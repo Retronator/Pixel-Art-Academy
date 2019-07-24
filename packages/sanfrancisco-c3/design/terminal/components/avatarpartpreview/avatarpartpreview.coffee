@@ -53,7 +53,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         @rendererOptions = new ComputedField => renderingSides: [@renderingSide()]
 
       else
-        @viewingAngle = @options.viewingAngle or new ReactiveField 0
+        @viewingAngle = @options.viewingAngle or new ReactiveField @options.initialViewingAngle or 0
         @rendererOptions = => @options.rendererOptions
 
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()

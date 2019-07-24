@@ -468,6 +468,25 @@ Package.onUse(function(api) {
   api.addComponent('pages/admin/characters/approveddesigns..');
   api.addServerFile('pages/admin/characters/approveddesigns/subscriptions');
 
+  api.addComponent('pages/admin/characters/outfitstest..');
+  api.addData('pages/admin/characters/outfitstest/bodies/ectomorph');
+  api.addData('pages/admin/characters/outfitstest/bodies/mesomorph');
+  api.addData('pages/admin/characters/outfitstest/bodies/endomorph');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-ectomorph2');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-ectomorph3');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-mesomorph1');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-mesomorph2');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-mesomorph3');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-endomorph1');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-endomorph2');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-endomorph4');
+  api.addData('pages/admin/characters/outfitstest/bodies/female-endomorph5');
+  api.addData('pages/admin/characters/outfitstest/bodies/male-ectomorph1');
+  api.addData('pages/admin/characters/outfitstest/bodies/male-mesomorph3');
+  api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph2');
+  api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph3');
+  api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph4');
+
   // Components
 
   api.addFile('components..');
