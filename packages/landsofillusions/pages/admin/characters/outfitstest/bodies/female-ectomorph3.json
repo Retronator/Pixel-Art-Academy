@@ -94,78 +94,13 @@
                         },
                         "breasts": {
                           "template": {
-                            "id": "X2eH62MAyv37s3xkk",
+                            "id": "GGWXq8sZor2J7k8yF",
                             "version": 1,
                             "data": {
                               "fields": {
-                                "topShape": {
-                                  "template": {
-                                    "id": "9hr4fgaiAyFWcqp8C",
-                                    "version": 0,
-                                    "data": {
-                                      "fields": {
-                                        "front": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "q9wwvFDaj8sDNSxv9"
-                                              }
-                                            }
-                                          }
-                                        },
-                                        "frontLeft": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "Yc6joEfubbqcMKwjt"
-                                              }
-                                            }
-                                          }
-                                        },
-                                        "left": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "mrkbpXhy3DSFSEHDT"
-                                              }
-                                            }
-                                          }
-                                        },
-                                        "backLeft": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "dDgsTKKBoJbs7QL7L"
-                                              }
-                                            }
-                                          }
-                                        },
-                                        "back": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "H6h2QX2JZMNp6oSSd"
-                                              }
-                                            }
-                                          }
-                                        },
-                                        "frontRight": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "A2r8JoHgsSN3fPCJ3"
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "name": "Top 3"
-                                  }
-                                },
                                 "bottomShape": {
                                   "template": {
-                                    "id": "GqqBP6pjyWKyYEdh9",
+                                    "id": "E2PRc4CWFegGETZcH",
                                     "version": 0,
                                     "data": {
                                       "fields": {
@@ -173,7 +108,7 @@
                                           "node": {
                                             "fields": {
                                               "spriteId": {
-                                                "value": "4GDMkwoPGeRpiT2xZ"
+                                                "value": "2BhKrmvixdXXQdrkg"
                                               }
                                             }
                                           }
@@ -182,7 +117,7 @@
                                           "node": {
                                             "fields": {
                                               "spriteId": {
-                                                "value": "NAqyF2xBuFZZxmTx4"
+                                                "value": "TMahjjEHpnnis3ydw"
                                               }
                                             }
                                           }
@@ -191,16 +126,7 @@
                                           "node": {
                                             "fields": {
                                               "spriteId": {
-                                                "value": "xfjS6gpEwusxAMqxm"
-                                              }
-                                            }
-                                          }
-                                        },
-                                        "frontRight": {
-                                          "node": {
-                                            "fields": {
-                                              "spriteId": {
-                                                "value": "Az47uZHTkuAdSXoJt"
+                                                "value": "u9YgZX9Pk7JCAW4aH"
                                               }
                                             }
                                           }
@@ -209,7 +135,7 @@
                                           "node": {
                                             "fields": {
                                               "spriteId": {
-                                                "value": "KMk7b5TdM5Cho46g3"
+                                                "value": "sxn3euc2Cwxe5Q3cd"
                                               }
                                             }
                                           }
@@ -218,14 +144,23 @@
                                           "node": {
                                             "fields": {
                                               "spriteId": {
-                                                "value": "77hzfqpbpatsHynZ6"
+                                                "value": "WLRTBNQzxmZ67tsp6"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "frontRight": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "XXLwJwkH7PQjWnSL8"
                                               }
                                             }
                                           }
                                         }
                                       }
                                     },
-                                    "name": "Bottom 3"
+                                    "name": "2"
                                   }
                                 },
                                 "nippleShape": {
@@ -292,10 +227,75 @@
                                 },
                                 "nippleOffsetY": {
                                   "value": 0
+                                },
+                                "topShape": {
+                                  "template": {
+                                    "id": "sj86cr7Z7fz2uNcq5",
+                                    "version": 0,
+                                    "data": {
+                                      "fields": {
+                                        "front": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "k4yFqMb24Wgo5x3Jy"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "frontLeft": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "vGPvxqAtkBJqdPHwB"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "left": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "a3cqDSWzHs2YznBjQ"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "backLeft": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "AwTAGGJxmCyF5tf9M"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "back": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "gvZBXAoJDdu3nQnB7"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "frontRight": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "9Zexguc2XoA9Xqdb8"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "name": "2"
+                                  }
                                 }
                               }
                             },
-                            "name": "Breasts 3"
+                            "name": "Breasts 2"
                           }
                         },
                         "breastsOffsetX": {

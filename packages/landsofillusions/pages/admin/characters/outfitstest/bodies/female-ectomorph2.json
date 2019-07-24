@@ -97,15 +97,15 @@
                             "fields": {
                               "bottomShape": {
                                 "template": {
-                                  "id": "E2PRc4CWFegGETZcH",
-                                  "version": 0,
+                                  "id": "syLin7Yj87CDe8gbo",
+                                  "version": 2,
                                   "data": {
                                     "fields": {
                                       "front": {
                                         "node": {
                                           "fields": {
                                             "spriteId": {
-                                              "value": "2BhKrmvixdXXQdrkg"
+                                              "value": "pEKdNTA4GLPBTZkjw"
                                             }
                                           }
                                         }
@@ -114,7 +114,7 @@
                                         "node": {
                                           "fields": {
                                             "spriteId": {
-                                              "value": "TMahjjEHpnnis3ydw"
+                                              "value": "6XtsHim2Nihxd6e8J"
                                             }
                                           }
                                         }
@@ -123,25 +123,7 @@
                                         "node": {
                                           "fields": {
                                             "spriteId": {
-                                              "value": "u9YgZX9Pk7JCAW4aH"
-                                            }
-                                          }
-                                        }
-                                      },
-                                      "backLeft": {
-                                        "node": {
-                                          "fields": {
-                                            "spriteId": {
-                                              "value": "sxn3euc2Cwxe5Q3cd"
-                                            }
-                                          }
-                                        }
-                                      },
-                                      "back": {
-                                        "node": {
-                                          "fields": {
-                                            "spriteId": {
-                                              "value": "WLRTBNQzxmZ67tsp6"
+                                              "value": "qjbpRKi72Dvvr5fKM"
                                             }
                                           }
                                         }
@@ -150,14 +132,32 @@
                                         "node": {
                                           "fields": {
                                             "spriteId": {
-                                              "value": "XXLwJwkH7PQjWnSL8"
+                                              "value": "nejNjdYWwPnNQZYMQ"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "backLeft": {
+                                        "node": {
+                                          "fields": {
+                                            "spriteId": {
+                                              "value": "y3Gpq8mKnuxudyCQu"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "back": {
+                                        "node": {
+                                          "fields": {
+                                            "spriteId": {
+                                              "value": "WWWzCj23dXzd7TjWC"
                                             }
                                           }
                                         }
                                       }
                                     }
                                   },
-                                  "name": "2"
+                                  "name": "Bottom 1"
                                 }
                               },
                               "nippleShape": {
