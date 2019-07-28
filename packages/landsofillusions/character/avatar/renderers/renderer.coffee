@@ -29,8 +29,13 @@ class LOI.Character.Avatar.Renderers.Renderer
     options = _.extend {}, @options, options
     
     # Region is a property that gets priority coming from constructor options.
+    # Otherwise the undefined value in options parameters will overwrite it.
     if @options?.region
       options.region = @options.region
+
+    # Same applies to additional landmark regions.
+    if @options?.additionalLandmarkRegions
+      options.additionalLandmarkRegions = @options.additionalLandmarkRegions
 
     new @constructor options, true
 
@@ -44,6 +49,7 @@ class LOI.Character.Avatar.Renderers.Renderer
     renderTexture: @options.renderTexture
     regionSide: @options.regionSide
     region: @options.region
+    additionalLandmarkRegions: @options.additionalLandmarkRegions
     bodyPart: @options.bodyPart
     renderingSides: @options.renderingSides
     useDatabaseSprites: @options.useDatabaseSprites
@@ -56,24 +62,43 @@ class LOI.Character.Avatar.Renderers.Renderer
     # Apply region ID to all landmarks that haven't had a region assigned yet.
     return unless regionId = @getRegionId()
 
-    # When providing region landmarks, we need to offset them by the region offset.
+    for landmark in landmarks
+      landmark.regionId ?= regionId
+
+    # Duplicate landmarks that should be available in additional regions.
+    if @options.additionalLandmarkRegions
+      currentRegionLandmarks = _.filter landmarks, (landmark) => landmark.regionId is regionId
+
+      for region in @options.additionalLandmarkRegions
+        for currentRegionLandmark in currentRegionLandmarks
+          # See if this landmark already exists in this region.
+          continue if _.find landmarks, (landmark) -> landmark.name is currentRegionLandmark.name and landmark.regionId is region.id
+
+          # Clone the landmark to the new region.
+          additionalLandmark = _.clone currentRegionLandmark
+          additionalLandmark.regionId = region.id
+
+          # When adding symmetric landmarks to other regions, append the suffix to their end.
+          additionalLandmark.name += @options.regionSide if @options.regionSide
+
+          landmarks.push additionalLandmark
+
+    # When providing render texture landmarks, we need to offset them by the region offset.
     if @options.renderTexture and @isRegionRoot()
       region = @getRegion()
       bounds = region.options.bounds
 
-    for landmark in landmarks
-      landmark.regionId ?= regionId
+      for landmark in landmarks
+        if landmark.regionId is regionId
+          if region.id.indexOf('Right') >= 0
+            # This is a mirrored region.
+            landmark.x = bounds.right() - landmark.x
 
-      if bounds and landmark.regionId is regionId
-        if region.id.indexOf('Right') >= 0
-          # This is a mirrored region.
-          landmark.x = bounds.right() - landmark.x
+          else
+            # This is a normal region.
+            landmark.x += bounds.x()
 
-        else
-          # This is a normal region.
-          landmark.x += bounds.x()
-
-        landmark.y += bounds.y()
+          landmark.y += bounds.y()
 
   getRegionId: ->
     if propertyRegionId = @options.part.properties.region?.options.dataLocation()

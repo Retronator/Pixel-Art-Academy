@@ -5,7 +5,7 @@ class LOI.Engine.RenderingRegion
     @id = @options.id
     
   getLandmarksRegionId: ->
-    @options.landmarksRegion or @id
+    @id
     
   getRegionIds: ->
     @options.multipleRegions or [@id]
@@ -22,5 +22,5 @@ class LOI.Engine.RenderingRegion
     else
       region = regionOrRegionId
       otherRegionIds = region.getRegionIds()
-    
+
     _.intersection(myRegionIds, otherRegionIds).length

@@ -56,6 +56,7 @@ LOI.Character.Part.registerClasses
             type: 'Avatar.Body.FacialHair'
         renderer: new LOI.Character.Avatar.Renderers.Head
           region: LOI.HumanAvatar.Regions.Head
+          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.HairFront, LOI.HumanAvatar.Regions.HairMiddle, LOI.HumanAvatar.Regions.HairBehind]
           origin:
             landmark: 'atlas'
             x: 0
@@ -203,6 +204,7 @@ LOI.Character.Part.registerClasses
             type: 'Avatar.Body.Neck'
         renderer: new LOI.Character.Avatar.Renderers.Default
           region: LOI.HumanAvatar.Regions.Torso
+          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
           origin:
             landmark: 'navel'
 
@@ -550,6 +552,7 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/legs/thigh/2.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.UpperLegs
+          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
           origin:
             landmark: 'acetabulum'
             x: 0
@@ -574,6 +577,7 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/legs/lowerleg/2/regular.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.LowerLegs
+          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
           origin:
             landmark: 'knee'
             x: 0

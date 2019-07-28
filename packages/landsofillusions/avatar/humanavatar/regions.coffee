@@ -66,8 +66,7 @@ LOI.HumanAvatar.Regions =
       landmark: 'navel'
       x: 15
       y: 15
-    landmarksRegion: 'Torso'
-      
+
   # Arms
 
   RightUpperArm: new LOI.Engine.RenderingRegion

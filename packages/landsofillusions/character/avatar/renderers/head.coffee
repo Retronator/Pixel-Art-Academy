@@ -28,23 +28,6 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
       @_placeRenderer side, hairRenderer, 'headCenter', 'headCenter'
       @_placeRenderer side, hairRenderer, 'mouth', 'mouth'
 
-  _applyLandmarksRegion: (landmarks) ->
-    # Head landmarks should be available in hair regions as well.
-    headLandmarks = _.filter landmarks, (landmark) => landmark.regionId is LOI.HumanAvatar.Regions.Head.id
-
-    for region in [LOI.HumanAvatar.Regions.HairFront, LOI.HumanAvatar.Regions.HairMiddle, LOI.HumanAvatar.Regions.HairBehind]
-      for headLandmark in headLandmarks
-        # See if this landmark already exists in this region.
-        continue if _.find landmarks, (landmark) -> landmark.name is headLandmark.name and landmark.regionId is region.id
-
-        # Clone the landmark to the new region.
-        landmark = _.clone headLandmark
-        landmark.regionId = region.id
-        landmarks.push landmark
-
-    # Continue to process the landmarks.
-    super arguments...
-
   drawToContext: (context, options = {}) ->
     return unless @ready()
 
