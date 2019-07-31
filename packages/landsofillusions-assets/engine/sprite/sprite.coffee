@@ -199,14 +199,14 @@ class LOI.Assets.Engine.Sprite
             # Shade color based on the normal.
             shadeFactor = 0
 
-            # Ambient lighting.
+            # Calculate ambient lighting.
             sceneAmbientCoefficient = 0.4
             materialAmbientCoefficient = 1
 
             if sceneAmbientCoefficient and materialAmbientCoefficient
               shadeFactor += sceneAmbientCoefficient * materialAmbientCoefficient
 
-            # Diffuse lighting
+            # Calculate diffuse lighting.
             if pixel.normal
               normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
               normal.x *= -1 if flippedHorizontal
@@ -222,14 +222,15 @@ class LOI.Assets.Engine.Sprite
             if lightDiffuseCoefficient and materialDiffuseCoefficient
               shadeFactor += normalLightProduct * lightDiffuseCoefficient * materialDiffuseCoefficient
 
+            shadedColor = sourceColor.clone().multiplyScalar shadeFactor
+
+            # Calculate specular lighting.
             lightSpecularCoefficient = 1
             materialSpecularCoefficient = 0
 
             if paletteColor?.reflection
-              materialSpecularCoefficient = paletteColor.reflection.intensity
-              shininess = paletteColor.reflection.shininess
-
-            shadedColor = sourceColor.clone().multiplyScalar shadeFactor
+              materialSpecularCoefficient = paletteColor.reflection.intensity or 0
+              shininess = paletteColor.reflection.shininess or 1
 
             if lightSpecularCoefficient and materialSpecularCoefficient
               smoothFactor = paletteColor.reflection.smoothFactor or 0

@@ -183,7 +183,9 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
         newSpriteData.bounds.top = Math.min newSpriteData.bounds.top, pixel.y
         newSpriteData.bounds.bottom = Math.max newSpriteData.bounds.bottom, pixel.y
 
-    new LOI.Assets.Sprite newSpriteData
+    sprite = new LOI.Assets.Sprite newSpriteData
+    sprite.rebuildPixelMaps()
+    sprite
 
   _calculateLandmarkBounds: (landmarks) ->
     bounds =

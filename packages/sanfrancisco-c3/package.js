@@ -68,6 +68,7 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/properties/color..');
   api.addComponent('design/terminal/properties/relativecolorshade..');
   api.addComponent('design/terminal/properties/haircolor..');
+  api.addComponent('design/terminal/properties/outfitcolor..');
   api.addComponent('design/terminal/properties/sprite..');
   api.addComponent('design/terminal/properties/sprite/opendialog');
   api.addComponent('design/terminal/properties/string..');

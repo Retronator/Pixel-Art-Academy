@@ -18,7 +18,7 @@ class LOI.Character.Avatar.Properties.HairColor extends LOI.Character.Avatar.Pro
     colorNode = @options.dataLocation()
     shine = colorNode? 'shine'
 
-    # Compare for existence since shade can be 0.
+    # Compare for existence since shine can be 0.
     return shine if shine?
 
     @options.default?.shine

@@ -1,0 +1,31 @@
+<template name="SanFrancisco.C3.Design.Terminal.Properties.OutfitColor">
+  <div class="sanfrancisco-c3-design-terminal-properties-color sanfrancisco-c3-design-terminal-properties-outfitcolor">
+    <div class="hues swatches-area">
+      <div class="name">
+        color
+      </div>
+      {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches hues}}
+    </div>
+    <div class="shades swatches-area">
+      <div class="name">
+        shade
+      </div>
+      {{#if hueIsSelected}}
+        {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches shades}}
+      {{/if}}
+    </div>
+    <div class="reflection swatches-area">
+      <div class="name">
+        reflection
+      </div>
+      <div class="reflection-properties">
+        {{#each properties}}
+          <div class="reflection-property {{name}}">
+            <div class="reflection-property-name">{{name}}:</div>
+            <div class="reflection-property-value">{{> Render input}}</div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</template>

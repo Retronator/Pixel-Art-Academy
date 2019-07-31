@@ -12,8 +12,6 @@ class C3.Design.Terminal.Properties.HairColor extends C3.Design.Terminal.Propert
     @selectedShine = new ComputedField =>
       @property.shine()
 
-    @selectedShineValue
-
     @pageNumber.shineLevels = => 0
     @pagesCount.shineLevels = => 1
     @currentColorIndices.shineLevels = => [0..4]

@@ -8,7 +8,14 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
   #     shade
   #       value
   #     reflection
-  #       value
+  #       node
+  #         fields
+  #           intensity
+  #             value
+  #           shininess
+  #             value
+  #           smoothFactor
+  #             value
   constructor: (@options = {}) ->
     super arguments...
 
@@ -36,7 +43,13 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
 
   reflection: ->
     colorNode = @options.dataLocation()
-    reflection = colorNode? 'reflection'
+    reflectionNode = colorNode? 'reflection'
+    reflectionData = reflectionNode?.data()
 
-    # Compare for existence since shade can be 0.
+    if reflectionData?.fields
+      reflection =
+        intensity: reflectionData.fields.intensity?.value
+        shininess: reflectionData.fields.shininess?.value
+        smoothFactor: reflectionData.fields.smoothFactor?.value
+
     reflection or @options.default?.reflection

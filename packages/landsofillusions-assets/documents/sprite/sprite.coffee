@@ -97,11 +97,17 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     for layer in @layers when layer?.pixels
       continue if layer._pixelMap
 
-      layer._pixelMap = {}
+      @_buildPixelMap layer
 
-      for pixel in layer.pixels
-        layer._pixelMap[pixel.x] ?= {}
-        layer._pixelMap[pixel.x][pixel.y] = pixel
+  rebuildPixelMaps: ->
+    @_buildPixelMap layer for layer in @layers when layer?.pixels
+
+  _buildPixelMap: (layer) ->
+    layer._pixelMap = {}
+
+    for pixel in layer.pixels
+      layer._pixelMap[pixel.x] ?= {}
+      layer._pixelMap[pixel.x][pixel.y] = pixel
 
   # Pixel retrieval
         

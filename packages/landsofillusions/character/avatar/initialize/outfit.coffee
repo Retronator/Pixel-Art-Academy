@@ -54,5 +54,5 @@ LOI.Character.Part.registerClasses
         properties:
           name: new LOI.Character.Part.Property.String
             name: 'name'
-          color: new LOI.Character.Avatar.Properties.Color
+          color: new LOI.Character.Avatar.Properties.OutfitColor
             name: 'color'
