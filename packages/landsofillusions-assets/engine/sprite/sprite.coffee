@@ -3,21 +3,17 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Sprite
   constructor: (@options) ->
-    @palette = new ComputedField =>
-      return unless spriteData = @options.spriteData()
-      spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id)
-
     @ready = new ComputedField =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
-      return unless @palette() or @options.visualizeNormals?()
+      return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id) or @options.visualizeNormals?()
 
       true
 
     # Create temporary objects and constants.
     @_normal = new THREE.Vector3
     @_backward = new THREE.Vector3 0, 0, 1
-    @_destinationColor = new THREE.Color
+    @_color = new THREE.Color
     @_lightColor = new THREE.Color
     @_averageNormal = new THREE.Vector3
 
@@ -59,7 +55,7 @@ class LOI.Assets.Engine.Sprite
     # On the server we need to manually request pixel maps.
     spriteData.requirePixelMaps() if Meteor.isServer
 
-    palette = @palette()
+    palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id)
 
     # Build a new canvas if needed.
     unless @_canvas?.width is spriteData.bounds.width and @_canvas?.height is spriteData.bounds.height
@@ -133,19 +129,24 @@ class LOI.Assets.Engine.Sprite
             else
               lightness = 0.5
 
-            @_destinationColor.setHSL hue, saturation, lightness
+            @_color.setHSL hue, saturation, lightness
+            destinationColor = @_color
 
           else
-            @_destinationColor = r: 0, g: 0, b: 0
+            destinationColor = r: 0, g: 0, b: 0
 
         else if renderOptions.renderNormalData
           # Rendering of raw normal data for use in shaders.
           if pixel.normal
-            @_destinationColor = r: pixel.normal.x * 0.5 + 0.5, g: pixel.normal.y * 0.5 + 0.5, b: pixel.normal.z * 0.5 + 0.5
-            @_destinationColor.r = -pixel.normal.x * 0.5 + 0.5 if flippedHorizontal
+            destinationColor =
+              r: pixel.normal.x * 0.5 + 0.5
+              g: pixel.normal.y * 0.5 + 0.5
+              b: pixel.normal.z * 0.5 + 0.5
+
+            destinationColor.r = -pixel.normal.x * 0.5 + 0.5 if flippedHorizontal
 
           else
-            @_destinationColor = r: 0, g: 0, b: 0
+            destinationColor = r: 0, g: 0, b: 0
 
         else if renderOptions.renderPaletteData
           # Rendering of ramp + shade + dither data for use in shaders.
@@ -166,13 +167,13 @@ class LOI.Assets.Engine.Sprite
             paletteColor = pixel.paletteColor
             
           if paletteColor
-            @_destinationColor =
+            destinationColor =
               r: paletteColor.ramp / 255
               g: paletteColor.shade / 255
               b: paletteColor.dither or 0
             
           else
-            @_destinationColor = r: 255, g: 255, b: 255, a: 0
+            destinationColor = r: 1, g: 1, b: 1, a: 0
 
         else
           paletteColor = null
@@ -295,7 +296,7 @@ class LOI.Assets.Engine.Sprite
                     secondBestColor = shade
                     secondBestColorDistance = distance
 
-              @_destinationColor = bestColor
+              destinationColor = bestColor
 
               # Apply dithering.
 
@@ -303,7 +304,7 @@ class LOI.Assets.Engine.Sprite
 
               if ditherPercentage > 1 - (paletteColor?.dither or 0)
                 if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
-                  @_destinationColor = secondBestColor
+                  destinationColor = secondBestColor
 
               ### Smooth shading routine
               #closest = THREE.Color.fromObject bestColor
@@ -315,18 +316,18 @@ class LOI.Assets.Engine.Sprite
               ###
 
             else
-              @_destinationColor = shadedColor
+              destinationColor = shadedColor
 
           else
-            @_destinationColor = sourceColor
+            destinationColor = sourceColor
 
         if erase
           @_imageData.data[pixelIndex + 3] = 0
 
         else
-          @_imageData.data[pixelIndex] = @_destinationColor.r * 255
-          @_imageData.data[pixelIndex + 1] = @_destinationColor.g * 255
-          @_imageData.data[pixelIndex + 2] = @_destinationColor.b * 255
-          @_imageData.data[pixelIndex + 3] = (@_destinationColor.a or 1) * 255
+          @_imageData.data[pixelIndex] = destinationColor.r * 255
+          @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
+          @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
+          @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
 
     @_canvas.putFullImageData @_imageData
