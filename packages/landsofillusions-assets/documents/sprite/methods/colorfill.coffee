@@ -12,7 +12,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   LOI.Assets.Asset._authorizeAssetAction sprite
 
   # Make sure the location is within the bounds.
-  layer = sprite.layers?[layerIndex]  
+  layer = sprite.layers?[layerIndex]
   throw new AE.ArgumentException "Layer with provided index does not exist." unless layer
   
   absoluteX = newTargetPixel.x + (layer.origin?.x or 0)
@@ -53,8 +53,11 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
         # Found it. Has it been added already?
         return if pixel in visited
   
-        # Is it the right color?
+        # Is it the same color?
         return unless EJSON.equals(pixel.paletteColor, currentTargetPixel.paletteColor) and pixel.materialIndex is currentTargetPixel.materialIndex
+
+        # If the normal is present, make sure it matches too.
+        return if pixel.normal and not EJSON.equals(pixel.normal, currentTargetPixel.normal)
   
         # It seems legit, add it.
         fringe.push pixel
@@ -69,7 +72,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
     # All the visited pixels are of correct color and should be filled!
     for pixel in visited
       pixelIndex = layerPixels.indexOf pixel
-      for key in ['paletteColor', 'directColor', 'materialIndex']
+      for key in ['paletteColor', 'directColor', 'materialIndex', 'normal']
         if newTargetPixel[key]?
           # Set new or existing property.
           forward.$set ?= {}
