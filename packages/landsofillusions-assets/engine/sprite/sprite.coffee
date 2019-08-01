@@ -3,12 +3,23 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Sprite
   constructor: (@options) ->
+    @palette = new ComputedField =>
+      return unless spriteData = @options.spriteData()
+      spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id)
+
     @ready = new ComputedField =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
-      return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id) or @options.visualizeNormals?()
+      return unless @palette() or @options.visualizeNormals?()
 
       true
+
+    # Create temporary objects and constants.
+    @_normal = new THREE.Vector3
+    @_backward = new THREE.Vector3 0, 0, 1
+    @_destinationColor = new THREE.Color
+    @_lightColor = new THREE.Color
+    @_averageNormal = new THREE.Vector3
 
   drawToContext: (context, renderOptions = {}) ->
     # HACK: Request sprite data already at the top since otherwise ready sometimes doesn't get recomputed in time.
@@ -48,7 +59,7 @@ class LOI.Assets.Engine.Sprite
     # On the server we need to manually request pixel maps.
     spriteData.requirePixelMaps() if Meteor.isServer
 
-    palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette?._id
+    palette = @palette()
 
     # Build a new canvas if needed.
     unless @_canvas?.width is spriteData.bounds.width and @_canvas?.height is spriteData.bounds.height
@@ -107,12 +118,11 @@ class LOI.Assets.Engine.Sprite
         if visualizeNormals
           # Visualized normals mode.
           if pixel.normal
-            normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
-            normal.x *= -1 if flippedHorizontal
-            backward = new THREE.Vector3 0, 0, 1
+            @_normal.copy pixel.normal
+            @_normal.x *= -1 if flippedHorizontal
 
-            horizontalAngle = Math.atan2(normal.y, normal.x) + Math.PI
-            verticalAngle = normal.angleTo backward
+            horizontalAngle = Math.atan2(@_normal.y, @_normal.x) + Math.PI
+            verticalAngle = @_normal.angleTo @_backward
 
             hue = horizontalAngle / (2 * Math.PI)
             saturation = verticalAngle / (Math.PI / 2)
@@ -123,19 +133,19 @@ class LOI.Assets.Engine.Sprite
             else
               lightness = 0.5
 
-            destinationColor = new THREE.Color().setHSL hue, saturation, lightness
+            @_destinationColor.setHSL hue, saturation, lightness
 
           else
-            destinationColor = r: 0, g: 0, b: 0
+            @_destinationColor = r: 0, g: 0, b: 0
 
         else if renderOptions.renderNormalData
           # Rendering of raw normal data for use in shaders.
           if pixel.normal
-            destinationColor = r: pixel.normal.x * 0.5 + 0.5, g: pixel.normal.y * 0.5 + 0.5, b: pixel.normal.z * 0.5 + 0.5
-            destinationColor.r = -pixel.normal.x * 0.5 + 0.5 if flippedHorizontal
+            @_destinationColor = r: pixel.normal.x * 0.5 + 0.5, g: pixel.normal.y * 0.5 + 0.5, b: pixel.normal.z * 0.5 + 0.5
+            @_destinationColor.r = -pixel.normal.x * 0.5 + 0.5 if flippedHorizontal
 
           else
-            destinationColor = r: 0, g: 0, b: 0
+            @_destinationColor = r: 0, g: 0, b: 0
 
         else if renderOptions.renderPaletteData
           # Rendering of ramp + shade + dither data for use in shaders.
@@ -156,13 +166,13 @@ class LOI.Assets.Engine.Sprite
             paletteColor = pixel.paletteColor
             
           if paletteColor
-            destinationColor =
+            @_destinationColor =
               r: paletteColor.ramp / 255
               g: paletteColor.shade / 255
               b: paletteColor.dither or 0
             
           else
-            destinationColor = r: 255, g: 255, b: 255, a: 0
+            @_destinationColor = r: 255, g: 255, b: 255, a: 0
 
         else
           paletteColor = null
@@ -208,13 +218,13 @@ class LOI.Assets.Engine.Sprite
 
             # Calculate diffuse lighting.
             if pixel.normal
-              normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
-              normal.x *= -1 if flippedHorizontal
+              @_normal.copy pixel.normal
+              @_normal.x *= -1 if flippedHorizontal
 
             else
-              normal = new THREE.Vector3 0, 0, 1
+              @_normal.set 0, 0, 1
 
-            normalLightProduct = THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
+            normalLightProduct = THREE.Math.clamp @_normal.dot(inverseLightDirection), 0, 1
 
             lightDiffuseCoefficient = 0.6
             materialDiffuseCoefficient = 1
@@ -236,29 +246,29 @@ class LOI.Assets.Engine.Sprite
               smoothFactor = paletteColor.reflection.smoothFactor or 0
 
               # Average the normal.
-              averageNormal = new THREE.Vector3
+              @_averageNormal.set 0, 0, 0
 
               for offsetX in [-smoothFactor..smoothFactor]
                 for offsetY in [-smoothFactor..smoothFactor]
                   if sampleNormal = layer._pixelMap[pixel.x + offsetX]?[pixel.y + offsetY]?.normal
-                    averageNormal.add sampleNormal
+                    @_averageNormal.add sampleNormal
 
-              averageNormal.normalize()
-              averageNormal.x *= -1 if flippedHorizontal
+              @_averageNormal.normalize()
+              @_averageNormal.x *= -1 if flippedHorizontal
 
-              averageNormalLightProduct = THREE.Math.clamp averageNormal.dot(inverseLightDirection), 0, 1
+              averageNormalLightProduct = THREE.Math.clamp @_averageNormal.dot(inverseLightDirection), 0, 1
 
               # Calculate the perfectly reflected ray.
-              reflection = averageNormal.clone().multiplyScalar(2 * averageNormalLightProduct).sub inverseLightDirection
+              reflection = @_averageNormal.clone().multiplyScalar(2 * averageNormalLightProduct).sub inverseLightDirection
 
               # We assume the inverse view direction to be (0, 0, 1).
               # Dot product is then the equivalent of the z coordinate.
               reflectionViewProduct = THREE.Math.clamp reflection.z, 0, 1
 
               lightFactor = Math.pow(reflectionViewProduct, shininess) * lightSpecularCoefficient * materialSpecularCoefficient
-              lightColor = new THREE.Color(0xffffff).multiplyScalar lightFactor
+              @_lightColor.set(0xffffff).multiplyScalar lightFactor
 
-              shadedColor.add lightColor
+              shadedColor.add @_lightColor
 
             if palette
               # Find the nearest color from the palette to represent the shaded color.
@@ -285,7 +295,7 @@ class LOI.Assets.Engine.Sprite
                     secondBestColor = shade
                     secondBestColorDistance = distance
 
-              destinationColor = bestColor
+              @_destinationColor = bestColor
 
               # Apply dithering.
 
@@ -293,7 +303,7 @@ class LOI.Assets.Engine.Sprite
 
               if ditherPercentage > 1 - (paletteColor?.dither or 0)
                 if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
-                  destinationColor = secondBestColor
+                  @_destinationColor = secondBestColor
 
               ### Smooth shading routine
               #closest = THREE.Color.fromObject bestColor
@@ -305,18 +315,18 @@ class LOI.Assets.Engine.Sprite
               ###
 
             else
-              destinationColor = shadedColor
+              @_destinationColor = shadedColor
 
           else
-            destinationColor = sourceColor
+            @_destinationColor = sourceColor
 
         if erase
           @_imageData.data[pixelIndex + 3] = 0
 
         else
-          @_imageData.data[pixelIndex] = destinationColor.r * 255
-          @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
-          @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
-          @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
+          @_imageData.data[pixelIndex] = @_destinationColor.r * 255
+          @_imageData.data[pixelIndex + 1] = @_destinationColor.g * 255
+          @_imageData.data[pixelIndex + 2] = @_destinationColor.b * 255
+          @_imageData.data[pixelIndex + 3] = (@_destinationColor.a or 1) * 255
 
     @_canvas.putFullImageData @_imageData
