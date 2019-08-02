@@ -89,13 +89,12 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
         sphereSpriteData = _.clone spriteData
         sphereSpriteData.palette = _id: paletteId
 
-        if materialIndex? and materials[materialIndex]
+        if materialIndex?
           asset = loader.asset()
           materials = asset.materials?.getAll?() or asset.materials
-          material = materials[materialIndex]
+          material = materials?[materialIndex]
 
-        else
-          material = paletteColor
+        material ?= paletteColor
 
         unless material?.ramp? and material?.shade?
           sphereSpriteData = null
