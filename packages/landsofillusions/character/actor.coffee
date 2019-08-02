@@ -19,6 +19,39 @@ class LOI.Character.Actor extends LOI.Character.Person
 
       @initialize()
 
+    # Add the NPC to database.
+    if Meteor.isServer and not Meteor.settings.startEmpty
+      Document.startup => @_addActorToDatabase()
+
+  @_addActorToDatabase: ->
+    # Make sure we didn't already add them.
+    return if LOI.Character.documents.findOne thingId: @id()
+
+    # We need the admin user to add this character to.
+    return unless admin = RA.User.documents.findOne username: 'admin'
+
+    # Fetch the data.
+    return unless documentUrl = @nonPlayerCharacterDocumentUrl?()
+
+    [packageId, pathParts...] = documentUrl.split '/'
+    path = pathParts.join '/'
+    json = LOI.packages[packageId].assets.getText path
+    character = JSON.parse json
+
+    # Replace the user to admin.
+    character.user = _id: admin._id
+
+    # Create a translation for the name.
+    fullNameTranslationId = AB.Translation.documents.insert lastEditTime: new Date
+    AB.Translation.update fullNameTranslationId, Artificial.Babel.defaultLanguage, @fullName()
+    character.avatar.fullName = _id: fullNameTranslationId
+
+    # Insert the character with a proper document ID and save
+    # the thing ID on the document to prevent multiple insertions.
+    character._id = Random.id()
+    character.thingId = @id()
+    LOI.Character.documents.insert character
+
   constructor: ->
     super arguments...
 

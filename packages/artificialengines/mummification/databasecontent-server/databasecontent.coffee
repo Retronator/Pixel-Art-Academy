@@ -85,7 +85,7 @@ class AM.DatabaseContent
 
         if currentLastEditTime < exportedLastEditTime
           # The database document is older so we need to update it.
-          do (documentInformation, documentClass) =>
+          do (documentInformation, exportedLastEditTime, documentClass) =>
             url = Meteor.absoluteUrl "databasecontent/#{documentInformation.path}"
 
             requestGet url, encoding: null, (error, response, body) =>
@@ -111,7 +111,7 @@ class AM.DatabaseContent
                 return
 
               # Add last edit time if needed so that documents don't need unnecessary imports.
-              unless importedDocument.lastEditTime and importedDocument.lastEditTime >= documentInformation.lastEditTime
+              unless importedDocument.lastEditTime and importedDocument.lastEditTime >= exportedLastEditTime
                 importedDocument.lastEditTime = exportedLastEditTime
 
               documentClass.documents.upsert importedDocument._id, importedDocument

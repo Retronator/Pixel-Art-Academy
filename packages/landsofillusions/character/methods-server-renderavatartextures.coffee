@@ -16,7 +16,10 @@ LOI.Character.renderAvatarTextures.method (characterId) ->
   character = LOI.Character.documents.findOne characterId
   throw new AE.InvalidOperationException "Character's design hasn't been approved yet." unless character.designApproved
   throw new AE.InvalidOperationException "Character's avatar textures don't need to be updated." unless character.avatar?.textures?.needUpdate
-  
+
+  characterName = character.avatar.fullName.translate().text
+  console.log "Rendering avatar textures for", characterName
+
   humanAvatar = new LOI.Character.Avatar character
   
   humanAvatarRenderer = new LOI.Character.Avatar.Renderers.HumanAvatar
@@ -35,6 +38,10 @@ LOI.Character.renderAvatarTextures.method (characterId) ->
 
   normalsPNGStream = textureRenderer.scaledNormalsCanvas.createPNGStream
     compressionLevel: 9
+
+  # Clean up the avatar and renderer.
+  humanAvatar.destroy()
+  humanAvatarRenderer.destroy()
 
   # Upload the textures to storage server.
   upload = (stream, textureName) =>
@@ -76,3 +83,5 @@ LOI.Character.renderAvatarTextures.method (characterId) ->
         'avatar.textures.normals.url': "https://pixelartacademy.s3.amazonaws.com/avatars/#{characterId}-normals.png?#{version}"
         'avatar.textures.version': version
         'avatar.textures.needUpdate': false
+
+    console.log "Updated avatar textures to version #{version} for", characterName
