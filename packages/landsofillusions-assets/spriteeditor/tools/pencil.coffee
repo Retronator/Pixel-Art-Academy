@@ -29,10 +29,10 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       pixel
 
   applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
-    changedPixels = _.filter relativePixels, (pixel) =>
-      # See if we're only painting normals.
-      paintNormals = @data.get 'paintNormals'
+    # See if we're only painting normals.
+    paintNormals = @data.get 'paintNormals'
 
+    changedPixels = _.filter relativePixels, (pixel) =>
       existingPixel = spriteData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
   
       if paintNormals and existingPixel

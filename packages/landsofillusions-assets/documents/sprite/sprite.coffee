@@ -92,7 +92,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     @requirePixelMaps() if Meteor.isClient
 
   requirePixelMaps: ->
-    return unless @layers?[0].pixels
+    return unless @layers?
 
     for layer in @layers when layer?.pixels
       continue if layer._pixelMap
@@ -219,8 +219,16 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
 
   getSaveData: ->
     saveData = super arguments...
+    _.extend saveData, _.pick @, ['bounds']
 
-    _.extend saveData, _.pick @, ['layers', 'bounds']
+    # When saving layers, don't save pixel maps.
+    if @layers
+      saveData.layers = []
+
+      for layer in @layers
+        saveData.layers.push _.omit layer, ['_pixelMap']
+
+    saveData
 
   getPreviewImage: ->
     engineSprite = new LOI.Assets.Engine.Sprite
