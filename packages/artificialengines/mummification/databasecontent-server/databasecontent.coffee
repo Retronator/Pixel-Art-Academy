@@ -14,6 +14,8 @@ class AM.DatabaseContent
     @importTransforms[directive] = transform
 
   @export: (archive) ->
+    console.log "Starting database content export ..."
+
     directory =
       exportTime: new Date
       documents: {}
@@ -24,7 +26,17 @@ class AM.DatabaseContent
       exportingDocuments = getter()
 
       for document in exportingDocuments when document?.exportDatabaseContent
+        if document.name instanceof Artificial.Babel.Translation
+          documentName = document.name.translate().text
+
+        else
+          documentName = document.name or document._id
+
+        console.log "Exporting", document.constructor.name, documentName
+
         {arrayBuffer, path, lastEditTime} = document.exportDatabaseContent()
+
+        console.log "Writing #{Math.round arrayBuffer.length / 1024, 2} kB to #{path}"
 
         # Add a suffix
         paths[path] ?= 0
@@ -50,6 +62,8 @@ class AM.DatabaseContent
 
     # Comlete exporting.
     archive.finalize()
+
+    console.log "Database content export done!"
 
   @import: (directory) ->
     for documentClassId, documentsInformation of directory.documents
