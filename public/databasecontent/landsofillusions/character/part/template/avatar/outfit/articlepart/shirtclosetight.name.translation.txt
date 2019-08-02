@@ -1,0 +1,3 @@
+en-US: Shirt close tight
+
+{"_id":"destoEkzGXkZmnCzM","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Shirt close tight","quality":0},"best":{"text":"Shirt close tight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shirt close tight","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564075654820}}

@@ -1,0 +1,3 @@
+en-US: Leggings patterns spartans thigh
+
+{"_id":"KQMGdSFy8onh8FmrP","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564617042848},"translations":{"en":{"us":{"text":"Leggings patterns spartans thigh","quality":0},"best":{"text":"Leggings patterns spartans thigh","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings patterns spartans thigh","quality":0,"languageRegion":"en-US"}}}

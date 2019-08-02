@@ -1,3 +1,0 @@
-en-US: Boxer briefs
-
-{"_id":"vhwzoP7TR6Qkmmtyv","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Boxer briefs","quality":0},"best":{"text":"Boxer briefs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Boxer briefs","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519124057}}

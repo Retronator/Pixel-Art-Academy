@@ -1,3 +1,3 @@
 en-US: Leggings pattern random torso
 
-{"_id":"yzpJcfuuckZeBdLDD","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Leggings pattern random torso","quality":0},"best":{"text":"Leggings pattern random torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings pattern random torso","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519137409}}
+{"_id":"yzpJcfuuckZeBdLDD","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Leggings pattern random torso","quality":0},"best":{"text":"Leggings pattern random torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings pattern random torso","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564536299192}}

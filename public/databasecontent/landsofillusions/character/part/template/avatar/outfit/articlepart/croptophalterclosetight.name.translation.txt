@@ -1,0 +1,3 @@
+en-US: Crop top halter close tight
+
+{"_id":"rb8Ft37eHnw52QRRd","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564173239203},"translations":{"en":{"us":{"text":"Crop top halter close tight","quality":0},"best":{"text":"Crop top halter close tight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Crop top halter close tight","quality":0,"languageRegion":"en-US"}}}

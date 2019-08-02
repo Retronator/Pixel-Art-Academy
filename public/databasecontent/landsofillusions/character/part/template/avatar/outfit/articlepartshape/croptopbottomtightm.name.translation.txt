@@ -1,3 +1,0 @@
-en: Crop top bottom tight M
-
-{"_id":"6YWiWHs8wmpFrrat8","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Crop top bottom tight M","quality":0,"best":{"text":"Crop top bottom tight M","quality":0,"languageRegion":"en"}},"best":{"text":"Crop top bottom tight M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519111987}}

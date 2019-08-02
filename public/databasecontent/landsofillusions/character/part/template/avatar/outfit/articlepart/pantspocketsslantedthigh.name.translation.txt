@@ -1,0 +1,3 @@
+en-US: Pants pockets slanted thigh
+
+{"_id":"d6fLkySPQ4R8MMESM","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564532342109},"translations":{"en":{"us":{"text":"Pants pockets slanted thigh","quality":0},"best":{"text":"Pants pockets slanted thigh","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants pockets slanted thigh","quality":0,"languageRegion":"en-US"}}}

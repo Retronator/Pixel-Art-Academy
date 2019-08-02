@@ -1,3 +1,0 @@
-en: 8-bit rebel scum
-
-{"_id":"dqxnCTHbj4uoAKTfE","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"8-bit rebel scum","quality":0,"best":{"text":"8-bit rebel scum","quality":0,"languageRegion":"en"}},"best":{"text":"8-bit rebel scum","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519112992}}

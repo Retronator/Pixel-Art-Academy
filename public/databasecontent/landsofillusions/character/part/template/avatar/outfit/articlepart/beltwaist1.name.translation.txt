@@ -1,0 +1,3 @@
+en-US: Belt waist 1
+
+{"_id":"AwR9fa5EhNHyQEyfs","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564440397816},"translations":{"en":{"us":{"text":"Belt waist 1","quality":0},"best":{"text":"Belt waist 1","quality":0,"languageRegion":"en-US"}},"best":{"text":"Belt waist 1","quality":0,"languageRegion":"en-US"}}}

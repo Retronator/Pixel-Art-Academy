@@ -1,0 +1,3 @@
+en-US: Chest open top
+
+{"_id":"Ef4QjvakqJGFr8gTD","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564102222162},"translations":{"en":{"us":{"text":"Chest open top","quality":0},"best":{"text":"Chest open top","quality":0,"languageRegion":"en-US"}},"best":{"text":"Chest open top","quality":0,"languageRegion":"en-US"}}}

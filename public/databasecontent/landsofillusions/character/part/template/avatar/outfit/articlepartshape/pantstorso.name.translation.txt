@@ -1,3 +1,3 @@
 en-US: Pants torso
 
-{"_id":"iysAT2EMyua88jugh","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants torso","quality":0},"best":{"text":"Pants torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants torso","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519147310}}
+{"_id":"bW6Mxrdvgcq4MbFML","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564531642604},"translations":{"en":{"us":{"text":"Pants torso","quality":0},"best":{"text":"Pants torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants torso","quality":0,"languageRegion":"en-US"}}}

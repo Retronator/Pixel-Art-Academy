@@ -1,0 +1,3 @@
+en-US: Shoes sneakers low straight
+
+{"_id":"pRBSjtMTFmqbavbxA","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564600465002},"translations":{"en":{"us":{"text":"Shoes sneakers low straight","quality":0},"best":{"text":"Shoes sneakers low straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoes sneakers low straight","quality":0,"languageRegion":"en-US"}}}

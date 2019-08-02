@@ -1,0 +1,3 @@
+en-US: Pants slim thighs
+
+{"_id":"KsMp8Lzhf7r3DhRwu","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564529939953},"translations":{"en":{"us":{"text":"Pants slim thighs","quality":0},"best":{"text":"Pants slim thighs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants slim thighs","quality":0,"languageRegion":"en-US"}}}

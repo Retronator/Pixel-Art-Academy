@@ -1,0 +1,3 @@
+en-US: Sleeves lower-arms long
+
+{"_id":"fyEPuA6Hdgk7jbnRN","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564074185645},"translations":{"en":{"us":{"text":"Sleeves lower-arms long","quality":0},"best":{"text":"Sleeves lower-arms long","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sleeves lower-arms long","quality":0,"languageRegion":"en-US"}}}

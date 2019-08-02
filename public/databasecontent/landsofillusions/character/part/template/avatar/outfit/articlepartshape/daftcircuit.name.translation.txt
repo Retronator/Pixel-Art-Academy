@@ -1,3 +1,0 @@
-en: Daft Circuit
-
-{"_id":"PQhmu23ZMppMbovA7","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Daft Circuit","quality":0,"best":{"text":"Daft Circuit","quality":0,"languageRegion":"en"}},"best":{"text":"Daft Circuit","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519092795}}

@@ -1,0 +1,3 @@
+en-US: Pants baggy left foot
+
+{"_id":"ygtiRRkusKgb7CtoB","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants baggy left foot","quality":0},"best":{"text":"Pants baggy left foot","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants baggy left foot","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564528780598}}

@@ -1,0 +1,3 @@
+en-US: Pants slim jeans pockets
+
+{"_id":"CdeddH8ZkwWdZNoM6","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564529976607},"translations":{"en":{"us":{"text":"Pants slim jeans pockets","quality":0},"best":{"text":"Pants slim jeans pockets","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants slim jeans pockets","quality":0,"languageRegion":"en-US"}}}

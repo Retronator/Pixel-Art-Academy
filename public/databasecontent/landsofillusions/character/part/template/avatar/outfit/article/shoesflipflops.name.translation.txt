@@ -1,0 +1,3 @@
+en: Shoes flip-flops
+
+{"_id":"aHjZCCuZ5zGrCTGD3","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Shoes flip-flops","quality":0,"best":{"text":"Shoes flip-flops","quality":0,"languageRegion":"en"}},"best":{"text":"Shoes flip-flops","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1564600649740}}

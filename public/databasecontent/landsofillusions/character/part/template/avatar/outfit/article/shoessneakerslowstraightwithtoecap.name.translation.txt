@@ -1,0 +1,3 @@
+en-US: Shoes sneakers low straight with toe cap
+
+{"_id":"jEtgL8Ejj65dh75Lb","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Shoes sneakers low straight with toe cap","quality":0},"best":{"text":"Shoes sneakers low straight with toe cap","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoes sneakers low straight with toe cap","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564600308274}}

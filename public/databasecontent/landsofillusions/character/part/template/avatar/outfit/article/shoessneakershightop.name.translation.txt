@@ -1,0 +1,3 @@
+en-US: Shoes sneakers high top
+
+{"_id":"zZny7ufnvcTQsSyaB","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564598470887},"translations":{"en":{"us":{"text":"Shoes sneakers high top","quality":0},"best":{"text":"Shoes sneakers high top","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoes sneakers high top","quality":0,"languageRegion":"en-US"}}}

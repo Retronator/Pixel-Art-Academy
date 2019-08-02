@@ -1,3 +1,0 @@
-en: Crop top triangle M
-
-{"_id":"2r5s2CnvdbeSMSydC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Crop top triangle M","quality":0,"best":{"text":"Crop top triangle M","quality":0,"languageRegion":"en"}},"best":{"text":"Crop top triangle M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802604157}}

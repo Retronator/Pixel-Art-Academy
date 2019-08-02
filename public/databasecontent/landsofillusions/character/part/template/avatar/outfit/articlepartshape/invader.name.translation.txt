@@ -1,3 +1,0 @@
-en: Invader
-
-{"_id":"9DK5GEkfLmddstzP9","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Invader","quality":0,"best":{"text":"Invader","quality":0,"languageRegion":"en"}},"best":{"text":"Invader","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519107989}}

@@ -1,3 +1,0 @@
-en: T-shirt yellow L
-
-{"_id":"chjvLcZJSuxcvZyHq","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"T-shirt yellow L","quality":0,"best":{"text":"T-shirt yellow L","quality":0,"languageRegion":"en"}},"best":{"text":"T-shirt yellow L","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802575154}}

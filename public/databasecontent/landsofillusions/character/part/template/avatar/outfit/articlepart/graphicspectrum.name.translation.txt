@@ -1,0 +1,3 @@
+en-US: Graphic Spectrum
+
+{"_id":"agtrkcLYQBEYd9rgg","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564753362787},"translations":{"en":{"us":{"text":"Graphic Spectrum","quality":0},"best":{"text":"Graphic Spectrum","quality":0,"languageRegion":"en-US"}},"best":{"text":"Graphic Spectrum","quality":0,"languageRegion":"en-US"}}}

@@ -1,3 +1,0 @@
-en: Leggings dark grey M
-
-{"_id":"3RqAhmHe6o8fRpedB","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Leggings dark grey M","quality":0,"best":{"text":"Leggings dark grey M","quality":0,"languageRegion":"en"}},"best":{"text":"Leggings dark grey M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802586417}}

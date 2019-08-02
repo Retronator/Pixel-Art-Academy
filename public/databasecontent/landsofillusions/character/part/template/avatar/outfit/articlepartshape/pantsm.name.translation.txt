@@ -1,3 +1,0 @@
-en: Pants M
-
-{"_id":"orzX65drYdkcC3Woz","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Pants M","quality":0,"best":{"text":"Pants M","quality":0,"languageRegion":"en"}},"best":{"text":"Pants M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802603888}}
