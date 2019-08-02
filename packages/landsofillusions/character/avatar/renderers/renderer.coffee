@@ -20,6 +20,9 @@ class LOI.Character.Avatar.Renderers.Renderer
     @_translation = {}
     @_depth = {}
 
+  destroy: ->
+    # Override to clean up.
+
   ready: ->
     # Override to delay rendering while not ready.
     true
