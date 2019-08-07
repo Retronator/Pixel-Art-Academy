@@ -38,6 +38,7 @@ var
 	_MASK_2 = 0x00FF00,
 	_MASK_13 = 0xFF00FF,
 
+  _Amask = 0xFF000000,
 	_Ymask = 0x00FF0000,
 	_Umask = 0x0000FF00,
 	_Vmask = 0x000000FF,
@@ -60,7 +61,9 @@ var _RGBtoYUV = function( c ) {
 };
 
 var _Diff = function( w1, w2 ) {
-	// Mask against RGB_MASK to discard the alpha channel
+  // If alpha values are different, the colors are considered different.
+  if ((w1 & _Amask) !== (w2 & _Amask)) return true;
+
 	var YUV1 = _RGBtoYUV(w1);
 	var YUV2 = _RGBtoYUV(w2);
 	return  ( (_Math.abs((YUV1 & _Ymask) - (YUV2 & _Ymask)) > _trY ) ||
@@ -381,11 +384,15 @@ var hq2x = function( width, height, trY, trU, trV ) {
 
                 if ( w[k] !== w[5] )
                 {
+                  if ((w[k] & _Amask) !== w[5] & _Amask) {
+                    pattern |= flag;
+                  } else {
                     YUV2 = RGBtoYUV(w[k]);
                     if ( ( Math.abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
-                            ( Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
-                            ( Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
-                        pattern |= flag;
+                      ( Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
+                      ( Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
+                      pattern |= flag;
+                  }
                 }
                 flag <<= 1;
             }
@@ -3152,11 +3159,15 @@ var hq3x = function( width, height, trY, trU, trV ) {
 
 				if ( w[k] !== w[5] )
 				{
-					YUV2 = RGBtoYUV(w[k]);
-					if ( ( Math.abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
-							( Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
-							( Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
-						pattern |= flag;
+          if ((w[k] & _Amask) !== w[5] & _Amask) {
+            pattern |= flag;
+          } else {
+            YUV2 = RGBtoYUV(w[k]);
+            if ( ( Math.abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
+              ( Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
+              ( Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
+              pattern |= flag;
+          }
 				}
 				flag <<= 1;
 			}
@@ -6897,11 +6908,15 @@ var hq4x = function( width, height, trY, trU, trV ) {
 
                 if ( w[k] !== w[5] )
                 {
+                  if ((w[k] & _Amask) !== w[5] & _Amask) {
+                    pattern |= flag;
+                  } else {
                     YUV2 = RGBtoYUV(w[k]);
                     if ( ( Math.abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
-                            ( Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
-                            ( Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
-                        pattern |= flag;
+                      ( Math.abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
+                      ( Math.abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) )
+                      pattern |= flag;
+                  }
                 }
                 flag <<= 1;
             }
