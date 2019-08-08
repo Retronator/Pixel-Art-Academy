@@ -52,7 +52,6 @@ class LOI.Character.Avatar.Renderers.Renderer
     renderTexture: @options.renderTexture
     regionSide: @options.regionSide
     region: @options.region
-    additionalLandmarkRegions: @options.additionalLandmarkRegions
     bodyPart: @options.bodyPart
     renderingSides: @options.renderingSides
     useDatabaseSprites: @options.useDatabaseSprites
@@ -75,14 +74,18 @@ class LOI.Character.Avatar.Renderers.Renderer
       for region in @options.additionalLandmarkRegions
         for currentRegionLandmark in currentRegionLandmarks
           # See if this landmark already exists in this region.
-          continue if _.find landmarks, (landmark) -> landmark.name is currentRegionLandmark.name and landmark.regionId is region.id
+          continue if _.find landmarks, (landmark) -> landmark.name is currentRegionLandmark.name and landmark.regionId is region.id and landmark.sourceRegionId is regionId
 
           # Clone the landmark to the new region.
           additionalLandmark = _.clone currentRegionLandmark
           additionalLandmark.regionId = region.id
+          additionalLandmark.sourceRegionId = regionId
 
           # When adding symmetric landmarks to other regions, append the suffix to their end.
           additionalLandmark.name += @options.regionSide if @options.regionSide
+
+          # Flip landmarks if needed when rendering to texture since they won't be handled anymore.
+          additionalLandmark.x *= -1 if @options.renderTexture and @options.flippedHorizontal
 
           landmarks.push additionalLandmark
 

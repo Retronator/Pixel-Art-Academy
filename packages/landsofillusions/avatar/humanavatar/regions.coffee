@@ -53,7 +53,7 @@ LOI.HumanAvatar.Regions =
 
   SexOrgan: new LOI.Engine.RenderingRegion
     id: 'SexOrgan'
-    bounds: new AE.Rectangle 0, 50, 30, 30
+    bounds: new AE.Rectangle 0, 20, 30, 30
     origin:
       landmark: 'pubicSymphysis'
       x: 15
