@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Engine.World.SceneManager
   constructor: (@world) ->
     scene = new THREE.Scene()
+    scene.manager = @
     @scene = new AE.ReactiveWrapper scene
 
     @sceneObjectsAddedDependency = new Tracker.Dependency

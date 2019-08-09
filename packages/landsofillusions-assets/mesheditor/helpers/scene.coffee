@@ -11,6 +11,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     super arguments...
 
     scene = new THREE.Scene()
+    scene.manager = @
     @scene = new AE.ReactiveWrapper scene
 
     @sceneObjectsAddedDependency = new Tracker.Dependency

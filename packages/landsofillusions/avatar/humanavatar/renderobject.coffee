@@ -38,7 +38,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       animatedMesh = new AS.AnimatedMesh
         dataUrl: "/landsofillusions/avatar/#{_.toLower sideName}.json"
         dataFPS: 60
-        playbackFPS: 8
+        playbackFPS: 20
         castShadow: true
         receiveShadow: true
         material: new LOI.Engine.Materials.SpriteMaterial
@@ -56,6 +56,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         animatedMesh._updateCreatureRendererAutorun = Tracker.autorun (computation) =>
           return unless creatureRenderer = animatedMesh.creatureRenderer()
           creatureRenderer.renderMesh.mainMaterial = animatedMesh.options.material
+          @scene().manager.addedSceneObjects()
 
     @_prepareMeshAutorun = Tracker.autorun (computation) =>
       heightValue = @humanAvatar.body.properties.height.options.dataLocation()
@@ -119,7 +120,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       textures = @humanAvatar.options.textures?()
 
       # If we have textures prepared and don't have a custom outfit, we load pre-rendered textures.
-      if textures.paletteData and textures.normals and not @humanAvatar.customOutfit()
+      if textures.paletteData and textures.normals and not @humanAvatar.customOutfit() and not @constructor.debugLandmarks and not @constructor.debugMapping
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.
@@ -167,7 +168,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
           debugContext.fillStyle = '#ccc'
           debugContext.fillRect 0, 0, debugCanvas.width, debugCanvas.height
           debugContext.imageSmoothingEnabled = false
-          debugContext.drawImage @textureRenderer.paletteDataCanvas, 0, 0, debugCanvas.width, debugCanvas.height
+          debugContext.drawImage @textureRenderer.scaledPaletteDataCanvas, 0, 0, debugCanvas.width, debugCanvas.height
           debugContext.fillStyle = 'white'
           debugContext.lineWidth = 1 / debugScale
     

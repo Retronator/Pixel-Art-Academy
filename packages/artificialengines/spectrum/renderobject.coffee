@@ -15,3 +15,14 @@ class AS.RenderObject extends THREE.Object3D
     @_autorunHandles.push handle
 
     handle
+
+  scene: ->
+    # Travel up the hierarchy until you hit an instance of a scene.
+    ancestor = @
+
+    while ancestor
+      return ancestor if ancestor instanceof THREE.Scene
+      ancestor = ancestor.parent
+
+    # The object is not nested within a scene.
+    null
