@@ -1,6 +1,13 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+# Create temporary objects and constants.
+_normal = new THREE.Vector3
+_backward = new THREE.Vector3 0, 0, 1
+_color = new THREE.Color
+_lightColor = new THREE.Color
+_averageNormal = new THREE.Vector3
+
 class LOI.Assets.Engine.Sprite
   constructor: (@options) ->
     @ready = new ComputedField =>
@@ -9,13 +16,6 @@ class LOI.Assets.Engine.Sprite
       return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id) or @options.visualizeNormals?()
 
       true
-
-    # Create temporary objects and constants.
-    @_normal = new THREE.Vector3
-    @_backward = new THREE.Vector3 0, 0, 1
-    @_color = new THREE.Color
-    @_lightColor = new THREE.Color
-    @_averageNormal = new THREE.Vector3
 
   drawToContext: (context, renderOptions = {}) ->
     # HACK: Request sprite data already at the top since otherwise ready sometimes doesn't get recomputed in time.
@@ -114,11 +114,11 @@ class LOI.Assets.Engine.Sprite
         if visualizeNormals
           # Visualized normals mode.
           if pixel.normal
-            @_normal.copy pixel.normal
-            @_normal.x *= -1 if flippedHorizontal
+            _normal.copy pixel.normal
+            _normal.x *= -1 if flippedHorizontal
 
-            horizontalAngle = Math.atan2(@_normal.y, @_normal.x) + Math.PI
-            verticalAngle = @_normal.angleTo @_backward
+            horizontalAngle = Math.atan2(_normal.y, _normal.x) + Math.PI
+            verticalAngle = _normal.angleTo _backward
 
             hue = horizontalAngle / (2 * Math.PI)
             saturation = verticalAngle / (Math.PI / 2)
@@ -129,8 +129,8 @@ class LOI.Assets.Engine.Sprite
             else
               lightness = 0.5
 
-            @_color.setHSL hue, saturation, lightness
-            destinationColor = @_color
+            _color.setHSL hue, saturation, lightness
+            destinationColor = _color
 
           else
             destinationColor = r: 0, g: 0, b: 0
@@ -219,13 +219,13 @@ class LOI.Assets.Engine.Sprite
 
             # Calculate diffuse lighting.
             if pixel.normal
-              @_normal.copy pixel.normal
-              @_normal.x *= -1 if flippedHorizontal
+              _normal.copy pixel.normal
+              _normal.x *= -1 if flippedHorizontal
 
             else
-              @_normal.set 0, 0, 1
+              _normal.set 0, 0, 1
 
-            normalLightProduct = THREE.Math.clamp @_normal.dot(inverseLightDirection), 0, 1
+            normalLightProduct = THREE.Math.clamp _normal.dot(inverseLightDirection), 0, 1
 
             lightDiffuseCoefficient = 0.6
             materialDiffuseCoefficient = 1
@@ -247,29 +247,29 @@ class LOI.Assets.Engine.Sprite
               smoothFactor = paletteColor.reflection.smoothFactor or 0
 
               # Average the normal.
-              @_averageNormal.set 0, 0, 0
+              _averageNormal.set 0, 0, 0
 
               for offsetX in [-smoothFactor..smoothFactor]
                 for offsetY in [-smoothFactor..smoothFactor]
                   if sampleNormal = layer._pixelMap[pixel.x + offsetX]?[pixel.y + offsetY]?.normal
-                    @_averageNormal.add sampleNormal
+                    _averageNormal.add sampleNormal
 
-              @_averageNormal.normalize()
-              @_averageNormal.x *= -1 if flippedHorizontal
+              _averageNormal.normalize()
+              _averageNormal.x *= -1 if flippedHorizontal
 
-              averageNormalLightProduct = THREE.Math.clamp @_averageNormal.dot(inverseLightDirection), 0, 1
+              averageNormalLightProduct = THREE.Math.clamp _averageNormal.dot(inverseLightDirection), 0, 1
 
               # Calculate the perfectly reflected ray.
-              reflection = @_averageNormal.clone().multiplyScalar(2 * averageNormalLightProduct).sub inverseLightDirection
+              reflection = _averageNormal.clone().multiplyScalar(2 * averageNormalLightProduct).sub inverseLightDirection
 
               # We assume the inverse view direction to be (0, 0, 1).
               # Dot product is then the equivalent of the z coordinate.
               reflectionViewProduct = THREE.Math.clamp reflection.z, 0, 1
 
               lightFactor = Math.pow(reflectionViewProduct, shininess) * lightSpecularCoefficient * materialSpecularCoefficient
-              @_lightColor.set(0xffffff).multiplyScalar lightFactor
+              _lightColor.set(0xffffff).multiplyScalar lightFactor
 
-              shadedColor.add @_lightColor
+              shadedColor.add _lightColor
 
             if palette
               # Find the nearest color from the palette to represent the shaded color.
