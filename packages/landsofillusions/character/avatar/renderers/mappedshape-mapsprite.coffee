@@ -183,6 +183,14 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
         newSpriteData.bounds.top = Math.min newSpriteData.bounds.top, pixel.y
         newSpriteData.bounds.bottom = Math.max newSpriteData.bounds.bottom, pixel.y
 
+    else
+      # Create dummy bounds so the sprite will be valid.
+      newSpriteData.bounds =
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+
     sprite = new LOI.Assets.Sprite newSpriteData
     sprite.rebuildPixelMaps()
     sprite
