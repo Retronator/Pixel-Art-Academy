@@ -271,49 +271,8 @@ class LOI.Assets.Engine.Sprite
 
               shadedColor.add _lightColor
 
-            if palette
-              # Find the nearest color from the palette to represent the shaded color.
-              bestColor = null
-              secondBestColor = null
-              bestColorDistance = Number.POSITIVE_INFINITY
-              secondBestColorDistance = Number.POSITIVE_INFINITY
-
-              # If we got this color from a palette ramp, we should shade only withing it.
-              # If it was done as a direct color, we'll match it to the whole palette space.
-              ramps = if paletteColor then [palette.ramps[paletteColor.ramp]] else palette.ramps
-
-              for ramp in ramps
-                for shade in ramp.shades
-                  distance = Math.pow(shade.r - shadedColor.r, 2) + Math.pow(shade.g - shadedColor.g, 2) + Math.pow(shade.b - shadedColor.b, 2)
-
-                  if distance < bestColorDistance
-                    secondBestColor = bestColor
-                    secondBestColorDistance = bestColorDistance
-                    bestColor = shade
-                    bestColorDistance = distance
-
-                  else if distance < secondBestColorDistance
-                    secondBestColor = shade
-                    secondBestColorDistance = distance
-
-              destinationColor = bestColor
-
-              # Apply dithering.
-
-              ditherPercentage = 2 * bestColorDistance / (bestColorDistance + secondBestColorDistance)
-
-              if ditherPercentage > 1 - (paletteColor?.dither or 0)
-                if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
-                  destinationColor = secondBestColor
-
-              ### Smooth shading routine
-              #closest = THREE.Color.fromObject bestColor
-              #farthest = THREE.Color.fromObject secondBestColor
-
-              #blendFactor = bestColorDistance / (bestColorDistance + secondBestColorDistance)
-
-              #destinationColor = closest.lerp(farthest, blendFactor)
-              ###
+            if palette and paletteColor
+              destinationColor = @_boundColorToPaletteRamp pixel, shadedColor, palette.ramps[paletteColor.ramp], paletteColor.dither, false
 
             else
               destinationColor = shadedColor
@@ -331,3 +290,67 @@ class LOI.Assets.Engine.Sprite
           @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
 
     @_canvas.putFullImageData @_imageData
+
+  _boundColorToPaletteRamp: (pixel, color, ramp, dither, smoothShading) ->
+    # Find the nearest color from the palette to represent the shaded color.
+    bestColor = null
+    bestColorDistance = Number.POSITIVE_INFINITY
+
+    passedZero = false
+    earlierColor = null
+    laterColor = null
+    blendFactor = 0
+
+    previousColor = null
+    previousSignedDistance = 0
+
+    for shade, shadeIndex in ramp.shades
+      # Measure distance to color.
+      difference =
+        r: shade.r - color.r
+        g: shade.g - color.g
+        b: shade.b - color.b
+
+      signedDistance = difference.r + difference.g + difference.b
+      distance = Math.abs(difference.r) + Math.abs(difference.g) + Math.abs(difference.b)
+
+      unless shadeIndex
+        # Set initial values in first loop iteration.
+        bestColor = shade
+        bestColorDistance = distance
+
+      else
+        # See if we've crossed zero distance, which means our target
+        # shaded color is between the previous and current shade.
+        if previousSignedDistance < 0 and signedDistance >= 0 or previousSignedDistance >= 0 and signedDistance < 0
+          passedZero = true
+          earlierColor = previousColor
+          laterColor = shade
+          blendFactor = Math.abs(previousSignedDistance) / Math.abs(signedDistance - previousSignedDistance)
+
+        if distance < bestColorDistance
+          bestColor = shade
+          bestColorDistance = distance
+
+        # Note: We have to make sure the distance increased since there could be two of the same colors in the palette.
+        else if distance > bestColorDistance
+          # We have increased the distance, which means we're moving away from the best color and can safely quit.
+          break
+
+      previousSignedDistance = signedDistance
+      previousColor = shade
+
+    boundColor = bestColor
+
+    # Apply dithering.
+    if Math.abs(0.5 - blendFactor) < dither / 2.0
+      if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
+        boundColor = laterColor
+
+      else
+        boundColor = earlierColor
+
+    else if smoothShading and passedZero
+      boundColor = _color.copy(earlierColor).lerp(laterColor, blendFactor)
+
+    boundColor
