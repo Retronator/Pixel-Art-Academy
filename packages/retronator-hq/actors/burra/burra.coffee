@@ -11,7 +11,8 @@ class HQ.Actors.Burra extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.green
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
-  @initialize()
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/burra/burra.json'
+  @textureUrls: -> '/retronator/hq/actors/burra'
 
   @translations: ->
     # She's the _____ at Retronator.
@@ -57,6 +58,8 @@ class HQ.Actors.Burra extends LOI.Adventure.Thing
       translations["description#{index}"] = description
 
     translations
+
+  @initialize()
 
   description: ->
     # Pick one of the descriptions on random.

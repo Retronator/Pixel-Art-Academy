@@ -10,7 +10,7 @@ class PAA.Actors.Saanvi extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.lime
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/saanvi.json'
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/saanvi/saanvi.json'
   @textureUrls: -> '/pixelartacademy/actors/saanvi'
 
   @initialize()

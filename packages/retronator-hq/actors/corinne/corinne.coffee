@@ -13,9 +13,11 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.aqua
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @initialize()
+  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/corinne/corinne.script'
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/corinne/corinne.json'
+  @textureUrls: -> '/retronator/hq/actors/corinne'
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/corinne.script'
+  @initialize()
 
   # Listener
 

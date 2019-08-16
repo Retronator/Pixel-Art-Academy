@@ -10,7 +10,7 @@ class PAA.Actors.Ace extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.yellow
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/ace.json'
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/ace/ace.json'
   @textureUrls: -> '/pixelartacademy/actors/ace'
 
   @initialize()

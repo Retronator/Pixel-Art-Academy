@@ -11,8 +11,8 @@ class HQ.Actors.Retro extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.red
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/retro.script'
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/retro.json'
+  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/retro/retro.script'
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/retro/retro.json'
   @textureUrls: -> '/retronator/hq/actors/retro'
 
   @initialize()

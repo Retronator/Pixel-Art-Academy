@@ -158,7 +158,12 @@ class LOI.Character.Avatar.Renderers.Renderer
       # For live templates, we have to manually go into the translations.
       templateName = templateName.translations.best.text if templateName?.translations
 
-      new RegExp(regex).test templateName
+      if templateName and regex
+        new RegExp(regex).test templateName
+
+      else
+        # To match an absent template the regex needs to be empty as well.
+        not (regex or templateName)
 
     return true unless conditionResults.length
 

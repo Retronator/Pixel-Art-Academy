@@ -14,8 +14,8 @@ coordinator:
 npc1:
   Hi, like _coordinator_ said, my name is _npc1_.
   I just graduated from UC Berkeley, so I'm looking for what to do next in life. Going to Retropolis seemed like a great choice since I love to do art, but I don't want to get involved with the business side of things. `_studyGroup.npc1.name is 'Ty'`
-  I come from India, but my family moved to the US when I was a teenager. At home we had a console called Samurai Electronic TV Game System, and only when I got to the states I discovered it was a clone of the NES. `_studyGroup.npc1.name is 'Saanvi'`
-  I am a graphic designer. I did pixel art back in the 90s and I want to get back into it. `_studyGroup.npc1.name is 'Mae'`
+  I come from India, but my family moved to the US when I was a teenager. At home we had a console called Samurai Electronic TV Game System, and only when I got to the States I discovered it was a clone of the NES. `_studyGroup.npc1.name is 'Saanvi'`
+  I am a graphic designer. I did pixel art back in the 90s and I want to get back to it. `_studyGroup.npc1.name is 'Mae'`
 
 <!-- Agents dynamic introductions -->
 

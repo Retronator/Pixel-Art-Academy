@@ -13,8 +13,8 @@ class HQ.Actors.Shelley extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.brown
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/shelley.script'
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/shelley.json'
+  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/shelley/shelley.script'
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/shelley/shelley.json'
   @textureUrls: -> '/retronator/hq/actors/shelley'
 
   @initialize()
