@@ -1,3 +1,0 @@
-en-US: Hoodie pullover with hood down
-
-{"_id":"dFBPkCdnC3kPsA6JW","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565293431928},"translations":{"en":{"us":{"text":"Hoodie pullover with hood down","quality":0},"best":{"text":"Hoodie pullover with hood down","quality":0,"languageRegion":"en-US"}},"best":{"text":"Hoodie pullover with hood down","quality":0,"languageRegion":"en-US"}}}

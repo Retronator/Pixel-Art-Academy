@@ -1,0 +1,3 @@
+en-US: Shoe midfoot high strap
+
+{"_id":"tw9QCPDNmSe4TRkit","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565395914038},"translations":{"en":{"us":{"text":"Shoe midfoot high strap","quality":0},"best":{"text":"Shoe midfoot high strap","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoe midfoot high strap","quality":0,"languageRegion":"en-US"}}}

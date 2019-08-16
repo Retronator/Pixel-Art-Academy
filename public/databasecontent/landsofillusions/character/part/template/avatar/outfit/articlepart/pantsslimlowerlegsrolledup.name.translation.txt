@@ -1,0 +1,3 @@
+en-US: Pants slim lower-legs rolled up
+
+{"_id":"opczbebWKJ3As3cuY","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565465936611},"translations":{"en":{"us":{"text":"Pants slim lower-legs rolled up","quality":0},"best":{"text":"Pants slim lower-legs rolled up","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants slim lower-legs rolled up","quality":0,"languageRegion":"en-US"}}}

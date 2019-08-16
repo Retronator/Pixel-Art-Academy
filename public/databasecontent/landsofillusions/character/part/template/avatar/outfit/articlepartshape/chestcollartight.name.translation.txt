@@ -1,0 +1,3 @@
+en-US: Chest collar tight
+
+{"_id":"LhhnneRaqJJzqpG3K","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565817750254},"translations":{"en":{"us":{"text":"Chest collar tight","quality":0},"best":{"text":"Chest collar tight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Chest collar tight","quality":0,"languageRegion":"en-US"}}}

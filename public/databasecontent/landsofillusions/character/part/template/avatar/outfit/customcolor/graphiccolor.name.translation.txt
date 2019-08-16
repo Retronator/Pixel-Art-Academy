@@ -1,0 +1,3 @@
+en-US: Graphic color
+
+{"_id":"p3R3PNKy2k4Bc2PG7","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565381844402},"translations":{"en":{"us":{"text":"Graphic color","quality":0},"best":{"text":"Graphic color","quality":0,"languageRegion":"en-US"}},"best":{"text":"Graphic color","quality":0,"languageRegion":"en-US"}}}

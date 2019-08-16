@@ -1,0 +1,3 @@
+en-US: Hoodie pullover
+
+{"_id":"JoCkZaezrhfHAbEDk","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565378401392},"translations":{"en":{"us":{"text":"Hoodie pullover","quality":0},"best":{"text":"Hoodie pullover","quality":0,"languageRegion":"en-US"}},"best":{"text":"Hoodie pullover","quality":0,"languageRegion":"en-US"}}}

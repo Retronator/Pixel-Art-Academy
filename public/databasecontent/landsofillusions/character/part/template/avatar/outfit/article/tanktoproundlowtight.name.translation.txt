@@ -1,0 +1,3 @@
+en-US: Tank top round low tight
+
+{"_id":"n6hJs5jYGhNsFqmQk","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565388712316},"translations":{"en":{"us":{"text":"Tank top round low tight","quality":0},"best":{"text":"Tank top round low tight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Tank top round low tight","quality":0,"languageRegion":"en-US"}}}

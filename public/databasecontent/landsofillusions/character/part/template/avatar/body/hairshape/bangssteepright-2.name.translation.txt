@@ -1,3 +1,0 @@
-en-US: Bangs steep right
-
-{"_id":"mNQi5dYYAkWpEDETj","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560719697982},"translations":{"en":{"us":{"text":"Bangs steep right","quality":0},"best":{"text":"Bangs steep right","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bangs steep right","quality":0,"languageRegion":"en-US"}}}

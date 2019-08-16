@@ -1,0 +1,3 @@
+en-US: Abdomen kangaroo pocket
+
+{"_id":"R46mRs2dRfRREd7Mv","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565378004841},"translations":{"en":{"us":{"text":"Abdomen kangaroo pocket","quality":0},"best":{"text":"Abdomen kangaroo pocket","quality":0,"languageRegion":"en-US"}},"best":{"text":"Abdomen kangaroo pocket","quality":0,"languageRegion":"en-US"}}}

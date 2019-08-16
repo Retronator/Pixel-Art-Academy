@@ -1,0 +1,3 @@
+en-US: Jacket open medium
+
+{"_id":"kDbqhoDcztMqzkK3B","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565698589812},"translations":{"en":{"us":{"text":"Jacket open medium","quality":0},"best":{"text":"Jacket open medium","quality":0,"languageRegion":"en-US"}},"best":{"text":"Jacket open medium","quality":0,"languageRegion":"en-US"}}}
