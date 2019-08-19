@@ -6,12 +6,16 @@ requestGet = Meteor.wrapAsync Request.get, Request
 class AM.DatabaseContent
   @exportGetters = []
   @importTransforms = {}
+  @documentImportPriority = {}
 
   @addToExport: (getter) ->
     @exportGetters.push getter
 
   @addImportDirective: (directive, transform) ->
     @importTransforms[directive] = transform
+
+  @setDocumentImportPriority: (documentId, priority) ->
+    @documentImportPriority[documentId] = priority
 
   @export: (archive) ->
     console.log "Starting database content export ..."
@@ -66,7 +70,11 @@ class AM.DatabaseContent
     console.log "Database content export done!"
 
   @import: (directory) ->
-    for documentClassId, documentsInformation of directory.documents
+    documentIds = _.keys directory.documents
+    prioritizedDocumentIds = _.sortBy documentIds, (documentId) => -(@documentImportPriority[documentId] or 0)
+
+    for documentClassId in prioritizedDocumentIds
+      documentsInformation = directory.documents[documentClassId]
       documentClass = AM.Document.getClassForId documentClassId
 
       for documentInformation in documentsInformation
@@ -94,6 +102,7 @@ class AM.DatabaseContent
                 return
 
               # Retrieve document from the data.
+              console.log "importing", documentInformation.path
               importedDocument = documentClass.importDatabaseContent body
 
               unless importedDocument

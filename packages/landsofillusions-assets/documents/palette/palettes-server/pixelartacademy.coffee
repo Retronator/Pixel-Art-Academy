@@ -20,6 +20,7 @@ Document.startup ->
   #     b: blue attribute (0.0-1.0)
   #
   pixelArtAcademyPalette =
+    _id: 'irb2G8JnwW6sGMfmu'
     name: LOI.Assets.Palette.SystemPaletteNames.pixelArtAcademy
     ramps: []
 
