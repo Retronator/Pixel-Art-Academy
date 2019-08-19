@@ -1,0 +1,3 @@
+en-US: Ariya's clothes
+
+{"_id":"5YqKgHdTKiaJbENuj","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1566222575296},"translations":{"en":{"us":{"text":"Ariya's clothes","quality":0},"best":{"text":"Ariya's clothes","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ariya's clothes","quality":0,"languageRegion":"en-US"}}}
