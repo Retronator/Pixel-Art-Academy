@@ -123,6 +123,12 @@ class AM.EmbeddedImageData
         dy = 0
         fillRemaining = fillWidth
 
+        # If we're down to one last column, we need to go straight down.
+        unless fillRemaining
+          dx = 0
+          dy = 1
+          fillRemaining = fillHeight
+
     # Return generated image data.
     imageData
 
@@ -177,6 +183,12 @@ class AM.EmbeddedImageData
 
         dy = 0
         retrieveRemaining = retrieveWidth
+
+        # If we're down to one last column, we need to go straight down.
+        unless retrieveRemaining
+          dx = 0
+          dy = 1
+          retrieveRemaining = retrieveHeight
 
     compressedBinaryDataLength = header[0]
     compressedBinaryData = new Uint8Array embeddedData.buffer, 4, compressedBinaryDataLength
