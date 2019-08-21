@@ -3,6 +3,10 @@ AM = Artificial.Mummification
 BSON = require 'bson'
 Pako = require 'pako'
 
+if Meteor.isServer
+  TextDecoder = require('text-encoder-lite').TextDecoderLite
+  TextEncoder = require('text-encoder-lite').TextEncoderLite
+
 compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
@@ -19,7 +23,8 @@ class AM.EmbeddedImageData
       backgroundColor: 'grey'
 
     # Compress the save data of this asset.
-    binaryData = BSON.serialize data
+    encoder = new TextEncoder
+    binaryData = encoder.encode EJSON.stringify data
     compressedBinaryData = Pako.deflateRaw binaryData, compressionOptions
 
     if @debug
@@ -194,4 +199,14 @@ class AM.EmbeddedImageData
     compressedBinaryData = new Uint8Array embeddedData.buffer, 4, compressedBinaryDataLength
 
     binaryData = Pako.inflateRaw compressedBinaryData
-    BSON.deserialize binaryData
+
+    try
+      # First try the new encoded EJSON format.
+      decoder = new TextDecoder
+      data = EJSON.parse decoder.decode binaryData
+
+    catch
+      # If parsing failed, see if we have the old BSON format.
+      data = BSON.deserialize binaryData
+
+    data

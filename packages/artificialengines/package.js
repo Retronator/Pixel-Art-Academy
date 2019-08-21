@@ -13,7 +13,8 @@ Npm.depends({
   'jaro-winkler': '0.2.8',
   'canvas': '2.3.1',
   'pako': '1.0.8',
-  'bson': '4.0.2'
+  'bson': '4.0.2',
+  'text-encoder-lite': '2.0.0'
 });
 
 Package.onUse(function(api) {
