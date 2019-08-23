@@ -47,8 +47,12 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
         partData = fields[fieldKey]
         part = @_partsByOrder[dotFieldKey]
 
+        unless partData.type
+          console.warn "Array field #{dotFieldKey} is missing type."
+          continue
+
         # If we have the part already, make sure it's of the correct type.
-        unless part?.options.type is partData.type or not partData.type
+        unless part?.options.type is partData.type
           Tracker.nonreactive =>
             partDataLocation = @options.dataLocation.child fieldKey
 
