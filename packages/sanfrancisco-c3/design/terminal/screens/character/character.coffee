@@ -48,6 +48,23 @@ class C3.Design.Terminal.Character extends AM.Component
         # Return true to prevent the default update to be executed.
         true
 
+    # Offer to automatically upgrade avatar parts.
+    @autorun (computation) =>
+      # Wait until avatar data has loaded.
+      return unless avatar = @character().avatar
+      return unless avatar.dataReady()
+      computation.stop()
+
+      if avatar.body.options.dataLocation.canUpgrade() or avatar.outfit.options.dataLocation.canUpgrade()
+        @terminal.showDialog
+          message: "Agent includes parts that can be upgraded to newer versions. Do you want to upgrade all parts now automatically?"
+          confirmButtonText: "Upgrade"
+          confirmButtonClass: 'positive-button'
+          cancelButtonText: "Later"
+          confirmAction: =>
+            for part in [avatar.body, avatar.outfit]
+              part.options.dataLocation.upgrade() if part.options.dataLocation.canUpgrade()
+
   setCharacterId: (characterId) ->
     @characterId characterId
 
@@ -79,6 +96,15 @@ class C3.Design.Terminal.Character extends AM.Component
   avatarOutfitPreviewOptions: ->
     renderer: @characterRenderer()
     drawBody: false
+
+  bodyCanUpgradeClass: ->
+    'can-upgrade' if @_canUpgradeData @character().avatar.body
+
+  outfitCanUpgradeClass: ->
+    'can-upgrade' if @_canUpgradeData @character().avatar.outfit
+
+  _canUpgradeData: (part) ->
+    part.options.dataLocation.canUpgrade()
 
   events: ->
     super(arguments...).concat

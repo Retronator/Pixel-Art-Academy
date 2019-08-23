@@ -171,6 +171,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     # The template is publishable when it has been edited.
     @isTemplateEditable() and not @fullPartTemplate().dataPublished
 
+  canUpgradeTemplate: ->
+    return unless dataLocation = @part()?.options.dataLocation
+    return unless dataLocation().template
+    dataLocation.canUpgradeTemplate()
+
   canPublishTemplate: ->
     return unless @isTemplatePublishable()
     return unless node = @part()?.options.dataLocation().data()
@@ -273,6 +278,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'click .unlink-template-button': @onClickUnlinkTemplateButton
       'click .modify-template-button': @onClickModifyTemplateButton
       'click .revert-template-button': @onClickRevertTemplateButton
+      'click .upgrade-template-button': @onClickUpgradeTemplateButton
       'click .new-part-button': @onClickNewPartButton
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
@@ -313,6 +319,9 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
   onClickRevertTemplateButton: (event) ->
     @part()?.options.dataLocation.revertTemplate()
+
+  onClickUpgradeTemplateButton: (event) ->
+    @part()?.options.dataLocation.upgradeTemplate()
 
   onClickNewPartButton: (event) ->
     # Delete current data at this node.

@@ -31,7 +31,7 @@
         </div>
         <p class="main-text avatar-item">
           <div class="name">Body</div>
-          <div class="avatar-part body-part">
+          <div class="avatar-part body-part {{bodyCanUpgradeClass}}">
             {{#with avatar}}
               {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarBodyPreviewOptions}}
             {{/with}}
@@ -39,7 +39,7 @@
         </p>
         <p class="main-text avatar-item">
           <div class="name">Outfit</div>
-          <div class="avatar-part outfit-part">
+          <div class="avatar-part outfit-part {{outfitCanUpgradeClass}}">
             {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarOutfitPreviewOptions}}
           </div>
         </p>

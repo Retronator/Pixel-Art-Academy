@@ -24,3 +24,14 @@
 
       &.draft-template
         background rgba(atariRed(1), 0.5)
+
+      &.can-upgrade
+        background rgba(atariGreen(1), 0.5)
+
+        &::before
+          content '↑'
+          display block
+          position absolute
+          top 1rem
+          right 1rem
+          color atariGreen(2)

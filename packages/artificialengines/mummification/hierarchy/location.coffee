@@ -167,5 +167,77 @@ class AM.Hierarchy.Location
 
         location.setTemplate templateId, versionIndex
 
+    location.canUpgradeTemplate = ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+
+      return unless liveTemplate = field.options.templateClass.documents.findOne node.template.id
+      node.template.version < liveTemplate.latestVersion.index
+
+    location.upgradeTemplate = ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+
+      liveTemplate = field.options.templateClass.documents.findOne node.template.id
+      throw new AE.InvalidOperationException "Template doesn't have a published version yet." unless liveTemplate?.latestVersion
+      throw new AE.InvalidOperationException "Template is already at the latest version." unless node.template.version < liveTemplate.latestVersion.index
+
+      location.setTemplate node.template.id, liveTemplate.latestVersion.index
+
+    location.usedTemplates = ->
+      field = location.field()
+      return [] unless node = field()
+
+      usedTemplates = []
+
+      collectTemplates = (data) =>
+        for key, value of data
+          if key is 'template'
+            usedTemplates.push value
+
+          else if _.isObject value
+            collectTemplates value
+
+      collectTemplates node.data()
+
+      usedTemplates
+
+    location.includesUpgradableTemplates = ->
+      for usedTemplate in location.usedTemplates()
+        continue unless liveTemplate = LOI.Character.Part.Template.documents.findOne usedTemplate.id
+        return true if usedTemplate.version < liveTemplate.latestVersion.index
+
+      false
+
+    location.upgradeTemplates = ->
+      upgradeTemplates = (location) ->
+        node = location()
+
+        # See which fields this node has.
+        for fieldName, field of node.data().fields
+          fieldLocation = location.child fieldName
+          fieldNode = fieldLocation()
+
+          if fieldNode.template
+            # See if the template's version is the latest.
+            liveTemplate = LOI.Character.Part.Template.documents.findOne fieldNode.template.id
+
+            if fieldNode.template.version < liveTemplate.latestVersion.index
+              fieldLocation.setTemplate fieldNode.template.id, liveTemplate.latestVersion.index
+
+          else if fieldNode instanceof AM.Hierarchy.Node
+            upgradeTemplates fieldLocation
+
+      # Upgrade all templates inside this template.
+      upgradeTemplates location
+
+    location.canUpgrade = ->
+      if location()?.template then location.canUpgradeTemplate() else location.includesUpgradableTemplates()
+
+    location.upgrade = ->
+      if location()?.template then location.upgradeTemplate() else location.upgradeTemplates()
+
     # Return the location getter/setter function (return must be explicit).
     return location

@@ -48,7 +48,7 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
         part = @_partsByOrder[dotFieldKey]
 
         # If we have the part already, make sure it's of the correct type.
-        unless part?.options.type is partData.type
+        unless part?.options.type is partData.type or not partData.type
           Tracker.nonreactive =>
             partDataLocation = @options.dataLocation.child fieldKey
 

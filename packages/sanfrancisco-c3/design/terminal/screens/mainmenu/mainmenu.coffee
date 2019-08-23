@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
@@ -25,6 +26,21 @@ class C3.Design.Terminal.MainMenu extends AM.Component
       for character in characters
         character.translatedName = AB.translate(character.avatar.fullName).text
 
+        # Create temporary hierarchy locations.
+        bodyLocation = new AMu.Hierarchy.Location
+          rootField: AMu.Hierarchy.create
+            type: LOI.Character.Part.Types.Avatar.Body.options.type
+            templateClass: LOI.Character.Part.Template
+            load: => character.avatar.body
+
+        outfitLocation = new AMu.Hierarchy.Location
+          rootField: AMu.Hierarchy.create
+            type: LOI.Character.Part.Types.Avatar.Outfit.options.type
+            templateClass: LOI.Character.Part.Template
+            load: => character.avatar.outfit
+
+        character.canUpgrade = bodyLocation.canUpgrade() or outfitLocation.canUpgrade()
+
       _.sortBy characters, 'translatedName'
 
     @templates = new ComputedField =>
@@ -40,11 +56,7 @@ class C3.Design.Terminal.MainMenu extends AM.Component
 
       _.sortBy templates, 'translatedName'
 
-    partTypes = _.flatten [
-      LOI.Character.Part.getPartTypeIdsUnderType 'Avatar.Body'
-      'Avatar.Outfit'
-      LOI.Character.Part.getPartTypeIdsUnderType 'Avatar.Outfit'
-    ]
+    partTypes = LOI.Character.Part.allAvatarPartTypeIds()
 
     templateCategories = for partType in partTypes
       type: partType

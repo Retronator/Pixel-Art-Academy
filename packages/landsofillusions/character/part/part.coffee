@@ -22,17 +22,17 @@ class LOI.Character.Part
     ]
 
   @allAvatarBodyPartTypeIds: ->
-    @getPartTypeIdsUnderType 'Avatar.Body'
+    @getPartTypeIdsFromType 'Avatar.Body'
 
   @allAvatarOutfitPartTypeIds: ->
-    _.flatten [
-      'Avatar.Outfit'
-      @getPartTypeIdsUnderType 'Avatar.Outfit'
-    ]
-    
+    @getPartTypeIdsFromType 'Avatar.Outfit'
+
   @allBehaviorPartTypeIds: ->
-    @getPartTypeIdsUnderType 'Behavior'
-    
+    @getPartTypeIdsFromType 'Behavior'
+
+  @getPartTypeIdsFromType: (type) =>
+    [type, @getPartTypeIdsUnderType(type)...]
+
   @getPartTypeIdsUnderType: (type) =>
     types = []
 

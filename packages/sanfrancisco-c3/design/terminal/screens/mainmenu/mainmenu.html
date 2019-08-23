@@ -16,6 +16,7 @@
             <button class="document-selection-button character-selection-button">
               {{translatedName}}
               {{#unless designApproved}} (draft){{/unless}}
+              {{#if canUpgrade}} (upgrade){{/if}}
             </button>
           </li>
         {{/each}}

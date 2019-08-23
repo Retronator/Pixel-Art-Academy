@@ -132,6 +132,9 @@
           {{else}}
             <button class="main-button action-button done-button">Done</button>
           {{/if}}
+          {{#if canUpgradeTemplate}}
+            <button class="action-button upgrade-template-button">Upgrade version</button>
+          {{/if}}
           {{#unless rootTemplate}}
             <button class="action-button replace-button">Replace</button>
           {{/unless}}

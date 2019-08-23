@@ -139,7 +139,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/part-server-databasecontent');
   api.addFile('character/part/template');
   api.addServerFile('character/part/template-server-databasecontent');
-  api.addFile('character/part/methods');
+  api.addServerFile('character/part/methods-server');
   api.addServerFile('character/part/subscriptions');
   
   api.addServerFile('character/part/migrations/0000-embeddedtranslations');
@@ -487,6 +487,8 @@ Package.onUse(function(api) {
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph2');
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph3');
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph4');
+
+  api.addComponent('pages/admin/characters/templates..');
 
   // Components
 
