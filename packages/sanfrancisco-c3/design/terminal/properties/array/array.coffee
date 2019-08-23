@@ -31,7 +31,7 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
         if template
           [prefix, ..., suffix] = template.name.translations.best.text.split ' '
 
-          if lastTemplate and suffix in ['middle', 'behind']
+          if lastTemplate and suffix in ['middle', 'behind'] and not part.options.dataLocation.canUpgradeTemplate()
             if template.name.translations.best.text is "#{lastTemplate.name.translations.best.text} #{suffix}"
               # Merge the counterpart.
               lastTemplatePart.counterpartTemplateParts ?= []
