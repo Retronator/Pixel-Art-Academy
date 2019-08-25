@@ -55,7 +55,9 @@ class C3.Design.Terminal.Character extends AM.Component
       return unless avatar.dataReady()
       computation.stop()
 
-      if avatar.body.options.dataLocation.canUpgrade() or avatar.outfit.options.dataLocation.canUpgrade()
+      comparator = LOI.Character.Part.Template.canUpgradeComparator
+
+      if avatar.body.options.dataLocation.canUpgrade(comparator) or avatar.outfit.options.dataLocation.canUpgrade(comparator)
         @terminal.showDialog
           message: "Agent includes parts that can be upgraded to newer versions. Do you want to upgrade all parts now automatically?"
           confirmButtonText: "Upgrade"
@@ -63,7 +65,7 @@ class C3.Design.Terminal.Character extends AM.Component
           cancelButtonText: "Later"
           confirmAction: =>
             for part in [avatar.body, avatar.outfit]
-              part.options.dataLocation.upgrade() if part.options.dataLocation.canUpgrade()
+              part.options.dataLocation.upgrade comparator if part.options.dataLocation.canUpgrade comparator
 
   setCharacterId: (characterId) ->
     @characterId characterId

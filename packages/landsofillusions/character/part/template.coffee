@@ -70,3 +70,6 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
     # Also denormalize the name since we need it for conditional template name checking.
     referencedTemplate = LOI.Character.Part.Template.documents.findOne templateField.id
     templateField.name = referencedTemplate.name.translations?.best?.text
+
+  @canUpgradeComparator = (embeddedTemplate, liveTemplate) ->
+    embeddedTemplate.version < liveTemplate.latestVersion.index or embeddedTemplate.name isnt liveTemplate.name.translations?.best?.text

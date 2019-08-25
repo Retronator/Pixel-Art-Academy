@@ -174,7 +174,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   canUpgradeTemplate: ->
     return unless dataLocation = @part()?.options.dataLocation
     return unless dataLocation().template
-    dataLocation.canUpgradeTemplate()
+    dataLocation.canUpgradeTemplate LOI.Character.Part.Template.canUpgradeComparator
 
   canPublishTemplate: ->
     return unless @isTemplatePublishable()
@@ -321,7 +321,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.revertTemplate()
 
   onClickUpgradeTemplateButton: (event) ->
-    @part()?.options.dataLocation.upgradeTemplate()
+    @part()?.options.dataLocation.upgradeTemplate LOI.Character.Part.Template.canUpgradeComparator
 
   onClickNewPartButton: (event) ->
     # Delete current data at this node.

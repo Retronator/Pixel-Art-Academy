@@ -39,7 +39,8 @@ class C3.Design.Terminal.MainMenu extends AM.Component
             templateClass: LOI.Character.Part.Template
             load: => character.avatar.outfit
 
-        character.canUpgrade = bodyLocation.canUpgrade() or outfitLocation.canUpgrade()
+        comparator = LOI.Character.Part.Template.canUpgradeComparator
+        character.canUpgrade = bodyLocation.canUpgrade(comparator) or outfitLocation.canUpgrade(comparator)
 
       _.sortBy characters, 'translatedName'
 

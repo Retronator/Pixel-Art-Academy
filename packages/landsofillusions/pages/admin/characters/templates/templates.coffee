@@ -82,7 +82,7 @@ class LOI.Pages.Admin.Characters.Templates extends AM.Component
   _usedTemplateStale: (usedTemplate) ->
     return unless liveTemplate = LOI.Character.Part.Template.documents.findOne usedTemplate.id
 
-    usedTemplate.version < liveTemplate.latestVersion.index
+    LOI.Character.Part.Template.canUpgradeComparator usedTemplate, liveTemplate
 
   events: ->
     super(arguments...).concat
@@ -111,7 +111,7 @@ class LOI.Pages.Admin.Characters.Templates extends AM.Component
     location = templatePart.part.options.dataLocation
 
     # Upgrade all templates inside this template.
-    location.upgradeTemplates()
+    location.upgradeTemplates LOI.Character.Part.Template.canUpgradeComparator
 
     # Publish the upgraded template.
     location.publishTemplate()

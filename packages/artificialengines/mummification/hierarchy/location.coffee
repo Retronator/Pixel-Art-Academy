@@ -104,6 +104,19 @@ class AM.Hierarchy.Location
 
       field.options.save field.options.address.string(), data
 
+    # Replaces just the template in this field, preserving all meta data.
+    location.replaceTemplate = (templateId, versionIndex) ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+
+      data = field.options.load()
+
+      data.template = id: templateId
+      data.template.version = versionIndex if versionIndex?
+
+      field.options.save field.options.address.string(), data
+
     # Converts this node into a template.
     location.createTemplate = ->
       field = location.field()
@@ -167,24 +180,28 @@ class AM.Hierarchy.Location
 
         location.setTemplate templateId, versionIndex
 
-    location.canUpgradeTemplate = ->
+    defaultCanUpgradeComparator = (embeddedTemplate, liveTemplate) ->
+      embeddedTemplate.version < liveTemplate.latestVersion.index
+
+    location.canUpgradeTemplate = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       field = location.field()
       node = field()
       throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
 
       return unless liveTemplate = field.options.templateClass.documents.findOne node.template.id
-      node.template.version < liveTemplate.latestVersion.index
 
-    location.upgradeTemplate = ->
+      canUpgradeComparator node.template, liveTemplate
+
+    location.upgradeTemplate = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       field = location.field()
       node = field()
       throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
 
       liveTemplate = field.options.templateClass.documents.findOne node.template.id
       throw new AE.InvalidOperationException "Template doesn't have a published version yet." unless liveTemplate?.latestVersion
-      throw new AE.InvalidOperationException "Template is already at the latest version." unless node.template.version < liveTemplate.latestVersion.index
+      throw new AE.InvalidOperationException "Template is already at the latest version." unless canUpgradeComparator node.template, liveTemplate
 
-      location.setTemplate node.template.id, liveTemplate.latestVersion.index
+      location.replaceTemplate node.template.id, liveTemplate.latestVersion.index
 
     location.usedTemplates = ->
       field = location.field()
@@ -204,14 +221,14 @@ class AM.Hierarchy.Location
 
       usedTemplates
 
-    location.includesUpgradableTemplates = ->
+    location.includesUpgradableTemplates = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       for usedTemplate in location.usedTemplates()
         continue unless liveTemplate = LOI.Character.Part.Template.documents.findOne usedTemplate.id
-        return true if usedTemplate.version < liveTemplate.latestVersion.index
+        return true if canUpgradeComparator usedTemplate, liveTemplate
 
       false
 
-    location.upgradeTemplates = ->
+    location.upgradeTemplates = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       upgradeTemplates = (location) ->
         node = location()
 
@@ -224,8 +241,8 @@ class AM.Hierarchy.Location
             # See if the template's version is the latest.
             liveTemplate = LOI.Character.Part.Template.documents.findOne fieldNode.template.id
 
-            if fieldNode.template.version < liveTemplate.latestVersion.index
-              fieldLocation.setTemplate fieldNode.template.id, liveTemplate.latestVersion.index
+            if canUpgradeComparator fieldNode.template, liveTemplate
+              fieldLocation.replaceTemplate fieldNode.template.id, liveTemplate.latestVersion.index
 
           else if fieldNode instanceof AM.Hierarchy.Node
             upgradeTemplates fieldLocation
@@ -233,11 +250,11 @@ class AM.Hierarchy.Location
       # Upgrade all templates inside this template.
       upgradeTemplates location
 
-    location.canUpgrade = ->
-      if location()?.template then location.canUpgradeTemplate() else location.includesUpgradableTemplates()
+    location.canUpgrade = (canUpgradeComparator = defaultCanUpgradeComparator) ->
+      if location()?.template then location.canUpgradeTemplate canUpgradeComparator else location.includesUpgradableTemplates canUpgradeComparator
 
-    location.upgrade = ->
-      if location()?.template then location.upgradeTemplate() else location.upgradeTemplates()
+    location.upgrade = (canUpgradeComparator = defaultCanUpgradeComparator) ->
+      if location()?.template then location.upgradeTemplate canUpgradeComparator else location.upgradeTemplates canUpgradeComparator
 
     # Return the location getter/setter function (return must be explicit).
     return location
