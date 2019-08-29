@@ -134,14 +134,24 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
       # Listen to location changes.
       @_locationAutorun = Tracker.autorun (computation) =>
         return unless timelineId = LOI.adventure.currentTimelineId()
-        return unless locationId = LOI.adventure.currentLocationId()
+        return unless location = LOI.adventure.currentLocation()
 
-        # See if we've already shown a flashback at this location.
-        fieldName = "#{timelineId}-#{locationId}"
-        flashbackState = @flashbacksState fieldName
+        locationId = location.id()
+        locationIsPrivate = location.isPrivate()
+
+        if locationIsPrivate
+          # Don't show flashbacks at private locations.
+          flashbackState = null
+
+        else
+          # See if we've already shown a flashback at this location.
+          fieldName = "#{timelineId}-#{locationId}"
+          flashbackState = @flashbacksState fieldName
 
         @memoryId flashbackState?.memoryId or null
         @memoryPlayed flashbackState?.playStart? or false
+
+        return if locationIsPrivate
 
         fetchNewMemory = _.some [
           # Fetch a memory if we haven't done it yet.
@@ -161,8 +171,8 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
           @memoryId memoryId
 
           # Store the flashback state.
-          @flashbacksState fieldName,
-            memoryId: memoryId
+          flashbackState = if memoryId then memoryId: memoryId else null
+          @flashbacksState fieldName, flashbackState
 
     destroy: ->
       @_memorySubscriptionAutorun.stop()
