@@ -1,0 +1,3 @@
+en: There's plenty of things going in life, but with a little organization it's all very doable.
+
+{"_id":"in6TqZwQm4Mamuwi4","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"There's plenty of things going in life, but with a little organization it's all very doable.","quality":0,"best":{"text":"There's plenty of things going in life, but with a little organization it's all very doable.","quality":0,"languageRegion":"en"}},"best":{"text":"There's plenty of things going in life, but with a little organization it's all very doable.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038920427}}

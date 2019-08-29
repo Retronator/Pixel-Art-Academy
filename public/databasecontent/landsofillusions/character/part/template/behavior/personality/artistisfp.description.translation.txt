@@ -1,0 +1,3 @@
+en: Chases after new experiences and pushes social boundaries.
+
+{"_id":"fx6k4NCKQspayPLck","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Chases after new experiences and pushes social boundaries.","quality":0,"best":{"text":"Chases after new experiences and pushes social boundaries.","quality":0,"languageRegion":"en"}},"best":{"text":"Chases after new experiences and pushes social boundaries.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038956604}}

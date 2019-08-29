@@ -1,0 +1,3 @@
+en: In her footsteps
+
+{"_id":"ukzLojaTupzdsoHFz","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"In her footsteps","quality":0,"best":{"text":"In her footsteps","quality":0,"languageRegion":"en"}},"best":{"text":"In her footsteps","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038939275}}

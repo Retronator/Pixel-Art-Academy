@@ -1,0 +1,3 @@
+en: Expressive
+
+{"_id":"ta8nEGvRcmxsnhGF9","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Expressive","quality":0,"best":{"text":"Expressive","quality":0,"languageRegion":"en"}},"best":{"text":"Expressive","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038920434}}

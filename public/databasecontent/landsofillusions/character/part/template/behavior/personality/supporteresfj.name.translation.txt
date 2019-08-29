@@ -1,0 +1,3 @@
+en: Supporter (ESFJ)
+
+{"_id":"2CjbSBK7sRoKsjLPS","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Supporter (ESFJ)","quality":0,"best":{"text":"Supporter (ESFJ)","quality":0,"languageRegion":"en"}},"best":{"text":"Supporter (ESFJ)","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038948381}}

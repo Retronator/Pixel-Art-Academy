@@ -1,0 +1,3 @@
+en: Preparing for a move into game development, you are very serious in improving your craft.
+
+{"_id":"mDS3qowoxTPSDsZYx","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Preparing for a move into game development, you are very serious in improving your craft.","quality":0,"best":{"text":"Preparing for a move into game development, you are very serious in improving your craft.","quality":0,"languageRegion":"en"}},"best":{"text":"Preparing for a move into game development, you are very serious in improving your craft.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038970286}}

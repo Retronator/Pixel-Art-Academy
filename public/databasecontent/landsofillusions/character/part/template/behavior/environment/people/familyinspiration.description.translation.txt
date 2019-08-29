@@ -1,0 +1,3 @@
+en: You always liked that one family member you'd visit at their art studio on holidays.
+
+{"_id":"8ByRRWYDpy4sfC4mN","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"You always liked that one family member you'd visit at their art studio on holidays.","quality":0,"best":{"text":"You always liked that one family member you'd visit at their art studio on holidays.","quality":0,"languageRegion":"en"}},"best":{"text":"You always liked that one family member you'd visit at their art studio on holidays.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038929431}}

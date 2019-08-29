@@ -52,16 +52,19 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
       arrayBuffer = PNG.encode imageData
       extension = 'png'
 
-    else if previewText = @getPreviewText()
-      previewText += "\n\n#{EJSON.stringify @}"
-
-      encoder = new util.TextEncoder
-      arrayBuffer = encoder.encode previewText
-      extension = 'txt'
-
     else
-      console.warn "Template did not generate a preview image or text."
-      return
+      previewText = @getPreviewText()
+
+      if previewText?
+        previewText += "\n\n#{EJSON.stringify @}"
+
+        encoder = new util.TextEncoder
+        arrayBuffer = encoder.encode previewText
+        extension = 'txt'
+
+      else
+        console.warn "Template did not generate a preview image or text."
+        return
 
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.template.#{extension}"
@@ -100,7 +103,6 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
     return unless _.startsWith @type, 'Behavior'
 
     part = @_getPreviewPart()
-    console.log "parttt", part
     previewText = part.getPreviewText()
 
     part.destroy()

@@ -1,0 +1,3 @@
+en: Your girlfriend is very into art and has inspired you to give it a go as well.
+
+{"_id":"ikSg8jjv75BcyfnmC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Your girlfriend is very into art and has inspired you to give it a go as well.","quality":0,"best":{"text":"Your girlfriend is very into art and has inspired you to give it a go as well.","quality":0,"languageRegion":"en"}},"best":{"text":"Your girlfriend is very into art and has inspired you to give it a go as well.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038939275}}

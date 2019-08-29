@@ -117,7 +117,7 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
     for factorIndex, factor of @constructor.Factors
       continue unless factorPart = @properties.factors.partsByOrder()[factor.options.type]
 
-      traitsString = factorPart.properties.traits.toString()
+      traitsString = factorPart.traitsString()
       traitsStrings = traitsStrings.concat traitsString if traitsString?.length
 
     traitsStrings.join ', '

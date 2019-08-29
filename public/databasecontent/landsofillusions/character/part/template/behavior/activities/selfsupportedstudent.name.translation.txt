@@ -1,0 +1,3 @@
+en: Self-supported student
+
+{"_id":"r5DZ5bcRZ7BL2BeRc","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Self-supported student","quality":0,"best":{"text":"Self-supported student","quality":0,"languageRegion":"en"}},"best":{"text":"Self-supported student","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038944008}}

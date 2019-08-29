@@ -1,0 +1,3 @@
+en: Artist (ISFP)
+
+{"_id":"rnob6pvxmqKKqPwQB","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Artist (ISFP)","quality":0,"best":{"text":"Artist (ISFP)","quality":0,"languageRegion":"en"}},"best":{"text":"Artist (ISFP)","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038956604}}

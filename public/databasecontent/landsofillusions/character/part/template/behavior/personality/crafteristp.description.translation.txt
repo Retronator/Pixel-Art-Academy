@@ -1,0 +1,3 @@
+en: Hands-on creator that enjoys making useful things.
+
+{"_id":"d7PBxkBrhXanWCH6Y","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Hands-on creator that enjoys making useful things.","quality":0,"best":{"text":"Hands-on creator that enjoys making useful things.","quality":0,"languageRegion":"en"}},"best":{"text":"Hands-on creator that enjoys making useful things.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038970136}}

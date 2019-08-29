@@ -1,0 +1,3 @@
+en: It's dangerous to go alone, take your family! Your loved ones will be there when you need them.
+
+{"_id":"QRNi9E6EBRB9korDT","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"It's dangerous to go alone, take your family! Your loved ones will be there when you need them.","quality":0,"best":{"text":"It's dangerous to go alone, take your family! Your loved ones will be there when you need them.","quality":0,"languageRegion":"en"}},"best":{"text":"It's dangerous to go alone, take your family! Your loved ones will be there when you need them.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038957370}}

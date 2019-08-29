@@ -1,0 +1,3 @@
+en: Things with your boyfriend are going well enough, but will the relationship survive when you're away for school?
+
+{"_id":"uwTkM5jCRhjcTP96R","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Things with your boyfriend are going well enough, but will the relationship survive when you're away for school?","quality":0,"best":{"text":"Things with your boyfriend are going well enough, but will the relationship survive when you're away for school?","quality":0,"languageRegion":"en"}},"best":{"text":"Things with your boyfriend are going well enough, but will the relationship survive when you're away for school?","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038934349}}

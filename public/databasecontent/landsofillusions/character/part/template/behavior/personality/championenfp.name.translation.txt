@@ -1,0 +1,3 @@
+en: Champion (ENFP)
+
+{"_id":"dkAjzujgu8g4szHEv","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Champion (ENFP)","quality":0,"best":{"text":"Champion (ENFP)","quality":0,"languageRegion":"en"}},"best":{"text":"Champion (ENFP)","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038950923}}
