@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Actors.Corinne extends LOI.Adventure.Thing
+class HQ.Actors.Corinne extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Corinne'
   @fullName: -> "Corinne Colgan"
   @shortName: -> "Corinne"
@@ -14,8 +14,7 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/actors/corinne/corinne.script'
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/corinne/corinne.json'
-  @textureUrls: -> '/retronator/hq/actors/corinne'
+  @assetUrls: -> '/retronator/hq/actors/corinne'
 
   @initialize()
 

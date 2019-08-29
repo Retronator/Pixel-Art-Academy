@@ -10,8 +10,7 @@ class PAA.Actors.Ty extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.orange
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/ty/ty.json'
-  @textureUrls: -> '/pixelartacademy/actors/ty'
+  @assetUrls: -> '/pixelartacademy/actors/ty'
 
   @initialize()
 

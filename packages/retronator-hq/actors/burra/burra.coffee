@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
-class HQ.Actors.Burra extends LOI.Adventure.Thing
+class HQ.Actors.Burra extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Burra'
   @fullName: -> "Sarah 'Burra' Burrough"
   @shortName: -> "Burra"
@@ -11,8 +11,7 @@ class HQ.Actors.Burra extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.green
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/burra/burra.json'
-  @textureUrls: -> '/retronator/hq/actors/burra'
+  @assetUrls: -> '/retronator/hq/actors/burra'
 
   @translations: ->
     # She's the _____ at Retronator.

@@ -122,7 +122,7 @@
                               }
                             }
                           },
-                          "name": "Eye"
+                          "name": "Eye shape"
                         }
                       },
                       "iris": {
@@ -304,23 +304,17 @@
                                           },
                                           "backRight": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "right": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "frontRight": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "region": {
@@ -422,7 +416,7 @@
                                   "8": {
                                     "template": {
                                       "id": "q6YX4XvcZdPseZQpX",
-                                      "version": 0,
+                                      "version": 1,
                                       "data": {
                                         "fields": {
                                           "region": {
@@ -442,6 +436,15 @@
                                               "fields": {
                                                 "spriteId": {
                                                   "value": "xG4btRRTtovt6g9qc"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "back": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "8aRvH2agbGimQSRaK"
                                                 }
                                               }
                                             }
@@ -825,13 +828,13 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 0,
+              "version": 5,
               "data": {
                 "fields": {
                   "upperArm": {
                     "template": {
                       "id": "ZQLLLmHMhhqHuafae",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -887,18 +890,18 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Upper arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Upper arm 1"
                     }
                   },
                   "lowerArm": {
                     "template": {
                       "id": "E9484G4dwPnDAirmf",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -954,24 +957,24 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Lower arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Lower arm 1"
                     }
                   },
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 0,
+                      "version": 3,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 0,
+                              "version": 2,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1018,38 +1021,43 @@
                                         }
                                       }
                                     }
+                                  },
+                                  "frontRight": {
+                                    "node": {
+                                      "fields": {}
+                                    }
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Hand 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Hand 1"
                     }
                   }
                 }
               },
-              "name": "1"
+              "name": "Arms 1"
             }
           },
           "legs": {
             "template": {
               "id": "bibvXTewLfLkoZHvu",
-              "version": 2,
+              "version": 4,
               "data": {
                 "fields": {
                   "thigh": {
                     "template": {
                       "id": "hyGKMPS7pfYQCLXYC",
-                      "version": 1,
+                      "version": 3,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JNduwF96AmfGA9w3i",
-                              "version": 1,
+                              "version": 3,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1108,7 +1116,7 @@
                                   }
                                 }
                               },
-                              "name": "3"
+                              "name": "Thigh 3"
                             }
                           }
                         }
@@ -1119,7 +1127,7 @@
                   "lowerLeg": {
                     "template": {
                       "id": "xz6F9XeZS8FTfckSm",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1175,7 +1183,7 @@
                                   }
                                 }
                               },
-                              "name": "3"
+                              "name": "Lower leg 3"
                             }
                           }
                         }
@@ -1186,7 +1194,7 @@
                   "foot": {
                     "template": {
                       "id": "BMrtuEhw6ayZhJbye",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1251,7 +1259,7 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Foot shape 1"
                             }
                           }
                         }
@@ -1705,7 +1713,7 @@
                                         "0": {
                                           "template": {
                                             "id": "G5hnucKza6HqGTFL9",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1819,7 +1827,7 @@
                                         "2": {
                                           "template": {
                                             "id": "zThzLNgufYxBmETf7",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1882,7 +1890,7 @@
                                         "3": {
                                           "template": {
                                             "id": "N9yJZEFwkijKuCA2g",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "condition": {
@@ -1935,6 +1943,15 @@
                                                       }
                                                     }
                                                   }
+                                                },
+                                                "back": {
+                                                  "node": {
+                                                    "fields": {
+                                                      "spriteId": {
+                                                        "value": "HrSGGFvebEGPfYxT8"
+                                                      }
+                                                    }
+                                                  }
                                                 }
                                               }
                                             },
@@ -1952,7 +1969,7 @@
                             "1": {
                               "template": {
                                 "id": "q6vtsfiNedQ8eyR9j",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -2020,7 +2037,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "T-shirt sleeves very-short"
+                                              "name": "Sleeve upper-arm very-short"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           }
@@ -2374,7 +2391,7 @@
                             "2_5": {
                               "template": {
                                 "id": "LBzTxWov6QfQXz64A",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "region": {
@@ -2386,7 +2403,7 @@
                                           "0": {
                                             "template": {
                                               "id": "xXqCTmXd9pmMab8yK",
-                                              "version": 0,
+                                              "version": 1,
                                               "data": {
                                                 "fields": {
                                                   "front": {
@@ -2427,25 +2444,17 @@
                                                   },
                                                   "back": {
                                                     "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "YZgokAEXybjxX66n8"
-                                                        }
-                                                      }
+                                                      "fields": {}
                                                     }
                                                   },
                                                   "hideRegions": {
                                                     "node": {
-                                                      "fields": {
-                                                        "SexOrgan": {
-                                                          "value": true
-                                                        }
-                                                      }
+                                                      "fields": {}
                                                     }
                                                   }
                                                 }
                                               },
-                                              "name": "Jeans torso"
+                                              "name": "Pants pockets jeans torso"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           }
@@ -2670,7 +2679,7 @@
                                     }
                                   }
                                 },
-                                "name": "Shoes low top"
+                                "name": "Shoes sneakers low top"
                               },
                               "type": "Avatar.Outfit.ArticlePart"
                             }
@@ -2897,7 +2906,7 @@
       }
     },
     "fullName": {
-      "_id": "2xEL8DuMzJRqfmXJh",
+      "_id": "ofAvFEqF4DdHAT2ec",
       "translations": {
         "en": {
           "us": {
@@ -2918,7 +2927,14 @@
       }
     },
     "textures": {
-      "needUpdate": true
+      "needUpdate": false,
+      "normals": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/EvvRDjukNyHQFTS7h-normals.png?1"
+      },
+      "paletteData": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/EvvRDjukNyHQFTS7h-palettedata.png?1"
+      },
+      "version": 1
     }
   },
   "designApproved": true,
@@ -2927,8 +2943,7 @@
     "displayName": "Administrator",
     "publicName": "Administrator"
   },
-  "thingId": "Retronator.HQ.Actors.Alexandra",
-  "_schema": "6.0.0",
+  "_schema": "7.0.0",
   "ownerName": "Administrator",
   "debugName": "Alexandra Hood"
 }

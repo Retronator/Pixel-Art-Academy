@@ -122,7 +122,7 @@
                               }
                             }
                           },
-                          "name": "Eye"
+                          "name": "Eye shape"
                         }
                       },
                       "iris": {
@@ -247,9 +247,7 @@
                                           },
                                           "frontLeft": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "left": {
@@ -740,7 +738,7 @@
                                           }
                                         }
                                       },
-                                      "name": "Left medium over-chest straight"
+                                      "name": "Left medium over-chest straight middle"
                                     },
                                     "type": "Avatar.Body.HairShape"
                                   },
@@ -964,13 +962,13 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 0,
+              "version": 5,
               "data": {
                 "fields": {
                   "upperArm": {
                     "template": {
                       "id": "ZQLLLmHMhhqHuafae",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1026,18 +1024,18 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Upper arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Upper arm 1"
                     }
                   },
                   "lowerArm": {
                     "template": {
                       "id": "E9484G4dwPnDAirmf",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1093,24 +1091,24 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Lower arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Lower arm 1"
                     }
                   },
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 0,
+                      "version": 3,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 0,
+                              "version": 2,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1157,20 +1155,25 @@
                                         }
                                       }
                                     }
+                                  },
+                                  "frontRight": {
+                                    "node": {
+                                      "fields": {}
+                                    }
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Hand 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Hand 1"
                     }
                   }
                 }
               },
-              "name": "Arm 1"
+              "name": "Arms 1"
             }
           },
           "torso": {
@@ -1727,19 +1730,19 @@
           "legs": {
             "template": {
               "id": "bibvXTewLfLkoZHvu",
-              "version": 2,
+              "version": 4,
               "data": {
                 "fields": {
                   "thigh": {
                     "template": {
                       "id": "hyGKMPS7pfYQCLXYC",
-                      "version": 1,
+                      "version": 3,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JNduwF96AmfGA9w3i",
-                              "version": 1,
+                              "version": 3,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1798,7 +1801,7 @@
                                   }
                                 }
                               },
-                              "name": "3"
+                              "name": "Thigh 3"
                             }
                           }
                         }
@@ -1809,7 +1812,7 @@
                   "lowerLeg": {
                     "template": {
                       "id": "xz6F9XeZS8FTfckSm",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1865,7 +1868,7 @@
                                   }
                                 }
                               },
-                              "name": "3"
+                              "name": "Lower leg 3"
                             }
                           }
                         }
@@ -1876,7 +1879,7 @@
                   "foot": {
                     "template": {
                       "id": "BMrtuEhw6ayZhJbye",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1941,7 +1944,7 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Foot shape 1"
                             }
                           }
                         }
@@ -1970,7 +1973,7 @@
       }
     },
     "fullName": {
-      "_id": "vGC2txLteuwv3ZKZL",
+      "_id": "PFYxaFbSjiS2GWAYq",
       "translations": {
         "en": {
           "us": {
@@ -1991,7 +1994,14 @@
       }
     },
     "textures": {
-      "needUpdate": true
+      "needUpdate": false,
+      "normals": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/SsDrxKT8qx9oCFNsi-normals.png?1"
+      },
+      "paletteData": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/SsDrxKT8qx9oCFNsi-palettedata.png?1"
+      },
+      "version": 1
     },
     "outfit": {
       "node": {
@@ -2856,7 +2866,7 @@
                             "2_5": {
                               "template": {
                                 "id": "LBzTxWov6QfQXz64A",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "region": {
@@ -2868,7 +2878,7 @@
                                           "0": {
                                             "template": {
                                               "id": "xXqCTmXd9pmMab8yK",
-                                              "version": 0,
+                                              "version": 1,
                                               "data": {
                                                 "fields": {
                                                   "front": {
@@ -2909,25 +2919,17 @@
                                                   },
                                                   "back": {
                                                     "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "YZgokAEXybjxX66n8"
-                                                        }
-                                                      }
+                                                      "fields": {}
                                                     }
                                                   },
                                                   "hideRegions": {
                                                     "node": {
-                                                      "fields": {
-                                                        "SexOrgan": {
-                                                          "value": true
-                                                        }
-                                                      }
+                                                      "fields": {}
                                                     }
                                                   }
                                                 }
                                               },
-                                              "name": "Jeans torso"
+                                              "name": "Pants pockets jeans torso"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           }
@@ -2965,7 +2967,7 @@
                                           "node": {
                                             "fields": {
                                               "intensity": {
-                                                "value": 0.10000000000000000555
+                                                "value": 0.1
                                               },
                                               "smoothFactor": {
                                                 "value": 1
@@ -3277,7 +3279,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt bottom loose 2"
+                                            "name": "Abdomen loose low 2"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -3349,7 +3351,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt belly 1"
+                                            "name": "Abdomen belly 1"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -3421,7 +3423,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt belly 2"
+                                            "name": "Abdomen belly 2"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         }
@@ -3470,388 +3472,6 @@
                   },
                   "type": "Avatar.Outfit.Article"
                 },
-                "6_5": {
-                  "node": {
-                    "fields": {
-                      "parts": {
-                        "node": {
-                          "fields": {
-                            "0": {
-                              "template": {
-                                "id": "vwq9Tbd8ed7ceZsZG",
-                                "version": 0,
-                                "data": {
-                                  "fields": {
-                                    "region": {
-                                      "value": "Feet"
-                                    },
-                                    "shapes": {
-                                      "node": {
-                                        "fields": {
-                                          "-1": {
-                                            "template": {
-                                              "id": "33i9fonRGcY5uBA7p",
-                                              "version": 0,
-                                              "data": {
-                                                "fields": {
-                                                  "front": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "45ijkyQJADTf2hTtR"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "s9WkdaQikwsNk9z6J"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontRight": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "FhFoECWNBQLxy6RTF"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "left": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "jucERkfrSEfo34gyM"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "backLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "BGisxvGXZHZM9FrXK"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "back": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "Yyqpi4CgGpXoNesBX"
-                                                        }
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                              "name": "Shoe sole"
-                                            },
-                                            "type": "Avatar.Outfit.ArticlePartShape"
-                                          },
-                                          "-0_5": {
-                                            "template": {
-                                              "id": "fYhpAmQc92hokzDRX",
-                                              "version": 0,
-                                              "data": {
-                                                "fields": {
-                                                  "front": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "wiiXLZX9bbYA4QWsL"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "PGX6ftYM5K8nxisJa"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "left": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "zSNbD9k3FMSwfcq9o"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontRight": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "SG2SGoqBrFeGqJ6aj"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "backLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "ucNusNAawqndtCitK"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "back": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "QTxrLGpTuWois2feF"
-                                                        }
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                              "name": "Shoe low straight"
-                                            },
-                                            "type": "Avatar.Outfit.ArticlePartShape"
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "condition": {
-                                      "node": {
-                                        "fields": {
-                                          "parts": {
-                                            "node": {
-                                              "fields": {
-
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                },
-                                "name": "Shoes sneakers low straight"
-                              },
-                              "type": "Avatar.Outfit.ArticlePart"
-                            },
-                            "1": {
-                              "template": {
-                                "id": "SY8DeFvA64PoYHbnb",
-                                "version": 0,
-                                "data": {
-                                  "fields": {
-                                    "region": {
-                                      "value": "LowerLegs"
-                                    },
-                                    "shapes": {
-                                      "node": {
-                                        "fields": {
-                                          "0": {
-                                            "template": {
-                                              "id": "FNGyPsktS3wGRsvhL",
-                                              "version": 0,
-                                              "data": {
-                                                "fields": {
-                                                  "front": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "ZLzz2i6xRFfjCzGCf"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "MdhFACujZYDsFvngL"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "left": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "hxoNhyAqREXJZLwaM"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontRight": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "nPKfLhN3u45Ww283h"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "backLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "ngsbRGkuKGuM52LpC"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "back": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "mEfWPfMGGne6n3uQ6"
-                                                        }
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                              "name": "Shoes boots low"
-                                            },
-                                            "type": "Avatar.Outfit.ArticlePartShape"
-                                          },
-                                          "1": {
-                                            "template": {
-                                              "id": "YH94CkknFqSsgyn5a",
-                                              "version": 1,
-                                              "data": {
-                                                "fields": {
-                                                  "front": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "wiiXLZX9bbYA4QWsL"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "PGX6ftYM5K8nxisJa"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "left": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "zSNbD9k3FMSwfcq9o"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "frontRight": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "SG2SGoqBrFeGqJ6aj"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "backLeft": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "ucNusNAawqndtCitK"
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                  "back": {
-                                                    "node": {
-                                                      "fields": {
-                                                        "spriteId": {
-                                                          "value": "QTxrLGpTuWois2feF"
-                                                        }
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                              "name": "Shoe low top"
-                                            },
-                                            "type": "Avatar.Outfit.ArticlePartShape"
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                },
-                                "name": "Shoes boots low"
-                              },
-                              "type": "Avatar.Outfit.ArticlePart"
-                            }
-                          }
-                        }
-                      },
-                      "customColors": {
-                        "node": {
-                          "fields": {
-                            "0": {
-                              "node": {
-                                "fields": {
-                                  "name": {
-                                    "value": "main"
-                                  },
-                                  "color": {
-                                    "node": {
-                                      "fields": {
-                                        "hue": {
-                                          "value": 2
-                                        },
-                                        "shade": {
-                                          "value": 3
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              },
-                              "type": "Avatar.Outfit.CustomColor"
-                            },
-                            "1": {
-                              "node": {
-                                "fields": {
-                                  "name": {
-                                    "value": "secondary"
-                                  },
-                                  "color": {
-                                    "node": {
-                                      "fields": {
-                                        "hue": {
-                                          "value": 2
-                                        },
-                                        "shade": {
-                                          "value": 3
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              },
-                              "type": "Avatar.Outfit.CustomColor"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "type": "Avatar.Outfit.Article"
-                },
                 "9": {
                   "node": {
                     "fields": {
@@ -3877,7 +3497,7 @@
                                           "node": {
                                             "fields": {
                                               "intensity": {
-                                                "value": 0.2000000000000000111
+                                                "value": 0.2
                                               },
                                               "shininess": {
                                                 "value": 2
@@ -3901,7 +3521,7 @@
                             "3": {
                               "template": {
                                 "id": "bKEZAPCvzs5Due8ot",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -3960,7 +3580,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "Chest jacket open"
+                                              "name": "Chest open"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           },
@@ -4017,7 +3637,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "Abdomen jacket leather open long"
+                                              "name": "Abdomen open leather long"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           }
@@ -4205,6 +3825,320 @@
                   },
                   "type": "Avatar.Outfit.Article"
                 },
+                "6_5": {
+                  "node": {
+                    "fields": {
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "template": {
+                                "id": "vwq9Tbd8ed7ceZsZG",
+                                "version": 1,
+                                "data": {
+                                  "fields": {
+                                    "region": {
+                                      "value": "Feet"
+                                    },
+                                    "shapes": {
+                                      "node": {
+                                        "fields": {
+                                          "-1": {
+                                            "template": {
+                                              "id": "33i9fonRGcY5uBA7p",
+                                              "version": 0,
+                                              "data": {
+                                                "fields": {
+                                                  "front": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "45ijkyQJADTf2hTtR"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "frontLeft": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "s9WkdaQikwsNk9z6J"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "frontRight": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "FhFoECWNBQLxy6RTF"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "left": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "jucERkfrSEfo34gyM"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "backLeft": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "BGisxvGXZHZM9FrXK"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "back": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "Yyqpi4CgGpXoNesBX"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "name": "Shoe sole"
+                                            },
+                                            "type": "Avatar.Outfit.ArticlePartShape"
+                                          },
+                                          "-0_5": {
+                                            "template": {
+                                              "id": "fYhpAmQc92hokzDRX",
+                                              "version": 0,
+                                              "data": {
+                                                "fields": {
+                                                  "front": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "wiiXLZX9bbYA4QWsL"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "frontLeft": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "PGX6ftYM5K8nxisJa"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "left": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "zSNbD9k3FMSwfcq9o"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "frontRight": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "SG2SGoqBrFeGqJ6aj"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "backLeft": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "ucNusNAawqndtCitK"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "back": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "QTxrLGpTuWois2feF"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "name": "Shoe sneakers low straight"
+                                            },
+                                            "type": "Avatar.Outfit.ArticlePartShape"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "condition": {
+                                      "node": {
+                                        "fields": {
+                                          "parts": {
+                                            "node": {
+                                              "fields": {}
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "name": "Shoes sneakers low straight"
+                              },
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "1": {
+                              "template": {
+                                "id": "SY8DeFvA64PoYHbnb",
+                                "version": 2,
+                                "data": {
+                                  "fields": {
+                                    "region": {
+                                      "value": "LowerLegs"
+                                    },
+                                    "shapes": {
+                                      "node": {
+                                        "fields": {
+                                          "0": {
+                                            "template": {
+                                              "id": "FNGyPsktS3wGRsvhL",
+                                              "version": 0,
+                                              "data": {
+                                                "fields": {
+                                                  "front": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "ZLzz2i6xRFfjCzGCf"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "frontLeft": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "MdhFACujZYDsFvngL"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "left": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "hxoNhyAqREXJZLwaM"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "frontRight": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "nPKfLhN3u45Ww283h"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "backLeft": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "ngsbRGkuKGuM52LpC"
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "back": {
+                                                    "node": {
+                                                      "fields": {
+                                                        "spriteId": {
+                                                          "value": "mEfWPfMGGne6n3uQ6"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "name": "Shoe boot low"
+                                            },
+                                            "type": "Avatar.Outfit.ArticlePartShape"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "name": "Shoes boots low"
+                              },
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      },
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 2
+                                        },
+                                        "shade": {
+                                          "value": 3
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            },
+                            "1": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "secondary"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 2
+                                        },
+                                        "shade": {
+                                          "value": 3
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                },
                 "8_5": {
                   "node": {
                     "fields": {
@@ -4230,7 +4164,7 @@
                                           "node": {
                                             "fields": {
                                               "intensity": {
-                                                "value": 0.2000000000000000111
+                                                "value": 0.2
                                               },
                                               "shininess": {
                                                 "value": 3
@@ -4264,7 +4198,7 @@
                                           "node": {
                                             "fields": {
                                               "intensity": {
-                                                "value": 0.2999999999999999889
+                                                "value": 0.3
                                               },
                                               "shininess": {
                                                 "value": 3
@@ -4572,14 +4506,25 @@
       }
     }
   },
+  "profile": {
+    "age": 36,
+    "country": "in",
+    "aspiration": "Draw animated scenes.",
+    "favorites": {
+      "computer": "NES",
+      "gameGenre": "Platformer",
+      "artMedium": "Pixel art",
+      "superhero": "Mulan",
+      "quote": "Every child is an artist. The problem is how to remain an artist once you grow up."
+    }
+  },
   "designApproved": true,
   "user": {
     "_id": "9udfGdvJX7TyFMiE2",
     "displayName": "Administrator",
     "publicName": "Administrator"
   },
-  "thingId": "PixelArtAcademy.Actors.Saanvi",
-  "_schema": "6.0.0",
+  "_schema": "7.0.0",
   "debugName": "Saanvi",
   "ownerName": "Administrator"
 }

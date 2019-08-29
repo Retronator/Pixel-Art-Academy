@@ -70,10 +70,12 @@ class LOI.Character.Actor extends LOI.Character.Person
       @constructor.instances[id] = @instance
 
       # Load the NPC document.
-      if documentUrl = @constructor.nonPlayerCharacterDocumentUrl?()
-        url = @versionedUrl "/packages/#{documentUrl}"
+      if assetUrls = @constructor.assetUrls?()
+        version = @constructor.version()
 
-        HTTP.call 'GET', url, (error, result) =>
+        documentUrl = @versionedUrl "#{assetUrls}.json?#{version}"
+
+        HTTP.call 'GET', documentUrl, (error, result) =>
           if error
             console.error error
             return
@@ -89,15 +91,14 @@ class LOI.Character.Actor extends LOI.Character.Person
             pronouns: @thingAvatar.pronouns()
             color: @thingAvatar.color()
 
-          if textureUrls = @constructor.textureUrls?()
             version = @constructor.version()
 
             _.extend document.avatar,
               textures:
                 paletteData:
-                  url: "#{textureUrls}-palettedata.png?#{version}"
+                  url: "#{assetUrls}-palettedata.png?#{version}"
                 normals:
-                  url: "#{textureUrls}-normals.png?#{version}"
+                  url: "#{assetUrls}-normals.png?#{version}"
 
           nonPlayerCharacterDocument document
 

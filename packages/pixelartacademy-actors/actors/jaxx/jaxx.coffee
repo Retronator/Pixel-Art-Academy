@@ -10,8 +10,7 @@ class PAA.Actors.Jaxx extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.red
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/jaxx/jaxx.json'
-  @textureUrls: -> '/pixelartacademy/actors/jaxx'
+  @assetUrls: -> '/pixelartacademy/actors/jaxx'
 
   @initialize()
 

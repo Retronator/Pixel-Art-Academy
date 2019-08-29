@@ -10,8 +10,7 @@ class PAA.Actors.Lisa extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.magenta
     shade: LOI.Assets.Palette.Atari2600.characterShades.lighter
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/lisa/lisa.json'
-  @textureUrls: -> '/pixelartacademy/actors/lisa'
+  @assetUrls: -> '/pixelartacademy/actors/lisa'
 
   @initialize()
 

@@ -10,8 +10,7 @@ class PAA.Actors.Mae extends LOI.Character.Actor
     hue: LOI.Assets.Palette.Atari2600.hues.purple
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
-  @nonPlayerCharacterDocumentUrl: -> 'retronator_pixelartacademy-actors/actors/mae/mae.json'
-  @textureUrls: -> '/pixelartacademy/actors/mae'
+  @assetUrls: -> '/pixelartacademy/actors/mae'
 
   @initialize()
 

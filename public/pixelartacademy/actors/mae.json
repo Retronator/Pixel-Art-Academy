@@ -122,7 +122,7 @@
                               }
                             }
                           },
-                          "name": "Eye"
+                          "name": "Eye shape"
                         }
                       },
                       "iris": {
@@ -277,7 +277,7 @@
                                           }
                                         }
                                       },
-                                      "name": "Bun top"
+                                      "name": "Bun high"
                                     },
                                     "type": "Avatar.Body.HairShape"
                                   }
@@ -309,13 +309,13 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 0,
+              "version": 5,
               "data": {
                 "fields": {
                   "upperArm": {
                     "template": {
                       "id": "ZQLLLmHMhhqHuafae",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -371,18 +371,18 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Upper arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Upper arm 1"
                     }
                   },
                   "lowerArm": {
                     "template": {
                       "id": "E9484G4dwPnDAirmf",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -438,24 +438,24 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Lower arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Lower arm 1"
                     }
                   },
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 0,
+                      "version": 3,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 0,
+                              "version": 2,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -502,20 +502,25 @@
                                         }
                                       }
                                     }
+                                  },
+                                  "frontRight": {
+                                    "node": {
+                                      "fields": {}
+                                    }
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Hand 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Hand 1"
                     }
                   }
                 }
               },
-              "name": "Arm 1"
+              "name": "Arms 1"
             }
           },
           "torso": {
@@ -1127,7 +1132,7 @@
           "legs": {
             "template": {
               "id": "WfHGdhdPCbCtemYRT",
-              "version": 0,
+              "version": 1,
               "data": {
                 "fields": {
                   "thigh": {
@@ -1267,7 +1272,7 @@
                   "foot": {
                     "template": {
                       "id": "BMrtuEhw6ayZhJbye",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1332,7 +1337,7 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Foot shape 1"
                             }
                           }
                         }
@@ -1349,7 +1354,7 @@
       }
     },
     "fullName": {
-      "_id": "AsnxgAxqhM66DwfW6",
+      "_id": "WukYpozWn5eGNM4ws",
       "translations": {
         "en": {
           "us": {
@@ -1393,7 +1398,7 @@
                                         "0": {
                                           "template": {
                                             "id": "yL3FhD6PXRTcyohwa",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1442,7 +1447,8 @@
                                                   }
                                                 }
                                               }
-                                            }
+                                            },
+                                            "name": "Abdomen tight low"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -1506,7 +1512,7 @@
                                         "2": {
                                           "template": {
                                             "id": "zThzLNgufYxBmETf7",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1561,14 +1567,15 @@
                                                   }
                                                 }
                                               }
-                                            }
+                                            },
+                                            "name": "Breasts 1-2"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
                                         "3": {
                                           "template": {
                                             "id": "N9yJZEFwkijKuCA2g",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "condition": {
@@ -1621,10 +1628,19 @@
                                                       }
                                                     }
                                                   }
+                                                },
+                                                "back": {
+                                                  "node": {
+                                                    "fields": {
+                                                      "spriteId": {
+                                                        "value": "HrSGGFvebEGPfYxT8"
+                                                      }
+                                                    }
+                                                  }
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt tight breasts C-D"
+                                            "name": "Breasts 3-4"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -1696,7 +1712,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt belly 1"
+                                            "name": "Abdomen belly 1"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -1768,7 +1784,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt belly 2"
+                                            "name": "Abdomen belly 2"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -1851,7 +1867,7 @@
                             "2": {
                               "template": {
                                 "id": "q6vtsfiNedQ8eyR9j",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -1919,7 +1935,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "T-shirt sleeves very-short"
+                                              "name": "Sleeve upper-arm very-short"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           }
@@ -1958,9 +1974,7 @@
                                         },
                                         "reflection": {
                                           "node": {
-                                            "fields": {
-
-                                            }
+                                            "fields": {}
                                           }
                                         }
                                       }
@@ -1986,7 +2000,7 @@
                             "0": {
                               "template": {
                                 "id": "G9NFt5jjgYyRXvnxb",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -2054,7 +2068,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "Shoe balerina"
+                                              "name": "Shoe ballet"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           },
@@ -2161,7 +2175,7 @@
                                           "node": {
                                             "fields": {
                                               "intensity": {
-                                                "value": 0.2999999999999999889
+                                                "value": 0.3
                                               },
                                               "shininess": {
                                                 "value": 2
@@ -2385,7 +2399,7 @@
                             "0": {
                               "template": {
                                 "id": "Bm92zw7YLNJTvQRTN",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "region": {
@@ -2447,7 +2461,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "Underwear top high 1"
+                                              "name": "Underwear top high"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           },
@@ -2513,14 +2527,14 @@
                                     }
                                   }
                                 },
-                                "name": "Underwear torso high 1 cheekies"
+                                "name": "Underwear groin high cheekies"
                               },
                               "type": "Avatar.Outfit.ArticlePart"
                             },
                             "1": {
                               "template": {
                                 "id": "DqBMSA3G7s5Fqd7ck",
-                                "version": 1,
+                                "version": 3,
                                 "data": {
                                   "fields": {
                                     "region": {
@@ -2606,7 +2620,7 @@
                                     }
                                   }
                                 },
-                                "name": "Underwear bottom male"
+                                "name": "Underwear groin male"
                               },
                               "type": "Avatar.Outfit.ArticlePart"
                             },
@@ -2657,7 +2671,7 @@
                                     }
                                   }
                                 },
-                                "name": "Underwear leg cheekies"
+                                "name": "Underwear legs cheekies"
                               },
                               "type": "Avatar.Outfit.ArticlePart"
                             }
@@ -2703,14 +2717,25 @@
       }
     }
   },
+  "profile": {
+    "age": 45,
+    "country": "us",
+    "aspiration": "Sell my own illustrations.",
+    "favorites": {
+      "computer": "Macintosh",
+      "gameGenre": "Strategy",
+      "artMedium": "Pixel art",
+      "superhero": "Batman",
+      "quote": "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
+    }
+  },
   "designApproved": true,
   "user": {
     "_id": "9udfGdvJX7TyFMiE2",
     "displayName": "Administrator",
     "publicName": "Administrator"
   },
-  "thingId": "PixelArtAcademy.Actors.Mae",
   "ownerName": "Administrator",
   "debugName": "Mae",
-  "_schema": "6.0.0"
+  "_schema": "7.0.0"
 }
