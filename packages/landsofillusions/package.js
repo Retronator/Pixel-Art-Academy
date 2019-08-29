@@ -126,9 +126,10 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0003-migrateavatarfields');
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
-  api.addServerFile('character/migrations/0006-moveneckfield');
-  api.addServerFile('character/migrations/0007-mergehairfields');
-  api.addServerFile('character/migrations/0008-linkshapetemplates');
+  api.addServerFile('character/migrations/0006-linkpremadecharacters');
+  api.addServerFile('character/migrations/0007-moveneckfield');
+  api.addServerFile('character/migrations/0008-mergehairfields');
+  api.addServerFile('character/migrations/0009-linkshapetemplates');
   api.addClientFile('character/spacebars');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');
@@ -148,6 +149,8 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/migrations/0003-articlewitharticlepartshapes');
 
   api.addFile('character/part/property');
+  api.addServerFile('character/part/property-server-databasecontent');
+
   api.addFile('character/part/properties/oneof');
   api.addFile('character/part/properties/array');
   api.addFile('character/part/properties/integer');
@@ -462,6 +465,8 @@ Package.onUse(function(api) {
   api.addServerFile('pages/admin/characters/avatartexture');
 
   api.addComponent('pages/admin/characters/avatareditor..');
+  api.addComponent('pages/admin/characters/characters..');
+  api.addComponent('pages/admin/characters/templates..');
 
   api.addUnstyledComponent('pages/admin/characters/premadecharacters/premadecharacters');
   api.addServerFile('pages/admin/characters/premadecharacters/methods-server');
@@ -487,8 +492,6 @@ Package.onUse(function(api) {
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph2');
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph3');
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph4');
-
-  api.addComponent('pages/admin/characters/templates..');
 
   // Components
 

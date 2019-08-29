@@ -106,7 +106,7 @@ class C3.Design.Terminal.Character extends AM.Component
     'can-upgrade' if @_canUpgradeData @character().avatar.outfit
 
   _canUpgradeData: (part) ->
-    part.options.dataLocation.canUpgrade()
+    part.options.dataLocation.canUpgrade LOI.Character.Part.Template.canUpgradeComparator
 
   events: ->
     super(arguments...).concat

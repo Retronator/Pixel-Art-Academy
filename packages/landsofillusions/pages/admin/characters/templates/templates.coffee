@@ -12,7 +12,7 @@ class LOI.Pages.Admin.Characters.Templates extends AM.Component
     types = LOI.Character.Part.allPartTypeIds()
     LOI.Character.Part.Template.forTypes.subscribe @, types
 
-    @showOnlyStale = new ReactiveField true
+    @showOnlyStale = new ReactiveField false
     @showOnlyNotPublished = new ReactiveField false
 
   showOnlyStaleCheckedAttribute: ->

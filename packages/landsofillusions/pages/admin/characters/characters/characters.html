@@ -1,0 +1,54 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters.Characters">
+  <div class="landsofillusions-pages-admin-characters-characters admin-page">
+    <h1>Characters</h1>
+    <div>
+      Loaded {{charactersCount}} characters and {{templatesCount}} templates.
+    </div>
+    <label><input class="show-only-stale-checkbox" type="checkbox" {{showOnlyStaleCheckedAttribute}}>Show only stale</label>
+    <button class="embade-all-button">Embed all</button>
+    <button class="upgrade-all-button">Upgrade all</button>
+    <table class="characters {{showOnlyStaleClass}}">
+      <tr>
+        <th>Owner</th>
+        <th>Name</th>
+        <th>Design approved</th>
+        <th>Behavior approved</th>
+        <th>Activated</th>
+        <th>Used templates</th>
+        <th>Actions</th>
+      </tr>
+      {{#each characters}}
+        <tr class="character {{staleCharacterClass}}">
+          <td>{{user.displayName}}</td>
+          <td>{{debugName}}</td>
+          <td>{{designApproved}}</td>
+          <td>{{behaviorApproved}}</td>
+          <td>{{activated}}</td>
+          <td class="used-templates">
+            <table>
+              {{#each usedTemplates}}
+                <tr class="used-template {{canEmbedUsedTemplateClass}} {{canUpgradeUsedTemplateClass}}">
+                  <td>{{usedTemplate.type}}</td>
+                  <td>{{usedTemplateName}}</td>
+                  <td>{{this.version}}</td>
+                  <td>{{usedTemplate.latestVersion.index}}</td>
+                </tr>
+              {{/each}}
+            </table>
+          </td>
+          <td>
+            {{#if characterCanEmbed}}
+              <button class="embed-button">Embed</button>
+            {{/if}}
+            {{#if characterCanUpgrade}}
+              <button class="upgrade-button">Upgrade</button>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+    <div>
+      <button class="display-more-button">Display more</button>
+    </div>
+  </div>
+</template>

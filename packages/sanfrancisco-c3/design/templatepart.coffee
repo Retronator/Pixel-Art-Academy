@@ -22,8 +22,8 @@ class C3.Design.TemplatePart
       save: (address, value) =>
         # Since this is just a dummy wrapper, there's nothing to do when template tries to be replaced here.
 
-    partClass = LOI.Character.Part.getClassForType document.type
-    
+    partClass = LOI.Character.Part.getClassForTemplateType document.type
+
     @part = partClass.create
       dataLocation: new AM.Hierarchy.Location
         rootField: templateDataField

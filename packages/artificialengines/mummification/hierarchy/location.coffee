@@ -115,7 +115,30 @@ class AM.Hierarchy.Location
       data.template = id: templateId
       data.template.version = versionIndex if versionIndex?
 
+      # Clean old template format.
+      delete data.templateId
+
       field.options.save field.options.address.string(), data
+
+    # Embeds the template if it's missing denormalized data.
+    location.embedTemplate = (defaultToLatestVersion) ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+
+      # Make sure we have a published template.
+      liveTemplate = LOI.Character.Part.Template.documents.findOne node.template._id
+      return unless liveTemplate?.latestVersion
+
+      # See if we have a version specified.
+      targetVersion = node.template.version
+
+      # Default to latest version if requested.
+      targetVersion ?= liveTemplate.latestVersion.index if defaultToLatestVersion
+
+      return unless targetVersion
+
+      location.replaceTemplate node.template._id, targetVersion
 
     # Converts this node into a template.
     location.createTemplate = ->
@@ -181,7 +204,7 @@ class AM.Hierarchy.Location
         location.setTemplate templateId, versionIndex
 
     defaultCanUpgradeComparator = (embeddedTemplate, liveTemplate) ->
-      embeddedTemplate.version < liveTemplate.latestVersion.index
+      embeddedTemplate?.version < liveTemplate?.latestVersion?.index
 
     location.canUpgradeTemplate = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       field = location.field()
@@ -240,6 +263,7 @@ class AM.Hierarchy.Location
           if fieldNode.template
             # See if the template's version is the latest.
             liveTemplate = LOI.Character.Part.Template.documents.findOne fieldNode.template.id
+            continue unless liveTemplate?.latestVersion
 
             if canUpgradeComparator fieldNode.template, liveTemplate
               fieldLocation.replaceTemplate fieldNode.template.id, liveTemplate.latestVersion.index
@@ -250,11 +274,46 @@ class AM.Hierarchy.Location
       # Upgrade all templates inside this template.
       upgradeTemplates location
 
+    location.embedTemplates = (defaultToLatestVersion) ->
+      embedTemplates = (location) ->
+        return unless node = location()
+
+        # See which fields this node has.
+        for fieldName, field of node.data().fields
+          fieldLocation = location.child fieldName
+          continue unless fieldNode = fieldLocation()
+
+          if fieldNode.template
+            # Nothing to do if the data is already there.
+            continue if field.template?.data
+
+            # Make sure we have a published template.
+            liveTemplate = LOI.Character.Part.Template.documents.findOne fieldNode.template._id
+            continue unless liveTemplate?.latestVersion
+
+            # See if we have a version specified.
+            targetVersion = fieldNode.template.version
+
+            # Default to latest version if requested.
+            targetVersion ?= liveTemplate.latestVersion.index if defaultToLatestVersion
+
+            if targetVersion?
+              fieldLocation.replaceTemplate fieldNode.template._id, targetVersion
+
+          else if fieldNode instanceof AM.Hierarchy.Node
+            embedTemplates fieldLocation
+
+      # Upgrade all templates inside this template.
+      embedTemplates location
+
     location.canUpgrade = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       if location()?.template then location.canUpgradeTemplate canUpgradeComparator else location.includesUpgradableTemplates canUpgradeComparator
 
     location.upgrade = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       if location()?.template then location.upgradeTemplate canUpgradeComparator else location.upgradeTemplates canUpgradeComparator
+
+    location.embed = (defaultToLatestVersion) ->
+      if location()?.template then location.embedTemplate defaultToLatestVersion else location.embedTemplates defaultToLatestVersion
 
     # Return the location getter/setter function (return must be explicit).
     return location

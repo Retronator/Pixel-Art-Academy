@@ -4,15 +4,29 @@ LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
 PNG = require 'fast-png'
+util = require 'util'
 
 class LOI.Character.Part.Template extends LOI.Character.Part.Template
   @Meta
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer) ->
-    imageData = PNG.decode arrayBuffer
-    AM.EmbeddedImageData.extract imageData
+  @importDatabaseContent: (arrayBuffer, documentInformation) ->
+    if _.endsWith documentInformation.path, 'png'
+      imageData = PNG.decode arrayBuffer
+      AM.EmbeddedImageData.extract imageData
+
+    else if _.endsWith documentInformation.path, 'txt'
+      decoder = new util.TextDecoder
+      content = decoder.decode arrayBuffer
+
+      # The last line will have JSON content.
+      lines = content.split '\n'
+      EJSON.parse _.last lines
+
+    else
+      console.warn "Template to be imported isn't in a supported format.", documentInformation
+      null
 
   databaseContentPath: ->
     return unless @type and @name.translations
@@ -28,20 +42,43 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
     "landsofillusions/character/part/template/#{path}/#{name}"
 
   exportDatabaseContent: ->
-    previewImage = @getPreviewImage()
-    imageData = AM.EmbeddedImageData.embed previewImage, @
-
-    # Encode the PNG.
-    arrayBuffer = PNG.encode imageData
-
     # Add last edit time if needed so that documents don't need unnecessary imports.
     @lastEditTime ?= new Date()
 
+    if previewImage = @getPreviewImage()
+      imageData = AM.EmbeddedImageData.embed previewImage, @
+
+      # Encode the PNG.
+      arrayBuffer = PNG.encode imageData
+      extension = 'png'
+
+    else if previewText = @getPreviewText()
+      previewText += "\n\n#{EJSON.stringify @}"
+
+      encoder = new util.TextEncoder
+      arrayBuffer = encoder.encode previewText
+      extension = 'txt'
+
+    else
+      console.warn "Template did not generate a preview image or text."
+      return
+
     arrayBuffer: arrayBuffer
-    path: "#{@databaseContentPath()}.template.png"
+    path: "#{@databaseContentPath()}.template.#{extension}"
     lastEditTime: @lastEditTime
 
   getPreviewImage: ->
+    return unless _.startsWith @type, 'Avatar'
+
+    part = @_getPreviewPart()
+    previewImage = part.getPreviewImage()
+
+    part.destroy()
+    part.options.dataLocation.options.rootField.destroy()
+
+    previewImage
+
+  _getPreviewPart: ->
     # Create the template hierarchy.
     templateDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
@@ -53,18 +90,23 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
         EJSON.equals
 
     # Create the part that uses this template.
-    partClass = LOI.Character.Part.getClassForType @type
+    partClass = LOI.Character.Part.getClassForTemplateType @type
 
-    part = partClass.create
+    partClass.create
       dataLocation: new AM.Hierarchy.Location
         rootField: templateDataField
 
-    previewImage = part.getPreviewImage()
+  getPreviewText: ->
+    return unless _.startsWith @type, 'Behavior'
+
+    part = @_getPreviewPart()
+    console.log "parttt", part
+    previewText = part.getPreviewText()
 
     part.destroy()
-    templateDataField.destroy()
+    part.options.dataLocation.options.rootField.destroy()
 
-    previewImage
+    previewText
 
 databaseContentImportDirective = 'LandsOfIllusions.Character.Part.Template.adminTemplates'
 
@@ -72,7 +114,8 @@ AM.DatabaseContent.addToExport ->
   documents = []
 
   # TODO: Fetch only admin templates.
-  templates = LOI.Character.Part.Template.documents.fetch type: /^Avatar/
+  templates = LOI.Character.Part.Template.documents.fetch
+    latestVersion: $exists: true
 
   # Strip authors from templates.
   for template in templates

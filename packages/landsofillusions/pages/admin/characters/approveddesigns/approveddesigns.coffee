@@ -18,10 +18,6 @@ class LOI.Pages.Admin.Characters.ApprovedDesigns extends AM.Component
     @autorun (computation) =>
       @constructor.characters.subscribe @limit(), @skip()
 
-    # Subscribe to templates.
-    types = LOI.Character.Part.allPartTypeIds()
-    LOI.Character.Part.Template.forTypes.subscribe @, types
-
     # Create pixel scaling display.
     @display = new AM.Display
       safeAreaWidth: 500

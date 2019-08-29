@@ -55,6 +55,29 @@ class LOI.Character.Part
 
     console.error "Can't find part of type", type
 
+  # Access part classes by type, but also considers template type properties.
+  @getClassForTemplateType: (templateType) ->
+    # First see if template type can be accessed directly.
+    partClass = _.nestedProperty @Types, templateType
+    return partClass if partClass
+
+    # Search through all types for templateType option.
+    findTemplateType = (part) ->
+      for propertyName, property of part.options?.properties
+        if property.options.templateType is templateType
+          return property
+
+      for subPartName, subPart of part when subPartName isnt 'options'
+        result = findTemplateType subPart
+        return result if result
+
+      null
+
+    partClass = findTemplateType @Types
+    return partClass if partClass
+
+    console.error "Can't find part of type", type
+
   constructor: (@options) ->
     return unless @options.dataLocation
 

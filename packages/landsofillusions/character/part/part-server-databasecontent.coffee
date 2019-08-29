@@ -34,3 +34,6 @@ class LOI.Character.Part extends LOI.Character.Part
     renderer.destroy()
 
     previewImage
+
+  getPreviewText: ->
+    @toString()

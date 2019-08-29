@@ -1,0 +1,25 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-pages-admin-characters-characters
+  .characters
+    border-collapse collapse
+
+    &.show-only-stale
+      .character:not(.stale)
+        display none
+
+    .character
+      border-bottom 1px solid #333
+
+      &.stale
+        background #300
+
+      .used-templates
+        font-size 80%
+
+        .used-template
+          &.can-upgrade
+            background #600
+
+          &.can-embed
+            background #006

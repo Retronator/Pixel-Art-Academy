@@ -7,6 +7,7 @@ class AM.DatabaseContent
   @exportGetters = []
   @importTransforms = {}
   @documentImportPriority = {}
+  @startupHandlers = []
 
   @addToExport: (getter) ->
     @exportGetters.push getter
@@ -16,6 +17,9 @@ class AM.DatabaseContent
 
   @setDocumentImportPriority: (documentId, priority) ->
     @documentImportPriority[documentId] = priority
+
+  @startup: (handler) ->
+    @startupHandlers.push handler
 
   @export: (archive) ->
     console.log "Starting database content export ..."
@@ -64,7 +68,7 @@ class AM.DatabaseContent
     # Place directory in the archive.
     archive.append EJSON.stringify(directory), name: 'directory.json'
 
-    # Comlete exporting.
+    # Complete exporting.
     archive.finalize()
 
     console.log "Database content export done!"
@@ -72,6 +76,9 @@ class AM.DatabaseContent
   @import: (directory) ->
     documentIds = _.keys directory.documents
     prioritizedDocumentIds = _.sortBy documentIds, (documentId) => -(@documentImportPriority[documentId] or 0)
+
+    # Create a promise for each updating document so that we can react when all documents have been updated.
+    updatePromises = []
 
     for documentClassId in prioritizedDocumentIds
       documentsInformation = directory.documents[documentClassId]
@@ -94,39 +101,50 @@ class AM.DatabaseContent
         if currentLastEditTime < exportedLastEditTime
           # The database document is older so we need to update it.
           do (documentInformation, exportedLastEditTime, documentClass) =>
-            url = Meteor.absoluteUrl "databasecontent/#{documentInformation.path}"
+            updatePromises.push new Promise (resolve, reject) =>
+              url = Meteor.absoluteUrl "databasecontent/#{documentInformation.path}"
 
-            requestGet url, encoding: null, (error, response, body) =>
-              if error
-                console.error "Error retrieving database content file at url", url
-                return
+              requestGet url, encoding: null, (error, response, body) =>
+                if error
+                  console.error "Error retrieving database content file at url", url
+                  resolve()
+                  return
 
-              # Retrieve document from the data.
-              console.log "importing", documentInformation.path
-              importedDocument = documentClass.importDatabaseContent body
+                # Retrieve document from the data.
+                console.log "importing", documentInformation.path
+                importedDocument = documentClass.importDatabaseContent body, documentInformation
 
-              unless importedDocument
-                console.error "Couldn't extract document from file at url", url
-                return
+                unless importedDocument
+                  console.error "Couldn't extract document from file at url", url
+                  resolve()
+                  return
 
-              if importedDocument._databaseContentImportDirective
-                transform = @importTransforms[importedDocument._databaseContentImportDirective]
-                delete importedDocument._databaseContentImportDirective
-                transform importedDocument
+                if importedDocument._databaseContentImportDirective
+                  transform = @importTransforms[importedDocument._databaseContentImportDirective]
+                  delete importedDocument._databaseContentImportDirective
+                  transform importedDocument
 
-              # Transform can skip importing a document by deleting the _id field.
-              unless importedDocument._id
-                console.log "Skipping import of document with path", documentInformation.path
-                return
+                # Transform can skip importing a document by deleting the _id field.
+                unless importedDocument._id
+                  console.log "Skipping import of document with path", documentInformation.path
+                  resolve()
+                  return
 
-              # Add last edit time if needed so that documents don't need unnecessary imports.
-              unless importedDocument.lastEditTime and importedDocument.lastEditTime >= exportedLastEditTime
-                importedDocument.lastEditTime = exportedLastEditTime
+                # Add last edit time if needed so that documents don't need unnecessary imports.
+                unless importedDocument.lastEditTime and importedDocument.lastEditTime >= exportedLastEditTime
+                  importedDocument.lastEditTime = exportedLastEditTime
 
-              documentClass.documents.upsert importedDocument._id, importedDocument
+                documentClass.documents.upsert importedDocument._id, importedDocument
 
-              console.log "Updated database content with path", documentInformation.path
+                console.log "Updated database content with path", documentInformation.path
+                resolve()
 
         else
           # The database document is newer so we should avoid overwriting new content.
           console.warn "Document #{documentClassId}:#{documentInformation._id} at #{documentInformation.path} has been updated since the export."
+
+    Promise.all(updatePromises).then =>
+      console.log "Database content initialized."
+
+      # All documents have been updated, notify the database content has started.
+      handler() for handler in @startupHandlers

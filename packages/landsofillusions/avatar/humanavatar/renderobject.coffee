@@ -120,7 +120,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       textures = @humanAvatar.options.textures?()
 
       # If we have textures prepared and don't have a custom outfit, we load pre-rendered textures.
-      if textures.paletteData and textures.normals and not @humanAvatar.customOutfit() and not @constructor.debugLandmarks and not @constructor.debugMapping
+      if textures?.paletteData and textures?.normals and not @humanAvatar.customOutfit() and not @constructor.debugLandmarks and not @constructor.debugMapping
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.

@@ -13,6 +13,7 @@ class AM.Hierarchy
 
     if value instanceof AM.Hierarchy.Template
       # We're converting a template and just store its ID.
+      # TODO: Convert to new template embedding format.
       templateId: storedProperty._id
 
     else if value instanceof AM.Hierarchy.Node

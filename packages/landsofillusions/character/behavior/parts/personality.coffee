@@ -121,3 +121,6 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
       traitsStrings = traitsStrings.concat traitsString if traitsString?.length
 
     traitsStrings.join ', '
+
+  toString: ->
+    @traitsString()

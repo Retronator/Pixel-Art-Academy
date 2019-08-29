@@ -78,5 +78,7 @@ class LOI.Character extends AM.Document
 
   # Subscriptions
 
+  @all: @subscription 'all'
+  @allLive: @subscription 'allLive'
   @forId: @subscription 'forId'
   @forCurrentUser: @subscription 'forCurrentUser'
