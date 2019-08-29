@@ -16,7 +16,8 @@ Npm.depends({
   'canvas': '2.3.1',
   'pngjs': '2.3.0',
   's3-streaming-upload': '0.2.3',
-  'fast-png': '4.0.1'
+  'fast-png': '4.0.1',
+  'archiver': '3.0.0'
 });
 
 Package.onUse(function(api) {
@@ -462,7 +463,6 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('pages/admin..');
 
   api.addUnstyledComponent('pages/admin/characters..');
-  api.addServerFile('pages/admin/characters/avatartexture');
 
   api.addComponent('pages/admin/characters/avatareditor..');
   api.addComponent('pages/admin/characters/characters..');
@@ -473,6 +473,10 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/admin/characters/approveddesigns..');
   api.addServerFile('pages/admin/characters/approveddesigns/subscriptions');
+
+  api.addUnstyledComponent('pages/admin/characters/assets..');
+  api.addServerFile('pages/admin/characters/assets/server/actorassets');
+  api.addServerFile('pages/admin/characters/assets/server/avatartexture');
 
   api.addComponent('pages/admin/characters/outfitstest..');
   api.addData('pages/admin/characters/outfitstest/bodies/ectomorph');

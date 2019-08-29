@@ -111,7 +111,7 @@ class AM.DatabaseContent
                   return
 
                 # Retrieve document from the data.
-                console.log "importing", documentInformation.path
+                console.log "Importing", documentInformation.path
                 importedDocument = documentClass.importDatabaseContent body, documentInformation
 
                 unless importedDocument

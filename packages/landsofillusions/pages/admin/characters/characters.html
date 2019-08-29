@@ -15,17 +15,8 @@
         Characters info and upgrading.</li>
       <li><strong><a href="{{routerPath 'LandsOfIllusions.Pages.Admin.Characters.Templates'}}">Templates</a></strong>:
         Character part templates info and upgrading.</li>
+      <li><strong><a href="{{routerPath 'LandsOfIllusions.Pages.Admin.Characters.Assets'}}">Assets</a></strong>:
+        Character assets exporting.</li>
     </ul>
-    <h2>Avatar renderer</h2>
-    <p>
-      <input class="character-id" placeholder="Character ID"/>
-      <input class="character-url" placeholder="Character Url"/>
-      <input class="password" placeholder="Password"/>
-      <button class="render-avatar-button">Render</button>
-      {{#with avatarUrls}}
-        <img src="{{paletteData}}"/>
-        <img src="{{normal}}"/>
-      {{/with}}
-    </p>
   </div>
 </template>

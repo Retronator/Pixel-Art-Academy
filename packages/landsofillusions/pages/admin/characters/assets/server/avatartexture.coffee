@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 RA = Retronator.Accounts
 Request = request
 
-WebApp.connectHandlers.use '/admin/landsofillusions/characters/avatartexture.png', (request, response, next) ->
+WebApp.connectHandlers.use '/admin/landsofillusions/characters/assets/avatartexture.png', (request, response, next) ->
   query = request.query
   adminPassword = Meteor.settings.admin?.password or ''
 
@@ -46,7 +46,8 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/avatartexture.png
 
     # Render the textures.
     textureRenderer = new LOI.HumanAvatar.TextureRenderer {humanAvatar, humanAvatarRenderer}
-    textureRenderer.render()
+    result = textureRenderer.render()
+    throw new AE.ArgumentException "Texture renderer could not render the provided avatar." unless result
 
     canvas = textureRenderer[canvasField]
     buffer = canvas.toBuffer 'image/png',
