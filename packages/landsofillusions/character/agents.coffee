@@ -38,13 +38,13 @@ class LOI.Character.Agents extends LOI.Adventure.Global
       super arguments...
 
       # Show characters that have been at the location in the last 15 minutes.
-      durationInMilliseconds = 15 * 60 * 1000
+      presenceDurationInMilliseconds = 15 * 60 * 1000
 
       @recentActionsSubscription = new ComputedField =>
         return unless timelineId = LOI.adventure.currentTimelineId()
         return unless locationId = LOI.adventure.currentLocationId()
 
-        earliestTime = new Date Date.now() - durationInMilliseconds
+        earliestTime = new Date Date.now() - presenceDurationInMilliseconds
 
         LOI.Memory.Action.recentForTimelineLocation.subscribe timelineId, locationId, earliestTime
 
@@ -69,12 +69,15 @@ class LOI.Character.Agents extends LOI.Adventure.Global
   
         # Filter all actions to unique characters. We don't care about reactivity
         # of time since we'll only get too many actions and not miss any.
-        earliestTime = new Date Date.now() - durationInMilliseconds
+        now = Date.now()
+        earliestTime = new Date now - presenceDurationInMilliseconds
   
         actions = LOI.Memory.Action.documents.fetch
           timelineId: currentTimelineId
           locationId: currentLocationId
           time: $gt: earliestTime
+
+        actions = (action.cast() for action in actions)
 
         # When in a memory context, only set actions, don't transition them.
         inMemoryContext = LOI.adventure.currentContext() instanceof LOI.Memory.Context
@@ -85,7 +88,15 @@ class LOI.Character.Agents extends LOI.Adventure.Global
           actions = _.sortBy actions, (action) => action.time.getTime()
   
           oldAgents = _.values @_agentsById
-  
+
+          # Filter non-memorable actions that are past their retain time.
+          _.remove actions, (action) =>
+            return if action.constructor.isMemorable()
+            return unless retainDurationInMilliseconds = action.constructor.retainDuration() * 1000
+
+            earliestRetainTime = new Date now - retainDurationInMilliseconds
+            action.time < earliestRetainTime
+
           characterIds = _.uniq (action.character._id for action in actions)
 
           # Don't include other characters on private locations.
