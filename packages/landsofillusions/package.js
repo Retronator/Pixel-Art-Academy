@@ -131,6 +131,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0007-moveneckfield');
   api.addServerFile('character/migrations/0008-mergehairfields');
   api.addServerFile('character/migrations/0009-linkshapetemplates');
+  api.addServerFile('character/migrations/0010-designapprovedrevoked');
   api.addClientFile('character/spacebars');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');

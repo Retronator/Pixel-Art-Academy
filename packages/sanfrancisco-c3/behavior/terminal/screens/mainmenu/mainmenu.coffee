@@ -18,7 +18,11 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
       characters = for character in characters
         LOI.Character.documents.findOne
           _id: character._id
-          designApproved: true
+          $or: [
+            designApproved: true
+          ,
+            activated: true
+          ]
 
       _.pull characters, undefined
 

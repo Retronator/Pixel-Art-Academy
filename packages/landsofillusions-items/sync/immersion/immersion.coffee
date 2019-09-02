@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AC = Artificial.Control
 LOI = LandsOfIllusions
 
@@ -50,8 +51,20 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
     'active' if LOI.characterId() is characterInstance._id
 
   avatarPreviewOptions: ->
-    rendererOptions:
-      renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
+    characterInstance = Template.parentData()
+    character = characterInstance.document()
+
+    previewOptions =
+      rendererOptions:
+        renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
+
+    # Draw characters with revoked design in silhouette.
+    unless character?.designApproved
+      previewOptions.silhouette =
+        ramp: LOI.Assets.Palette.Atari2600.hues.cyan
+        shade: 2
+
+    previewOptions
 
   landsOfIllusionsActiveClass: ->
     'active' if LOI.adventure.currentTimelineId() is LOI.TimelineIds.Construct
@@ -77,6 +90,18 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
 
   onClickCharacter: (event) ->
     characterInstance = @currentData()
+    character = characterInstance.document()
+
+    unless character.designApproved
+      LOI.adventure.showActivatableModalDialog
+        dialog: new LOI.Components.Dialog
+          message: "Character unavailable"
+          moreInfo: "#{AB.Rules.English.createPossessive characterInstance.name()} design has been revoked. Please visit Cyborg Construction Center to redesign the character."
+          buttons: [
+            text: "OK"
+          ]
+
+      return
 
     @sync.fadeToWhite()
 

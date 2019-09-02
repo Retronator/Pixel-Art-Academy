@@ -117,11 +117,26 @@ class C3.Design.Terminal.Character extends AM.Component
       'click .outfit-part': @onClickOutfitPart
 
   onClickDoneButton: (event) ->
-    character = @currentData()
+    characterInstance = @currentData()
+    character = characterInstance.document()
 
     # If the design is already approved, simply return to main menu, which will update the design if needed.
-    if character.document().designApproved
+    if character.designApproved
       @_updateAndReturnToMenu()
+      return
+
+    else if character.activated
+      # Design has been revoked, so re-approve it.
+      LOI.Character.approveDesign characterInstance._id, (error) =>
+        if error
+          console.error error
+          # TODO: Show an error dialog to the user.
+          return
+
+        # Return to main menu (no need to render textures since that
+        # will be done automatically from the approve design method).
+        @terminal.switchToScreen @terminal.screens.mainMenu
+
       return
 
     @terminal.showDialog
@@ -131,7 +146,7 @@ class C3.Design.Terminal.Character extends AM.Component
       cancelButtonText: "Cancel"
       confirmAction: =>
         # TODO: Show a loading screen since texture rendering takes a while.
-        LOI.Character.approveDesign character._id, (error) =>
+        LOI.Character.approveDesign characterInstance._id, (error) =>
           if error
             console.error error
             # TODO: Show an error dialog to the user.

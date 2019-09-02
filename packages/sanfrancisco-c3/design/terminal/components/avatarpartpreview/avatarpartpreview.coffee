@@ -50,7 +50,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
           renderingSide
 
         @viewingAngle = new ComputedField => LOI.Engine.RenderingSides.angles[@renderingSide()]
-        @rendererOptions = new ComputedField => renderingSides: [@renderingSide()]
+        @rendererOptions = new ComputedField => _.defaults renderingSides: [@renderingSide()], @options.rendererOptions
 
       else
         @viewingAngle = @options.viewingAngle or new ReactiveField @options.initialViewingAngle or 0
@@ -162,6 +162,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
           side: LOI.Engine.RenderingSides.getSideForAngle @viewingAngle()
           drawBody: @options.drawBody
           drawOutfit: @options.drawOutfit
+          silhouette: @options.silhouette
 
         @context.restore()
 

@@ -28,7 +28,7 @@ Meteor.startup ->
         # We don't have a character any more.
         LOI.character null
 
-  # Automatically unload character if it doesn't belong to the current user.
+  # Automatically unload character if it doesn't belong to the current user or its design is revoked.
   Tracker.autorun (computation) ->
     characterId = LOI.characterId()
 
@@ -37,7 +37,10 @@ Meteor.startup ->
 
     characters = Retronator.user()?.characters
 
-    unless _.find characters, ((character) -> character._id is characterId)
+    characterBelongsToUser = _.find characters, ((character) -> character._id is characterId)
+    characterHasApprovedDesign = LOI.Character.documents.findOne(characterId)?.designApproved
+
+    unless characterBelongsToUser and characterHasApprovedDesign
       LOI.switchCharacter null
 
   # Persist character choice if we allow storing game state.

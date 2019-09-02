@@ -13,7 +13,9 @@
                   {{#if confirmButtonText}}
                     <button class="action-button confirm-button {{confirmButtonClass}}">{{confirmButtonText}}</button>
                   {{/if}}
-                  <button class="action-button cancel-button {{cancelButtonClass}}">{{cancelButtonText}}</button>
+                  {{#if cancelButtonText}}
+                    <button class="action-button cancel-button {{cancelButtonClass}}">{{cancelButtonText}}</button>
+                  {{/if}}
                 </div>
               </div>
             </div>

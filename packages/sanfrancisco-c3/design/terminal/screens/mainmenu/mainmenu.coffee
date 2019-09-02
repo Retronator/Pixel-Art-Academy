@@ -93,8 +93,21 @@ class C3.Design.Terminal.MainMenu extends AM.Component
   onClickCharacterSelectionButton: (event) ->
     character = @currentData()
 
-    @terminal.screens.character.setCharacterId character._id
-    @terminal.switchToScreen @terminal.screens.character
+    selectCharacter = =>
+      @terminal.screens.character.setCharacterId character._id
+      @terminal.switchToScreen @terminal.screens.character
+
+    # Inform the user if design has been revoked.
+    if character.activated and not character.designApproved
+      @terminal.showDialog
+        message: "Agent's design has been revoked. Please redesign the body and outfit with currently available parts."
+        confirmButtonText: "OK"
+        confirmButtonClass: 'positive-button'
+        confirmAction: =>
+          selectCharacter()
+
+    else
+      selectCharacter()
 
   onClickNewCharacterButton: (event) ->
     LOI.Character.insert (error, characterId) =>

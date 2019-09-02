@@ -15,8 +15,14 @@
           <li class="document">
             <button class="document-selection-button character-selection-button">
               {{translatedName}}
-              {{#unless designApproved}} (draft){{/unless}}
-              {{#if canUpgrade}} (upgrade){{/if}}
+              {{#unless designApproved}}
+                {{#if activated}}
+                  (redesign)
+                {{else}}
+                  (draft)
+                {{/if}}
+              {{/unless}}
+              {{#if canUpgrade}}(upgrade){{/if}}
             </button>
           </li>
         {{/each}}

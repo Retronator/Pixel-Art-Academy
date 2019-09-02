@@ -175,6 +175,13 @@ class LOI.Assets.Engine.Sprite
           else
             destinationColor = r: 1, g: 1, b: 1, a: 0
 
+        else if renderOptions.silhouette
+          paletteColor = renderOptions.silhouette
+
+          continue unless shades = palette.ramps[paletteColor.ramp]?.shades
+          shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
+          destinationColor = shades[shadeIndex]
+
         else
           paletteColor = null
 
