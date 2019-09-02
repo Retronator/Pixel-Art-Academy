@@ -10,8 +10,8 @@ LOI.Authorize.characterAction = (characterId) ->
   throw new AE.ArgumentException "Character not found." unless character
 
   # The character must belong to the logged-in user, or it is an admin performing the action.
-  return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
-  throw new AE.UnauthorizedException "The character must belong to you." unless character.user._id is user._id
+  unless character.user._id is user._id or user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
+    throw new AE.UnauthorizedException "The character must belong to you."
   
   character
 

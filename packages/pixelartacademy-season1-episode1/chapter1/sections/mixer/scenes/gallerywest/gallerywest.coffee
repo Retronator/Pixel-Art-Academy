@@ -112,7 +112,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     script = @listeners[0].script
 
     return C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro if script.state 'CoordinatorIntro'
-    return C1.Mixer.GalleryWest.EventPhases.JoinGroup if script.state 'JoinStudyGroupIntro'
+    return C1.Mixer.GalleryWest.EventPhases.JoinGroup if script.state 'JoinStudyGroupStart'
     return C1.Mixer.GalleryWest.EventPhases.TalkToClassmates if script.state 'IceBreakersDone'
     return C1.Mixer.GalleryWest.EventPhases.Answering if script.state 'HobbyProfessionContinue'
     return C1.Mixer.GalleryWest.EventPhases.Intro if script.state 'MixerStart'

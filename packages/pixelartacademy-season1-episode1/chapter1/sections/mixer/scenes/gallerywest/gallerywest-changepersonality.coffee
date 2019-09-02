@@ -21,7 +21,12 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
     personalityChanged = false
 
-    # We need to change the character's personality. We go over factor traits.
+    # We need to change the character's personality. Unlink the personality if it's using a template.
+    # TODO: Use the overriding system for applying changes on top of templates when it's implemented.
+    if personality.options.dataLocation().template
+      personality.options.dataLocation.unlinkTemplate()
+
+    # We go over factor traits.
     factorTraits = LOI.Character.Behavior.Personality.Trait.documents.find(
       'primaryFactor.type': factorType
     ).fetch()
@@ -33,6 +38,12 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
     factorTraits = [representativeTrait, _.shuffle(factorTraits)...]
 
     factorPart = personality.properties.factors.getFactorPart factorType
+
+    # Unlink the factor if it's using a template.
+    # TODO: Use the overriding system for applying changes on top of templates when it's implemented.
+    if factorPart.options.dataLocation().template
+      factorPart.options.dataLocation.unlinkTemplate()
+
     ownedTraitParts = factorPart.properties.traits.parts()
 
     if answerPosition > factorPosition
@@ -44,6 +55,11 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       desiredFactorDifference = if answerPosition then -3 else 2
 
     changeNeeded = Math.abs(desiredFactorDifference - factorDifference)
+
+    changeTrait = (trait, weight) =>
+      # Apply the change after flush to wait for potential unlinking of templates to take place.
+      Tracker.afterFlush =>
+        factorPart.properties.traits.setTrait trait.key, weight
 
     for trait in factorTraits
       # Find the current weight of this trait (default is 0 if not present).
@@ -68,17 +84,17 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       # Test the middle position first since that will always make the smallest impact.
       if Math.sign(changeDelta[1]) is changeDirection and changeDelta[1] * changeDirection >= changeNeeded
         # Using the middle position will change things enough already.
-        factorPart.properties.traits.setTrait trait.key, 0
+        changeTrait trait, 0
         changeNeeded -= changeDelta[1] * changeDirection
 
       else if Math.sign(changeDelta[0]) is changeDirection
         # Using the left position will bring us closer.
-        factorPart.properties.traits.setTrait trait.key, -1
+        changeTrait trait, -1
         changeNeeded -= changeDelta[0] * changeDirection
 
       else if Math.sign(changeDelta[2]) is changeDirection
         # Using the right position will bring us closer.
-        factorPart.properties.traits.setTrait trait.key, 1
+        changeTrait trait, 1
         changeNeeded -= changeDelta[2] * changeDirection
 
       else

@@ -74,6 +74,9 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
     [@otherAgents()..., @actors()...]
 
   things: ->
+    # Study group isn't active until the mixer is over.
+    return [] unless C1.Mixer.finished()
+
     [
       @presentMembers()...
       @constructor.coordinator()

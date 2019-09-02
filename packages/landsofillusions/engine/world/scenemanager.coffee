@@ -89,8 +89,13 @@ class LOI.Engine.World.SceneManager
     
     @currentLocationMeshData = new ReactiveField null
 
+    @illustration = new ComputedField =>
+      @world.options.adventure.currentSituation()?.illustration()
+    ,
+      EJSON.equals
+
     @world.autorun (computation) =>
-      illustration = @world.options.adventure.currentSituation()?.illustration()
+      illustration = @illustration()
       return unless illustrationName = illustration?.name
       return unless meshData = LOI.Assets.Mesh.findInCache name: illustrationName
 

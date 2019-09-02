@@ -144,44 +144,47 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       return unless LOI.adventure.currentContext() instanceof C1.Mixer.Context
       scene.translations()?.intro
 
-    # Player should be in the mixer context when they have a name tag.
+    # Player should be in the mixer context.
     @_enterContextAutorun = @autorun (computation) =>
       # Don't overwrite an existing context.
       return if LOI.adventure.currentContext()
 
+      LOI.adventure.enterContext C1.Mixer.Context
+
+    @_autoStartScriptAutorun = @autorun (computation) =>
+      # Make sure we're in the mixer context.
+      return unless LOI.adventure.currentContext() instanceof C1.Mixer.Context
+
+      # Autostart script interactions after the player has a name tag.
       return unless LOI.adventure.getCurrentInventoryThing C1.Mixer.NameTag
       return unless shelley = LOI.adventure.getCurrentThing HQ.Actors.Shelley
       return unless shelley.ready()
 
-      LOI.adventure.enterContext C1.Mixer.Context
+      # Wait until the location mesh has loaded, so that we have landmark positions.
+      return unless LOI.adventure.world.sceneManager().currentLocationMeshData()
 
-      # Autostart script interactions.
-      @_autoStartScriptAutorun?.stop()
+      computation.stop()
+
       Tracker.nonreactive =>
-        @_autoStartScriptAutorun = @autorun (computation) =>
-          # Wait until the location mesh has loaded, so that we have landmark positions.
-          return unless LOI.adventure.world.sceneManager().currentLocationMeshData()
-          computation.stop()
+        unless @script.state 'IceBreakersDone'
+          # Start the mixer script at the latest checkpoint.
+          @startScriptAtLatestCheckpoint [
+            'MixerStart'
+            'IceBreakersStart'
+            'HobbyProfessionWriteStart'
+            'PixelArtOtherStylesStart'
+            'ExtrovertIntrovertStart'
+            'IndividualTeamStart'
+          ]
 
-          unless @script.state 'IceBreakersDone'
-            # Start the mixer script at the latest checkpoint.
-            @startScriptAtLatestCheckpoint [
-              'MixerStart'
-              'IceBreakersStart'
-              'HobbyProfessionWriteStart'
-              'PixelArtOtherStylesStart'
-              'ExtrovertIntrovertStart'
-              'IndividualTeamStart'
-            ]
+        if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
+          @startScriptAtLatestCheckpoint [
+            'JoinStudyGroupStart'
+            'JoinStudyGroupContinue'
+          ]
 
-          if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
-            @startScriptAtLatestCheckpoint [
-              'JoinStudyGroupIntro'
-              'JoinStudyGroupContinue'
-            ]
-
-          if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
-            @startScript label: 'CoordinatorIntro'
+        if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
+          @startScript label: 'CoordinatorIntro'
 
     # Script should continue when break time has passed.
     if eventPhase is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates

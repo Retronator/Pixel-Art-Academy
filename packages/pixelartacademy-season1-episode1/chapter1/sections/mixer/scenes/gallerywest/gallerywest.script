@@ -274,9 +274,20 @@ shelley:
 
 ## JoinStudyGroupIntro
 
-shelley: OK, everyone, let's continue.
+shelley: OK, everyone, ready to continue?
 
-> People stop their conversations and turn their attention to Shelley.
+* Ready! -> [JoinStudyGroupStart]
+* Wait … 5 more minutes.
+
+shelley: No problem, get to know everyone better.
+
+### StartTalkToClassmates
+
+-> [End]
+
+## JoinStudyGroupStart
+
+> People stop their conversations and return to Shelley.
 
 ### JoinStudyGroupStart
 

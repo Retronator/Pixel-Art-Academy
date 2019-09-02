@@ -11,6 +11,9 @@ class C1.Mixer.Context extends LOI.Adventure.Context
   @initialize()
 
   illustration: ->
+    # The camera angle doesn't change until the mixer interactions start.
+    return unless C1.Mixer.GalleryWest.Listener.Script.state 'MixerStart'
+
     if C1.Mixer.GalleryWest.Listener.Script.state 'CoordinatorIntro'
       studyGroupId = C1.readOnlyState 'studyGroupId'
       letter = _.last studyGroupId
