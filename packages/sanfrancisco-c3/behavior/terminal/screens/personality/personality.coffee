@@ -89,15 +89,53 @@ class C3.Behavior.Terminal.Personality extends AM.Component
   partTemplate: ->
     @part()?.options.dataLocation()?.template
 
-  isOwnPartTemplate: ->
-    return unless template = @partTemplate()
+  fullPartTemplate: ->
+    return unless embeddedTemplate = @partTemplate()
 
+    # We must fetch the full template that has author data.
+    LOI.Character.Part.Template.documents.findOne embeddedTemplate._id
+
+  isOwnPartTemplate: ->
     userId = Meteor.userId()
+    return unless template = @fullPartTemplate()
     template.author?._id is userId
 
+  isTemplateEditable: ->
+    # The template is editable if it belongs to the user and is not locked to a version.
+    @isOwnPartTemplate() and not @partTemplate().version?
+
+  isTemplatePublishable: ->
+    # The template is publishable when it has been edited.
+    @isTemplateEditable() and not @fullPartTemplate().dataPublished
+
+  canUpgradeTemplate: ->
+    return unless dataLocation = @part()?.options.dataLocation
+    return unless dataLocation().template
+    dataLocation.canUpgradeTemplate LOI.Character.Part.Template.canUpgradeComparator
+
+  canPublishTemplate: ->
+    return unless @isTemplatePublishable()
+    return unless node = @part()?.options.dataLocation().data()
+
+    # The template can be successfully published only when no unversioned templates are used.
+    try
+      AMu.Hierarchy.Template.assertNoDraftTemplates node
+
+    catch
+      return false
+
+    true
+
+  publishButtonMainButtonClass: ->
+    'main-button' if @canPublishTemplate()
+
+  canRevertTemplate: ->
+    # The template can be reverted when it can be published and we have a latest version to revert to.
+    @isTemplatePublishable() and @fullPartTemplate().latestVersion
+
   isEditable: ->
-    # We can edit the template if it's not using a template, or if the template is our own.
-    not @partTemplate() or @isOwnPartTemplate()
+    # User can edit the part if it is not a template or if the template is editable.
+    not @partTemplate() or @isTemplateEditable()
 
   editableClass: ->
     'editable' if @isEditable()
@@ -144,6 +182,9 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton
       'click .unlink-template-button': @onClickUnlinkTemplateButton
+      'click .modify-template-button': @onClickModifyTemplateButton
+      'click .revert-template-button': @onClickRevertTemplateButton
+      'click .upgrade-template-button': @onClickUpgradeTemplateButton
       'click .custom-personality': @onClickCustomPersonality
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
@@ -163,6 +204,17 @@ class C3.Behavior.Terminal.Personality extends AM.Component
   onClickUnlinkTemplateButton: (event) ->
     @part()?.options.dataLocation.unlinkTemplate()
 
+  onClickModifyTemplateButton: (event) ->
+    # Set the same template without a version.
+    templateId = @partTemplate()._id
+    @part()?.options.dataLocation.setTemplate templateId
+
+  onClickRevertTemplateButton: (event) ->
+    @part()?.options.dataLocation.revertTemplate()
+
+  onClickUpgradeTemplateButton: (event) ->
+    @part()?.options.dataLocation.upgradeTemplate LOI.Character.Part.Template.canUpgradeComparator
+
   onClickCustomPersonality: (event) ->
     # Clear current data at this node.
     @part()?.options.dataLocation.clear()
@@ -180,7 +232,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
   onClickTemplate: (event) ->
     template = @currentData()
 
-    @part()?.options.dataLocation.setTemplate template._id
+    @part()?.options.dataLocation.setTemplate template._id, template.latestVersion.index
 
     @forceShowTemplates false
 

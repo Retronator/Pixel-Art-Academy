@@ -66,11 +66,46 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   partTemplate: ->
     @part()?.options.dataLocation()?.template
 
-  isOwnPartTemplate: ->
-    return unless template = @partTemplate()
+  fullPartTemplate: ->
+    return unless embeddedTemplate = @partTemplate()
 
+    # We must fetch the full template that has author data.
+    LOI.Character.Part.Template.documents.findOne embeddedTemplate._id
+
+  isOwnPartTemplate: ->
     userId = Meteor.userId()
+    return unless template = @fullPartTemplate()
     template.author?._id is userId
+
+  isTemplateEditable: ->
+    # The template is editable if it belongs to the user and is not locked to a version.
+    @isOwnPartTemplate() and not @partTemplate().version?
+
+  isTemplatePublishable: ->
+    # The template is publishable when it has been edited.
+    @isTemplateEditable() and not @fullPartTemplate().dataPublished
+
+  canUpgradeTemplate: ->
+    return unless dataLocation = @part()?.options.dataLocation
+    return unless dataLocation().template
+    dataLocation.canUpgradeTemplate LOI.Character.Part.Template.canUpgradeComparator
+
+  canPublishTemplate: ->
+    return unless @isTemplatePublishable()
+    return unless node = @part()?.options.dataLocation().data()
+
+    # The template can be successfully published only when no unversioned templates are used.
+    try
+      AMu.Hierarchy.Template.assertNoDraftTemplates node
+
+    catch
+      return false
+
+    true
+
+  canRevertTemplate: ->
+    # The template can be reverted when it can be published and we have a latest version to revert to.
+    @isTemplatePublishable() and @fullPartTemplate().latestVersion
 
   isEditable: ->
     # We can edit this factor if the personality is editable.
@@ -85,14 +120,17 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     factorPart.properties.traits.toString()
 
   areTraitsEditable: ->
-    # We can edit the factor's traits if it's not a template, or it's our own template.
-    not @partTemplate() or @isOwnPartTemplate()
+    # User can edit the factor's traits if it is not a template or if the template is editable.
+    not @partTemplate() or @isTemplateEditable()
 
   events: ->
     super(arguments...).concat
       'click .factor-edit-traits-button': @onClickEditTraitsButton
       'click .factor-save-as-template-button': @onClickSaveAsTemplateButton
       'click .factor-unlink-template-button': @onClickUnlinkTemplateButton
+      'click .factor-modify-template-button': @onClickModifyTemplateButton
+      'click .factor-revert-template-button': @onClickRevertTemplateButton
+      'click .factor-upgrade-template-button': @onClickUpgradeTemplateButton
       'click .factor-reset-button': @onClickResetButton
       'click .traits': @onClickTraits
 
@@ -104,6 +142,17 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
   onClickUnlinkTemplateButton: (event) ->
     @part()?.options.dataLocation.unlinkTemplate()
+
+  onClickModifyTemplateButton: (event) ->
+    # Set the same template without a version.
+    templateId = @partTemplate()._id
+    @part()?.options.dataLocation.setTemplate templateId
+
+  onClickRevertTemplateButton: (event) ->
+    @part()?.options.dataLocation.revertTemplate()
+
+  onClickUpgradeTemplateButton: (event) ->
+    @part()?.options.dataLocation.upgradeTemplate LOI.Character.Part.Template.canUpgradeComparator
 
   onClickResetButton: (event) ->
     # Delete current data at this node.
@@ -132,13 +181,15 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
       @factorComponent = @ancestorComponentOfType C3.Behavior.Terminal.Personality.Factor
 
+      @templates = new ComputedField => @factorComponent.templates().fetch()
+
     options: ->
       options = [
         name: 'Custom'
         value: ''
       ]
 
-      for template in @factorComponent.templates().fetch()
+      for template in @templates()
         options.push
           name: @translateTranslation template.name
           value: template._id
@@ -151,8 +202,10 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     save: (value) ->
       dataLocation = @factorComponent.part().options.dataLocation
 
+      template = _.find @templates(), (template) => template._id is value
+
       if value isnt ''
-        dataLocation.setTemplate value
+        dataLocation.setTemplate value, template.latestVersion.index
 
       else
         dataLocation.unlinkTemplate()
