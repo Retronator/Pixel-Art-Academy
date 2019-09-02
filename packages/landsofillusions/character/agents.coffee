@@ -89,7 +89,7 @@ class LOI.Character.Agents extends LOI.Adventure.Global
   
           oldAgents = _.values @_agentsById
 
-          # Filter non-memorable actions that are past their retain time.
+          # Remove non-memorable actions that are past their retain time.
           _.remove actions, (action) =>
             return if action.constructor.isMemorable()
             return unless retainDurationInMilliseconds = action.constructor.retainDuration() * 1000
@@ -97,13 +97,28 @@ class LOI.Character.Agents extends LOI.Adventure.Global
             earliestRetainTime = new Date now - retainDurationInMilliseconds
             action.time < earliestRetainTime
 
+          # Remove actions performed by characters in private contexts.
+          playerCharacterId = LOI.characterId()
+          currentContext = LOI.adventure.currentContext()
+
+          _.remove actions, (action) =>
+            # Keep all actions that have no context.
+            return unless action.contextId
+
+            # Keep actions of the current character in current context.
+            return if action.character._id is playerCharacterId and action.contextId is currentContext?.id()
+
+            # Otherwise remove the action if it's private.
+            contextClass = LOI.Adventure.Thing.getClassForId action.contextId
+            contextClass.isPrivate()
+
+          # Get all the characters performing the remaining actions.
           characterIds = _.uniq (action.character._id for action in actions)
 
-          # Don't include other characters on private locations.
-          characterIds = [] if LOI.adventure.currentLocation().isPrivate()
+          # Don't include other characters on private locations and in private contexts.
+          characterIds = [] if LOI.adventure.currentLocation().constructor.isPrivate() or currentContext?.constructor.isPrivate()
 
           # Always include player's character.
-          playerCharacterId = LOI.characterId()
           characterIds.push playerCharacterId if playerCharacterId and playerCharacterId not in characterIds
   
           # Return a list of characters initialized with their actions.

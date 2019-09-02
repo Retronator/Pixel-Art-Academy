@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class C1.CoordinatorAddress.Context extends LOI.Adventure.Context
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.CoordinatorAddress.Context'
+  @isPrivate: -> true
 
   @initialize()
 

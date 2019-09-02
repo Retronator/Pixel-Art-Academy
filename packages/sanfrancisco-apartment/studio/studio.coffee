@@ -7,6 +7,7 @@ class Apartment.Studio extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Apartment.Studio'
   @url: -> 'sf/apartment/studio'
   @region: -> Apartment
+  @isPrivate: -> true
 
   @version: -> '0.0.1'
 
@@ -37,5 +38,3 @@ class Apartment.Studio extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
-
-  isPrivate: -> true

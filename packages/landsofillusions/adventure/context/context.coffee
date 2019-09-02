@@ -5,7 +5,9 @@ LOI = LandsOfIllusions
 Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Adventure.Context extends LOI.Adventure.Thing
-  @illustration: -> 
+  @isPrivate: -> false # Override if people should be isolated in this context.
+
+  @illustration: ->
     # Override to provide information about the illustration (name, height)
     # for this context. By default there is no illustration.
     null

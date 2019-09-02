@@ -137,7 +137,7 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
         return unless location = LOI.adventure.currentLocation()
 
         locationId = location.id()
-        locationIsPrivate = location.isPrivate()
+        locationIsPrivate = location.constructor.isPrivate()
 
         if locationIsPrivate
           # Don't show flashbacks at private locations.

@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class C1.Mixer.Context extends LOI.Adventure.Context
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Context'
+  @isPrivate: -> true
 
   @initialize()
 
