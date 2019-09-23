@@ -205,6 +205,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/items/nametag');
   api.addFile('chapter1/sections/mixer/items/answer');
   api.addFile('chapter1/sections/mixer/items/answers');
+  api.addFile('chapter1/sections/mixer/items/table');
 
   api.addFile('chapter1/sections/mixer/icebreakers..');
   api.addFile('chapter1/sections/mixer/icebreakers/answeraction');

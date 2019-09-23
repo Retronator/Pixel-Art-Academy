@@ -129,6 +129,14 @@ class LOI.Engine.World.SceneManager
           @_currentLocationMesh = new LOI.Assets.Engine.Mesh
             meshData: => meshData
             sceneManager: @
+            objectVisibility: (objectName) =>
+              return unless locationThings = @world.options.adventure.currentLocationThings()
+
+              for thing in locationThings
+                if thingIllustration = thing.illustration()
+                  return true if thingIllustration.mesh is illustrationName and thingIllustration.object is objectName
+
+              null
 
           # Initialize the camera from the camera angle.
           @world.cameraManager().setFromCameraAngle cameraAngle()

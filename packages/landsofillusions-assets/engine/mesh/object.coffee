@@ -39,6 +39,10 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
 
     # Update visibility.
     Tracker.autorun (computation) =>
-      @visible = objectData.visible()
+      # See if mesh object visibility is controlled externally.
+      @visible = @mesh.options.objectVisibility? objectData.name()
+
+      # Default to object's visibility in the mesh file.
+      @visible ?= objectData.visible()
 
       @mesh.options.sceneManager.scene.updated()

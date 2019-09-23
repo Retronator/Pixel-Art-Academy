@@ -110,6 +110,10 @@ class LOI.Adventure.Thing extends AM.Component
 
   @accessRequirement: -> # Override to set an access requirement to use this thing.
 
+  @illustration: ->
+    # Override to provide information about the illustration for this thing. By default there is no illustration data.
+    null
+
   @initialize: ->
     # Store thing class by ID and url.
     @_thingClassesById[@id()] ?= @
@@ -271,7 +275,7 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
   url: -> @constructor.url()
-
+  illustration: -> @constructor.illustration()
   createAvatar: -> @constructor.createAvatar()
 
   # Override to control if the item appears in the interface.

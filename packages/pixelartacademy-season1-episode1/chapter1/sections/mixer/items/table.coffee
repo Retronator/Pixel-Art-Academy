@@ -15,6 +15,10 @@ class C1.Mixer.Table extends LOI.Adventure.Thing
       It's the sign-in table with stickers and markers on it.
     "
 
+  @illustration: ->
+    mesh: 'retronator/hq/floor3/gallery/gallery'
+    object: 'Mixer table'
+
   @initialize()
 
   displayInLocation: -> false

@@ -15,13 +15,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
 
   @isPrivate: -> false # Override if other people shouldn't show up at this location.
 
-  @illustration: ->
-    # Override to provide information about the illustration (name, height)
-    # for this context. By default there is no illustration.
-    null
-  
-  illustration: -> @constructor.illustration()
-
   @initialize: ->
     super arguments...
 
