@@ -10,32 +10,6 @@ class LOI.Engine.World.PhysicsManager
     @solver = new Ammo.btSequentialImpulseConstraintSolver
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @overlappingPairCache, @solver, @collisionConfiguration
     @dynamicsWorld.setGravity new Ammo.btVector3 0, -9.81, 0
-    @bodies = []
-
-    addBox = (halfSize, position) =>
-      boxShape = new Ammo.btBoxShape halfSize
-      boxLocalInertia = new Ammo.btVector3 0, 0, 0
-    
-      boxTransform = new Ammo.btTransform Ammo.btQuaternion.identity, position
-      boxMotionState = new Ammo.btDefaultMotionState boxTransform
-    
-      boxInfo = new Ammo.btRigidBodyConstructionInfo 0, boxMotionState, boxShape, boxLocalInertia
-      boxBody = new Ammo.btRigidBody boxInfo
-    
-      @dynamicsWorld.addRigidBody boxBody
-
-    # Add ground.
-    addBox new Ammo.btVector3(12, 1, 7.5), new Ammo.btVector3(0, -1, 0)
-
-    # Add walls.
-    addBox new Ammo.btVector3(12, 4, 1), new Ammo.btVector3(0, 2, 8.2)
-    addBox new Ammo.btVector3(12, 4, 1), new Ammo.btVector3(0, 2, -8.5)
-    addBox new Ammo.btVector3(1, 4, 7.5), new Ammo.btVector3(-13, 2, 0)
-    addBox new Ammo.btVector3(1, 4, 7.5), new Ammo.btVector3(13, 2, 0)
-
-    # Add insets.
-    addBox new Ammo.btVector3(2, 4, 1.5), new Ammo.btVector3(0, 2, 6.5)
-    addBox new Ammo.btVector3(2, 4, 1.5), new Ammo.btVector3(0, 2, -6.5)
 
     # Add scene items.
     @physicalItems = new AE.ReactiveArray =>
