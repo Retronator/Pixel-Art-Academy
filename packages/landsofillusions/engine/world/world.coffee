@@ -206,4 +206,8 @@ class LOI.Engine.World extends AM.Component
     if newObject
       sceneManager = @sceneManager()
       sceneManager.scene().add newObject.renderObject
-      sceneManager.scene.updated()
+      sceneManager.addedSceneObjects()
+
+      # HACK: We need to force recomputation for scene to apply uniforms to the
+      # new object. Otherwise render draw will run before the recomputation.
+      Tracker.flush()

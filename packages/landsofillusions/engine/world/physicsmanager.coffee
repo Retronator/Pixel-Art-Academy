@@ -85,9 +85,14 @@ class LOI.Engine.World.PhysicsManager
         @debugObjects.push debugObject
 
       # Remove debug objects for removed items.
-      for debugObject in @debugObjects when debugObject.item not in physicalItems
+      removed = false
+
+      for debugObject, index in @debugObjects when debugObject.item not in physicalItems
         scene.remove debugObject
-        _.pull @debugObjects, debugObject
+        @debugObjects[index] = null
+        removed = true
+
+      _.pull @debugObjects, null if removed
 
     # Create reusable objects.
     @_transform = new Ammo.btTransform

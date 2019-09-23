@@ -4,7 +4,7 @@ class LOI.Engine.Materials
   @_cache = {}
   @_cacheDependency = new Tracker.Dependency
 
-  @getMaterial: (materialId, options) ->
+  @getMaterial: (materialId, options = {}) ->
     @_cache[materialId] ?= []
 
     # Try to find a material with these options in the cache.

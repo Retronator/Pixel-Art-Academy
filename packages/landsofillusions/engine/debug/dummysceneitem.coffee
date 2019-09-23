@@ -17,14 +17,27 @@ class LOI.Engine.Debug.DummySceneItem
     constructor: (@parentItem) ->
       super arguments...
 
-      material = new LOI.Engine.Materials.RampMaterial
-        shades: LOI.palette().ramps[0].shades
-        shadeIndex: 8
+      materialOptions =
+        palette: LOI.palette()
+        ramp: 0
+        shade: 8
+        dither: 0
+        smoothShading: false
+
+      material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.RampMaterial.id(), materialOptions
+      depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id()
+      shadowColorMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.ShadowColorMaterial.id(), materialOptions
+      preprocessingMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.PreprocessingMaterial.id(), materialOptions
 
       geometry = @parentItem.createGeometry()
       mesh = new THREE.Mesh geometry, material
       mesh.castShadow = true
       mesh.receiveShadow = true
+
+      mesh.mainMaterial = material
+      mesh.shadowColorMaterial = shadowColorMaterial
+      mesh.customDepthMaterial = depthMaterial
+      mesh.preprocessingMaterial = preprocessingMaterial
 
       @add mesh
 
