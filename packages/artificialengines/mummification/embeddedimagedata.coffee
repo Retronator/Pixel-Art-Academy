@@ -7,6 +7,10 @@ if Meteor.isServer
   TextDecoder = require('text-encoder-lite').TextDecoderLite
   TextEncoder = require('text-encoder-lite').TextEncoderLite
 
+else
+  TextDecoder = window.TextDecoder
+  TextEncoder = window.TextEncoder
+
 compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
