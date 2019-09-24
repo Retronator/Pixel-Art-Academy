@@ -62,8 +62,8 @@ class HQ.GalleryWest extends LOI.Adventure.Location
 
         @renderObject = new THREE.Object3D
 
-        addColliderBox = (halfSize, position) =>
-          colliderBox = new @constructor.ColliderBox halfSize, position
+        addColliderBox = (halfSize, position, rotation) =>
+          colliderBox = new @constructor.ColliderBox halfSize, position, rotation
           @renderObject.add colliderBox.getRenderObject()
 
         # Add ground.
@@ -80,21 +80,29 @@ class HQ.GalleryWest extends LOI.Adventure.Location
         addColliderBox new THREE.Vector3(2, 4, 1.5), new THREE.Vector3(0, 2, -6.5)
         addColliderBox new THREE.Vector3(1.5, 4, 4), new THREE.Vector3(-11.5, 2, 0)
 
+        # Add reception table.
+        addColliderBox new THREE.Vector3(1.25, 0.45, 0.35), new THREE.Vector3(10.1, 0.45, 3.4), new THREE.Euler 0, Math.PI / 4, 0
+
+      fullName: -> null
+
       getRenderObject: -> @renderObject
 
       class @ColliderBox
-        constructor: (halfSize, position) ->
+        constructor: (halfSize, position, rotation) ->
+          rotation ?= new THREE.Euler 0, 0, 0
+
           @renderObject = new THREE.Object3D
           @renderObject.parentItem = @
           @renderObject.position.copy position
+          @renderObject.rotation.copy rotation
 
-          @physicsObject = new @constructor.PhysicsObject @, halfSize, position
+          @physicsObject = new @constructor.PhysicsObject @, halfSize, position, rotation
 
         getRenderObject: -> @renderObject
         getPhysicsObject: -> @physicsObject
 
         class @PhysicsObject extends AR.PhysicsObject
-          constructor: (@parentItem, @halfSize, @position) ->
+          constructor: (@parentItem, @halfSize, @position, @rotation) ->
             super arguments...
 
             @mass = 0
@@ -102,7 +110,8 @@ class HQ.GalleryWest extends LOI.Adventure.Location
 
             @collisionShape = @createCollisionShape()
 
-            transform = new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3 @position.x, @position.y, @position.z
+            quaternion = new THREE.Quaternion().setFromEuler @rotation
+            transform = new Ammo.btTransform new Ammo.btQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w), new Ammo.btVector3 @position.x, @position.y, @position.z
             @motionState = new Ammo.btDefaultMotionState transform
 
             boxInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
@@ -123,6 +132,4 @@ class HQ.GalleryWest extends LOI.Adventure.Location
             options = _.extend {}, options,
               debug: true
 
-            debugMesh = new THREE.Mesh @createGeometry(options), options.material
-            debugMesh.position.copy @position
-            debugMesh
+            new THREE.Mesh @createGeometry(options), options.material
