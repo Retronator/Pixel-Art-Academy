@@ -82,6 +82,11 @@ class LOI.Assets.Engine.Sprite
     visualizeNormals = @options.visualizeNormals?()
     flippedHorizontal = @options.flippedHorizontal
     flippedHorizontal = flippedHorizontal() if _.isFunction flippedHorizontal
+    smoothShading = renderOptions.smoothShading ? LOI.settings.graphics.smoothShading.value()
+
+    if smoothShading
+      smoothShadingQuantizationLevels = renderOptions.smoothShadingQuantizationLevels ? LOI.settings.graphics.smoothShadingQuantizationLevels.value()
+      smoothShadingQuantizationFactor = (smoothShadingQuantizationLevels or 1) - 1
 
     for layer in spriteData.layers when layer?.pixels and layer.visible isnt false
       layerOrigin =
@@ -279,7 +284,12 @@ class LOI.Assets.Engine.Sprite
               shadedColor.add _lightColor
 
             if palette and paletteColor
-              destinationColor = @_boundColorToPaletteRamp pixel, shadedColor, palette.ramps[paletteColor.ramp], paletteColor.dither, false
+              if smoothShadingQuantizationFactor
+                shadedColor.r = Math.round(shadedColor.r * smoothShadingQuantizationFactor) / smoothShadingQuantizationFactor
+                shadedColor.g = Math.round(shadedColor.g * smoothShadingQuantizationFactor) / smoothShadingQuantizationFactor
+                shadedColor.b = Math.round(shadedColor.b * smoothShadingQuantizationFactor) / smoothShadingQuantizationFactor
+
+              destinationColor = @_boundColorToPaletteRamp pixel, shadedColor, palette.ramps[paletteColor.ramp], paletteColor.dither, smoothShading
 
             else
               destinationColor = shadedColor

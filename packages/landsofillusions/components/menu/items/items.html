@@ -78,6 +78,9 @@
         {{/if}}
         <button class="next-button">▶</button>
       </li>
+      <li class="menu-item"><span class="smooth-shading actionable">
+        Smooth shading: {{#if smoothShading}}on{{else}}off{{/if}}
+      </span></li>
       <li class="menu-item"><span class="audio actionable">
         Audio:
         {{#if $is audioEnabled 'On'}}on{{/if}}
@@ -90,9 +93,6 @@
       <li class="music menu-item">
         Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
       </li>
-      <li class="menu-item"><span class="smooth-shading actionable">
-        Smooth shading: {{#if smoothShading}}on{{else}}off{{/if}}
-      </span></li>
       <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
       <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
     {{/if}}

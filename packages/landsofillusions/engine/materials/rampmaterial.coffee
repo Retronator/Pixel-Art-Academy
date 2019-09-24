@@ -85,6 +85,8 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         # Shading
         smoothShading:
           value: options.smoothShading
+        smoothShadingQuantizationFactor:
+          value: options.smoothShadingQuantizationFactor
         directionalShadowColorMap:
           value: []
         directionalOpaqueShadowMap:
@@ -164,6 +166,7 @@ uniform sampler2D palette;
 
 // Shading
 uniform bool smoothShading;
+uniform float smoothShadingQuantizationFactor;
 #{LOI.Engine.Materials.ShaderChunks.totalLightIntensityParametersFragment}
 uniform sampler2D preprocessingMap;
 
@@ -213,6 +216,10 @@ void main()	{
   #{LOI.Engine.Materials.ShaderChunks.shadeSourceColorFragment}
 
   // Bound shaded color to palette ramp.
+  if (smoothShading && smoothShadingQuantizationFactor > 0.0) {
+    shadedColor = floor(shadedColor * smoothShadingQuantizationFactor + 0.5) / smoothShadingQuantizationFactor;
+  }
+
   vec3 destinationColor = boundColorToPaletteRamp(shadedColor, paletteColor.r, shadingDither, smoothShading);
 
   // Color the pixel with the best match from the palette.
