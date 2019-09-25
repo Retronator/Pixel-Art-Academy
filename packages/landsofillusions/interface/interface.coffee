@@ -74,6 +74,10 @@ class LOI.Interface extends AM.Component
   context: ->
     LOI.adventure.currentContext()
 
+  prepareForLocationChange: (newLocation, handler) =>
+    # Override to prepare for location change. Call handler when done with preparations.
+    handler()
+
   onLocationChanged: (location) ->
     # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
     

@@ -6,13 +6,18 @@
   </style>
   {{> Render display}}
   <div class="landsofillusions-interface-text scrollable">
-    <div class="location {{locationLoadingClass}}">
+    <div class="location">
       {{> Render world}}
       {{#if context}}
         {{> Render context}}
       {{else}}
         {{> Render location}}
       {{/if}}
+      <div class="loading-cover">
+        <div class="caption">
+          Loading …
+        </div>
+      </div>
     </div>
     <div class="items">
       {{#each activeItems}}

@@ -112,6 +112,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
       ,
         hintDelayTime * 1000
 
+    # Prepare location loading cover.
+    @$locationLoadingCover = @$('.location .loading-cover')
+    @$locationLoadingCover.css(height: '100%')
+    @$locationLoadingCaption = @$locationLoadingCover.find('.caption')
+
   onDestroyed: ->
     super arguments...
 

@@ -11,9 +11,6 @@ class LOI.Interface.Text extends LOI.Interface
   world: ->
     LOI.adventure.world
 
-  locationLoadingClass: ->
-    'loading' unless LOI.adventure.world.sceneManager()?.sceneItemsReady()
-
   exitAvatarName: ->
     exitAvatar = @currentData()
 
