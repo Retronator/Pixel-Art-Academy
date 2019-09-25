@@ -11,6 +11,14 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       for layerData in layersData
         new @constructor.Layer @, layerData
 
+    @ready = new ComputedField =>
+      return unless layers = @engineLayers()
+
+      for layer in layers
+        return unless layer.ready()
+
+      true
+
     # Update object children.
     Tracker.autorun (computation) =>
       # Clean up previous children.

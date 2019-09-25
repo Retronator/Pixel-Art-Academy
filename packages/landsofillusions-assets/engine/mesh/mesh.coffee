@@ -6,6 +6,14 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
     @objects = new ReactiveField null
 
+    @ready = new ComputedField =>
+      return unless objects = @objects()
+
+      for object in objects
+        return unless object.ready()
+
+      true
+
     # Add the mesh to the scene.
     Tracker.autorun (computation) =>
       return unless scene = @options.sceneManager.scene()

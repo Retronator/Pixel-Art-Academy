@@ -58,6 +58,13 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
           creatureRenderer.renderMesh.mainMaterial = animatedMesh.options.material
           @scene().manager.addedSceneObjects()
 
+    @ready = new ComputedField =>
+      for side, animatedMesh of @animatedMeshes
+        # Wait till the animated mesh has an initialized creature renderer.
+        return unless animatedMesh.creatureRenderer()
+
+      true
+
     @_prepareMeshAutorun = Tracker.autorun (computation) =>
       heightValue = @humanAvatar.body.properties.height.options.dataLocation()
       heightOptions = LOI.Character.Part.Types.Avatar.Body.options.properties.height.options

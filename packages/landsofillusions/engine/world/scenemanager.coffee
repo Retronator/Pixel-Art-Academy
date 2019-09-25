@@ -85,6 +85,7 @@ class LOI.Engine.World.SceneManager
 
     # Add location mesh.
     @_currentLocationMesh = null
+    @_currentLocationMeshDependency = new Tracker.Dependency
     @_currentIllustrationName = null
     
     @currentLocationMeshData = new ReactiveField null
@@ -139,6 +140,8 @@ class LOI.Engine.World.SceneManager
 
               null
 
+          @_currentLocationMeshDependency.changed()
+
           # Initialize the camera from the camera angle.
           @world.cameraManager().setFromCameraAngle cameraAngle()
 
@@ -171,6 +174,22 @@ class LOI.Engine.World.SceneManager
     @physicalItems = new ComputedField =>
       renderObjectsWithPhysics = @getAllChildren (item) => item.parentItem?.getPhysicsObject
       renderObjectWithPhysics.parentItem for renderObjectWithPhysics in renderObjectsWithPhysics
+
+    @sceneItemsReady = new ComputedField =>
+      illustration = @illustration()
+
+      if illustration?.name
+        # Depend on location mesh changes.
+        @_currentLocationMeshDependency.depend()
+
+        return unless @_currentLocationMesh?.ready()
+
+      if locationThings = @world.options.adventure.currentLocationThings()
+        for thing in locationThings
+          renderObject = thing.avatar.getRenderObject?()
+          return if renderObject?.ready and not renderObject.ready()
+
+      true
 
   destroy: ->
     @locationThings.stop()

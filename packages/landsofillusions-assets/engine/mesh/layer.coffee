@@ -13,6 +13,14 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
       for clusterId, clusterData of clustersData
         new @constructor.Cluster @, clusterData
 
+    @ready = new ComputedField =>
+      return unless clusters = @clusters()
+
+      for cluster in clusters
+        return unless cluster.ready()
+
+      true
+
     # Update object children.
     Tracker.autorun (computation) =>
       # Clean up previous children.

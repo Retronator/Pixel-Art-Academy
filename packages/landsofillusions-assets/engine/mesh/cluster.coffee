@@ -7,7 +7,14 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
     @geometry = new ComputedField => @_generateGeometry()
     @materials = new ComputedField => @_generateMaterials()
     @mesh = new ComputedField => @_generateMesh()
-    
+
+    @ready = new ComputedField =>
+      _.every [
+        @geometry()
+        @materials()
+        @mesh()
+      ]
+
     # Update scene.
     Tracker.autorun (computation) =>
       # Clean up previous children.

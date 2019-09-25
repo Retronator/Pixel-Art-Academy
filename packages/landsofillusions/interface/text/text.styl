@@ -26,6 +26,14 @@ hoverable()
     transform translateZ(0)
     z-index 1
 
+    &.loading
+      &::after
+        content ''
+        display block
+        absolute-cover()
+        z-index 2
+        background atariGrey(0)
+
   > .items
     position absolute
     z-index 3

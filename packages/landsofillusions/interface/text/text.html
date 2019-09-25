@@ -6,7 +6,7 @@
   </style>
   {{> Render display}}
   <div class="landsofillusions-interface-text scrollable">
-    <div class="location">
+    <div class="location {{locationLoadingClass}}">
       {{> Render world}}
       {{#if context}}
         {{> Render context}}
