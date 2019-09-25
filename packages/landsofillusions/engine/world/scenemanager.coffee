@@ -111,10 +111,11 @@ class LOI.Engine.World.SceneManager
             cameraAngles.getFirst()
 
         if illustrationName is @_currentIllustrationName
-          # Transition to other camera angle.
-          @world.cameraManager().transitionToCameraAngle cameraAngle(),
-            duration: 3000
-            easing: 'ease-in-out'
+          # Transition to other camera angle after illustration size has been applied.
+          Tracker.afterFlush =>
+            @world.cameraManager().transitionToCameraAngle cameraAngle(),
+              duration: 3000
+              easing: 'ease-in-out'
   
         else
           @_currentIllustrationName = illustrationName

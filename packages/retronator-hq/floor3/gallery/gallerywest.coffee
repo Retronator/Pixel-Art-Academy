@@ -22,7 +22,7 @@ class HQ.GalleryWest extends LOI.Adventure.Location
 
   @illustration: ->
     name: 'retronator/hq/floor3/gallery/gallery'
-    cameraAngle: 'Center'
+    cameraAngle: 'West'
     height: 120
 
   @initialize()
