@@ -11,10 +11,11 @@ class LOI.Pages.Admin.Characters.Assets extends AM.Component
 
   events: ->
     super(arguments...).concat
-      'click .download-button': @onClickDownloadButton
+      'click .actor-assets-download-button': @onClickActorAssetsDownloadButton
       'click .render-avatar-button': @onClickRenderAvatarButton
+      'click .creature-assets-download-button': @onClickCreatureAssetsDownloadButton
 
-  onClickDownloadButton: (event) ->
+  onClickActorAssetsDownloadButton: (event) ->
     password = @$('.password').val()
 
     # Encrypt userId with the password.
@@ -44,3 +45,19 @@ class LOI.Pages.Admin.Characters.Assets extends AM.Component
     @avatarUrls
       paletteData: "#{url}&texture=paletteData"
       normal: "#{url}&texture=normal"
+
+  onClickCreatureAssetsDownloadButton: (event) ->
+    password = @$('.password').val()
+
+    # Encrypt userId with the password.
+    userId = CryptoJS.AES.encrypt(Meteor.userId(), password).toString()
+
+    $link = $('<a style="display: none">')
+    $('body').append $link
+
+    link = $link[0]
+    link.download = 'creatureassets.zip'
+    link.href = "/admin/landsofillusions/characters/assets/creatureassets.zip?userId=#{encodeURIComponent userId}"
+    link.click()
+
+    $link.remove()

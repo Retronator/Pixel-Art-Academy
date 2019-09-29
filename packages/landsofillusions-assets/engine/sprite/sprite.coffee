@@ -82,7 +82,7 @@ class LOI.Assets.Engine.Sprite
     visualizeNormals = @options.visualizeNormals?()
     flippedHorizontal = @options.flippedHorizontal
     flippedHorizontal = flippedHorizontal() if _.isFunction flippedHorizontal
-    smoothShading = renderOptions.smoothShading ? LOI.settings.graphics.smoothShading.value()
+    smoothShading = renderOptions.smoothShading ? LOI.settings?.graphics.smoothShading.value()
 
     if smoothShading
       smoothShadingQuantizationLevels = renderOptions.smoothShadingQuantizationLevels ? LOI.settings.graphics.smoothShadingQuantizationLevels.value()

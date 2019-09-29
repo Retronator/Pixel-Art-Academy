@@ -1,21 +1,26 @@
 <template name="LandsOfIllusions.Pages.Admin.Characters.Assets">
   <div class="admin-page">
     <h1>Character assets</h1>
+    <p>
+      Export password: <input class="password" placeholder="Password"/>
+    </p>
     <h2>Actors batch export</h2>
     <p>
-      <input class="password" placeholder="Password"/>
-      <button class="download-button">Download</button>
+      <button class="actor-assets-download-button">Download</button>
     </p>
     <h2>Avatar renderer</h2>
     <p>
       <input class="character-id" placeholder="Character ID"/>
       <input class="character-url" placeholder="Character Url"/>
-      <input class="password" placeholder="Password"/>
       <button class="render-avatar-button">Render</button>
       {{#with avatarUrls}}
         <img src="{{paletteData}}"/>
         <img src="{{normal}}"/>
       {{/with}}
+    </p>
+    <h2>Creature export</h2>
+    <p>
+      <button class="creature-assets-download-button">Download</button>
     </p>
   </div>
 </template>

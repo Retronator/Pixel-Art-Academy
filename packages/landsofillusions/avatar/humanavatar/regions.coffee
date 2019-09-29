@@ -136,7 +136,7 @@ LOI.HumanAvatar.Regions =
 
   RightUpperLeg: new LOI.Engine.RenderingRegion
     id: 'RightUpperLeg'
-    bounds: new AE.Rectangle 50, 0, 20, 30
+    bounds: new AE.Rectangle 50, 0, 20, 25
     origin:
       landmark: 'acetabulum'
       x: 10
@@ -145,7 +145,7 @@ LOI.HumanAvatar.Regions =
 
   LeftUpperLeg: new LOI.Engine.RenderingRegion
     id: 'LeftUpperLeg'
-    bounds: new AE.Rectangle 70, 0, 20, 30
+    bounds: new AE.Rectangle 70, 0, 20, 25
     origin:
       landmark: 'acetabulum'
       x: 10
@@ -157,20 +157,20 @@ LOI.HumanAvatar.Regions =
 
   RightLowerLeg: new LOI.Engine.RenderingRegion
     id: 'RightLowerLeg'
-    bounds: new AE.Rectangle 50, 20, 20, 20
+    bounds: new AE.Rectangle 50, 25, 20, 20
     origin:
       landmark: 'knee'
       x: 10
-      y: 10
+      y: 5
     flipHorizontal: true
 
   LeftLowerLeg: new LOI.Engine.RenderingRegion
     id: 'LeftLowerLeg'
-    bounds: new AE.Rectangle 70, 20, 20, 20
+    bounds: new AE.Rectangle 70, 25, 20, 20
     origin:
       landmark: 'knee'
       x: 10
-      y: 10
+      y: 5
 
   LowerLegs: new LOI.Engine.RenderingRegion
     id: 'LowerLegs'
@@ -178,20 +178,20 @@ LOI.HumanAvatar.Regions =
 
   RightFoot: new LOI.Engine.RenderingRegion
     id: 'RightFoot'
-    bounds: new AE.Rectangle 50, 40, 20, 20
+    bounds: new AE.Rectangle 50, 45, 20, 15
     origin:
       landmark: 'ankle'
       x: 10
-      y: 10
+      y: 5
     flipHorizontal: true
 
   LeftFoot: new LOI.Engine.RenderingRegion
     id: 'LeftFoot'
-    bounds: new AE.Rectangle 70, 40, 20, 20
+    bounds: new AE.Rectangle 70, 45, 20, 15
     origin:
       landmark: 'ankle'
       x: 10
-      y: 10
+      y: 5
 
   Feet: new LOI.Engine.RenderingRegion
     id: 'Feet'

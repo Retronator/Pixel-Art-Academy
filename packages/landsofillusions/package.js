@@ -478,6 +478,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('pages/admin/characters/assets..');
   api.addServerFile('pages/admin/characters/assets/server/actorassets');
   api.addServerFile('pages/admin/characters/assets/server/avatartexture');
+  api.addServerFile('pages/admin/characters/assets/server/creatureassets');
 
   api.addComponent('pages/admin/characters/outfitstest..');
   api.addData('pages/admin/characters/outfitstest/bodies/ectomorph');
