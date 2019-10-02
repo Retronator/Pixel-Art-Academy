@@ -6,11 +6,11 @@ RA = Retronator.Accounts
 
 Archiver = require 'archiver'
 
-textureWidth = 1024
-textureHeight = 128
-textureMagnification = 4
+textureWidth = LOI.HumanAvatar.TextureRenderer.textureWidth
+textureHeight = LOI.HumanAvatar.TextureRenderer.textureHeight
+textureMagnification = LOI.HumanAvatar.TextureRenderer.textureMagnification
 regionPadding = 1
-sideOffset = 100
+sideWidth = LOI.HumanAvatar.TextureRenderer.sideWidth
 characterSafeSize = 100
 
 WebApp.connectHandlers.use '/admin/landsofillusions/characters/assets/creatureassets.zip', (request, response, next) ->
@@ -88,7 +88,7 @@ createTextureRegions = ->
   frames = []
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
-    textureOffset = sideOffset * sideIndex
+    textureOffset = sideWidth * sideIndex
 
     for regionName, region of LOI.HumanAvatar.Regions when region.options.bounds
       frames.push
@@ -108,7 +108,7 @@ createTextures = ->
   layoutContext.fillStyle = "grey"
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
-    textureOffset = sideOffset * sideIndex
+    textureOffset = sideWidth * sideIndex
 
     for regionName, region of LOI.HumanAvatar.Regions when region.options.bounds
       x = (region.options.bounds.x() + textureOffset + regionPadding) * textureMagnification
@@ -138,7 +138,7 @@ createTextures = ->
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
     humanAvatarRenderer.drawToContext characterContext,
       rootPart: humanAvatarRenderer.options.part
-      textureOffset: sideOffset * sideIndex
+      textureOffset: sideWidth * sideIndex
       side: side
       lightDirection: new THREE.Vector3(0, -1, -1).normalize()
 
@@ -164,7 +164,7 @@ createTextures = ->
     'knee', 'ankle', 'toeTip']
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
-    landmarksContext.setTransform textureMagnification, 0, 0, textureMagnification, sideOffset * sideIndex * textureMagnification, 0
+    landmarksContext.setTransform textureMagnification, 0, 0, textureMagnification, sideWidth * sideIndex * textureMagnification, 0
 
     for landmark in humanAvatarRenderer.bodyRenderer.landmarks[side]() when landmark.regionId and landmark.name in skeletonLandmarks
       landmarksContext.fillRect landmark.x + 0.25, landmark.y + 0.25, 0.5, 0.5

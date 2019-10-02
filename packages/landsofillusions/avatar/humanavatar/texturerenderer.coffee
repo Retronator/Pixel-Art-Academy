@@ -14,13 +14,19 @@ class LOI.HumanAvatar.TextureRenderer
     LOI.Engine.RenderingSides.Keys.FrontRight
   ]
 
+  @sideWidth = 64
+  @textureWidth = @sideWidth * @textureSides.length
+  @textureHeight = 256
+  @textureMagnification = 4
+
   constructor: (@options = {}) ->
     # Create and automatically update textures.
-    @paletteDataCanvas = new AM.Canvas 1024, 128
+    @paletteDataCanvas = new AM.Canvas @constructor.textureWidth, @constructor.textureHeight
     @paletteDataContext = @paletteDataCanvas.context
 
-    @normalsCanvas = new AM.Canvas 1024, 128
+    @normalsCanvas = new AM.Canvas @constructor.textureWidth, @constructor.textureHeight
     @normalsContext = @normalsCanvas.context
+
 
   render: ->
     return unless @options.humanAvatar.dataReady()
@@ -34,7 +40,7 @@ class LOI.HumanAvatar.TextureRenderer
 
     drawOptions = (side, sideIndex) =>
       rootPart: @options.humanAvatarRenderer.options.part
-      textureOffset: 100 * sideIndex
+      textureOffset: @constructor.sideWidth * sideIndex
       side: side
 
     for side, sideIndex in @constructor.textureSides
@@ -43,7 +49,7 @@ class LOI.HumanAvatar.TextureRenderer
 
       @paletteDataContext.restore()
 
-    @scaledPaletteDataCanvas = AS.Hqx.scale @paletteDataCanvas, 4, AS.Hqx.Modes.NoBlending, false
+    @scaledPaletteDataCanvas = AS.Hqx.scale @paletteDataCanvas, @constructor.textureMagnification, AS.Hqx.Modes.NoBlending, false
 
     # Render normal map.
     @normalsContext.setTransform 1, 0, 0, 1, 0, 0
@@ -61,7 +67,7 @@ class LOI.HumanAvatar.TextureRenderer
     AS.ImageDataHelpers.expandPixels normalImageData, 1
     @normalsContext.putImageData normalImageData, 0, 0
 
-    @scaledNormalsCanvas = AS.Hqx.scale @normalsCanvas, 4, AS.Hqx.Modes.Default, true
+    @scaledNormalsCanvas = AS.Hqx.scale @normalsCanvas, @constructor.textureMagnification, AS.Hqx.Modes.Default, true
 
     # Notify that rendering has completed.
     true
