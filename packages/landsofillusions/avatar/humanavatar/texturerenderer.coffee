@@ -3,7 +3,7 @@ AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.HumanAvatar.TextureRenderer
-  @textureSides = [
+  @textureSides: [
     LOI.Engine.RenderingSides.Keys.Front
     LOI.Engine.RenderingSides.Keys.FrontLeft
     LOI.Engine.RenderingSides.Keys.Left
@@ -14,10 +14,10 @@ class LOI.HumanAvatar.TextureRenderer
     LOI.Engine.RenderingSides.Keys.FrontRight
   ]
 
-  @sideWidth = 64
-  @textureWidth = @sideWidth * @textureSides.length
-  @textureHeight = 256
-  @textureMagnification = 4
+  @sideWidth: 64
+  @textureWidth: @sideWidth * @textureSides.length
+  @textureHeight: 256
+  @textureMagnification: 4
 
   constructor: (@options = {}) ->
     # Create and automatically update textures.

@@ -15,6 +15,6 @@ class LOI.Character.Avatar.Renderers.Chest extends LOI.Character.Avatar.Renderer
 
   _placeRenderers: (side) ->
     # Place the chest shape.
-    @_placeRenderer side, @chestShapeRenderer, 'xiphoid', 'xiphoid'
+    @_placeRenderer side, @chestShapeRenderer, 'vertebraT9', 'vertebraT9'
     @_placeRenderer side, @leftBreastRenderer, 'breastCenter', 'breastLeft'
     @_placeRenderer side, @rightBreastRenderer, 'breastCenter', 'breastRight'

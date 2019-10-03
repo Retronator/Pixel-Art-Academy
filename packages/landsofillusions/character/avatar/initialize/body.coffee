@@ -33,7 +33,7 @@ LOI.Character.Part.registerClasses
           default: 1.65
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
-          landmark: 'navel'
+          landmark: 'vertebraL3'
 
 LOI.Character.Part.registerClasses
   Avatar:
@@ -206,7 +206,7 @@ LOI.Character.Part.registerClasses
           region: LOI.HumanAvatar.Regions.Torso
           additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
           origin:
-            landmark: 'navel'
+            landmark: 'vertebraL3'
 
       Neck: new LOI.Character.Part
         type: 'Avatar.Body.Neck'
@@ -243,7 +243,7 @@ LOI.Character.Part.registerClasses
             type: 'Avatar.Body.Breasts'
         renderer: new LOI.Character.Avatar.Renderers.Chest
           origin:
-            landmark: 'xiphoid'
+            landmark: 'vertebraT9'
             x: 0
             y: 1.5
 
@@ -253,7 +253,7 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/torso/chest/mesomorph/1.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
-            landmark: 'xiphoid'
+            landmark: 'vertebraT9'
             x: 0
             y: 3.5
         landmarks:
@@ -336,7 +336,7 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/torso/abdomen/ectomorph/1.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
-            landmark: 'navel'
+            landmark: 'vertebraL3'
         landmarks:
           xiphoid: new LOI.Character.Avatar.Landmark.Position
             name: 'xiphoid'
@@ -365,7 +365,7 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/torso/groin/narrow.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
-            landmark: 'hypogastrium'
+            landmark: 'vertebraS1'
             x: 0
             y: -2.5
         landmarks:

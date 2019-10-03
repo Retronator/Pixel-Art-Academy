@@ -26,7 +26,7 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
 
   _placeRenderers: (side) ->
     # Place the torso.
-    @_placeRenderer side, @torsoRenderer, 'navel', 'navel'
+    @_placeRenderer side, @torsoRenderer, 'vertebraL3', 'vertebraL3'
 
     # Place the head.
     @_placeRenderer side, @headRenderer, 'atlas', 'atlas'

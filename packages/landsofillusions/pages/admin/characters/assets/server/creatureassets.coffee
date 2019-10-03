@@ -105,7 +105,8 @@ createTextures = ->
   layoutCanvas = new AM.Canvas textureWidth * textureMagnification, textureHeight * textureMagnification
   layoutContext = layoutCanvas.context
 
-  layoutContext.fillStyle = "grey"
+  layoutContext.fillStyle = "white"
+  layoutContext.globalAlpha = 0.3
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
     textureOffset = sideWidth * sideIndex
@@ -118,11 +119,13 @@ createTextures = ->
 
       layoutContext.fillRect x, y, width, height
 
+  layoutContext.globalAlpha = 1
+
   # Render a character for preview purposes.
   characterCanvas = new AM.Canvas textureWidth, textureHeight
   characterContext = characterCanvas.context
 
-  character = LOI.Character.documents.findOne debugName: 'Ariya'
+  character = LOI.Character.documents.findOne debugName: 'Default'
   humanAvatar = new LOI.Character.Avatar character
 
   humanAvatarRenderer = new LOI.Character.Avatar.Renderers.HumanAvatar
@@ -159,8 +162,8 @@ createTextures = ->
 
   # Draw landmarks.
   landmarksContext.fillStyle = 'white'
-  skeletonLandmarks = ['navel', 'xiphoid', 'suprasternalNotch', 'atlas', 'headCenter', 'shoulderLeft', 'shoulderRight',
-    'shoulder', 'elbow', 'wrist', 'fingertip', 'hypogastrium', 'acetabulumLeft', 'acetabulumRight', 'acetabulum',
+  skeletonLandmarks = ['vertebraT9', 'vertebraT5', 'vertebraT1', 'atlas', 'headCenter', 'shoulderLeft', 'shoulderRight',
+    'shoulder', 'elbow', 'wrist', 'fingertip', 'vertebraL3', 'vertebraS1', 'acetabulumLeft', 'acetabulumRight', 'acetabulum',
     'knee', 'ankle', 'toeTip']
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
@@ -170,6 +173,8 @@ createTextures = ->
       landmarksContext.fillRect landmark.x + 0.25, landmark.y + 0.25, 0.5, 0.5
 
     landmarksContext.restore()
+
+  layoutContext.drawImage landmarksCanvas, 0, 0
 
   {layoutCanvas, characterCanvas, landmarksCanvas}
 
@@ -202,80 +207,83 @@ createRigRegion = (side, landmarks) ->
   {header, regions}
 
 humanSkeleton =
-  landmark: 'navel'
+  landmark: 'vertebraL3'
   children:
-    "Lower Spine":
-      landmark: 'xiphoid'
+    "Thoracic Spine Bottom":
+      landmark: 'vertebraT9'
       part: 'Torso'
       children:
-        "Upper Spine":
-          landmark: 'suprasternalNotch'
+        "Thoracic Spine Middle":
+          landmark: 'vertebraT5'
           part: 'Torso'
           children:
-            Neck:
-              landmark: 'atlas'
+            "Thoracic Spine Top":
+              landmark: 'vertebraT1'
               part: 'Torso'
               children:
-                Head:
-                  landmark: 'headCenter'
-                  part: 'Head'
-            "Clavicle Left":
+                Neck:
+                  landmark: 'atlas'
+                  part: 'Torso'
+                  children:
+                    Head:
+                      landmark: 'headCenter'
+            "Left Shoulder":
               landmark: 'shoulderLeft'
               part: 'Torso'
               children:
-                "Upper Arm Left":
+                "Left Upper Arm":
                   landmark: 'elbowLeft'
                   children:
-                    "Lower Arm Left":
+                    "Left Lower Arm":
                       landmark: 'wrist'
                       regionId: 'LeftHand'
                       children:
-                        "Hand Left":
+                        "Left Hand":
                           landmark: 'fingertip'
                           regionId: 'LeftHand'
-            "Clavicle Right":
+            "Right Shoulder":
               landmark: 'shoulderRight'
               part: 'Torso'
               children:
-                "Upper Arm Right":
+                "Right Upper Arm":
                   landmark: 'elbowRight'
                   children:
-                    "Lower Arm Right":
+                    "Right Lower Arm":
                       landmark: 'wrist'
                       regionId: 'RightHand'
                       children:
-                        "Hand Right":
+                        "Right Hand":
                           landmark: 'fingertip'
                           regionId: 'RightHand'
-        Pelvis:
-          landmark: 'hypogastrium'
-          parentLandmark: 'navel'
+        "Lumbar Spine":
+          landmark: 'vertebraS1'
+          parentLandmark: 'vertebraL3'
           part: 'Torso'
           children:
-            "Acetabulum Left":
+            "Left Acetabulum":
               landmark: 'acetabulumLeft'
               part: 'Torso'
               children:
-                "Upper Leg Left":
+                "Left Upper Leg":
                   landmark: 'kneeLeft'
                   children:
-                    "Lower Leg Left":
+                    "Left Lower Leg":
                       landmark: 'ankleLeft'
                       children:
-                        "Foot Left":
+                        "Left Foot":
                           landmark: 'toeTip'
                           regionId: 'LeftFoot'
-            "Acetabulum Right":
+            "Right Acetabulum":
               landmark: 'acetabulumRight'
               part: 'Torso'
               children:
-                "Upper Leg Right":
+                "Right Upper Leg":
                   landmark: 'kneeRight'
                   children:
-                    "Lower Leg Right":
+                    "Right Lower Leg":
                       landmark: 'ankleRight'
                       children:
-                        "Foot Right":
+                        "Right Foot":
                           landmark: 'toeTip'
                           regionId: 'RightFoot'
                           
