@@ -162,7 +162,7 @@ createTextures = ->
 
   # Draw landmarks.
   landmarksContext.fillStyle = 'white'
-  skeletonLandmarks = ['vertebraT9', 'vertebraT5', 'vertebraT1', 'atlas', 'headCenter', 'shoulderLeft', 'shoulderRight',
+  skeletonLandmarks = ['vertebraT9', 'vertebraT1', 'atlas', 'headCenter', 'shoulderLeft', 'shoulderRight',
     'shoulder', 'elbow', 'wrist', 'fingertip', 'vertebraL3', 'vertebraS1', 'acetabulumLeft', 'acetabulumRight', 'acetabulum',
     'knee', 'ankle', 'toeTip']
 
@@ -213,20 +213,16 @@ humanSkeleton =
       landmark: 'vertebraT9'
       part: 'Torso'
       children:
-        "Thoracic Spine Middle":
-          landmark: 'vertebraT5'
+        "Thoracic Spine Top":
+          landmark: 'vertebraT1'
           part: 'Torso'
           children:
-            "Thoracic Spine Top":
-              landmark: 'vertebraT1'
+            Neck:
+              landmark: 'atlas'
               part: 'Torso'
               children:
-                Neck:
-                  landmark: 'atlas'
-                  part: 'Torso'
-                  children:
-                    Head:
-                      landmark: 'headCenter'
+                Head:
+                  landmark: 'headCenter'
             "Left Shoulder":
               landmark: 'shoulderLeft'
               part: 'Torso'
@@ -324,7 +320,7 @@ createRigTemplate = (side, landmarks) ->
         name: boneName
         localRestStartPt: [startVector.x, startVector.y]
         localRestEndPt: [endVector.x, endVector.y]
-        restParentMat: transform.elements
+        restParentMat: _.clone transform.elements
         children: []
 
       allBones[data.id] = boneData
@@ -336,10 +332,12 @@ createRigTemplate = (side, landmarks) ->
 
     # Calculate the new transform.
     if parent
+      rotationDifference = new THREE.Vector3().subVectors endVector, startVector
+      childrenTransform = new THREE.Matrix4().makeRotationZ Math.atan2 rotationDifference.y, rotationDifference.x
+
       rootVector = getLandmarkVector parent.landmark, parent.regionId
-      difference = new THREE.Vector3().subVectors endVector, rootVector
-      childrenTransform = new THREE.Matrix4().makeRotationZ Math.atan2 difference.y, difference.x
-      childrenTransform.setPosition difference
+      translationDifference = new THREE.Vector3().subVectors endVector, rootVector
+      childrenTransform.setPosition translationDifference
 
       childrenTransform.premultiply transform
 
