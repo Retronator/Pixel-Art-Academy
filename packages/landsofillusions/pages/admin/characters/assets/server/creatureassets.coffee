@@ -197,9 +197,11 @@ createRigRegion = (side, landmarks) ->
       # shape and will not have any landmarks of its own (e.g. SexOrgan region).
       landmarkPosition = _.find landmarks, (landmark) -> landmark.name is origin.landmark
 
+    horizontalOffset = if region.options.flipHorizontal then region.options.bounds.width() - origin.x else origin.x
+
     regions.push
       name: "#{region.options.id} #{_.titleCase side}"
-      x: landmarkPosition.x - origin.x + characterSafeSize / 2
+      x: landmarkPosition.x - horizontalOffset + characterSafeSize / 2
       y: landmarkPosition.y - origin.y + characterSafeSize / 2
       width: region.options.bounds.width()
       height: region.options.bounds.height()
@@ -209,79 +211,79 @@ createRigRegion = (side, landmarks) ->
 humanSkeleton =
   landmark: 'vertebraL3'
   children:
-    "Thoracic Spine Bottom":
-      landmark: 'vertebraT9'
+    "Lumbar Spine":
+      landmark: 'vertebraS1'
       part: 'Torso'
       children:
-        "Thoracic Spine Top":
-          landmark: 'vertebraT1'
+        "Left Acetabulum":
+          landmark: 'acetabulumLeft'
           part: 'Torso'
           children:
-            Neck:
-              landmark: 'atlas'
-              part: 'Torso'
+            "Left Upper Leg":
+              landmark: 'kneeLeft'
               children:
-                Head:
-                  landmark: 'headCenter'
-            "Left Shoulder":
-              landmark: 'shoulderLeft'
-              part: 'Torso'
-              children:
-                "Left Upper Arm":
-                  landmark: 'elbowLeft'
+                "Left Lower Leg":
+                  landmark: 'ankleLeft'
                   children:
-                    "Left Lower Arm":
-                      landmark: 'wrist'
-                      regionId: 'LeftHand'
-                      children:
-                        "Left Hand":
-                          landmark: 'fingertip'
-                          regionId: 'LeftHand'
-            "Right Shoulder":
-              landmark: 'shoulderRight'
-              part: 'Torso'
+                    "Left Foot":
+                      landmark: 'toeTip'
+                      regionId: 'LeftFoot'
+        "Right Acetabulum":
+          landmark: 'acetabulumRight'
+          part: 'Torso'
+          children:
+            "Right Upper Leg":
+              landmark: 'kneeRight'
               children:
-                "Right Upper Arm":
-                  landmark: 'elbowRight'
+                "Right Lower Leg":
+                  landmark: 'ankleRight'
                   children:
-                    "Right Lower Arm":
-                      landmark: 'wrist'
-                      regionId: 'RightHand'
-                      children:
-                        "Right Hand":
-                          landmark: 'fingertip'
-                          regionId: 'RightHand'
-        "Lumbar Spine":
-          landmark: 'vertebraS1'
+                    "Right Foot":
+                      landmark: 'toeTip'
+                      regionId: 'RightFoot'
+        "Thoracic Spine Bottom":
+          landmark: 'vertebraT9'
           parentLandmark: 'vertebraL3'
           part: 'Torso'
           children:
-            "Left Acetabulum":
-              landmark: 'acetabulumLeft'
+            "Thoracic Spine Top":
+              landmark: 'vertebraT1'
               part: 'Torso'
               children:
-                "Left Upper Leg":
-                  landmark: 'kneeLeft'
+                Neck:
+                  landmark: 'atlas'
+                  part: 'Torso'
                   children:
-                    "Left Lower Leg":
-                      landmark: 'ankleLeft'
-                      children:
-                        "Left Foot":
-                          landmark: 'toeTip'
-                          regionId: 'LeftFoot'
-            "Right Acetabulum":
-              landmark: 'acetabulumRight'
-              part: 'Torso'
-              children:
-                "Right Upper Leg":
-                  landmark: 'kneeRight'
+                    Head:
+                      landmark: 'headCenter'
+                "Left Shoulder":
+                  landmark: 'shoulderLeft'
+                  part: 'Torso'
                   children:
-                    "Right Lower Leg":
-                      landmark: 'ankleRight'
+                    "Left Upper Arm":
+                      landmark: 'elbowLeft'
                       children:
-                        "Right Foot":
-                          landmark: 'toeTip'
-                          regionId: 'RightFoot'
+                        "Left Lower Arm":
+                          landmark: 'wrist'
+                          regionId: 'LeftHand'
+                          children:
+                            "Left Hand":
+                              landmark: 'fingertip'
+                              regionId: 'LeftHand'
+                "Right Shoulder":
+                  landmark: 'shoulderRight'
+                  part: 'Torso'
+                  children:
+                    "Right Upper Arm":
+                      landmark: 'elbowRight'
+                      children:
+                        "Right Lower Arm":
+                          landmark: 'wrist'
+                          regionId: 'RightHand'
+                          children:
+                            "Right Hand":
+                              landmark: 'fingertip'
+                              regionId: 'RightHand'
                           
 createRigTemplate = (side, landmarks) ->
   boneBodyMap = {}
