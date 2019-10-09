@@ -36,8 +36,12 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/assets/creatureas
     # Export texture regions.
     archive.append EJSON.stringify(createTextureRegions(), indent: true), name: "textureregions.json"
 
+    # Laod default character.
+    defaultCharacter = LOI.Character.documents.findOne debugName: 'Default'
+    defaultHumanAvatar = new LOI.Character.Avatar defaultCharacter
+
     # Export textures.
-    {layoutCanvas, characterCanvas, landmarksCanvas} = createTextures()
+    {layoutCanvas, characterCanvas, landmarksCanvas} = createTextures defaultHumanAvatar
 
     buffer = layoutCanvas.toBuffer 'image/png', compressionLevel: 9
     archive.append Buffer.from(buffer), name: "layouttexture.png"
@@ -49,23 +53,19 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/assets/creatureas
     archive.append Buffer.from(buffer), name: "landmarkstexture.png"
 
     # Export rig regions.
-    defaultBodyPart = LOI.Character.Part.Types.Avatar.Body.create
-      dataLocation: new AMu.Hierarchy.Location
-        rootField: AMu.Hierarchy.create
-          templateClass: LOI.Character.Part.Template
-          type: LOI.Character.Part.Types.Avatar.Body.options.type
-          load: => null
-
-    bodyRenderer = defaultBodyPart.createRenderer
+    defaultHumanAvatarRenderer = new LOI.Character.Avatar.Renderers.HumanAvatar
+      humanAvatar: defaultHumanAvatar
       useDatabaseSprites: true
+    ,
+      true
 
     for side, key of LOI.Engine.RenderingSides.Keys
-      landmarks = bodyRenderer.landmarks[key]()
+      landmarks = defaultHumanAvatarRenderer.bodyRenderer.landmarks[key]()
       archive.append EJSON.stringify(createRigRegion(key, landmarks), indent: true), name: "rigregions/#{_.toLower key}.json"
 
     # Export rig templates.
     for side, key of LOI.Engine.RenderingSides.Keys
-      landmarks = bodyRenderer.landmarks[key]()
+      landmarks = defaultHumanAvatarRenderer.bodyRenderer.landmarks[key]()
       archive.append EJSON.stringify(createRigTemplate(key, landmarks), indent: true), name: "rigtemplates/#{_.toLower key}.creaRig"
 
     # Complete exporting.
@@ -101,7 +101,7 @@ createTextureRegions = ->
 
   {meta, frames}
 
-createTextures = ->
+createTextures = (humanAvatar) ->
   layoutCanvas = new AM.Canvas textureWidth * textureMagnification, textureHeight * textureMagnification
   layoutContext = layoutCanvas.context
 
@@ -124,9 +124,6 @@ createTextures = ->
   # Render a character for preview purposes.
   characterCanvas = new AM.Canvas textureWidth, textureHeight
   characterContext = characterCanvas.context
-
-  character = LOI.Character.documents.findOne debugName: 'Default'
-  humanAvatar = new LOI.Character.Avatar character
 
   humanAvatarRenderer = new LOI.Character.Avatar.Renderers.HumanAvatar
     humanAvatar: humanAvatar
@@ -162,14 +159,23 @@ createTextures = ->
 
   # Draw landmarks.
   landmarksContext.fillStyle = 'white'
-  skeletonLandmarks = ['vertebraT9', 'vertebraT1', 'atlas', 'headCenter', 'shoulderLeft', 'shoulderRight',
-    'shoulder', 'elbow', 'wrist', 'fingertip', 'vertebraL3', 'vertebraS1', 'acetabulumLeft', 'acetabulumRight', 'acetabulum',
-    'knee', 'ankle', 'toeTip']
+  drawnSkeletonLandmarks = ['vertebra', 'atlas', 'headTop', 'shoulder', 'elbow', 'wrist', 'fingertip', 'acetabulum',
+    'knee', 'ankle', 'toeTip', 'hairBack', 'hairFront']
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
     landmarksContext.setTransform textureMagnification, 0, 0, textureMagnification, sideWidth * sideIndex * textureMagnification, 0
 
-    for landmark in humanAvatarRenderer.bodyRenderer.landmarks[side]() when landmark.regionId and landmark.name in skeletonLandmarks
+    for landmark in humanAvatarRenderer.bodyRenderer.landmarks[side]() when landmark.regionId
+      # See if we should draw this landmark.
+      drawLandmark = false
+      for drawnSkeletonLandmark in drawnSkeletonLandmarks
+        if _.startsWith landmark.name, drawnSkeletonLandmark
+          drawLandmark = true
+          break
+
+      continue unless drawLandmark
+
+      # Draw a square for the landmark.
       landmarksContext.fillRect landmark.x + 0.25, landmark.y + 0.25, 0.5, 0.5
 
     landmarksContext.restore()
@@ -255,7 +261,48 @@ humanSkeleton =
                   part: 'Torso'
                   children:
                     Head:
-                      landmark: 'headCenter'
+                      landmark: 'headTop'
+                      children:
+                        "Hair Left 1":
+                          landmark: 'hairLeft2'
+                          parentLandmark: 'hairLeft1'
+                          part: 'Hair'
+                          children:
+                            "Hair Left 2":
+                              landmark: 'hairLeft3'
+                              part: 'Hair'
+                              children:
+                                "Hair Left 3":
+                                  landmark: 'hairLeft4'
+                                  part: 'Hair'
+                        "Hair Right 1":
+                          landmark: 'hairRight2'
+                          parentLandmark: 'hairRight1'
+                          part: 'Hair'
+                          children:
+                            "Hair Right 2":
+                              landmark: 'hairRight3'
+                              part: 'Hair'
+                              children:
+                                "Hair Right 3":
+                                  landmark: 'hairRight4'
+                                  part: 'Hair'
+                        "Hair Back 1":
+                          landmark: 'hairBack2'
+                          parentLandmark: 'hairBack1'
+                          part: 'Hair'
+                          children:
+                            "Hair Back 2":
+                              landmark: 'hairBack3'
+                              part: 'Hair'
+                              children:
+                                "Hair Back 3":
+                                  landmark: 'hairBack4'
+                                  part: 'Hair'
+                                  children:
+                                    "Hair Back 4":
+                                      landmark: 'hairBack5'
+                                      part: 'Hair'
                 "Left Shoulder":
                   landmark: 'shoulderLeft'
                   part: 'Torso'
@@ -291,10 +338,6 @@ createRigTemplate = (side, landmarks) ->
   nextBoneId = 1
 
   addBones = (parent, boneName, data, transform) ->
-    # Assign an ID to the bone.
-    data.id = nextBoneId
-    nextBoneId++
-
     if parent
       # Add bone spanning from child to parent landmark.
       transformInverse = new THREE.Matrix4().getInverse transform
@@ -306,6 +349,9 @@ createRigTemplate = (side, landmarks) ->
         else
           landmark = _.find landmarks, (landmark) -> landmark.name is name
 
+        # Some landmarks might not be present for the current side.
+        return unless landmark
+
         # Note: Creature coordinate space has positive Y pointing upwards.
         vector = new THREE.Vector3 landmark.x, -landmark.y, 0
 
@@ -316,6 +362,13 @@ createRigTemplate = (side, landmarks) ->
 
       startVector = getLandmarkVector data.parentLandmark or parent.landmark, parent.regionId
       endVector = getLandmarkVector data.landmark, data.regionId
+
+      # Skip bones that don't have their landmarks present.
+      return unless startVector and endVector
+
+      # Assign an ID to the bone.
+      data.id = nextBoneId
+      nextBoneId++
 
       boneData =
         id: data.id
@@ -348,7 +401,7 @@ createRigTemplate = (side, landmarks) ->
 
     for boneName, child of data.children
       addBones data, boneName, child, childrenTransform
-      boneData?.children.push child.id
+      boneData?.children.push child.id if child.id
 
   addBones null, null, humanSkeleton, new THREE.Matrix4
 
