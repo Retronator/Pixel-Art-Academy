@@ -10,7 +10,7 @@ class AM.Hierarchy.Field
     metaData = null
 
     cleanTemplate = ->
-      templateNode?.options.load.stop()
+      templateNode?.options.load.stop?()
       templateNode?.destroy()
       templateNode = null
 
@@ -54,10 +54,7 @@ class AM.Hierarchy.Field
             ,
               data.template
             address: new AM.Hierarchy.Address
-            load: new ComputedField =>
-              data.template.data
-            ,
-              true
+            load: => data.template.data
             save: =>
               throw new AE.InvalidOperationException "You cannot modify published versions of templates."
 

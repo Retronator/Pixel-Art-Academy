@@ -23,34 +23,44 @@ class LOI.Character.Actor extends LOI.Character.Person
     if Meteor.isServer and not Meteor.settings.startEmpty
       Document.startup => @_addActorToDatabase()
 
+  @_actorIdsBeingAdded = []
+
   @_addActorToDatabase: ->
     # Make sure we didn't already add them.
-    return if LOI.Character.documents.findOne thingId: @id()
+    id = @id()
+    return if LOI.Character.documents.findOne thingId: id
+
+    # Make sure we aren't already adding them.
+    return if id in @_actorIdsBeingAdded
 
     # We need the admin user to add this character to.
     return unless admin = RA.User.documents.findOne username: 'admin'
 
     # Fetch the data.
-    return unless documentUrl = @nonPlayerCharacterDocumentUrl?()
+    return unless assetUrls = @assetUrls?()
 
-    [packageId, pathParts...] = documentUrl.split '/'
-    path = pathParts.join '/'
-    json = LOI.packages[packageId].assets.getText path
-    character = JSON.parse json
+    version = @version()
+    documentUrl = Meteor.absoluteUrl "#{assetUrls}.json?#{version}"
 
-    # Replace the user to admin.
-    character.user = _id: admin._id
+    @_actorIdsBeingAdded.push id
 
-    # Create a translation for the name.
-    fullNameTranslationId = AB.Translation.documents.insert lastEditTime: new Date
-    AB.Translation.update fullNameTranslationId, Artificial.Babel.defaultLanguage, @fullName()
-    character.avatar.fullName = _id: fullNameTranslationId
+    # Note: We need to get the document asynchronously since the server is still setting up at this point.
+    HTTP.get documentUrl, (error, result) =>
+      character = result.data
 
-    # Insert the character with a proper document ID and save
-    # the thing ID on the document to prevent multiple insertions.
-    character._id = Random.id()
-    character.thingId = @id()
-    LOI.Character.documents.insert character
+      # Replace the user to admin.
+      character.user = _id: admin._id
+
+      # Create a translation for the name.
+      fullNameTranslationId = AB.Translation.documents.insert lastEditTime: new Date
+      AB.Translation.update fullNameTranslationId, Artificial.Babel.defaultLanguage, @fullName()
+      character.avatar.fullName = _id: fullNameTranslationId
+
+      # Insert the character with a proper document ID and save
+      # the thing ID on the document to prevent multiple insertions.
+      character._id = Random.id()
+      character.thingId = @id()
+      LOI.Character.documents.insert character
 
   constructor: ->
     super arguments...
@@ -72,10 +82,9 @@ class LOI.Character.Actor extends LOI.Character.Person
       # Load the NPC document.
       if assetUrls = @constructor.assetUrls?()
         version = @constructor.version()
+        documentUrl = "#{assetUrls}.json?#{version}"
 
-        documentUrl = @versionedUrl "#{assetUrls}.json?#{version}"
-
-        HTTP.call 'GET', documentUrl, (error, result) =>
+        HTTP.get documentUrl, (error, result) =>
           if error
             console.error error
             return

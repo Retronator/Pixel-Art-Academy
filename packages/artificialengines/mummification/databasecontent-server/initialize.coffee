@@ -1,8 +1,5 @@
 AM = Artificial.Mummification
 
-Request = request
-requestGet = Meteor.wrapAsync Request.get, Request
-
 Document.prepare ->
   return if Meteor.settings.startEmpty
 
@@ -11,8 +8,10 @@ Document.prepare ->
 
   # Try to retrieve the database content directory.
   directoryUrl = Meteor.absoluteUrl "databasecontent/directory.json"
-  requestGet directoryUrl, encoding: null, (error, response, body) ->
-    return unless _.startsWith response.headers['content-type'], 'application/json'
+  HTTP.get directoryUrl, (error, result) ->
+    return unless _.startsWith result.headers['content-type'], 'application/json'
 
-    directory = EJSON.parse body.toString()
+    # Note: We need to parse with EJSON instead of using result.data (which
+    # is parsed with JSON) to get date objects properly reconstructed.
+    directory = EJSON.parse result.content
     AM.DatabaseContent.import directory
