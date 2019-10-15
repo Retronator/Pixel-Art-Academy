@@ -40,6 +40,8 @@ class AM.Hierarchy.Field
           # We need to recreate the node when template id or version changes.
           return templateNode if templateNode?.options.template.id is data.template.id and templateNode?.options.template.version is data.template.version
 
+          cleanTemplate()
+
           # We create a node similarly to how the template prepares it, but we load directly the embedded data instead
           # of needing to query template document. Note that we reset the address hierarchy from here on out to match
           # the address relative to the template.
@@ -52,17 +54,24 @@ class AM.Hierarchy.Field
             ,
               data.template
             address: new AM.Hierarchy.Address
-            load: new ComputedField => data.template.data
+            load: new ComputedField =>
+              data.template.data
+            ,
+              true
             save: =>
               throw new AE.InvalidOperationException "You cannot modify published versions of templates."
 
           templateNode
   
         else
-          # Return the template document's root node (it will be null until the subscription kicks in).
-          templateId = data.templateId or data.template.id
+          cleanTemplate()
 
-          options.templateClass.documents.findOne(templateId)?.node
+          # Return the template document's root node (it will be null until the subscription kicks
+          # in). We have to save the reference to the node so that it gets properly cleaned up.
+          templateId = data.templateId or data.template.id
+          templateNode = options.templateClass.documents.findOne(templateId)?.getNode()
+
+          templateNode
 
       else if data.node
         cleanTemplate()
@@ -70,6 +79,8 @@ class AM.Hierarchy.Field
         # We create a new node if needed (if not, the node's load
         # function will already be dynamically loading new values).
         unless node
+          cleanNode()
+
           # We allow sending in already instantiated nodes.
           if data.node instanceof AM.Hierarchy.Node
             node = data.node

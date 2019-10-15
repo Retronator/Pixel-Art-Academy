@@ -113,12 +113,10 @@ class AM.Hierarchy.Template extends AM.Document
     # Return the index of the reverted version.
     template.latestVersion.index
 
-  constructor: ->
-    super arguments...
-    
+  getNode: ->
     # The field that loaded the template will want a node with our data.
     # Note that this resets the address hierarchy from here on out to this template.
-    @node = new AM.Hierarchy.Node
+    new AM.Hierarchy.Node
       templateClass: @constructor
       template: @
       address: new AM.Hierarchy.Address
