@@ -14,7 +14,8 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
 
     return unless @options.dataLocation
 
-    @parts = new ReactiveField []
+    @_parts = []
+    @parts = new ReactiveField @_parts
 
     @_partsByOrder = {}
     @partsByOrder = new ReactiveField @_partsByOrder
@@ -26,9 +27,14 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
 
       unless fields
         # Clean any previous parts.
+        part.destroy() for part in @_parts
+
+        @_parts = []
+        @parts @_parts
+
         @_partsByOrder = {}
-        @partsByOrder {}
-        @parts []
+        @partsByOrder @_partsByOrder
+
         return
 
       dotFields = {}
@@ -76,6 +82,10 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
       # Clean out undefined parts that would appear in case any class type was missing.
       parts = _.without parts, undefined
 
+      # Destroy removed parts.
+      removedParts = _.difference @_parts, parts
+      removedPart.destroy() for removedPart in removedParts
+
       # Update local cache.
       @_partsByOrder = partsByOrder
 
@@ -83,10 +93,13 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
       @partsByOrder partsByOrder
 
       # Update reactive parts array.
-      @parts parts
+      @_parts = parts
+      @parts @_parts
 
   destroy: ->
     super arguments...
+
+    part.destroy() for part in @parts()
 
     @_arrayAutorun.stop()
 

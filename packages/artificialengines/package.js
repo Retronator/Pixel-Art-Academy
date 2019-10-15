@@ -94,6 +94,8 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/inherit');
   api.addFile('everywhere/lodash/parse');
 
+  api.addFile('everywhere/tracker/delayedautorun');
+
   api.addFile('everywhere/csvparser');
   api.addFile('everywhere/date');
   api.addFile('everywhere/datehelper');

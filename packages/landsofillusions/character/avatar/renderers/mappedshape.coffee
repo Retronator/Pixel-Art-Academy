@@ -119,6 +119,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       true
 
   destroy: ->
+    super arguments...
+
     for side in @options.renderingSides
       @spriteDataInfo[side].stop()
       @spriteData[side].stop()

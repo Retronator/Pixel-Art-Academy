@@ -14,6 +14,8 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @_renderers = []
       @_createRenderers()
       @_renderers
+    ,
+      true
 
     @_landmarks = {}
 
@@ -48,7 +50,10 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       true
     
   destroy: ->
-    renderer.destroy() for renderer in @renderers()
+    super arguments...
+
+    @renderers.stop()
+    renderer.destroy() for renderer in @_renderers
 
     for side in @options.renderingSides
       @landmarks[side].stop()

@@ -95,7 +95,7 @@ class LOI.Character.Part
         parent: @
 
   destroy: ->
-    property.destroy() for property in @properties
+    property.destroy() for propertyName, property of @properties
 
   create: (options) ->
     # Set this part's type as template meta data.

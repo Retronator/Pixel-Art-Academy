@@ -165,6 +165,8 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       true
 
   destroy: ->
+    super arguments...
+
     for side in @options.renderingSides
       @spriteDataInfo[side].stop()
       @spriteData[side].stop()

@@ -23,8 +23,17 @@ class LOI.HumanAvatar extends LOI.Avatar
   destroy: ->
     super arguments...
 
+    # Destroy rendering systems.
     @_renderer?.destroy()
     @_renderObject?.destroy()
+
+    # Destroy parts.
+    @body?.destroy()
+    @outfit?.destroy()
+
+    # Destroy data hierarchy.
+    @options.bodyDataField?.destroy()
+    @options.outfitDataField?.destroy()
 
     @dataReady.stop()
     
@@ -33,12 +42,19 @@ class LOI.HumanAvatar extends LOI.Avatar
     @_renderer
 
   createRenderer: (options) ->
+    console.log "Creating human avatar renderer", @ if LOI.debug
     new LOI.Character.Avatar.Renderers.HumanAvatar _.extend({}, options, humanAvatar: @), true
 
   getRenderObject: ->
-    @_renderObject ?= Tracker.nonreactive => new @constructor.RenderObject @
+    @_renderObject ?= Tracker.nonreactive =>
+      console.log "Creating human avatar render object", @ if LOI.debug
+      new @constructor.RenderObject @
+
     @_renderObject
 
   getPhysicsObject: ->
-    @_physicsObject ?= Tracker.nonreactive => new @constructor.PhysicsObject @
+    @_physicsObject ?= Tracker.nonreactive =>
+      console.log "Creating human avatar physics object", @ if LOI.debug
+      new @constructor.PhysicsObject @
+
     @_physicsObject

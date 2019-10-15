@@ -47,6 +47,8 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
       true
     
   destroy: ->
+    super arguments...
+
     @hiddenRegionIds.stop()
     @_ready.stop()
     renderer.destroy() for renderer in @renderers

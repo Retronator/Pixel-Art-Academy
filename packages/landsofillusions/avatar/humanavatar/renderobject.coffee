@@ -55,6 +55,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       do (animatedMesh) =>
         animatedMesh._updateCreatureRendererAutorun = Tracker.autorun (computation) =>
           return unless creatureRenderer = animatedMesh.creatureRenderer()
+          console.log "Updating human avatar render object material", @ if LOI.debug
+
           creatureRenderer.renderMesh.mainMaterial = animatedMesh.options.material
           @scene().manager.addedSceneObjects()
 
@@ -66,6 +68,11 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       true
 
     @_prepareMeshAutorun = Tracker.autorun (computation) =>
+      # Bone corrections will need avatar sprites so wait until they are loaded.
+      return unless LOI.Assets.Sprite.cacheReady()
+
+      console.log "Preparing human avatar render object mesh", @ if LOI.debug
+
       heightValue = @humanAvatar.body.properties.height.options.dataLocation()
       heightOptions = LOI.Character.Part.Types.Avatar.Body.options.properties.height.options
       targetHeight = _.clamp heightValue or heightOptions.default, heightOptions.min, heightOptions.max
@@ -123,11 +130,14 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @_prepareTexturesAutorun = Tracker.autorun (computation) =>
       # See if we will get texture data, or we need to render them ad-hoc.
       return unless @humanAvatar.dataReady()
+      console.log "Preparing human avatar render object textures", @ if LOI.debug
 
       textures = @humanAvatar.options.textures?()
 
       # If we have textures prepared and don't have a custom outfit, we load pre-rendered textures.
       if textures?.paletteData and textures?.normals and not @humanAvatar.customOutfit() and not @constructor.debugLandmarks and not @constructor.debugMapping
+        console.log "Loading from URL", textures.paletteData.url if LOI.debug
+
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.
@@ -148,19 +158,23 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         image.src = textures.paletteData.url
 
       else
-        # We need to render textures ad-hoc. Create texture renderers.
+        console.log "Rendering ad-hoc", @humanAvatarRenderer?, @textureRenderer? if LOI.debug
+        # We need to render textures ad-hoc. Create texture renderer.
         @humanAvatarRenderer ?= new LOI.Character.Avatar.Renderers.HumanAvatar
           humanAvatar: @humanAvatar
           renderTexture: true
         ,
           true
     
-        # Create and automatically update textures.
         @textureRenderer ?= new LOI.HumanAvatar.TextureRenderer
           humanAvatar: @humanAvatar
           humanAvatarRenderer: @humanAvatarRenderer
-    
-        @_textureUpdateAutorun = Tracker.autorun (computation) =>
+
+        # Start reactively updating textures.
+        @_textureUpdateAutorun?.stop()
+        @_textureUpdateAutorun = Tracker.delayedAutorun (computation) =>
+          console.log "Rendering human avatar render object textures", @ if LOI.debug
+
           # Render scaled palette data and normal textures.
           return unless @textureRenderer.render()
     
@@ -235,6 +249,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
     @_prepareMeshAutorun?.stop()
     @_prepareTexturesAutorun?.stop()
+    @_textureUpdateAutorun?.stop()
 
     @humanAvatarRenderer?.destroy()
 

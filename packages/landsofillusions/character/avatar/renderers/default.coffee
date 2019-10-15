@@ -124,9 +124,11 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       true
 
   destroy: ->
-    renderer.destroy() for renderer in @renderers()
+    super arguments...
+
     @renderers.stop()
-    
+    renderer.destroy() for renderer in @_renderers
+
     for side in @options.renderingSides
       @landmarks[side].stop()
       @usedLandmarks[side].stop()

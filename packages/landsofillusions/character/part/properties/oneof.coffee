@@ -15,5 +15,10 @@ class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
         dataLocation: @options.dataLocation
         parent: @
 
+  destroy: ->
+    super arguments...
+
+    @part.destroy()
+
   childPartOfType: (typeTemplateOrId) ->
     @part.childPartOfType typeTemplateOrId

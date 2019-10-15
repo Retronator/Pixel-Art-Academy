@@ -11,9 +11,13 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
     propertyRendererOptions = @_cloneRendererOptions()
 
+    @_renderers = []
     @renderers = new ComputedField =>
+      renderer.destroy() for renderer in @_renderers
+      @_renderers = []
+
       # Get the region we're in.
-      return [] unless regionId = @options.part.properties.region.options.dataLocation()
+      return @_renderers unless regionId = @options.part.properties.region.options.dataLocation()
       region = LOI.HumanAvatar.Regions[regionId]
 
       # Resolve multiple regions.
@@ -21,16 +25,16 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
       shapeParts = @options.part.properties.shapes.parts()
 
-      renderers = []
-
       for regionId in regionIds
         for part in shapeParts
           renderer = part.createRenderer _.extend propertyRendererOptions,
             region: LOI.HumanAvatar.Regions[regionId]
 
-          renderers.push renderer
+          @_renderers.push renderer
 
-      renderers
+      @_renderers
+    ,
+      true
 
     for side in @options.renderingSides
       do (side) =>
@@ -59,8 +63,10 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
       _.every @renderers(), (renderer) => renderer.ready()
       
   destroy: ->
-    renderer.destroy() for renderer in @renderers()
+    super arguments...
+
     @renderers.stop()
+    renderer.destroy() for renderer in @_renderers
 
     for side in @options.renderingSides
       @landmarks[side].stop()

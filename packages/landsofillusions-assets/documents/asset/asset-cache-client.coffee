@@ -24,6 +24,8 @@ class LOI.Assets.Asset extends AM.Document
 
         @_cache cache
 
+        console.log "Loaded asset cache", @ if LOI.debug
+
   @cacheReady: ->
     @_cache()?
 
