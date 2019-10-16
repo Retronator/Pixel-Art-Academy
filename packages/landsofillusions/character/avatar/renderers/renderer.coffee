@@ -197,6 +197,11 @@ class LOI.Character.Avatar.Renderers.Renderer
       # This is a normal region.
       context.setTransform 1, 0, 0, 1, options.textureOffset + bounds.left(), bounds.top()
 
+    # If the region origin is manually offset (such as for facial hair shape renderers that aren't
+    # positioned relative to the region origin landmark), we have to further translate the context.
+    if regionOriginOffset = @_regionOriginOffset?[options.side]
+      context.translate regionOriginOffset.x, regionOriginOffset.y
+
   _usedLandmarksCenter: (side) ->
     center = x: 0, y: 0
 

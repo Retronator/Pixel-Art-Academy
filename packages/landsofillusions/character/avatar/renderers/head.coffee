@@ -28,6 +28,23 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
       @_placeRenderer side, hairRenderer, 'headCenter', 'headCenter'
       @_placeRenderer side, hairRenderer, 'mouth', 'mouth'
 
+    # Since facial hair renderers don't use the headCenter landmark but mouth instead, we need to pass the
+    # headCenter-to-mouth offset down into the renderer so that it can position the sprite correctly when rendering to
+    # the texture region as that one only has the headCenter landmark.
+    headLandmarks = @headShapeRenderer.landmarks[side]()
+    mouthLandmark = _.find headLandmarks, (landmark) => landmark.name is 'mouth'
+    headCenterLandmark = _.find headLandmarks, (landmark) => landmark.name is 'headCenter'
+
+    if mouthLandmark and headCenterLandmark
+      regionOriginOffset =
+        x: mouthLandmark.x - headCenterLandmark.x
+        y: mouthLandmark.y - headCenterLandmark.y
+
+      for hairRenderer in @hairRenderers when hairRenderer.options.part.options.type is LOI.Character.Part.Types.Avatar.Body.FacialHair.options.type
+        for hairShapeRenderer in hairRenderer.renderers()
+          hairShapeRenderer._regionOriginOffset ?= {}
+          hairShapeRenderer._regionOriginOffset[side] = regionOriginOffset
+
   drawToContext: (context, options = {}) ->
     return unless @ready()
 
