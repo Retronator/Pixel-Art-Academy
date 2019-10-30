@@ -50,6 +50,8 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
       LOI.HumanAvatar.Regions.HairMiddle
       LOI.HumanAvatar.Regions.HairBehind
       LOI.HumanAvatar.Regions.TorsoClothes
+      LOI.HumanAvatar.Regions.BodyClothes
+      LOI.HumanAvatar.Regions.BodyClothesTight
     ]
       unpositionedLandmarks = _.filter landmarks, (landmark) => landmark.regionId is region.id
       _.pullAll landmarks, unpositionedLandmarks

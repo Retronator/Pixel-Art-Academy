@@ -44,8 +44,8 @@ class AS.AnimatedMesh extends AS.RenderObject
 
       @materials.updated()
 
-    # Create creature objects.
-    @creature = new ComputedField =>
+    # Prepare animation data.
+    @correctedData = new ComputedField =>
       return unless data = @data()
 
       boneCorrections = @boneCorrections()
@@ -54,23 +54,39 @@ class AS.AnimatedMesh extends AS.RenderObject
       if boneCorrections
         data = _.clone data
         data.skeleton = _.clone data.skeleton
+        data.animation = _.clone data.animation
+
+        for animationName, animation of data.animation
+          data.animation[animationName] = _.clone animation
+          data.animation[animationName].bones = _.cloneDeep animation.bones
 
         for boneName, correction of boneCorrections
-          data.skeleton[boneName] = _.cloneDeep data.skeleton[boneName]
-          bone = data.skeleton[boneName]
-          matrix4 = new THREE.Matrix4
-          matrix4.elements = bone.restParentMat
+          unless data.skeleton[boneName]
+            console.warn "Bone #{boneName} to be corrected does not exist in the skeleton."
+            continue
 
-          matrix3 = new THREE.Matrix3().setFromMatrix4 matrix4
-          matrix3 = new THREE.Matrix3().getInverse matrix3
+          for animationName, animation of data.animation
+            for frameNumber, frame of animation.bones
+              # Offset bone and all children. We do this in world space to avoid computation of proper correction in
+              # bone space which would require calculating all hierarchy matrices per frame. For non-extreme animations
+              # (that don't go too far away from the rest pose) this is good enough.
+              offsetBone = (bone) =>
+                frame[bone.name].start_pt[0] += correction.x
+                frame[bone.name].start_pt[1] -= correction.y
+                frame[bone.name].end_pt[0] += correction.x
+                frame[bone.name].end_pt[1] -= correction.y
 
-          translation = new THREE.Vector2 correction.x, -correction.y
-          translation.applyMatrix3(matrix3).multiplyScalar -1
+                for childId in bone.children
+                  childBone = _.find data.skeleton, (bone) => bone.id is childId
+                  offsetBone childBone
 
-          bone.localRestStartPt[0] += translation.x
-          bone.localRestStartPt[1] += translation.y
-          bone.localRestEndPt[0] += translation.x
-          bone.localRestEndPt[1] += translation.y
+              offsetBone data.skeleton[boneName]
+
+      data
+
+    # Create creature objects.
+    @creature = new ComputedField =>
+      return unless data = @correctedData()
 
       new AS.Creature data
     ,
@@ -78,7 +94,7 @@ class AS.AnimatedMesh extends AS.RenderObject
 
     @creatureManager = new ComputedField =>
       return unless creature = @creature()
-      data = @data()
+      data = @correctedData()
 
       creatureManager = new AS.CreatureManager creature
       @_autoBlendSet = false
@@ -121,7 +137,7 @@ class AS.AnimatedMesh extends AS.RenderObject
       return unless creatureRenderer = @creatureRenderer()
 
       return unless animationName = @currentAnimationName()
-      return unless animation = creatureManager.GetAnimation animationName if animationName
+      return unless animation = creatureManager.GetAnimation animationName
 
       if @_autoBlendSet
         blendRate = 1 / @blendTime() / @options.playbackFPS

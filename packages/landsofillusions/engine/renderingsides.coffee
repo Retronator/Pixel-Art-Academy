@@ -53,3 +53,7 @@ class LOI.Engine.RenderingSides
 
   @getDirectionForAngle: (angle) ->
     new THREE.Vector3 Math.sin(angle), 0, Math.cos angle
+
+  @getDirectionForSide: (side) ->
+    angle = LOI.Engine.RenderingSides.angles[side]
+    @getDirectionForAngle angle

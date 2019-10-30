@@ -55,6 +55,14 @@ class C3.Design.Terminal.MainMenu extends AM.Component
       for template in templates
         template.translatedName = AB.translate(template.name).text
 
+      # Schedule repositioning of the scroll after the list has updated.
+      Tracker.afterFlush =>
+        Tracker.autorun (computation) =>
+          return unless @isRendered()
+          computation.stop()
+
+          @$('.templates .document-selection')?.scrollTop @_templatesDocumentSelectionScrollTop
+
       _.sortBy templates, 'translatedName'
 
     partTypes = LOI.Character.Part.allAvatarPartTypeIds()
@@ -89,6 +97,7 @@ class C3.Design.Terminal.MainMenu extends AM.Component
       'change .category-selection': @onChangeCategorySelection
       'click .template-selection-button': @onClickTemplateSelectionButton
       'click .new-template-button': @onClickNewTemplateButton
+      'scroll .templates .document-selection': @onScrollTemplatesDocumentSelection
 
   onClickCharacterSelectionButton: (event) ->
     character = @currentData()
@@ -145,3 +154,6 @@ class C3.Design.Terminal.MainMenu extends AM.Component
 
     # Clean up any previous character selection so the interface knows we're editing a template.
     @terminal.screens.character.setCharacterId null
+
+  onScrollTemplatesDocumentSelection: (event) ->
+    @_templatesDocumentSelectionScrollTop = event.target.scrollTop

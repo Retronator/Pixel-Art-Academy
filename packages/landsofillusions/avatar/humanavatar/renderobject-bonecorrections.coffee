@@ -4,107 +4,130 @@ LOI = LandsOfIllusions
 class LOI.HumanAvatar.RenderObject extends LOI.HumanAvatar.RenderObject
   @_boneHierarchy =
     children:
-      Xiphoid:
+      "Lumbar Spine":
         landmark: 'navel'
         children:
-          Suprasternum:
+          "Thoracic Spine Bottom":
             part: 'AbdomenShape'
             partPath: 'torso.abdomen.shape'
-            landmark: 'xiphoid'
+            landmark: 'navel'
             children:
-              Atlas:
-                part: 'ChestShape'
-                partPath: 'torso.chest.shape'
-                landmark: 'suprasternalNotch'
+              "Thoracic Spine Top":
+                part: 'AbdomenShape'
+                partPath: 'torso.abdomen.shape'
+                landmark: 'xiphoid'
                 children:
-                  Head:
-                    part: 'NeckShape'
-                    partPath: 'torso.neck.shape'
-                    landmark: 'atlas'
-          "Shoulder Left":
-            part: 'AbdomenShape'
-            partPath: 'torso.abdomen.shape'
-            landmark: 'xiphoid'
-            children:
-              "Elbow Left":
-                part: 'ChestShape'
-                partPath: 'torso.chest.shape'
-                landmark: 'shoulderLeft'
-                children:
-                  "Wrist Left":
-                    part: 'UpperArmShape'
-                    partPath: 'arms.upperArm.shape'
-                    landmark: 'elbow'
-                    parentLandmark: 'shoulder'
+                  Neck:
+                    part: 'ChestShape'
+                    partPath: 'torso.chest.shape'
+                    landmark: 'suprasternalNotch'
                     children:
-                      "Hand Left":
-                        part: 'LowerArmShape'
-                        partPath: 'arms.lowerArm.shape'
-                        landmark: 'wrist'
-          "Shoulder Right":
-            part: 'AbdomenShape'
-            partPath: 'torso.abdomen.shape'
-            landmark: 'xiphoid'
-            children:
-              "Elbow Right":
-                part: 'ChestShape'
-                partPath: 'torso.chest.shape'
-                landmark: 'shoulderRight'
-                children:
-                  "Wrist Right":
-                    part: 'UpperArmShape'
-                    partPath: 'arms.upperArm.shape'
-                    landmark: 'elbow'
-                    parentLandmark: 'shoulder'
-                    flipped: true
+                      Head:
+                        part: 'NeckShape'
+                        partPath: 'torso.neck.shape'
+                        landmark: 'atlas'
+                  "Left Shoulder":
+                    part: 'ChestShape'
+                    partPath: 'torso.chest.shape'
+                    landmark: 'suprasternalNotch'
                     children:
-                      "Hand Right":
-                        part: 'LowerArmShape'
-                        partPath: 'arms.lowerArm.shape'
-                        landmark: 'wrist'
-                        flipped: true
-          "Acetabulum Left":
+                      "Left Upper Arm":
+                        part: 'ChestShape'
+                        partPath: 'torso.chest.shape'
+                        landmark: 'shoulderLeft'
+                        parentLandmark: 'suprasternalNotch'
+                        children:
+                          "Left Lower Arm":
+                            part: 'UpperArmShape'
+                            partPath: 'arms.upperArm.shape'
+                            landmark: 'elbow'
+                            parentLandmark: 'shoulder'
+                            children:
+                              "Left Hand":
+                                part: 'LowerArmShape'
+                                partPath: 'arms.lowerArm.shape'
+                                landmark: 'wrist'
+                  "Right Shoulder":
+                    part: 'ChestShape'
+                    partPath: 'torso.chest.shape'
+                    landmark: 'suprasternalNotch'
+                    children:
+                      "Right Upper Arm":
+                        part: 'ChestShape'
+                        partPath: 'torso.chest.shape'
+                        landmark: 'shoulderRight'
+                        parentLandmark: 'suprasternalNotch'
+                        children:
+                          "Right Lower Arm":
+                            part: 'UpperArmShape'
+                            partPath: 'arms.upperArm.shape'
+                            landmark: 'elbow'
+                            parentLandmark: 'shoulder'
+                            flipped: true
+                            children:
+                              "Right Hand":
+                                part: 'LowerArmShape'
+                                partPath: 'arms.lowerArm.shape'
+                                landmark: 'wrist'
+                                flipped: true
+              "Clothes Top L 1":
+                part: 'AbdomenShape'
+                partPath: 'torso.abdomen.shape'
+                landmark: 'xiphoid'
+              "Clothes Top R 1":
+                part: 'AbdomenShape'
+                partPath: 'torso.abdomen.shape'
+                landmark: 'xiphoid'
+          "Left Acetabulum":
             part: 'AbdomenShape'
             partPath: 'torso.abdomen.shape'
             landmark: 'hypogastrium'
             children:
-              "Knee Left":
+              "Left Upper Leg":
                 part: 'GroinShape'
                 partPath: 'torso.groin.shape'
                 landmark: 'acetabulumLeft'
                 children:
-                  "Ankle Left":
+                  "Left Lower Leg":
                     part: 'ThighShape'
                     partPath: 'legs.thigh.shape'
                     landmark: 'knee'
                     parentLandmark: 'acetabulum'
                     children:
-                      "Foot Left":
+                      "Left Foot":
                         part: 'LowerLegShape'
                         partPath: 'legs.lowerLeg.shape'
                         landmark: 'ankle'
-          "Acetabulum Right":
+          "Right Acetabulum":
             part: 'AbdomenShape'
             partPath: 'torso.abdomen.shape'
             landmark: 'hypogastrium'
             children:
-              "Knee Right":
+              "Right Upper Leg":
                 part: 'GroinShape'
                 partPath: 'torso.groin.shape'
                 landmark: 'acetabulumRight'
                 children:
-                  "Ankle Right":
+                  "Right Lower Leg":
                     part: 'ThighShape'
                     partPath: 'legs.thigh.shape'
                     landmark: 'knee'
                     parentLandmark: 'acetabulum'
                     flipped: true
                     children:
-                      "Foot Right":
+                      "Right Foot":
                         part: 'LowerLegShape'
                         partPath: 'legs.lowerLeg.shape'
                         landmark: 'ankle'
                         flipped: true
+          "Clothes Bottom L 1":
+            part: 'AbdomenShape'
+            partPath: 'torso.abdomen.shape'
+            landmark: 'hypogastrium'
+          "Clothes Bottom R 1":
+            part: 'AbdomenShape'
+            partPath: 'torso.abdomen.shape'
+            landmark: 'hypogastrium'
 
   # Calculate bone offsets relative to default body.
   _calculateBoneCorrections: (side) ->

@@ -68,6 +68,9 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/assets/actorasset
 
         archive.append Buffer.from(buffer), name: "#{path}-#{textureName.toLowerCase()}.png"
 
+      humanAvatarRenderer.destroy()
+      humanAvatar.destroy()
+
     # Complete exporting.
     archive.finalize()
 

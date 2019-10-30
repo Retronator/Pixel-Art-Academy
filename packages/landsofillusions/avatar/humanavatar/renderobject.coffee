@@ -17,8 +17,9 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @currentAngle = 0
     @currentSide = LOI.Engine.RenderingSides.Keys.Front
 
-    bodyBottom = [-10.2, -10, -10.3, -9.9, -10.2]
-    bodyTop = [6, 5.8, 5.5, 5.8, 6]
+    bodyBottom = -10.2
+    bodyTop = 8.6
+    bodyHeight = bodyTop - bodyBottom
 
     @_rotationEuler = new THREE.Euler
     @_cameraPosition = new THREE.Vector3
@@ -87,13 +88,12 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
         sideIndex = LOI.HumanAvatar.TextureRenderer.textureSides.indexOf sideName
 
-        bodyHeight = bodyTop[sideIndex] - bodyBottom[sideIndex]
         scale = targetHeight / bodyHeight
 
         animatedMesh = @animatedMeshes[side]
         animatedMesh.scale.set scale, scale, scale
         animatedMesh.scale.x *= -1 if sideAngle > 0
-        animatedMesh.position.y = -bodyBottom[sideIndex] * scale
+        animatedMesh.position.y = -bodyBottom * scale
 
         # Calculate bone corrections relative to default body.
         boneCorrections = @_calculateBoneCorrections sideName

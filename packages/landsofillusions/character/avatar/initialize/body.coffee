@@ -113,6 +113,7 @@ LOI.Character.Part.registerClasses
           shapes: new LOI.Character.Part.Property.Array
             name: 'shapes'
             type: 'Avatar.Body.FacialHairShape'
+        renderer: new LOI.Character.Avatar.Renderers.Hair
 
       FacialHairShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.FacialHairShape'
@@ -204,7 +205,11 @@ LOI.Character.Part.registerClasses
             type: 'Avatar.Body.Neck'
         renderer: new LOI.Character.Avatar.Renderers.Default
           region: LOI.HumanAvatar.Regions.Torso
-          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
+          additionalLandmarkRegions: [
+            LOI.HumanAvatar.Regions.TorsoClothes
+            LOI.HumanAvatar.Regions.BodyClothes
+            LOI.HumanAvatar.Regions.BodyClothesTight
+          ]
           origin:
             landmark: 'vertebraL3'
 
@@ -486,7 +491,7 @@ LOI.Character.Part.registerClasses
       LowerArmShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.LowerArmShape'
         name: 'lower arm shape'
-        default: 'landsofillusions/character/avatar/body/arms/lowerarm.rot8'
+        default: 'landsofillusions/character/avatar/body/arms/lowerarm/regular.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.LowerArms
           origin:
@@ -552,7 +557,10 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/legs/thigh/2.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.UpperLegs
-          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
+          additionalLandmarkRegions: [
+            LOI.HumanAvatar.Regions.BodyClothes
+            LOI.HumanAvatar.Regions.BodyClothesTight
+          ]
           origin:
             landmark: 'acetabulum'
             x: 0
@@ -577,7 +585,10 @@ LOI.Character.Part.registerClasses
         default: 'landsofillusions/character/avatar/body/legs/lowerleg/2/regular.rot8'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.LowerLegs
-          additionalLandmarkRegions: [LOI.HumanAvatar.Regions.TorsoClothes]
+          additionalLandmarkRegions: [
+            LOI.HumanAvatar.Regions.BodyClothes
+            LOI.HumanAvatar.Regions.BodyClothesTight
+          ]
           origin:
             landmark: 'knee'
             x: 0

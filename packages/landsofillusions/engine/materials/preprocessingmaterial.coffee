@@ -66,11 +66,10 @@ void main()	{
     #ifndef USE_MAP
       // We're using constants, read from uniforms.
       #{LOI.Engine.Materials.ShaderChunks.setPaletteColorFromUniformsFragment}
-    #endif
 
-  } else {
-    // No tinting is used, so set values to 1 (not used).
-    paletteColor = vec2(1.0);
+      // Ramp is offset by 1 so that 0 can mean no preprocessing info.
+      palette.r += 1.0 / 256.0;
+    #endif
   }
 
   // Preprocessing map has the tint color (ramp and shade) written to red and green channels.

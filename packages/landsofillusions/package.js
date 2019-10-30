@@ -499,6 +499,10 @@ Package.onUse(function(api) {
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph3');
   api.addData('pages/admin/characters/outfitstest/bodies/male-endomorph4');
 
+  api.addComponent('pages/admin/characters/animationstest..');
+  api.addFile('pages/admin/characters/animationstest/renderermanager');
+  api.addFile('pages/admin/characters/animationstest/scenemanager');
+
   // Components
 
   api.addFile('components..');

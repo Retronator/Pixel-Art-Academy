@@ -73,6 +73,9 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/assets/creatureas
 
     console.log "Creature assets export done!"
 
+    defaultHumanAvatarRenderer.destroy()
+    defaultHumanAvatar.destroy()
+
   catch error
     console.error error
     response.writeHead 400, 'Content-Type': 'text/txt'
@@ -159,7 +162,7 @@ createTextures = (humanAvatar) ->
 
   # Draw landmarks.
   landmarksContext.fillStyle = 'white'
-  drawnSkeletonLandmarks = ['vertebra', 'atlas', 'headTop', 'shoulder', 'elbow', 'wrist', 'fingertip', 'acetabulum',
+  drawnSkeletonLandmarks = ['vertebra', 'atlas', 'mouth', 'headTop', 'shoulder', 'elbow', 'wrist', 'fingertip', 'acetabulum',
     'knee', 'ankle', 'toeTip', 'hairBack', 'hairFront']
 
   for side, sideIndex in LOI.HumanAvatar.TextureRenderer.textureSides
@@ -331,7 +334,63 @@ humanSkeleton =
                             "Right Hand":
                               landmark: 'fingertip'
                               regionId: 'RightHand'
-                          
+            "Clothes Top L 1":
+              landmark: 'clothesTopL2'
+              parentLandmark: 'clothesTopL1'
+              part: 'Clothes'
+              children:
+                "Clothes Top L 2":
+                  landmark: 'clothesTopL3'
+                  part: 'Clothes'
+                  children:
+                    "Clothes Top L 3":
+                      landmark: 'clothesTopL4'
+                      part: 'Clothes'
+            "Clothes Top R 1":
+              landmark: 'clothesTopR2'
+              parentLandmark: 'clothesTopR1'
+              part: 'Clothes'
+              children:
+                "Clothes Top R 2":
+                  landmark: 'clothesTopR3'
+                  part: 'Clothes'
+                  children:
+                    "Clothes Top R 3":
+                      landmark: 'clothesTopR4'
+                      part: 'Clothes'
+        "Clothes Bottom L 1":
+          landmark: 'clothesBottomL2'
+          parentLandmark: 'clothesBottomL1'
+          part: 'Clothes'
+          children:
+            "Clothes Bottom L 2":
+              landmark: 'clothesBottomL3'
+              part: 'Clothes'
+              children:
+                "Clothes Bottom L 3":
+                  landmark: 'clothesBottomL4'
+                  part: 'Clothes'
+                  children:
+                    "Clothes Bottom L 4":
+                      landmark: 'clothesBottomL5'
+                      part: 'Clothes'
+        "Clothes Bottom R 1":
+          landmark: 'clothesBottomR2'
+          parentLandmark: 'clothesBottomR1'
+          part: 'Clothes'
+          children:
+            "Clothes Bottom R 2":
+              landmark: 'clothesBottomR3'
+              part: 'Clothes'
+              children:
+                "Clothes Bottom R 3":
+                  landmark: 'clothesBottomR4'
+                  part: 'Clothes'
+                  children:
+                    "Clothes Bottom R 4":
+                      landmark: 'clothesBottomR5'
+                      part: 'Clothes'
+                      
 createRigTemplate = (side, landmarks) ->
   boneBodyMap = {}
   allBones = {}

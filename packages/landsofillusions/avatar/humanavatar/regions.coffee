@@ -59,13 +59,31 @@ LOI.HumanAvatar.Regions =
       x: 8
       y: 8
 
-  TorsoClothes: new LOI.Engine.RenderingRegion
-    id: 'TorsoClothes'
+  # Clothes
+
+  BodyClothesTight: new LOI.Engine.RenderingRegion
+    id: 'BodyClothesTight'
     bounds: new AE.Rectangle 40, 64, 24, 48
     origin:
       landmark: 'vertebraL3'
       x: 12
+      y: 16
+
+  TorsoClothes: new LOI.Engine.RenderingRegion
+    id: 'TorsoClothes'
+    bounds: new AE.Rectangle 16, 96, 24, 32
+    origin:
+      landmark: 'vertebraL3'
+      x: 12
       y: 18
+
+  BodyClothes: new LOI.Engine.RenderingRegion
+    id: 'BodyClothes'
+    bounds: new AE.Rectangle 40, 112, 24, 48
+    origin:
+      landmark: 'vertebraL3'
+      x: 12
+      y: 16
 
   # Arms
 
@@ -96,7 +114,7 @@ LOI.HumanAvatar.Regions =
     origin:
       landmark: 'elbow'
       x: 8
-      y: 4
+      y: 3
     flipHorizontal: true
 
   LeftLowerArm: new LOI.Engine.RenderingRegion
@@ -105,7 +123,7 @@ LOI.HumanAvatar.Regions =
     origin:
       landmark: 'elbow'
       x: 7
-      y: 4
+      y: 3
 
   LowerArms: new LOI.Engine.RenderingRegion
     id: 'LowerArms'
@@ -136,7 +154,7 @@ LOI.HumanAvatar.Regions =
 
   RightUpperLeg: new LOI.Engine.RenderingRegion
     id: 'RightUpperLeg'
-    bounds: new AE.Rectangle 0, 160, 16, 24
+    bounds: new AE.Rectangle 0, 128, 16, 24
     origin:
       landmark: 'acetabulum'
       x: 9
@@ -145,7 +163,7 @@ LOI.HumanAvatar.Regions =
 
   LeftUpperLeg: new LOI.Engine.RenderingRegion
     id: 'LeftUpperLeg'
-    bounds: new AE.Rectangle 16, 160, 16, 24
+    bounds: new AE.Rectangle 0, 152, 16, 24
     origin:
       landmark: 'acetabulum'
       x: 8
@@ -157,7 +175,7 @@ LOI.HumanAvatar.Regions =
 
   RightLowerLeg: new LOI.Engine.RenderingRegion
     id: 'RightLowerLeg'
-    bounds: new AE.Rectangle 0, 184, 16, 24
+    bounds: new AE.Rectangle 0, 176, 16, 24
     origin:
       landmark: 'knee'
       x: 9
@@ -166,7 +184,7 @@ LOI.HumanAvatar.Regions =
 
   LeftLowerLeg: new LOI.Engine.RenderingRegion
     id: 'LeftLowerLeg'
-    bounds: new AE.Rectangle 16, 184, 16, 24
+    bounds: new AE.Rectangle 0, 200, 16, 24
     origin:
       landmark: 'knee'
       x: 8
@@ -178,7 +196,7 @@ LOI.HumanAvatar.Regions =
 
   RightFoot: new LOI.Engine.RenderingRegion
     id: 'RightFoot'
-    bounds: new AE.Rectangle 0, 128, 24, 16
+    bounds: new AE.Rectangle 16, 128, 24, 16
     origin:
       landmark: 'ankle'
       x: 13
@@ -187,7 +205,7 @@ LOI.HumanAvatar.Regions =
 
   LeftFoot: new LOI.Engine.RenderingRegion
     id: 'LeftFoot'
-    bounds: new AE.Rectangle 0, 144, 24, 16
+    bounds: new AE.Rectangle 16, 144, 24, 16
     origin:
       landmark: 'ankle'
       x: 12

@@ -63,6 +63,9 @@ class AB.App extends AM.Component
     elapsedTime = (currentFrameTime - @lastFrameTime) / 1000
     @lastFrameTime = currentFrameTime
 
+    # Bound elapsed time to 1 FPS.
+    elapsedTime = Math.min 1, elapsedTime
+
     # console.log "Tick at #{Math.round 1/elapsedTime} FPS"
 
     appTime =
