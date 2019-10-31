@@ -2,17 +2,36 @@ AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 
 class AS.AnimatedMesh extends AS.RenderObject
+  @_dataCache = {}
+
+  @getCachedDataField: (dataUrl) ->
+    # Return the singleton field if we already have it.
+    return @_dataCache[dataUrl] if @_dataCache[dataUrl]
+
+    # Create a new field.
+    @_dataCache[dataUrl] = new ReactiveField null
+
+    # Start loading its content.
+    $.getJSON dataUrl, (data) =>
+      @_dataCache[dataUrl] data
+
+    # Return the new field.
+    @_dataCache[dataUrl]
+
   constructor: (@options) ->
     super arguments...
 
-    @data = new ReactiveField @options.data
-    @boneCorrections = new ReactiveField @options.boneCorrections
-    @texture = new ReactiveField @options.texture
-
-    # Load data and texture if provided with their URLs.
+    # Load data if provided with its URLs.
     if @options.dataUrl
-      $.getJSON @options.dataUrl, (data) =>
-        @data data
+      @data = @constructor.getCachedDataField @options.dataUrl
+
+    else
+      @data = new ReactiveField @options.data
+
+    @boneCorrections = new ReactiveField @options.boneCorrections
+
+    # Load texture if provided with its URLs.
+    @texture = new ReactiveField @options.texture
 
     if @options.textureUrl
       texture = new THREE.TextureLoader().load @options.textureUrl
