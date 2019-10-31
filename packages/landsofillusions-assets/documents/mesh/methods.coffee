@@ -90,6 +90,10 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       ramp: Match.OptionalOrNull Number
       shade: Match.OptionalOrNull Number
       dither: Match.OptionalOrNull Number
+      reflection: Match.Optional
+        intensity: Match.OptionalOrNull Number
+        shininess: Match.OptionalOrNull Number
+        smoothFactor: Match.OptionalOrNull Number
       translucency: Match.Optional
         amount: Match.OptionalOrNull Number
         dither: Match.OptionalOrNull Number

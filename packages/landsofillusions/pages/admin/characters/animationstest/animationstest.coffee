@@ -28,7 +28,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
     @display = new AM.Display
       safeAreaWidth: 250
       safeAreaHeight: 100
-      minScale: 4
+      minScale: 3
 
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -65,7 +65,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
     retronatorHQActorUrls = for actor in retronatorHQActors
       @versionedUrl "/retronator/hq/actors/#{actor}.json"
 
-    avatarUrls = retronatorHQActorUrls
+    avatarUrls = pixelArtAcademyActorUrls[4..4]
     @charactersCount = avatarUrls.length
 
     # Initialize components.

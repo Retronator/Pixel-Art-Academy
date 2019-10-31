@@ -60,6 +60,7 @@ void main()	{
   // Discard transparent pixels for textured fragments.
   #ifdef USE_MAP
     #{LOI.Engine.Materials.ShaderChunks.readTextureDataFragment}
+    #{LOI.Engine.Materials.ShaderChunks.unpackSamplePaletteColorFragment}
   #endif
 
   if (translucencyTint) {

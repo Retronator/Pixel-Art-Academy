@@ -152,6 +152,9 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     item = @currentData()
     item is @editingNameItem()
 
+  editingNameClass: ->
+    'editing-name' if @editingName()
+
   directoryDropTargetClass: ->
     'drop-target' if @draggingOverFolderCount() is 0 and @draggingOverDirectoryCount() > 0
 

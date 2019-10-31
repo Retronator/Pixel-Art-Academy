@@ -154,7 +154,7 @@ class LOI.Assets.Engine.Sprite
             destinationColor = r: 0, g: 0, b: 0
 
         else if renderOptions.renderPaletteData
-          # Rendering of ramp + shade + dither data for use in shaders.
+          # Rendering of ramp + shade + dither + shininess data for use in shaders.
           paletteColor = null
 
           # Normal color mode.
@@ -170,15 +170,31 @@ class LOI.Assets.Engine.Sprite
 
           else if pixel.paletteColor
             paletteColor = pixel.paletteColor
-            
-          if paletteColor
-            destinationColor =
-              r: paletteColor.ramp / 255
-              g: paletteColor.shade / 255
-              b: paletteColor.dither or 0
-            
-          else
-            destinationColor = r: 1, g: 1, b: 1, a: 0
+
+          paletteColor ?=
+            ramp: 0
+            shade: 9
+
+          # Pack palette color data into the RGB channels.
+          # R: ramp (4 bits), shade (4 bits)
+          # G: intensity (4 bits), shininess (3 bits), smoothing factor (1 bit)
+          # B: dither (3 bits)
+          destinationColor =
+            r: ((paletteColor.ramp << 4) + paletteColor.shade) / 255
+            g: 0
+            b: (Math.round(paletteColor.dither * 7) << 5) / 255
+
+          if paletteColor?.reflection
+            intensity = paletteColor.reflection.intensity or 0
+            intensity = Math.round _.clamp(intensity, 0, 0.3) / 0.3 * 15
+
+            shininess = paletteColor.reflection.shininess or 1
+            shininess = Math.round _.clamp shininess, 0, 7
+
+            smoothFactor = paletteColor.reflection.smoothFactor or 0
+            smoothFactor = Math.round _.clamp smoothFactor, 0, 1
+
+            destinationColor.g = ((intensity << 4) + (shininess << 1) + smoothFactor) / 255
 
         else if renderOptions.silhouette
           paletteColor = renderOptions.silhouette

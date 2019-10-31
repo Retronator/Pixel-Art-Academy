@@ -54,10 +54,6 @@ LOI.Engine.Materials.ShaderChunks.readTextureDataFragment = """
   // Discard transparent pixels.
   if (sample.a == 0.0) discard;
 
-  // Palette color (ramp and shade) is stored in the red and green channels.
-  paletteColor = sample.rg;
-  paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
-
   #ifdef USE_NORMALMAP
     // Read normal from normal map.
     vec3 spriteNormal = texture2D(normalMap, spriteUv, mipmapBias).xyz * 2.0 - 1.0;
@@ -68,7 +64,27 @@ LOI.Engine.Materials.ShaderChunks.readTextureDataFragment = """
   #endif
 """
 
-LOI.Engine.Materials.ShaderChunks.readTextureDataShadingDitherFragment = """
+LOI.Engine.Materials.ShaderChunks.unpackSamplePaletteColorFragment = """
+  // Palette color (ramp and shade) is stored in the red channel.
+  float paletteColorPacked = sample.r * 255.0;
+  paletteColor = vec2(floor(paletteColorPacked / 16.0), mod(paletteColorPacked, 16.0));
+  paletteColor = (paletteColor + 0.5) / 256.0;
+"""
+
+LOI.Engine.Materials.ShaderChunks.unpackSampleReflectionParametersFragment = """
+  // Reflection parameters are stored in the green channel.
+  float reflectionParametersPacked = sample.g * 255.0;
+
+  reflectionParameters = vec3(
+    floor(reflectionParametersPacked / 16.0) / 16.0 * 0.3,
+    mod(floor(reflectionParametersPacked / 2.0), 8.0),
+    mod(reflectionParametersPacked, 2.0)
+  );
+"""
+
+LOI.Engine.Materials.ShaderChunks.unpackSampleShadingDitherFragment = """
   // Dither is stored in the blue channel.
-  shadingDither = sample.b;
+  float ditherParameterPacked = sample.b * 255.0;
+
+  shadingDither = floor(ditherParameterPacked / 32.0) / 8.0;
 """

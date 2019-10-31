@@ -83,6 +83,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   ramp: index of the ramp within the palette
   #   shade: index of the shade in the ramp
   #   dither: amount of dither used from 0 to 1
+  #   reflection:
+  #     intensity: amount of perfectly reflected light
+  #     shininess: the Phong exponent controlling how smooth the surface is (high is less smooth producing sharp, shiny reflections)
+  #     smoothFactor: option to smooth the normals of the texture itself
   #   translucency:
   #     amount: amount from 0 to 1, how much the rest of the scene should be seen through this material
   #     dither: amount from 0 to 1, how much of transparency dither to apply to this material

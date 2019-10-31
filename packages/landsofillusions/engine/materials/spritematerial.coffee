@@ -82,9 +82,11 @@ void main()	{
   // Discard transparent pixels.
   if (sample.a < 1.0) discard;
 
-  // Palette color (ramp and shade) is stored in the red and green channels.
-  vec2 paletteColor = sample.rg;
-  paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
+  // Unpack sample palette color and reflection parameters.
+  vec2 paletteColor;
+  vec3 reflectionParameters;
+  #{LOI.Engine.Materials.ShaderChunks.unpackSamplePaletteColorFragment}
+  #{LOI.Engine.Materials.ShaderChunks.unpackSampleReflectionParametersFragment}
 
   // Read normal from normal map.
   vec3 spriteNormal = texture2D(normalMap, vUv).xyz * 2.0 - 1.0;
@@ -106,8 +108,10 @@ void main()	{
 
   // Bound shaded color to palette ramp.
   float ramp = paletteColor.r;
-  float dither = sample.b;
-  vec3 destinationColor = boundColorToPaletteRamp(shadedColor, ramp, dither, smoothShading);
+  float shadingDither;
+  #{LOI.Engine.Materials.ShaderChunks.unpackSampleShadingDitherFragment}
+
+  vec3 destinationColor = boundColorToPaletteRamp(shadedColor, ramp, shadingDither, smoothShading);
 
   // Color the pixel with the best match from the palette.
   gl_FragColor = vec4(destinationColor, 1);

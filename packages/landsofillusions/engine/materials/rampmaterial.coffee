@@ -82,6 +82,14 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         palette:
           value: paletteTexture
 
+        # Reflection
+        reflectionIntensity:
+          value: options.reflection?.intensity
+        reflectionShininess:
+          value: options.reflection?.shininess
+        reflectionSmoothFactor:
+          value: options.reflection?.smoothFactor
+
         # Shading
         smoothShading:
           value: options.smoothShading
@@ -164,6 +172,11 @@ uniform float dither;
 uniform sampler2D palette;
 #{LOI.Engine.Materials.ShaderChunks.paletteParametersFragment}
 
+// Reflection
+uniform float reflectionIntensity;
+uniform float reflectionShininess;
+uniform float reflectionSmoothFactor;
+
 // Shading
 uniform bool smoothShading;
 uniform float smoothShadingQuantizationFactor;
@@ -186,17 +199,21 @@ void main()	{
   // Prepare normal.
   #include <normal_fragment_begin>
 
-  // Determine palette color (ramp and shade) and dither.
+  // Determine palette color (ramp and shade), reflection parameters (amount, shininess, smoothFactor), and dither.
   vec2 paletteColor;
+  vec3 reflectionParameters;
   float shadingDither;
 
   #ifdef USE_MAP
     #{LOI.Engine.Materials.ShaderChunks.readTextureDataFragment}
-    #{LOI.Engine.Materials.ShaderChunks.readTextureDataShadingDitherFragment}
+    #{LOI.Engine.Materials.ShaderChunks.unpackSamplePaletteColorFragment}
+    #{LOI.Engine.Materials.ShaderChunks.unpackSampleReflectionParametersFragment}
+    #{LOI.Engine.Materials.ShaderChunks.unpackSampleShadingDitherFragment}
 
   #else
     // We're using constants, read from uniforms.
     #{LOI.Engine.Materials.ShaderChunks.setPaletteColorFromUniformsFragment}
+    reflectionParameters = vec3(reflectionIntensity, reflectionShininess, reflectionSmoothFactor);
     shadingDither = dither;
 
   #endif

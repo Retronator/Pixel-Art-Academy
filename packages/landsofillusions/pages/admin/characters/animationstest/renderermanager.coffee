@@ -29,9 +29,9 @@ class LOI.Pages.Admin.Characters.AnimationsTest.RendererManager
 
     @_position.set Math.cos(angle) * distance + @targetOffset, 1.5, Math.sin(angle)  * distance
 
-    #@camera.matrix.lookAt @_position, @_target, @_up
-    #@camera.matrix.setPosition @_position
-    #@camera.matrix.decompose @camera.position, @camera.quaternion, @camera.scale
+    @camera.matrix.lookAt @_position, @_target, @_up
+    @camera.matrix.setPosition @_position
+    @camera.matrix.decompose @camera.position, @camera.quaternion, @camera.scale
 
     sceneManager = @parent.sceneManager()
     scene = sceneManager.scene()
