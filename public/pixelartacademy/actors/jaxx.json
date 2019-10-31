@@ -890,7 +890,7 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 5,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
@@ -1030,13 +1030,13 @@
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1086,7 +1086,20 @@
                                   },
                                   "frontRight": {
                                     "node": {
-                                      "fields": {}
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -1108,7 +1121,7 @@
       }
     },
     "fullName": {
-      "_id": "hg8pmZYR9QhYMDWcR",
+      "_id": "DugFpZrvmXPmTc3Wo",
       "translations": {
         "en": {
           "us": {
@@ -1129,7 +1142,14 @@
       }
     },
     "textures": {
-      "needUpdate": true
+      "needUpdate": true,
+      "normals": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/H86Jd9FsE53xERzPa-normals.png?1"
+      },
+      "paletteData": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/H86Jd9FsE53xERzPa-palettedata.png?1"
+      },
+      "version": 1
     },
     "outfit": {
       "node": {
@@ -2393,7 +2413,7 @@
                                     "node": {
                                       "fields": {
                                         "hue": {
-                                          "value": 10
+                                          "value": 4
                                         },
                                         "shade": {
                                           "value": 4
@@ -2501,7 +2521,7 @@
                             "3": {
                               "template": {
                                 "id": "vcqGuPCGnviiq3NvY",
-                                "version": 4,
+                                "version": 5,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -2904,7 +2924,7 @@
                                       }
                                     },
                                     "region": {
-                                      "value": "TorsoClothes"
+                                      "value": "BodyClothesTight"
                                     }
                                   }
                                 },
@@ -3219,11 +3239,11 @@
   },
   "designApproved": true,
   "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
   },
-  "ownerName": "Administrator",
+  "ownerName": "Lands of Illusions Admin",
   "debugName": "Jaxx",
-  "_schema": "7.0.0"
+  "_schema": "8.0.0"
 }

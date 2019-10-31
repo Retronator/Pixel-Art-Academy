@@ -1,23 +1,24 @@
 {
   "_id": "Retronator.HQ.Actors.Corinne",
-  "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
-  },
-  "debugName": "Corinne Colgan",
-  "ownerName": "Administrator",
-  "_schema": "6.0.0",
   "avatar": {
     "fullName": {
-      "_id": "nswdw6Wq2qeFj4sYq",
+      "_id": "Pgv85yrfxSgu9qArh",
       "translations": {
-        "text": "Corinne Colgan",
-        "quality": 0,
+        "en": {
+          "us": {
+            "text": "Corinne Colgan",
+            "quality": 0
+          },
+          "best": {
+            "text": "Corinne Colgan",
+            "quality": 0,
+            "languageRegion": "en-US"
+          }
+        },
         "best": {
           "text": "Corinne Colgan",
           "quality": 0,
-          "languageRegion": ""
+          "languageRegion": "en-US"
         }
       }
     },
@@ -26,7 +27,14 @@
       "hue": 11
     },
     "textures": {
-      "needUpdate": true
+      "needUpdate": true,
+      "normals": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J2mNS6ye7kpBRwvqA-normals.png?1"
+      },
+      "paletteData": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J2mNS6ye7kpBRwvqA-palettedata.png?1"
+      },
+      "version": 1
     },
     "body": {
       "node": {
@@ -146,7 +154,7 @@
                               }
                             }
                           },
-                          "name": "Eye"
+                          "name": "Eye shape"
                         }
                       },
                       "iris": {
@@ -328,23 +336,17 @@
                                           },
                                           "backRight": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "right": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "frontRight": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "region": {
@@ -437,7 +439,7 @@
                                   "8": {
                                     "template": {
                                       "id": "JTayz8LyJbjSkb43L",
-                                      "version": 0,
+                                      "version": 1,
                                       "data": {
                                         "fields": {
                                           "region": {
@@ -457,6 +459,15 @@
                                               "fields": {
                                                 "spriteId": {
                                                   "value": "xG4btRRTtovt6g9qc"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "back": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "mDdvuHgNn3gbZSxnt"
                                                 }
                                               }
                                             }
@@ -761,7 +772,7 @@
                                   "16": {
                                     "template": {
                                       "id": "q6YX4XvcZdPseZQpX",
-                                      "version": 0,
+                                      "version": 1,
                                       "data": {
                                         "fields": {
                                           "region": {
@@ -781,6 +792,15 @@
                                               "fields": {
                                                 "spriteId": {
                                                   "value": "xG4btRRTtovt6g9qc"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "back": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "8aRvH2agbGimQSRaK"
                                                 }
                                               }
                                             }
@@ -960,13 +980,13 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 3,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
                     "template": {
                       "id": "ZQLLLmHMhhqHuafae",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1022,18 +1042,18 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Upper arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Upper arm 1"
                     }
                   },
                   "lowerArm": {
                     "template": {
                       "id": "E9484G4dwPnDAirmf",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1089,24 +1109,24 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Lower arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Lower arm 1"
                     }
                   },
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1157,7 +1177,18 @@
                                   "frontRight": {
                                     "node": {
                                       "fields": {
-
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
                                       }
                                     }
                                   }
@@ -1303,7 +1334,7 @@
                                     }
                                   }
                                 },
-                                "name": "2"
+                                "name": "Bottom 2"
                               }
                             },
                             "nippleShade": {
@@ -1377,7 +1408,7 @@
                                     }
                                   }
                                 },
-                                "name": "2"
+                                "name": "Top 2"
                               }
                             }
                           }
@@ -1593,13 +1624,13 @@
           "legs": {
             "template": {
               "id": "6iQW2T2tHGkeSd8om",
-              "version": 2,
+              "version": 4,
               "data": {
                 "fields": {
                   "thigh": {
                     "template": {
                       "id": "Y62iAXfQ5M3Eo3G63",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1655,18 +1686,18 @@
                                   }
                                 }
                               },
-                              "name": "2"
+                              "name": "Thigh 2"
                             }
                           }
                         }
                       },
-                      "name": "2"
+                      "name": "Thigh 2"
                     }
                   },
                   "lowerLeg": {
                     "template": {
                       "id": "k3wYq3cLNToMxNef9",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1722,18 +1753,18 @@
                                   }
                                 }
                               },
-                              "name": "2"
+                              "name": "Lower leg 2"
                             }
                           }
                         }
                       },
-                      "name": "2"
+                      "name": "Lower leg 2"
                     }
                   },
                   "foot": {
                     "template": {
                       "id": "BMrtuEhw6ayZhJbye",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -1798,12 +1829,12 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Foot shape 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Foot 1"
                     }
                   }
                 }
@@ -1835,7 +1866,7 @@
                                         "0": {
                                           "template": {
                                             "id": "yL3FhD6PXRTcyohwa",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1949,7 +1980,7 @@
                                         "2": {
                                           "template": {
                                             "id": "zThzLNgufYxBmETf7",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -2012,7 +2043,7 @@
                                         "3": {
                                           "template": {
                                             "id": "N9yJZEFwkijKuCA2g",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "condition": {
@@ -2065,10 +2096,19 @@
                                                       }
                                                     }
                                                   }
+                                                },
+                                                "back": {
+                                                  "node": {
+                                                    "fields": {
+                                                      "spriteId": {
+                                                        "value": "HrSGGFvebEGPfYxT8"
+                                                      }
+                                                    }
+                                                  }
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt tight breasts C-D"
+                                            "name": "Breasts 3-4"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -2140,7 +2180,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt belly 1"
+                                            "name": "Abdomen belly 1"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         },
@@ -2212,7 +2252,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "T-shirt belly 2"
+                                            "name": "Abdomen belly 2"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         }
@@ -2220,7 +2260,7 @@
                                     }
                                   },
                                   "region": {
-                                    "value": "TorsoClothes"
+                                    "value": "BodyClothesTight"
                                   }
                                 }
                               },
@@ -2270,7 +2310,7 @@
                             "0": {
                               "template": {
                                 "id": "XgBciCY7YsQyzDHrC",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -2346,7 +2386,7 @@
                                       }
                                     },
                                     "region": {
-                                      "value": "TorsoClothes"
+                                      "value": "BodyClothes"
                                     }
                                   }
                                 },
@@ -2646,9 +2686,7 @@
                                                 },
                                                 "back": {
                                                   "node": {
-                                                    "fields": {
-
-                                                    }
+                                                    "fields": {}
                                                   }
                                                 },
                                                 "frontRight": {
@@ -2884,5 +2922,14 @@
         }
       }
     }
-  }
+  },
+  "user": {
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
+  },
+  "debugName": "Corinne Colgan",
+  "ownerName": "Lands of Illusions Admin",
+  "_schema": "8.0.0",
+  "designApproved": true
 }

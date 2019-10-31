@@ -22,7 +22,7 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 5,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
@@ -162,13 +162,13 @@
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -218,7 +218,20 @@
                                   },
                                   "frontRight": {
                                     "node": {
-                                      "fields": {}
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -1893,7 +1906,7 @@
       }
     },
     "fullName": {
-      "_id": "qfW9oKKvPCA4kC6kn",
+      "_id": "NekfeXhKqa6s4ufQc",
       "translations": {
         "en": {
           "us": {
@@ -1914,14 +1927,14 @@
       }
     },
     "textures": {
-      "needUpdate": false,
+      "needUpdate": true,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/rWbFcrSfGyCAQZApD-normals.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/XBsJZssPgEsnm9yNG-normals.png?3"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/rWbFcrSfGyCAQZApD-palettedata.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/XBsJZssPgEsnm9yNG-palettedata.png?3"
       },
-      "version": 1
+      "version": 3
     },
     "outfit": {
       "node": {
@@ -2258,11 +2271,11 @@
                             "0": {
                               "template": {
                                 "id": "dDdJMWjMciDzXMAj6",
-                                "version": 1,
+                                "version": 2,
                                 "data": {
                                   "fields": {
                                     "region": {
-                                      "value": "TorsoClothes"
+                                      "value": "BodyClothesTight"
                                     },
                                     "shapes": {
                                       "node": {
@@ -2853,11 +2866,11 @@
                             "0": {
                               "template": {
                                 "id": "QvEhZzcK3sCcS9Cs2",
-                                "version": 2,
+                                "version": 3,
                                 "data": {
                                   "fields": {
                                     "region": {
-                                      "value": "LeftHand"
+                                      "value": "LeftLowerArm"
                                     },
                                     "shapes": {
                                       "node": {
@@ -3432,7 +3445,7 @@
                                     }
                                   }
                                 },
-                                "name": "Jacket open tied"
+                                "name": "Shirt open tied"
                               },
                               "type": "Avatar.Outfit.ArticlePart"
                             },
@@ -3862,11 +3875,11 @@
   },
   "designApproved": true,
   "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
   },
-  "ownerName": "Administrator",
+  "ownerName": "Lands of Illusions Admin",
   "debugName": "Lisa",
-  "_schema": "7.0.0"
+  "_schema": "8.0.0"
 }

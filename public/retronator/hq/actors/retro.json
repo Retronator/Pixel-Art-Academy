@@ -168,24 +168,27 @@
                                 "fields": {
                                   "3": {
                                     "template": {
-                                      "id": "CqrhfxjtEgwTLhv5u",
-                                      "version": 3,
+                                      "id": "98qPLK6QJSrhAGp84",
+                                      "version": 1,
                                       "data": {
                                         "fields": {
                                           "front": {
                                             "node": {
                                               "fields": {
                                                 "spriteId": {
-                                                  "value": "RWuD9SR7ucs5z86AZ"
+                                                  "value": "KdcJ8w9bW4heLM3ZX"
                                                 }
                                               }
                                             }
+                                          },
+                                          "region": {
+                                            "value": "HairFront"
                                           },
                                           "frontLeft": {
                                             "node": {
                                               "fields": {
                                                 "spriteId": {
-                                                  "value": "TkQZdDazXAhpfkHDc"
+                                                  "value": "wvJftsNCT6NT4PrsW"
                                                 }
                                               }
                                             }
@@ -194,7 +197,7 @@
                                             "node": {
                                               "fields": {
                                                 "spriteId": {
-                                                  "value": "g77zNpaGBZTwmz2Dz"
+                                                  "value": "Aq9MGc3jwgAz5jMpp"
                                                 }
                                               }
                                             }
@@ -208,9 +211,6 @@
                                               }
                                             }
                                           },
-                                          "region": {
-                                            "value": "HairFront"
-                                          },
                                           "back": {
                                             "node": {
                                               "fields": {
@@ -222,7 +222,142 @@
                                           }
                                         }
                                       },
-                                      "name": "Beard 3"
+                                      "name": "Beard 4"
+                                    },
+                                    "type": "Avatar.Body.FacialHairShape"
+                                  },
+                                  "4": {
+                                    "template": {
+                                      "id": "DLpaYdxKTdBNtzzMT",
+                                      "version": 1,
+                                      "data": {
+                                        "fields": {
+                                          "region": {
+                                            "value": "HairBehind"
+                                          },
+                                          "back": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "KdcJ8w9bW4heLM3ZX"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "backLeft": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "5RfGCj5ESAMvRqm7R"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "name": "Beard 4 behind"
+                                    },
+                                    "type": "Avatar.Body.FacialHairShape"
+                                  },
+                                  "5": {
+                                    "template": {
+                                      "id": "L9auHNHoJvMoymMw4",
+                                      "version": 0,
+                                      "data": {
+                                        "fields": {
+                                          "front": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "zaTop7stzgE8haJtN"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "region": {
+                                            "value": "HairFront"
+                                          },
+                                          "frontLeft": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "RBnMSBXrYpGmoZSSh"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "left": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "8bQkjLTTaEX6zmHM5"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "name": "Mustache 3"
+                                    },
+                                    "type": "Avatar.Body.FacialHairShape"
+                                  },
+                                  "6": {
+                                    "template": {
+                                      "id": "tNNieLdswM7CLeCLu",
+                                      "version": 1,
+                                      "data": {
+                                        "fields": {
+                                          "region": {
+                                            "value": "HairFront"
+                                          },
+                                          "front": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "pv65ToB73JQeQEwuR"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "frontLeft": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "mRnNBksc9BqXFcDgw"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "left": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "tawaPYgjxjqYjrMyz"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "backLeft": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "zexF4mAQGXCKwh2N6"
+                                                }
+                                              }
+                                            }
+                                          },
+                                          "back": {
+                                            "node": {
+                                              "fields": {
+                                                "spriteId": {
+                                                  "value": "pv65ToB73JQeQEwuR"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "name": "Sideburns 2"
                                     },
                                     "type": "Avatar.Body.FacialHairShape"
                                   }
@@ -739,7 +874,7 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 5,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
@@ -879,13 +1014,13 @@
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -935,7 +1070,20 @@
                                   },
                                   "frontRight": {
                                     "node": {
-                                      "fields": {}
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -957,7 +1105,7 @@
       }
     },
     "fullName": {
-      "_id": "dcnsvWFs83mtKYMzP",
+      "_id": "XmGx6SuyCyykM8ChS",
       "translations": {
         "en": {
           "us": {
@@ -2542,18 +2690,25 @@
       }
     },
     "textures": {
-      "needUpdate": true
+      "needUpdate": true,
+      "normals": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J79g2EnveaEFQDP28-normals.png?1"
+      },
+      "paletteData": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J79g2EnveaEFQDP28-palettedata.png?1"
+      },
+      "version": 1
     }
   },
   "activated": true,
   "designApproved": true,
   "behaviorApproved": true,
   "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
   },
-  "_schema": "7.0.0",
-  "ownerName": "Administrator",
+  "_schema": "8.0.0",
+  "ownerName": "Lands of Illusions Admin",
   "debugName": "Matej 'Retro' Jan"
 }

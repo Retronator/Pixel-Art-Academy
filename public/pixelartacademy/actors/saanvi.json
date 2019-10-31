@@ -962,7 +962,7 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 5,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
@@ -1102,13 +1102,13 @@
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1158,7 +1158,20 @@
                                   },
                                   "frontRight": {
                                     "node": {
-                                      "fields": {}
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -1973,7 +1986,7 @@
       }
     },
     "fullName": {
-      "_id": "PFYxaFbSjiS2GWAYq",
+      "_id": "GCLxqj7Wav6KzuETM",
       "translations": {
         "en": {
           "us": {
@@ -1994,14 +2007,14 @@
       }
     },
     "textures": {
-      "needUpdate": false,
+      "needUpdate": true,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/SsDrxKT8qx9oCFNsi-normals.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/8eAGK8c89dAuswXZq-normals.png?3"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/SsDrxKT8qx9oCFNsi-palettedata.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/8eAGK8c89dAuswXZq-palettedata.png?3"
       },
-      "version": 1
+      "version": 3
     },
     "outfit": {
       "node": {
@@ -3497,7 +3510,7 @@
                                           "node": {
                                             "fields": {
                                               "intensity": {
-                                                "value": 0.2
+                                                "value": 0.15
                                               },
                                               "shininess": {
                                                 "value": 2
@@ -4520,11 +4533,11 @@
   },
   "designApproved": true,
   "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
   },
-  "_schema": "7.0.0",
+  "_schema": "8.0.0",
   "debugName": "Saanvi",
-  "ownerName": "Administrator"
+  "ownerName": "Lands of Illusions Admin"
 }

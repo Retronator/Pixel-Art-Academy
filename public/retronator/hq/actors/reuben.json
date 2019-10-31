@@ -2,7 +2,7 @@
   "_id": "Retronator.HQ.Actors.Reuben",
   "avatar": {
     "fullName": {
-      "_id": "LcZbqHDFxtqpKfNsm",
+      "_id": "rynvD3JCfwcwPFFPn",
       "translations": {
         "en": {
           "us": {
@@ -576,242 +576,246 @@
             }
           },
           "arms": {
-            "template": {
-              "id": "u9osevccXA7jfPpGc",
-              "version": 5,
-              "data": {
-                "fields": {
-                  "upperArm": {
-                    "template": {
-                      "id": "QSSsnBEBz4KdvmNfS",
-                      "version": 2,
-                      "data": {
-                        "fields": {
-                          "shape": {
-                            "template": {
-                              "id": "WfiR2vb3iRbqbbiEG",
-                              "version": 2,
-                              "data": {
-                                "fields": {
-                                  "front": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "CLxRboBrKoPYQHzCS"
-                                        }
+            "node": {
+              "fields": {
+                "upperArm": {
+                  "template": {
+                    "id": "QSSsnBEBz4KdvmNfS",
+                    "version": 2,
+                    "data": {
+                      "fields": {
+                        "shape": {
+                          "template": {
+                            "id": "WfiR2vb3iRbqbbiEG",
+                            "version": 2,
+                            "data": {
+                              "fields": {
+                                "front": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "CLxRboBrKoPYQHzCS"
                                       }
                                     }
-                                  },
-                                  "frontLeft": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "KtWMtRoX8uQAJNgRj"
-                                        }
+                                  }
+                                },
+                                "frontLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "KtWMtRoX8uQAJNgRj"
                                       }
                                     }
-                                  },
-                                  "left": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "DFsPyr7cCZbkKatFM"
-                                        }
+                                  }
+                                },
+                                "left": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "DFsPyr7cCZbkKatFM"
                                       }
                                     }
-                                  },
-                                  "backLeft": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "dhnJxpKtjBqCeS9wf"
-                                        }
+                                  }
+                                },
+                                "backLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "dhnJxpKtjBqCeS9wf"
                                       }
                                     }
-                                  },
-                                  "back": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "25cte6PZrCBaCqA92"
-                                        }
+                                  }
+                                },
+                                "back": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "25cte6PZrCBaCqA92"
                                       }
                                     }
-                                  },
-                                  "frontRight": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "p8AHYGRFJjCPpgq4s"
-                                        }
+                                  }
+                                },
+                                "frontRight": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "p8AHYGRFJjCPpgq4s"
                                       }
                                     }
-                                  },
-                                  "backRight": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "eHjzpcoqkZWoEs4G4"
-                                        }
+                                  }
+                                },
+                                "backRight": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "eHjzpcoqkZWoEs4G4"
                                       }
                                     }
                                   }
                                 }
-                              },
-                              "name": "Upper arm 2"
-                            }
+                              }
+                            },
+                            "name": "Upper arm 2"
                           }
                         }
-                      },
-                      "name": "Upper arm 2"
-                    }
-                  },
-                  "lowerArm": {
-                    "template": {
-                      "id": "E9484G4dwPnDAirmf",
-                      "version": 1,
-                      "data": {
-                        "fields": {
-                          "shape": {
-                            "template": {
-                              "id": "ktzpDg5WQvs3pXBtT",
-                              "version": 0,
-                              "data": {
-                                "fields": {
-                                  "front": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "6Ls825a9pfvRgtsiK"
-                                        }
+                      }
+                    },
+                    "name": "Upper arm 2"
+                  }
+                },
+                "lowerArm": {
+                  "template": {
+                    "id": "gAgtLi8Kt9Hq5oG8H",
+                    "version": 0,
+                    "data": {
+                      "fields": {
+                        "shape": {
+                          "template": {
+                            "id": "GnePyHznnCGdR2GR8",
+                            "version": 0,
+                            "data": {
+                              "fields": {
+                                "front": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "FKXeFgYYduEc4Nfex"
                                       }
                                     }
-                                  },
-                                  "frontLeft": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "HYaPdKekat35KXxoy"
-                                        }
+                                  }
+                                },
+                                "frontLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "WuKCAvj3HwJEjavE4"
                                       }
                                     }
-                                  },
-                                  "left": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "C5JsTwHSci74PmoFB"
-                                        }
+                                  }
+                                },
+                                "left": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "RGki2veDv8xv7L7jM"
                                       }
                                     }
-                                  },
-                                  "backLeft": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "oxzzPtBKXsFvpaH6S"
-                                        }
+                                  }
+                                },
+                                "backLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "LEb4A3RHbaSswk7TH"
                                       }
                                     }
-                                  },
-                                  "back": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "8nMtGn35xnw27xbB9"
-                                        }
+                                  }
+                                },
+                                "back": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "TzsygqkzSTSHkxSeM"
                                       }
                                     }
                                   }
                                 }
-                              },
-                              "name": "Lower arm 1"
-                            }
+                              }
+                            },
+                            "name": "Lower arm 1 long"
                           }
                         }
-                      },
-                      "name": "Lower arm 1"
-                    }
-                  },
-                  "hand": {
-                    "template": {
-                      "id": "EkDACMTBh985Akuvp",
-                      "version": 0,
-                      "data": {
-                        "fields": {
-                          "shape": {
-                            "template": {
-                              "id": "LKT8kZLWRLNHJn4oS",
-                              "version": 0,
-                              "data": {
-                                "fields": {
-                                  "front": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "7d4bG4bR3zxZEzuQK"
-                                        }
+                      }
+                    },
+                    "name": "Lower arm 1 long"
+                  }
+                },
+                "hand": {
+                  "template": {
+                    "id": "EkDACMTBh985Akuvp",
+                    "version": 1,
+                    "data": {
+                      "fields": {
+                        "shape": {
+                          "template": {
+                            "id": "LKT8kZLWRLNHJn4oS",
+                            "version": 1,
+                            "data": {
+                              "fields": {
+                                "front": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "7d4bG4bR3zxZEzuQK"
                                       }
                                     }
-                                  },
-                                  "frontLeft": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "2oNTw8h3gwg47QfCm"
-                                        }
+                                  }
+                                },
+                                "frontLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "2oNTw8h3gwg47QfCm"
                                       }
                                     }
-                                  },
-                                  "left": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "fpbXmQNkpfbdtfN59"
-                                        }
+                                  }
+                                },
+                                "left": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "fpbXmQNkpfbdtfN59"
                                       }
                                     }
-                                  },
-                                  "backLeft": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "GEqptwKT8SSLf4Lam"
-                                        }
+                                  }
+                                },
+                                "backLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "GEqptwKT8SSLf4Lam"
                                       }
                                     }
-                                  },
-                                  "back": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "BBfnncyJ2LWiHtxr6"
-                                        }
+                                  }
+                                },
+                                "back": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "BBfnncyJ2LWiHtxr6"
                                       }
                                     }
-                                  },
-                                  "frontRight": {
-                                    "node": {
-                                      "fields": {
-                                        "spriteId": {
-                                          "value": "7PGLvZHnqTNyn2fzE"
-                                        }
+                                  }
+                                },
+                                "frontRight": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "7PGLvZHnqTNyn2fzE"
+                                      }
+                                    }
+                                  }
+                                },
+                                "backRight": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "3oonuNxZYrb3ayQKr"
                                       }
                                     }
                                   }
                                 }
-                              },
-                              "name": "Hand 2"
-                            }
+                              }
+                            },
+                            "name": "Hand 2"
                           }
                         }
-                      },
-                      "name": "Hand 2"
-                    }
+                      }
+                    },
+                    "name": "Hand 2"
                   }
                 }
-              },
-              "name": "Arms 2"
+              }
             }
           },
           "torso": {
@@ -2303,7 +2307,7 @@
                             "2": {
                               "template": {
                                 "id": "w3RHWPt6TG7PomKDw",
-                                "version": 3,
+                                "version": 4,
                                 "data": {
                                   "fields": {
                                     "region": {
@@ -2315,7 +2319,7 @@
                                           "0": {
                                             "template": {
                                               "id": "fzwbjZyD8sLwwPpDZ",
-                                              "version": 2,
+                                              "version": 3,
                                               "data": {
                                                 "fields": {
                                                   "front": {
@@ -2331,7 +2335,7 @@
                                                     "node": {
                                                       "fields": {
                                                         "spriteId": {
-                                                          "value": "NXPH2dvpEsXASp9g7"
+                                                          "value": "GGcSEt9T86Yjpcbpx"
                                                         }
                                                       }
                                                     }
@@ -3228,23 +3232,23 @@
       }
     },
     "textures": {
-      "needUpdate": false,
+      "needUpdate": true,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/wDdu23RnFeLZxrSmF-normals.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/LtHe7bMsdAEN7Kynd-normals.png?2"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/wDdu23RnFeLZxrSmF-palettedata.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/LtHe7bMsdAEN7Kynd-palettedata.png?2"
       },
-      "version": 1
+      "version": 2
     }
   },
   "designApproved": true,
   "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
   },
   "debugName": "Reuben Thiessen",
-  "ownerName": "Administrator",
-  "_schema": "7.0.0"
+  "ownerName": "Lands of Illusions Admin",
+  "_schema": "8.0.0"
 }

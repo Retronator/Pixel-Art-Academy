@@ -828,7 +828,7 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 5,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
@@ -968,13 +968,13 @@
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -1024,7 +1024,20 @@
                                   },
                                   "frontRight": {
                                     "node": {
-                                      "fields": {}
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
+                                      }
                                     }
                                   }
                                 }
@@ -1705,7 +1718,7 @@
                               "node": {
                                 "fields": {
                                   "region": {
-                                    "value": "TorsoClothes"
+                                    "value": "BodyClothesTight"
                                   },
                                   "shapes": {
                                     "node": {
@@ -2906,7 +2919,7 @@
       }
     },
     "fullName": {
-      "_id": "ofAvFEqF4DdHAT2ec",
+      "_id": "aFCvwon8jFyX2EvQz",
       "translations": {
         "en": {
           "us": {
@@ -2927,23 +2940,23 @@
       }
     },
     "textures": {
-      "needUpdate": false,
+      "needUpdate": true,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/EvvRDjukNyHQFTS7h-normals.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/GuMSuWTAbkH6SupYB-normals.png?2"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/EvvRDjukNyHQFTS7h-palettedata.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/GuMSuWTAbkH6SupYB-palettedata.png?2"
       },
-      "version": 1
+      "version": 2
     }
   },
   "designApproved": true,
   "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
   },
-  "_schema": "7.0.0",
-  "ownerName": "Administrator",
+  "_schema": "8.0.0",
+  "ownerName": "Lands of Illusions Admin",
   "debugName": "Alexandra Hood"
 }

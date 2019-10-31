@@ -1,23 +1,24 @@
 {
   "_id": "Retronator.HQ.Actors.Burra",
-  "user": {
-    "_id": "9udfGdvJX7TyFMiE2",
-    "displayName": "Administrator",
-    "publicName": "Administrator"
-  },
-  "debugName": "Sarah Burrough",
-  "_schema": "6.0.0",
-  "ownerName": "Administrator",
   "avatar": {
     "fullName": {
-      "_id": "rhjduPGNcW3an8d9b",
+      "_id": "QmdiEJPE5idj3R9sm",
       "translations": {
-        "text": "Sarah Burrough",
-        "quality": 0,
+        "en": {
+          "us": {
+            "text": "Sarah 'Burra' Burrough",
+            "quality": 0
+          },
+          "best": {
+            "text": "Sarah 'Burra' Burrough",
+            "quality": 0,
+            "languageRegion": "en-US"
+          }
+        },
         "best": {
-          "text": "Sarah Burrough",
+          "text": "Sarah 'Burra' Burrough",
           "quality": 0,
-          "languageRegion": ""
+          "languageRegion": "en-US"
         }
       }
     },
@@ -27,7 +28,14 @@
       "shade": -2
     },
     "textures": {
-      "needUpdate": true
+      "needUpdate": true,
+      "normals": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/62DeQp5kYDY6Gz4ce-normals.png?2"
+      },
+      "paletteData": {
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/62DeQp5kYDY6Gz4ce-palettedata.png?2"
+      },
+      "version": 2
     },
     "body": {
       "node": {
@@ -147,7 +155,7 @@
                               }
                             }
                           },
-                          "name": "Eye"
+                          "name": "Eye shape"
                         }
                       },
                       "iris": {
@@ -245,7 +253,7 @@
                                           }
                                         }
                                       },
-                                      "name": "Pulled back"
+                                      "name": "Base pulled back"
                                     },
                                     "type": "Avatar.Body.HairShape"
                                   },
@@ -287,9 +295,7 @@
                                           },
                                           "front": {
                                             "node": {
-                                              "fields": {
-
-                                              }
+                                              "fields": {}
                                             }
                                           },
                                           "frontLeft": {
@@ -401,13 +407,13 @@
           "arms": {
             "template": {
               "id": "7xjZxMuokHKgCsBLX",
-              "version": 3,
+              "version": 7,
               "data": {
                 "fields": {
                   "upperArm": {
                     "template": {
                       "id": "ZQLLLmHMhhqHuafae",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -463,18 +469,18 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Upper arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Upper arm 1"
                     }
                   },
                   "lowerArm": {
                     "template": {
                       "id": "E9484G4dwPnDAirmf",
-                      "version": 0,
+                      "version": 1,
                       "data": {
                         "fields": {
                           "shape": {
@@ -530,24 +536,24 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Lower arm 1"
                             }
                           }
                         }
                       },
-                      "name": "1"
+                      "name": "Lower arm 1"
                     }
                   },
                   "hand": {
                     "template": {
                       "id": "fB9ZwaGXq35wkZAKd",
-                      "version": 3,
+                      "version": 5,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JsYj7b5dFLLbyqcsz",
-                              "version": 2,
+                              "version": 5,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -598,7 +604,18 @@
                                   "frontRight": {
                                     "node": {
                                       "fields": {
-
+                                        "spriteId": {
+                                          "value": "pTPhNwkpFkvniW3tH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "3oonuNxZYrb3ayQKr"
+                                        }
                                       }
                                     }
                                   }
@@ -620,19 +637,19 @@
           "legs": {
             "template": {
               "id": "g84TmkP25KNiDmBxx",
-              "version": 3,
+              "version": 5,
               "data": {
                 "fields": {
                   "thigh": {
                     "template": {
                       "id": "hyGKMPS7pfYQCLXYC",
-                      "version": 1,
+                      "version": 3,
                       "data": {
                         "fields": {
                           "shape": {
                             "template": {
                               "id": "JNduwF96AmfGA9w3i",
-                              "version": 1,
+                              "version": 3,
                               "data": {
                                 "fields": {
                                   "front": {
@@ -691,7 +708,7 @@
                                   }
                                 }
                               },
-                              "name": "3"
+                              "name": "Thigh 3"
                             }
                           }
                         }
@@ -702,7 +719,7 @@
                   "lowerLeg": {
                     "template": {
                       "id": "k3wYq3cLNToMxNef9",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -758,7 +775,7 @@
                                   }
                                 }
                               },
-                              "name": "2"
+                              "name": "Lower leg 2"
                             }
                           }
                         }
@@ -769,7 +786,7 @@
                   "foot": {
                     "template": {
                       "id": "BMrtuEhw6ayZhJbye",
-                      "version": 1,
+                      "version": 2,
                       "data": {
                         "fields": {
                           "shape": {
@@ -834,7 +851,7 @@
                                   }
                                 }
                               },
-                              "name": "1"
+                              "name": "Foot shape 1"
                             }
                           }
                         }
@@ -974,7 +991,7 @@
                                     }
                                   }
                                 },
-                                "name": "2"
+                                "name": "Bottom 2"
                               }
                             },
                             "nippleShade": {
@@ -1048,7 +1065,7 @@
                                     }
                                   }
                                 },
-                                "name": "2"
+                                "name": "Top 2"
                               }
                             }
                           }
@@ -1263,7 +1280,7 @@
             }
           },
           "height": {
-            "value": 1.6999999999999999556
+            "value": 1.7
           }
         }
       }
@@ -1346,7 +1363,7 @@
                                         "1_5": {
                                           "template": {
                                             "id": "yL3FhD6PXRTcyohwa",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1469,7 +1486,7 @@
                                         "2_25": {
                                           "template": {
                                             "id": "zThzLNgufYxBmETf7",
-                                            "version": 0,
+                                            "version": 1,
                                             "data": {
                                               "fields": {
                                                 "front": {
@@ -1749,7 +1766,7 @@
                                     }
                                   },
                                   "region": {
-                                    "value": "TorsoClothes"
+                                    "value": "BodyClothes"
                                   }
                                 }
                               },
@@ -2050,7 +2067,7 @@
                                                 }
                                               }
                                             },
-                                            "name": "Accessories watch"
+                                            "name": "Watch"
                                           },
                                           "type": "Avatar.Outfit.ArticlePartShape"
                                         }
@@ -2127,7 +2144,7 @@
                             "0": {
                               "template": {
                                 "id": "G9NFt5jjgYyRXvnxb",
-                                "version": 0,
+                                "version": 1,
                                 "data": {
                                   "fields": {
                                     "shapes": {
@@ -2195,7 +2212,7 @@
                                                   }
                                                 }
                                               },
-                                              "name": "Shoe balerina"
+                                              "name": "Shoe ballet"
                                             },
                                             "type": "Avatar.Outfit.ArticlePartShape"
                                           },
@@ -2505,5 +2522,14 @@
         }
       }
     }
-  }
+  },
+  "user": {
+    "_id": "sCcSTmSHWLgLutNqw",
+    "displayName": "Lands of Illusions Admin",
+    "publicName": "Lands of Illusions Admin"
+  },
+  "debugName": "Sarah 'Burra' Burrough",
+  "_schema": "8.0.0",
+  "ownerName": "Lands of Illusions Admin",
+  "designApproved": true
 }
