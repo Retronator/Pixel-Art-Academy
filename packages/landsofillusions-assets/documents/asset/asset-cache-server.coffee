@@ -10,6 +10,7 @@ class LOI.Assets.Asset extends AM.Document
     return if meta.abstract
 
     cache = null
+    cacheBuildId = null
     
     cachableDocumentsQuery =
       authors:
@@ -38,7 +39,20 @@ class LOI.Assets.Asset extends AM.Document
             cache[asset._id] = asset
 
           cache = JSON.stringify cache
+          cacheBuildId = Random.id()
 
-        response.writeHead 200, 'Content-Type': 'application/json'
-        response.write cache
+        # See if client's cache is up to date.
+        if request.headers['if-none-match'] is cacheBuildId
+          # The client already has the right cache, all is good.
+          response.writeHead 304
+
+        else
+          # Send the cache content to the client.
+          response.writeHead 200,
+            'Content-Type': 'application/json'
+            'Cache-Control': 'public, max-age=0'
+            'ETag': cacheBuildId
+
+          response.write cache
+
         response.end()
