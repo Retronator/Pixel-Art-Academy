@@ -123,8 +123,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         animatedMesh.boneCorrections boneCorrections
 
         # Further reposition the character upwards if the body was extended downwards from the navel.
-        for bone in ['Acetabulum', 'Knee', 'Ankle', 'Foot']
-          if correction = boneCorrections["#{bone} Left"]?.y
+        for bone in ['Acetabulum', 'Upper Leg', 'Lower Leg', 'Foot']
+          if correction = boneCorrections["Left #{bone}"]?.y
             animatedMesh.position.y += correction * scale
 
     @_prepareTexturesAutorun = Tracker.autorun (computation) =>

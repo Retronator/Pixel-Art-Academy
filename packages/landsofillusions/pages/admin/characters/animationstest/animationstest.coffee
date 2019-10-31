@@ -92,7 +92,6 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
             return
 
           document = new LOI.NonPlayerCharacter EJSON.parse result.content
-          document.avatar.textures = null
 
           avatar = new LOI.Character.Avatar document
           @avatars[index].avatar avatar

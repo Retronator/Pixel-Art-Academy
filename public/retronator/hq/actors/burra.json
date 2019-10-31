@@ -28,14 +28,14 @@
       "shade": -2
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/62DeQp5kYDY6Gz4ce-normals.png?2"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/62DeQp5kYDY6Gz4ce-normals.png?3"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/62DeQp5kYDY6Gz4ce-palettedata.png?2"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/62DeQp5kYDY6Gz4ce-palettedata.png?3"
       },
-      "version": 2
+      "version": 3
     },
     "body": {
       "node": {

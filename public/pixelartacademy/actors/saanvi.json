@@ -2007,14 +2007,14 @@
       }
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/8eAGK8c89dAuswXZq-normals.png?3"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/8eAGK8c89dAuswXZq-normals.png?4"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/8eAGK8c89dAuswXZq-palettedata.png?3"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/8eAGK8c89dAuswXZq-palettedata.png?4"
       },
-      "version": 3
+      "version": 4
     },
     "outfit": {
       "node": {

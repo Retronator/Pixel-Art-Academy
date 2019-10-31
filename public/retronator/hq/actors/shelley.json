@@ -1269,14 +1269,14 @@
       }
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/viLQ7zgrFaqwicG3C-normals.png?2"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/viLQ7zgrFaqwicG3C-normals.png?3"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/viLQ7zgrFaqwicG3C-palettedata.png?2"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/viLQ7zgrFaqwicG3C-palettedata.png?3"
       },
-      "version": 2
+      "version": 3
     },
     "outfit": {
       "node": {

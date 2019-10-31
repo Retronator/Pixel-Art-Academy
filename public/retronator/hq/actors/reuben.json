@@ -3232,14 +3232,14 @@
       }
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/LtHe7bMsdAEN7Kynd-normals.png?2"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/LtHe7bMsdAEN7Kynd-normals.png?3"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/LtHe7bMsdAEN7Kynd-palettedata.png?2"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/LtHe7bMsdAEN7Kynd-palettedata.png?3"
       },
-      "version": 2
+      "version": 3
     }
   },
   "designApproved": true,

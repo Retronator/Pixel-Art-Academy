@@ -1388,14 +1388,14 @@
       }
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/muFgY78mejb55hG6Q-normals.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/muFgY78mejb55hG6Q-normals.png?2"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/muFgY78mejb55hG6Q-palettedata.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/muFgY78mejb55hG6Q-palettedata.png?2"
       },
-      "version": 1
+      "version": 2
     },
     "outfit": {
       "node": {

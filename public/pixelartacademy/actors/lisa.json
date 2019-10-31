@@ -1927,14 +1927,14 @@
       }
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/XBsJZssPgEsnm9yNG-normals.png?3"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/XBsJZssPgEsnm9yNG-normals.png?4"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/XBsJZssPgEsnm9yNG-palettedata.png?3"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/XBsJZssPgEsnm9yNG-palettedata.png?4"
       },
-      "version": 3
+      "version": 4
     },
     "outfit": {
       "node": {

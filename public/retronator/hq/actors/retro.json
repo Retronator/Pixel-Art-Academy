@@ -2690,14 +2690,14 @@
       }
     },
     "textures": {
-      "needUpdate": true,
+      "needUpdate": false,
       "normals": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J79g2EnveaEFQDP28-normals.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J79g2EnveaEFQDP28-normals.png?2"
       },
       "paletteData": {
-        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J79g2EnveaEFQDP28-palettedata.png?1"
+        "url": "https://pixelartacademy.s3.amazonaws.com/avatars/J79g2EnveaEFQDP28-palettedata.png?2"
       },
-      "version": 1
+      "version": 2
     }
   },
   "activated": true,
