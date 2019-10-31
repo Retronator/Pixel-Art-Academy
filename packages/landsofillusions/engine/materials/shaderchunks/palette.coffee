@@ -78,3 +78,9 @@ LOI.Engine.Materials.ShaderChunks.setPaletteColorFromUniformsFragment = """
 LOI.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment = """
   vec3 sourceColor = texture2D(palette, paletteColor).rgb;
 """
+
+LOI.Engine.Materials.ShaderChunks.quantizeShadedColorFragment = """
+  if (smoothShading && smoothShadingQuantizationFactor > 0.0) {
+    shadedColor = floor(shadedColor * smoothShadingQuantizationFactor + 0.5) / smoothShadingQuantizationFactor;
+  }
+"""

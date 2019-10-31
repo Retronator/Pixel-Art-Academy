@@ -86,7 +86,7 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         reflectionIntensity:
           value: options.reflection?.intensity
         reflectionShininess:
-          value: options.reflection?.shininess
+          value: options.reflection?.shininess or 1
         reflectionSmoothFactor:
           value: options.reflection?.smoothFactor
 
@@ -229,11 +229,10 @@ void main()	{
   // Calculate the shaded color.
   #{LOI.Engine.Materials.ShaderChunks.shadeSourceColorFragment}
 
-  // Bound shaded color to palette ramp.
-  if (smoothShading && smoothShadingQuantizationFactor > 0.0) {
-    shadedColor = floor(shadedColor * smoothShadingQuantizationFactor + 0.5) / smoothShadingQuantizationFactor;
-  }
+  // Quantize if set for smooth shading.
+  #{LOI.Engine.Materials.ShaderChunks.quantizeShadedColorFragment}
 
+  // Bound shaded color to palette ramp.
   vec3 destinationColor = boundColorToPaletteRamp(shadedColor, paletteColor.r, shadingDither, smoothShading);
 
   // Color the pixel with the best match from the palette.

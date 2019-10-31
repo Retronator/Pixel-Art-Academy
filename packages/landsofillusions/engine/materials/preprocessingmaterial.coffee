@@ -60,17 +60,19 @@ void main()	{
   // Discard transparent pixels for textured fragments.
   #ifdef USE_MAP
     #{LOI.Engine.Materials.ShaderChunks.readTextureDataFragment}
-    #{LOI.Engine.Materials.ShaderChunks.unpackSamplePaletteColorFragment}
   #endif
 
   if (translucencyTint) {
-    #ifndef USE_MAP
+    #ifdef USE_MAP
+      // We're reading the color from the texture, unpack it from the texture sample.
+      #{LOI.Engine.Materials.ShaderChunks.unpackSamplePaletteColorFragment}
+    #else
       // We're using constants, read from uniforms.
       #{LOI.Engine.Materials.ShaderChunks.setPaletteColorFromUniformsFragment}
-
-      // Ramp is offset by 1 so that 0 can mean no preprocessing info.
-      palette.r += 1.0 / 256.0;
     #endif
+
+    // Ramp is offset by 1 so that 0 can mean no preprocessing info.
+    paletteColor.r += 1.0 / 256.0;
   }
 
   // Preprocessing map has the tint color (ramp and shade) written to red and green channels.

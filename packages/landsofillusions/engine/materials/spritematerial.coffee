@@ -19,6 +19,8 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
         # Shading
         smoothShading:
           value: options.smoothShading or false
+        smoothShadingQuantizationFactor:
+          value: options.smoothShadingQuantizationFactor
         directionalShadowColorMap:
           value: []
         directionalOpaqueShadowMap:
@@ -74,6 +76,7 @@ uniform sampler2D palette;
 
 // Shading
 uniform bool smoothShading;
+uniform float smoothShadingQuantizationFactor;
 #{LOI.Engine.Materials.ShaderChunks.totalLightIntensityParametersFragment}
 uniform sampler2D preprocessingMap;
 
@@ -110,6 +113,9 @@ void main()	{
 
   // Calculate the shaded color.
   #{LOI.Engine.Materials.ShaderChunks.shadeSourceColorFragment}
+
+  // Quantize if set for smooth shading.
+  #{LOI.Engine.Materials.ShaderChunks.quantizeShadedColorFragment}
 
   // Bound shaded color to palette ramp.
   float ramp = paletteColor.r;
