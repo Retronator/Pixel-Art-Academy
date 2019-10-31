@@ -41,12 +41,16 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
 #include <uv_pars_vertex>
 #include <shadowmap_pars_vertex>
 
+varying vec3 vViewPosition;
+
 void main()	{
 	#include <uv_vertex>
   #include <begin_vertex>
 	#include <project_vertex>
   #include <worldpos_vertex>
 	#include <shadowmap_vertex>
+
+  vViewPosition = -mvPosition.xyz;
 }
 """
 
@@ -74,6 +78,7 @@ uniform bool smoothShading;
 uniform sampler2D preprocessingMap;
 
 uniform mat4 modelViewMatrix;
+varying vec3 vViewPosition;
 
 void main()	{
   // Read palette color from main map.

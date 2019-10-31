@@ -129,9 +129,7 @@ varying vec3 vNormal;
   uniform mat3 textureMapping;
 #endif
 
-#ifdef USE_NORMALMAP
-  varying vec3 vViewPosition;
-#endif
+varying vec3 vViewPosition;
 
 void main()	{
   #include <beginnormal_vertex>
@@ -145,9 +143,7 @@ void main()	{
 
   #{LOI.Engine.Materials.ShaderChunks.mapTextureVertex}
 
-  #ifdef USE_NORMALMAP
-    vViewPosition = - mvPosition.xyz;
-  #endif
+  vViewPosition = -mvPosition.xyz;
 }
 """
 
@@ -191,6 +187,7 @@ uniform float opacity;
 uniform float translucencyDither;
 
 varying vec3 vNormal;
+varying vec3 vViewPosition;
 
 void main()	{
   // Apply translucency dither first since that can discard the whole fragment altogether.

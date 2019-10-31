@@ -55,15 +55,25 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensityParametersFragment = """
       return shadowColor;
     }
   #endif
+
+  float calculateReflectionIntensity(vec3 reflectionParameters, DirectionalLight directionalLight, vec3 normal, vec3 viewDirection) {
+    vec3 reflection = reflect(-directionalLight.direction, normal);
+    float reflectionViewProduct = saturate(dot(reflection, viewDirection));
+    float reflectionLightFactor = pow(reflectionViewProduct, reflectionParameters.y) * reflectionParameters.x;
+    return reflectionLightFactor * directionalLight.color.r;
+  }
 """
 
 LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment = """
   // Accumulate directional lights.
   float totalLightIntensity = 0.0;
+  float totalReflectedLightIntensity = 0.0;
 
   DirectionalLight directionalLight;
   float lightIntensity;
   vec4 shadowColor;
+
+  vec3 viewDirection = normalize(vViewPosition);
 
   // Note: Unrolling a loop requires specific whitespace formatting.
   #pragma unroll_loop
@@ -73,6 +83,10 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment = """
 
     // Shade using Lambert cosine law.
     lightIntensity = saturate(dot(directionalLight.direction, normal)) * directionalLight.color.r;
+
+    // Apply specular highlight.
+    // Note: We don't use parenthesis since the pragma unroll would match them and close the unroll.
+    if (reflectionParameters.x > 0.0) totalReflectedLightIntensity += calculateReflectionIntensity(reflectionParameters, directionalLight, normal, viewDirection);
 
     #ifdef USE_SHADOWMAP
       shadowColor = getShadowColor(directionalShadowMap[ i ], directionalOpaqueShadowMap[ i ], directionalShadowColorMap[ i ], directionalLight.shadowBias + shadowBiasOffset, vDirectionalShadowCoord[ i ]);
@@ -97,5 +111,5 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment = """
 LOI.Engine.Materials.ShaderChunks.shadeSourceColorFragment = """
   // Shade from ambient to full light based on intensity.
   float shadeFactor = mix(ambientLightColor.r, 1.0, totalLightIntensity);
-  vec3 shadedColor = sourceColor * shadeFactor;
+  vec3 shadedColor = sourceColor * shadeFactor + vec3(1) * totalReflectedLightIntensity;
 """
