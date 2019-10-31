@@ -1,3 +1,0 @@
-en-US: Jacket open short
-
-{"_id":"SvwbwakGHpLgYk4L2","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565698538326},"translations":{"en":{"us":{"text":"Jacket open short","quality":0},"best":{"text":"Jacket open short","quality":0,"languageRegion":"en-US"}},"best":{"text":"Jacket open short","quality":0,"languageRegion":"en-US"}}}

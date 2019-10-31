@@ -1,0 +1,3 @@
+en-US: Necklace princess
+
+{"_id":"Yjd3sA5bepPFZv9HC","ownerId":"sCcSTmSHWLgLutNqw","_schema":"2.0.0","lastEditTime":{"$date":1572460082997},"translations":{"en":{"us":{"text":"Necklace princess","quality":0},"best":{"text":"Necklace princess","quality":0,"languageRegion":"en-US"}},"best":{"text":"Necklace princess","quality":0,"languageRegion":"en-US"}}}
