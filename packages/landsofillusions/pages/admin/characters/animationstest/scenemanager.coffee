@@ -94,7 +94,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest.SceneManager
     changeGround = deltaGround * 6
 
     @groundMoveSpeed += changeGround * appTime.elapsedAppTime
-    @groundMoveSpeed = 0 if Math.abs(@groundMoveSpeed) < 0.01 and not groundMoveTargetSpeed
+    @groundMoveSpeed = _.clamp @groundMoveSpeed, 0, 1.75
 
     distance = direction.clone().multiplyScalar @groundMoveSpeed * appTime.elapsedAppTime
 

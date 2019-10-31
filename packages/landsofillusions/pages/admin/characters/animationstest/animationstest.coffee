@@ -65,7 +65,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
     retronatorHQActorUrls = for actor in retronatorHQActors
       @versionedUrl "/retronator/hq/actors/#{actor}.json"
 
-    avatarUrls = pixelArtAcademyActorUrls[4..4]
+    avatarUrls = pixelArtAcademyActorUrls
     @charactersCount = avatarUrls.length
 
     # Initialize components.
@@ -76,7 +76,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
 
     @testAnimationName = new ReactiveField 'default'
     @testOutfitId = new ReactiveField null
-    @renderingSide = new ReactiveField LOI.Engine.RenderingSides.Keys.Left
+    @renderingSide = new ReactiveField LOI.Engine.RenderingSides.Keys.Front
     @direction = new ReactiveField null
 
     @avatars = []
@@ -163,8 +163,8 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
       sceneItem.update? appTime,
         camera: @rendererManager().camera
 
-    if currentAngle = @directionReferenceRenderObject?.currentAngle
-      @direction LOI.Engine.RenderingSides.getDirectionForAngle currentAngle
+    currentAngle = @directionReferenceRenderObject?.currentAngle
+    @direction LOI.Engine.RenderingSides.getDirectionForAngle currentAngle if currentAngle?
 
     @sceneManager().update appTime
 

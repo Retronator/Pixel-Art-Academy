@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Pages.Admin.Characters.AnimationsTest.RendererManager
   @renderWidth = 250
-  @renderHeight = 100
+  @renderHeight = 150
   @sceneWidth = 5
 
   constructor: (@parent) ->
@@ -16,7 +16,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest.RendererManager
     @targetOffset = (@parent.charactersCount - 1) / 2
 
     #@camera = new THREE.OrthographicCamera -halfWidth, halfWidth, halfHeight, -halfHeight, 0, 20
-    @camera = new THREE.PerspectiveCamera 25, @constructor.renderWidth / @constructor.renderHeight, 0.1, 20
+    @camera = new THREE.PerspectiveCamera 37, @constructor.renderWidth / @constructor.renderHeight, 0.1, 20
     @camera.position.set @targetOffset, 1.5, 8.1
 
     @_position = new THREE.Vector3
@@ -29,9 +29,9 @@ class LOI.Pages.Admin.Characters.AnimationsTest.RendererManager
 
     @_position.set Math.cos(angle) * distance + @targetOffset, 1.5, Math.sin(angle)  * distance
 
-    @camera.matrix.lookAt @_position, @_target, @_up
-    @camera.matrix.setPosition @_position
-    @camera.matrix.decompose @camera.position, @camera.quaternion, @camera.scale
+    #@camera.matrix.lookAt @_position, @_target, @_up
+    #@camera.matrix.setPosition @_position
+    #@camera.matrix.decompose @camera.position, @camera.quaternion, @camera.scale
 
     sceneManager = @parent.sceneManager()
     scene = sceneManager.scene()
