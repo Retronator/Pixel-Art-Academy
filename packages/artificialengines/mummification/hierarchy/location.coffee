@@ -140,6 +140,22 @@ class AM.Hierarchy.Location
 
       location.replaceTemplate node.template._id, targetVersion
 
+    # Clears the location if a template doesn't exist.
+    location.cleanMissingTemplate = (remove) ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+
+      # If we have a published template we don't have anything to clean.
+      return if LOI.Character.Part.Template.documents.findOne(node.template._id)?.latestVersion
+
+      # Published template was not published so we should clean this location.
+      if remove
+        location.remove()
+
+      else
+        location.clear()
+
     # Converts this node into a template.
     location.createTemplate = ->
       field = location.field()
@@ -253,12 +269,12 @@ class AM.Hierarchy.Location
 
     location.upgradeTemplates = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       upgradeTemplates = (location) ->
-        node = location()
+        return unless node = location()
 
         # See which fields this node has.
         for fieldName, field of node.data().fields
           fieldLocation = location.child fieldName
-          fieldNode = fieldLocation()
+          continue unless fieldNode = fieldLocation()
 
           if fieldNode.template
             # See if the template's version is the latest.
@@ -271,7 +287,7 @@ class AM.Hierarchy.Location
           else if fieldNode instanceof AM.Hierarchy.Node
             upgradeTemplates fieldLocation
 
-      # Upgrade all templates inside this template.
+      # Upgrade all templates inside this location.
       upgradeTemplates location
 
     location.embedTemplates = (defaultToLatestVersion) ->
@@ -303,8 +319,26 @@ class AM.Hierarchy.Location
           else if fieldNode instanceof AM.Hierarchy.Node
             embedTemplates fieldLocation
 
-      # Upgrade all templates inside this template.
+      # Embed all templates inside this location.
       embedTemplates location
+
+    location.cleanMissingTemplates = (remove) ->
+      cleanMissingTemplates = (location) ->
+        return unless node = location()
+
+        # See which fields this node has.
+        for fieldName, field of node.data().fields
+          fieldLocation = location.child fieldName
+          continue unless fieldNode = fieldLocation()
+
+          if fieldNode.template
+            fieldLocation.cleanMissingTemplate remove
+
+          else if fieldNode instanceof AM.Hierarchy.Node
+            cleanMissingTemplates fieldLocation
+
+      # Clean all templates inside this location.
+      cleanMissingTemplates location
 
     location.canUpgrade = (canUpgradeComparator = defaultCanUpgradeComparator) ->
       if location()?.template then location.canUpgradeTemplate canUpgradeComparator else location.includesUpgradableTemplates canUpgradeComparator
@@ -314,6 +348,9 @@ class AM.Hierarchy.Location
 
     location.embed = (defaultToLatestVersion) ->
       if location()?.template then location.embedTemplate defaultToLatestVersion else location.embedTemplates defaultToLatestVersion
+
+    location.cleanMissing = (remove) ->
+      if location()?.template then location.cleanMissingTemplate remove else location.cleanMissingTemplates remove
 
     # Return the location getter/setter function (return must be explicit).
     return location

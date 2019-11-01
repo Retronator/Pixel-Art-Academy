@@ -7,6 +7,7 @@
     <label><input class="show-only-stale-checkbox" type="checkbox" {{showOnlyStaleCheckedAttribute}}>Show only stale</label>
     <button class="embed-all-button">Embed all</button>
     <button class="upgrade-all-button">Upgrade all</button>
+    <button class="clean-all-button">Clean all</button>
     <table class="characters {{showOnlyStaleClass}}">
       <tr>
         <th>Owner</th>
@@ -27,7 +28,7 @@
           <td class="used-templates">
             <table>
               {{#each usedTemplates}}
-                <tr class="used-template {{canEmbedUsedTemplateClass}} {{canUpgradeUsedTemplateClass}}">
+                <tr class="used-template {{canEmbedUsedTemplateClass}} {{canUpgradeUsedTemplateClass}} {{canCleanUsedTemplateClass}}">
                   <td>{{usedTemplate.type}}</td>
                   <td>{{usedTemplateName}}</td>
                   <td>{{this.version}}</td>
@@ -42,6 +43,9 @@
             {{/if}}
             {{#if characterCanUpgrade}}
               <button class="upgrade-button">Upgrade</button>
+            {{/if}}
+            {{#if characterCanClean}}
+              <button class="clean-button">Clean</button>
             {{/if}}
           </td>
         </tr>

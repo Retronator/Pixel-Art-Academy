@@ -46,6 +46,10 @@ class LOI.Pages.Admin.Characters.Characters extends AM.Component
     character = @currentData()
     @_characterCanUpgrade character
 
+  characterCanClean: ->
+    character = @currentData()
+    @_characterCanClean character
+
   _characterCanEmbed: (character) ->
     usedTemplates = @_getUsedTemplates character
 
@@ -59,6 +63,14 @@ class LOI.Pages.Admin.Characters.Characters extends AM.Component
 
     for usedTemplate in usedTemplates
       return true if @_usedTemplateCanUpgrade usedTemplate
+
+    false
+
+  _characterCanClean: (character) ->
+    usedTemplates = @_getUsedTemplates character
+
+    for usedTemplate in usedTemplates
+      return true if @_usedTemplateCanClean usedTemplate
 
     false
 
@@ -103,13 +115,26 @@ class LOI.Pages.Admin.Characters.Characters extends AM.Component
     usedTemplate = @currentData()
     'can-upgrade' if @_usedTemplateCanUpgrade usedTemplate
 
+  canCleanUsedTemplateClass: ->
+    usedTemplate = @currentData()
+    'can-clean' if @_usedTemplateCanClean usedTemplate
+
   _usedTemplateCanEmbed: (usedTemplate) ->
-    not usedTemplate.data
+    return if usedTemplate.data
+
+    # Make sure we have the template to embed as well.
+    LOI.Character.Part.Template.documents.findOne usedTemplate.id
 
   _usedTemplateCanUpgrade: (usedTemplate) ->
     return unless liveTemplate = LOI.Character.Part.Template.documents.findOne usedTemplate.id
 
     LOI.Character.Part.Template.canUpgradeComparator usedTemplate, liveTemplate
+
+  _usedTemplateCanClean: (usedTemplate) ->
+    liveTemplate = LOI.Character.Part.Template.documents.findOne usedTemplate.id
+
+    # A template can be cleaned if no live published version exists.
+    not liveTemplate?.latestVersion
 
   usedTemplateName: ->
     usedTemplate = @currentData()
@@ -123,8 +148,10 @@ class LOI.Pages.Admin.Characters.Characters extends AM.Component
       'change .show-only-stale-checkbox': @onChangeShowOnlyStaleCheckbox
       'click .embed-all-button': @onClickEmbedAllButton
       'click .upgrade-all-button': @onClickUpgradeAllButton
+      'click .clean-all-button': @onClickCleanAllButton
       'click .embed-button': @onClickEmbedButton
       'click .upgrade-button': @onClickUpgradeButton
+      'click .clean-button': @onClickCleanButton
       'click .display-more-button': @onClickDisplayMoreButton
 
   onChangeShowOnlyStaleCheckbox: (event) ->
@@ -137,6 +164,10 @@ class LOI.Pages.Admin.Characters.Characters extends AM.Component
   onClickUpgradeAllButton: (event) ->
     for character in LOI.Character.documents.fetch() when @_characterCanUpgrade character
       @_upgradeCharacter character
+
+  onClickCleanAllButton: (event) ->
+    for character in LOI.Character.documents.fetch() when @_characterCanClean character
+      @_cleanCharacter character
 
   onClickEmbedButton: (event) ->
     character = @currentData()
@@ -158,6 +189,16 @@ class LOI.Pages.Admin.Characters.Characters extends AM.Component
 
     for part in [instance.avatar.body, instance.avatar.outfit, instance.behavior.part]
       part.options.dataLocation.upgrade comparator if part.options.dataLocation.canUpgrade comparator
+
+  onClickCleanButton: (event) ->
+    character = @currentData()
+    @_cleanCharacter character
+
+  _cleanCharacter: (character) ->
+    instance = new LOI.Character.Instance character._id, => character
+
+    for part in [instance.avatar.body, instance.avatar.outfit, instance.behavior.part]
+      part.options.dataLocation.cleanMissing true
 
   onClickDisplayMoreButton: ->
     @displayCount @displayCount() + 100
