@@ -72,12 +72,32 @@ class AS.AnimatedMesh extends AS.RenderObject
 
       if boneCorrections
         data = _.clone data
-        data.skeleton = _.clone data.skeleton
         data.animation = _.clone data.animation
+
+        # See which bones will need offset.
+        bonesThatNeedOffset = {}
+
+        addBonesThatNeedOffset = (bone) =>
+          return if bonesThatNeedOffset[bone.name]
+          bonesThatNeedOffset[bone.name] = true
+
+          for childId in bone.children
+            childBone = _.find data.skeleton, (bone) => bone.id is childId
+            addBonesThatNeedOffset childBone
+
+        addBonesThatNeedOffset data.skeleton[boneName] for boneName of boneCorrections
 
         for animationName, animation of data.animation
           data.animation[animationName] = _.clone animation
-          data.animation[animationName].bones = _.cloneDeep animation.bones
+          bones = _.clone animation.bones
+          data.animation[animationName].bones = bones
+
+          for frameNumber, frame of bones
+            bones[frameNumber] = _.clone frame
+
+            # Only clone bones that will be offset.
+            for boneName of bonesThatNeedOffset
+              bones[frameNumber][boneName] = _.clone frame[boneName]
 
         for boneName, correction of boneCorrections
           unless data.skeleton[boneName]
@@ -90,10 +110,8 @@ class AS.AnimatedMesh extends AS.RenderObject
               # bone space which would require calculating all hierarchy matrices per frame. For non-extreme animations
               # (that don't go too far away from the rest pose) this is good enough.
               offsetBone = (bone) =>
-                frame[bone.name].start_pt[0] += correction.x
-                frame[bone.name].start_pt[1] -= correction.y
-                frame[bone.name].end_pt[0] += correction.x
-                frame[bone.name].end_pt[1] -= correction.y
+                frame[bone.name].start_pt = [frame[bone.name].start_pt[0] + correction.x, frame[bone.name].start_pt[1] + correction.y]
+                frame[bone.name].end_pt = [frame[bone.name].end_pt[0] + correction.x, frame[bone.name].end_pt[1] + correction.y]
 
                 for childId in bone.children
                   childBone = _.find data.skeleton, (bone) => bone.id is childId

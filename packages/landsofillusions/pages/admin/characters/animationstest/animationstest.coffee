@@ -65,7 +65,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
     retronatorHQActorUrls = for actor in retronatorHQActors
       @versionedUrl "/retronator/hq/actors/#{actor}.json"
 
-    avatarUrls = pixelArtAcademyActorUrls
+    avatarUrls = [pixelArtAcademyActorUrls..., retronatorHQActorUrls...]
     @charactersCount = avatarUrls.length
 
     # Initialize components.
@@ -97,7 +97,8 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
           @avatars[index].avatar avatar
 
           renderObject = avatar.getRenderObject()
-          renderObject.position.x = index
+          renderObject.position.x = Math.random() * 10 - 5
+          renderObject.position.z = Math.random() * 10 - 5
           renderObject.faceDirection LOI.Engine.RenderingSides.getDirectionForSide @renderingSide()
           @directionReferenceRenderObject ?= renderObject
 

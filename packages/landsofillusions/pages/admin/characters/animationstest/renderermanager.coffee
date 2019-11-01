@@ -13,10 +13,10 @@ class LOI.Pages.Admin.Characters.AnimationsTest.RendererManager
 
     halfWidth = @constructor.sceneWidth / 2
     halfHeight = halfWidth * @constructor.renderHeight / @constructor.renderWidth
-    @targetOffset = (@parent.charactersCount - 1) / 2
+    @targetOffset = 0 # (@parent.charactersCount - 1) / 4
 
     #@camera = new THREE.OrthographicCamera -halfWidth, halfWidth, halfHeight, -halfHeight, 0, 20
-    @camera = new THREE.PerspectiveCamera 37, @constructor.renderWidth / @constructor.renderHeight, 0.1, 20
+    @camera = new THREE.PerspectiveCamera 40, @constructor.renderWidth / @constructor.renderHeight, 0.1, 20
     @camera.position.set @targetOffset, 1.5, 8.1
 
     @_position = new THREE.Vector3
@@ -25,13 +25,13 @@ class LOI.Pages.Admin.Characters.AnimationsTest.RendererManager
 
   draw: (appTime) ->
     angle = appTime.totalAppTime / Math.PI
-    distance = 8.1
+    distance = 10
 
     @_position.set Math.cos(angle) * distance + @targetOffset, 1.5, Math.sin(angle)  * distance
 
-    #@camera.matrix.lookAt @_position, @_target, @_up
-    #@camera.matrix.setPosition @_position
-    #@camera.matrix.decompose @camera.position, @camera.quaternion, @camera.scale
+    @camera.matrix.lookAt @_position, @_target, @_up
+    @camera.matrix.setPosition @_position
+    @camera.matrix.decompose @camera.position, @camera.quaternion, @camera.scale
 
     sceneManager = @parent.sceneManager()
     scene = sceneManager.scene()
