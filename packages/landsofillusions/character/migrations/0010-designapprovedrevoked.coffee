@@ -30,6 +30,19 @@ class Migration extends Document.MajorMigration
         count += collection.update _id: document._id,
           $set:
             designApproved: false
+            _schema: newSchema
+
+    collection.findEach
+      _schema: currentSchema
+      designApproved: true
+      user: null
+    ,
+      (document) =>
+        # Simply remove design approved field so that these characters won't appear rendered to other players.
+        count += collection.update _id: document._id,
+          $set:
+            designApproved: false
+            _schema: newSchema
 
     counts = super arguments...
     counts.migrated += count

@@ -48,8 +48,8 @@ class Migration extends Document.MajorMigration
                     id: ids[preMadeCharacterName].outfit
                 _schema: newSchema
 
-            # After the database is initialized with character templates, embed template data.
-            do (preMadeCharacterName) =>
+            # After the database is initialized with character templates, embed template data and pre-rendered textures.
+            do (preMadeCharacterName, preMadeCharacterDocument) =>
               AM.DatabaseContent.startup =>
                 bodyTemplate = LOI.Character.Part.Template.documents.findOne ids[preMadeCharacterName].body
                 outfitTemplate = LOI.Character.Part.Template.documents.findOne ids[preMadeCharacterName].outfit
@@ -68,6 +68,11 @@ class Migration extends Document.MajorMigration
                         version: outfitTemplate.latestVersion.index
                         data: outfitTemplate.latestVersion.data
                         name: outfitTemplate.name.translations.best.text
+                    'avatar.textures':
+                      normals:
+                        url: "https://pixelartacademy.s3.amazonaws.com/avatars/#{preMadeCharacterDocument._id}-normals.png"
+                      paletteData:
+                        url: "https://pixelartacademy.s3.amazonaws.com/avatars/#{preMadeCharacterDocument._id}-palettedata.png"
 
     counts = super arguments...
     counts.migrated += count
