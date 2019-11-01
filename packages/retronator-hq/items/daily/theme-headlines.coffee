@@ -1,6 +1,6 @@
 HQ = Retronator.HQ
 
-ColorThief = require 'color-thief-standalone'
+ColorThief = require 'color-thief'
 colorThief = new ColorThief
 
 class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme

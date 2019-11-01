@@ -10,7 +10,7 @@ cat header.coffee ../theme.coffee ../theme-frontpage.coffee theme-headlines.coff
 coffee --compile theme-code.coffee
 
 # Prepend color thief.
-cat ../../../.npm/package/node_modules/color-thief-standalone/src/color-thief.js theme-code.js > theme.js
+cat ../../../.npm/package/node_modules/color-thief/src/color-thief.js theme-code.js > theme.js
 
 # Prepare html by inserting theme into main.
 tail -r main.html | tail -n +3 | tail -r > theme.html
