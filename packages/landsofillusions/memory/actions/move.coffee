@@ -28,7 +28,7 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
     physicsObject = person.avatar.getPhysicsObject()
 
     if @content?.coordinates
-      renderObject.setAnimation 'Walk'
+      renderObject.setAnimation 'Walk 50'
       physicsObject.setMass physicsObject.walkMass
 
       LOI.adventure.world.navigator().moveAvatar
@@ -36,7 +36,7 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
         target: @content.coordinates
         speed: 1.25
         onCompleted: =>
-          renderObject.setAnimation 'Idle'
+          renderObject.setAnimation 'Idle loop'
           physicsObject.setMass physicsObject.idleMass
 
     null

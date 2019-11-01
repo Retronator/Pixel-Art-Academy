@@ -209,7 +209,7 @@ class AS.AnimatedMesh extends AS.RenderObject
   syncAnimationTo: (otherAnimatedMesh) ->
     return unless otherCreatureManager = otherAnimatedMesh.creatureManager()
     animationName = otherCreatureManager.GetActiveAnimationName()
-    runTime = otherCreatureManager.getRunTime()
+    runTime = otherCreatureManager.getActualRuntime()
 
     return unless creatureManager = @creatureManager()
     return unless creatureManager.GetAnimation animationName

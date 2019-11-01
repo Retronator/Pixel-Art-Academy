@@ -46,7 +46,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         waitForBoneCorrections: true
 
       animatedMesh.blendTime 0.2
-      animatedMesh.currentAnimationName 'Idle'
+      animatedMesh.currentAnimationName 'Idle loop'
       animatedMesh.randomStart true
 
       animatedMesh.visible = false unless side is @currentSide
@@ -309,9 +309,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     side = LOI.Engine.RenderingSides.getSideForAngle @currentAngle - cameraAngle
     @setCurrentSide side unless side is @currentSide
 
-    for side, animatedMesh of @animatedMeshes
-      updateData = side is @currentSide
-      animatedMesh.update appTime, updateData
+    @animatedMeshes[@currentSide].update appTime
 
     # Avatar sprite should always face the camera.
     @_cameraEuler.setFromQuaternion @_cameraRotation, "YXZ"
