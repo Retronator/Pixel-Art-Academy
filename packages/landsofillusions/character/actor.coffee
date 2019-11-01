@@ -46,6 +46,11 @@ class LOI.Character.Actor extends LOI.Character.Person
 
     # Note: We need to get the document asynchronously since the server is still setting up at this point.
     HTTP.get documentUrl, (error, result) =>
+      if error
+        console.error "Failed loading actor from url", documentUrl
+        console.error error
+        return
+
       character = result.data
 
       # Replace the user to admin.
