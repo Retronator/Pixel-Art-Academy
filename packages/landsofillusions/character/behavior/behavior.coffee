@@ -35,7 +35,11 @@ class LOI.Character.Behavior
     behaviorDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
-      load: => @character.document()?.behavior
+      load: new ComputedField =>
+        @character.document(behavior: true)?.behavior
+      ,
+        EJSON.equals
+
       save: (address, value) =>
         LOI.Character.updateBehavior @character._id, address, value
 

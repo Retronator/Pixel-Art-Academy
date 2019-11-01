@@ -14,7 +14,6 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
-  api.use('retronator:pixelartacademy-cast');
   api.use('retronator:retronator-hq');
 
   api.export('Retronator');

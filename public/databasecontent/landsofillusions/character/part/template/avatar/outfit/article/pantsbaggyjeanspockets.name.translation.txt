@@ -1,0 +1,3 @@
+en-US: Pants baggy jeans pockets
+
+{"_id":"7AENcQic6RasLn2JJ","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants baggy jeans pockets","quality":0},"best":{"text":"Pants baggy jeans pockets","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants baggy jeans pockets","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564530810108}}

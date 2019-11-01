@@ -1,0 +1,3 @@
+en: Inventor (ENTP)
+
+{"_id":"zJ7arbAXQiNiMDLrS","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Inventor (ENTP)","quality":0,"best":{"text":"Inventor (ENTP)","quality":0,"languageRegion":"en"}},"best":{"text":"Inventor (ENTP)","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038945414}}

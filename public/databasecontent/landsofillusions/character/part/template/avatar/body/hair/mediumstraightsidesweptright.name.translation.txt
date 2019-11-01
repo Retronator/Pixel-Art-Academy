@@ -1,0 +1,3 @@
+en-US: Medium straight side-swept right
+
+{"_id":"fibA3WduAPrxMwt3J","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560504208190},"translations":{"en":{"us":{"text":"Medium straight side-swept right","quality":0},"best":{"text":"Medium straight side-swept right","quality":0,"languageRegion":"en-US"}},"best":{"text":"Medium straight side-swept right","quality":0,"languageRegion":"en-US"}}}

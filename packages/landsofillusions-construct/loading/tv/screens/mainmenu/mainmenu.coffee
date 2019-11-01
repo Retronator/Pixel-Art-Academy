@@ -5,29 +5,15 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
   @register 'LandsOfIllusions.Construct.Loading.TV.MainMenu'
 
   constructor: (@tv) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
-  
-    # Subscribe to user's activated characters.
-    @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
+    super arguments...
   
     @activatedCharacters = new ComputedField =>
-      return unless user = Retronator.user()
+      return unless characters = Retronator.user()?.characters
   
-      characterDocuments = _.filter user.characters, (character) =>
-        character = LOI.Character.documents.findOne(character._id)
-  
-        character?.activated
-  
-      # Destroy previous character instances.
-      character.destroy() for character in @_characters if @_characters
-  
-      @_characters = for characterDocument in characterDocuments
-        new LOI.Character.Instance characterDocument._id
-  
-      @_characters
+      LOI.Character.getInstance character._id for character in characters when character.activated
 
     # Which character is shown left-most. Allows to scroll through options.
     @firstCharacterOffset = new ReactiveField 0
@@ -68,7 +54,7 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
     'visible' if @firstCharacterOffset() > 0
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character': @onClickCharacter
       'click .screen': @onClickScreen
       'click .new-character': @onClickNewCharacter

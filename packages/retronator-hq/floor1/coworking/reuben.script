@@ -1,0 +1,37 @@
+# Retronator.HQ.Coworking.Reuben
+
+## Start
+
+reuben: Hi there! `not _IntroductionOver`
+reuben: What's up? `_IntroductionOver`
+
+## IntroductionOver
+
+## MainQuestions
+
+* What are you up to? -> [UpTo]
+* *MainQuestions*
+* *CoordinatorMainQuestions*
+* See you around.
+
+-> [End]
+
+## UpTo
+
+-> [UpToFinished] `_gameFinished`
+
+reuben: 
+  Working on a PICO-8 game. 
+  I have it running, but still need to get some graphics going.
+  
+-> [MainQuestions]
+  
+## UpToFinished
+
+reuben:
+  Now that the Snake game is finished, I'm going to take my plane for a spin.
+  Thanks again for helping with the graphics!
+
+-> [MainQuestions]
+
+## End

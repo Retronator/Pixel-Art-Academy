@@ -5,16 +5,17 @@
         <label class="name">Name:
           {{> LandsOfIllusions.Assets.Components.AssetInfo.Name}}
         </label>
-        <label class="palette">Palette:
-          {{> LandsOfIllusions.Assets.Components.AssetInfo.Palette}}
-        </label>
+        {{#if showPalette}}
+          <label class="palette">Palette:
+            {{> LandsOfIllusions.Assets.Components.AssetInfo.Palette}}
+          </label>
+        {{/if}}
       {{/with}}
       <div class="actions">
         <button class="clear-button">Clear</button>
         <button class="delete-button">Delete</button>
         <button class="duplicate-button">Duplicate</button>
       </div>
-      {{> Render colorMap}}
     </div>
   </div>
 </template>

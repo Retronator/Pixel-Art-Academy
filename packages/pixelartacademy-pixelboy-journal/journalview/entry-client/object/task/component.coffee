@@ -5,7 +5,7 @@ IL = Illustrapedia
 
 class Entry.Object.Task.Component extends AM.Component
   constructor: (@parent) ->
-    super
+    super arguments...
 
     @task = @parent.task
 

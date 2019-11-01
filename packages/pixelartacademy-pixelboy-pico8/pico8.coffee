@@ -28,7 +28,7 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @resizable false
 
@@ -38,7 +38,7 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
     @cartridge = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @drawer new @constructor.Drawer @
     @device new PAA.Pico8.Device.Handheld

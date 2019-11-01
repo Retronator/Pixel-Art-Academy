@@ -1,0 +1,16 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.Navigator">
+  <div class="landsofillusions-assets-editor-navigator landsofillusions-assets-mesheditor-navigator landsofillusions-assets-editor-panel">
+    <div class="thumbnail">
+      {{> LandsOfIllusions.Assets.MeshEditor.Thumbnail meshThumbnail}}
+    </div>
+    <div class="controls">
+      <div class="zoom-display">
+        {{#if zoomPercentageValue}}
+          <input class="zoom-percentage-input" value="{{zoomPercentageValue}}" />%
+        {{/if}}
+        <button class="zoom-in-button zoom-button {{zoomInPressedClass}}">+</button>
+        <button class="zoom-out-button zoom-button {{zoomOutPressedClass}}">-</button>
+      </div>
+    </div>
+  </div>
+</template>

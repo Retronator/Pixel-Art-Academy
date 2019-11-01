@@ -7,12 +7,12 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       PAA.PersonUpdates
     ]
 
   constructor: ->
-    super
+    super arguments...
 
     # Active members are the ones that have done any memorable recent actions.
     @presentMembers = new ComputedField =>
@@ -28,7 +28,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
     @personUpdates = _.find @listeners, (listener) -> listener instanceof PAA.PersonUpdates
 
   destroy: ->
-    super
+    super arguments...
 
     @characterUpdatesHelper.destroy()
 
@@ -137,6 +137,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
         form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
         action: =>
           presentMembers = scene.presentMembers()
+
           switch presentMembers.length
             when 0 then label = 'NoOne'
             when 1
@@ -165,10 +166,15 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
               things = {}
 
-              for personIndex in [1..3]
+              for personIndex in [1..persons.length]
                 things["person#{personIndex}"] = persons[personIndex]
-                @groupScript.ephemeralState "person#{personIndex}", persons[personIndex]?
+                @groupScript.ephemeralState "person#{personIndex}", true
 
               @groupScript.setThings things
+
+          # Clear out the rest of the people.
+          if presentMembers.length < 3
+            for personIndex in [presentMembers.length + 1..3]
+              @groupScript.ephemeralState "person#{personIndex}", false
 
           LOI.adventure.director.startScript @groupScript, {label}

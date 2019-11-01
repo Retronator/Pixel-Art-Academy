@@ -11,10 +11,10 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
   template: -> @constructor.id()
 
   constructor: (@calendar) ->
-    super
+    super arguments...
   
   onCreated: ->
-    super
+    super arguments...
 
     @visible = new ReactiveField false
 
@@ -59,7 +59,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
     'visible' if @visible()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .task': @onClickTask
 
   onClickTask: (event) ->

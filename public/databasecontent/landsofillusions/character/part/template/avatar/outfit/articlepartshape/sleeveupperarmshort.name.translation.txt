@@ -1,0 +1,3 @@
+en: Sleeve upper-arm short
+
+{"_id":"7FPGvTEbQKnzShsvk","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Sleeve upper-arm short","quality":0,"best":{"text":"Sleeve upper-arm short","quality":0,"languageRegion":"en"}},"best":{"text":"Sleeve upper-arm short","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1564069141881}}

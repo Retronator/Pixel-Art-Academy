@@ -8,12 +8,12 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard'
   
   constructor: (@drawing) ->
-    super
+    super arguments...
 
     @secondPageActive = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
 
     # Calculate sprite size.
     @spriteSize = new ComputedField =>
@@ -73,7 +73,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
     height: "#{spriteSize.contentHeight + 2 * spriteSize.borderWidth}rem"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .back-button': @onClickBackButton
 
   onClickBackButton: (event) ->

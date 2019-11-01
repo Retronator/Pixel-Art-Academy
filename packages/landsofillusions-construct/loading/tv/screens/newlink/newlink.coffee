@@ -6,16 +6,16 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
   @register 'LandsOfIllusions.Construct.Loading.TV.NewLink'
 
   constructor: (@tv) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to pre-made characters.
-    LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
+    LOI.Character.PreMadeCharacter.all.subscribe @
 
     @preMadeCharacters = new ComputedField =>
-      LOI.Construct.Loading.PreMadeCharacter.documents.find().fetch()
+      LOI.Character.PreMadeCharacter.documents.find().fetch()
 
     @currentPreMadeCharacterIndex = new ReactiveField 0
 
@@ -62,7 +62,7 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
     @currentCharacter()?.behavior.part.properties.perks.toString() or "None"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .clone-character-button': @onClickCloneCharacterButton
       'click .cancel-button': @onClickCancelButton
       'click .previous-button': @onClickPreviousButton
@@ -75,7 +75,7 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
 
   onClickConfirmCloneButton: (event) ->
     name = @$('.name-input').val()
-    LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
+    LOI.Character.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
     @_returnToMenu()
 
   onClickCancelCloneButton: (event) ->

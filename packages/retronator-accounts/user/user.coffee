@@ -24,7 +24,7 @@ class RA.User extends AM.Document
     name: @id()
     collection: Meteor.users
     fields: =>
-      contactEmail: @GeneratedField 'self', ['registered_emails', 'emails'], (user) ->
+      contactEmail: Document.GeneratedField 'self', ['registered_emails', 'emails'], (user) ->
         contactEmail = null
 
         # Select the source of emails (in case registered email haven't been generated yet).
@@ -48,15 +48,15 @@ class RA.User extends AM.Document
 
         [user._id, contactEmail]
 
-      displayName: @GeneratedField 'self', ['username', 'profile', 'registered_emails'], (user) ->
+      displayName: Document.GeneratedField 'self', ['username', 'profile', 'registered_emails'], (user) ->
         displayName = user.profile?.name or user.username or user.registered_emails?[0]?.address or ''
         [user._id, displayName]
 
-      publicName: @GeneratedField 'self', ['profile'], (user) ->
+      publicName: Document.GeneratedField 'self', ['profile'], (user) ->
         publicName = user.profile?.name or null
         [user._id, publicName]
 
-      loginServices: [@GeneratedField 'self', ['services'], (user) ->
+      loginServices: [Document.GeneratedField 'self', ['services'], (user) ->
         availableServices = ['facebook', 'twitter', 'google', 'patreon']
         enabledServices = _.intersection _.keys(user.services), availableServices
 

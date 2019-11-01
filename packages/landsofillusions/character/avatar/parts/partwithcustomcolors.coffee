@@ -19,17 +19,16 @@ class LOI.Character.Avatar.Parts.PartWithCustomColors extends LOI.Character.Part
 
       for customColorPart in customColorsParts
         name = customColorPart.properties.name.options.dataLocation()
-
-        colorDataLocation = customColorPart.properties.color.options.dataLocation
-        hue = colorDataLocation.child('hue')()
-        shade = colorDataLocation.child('shade')()
-
+        color = customColorPart.properties.color
+        hue = color.hue()
+        shade = color.shade()
         continue unless name and hue? and shade?
 
         # Replace or set the material with this name.
         materialsData[name] =
           ramp: hue
           shade: shade
+          reflection: color.reflection()
 
       materialsData
 

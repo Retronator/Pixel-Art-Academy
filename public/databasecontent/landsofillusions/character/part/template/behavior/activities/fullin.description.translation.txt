@@ -1,0 +1,3 @@
+en: By having the financial side of thing covered, you decide to become a full-time art student.
+
+{"_id":"cavNsgAxeA2TTSMvc","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"By having the financial side of thing covered, you decide to become a full-time art student.","quality":0,"best":{"text":"By having the financial side of thing covered, you decide to become a full-time art student.","quality":0,"languageRegion":"en"}},"best":{"text":"By having the financial side of thing covered, you decide to become a full-time art student.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038959134}}

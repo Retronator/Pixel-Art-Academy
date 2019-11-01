@@ -1,0 +1,3 @@
+en: Short parted right
+
+{"_id":"EdjXhm2XdsWhTMh8k","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Short parted right","quality":0,"best":{"text":"Short parted right","quality":0,"languageRegion":"en"}},"best":{"text":"Short parted right","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559309543584}}

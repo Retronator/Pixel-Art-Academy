@@ -1,0 +1,3 @@
+en: Trying to take community college classes after work doesn't leave much time to pursue drawing.
+
+{"_id":"jQbQsMq6wtykGWHkk","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Trying to take community college classes after work doesn't leave much time to pursue drawing.","quality":0,"best":{"text":"Trying to take community college classes after work doesn't leave much time to pursue drawing.","quality":0,"languageRegion":"en"}},"best":{"text":"Trying to take community college classes after work doesn't leave much time to pursue drawing.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038939386}}

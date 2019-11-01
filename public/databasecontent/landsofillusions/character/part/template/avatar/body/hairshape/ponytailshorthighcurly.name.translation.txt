@@ -1,0 +1,3 @@
+en-US: Ponytail short high curly
+
+{"_id":"xCRy54gXuRNQ53NbW","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560728329900},"translations":{"en":{"us":{"text":"Ponytail short high curly","quality":0},"best":{"text":"Ponytail short high curly","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ponytail short high curly","quality":0,"languageRegion":"en-US"}}}

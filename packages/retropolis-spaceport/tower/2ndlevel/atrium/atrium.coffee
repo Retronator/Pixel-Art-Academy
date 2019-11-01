@@ -22,7 +22,7 @@ class RS.Tower.Atrium2ndLevel extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

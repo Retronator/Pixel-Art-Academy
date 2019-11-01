@@ -1,0 +1,3 @@
+en-US: Tank top thin straps tight U back
+
+{"_id":"hvjPM3xfx7fkX49Ex","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564169671959},"translations":{"en":{"us":{"text":"Tank top thin straps tight U back","quality":0},"best":{"text":"Tank top thin straps tight U back","quality":0,"languageRegion":"en-US"}},"best":{"text":"Tank top thin straps tight U back","quality":0,"languageRegion":"en-US"}}}

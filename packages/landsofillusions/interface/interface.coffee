@@ -5,12 +5,12 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Interface extends AM.Component
   constructor: (@options) ->
-    super
+    super arguments...
 
     @locationChangeReady = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
 
     # React to location changes.
     @autorun (computation) =>
@@ -73,6 +73,10 @@ class LOI.Interface extends AM.Component
 
   context: ->
     LOI.adventure.currentContext()
+
+  prepareForLocationChange: (newLocation, handler) =>
+    # Override to prepare for location change. Call handler when done with preparations.
+    handler()
 
   onLocationChanged: (location) ->
     # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.

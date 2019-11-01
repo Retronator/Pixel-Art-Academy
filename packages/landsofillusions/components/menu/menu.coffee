@@ -8,7 +8,7 @@ class LOI.Components.Menu extends AM.Component
   @url: -> 'menu'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @menuVisible = new ReactiveField false
 
@@ -24,7 +24,7 @@ class LOI.Components.Menu extends AM.Component
     @customShowMenu = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     $(document).on 'keydown.menu', (event) =>
       return unless LOI.adventure.interface.active() or @menuVisible()
@@ -44,7 +44,7 @@ class LOI.Components.Menu extends AM.Component
             @showMenu()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off '.menu'
 
@@ -75,12 +75,25 @@ class LOI.Components.Menu extends AM.Component
   menuVisibleClass: ->
     'visible' if @menuVisible()
 
-  menuButtonVisibleClass: ->
-    'visible' unless @menuVisible()
+  toolbarVisible: ->
+    'visible' if @customShowMenu() or not @menuVisible()
+
+  audioEnabledClass: ->
+    'audio-enabled' if LOI.adventure.world.audioManager().enabled()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .menu-button': @onClickMenuButton
+      'click .toggle-audio-button': @onClickToggleAudioButton
 
   onClickMenuButton: (event) ->
     @showMenu()
+
+  onClickToggleAudioButton: (event) ->
+    if LOI.adventure.world.audioManager().enabled()
+      value = LOI.Settings.Audio.Enabled.Off
+
+    else
+      value = LOI.Settings.Audio.Enabled.On
+
+    LOI.settings.audio.enabled.value value

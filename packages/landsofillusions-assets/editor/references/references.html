@@ -1,0 +1,29 @@
+<template name="LandsOfIllusions.Assets.Editor.References">
+  <div class="landsofillusions-assets-editor-references landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="references-table editor-table">
+      {{#each references}}
+        <tr class="reference {{activeClass}}">
+          <td class="displayed">
+            <label class="label">
+              <input type="checkbox" class="displayed-checkbox" {{displayedCheckedAttribute}}/><span class="icon"></span>
+            </label>
+          </td>
+          <td class="thumbnail"><img class="image" src="{{this.image.url}}" /></td>
+          <td class="display-mode">
+            <select class="display-mode-select">
+              {{#each displayModes}}
+                <option value="{{value}}" {{displayModeSelectedAttribute}}>{{text}}</option>
+              {{/each}}
+            </select>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="upload-button">Upload</button>
+      {{#if showRemoveButton}}
+        <button class="remove-button">Remove</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

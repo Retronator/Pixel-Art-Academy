@@ -1,0 +1,3 @@
+en-US: Sleeve lower-arm short rolled up
+
+{"_id":"YcsBMvRmLhSSiu89q","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565471979467},"translations":{"en":{"us":{"text":"Sleeve lower-arm short rolled up","quality":0},"best":{"text":"Sleeve lower-arm short rolled up","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sleeve lower-arm short rolled up","quality":0,"languageRegion":"en-US"}}}

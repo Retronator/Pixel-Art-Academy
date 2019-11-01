@@ -10,7 +10,7 @@ class LOI.Items.Components.Map extends AM.Component
   @register @id()
 
   constructor: ->
-    super
+    super arguments...
 
     @bigMap = new ReactiveField false
     @miniMap = LOI.Items.Map.state.field 'showMinimap'
@@ -79,7 +79,7 @@ class LOI.Items.Components.Map extends AM.Component
       _.sortBy _.values(locations), '_id'
     
   onRendered: ->
-    super
+    super arguments...
 
     # Resize elements.
     @autorun (computation) =>
@@ -119,7 +119,7 @@ class LOI.Items.Components.Map extends AM.Component
     displayingMiniMap = @miniMap() and not @bigMap()
 
     # Don't show the mini-map when we have an illustration.
-    return if displayingMiniMap and LOI.adventure.currentSituation()?.illustrationHeight.last()
+    return if displayingMiniMap and LOI.adventure.currentSituation()?.illustration()?.height
 
     # Don't show the mini map if interface is busy.
     busyConditions = [

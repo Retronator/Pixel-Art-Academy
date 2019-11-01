@@ -29,6 +29,18 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles(path + ".coffee", ['client']);
   };
+  api.constructor.prototype.addJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js");
+  };
+  api.constructor.prototype.addServerJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js", ['server']);
+  };
+  api.constructor.prototype.addClientJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js", ['client']);
+  };
   api.constructor.prototype.addHtml = function(path) {
     path = expandPath(path);
     this.addFiles(path + ".html");
@@ -74,5 +86,24 @@ Package.onUse(function(api) {
   api.constructor.prototype.addScript = function(path) {
     path = expandPath(path);
     this.addAssets(path + ".script", ['client', 'server']);
+  };
+  api.constructor.prototype.addData = function(path) {
+    path = expandPath(path);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addServerData = function(path) {
+    path = expandPath(path);
+    this.addAssets(path + ".json", ['server']);
+  };
+  api.constructor.prototype.addFileWithData = function(path, architecture) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee", architecture);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addThingWithData = function(path, architecture) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee", architecture);
+    this.addAssets(path + ".script", ['client', 'server']);
+    this.addAssets(path + ".json", ['client', 'server']);
   };
 });

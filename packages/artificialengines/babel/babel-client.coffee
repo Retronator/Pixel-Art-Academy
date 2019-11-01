@@ -16,8 +16,8 @@ class Artificial.Babel extends Artificial.Babel
   # Load cache.
   @_cache = new ReactiveField null
 
-  HTTP.get @cacheUrl, (error, response) =>
-    @_cache JSON.parse response.content
+  HTTP.get @cacheUrl, (error, response) ->
+    Artificial.Babel._cache JSON.parse response.content
 
   # Handle for keeping tracks of individual translation subscriptions.
   class @SubscriptionHandle

@@ -18,7 +18,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     @previewComponents[contextId] = component
 
   onCreated: ->
-    super
+    super arguments...
 
     @limit = new ReactiveField 20
     @currentOffset = new ReactiveField 0
@@ -46,7 +46,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     @_characterImagesDependency = new Tracker.Dependency
 
   onDestroyed: ->
-    super
+    super arguments...
 
     characterImage.updateAutorun.stop() for characterId, characterImage of @characterImages
 
@@ -59,10 +59,10 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
           updateAutorun: Tracker.autorun (computation) =>
             # Render avatar to image.
             character = LOI.Character.getInstance characterId
-            renderer = character.avatar.renderer()
+            renderer = character.avatar.getRenderer()
 
             # Wait until character has loaded and renderer is ready.
-            return unless character.document()
+            return unless characterDocument = character.document()
             return unless renderer.ready()
 
             canvas = $('<canvas>')[0]
@@ -74,10 +74,19 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
             context.setTransform 1, 0, 0, 1, Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)
             context.clearRect 0, 0, canvas.width, canvas.height
 
-            # Draw and pass the root part in options so we can do different rendering paths based on it.
-            renderer.drawToContext context,
+            drawOptions =
               rootPart: character.avatar
-              lightDirection: => new THREE.Vector3(0, -1, -1).normalize()
+              lightDirection: new THREE.Vector3(0, -1, -1).normalize()
+              side: LOI.Engine.RenderingSides.Keys.Front
+
+            # Draw characters with revoked design in silhouette.
+            unless characterDocument?.designApproved
+              drawOptions.silhouette =
+                ramp: LOI.Assets.Palette.Atari2600.hues.grey
+                shade: 2
+
+            # Draw and pass the root part in options so we can do different rendering paths based on it.
+            renderer.drawToContext context, drawOptions
 
             canvas.toBlob (blob) =>
               # Update the image.
@@ -130,7 +139,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     'updated' unless memory.endTime.getTime() <= observedMemory?.time?.getTime()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'wheel': @onMouseWheel
       'click .memory .preview': @onClickMemoryPreview
 
@@ -200,7 +209,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     @register 'LandsOfIllusions.Items.Sync.Memories.Preview'
 
     onCreated: ->
-      super
+      super arguments...
 
       memory = @data()
 

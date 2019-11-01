@@ -1,0 +1,3 @@
+en-US: Abdomen belly 2
+
+{"_id":"mykKDMdecTi5mvyfA","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564136364729},"translations":{"en":{"us":{"text":"Abdomen belly 2","quality":0},"best":{"text":"Abdomen belly 2","quality":0,"languageRegion":"en-US"}},"best":{"text":"Abdomen belly 2","quality":0,"languageRegion":"en-US"}}}

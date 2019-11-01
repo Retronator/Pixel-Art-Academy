@@ -7,9 +7,10 @@ class C3.Behavior.Terminal.Environment extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Environment'
 
   constructor: (@terminal) ->
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @part = new ReactiveField null
     @behaviorPart = new ReactiveField null
@@ -35,7 +36,7 @@ class C3.Behavior.Terminal.Environment extends AM.Component
     @terminal.switchToScreen @terminal.screens.character
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .modify-people-button': @onClickModifyPeopleButton
 
@@ -48,7 +49,7 @@ class C3.Behavior.Terminal.Environment extends AM.Component
   # Components
   class @Clutter extends AM.DataInputComponent
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
@@ -98,7 +99,7 @@ class C3.Behavior.Terminal.Environment extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Environment.AverageClutter'
 
     constructor: ->
-      super
+      super arguments...
 
       @property = 'average'
 
@@ -108,7 +109,7 @@ class C3.Behavior.Terminal.Environment extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Environment.IdealClutter'
 
     constructor: ->
-      super
+      super arguments...
 
       @property = 'ideal'
 

@@ -1,0 +1,3 @@
+en: Wide
+
+{"_id":"AX2p76hswzgmfCvZT","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Wide","quality":0,"best":{"text":"Wide","quality":0,"languageRegion":"en"}},"best":{"text":"Wide","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802533446}}

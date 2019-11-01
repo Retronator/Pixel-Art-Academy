@@ -247,5 +247,6 @@ class LOI.Adventure extends LOI.Adventure
     for result in results
       result.listener.onExit result.exitResponse
 
-    # Change location.
-    @setLocationId locationClassOrId
+    # Change location after interface is prepared for it.
+    @interface.prepareForLocationChange destinationLocationClass, =>
+      @setLocationId locationClassOrId

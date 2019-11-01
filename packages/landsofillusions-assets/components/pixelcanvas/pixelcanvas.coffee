@@ -7,7 +7,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.PixelCanvas'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     _.defaults @options,
       cameraInput: true
@@ -27,7 +27,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @context = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = @callAncestorWith 'display'
 
@@ -38,7 +38,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       enableInput: @options.cameraInput
 
     if @options.grid
-      @grid new @constructor.Grid @, @options.gridInvertColor
+      @grid new @constructor.Grid @, @options.gridInvertColor, @options.gridEnabled
 
     if @options.mouse
       @mouse new @constructor.Mouse @
@@ -108,11 +108,11 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
         continue unless component
 
         context.save()
-        component.drawToContext context, lightDirection: @options.lightDirection
+        component.drawToContext context, lightDirection: @options.lightDirection?()
         context.restore()
 
   onRendered: ->
-    super
+    super arguments...
 
     # DOM has been rendered, initialize.
     $pixelCanvas = @$('.landsofillusions-assets-components-pixelcanvas')
@@ -129,7 +129,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseLeaveWindow? event
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off '.landsofillusions-assets-components-pixelcanvas'
 
@@ -142,8 +142,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
   # Events
 
   events: ->
-    super.concat
-    events = super
+    events = super arguments...
 
     if @options.activeTool
       events = events.concat

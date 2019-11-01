@@ -19,12 +19,17 @@ Package.onUse(function(api) {
   api.addFile('pixelartacademy');
 
   api.addFile('adventure..');
+  api.addFile('adventure/adventure-things');
   api.addFile('adventure/chapter..');
 
   // Layouts
 
   api.addFile('layouts..');
   api.addFile('layouts/adminaccess..');
+
+  api.addFile('character/person');
+  api.addFile('character/agent');
+  api.addFile('character/actor');
 
   api.addServerFile('character/methods');
 
@@ -33,4 +38,8 @@ Package.onUse(function(api) {
   
   api.addFile('groups..');
   api.addFile('groups/hangoutgroup');
+
+  api.addFile('student..');
+  api.addThing('student/conversation..');
+
 });

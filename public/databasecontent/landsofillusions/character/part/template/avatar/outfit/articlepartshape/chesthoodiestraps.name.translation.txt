@@ -1,0 +1,3 @@
+en-US: Chest hoodie straps
+
+{"_id":"ujYzcuKN6PBgAzgMG","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564837035195},"translations":{"en":{"us":{"text":"Chest hoodie straps","quality":0},"best":{"text":"Chest hoodie straps","quality":0,"languageRegion":"en-US"}},"best":{"text":"Chest hoodie straps","quality":0,"languageRegion":"en-US"}}}

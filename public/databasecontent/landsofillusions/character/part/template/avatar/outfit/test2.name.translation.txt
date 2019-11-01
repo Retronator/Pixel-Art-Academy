@@ -1,0 +1,3 @@
+en-US: Test 2
+
+{"_id":"gXeWaJD3coXctK4e3","ownerId":"sCcSTmSHWLgLutNqw","_schema":"2.0.0","lastEditTime":{"$date":1572432629373},"translations":{"en":{"us":{"text":"Test 2","quality":0},"best":{"text":"Test 2","quality":0,"languageRegion":"en-US"}},"best":{"text":"Test 2","quality":0,"languageRegion":"en-US"}}}

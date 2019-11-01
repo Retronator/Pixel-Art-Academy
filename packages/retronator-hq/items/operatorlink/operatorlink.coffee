@@ -1,5 +1,4 @@
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -25,38 +24,21 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
-
-    # Subscribe to user's activated characters.
-    @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
-
+    super arguments...
     @activatedCharacters = new ComputedField =>
-      return unless user = Retronator.user()
+      return [] unless characters = Retronator.user()?.characters
 
-      characterDocuments = _.filter user.characters, (character) =>
-        character = LOI.Character.documents.findOne(character._id)
-
-        character?.activated
-
-      # Destroy previous character instances.
-      character.destroy() for character in @_characters if @_characters
-
-      @_characters = for characterDocument in characterDocuments
-        new LOI.Character.Instance characterDocument._id
-
-      @_characters
+      LOI.Character.getInstance character._id for character in characters when character.activated
     ,
       true
 
   destroy: ->
-    super
+    super arguments...
 
-    @_charactersSubscription.stop()
     @activatedCharacters.stop()
-    character.destroy() for character in @_characters if @_characters
 
   onCreated: ->
-    super
+    super arguments...
 
     @pluggedIn = new ReactiveField false
     @fastTransition = new ReactiveField false
@@ -122,7 +104,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     currentCharacter = LOI.character()
 
     # For each agent, create a choice node. Reverse the nodes so they appear in the same order.
-    for character in @activatedCharacters() when character._id isnt currentCharacter?_id
+    for character in @activatedCharacters() when character._id isnt currentCharacter?._id
       do (character) =>
         callbackNode = new Nodes.Callback
           callback: (complete) =>

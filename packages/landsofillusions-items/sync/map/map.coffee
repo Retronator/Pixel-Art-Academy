@@ -13,6 +13,6 @@ class LOI.Items.Sync.Map extends LOI.Items.Sync.Tab
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @map = new LOI.Items.Components.Map

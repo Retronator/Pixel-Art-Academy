@@ -64,9 +64,9 @@ AC.Keys =
   y: 89
   z: 90
   windowsKey: 91
-  leftCommand: 91
+  leftMeta: 91
   contextMenu: 93
-  rightCommand: 93
+  rightMeta: 93
   num0: 96
   num1: 97
   num2: 98
@@ -96,7 +96,7 @@ AC.Keys =
   f12: 123
   numLock: 144
   scrollLock: 145
-  semiColon: 186
+  semicolon: 186
   equalSign: 187
   comma: 188
   dash: 189

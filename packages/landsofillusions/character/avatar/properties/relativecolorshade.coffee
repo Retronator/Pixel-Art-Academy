@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Properties.RelativeColorShade extends LOI.Character.Part.Property
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @type = 'relativeColorShade'
 
@@ -11,6 +11,10 @@ class LOI.Character.Avatar.Properties.RelativeColorShade extends LOI.Character.P
   hue: ->
     # Hue remains the same.
     @options.baseColor(@options.parent).hue()
+
+  reflection: ->
+    # Reflection remains the same.
+    @options.baseColor(@options.parent).reflection()
 
   baseShade: ->
     @options.baseColor(@options.parent).shade()

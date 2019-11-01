@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
   @register @id()
 
   constructor: ->
-    super
+    super arguments...
 
     # Set the global instance.
     LOI.adventure = @
@@ -25,18 +25,17 @@ class LOI.Adventure extends LOI.Adventure
     @_modalDialogsDependency = new Tracker.Dependency
 
   onCreated: ->
-    super
+    super arguments...
 
     console.log "Adventure created." if LOI.debug
 
     $('html').addClass('adventure')
 
     @interface = new LOI.Interface.Text
-
     @parser = new LOI.Parser
-
     @director = new LOI.Director
-
+    @world = new LOI.Engine.World adventure: @
+    
     @_initializeState()
 
     # Memories need to be initialized first because timeline and location depends on the display of a memory.
@@ -60,7 +59,7 @@ class LOI.Adventure extends LOI.Adventure
     LOI.adventureInitialized true
 
   onRendered: ->
-    super
+    super arguments...
 
     console.log "Adventure rendered." if LOI.debug
 
@@ -74,7 +73,7 @@ class LOI.Adventure extends LOI.Adventure
       @loadGame preserveActiveItem: true
 
   onDestroyed: ->
-    super
+    super arguments...
 
     Meteor.clearInterval @_gameTimeInterval
 

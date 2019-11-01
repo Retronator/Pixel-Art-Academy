@@ -8,7 +8,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.Renderer
     @renderer = new THREE.WebGLRenderer
 
     @renderer.shadowMap.enabled = true
-    @renderer.shadowMap.type = THREE.PCFShadowMap
+    @renderer.shadowMap.type = THREE.BasicShadowMap
 
     @renderer.setClearColor new THREE.Color 0x888888
     @renderer.autoClearColor = false
@@ -30,10 +30,6 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.Renderer
     @renderer.dispose()
 
   start: ->
-    # Append the WebGL canvas.
-    $scene = @journalsView.$('.scene')
-    $scene.append @renderer.domElement
-
     # Start the reactive redraw routine.
     @journalsView.autorun =>
       # Depend on renderer bounds.
@@ -43,3 +39,5 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.Renderer
       camera = @journalsView.camera.withUpdates()
 
       @renderer.render scene, camera
+
+      @journalsView.sceneImage().update()

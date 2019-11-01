@@ -26,7 +26,7 @@ class Migration extends Document.MajorMigration
             conversation: true
             text: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -51,7 +51,7 @@ class Migration extends Document.MajorMigration
             timelineId: true
             locationId: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

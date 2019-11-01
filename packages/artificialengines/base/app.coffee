@@ -10,7 +10,7 @@ class AB.App extends AM.Component
     'Artificial.Base.App'
 
   constructor: ->
-    super
+    super arguments...
 
     @appTime = new ReactiveField
       elapsedAppTime: 0
@@ -21,12 +21,12 @@ class AB.App extends AM.Component
       AC.Keyboard.initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @run()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @endRun()
 
@@ -62,6 +62,9 @@ class AB.App extends AM.Component
     @lastFrameTime ?= currentFrameTime
     elapsedTime = (currentFrameTime - @lastFrameTime) / 1000
     @lastFrameTime = currentFrameTime
+
+    # Bound elapsed time to 1 FPS.
+    elapsedTime = Math.min 1, elapsedTime
 
     # console.log "Tick at #{Math.round 1/elapsedTime} FPS"
 

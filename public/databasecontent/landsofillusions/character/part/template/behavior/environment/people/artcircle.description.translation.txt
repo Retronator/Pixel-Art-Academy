@@ -1,0 +1,3 @@
+en: You have your local art scene to thank for supporting your passion.
+
+{"_id":"t5WLvtHyMqSrTqhpC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"You have your local art scene to thank for supporting your passion.","quality":0,"best":{"text":"You have your local art scene to thank for supporting your passion.","quality":0,"languageRegion":"en"}},"best":{"text":"You have your local art scene to thank for supporting your passion.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038956645}}

@@ -1,0 +1,74 @@
+# Retronator.HQ.Actors.Shelley
+
+## Start
+
+shelley: Hey! -> [MainQuestions] `IntroductionOver and not _IntroductionOver`
+shelley: Can I help with something else? -> [MainQuestions] `_IntroductionOver`
+
+shelley: 
+  Hi there, I'm Shelley!
+  I run the application process for the Academy. I'm also Matej's art dealer. `PixelArtAcademy.Season1.Episode0.Chapter2.finished()`
+  I'm Matej's art dealer. `not PixelArtAcademy.Season1.Episode0.Chapter2.finished()`
+
+char: Hi, I'm _char_. Nice to meet you!
+
+## IntroductionOver
+
+## MainQuestions
+
+* What kind of Academy? -> [Academy] `@character`
+* Where can I find more about the Academy? -> [AcademyMore] `@character`
+* How do I apply to the Academy? -> [AcademyApply] `not _application.applied`
+* I applied but am still waiting to start admission week. -> [ApplicationWaiting] `_application.applied and not _application.accepted`
+* How do I get admission week started? -> [AdmissionWeekStart] `_application.accepted and not @inventory['PixelArtAcademy.PixelBoy']`
+* *CoordinatorMainQuestions*
+* What kind of art does Matej do? -> [RetroArt]
+* See you around.
+
+shelley: Laters.
+
+-> [End]
+
+## Academy
+
+shelley: Sorry, yeah, I should have been more clear. It's the Retropolis Academy of Art.
+  
+-> [MainQuestions]
+
+## AcademyMore
+
+shelley: You'll find a lot of information on their website. The URL is https://retropolis.city/academy-of-art.
+
+-> [MainQuestions]
+
+## AcademyApply
+
+shelley: You do it online at the Academy's website. The URL is https://retropolis.city/academy-of-art.
+
+-> [MainQuestions]
+
+## ApplicationWaiting
+
+shelley:
+  It usually takes a day for us to arrange that we have everything prepared for your admission week to start.
+  When we're ready we'll send an invitation to the email you used when you applied.
+
+-> [MainQuestions]
+
+## AdmissionWeekStart
+
+shelley:
+  You'll need to pick up a PixelBoy 2000 in the Store. Look for the shelf with devices from Pixel. 
+  Then talk to Retro to link it up to your student account.
+
+-> [MainQuestions]
+
+## RetroArt
+
+shelley: 
+  His main thing is pixel art, but he makes traditional pieces as well sometimes.
+  You can see his best pixel works in the gallery and the traditional stuff up in the art studio.
+
+-> [MainQuestions]
+
+## End

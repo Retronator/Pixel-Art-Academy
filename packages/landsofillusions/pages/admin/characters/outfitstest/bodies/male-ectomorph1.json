@@ -1,0 +1,977 @@
+{
+  "_id": "kGQZxE3MKxPveKWvv",
+  "user": {
+    "_id": "9udfGdvJX7TyFMiE2",
+    "displayName": "Administrator",
+    "publicName": "Administrator"
+  },
+  "_schema": "6.0.0",
+  "debugName": "Body test",
+  "ownerName": "Administrator",
+  "avatar": {
+    "fullName": {
+      "_id": "Qd2kwKGyC7AgGZ3vL",
+      "translations": {
+        "text": "Body test",
+        "quality": 0,
+        "best": {
+          "text": "Body test",
+          "quality": 0,
+          "languageRegion": ""
+        }
+      }
+    },
+    "textures": {
+      "needUpdate": true
+    },
+    "body": {
+      "node": {
+        "fields": {
+          "torso": {
+            "template": {
+              "id": "stCfdAQBrtJy5rdaY",
+              "version": 0,
+              "data": {
+                "fields": {
+                  "chest": {
+                    "node": {
+                      "fields": {
+                        "shape": {
+                          "template": {
+                            "id": "CkFdN5yQ6BtjWnRsW",
+                            "version": 0,
+                            "data": {
+                              "fields": {
+                                "front": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "4crvhtxw8zuGw5znC"
+                                      }
+                                    }
+                                  }
+                                },
+                                "frontLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "zLREsBF5rm87SmLJh"
+                                      }
+                                    }
+                                  }
+                                },
+                                "left": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "4WmWz5ecEFJmJoijr"
+                                      }
+                                    }
+                                  }
+                                },
+                                "backLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "2ZgK8mdaGW8MSt4Tj"
+                                      }
+                                    }
+                                  }
+                                },
+                                "back": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "ZpmY8hrpJocmjNLsa"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "name": "Ectomorph"
+                          }
+                        },
+                        "breasts": {
+                          "template": {
+                            "id": "msYEu22o9AmirdWL7",
+                            "version": 1,
+                            "data": {
+                              "fields": {
+                                "nippleShape": {
+                                  "template": {
+                                    "id": "tr5iLJMc9eNkX6QNY",
+                                    "version": 0,
+                                    "data": {
+                                      "fields": {
+                                        "front": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "yB9WLZEFPzuT7yKc2"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "frontLeft": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "yB9WLZEFPzuT7yKc2"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "left": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "yB9WLZEFPzuT7yKc2"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "backLeft": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "yB9WLZEFPzuT7yKc2"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "back": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "yB9WLZEFPzuT7yKc2"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "name": "Nipple male"
+                                  }
+                                },
+                                "nippleShade": {
+                                  "value": -3
+                                }
+                              }
+                            },
+                            "name": "Nipple darker"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "abdomen": {
+                    "template": {
+                      "id": "mJioY559vfEGohrG5",
+                      "version": 1,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "NEur64rhToauNeiti",
+                              "version": 0,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "sAwLLiP22Dnp7sJgJ"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "iP8Ydvpe7GcixvKoo"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "iAmwhYRQE3FDwK3Hx"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "qXFMLgcmvh3sJ36Xr"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "7ax9FDbvtu2SR4RDZ"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "Ectomorph 1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "Ectomorph 1"
+                    }
+                  },
+                  "groin": {
+                    "node": {
+                      "fields": {
+                        "shape": {
+                          "template": {
+                            "id": "CGPE834KfMaAA5PAF",
+                            "version": 0,
+                            "data": {
+                              "fields": {
+                                "front": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "aASqQS5TnPkzmhEQm"
+                                      }
+                                    }
+                                  }
+                                },
+                                "left": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "uf5k8TTxcKdg2xLPq"
+                                      }
+                                    }
+                                  }
+                                },
+                                "frontLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "CHa5eafoEvCtNJu9r"
+                                      }
+                                    }
+                                  }
+                                },
+                                "backLeft": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "5J3KBSrAzBwfZ8dfW"
+                                      }
+                                    }
+                                  }
+                                },
+                                "back": {
+                                  "node": {
+                                    "fields": {
+                                      "spriteId": {
+                                        "value": "TpzSrrvEx7bxp6brt"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "name": "Narrow"
+                          }
+                        },
+                        "sexOrgan": {
+                          "template": {
+                            "id": "EYD8nz6ismrZ5sDHi",
+                            "version": 0,
+                            "data": {
+                              "fields": {
+                                "shape": {
+                                  "template": {
+                                    "id": "GnBvtPRq2MF6WijAT",
+                                    "version": 0,
+                                    "data": {
+                                      "fields": {
+                                        "front": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "ScBdDwyEQdR3YbTRW"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "region": {
+                                          "value": "SexOrgan"
+                                        },
+                                        "frontLeft": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "4ftuFQYAGufCgZKdk"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "left": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "28atoxCpPfDXEStrP"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "backLeft": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "gcDcduvRvdcXf97XJ"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "back": {
+                                          "node": {
+                                            "fields": {
+                                              "spriteId": {
+                                                "value": "zZiQbg3qnH6SRrkhR"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "name": "Male"
+                                  }
+                                }
+                              }
+                            },
+                            "name": "Male"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "neck": {
+                    "template": {
+                      "id": "4fwgybBqL8j8CRwK9",
+                      "version": 1,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "FTXsfx4b3apcK5AnS",
+                              "version": 0,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "bwJLcsqBkkCKYjZR8"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "DkgBsa43usBnagQYv"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "ivGtGjauTDeeE4PFC"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "a7Yd4eeCYJb3h9M9h"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "WNA8GtWCLuyhrjMHA"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "Neck"
+                            }
+                          }
+                        }
+                      },
+                      "name": "Neck"
+                    }
+                  }
+                }
+              },
+              "name": "Male ectomorph 1"
+            }
+          },
+          "skin": {
+            "node": {
+              "fields": {
+                "shade": {
+                  "value": 8
+                },
+                "hue": {
+                  "value": 3
+                }
+              }
+            }
+          },
+          "head": {
+            "node": {
+              "fields": {
+                "shape": {
+                  "template": {
+                    "id": "i7hjzpmyGPBtxgQJa",
+                    "version": 0,
+                    "data": {
+                      "fields": {
+                        "front": {
+                          "node": {
+                            "fields": {
+                              "spriteId": {
+                                "value": "zHn6s2QoMfRZ97jRv"
+                              }
+                            }
+                          }
+                        },
+                        "left": {
+                          "node": {
+                            "fields": {
+                              "spriteId": {
+                                "value": "oP5YJ8CnE9tByjpJk"
+                              }
+                            }
+                          }
+                        },
+                        "frontLeft": {
+                          "node": {
+                            "fields": {
+                              "spriteId": {
+                                "value": "A8QBJQ2QPbWAirB2x"
+                              }
+                            }
+                          }
+                        },
+                        "back": {
+                          "node": {
+                            "fields": {
+                              "spriteId": {
+                                "value": "Et8vbXADusc7AjQA7"
+                              }
+                            }
+                          }
+                        },
+                        "backLeft": {
+                          "node": {
+                            "fields": {
+                              "spriteId": {
+                                "value": "RADtN9LDTjdAFJFkJ"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "name": "Head 2"
+                  }
+                },
+                "hair": {
+                  "node": {
+                    "fields": {
+
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "arms": {
+            "template": {
+              "id": "7xjZxMuokHKgCsBLX",
+              "version": 3,
+              "data": {
+                "fields": {
+                  "upperArm": {
+                    "template": {
+                      "id": "ZQLLLmHMhhqHuafae",
+                      "version": 0,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "MiHj9dqXpnyzTqiNB",
+                              "version": 0,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "QYQCDHv8jQAkZhM7m"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "CpWc2tQfxo4jAswAR"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "qhkJRna7xfH98Qjso"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "iFYZKngbKwqDjEP7o"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "RPaTXc6LWxGcf73hu"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "1"
+                    }
+                  },
+                  "lowerArm": {
+                    "template": {
+                      "id": "E9484G4dwPnDAirmf",
+                      "version": 0,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "ktzpDg5WQvs3pXBtT",
+                              "version": 0,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "6Ls825a9pfvRgtsiK"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "HYaPdKekat35KXxoy"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "C5JsTwHSci74PmoFB"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "oxzzPtBKXsFvpaH6S"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "8nMtGn35xnw27xbB9"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "1"
+                    }
+                  },
+                  "hand": {
+                    "template": {
+                      "id": "fB9ZwaGXq35wkZAKd",
+                      "version": 3,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "JsYj7b5dFLLbyqcsz",
+                              "version": 2,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "7d4bG4bR3zxZEzuQK"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "2oNTw8h3gwg47QfCm"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "fpbXmQNkpfbdtfN59"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "GEqptwKT8SSLf4Lam"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "BBfnncyJ2LWiHtxr6"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontRight": {
+                                    "node": {
+                                      "fields": {
+
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "Hand 1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "Hand 1"
+                    }
+                  }
+                }
+              },
+              "name": "Arms 1"
+            }
+          },
+          "legs": {
+            "template": {
+              "id": "WfHGdhdPCbCtemYRT",
+              "version": 0,
+              "data": {
+                "fields": {
+                  "thigh": {
+                    "template": {
+                      "id": "WCF3fjqqvpqmHwMR9",
+                      "version": 1,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "8GKCpAudG5gKSTMP3",
+                              "version": 1,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "RpHsxkcnfQACn8bbi"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "d9XgDLyNH8KFDoYnF"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "5KyaqsHamETc4awYn"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "aewrRzZAjQ7N4NAZH"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "WD9xZHPYetKKQpnZ6"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "Thigh 1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "Thigh 1"
+                    }
+                  },
+                  "lowerLeg": {
+                    "template": {
+                      "id": "DxxteJotgN64zJTx5",
+                      "version": 0,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "nFXm4JqAa2z4kiBMQ",
+                              "version": 0,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "qC4KPDCKDaf4xhEEs"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "8k5aWbk9YRMiFxwkE"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "wktcLgwi7E6vZPdus"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "L36hi3fyfDuEpDBDc"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "KD3KJJH9GPf7uAngd"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "Lower leg 1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "Lower leg 1"
+                    }
+                  },
+                  "foot": {
+                    "template": {
+                      "id": "BMrtuEhw6ayZhJbye",
+                      "version": 1,
+                      "data": {
+                        "fields": {
+                          "shape": {
+                            "template": {
+                              "id": "u5qzdZPCgk67oqtnb",
+                              "version": 0,
+                              "data": {
+                                "fields": {
+                                  "front": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "FbMNXoBNQeLa8oXWA"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "ggPKnzMwuFifwdX4A"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "left": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "WvifyteEFtB8Npxgb"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "backLeft": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "WdB6gaAHHg5eE6wLL"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "back": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "FwuxCL7qF9sbX2cgj"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "frontRight": {
+                                    "node": {
+                                      "fields": {
+                                        "spriteId": {
+                                          "value": "GjiYSQ3RJRNkidTgS"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "1"
+                            }
+                          }
+                        }
+                      },
+                      "name": "Foot 1"
+                    }
+                  }
+                }
+              },
+              "name": "Legs 1"
+            }
+          }
+        }
+      }
+    },
+    "outfit": {
+      "node": {
+        "fields": {
+          "articles": {
+            "node": {
+              "fields": {
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

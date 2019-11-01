@@ -7,10 +7,10 @@ class LOI.Components.TranslationInput extends AM.Component
   @register 'LandsOfIllusions.Components.TranslationInput'
 
   constructor: (@options) ->
-    super
+    super arguments...
   
   onCreated: ->
-    super
+    super arguments...
 
     # We create a translatable that is always editable.
     @translatable = new AB.Components.Translatable _.extend {}, @options,

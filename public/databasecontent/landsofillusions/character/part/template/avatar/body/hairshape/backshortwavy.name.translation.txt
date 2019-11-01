@@ -1,0 +1,3 @@
+en-US: Back short wavy
+
+{"_id":"pprmXCvABC56Ywj6H","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559599888577},"translations":{"en":{"us":{"text":"Back short wavy","quality":0},"best":{"text":"Back short wavy","quality":0,"languageRegion":"en-US"}},"best":{"text":"Back short wavy","quality":0,"languageRegion":"en-US"}}}

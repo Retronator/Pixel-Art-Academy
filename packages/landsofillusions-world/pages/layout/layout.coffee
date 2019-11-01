@@ -9,7 +9,7 @@ class LOI.World.Pages.Layout extends LOI.Components.EmbeddedWebpage
   @description: -> LOI.Adventure.description()
 
   onCreated: ->
-    super
+    super arguments...
 
     @loginButtonsSession = Accounts._loginButtonsSession
 

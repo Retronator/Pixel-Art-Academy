@@ -20,11 +20,12 @@ class PAA.Learning.Task.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, [], true
+      character: Document.ReferenceField LOI.Character, [], true
 
   # Methods
   @insert: @method 'insert'
 
   # Subscriptions
   @forCharacter: @subscription 'forCharacter'
+  @recentForCharacter: @subscription 'recentForCharacter'
   @forCharacterTaskIds: @subscription 'forCharacterTaskIds'

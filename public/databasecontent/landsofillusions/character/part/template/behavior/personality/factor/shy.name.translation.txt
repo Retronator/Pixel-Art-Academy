@@ -1,0 +1,3 @@
+en: Shy
+
+{"_id":"QrddHFzE4SM7reCb9","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Shy","quality":0,"best":{"text":"Shy","quality":0,"languageRegion":"en"}},"best":{"text":"Shy","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038942129}}

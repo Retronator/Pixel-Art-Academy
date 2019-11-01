@@ -13,14 +13,14 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # We want to be able to set the selected user even before the page gets rendered,
     # so that it's already displaying it when the account is turned to the characters page.
     @selectedCharacterId = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     LOI.Character.forCurrentUser.subscribe @
 
@@ -77,7 +77,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .new-character': @onClickNewCharacter
       'click .load-character': @onClickLoadCharacter
       'click .unload-character': @onClickUnloadCharacter
@@ -96,7 +96,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorHue'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = 'select'
 
@@ -119,7 +119,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorShade'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = 'select'
 
@@ -140,7 +140,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterPronouns'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 

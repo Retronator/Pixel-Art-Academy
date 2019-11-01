@@ -66,7 +66,7 @@ class Migration extends Document.MinorMigration
 
         count += updated
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

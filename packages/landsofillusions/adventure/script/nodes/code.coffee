@@ -26,7 +26,7 @@ class Script.Nodes.Code extends Script.Node
     'not ': '!'
 
   constructor: (options) ->
-    super
+    super arguments...
 
     @expression = options.expression
 
@@ -61,7 +61,7 @@ class Script.Nodes.Code extends Script.Node
     @evaluate()
 
     # Finish transition.
-    super
+    super arguments...
 
   evaluate: (options = {}) ->
     options.triggerChange ?= true

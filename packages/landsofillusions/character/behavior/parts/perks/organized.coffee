@@ -12,7 +12,7 @@ class LOI.Character.Behavior.Perk.Organized extends LOI.Character.Behavior.Perk
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     factorPowers = behaviorPart.properties.personality.part.factorPowers()
     organizedScore = factorPowers[3].positive

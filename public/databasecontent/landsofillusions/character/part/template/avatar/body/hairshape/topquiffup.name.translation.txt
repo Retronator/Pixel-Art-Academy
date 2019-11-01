@@ -1,0 +1,3 @@
+en-US: Top quiff up
+
+{"_id":"soSy3M6APz33s6qty","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560760573739},"translations":{"en":{"us":{"text":"Top quiff up","quality":0},"best":{"text":"Top quiff up","quality":0,"languageRegion":"en-US"}},"best":{"text":"Top quiff up","quality":0,"languageRegion":"en-US"}}}

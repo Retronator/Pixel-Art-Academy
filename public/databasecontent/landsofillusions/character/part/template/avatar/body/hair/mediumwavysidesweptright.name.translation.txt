@@ -1,0 +1,3 @@
+en-US: Medium wavy side-swept right
+
+{"_id":"EKe2nqt35zWJyrApS","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560499918982},"translations":{"en":{"us":{"text":"Medium wavy side-swept right","quality":0},"best":{"text":"Medium wavy side-swept right","quality":0,"languageRegion":"en-US"}},"best":{"text":"Medium wavy side-swept right","quality":0,"languageRegion":"en-US"}}}

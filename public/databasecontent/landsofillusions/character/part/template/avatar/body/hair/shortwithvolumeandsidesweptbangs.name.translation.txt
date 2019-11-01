@@ -1,0 +1,3 @@
+en-US: Short with volume and side-swept bangs
+
+{"_id":"DLPmavEsw9ZRFi5iE","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560196145423},"translations":{"en":{"us":{"text":"Short with volume and side-swept bangs","quality":0},"best":{"text":"Short with volume and side-swept bangs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short with volume and side-swept bangs","quality":0,"languageRegion":"en-US"}}}

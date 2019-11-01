@@ -12,6 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
+  api.use('retronator:landsofillusions-assets');
 
   api.export('Retropolis');
   api.addFile('retropolis');

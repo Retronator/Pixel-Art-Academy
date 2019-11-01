@@ -1,0 +1,3 @@
+en-US: Short high forehead
+
+{"_id":"PFtkjqZ6Hq6fJeJ6g","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560348951565},"translations":{"en":{"us":{"text":"Short high forehead","quality":0},"best":{"text":"Short high forehead","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short high forehead","quality":0,"languageRegion":"en-US"}}}

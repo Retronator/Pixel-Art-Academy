@@ -2,11 +2,14 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
-class C3.Design.Terminal.Properties.OneOf extends AM.Component
+class C3.Design.Terminal.Properties.OneOf extends C3.Design.Terminal.Properties.Property
   @register 'SanFrancisco.C3.Design.Terminal.Properties.OneOf'
 
+  avatarPartPreviewOptions: ->
+    chooseNonEmptyViewingAngle: true
+
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .avatar-part': @onClickAvatarPart
 
   onClickAvatarPart: (events) ->

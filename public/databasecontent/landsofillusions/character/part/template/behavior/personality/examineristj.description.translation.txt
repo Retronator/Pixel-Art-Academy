@@ -1,0 +1,3 @@
+en: Very practical and dedicated, they make the world go around.
+
+{"_id":"DBbdr3X6WG6FqQS62","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Very practical and dedicated, they make the world go around.","quality":0,"best":{"text":"Very practical and dedicated, they make the world go around.","quality":0,"languageRegion":"en"}},"best":{"text":"Very practical and dedicated, they make the world go around.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038956419}}

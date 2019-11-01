@@ -3,7 +3,7 @@ RS = Retronator.Store
 class Migration extends Document.MajorMigration
   name: "Migrate stripeCustomerId field to a payment method."
 
-  forward: (document, collection, currentSchema, newSchema) =>
+  forward: (document, collection, currentSchema, newSchema) ->
     count = 0
 
     paymentMethodsCollection = new DirectCollection 'Retronator.Store.PaymentMethods'
@@ -13,7 +13,7 @@ class Migration extends Document.MajorMigration
       stripeCustomerId:
         $exists: true
     ,
-      (document) =>
+      (document) ->
         # Create stripe payment method object with stripe customer ID.
         paymentMethod =
           _id: Random.id()
@@ -32,12 +32,12 @@ class Migration extends Document.MajorMigration
           $unset:
             stripeCustomerId: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
 
-  backward: (document, collection, currentSchema, oldSchema) =>
+  backward: (document, collection, currentSchema, oldSchema) ->
     count = 0
 
     paymentMethodsCollection = new DirectCollection 'Retronator.Store.PaymentMethods'
@@ -61,7 +61,7 @@ class Migration extends Document.MajorMigration
 
         paymentMethodsCollection.remove _id: paymentMethod._id
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

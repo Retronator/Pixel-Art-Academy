@@ -15,11 +15,24 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @_currentIntroductionFunction = new ReactiveField null
 
+  prepareForLocationChange: (newLocation, complete) =>
+    @_animateLoadingCover 100, complete
+
+  _animateLoadingCover: (heightPercentage, complete) =>
+    illustrationHeight = @illustrationSize.height()
+
+    @$locationLoadingCover.velocity('stop').velocity
+      height: "#{heightPercentage}%"
+    ,
+      easing: 'easeInOutQuart'
+      duration: Math.sqrt(illustrationHeight) * 40
+      complete: => complete?()
+
   onLocationChanged: ->
     location = @location()
 
     # Wait for narrative to be created and location to load.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       return unless @isCreated()
       return unless location.ready()
       computation.stop()
@@ -52,6 +65,22 @@ class LOI.Interface.Text extends LOI.Interface.Text
           # Set scroll position to reveal the top or the bottom of the UI.
           scrollPosition = if location.constructor.visited() then @maxScrollTop() else 0
           @scroll position: scrollPosition
+
+          # Show loading text if location loading takes too long.
+          @_locationLoadingCaptionTimeout = Meteor.setTimeout =>
+            @$locationLoadingCaption.css(display: 'block').addClass('visible')
+          ,
+            1500
+
+          # Wait for location illustration to be ready.
+          Tracker.autorun (computation) =>
+            return unless LOI.adventure.world.sceneManager()?.sceneItemsReady()
+            computation.stop()
+
+            Meteor.clearTimeout @_locationLoadingCaptionTimeout
+            @$locationLoadingCaption.css(display: 'none').removeClass('visible')
+
+            @_animateLoadingCover 0
         ,
           0
       ,
@@ -94,7 +123,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @narrative.scroll()
 
   _executeCommand: (command) ->
-    return unless command.length
+    return unless command?.length
 
     # Add closing quote if needed.
     numberOfQuotes = _.sumBy command, (character) => if character is '"' then 1 else 0

@@ -12,7 +12,7 @@ class LOI.Character.Behavior.Perk.RenaissanceSoul extends LOI.Character.Behavior
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     numberOfPersonalActivities = behaviorPart.properties.activities.activePersonalActivities().length
     numberOfPersonalActivities >= 3

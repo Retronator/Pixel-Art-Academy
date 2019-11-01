@@ -62,6 +62,7 @@ class PAA.Learning.Goal
   constructor: (@options = {}) ->
     # By default the task is related to the current character.
     @options.characterId ?= => LOI.characterId()
+    @options.goal = @
 
     @_tasks = []
     @_finalTasks = []

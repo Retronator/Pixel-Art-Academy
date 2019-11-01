@@ -1,0 +1,3 @@
+en-US: Leggings pattern random
+
+{"_id":"Z8s6RNhTSP63Bbxng","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564537789814},"translations":{"en":{"us":{"text":"Leggings pattern random","quality":0},"best":{"text":"Leggings pattern random","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings pattern random","quality":0,"languageRegion":"en-US"}}}

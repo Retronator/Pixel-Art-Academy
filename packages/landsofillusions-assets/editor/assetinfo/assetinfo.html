@@ -1,0 +1,16 @@
+<template name="LandsOfIllusions.Assets.Editor.AssetInfo">
+  <div class="landsofillusions-assets-editor-assetinfo landsofillusions-assets-editor-panel">
+    <div class="properties">
+      {{#with asset}}
+        <label class="name">Name:
+          {{> LandsOfIllusions.Assets.Editor.AssetInfo.Name}}
+        </label>
+        {{#if showPalette}}
+          <label class="palette">Palette:
+            {{> LandsOfIllusions.Assets.Editor.AssetInfo.Palette}}
+          </label>
+        {{/if}}
+      {{/with}}
+    </div>
+  </div>
+</template>

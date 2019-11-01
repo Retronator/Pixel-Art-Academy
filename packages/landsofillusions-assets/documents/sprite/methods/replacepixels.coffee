@@ -6,13 +6,12 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
   check layerIndex, Match.Integer
   check pixels, [LOI.Assets.Sprite.pixelPattern]
 
-  # Allow up to 2,000 pixels per layer.
-  throw new AE.ArgumentOutOfRangeException "Up to 2,000 pixels per layer are allowed." if pixels.length > 2000
+  LOI.Assets.Sprite._limitLayerPixels pixels.length
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  LOI.Assets.VisualAsset._authorizeAssetAction sprite
+  LOI.Assets.Asset._authorizeAssetAction sprite
 
   layerPixels = sprite.layers[layerIndex]?.pixels
 
@@ -46,23 +45,8 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
 
   else
     # Recalculate bounds completely.
-    bounds = null
-
-    sprite.layers[layerIndex] ?= {}
-    sprite.layers[layerIndex].pixels = pixels
-
-    for layer, index in sprite.layers
-      for pixel in layer.pixels
-        if bounds
-          bounds =
-            left: Math.min bounds.left, pixel.x
-            right: Math.max bounds.right, pixel.x
-            top: Math.min bounds.top, pixel.y
-            bottom: Math.max bounds.bottom, pixel.y
-
-        else
-          bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
-
-    forward.$set.bounds = bounds
+    if bounds = sprite.getRecomputedBoundsIfNew()
+      forward.$set ?= {}
+      forward.$set.bounds = bounds
 
   sprite._applyOperation forward, backward

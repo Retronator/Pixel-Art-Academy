@@ -1,0 +1,41 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.Cluster">
+  <div class="landsofillusions-assets-mesheditor-cluster landsofillusions-assets-editor-panel">
+    <div class="properties landsofillusions-assets-editor-propertieslist">
+      {{#with cluster}}
+        <label class="property name">
+          <span class="name">Name</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.Cluster.Name}}</span>
+        </label>
+        <label class="property name">
+          <span class="name">Navigable</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.Cluster.Navigable}}<span class="checkmark"></span></span>
+        </label>
+        <label class="property coplanar-point">
+          <span class="name">Coplanar point</span>
+          <span class="value landsofillusions-assets-editor-propertytable">
+            <table class="vectors-table editor-table">
+              <tr class="legend">
+                <th class="coordinate-x">x</th>
+                <th class="coordinate-y">y</th>
+                <th class="coordinate-z">z</th>
+              </tr>
+              <tr class="coordinates">
+                <td class="coordinate-x"><input class="coordinate-input" type="number" value="{{properties.coplanarPoint.x}}" placeholder="{{planePoint.x}}" step="0.1"/></td>
+                <td class="coordinate-y"><input class="coordinate-input" type="number" value="{{properties.coplanarPoint.y}}" placeholder="{{planePoint.y}}" step="0.1"/></td>
+                <td class="coordinate-z"><input class="coordinate-input" type="number" value="{{properties.coplanarPoint.z}}" placeholder="{{planePoint.z}}" step="0.1"/></td>
+              </tr>
+            </table>
+          </span>
+        </label>
+        <label class="property attachment">
+          <span class="name">Attachment</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.Cluster.Attachment}}</span>
+        </label>
+        <label class="property name">
+          <span class="name">Extrusion</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.Cluster.Extrusion}}</span>
+        </label>
+      {{/with}}
+    </div>
+  </div>
+</template>

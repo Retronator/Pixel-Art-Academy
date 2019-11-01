@@ -12,14 +12,14 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
     StripePayment: 'StripePayment'
 
   constructor: ->
-    super
+    super arguments...
 
     @_actionModes =
       SaveCustomer: 'SaveCustomer'
       Payment: 'Payment'
 
   onCreated: ->
-    super
+    super arguments...
 
     @stripeInitialized = new ReactiveField false
     @stripeEnabled = false
@@ -31,7 +31,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
     @selectedPaymentMethod = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
 
     if Meteor.settings.public.stripe?.publishableKey
       @stripeEnabled = true
@@ -57,7 +57,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
       console.warn "Set Stripe public and secret key in the settings file if you want to enable Stripe purchases."
 
   onDestroyed: ->
-    super
+    super arguments...
 
     # Clean up after stripe checkout.
     @_stripeCheckout?.close()
@@ -73,7 +73,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
   supporterName: -> null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .save-customer-button': @onClickSaveCustomerButton
       'click .submit-payment-button': @onClickSubmitPaymentButton
 

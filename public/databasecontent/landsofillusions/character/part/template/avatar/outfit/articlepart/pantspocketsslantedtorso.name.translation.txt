@@ -1,0 +1,3 @@
+en-US: Pants pockets slanted torso
+
+{"_id":"MPnjpt2zHphqmniji","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants pockets slanted torso","quality":0},"best":{"text":"Pants pockets slanted torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants pockets slanted torso","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1565617342116}}

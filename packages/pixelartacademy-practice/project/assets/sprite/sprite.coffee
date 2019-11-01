@@ -32,7 +32,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     @BriefComponent
 
   @initialize: ->
-    super
+    super arguments...
 
     # On the server, create this assets's translated names.
     if Meteor.isServer
@@ -46,7 +46,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
             AB.createTranslation translationNamespace, property, value
 
   constructor: ->
-    super
+    super arguments...
 
     @spriteId = new ComputedField =>
       @data()?.sprite._id
@@ -57,7 +57,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     @sprite = new ComputedField =>
       return unless spriteId = @spriteId()
 
-      LOI.Assets.Sprite.forId.subscribe spriteId
+      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
     ,
       true
@@ -66,7 +66,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     @briefComponent = new briefComponentClass @
 
   destroy: ->
-    super
+    super arguments...
 
     @spriteId.stop()
     @sprite.stop()

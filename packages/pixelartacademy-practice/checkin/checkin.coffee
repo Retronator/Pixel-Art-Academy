@@ -26,8 +26,8 @@ class PAA.Practice.CheckIn extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], true
-      memories: [@ReferenceField LOI.Memory]
+      character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], true
+      memories: [Document.ReferenceField LOI.Memory]
 
   # Methods
 

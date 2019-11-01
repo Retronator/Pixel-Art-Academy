@@ -26,17 +26,19 @@ class PAA.PixelBoy.Apps.Yearbook extends PAA.PixelBoy.App
   @studentsCollectionName: "#{@id()}.students"
 
   if Meteor.isClient
-    Yearbook = @
+    # Create a reference to the Yearbook class since @ will refer to Student in the code below. Note that
+    # we can't just name this Yearbook since the class is already called that and it would issue a warning.
+    yearbookClass = @
 
     class @Student extends LOI.Character
       @id: -> 'PixelArtAcademy.PixelBoy.Apps.Yearbook.Student'
 
       @Meta
         name: @id()
-        collection: new Meteor.Collection Yearbook.studentsCollectionName
+        collection: new Meteor.Collection yearbookClass.studentsCollectionName
   
   constructor: ->
-    super
+    super arguments...
 
     @setFixedPixelBoySize 384, 274
 
@@ -49,7 +51,7 @@ class PAA.PixelBoy.Apps.Yearbook extends PAA.PixelBoy.App
   ]
 
   onCreated: ->
-    super
+    super arguments...
 
     @showFront = new ReactiveField true
     @showProfileForm = new ReactiveField false

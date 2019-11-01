@@ -1,0 +1,11 @@
+<template name="LandsOfIllusions.Assets.Editor.References.DisplayComponent">
+  <div class="landsofillusions-assets-editor-references-displaycomponent">
+    <ul class="references">
+      {{#each displayedReferences}}
+        <li class="reference">
+          {{> LandsOfIllusions.Assets.Editor.References.DisplayComponent.Reference}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

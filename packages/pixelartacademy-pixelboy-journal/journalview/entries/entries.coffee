@@ -12,14 +12,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
   template: -> @constructor.id()
   
   constructor: (@journalDesign) ->
-    super
+    super arguments...
     
   mixins: -> [
     PAA.PixelBoy.Components.Mixins.PageTurner
   ]
     
   onCreated: ->
-    super
+    super arguments...
 
     @entriesLimit = new ReactiveField 0
 
@@ -107,7 +107,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
       index
 
   onRendered: ->
-    super
+    super arguments...
 
     Meteor.setTimeout =>
       @startLoading true
@@ -227,7 +227,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     'new-page' if @nextPageIsNew()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .previous.page-button': @onClickPreviousPageButton
       'click .next.page-button': @onClickNextPageButton
 

@@ -5,9 +5,12 @@
         {{> Render menuItems}}
       {{/if}}
     </div>
-    {{#unless customShowMenu}}
-      <button class="menu-button {{menuButtonVisibleClass}}">Menu</button>
-    {{/unless}}
+    <div class="toolbar {{toolbarVisible}}">
+      <button class="toggle-audio-button {{audioEnabledClass}}"></button>
+      {{#unless customShowMenu}}
+        <button class="menu-button">Menu</button>
+      {{/unless}}
+    </div>
     {{> Render signIn}}
     {{> Render account}}
   </div>

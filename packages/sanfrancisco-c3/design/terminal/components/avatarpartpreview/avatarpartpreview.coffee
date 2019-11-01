@@ -1,17 +1,107 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
 class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview'
 
+  constructor: (@options = {}) ->
+    super arguments...
+
   class @Default extends AM.Component
     @register 'SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default'
 
-    onRendered: ->
-      super
+    constructor: (@options = {}) ->
+      super arguments...
+
+    onCreated: ->
+      super arguments...
+
+      @designTerminal = @ancestorComponentOfType C3.Design.Terminal
+
+      # See if we want automatic choice of the viewing angle.
+      if @options.chooseNonEmptyViewingAngle
+        @renderingSide = new ComputedField =>
+          part = @data()
+          data = part.options.dataLocation()?.data()
+
+          if data and part instanceof LOI.Character.Avatar.Parts.Shape
+            dummies = LOI.Assets.Sprite.documents.fetch name: /dummy/
+            dummyIds = (dummy._id for dummy in dummies)
+
+            # Find which rendering side has a sprite assigned. We prefer some angles more than the others.
+            for renderingSide in [
+              LOI.Engine.RenderingSides.Keys.Front
+              LOI.Engine.RenderingSides.Keys.Back
+              LOI.Engine.RenderingSides.Keys.Left
+              LOI.Engine.RenderingSides.Keys.Right
+              LOI.Engine.RenderingSides.Keys.FrontLeft
+              LOI.Engine.RenderingSides.Keys.FrontRight
+              LOI.Engine.RenderingSides.Keys.BackLeft
+              LOI.Engine.RenderingSides.Keys.BackRight
+              # Repeat front so it becomes the default.
+              LOI.Engine.RenderingSides.Keys.Front
+            ]
+              spriteId = data.fields[renderingSide]?.node?.fields?.spriteId?.value
+              break if spriteId and spriteId not in dummyIds
+
+          renderingSide ?= LOI.Engine.RenderingSides.Keys.Front
+          renderingSide
+
+        @viewingAngle = new ComputedField => LOI.Engine.RenderingSides.angles[@renderingSide()]
+        @rendererOptions = new ComputedField => _.defaults renderingSides: [@renderingSide()], @options.rendererOptions
+
+      else
+        @viewingAngle = @options.viewingAngle or new ReactiveField @options.initialViewingAngle or 0
+        @rendererOptions = => @options.rendererOptions
 
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
+
+      @_renderer = null
+      @_landmarksSourceRenderer = null
+
+      @renderer = new ComputedField =>
+        return @options.renderer if @options.renderer
+        
+        return unless part = @data()
+        return unless part.createRenderer
+        @_renderer?.destroy()
+
+        rendererOptions = _.clone @rendererOptions() or {}
+
+        if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
+          rendererOptions.landmarksSource = =>
+            # If we're editing a character, use its landmarks to position clothes.
+            if characterRenderer = @designTerminal.screens.character.characterRenderer()
+              characterRenderer.bodyRenderer
+
+            else
+              # Without a character, we rely on landmarks from default
+              # body parts that get created when no data is loaded.
+              unless @constructor._defaultBodyRenderer
+                @constructor._defaultBodyPart = LOI.Character.Part.Types.Avatar.Body.create
+                  dataLocation: new AMu.Hierarchy.Location
+                    rootField: AMu.Hierarchy.create
+                      templateClass: LOI.Character.Part.Template
+                      type: LOI.Character.Part.Types.Avatar.Body.options.type
+                      load: => null
+
+                @constructor._defaultBodyRenderer = @constructor._defaultBodyPart.createRenderer
+                  useArticleLandmarks: true
+
+              @constructor._defaultBodyRenderer
+
+          rendererOptions.centerOnUsedLandmarks = true
+          rendererOptions.ignoreRenderingConditions = true
+
+          rendererOptions.bodyPart = => @designTerminal.screens.character.character()?.avatar.body or @_defaultBodyPart
+
+        @_renderer = part.createRenderer rendererOptions
+        @_renderer
+
+    onRendered: ->
+      super arguments...
 
       @display = @callAncestorWith 'display'
 
@@ -23,30 +113,30 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       @context = @canvas.getContext '2d'
 
       @inViewport = new ReactiveField false
+      @inViewport true unless @options.renderInViewportOnly
 
-      @updateInViewport = =>
-        viewport = @display.viewport()
+      if @options.renderInViewportOnly
+        @updateInViewport = =>
+          viewport = @display.viewport()
 
-        canvasDimensions = @$canvas.offset()
-        canvasDimensions.top -= @$window.scrollTop()
-        canvasDimensions.bottom = canvasDimensions.top + @$canvas.height()
+          canvasDimensions = @$canvas.offset()
+          canvasDimensions.top -= @$window.scrollTop()
+          canvasDimensions.bottom = canvasDimensions.top + @$canvas.height()
 
-        # See if the canvas is anywhere in the viewport + one viewport height before/after.
-        viewportHeight = viewport.viewportBounds.height()
+          # See if the canvas is anywhere in the viewport + one viewport height before/after.
+          viewportHeight = viewport.viewportBounds.height()
 
-        @inViewport canvasDimensions.top < viewport.viewportBounds.bottom() + viewportHeight and canvasDimensions.bottom > viewport.viewportBounds.top() - viewportHeight
+          @inViewport canvasDimensions.top < viewport.viewportBounds.bottom() + viewportHeight and canvasDimensions.bottom > viewport.viewportBounds.top() - viewportHeight
 
-      @autorun (computation) =>
-        @updateInViewport()
+        @autorun (computation) =>
+          @updateInViewport()
 
-      $(window).on 'scroll', @updateInViewport
+        $(window).on 'scroll', @updateInViewport
 
       @autorun (computation) =>
         return unless @inViewport()
 
-        part = @data()
-        
-        unless renderer = part?.renderer()
+        unless renderer = @renderer()
           # There's no renderer so just clear whatever is drawn.
           @context.setTransform 1, 0, 0, 1, 0, 0
           @context.clearRect 0, 0, @canvas.width, @canvas.height
@@ -60,26 +150,69 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         @context.setTransform 1, 0, 0, 1, Math.floor(@canvas.width / 2), Math.floor(@canvas.height / 2)
         @context.clearRect 0, 0, @canvas.width, @canvas.height
 
+        if @options.originOffset
+          @context.translate @options.originOffset.x, @options.originOffset.y
+
         @context.save()
         
         # Draw and pass the root part in options so we can do different rendering paths based on it.
         renderer.drawToContext @context,
           rootPart: renderer.options.part
-          lightDirection: @lightDirection
+          lightDirection: @lightDirection()
+          side: LOI.Engine.RenderingSides.getSideForAngle @viewingAngle()
+          drawBody: @options.drawBody
+          drawOutfit: @options.drawOutfit
+          silhouette: @options.silhouette
 
         @context.restore()
 
     onDestroyed: ->
-      super
+      super arguments...
 
-      $(window).off 'scroll', @updateInViewport
+      @_renderer?.destroy()
+      @_defaultBodyRenderer?.destroy()
+
+      if @options.renderInViewportOnly
+        $(@options.scrollContainer).off 'scroll', @updateInViewport
+
+      Meteor.clearInterval @_rotateInterval
+
+    toggleRotation: ->
+      if @_rotateInterval
+        @stopRotation()
+
+      else
+        @startRotation()
+
+    startRotation: ->
+      return if @_rotateInterval
+
+      @_rotateInterval = Meteor.setInterval =>
+        @viewingAngle @viewingAngle() + Math.PI / 4
+      ,
+        250
+
+    stopRotation: ->
+      Meteor.clearInterval @_rotateInterval
+      @_rotateInterval = null
+
+    rotatableClass: ->
+      'rotatable' if @options.rotatable
 
     events: ->
-      super.concat
+      super(arguments...).concat
+        'mouseenter canvas': @onMouseEnterCanvas
         'mousemove canvas': @onMouseMoveCanvas
         'mouseleave canvas': @onMouseLeaveCanvas
+        'mousedown canvas': @onMouseDownCanvas
+        'dblclick canvas': @onMouseDoubleClickCanvas
+
+    onMouseEnterCanvas: (event) ->
+      @startRotation() if @options.rotateOnHover
 
     onMouseMoveCanvas: (event) ->
+      return unless @$canvas
+
       canvasOffset = @$canvas.offset()
 
       percentageX = (event.pageX - canvasOffset.left) / @$canvas.outerWidth() * 2 - 1
@@ -87,5 +220,33 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       @lightDirection new THREE.Vector3(-percentageX, percentageY, -1).normalize()
 
+      if @_drag
+        offset = event.pageX - @_dragStart
+        @viewingAngle @_viewingAngleStart + offset * 0.04
+
     onMouseLeaveCanvas: (event) ->
       @lightDirection new THREE.Vector3(0, -1, -1).normalize()
+
+      @stopRotation() if @options.rotateOnHover
+      @viewingAngle 0 if @options.resetViewingAngleOnLeave
+
+    onMouseDownCanvas: (event) ->
+      event.preventDefault()
+
+      return unless @options.rotatable
+
+      Meteor.clearInterval @_rotateInterval
+      @_rotateInterval = null
+
+      @_dragStart = event.pageX
+      @_viewingAngleStart = @viewingAngle()
+      @_drag = true
+      
+      $(document).on 'mouseup.sanfrancisco-c3-design-terminal-components-avatarpartpreview-default', =>
+        $(document).off '.sanfrancisco-c3-design-terminal-components-avatarpartpreview-default'
+        @_drag = false
+
+    onMouseDoubleClickCanvas: (event) ->
+      return unless @options.rotatable
+
+      @toggleRotation()

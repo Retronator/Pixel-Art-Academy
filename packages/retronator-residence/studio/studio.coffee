@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -25,7 +24,7 @@ class HQ.Residence.Studio extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   @state: ->
     things = {}

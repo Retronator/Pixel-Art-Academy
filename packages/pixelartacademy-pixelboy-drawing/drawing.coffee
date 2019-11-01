@@ -24,14 +24,14 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @portfolio = new ReactiveField null
     @clipboard = new ReactiveField null
     @editor = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Initialize components.
     @portfolio new @constructor.Portfolio @

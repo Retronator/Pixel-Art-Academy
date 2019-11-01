@@ -6,17 +6,7 @@ class C3.Design.Terminal.Properties.String extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.String'
 
   onCreated: ->
-    super
+    super arguments...
 
     property = @data()
-    @input = new @constructor.Input property.options.dataLocation
-
-  class @Input extends AM.DataInputComponent
-    constructor: (@dataLocation) ->
-      super
-
-    load: ->
-      @dataLocation()
-
-    save: (value) ->
-      @dataLocation value
+    @input = new C3.Design.Terminal.Properties.Input property.options

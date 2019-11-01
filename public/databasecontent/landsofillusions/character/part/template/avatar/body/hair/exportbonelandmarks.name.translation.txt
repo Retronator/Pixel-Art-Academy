@@ -1,0 +1,3 @@
+en-US: Export bone landmarks
+
+{"_id":"cChGZXMPhTe88EckN","ownerId":"sCcSTmSHWLgLutNqw","_schema":"2.0.0","lastEditTime":{"$date":1570527460605},"translations":{"en":{"us":{"text":"Export bone landmarks","quality":0},"best":{"text":"Export bone landmarks","quality":0,"languageRegion":"en-US"}},"best":{"text":"Export bone landmarks","quality":0,"languageRegion":"en-US"}}}

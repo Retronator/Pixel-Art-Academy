@@ -1,0 +1,3 @@
+en: If school didn't take most of your life, you have to have a part time job on top of that.
+
+{"_id":"jbYYLpq4TB4scnKZg","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"If school didn't take most of your life, you have to have a part time job on top of that.","quality":0,"best":{"text":"If school didn't take most of your life, you have to have a part time job on top of that.","quality":0,"languageRegion":"en"}},"best":{"text":"If school didn't take most of your life, you have to have a part time job on top of that.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038944008}}

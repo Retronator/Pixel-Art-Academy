@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AC = Artificial.Control
 LOI = LandsOfIllusions
 
@@ -13,16 +14,12 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
-    # Subscribe to user's activated characters.
-    @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
-  
     @activatedCharacters = new ComputedField =>
-      return [] unless user = Retronator.user()
-      return [] unless user.characters
+      return [] unless characters = Retronator.user()?.characters
 
-      LOI.Character.getInstance character for character in user.characters when character.activated
+      LOI.Character.getInstance character for character in characters when character.activated
 
     # Which character is shown left-most. Allows to scroll through options.
     @firstCharacterOffset = new ReactiveField 0
@@ -53,6 +50,22 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
 
     'active' if LOI.characterId() is characterInstance._id
 
+  avatarPreviewOptions: ->
+    characterInstance = Template.parentData()
+    character = characterInstance.document()
+
+    previewOptions =
+      rendererOptions:
+        renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
+
+    # Draw characters with revoked design in silhouette.
+    unless character?.designApproved
+      previewOptions.silhouette =
+        ramp: LOI.Assets.Palette.Atari2600.hues.cyan
+        shade: 2
+
+    previewOptions
+
   landsOfIllusionsActiveClass: ->
     'active' if LOI.adventure.currentTimelineId() is LOI.TimelineIds.Construct
 
@@ -68,7 +81,7 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
     LOI.characterId() or LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character': @onClickCharacter
       'click .lands-of-illusions': @onClickLandsOfIllusions
       'click .disconnect': @onClickDisconnect
@@ -77,6 +90,18 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
 
   onClickCharacter: (event) ->
     characterInstance = @currentData()
+    character = characterInstance.document()
+
+    unless character.designApproved
+      LOI.adventure.showActivatableModalDialog
+        dialog: new LOI.Components.Dialog
+          message: "Character unavailable"
+          moreInfo: "#{AB.Rules.English.createPossessive characterInstance.name()} design has been revoked. Please visit Cyborg Construction Center to redesign the character."
+          buttons: [
+            text: "OK"
+          ]
+
+      return
 
     @sync.fadeToWhite()
 

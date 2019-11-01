@@ -25,12 +25,12 @@ class LOI.Adventure extends LOI.Adventure
     # Returns things that are at the location (and not in the inventory).
     @currentLocationThings = new ComputedField =>
       return unless currentSituation = @currentSituation()
-      @_instantiateThings currentSituation.things()
+      _.uniq @_instantiateThings currentSituation.things()
 
     # Returns things that are in the inventory.
     @currentInventoryThings = new ComputedField =>
       return unless currentInventory = @currentInventory()
-      @_instantiateThings currentInventory.things()
+      _.uniq @_instantiateThings currentInventory.things()
 
     # Returns all physical things (items, characters) that are available to listen to commands.
     @currentPhysicalThings = new ComputedField =>
@@ -53,6 +53,21 @@ class LOI.Adventure extends LOI.Adventure
 
       _.without things, undefined, null
 
+    @currentPeople = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+
+    @currentOtherPeople = new ComputedField =>
+      _.without @currentPeople(), LOI.agent()
+
+    @currentAgents = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
+
+    @currentOtherAgents = new ComputedField =>
+      _.without @currentAgents(), LOI.agent()
+
+    @currentActors = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Actor
+
   _instantiateThings: (things) ->
     for thing in things
       thingId = thing.id()
@@ -73,9 +88,30 @@ class LOI.Adventure extends LOI.Adventure
 
       thingInstance
 
+  getThing: (thingClassOrId) ->
+    thingClass = _.thingClass thingClassOrId
+
+    unless thingClass
+      console.warn "Unknown thing requested.", thingClassOrId
+      return
+
+    @_instantiateThings([thingClass])[0]
+
   getCurrentThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId
+    characterId = thingClassOrId unless thingClass
     things = @currentThings()
+
+    _.find things, (thing) =>
+      if characterId
+        thing._id is characterId
+
+      else
+        thing instanceof thingClass
+
+  getCurrentInventoryThing: (thingClassOrId) ->
+    thingClass = _.thingClass thingClassOrId
+    things = @currentInventoryThings()
 
     _.find things, (thing) -> thing instanceof thingClass
 

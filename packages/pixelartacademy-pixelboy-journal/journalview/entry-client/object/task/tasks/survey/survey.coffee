@@ -11,7 +11,7 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
   template: -> @constructor.id()
   
   onCreated: ->
-    super
+    super arguments...
 
     @state = new ComputedField =>
       @parent.value()?.data or {}
@@ -42,7 +42,7 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
     AB.translation @task._translationSubscription, "survey.#{question.key}"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .enabled.confirmation': @onClickConfirmation
 
   onClickConfirmation: (event) ->
@@ -52,7 +52,7 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice'
 
     onCreated: ->
-      super
+      super arguments...
 
       question = @data()
       @survey = @ancestorComponentOfType Entry.Object.Task.Survey
@@ -99,12 +99,12 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
       @register 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice.Choice'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Checkbox
 
       onCreated: ->
-        super
+        super arguments...
 
         @multipleChoice = @ancestorComponentOfType Entry.Object.Task.Survey.MultipleChoice
 
@@ -132,12 +132,12 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
       @register 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice.Text'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Text
 
       onCreated: ->
-        super
+        super arguments...
 
         @multipleChoice = @ancestorComponentOfType Entry.Object.Task.Survey.MultipleChoice
 

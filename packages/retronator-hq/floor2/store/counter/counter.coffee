@@ -15,19 +15,19 @@ class HQ.Store.Counter extends LOI.Adventure.Context
 
   @version: -> '0.0.1'
 
-  @illustrationHeight: -> 240
+  @illustration: -> height: 240
 
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @smiling = new ReactiveField false
 
     @showReceiptSupporters = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe RS.Transaction.topRecent, 15
     @subscribe RA.User.topSupportersCurrentUser
@@ -43,7 +43,7 @@ class HQ.Store.Counter extends LOI.Adventure.Context
       @subscribe RS.Transaction.messages, @_messagesCount()
 
   onRendered: ->
-    super
+    super arguments...
 
     # Fix supporter list titles to be inside the screen.
     $supportersArea = @$('.content-area .supporters-area')
@@ -119,7 +119,7 @@ class HQ.Store.Counter extends LOI.Adventure.Context
         time: -1
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .top-supporters .show-more-button': @onClickTopSupportersShowMoreButton
 
   onClickTopSupportersShowMoreButton: (event) ->

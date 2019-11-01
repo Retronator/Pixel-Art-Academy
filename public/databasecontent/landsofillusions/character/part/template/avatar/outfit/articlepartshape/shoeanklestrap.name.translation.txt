@@ -1,0 +1,3 @@
+en-US: Shoe ankle strap
+
+{"_id":"ksu8Lccw2dtJbGacu","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565394434670},"translations":{"en":{"us":{"text":"Shoe ankle strap","quality":0},"best":{"text":"Shoe ankle strap","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoe ankle strap","quality":0,"languageRegion":"en-US"}}}

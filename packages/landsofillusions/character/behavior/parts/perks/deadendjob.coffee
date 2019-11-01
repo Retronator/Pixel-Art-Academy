@@ -12,7 +12,7 @@ class LOI.Character.Behavior.Perk.DeadEndJob extends LOI.Character.Behavior.Perk
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     # Search activities for a job with some time allocated to it.
     _.find behaviorPart.properties.activities.parts(), (activityPart) ->

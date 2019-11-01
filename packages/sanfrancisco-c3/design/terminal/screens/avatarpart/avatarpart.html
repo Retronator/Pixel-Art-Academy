@@ -1,19 +1,30 @@
 <template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
-  <div class="sanfrancisco-c3-design-terminal-avatarpart screen {{partClass}}">
+  <div class="sanfrancisco-c3-design-terminal-avatarpart screen {{partClass}} {{ownTemplateClass}}">
     <div class="main-content">
       <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
       {{#if showTemplates}}
         <div class="templates-area">
-          {{#if canCreateNew}}
-            <button class="new-part-button avatar-part">New</button>
-          {{/if}}
-          <ul class="templates">
-            {{#each templates}}
-              <li class="template avatar-part">
-                {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview templatePart}}
-              </li>
-            {{/each}}
-          </ul>
+          {{#each templateGroups}}
+            <div class="template-group">
+              {{#if title}}
+                <div class="title">{{title}}</div>
+              {{/if}}
+              <ul class="templates">
+                {{#each templates}}
+                  <li class="template avatar-part">
+                    {{#with templatePart}}
+                      {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args templatePreviewOptions}}
+                    {{/with}}
+                  </li>
+                {{/each}}
+              </ul>
+              {{#if lastGroup}}
+                {{#if canCreateNew}}
+                  <button class="new-part-button avatar-part">Custom</button>
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/each}}
         </div>
       {{else}}
         <div class="instructions">
@@ -21,15 +32,17 @@
             {{#with partTemplate}}
               <div class="template-info">
                 {{#if isOwnPartTemplate}}
-                  <div class="name">
-                    <span class="label">Template</span>: {{> renderTemplateNameInput name}}
-                  </div>
-                  <p class="main-text">
-                    You are the designer of this template and can edit it.
-                  </p>
+                  {{#with fullPartTemplate}}
+                    <div class="name">
+                      <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+                    </div>
+                    <p class="main-text">
+                      You are the designer of this template and can edit it.
+                    </p>
+                  {{/with}}
                 {{else}}
                   <div class="name">
-                    <span class="label">Model</span>: {{> t9n name}}
+                    <span class="label">Model</span>: {{> t9n fullPartTemplate.name}}
                   </div>
                   {{#if canCreateNew}}
                     <p class="main-text">
@@ -68,54 +81,94 @@
                     {{#if $is this.type 'relativeColorShade'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade this}}
                     {{/if}}
+                    {{#if $is this.type 'hairColor'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.HairColor this}}
+                    {{/if}}
+                    {{#if $is this.type 'outfitColor'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.OutfitColor this}}
+                    {{/if}}
                     {{#if $is this.type 'sprite'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Sprite this}}
                     {{/if}}
                     {{#if $is this.type 'string'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.String this}}
                     {{/if}}
+                    {{#if $is this.type 'number'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Number this}}
+                    {{/if}}
                     {{#if $is this.type 'integer'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Integer this}}
+                    {{/if}}
+                    {{#if $is this.type 'boolean'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Boolean this}}
+                    {{/if}}
+                    {{#if $is this.type 'renderingCondition'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.RenderingCondition this}}
+                    {{/if}}
+                    {{#if $is this.type 'hideRegions'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.HideRegions this}}
                     {{/if}}
                   </div>
                 </li>
               {{/each}}
             </ul>
           </div>
-          <div class="preview">
-            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview previewPart}}
+          <div class="avatar-part-preview">
+            {{#with previewPart}}
+              {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarPreviewOptions}}
+            {{/with}}
           </div>
         {{/with}}
       {{/if}}
     </div>
-    {{#if showTemplates}}
+    <div class="main-actions">
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        {{#if partTemplate}}
+          {{#if isTemplatePublishable}}
+            <button class="{{publishButtonMainButtonClass}} action-button publish-button">Publish</button>
+            <button class="action-button done-button">Save as draft</button>
+          {{else}}
+            <button class="main-button action-button done-button">Done</button>
+          {{/if}}
+          {{#if canUpgradeTemplate}}
+            <button class="action-button upgrade-template-button">Upgrade version</button>
+          {{/if}}
+          {{#unless rootTemplate}}
+            <button class="action-button replace-button">Replace</button>
+          {{/unless}}
+          {{#if canRevertTemplate}}
+            <button class="action-button revert-template-button">Revert template</button>
+          {{/if}}
+          {{#unless rootTemplate}}
+            {{#if canCreateNew}}
+              {{#if isOwnPartTemplate}}
+                {{#unless isTemplateEditable}}
+                  <button class="action-button modify-template-button">Modify template</button>
+                {{/unless}}
+                <button class="action-button unlink-template-button">Unlink template</button>
+              {{else}}
+                <button class="action-button unlink-template-button">Modify</button>
+              {{/if}}
+            {{/if}}
+          {{/unless}}
+        {{else}}
+          <button class="main-button action-button done-button">Done</button>
+          <button class="action-button replace-button">Replace</button>
+          {{#if isAdmin}}
+            <button class="action-button save-as-template-button">Save as template</button>
+          {{/if}}
+        {{/if}}
+        {{#unless rootTemplate}}
+          <button class="action-button delete-button danger-button">Delete</button>
+        {{/unless}}
+      {{/if}}
       {{#with hoveredTemplate}}
         <div class="hovered-template">
           <div class="name">{{> t9n name}}</div>
         </div>
       {{/with}}
-    {{/if}}
-    <div class="main-actions">
-      {{#if showTemplates}}
-        <button class="main-button action-button done-button">Back</button>
-      {{else}}
-        <button class="main-button action-button done-button">Done</button>
-        <button class="action-button replace-button">Replace</button>
-        {{#if partTemplate}}
-          {{#if canCreateNew}}
-            {{#if isOwnPartTemplate}}
-              <button class="action-button unlink-template-button">Unlink template</button>
-            {{else}}
-              <button class="action-button unlink-template-button">Modify</button>
-            {{/if}}
-          {{/if}}
-        {{else}}
-          {{#if isAdmin}}
-            <button class="action-button save-as-template-button">Save as template</button>
-          {{/if}}
-        {{/if}}
-        <button class="action-button delete-button danger-button">Delete</button>
-      {{/if}}
     </div>
   </div>
 </template>

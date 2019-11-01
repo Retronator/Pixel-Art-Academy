@@ -38,6 +38,11 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     archiveProperty = @archivePropertyForDate new Date()
     @state "weeklyGoals.archive.#{archiveProperty}.#{goal}", value
 
+    # Set the current goals publicly to profile.
+
+    profileData = _.pick @state("weeklyGoals"), ['daysWithActivities', 'totalHours']
+    LOI.Character.updateProfile LOI.characterId(), 'weeklyGoals', profileData
+
   @archivedWeeklyGoalsForDate: (date) ->
     archiveProperty = @archivePropertyForDate date
     @state "weeklyGoals.archive.#{archiveProperty}"
@@ -50,7 +55,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     "#{monday.getFullYear()}.#{monday.getMonth()}.#{monday.getDate()}"
 
   constructor: ->
-    super
+    super arguments...
 
     @resizable false
 
@@ -91,7 +96,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
               @state "weeklyGoals.archive.#{archiveProperty}", currentGoals
 
   onCreated: ->
-    super
+    super arguments...
     
     @monthView new @constructor.MonthView @
     @goalSettings new @constructor.GoalSettings @

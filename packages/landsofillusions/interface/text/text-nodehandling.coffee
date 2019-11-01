@@ -49,7 +49,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       node.cancel()
       return
 
-    super
+    super arguments...
 
     # We don't really have to handle choice node, because the dialog selection
     # module does that, but we still want to pause before we display it.
@@ -71,8 +71,17 @@ class LOI.Interface.Text extends LOI.Interface.Text
   _handleDialogueLine: (dialogueLine, options) ->
     return if not options.background and @_waitForNode dialogueLine
 
+    if dialogueLine.command
+      # This is a command to the interface. Add it to the narrative as if it was a typed command and finish.
+      text = @_evaluateLine dialogueLine
+
+      @narrative.addText "> #{text.toUpperCase()}"
+
+      dialogueLine.end()
+      return
+
     unless dialogueLine.actor
-      # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
+      # There is no actor, which means the player is saying this. Add it to the narrative as a command in quotes and finish.
       text = @_evaluateLine dialogueLine
 
       @narrative.addText "> \"#{text.toUpperCase()}\""

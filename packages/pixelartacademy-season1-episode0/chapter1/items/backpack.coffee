@@ -24,9 +24,9 @@ class C1.Items.Backpack extends LOI.Adventure.Thing
   description: ->
     opened = @state 'opened'
 
-    return super if opened
+    return super(arguments...) if opened
 
-    "#{super} #{@translations().openHint}"
+    "#{super arguments...} #{@translations().openHint}"
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/items/backpack.script'
 

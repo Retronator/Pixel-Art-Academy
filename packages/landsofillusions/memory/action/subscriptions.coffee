@@ -17,7 +17,7 @@ LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, ear
     locationId: locationId
     time: $gt: earliestTime
 
-# Returns actions at a location within the duration.
+# Returns actions for a character within the duration.
 LOI.Memory.Action.recentForCharacter.publish (characterId, earliestTime) ->
   check characterId, Match.DocumentId
   check earliestTime, Date
@@ -26,7 +26,7 @@ LOI.Memory.Action.recentForCharacter.publish (characterId, earliestTime) ->
     'character._id': characterId
     time: $gt: earliestTime
 
-# Returns actions at a location within the duration.
+# Returns actions for characters within the duration.
 LOI.Memory.Action.recentForCharacters.publish (characterIds, earliestTime) ->
   check characterIds, [Match.DocumentId]
   check earliestTime, Date

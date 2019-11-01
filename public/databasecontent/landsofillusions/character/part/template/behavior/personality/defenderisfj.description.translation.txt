@@ -1,0 +1,3 @@
+en: Kind altruist that is always ready to stand up for what is right.
+
+{"_id":"y6uC95oP2AFQ23Kcb","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Kind altruist that is always ready to stand up for what is right.","quality":0,"best":{"text":"Kind altruist that is always ready to stand up for what is right.","quality":0,"languageRegion":"en"}},"best":{"text":"Kind altruist that is always ready to stand up for what is right.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038963040}}

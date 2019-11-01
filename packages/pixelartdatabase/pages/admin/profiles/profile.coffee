@@ -6,7 +6,7 @@ class PADB.Pages.Admin.Profiles.Profile extends Artificial.Mummification.Admin.C
   @register @id()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .refresh-button': @onClickRefreshButton
 
   onClickRefreshButton: (event) ->

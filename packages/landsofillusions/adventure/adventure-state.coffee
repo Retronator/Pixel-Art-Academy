@@ -20,10 +20,14 @@ class LOI.Adventure extends LOI.Adventure
       tracker: @
       consentField: LOI.settings.persistGameState.allowed
 
+    # We need to know when the save/load dialog is in effect so we don't react to state changes during it.
+    @savingOrLoading = new ReactiveField null
+
     # Listen to user changes. If we find a mismatch between the last user, delete stored info.
     @autorun (computation) =>
       return unless LOI.adventureInitialized()
       return if Meteor.loggingIn()
+      return if LOI.adventure.savingOrLoading()
 
       userId = Meteor.userId()
       lastUserId = @lastUserId()
@@ -322,6 +326,9 @@ class LOI.Adventure extends LOI.Adventure
             @playerTimelineId databaseState.state.currentTimelineId
             @_immersionExitLocationId databaseState.state.immersionExitLocationId
 
+            # Set that current local state is coming from the logged in user so it doesn't get deleted.
+            @lastUserId user._id
+
             @menu.signIn.activatable.deactivate()
 
             # Reset the local game state, so it doesn't exist if we come back and we're not logged in anymore.
@@ -357,10 +364,14 @@ class LOI.Adventure extends LOI.Adventure
     Accounts._loginButtonsSession.set 'inSignupFlow', false
     Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
 
+    @savingOrLoading true
+
     @showActivatableModalDialog
       dialog: @menu.signIn
       dontRender: true
       callback: =>
+        @savingOrLoading false
+
         # User has returned from the load screen.
         userAutorun.stop()
 
@@ -407,10 +418,13 @@ class LOI.Adventure extends LOI.Adventure
             dialog: dialog
             callback: =>
               if dialog.result
-                # The player has confirmed to use the local state for the loaded account.
+                # The player has confirmed to transfer the local state to the loaded account.
                 LOI.GameState.replaceForCurrentUser @localGameState.state(), =>
                   # Now that the local state has been transferred, clear it for next player.
                   @clearLocalGameState()
+
+                # Set that current local state belongs to the user so it doesn't get deleted.
+                @lastUserId user._id
 
               else
                 # The player canceled. Log them out since we shouldn't store our game state there.
@@ -424,6 +438,9 @@ class LOI.Adventure extends LOI.Adventure
             # Now that the local state has been transferred, clear it for next player.
             @clearLocalGameState()
 
+          # Set that current local state belongs to the user so it doesn't get deleted.
+          @lastUserId user._id
+
           @menu.signIn.activatable.deactivate()
 
     # Make sure location and timeline are written to the state, by overwriting them.
@@ -434,11 +451,15 @@ class LOI.Adventure extends LOI.Adventure
     Accounts._loginButtonsSession.set 'inSignupFlow', true
     Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
 
+    @savingOrLoading true
+
     @showActivatableModalDialog
       dialog: @menu.signIn
       dontRender: true
       callback: =>
         # User has returned from the load screen.
+        @savingOrLoading false
+
         userAutorun.stop()
         callback?()
 
@@ -477,6 +498,8 @@ class LOI.Adventure extends LOI.Adventure
     localStorage.removeItem 'Meteor.loginTokenExpires'
 
   loadCharacter: (characterId) ->
+    console.log "Loading character", characterId if LOI.debug or LOI.Adventure.debugState
+
     # Save where we're going to immersion from.
     if @currentTimelineId() is LOI.TimelineIds.RealLife
       @saveImmersionExitLocation()
@@ -498,6 +521,8 @@ class LOI.Adventure extends LOI.Adventure
           LOI.switchCharacter null
 
   unloadCharacter: ->
+    console.log "Unloading character." if LOI.debug or LOI.Adventure.debugState
+
     LOI.switchCharacter null
     @_onSwitchingGameState()
 

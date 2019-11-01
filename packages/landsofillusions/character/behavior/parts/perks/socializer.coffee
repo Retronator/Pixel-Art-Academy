@@ -12,7 +12,7 @@ class LOI.Character.Behavior.Perk.Socializer extends LOI.Character.Behavior.Perk
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     factorPowers = behaviorPart.properties.personality.part.factorPowers()
     energyScore = factorPowers[1].positive

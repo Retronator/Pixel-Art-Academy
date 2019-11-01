@@ -27,7 +27,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   @initialize()
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     # Fields that control supporter display for logged out users (guests).
     @guestShowSupporterName = @state.field 'showSupporterName', default: true
@@ -53,7 +53,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @usdToEurExchangeRate = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @vatSummaryError = new ComputedField =>
       return unless @europeanUnion()
@@ -136,7 +136,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       @usdToEurExchangeRate value
 
   onRendered: ->
-    super
+    super arguments...
 
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -161,7 +161,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       1000
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @app?.removeComponent @
 
@@ -353,7 +353,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @vatPayment()?.netAmountEur
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'change .european-union-radio': @onChangeEuropeanUnionRadio
       'change .european-union-entity-radio': @onChangeEuropeanUnionEntityRadio
       'change .vat-id': @onChangeVatId
@@ -438,13 +438,13 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       container: @$('.background')
 
   _displayError: (error) ->
-    super
+    super arguments...
 
     # If the error has happened after purchase, we still want to clean up.
     @_resetAfterPurchase() if @purchaseErrorAfterCharge()
 
   _completePurchase: ->
-    super
+    super arguments...
 
     # We set this to true because adventure script will use it to determine how to branch the dialog.
     @transactionCompleted = true
@@ -481,12 +481,12 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @register 'Retronator.HQ.Items.Receipt.EuropeanCountrySelection'
 
     constructor: ->
-      super
+      super arguments...
 
       @regionList = AB.Region.Lists.EuropeanUnion
 
     onCreated: ->
-      super
+      super arguments...
 
       @receipt = @ancestorComponentOfType HQ.Items.Receipt
 
@@ -518,7 +518,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @register 'Retronator.HQ.Items.Receipt.StripePaymentMethod'
 
     onCreated: ->
-      super
+      super arguments...
 
       @loading = new ReactiveField false
       @receipt = @ancestorComponentOfType HQ.Items.Receipt
@@ -531,7 +531,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       'loading' if @loading()
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click .case': @onClickCase
 
     onClickCase: (event) ->

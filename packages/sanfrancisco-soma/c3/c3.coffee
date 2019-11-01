@@ -21,7 +21,7 @@ class Soma.C3 extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

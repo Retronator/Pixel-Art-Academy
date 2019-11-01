@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 Blog = Retronator.Blog
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -28,7 +27,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
   description: ->
     return @translations().openedDrawer if @openedDrawer()
 
-    super
+    super arguments...
 
   postscript: ->
     if @postsSkip() is 0
@@ -41,7 +40,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
     
     @postsSkip = new ReactiveField 0
     @openedDrawer = new ReactiveField false
@@ -67,7 +66,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
         @constructor.Item.createItem itemOptions
 
   onRendered: ->
-    super
+    super arguments...
 
     @$uiArea = $('.ui-area')
     @$table = $('.retronator-hq-store-table')

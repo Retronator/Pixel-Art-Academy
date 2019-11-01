@@ -7,7 +7,7 @@ class RS.Components.Invoice extends AM.Component
   @register @id()
 
   onCreated: ->
-    super
+    super arguments...
 
     @language = new ReactiveField 'en'
 

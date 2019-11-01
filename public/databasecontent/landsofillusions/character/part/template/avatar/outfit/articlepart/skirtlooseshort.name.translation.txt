@@ -1,0 +1,3 @@
+en-US: Skirt loose short
+
+{"_id":"H6owHJdvqQWGK8P6a","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565390666841},"translations":{"en":{"us":{"text":"Skirt loose short","quality":0},"best":{"text":"Skirt loose short","quality":0,"languageRegion":"en-US"}},"best":{"text":"Skirt loose short","quality":0,"languageRegion":"en-US"}}}

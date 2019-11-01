@@ -10,10 +10,10 @@ class Yearbook.Middle extends AM.Component
   @register @id()
 
   constructor: (@yearbook) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @currentSpreadIndex = new ReactiveField 0
 
@@ -58,7 +58,7 @@ class Yearbook.Middle extends AM.Component
       studentsByYear[currentYear].spreads[currentSpreadIndexInYear]
 
   onDestroyed: ->
-    super
+    super arguments...
 
     # Clean up character instances.
     avatar().destroy() for characterId, avatar of @_avatars
@@ -162,7 +162,7 @@ class Yearbook.Middle extends AM.Component
     'highlighted' if student.isPlayerCharacter
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .previous.page-button': @onClickPreviousPageButton
       'click .next.page-button': @onClickNextPageButton
       'click .front.page-button': @onClickFrontPageButton

@@ -27,7 +27,7 @@ class C2.Items.VideoTablet extends LOI.Adventure.Item
   isVisible: -> false
     
   onCreated: ->
-    super
+    super arguments...
     
     # Analyze player's answers in the Chapter 2/Immersion/Room script.
     scriptsState = LOI.adventure.gameState().scripts
@@ -63,7 +63,7 @@ class C2.Items.VideoTablet extends LOI.Adventure.Item
     @selection = new ReactiveField null
     
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .videos .video': @onClickVideo
       'click .close-button': @onClickCloseButton
       
@@ -87,7 +87,7 @@ class C2.Items.VideoTablet extends LOI.Adventure.Item
     @register 'PixelArtAcademy.Season1.Episode0.Chapter2.Items.VideoTablet.Video'
 
     onRendered: ->
-      super
+      super arguments...
 
       # Load the thumbnail
       video = @currentData()

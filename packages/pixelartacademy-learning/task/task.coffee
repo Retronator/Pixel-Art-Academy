@@ -8,6 +8,12 @@ class PAA.Learning.Task
     All: 'All'
     Any: 'Any'
 
+  @Icons:
+    Task: 'Task'
+    Drawing: 'Drawing'
+    Reading: 'Reading'
+    Video: 'Video'
+
   @getClassForId: (id) ->
     @_taskClassesById[id]
 
@@ -16,6 +22,9 @@ class PAA.Learning.Task
 
   # The type that identifies the task class individual tasks inherit from.
   @type: null
+
+  # The icon that represents the kind of work done in this task.
+  @icon: @Icons.Task
 
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
@@ -49,7 +58,18 @@ class PAA.Learning.Task
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 
+  @getAdventureInstanceForId: (taskId) ->
+    for episode in LOI.adventure.episodes()
+      for chapter in episode.chapters
+        for task in chapter.tasks
+          return task if task.id() is taskId
+
+    console.warn "Unknown task requested.", taskId
+    null
+
   constructor: (@options = {}) ->
+    @goal = @options.goal
+
     # By default the task is related to the current character.
     @options.characterId ?= => LOI.characterId()
 

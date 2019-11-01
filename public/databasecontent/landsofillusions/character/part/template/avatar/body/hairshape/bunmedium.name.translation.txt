@@ -1,0 +1,3 @@
+en-US: Bun medium
+
+{"_id":"z6kWGqibiCbZhKoXf","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560588591745},"translations":{"en":{"us":{"text":"Bun medium","quality":0},"best":{"text":"Bun medium","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bun medium","quality":0,"languageRegion":"en-US"}}}

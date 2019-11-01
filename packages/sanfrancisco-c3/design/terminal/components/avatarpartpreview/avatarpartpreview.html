@@ -1,13 +1,13 @@
 <template name="SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview">
   <div class="sanfrancisco-c3-design-terminal-components-avatarpartpreview">
-    {{#if $is options.type 'Avatar.Outfit.CustomColor'}}
-      {{> SanFrancisco.C3.Design.Terminal.Components.CustomColorPreview}}
+    {{#if $is this.options.type 'Avatar.Outfit.CustomColor'}}
+      {{> SanFrancisco.C3.Design.Terminal.Components.CustomColorPreview args options}}
     {{else}}
-      {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default}}
+      {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default args options}}
     {{/if}}
   </div>
 </template>
 
 <template name="SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default">
-  <canvas class="sanfrancisco-c3-design-terminal-components-avatarpartpreview-default"></canvas>
+  <canvas class="sanfrancisco-c3-design-terminal-components-avatarpartpreview-default {{rotatableClass}}"></canvas>
 </template>

@@ -135,8 +135,7 @@ class LOI.Parser.CommandResponse
               phraseLikelihood = 0
 
               # See if we've already calculated this phrase's likelihood.
-              # HACK: Firefox implements a method 'watch' on all objects, so this would incorrectly return a function.
-              if likelihoodCache[translatedPhrase] and not _.isFunction likelihoodCache[translatedPhrase]
+              if likelihoodCache[translatedPhrase]
                 phraseLikelihood = likelihoodCache[translatedPhrase]
 
               else
@@ -173,12 +172,13 @@ class LOI.Parser.CommandResponse
   generateAvatarActions: ->
     avatarActions = []
 
-    addMatchingPhraseActionToAvatar = (matchingPhraseAction, avatar) =>
+    addMatchingPhraseActionToAvatar = (matchingPhraseAction, avatar, possessive) =>
       avatarAction = _.find avatarActions, (avatarAction) => avatarAction.avatar is avatar
 
       unless avatarAction
         avatarAction =
           avatar: avatar
+          possessive: possessive
           actions: []
 
         avatarActions.push avatarAction
@@ -203,7 +203,7 @@ class LOI.Parser.CommandResponse
           # phrases.
           avatar = alias.possessive or alias
 
-          addMatchingPhraseActionToAvatar matchingPhraseAction, avatar
+          addMatchingPhraseActionToAvatar matchingPhraseAction, avatar, alias.possessive
 
     console.log "Found avatars in actions.", avatarActions if LOI.debug
 
@@ -220,6 +220,10 @@ class LOI.Parser.CommandResponse
       fullNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatarAction.avatar.fullName()
 
       phrases = _.union shortNamePhrases, fullNamePhrases
+
+      # Create possessive versions of the phrases if needed.
+      # TODO: Localize for other than English.
+      phrases = (AB.Rules.English.createPossessive phrase for phrase in phrases) if avatarAction.possessive
 
       for phrase in phrases
         # Calculate how likely this phrase is in the command.

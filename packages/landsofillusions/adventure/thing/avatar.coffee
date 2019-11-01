@@ -26,7 +26,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
           AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
   constructor: (@options) ->
-    super
+    super arguments...
     
     id = _.propertyValue @options, 'id'
     translationNamespace = "#{id}.Avatar"
@@ -35,7 +35,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
   destroy: ->
-    super
+    super arguments...
 
     @_translationSubscription.stop()
 
@@ -46,7 +46,8 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
   descriptiveName: -> @_translateIfAvailable @constructor.translationKeys.descriptiveName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
-    
+
+  pronouns: -> _.propertyValue @options, 'pronouns'
   nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'
   nameNounType: -> _.propertyValue @options, 'nameNounType'
 
@@ -54,7 +55,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     # Return the desired color or use the default.
     color = _.propertyValue @options, 'color'
 
-    color or super
+    color or super arguments...
 
   dialogTextTransform: -> _.propertyValue @options, 'dialogTextTransform'
   dialogueDeliveryType: -> _.propertyValue @options, 'dialogueDeliveryType'

@@ -14,7 +14,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
   
   @initialize()
   
-  @illustrationHeight: -> 240
+  @illustration: -> height: 240
 
   @canHandleMemory: (memory) ->
     memory.journalEntry?
@@ -42,7 +42,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
   @createIntroDescriptionScript: (memory, people, nextNode, nodeOptions) ->
     # Don't include the author in people since they will already be mentioned.
-    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
     people = _.without people, author
 
     translationKey = if people.length then 'introDescription' else 'introDescriptionJustAuthor'
@@ -50,7 +50,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
     # Format people into the description. We need to do it here first (instead of letting
     # createDescriptionScript do it) because _are_ should refer to people, not the author.
-    description = LOI.Character.People.formatText description, 'people', people if people.length
+    description = LOI.Character.Agents.formatText description, 'people', people if people.length
 
     # Format entry author into the description.
     description = LOI.Character.formatText description, 'author', author
@@ -58,21 +58,21 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     @_createDescriptionScript people, description, nextNode, nodeOptions
 
   @getPeopleForMemory: (memory) ->
-    people = super
+    people = super arguments...
 
     # Add the author if not already part of the conversation.
-    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
     people.push author unless author in people
 
     people
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @journalEntryAvatar = new LOI.Adventure.Thing.Avatar PAA.Practice.Journal.Entry.Avatar
     
   destroy: ->
-    super
+    super arguments...
 
     @journalEntryAvatar.destroy()
 
@@ -151,15 +151,15 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
       memory._id for memory in entry.memories
 
     # Call super last because Memory Context relies on our computed fields.
-    super
+    super arguments...
 
   onRendered: ->
-    super
+    super arguments...
 
     @$context = @$('.pixelartacademy-pixelboy-apps-journal-journalview-context')
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @journalDesign.stop()
     @entryId.stop()
@@ -167,7 +167,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
   ready: ->
     conditions = [
-      super
+      super arguments...
       @memoryIds()
       @description()
     ]
@@ -175,7 +175,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     _.every conditions
 
   createNewMemory: ->
-    memoryId = super
+    memoryId = super arguments...
 
     PAA.Practice.Journal.Entry.addMemory @entryId(), memoryId
 
@@ -197,12 +197,15 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     else
       "You look at #{possessiveName} journal."
 
-  illustrationHeight: ->
+  illustration: ->
     return unless @isCreated()
     return unless journalDesign = @journalDesign()
+    
+    illustration = super(arguments...) or {}
 
-    # We use a padding of 10.
-    journalDesign.size().height + 20
+    _.extend illustration,
+      # We use a padding of 10.
+      height: journalDesign.size().height + 20
 
   onScroll: (scrollTop) ->
     return unless @isRendered()
@@ -211,7 +214,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
   onCommandWhileAdvertised: (commandResponse) ->
     return unless memory = LOI.Memory.documents.findOne @memoryId()
-    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
     
     # Looking at the entry enters into the context of the entry.
     action = => LOI.adventure.enterContext @

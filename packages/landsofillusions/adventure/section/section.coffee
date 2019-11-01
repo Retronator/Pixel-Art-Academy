@@ -31,7 +31,7 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     _.every sectionsFinished
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @chapter = @options.parent if @options?.parent instanceof LOI.Adventure.Chapter
 
@@ -65,7 +65,7 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
         @scenes scenes
 
   destroy: ->
-    super
+    super arguments...
 
     scene.destroy() for scene in @scenes()
 
@@ -100,7 +100,7 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     
     # Section is ready when it has determined its active status.
     conditions = _.flattenDeep [
-      super
+      super arguments...
       activeWasDetermined
     ]
 

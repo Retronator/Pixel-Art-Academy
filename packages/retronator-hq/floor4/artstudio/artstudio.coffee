@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -25,7 +24,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton
@@ -33,7 +32,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
       floor: 4
 
   things: -> [
-    HQ.Actors.Alexandra
+    @constructor.Alexandra
     @constructor.Artworks
     @elevatorButton
   ]

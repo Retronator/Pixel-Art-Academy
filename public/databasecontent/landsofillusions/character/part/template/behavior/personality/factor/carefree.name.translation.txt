@@ -1,0 +1,3 @@
+en: Carefree
+
+{"_id":"7PDFkZzKqWCTxLbcp","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Carefree","quality":0,"best":{"text":"Carefree","quality":0,"languageRegion":"en"}},"best":{"text":"Carefree","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038935026}}

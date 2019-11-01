@@ -1,0 +1,91 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.CoordinatorAddress.MeetingSpace
+
+## Start
+
+coordinator: Alright, let's have a quick first meeting.
+
+> Everyone sits down in a circle.
+
+coordinator: 
+  I know you got to know each other a bit already, but just to make sure we all know each other's names, let's do a round of introductions.
+  Just say your name and if you want a fun fact about yourself.
+  Why don't we start with you, _npc1_.
+  
+npc1:
+  Hi, like _coordinator_ said, my name is _npc1_.
+  I just graduated from UC Berkeley, so I'm looking for what to do next in life. Going to Retropolis seemed like a great choice since I love to do art, but I don't want to get involved with the business side of things. `_studyGroup.npc1.name is 'Ty'`
+  I come from India, but my family moved to the US when I was a teenager. At home we had a console called Samurai Electronic TV Game System, and only when I got to the States I discovered it was a clone of the NES. `_studyGroup.npc1.name is 'Saanvi'`
+  I am a graphic designer. I did pixel art back in the 90s and I want to get back to it. `_studyGroup.npc1.name is 'Mae'`
+
+<!-- Agents dynamic introductions -->
+
+## AgentsIntroduction
+
+> Introductions continue around the circle.
+
+### AgentsIntroduction
+
+-> [End]
+
+## DefaultIntroduction
+
+pc: Hi! I'm _pc_.
+
+### DefaultIntroductionEnd
+
+-> [end]
+  
+<!-- Player introduction -->
+
+## PlayerIntroduction
+
+> The turn comes to _char_ to introduce _themselves_.
+
+> You can use the ![say](say "something") command followed by quotation marks to instruct your character to say something.
+
+> Note that other players will be able to read and respond to what your character says this way.
+
+> Give it a try now to introduce _char_ to the group.
+
+### PlayerIntroduction
+
+-> [End]
+
+## PlayerIntroductionEnd
+
+> _coordinator_ smiles at _char_ and continues around the circle.
+
+## SecondNPCIntroduction
+
+coordinator:
+  And last we have …
+  
+npc2:
+  Hello everyone! I'm _npc2_ and I come from Russia. I here hope to be accepted to the Academy and do art for living. Apologize in advance for my English. `_studyGroup.npc2.name is 'Ace'`
+  Hey, I'm _npc2_. I love all kinds of art, movies, music, dancing … If anyone is going to a party, let me know! `_studyGroup.npc2.name is 'Lisa'`
+  Hi, I'm _npc2_. I love building things. I have a huge collection of LEGOs. Probably way too many LEGOs. `_studyGroup.npc2.name is 'Jaxx'`
+
+> _coordinator_ smiles at _npc2_.
+
+coordinator: 
+  We understand you great, no worries. `_studyGroup.npc2.name is 'Ace'`
+  Sounds good, we will. `_studyGroup.npc2.name is 'Lisa'`
+  Well, there's no such thing as too many LEGOs. `_studyGroup.npc2.name is 'Jaxx'`
+  
+coordinator:
+  Alright, that's everyone for now. We might have a couple more students joining later on.
+  It's important to know you're all at different stages in your admission week, so there's no need to compare your progress with others.
+  We're just here to share what we're working on and help each other.
+  That's all for today. Every day you can come here and ![hang out](hang out) to find out how everyone is doing.
+  You can ask me any specific questions about the admission process as well.
+  Otherwise I'll see you tomorrow! Good night!
+
+> The meeting ends and everyone gets on with their day.
+
+## MeetingEnd
+
+### MeetingEnd
+
+-> [End]
+
+## End

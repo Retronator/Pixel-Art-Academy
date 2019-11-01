@@ -10,14 +10,14 @@ BlockEmbed = Quill.import 'blots/block/embed'
 
 class Entry.Object extends AM.Component
   constructor: (@node, @_initialValue) ->
-    super
+    super arguments...
     
     @entryComponent = new ReactiveField null, (a, b) => a is b
 
     console.log "Constructed component", @ if Entry.debug
     
   onCreated: ->
-    super
+    super arguments...
 
     @value = new ReactiveField @_initialValue
     @formats = new ReactiveField {}
@@ -31,7 +31,7 @@ class Entry.Object extends AM.Component
     console.log "Created component", @ if Entry.debug
 
   onRendered: ->
-    super
+    super arguments...
     
     # Reactively update data attributes.
     @autorun (computation) =>
@@ -63,7 +63,7 @@ class Entry.Object extends AM.Component
 
         # Create node and component and link them together. We need to use the provided node and
         # not a temporary one since otherwise we won't be able to detect events inside the component.
-        node = super
+        node = super arguments...
         node.setAttribute 'contenteditable', false
 
         component = new parent node, value

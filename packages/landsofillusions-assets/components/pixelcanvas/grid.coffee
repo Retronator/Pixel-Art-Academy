@@ -1,9 +1,11 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas.Grid
-  constructor: (@pixelCanvas, @invertColor) ->
+  constructor: (@pixelCanvas, @invertColor, @gridEnabled) ->
 
   drawToContext: (context) ->
+    return if @gridEnabled and not @gridEnabled()
+    
     camera = @pixelCanvas.camera()
     scale = camera.scale()
     effectiveScale = camera.effectiveScale()
@@ -16,10 +18,10 @@ class LOI.Assets.Components.PixelCanvas.Grid
     return unless gridOpacity > 0
 
     if @invertColor?()
-      context.strokeStyle = "rgba(255,255,255,#{gridOpacity * 3})"
+      context.strokeStyle = "rgba(230,230,230,#{gridOpacity * 3})"
 
     else
-      context.strokeStyle = "rgba(0,0,0,#{gridOpacity * 2})"
+      context.strokeStyle = "rgba(25,25,25,#{gridOpacity * 2})"
 
     context.lineWidth = 1 / effectiveScale
     context.beginPath()

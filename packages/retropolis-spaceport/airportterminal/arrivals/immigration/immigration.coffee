@@ -22,9 +22,8 @@ class RS.AirportTerminal.Immigration extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
+    super arguments...
     @announcer = new RS.Items.Announcer
-
-    super
 
   things: -> [
     RS.AirportTerminal.Immigration.Terminal
@@ -53,4 +52,4 @@ class RS.AirportTerminal.Immigration extends LOI.Adventure.Location
       @startScript label: "TerminalAvailable"
 
   cleanup: ->
-    @_terminalAvailableAutorun.stop()
+    @_terminalAvailableAutorun?.stop()

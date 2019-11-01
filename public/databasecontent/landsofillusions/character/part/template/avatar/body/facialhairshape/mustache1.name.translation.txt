@@ -1,0 +1,3 @@
+en: Mustache 1
+
+{"_id":"pKyzSHYxoCYjpjB8a","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Mustache 1","quality":0,"best":{"text":"Mustache 1","quality":0,"languageRegion":"en"}},"best":{"text":"Mustache 1","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802532898}}

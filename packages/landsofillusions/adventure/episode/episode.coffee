@@ -10,7 +10,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     @_episodeClassesById[id]
 
   @initialize: ->
-    super
+    super arguments...
 
     @_episodeClassesById[@id()] = @
 
@@ -22,7 +22,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
   @startSection: -> throw new AE.NotImplementedException
 
   constructor: ->
-    super
+    super arguments...
 
     startSectionClass = @constructor.startSection()
     @startSection = new startSectionClass
@@ -44,7 +44,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
       new sceneClass parent: @
 
   destroy: ->
-    super
+    super arguments...
 
     chapter.destroy() for chapter in @chapters
 
@@ -64,7 +64,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     return unless currentChapters = @currentChapters()
 
     conditions = _.flattenDeep [
-      super
+      super arguments...
       chapter.ready() for chapter in currentChapters
     ]
 

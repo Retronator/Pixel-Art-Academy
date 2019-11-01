@@ -7,7 +7,7 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.Sprite'
 
   onCreated: ->
-    super
+    super arguments...
 
     getSpriteIdLocation = =>
       property = @data()
@@ -17,18 +17,25 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
       spriteIdLocation = getSpriteIdLocation()
       spriteIdLocation()
 
-    @spriteList = new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Sprite
-      getAssetId: @spriteId
-      setAssetId: (spriteId) =>
-        # Set the new sprite.
-        spriteIdLocation = getSpriteIdLocation()
-        spriteIdLocation spriteId
+    # Only administrators can change sprites.
+    if Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
+      @openDialog = new @constructor.OpenDialog
+        documents: LOI.Assets.Sprite.documents
+        multipleSelect: false
+        close: =>
+          # Close the selection UI.
+          @openDialogVisible false
 
-        # Close the selection UI.
-        @showSpriteList false
+        setSpriteId: (spriteId) =>
+          # Set the new sprite.
+          spriteIdLocation = getSpriteIdLocation()
+          spriteIdLocation spriteId
 
-    @showSpriteList = new ReactiveField false
+        setRot8Sprites: (path) =>
+          property = @data()
+          property.options.parent.setRot8Sprites path
+
+    @openDialogVisible = new ReactiveField false
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
 
@@ -36,21 +43,23 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
       spriteId: @spriteId
       lightDirection: @lightDirection
 
-  spriteListVisibleClass: ->
-    'visible' if @showSpriteList()
-
   showSpritePreview: ->
     @spriteId()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .choose-sprite-button': @onClickChooseSpriteButton
       'click .sprite-preview': @onClickSpritePreview
       'mousemove .sprite-preview': @onMouseMoveSpritePreview
       'mouseleave .sprite-preview': @onMouseLeaveSpritePreview
 
   onClickChooseSpriteButton: (event) ->
-    @showSpriteList not @showSpriteList()
+    @openDialogVisible true
+
+    # After the file manager renders, select the sprite.
+    if selectedSprite = LOI.Assets.Sprite.documents.findOne @spriteId()
+      Tracker.afterFlush =>
+        @openDialog.fileManager.selectItem selectedSprite.name
 
   onClickSpritePreview: (event) ->
     window.open AB.Router.createUrl 'LandsOfIllusions.Assets.SpriteEditor', spriteId: @spriteId()

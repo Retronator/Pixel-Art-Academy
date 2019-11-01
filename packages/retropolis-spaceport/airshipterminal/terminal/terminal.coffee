@@ -19,7 +19,7 @@ class RS.AirshipTerminal.Terminal extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
     RS.AirshipTerminal.Terminal.RoutesMap

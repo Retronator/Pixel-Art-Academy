@@ -1,0 +1,3 @@
+en-US: Top quiff up front
+
+{"_id":"hCvcdvH8vbTMt74BG","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560771217213},"translations":{"en":{"us":{"text":"Top quiff up front","quality":0},"best":{"text":"Top quiff up front","quality":0,"languageRegion":"en-US"}},"best":{"text":"Top quiff up front","quality":0,"languageRegion":"en-US"}}}

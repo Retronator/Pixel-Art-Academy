@@ -2,88 +2,153 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.Renderer
   constructor: (@options, initialize) ->
-    super
+    super arguments...
 
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    # Shape renderer prepares all sprite directions and draws the one needed by the engine.
-    @frontSpriteData = new ComputedField =>
-      return unless spriteId = @options.frontSpriteId()
+    @spriteDataInfo = {}
+    @spriteData = {}
+    @sourceLandmarks = {}
+    @mappedSpriteData = {}
+    @sprite = {}
+    @debugDelaunay = {}
 
-      LOI.Assets.Sprite.getFromCache spriteId
+    for side in @options.renderingSides
+      do (side) =>
+        @debugDelaunay[side] = new ReactiveField null
 
-    @frontSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @frontSpriteData
-      materialsData: @options.materialsData
-      flippedHorizontal: @options.flippedHorizontal
+        # Sprites in flipped renderers need to come from the other side.
+        flipped = @options.region?.id.indexOf('Right') >= 0
+        sourceSide = if flipped then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
-    @activeSprite = new ComputedField =>
-      @frontSprite
+        @spriteDataInfo[side] = new ComputedField =>
+          # Don't start loading until the cache is ready.
+          return unless @options.useDatabaseSprites or LOI.Assets.Sprite.cacheReady()
 
-    @translation = new ComputedField =>
-      # Landmarks source provides landmarks we try to map to (our targets).
-      targetLandmarks = @options.landmarksSource?.landmarks()
+          spriteId = @options["#{sourceSide}SpriteId"]()
 
-      # Source landmark is the data set directly in the sprite.
-      # We try to map from sprite (source) to provided landmarks (target).
-      source = x: 0, y: 0
-      target = x: 0, y: 0
+          # If we didn't find a sprite for this side, we assume we should mirror the other side.
+          unless spriteId
+            mirrorSide = LOI.Engine.RenderingSides.mirrorSides[sourceSide]
+            spriteId = @options["#{mirrorSide}SpriteId"]()
+            flipped = not flipped
 
-      # Translation in a mapped sprite is calculated so that sprite's landmarks map onto the provided ones.
-      sprite = @activeSprite()
-      spriteData = sprite.options.spriteData()
+          return unless spriteId
 
-      if spriteData?.landmarks and targetLandmarks
-        for spriteLandmark in spriteData.landmarks
-          # See if we have this landmark in our source.
-          if targetLandmark = targetLandmarks[spriteLandmark.name]
-            target = targetLandmark
-            source.x = spriteLandmark.x or 0
-            source.y = spriteLandmark.y or 0
+          if @options.useDatabaseSprites
+            spriteData = LOI.Assets.Sprite.documents.findOne spriteId
 
-            # For now we just attach to the first matched landmark.
-            # TODO: Match to multiple landmarks and calculate necessary scaling to achieve perfect map.
-            break
+          else
+            spriteData = LOI.Assets.Sprite.getFromCache spriteId
 
-      x: target.x - source.x
-      y: target.y - source.y
+          {spriteData, flipped}
+        ,
+          true
+
+        @spriteData[side] = new ComputedField =>
+          @spriteDataInfo[side]()?.spriteData
+        ,
+          true
+
+        @sourceLandmarks[side] = new ComputedField =>
+          return unless spriteDataInfo = @spriteDataInfo[side]()
+          return unless spriteData = spriteDataInfo.spriteData
+
+          # If we're flipped, we want to map onto flipped landmarks.
+          if spriteDataInfo.flipped and spriteData.landmarks
+            for landmark in spriteData.landmarks
+              _.extend {}, landmark,
+                name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
+
+          else
+            spriteData.landmarks
+        ,
+          true
+      
+        @mappedSpriteData[side] = new ComputedField =>
+          return unless spriteDataInfo = @spriteDataInfo[side]()
+          return unless spriteData = spriteDataInfo.spriteData
+
+          # Landmarks source provides landmarks we try to map to (our targets).
+          targetLandmarks = @options.landmarksSource?()?.landmarks[side]()
+
+          # Filter down to the region this shape is mapped onto.
+          if @options.region
+            landmarksRegion = LOI.HumanAvatar.Regions[@options.region.getLandmarksRegionId()]
+
+            targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
+              landmarksRegion.matchRegion targetLandmark.regionId
+
+          sourceLandmarks = @sourceLandmarks[side]()
+
+          @_mapSprite side, spriteData, sourceLandmarks, targetLandmarks, spriteDataInfo.flipped
+
+        @sprite[side] = new LOI.Assets.Engine.Sprite
+          spriteData: @mappedSpriteData[side]
+          materialsData: @options.materialsData
+          flippedHorizontal: new ComputedField =>
+            @spriteDataInfo[side]()?.flipped
+          ,
+            true
+
+        @landmarks[side] = => []
+
+        @usedLandmarks[side] = new ComputedField =>
+          return unless landmarks = @sourceLandmarks[side]()
+          landmark.name for landmark in landmarks
+        ,
+          true
+
+        @usedLandmarksCenter[side] = new ComputedField =>
+          @_usedLandmarksCenter side
+        ,
+          true
 
     @_ready = new ComputedField =>
-      # If we have no data, in this part, there's nothing to do.
-      return true unless @options.part.options.dataLocation()
+      # Wait until the cache is ready.
+      return unless @options.useDatabaseSprites or LOI.Assets.Sprite.cacheReady()
 
-      # Shape is ready when the sprite is ready.
-      @activeSprite().ready()
+      for side in @options.renderingSides
+        # If we have no data in this part for this side, there's nothing to do.
+        continue unless @spriteDataInfo[side]()
+
+        # Shape is ready when the sprite is ready.
+        return false unless @sprite[side].ready()
+
+      true
+
+  destroy: ->
+    super arguments...
+
+    for side in @options.renderingSides
+      @spriteDataInfo[side].stop()
+      @spriteData[side].stop()
+      @sourceLandmarks[side].stop()
+      @mappedSpriteData[side].stop()
+      @sprite[side].options.flippedHorizontal.stop()
+      @usedLandmarks[side].stop()
+      @usedLandmarksCenter[side].stop()
+
+    @_ready.stop()
 
   ready: ->
     @_ready()
-    
-  landmarks: ->
-    # Provide active sprite's landmarks, but translate them to the origin.
-    return unless spriteData = @activeSprite().options.spriteData()
-
-    # If there are no landmarks, there's nothing to do.
-    return unless spriteData.landmarks
-
-    translation = @translation()
-
-    landmarks = {}
-
-    for landmark in spriteData.landmarks
-      landmarks[landmark.name] = _.extend {}, landmark,
-        x: landmark.x + translation.x
-        y: landmark.y + translation.y
-
-    landmarks
 
   drawToContext: (context, options = {}) ->
-    sprite = @activeSprite()
+    super arguments...
+
+    return unless @_shouldDraw(options) and @ready() and @_renderingConditionsSatisfied()
 
     context.save()
 
-    translation = @translation()
-    context.translate translation.x, translation.y
+    if @options.centerOnUsedLandmarks
+      center = @usedLandmarksCenter[options.side]()
+      context.translate -Math.round(center.x), -Math.round(center.y)
 
-    sprite.drawToContext context, options
+    else if @options.renderTexture
+      context.setTransform 1, 0, 0, 1, options.textureOffset, 0
+
+    @sprite[options.side].drawToContext context, options
+
     context.restore()

@@ -1,0 +1,3 @@
+en-US: Pants straight thighs
+
+{"_id":"EfZF94unykFD9w8tP","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants straight thighs","quality":0},"best":{"text":"Pants straight thighs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants straight thighs","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564525930009}}

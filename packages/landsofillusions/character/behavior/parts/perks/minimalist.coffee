@@ -11,7 +11,7 @@ class LOI.Character.Behavior.Perk.Minimalist extends LOI.Character.Behavior.Perk
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     idealClutter = behaviorPart.properties.environment.part.properties.clutter.part.properties.ideal.options.dataLocation()
     idealClutter < 3

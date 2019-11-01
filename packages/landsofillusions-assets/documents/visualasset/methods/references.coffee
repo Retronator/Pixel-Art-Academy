@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 LOI.Assets.VisualAsset.addReferenceByUrl.method (assetClassName, assetId, characterId, url, position, scale, displayed) ->
   check assetId, Match.DocumentId
   check assetClassName, String
-  check characterId, Match.DocumentId
+  check characterId, Match.OptionalOrNull Match.DocumentId
   check url, String
   check position, Match.OptionalOrNull
     x: Number
@@ -15,7 +15,7 @@ LOI.Assets.VisualAsset.addReferenceByUrl.method (assetClassName, assetId, charac
   # Authorize action.
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
-  LOI.Assets.VisualAsset._authorizeAssetAction asset
+  LOI.Assets.Asset._authorizeAssetAction asset
 
   # Create the image document.
   imageId = LOI.Assets.Image.insert characterId, url
@@ -53,6 +53,11 @@ LOI.Assets.VisualAsset.updateReferenceDisplayed.method (assetClassName, assetId,
 
   updateReference assetClassName, assetId, imageId, 'displayed', displayed
 
+LOI.Assets.VisualAsset.updateReferenceDisplayMode.method (assetClassName, assetId, imageId, displayMode) ->
+  check displayMode, Match.Enum LOI.Assets.VisualAsset.ReferenceDisplayModes
+
+  updateReference assetClassName, assetId, imageId, 'displayMode', displayMode
+
 updateReference = (assetClassName, assetId, imageId, key, value) ->
   check assetId, Match.DocumentId
   check assetClassName, String
@@ -61,7 +66,7 @@ updateReference = (assetClassName, assetId, imageId, key, value) ->
   # Authorize action.
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
-  LOI.Assets.VisualAsset._authorizeAssetAction asset
+  LOI.Assets.Asset._authorizeAssetAction asset
 
   referenceIndex = _.findIndex asset.references, (asset) -> asset.image._id is imageId
   throw new AE.ArgumentException "Image is not one of the references." if referenceIndex is -1
@@ -78,7 +83,7 @@ LOI.Assets.VisualAsset.reorderReferenceToTop.method (assetClassName, assetId, im
   # Authorize action.
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
-  LOI.Assets.VisualAsset._authorizeAssetAction asset
+  LOI.Assets.Asset._authorizeAssetAction asset
 
   referenceIndex = _.findIndex asset.references, (reference) -> reference.image._id is imageId
   throw new AE.ArgumentException "Image is not one of the references." if referenceIndex is -1

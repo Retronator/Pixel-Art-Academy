@@ -23,7 +23,7 @@ class LOI.Memory.Action extends AM.Document
 
   # Override register to do action initialization as well.
   @register: ->
-    super
+    super arguments...
 
     translationNamespace = @type
 
@@ -35,12 +35,19 @@ class LOI.Memory.Action extends AM.Document
         for translationKey of @translationKeys
           defaultText = _.propertyValue @, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
-  
+
+    # Prepare any extra translations.
+    AB.Helpers.Translations.initialize @type, @translations() if @translations
+
+    # On the client also instantiate a singleton for retrieving them.
+    if Meteor.isClient
+      @_translations = new AB.Helpers.Translations @type
+
   @Meta
     name: @id()
     fields: =>
-      memory: @ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
-      character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
+      memory: Document.ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
+      character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   @type: @id()
   @register @type, @
@@ -52,6 +59,7 @@ class LOI.Memory.Action extends AM.Document
     @contentPatterns[type] = pattern
 
   @isMemorable: -> false # Override to persist actions of this type even when used outside of memories.
+  @retainDuration: -> 0 # Override with number of seconds actions of this type are retained when not memorable.
 
   # Methods
 
@@ -70,6 +78,11 @@ class LOI.Memory.Action extends AM.Document
     startDescription: 'startDescription'
     activeDescription: 'activeDescription'
     endDescription: 'endDescription'
+    
+  constructor: ->
+    super arguments...
+    
+    @translations = @constructor._translations
 
   startDescription: -> @_translateIfAvailable @constructor.translationKeys.startDescription
   activeDescription: -> @_translateIfAvailable @constructor.translationKeys.activeDescription

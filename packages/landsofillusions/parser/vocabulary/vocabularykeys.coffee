@@ -55,6 +55,10 @@ LOI.Parser.Vocabulary.Keys =
     HangOut: ''
     Cheat: ''
     Help: ''
+    Create: ''
+    Write: ''
+    WriteOn: ''
+    Continue: ''
 
     Be:
       Present:
@@ -82,6 +86,10 @@ LOI.Parser.Vocabulary.Keys =
       Masculine: ''
       Neutral: ''
     Possessive:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Reflexive:
       Feminine: ''
       Masculine: ''
       Neutral: ''

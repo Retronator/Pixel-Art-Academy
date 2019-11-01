@@ -16,10 +16,10 @@ Npm.depends({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:landsofillusions-assets');
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
-  api.use('retronator:pixelartacademy-cast');
   api.use('retronator:pixelartdatabase');
 
   api.export('Retronator');
@@ -33,13 +33,13 @@ Package.onUse(function(api) {
   // Actors
 
   api.addFile('actors/actors');
-  api.addFile('actors/operator');
-  api.addThing('actors/aeronaut');
-  api.addFile('actors/burra');
-  api.addThing('actors/corinne');
-  api.addThing('actors/retro');
-  api.addFile('actors/shelley');
-  api.addThing('actors/alexandra');
+  api.addFile('actors/operator..');
+  api.addFile('actors/reuben..');
+  api.addFile('actors/burra..');
+  api.addThing('actors/corinne..');
+  api.addThing('actors/retro..');
+  api.addThing('actors/shelley..');
+  api.addFile('actors/alexandra..');
 
   // Items
 
@@ -88,6 +88,7 @@ Package.onUse(function(api) {
   api.addScript('floor1/cafe/burra-character');
 
   api.addFile('floor1/coworking..');
+  api.addThing('floor1/coworking/reuben');
 
   api.addThing('floor2/store..');
   api.addFile('floor2/store/retro');
@@ -123,7 +124,7 @@ Package.onUse(function(api) {
 
   api.addThing('floor4/artstudio..');
   api.addServerFile('floor4/artstudio/initialize-server');
-
+  api.addThing('floor4/artstudio/alexandra');
   api.addFile('floor4/artstudio/artworks');
 
   api.addComponent('floor4/artstudio/contextwithartworks');

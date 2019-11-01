@@ -7,18 +7,18 @@ class LOI.Assets.Components.Toolbox extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.Toolbox'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @_storedTool = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
 
     $(document).on 'keydown.landsofillusions-assets-components-toolbox', (event) => @onKeyDown event
     $(document).on 'keyup.landsofillusions-assets-components-toolbox', (event) => @onKeyUp event
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off '.landsofillusions-assets-components-toolbox'
 
@@ -58,7 +58,7 @@ class LOI.Assets.Components.Toolbox extends AM.Component
     activeTool.onDeactivated?()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .tool-button': @onClickToolButton
 
   onClickToolButton: (event) ->
@@ -76,7 +76,7 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
     # Find if the pressed key matches any of the tools' shortcuts.
     keyboardState = AC.Keyboard.getState()
-    commandOrCtrlDown = keyboardState.isCommandOrCtrlDown()
+    commandOrCtrlDown = keyboardState.isCommandOrControlDown()
     shiftDown = keyboardState.isKeyDown AC.Keys.shift
 
     targetTool = _.find @options.tools(), (tool) =>

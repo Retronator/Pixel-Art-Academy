@@ -13,7 +13,7 @@ class RS.Pages.Admin.AuthorizedPayments extends AM.Component
   @chargeAllPayments: new AB.Method name: "#{@id()}.chargeAllPayments"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .email-all': @onClickEmailAll
       'click .charge-all': @onClickChargeAll
 

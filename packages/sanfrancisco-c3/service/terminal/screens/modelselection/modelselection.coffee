@@ -7,16 +7,16 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
   @register 'SanFrancisco.C3.Service.Terminal.ModelSelection'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
     
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to pre-made characters.
-    LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
+    LOI.Character.PreMadeCharacter.all.subscribe @
 
     @preMadeCharacters = new ComputedField =>
-      LOI.Construct.Loading.PreMadeCharacter.documents.find().fetch()
+      LOI.Character.PreMadeCharacter.documents.find().fetch()
 
     @characters = new ComputedField =>
       LOI.Character.getInstance preMadeCharacter.character._id for preMadeCharacter in @preMadeCharacters()
@@ -32,6 +32,9 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
     @cloningCharacter = new ReactiveField false
 
     AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk', subscribeProvider: @
+
+    @_initialPreviewViewingAngle = -Math.PI / 4
+    @previewViewingAngle = new ReactiveField @_initialPreviewViewingAngle
 
   backButtonCallback: ->
     # We return to main menu.
@@ -55,8 +58,15 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
   perks: ->
     @currentCharacter()?.behavior.part.properties.perks.toString() or "None"
 
+  avatarPreviewOptions: ->
+    rotatable: true
+    viewingAngle: @previewViewingAngle
+    originOffset:
+      x: -3
+      y: 8
+
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .clone-character-button': @onClickCloneCharacterButton
       'click .cancel-button': @onClickCancelButton
       'click .previous-button': @onClickPreviousButton
@@ -69,7 +79,7 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
 
   onClickConfirmCloneButton: (event) ->
     name = @$('.name-input').val()
-    LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
+    LOI.Character.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
     @_returnToMenu()
 
     @terminal.createdCharacter = true
@@ -84,13 +94,18 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
     newIndex = @currentPreMadeCharacterIndex() - 1
     newIndex = @preMadeCharacters().length - 1 if newIndex < 0
 
-    @currentPreMadeCharacterIndex newIndex
+    @_selectCharacter newIndex
 
   onClickNextButton: (event) ->
     newIndex = @currentPreMadeCharacterIndex() + 1
     newIndex = 0 if newIndex >= @preMadeCharacters().length
 
-    @currentPreMadeCharacterIndex newIndex
+    @_selectCharacter newIndex
+
+  _selectCharacter: (index) ->
+    # Reset viewing angle.
+    @previewViewingAngle @_initialPreviewViewingAngle
+    @currentPreMadeCharacterIndex index
 
   _returnToMenu: ->
     @terminal.switchToScreen @terminal.screens.mainMenu

@@ -7,10 +7,10 @@ class Studio.Computer.Email extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.Email'
 
   constructor: (@computer) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @inboxLocation = new LOI.Emails.Inbox()
 
@@ -42,7 +42,7 @@ class Studio.Computer.Email extends AM.Component
     'read' if email.wasRead()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .email': @onClickEmail
 
   onClickEmail: (event) ->

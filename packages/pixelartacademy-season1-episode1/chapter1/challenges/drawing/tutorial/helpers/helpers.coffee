@@ -16,7 +16,7 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
   # Methods
 
   constructor: ->
-    super
+    super arguments...
 
     @assets = new ComputedField =>
       assets = []

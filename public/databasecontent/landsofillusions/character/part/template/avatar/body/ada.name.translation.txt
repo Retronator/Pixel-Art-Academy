@@ -1,0 +1,3 @@
+en-US: Ada
+
+{"_id":"z4BxCMZ9X5SNyCeSZ","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1566220772013},"translations":{"en":{"us":{"text":"Ada","quality":0},"best":{"text":"Ada","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ada","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en-US: Pants baggy right foot
+
+{"_id":"xNxawDptaQvFJGXFk","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants baggy right foot","quality":0},"best":{"text":"Pants baggy right foot","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants baggy right foot","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564497121057}}

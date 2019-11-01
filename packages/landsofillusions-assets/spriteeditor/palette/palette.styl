@@ -1,0 +1,29 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-spriteeditor-palette
+  display flex
+  flex-direction column
+
+  .ramp
+    display flex
+    flex-shrink 0
+
+    .color
+      width 7rem
+      height 7rem
+      position relative
+      cursor pointer
+
+      &::after
+        content ''
+        display none
+        position absolute
+        top -1rem
+        bottom -1rem
+        left -1rem
+        right -1rem
+        z-index 1
+        border 1rem solid atariGrey(4)
+
+      &.active::after
+        display block

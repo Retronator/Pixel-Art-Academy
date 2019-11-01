@@ -5,7 +5,7 @@ class PADB.PixelDailies.Pages.Admin.Scripts extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .process-tweet-history': => Meteor.call 'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.processTweetHistory'
       'click .archive-all-submissions': => Meteor.call 'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.archiveAllSubmissions'
       'click .reprocess-submissions': => Meteor.call 'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.reprocessSubmissions'

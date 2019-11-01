@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 RS = Retronator.Store
 RA = Retronator.Accounts
 
@@ -24,7 +23,7 @@ class HQ.Store extends LOI.Adventure.Location
     "
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       @RetroListener
     ]
 
@@ -36,7 +35,7 @@ class HQ.Store extends LOI.Adventure.Location
     LOI.adventure.director.startScript script, label: 'PixelArt'
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton
@@ -54,7 +53,7 @@ class HQ.Store extends LOI.Adventure.Location
     RS.Payment.forCurrentUser.subscribe @
 
   destroy: ->
-    super
+    super arguments...
     
     @shelves.destroy()
     @retro.destroy()

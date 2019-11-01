@@ -21,6 +21,7 @@ Package.onUse(function(api) {
 
   api.addComponent('monthview..');
   api.addComponent('monthview/activities/journalentries..');
+  api.addComponent('monthview/activities/tasks..');
 
   api.addComponent('goalsettings..');
 });

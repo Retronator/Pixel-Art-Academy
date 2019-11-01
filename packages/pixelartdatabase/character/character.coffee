@@ -9,4 +9,4 @@ class LOI.Character extends LOI.Character
     name: 'LandsOfIllusions.Character'
     replaceParent: true
     fields: =>
-      artist: @ReferenceField PADB.Artist, ['publicName'] , true, 'characters', ['name']
+      artist: Document.ReferenceField PADB.Artist, ['publicName'] , true, 'characters', ['name']

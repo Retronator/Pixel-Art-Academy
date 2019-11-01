@@ -23,10 +23,10 @@ class C3.Design extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   destroy: ->
-    super
+    super arguments...
 
   exits: ->
     "#{Vocabulary.Keys.Directions.South}": C3.Lobby

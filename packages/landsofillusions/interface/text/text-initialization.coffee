@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 
 class LOI.Interface.Text extends LOI.Interface.Text
   onCreated: ->
-    super
+    super arguments...
 
     console.log "Text interface is being created." if LOI.debug
 
@@ -20,6 +20,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       minAspectRatio: 1 / 2
       maxAspectRatio: 2
       debug: false
+      
+    @illustrationSize = new AE.Rectangle
 
     @narrative = new LOI.Interface.Components.Narrative
       textInterface: @
@@ -56,17 +58,22 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @initializeHandlers()
 
   onRendered: ->
-    super
+    super arguments...
 
     console.log "Rendering text interface." if LOI.debug
 
     @initializeScrolling()
 
-    # Resize on viewport, fullscreen, and illustration height changes.
+    # Resize on viewport, fullscreen, and illustration changes.
+    @_illustration = new ComputedField =>
+      LOI.adventure.currentSituation()?.illustration()
+    ,
+      EJSON.equals
+
     @autorun (computation) =>
       @display.viewport()
       AM.Window.isFullscreen()
-      LOI.adventure.currentSituation()?.illustrationHeight()
+      @_illustration()
 
       Tracker.afterFlush =>
         @resize()
@@ -105,8 +112,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
       ,
         hintDelayTime * 1000
 
+    # Prepare location loading cover.
+    @$locationLoadingCover = @$('.location .loading-cover')
+    @$locationLoadingCover.css(height: '100%')
+    @$locationLoadingCaption = @$locationLoadingCover.find('.caption')
+
   onDestroyed: ->
-    super
+    super arguments...
 
     console.log "Destroying text interface." if LOI.debug
 

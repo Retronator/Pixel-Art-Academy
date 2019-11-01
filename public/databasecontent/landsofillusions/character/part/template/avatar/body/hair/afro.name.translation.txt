@@ -1,0 +1,3 @@
+en: Afro
+
+{"_id":"kwAdEewfHffHane24","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Afro","quality":0,"best":{"text":"Afro","quality":0,"languageRegion":"en"}},"best":{"text":"Afro","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1560546967932}}

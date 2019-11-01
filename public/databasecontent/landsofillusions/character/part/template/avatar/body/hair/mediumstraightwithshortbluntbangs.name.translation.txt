@@ -1,0 +1,3 @@
+en-US: Medium straight with short blunt bangs
+
+{"_id":"Jn9LraqHiY3Y86KMa","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560502760385},"translations":{"en":{"us":{"text":"Medium straight with short blunt bangs","quality":0},"best":{"text":"Medium straight with short blunt bangs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Medium straight with short blunt bangs","quality":0,"languageRegion":"en-US"}}}

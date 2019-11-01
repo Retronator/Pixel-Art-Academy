@@ -9,7 +9,7 @@ class LOI.Components.Mixins.Activatable extends AM.Component
     Deactivating: 'Deactivating'
 
   constructor: ->
-    super
+    super arguments...
 
     # An dialog that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the dialog is currently in.

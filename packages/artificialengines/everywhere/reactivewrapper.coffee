@@ -37,7 +37,7 @@ class AE.ReactiveWrapper
     value = new ReactiveVar initialValue, equalsFunc
     updatedDependency = new Tracker.Dependency()
 
-    getterSetter = (newValue) ->
+    reactiveWrapper = (newValue) ->
       if arguments.length > 0
         value.set newValue
         # We return the value as well, but we do not want to register a dependency.
@@ -46,36 +46,35 @@ class AE.ReactiveWrapper
 
       value.get()
 
-    # We mingle the prototype so that getterSetter instanceof ReactiveWrapper is true.
-    if Object.setPrototypeOf
-      Object.setPrototypeOf getterSetter, @constructor::
-    else
-      getterSetter.__proto__ = @constructor.prototype
+    # Allow correct handling of instanceof operator.
+    Object.setPrototypeOf reactiveWrapper, @constructor.prototype
 
-    getterSetter.toString = ->
+    reactiveWrapper.toString = ->
       "ReactiveField{#{@()}}"
 
-    getterSetter.apply = (obj, args) ->
+    reactiveWrapper.apply = (obj, args) ->
       if args?.length > 0
-        getterSetter args[0]
+        reactiveWrapper args[0]
+        
       else
-        getterSetter()
+        reactiveWrapper()
 
-    getterSetter.call = (obj, arg) ->
+    reactiveWrapper.call = (obj, arg) ->
       if arguments.length > 1
-        getterSetter arg
+        reactiveWrapper arg
+        
       else
-        getterSetter()
+        reactiveWrapper()
 
     # Returns the value of the field that will also rerun the enclosing
     # computation every time the object is marked as updated.
-    getterSetter.withUpdates = ->
+    reactiveWrapper.withUpdates = ->
       updatedDependency.depend()
       value.get()
 
     # Triggers recomputation of all computations that depend on the updates of the
     # field's value not set through the setter, such as direct underlying object changes.
-    getterSetter.updated = ->
+    reactiveWrapper.updated = ->
       updatedDependency.changed()
 
-    return getterSetter
+    return reactiveWrapper

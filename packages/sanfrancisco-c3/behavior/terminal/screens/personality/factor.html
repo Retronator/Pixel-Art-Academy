@@ -6,13 +6,13 @@
         <span class="label-name">Template:</span>
         {{#if isEditable}}
           {{#if isOwnPartTemplate}}
-            {{> renderTemplateNameInput partTemplate.name}}
+            {{> renderTemplateNameInput fullPartTemplate.name}}
           {{else}}
             {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
           {{/if}}
         {{else}}
           {{#if partTemplate}}
-            {{> t9n partTemplate.name}}
+            {{> t9n fullPartTemplate.name}}
           {{else}}
             Custom
           {{/if}}
@@ -30,13 +30,27 @@
               {{/if}}
             </button>
             {{#if partTemplate}}
+              {{#if isTemplatePublishable}}
+                <button class="factor-action-button factor-publish-button">Publish</button>
+              {{/if}}
+              {{#if canUpgradeTemplate}}
+                <button class="factor-action-button factor-upgrade-template-button">Upgrade version</button>
+              {{/if}}
+              {{#if canRevertTemplate}}
+                <button class="factor-action-button factor-revert-template-button">Revert template</button>
+              {{/if}}
               {{#if isOwnPartTemplate}}
+                {{#unless isTemplateEditable}}
+                  <button class="factor-action-button factor-modify-template-button">Modify template</button>
+                {{/unless}}
                 <button class="factor-action-button factor-unlink-template-button">Unlink template</button>
               {{else}}
                 <button class="factor-action-button factor-unlink-template-button">Modify</button>
               {{/if}}
             {{else}}
-              <button class="factor-action-button factor-save-as-template-button">Save as template</button>
+              {{#if isAdmin}}
+                <button class="factor-action-button factor-save-as-template-button">Save as template</button>
+              {{/if}}
             {{/if}}
             <button class="factor-action-button factor-reset-button danger-button">Reset</button>
           </div>

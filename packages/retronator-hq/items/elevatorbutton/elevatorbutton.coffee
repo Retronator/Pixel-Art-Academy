@@ -7,6 +7,7 @@ class HQ.Items.ElevatorButton extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Items.ElevatorButton'
   @fullName: -> "elevator button"
   @shortName: -> "button"
+  @descriptiveName: -> "Elevator ![button](press button)."
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: -> "It's the button that calls the elevator."
 
@@ -15,7 +16,7 @@ class HQ.Items.ElevatorButton extends LOI.Adventure.Thing
   @defaultScriptUrl: -> 'retronator_retronator-hq/items/elevatorbutton/elevatorbutton.script'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
   onScriptsLoaded: ->
     button = @options.parent

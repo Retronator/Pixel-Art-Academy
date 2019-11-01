@@ -19,7 +19,7 @@ class C2.Immersion.LandsOfIllusions extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/immersion/scenes/landsofillusions.script'
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
     HQ.Actors.Operator if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.InLandsOfIllusions

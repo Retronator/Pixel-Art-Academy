@@ -29,6 +29,7 @@ RS.Items.CatalogKeys =
       ZXCosmopolis: ''
       PixelChinaMountains: ''
       ArtworkShipping: ''
+    RetronatorBlackKeycard: ''
   Retropolis:
     DayPass: ''
     NightlifePass: ''
@@ -37,6 +38,7 @@ RS.Items.CatalogKeys =
     PatronClubMember: ''
     Investor: ''
     VIP: ''
+    PressPass: ''
   LandsOfIllusions:
     Character:
       Avatar:
@@ -49,6 +51,8 @@ RS.Items.CatalogKeys =
     Patreon:
       PatreonKeycard: ''
       EarlyBirdKeycard: ''
+  Collaborator:
+    AudioEditor: ''
 
   Bundles:
     PixelArtAcademy:

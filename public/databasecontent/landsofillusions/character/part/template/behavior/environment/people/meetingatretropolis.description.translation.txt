@@ -1,0 +1,3 @@
+en: A good friend you made on the Internet is applying to Retropolis Academy of Art with you.
+
+{"_id":"PhWD3f9dQmFadd6ow","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"A good friend you made on the Internet is applying to Retropolis Academy of Art with you.","quality":0,"best":{"text":"A good friend you made on the Internet is applying to Retropolis Academy of Art with you.","quality":0,"languageRegion":"en"}},"best":{"text":"A good friend you made on the Internet is applying to Retropolis Academy of Art with you.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038947199}}

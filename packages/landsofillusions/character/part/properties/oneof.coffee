@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @type = 'oneOf'
 
@@ -14,3 +14,11 @@ class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
       @part = partClass.create
         dataLocation: @options.dataLocation
         parent: @
+
+  destroy: ->
+    super arguments...
+
+    @part.destroy()
+
+  childPartOfType: (typeTemplateOrId) ->
+    @part.childPartOfType typeTemplateOrId

@@ -1,0 +1,3 @@
+en-US: Pants torso high-waist
+
+{"_id":"XiXPr9PGa9oRuFo6F","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565463640564},"translations":{"en":{"us":{"text":"Pants torso high-waist","quality":0},"best":{"text":"Pants torso high-waist","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants torso high-waist","quality":0,"languageRegion":"en-US"}}}

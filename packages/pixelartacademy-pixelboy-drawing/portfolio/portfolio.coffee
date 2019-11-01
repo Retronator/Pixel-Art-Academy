@@ -14,7 +14,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     Settings: 'Settings'
 
   constructor: (@drawing) ->
-    super
+    super arguments...
 
     @sectionHeight = 21
     @initialGroupHeight = 17
@@ -159,12 +159,13 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     'selected' if selectedSoftware is software.value
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .section': @onClickSection
       'click .group-name': @onClickGroupName
       'click': @onClick
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
+      'click .brief': @onClickBrief
       'click .asset': @onClickAsset
       'click .pixel-boy .editor': @onClickPixelBoyEditor
       'click .external .editor': @onClickExternalEditor
@@ -221,7 +222,13 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   onMouseLeaveAsset: (event) ->
     @hoveredAsset null
 
+  onClickBrief: (event) ->
+    @_goToClickedAsset()
+
   onClickAsset: (event) ->
+    @_goToClickedAsset()
+
+  _goToClickedAsset: ->
     assetData = @currentData()
 
     # Set active sprite ID.

@@ -21,7 +21,7 @@ class Retronator.App extends Artificial.Base.App
     AB.Router.addRoute url, @Layouts.AdminAccess, pageClass
     
   constructor: ->
-    super
+    super arguments...
 
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
@@ -35,6 +35,7 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtAcademy.Season1.Episode1.Pages
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies
+    new LOI
     new LOI.Assets
     new LOI.Construct.Pages
     new Retropolis.City

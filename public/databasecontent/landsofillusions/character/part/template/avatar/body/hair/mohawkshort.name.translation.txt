@@ -1,0 +1,3 @@
+en-US: Mohawk short
+
+{"_id":"c4kicXkkpKbaYNXCv","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560721169864},"translations":{"en":{"us":{"text":"Mohawk short","quality":0},"best":{"text":"Mohawk short","quality":0,"languageRegion":"en-US"}},"best":{"text":"Mohawk short","quality":0,"languageRegion":"en-US"}}}

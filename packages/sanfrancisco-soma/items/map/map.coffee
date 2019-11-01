@@ -14,6 +14,7 @@ class Soma.Items.Map extends LOI.Adventure.Item
 
   @fullName: -> "map of San Francisco"
   @shortName: -> "SF map"
+  @descriptiveName: -> "![Map](look at SF map) of San Francisco."
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->

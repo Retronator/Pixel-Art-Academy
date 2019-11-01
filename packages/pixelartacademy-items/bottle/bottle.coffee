@@ -39,7 +39,7 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @drink = new ComputedField =>
       drinkType = @state 'drinkType'

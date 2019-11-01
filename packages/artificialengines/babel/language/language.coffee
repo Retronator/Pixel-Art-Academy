@@ -14,9 +14,9 @@ class AB.Language extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      name: @ReferenceField AB.Translation, [], false
+      name: Document.ReferenceField AB.Translation, [], false
       regions: [
-        region: @ReferenceField AB.Region, ['code']
+        region: Document.ReferenceField AB.Region, ['code']
       ]
 
   @all: @subscription 'all'

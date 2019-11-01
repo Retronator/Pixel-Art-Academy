@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AEt = Artificial.Everything
 AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -6,6 +7,9 @@ LOI = LandsOfIllusions
 Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Adventure.Thing extends AM.Component
+  # Things should support aggregation.
+  _.inherit @, AEt.Item
+
   template: -> 'LandsOfIllusions.Adventure.Thing'
     
   # Static thing properties and methods
@@ -71,6 +75,9 @@ class LOI.Adventure.Thing extends AM.Component
   @getClassForId: (id) ->
     @_thingClassesById[id]
 
+  @getClasses: ->
+    _.values @_thingClassesById
+
   # Start all things with a WIP version.
   @version: -> "0.0.1-#{@wipSuffix}"
 
@@ -103,9 +110,13 @@ class LOI.Adventure.Thing extends AM.Component
 
   @accessRequirement: -> # Override to set an access requirement to use this thing.
 
+  @illustration: ->
+    # Override to provide information about the illustration for this thing. By default there is no illustration data.
+    null
+
   @initialize: ->
     # Store thing class by ID and url.
-    @_thingClassesById[@id()] = @
+    @_thingClassesById[@id()] ?= @
 
     url = @url()
     if url?
@@ -120,15 +131,8 @@ class LOI.Adventure.Thing extends AM.Component
     # Prepare the avatar for this thing.
     LOI.Adventure.Thing.Avatar.initialize @
 
-    # On the server, prepare any extra translations.
-    if Meteor.isServer
-      Document.startup =>
-        return if Meteor.settings.startEmpty
-      
-        translationNamespace = @id()
-
-        for translationKey, defaultText of @_translations()
-          AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
+    # Prepare any extra translations.
+    AB.Helpers.Translations.initialize @id(), @_translations()
 
     # Create static state field.
     @stateAddress = new LOI.StateAddress "things.#{@id()}"
@@ -155,9 +159,13 @@ class LOI.Adventure.Thing extends AM.Component
       parentThing = parent
 
       class @Script extends LOI.Adventure.Script
-        @id: -> parentThing.id()
+        @id: -> parentThing.defaultScriptId?() or parentThing.id()
         @initialize()
-        initialize: -> @options.parent.initializeScript.call @
+        initialize: ->
+          # Make sure listener was not already destroyed while we were loading files.
+          return if @options.listener._destroyed
+
+          @options.parent.initializeScript.call @
 
       @avatars: -> parent.avatars()
       @initialize()
@@ -169,7 +177,8 @@ class LOI.Adventure.Thing extends AM.Component
         LOI.adventure.director.startBackgroundScript @script, options
 
       onScriptsLoaded: ->
-        @script = @scripts[@options.parent.id()]
+        defaultScriptId = @options.parent.constructor.defaultScriptId?() or @options.parent.id()
+        @script = @scripts[defaultScriptId]
         @options.parent.onScriptsLoaded.call @
 
       onCommand: (commandResponse) -> @options.parent.onCommand.call @, commandResponse
@@ -200,6 +209,15 @@ class LOI.Adventure.Thing extends AM.Component
 
           Tracker.nonreactive => callback?()
 
+      startScriptAtLatestCheckpoint: (checkpointLabels) ->
+        for label, index in checkpointLabels
+          # Start at this checkpoint if we haven't reached the next one yet.
+          nextLabel = checkpointLabels[index + 1]
+  
+          unless nextLabel and @script.state nextLabel
+            @startScript {label}
+            return
+
   @createAvatar: ->
     # Note: We fully qualify Avatar (instead of @Avatar) because this gets called from classes that inherit from Thing.
     new LOI.Adventure.Thing.Avatar @
@@ -211,10 +229,10 @@ class LOI.Adventure.Thing extends AM.Component
   # Thing instance
 
   constructor: (@options) ->
-    super
+    super arguments...
 
-    # To ease debugging, we save the ID value as a variable on the instance.
-    @ID = @id()
+    # To improve component persistence (and ease debugging), we save the ID value as _id as well.
+    @_id ?= @id()
 
     @avatar = @createAvatar()
 
@@ -230,27 +248,14 @@ class LOI.Adventure.Thing extends AM.Component
     @_subscriptionHandles = []
 
     LOI.Adventure.initializeListenerProvider @
-
-    # Subscribe to this thing's translations.
-    translationNamespace = @constructor.id()
-    @_translationSubscription = AB.subscribeNamespace translationNamespace
     
-    @translations = new ComputedField =>
-      return unless @_translationSubscription.ready()
-
-      translations = {}
-
-      for translationKey, defaultText of @constructor._translations()
-        translated = AB.translate @_translationSubscription, translationKey
-        translations[translationKey] = translated.text if translated.language
-
-      translations
+    @translations = new AB.Helpers.Translations @constructor.id()
 
     @thingReady = new ComputedField =>
       conditions = _.flattenDeep [
         @avatar.ready()
         listener.ready() for listener in @listeners
-        @_translationSubscription.ready()
+        @translations.ready()
       ]
 
       console.log "Thing ready?", @id(), conditions if LOI.debug
@@ -262,8 +267,7 @@ class LOI.Adventure.Thing extends AM.Component
 
     handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
 
-    @_translationSubscription.stop()
-
+    @translations.stop()
     @thingReady.stop()
 
     LOI.Adventure.destroyListenerProvider @
@@ -271,7 +275,7 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
   url: -> @constructor.url()
-
+  illustration: -> @constructor.illustration()
   createAvatar: -> @constructor.createAvatar()
 
   # Override to control if the item appears in the interface.
@@ -286,7 +290,7 @@ class LOI.Adventure.Thing extends AM.Component
   autorun: (handler) ->
     # If we're already created, we can simply use default implementation
     # that will stop the autorun when component is removed from DOM.
-    return super if @isCreated()
+    return super(arguments...) if @isCreated()
 
     handle = Tracker.autorun handler
     @_autorunHandles.push handle
@@ -297,12 +301,48 @@ class LOI.Adventure.Thing extends AM.Component
   subscribe: (subscriptionName, params...) ->
     # If we're already created, we can simply use default implementation
     # that will stop the subscribe when component is removed from DOM.
-    return super if @isCreated()
+    return super(arguments...) if @isCreated()
 
     handle = Meteor.subscribe subscriptionName, params...
     @_subscriptionHandles.push handle
 
     handle
+
+  # A reactive field that can be used to query when a constructor has completed. Useful when you need to return the
+  # value of some functions only after all the fields have been assigned in the constructor. Returns false until true
+  # has been sent in the second parameter. The name can be used to distinguish between different constructors.
+  constructed: (name, done) ->
+    unless _.isString name
+      done = name
+      name = '_default'
+
+    @_constructed ?= {}
+
+    if done
+      if @_constructed[name] is true
+        console.error "Constructed called as done multiple times for same name", name
+        return true
+
+      dependency = @_constructed[name]
+
+      # Mark that the constructor is done, so we can return true when queried from now on.
+      # Dependency is no longer necessary since this is a one way operation.
+      @_constructed[name] = true
+
+      # Signal to all dependent callers that the change has occurred.
+      dependency?.changed()
+
+    else if @_constructed[name] is true
+      # Simply return true.
+      true
+
+    else
+      # Done hasn't been called yet for this name so we need to create a dependency for caller to be informed later.
+      @_constructed[name] ?= new Tracker.Dependency
+      @_constructed[name].depend()
+
+      # Return false to indicate we're still waiting.
+      false
 
   getListener: (listenerClass) ->
     _.find @listeners, (listener) -> listener instanceof listenerClass
@@ -325,6 +365,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   fullName: -> @avatar?.fullName()
   shortName: -> @avatar?.shortName()
+  pronouns: -> @avatar?.pronouns()
   nameAutoCorrectStyle: -> @avatar?.nameAutoCorrectStyle()
   nameNounType: -> @avatar?.nameNounType()
   descriptiveName: -> @avatar?.descriptiveName()

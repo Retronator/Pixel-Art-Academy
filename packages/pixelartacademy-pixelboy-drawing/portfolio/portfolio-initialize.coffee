@@ -23,7 +23,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
     PixelArtStudio: 'Pixel Art Studio'
     
   onCreated: ->
-    super
+    super arguments...
 
     sectionLocations =
       challenge: new PAA.Practice.Challenges.Drawing
@@ -168,6 +168,6 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
       fullName: 'Other software'
 
   onDestroyed: ->
-    super
+    super arguments...
     
     editor.destroy?() for editor in @_editors

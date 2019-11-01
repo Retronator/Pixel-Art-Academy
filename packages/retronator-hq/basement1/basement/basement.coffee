@@ -24,7 +24,7 @@ class HQ.Basement extends LOI.Adventure.Location
   @defaultScriptUrl: -> 'retronator_retronator-hq/basement1/basement/basement.script'
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton

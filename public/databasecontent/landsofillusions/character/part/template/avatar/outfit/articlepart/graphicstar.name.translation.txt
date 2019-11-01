@@ -1,0 +1,3 @@
+en-US: Graphic star
+
+{"_id":"opNFAePesxDmBP3PK","ownerId":"sCcSTmSHWLgLutNqw","_schema":"2.0.0","lastEditTime":{"$date":1572462514910},"translations":{"en":{"us":{"text":"Graphic star","quality":0},"best":{"text":"Graphic star","quality":0,"languageRegion":"en-US"}},"best":{"text":"Graphic star","quality":0,"languageRegion":"en-US"}}}

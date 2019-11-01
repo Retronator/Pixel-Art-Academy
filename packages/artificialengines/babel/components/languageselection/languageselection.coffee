@@ -12,7 +12,7 @@ class AB.Components.LanguageSelection extends AM.Component
     throw new AE.NotImplementedException "You must implement the save method."
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to all languages, regions and the translations of their names.
     AB.Language.all.subscribe @
@@ -106,7 +106,7 @@ class AB.Components.LanguageSelection extends AM.Component
     not @showAllRegions() and not @regionFilter()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .abcls-current-language': @onClickCurrentLanguage
       'click .abcls-no-language': @onClickNoLanguage
       'click .abcls-language': @onClickLanguage
@@ -169,7 +169,7 @@ class AB.Components.LanguageSelection extends AM.Component
     @register 'Artificial.Babel.Components.LanguageSelection.Search'
 
     constructor: (@field) ->
-      super
+      super arguments...
 
     load: ->
       @field()

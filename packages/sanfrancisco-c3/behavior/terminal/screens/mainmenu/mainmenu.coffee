@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
@@ -6,28 +7,32 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.MainMenu'
 
   constructor: (@terminal) ->
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
     
-    @_characters = []
-      
     @characters = new ComputedField =>
-      character.destroy() for character in @_characters
+      return unless characters = Retronator.user()?.characters
 
-      user = Retronator.user()
+      characters = for character in characters
+        LOI.Character.documents.findOne
+          _id: character._id
+          $or: [
+            designApproved: true
+          ,
+            activated: true
+          ]
 
-      designedCharacters = _.filter user.characters, (character) =>
-        LOI.Character.documents.findOne(character._id)?.designApproved
+      _.pull characters, undefined
 
-      @_characters = for character in designedCharacters
-        Tracker.nonreactive =>
-          new LOI.Character.Instance character._id
+      for character in characters
+        character.translatedName = AB.translate(character.avatar.fullName).text
 
-      @_characters
+      _.sortBy characters, 'translatedName'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character-selection-button': @onClickCharacterSelectionButton
 
   onClickCharacterSelectionButton: (event) ->

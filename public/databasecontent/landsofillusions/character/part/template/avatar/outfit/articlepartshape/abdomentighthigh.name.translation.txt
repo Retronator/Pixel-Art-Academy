@@ -1,0 +1,3 @@
+en-US: Abdomen tight high
+
+{"_id":"APDDzGhAXZFGbh8KE","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564144580953},"translations":{"en":{"us":{"text":"Abdomen tight high","quality":0},"best":{"text":"Abdomen tight high","quality":0,"languageRegion":"en-US"}},"best":{"text":"Abdomen tight high","quality":0,"languageRegion":"en-US"}}}

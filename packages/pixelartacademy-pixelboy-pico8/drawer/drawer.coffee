@@ -8,14 +8,14 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
   @register @id()
 
   constructor: (@pico8) ->
-    super
+    super arguments...
 
     @opened = new ReactiveField false
     @pannedLeft = new ReactiveField false
     @selectedCartridge = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Create a random ID to prevent caching carts. We assume the art won't
     # change while in the app, to prevent constant calls to the server.
@@ -49,7 +49,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
         @_cartridges[cartridgeClass.id()]
 
   onRendered: ->
-    super
+    super arguments...
 
     # Open the drawer on app launch.
     Meteor.setTimeout =>
@@ -58,7 +58,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
       500
 
   onDestroyed: ->
-    super
+    super arguments...
 
     cartridge.destroy() for id, cartridge of @_cartridges
 
@@ -99,7 +99,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     'selected' if cartridge is @selectedCartridge()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click': @onClick
       'click .cartridge': @onClickCartridge
       'click .selected-cartridge .memory-card': @onClickSelectedCartridgeMemoryCard

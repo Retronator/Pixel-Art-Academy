@@ -14,7 +14,7 @@ class C2.Immersion.Basement extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/immersion/scenes/basement.script'
 
   constructor: ->
-    super
+    super arguments...
 
     @subscribe RA.User.registeredEmailsForCurrentUser
 

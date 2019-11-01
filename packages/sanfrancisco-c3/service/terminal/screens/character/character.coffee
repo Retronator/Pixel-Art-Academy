@@ -6,7 +6,7 @@ class C3.Service.Terminal.Character extends AM.Component
   @register 'SanFrancisco.C3.Service.Terminal.Character'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
     
     @characterId = new ReactiveField null
     
@@ -14,7 +14,7 @@ class C3.Service.Terminal.Character extends AM.Component
       LOI.Character.getInstance @characterId()
 
   onCreated: ->
-    super
+    super arguments...
     
     nameInputOptions =
       addTranslationText: => @translation "Add language variant"
@@ -32,6 +32,9 @@ class C3.Service.Terminal.Character extends AM.Component
 
         # Return true to prevent the default update to be executed.
         true
+
+    @_initialPreviewViewingAngle = -Math.PI / 4
+    @previewViewingAngle = new ReactiveField @_initialPreviewViewingAngle
 
   setCharacterId: (characterId) ->
     @characterId characterId
@@ -64,8 +67,15 @@ class C3.Service.Terminal.Character extends AM.Component
   perks: ->
     @character()?.behavior.part.properties.perks.toString() or "None"
 
+  avatarPreviewOptions: ->
+    rotatable: true
+    viewingAngle: @previewViewingAngle
+    originOffset:
+      x: -3
+      y: 8
+
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .delete-button': @onClickDeleteButton
 

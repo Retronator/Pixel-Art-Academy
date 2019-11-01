@@ -62,13 +62,13 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
   mixins: -> [@infiniteScroll]
 
   constructor: ->
-    super
+    super arguments...
 
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll step: 10
     @sortingParameter = new ReactiveField @constructor.SortingParameters.FavoritesCount
 
   onCreated: ->
-    super
+    super arguments...
 
     @autorun (computation) =>
       @constructor.highestRanked.subscribe @, @sortingParameter(), @year(), @infiniteScroll.limit()
@@ -98,7 +98,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     @_profilesVisibilityData = []
 
   onRendered: ->
-    super
+    super arguments...
     @_$window = $(window)
 
     @_$window.on 'scroll.pixelartdatabase-pixeldailies-pages-yearreview-artists', (event) => @onScroll()
@@ -117,7 +117,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
         @_updateProfilesVisibility()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @_$window.off '.pixelartdatabase-pixeldailies-pages-yearreview-artists'
 
@@ -220,7 +220,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     not @subscriptionsReady()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .favorites.view-mode-button': @onClickFavoritesViewModeButton
       'click .submissions.view-mode-button': @onClickSubmissionsViewModeButton
       'click .followers.view-mode-button': @onClickFollowersViewModeButton

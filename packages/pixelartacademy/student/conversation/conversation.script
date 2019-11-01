@@ -1,0 +1,173 @@
+# PixelArtAcademy.Student.Conversation
+
+## MainQuestions
+
+* What's your name? -> [YourName] `not studentInstance.personState('introduced')`
+* Can I see your study journal? -> [Journal] `studentInstance.personState('introduced')`
+* Where are you from? -> [Country] `studentInstance.personState('introduced') and _profile.country and _studentProfile.country`
+* How old are you, if I may ask? -> [Age] `studentInstance.personState('introduced') and _profile.age and _studentProfile.age`
+* What's your favorite … -> [Favorites] `studentInstance.personState('introduced') and _profile.favorites and _studentProfile.favorites`
+* So, what's your aspiration? -> [Aspiration] `studentInstance.personState('introduced') and _profile.aspiration and _studentProfile.aspiration and (Country or Age or Favorites)`
+
+## YourName
+
+student: I'm `studentInstance.fullName()`.
+
+> _char_ extends _their_ hand.
+
+char: Nice to meet you. I'm `@character.name()`.
+
+`studentInstance.personState('introduced', true)`
+
+-> [Return]
+
+## Country
+
+student: I'm from `_studentProfile.country`. And you?
+
+char: `_profile.country`!
+
+-> [Return]
+
+## Age
+
+student: Of course, I'm `_studentProfile.age`.
+
+`_ageDifference = _profile.age - _studentProfile.age`
+-> [SameAge] `_ageDifference is 0`
+-> [AskDirectly] `_ageDifference <= -5 or _ageDifference >= 5`
+
+student: And I'm guessing you're a bit younger? `_ageDifference < 0`
+student: And you're kind of the same, or a bit older? `_ageDifference > 0`
+
+char: Yeah, I'm `_profile.age`!
+
+-> [Return]
+
+## SameAge
+
+char: Oh, me too! That's awesome.
+
+-> [Return]
+
+## AskDirectly
+
+char: Ah, I'm `_profile.age` now.
+
+-> [Return]
+
+## Favorites
+
+* computer? -> [FavoriteComputer] `_profile.favorites.computer and _studentProfile.favorites.computer`
+* game genre? -> [FavoriteGameGenre] `_profile.favorites.gameGenre and _studentProfile.favorites.gameGenre`
+* art medium? -> [FavoriteArtMedium] `_profile.favorites.artMedium and _studentProfile.favorites.artMedium`
+* superhero? -> [FavoriteSuperhero] `_profile.favorites.superhero and _studentProfile.favorites.superhero`
+* quote? -> [FavoriteQuote] `_profile.favorites.quote and _studentProfile.favorites.quote`
+* Actually, nevermind. -> [MainQuestions]
+
+## FavoriteComputer
+
+student: I love `_studentProfile.favorites.computer`!
+
+* No way, me too! -> [FavoriteComputerMeToo]
+* I like that one too! But my favorite is `_profile.favorites.computer`. -> [FavoriteComputerCool]
+* Looks like we're in opposing camps!
+* Oh, haven't heard of it.
+
+char: For me it's `_profile.favorites.computer`.
+
+-> [Return]
+
+## FavoriteComputerMeToo
+
+student: Awesome!
+
+-> [Return]
+
+## FavoriteComputerCool
+
+student: That's cool!
+
+-> [Return]
+
+## FavoriteGameGenre
+
+student: I like to play `_studentProfile.favorites.gameGenre`.
+
+char: Nice! I enjoy `_profile.favorites.gameGenre` the most.
+
+-> [Return]
+
+## FavoriteArtMedium
+
+student: I work mostly with `_studentProfile.favorites.artMedium`.
+
+char: Mine is `_profile.favorites.artMedium`.
+
+-> [Return]
+
+## FavoriteSuperhero
+
+student: If I could by anyone I'd be `_studentProfile.favorites.superhero`.
+
+* Oh, I love `_studentProfile.favorites.superhero`! Yeah, me too.
+* Haha, cool! I'd be `_profile.favorites.superhero`.
+* Interesting. I guess my favorite is `_profile.favorites.superhero`.
+
+-> [Return]
+
+## FavoriteQuote
+
+student: Hmm, let me think … What's yours?
+
+char: `_profile.favorites.quote` `true`
+
+student: 
+  Good one! 
+  OK, I like …
+  `_studentProfile.favorites.quote` `true`
+  
+* Oh, I love it!
+* Inspiring!
+* That's deep.
+* Hahaha, funny.
+* I see.
+
+-> [Return]
+
+## Aspiration
+
+student: 
+  That's a good question. I guess I would say …
+  `_studentProfile.aspiration`.
+
+* That's so cool! Mine is …
+* Interesting. For me it's …
+
+char: `_profile.aspiration` `true` <!-- We add a no-op condition to output just the string. -->
+
+-> [Return]
+
+## Journal
+
+-> [NoJournals] `not _student.journalIds.length`
+
+student: Of course! Let me know what you think.
+
+pause
+
+### Journal
+
+-> [End]
+
+## NoJournals
+
+student: Oh, I don't actually have one.
+
+-> [Return]
+
+## Return
+
+### Return
+
+## End

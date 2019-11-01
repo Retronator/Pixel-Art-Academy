@@ -15,7 +15,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     'Artificial.Mirage.DataInputComponent'
 
   constructor: ->
-    super
+    super arguments...
 
     @type = @constructor.Types.Text
 
@@ -71,6 +71,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
   onChange: (event) ->
     if @type is @constructor.Types.Checkbox
       @save $(event.target).is(':checked')
+      return
 
     @save $(event.target).val() unless @realtime
 

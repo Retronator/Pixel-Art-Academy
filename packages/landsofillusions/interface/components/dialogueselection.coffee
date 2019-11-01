@@ -8,6 +8,7 @@ class LOI.Interface.Components.DialogueSelection
     @command = new ReactiveField ""
 
     @selectedDialogueLine = new ReactiveField null
+    @selectedDialogueLineIndex = new ReactiveField null
 
     # Provide a list of options.
     @choiceNode = new ComputedField =>
@@ -21,6 +22,7 @@ class LOI.Interface.Components.DialogueSelection
 
       # No choice node was found, so also reset our selected node.
       @selectedDialogueLine null
+      @selectedDialogueLineIndex null
 
       null
 
@@ -64,8 +66,10 @@ class LOI.Interface.Components.DialogueSelection
 
       console.log "We have collected choice nodes", choiceNodes if LOI.debug
 
-      # Alright, we found all the choices. Set the first node as the initial choice.
-      @selectedDialogueLine choiceNodes[0].node
+      # Alright, we found all the choices. We select the choice at the
+      # previous index to prevent selection changing on recomputations.
+      selectIndex = _.clamp @selectedDialogueLineIndex() or 0, 0, choiceNodes.length - 1
+      @selectedDialogueLine choiceNodes[selectIndex].node
 
       # Return the embedded dialog nodes as the selection.
       choiceNode.node for choiceNode in choiceNodes
@@ -113,5 +117,6 @@ class LOI.Interface.Components.DialogueSelection
 
     index = _.indexOf choices, @selectedDialogueLine()
 
-    newIndex = _.clamp index + offset, 0, choices.length - 1
+    newIndex = (index + offset + choices.length) % choices.length
     @selectedDialogueLine choices[newIndex]
+    @selectedDialogueLineIndex newIndex

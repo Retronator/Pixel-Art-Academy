@@ -1,0 +1,3 @@
+en: Short shaved
+
+{"_id":"5fGXErdxaB59arLiL","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Short shaved","quality":0,"best":{"text":"Short shaved","quality":0,"languageRegion":"en"}},"best":{"text":"Short shaved","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1560727731158}}

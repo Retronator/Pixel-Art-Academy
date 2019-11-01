@@ -1,0 +1,3 @@
+en: Extrovert
+
+{"_id":"3sHzr74DDhwbv5yXg","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Extrovert","quality":0,"best":{"text":"Extrovert","quality":0,"languageRegion":"en"}},"best":{"text":"Extrovert","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038935918}}

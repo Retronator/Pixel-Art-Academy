@@ -1,0 +1,3 @@
+en-US: Sideburns 1
+
+{"_id":"6F4gCCb4hQRubnfHC","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1558957300491},"translations":{"en":{"us":{"text":"Sideburns 1","quality":0},"best":{"text":"Sideburns 1","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sideburns 1","quality":0,"languageRegion":"en-US"}}}

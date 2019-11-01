@@ -12,7 +12,7 @@ class LOI.Components.Account extends AM.Component
   mixins: -> [@activatable]
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @activatable = new LOI.Components.Mixins.Activatable()
 
@@ -48,7 +48,7 @@ class LOI.Components.Account extends AM.Component
     @noBackground = new ReactiveField false
 
   onRendered: ->
-    super
+    super arguments...
 
     # Animate page turning.
     @autorun (computation) =>
@@ -186,4 +186,4 @@ class LOI.Components.Account extends AM.Component
         if currentPageNumber > 1 then currentPageNumber * 200 else 0
 
   events: ->
-    super
+    super arguments...

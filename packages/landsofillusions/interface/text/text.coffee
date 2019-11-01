@@ -8,6 +8,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Interface.Text'
 
+  world: ->
+    LOI.adventure.world
+
   exitAvatarName: ->
     exitAvatar = @currentData()
 
@@ -222,7 +225,7 @@ class LOI.Interface.Text extends LOI.Interface
       100
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'wheel': @onWheel
       'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
@@ -290,8 +293,8 @@ class LOI.Interface.Text extends LOI.Interface
       cursorFrame = 3 if cursorTimeFrame is 4
 
       unless cursorFrame is @_previousCursorFrame
-        $textInterface.addClass("cursor-frame-#{cursorFrame}")
-        $textInterface.removeClass("cursor-frame-#{@_previousCursorFrame}")
+        $textInterface?.addClass("cursor-frame-#{cursorFrame}")
+        $textInterface?.removeClass("cursor-frame-#{@_previousCursorFrame}")
         @_previousCursorFrame = cursorFrame
     ,
       175

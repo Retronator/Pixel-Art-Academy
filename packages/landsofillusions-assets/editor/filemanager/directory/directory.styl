@@ -1,0 +1,79 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-editor-filemanager-directory
+  position relative
+  height 100%
+  user-select none
+
+  &.drop-target::after
+    content ''
+    absolute-cover()
+    right 1rem
+    border 1rem solid atariCyan(1)
+    pointer-events none
+
+  .items
+    list-style none
+    margin 0
+    padding 0
+    height 100%
+    overflow-y auto
+
+    .item
+      position relative
+      cursor pointer
+      padding 0 3rem
+
+      &:hover
+        color atariGrey(6)
+
+      &.selected
+        background atariGrey(2)
+        color atariGrey(7)
+
+      &.folder
+        &::after
+          content '►'
+          position absolute
+          right 2rem
+          top 0
+
+        .entry
+          width calc(100% - 10rem)
+
+      &.drop-target
+        background atariCyan(1)
+
+      &.editing-name
+        .entry
+          text-overflow clip
+
+      .entry
+        width 100%
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+
+        .icon
+          width 7rem
+          height 7rem
+          margin-right 1rem
+          vertical-align middle
+
+        .name
+          vertical-align middle
+
+        .name-input
+          background atariGrey(1)
+          border none
+          margin 1rem
+
+  .divider
+    position absolute
+    z-index 1
+    top 0
+    right 0
+    width 1rem
+    height 100%
+    cursor ew-resize
+    background atariGrey(0)

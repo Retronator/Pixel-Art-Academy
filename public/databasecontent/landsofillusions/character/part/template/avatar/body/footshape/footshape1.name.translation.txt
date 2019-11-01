@@ -1,0 +1,3 @@
+en: Foot shape 1
+
+{"_id":"KZiQncza363F8mMoQ","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Foot shape 1","quality":0,"best":{"text":"Foot shape 1","quality":0,"languageRegion":"en"}},"best":{"text":"Foot shape 1","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519111028}}

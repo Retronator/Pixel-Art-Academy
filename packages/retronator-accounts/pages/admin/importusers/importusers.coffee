@@ -14,7 +14,7 @@ class RA.Pages.Admin.ImportUsers extends AM.Component
     LOI.Accounts.RewardTier.documents.find()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'submit .upload-form': @onSubmitUploadForm
 
   onSubmitUploadForm: (event) ->

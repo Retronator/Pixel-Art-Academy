@@ -62,4 +62,6 @@ class C1.Challenges.Drawing.Tutorial.Colors.QuickColorPicking extends PAA.Practi
       PAA.Practice.Software.Tools.ToolKeys.Redo if Helpers.isAssetCompleted Helpers.UndoRedo
     ]
 
+  editorStyleClasses: -> 'hidden-color-picker'
+
   @initialize()

@@ -4,20 +4,20 @@ class AB.Router extends AB.Router
   @currentRouteData = new ReactiveField null
 
   # Minimize reactivity by isolating different parts of the route.
-  @currentParameters = new ComputedField =>
+  @currentParameters = new ComputedField @currentParameters, EJSON.equals
+  @currentParameters: =>
     @currentRouteData()?.parameters
-  ,
-    EJSON.equals
 
-  @currentRoute = new ComputedField =>
+  @currentRoute = new ComputedField @currentRoute, (a, b) => a is b
+  @currentRoute: =>
     @currentRouteData()?.route
-  ,
-    (a, b) => a is b
 
-  @currentRouteName = new ComputedField =>
+  @currentRouteName = new ComputedField @currentRouteName
+  @currentRouteName: =>
     @currentRoute()?.name
 
-  @currentRoutePath = new ComputedField =>
+  @currentRoutePath = new ComputedField @currentRoutePath
+  @currentRoutePath: =>
     @currentRouteData()?.path
 
   @getParameter: (parameter) ->
@@ -172,13 +172,16 @@ class AB.Router extends AB.Router
         currentRoute.layoutClass.renderComponent parentComponent
 
   @onPathChange: ->
-    host = location.hostname
-    path = location.pathname
+    url = new URL location
+
+    host = url.hostname
+    path = url.pathname
+    searchParameters = url.searchParams
 
     {route, matchData} = @findRoute host, path
 
     if matchData
-      currentRouteData = _.extend {route, path, host}, matchData
+      currentRouteData = _.extend {route, path, host, searchParameters}, matchData
       @currentRouteData currentRouteData
 
     else

@@ -1,0 +1,3 @@
+en-US: Short curly
+
+{"_id":"2HWfYEKE458XuC8Mr","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560174769213},"translations":{"en":{"us":{"text":"Short curly","quality":0},"best":{"text":"Short curly","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short curly","quality":0,"languageRegion":"en-US"}}}

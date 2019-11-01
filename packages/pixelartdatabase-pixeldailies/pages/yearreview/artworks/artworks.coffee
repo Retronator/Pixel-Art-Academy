@@ -36,7 +36,7 @@ class PADB.PixelDailies.Pages.YearReview.Artworks extends AM.Component
       [submissionsCursor, artworksCursor]
 
   onCreated: ->
-    super
+    super arguments...
 
     @stream = new ReactiveField null
 
@@ -54,7 +54,7 @@ class PADB.PixelDailies.Pages.YearReview.Artworks extends AM.Component
       PADB.PixelDailies.Pages.YearReview.Helpers.prepareTopArtworks artworksCursor.fetch()
 
   onRendered: ->
-    super
+    super arguments...
 
     @stream @childComponents(PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream)[0]
 

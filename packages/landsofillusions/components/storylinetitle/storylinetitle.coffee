@@ -9,7 +9,7 @@ class LOI.Components.StorylineTitle extends AM.Component
   @version: -> '0.0.1'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @activatable = new LOI.Components.Mixins.Activatable()
 
@@ -59,7 +59,7 @@ class LOI.Components.StorylineTitle extends AM.Component
     'to-be-continued' if @options.toBeContinued
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click': @onClick
 
   onClick: (event) ->

@@ -3,7 +3,7 @@ Script = LOI.Adventure.Script
 
 class Script.Nodes.Callback extends Script.Node
   constructor: (options) ->
-    super
+    super arguments...
     
     @name = options.name
 

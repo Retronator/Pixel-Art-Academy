@@ -1,0 +1,3 @@
+en-US: Abdomen open tied
+
+{"_id":"wfHriEtygoKc5H28A","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565904249405},"translations":{"en":{"us":{"text":"Abdomen open tied","quality":0},"best":{"text":"Abdomen open tied","quality":0,"languageRegion":"en-US"}},"best":{"text":"Abdomen open tied","quality":0,"languageRegion":"en-US"}}}

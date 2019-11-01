@@ -37,5 +37,30 @@ class LOI.Director
     @foregroundScriptQueue.pauseCurrentNode()
 
   stopAllScripts: (options = {}) ->
+    console.log "Stopping all scripts." if LOI.debug
     @foregroundScriptQueue.stopAllScripts options
     @backgroundScriptQueue.stopAllScripts options
+
+  setPosition: (positions) ->
+    for thingId, position of positions
+      continue unless position = LOI.adventure.world.getPositionVector position
+
+      thing = LOI.adventure.getCurrentThing thingId
+      position = LOI.adventure.world.findEmptySpace thing.avatar, position
+
+      renderObject = thing.avatar.getRenderObject()
+      renderObject.position.copy position
+
+      physicsObject = thing.avatar.getPhysicsObject()
+      physicsObject.setPosition position
+
+  facePosition: (positions) ->
+    for thingId, position of positions
+      continue unless position = LOI.adventure.world.getPositionVector position
+
+      thing = LOI.adventure.getCurrentThing thingId
+      renderObject = thing.avatar.getRenderObject()
+
+      direction = new THREE.Vector3().subVectors position, renderObject.position
+      direction.normalize()
+      renderObject.faceDirection direction

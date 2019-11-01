@@ -14,9 +14,9 @@ class C1.Airship.Terminal extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/airship/scenes/terminal.script'
 
   constructor: ->
-    @announcer = new RS.Items.Announcer
+    super arguments...
 
-    super
+    @announcer = new RS.Items.Announcer
 
   initializeScript: ->
     announcer = @options.parent.announcer

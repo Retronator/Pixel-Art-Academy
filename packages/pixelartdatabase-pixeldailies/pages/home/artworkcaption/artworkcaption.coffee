@@ -6,7 +6,7 @@ class PADB.PixelDailies.Pages.Home.ArtworkCaption extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Home.ArtworkCaption'
 
   onCreated: ->
-    super
+    super arguments...
 
     @submission = new ComputedField =>
       artwork = @data()

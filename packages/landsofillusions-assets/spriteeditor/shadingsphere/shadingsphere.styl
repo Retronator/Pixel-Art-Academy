@@ -1,0 +1,30 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-spriteeditor-shadingsphere
+  .options
+    margin-top 5rem
+
+    .option
+      margin-top 5rem
+
+  .landsofillusions-assets-components-pixelcanvas
+    display inline-block
+    vertical-align bottom
+    position relative
+    top auto
+    right auto
+    width 80rem
+    height 80rem
+    background blend(rgba(atariGrey(1), 0.5) atariGrey(2))
+    border 1rem solid atariGrey(0)
+
+    canvas
+      absolute-cover-size()
+      user-select none
+
+  .edit-light-button
+    margin-bottom 0
+
+    &.active
+      background atariYellow(5)
+      color atariGrey(0)

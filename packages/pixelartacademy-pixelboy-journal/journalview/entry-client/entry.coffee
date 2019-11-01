@@ -16,7 +16,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
   @debug = false
 
   constructor: (@entries, @entryId) ->
-    super
+    super arguments...
 
     @journalDesign = @entries.journalDesign
 
@@ -24,7 +24,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @_id = @entryId if @entryId
 
   onCreated: ->
-    super
+    super arguments...
 
     @quill = new AE.ReactiveWrapper null
 
@@ -54,7 +54,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
       PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe @, characterId, taskIds
 
   onRendered: ->
-    super
+    super arguments...
 
     @$entry = @$('.pixelartacademy-pixelboy-apps-journal-journalview-entry')
 
@@ -132,7 +132,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
       quill.setContents entry.content, Quill.sources.API
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(window).off 'mouseup', @_mouseUpWindowHandler
 
@@ -307,7 +307,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     'read-only' if @readOnly()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'scroll .pixelartacademy-pixelboy-apps-journal-journalview-entry': @onScrollEntry
       'click .writing-area': @onClickWritingArea
       'click .toggle-objects-button': @onClickToggleObjectsButton

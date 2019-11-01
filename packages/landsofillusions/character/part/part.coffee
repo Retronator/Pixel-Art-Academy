@@ -10,28 +10,70 @@ class LOI.Character.Part
     _.merge @Types, classes
           
   @allPartTypeIds: ->
+    _.flatten [
+      @allAvatarPartTypeIds()
+      @allBehaviorPartTypeIds()
+    ]
+    
+  @allAvatarPartTypeIds: ->
+    _.flatten [
+      @allAvatarBodyPartTypeIds()
+      @allAvatarOutfitPartTypeIds()
+    ]
+
+  @allAvatarBodyPartTypeIds: ->
+    @getPartTypeIdsFromType 'Avatar.Body'
+
+  @allAvatarOutfitPartTypeIds: ->
+    @getPartTypeIdsFromType 'Avatar.Outfit'
+
+  @allBehaviorPartTypeIds: ->
+    @getPartTypeIdsFromType 'Behavior'
+
+  @getPartTypeIdsFromType: (type) =>
+    [type, @getPartTypeIdsUnderType(type)...]
+
+  @getPartTypeIdsUnderType: (type) =>
     types = []
-  
-    addTypes = (type) =>
-      # Go over all the properties of the type and add all sub-types.
-      typeClass = _.nestedProperty LOI.Character.Part.Types, type
-  
-      for propertyName, property of typeClass.options.properties when property.options?.type?
-        templateType = property.options.templateType or property.options.type
-        type = property.options.type
-  
-        types.push templateType
-        addTypes type
-  
-    addTypes 'Avatar.Body'
-    addTypes 'Avatar.Outfit'
-    addTypes 'Behavior'
-  
+
+    # Go over all the properties of the type and add all sub-types.
+    typeClass = _.nestedProperty LOI.Character.Part.Types, type
+
+    for propertyName, property of typeClass.options.properties when property.options?.type?
+      templateType = property.options.templateType or property.options.type
+      type = property.options.type
+
+      types.push templateType
+      types.push @getPartTypeIdsUnderType(type)...
+      
     types
 
   # Helper to access Types with a nested string.
   @getClassForType: (type) ->
     partClass = _.nestedProperty @Types, type
+    return partClass if partClass
+
+    console.error "Can't find part of type", type
+
+  # Access part classes by type, but also considers template type properties.
+  @getClassForTemplateType: (templateType) ->
+    # First see if template type can be accessed directly.
+    partClass = _.nestedProperty @Types, templateType
+    return partClass if partClass
+
+    # Search through all types for templateType option.
+    findTemplateType = (part) ->
+      for propertyName, property of part.options?.properties
+        if property.options.templateType is templateType
+          return property
+
+      for subPartName, subPart of part when subPartName isnt 'options'
+        result = findTemplateType subPart
+        return result if result
+
+      null
+
+    partClass = findTemplateType @Types
     return partClass if partClass
 
     console.error "Can't find part of type", type
@@ -52,15 +94,8 @@ class LOI.Character.Part
         dataLocation: propertyDataLocation
         parent: @
 
-    # Create renderer for drawing this part's hierarchy.
-    @renderer = new ComputedField =>
-      @createRenderer()
-    ,
-      true
-
   destroy: ->
-    property.destroy() for property in @properties
-    @renderer.stop()
+    property.destroy() for propertyName, property of @properties
 
   create: (options) ->
     # Set this part's type as template meta data.
@@ -90,3 +125,13 @@ class LOI.Character.Part
       parent = parent.options.parent
 
     parent
+
+  childPartOfType: (typeTemplateOrId) ->
+    targetType = typeTemplateOrId.options?.type or typeTemplateOrId
+    return @ if @options.type is targetType
+
+    for propertyName, property of @properties
+      child = property.childPartOfType typeTemplateOrId
+      return child if child
+      
+    null

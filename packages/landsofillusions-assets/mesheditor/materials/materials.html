@@ -1,0 +1,19 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.Materials">
+  <div class="landsofillusions-assets-mesheditor-materials landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="materials-table editor-table">
+      <tr class="legend">
+        <th class="preview"></th>
+        <th class="name">name</th>
+      </tr>
+      {{#each materials}}
+        <tr class="material">
+          <td class="preview preview-color {{activeColorClass}}" {{style colorPreviewStyle}}></td>
+          <td class="name"><input class="name-input" value="{{name}}"/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="add-material-button">Add material</button>
+    </div>
+  </div>
+</template>

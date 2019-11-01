@@ -9,13 +9,18 @@ class AM.Hierarchy.Node
     fieldGetter = (fieldName) ->
       # We want to create a new internal hierarchy field that we'll depend upon to isolate reactivity.
       unless hierarchyFields[fieldName]
-        hierarchyFields[fieldName] = new AM.Hierarchy.Field _.extend {}, options,
+        hierarchyFields[fieldName] = Tracker.nonreactive => new AM.Hierarchy.Field _.extend {}, options,
           # Clear template (we don't want to pass it down since
-          # only the root note should be marked as being the template).
+          # only the root node should be marked as being the template).
           template: null
           address: options.address.fieldChild fieldName
-          load: =>
+          load: new ComputedField =>
             options.load()?.fields[fieldName]
+          ,
+            EJSON.equals
+          ,
+            true
+
           save: options.save
 
         hierarchyFieldsUpdated.changed()
@@ -53,7 +58,9 @@ class AM.Hierarchy.Node
       options.load()
 
     node.destroy = ->
-      field.destroy() for name, field of hierarchyFields
+      for name, field of hierarchyFields
+        field.options.load.stop()
+        field.destroy()
 
     # Return the node getter/setter function (return must be explicit).
     return node

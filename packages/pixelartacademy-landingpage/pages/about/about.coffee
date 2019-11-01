@@ -16,7 +16,7 @@ class PixelArtAcademy.LandingPage.Pages.About extends AM.Component
     Meteor.absoluteUrl "pixelartacademy/title.png"
 
   onCreated: ->
-    super
+    super arguments...
 
     # Create pixel scaling display.
     @display = new AM.Display

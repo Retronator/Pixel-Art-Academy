@@ -4,13 +4,14 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.SpriteImage extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.SpriteImage'
+  @id: -> 'LandsOfIllusions.Assets.Components.SpriteImage'
+  @register @id()
 
   constructor: (@options) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @spriteData = new ComputedField =>
       return unless spriteId = @options.spriteId()
@@ -34,7 +35,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
         LOI.Assets.Palette.forId.subscribe @, spriteData.palette._id
 
   onRendered: ->
-    super
+    super arguments...
 
     @autorun =>
       canvas = @$('.canvas')[0]
@@ -56,7 +57,10 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
       context.clearRect 0, 0, canvas.width, canvas.height
 
       context.save()
-      @sprite.drawToContext context, lightDirection: @options.lightDirection
+
+      @sprite.drawToContext context,
+        lightDirection: @options.lightDirection?()
+
       context.restore()
 
   canvasStyle: ->

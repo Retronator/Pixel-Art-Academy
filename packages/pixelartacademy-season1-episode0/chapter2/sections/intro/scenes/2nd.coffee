@@ -34,6 +34,6 @@ class C2.Intro.SecondStreet extends LOI.Adventure.Scene
           LOI.adventure.goToLocation HQ.Cafe
 
   cleanup: ->
-    super
+    super arguments...
 
     @_conductorTalksAutorun?.stop()

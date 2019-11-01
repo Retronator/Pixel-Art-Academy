@@ -1,0 +1,79 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.GalleryWest.Student
+
+## Start
+
+-> [SaidHi] `_person.saidHi`
+
+`_person.saidHi = true`
+
+-> [AlreadyMetGreeting] `studentInstance.personState('alreadyMet')`
+
+char: Hi, I'm `@character.name()`.
+
+student: Nice to meet you, `@character.name()`. I'm `studentInstance.fullName()`.
+
+`studentInstance.personState('alreadyMet', true)`
+`studentInstance.personState('introduced', true)`
+
+-> [MainQuestions]
+
+## AlreadyMetGreeting
+
+student: Hey, nice to see you again.
+
+-> [MainQuestions]
+
+## SaidHi
+
+student: Hey!
+
+-> [MainQuestions]
+
+## MainQuestions
+
+* *PersonConversationMainQuestions*
+* Nice talking to you!
+
+student: You too!
+
+-> [End]
+
+## LookAtStudent
+
+> On _student:their_ stickers it's written:
+
+-> [DisplayAnswers]
+
+## LookAtAnswers
+
+> _char_ looks at _student's_ stickers to see which answers _student:they_ wrote:
+
+-> [DisplayAnswers]
+
+## DisplayAnswers
+
+> Hobby `_studentAnswers.HobbyProfession == 0`
+> Professional `_studentAnswers.HobbyProfession == 2`
+> Hobby/Professional `_studentAnswers.HobbyProfession == 1`
+
+> Pixel art `_studentAnswers.PixelArtOtherStyles == 0`
+> Non-pixel art styles `_studentAnswers.PixelArtOtherStyles == 2`
+> All art styles `_studentAnswers.PixelArtOtherStyles == 1`
+
+> Extrovert `_studentAnswers.ExtrovertIntrovert == 0`
+> Introvert `_studentAnswers.ExtrovertIntrovert == 2`
+> Extrovert/Introvert `_studentAnswers.ExtrovertIntrovert == 1`
+
+> Individual `_studentAnswers.IndividualTeam == 0`
+> Team `_studentAnswers.IndividualTeam == 2`
+> Individual/Team `_studentAnswers.IndividualTeam == 1`
+
+-> [End]
+
+## LookAtNameTag
+
+> You see _student_ written in big letters on the sticker.
+
+-> [end]
+
+## End

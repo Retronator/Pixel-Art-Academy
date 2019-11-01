@@ -39,7 +39,7 @@ class HQ.ArtStudio.Northeast extends HQ.ArtStudio.ContextWithArtworks
     MarkersCombine: ['cardinalCity', 'cardinalCityTools']
 
   constructor: ->
-    super
+    super arguments...
 
     @sceneSize =
       width: 480

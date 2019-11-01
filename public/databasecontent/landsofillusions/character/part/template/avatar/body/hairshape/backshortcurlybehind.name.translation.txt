@@ -1,0 +1,3 @@
+en-US: Back short curly behind
+
+{"_id":"8KGWs49xdp6fT7Z46","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559561372602},"translations":{"en":{"us":{"text":"Back short curly behind","quality":0},"best":{"text":"Back short curly behind","quality":0,"languageRegion":"en-US"}},"best":{"text":"Back short curly behind","quality":0,"languageRegion":"en-US"}}}

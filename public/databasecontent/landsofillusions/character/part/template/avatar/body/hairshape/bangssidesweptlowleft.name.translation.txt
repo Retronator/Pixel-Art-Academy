@@ -1,0 +1,3 @@
+en-US: Bangs side-swept low left
+
+{"_id":"rrmjSxgMjh9ntZpWg","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560770679260},"translations":{"en":{"us":{"text":"Bangs side-swept low left","quality":0},"best":{"text":"Bangs side-swept low left","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bangs side-swept low left","quality":0,"languageRegion":"en-US"}}}

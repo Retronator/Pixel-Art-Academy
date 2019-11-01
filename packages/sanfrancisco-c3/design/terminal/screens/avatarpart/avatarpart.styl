@@ -1,6 +1,53 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .sanfrancisco-c3-design-terminal-avatarpart
+  &.own-template
+    .main-content
+      background rgba(atariCyan(0), 0.5)
+
+      &::after
+        content ''
+        absolute-cover()
+        border 1rem solid atariCyan(2)
+        pointer-events none
+
+    .action-button
+      border 1rem solid atariCyan(2)
+      color atariCyan(4)
+
+      &:hover
+        z-index 1
+        border-color atariCyan(4)
+        color atariCyan(6)
+        outline none
+
+    .main-actions
+      .action-button
+        &:hover
+          &::after
+            background atariCyan(2)
+
+        &.main-button
+          border 1rem solid atariAqua(2)
+
+          &::after
+            background atariAqua(1)
+
+          &:hover
+            &::after
+              background atariAqua(2)
+
+        &.upgrade-template-button
+          border-color atariGreen(2)
+          color atariGreen(4)
+
+          &:hover
+            border-color atariGreen(4)
+            color atariGreen(6)
+
+            &::after
+              background atariGreen(2)
+
   .main-content
     absolute-cover()
     overflow-y auto
@@ -15,16 +62,26 @@
 
     .new-part-button
       text-transform uppercase
+      checkout()
 
-    .templates
-      list-style none
-      margin 0
-      padding 0
+    .template-group
+      &::after
+        content ''
+        display block
+        clear both
+
+      .title
+        text-transform uppercase
+        margin 2rem 0
+        checkout()
+
+      .templates
+        list-style none
+        margin 0
+        padding 0
 
   .hovered-template
-    position absolute
-    top 50rem
-    left 235rem
+    margin-top 20rem
     width 70rem
 
     .name
@@ -56,9 +113,13 @@
 
       .property
         position relative
+        z-index 1
         display inline-block
         vertical-align top
         margin 0 4rem 4rem 0
+
+        &:hover
+          z-index 2
 
         &::after
           content ''
@@ -85,7 +146,7 @@
             &::after
               pointer-events none
 
-  .preview
+  .avatar-part-preview
     position absolute
     bottom 1rem
     left 115rem
@@ -94,6 +155,10 @@
     background-image image('/sanfrancisco/c3/design/preview-cube.png')
 
   &.avatar-body
+    .main-actions
+      .hovered-template
+        display none
+
     .part
       .properties
         .property
@@ -138,3 +203,16 @@
           &.skin
             left 215rem
             top 165rem
+
+          &.height
+            left 225rem
+            top 90rem
+
+            .name
+              display inline-block
+
+            .sanfrancisco-c3-design-terminal-properties-number
+              display inline-block
+
+              &::after
+                content 'm'

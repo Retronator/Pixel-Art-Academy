@@ -46,9 +46,9 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      journal: @ReferenceField PAA.Practice.Journal, ['character'], true, 'entries', []
-      action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
-      memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
+      journal: Document.ReferenceField PAA.Practice.Journal, ['character'], true, 'entries', []
+      action: Document.ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
+      memories: [Document.ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 
   @pictureUploadContext = new LOI.Assets.Upload.Context
     name: "#{@id()}.picture"

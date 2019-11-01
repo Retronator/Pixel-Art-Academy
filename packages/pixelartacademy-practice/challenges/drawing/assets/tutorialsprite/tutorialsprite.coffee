@@ -20,6 +20,11 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   # Override to define a background color.
   @backgroundColor: -> null
 
+  # Override to define a palette.
+  @restrictedPaletteName: -> null
+  @customPaletteImageUrl: -> null
+  @customPalette: -> null
+
   # Methods
 
   @create: new AB.Method name: "#{@id()}.create"
@@ -72,7 +77,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
     pixels
 
   constructor: ->
-    super
+    super arguments...
     
     @tutorial = @project
 
@@ -191,7 +196,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       @tutorial.state 'assets', assets if updated
 
   destroy: ->
-    super
+    super arguments...
 
     @completed.stop()
     @_completedAutorun.stop()

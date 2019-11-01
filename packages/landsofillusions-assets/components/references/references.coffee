@@ -3,7 +3,6 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Components.References extends AM.Component
   @id: -> 'LandsOfIllusions.Assets.Components.References'
-
   @register @id()
   template: -> @constructor.id()
 
@@ -18,15 +17,18 @@ class LOI.Assets.Components.References extends AM.Component
     ]
     
   constructor: (@options) ->
-    super
+    super arguments...
         
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
 
+    # Override to provide a custom scaling factor for dragging.
+    @draggingScale = => 1
+
     @resizingReference = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = @callAncestorWith 'display'
 
@@ -37,7 +39,7 @@ class LOI.Assets.Components.References extends AM.Component
           references: 1
           
     @assetOptions = new ComputedField =>
-      _.defaultsDeep {}, @options.assetOptions(),
+      _.defaultsDeep {}, @options.assetOptions?(),
         upload:
           enabled: true
         storage:
@@ -93,7 +95,7 @@ class LOI.Assets.Components.References extends AM.Component
       @draggingReference null
 
     $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
-      scale = @display.scale()
+      scale = @display.scale() * @draggingScale()
 
       dragDelta =
         x: (event.pageX - @_dragStartMousePosition.x) / scale
@@ -142,7 +144,7 @@ class LOI.Assets.Components.References extends AM.Component
     @draggingReference()?
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .upload-button': @onClickUploadButton
       'click .storage-button': @onClickStorageButton
 
