@@ -27,7 +27,7 @@ class LOI.Assets.Asset extends AM.Document
       WebApp.connectHandlers.use @cacheUrl(), (request, response, next) =>
         unless cache
           # Rebuild cache.
-          cache = {}
+          newCache = {}
 
           assets = LOI.Assets[@className].documents.fetch cachableDocumentsQuery,
             # Do not send history in cache.
@@ -36,9 +36,9 @@ class LOI.Assets.Asset extends AM.Document
               historyPosition: false
 
           for asset in assets
-            cache[asset._id] = asset
+            newCache[asset._id] = asset
 
-          cache = JSON.stringify cache
+          cache = JSON.stringify newCache
           cacheBuildId = Random.id()
 
         # See if client's cache is up to date.
