@@ -159,14 +159,14 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     options.faceLandmark ?= 'InFrontOfProjector'
 
     renderObject = person.avatar.getRenderObject()
-    renderObject.setAnimation 'Walk'
+    renderObject.setAnimation 'Walk 50'
 
     LOI.adventure.world.navigator().moveAvatar
       avatar: person.avatar
       target: landmark
       speed: 1.25
       onCompleted: =>
-        renderObject.setAnimation 'Idle'
+        renderObject.setAnimation 'Idle loop'
         renderObject.facePosition options.faceLandmark
 
         options.onCompleted?()

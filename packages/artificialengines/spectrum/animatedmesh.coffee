@@ -110,8 +110,8 @@ class AS.AnimatedMesh extends AS.RenderObject
               # bone space which would require calculating all hierarchy matrices per frame. For non-extreme animations
               # (that don't go too far away from the rest pose) this is good enough.
               offsetBone = (bone) =>
-                frame[bone.name].start_pt = [frame[bone.name].start_pt[0] + correction.x, frame[bone.name].start_pt[1] + correction.y]
-                frame[bone.name].end_pt = [frame[bone.name].end_pt[0] + correction.x, frame[bone.name].end_pt[1] + correction.y]
+                frame[bone.name].start_pt = [frame[bone.name].start_pt[0] + correction.x, frame[bone.name].start_pt[1] - correction.y]
+                frame[bone.name].end_pt = [frame[bone.name].end_pt[0] + correction.x, frame[bone.name].end_pt[1] - correction.y]
 
                 for childId in bone.children
                   childBone = _.find data.skeleton, (bone) => bone.id is childId
