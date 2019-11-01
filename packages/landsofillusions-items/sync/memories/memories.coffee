@@ -62,7 +62,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
             renderer = character.avatar.getRenderer()
 
             # Wait until character has loaded and renderer is ready.
-            return unless character.document()
+            return unless characterDocument = character.document()
             return unless renderer.ready()
 
             canvas = $('<canvas>')[0]
@@ -74,11 +74,19 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
             context.setTransform 1, 0, 0, 1, Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)
             context.clearRect 0, 0, canvas.width, canvas.height
 
-            # Draw and pass the root part in options so we can do different rendering paths based on it.
-            renderer.drawToContext context,
+            drawOptions =
               rootPart: character.avatar
               lightDirection: new THREE.Vector3(0, -1, -1).normalize()
               side: LOI.Engine.RenderingSides.Keys.Front
+
+            # Draw characters with revoked design in silhouette.
+            unless characterDocument?.designApproved
+              drawOptions.silhouette =
+                ramp: LOI.Assets.Palette.Atari2600.hues.grey
+                shade: 2
+
+            # Draw and pass the root part in options so we can do different rendering paths based on it.
+            renderer.drawToContext context, drawOptions
 
             canvas.toBlob (blob) =>
               # Update the image.

@@ -7,6 +7,7 @@ LOI.Pages.Admin.Characters.ApprovedDesigns.characters.publish (limit = 10, skip 
   RA.authorizeAdmin()
 
   LOI.Character.documents.find
+    user: $ne: null
     designApproved: true
   ,
     {limit, skip}
