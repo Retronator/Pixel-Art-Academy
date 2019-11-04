@@ -14,6 +14,9 @@ class LOI.GameDate
       {day, hours, minutes, seconds} = value
       @_time = (day or 0) - 1 + ((hours or 0) + ((minutes or 0) + (seconds or 0) / 60) / 60) / 24
 
+    else
+      @_time = 0
+
   # Returns the internal value indicating the number of days passed in the game.
   getTime: ->
     @_time

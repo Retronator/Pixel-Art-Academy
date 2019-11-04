@@ -7,6 +7,7 @@ class C1.Mixer.IceBreakers
     PixelArtOtherStyles: 'PixelArtOtherStyles'
     ExtrovertIntrovert: 'ExtrovertIntrovert'
     IndividualTeam: 'IndividualTeam'
+    ComputersConsoles: 'ComputersConsoles'
 
   @AnswerSides:
     Left: 0

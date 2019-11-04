@@ -93,7 +93,7 @@ class LOI.Simulation.Server
     LOI.GameState.documents.update gameStateDocument._id,
       $set:
         'state.gameTime': gameTime
-        'readOnlyState.simulatedGametime': gameTime
+        'readOnlyState.simulatedGameTime': gameTime
         stateLastUpdatedAt: new Date()
 
 # Initialize on startup.

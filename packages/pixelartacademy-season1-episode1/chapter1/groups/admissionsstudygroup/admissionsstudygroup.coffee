@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -14,6 +15,9 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
     super(arguments...).concat [
       @HangoutGroupListener
     ]
+
+  @coordinator: -> throw new AE.NotImplementedException "You must provide who coordinates this group."
+  @coordinatorInMeetingSpace: -> @coordinator()
 
   # Subscriptions
 
@@ -79,7 +83,7 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
 
     [
       @presentMembers()...
-      @constructor.coordinator()
+      @constructor.coordinatorInMeetingSpace()
     ]
 
   listenForReciprocityAsk: (@_reciprocityAskCompleteCallback) ->
@@ -128,7 +132,7 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
       group = scene
 
       @groupScript.setCurrentThings
-        coordinator: scene.constructor.coordinator()
+        coordinator: scene.constructor.coordinatorInMeetingSpace()
 
       @groupScript.setCallbacks
         ReportProgress: (complete) =>

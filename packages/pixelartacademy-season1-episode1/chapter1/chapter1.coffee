@@ -54,7 +54,7 @@ class PAA.Season1.Episode1.Chapter1 extends PAA.Adventure.Chapter
 
   # We specifically set the requirement of Chapter 1 since it's used to allow students to get accepted. 
   # We do it for class as well as object method, because object by default inherits from episode.
-  @accessRequirement: -> RS.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
+  @accessRequirement: -> RS.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
   accessRequirement: -> @constructor.accessRequirement()
 
   # Methods
