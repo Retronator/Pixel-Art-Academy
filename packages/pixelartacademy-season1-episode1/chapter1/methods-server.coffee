@@ -28,9 +28,9 @@ C1.applyCharacter.method (characterId, contactEmail) ->
   # Fetch the character again to get their contact email.
   character = LOI.Character.documents.findOne characterId
 
-  # TODO: Add support for gating of applicants. Currently anyone with alpha access gets accepted.
+  # TODO: Add support for gating of applicants. Currently everyone gets accepted.
 
-  # Send application email. Contents will depend on whether user meets Chapter 1 access requirements.
+  # Send application email.
   C1.Items.ApplicationEmail.send character
 
   # Accept applications that meet chapter requirement.

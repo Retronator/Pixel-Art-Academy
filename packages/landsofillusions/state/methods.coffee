@@ -65,9 +65,11 @@ LOI.GameState._insertForCharacter.method (characterId) ->
   LOI.GameState.documents.insert
     character:
       _id: characterId
-    state: {}
+    state:
+      gameTime: 0
     stateLastUpdatedAt: new Date()
-    readOnlyState: {}
+    readOnlyState:
+      simulatedGameTime: 0
     events: []
 
 LOI.GameState._clearForCharacter.method (characterId) ->
