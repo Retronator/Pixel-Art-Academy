@@ -68,6 +68,10 @@ student: You too!
 > Team `_studentAnswers.IndividualTeam == 2`
 > Individual/Team `_studentAnswers.IndividualTeam == 1`
 
+> Computers `_studentAnswers.ComputersConsoles == 0`
+> Consoles `_studentAnswers.ComputersConsoles == 2`
+> Any platform `_studentAnswers.ComputersConsoles == 1`
+
 -> [End]
 
 ## LookAtNameTag

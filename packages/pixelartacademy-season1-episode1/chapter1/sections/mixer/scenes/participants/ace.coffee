@@ -22,3 +22,4 @@ class C1.Mixer.Ace extends C1.Mixer.Participant
       "#{C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles}": C1.Mixer.IceBreakers.AnswerSides.Middle
       "#{C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert}": C1.Mixer.IceBreakers.AnswerSides.Left
       "#{C1.Mixer.IceBreakers.Questions.IndividualTeam}": C1.Mixer.IceBreakers.AnswerSides.Middle
+      "#{C1.Mixer.IceBreakers.Questions.ComputersConsoles}": C1.Mixer.IceBreakers.AnswerSides.Left

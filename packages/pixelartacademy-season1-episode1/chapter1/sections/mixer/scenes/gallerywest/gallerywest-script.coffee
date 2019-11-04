@@ -70,6 +70,15 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         scene._doAnswerAction C1.Mixer.IceBreakers.Questions.IndividualTeam, answers[3]
         complete()
 
+      ComputersConsolesStart: (complete) =>
+        scene._animateOtherStudentsOnQuestion C1.Mixer.IceBreakers.Questions.ComputersConsoles
+        complete()
+
+      ComputersConsolesEnd: (complete) =>
+        answers = @state 'answers'
+        scene._doAnswerAction C1.Mixer.IceBreakers.Questions.ComputersConsoles, answers[4]
+        complete()
+
       StartTalkToClassmates: (complete) =>
         scene.state 'talkToClassmatesStart', Date.now()
 

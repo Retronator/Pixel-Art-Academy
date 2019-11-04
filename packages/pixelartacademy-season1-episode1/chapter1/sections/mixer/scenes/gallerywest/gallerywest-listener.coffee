@@ -57,12 +57,14 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           'HobbyProfessionWriteStart'
           'ExtrovertIntrovertStart'
           'IndividualTeamStart'
+          'ComputersConsolesStart'
         ]
 
         questions = [
           C1.Mixer.IceBreakers.Questions.HobbyProfession
           C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles
           C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert
+          C1.Mixer.IceBreakers.Questions.IndividualTeam
         ]
 
         question = null
@@ -175,6 +177,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
             'PixelArtOtherStylesStart'
             'ExtrovertIntrovertStart'
             'IndividualTeamStart'
+            'ComputersConsolesStart'
           ]
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
