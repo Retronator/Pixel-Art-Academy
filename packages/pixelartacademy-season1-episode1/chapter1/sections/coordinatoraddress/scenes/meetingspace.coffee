@@ -31,7 +31,7 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
   things: ->
     return unless group = @group()
 
-    coordinator = group.coordinator()
+    coordinator = group.coordinatorInMeetingSpace()
 
     otherAgentIds = _.without @memberCharacterIds(), LOI.characterId()
     otherAgents = (LOI.Character.getAgent agentId for agentId in otherAgentIds)
@@ -142,7 +142,7 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
     @_scriptStartAutorun = @autorun (computation) =>
       return unless @scriptsReady()
       return unless group = scene.group()
-      return unless coordinator = LOI.adventure.getCurrentThing group.coordinator()
+      return unless coordinator = LOI.adventure.getCurrentThing group.coordinatorInMeetingSpace()
       return unless coordinator.ready()
 
       npcMembers = group.npcMembers()
