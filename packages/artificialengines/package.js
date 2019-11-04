@@ -203,6 +203,7 @@ Package.onUse(function(api) {
   api.addFile('telepathy/telepathy');
 
   api.addFile('telepathy/emailcomposer');
+  api.addFile('telepathy/requesthelper');
 
   api.addServerFile('telepathy/twitter-server');
   api.addServerFile('telepathy/stripe-server');

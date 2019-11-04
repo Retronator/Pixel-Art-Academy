@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AM = Artificial.Mummification
+AT = Artificial.Telepathy
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
@@ -45,27 +46,25 @@ class LOI.Character.Actor extends LOI.Character.Person
     @_actorIdsBeingAdded.push id
 
     # Note: We need to get the document asynchronously since the server is still setting up at this point.
-    HTTP.get documentUrl, (error, result) =>
-      if error
-        console.error "Failed loading actor from url", documentUrl
-        console.error error
-        return
+    AT.RequestHelper.requestUntilSucceeded
+      url: documentUrl
+      retryAfterSeconds: 60
+      callback: (result) =>
+        character = result.data
 
-      character = result.data
+        # Replace the user to admin.
+        character.user = _id: admin._id
 
-      # Replace the user to admin.
-      character.user = _id: admin._id
+        # Create a translation for the name.
+        fullNameTranslationId = AB.Translation.documents.insert lastEditTime: new Date
+        AB.Translation.update fullNameTranslationId, Artificial.Babel.defaultLanguage, @fullName()
+        character.avatar.fullName = _id: fullNameTranslationId
 
-      # Create a translation for the name.
-      fullNameTranslationId = AB.Translation.documents.insert lastEditTime: new Date
-      AB.Translation.update fullNameTranslationId, Artificial.Babel.defaultLanguage, @fullName()
-      character.avatar.fullName = _id: fullNameTranslationId
-
-      # Insert the character with a proper document ID and save
-      # the thing ID on the document to prevent multiple insertions.
-      character._id = Random.id()
-      character.thingId = @id()
-      LOI.Character.documents.insert character
+        # Insert the character with a proper document ID and save
+        # the thing ID on the document to prevent multiple insertions.
+        character._id = Random.id()
+        character.thingId = @id()
+        LOI.Character.documents.insert character
 
   constructor: ->
     super arguments...
