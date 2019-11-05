@@ -16,22 +16,7 @@ class C3.Service.Terminal.Character extends AM.Component
   onCreated: ->
     super arguments...
     
-    nameInputOptions =
-      addTranslationText: => @translation "Add language variant"
-      removeTranslationText: => @translation "Remove language variant"
-      newTranslationLanguage: ''
-
-    @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
-      placeholderText: => LOI.Character.Avatar.noNameTranslation()
-      placeholderInTargetLanguage: true
-      onTranslationInserted: (languageRegion, value) =>
-        LOI.Character.updateName @characterId(), languageRegion, value
-
-      onTranslationUpdated: (languageRegion, value) =>
-        LOI.Character.updateName @characterId(), languageRegion, value
-
-        # Return true to prevent the default update to be executed.
-        true
+    @fullNameInput = new LOI.Components.Account.Characters.CharacterNameTranslationInput characterId: @characterId
 
     @_initialPreviewViewingAngle = -Math.PI / 4
     @previewViewingAngle = new ReactiveField @_initialPreviewViewingAngle

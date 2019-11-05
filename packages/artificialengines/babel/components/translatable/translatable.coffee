@@ -135,6 +135,7 @@ class AB.Components.Translatable extends AM.Component
 
       @translatableInput = new AB.Components.Translatable.Input
         type: translatableComponent.options.type
+        realtime: translatableComponent.options.realtime
         translation: => @translation()
         languageRegion: => @languageRegion()
 
@@ -179,6 +180,7 @@ class AB.Components.Translatable extends AM.Component
       super arguments...
 
       @type = @options.type
+      @realtime = @options.realtime if @options.realtime?
 
     load: ->
       return unless translation = @options.translation()

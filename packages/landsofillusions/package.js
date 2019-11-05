@@ -515,6 +515,7 @@ Package.onUse(function(api) {
   api.addComponent('components/signin..');
   api.addComponent('components/storylinetitle..');
   api.addComponent('components/hand..');
+  api.addComponent('components/translationinput..');
 
   api.addComponent('components/menu..');
   api.addComponent('components/menu/items..');
@@ -534,7 +535,6 @@ Package.onUse(function(api) {
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
   
-  api.addComponent('components/translationinput..');
   api.addUnstyledComponent('components/sprite..');
   api.addUnstyledComponent('components/computer..');
 

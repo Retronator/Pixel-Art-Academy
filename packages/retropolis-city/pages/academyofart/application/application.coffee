@@ -80,22 +80,7 @@ class AOA.Application extends AM.Component
         return unless characterId = @applicationComponent.selectedCharacterId()
         LOI.GameState.forCharacter.subscribe @, characterId
 
-      nameInputOptions =
-        addTranslationText: => @translation "Add language variant"
-        removeTranslationText: => @translation "Remove language variant"
-        newTranslationLanguage: ''
-
-      @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
-        placeholderText: => LOI.Character.Avatar.noNameTranslation()
-        placeholderInTargetLanguage: true
-        onTranslationInserted: (languageRegion, value) =>
-          LOI.Character.updateName @applicationComponent.selectedCharacterId(), languageRegion, value
-
-        onTranslationUpdated: (languageRegion, value) =>
-          LOI.Character.updateName @applicationComponent.selectedCharacterId(), languageRegion, value
-
-          # Return true to prevent the default update to be executed.
-          true
+      @fullNameInput = new LOI.Components.Account.Characters.CharacterNameTranslationInput characterId: @applicationComponent.selectedCharacterId
 
     alreadyApplied: ->
       return unless gameState = LOI.GameState.documents.findOne 'character._id': @applicationComponent.selectedCharacterId()
