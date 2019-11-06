@@ -23,7 +23,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
     # We need to change the character's personality. Unlink the personality if it's using a template.
     # TODO: Use the overriding system for applying changes on top of templates when it's implemented.
-    if personality.options.dataLocation().template
+    if personality.options.dataLocation()?.template
       personality.options.dataLocation.unlinkTemplate()
 
     # We go over factor traits.
@@ -41,7 +41,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
     # Unlink the factor if it's using a template.
     # TODO: Use the overriding system for applying changes on top of templates when it's implemented.
-    if factorPart.options.dataLocation().template
+    if factorPart.options.dataLocation()?.template
       factorPart.options.dataLocation.unlinkTemplate()
 
     ownedTraitParts = factorPart.properties.traits.parts()

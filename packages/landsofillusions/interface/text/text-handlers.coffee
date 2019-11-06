@@ -98,7 +98,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
       for result in responseResults
         introductionFunction = result.enterResponse.introductionFunction()
 
-        @_currentIntroductionFunction introductionFunction if introductionFunction
+        if introductionFunction
+          @_currentIntroductionFunction introductionFunction
+
+          # Force user to read the custom introduction.
+          @showIntro()
 
   onCommandInputEnter: ->
     # Stop intro on enter.

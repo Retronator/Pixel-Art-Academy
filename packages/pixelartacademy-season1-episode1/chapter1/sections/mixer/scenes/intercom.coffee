@@ -26,7 +26,10 @@ class C1.Mixer.Intercom extends LOI.Adventure.Scene
 
       # Wait until the player is in the HQ.
       return unless LOI.adventure.currentRegionId() is Retronator.HQ.id()
-      
+
+      # Don't play it in the gallery, a separate script will run there.
+      return if LOI.adventure.currentLocationId() is Retronator.HQ.GalleryWest.id()
+
       # Prevent from playing twice, but retry if no script is playing.
       scriptQueue = LOI.adventure.director.foregroundScriptQueue
       @_scriptPlaying = false unless scriptQueue.currentScriptNode() or scriptQueue.queuedScriptNodes().length
@@ -38,6 +41,11 @@ class C1.Mixer.Intercom extends LOI.Adventure.Scene
       # Play the script and mark that it's playing to prevent starting twice.
       @_scriptPlaying = true
       @listeners[0].startScript()
+
+  destroy: ->
+    super arguments...
+
+    @_playAutorun.stop()
 
   # Script
 

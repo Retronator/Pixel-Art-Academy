@@ -131,6 +131,15 @@ class LOI.Adventure.Script
       for callbackNode in @startNode.callbacks[name]
         callbackNode.callback = callback
 
+  startAtLatestCheckpoint: (checkpointLabels) ->
+    for label, index in checkpointLabels
+      # Start at this checkpoint if we haven't reached the next one yet.
+      nextLabel = checkpointLabels[index + 1]
+
+      unless nextLabel and @state nextLabel
+        LOI.adventure.director.startScript @, {label}
+        return
+
   _addNode: (node) ->
     # Add the node only if it hasn't already added.
     return if not node or node in @nodes

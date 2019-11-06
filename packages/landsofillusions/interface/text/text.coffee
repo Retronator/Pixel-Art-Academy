@@ -130,12 +130,20 @@ class LOI.Interface.Text extends LOI.Interface
 
     if options.resetIntroduction
       @location()?.constructor.visited false
-      @inIntro true
+
+      # Show intro again (scrolls to top as well).
+      @showIntro()
 
       @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()
+
+  showIntro: ->
+    @inIntro true
+
+    # Scroll after intro has updated and other elements were hidden.
+    Tracker.afterFlush => @narrative.scroll animate: false
 
   stopIntro: (options = {}) ->
     options.scroll ?= true

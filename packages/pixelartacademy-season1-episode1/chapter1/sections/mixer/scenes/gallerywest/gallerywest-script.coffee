@@ -16,6 +16,12 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       reuben: HQ.Actors.Reuben
 
     @setCallbacks
+      GalleryIntroDone: (complete) =>
+        # We don't have to play the intercom announcement after the intro in the gallery.
+        C1.Mixer.Intercom.state 'announcementDone', true
+
+        complete()
+
       MixerStart: (complete) =>
         # Students move into audience position.
         scene._moveStudentsToAudience()

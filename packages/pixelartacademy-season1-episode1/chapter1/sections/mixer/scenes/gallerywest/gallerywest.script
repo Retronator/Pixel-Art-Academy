@@ -1,11 +1,29 @@
 # PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.GalleryWest
 
+## GalleryIntro
+
+> Shelley and Retro enter and set up a desk in the back of the gallery.
+
+shelley:
+  Oh, hi! We'll be having the meeting for Academy of Art applicants here.
+  
+retro:
+   We're almost done prepping so go ahead and get ready too.
+   
+### GalleryIntroDone
+
+-> [RetroIntroInstructions]
+
 ## RetroIntro
 
 -> [End] `RetroIntroDone`
 
 retro:
   Hey, welcome to the admission week meetup! We're just about to start.
+
+## RetroIntroInstructions
+
+retro:
   Grab a marker and make yourself a name tag. 
   Get a bunch of extra stickers too, you'll need them later on.
 
