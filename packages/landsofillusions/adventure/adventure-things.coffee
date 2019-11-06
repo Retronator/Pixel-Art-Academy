@@ -78,6 +78,7 @@ class LOI.Adventure extends LOI.Adventure
         # Look into our cache if we already instantiated this thing.
         thingId = _.thingId thing
         thingClass = _.thingClass thing
+        thingInstance = null
 
         if thingEntries = @_things[thingId]
           thingEntry = _.find thingEntries, (thingEntry) => thingEntry.class is thingClass
@@ -86,7 +87,7 @@ class LOI.Adventure extends LOI.Adventure
         unless thingInstance
           # We don't have an instance ready, so we'll have to create it. We do so in a non-reactive
           # context so that reruns of this autorun don't invalidate instance's autoruns.
-          thingInstance = Tracker.nonreactive => new thing
+          thingInstance = Tracker.nonreactive => new thingClass
           @_things[thingId] ?= []
           @_things[thingId].push
             class: thingClass
