@@ -196,11 +196,11 @@ class LOI.Engine.World extends AM.Component
     else if keyboardState.isKeyDown AC.Keys.rightMeta
       newObject = new LOI.Engine.Debug.DummySceneItem.Box point, 0.5
 
-    else
+    else if characterId = LOI.characterId()
       # Create move memory action.
       type = LOI.Memory.Actions.Move.type
       situation = LOI.adventure.currentSituationParameters()
-      LOI.Memory.Action.do type, LOI.characterId(), situation,
+      LOI.Memory.Action.do type, characterId, situation,
         coordinates: _.last(intersects).point.toObject()
 
     if newObject
