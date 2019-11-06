@@ -13,7 +13,10 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @debugTextureDataUrl = new ReactiveField null
 
     @animatedMeshes = {}
-    
+
+    # Main meshes are the meshes that aren't mirrored.
+    @mainAnimatedMeshes = {}
+
     @currentAngle = 0
     @currentSide = LOI.Engine.RenderingSides.Keys.Front
 
@@ -28,16 +31,13 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @_cameraEuler = new THREE.Euler
     @_cameraDirection = new THREE.Vector3
 
-    for side, sideAngle of LOI.Engine.RenderingSides.angles
+    mainRenderingSides = ['front', 'frontLeft', 'left', 'backLeft', 'back']
+    mirroredRenderingSides = ['frontRight', 'right', 'backRight']
+
+    for side in mainRenderingSides
       # Create the animated mesh.
-      if sideAngle > 0
-        sideName = LOI.Engine.RenderingSides.mirrorSides[side]
-
-      else
-        sideName = side
-
       animatedMesh = new AS.AnimatedMesh
-        dataUrl: "/landsofillusions/avatar/#{_.toLower sideName}.json"
+        dataUrl: "/landsofillusions/avatar/#{_.toLower side}.json"
         dataFPS: 60
         playbackFPS: 20
         castShadow: true
@@ -52,6 +52,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       animatedMesh.visible = false unless side is @currentSide
 
       @animatedMeshes[side] = animatedMesh
+      @mainAnimatedMeshes[side] = animatedMesh
 
       do (animatedMesh) =>
         animatedMesh._updateCreatureRendererAutorun = Tracker.autorun (computation) =>
@@ -61,8 +62,12 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
           creatureRenderer.renderMesh.mainMaterial = animatedMesh.options.material
           @scene().manager.addedSceneObjects()
 
+    for side in mirroredRenderingSides
+      mirrorSide = LOI.Engine.RenderingSides.mirrorSides[side]
+      @animatedMeshes[side] = @animatedMeshes[mirrorSide]
+
     @ready = new ComputedField =>
-      for side, animatedMesh of @animatedMeshes
+      for side, animatedMesh of @mainAnimatedMeshes
         # Wait till the animated mesh has an initialized creature renderer.
         return unless animatedMesh.creatureRenderer()
 
@@ -78,40 +83,15 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       heightOptions = LOI.Character.Part.Types.Avatar.Body.options.properties.height.options
       targetHeight = _.clamp heightValue or heightOptions.default, heightOptions.min, heightOptions.max
 
-      for side, sideAngle of LOI.Engine.RenderingSides.angles
-        # TODO: Remove when we're not using mirrored animation files.
-        if sideAngle > 0
-          sideName = LOI.Engine.RenderingSides.mirrorSides[side]
-
-        else
-          sideName = side
-
-        sideIndex = LOI.HumanAvatar.TextureRenderer.textureSides.indexOf sideName
-
+      for side in mainRenderingSides
         scale = targetHeight / bodyHeight
 
         animatedMesh = @animatedMeshes[side]
         animatedMesh.scale.set scale, scale, scale
-        animatedMesh.scale.x *= -1 if sideAngle > 0
         animatedMesh.position.y = -bodyBottom * scale
 
         # Calculate bone corrections relative to default body.
-        boneCorrections = @_calculateBoneCorrections sideName
-
-        # TODO: Remove when bones are properly named.
-        if sideName is 'backLeft'
-          mirroredBoneCorrections = {}
-
-          for bone, correction of boneCorrections
-            if _.endsWith bone, 'Right'
-              bone = bone.replace 'Right', 'Left'
-
-            else if _.endsWith bone, 'Left'
-              bone = bone.replace 'Left', 'Right'
-
-            mirroredBoneCorrections[bone] = correction
-
-          boneCorrections = mirroredBoneCorrections
+        boneCorrections = @_calculateBoneCorrections side
 
         # We need to transform corrections from pixels to character units. The standard character size is 49 pixels.
         unitsPerPixel = bodyHeight / 49
@@ -253,7 +233,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
     @humanAvatarRenderer?.destroy()
 
-    for side, animatedMesh of @animatedMeshes
+    for side, animatedMesh of @mainAnimatedMeshes
       animatedMesh._updateCreatureRendererAutorun.stop()
       animatedMesh.destroy()
 
@@ -262,7 +242,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     texture.minFilter = THREE.NearestFilter
 
     # We update the map (via texture field).
-    for side, animatedMesh of @animatedMeshes
+    for side, animatedMesh of @mainAnimatedMeshes
       animatedMesh.texture texture
       animatedMesh.options.material.needsUpdate = true
 
@@ -271,7 +251,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
   updateNormalsTexture: (texture) ->
     # We update the normal map field on material so that appropriate shader defines get turned on.
-    for side, animatedMesh of @animatedMeshes
+    for side, animatedMesh of @mainAnimatedMeshes
       animatedMesh.options.material.normalMap = texture
       animatedMesh.options.material.needsUpdate = true
 
@@ -283,8 +263,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       @_textureRendered = true
 
       # Add all animated meshes to the object.
-      for side, sideAngle of LOI.Engine.RenderingSides.angles
-        @add @animatedMeshes[side]
+      @add animatedMesh for side, animatedMesh of @mainAnimatedMeshes
 
   update: (appTime, options = {}) ->
     return unless @_textureRendered
@@ -325,6 +304,10 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @currentSide = side
     @animatedMeshes[@currentSide].visible = true
     @animatedMeshes[@currentSide].syncAnimationTo previousAnimatedMesh
+
+    # Apply correct flip.
+    sign = if @mainAnimatedMeshes[@currentSide] then 1 else -1
+    @animatedMeshes[@currentSide].scale.x = sign * Math.abs @animatedMeshes[@currentSide].scale.x
 
   facePosition: (positionOrLandmark) ->
     facingPosition = LOI.adventure.world.getPositionVector positionOrLandmark
