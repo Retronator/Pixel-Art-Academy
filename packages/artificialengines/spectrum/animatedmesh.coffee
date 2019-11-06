@@ -6,17 +6,96 @@ class AS.AnimatedMesh extends AS.RenderObject
 
   @getCachedDataField: (dataUrl) ->
     # Return the singleton field if we already have it.
-    return @_dataCache[dataUrl] if @_dataCache[dataUrl]
+    return @_dataCache[dataUrl].source if @_dataCache[dataUrl]
 
     # Create a new field.
-    @_dataCache[dataUrl] = new ReactiveField null
+    @_dataCache[dataUrl] =
+      source: new ReactiveField null
+      boneCorrected: []
 
     # Start loading its content.
     $.getJSON dataUrl, (data) =>
-      @_dataCache[dataUrl] data
+      @_dataCache[dataUrl].source data
 
     # Return the new field.
-    @_dataCache[dataUrl]
+    @_dataCache[dataUrl].source
+
+  @getCachedDataWithBoneCorrections: (dataUrl, boneCorrections) ->
+    # Return the singleton field if we already have it.
+    if dataCache = @_dataCache[dataUrl]
+      boneCorrectedEntry = _.find dataCache.boneCorrected, (boneCorrectedEntry) => _.isEqual boneCorrectedEntry.boneCorrections, boneCorrections
+
+      if boneCorrectedEntry
+        return boneCorrectedEntry.data()
+
+    else
+      # Ensure we have the source data field.
+      @getCachedDataField dataUrl
+
+    boneCorrectedData = Tracker.nonreactive =>
+      new ComputedField =>
+        return unless dataField = @getCachedDataField dataUrl
+
+        @_applyBoneCorrections dataField(), boneCorrections
+      ,
+        true
+
+    @_dataCache[dataUrl].boneCorrected.push
+      data: boneCorrectedData
+      boneCorrections: boneCorrections
+
+    boneCorrectedData()
+
+  @_applyBoneCorrections: (data, boneCorrections) ->
+    data = _.clone data
+    data.animation = _.clone data.animation
+
+    # See which bones will need offset.
+    bonesThatNeedOffset = {}
+
+    addBonesThatNeedOffset = (bone) =>
+      return if bonesThatNeedOffset[bone.name]
+      bonesThatNeedOffset[bone.name] = true
+
+      for childId in bone.children
+        childBone = _.find data.skeleton, (bone) => bone.id is childId
+        addBonesThatNeedOffset childBone
+
+    addBonesThatNeedOffset data.skeleton[boneName] for boneName of boneCorrections
+
+    for animationName, animation of data.animation
+      data.animation[animationName] = _.clone animation
+      bones = _.clone animation.bones
+      data.animation[animationName].bones = bones
+
+      for frameNumber, frame of bones
+        bones[frameNumber] = _.clone frame
+
+        # Only clone bones that will be offset.
+        for boneName of bonesThatNeedOffset
+          bones[frameNumber][boneName] = _.clone frame[boneName]
+
+    for boneName, correction of boneCorrections
+      unless data.skeleton[boneName]
+        console.warn "Bone #{boneName} to be corrected does not exist in the skeleton."
+        continue
+
+      for animationName, animation of data.animation
+        for frameNumber, frame of animation.bones
+          # Offset bone and all children. We do this in world space to avoid computation of proper correction in
+          # bone space which would require calculating all hierarchy matrices per frame. For non-extreme animations
+          # (that don't go too far away from the rest pose) this is good enough.
+          offsetBone = (bone) =>
+            frame[bone.name].start_pt = [frame[bone.name].start_pt[0] + correction.x, frame[bone.name].start_pt[1] - correction.y]
+            frame[bone.name].end_pt = [frame[bone.name].end_pt[0] + correction.x, frame[bone.name].end_pt[1] - correction.y]
+
+            for childId in bone.children
+              childBone = _.find data.skeleton, (bone) => bone.id is childId
+              offsetBone childBone
+
+          offsetBone data.skeleton[boneName]
+          
+    data
 
   constructor: (@options) ->
     super arguments...
@@ -71,53 +150,11 @@ class AS.AnimatedMesh extends AS.RenderObject
       return if @options.waitForBoneCorrections and not boneCorrections
 
       if boneCorrections
-        data = _.clone data
-        data.animation = _.clone data.animation
+        if @options.dataUrl
+          data = @constructor.getCachedDataWithBoneCorrections @options.dataUrl, boneCorrections
 
-        # See which bones will need offset.
-        bonesThatNeedOffset = {}
-
-        addBonesThatNeedOffset = (bone) =>
-          return if bonesThatNeedOffset[bone.name]
-          bonesThatNeedOffset[bone.name] = true
-
-          for childId in bone.children
-            childBone = _.find data.skeleton, (bone) => bone.id is childId
-            addBonesThatNeedOffset childBone
-
-        addBonesThatNeedOffset data.skeleton[boneName] for boneName of boneCorrections
-
-        for animationName, animation of data.animation
-          data.animation[animationName] = _.clone animation
-          bones = _.clone animation.bones
-          data.animation[animationName].bones = bones
-
-          for frameNumber, frame of bones
-            bones[frameNumber] = _.clone frame
-
-            # Only clone bones that will be offset.
-            for boneName of bonesThatNeedOffset
-              bones[frameNumber][boneName] = _.clone frame[boneName]
-
-        for boneName, correction of boneCorrections
-          unless data.skeleton[boneName]
-            console.warn "Bone #{boneName} to be corrected does not exist in the skeleton."
-            continue
-
-          for animationName, animation of data.animation
-            for frameNumber, frame of animation.bones
-              # Offset bone and all children. We do this in world space to avoid computation of proper correction in
-              # bone space which would require calculating all hierarchy matrices per frame. For non-extreme animations
-              # (that don't go too far away from the rest pose) this is good enough.
-              offsetBone = (bone) =>
-                frame[bone.name].start_pt = [frame[bone.name].start_pt[0] + correction.x, frame[bone.name].start_pt[1] - correction.y]
-                frame[bone.name].end_pt = [frame[bone.name].end_pt[0] + correction.x, frame[bone.name].end_pt[1] - correction.y]
-
-                for childId in bone.children
-                  childBone = _.find data.skeleton, (bone) => bone.id is childId
-                  offsetBone childBone
-
-              offsetBone data.skeleton[boneName]
+        else
+          data = @constructor._applyBoneCorrections data, boneCorrections
 
       data
 
