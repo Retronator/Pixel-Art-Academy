@@ -70,21 +70,27 @@ class LOI.Adventure extends LOI.Adventure
 
   _instantiateThings: (things) ->
     for thing in things
-      thingId = thing.id()
-
       # Look if the thing was already an instance.
       if thing instanceof LOI.Adventure.Thing
         thingInstance = thing
 
-      # Look into our cache if we already instantiated this thing.
-      else if @_things[thingId]
-        thingInstance = @_things[thingId]
-
       else
-        # We don't have an instance ready, so we'll have to create it. We do so in a non-reactive
-        # context so that reruns of this autorun don't invalidate instance's autoruns.
-        thingInstance = Tracker.nonreactive => new thing
-        @_things[thingId] = thingInstance
+        # Look into our cache if we already instantiated this thing.
+        thingId = _.thingId thing
+        thingClass = _.thingClass thing
+
+        if thingEntries = @_things[thingId]
+          thingEntry = _.find thingEntries, (thingEntry) => thingEntry.class is thingClass
+          thingInstance = thingEntry?.instance
+
+        unless thingInstance
+          # We don't have an instance ready, so we'll have to create it. We do so in a non-reactive
+          # context so that reruns of this autorun don't invalidate instance's autoruns.
+          thingInstance = Tracker.nonreactive => new thing
+          @_things[thingId] ?= []
+          @_things[thingId].push
+            class: thingClass
+            instance: thingInstance
 
       thingInstance
 
