@@ -123,7 +123,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   _formatLinks: (escapedText, linkColor) ->
     # Replace urls with links. The regex doesn't match links inside <a> tags.
-    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-;]*[\w@?^=%&\/~+#-;])?(?!(?:[^<]|<[^a])*\<\/\a\>)/g
+    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w#-;=?@^~]*[\w#-+\-/-;=?@^~])?(?!(?:[^<]|<[^a])*\<\/\a\>)/g
 
     formattedText = escapedText.replace urlRegex, (url, protocol, domain, path) =>
       urlText = domain

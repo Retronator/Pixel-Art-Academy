@@ -27,6 +27,10 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   @initialize()
 
+  @finished: ->
+    # Chapter 2 ends when you finish immersion.
+    C2.Immersion.finished()
+
   constructor: ->
     super arguments...
 
@@ -58,7 +62,3 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   fadeVisibleClass: ->
     'visible' if @fadeOutNeeded()
-
-  finished: ->
-    # Chapter 2 ends when you finish immersion.
-    C2.Immersion.finished()

@@ -33,10 +33,13 @@ class HQ.Actors.Shelley extends LOI.Character.Actor
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, shelley]
       action: =>
-        C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+        # Provide application read-only state.
+        application = PixelArtAcademy.Season1.Episode1.Chapter1.readOnlyState 'application'
 
-        @script.ephemeralState 'application',
-          applied: C1.state('application')?.applied
-          accepted: C1.readOnlyState('application')?.accepted
+        # Note: We need to make sure the application object exists since we'll be accessing its fields from the script.
+        @script.ephemeralState 'application', application or {}
+
+        # Immersion has been completed after chapter 2 is done or implicitly if we're synced to a character.
+        @script.ephemeralState 'immersionDone', PixelArtAcademy.Season1.Episode0.Chapter2.finished() or LOI.characterId()
 
         @startScript()

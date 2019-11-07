@@ -7,17 +7,21 @@ shelley: Can I help with something else? -> [MainQuestions] `_IntroductionOver`
 
 shelley: 
   Hi there, I'm Shelley!
-  I run the application process for the Academy. I'm also Matej's art dealer. `PixelArtAcademy.Season1.Episode0.Chapter2.finished()`
-  I'm Matej's art dealer. `not PixelArtAcademy.Season1.Episode0.Chapter2.finished()`
+  I run the application process for the Academy. I'm also Matej's art dealer. `_immersionDone`
+  I'm Matej's art dealer. `not _immersionDone`
+  
+-> [IntroductionOver] `not @character`
 
 char: Hi, I'm _char_. Nice to meet you!
+
+shelley: Nice to meet you too! So how can I help you, _char_?
 
 ## IntroductionOver
 
 ## MainQuestions
 
-* What kind of Academy? -> [Academy] `@character`
-* Where can I find more about the Academy? -> [AcademyMore] `@character`
+* What kind of Academy are you working for? -> [Academy]
+* Where can I find more about the Academy? -> [AcademyMore]
 * How do I apply to the Academy? -> [AcademyApply] `not _application.applied`
 * I applied but am still waiting to start admission week. -> [ApplicationWaiting] `_application.applied and not _application.accepted`
 * How do I get admission week started? -> [AdmissionWeekStart] `_application.accepted and not @inventory['PixelArtAcademy.PixelBoy']`
@@ -43,7 +47,7 @@ shelley: You'll find a lot of information on their website. The URL is https://r
 
 ## AcademyApply
 
-shelley: You do it online at the Academy's website. The URL is https://retropolis.city/academy-of-art.
+shelley: You do it online at the Academy's website. The URL is https://retropolis.city/academy-of-art/application.
 
 -> [MainQuestions]
 

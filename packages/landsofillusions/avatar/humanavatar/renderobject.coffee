@@ -60,7 +60,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
           console.log "Updating human avatar render object material", @ if LOI.debug
 
           creatureRenderer.renderMesh.mainMaterial = animatedMesh.options.material
-          @scene().manager.addedSceneObjects()
+          @scene()?.manager.addedSceneObjects()
 
     for side in mirroredRenderingSides
       mirrorSide = LOI.Engine.RenderingSides.mirrorSides[side]
