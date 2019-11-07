@@ -1,6 +1,8 @@
 LOI = LandsOfIllusions
 
 class LOI.Director
+  @debugDirector = false
+
   constructor: ->
     @foregroundScriptQueue = new @constructor.ScriptQueue null
     @backgroundScriptQueue = new @constructor.ScriptQueue null
@@ -23,7 +25,7 @@ class LOI.Director
     isForeground = @foregroundScriptQueue.containsScriptNode endingScriptNode
     isBackground = @backgroundScriptQueue.containsScriptNode endingScriptNode
 
-    console.log "Transitioning from", endingScriptNode, "to", nextScriptNode, isForeground, isBackground if LOI.debug
+    console.log "Transitioning from", endingScriptNode, "to", nextScriptNode, isForeground, isBackground if LOI.debug or LOI.Director.debugDirector
 
     # Give out a warning if we couldn't determine which queue to use
     if endingScriptNode and not (isForeground or isBackground)
@@ -37,7 +39,7 @@ class LOI.Director
     @foregroundScriptQueue.pauseCurrentNode()
 
   stopAllScripts: (options = {}) ->
-    console.log "Stopping all scripts." if LOI.debug
+    console.log "Stopping all scripts." if LOI.debug or LOI.Director.debugDirector
     @foregroundScriptQueue.stopAllScripts options
     @backgroundScriptQueue.stopAllScripts options
 

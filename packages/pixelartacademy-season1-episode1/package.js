@@ -185,6 +185,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-changepersonality');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-script');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-listener');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-positionactors');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-initialization');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/retro');
   api.addServerFile('chapter1/sections/mixer/scenes/gallerywest/methods-server');

@@ -34,6 +34,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       @_agentActionsSubscriptions subscriptions
 
+    # Position actors based on event phase.
     @_positionActorsAutorun = @autorun (computation) =>
       # Wait until the location mesh has loaded, so that we have landmark positions.
       return unless LOI.adventure.world.sceneManager().currentLocationMeshData()
@@ -43,99 +44,19 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         return unless subscription.ready()
 
       computation.stop()
+      @_positionActors()
 
-      startingPositions =
-        "#{HQ.Actors.Shelley.id()}": 'InFrontOfProjector'
-        "#{HQ.Actors.Reuben.id()}": 'MixerSideReuben'
-        "#{HQ.Actors.Alexandra.id()}": 'MixerSideAlexandra'
-        "#{HQ.Actors.Retro.id()}": 'MixerTable'
+    # Player should be in the mixer context.
+    @_enterContextAutorun = @autorun (computation) =>
+      # Don't overwrite an existing context.
+      return if LOI.adventure.currentContext()
 
-      startingFacingPositions =
-        "#{HQ.Actors.Reuben.id()}": 'MixerMiddle'
-        "#{HQ.Actors.Alexandra.id()}": 'MixerMiddle'
+      LOI.adventure.enterContext C1.Mixer.Context
 
-      if eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
-        # Position the students based on their answer to the previous
-        # question (so that they will animate to the new one).
-        answerStarts = [
-          'HobbyProfessionWriteStart'
-          'ExtrovertIntrovertStart'
-          'IndividualTeamStart'
-          'ComputersConsolesStart'
-        ]
-
-        questions = [
-          C1.Mixer.IceBreakers.Questions.HobbyProfession
-          C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles
-          C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert
-          C1.Mixer.IceBreakers.Questions.IndividualTeam
-        ]
-
-        question = null
-
-        for answerStart, index in answerStarts
-          if script.state answerStart
-            question = questions[index]
-
-          else
-            break
-
-        for person in @students()
-          # Find which answer the actor chose.
-          action = person.getActions(
-            type: C1.Mixer.IceBreakers.AnswerAction.type
-            'content.question': question
-          )[0]
-
-          # Get either the agent's character ID or actor's thing ID.
-          personId = person._id or person.id()
-
-          startingPositions[personId] = C1.Mixer.GalleryWest.answerLandmarks[action.content.answer]
-          startingFacingPositions[personId] = 'InFrontOfProjector'
-
-      else if (eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup and script.state 'JoinStudyGroupContinue') or eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
-        # Position students in their groups.
-        for actorClass in @constructor.actorClasses
-          groupIndex = _.findIndex @constructor.groups, (group) => actorClass in group.npcMembers()
-          startingPositions[actorClass.id()] = @constructor.answerLandmarks[groupIndex]
-
-        for agent in @otherAgents()
-          group = LOI.Adventure.Thing.getClassForId agent.studyGroupMembership.groupId
-          groupIndex = @constructor.groups.indexOf group
-          startingPositions[agent._id] = @constructor.answerLandmarks[groupIndex]
-
-        group = LOI.Adventure.Thing.getClassForId C1.readOnlyState 'studyGroupId'
-        groupIndex = @constructor.groups.indexOf group
-        startingPositions[LOI.characterId()] = @constructor.answerLandmarks[groupIndex]
-
-        if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
-          # Position coordinators.
-          startingPositions[HQ.Actors.Shelley.id()] = 'MixerMiddle'
-          startingPositions[HQ.Actors.Reuben.id()] = 'MixerRight'
-          startingPositions[HQ.Actors.Alexandra.id()] = 'MixerLeft'
-
-      else
-        # Position students randomly.
-        for actorClass in @constructor.actorClasses
-          startingPositions[actorClass.id()] = 'GalleryFloor'
-
-        for agent in @otherAgents()
-          startingPositions[agent._id] = 'GalleryFloor'
-
-      LOI.adventure.director.setPosition startingPositions
-      LOI.adventure.director.facePosition startingFacingPositions
-
-      unless eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
-        # Make actors face random directions.
-        for actorClass in @constructor.actorClasses
-          actor = LOI.adventure.getCurrentThing actorClass
-
-          direction = new THREE.Vector3 Math.random() * 2 - 1, 0, Math.random() * 2 - 1
-          direction.normalize()
-          actor.avatar.getRenderObject().faceDirection direction
-
-    # Retro should talk when at location.
+    # Intro with Retro (and Shelley) should play when at location.
     @_eventIntroAutorun = @autorun (computation) =>
+      # Make sure we're in the mixer context. Otherwise the running scripts would get cleared on context switch.
+      return unless LOI.adventure.currentContext() instanceof C1.Mixer.Context
       return unless @listeners[0].scriptsReady()
       return unless retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
       return unless retro.ready()
@@ -154,13 +75,6 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       computation.stop()
       LOI.adventure.director.startScript script, {label}
-
-    # Player should be in the mixer context.
-    @_enterContextAutorun = @autorun (computation) =>
-      # Don't overwrite an existing context.
-      return if LOI.adventure.currentContext()
-
-      LOI.adventure.enterContext C1.Mixer.Context
 
     @_autoStartScriptAutorun = @autorun (computation) =>
       # Make sure we're in the mixer context.
