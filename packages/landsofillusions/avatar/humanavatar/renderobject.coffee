@@ -121,12 +121,16 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.
-        @updatePaletteDataTexture new THREE.TextureLoader().load textures.paletteData.url
-        @updateNormalsTexture new THREE.TextureLoader().load textures.normals.url
+        textureLoader = new THREE.TextureLoader()
+        textureLoader.crossOrigin = 'use-credentials'
+
+        @updatePaletteDataTexture textureLoader.load textures.paletteData.url
+        @updateNormalsTexture textureLoader.load textures.normals.url
         @textureUpdateFinished()
 
         # Make sure the textures are actually reachable and fallback to on-the-fly rendering otherwise.
         image = new Image
+        image.crossOrigin = 'use-credentials'
         image.addEventListener 'error', =>
           console.warn "Couldn't reach avatar texture", textures.paletteData.url
           

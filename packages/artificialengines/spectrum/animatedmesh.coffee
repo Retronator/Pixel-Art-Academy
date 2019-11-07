@@ -113,7 +113,10 @@ class AS.AnimatedMesh extends AS.RenderObject
     @texture = new ReactiveField @options.texture
 
     if @options.textureUrl
-      texture = new THREE.TextureLoader().load @options.textureUrl
+      textureLoader = new THREE.TextureLoader()
+      textureLoader.crossOrigin = 'use-credentials'
+
+      texture = textureLoader.load @options.textureUrl
       texture.magFilter = THREE.NearestFilter
       texture.minFilter = THREE.NearestFilter
       @texture texture
