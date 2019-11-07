@@ -20,9 +20,9 @@ shelley: Nice to meet you too! So how can I help you, _char_?
 
 ## MainQuestions
 
-* What kind of Academy are you working for? -> [Academy]
-* Where can I find more about the Academy? -> [AcademyMore]
-* How do I apply to the Academy? -> [AcademyApply] `not _application.applied`
+* What kind of Academy are you working for? -> [Academy] `_immersionDone`
+* Where can I find more about the Academy? -> [AcademyMore] `_immersionDone`
+* How do I apply to the Academy? -> [AcademyApply] `_immersionDone and not _application.applied`
 * I applied but am still waiting to start admission week. -> [ApplicationWaiting] `_application.applied and not _application.accepted`
 * How do I get admission week started? -> [AdmissionWeekStart] `_application.accepted and not @inventory['PixelArtAcademy.PixelBoy']`
 * *CoordinatorMainQuestions*
