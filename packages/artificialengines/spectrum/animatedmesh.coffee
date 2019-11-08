@@ -2,110 +2,36 @@ AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 
 class AS.AnimatedMesh extends AS.RenderObject
-  @_dataCache = {}
+  @_dataEntryCache = {}
 
-  @getCachedDataField: (dataUrl) ->
+  @getCachedDataEntryField: (dataUrl) ->
     # Return the singleton field if we already have it.
-    return @_dataCache[dataUrl].source if @_dataCache[dataUrl]
+    return @_dataEntryCache[dataUrl] if @_dataEntryCache[dataUrl]
 
     # Create a new field.
-    @_dataCache[dataUrl] =
-      source: new ReactiveField null
-      boneCorrected: []
+    @_dataEntryCache[dataUrl] = new ReactiveField null
 
     # Start loading its content.
     $.getJSON dataUrl, (data) =>
-      @_dataCache[dataUrl].source data
+      animations = {}
+      
+      for name, animationData of data.animation
+        animations[name] = new AS.CreatureAnimation data, name
+
+      @_dataEntryCache[dataUrl] {data, animations}
 
     # Return the new field.
-    @_dataCache[dataUrl].source
-
-  @getCachedDataWithBoneCorrections: (dataUrl, boneCorrections) ->
-    # Return the singleton field if we already have it.
-    if dataCache = @_dataCache[dataUrl]
-      boneCorrectedEntry = _.find dataCache.boneCorrected, (boneCorrectedEntry) => _.isEqual boneCorrectedEntry.boneCorrections, boneCorrections
-
-      if boneCorrectedEntry
-        return boneCorrectedEntry.data()
-
-    else
-      # Ensure we have the source data field.
-      @getCachedDataField dataUrl
-
-    boneCorrectedData = Tracker.nonreactive =>
-      new ComputedField =>
-        return unless dataField = @getCachedDataField dataUrl
-
-        @_applyBoneCorrections dataField(), boneCorrections
-      ,
-        true
-
-    @_dataCache[dataUrl].boneCorrected.push
-      data: boneCorrectedData
-      boneCorrections: boneCorrections
-
-    boneCorrectedData()
-
-  @_applyBoneCorrections: (data, boneCorrections) ->
-    data = _.clone data
-    data.animation = _.clone data.animation
-
-    # See which bones will need offset.
-    bonesThatNeedOffset = {}
-
-    addBonesThatNeedOffset = (bone) =>
-      return if bonesThatNeedOffset[bone.name]
-      bonesThatNeedOffset[bone.name] = true
-
-      for childId in bone.children
-        childBone = _.find data.skeleton, (bone) => bone.id is childId
-        addBonesThatNeedOffset childBone
-
-    addBonesThatNeedOffset data.skeleton[boneName] for boneName of boneCorrections
-
-    for animationName, animation of data.animation
-      data.animation[animationName] = _.clone animation
-      bones = _.clone animation.bones
-      data.animation[animationName].bones = bones
-
-      for frameNumber, frame of bones
-        bones[frameNumber] = _.clone frame
-
-        # Only clone bones that will be offset.
-        for boneName of bonesThatNeedOffset
-          bones[frameNumber][boneName] = _.clone frame[boneName]
-
-    for boneName, correction of boneCorrections
-      unless data.skeleton[boneName]
-        console.warn "Bone #{boneName} to be corrected does not exist in the skeleton."
-        continue
-
-      for animationName, animation of data.animation
-        for frameNumber, frame of animation.bones
-          # Offset bone and all children. We do this in world space to avoid computation of proper correction in
-          # bone space which would require calculating all hierarchy matrices per frame. For non-extreme animations
-          # (that don't go too far away from the rest pose) this is good enough.
-          offsetBone = (bone) =>
-            frame[bone.name].start_pt = [frame[bone.name].start_pt[0] + correction.x, frame[bone.name].start_pt[1] - correction.y]
-            frame[bone.name].end_pt = [frame[bone.name].end_pt[0] + correction.x, frame[bone.name].end_pt[1] - correction.y]
-
-            for childId in bone.children
-              childBone = _.find data.skeleton, (bone) => bone.id is childId
-              offsetBone childBone
-
-          offsetBone data.skeleton[boneName]
-          
-    data
+    @_dataEntryCache[dataUrl]
 
   constructor: (@options) ->
     super arguments...
 
     # Load data if provided with its URLs.
     if @options.dataUrl
-      @data = @constructor.getCachedDataField @options.dataUrl
+      @dataEntry = @constructor.getCachedDataEntryField @options.dataUrl
 
     else
-      @data = new ReactiveField @options.data
+      @dataEntry = new ReactiveField @options.data
 
     @boneCorrections = new ReactiveField @options.boneCorrections
 
@@ -145,41 +71,41 @@ class AS.AnimatedMesh extends AS.RenderObject
 
       @materials.updated()
 
-    # Prepare animation data.
-    @correctedData = new ComputedField =>
-      return unless data = @data()
-
-      boneCorrections = @boneCorrections()
-      return if @options.waitForBoneCorrections and not boneCorrections
-
-      if boneCorrections
-        if @options.dataUrl
-          data = @constructor.getCachedDataWithBoneCorrections @options.dataUrl, boneCorrections
-
-        else
-          data = @constructor._applyBoneCorrections data, boneCorrections
-
-      data
-
     # Create creature objects.
     @creature = new ComputedField =>
-      return unless data = @correctedData()
+      return unless dataEntry = @dataEntry()
 
-      new AS.Creature data
+      new AS.Creature dataEntry.data
     ,
       true
 
     @creatureManager = new ComputedField =>
+      boneCorrections = @boneCorrections()
+      return if @options.waitForBoneCorrections and not boneCorrections
+
       return unless creature = @creature()
-      data = @correctedData()
+      dataEntry = @dataEntry()
 
       creatureManager = new AS.CreatureManager creature
       @_autoBlendSet = false
 
       creatureManager.SetTimeScale @options.dataFPS
 
-      for name, animationData of data.animation
-        creatureManager.AddAnimation new AS.CreatureAnimation data, name
+      for name, animation of dataEntry.animations
+        creatureManager.AddAnimation animation
+
+      if boneCorrections and _.keys(boneCorrections).length
+        creatureManager.bones_override_callback = (bonesMap) =>
+          for boneName, correction of boneCorrections
+            unless bone = bonesMap[boneName]
+              unless @_missingBoneWarned?[boneName]
+                console.warn "Bone #{boneName} to be corrected does not exist in the skeleton."
+                @_missingBoneWarned ?= {}
+                @_missingBoneWarned[boneName] = true
+
+              continue
+
+            @_applyBoneCorrection bone, correction
 
       creatureManager
     ,
@@ -249,8 +175,17 @@ class AS.AnimatedMesh extends AS.RenderObject
     @creatureManager.stop()
     @creatureRenderer.stop()
 
+  _applyBoneCorrection: (bone, correction) ->
+    bone.world_start_pt[0] += correction.x
+    bone.world_start_pt[1] -= correction.y
+    bone.world_end_pt[0] += correction.x
+    bone.world_end_pt[1] -= correction.y
+
+    for child in bone.children
+      @_applyBoneCorrection child, correction
+
   animationNames: ->
-    _.keys @data()?.animation
+    _.keys @dataEntry()?.animation
 
   update: (appTime, updateData = true) ->
     @_accumulatedTime += appTime.elapsedAppTime
