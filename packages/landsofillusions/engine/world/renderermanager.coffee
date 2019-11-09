@@ -64,7 +64,7 @@ class LOI.Engine.World.RendererManager
     # in this pass. This will setup shadows for further passes as well.
     @renderer.shadowMap.needsUpdate = true
 
-    @renderer.setClearColor 0xffff00, 1
+    @renderer.setClearColor 0x000000, 1
     @renderer.render scene, camera, @preprocessingRenderTarget
 
     # Render the color shadow maps. First set the shadow color material on all meshes.
