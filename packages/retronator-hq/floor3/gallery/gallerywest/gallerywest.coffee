@@ -38,6 +38,8 @@ class HQ.GalleryWest extends LOI.Adventure.Location
   things: -> [
     @elevatorButton
     @constructor.Colliders
+    @constructor.Artworks
+    @constructor.Artworks.Tribute
   ]
 
   exits: ->

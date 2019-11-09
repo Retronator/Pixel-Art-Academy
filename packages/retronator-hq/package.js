@@ -118,9 +118,15 @@ Package.onUse(function(api) {
 
   api.addFile('floor2/bookshelves..');
 
-  api.addFile('floor3/gallery/galleryeast');
-  api.addFile('floor3/gallery/gallerywest');
-  api.addFile('floor3/gallery/corinne');
+  api.addFile('floor3/gallery..');
+  api.addFile('floor3/gallery/artworksgroup');
+
+  api.addFile('floor3/gallery/gallerywest..');
+  api.addFile('floor3/gallery/gallerywest/artworks..');
+  api.addFile('floor3/gallery/gallerywest/artworks/tribute');
+
+  api.addFile('floor3/gallery/galleryeast..');
+  api.addFile('floor3/gallery/galleryeast/corinne');
 
   api.addThing('floor4/artstudio..');
   api.addServerFile('floor4/artstudio/initialize-server');
