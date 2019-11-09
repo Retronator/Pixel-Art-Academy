@@ -171,6 +171,21 @@ class LOI.Engine.World.SceneManager
         scene.remove renderObject
         @scene.updated()
 
+    # Map thing avatars to objects.
+    @world.autorun (computation) =>
+      @_currentLocationMeshDependency.depend()
+      return unless objects = @_currentLocationMesh?.objects()
+      return unless locationThings = @world.options.adventure.currentLocationThings()
+      return unless illustrationName = @illustration()?.name
+
+      for thing in locationThings
+        if thingIllustration = thing.illustration()
+          continue unless thingIllustration.mesh is illustrationName
+          continue unless object = _.find objects, (object) => object.data.name() is thingIllustration.object
+          object.avatar = thing.avatar
+
+      @scene.updated()
+
     @physicalItems = new ComputedField =>
       renderObjectsWithPhysics = @getAllChildren (item) => item.parentItem?.getPhysicsObject
       renderObjectWithPhysics.parentItem for renderObjectWithPhysics in renderObjectsWithPhysics

@@ -1,6 +1,10 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
+_raycasterPosition = new THREE.Vector3
+_raycasterDirection = new THREE.Vector3
+_raycasterWorldPoint = new THREE.Vector3
+
 class LOI.Assets.Mesh.CameraAngle
   constructor: (@cameraAngles, @index, data) ->
     @_updatedDependency = new Tracker.Dependency
@@ -44,6 +48,10 @@ class LOI.Assets.Mesh.CameraAngle
 
   _createVector: (vectorData = {}) ->
     new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
+
+  _setVector: (vector, vectorData = {}) ->
+    vector.set vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
+    vector
 
   getProjectionMatrixForViewport: (viewportBounds, target) ->
     return unless @pixelSize
@@ -168,27 +176,32 @@ class LOI.Assets.Mesh.CameraAngle
     pointToHorizonOrigin.cross(horizon.direction) / Math.abs denominator
 
   getRaycaster: (screenPoint) ->
+    raycaster = new THREE.Raycaster
+    @updateRaycaster raycaster, screenPoint
+    raycaster
+
+  updateRaycaster: (raycaster, screenPoint) ->
     # The default is a ray from camera position shooting through the target.
     # Note: We need to create vectors from the data which is a plain object.
-    position = @_createVector @position
-    direction = @_createVector(@target).sub position
+    @_setVector _raycasterPosition, @position
+    @_setVector(_raycasterDirection, @target).sub _raycasterPosition
 
     # Apply picture plane offset.
     xOffset = @picturePlaneOffset?.x or 0
     yOffset = @picturePlaneOffset?.y or 0
 
     # Transform the point from screen space to world, positioned on the picture plane.
-    worldPoint = new THREE.Vector3 screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
-    worldPoint.applyMatrix4 @worldMatrix
+    _raycasterWorldPoint.set screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
+    _raycasterWorldPoint.applyMatrix4 @worldMatrix
 
     if @picturePlaneDistance
       # In perspective the ray is shooting through the point in world space.
-      direction = worldPoint.sub @position
+      _raycasterDirection = _raycasterWorldPoint.sub _raycasterPosition
 
     else
       # In orthogonal the ray is shooting from the point in world space.
-      position = worldPoint.multiplyScalar @pixelSize
+      _raycasterPosition = _raycasterWorldPoint.multiplyScalar @pixelSize
 
-    direction.normalize()
-
-    new THREE.Raycaster position, direction
+    _raycasterDirection.normalize()
+    raycaster.set _raycasterPosition, _raycasterDirection
+    raycaster

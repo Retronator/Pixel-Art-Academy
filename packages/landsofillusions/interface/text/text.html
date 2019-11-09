@@ -65,8 +65,8 @@
                   … <span class="keypress-hint">Press enter to continue</span>
                 {{else}}
                   &gt;
-                  {{#if hoveredCommand}}
-                    {{hoveredCommand}}
+                  {{#if suggestedCommand}}
+                    {{suggestedCommand}}
                   {{else}}
                     {{{commandBeforeCaret}}}<span class="caret {{caretIdleClass}}">■</span>{{{commandAfterCaret}}}
                  {{/if}}

@@ -36,6 +36,28 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @hoveredCommand = new ReactiveField null
 
+    @suggestedCommand = new ComputedField =>
+      # If we're hovering a command in the narrative, show that.
+      hoveredCommand = @hoveredCommand()
+      return hoveredCommand if hoveredCommand
+
+      # See if we're hovering an avatar in the world.
+      return unless avatar = LOI.adventure.world.avatarUnderCursor()
+
+      # See if the avatar belongs to a thing.
+      thing = _.find LOI.adventure.currentPhysicalThings(), (thing) => thing.avatar is avatar
+      target = thing or avatar
+
+      # See if we have a descriptive name.
+      if descriptiveName = target.descriptiveName()
+        # See if there is a command in the description.
+        if match = descriptiveName.match /!\[(.*?)]\((.*?)\)/
+          # The second capture group contains the command.
+          return match[2]
+
+      # We couldn't get a full command so just write the avatar name.
+      target.fullName()
+
     @inIntro = new ReactiveField false
 
     @uiInView = new ReactiveField false

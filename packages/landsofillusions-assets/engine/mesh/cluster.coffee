@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
-  constructor: (@layer, @clusterData) ->
+  constructor: (@layer, @data) ->
     super arguments...
 
     @geometry = new ComputedField => @_generateGeometry()
@@ -28,7 +28,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
       if options.debug?()
         # Add points.
-        solverCluster = @clusterData.layer.object.solver.clusters[@clusterData.id]
+        solverCluster = @data.layer.object.solver.clusters[@data.id]
         points = solverCluster.getPoints()
         points.layers.set 2
         @add points
@@ -36,7 +36,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
       options.sceneManager.addedSceneObjects()
 
   _generateGeometry: ->
-    return unless geometryData = @clusterData.geometry()
+    return unless geometryData = @data.geometry()
 
     geometry = new THREE.BufferGeometry
     geometry.addAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
@@ -46,7 +46,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
     geometry
 
   _generateMaterials: ->
-    meshData = @clusterData.layer.object.mesh
+    meshData = @data.layer.object.mesh
     return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
 
     options = @layer.object.mesh.options
@@ -56,7 +56,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
       wireframe: options.debug?()
 
     # Determine the color.
-    clusterMaterial = @clusterData.material()
+    clusterMaterial = @data.material()
     material = null
 
     if visualizeNormals

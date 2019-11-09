@@ -239,6 +239,7 @@ class LOI.Interface.Text extends LOI.Interface
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
       'click .command': @onClickCommand
+      'click .location': @onClickLocation
       'mouseenter .exits .exit .name': @onMouseEnterExit
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
@@ -257,6 +258,11 @@ class LOI.Interface.Text extends LOI.Interface
 
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
+
+  onClickLocation: (event) ->
+    return if @waitingKeypress()
+
+    @_executeCommand @suggestedCommand()
 
   onMouseEnterExit: (event) ->
     exitAvatar = @currentData()

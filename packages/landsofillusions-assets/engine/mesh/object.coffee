@@ -1,12 +1,12 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
-  constructor: (@mesh, objectData) ->
+  constructor: (@mesh, @data) ->
     super arguments...
     
     # Note: We can't call these layers, since that's an Object3D rendering system.
     @engineLayers = new ComputedField =>
-      return unless layersData = objectData.layers.getAllWithoutUpdates()
+      return unless layersData = @data.layers.getAllWithoutUpdates()
       
       for layerData in layersData
         new @constructor.Layer @, layerData
@@ -34,12 +34,12 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
         currentCluster = @mesh.options.currentCluster?()
 
         # Add edge lines.
-        for edge in objectData.solver.edges
+        for edge in @data.solver.edges
 
           # Do not draw edges of unselected clusters in debug mode.
           continue if currentCluster and currentCluster not in [edge.clusterA.layerCluster, edge.clusterB.layerCluster]
 
-          lineSegments = edge.getLineSegments objectData.mesh.cameraAngles.get 0
+          lineSegments = edge.getLineSegments @data.mesh.cameraAngles.get 0
           lineSegments.layers.set 2
           @add lineSegments
       
@@ -48,9 +48,9 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
     # Update visibility.
     Tracker.autorun (computation) =>
       # See if mesh object visibility is controlled externally.
-      @visible = @mesh.options.objectVisibility? objectData.name()
+      @visible = @mesh.options.objectVisibility? @data.name()
 
       # Default to object's visibility in the mesh file.
-      @visible ?= objectData.visible()
+      @visible ?= @data.visible()
 
       @mesh.options.sceneManager.scene.updated()

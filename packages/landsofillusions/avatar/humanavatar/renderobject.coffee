@@ -9,6 +9,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     super arguments...
 
     @parentItem = @humanAvatar
+    @avatar = @humanAvatar
 
     @debugTextureDataUrl = new ReactiveField null
 

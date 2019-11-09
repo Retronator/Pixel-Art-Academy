@@ -1,14 +1,14 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
-  constructor: (@object, layerData) ->
+  constructor: (@object, @data) ->
     super arguments...
 
     @isLayer = true
-    @isRenderable = not _.startsWith layerData.name()?.toLowerCase(), 'hint'
+    @isRenderable = not _.startsWith @data.name()?.toLowerCase(), 'hint'
 
     @clusters = new ComputedField =>
-      return unless clustersData = layerData.clusters.getAllWithoutUpdates()
+      return unless clustersData = @data.clusters.getAllWithoutUpdates()
 
       for clusterId, clusterData of clustersData
         new @constructor.Cluster @, clusterData
@@ -35,7 +35,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
       # Add new children.
       for cluster in clusters
         # Do not draw unselected clusters in debug mode.
-        continue if debug and currentCluster and currentCluster isnt cluster.clusterData
+        continue if debug and currentCluster and currentCluster isnt cluster.data
 
         @add cluster
 
@@ -43,6 +43,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
 
     # Update visibility.
     Tracker.autorun (computation) =>
-      @visible = layerData.visible()
+      @visible = @data.visible()
 
       @object.mesh.options.sceneManager.scene.updated()

@@ -24,13 +24,20 @@ class LOI.Engine.World extends AM.Component
     @physicsManager = new ReactiveField null
 
     @mouse = new ReactiveField null
-    
+
+    @_cursorIntersectionPoints = []
+    @cursorIntersectionPoints = new ReactiveField @_cursorIntersectionPoints
+
+    @avatarUnderCursor = new ReactiveField null, (a, b) => a is b
+
     @navigator = new ReactiveField null
 
     @$world = new ReactiveField null
 
     @physicsDebug = new ReactiveField false
     @spaceOccupationDebug = new ReactiveField false
+
+    @_raycaster = new THREE.Raycaster
 
   onCreated: ->
     super arguments...
@@ -75,9 +82,10 @@ class LOI.Engine.World extends AM.Component
         @$('.engine-texture')[0].src = LOI.character()?.avatar.getRenderObject().debugTextureDataUrl()
 
   forceUpdateAndDraw: ->
-    appTime = Tracker.nonreactive => @app.appTime()
-    @_update appTime
-    @_draw appTime
+    Tracker.nonreactive =>
+      appTime = @app.appTime()
+      @_update appTime
+      @_draw appTime
 
   onDestroyed: ->
     super arguments...
@@ -142,6 +150,10 @@ class LOI.Engine.World extends AM.Component
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
 
+    # Update avatar under cursor if the cursor is in the window. We need to do
+    # this even if the mouse is not moving since the objects underneath might be.
+    @_updateCursorIntersectionPoints() if @_hovering
+
   draw: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
 
@@ -169,26 +181,20 @@ class LOI.Engine.World extends AM.Component
     @_hovering = false
     @forceUpdateAndDraw()
 
+    # Clear cursor intersection points.
+    @_cursorIntersectionPoints.length = 0
+    @_cursorIntersectionPointsUpdated()
+
   onClickCanvas: (event) ->
-    displayCoordinate = @mouse().displayCoordinate()
-    illustrationSize = @options.adventure.interface.illustrationSize
-    scene = @sceneManager().scene()
-
-    return unless raycaster = @cameraManager().getRaycaster(
-      x: displayCoordinate.x - illustrationSize.width() / 2
-      y: displayCoordinate.y - illustrationSize.height() / 2
-    )
-
-    intersects = raycaster.intersectObjects scene.children, true
-    return unless intersects.length
+    return unless @_cursorIntersectionPoints.length
 
     keyboardState = AC.Keyboard.getState()
 
     if keyboardState.isKeyDown AC.Keys.shift
-      point = intersects[0].point
+      point = @_cursorIntersectionPoints[0].point
 
     else
-      point = _.last(intersects).point
+      point = _.last(@_cursorIntersectionPoints).point
 
     if keyboardState.isKeyDown AC.Keys.leftMeta
       newObject = new LOI.Engine.Debug.DummySceneItem.Ball point, 0.5
@@ -201,7 +207,7 @@ class LOI.Engine.World extends AM.Component
       type = LOI.Memory.Actions.Move.type
       situation = LOI.adventure.currentSituationParameters()
       LOI.Memory.Action.do type, characterId, situation,
-        coordinates: _.last(intersects).point.toObject()
+        coordinates: _.last(@_cursorIntersectionPoints).point.toObject()
 
     if newObject
       sceneManager = @sceneManager()
@@ -211,3 +217,42 @@ class LOI.Engine.World extends AM.Component
       # HACK: We need to force recomputation for scene to apply uniforms to the
       # new object. Otherwise render draw will run before the recomputation.
       Tracker.flush()
+
+  _updateCursorIntersectionPoints: ->
+    return unless displayCoordinate = @mouse().displayCoordinate()
+    illustrationSize = @options.adventure.interface.illustrationSize
+    scene = @sceneManager().scene()
+
+    @cameraManager().updateRaycaster(@_raycaster,
+      x: displayCoordinate.x - illustrationSize.width() / 2
+      y: displayCoordinate.y - illustrationSize.height() / 2
+    )
+
+    # Clear current intersected objects.
+    @_cursorIntersectionPoints.length = 0
+
+    # Update intersection points.
+    @_raycaster.intersectObjects scene.children, true, @_cursorIntersectionPoints
+    @_cursorIntersectionPointsUpdated()
+
+  _cursorIntersectionPointsUpdated: ->
+    @cursorIntersectionPoints @_cursorIntersectionPoints
+
+    # Update avatar as well.
+    @_updateAvatarUnderCursor()
+
+  _updateAvatarUnderCursor: ->
+    # Find any avatars we're hovering over from front to back.
+    for point in @_cursorIntersectionPoints
+      # See if this mesh is part of a render object with an avatar.
+      searchObject = point.object
+
+      while searchObject
+        if searchObject.avatar
+          @avatarUnderCursor searchObject.avatar
+          return
+
+        searchObject = searchObject.parent
+
+    # We couldn't find any objects with avatars.
+    @avatarUnderCursor null
