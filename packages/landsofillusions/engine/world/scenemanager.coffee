@@ -209,6 +209,13 @@ class LOI.Engine.World.SceneManager
   destroy: ->
     @locationThings.stop()
 
+  getObjectForThing: (thing) ->
+    return unless thingIllustration = thing.illustration()
+    return unless thingIllustration.mesh is @illustration()?.name
+    return unless objects = @_currentLocationMesh?.objects()
+
+    _.find objects, (object) => object.data.name() is thingIllustration.object
+
   getAllChildren: (filterParameter) ->
     filter = _.filterFunction filterParameter
     scene = @scene.withUpdates()

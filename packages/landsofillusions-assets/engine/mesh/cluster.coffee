@@ -15,6 +15,9 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
         @mesh()
       ]
 
+    @boundingBox = new ComputedField =>
+      @geometry().boundingBox
+
     # Update scene.
     Tracker.autorun (computation) =>
       # Clean up previous children.
@@ -42,6 +45,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
     geometry.addAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
     geometry.addAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
     geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
+    geometry.computeBoundingBox()
 
     geometry
 

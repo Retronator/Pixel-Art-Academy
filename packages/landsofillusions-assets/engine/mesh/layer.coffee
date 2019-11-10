@@ -21,6 +21,20 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
 
       true
 
+    @boundingBox = new ComputedField =>
+      return unless clusters = @clusters()
+
+      boundingBox = null
+
+      for cluster in clusters
+        if boundingBox
+          boundingBox.union cluster.boundingBox()
+
+        else
+          boundingBox = cluster.boundingBox()
+
+      boundingBox
+
     # Update object children.
     Tracker.autorun (computation) =>
       # Clean up previous children.
