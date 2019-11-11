@@ -1,6 +1,7 @@
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
+class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
   constructor: (@mesh, @data) ->
     super arguments...
     
@@ -19,9 +20,13 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
 
       true
 
-    @boundingBox = new ComputedField =>
+    @boundingBox = new ReactiveField null
+
+    # Reposition the object so the origin is in the center of its bounding box.
+    @autorun (computation) =>
       return unless layers = @engineLayers()
 
+      # Calculate the bounding box.
       boundingBox = null
 
       for layer in layers
@@ -31,10 +36,16 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
         else
           boundingBox = layer.boundingBox()
 
-      boundingBox
+      @boundingBox boundingBox
+
+      # Reposition object to bounding box center.
+      boundingBox.getCenter @position
+
+      # Offset layers in the opposite direction.
+      layer.position.copy(@position).negate() for layer in layers
 
     # Update object children.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
 
@@ -60,7 +71,7 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       @mesh.options.sceneManager.addedSceneObjects()
 
     # Update visibility.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       # See if mesh object visibility is controlled externally.
       @visible = @mesh.options.objectVisibility? @data.name()
 
@@ -68,3 +79,8 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       @visible ?= @data.visible()
 
       @mesh.options.sceneManager.scene.updated()
+
+  destroy: ->
+    super arguments...
+
+    layer.destroy() for layer in @layers()

@@ -18,7 +18,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation()?.exits()[Back]
 
-    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.options.id() is backExit?.id()
+    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.thing.id() is backExit?.id()
 
     exitAvatar.shortName()
 
@@ -262,7 +262,22 @@ class LOI.Interface.Text extends LOI.Interface
   onClickLocation: (event) ->
     return if @waitingKeypress()
 
-    @_executeCommand @suggestedCommand()
+    # See if hovering pre-filled a command for us.
+    if suggestedCommand = @suggestedCommand()
+      @_executeCommand suggestedCommand
+      return
+
+    # No command was given. If we have a character and the click was inside the scene, we can move the character.
+    return unless characterId = LOI.characterId()
+    return unless cursorIntersectionPoints = LOI.adventure.world.cursorIntersectionPoints()
+    return unless cursorIntersectionPoints.length
+
+    # Create move memory action.
+    type = LOI.Memory.Actions.Move.type
+    situation = LOI.adventure.currentSituationParameters()
+
+    LOI.Memory.Action.do type, characterId, situation,
+      coordinates: _.last(cursorIntersectionPoints).point.toObject()
 
   onMouseEnterExit: (event) ->
     exitAvatar = @currentData()
@@ -271,7 +286,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation().exits()[Back]
 
-    if exitAvatar.options.id() is backExit?.id()
+    if exitAvatar.thing.id() is backExit?.id()
       command = "Go #{$(event.target).text()}"
       
     else

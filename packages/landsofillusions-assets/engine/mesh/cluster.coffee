@@ -1,6 +1,7 @@
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
+class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
   constructor: (@layer, @data) ->
     super arguments...
 
@@ -19,7 +20,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
       @geometry().boundingBox
 
     # Update scene.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
 

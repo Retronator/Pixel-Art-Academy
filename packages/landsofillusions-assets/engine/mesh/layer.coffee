@@ -1,6 +1,7 @@
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
+class LOI.Assets.Engine.Mesh.Object.Layer extends AS.RenderObject
   constructor: (@object, @data) ->
     super arguments...
 
@@ -36,7 +37,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
       boundingBox
 
     # Update object children.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
 
@@ -56,7 +57,12 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
       @object.mesh.options.sceneManager.addedSceneObjects()
 
     # Update visibility.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       @visible = @data.visible()
 
       @object.mesh.options.sceneManager.scene.updated()
+
+  destroy: ->
+    super arguments...
+
+    cluster.destroy() for cluster in @clusters()

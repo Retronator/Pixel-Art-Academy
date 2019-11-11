@@ -23,6 +23,7 @@ Document.startup ->
     Verbs:
       GoToLocationName: ['go to', 'travel to', 'enter', 'leave to']
       GoToDirection: ['go', 'towards', 'move', 'travel']
+      GoToThing: ['go to', 'move to', 'approach']
       ExitLocation: ['exit', 'leave']
       TalkTo: ['talk to', 'talk with', 'speak to', 'speak with', 'chat with']
       LookAt: ['look at', 'examine', 'see', 'view', 'watch']

@@ -19,6 +19,7 @@ LOI.Parser.Vocabulary.Keys =
   Verbs:
     GoToLocationName: ''
     GoToDirection: ''
+    GoToThing: ''
     ExitLocation: ''
     TalkTo: ''
     LookAt: ''

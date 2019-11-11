@@ -1,6 +1,7 @@
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh extends THREE.Object3D
+class LOI.Assets.Engine.Mesh extends AS.RenderObject
   constructor: (@options) ->
     super arguments...
 
@@ -15,7 +16,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       true
 
     # Add the mesh to the scene.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       return unless scene = @options.sceneManager.scene()
       computation.stop()
 
@@ -23,7 +24,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       @options.sceneManager.addedSceneObjects()
 
     # Generate objects.
-    @_generateObjectsAutorun = Tracker.autorun (computation) =>
+    @autorun (computation) =>
       return unless meshData = @options.meshData()
       return unless objectsData = meshData.objects.getAllWithoutUpdates()
       
@@ -33,7 +34,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       @objects engineObjects
 
     # Update mesh children.
-    @_updateChildrenAutorun = Tracker.autorun (computation) =>
+    @autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
 
@@ -46,5 +47,6 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       @options.sceneManager.addedSceneObjects()
 
   destroy: ->
-    @_generateObjectsAutorun.stop()
-    @_updateChildrenAutorun.stop()
+    super arguments...
+
+    object.destroy() for object in @objects()

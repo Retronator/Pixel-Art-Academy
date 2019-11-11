@@ -430,7 +430,7 @@ Package.onUse(function(api) {
 
   api.addFile('parser/listeners/debug');
   api.addFile('parser/listeners/navigation');
-  api.addFile('parser/listeners/description');
+  api.addFile('parser/listeners/thing');
   api.addFile('parser/listeners/looklocation');
   api.addFile('parser/listeners/conversation');
   api.addFile('parser/listeners/advertisedcontext');

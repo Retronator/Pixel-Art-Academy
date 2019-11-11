@@ -18,7 +18,7 @@ class LOI.Parser
     @listeners = [
       new @constructor.DebugListener
       new @constructor.NavigationListener
-      new @constructor.DescriptionListener
+      new @constructor.ThingListener
       new @constructor.LookLocationListener
       new @constructor.ConversationListener
       new @constructor.AdvertisedContextListener

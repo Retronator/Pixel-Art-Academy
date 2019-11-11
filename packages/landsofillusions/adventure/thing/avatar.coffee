@@ -25,10 +25,10 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
           defaultText = _.propertyValue options, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
-  constructor: (@options) ->
+  constructor: (@thing) ->
     super arguments...
     
-    id = _.propertyValue @options, 'id'
+    id = _.propertyValue @thing, 'id'
     translationNamespace = "#{id}.Avatar"
 
     # Subscribe to this avatar's translations.
@@ -47,18 +47,18 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   descriptiveName: -> @_translateIfAvailable @constructor.translationKeys.descriptiveName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
 
-  pronouns: -> _.propertyValue @options, 'pronouns'
-  nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'
-  nameNounType: -> _.propertyValue @options, 'nameNounType'
+  pronouns: -> _.propertyValue @thing, 'pronouns'
+  nameAutoCorrectStyle: -> _.propertyValue @thing, 'nameAutoCorrectStyle'
+  nameNounType: -> _.propertyValue @thing, 'nameNounType'
 
   color: ->
     # Return the desired color or use the default.
-    color = _.propertyValue @options, 'color'
+    color = _.propertyValue @thing, 'color'
 
     color or super arguments...
 
-  dialogTextTransform: -> _.propertyValue @options, 'dialogTextTransform'
-  dialogueDeliveryType: -> _.propertyValue @options, 'dialogueDeliveryType'
+  dialogTextTransform: -> _.propertyValue @thing, 'dialogTextTransform'
+  dialogueDeliveryType: -> _.propertyValue @thing, 'dialogueDeliveryType'
 
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key
@@ -66,3 +66,8 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
 
   getTranslation: (key) ->
     AB.existingTranslation @_translationSubscription, key
+    
+  getRenderObject: ->
+    return unless thingIllustration = @thing.illustration?()
+
+    LOI.adventure.world.sceneManager().getMeshObject thingIllustration.mesh, thingIllustration.object
