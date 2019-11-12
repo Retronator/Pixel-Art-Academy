@@ -116,13 +116,19 @@ class LOI.Interface.Components.CommandInput
 
     # If space is pressed after the say command, auto-insert quotes.
     commandBeforeCaret = @commandBeforeCaret()
+    sayCommandPhrases = LOI.adventure.parser.vocabulary.getPhrases LOI.Parser.Vocabulary.Keys.Verbs.Say
 
     if charCode is AC.Keys.space
-      sayCommandPhrases = LOI.adventure.parser.vocabulary.getPhrases LOI.Parser.Vocabulary.Keys.Verbs.Say
-
       for sayCommandPhrase in sayCommandPhrases
         if commandBeforeCaret is sayCommandPhrase
           addition += '"'
+          break
+
+    # If quote is pressed directly after the say command, insert space in front of it.
+    if charCode is '"'.charCodeAt 0
+      for sayCommandPhrase in sayCommandPhrases
+        if commandBeforeCaret is sayCommandPhrase
+          addition = " #{addition}"
           break
 
     # If the quote is pressed directly behind a quote, don't add it.

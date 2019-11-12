@@ -41,7 +41,7 @@ pc: Hi! I'm _pc_.
 
 > The turn comes to _char_ to introduce _themselves_.
 
-> You can use the ![say](say "something") command followed by quotation marks to instruct your character to say something.
+> You can use the ![say](say "") command followed by quotation marks to instruct your character to say something.
 
 > Note that other players will be able to read and respond to what your character says this way.
 

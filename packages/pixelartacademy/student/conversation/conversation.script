@@ -118,7 +118,7 @@ student: If I could by anyone I'd be `_studentProfile.favorites.superhero`.
 
 ## FavoriteQuote
 
-student: Hmm, let me think … What's yours?
+student: Hmm, let me think … What's yours, by the way?
 
 char: `_profile.favorites.quote` `true`
 

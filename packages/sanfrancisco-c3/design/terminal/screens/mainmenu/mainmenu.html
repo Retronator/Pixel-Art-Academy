@@ -31,33 +31,35 @@
         <button class="action-button new-character-button">New</button>
       </div>
     </div>
-    <div class="templates section">
-      <h2 class="section-title">Cyborg Parts</h2>
-      <div class="category">
-        <select class="category-selection">
-          <option value="">All</option>
-          {{#each templateCategories}}
-            <option value="{{type}}" {{templateCategorySelectedAttribute}}>{{name}}</option>
+    {{#if hasItem 'Retronator.Admin'}}
+      <div class="templates section">
+        <h2 class="section-title">Cyborg Parts</h2>
+        <div class="category">
+          <select class="category-selection">
+            <option value="">All</option>
+            {{#each templateCategories}}
+              <option value="{{type}}" {{templateCategorySelectedAttribute}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <ul class="document-selection">
+          {{#each templates}}
+            <li class="document">
+              <button class="document-selection-button template-selection-button">
+                {{translatedName}}
+                {{#unless dataPublished}}
+                  ({{#if $gt templateVersion 1}}v{{templateVersion}}, {{/if}}draft)
+                {{/unless}}
+              </button>
+            </li>
           {{/each}}
-        </select>
+        </ul>
+        <div class="actions">
+          {{#if templatesTypeFilter}}
+            <button class="action-button new-template-button">New</button>
+          {{/if}}
+        </div>
       </div>
-      <ul class="document-selection">
-        {{#each templates}}
-          <li class="document">
-            <button class="document-selection-button template-selection-button">
-              {{translatedName}}
-              {{#unless dataPublished}}
-                ({{#if $gt templateVersion 1}}v{{templateVersion}}, {{/if}}draft)
-              {{/unless}}
-            </button>
-          </li>
-        {{/each}}
-      </ul>
-      <div class="actions">
-        {{#if templatesTypeFilter}}
-          <button class="action-button new-template-button">New</button>
-        {{/if}}
-      </div>
-    </div>
+    {{/if}}
   </div>
 </template>

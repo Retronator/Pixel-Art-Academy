@@ -53,6 +53,15 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Scene.PersonConversatio
         prepareScriptForStudent = =>
           scene.prepareForStudent student
 
+        lookAtStudentAnimation = =>
+          # The character should approach the student.
+          character = LOI.character()
+          character.avatar.walkTo
+            target: student
+            onCompleted: =>
+              # The character should turn towards the student.
+              character.avatar.lookAt student
+
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, student]
           priority: 1
@@ -68,10 +77,12 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Scene.PersonConversatio
             prepareScriptForStudent()
             LOI.adventure.director.startNode new Nodes.NarrativeLine line: student.description()
             LOI.adventure.director.startScript @script, label: 'LookAtStudent'
+            lookAtStudentAnimation()
 
         lookAtAnswersAction = =>
           prepareScriptForStudent()
           LOI.adventure.director.startScript @script, label: 'LookAtAnswers'
+          lookAtStudentAnimation()
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.LookAt, possessive: student, [@avatars.answers, @avatars.answer]]
@@ -86,3 +97,4 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Scene.PersonConversatio
           action: =>
             prepareScriptForStudent()
             LOI.adventure.director.startScript @script, label: 'LookAtNameTag'
+            lookAtStudentAnimation()
