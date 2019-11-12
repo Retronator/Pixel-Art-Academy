@@ -107,6 +107,7 @@ Package.onUse(function(api) {
 
   api.addFile('avatar/avatar');
   api.addFile('avatar/humanavatar..');
+  api.addFile('avatar/humanavatar/humanavatar-actions');
   api.addFile('avatar/humanavatar/renderobject');
   api.addFile('avatar/humanavatar/renderobject-bonecorrections');
   api.addFile('avatar/humanavatar/physicsobject');
@@ -347,6 +348,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/choiceplaceholder.coffee');
   api.addFiles('adventure/script/nodes/timeout.coffee');
   api.addFiles('adventure/script/nodes/pause.coffee');
+  api.addFiles('adventure/script/nodes/animation.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
@@ -421,6 +423,8 @@ Package.onUse(function(api) {
   api.addFile('memory/actions/move');
   api.addFile('memory/actions/leave');
   api.addFile('memory/actions/say');
+  api.addFile('memory/actions/talk');
+  api.addFile('memory/actions/idle');
 
   api.addFile('memory/progress..');
   api.addFile('memory/progress/methods');
@@ -435,6 +439,7 @@ Package.onUse(function(api) {
   api.addFile('parser/listeners/conversation');
   api.addFile('parser/listeners/advertisedcontext');
   api.addFile('parser/listeners/help');
+  api.addFile('parser/listeners/talking');
 
   // Interface
 

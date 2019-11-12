@@ -58,6 +58,16 @@ class LOI.Interface extends AM.Component
 
       Tracker.nonreactive => @_handleNode scriptNode, background: true
 
+    # Listen to the realtime scripts.
+    @autorun (computation) =>
+      # Realtime scripts execute all the time when the game is running.
+      return unless @locationChangeReady() and not LOI.adventure.paused()
+      return unless scriptNode = LOI.adventure.director.realtimeScriptQueue.currentScriptNode()
+
+      console.log "Interface has detected new realtime script node:", scriptNode if LOI.debug
+
+      Tracker.nonreactive => @_handleNode scriptNode, background: true, realtime: true
+
   _readyToProcessScriptNodes: ->
     # We want to wait until the interface is ready after the location change has been initiated.
     return unless @locationChangeReady()
@@ -100,19 +110,23 @@ class LOI.Interface extends AM.Component
     @_handleEmpty node, options if node instanceof Nodes.Code
 
     @_handleCallback node, options if node instanceof Nodes.Callback
+    @_handleCallback node, options if node instanceof Nodes.Animation
     @_handleTimeout node, options if node instanceof Nodes.Timeout
 
-  _handleEmpty: (scriptNode) ->
+    # Inform listeners that the node has been handled.
+    listener.onScriptNodeHandled node for listener in LOI.adventure.currentListeners()
+
+  _handleEmpty: (scriptNode, options) ->
     # Simply end the node.
     scriptNode.end()
 
-  _handleDialogueLine: (dialogueLine) ->
+  _handleDialogueLine: (dialogueLine, options) ->
     console.log "#{dialogueLine.actor.name} says: \"#{dialogueLine.line}\""
 
-  _handleNarrativeLine: (narrativeLine) ->
+  _handleNarrativeLine: (narrativeLine, options) ->
     console.log narrativeLine.line
 
-  _handleCallback: (callback) ->
+  _handleCallback: (callback, options) ->
     unless callback.callback
       # No callback was set for this node. Give a warning and just skip it.
       console.warn "No callback is set for", callback.name
@@ -123,7 +137,11 @@ class LOI.Interface extends AM.Component
     callback.callback =>
       callback.end()
 
-  _handleTimeout: (timeout) ->
+    # For realtime queue, immediately pause the node to allow other realtime scripts to continue.
+    if options.realtime
+      LOI.adventure.director.realtimeScriptQueue.pauseCurrentNode()
+
+  _handleTimeout: (timeout, options) ->
     Meteor.setTimeout =>
       timeout.end()
     ,

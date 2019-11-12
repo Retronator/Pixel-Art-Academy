@@ -70,6 +70,9 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
   _avatar: ->
     @document()?.avatar
 
+  characterId: ->
+    @document()._id
+
   fullName: ->
     # We only want to return the loading text the document hasn't loaded yet. When
     # it has loaded, avatar could be null, in which case we need to return no-name.

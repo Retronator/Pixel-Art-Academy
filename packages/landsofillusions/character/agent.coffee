@@ -21,7 +21,7 @@ class LOI.Character.Agent extends LOI.Character.Person
     # All agents are (potential) students.
     @require PixelArtAcademy.Student
 
-    # Agent's main avatar will be the character avatar from the instance, so we manually create the avatar based on
+    # Agent's main avatar will be the character avatar from the instance, so we separately store the avatar based on
     # this thing. This way we can use some universal avatar values that hold for all agents (like description).
     @thingAvatar = @avatar
 
@@ -41,6 +41,11 @@ class LOI.Character.Agent extends LOI.Character.Person
     @personStateAddress = new LOI.StateAddress "people.#{@_id}"
     @personState = new LOI.StateObject address: @personStateAddress
 
+  destroy: ->
+    super arguments...
+
+    @_actionSubscription.stop()
+
   ready: ->
     conditions = [
       super arguments...
@@ -49,6 +54,8 @@ class LOI.Character.Agent extends LOI.Character.Person
     ]
 
     _.every conditions
+
+  characterId: -> @_id
 
   description: ->
     if @_id is LOI.characterId()

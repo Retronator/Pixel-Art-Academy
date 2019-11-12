@@ -18,7 +18,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation()?.exits()[Back]
 
-    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.thing.id() is backExit?.id()
+    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.thingClass.id() is backExit?.id()
 
     exitAvatar.shortName()
 
@@ -286,7 +286,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation().exits()[Back]
 
-    if exitAvatar.thing.id() is backExit?.id()
+    if exitAvatar.thingClass.id() is backExit?.id()
       command = "Go #{$(event.target).text()}"
       
     else

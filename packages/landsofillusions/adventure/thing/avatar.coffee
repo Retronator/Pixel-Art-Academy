@@ -25,10 +25,10 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
           defaultText = _.propertyValue options, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
-  constructor: (@thing) ->
+  constructor: (@thingClass) ->
     super arguments...
     
-    id = _.propertyValue @thing, 'id'
+    id = _.propertyValue @thingClass, 'id'
     translationNamespace = "#{id}.Avatar"
 
     # Subscribe to this avatar's translations.
@@ -47,18 +47,18 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   descriptiveName: -> @_translateIfAvailable @constructor.translationKeys.descriptiveName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
 
-  pronouns: -> _.propertyValue @thing, 'pronouns'
-  nameAutoCorrectStyle: -> _.propertyValue @thing, 'nameAutoCorrectStyle'
-  nameNounType: -> _.propertyValue @thing, 'nameNounType'
+  pronouns: -> _.propertyValue @thingClass, 'pronouns'
+  nameAutoCorrectStyle: -> _.propertyValue @thingClass, 'nameAutoCorrectStyle'
+  nameNounType: -> _.propertyValue @thingClass, 'nameNounType'
 
   color: ->
     # Return the desired color or use the default.
-    color = _.propertyValue @thing, 'color'
+    color = _.propertyValue @thingClass, 'color'
 
     color or super arguments...
 
-  dialogTextTransform: -> _.propertyValue @thing, 'dialogTextTransform'
-  dialogueDeliveryType: -> _.propertyValue @thing, 'dialogueDeliveryType'
+  dialogTextTransform: -> _.propertyValue @thingClass, 'dialogTextTransform'
+  dialogueDeliveryType: -> _.propertyValue @thingClass, 'dialogueDeliveryType'
 
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key
@@ -68,6 +68,6 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     AB.existingTranslation @_translationSubscription, key
     
   getRenderObject: ->
-    return unless thingIllustration = @thing.illustration?()
+    return unless thingIllustration = @thingClass.illustration?()
 
-    LOI.adventure.world.sceneManager().getMeshObject thingIllustration.mesh, thingIllustration.object
+    LOI.adventure.world.sceneManager()?.getMeshObject thingIllustration.mesh, thingIllustration.object

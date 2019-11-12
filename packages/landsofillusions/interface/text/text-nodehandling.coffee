@@ -44,12 +44,22 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @_lastNode null
 
   _handleNode: (node, options = {}) ->
-    # Text interface doesn't narrate background actions when the interface is busy.
-    if options.background and @busy()
-      node.cancel()
+    # Text interface doesn't narrate background actions when the interface is busy, but it does execute animations.
+    if options.background and @busy() and not (node instanceof Nodes.Animation)
+      if options.realtime
+        # Realtime nodes silently continue.
+        node.end()
+
+      else
+        # Background scripts get interrupted completely.
+        node.cancel()
+
       return
 
     super arguments...
+
+    # Realtime nodes don't need any extra handling.
+    return if options.realtime
 
     # We don't really have to handle choice node, because the dialog selection
     # module does that, but we still want to pause before we display it.

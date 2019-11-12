@@ -46,6 +46,10 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         else
           break
 
+      unless question?
+        console.warn "Invalid script state. We are in the Answering state, but no answers-written labels have been reached."
+        return
+
       for person in @students()
         # Find which answer the actor chose.
         action = person.getActions(

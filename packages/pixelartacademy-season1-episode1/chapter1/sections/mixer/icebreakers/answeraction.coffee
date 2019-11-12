@@ -27,4 +27,4 @@ class C1.Mixer.IceBreakers.AnswerAction extends LOI.Memory.Action
   @latestAnswersForCharacter: @subscription 'latestAnswersForCharacter'
 
   activeDescription: ->
-    @translations()[@content.answer]
+    @translations()?[@content.answer]

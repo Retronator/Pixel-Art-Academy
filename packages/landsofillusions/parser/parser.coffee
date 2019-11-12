@@ -23,6 +23,7 @@ class LOI.Parser
       new @constructor.ConversationListener
       new @constructor.AdvertisedContextListener
       new @constructor.HelpListener
+      new @constructor.TalkingListener
     ]
 
   destroy: ->
@@ -83,6 +84,9 @@ class LOI.Parser
 
         if result is true
           LOI.adventure.interface.narrative.addText "OK."
+
+        # Inform listeners that the action was executed.
+        listener.onCommandExecuted likelyAction for listener in LOI.adventure.currentListeners()
 
   # Creates a node sequence that outputs the likely command to narrative and performs its action.
   _createCommandNodeSequence: (likelyAction) ->

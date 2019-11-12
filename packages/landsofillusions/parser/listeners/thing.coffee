@@ -4,19 +4,18 @@ LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
 
-_objectCenter = new THREE.Vector3
-
 class LOI.Parser.ThingListener extends LOI.Adventure.Listener
   onCommand: (commandResponse) ->
     currentPhysicalThings = LOI.adventure.currentPhysicalThings()
 
     character = LOI.character()
-    characterRenderObject = character.avatar.getRenderObject()
+    characterRenderObject = character?.avatar.getRenderObject()
 
     for thing in currentPhysicalThings
       do (thing) =>
         renderObject = thing.avatar.getRenderObject?()
 
+        # Look at a thing to see its description.
         commandResponse.onPhrase
           form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.WhatIs, Vocabulary.Keys.Verbs.WhoIs], thing.avatar]
           action: =>
@@ -28,6 +27,7 @@ class LOI.Parser.ThingListener extends LOI.Adventure.Listener
             characterRenderObject.facePosition renderObject
 
         if character and renderObject
+          # Go to a thing.
           commandResponse.onPhrase
             form: [Vocabulary.Keys.Verbs.GoToThing, thing.avatar]
             priority: -1

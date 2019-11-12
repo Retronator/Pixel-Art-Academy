@@ -24,19 +24,11 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
     "_person_ enters."
 
   createStartScript: (person, nextNode, nodeOptions = {}) ->
-    renderObject = person.avatar.getRenderObject()
-    physicsObject = person.avatar.getPhysicsObject()
+    return unless @content?.coordinates
 
-    if @content?.coordinates
-      renderObject.setAnimation 'Walk 50'
-      physicsObject.setMass physicsObject.walkMass
-
-      LOI.adventure.world.navigator().moveAvatar
-        avatar: person.avatar
-        target: @content.coordinates
-        speed: 1.25
-        onCompleted: =>
-          renderObject.setAnimation 'Idle loop'
-          physicsObject.setMass physicsObject.idleMass
-
-    null
+    new Nodes.Animation _.extend {}, nodeOptions,
+      next: nextNode
+      callback: (complete) =>
+        person.avatar.walkTo
+          target: @content.coordinates
+          onCompleted: => complete()

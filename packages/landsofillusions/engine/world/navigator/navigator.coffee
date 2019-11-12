@@ -13,7 +13,12 @@ class LOI.Engine.World.Navigator
 
   moveAvatar: (options) ->
     # Remove any existing movements for this avatar.
-    _.remove @_movements, (movement) => movement.options.avatar is options.avatar
+    _.remove @_movements, (movement) =>
+      return unless movement.options.avatar is options.avatar
+
+      # Cancel the movement as well.
+      movement.options.onCanceled?()
+      true
       
     target = LOI.adventure.world.getPositionVector options.target
     path = [THREE.Vector3.fromObject target]
