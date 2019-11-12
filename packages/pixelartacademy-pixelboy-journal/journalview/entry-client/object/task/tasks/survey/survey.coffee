@@ -60,7 +60,7 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
       @state = new ComputedField =>
         @survey.state()[question.key] or {}
         
-    updateChoice: (key, value) =>
+    updateChoice: (key, value) ->
       question = @data()
       state = @state()
       
