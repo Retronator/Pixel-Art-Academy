@@ -67,13 +67,13 @@ class C3.Behavior.Terminal.Activities extends AM.Component
       # Return hours per week value.
       template.data.fields[fieldsKey].node.fields.hoursPerWeek.value
 
-  templateParts: ->
+  templatePart: ->
     template = @currentData()
     property = @property()
 
     dataField = AMu.Hierarchy.create
       templateClass: LOI.Character.Part.Template
-      load: => template
+      load: => node: template.latestVersion.data
 
     property.create
       dataLocation: new AMu.Hierarchy.Location

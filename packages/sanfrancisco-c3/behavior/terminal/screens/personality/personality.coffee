@@ -78,7 +78,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
 
     dataField = AMu.Hierarchy.create
       templateClass: LOI.Character.Part.Template
-      load: => template
+      load: => node: template.latestVersion.data
 
     part.create
       dataLocation: new AMu.Hierarchy.Location
