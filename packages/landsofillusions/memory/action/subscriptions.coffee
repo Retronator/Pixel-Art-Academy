@@ -6,6 +6,12 @@ LOI.Memory.Action.forMemory.publish (memoryId) ->
   LOI.Memory.Action.documents.find
     'memory._id': memoryId
 
+LOI.Memory.Action.forMemories.publish (memoryIds) ->
+  check memoryIds, [Match.DocumentId]
+
+  LOI.Memory.Action.documents.find
+    'memory._id': $in: memoryIds
+
 # Returns actions at a location within the duration.
 LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, earliestTime) ->
   check timelineId, String

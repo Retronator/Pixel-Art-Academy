@@ -23,10 +23,6 @@ class LOI.Pages.Admin.Characters.Memberships extends AM.Component
       sort:
         memberId: -1
 
-  events: ->
-    super(arguments...).concat
-      'click .new-pre-made-character': => @constructor.insert()
-
   class @GroupSelect extends AM.DataInputComponent
     @register 'LandsOfIllusions.Pages.Admin.Characters.Memberships.GroupSelect'
 

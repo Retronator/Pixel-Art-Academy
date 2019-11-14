@@ -53,6 +53,8 @@ class LOI.Memory extends AM.Document
 
   # Subscriptions
 
+  @all: @subscription 'all'
+  @allWithActionsOfType: @subscription 'allWithActionsOfType'
   @forId: @subscription 'forId'
   @forIds: @subscription 'forIds'
   

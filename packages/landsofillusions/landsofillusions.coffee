@@ -59,3 +59,5 @@ class LandsOfIllusions
     Retronator.App.addAdminPage '/admin/landsofillusions/characters/assets', @constructor.Pages.Admin.Characters.Assets
     Retronator.App.addAdminPage '/admin/landsofillusions/characters/animationstest', @constructor.Pages.Admin.Characters.AnimationsTest
     Retronator.App.addAdminPage '/admin/landsofillusions/characters/memberships', @constructor.Pages.Admin.Characters.Memberships
+    Retronator.App.addAdminPage '/admin/landsofillusions/memories', @constructor.Pages.Admin.Memories
+    Retronator.App.addAdminPage '/admin/landsofillusions/memories/latest', @constructor.Pages.Admin.Memories.Latest

@@ -509,6 +509,10 @@ Package.onUse(function(api) {
   api.addFile('pages/admin/characters/animationstest/renderermanager');
   api.addFile('pages/admin/characters/animationstest/scenemanager');
 
+  api.addUnstyledComponent('pages/admin/memories..');
+
+  api.addComponent('pages/admin/memories/latest..');
+
   // Components
 
   api.addFile('components..');

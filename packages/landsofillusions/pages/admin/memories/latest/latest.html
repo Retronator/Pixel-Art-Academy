@@ -1,0 +1,27 @@
+<template name="LandsOfIllusions.Pages.Admin.Memories.Latest">
+  <div class="landsofillusions-pages-admin-memories-latest admin-page">
+    <h1>Latest</h1>
+    <ul class="memories">
+      {{#each memories}}
+        <li class="memory">
+          <div class="info">
+            {{#with firstAction}}
+              {{locationId}}
+              {{timelineId}}
+              {{contextId}}
+            {{/with}}
+          </div>
+          <ol class="actions">
+            {{#each actions}}
+              <li class="action">
+                <span class="character">{{> t9n character.avatar.fullName}}</span> <span class="time">({{time.toDateString}})</span>
+                <div class="text">{{content.say.text}}</div>
+              </li>
+            {{/each}}
+          </ol>
+        </li>
+      {{/each}}
+    </ul>
+    <button class="display-more-button">Display more</button>
+  </div>
+</template>
