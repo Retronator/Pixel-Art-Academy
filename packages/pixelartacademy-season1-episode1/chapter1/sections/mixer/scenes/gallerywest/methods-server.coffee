@@ -10,8 +10,8 @@ C1.Mixer.GalleryWest.joinGroup.method (characterId, groupId) ->
   LOI.Authorize.player()
   {gameState} = LOI.Authorize.characterGameplayAction characterId
 
-  # Add membership to this group.
-  LOI.Character.Membership.addMember characterId, groupId
+  # Add membership to this group. There are 5 members per study group.
+  LOI.Character.Membership.addMember characterId, groupId, 5
   
   # Set study group in the game state.
   _.nestedProperty gameState.readOnlyState, "things.#{C1.id()}.studyGroupId", groupId

@@ -26,3 +26,5 @@ class C1.CoordinatorAddress.CharacterIntroduction extends LOI.Memory.Action
         order:
           time: -1
         limit: 1
+
+  @all: @subscription 'all'

@@ -31,13 +31,6 @@ Package.onUse(function(api) {
   api.addFile('scenes/chinabasinpark');
   api.addFile('scenes/store');
 
-  // Admin
-
-  api.addFile('pages..');
-  api.addUnstyledComponent('pages/admin..');
-  api.addUnstyledComponent('pages/admin/admissions..');
-  api.addServerFile('pages/admin/admissions/methods-server/processapplied');
-
   // Start
 
   api.addFile('start..');
@@ -221,4 +214,14 @@ Package.onUse(function(api) {
   api.addServerFile('chapter1/sections/coordinatoraddress/subscriptions');
 
   api.addThing('chapter1/sections/coordinatoraddress/scenes/meetingspace');
+
+  // Admin
+
+  api.addFile('pages..');
+  api.addUnstyledComponent('pages/admin..');
+  api.addComponent('pages/admin/studygroups..');
+
+  api.addUnstyledComponent('pages/admin/admissions..');
+  api.addServerFile('pages/admin/admissions/methods-server/processapplied');
+
 });
