@@ -18,3 +18,4 @@ class LOI.Character.Membership extends AM.Document
   # Subscriptions
 
   @forCharacterId: @subscription 'forCharacterId'
+  @forGroupId: @subscription 'forGroupId'

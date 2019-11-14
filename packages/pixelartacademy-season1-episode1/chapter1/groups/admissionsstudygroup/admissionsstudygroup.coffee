@@ -24,10 +24,13 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
   @groupMembers = new AB.Subscription
     name: "PAA.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.groupMembers"
     query: (characterId, groupId) =>
-      # Get study group membership of character.
+      # Get the latest study group membership of character.
       characterMembership = LOI.Character.Membership.documents.findOne
         groupId: /PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup/
         'character._id': characterId
+      ,
+        sort:
+          joinTime: -1
 
       if characterMembership
         if characterMembership.groupId is groupId

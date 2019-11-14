@@ -473,6 +473,7 @@ Package.onUse(function(api) {
   api.addComponent('pages/admin/characters/avatareditor..');
   api.addComponent('pages/admin/characters/characters..');
   api.addComponent('pages/admin/characters/templates..');
+  api.addUnstyledComponent('pages/admin/characters/memberships..');
 
   api.addUnstyledComponent('pages/admin/characters/premadecharacters/premadecharacters');
   api.addServerFile('pages/admin/characters/premadecharacters/methods-server');
