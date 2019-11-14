@@ -89,7 +89,7 @@ class RS.Transaction extends AM.Document
         [fields._id, invalid]
     triggers: =>
       transactionsUpdated: Document.Trigger ['user._id', 'twitter', 'email', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
-        console.log "transaction generate items triggered!", transaction?.email or transaction?.user?._id or oldTransaction?.email or oldTransaction?.user?._id
+        console.log "transaction generate items triggered!", transaction?.email or transaction?.user?._id or transaction?.twitter or oldTransaction?.email or oldTransaction?.user?._id or oldTransaction?.twitter
         # If the user of this transaction has changed, the old user
         # should lose an item so they need to be updated as well.
         RS.Transaction.findUserForTransaction(oldTransaction)?.onTransactionsUpdated()
@@ -153,7 +153,7 @@ class RS.Transaction extends AM.Document
 
     if user.services?.twitter?.screenName
       query.$or.push
-        twitter: new RegExp user.services.twitter.screenName, 'i'
+        twitter: new RegExp "^#{user.services.twitter.screenName}$", 'i'
 
     RS.Transaction.documents.find query
 

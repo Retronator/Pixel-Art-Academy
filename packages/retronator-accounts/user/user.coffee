@@ -67,6 +67,7 @@ class RA.User extends AM.Document
       ]
 
   @loginServicesForCurrentUser: 'Retronator.Accounts.User.loginServicesForCurrentUser'
+  @twitterScreenNameForCurrentUser: @subscription 'twitterScreenNameForCurrentUser'
   @contactEmailForCurrentUser: 'Retronator.Store.User.contactEmailForCurrentUser'
   @registeredEmailsForCurrentUser: 'Retronator.Accounts.User.registeredEmailsForCurrentUser'
   

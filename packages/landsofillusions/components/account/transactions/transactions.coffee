@@ -16,9 +16,10 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
   onCreated: ->
     super arguments...
 
+    RA.User.twitterScreenNameForCurrentUser.subscribe @
     @subscribe Retronator.Accounts.User.supportAmountForCurrentUser
     @subscribe Retronator.Accounts.User.storeDataForCurrentUser
-    @subscribe Retronator.Store.Item.all
+    RS.Item.all.subscribe @
     @subscribe Retronator.Store.Transaction.forCurrentUser
     Retronator.Store.Payment.forCurrentUser.subscribe @
 

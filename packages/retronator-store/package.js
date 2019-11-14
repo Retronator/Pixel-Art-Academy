@@ -140,4 +140,8 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/admin/vat..');
 
+  api.addUnstyledComponent('pages/admin/transactions..');
+  api.addServerFile('pages/admin/transactions/methods-server');
+  api.addServerFile('pages/admin/transactions/subscriptions');
+
 });

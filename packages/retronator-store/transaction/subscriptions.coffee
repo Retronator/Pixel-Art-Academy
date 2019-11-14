@@ -12,7 +12,7 @@ Meteor.publish RS.Transaction.forCurrentUser, ->
       registered_emails: 1
       services:
         twitter:
-          screenname: 1
+          screenName: 1
 
     transactions = RS.Transaction.findTransactionsForUser user
     

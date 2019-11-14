@@ -65,7 +65,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @scrolledToBottom false
 
     # Get all store items data.
-    @subscribe RS.Item.all
+    RS.Item.all.subscribe @
 
     # Get top recent transactions to display the supporters list.
     @subscribe RS.Transaction.topRecent

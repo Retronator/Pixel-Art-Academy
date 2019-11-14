@@ -11,7 +11,7 @@ class RS.Pages.Admin.Vat extends AM.Component
   onCreated: ->
     super arguments...
 
-    @subscribe Retronator.Store.Item.all
+    RS.Item.all.subscribe @
 
     RS.Transaction.withTaxInfo.subscribe @
 

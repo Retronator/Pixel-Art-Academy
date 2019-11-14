@@ -27,7 +27,7 @@ class RS.Item extends AM.Document
   @type: @id()
   @register @type, @
 
-  @all: 'Retronator.Store.Item.all'
+  @all: @subscription "all"
 
   # Inserts an item into the database.
   @create: (documentData) ->

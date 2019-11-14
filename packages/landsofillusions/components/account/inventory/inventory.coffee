@@ -18,7 +18,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   onCreated: ->
     super arguments...
 
-    @subscribe RS.Item.all
+    RS.Item.all.subscribe @
 
     # Subscribe to item names.
     @autorun (computation) =>

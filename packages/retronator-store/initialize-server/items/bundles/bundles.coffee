@@ -15,7 +15,7 @@ Document.startup ->
     price: 10
     discountedFrom: 15
     name: "Pixel Art Academy - Basic game pre-order"
-    description: "Select from one of the pre-made characters and play through storylines, build your library of knowledge, complete assignments and track your art progress when the first chapter launches in 2018. With a pre-order you also secure the lower price."
+    description: "Select from one of the pre-made characters and play through storylines, build your library of knowledge, complete assignments and track your art progress. First chapter of the game is now in open alpha and you can already test playing it. With a pre-order you secure the lower price."
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
@@ -26,7 +26,7 @@ Document.startup ->
     price: 20
     discountedFrom: 25
     name: "Pixel Art Academy - Full game pre-order"
-    description: "Start playing once the first chapter launches in 2018. You will be able to create your own character and portrait by choosing and customizing individual parts. As a pre-order bonus you enjoy the lower price and get the Retropolis Day Pass."
+    description: "Start playing the open alpha of the first chapter. You will be able to create your own character by choosing and customizing individual parts. As a pre-order bonus you enjoy the lower price and get the Retropolis Day Pass."
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
@@ -39,7 +39,7 @@ Document.startup ->
     price: 40
     discountedFrom: 45
     name: "Pixel Art Academy - Alpha access pre-order"
-    description: "Get alpha access and start playing game chapters as soon as they enter alpha stage. You will be able to create your own character and portrait. Pre-ordering also gives you the lower price as well as the Retropolis Day and Nightlife Passes. This bundle is primarily if you want to support the project more."
+    description: "Get alpha access and start playing new game chapters as soon as they enter alpha stage (the first and only chapter is currently in open alpha and does NOT require alpha access). You will be able to create your own character. Pre-ordering also gives you the lower price as well as the Retropolis Day and Nightlife Passes. This bundle is primarily offered if you want to support the project more."
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.AlphaAccess

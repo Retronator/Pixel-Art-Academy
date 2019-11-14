@@ -20,7 +20,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     super arguments...
 
     # Get all store items data.
-    @_itemsSubscription = @subscribe RS.Item.all
+    @_itemsSubscription = RS.Item.all.subscribe @
 
     # Get all user's transactions and payments so we can determine which store items they are
     # eligible for. Payments are needed to determine if the user has a kickstarter pledge.

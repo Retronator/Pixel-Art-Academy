@@ -42,7 +42,7 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
     onCreated: ->
       super arguments...
 
-      @subscribe RS.Item.all
+      RS.Item.all.subscribe @
 
       @selectedItem = new ReactiveField null
 

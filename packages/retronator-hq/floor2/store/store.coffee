@@ -45,7 +45,7 @@ class HQ.Store extends LOI.Adventure.Location
     @shelves = new HQ.Store.Shelves
     @retro = new HQ.Store.Retro
 
-    @subscribe RS.Item.all
+    RS.Item.all.subscribe @
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RS.Transaction.forCurrentUser
 

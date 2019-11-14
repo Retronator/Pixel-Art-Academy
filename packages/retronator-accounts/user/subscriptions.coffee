@@ -17,6 +17,13 @@ Meteor.publish RA.User.loginServicesForCurrentUser, ->
     fields:
       loginServices: true
 
+RA.User.twitterScreenNameForCurrentUser.publish ->
+  RA.User.documents.find
+    _id: @userId
+  ,
+    fields:
+      'services.twitter.screenName': true
+
 # Current user's contact email.
 Meteor.publish RA.User.contactEmailForCurrentUser, ->
   RA.User.documents.find

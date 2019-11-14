@@ -1,4 +1,4 @@
 RS = Retronator.Store
 
-Meteor.publish RS.Item.all, ->
+RS.Item.all.publish ->
   RS.Item.documents.find()
