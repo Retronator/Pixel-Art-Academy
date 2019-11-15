@@ -82,11 +82,11 @@ class AM.Document extends Document
     
   @method: (name) ->
     return new AB.Method
-      name: "#{@id()}.#{name}"
+      name: "#{@type or @id()}.#{name}"
 
   @subscription: (name, options) ->
     return new AB.Subscription _.extend {}, options,
-      name: "#{@id()}.#{name}"
+      name: "#{@type or @id()}.#{name}"
 
   @register: (typeName, documentClass) ->
     throw new AE.ArgumentNullException "You must specify a document class." unless documentClass

@@ -511,7 +511,12 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('pages/admin/memories..');
 
+  api.addFile('pages/admin/memories/components..');
+
+  api.addComponent('pages/admin/memories/components/actioncontent..');
+
   api.addComponent('pages/admin/memories/latest..');
+  api.addComponent('pages/admin/memories/actionslog..');
 
   // Components
 

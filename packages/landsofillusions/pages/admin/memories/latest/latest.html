@@ -15,7 +15,7 @@
             {{#each actions}}
               <li class="action">
                 <span class="character">{{> t9n character.avatar.fullName}}</span> <span class="time">({{time.toDateString}})</span>
-                <div class="text">{{content.say.text}}</div>
+                {{> LandsOfIllusions.Pages.Admin.Memories.Components.ActionContent}}
               </li>
             {{/each}}
           </ol>

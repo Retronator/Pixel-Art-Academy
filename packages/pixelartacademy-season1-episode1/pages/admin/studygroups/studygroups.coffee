@@ -31,5 +31,5 @@ class E1.Pages.Admin.StudyGroups extends AM.Component
 
   introduction: ->
     membership = @currentData()
-    introductionAction = C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.query(membership.character._id).fetch()[0]
+    return unless introductionAction = C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.query(membership.character._id).fetch()[0]
     introductionAction.content.introduction

@@ -1,0 +1,22 @@
+<template name="LandsOfIllusions.Pages.Admin.Memories.Components.ActionContent">
+  <div class="landsofillusions-pages-admin-memories-components-actioncontent">
+    {{#if content.say}}
+      <div class="say quote">{{content.say.text}}</div>
+    {{/if}}
+    {{#if content.introduction}}
+      <div class="introduction quote">{{content.introduction}}</div>
+    {{/if}}
+    {{#if content.landmark}}
+      <div class="landmark">({{content.landmark}})</div>
+    {{/if}}
+    {{#if content.coordinates}}
+      <div class="coordinates vector">({{content.coordinates.x}}, {{content.coordinates.y}}, {{content.coordinates.z}})</div>
+    {{/if}}
+    {{#if content.person}}
+      <div class="person">{{content.person}}</div>
+    {{/if}}
+    {{#if $and content.question content.answer}}
+      <div class="question">{{content.question}}: {{content.answer}}</div>
+    {{/if}}
+  </div>
+</template>

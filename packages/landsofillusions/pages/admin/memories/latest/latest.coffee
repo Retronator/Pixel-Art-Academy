@@ -13,13 +13,13 @@ class LOI.Pages.Admin.Memories.Latest extends AM.Component
     @memoriesLimit = new ReactiveField 50
 
     @autorun (computation) =>
-      LOI.Memory.all.subscribe @memoriesLimit()
+      LOI.Memory.all.subscribe @, @memoriesLimit()
 
     @autorun (computation) =>
       memoryIds = (memory._id for memory in LOI.Memory.documents.fetch())
       return unless memoryIds.length
 
-      LOI.Memory.Action.forMemories.subscribe memoryIds
+      LOI.Memory.Action.forMemories.subscribe @, memoryIds
 
   memories: ->
     LOI.Memory.documents.find {},

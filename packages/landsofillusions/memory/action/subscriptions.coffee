@@ -1,4 +1,15 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
+
+LOI.Memory.Action.all.publish (limit = 10) ->
+  check limit, Match.Integer
+
+  RA.authorizeAdmin()
+
+  LOI.Memory.Action.documents.find {},
+    sort:
+      time: -1
+    limit: limit
 
 LOI.Memory.Action.forMemory.publish (memoryId) ->
   check memoryId, Match.DocumentId
