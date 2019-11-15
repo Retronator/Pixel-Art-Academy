@@ -238,6 +238,7 @@ class LOI.Interface.Text extends LOI.Interface
       'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
+      'click': @onClick
       'click .command': @onClickCommand
       'click .location': @onClickLocation
       'mouseenter .exits .exit .name': @onMouseEnterExit
@@ -246,12 +247,22 @@ class LOI.Interface.Text extends LOI.Interface
       'mouseenter .landsofillusions-interface-text': @onMouseEnterTextInterface
       'mouseleave .landsofillusions-interface-text': @onMouseLeaveTextInterface
       'input .dummy-input': @onInputDummyInput
+      'mouseenter .dialog-selection .option': @onMouseEnterDialogSelectionOption
+      'click .dialog-selection .option': @onClickDialogSelectionOption
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).attr 'title'
 
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null
+
+  onClick: (event) ->
+    # When we're waiting for user interaction, clicking doubles for pressing enter.
+    if @waitingKeypress()
+      @onCommandInputEnter()
+
+      # Do not let others handle this event.
+      event.stopPropagation()
 
   onClickCommand: (event) ->
     return if @waitingKeypress()
@@ -342,3 +353,12 @@ class LOI.Interface.Text extends LOI.Interface
 
     # Clear the content so we don't contaminate further pastes.
     $dummyInput.val ''
+
+  onMouseEnterDialogSelectionOption: (event) ->
+    option = @currentData()
+    @dialogueSelection.selectDialogLineOption option
+
+  onClickDialogSelectionOption: (event) ->
+    option = @currentData()
+    @dialogueSelection.selectDialogLineOption option
+    @dialogueSelection.confirm()

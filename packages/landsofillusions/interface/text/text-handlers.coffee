@@ -143,7 +143,4 @@ class LOI.Interface.Text extends LOI.Interface.Text
     
   onDialogueSelectionEnter: ->
     # Continue with the selection.
-    @_dialogueSelectionConfirm()
-
-  _dialogueSelectionConfirm: ->
     @dialogueSelection.confirm()

@@ -85,6 +85,17 @@ class LOI.Interface.Components.DialogueSelection
     # Remove key events.
     $(document).off('.dialogueSelection')
 
+  selectDialogLineOption: (option) ->
+    options = @dialogueLineOptions()
+    index = _.indexOf options, option
+
+    if index < 0
+      console.warn "Non-existent option tried to be selected."
+      return
+
+    @selectedDialogueLine option
+    @selectedDialogueLineIndex index
+
   confirm: ->
     selectedDialogueLine = @selectedDialogueLine()
     return unless selectedDialogueLine
