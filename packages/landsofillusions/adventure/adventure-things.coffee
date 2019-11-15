@@ -104,23 +104,22 @@ class LOI.Adventure extends LOI.Adventure
 
     @_instantiateThings([thingClass])[0]
 
-  getCurrentThing: (thingClassOrId) ->
+  getCurrentThing: (thingClassOrId) -> @_getThingInThings thingClassOrId, @currentThings()
+  getCurrentInventoryThing: (thingClassOrId) -> @_getThingInThings thingClassOrId, @currentInventoryThings()
+  getCurrentLocationThing: (thingClassOrId) -> @_getThingInThings thingClassOrId, @currentLocationThings()
+
+  _getThingInThings: (thingClassOrId, things) ->
     thingClass = _.thingClass thingClassOrId
+
+    # If we couldn't find a thing class, ID should be a character ID.
     characterId = thingClassOrId unless thingClass
-    things = @currentThings()
 
     _.find things, (thing) =>
       if characterId
-        thing._id is characterId
+        thing.characterId?() is characterId
 
       else
         thing instanceof thingClass
-
-  getCurrentInventoryThing: (thingClassOrId) ->
-    thingClass = _.thingClass thingClassOrId
-    things = @currentInventoryThings()
-
-    _.find things, (thing) -> thing instanceof thingClass
 
   getAvatar: (thingClass) ->
     # Create the avatar if needed. It must be done in non-reactive

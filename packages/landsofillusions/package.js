@@ -440,6 +440,7 @@ Package.onUse(function(api) {
   api.addFile('parser/listeners/advertisedcontext');
   api.addFile('parser/listeners/help');
   api.addFile('parser/listeners/talking');
+  api.addFile('parser/listeners/interaction');
 
   // Interface
 

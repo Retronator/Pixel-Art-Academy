@@ -5,7 +5,7 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Memory.Actions.Move extends LOI.Memory.Action
   # content:
-  #   landmark: the named point that can be looked up to get its coordinates
+  #   landmark: the named point or object that can be looked up to get its coordinates
   #   coordinates: direct location coordinates, if landmark is not specified
   #     x, y, z
   @type: 'LandsOfIllusions.Memory.Actions.Move'
@@ -24,11 +24,17 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
     "_person_ enters."
 
   createStartScript: (person, nextNode, nodeOptions = {}) ->
-    return unless @content?.coordinates
+    if @content.landmark
+      coordinates = LOI.adventure.world.getPositionVector @content.landmark
+
+    else
+      coordinates = @content.coordinates
+
+    return unless coordinates
 
     new Nodes.Animation _.extend {}, nodeOptions,
       next: nextNode
       callback: (complete) =>
         person.avatar.walkTo
-          target: @content.coordinates
+          target: coordinates
           onCompleted: => complete()

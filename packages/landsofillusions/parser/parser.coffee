@@ -24,6 +24,7 @@ class LOI.Parser
       new @constructor.AdvertisedContextListener
       new @constructor.HelpListener
       new @constructor.TalkingListener
+      new @constructor.InteractionListener
     ]
 
   destroy: ->
