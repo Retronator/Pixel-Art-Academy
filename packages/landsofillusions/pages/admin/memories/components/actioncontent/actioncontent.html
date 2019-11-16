@@ -15,7 +15,7 @@
     {{#if content.person}}
       <div class="person">{{content.person}}</div>
     {{/if}}
-    {{#if $and content.question content.answer}}
+    {{#if content.question}}
       <div class="question">{{content.question}}: {{content.answer}}</div>
     {{/if}}
   </div>
