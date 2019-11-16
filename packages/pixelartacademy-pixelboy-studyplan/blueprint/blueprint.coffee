@@ -24,6 +24,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @dragGoalId = new ReactiveField null
     @dragRequireMove = new ReactiveField false
     @dragHasMoved = new ReactiveField false
+    @dragBlueprint = new ReactiveField false
 
   onCreated: ->
     super arguments...
@@ -211,6 +212,21 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
         x: @dragStartGoalPosition.x + dragDelta.x
         y: @dragStartGoalPosition.y + dragDelta.y
 
+    # Handle blueprint dragging.
+    @autorun (computation) =>
+      return unless @dragBlueprint()
+
+      newDisplayCoordinate = @mouse().displayCoordinate()
+      cameraScale = @camera().scale()
+
+      dragDelta =
+        x: (@dragStartDisplayCoordinate.x - newDisplayCoordinate.x) / cameraScale
+        y: (@dragStartDisplayCoordinate.y - newDisplayCoordinate.y) / cameraScale
+
+      @dragStartDisplayCoordinate = newDisplayCoordinate
+
+      @camera().offsetOrigin dragDelta
+
   onRendered: ->
     super arguments...
 
@@ -254,9 +270,10 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @dragStartGoalPosition = options.goalPosition
     @dragRequireMove options.requireMove
     @dragHasMoved false
+    @dragBlueprint false
 
     # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-blueprint', =>
+    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node', =>
       # If required to move, don't stop drag until we do so.
       return if @dragRequireMove() and not @dragHasMoved()
 
@@ -264,13 +281,25 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
       @studyPlan.removeGoal @dragGoalId() if @mouseOverTrash()
 
       @dragGoalId null
-      $(document).off '.pixelartacademy-pixelboy-apps-studyplan-blueprint'
+      $(document).off '.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node'
 
     # Set goal component last since it triggers reactivity.
     @dragGoalId options.goalId
 
+  startDragBlueprint: ->
+    # Dragging of blueprint needs to be handled in display coordinates since the canvas ones should technically stay
+    # the same (the whole point is for the same canvas coordinate to stay under the mouse as we move it around).
+    @dragStartDisplayCoordinate = @mouse().displayCoordinate()
+    @dragBlueprint true
+
+    # Wire end of dragging on mouse up anywhere in the window.
+    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-blueprint', =>
+      $(document).off '.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-blueprint'
+
+      @dragBlueprint false
+
   draggingClass: ->
-    'dragging' if @dragGoalId()
+    'dragging' if @dragGoalId() or @dragBlueprint()
 
   dragged: ->
     @dragGoalId() and (@dragHasMoved() or @dragRequireMove())
@@ -362,6 +391,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   onMouseDown: (event) ->
     # Reset dragging on any start of clicks.
     @dragHasMoved false
+
+    # We should drag the blueprint if we're not dragging a goal.
+    @startDragBlueprint() unless @dragGoalId()
 
   onMouseUp: (event) ->
     return unless draggedConnection = @draggedConnection()
