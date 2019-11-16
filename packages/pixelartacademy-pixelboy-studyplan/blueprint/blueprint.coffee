@@ -273,15 +273,25 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @dragBlueprint false
 
     # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node', =>
+    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node', (event) =>
       # If required to move, don't stop drag until we do so.
       return if @dragRequireMove() and not @dragHasMoved()
 
+      # Expand goal if desired.
+      @_goalComponentsById[options.goalId].expanded true if options.expandOnEnd
+
       # Delete goal if we're over trash.
-      @studyPlan.removeGoal @dragGoalId() if @mouseOverTrash()
+      @studyPlan.removeGoal options.goalId if @mouseOverTrash()
 
       @dragGoalId null
       $(document).off '.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node'
+
+    # Also expand goal on click since default goal click handler will fire before us (but after the
+    # mouseup above) in case we're dragging from the search bar without holding the mouse button.
+    $(document).on 'click.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node-click', (event) =>
+      @_goalComponentsById[options.goalId].expanded true if options.expandOnEnd
+
+      $(document).off '.pixelartacademy-pixelboy-apps-studyplan-blueprint-drag-node-click'
 
     # Set goal component last since it triggers reactivity.
     @dragGoalId options.goalId
