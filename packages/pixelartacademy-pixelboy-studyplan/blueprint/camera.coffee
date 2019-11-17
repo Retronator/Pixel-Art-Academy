@@ -66,9 +66,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Camera
           x: windowDelta.x / effectiveScale
           y: windowDelta.y / effectiveScale
 
-        @setOrigin
-          x: @_preciseOrigin.x + canvasDelta.x
-          y: @_preciseOrigin.y + canvasDelta.y
+        @offsetOrigin canvasDelta
 
   setOrigin: (origin) ->
     @_preciseOrigin = origin
@@ -76,6 +74,11 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Camera
     @origin
       x: Math.floor @_preciseOrigin.x
       y: Math.floor @_preciseOrigin.y
+
+  offsetOrigin: (offset) ->
+    @setOrigin
+      x: @_preciseOrigin.x + offset.x
+      y: @_preciseOrigin.y + offset.y
 
   applyTransformToCanvas: ->
     context = @blueprint.context()

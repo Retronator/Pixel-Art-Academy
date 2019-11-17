@@ -111,6 +111,10 @@ pause
 
 -> [ReciprocityOtherAsksCanceled] `not _reciprocityReplied`
 
+<!-- We use this label to track if the player ever replied to something. -->
+
+## ReciprocityOtherAsksRepliedSuccessfully 
+
 -> [ReciprocityOtherAsksStart]
 
 ## ReciprocityOtherAsksCanceled

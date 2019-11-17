@@ -65,10 +65,8 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
     @directive: -> "Join study group"
 
     @instructions: -> """
-      At the mixer, choose one of the admission week study groups
+      At the mixer, choose one of the admission week study groups.
     """
-
-    @interests: -> ['study group']
 
     @predecessors: -> [Goal.MeetClassmates]
 
@@ -77,16 +75,95 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
     @completedConditions: ->
       C1.readOnlyState 'studyGroupId'
 
+  class @AttendIntroductoryMeeting extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.AttendIntroductoryMeeting'
+    @goal: -> Goal
+
+    @directive: -> "Attend introductory meeting"
+
+    @instructions: -> """
+      Go to your group's meeting space and complete the introductory meeting.
+    """
+
+    @interests: -> ['study group']
+
+    @predecessors: -> [Goal.JoinStudyGroup]
+
+    @initialize()
+
+    @completedConditions: -> C1.CoordinatorAddress.finished()
+
+  class @HangOutWithGroup extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.HangOutWithGroup'
+    @goal: -> Goal
+
+    @directive: -> "Hang out with your study group"
+
+    @instructions: -> """
+      Come back to the group's meeting space and report on your progress.
+    """
+
+    @predecessors: -> [Goal.AttendIntroductoryMeeting]
+
+    @groupNumber: -> 1
+
+    @initialize()
+
+    @completedConditions: -> C1.Groups.AdmissionsStudyGroup.HangoutGroupListener.Script.state 'ReportProgress'
+
+  class @Reciprocity extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.Reciprocity'
+    @goal: -> Goal
+
+    @directive: -> "Interact during the reciprocity round"
+
+    @instructions: -> """
+      Share something with the group or reply to your classmates' messages during the reciprocity part of a study group meeting.
+    """
+
+    @predecessors: -> [Goal.HangOutWithGroup]
+
+    @groupNumber: -> 1
+
+    @initialize()
+
+    @completedConditions: -> _.some [
+      C1.Groups.AdmissionsStudyGroup.HangoutGroupListener.Script.state 'ReciprocityOtherAsksRepliedSuccessfully'
+      C1.Groups.AdmissionsStudyGroup.HangoutGroupListener.Script.state 'ReciprocityAskThankYou'
+    ]
+
+  class @AcceptanceCelebration extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.AcceptanceCelebration'
+    @goal: -> Goal
+
+    @directive: -> "Attend your acceptance celebration"
+
+    @instructions: -> """
+      After you've been accepted to the Academy, hang out with your group to celebrate.
+    """
+
+    @predecessors: -> [Goal.HangOutWithGroup]
+
+    @groupNumber: -> 2
+
+    @initialize()
+
+    @completedConditions: -> false
+
   @tasks: -> [
     @Yearbook
     # TODO: Add privacy settings.
     # @SetPrivacySettings
     @MeetClassmates
     @JoinStudyGroup
+    @AttendIntroductoryMeeting
+    @HangOutWithGroup
+    @Reciprocity
+    @AcceptanceCelebration
   ]
 
   @finalTasks: -> [
-    @JoinStudyGroup
+    @AttendIntroductoryMeeting
   ]
 
   @initialize()

@@ -119,6 +119,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       left: 6
       bottom: 6
 
+    @requiredInterestLabelHeight = 7
     @requiredInterestsMargin = 5
 
     # Calculate entry and exit points.
@@ -194,6 +195,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
             height = $interest.outerHeight() / scale
             top += height
 
+          # If any interests were found, also accomodate the required label.
+          top += @requiredInterestsMargin + @requiredInterestLabelHeight if top
+
           @requiredInterestsPositionsById positions
           @requiredInterestsHeight top
       ,
@@ -221,14 +225,29 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @padding.left + @tasksMapSize().width + 2 * @borderWidth
 
   goalHeight: ->
-    height = @nameHeight() + 2 * @borderWidth
+    collapsedHeight = @nameHeight() + 2 * @borderWidth
 
-    return height unless @expanded?()
+    return collapsedHeight unless @expanded?()
 
-    height + @tasksMapSize().height + @requiredInterestsHeight() + @padding.bottom
+    _.sum [
+      collapsedHeight
+      @tasksMapSize().height
+      @requiredInterestsHeight()
+      @padding.bottom
+    ]
 
   expandedClass: ->
     'expanded' if @expanded?()
+
+  showRequiredInterests: ->
+    # Show required interests when you have all the interest documents.
+    return unless requiredInterests = @goal.requiredInterests()
+    return unless requiredInterests.length
+
+    for interest in requiredInterests
+      return unless IL.Interest.find interest
+
+    true
 
   interestDocument: ->
     interest = @currentData()
@@ -238,9 +257,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     if @expanded()
       return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
       return unless taskMapSize = @tasksMapSize()
-      return unless requiredInterestsPosition = requiredInterestsPositionsById[interestId]
+      return unless requiredInterestPosition = requiredInterestsPositionsById[interestId]
 
-      top = Math.ceil @nameHeight() + taskMapSize.height + requiredInterestsPosition
+      top = Math.ceil @nameHeight() + taskMapSize.height + @requiredInterestsMargin + @requiredInterestLabelHeight + requiredInterestPosition
 
       y = top + Math.ceil @taskHeight / 2
 
@@ -315,12 +334,17 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     x: @goalWidth()
     y: y + 1
 
+  requiredInterestLabelStyle: ->
+    top = @nameHeight() + @tasksMapSize().height + @requiredInterestsMargin
+
+    top: "#{top}rem"
+
   requiredInterestStyle: ->
     interestDocument = @currentData()
     return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
 
     requiredInterestsPosition = requiredInterestsPositionsById[interestDocument._id]
-    top = @nameHeight() + @tasksMapSize().height + requiredInterestsPosition
+    top = @nameHeight() + @tasksMapSize().height + @requiredInterestsMargin + @requiredInterestLabelHeight + requiredInterestsPosition
 
     top: "#{top}rem"
 
