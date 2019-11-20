@@ -29,6 +29,22 @@
 
     &.locked-apps
       .displayed-app
+        .recommendation
+          position relative
+          margin 5rem 5rem 0 5rem
+          padding-left 10rem
+          color atariGreen(5)
+
+          &::before
+            content '*'
+            display block
+            position absolute
+            top 0
+            left 0
+
+          .personality-factor
+            text-transform uppercase
+
         .app-unlock-area
           position absolute
           top 5rem

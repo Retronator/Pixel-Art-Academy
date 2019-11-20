@@ -12,7 +12,7 @@
         {{#if lockedApps.length}}
           Come back tomorrow to unlock another app.
         {{else}}
-          Complete all four tasks to complete Admission Week.
+          Complete all four admission goals to complete Admission Week.
         {{/if}}
       {{/if}}
     </p>
@@ -21,6 +21,11 @@
         {{#each lockedApps}}
           <li class="displayed-app">
             {{> PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App}}
+            {{#if appRecommendedForUnlock}}
+              <div class="recommendation">
+                Recommended for your high <span class="personality-factor" {{style appRecommendationPersonalityFactorStyle}}>{{unlockRecommendation.reason.axis.key}}</span> personality score.
+              </div>
+            {{/if}}
             {{#if unlocksLeft}}
               <div class="app-unlock-area">
                 <button class="app-unlock-button">Unlock</button>

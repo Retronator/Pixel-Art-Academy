@@ -17,7 +17,7 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends AM.Component
   onCreated: ->
     super arguments...
 
-    appClassIds = [
+    appIds = [
       PAA.PixelBoy.Apps.Calendar.id()
       PAA.PixelBoy.Apps.Drawing.id()
       PAA.PixelBoy.Apps.Journal.id()
@@ -25,29 +25,89 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends AM.Component
       PAA.PixelBoy.Apps.Yearbook.id()
     ]
 
-    apps = for appClassId in appClassIds
-      appClass = _.thingClass(appClassId)
+    apps = for appId in appIds
+      appClass = _.thingClass(appId)
       _.extend
-        _id: appClassId
+        _id: appId
         avatar: appClass.createAvatar()
         iconUrl: appClass.iconUrl()
         url: @admissionWeek.os.appPath appClass.url()
       ,
-        @constructor.AppInfo[appClassId]
+        @constructor.AppInfo[appId]
 
-    @unlockedAppClassIds = new ComputedField =>
+    @unlockedAppIds = new ComputedField =>
       @admissionWeek.state('unlockedApps') or []
 
-    @lockedAppClassIds = new ComputedField =>
-      _.difference appClassIds, @unlockedAppClassIds()
+    @lockedAppIds = new ComputedField =>
+      _.difference appIds, @unlockedAppIds()
 
-    getApps = (appClassIds) =>
+    getApps = (appIds) =>
       # Note: We don't simply filter the apps because that would not preserve the order of provided IDs.
-      for appId in appClassIds
+      for appId in appIds
         _.find apps, (app) => app._id is appId
 
-    @unlockedApps = new ComputedField => getApps @unlockedAppClassIds()
-    @lockedApps = new ComputedField => getApps @lockedAppClassIds()
+    @unlockedApps = new ComputedField => getApps @unlockedAppIds()
+    @lockedApps = new ComputedField => getApps @lockedAppIds()
+
+    @unlockRecommendation = new ComputedField =>
+      bestAppId = null
+      bestScore = 0
+      bestAxis = null
+
+      behaviorPart = LOI.character().behavior.part
+      personalityPart = behaviorPart.properties.personality.part
+      factorPowers = personalityPart.factorPowers()
+
+      lockedAppIds = @lockedAppIds()
+
+      # No need to recommend something when there's just one choice.
+      return unless lockedAppIds.length > 1
+
+      for appId in @lockedAppIds()
+        appInfo = @constructor.AppInfo[appId]
+        
+        score = 0
+        bestAxisIndex = null
+        bestAxisScore = 0
+        bestAxisDirection = null
+
+        for axisIndex, weight of appInfo.factors when factorPowers[axisIndex]
+          direction = if weight > 0 then 'positive' else 'negative'
+          axisScore = (factorPowers[axisIndex][direction] or 0) * Math.abs weight
+
+          score += axisScore
+          
+          if axisScore > bestAxisScore
+            bestAxisIndex = axisIndex
+            bestAxisScore = axisScore
+            bestAxisDirection = direction
+
+        if score > bestScore
+          bestAppId = appId
+          bestScore = score
+          bestAxis = LOI.Character.Behavior.Personality.Factors[bestAxisIndex].options[bestAxisDirection]
+
+      # Don't recommend anything if the best app doesn't have at least 10 points.
+      return unless bestScore >= 10
+
+      appId: bestAppId
+      reason:
+        axis: bestAxis
+
+  appRecommendedForUnlock: ->
+    app = @currentData()
+
+    return unless unlockRecommendation = @unlockRecommendation()
+    unlockRecommendation.appId is app._id
+
+  appRecommendationPersonalityFactorStyle: ->
+    return unless palette = LOI.palette()
+    return unless unlockRecommendation = @unlockRecommendation()
+
+    colorData = unlockRecommendation.reason.axis.color
+    color = palette.color colorData.hue, colorData.shade
+
+    color: "##{color.getHexString()}"
 
   visibleClass: ->
     'visible' if @admissionWeek.state 'startDay'
