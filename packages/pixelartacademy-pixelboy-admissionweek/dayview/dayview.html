@@ -1,5 +1,67 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView">
   <div class="pixelartacademy-pixelboy-apps-admissionweek-dayview {{visibleClass}}">
-    It is day {{admissionWeek.currentDay}}!
+    <h1 class="title">Admission week day {{admissionWeek.currentDay}}</h1>
+    <p class="instructions">
+      {{#if unlocksLeft}}
+        {{#if $gt unlocksLeft 1}}
+          You have {{unlocksLeft}} apps left to unlock today.
+        {{else}}
+          Choose an app to unlock today.
+        {{/if}}
+      {{else}}
+        {{#if lockedApps.length}}
+          Come back tomorrow to unlock another app.
+        {{else}}
+          Complete all four tasks to complete Admission Week.
+        {{/if}}
+      {{/if}}
+    </p>
+    {{#if $and unlocksLeft lockedApps.length}}
+      <ul class="locked-apps displayed-apps">
+        {{#each lockedApps}}
+          <li class="displayed-app">
+            {{> PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App}}
+            {{#if unlocksLeft}}
+              <div class="app-unlock-area">
+                <button class="app-unlock-button">Unlock</button>
+              </div>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    {{#if unlockedApps.length}}
+      <h2>Unlocked apps</h2>
+      <ul class="unlocked-apps displayed-apps">
+        {{#each unlockedApps}}
+          <li class="displayed-app">
+            {{> PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App}}
+          </li>
+        {{/each}}
+      </ul>
+      <p>
+        Return to the <a href="{{admissionWeek.os.appPath}}">home screen</a> to try {{#if $gt unlockedApps.length 1}}them{{else}}it{{/if}} out.
+      </p>
+    {{/if}}
+    <h2>Progress</h2>
+    {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App">
+  <div class="pixelartacademy-pixelboy-apps-admissionweek-dayview-app">
+    <div class="icon-area">
+      <img src="{{iconUrl}}" class="icon">
+    </div>
+    <div class="info">
+      <div class="header">
+        {{avatar.fullName}}
+      </div>
+      <ul class="features">
+        {{#each features}}
+          <li class="feature">{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
   </div>
 </template>

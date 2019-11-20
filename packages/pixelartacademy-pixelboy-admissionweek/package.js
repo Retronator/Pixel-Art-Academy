@@ -20,5 +20,6 @@ Package.onUse(function(api) {
 
   api.addComponent('instructions..');
   api.addComponent('dayview..');
+  api.addFile('dayview/dayview-appinfo');
 
 });

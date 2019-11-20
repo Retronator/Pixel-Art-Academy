@@ -1,8 +1,79 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-pixelboy-apps-admissionweek-dayview
-  position absolute
-  visibility hidden
+  position relative
+  z-index 11
+  width 229rem
+  margin 0 auto
+  padding 5rem 10rem 65rem
+  display none
 
   &.visible
-    visibility visible
+    display block
+
+  h1
+    text-transform uppercase
+    kyrou-7()
+    margin 5rem 0
+
+  h2
+    text-transform uppercase
+    kyrou-7()
+    font-weight normal
+    margin 10rem 0 5rem
+
+  .displayed-apps
+    list-style none
+    padding 0
+    margin 5rem 0
+
+    &.locked-apps
+      .displayed-app
+        .app-unlock-area
+          position absolute
+          top 5rem
+          right 5rem
+
+          .app-unlock-button
+            padding 0 2rem
+            border 1rem solid atariBrown(5)
+            color atariBrown(7)
+            background atariBrown(2)
+            uni()
+            text-transform uppercase
+
+            &:hover
+              background atariBrown(3)
+              color atariGrey(7)
+
+    .displayed-app
+      position relative
+      padding 5rem
+      border 1rem solid atariOrange(1)
+      background atariGrey(0)
+      margin-bottom 5rem
+
+      .pixelartacademy-pixelboy-apps-admissionweek-dayview-app
+        display flex
+
+        .icon-area
+          width 54rem
+          padding 2rem
+          margin-right 10rem
+
+          .icon
+            width 50rem
+            height 50rem
+
+        .info
+          .header
+            kyrou-7()
+            margin 3rem 0 5rem
+
+          .features
+            list-style square
+            color atariGrey(5)
+            padding-left 8rem
+
+            .feature
+              margin-bottom 3rem

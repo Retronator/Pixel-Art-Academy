@@ -22,6 +22,7 @@ html.landsofillusions-style-adventure
   background-size 21rem 21rem !important
 
 .pixelartacademy-pixelboy-os
+  position relative
   color white
   height 100%
   uni()
@@ -49,3 +50,14 @@ html.landsofillusions-style-adventure
 
     .app
       min-height 100%
+
+  .shortcuts-table
+    position absolute
+    z-index 10
+    bottom -35rem
+    left 0
+    right 0
+    transition bottom 1s
+
+    &.visible
+      bottom 0

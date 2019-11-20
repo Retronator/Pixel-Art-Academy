@@ -17,11 +17,8 @@ class PAA.PixelBoy.Apps.AdmissionWeek.Instructions extends AM.Component
   onCreated: ->
     super arguments...
 
-    # Start on the instructions screen if admission week hasn't been started.
-    @visible = new ReactiveField not PAA.PixelBoy.Apps.AdmissionWeek.state 'startDay'
-
   visibleClass: ->
-    'visible' if @visible()
+    'visible' if @admissionWeek.instructionsVisible()
 
   events: ->
     super(arguments...).concat
@@ -30,6 +27,3 @@ class PAA.PixelBoy.Apps.AdmissionWeek.Instructions extends AM.Component
   onClickStartButton: (event) ->
     # Mark current game day as start day of admission week.
     PAA.PixelBoy.Apps.AdmissionWeek.state 'startDay', LOI.adventure.gameTime().getDay()
-
-    # Close instructions.
-    @visible false

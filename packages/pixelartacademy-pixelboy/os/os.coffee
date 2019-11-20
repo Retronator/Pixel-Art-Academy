@@ -129,6 +129,9 @@ class PAA.PixelBoy.OS extends AM.Component
   go: (appUrl, appPath, appParameter) ->
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
 
+  shortcutsTableVisibleClass: ->
+    'visible' if @currentApp()?.allowsShortcutsTable()
+
   backButtonCallback: ->
     # See if the app can handle it.
     if @currentApp().onBackButton?()
