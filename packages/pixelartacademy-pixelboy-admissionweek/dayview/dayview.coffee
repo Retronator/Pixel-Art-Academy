@@ -91,13 +91,21 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends AM.Component
       return unless bestScore >= 10
 
       appId: bestAppId
+      app: _.find apps, (app) => app._id is bestAppId
       reason:
         axis: bestAxis
+
+    @unlockRecommendationRequested = new ReactiveField false
+
+  showUnlockRecommendationButton: ->
+    @unlockRecommendation() and not @unlockRecommendationRequested()
 
   appRecommendedForUnlock: ->
     app = @currentData()
 
+    return unless @unlockRecommendationRequested()
     return unless unlockRecommendation = @unlockRecommendation()
+
     unlockRecommendation.appId is app._id
 
   appRecommendationPersonalityFactorStyle: ->
@@ -113,16 +121,41 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends AM.Component
     'visible' if @admissionWeek.state 'startDay'
 
   unlocksLeft: ->
-    Math.max 0, @admissionWeek.currentDay() - @unlockedApps().length
+    _.clamp @admissionWeek.currentDay() - @unlockedApps().length, 0, @lockedApps().length
 
   events: ->
     super(arguments...).concat
       'click .app-unlock-button': @onClickAppUnlockButton
-      'click .unlocked-apps .app': @onClickUnlockedApp
+      'click .unlock-recommendation-button': @onClickUnlockRecommendationButton
 
   onClickAppUnlockButton: (event) ->
     app = @currentData()
     @admissionWeek.unlockApp app._id
 
-  onClickUnlockedApp: (event) ->
-    app = @currentData()
+  onClickUnlockRecommendationButton: (event) ->
+    @unlockRecommendationRequested true
+
+    # Scroll to the requested app after the suggestion is shown.
+    Tracker.afterFlush =>
+      admissionWeek = $(".pixelartacademy-pixelboy-apps-admissionweek")[0]
+
+      recommendedAppId = @unlockRecommendation().appId
+      $app = @$("*[data-app-id='#{recommendedAppId}']")
+
+      currentScrollTop = admissionWeek.scrollTop
+      scale = LOI.adventure.interface.display.scale()
+      targetScrollTop = Math.max 0, $app.position().top - 70 * scale
+
+      # Scroll at 200rem per second.
+      scrollDistance = Math.abs(currentScrollTop - targetScrollTop) / scale
+      scrollSpeed = 200 / 1000 # rem/ms
+      scrollDuration = 500 + scrollDistance / scrollSpeed
+
+      $(".pixelartacademy-pixelboy-apps-admissionweek").velocity
+        tween: [targetScrollTop, currentScrollTop]
+      ,
+        duration: scrollDuration
+        delay: 250
+        easing: 'ease-in-out'
+        progress: (elements, complete, remaining, start, tweenValue) =>
+          admissionWeek.scrollTop = tweenValue

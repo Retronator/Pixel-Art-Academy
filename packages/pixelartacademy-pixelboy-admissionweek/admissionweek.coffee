@@ -67,7 +67,7 @@ class PAA.PixelBoy.Apps.AdmissionWeek extends PAA.PixelBoy.App
     return if appId in unlockedApps
 
     # After the home screen has displayed, unlock the new app.
-    homeScreenDisplayTime = 1000 + @os.currentApps().length * 150
+    homeScreenDisplayTime = 750 + @os.currentApps().length * 150
 
     Meteor.setTimeout =>
       unlockedApps.push appId

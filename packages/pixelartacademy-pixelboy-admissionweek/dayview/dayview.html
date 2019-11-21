@@ -19,11 +19,11 @@
     {{#if $and unlocksLeft lockedApps.length}}
       <ul class="locked-apps displayed-apps">
         {{#each lockedApps}}
-          <li class="displayed-app">
+          <li class="displayed-app" data-app-id="{{_id}}">
             {{> PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App}}
             {{#if appRecommendedForUnlock}}
               <div class="recommendation">
-                Recommended for your high <span class="personality-factor" {{style appRecommendationPersonalityFactorStyle}}>{{unlockRecommendation.reason.axis.key}}</span> personality score.
+                Suggested for your high <span class="personality-factor" {{style appRecommendationPersonalityFactorStyle}}>{{unlockRecommendation.reason.axis.key}}</span> personality score.
               </div>
             {{/if}}
             {{#if unlocksLeft}}
@@ -34,6 +34,11 @@
           </li>
         {{/each}}
       </ul>
+      {{#if showUnlockRecommendationButton}}
+        <p class="unlock-recommendation">
+          <button class="unlock-recommendation-button">Help me choose</button>
+        </p>
+      {{/if}}
     {{/if}}
     {{#if unlockedApps.length}}
       <h2>Unlocked apps</h2>

@@ -108,7 +108,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
     @directive: -> "Spend your desired time drawing"
 
     @instructions: -> """
-      By the end of Admission Week, spend the desired time doing drawing (and related) activities.
+      By the end of Admission Week, spend the desired time doing drawing and related activities.
     """
 
     @predecessors: -> [Goal.StartLog]

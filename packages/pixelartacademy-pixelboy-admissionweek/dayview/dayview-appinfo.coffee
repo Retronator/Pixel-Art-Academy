@@ -11,8 +11,8 @@ PAA.PixelBoy.Apps.AdmissionWeek.DayView.AppInfo =
     ]
     factors:
       2: -1
-      3: 2
-      4: -2
+      3: 1
+      4: -3
 
   "#{PAA.PixelBoy.Apps.StudyPlan.id()}":
     features: [
@@ -20,16 +20,18 @@ PAA.PixelBoy.Apps.AdmissionWeek.DayView.AppInfo =
       "Enables you to add and complete learning tasks in the Journal."
     ]
     factors:
-      3: 5
+      3: 4
+      5: -1
 
   "#{PAA.PixelBoy.Apps.Calendar.id()}":
     features: [
-      "Set commitment goal for Admission Week."
-      "Track weekly progress towards your commitment goal."
+      "Set weekly drawing commitment goal."
+      "Track progress towards your commitment goal."
     ]
     factors:
-      3: -2.5
-      4: -2.5
+      3: -2
+      4: -2
+      5: -1
 
   "#{PAA.PixelBoy.Apps.Yearbook.id()}":
     features: [
