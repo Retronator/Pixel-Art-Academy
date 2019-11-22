@@ -8,6 +8,31 @@ C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.AdmissionWeek.DayView
   @register @id()
 
+  onCreated: ->
+    super arguments...
+
+    # Subscribe to character's study group members.
+    @autorun (computation) =>
+      return unless studyGroupId = C1.readOnlyState 'studyGroupId'
+      C1.Groups.AdmissionsStudyGroup.groupMembers.subscribe LOI.characterId(), studyGroupId
+
+    @studyGroupClass = new ComputedField =>
+      return unless studyGroupId = C1.readOnlyState 'studyGroupId'
+
+      LOI.Adventure.Thing.getClassForId studyGroupId
+
+    @studyGroupCoordinatorAvatar = new ComputedField =>
+      return unless groupClass = @studyGroupClass()
+      groupClass.coordinator().createAvatar()
+
+    @studyGroupLocationAvatar = new ComputedField =>
+      return unless groupClass = @studyGroupClass()
+      groupClass.location().createAvatar()
+
+    @studyGroupNPCMemberAvatars = new ComputedField =>
+      return unless groupClass = @studyGroupClass()
+      member.createAvatar() for member in groupClass.npcMembers()
+
   # Commitment goal
 
   commitmentGoalCompletedClass: ->
@@ -77,6 +102,40 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.Admissio
 
   prerequisitesPlaned: -> C1.Goals.StudyPlan.PlanAllRequirements.completedConditions()
   prerequisitesPlanedValueClass: -> @_valueClassTrueOrFalse @prerequisitesPlaned()
+
+  # Study group
+
+  studyGroupCompletedClass: ->
+    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
+    studyGroupGoal = _.find chapter1.goals, (goal) -> goal instanceof C1.Goals.StudyGroup
+
+    'completed' if studyGroupGoal.completed()
+
+  studyGroup: ->
+    return unless studyGroupId = C1.readOnlyState 'studyGroupId'
+
+    npcMembers = (member.fullName() for member in @studyGroupNPCMemberAvatars())
+
+    playerMemberships = C1.Groups.AdmissionsStudyGroup.groupMembers.query(LOI.characterId(), studyGroupId).fetch()
+    playerMembers = for membership in playerMemberships
+      if membership.character._id is LOI.characterId()
+        person = LOI.character()
+
+      else
+        person = LOI.Character.getAgent membership.character._id
+
+      person.avatar.fullName()
+
+    letter: _.last studyGroupId
+    coordinator: @studyGroupCoordinatorAvatar().fullName()
+    location: @studyGroupLocationAvatar().fullName()
+    members: [npcMembers..., playerMembers...]
+
+  joinedStudyGroupValueClass: ->
+    @_valueClassTrueOrFalse @studyGroup()
+
+  introductoryMeeting: -> C1.Goals.StudyGroup.AttendIntroductoryMeeting.completedConditions()
+  introductoryMeetingValueClass: -> @_valueClassTrueOrFalse @introductoryMeeting()
 
   # Helpers
 

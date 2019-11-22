@@ -103,7 +103,63 @@
           </div>
         </div>
       </div>
-      <h2>Study group</h2>
+      <h2 class="goal-title {{studyGroupCompletedClass}}">Study group</h2>
+      <div class="study-group goal-info-area">
+        <div class="info-item joined-study-group">
+          <div class="label">Joined study group:</div>
+          <div class="value {{joinedStudyGroupValueClass}}">
+            {{#if studyGroup}}
+              {{studyGroup.letter}}
+            {{else}}
+              none
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item coordinator">
+          <div class="label">Coordinator:</div>
+          <div class="value">
+            {{#if studyGroup.coordinator}}
+              {{studyGroup.coordinator}}
+            {{else}}
+              N/A
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item meeting-location">
+          <div class="label">Meeting location:</div>
+          <div class="value">
+            {{#if studyGroup.location}}
+              {{studyGroup.location}}
+            {{else}}
+              N/A
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item members">
+          <div class="label">Members:</div>
+          <div class="value">
+            {{#if studyGroup.members}}
+              <ul class="members">
+                {{#each studyGroup.members}}
+                  <li class="member">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{else}}
+              N/A
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item introductory-meeting">
+          <div class="label">Attended introductory meeting:</div>
+          <div class="value {{introductoryMeetingValueClass}}">
+            {{#if introductoryMeeting}}
+              yes
+            {{else}}
+              no
+            {{/if}}
+          </div>
+        </div>
+      </div>
       <h2>Admission project</h2>
     </div>
     {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
