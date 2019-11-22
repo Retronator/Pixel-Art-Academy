@@ -52,8 +52,47 @@
     &:hover
       background atariCyan(7)
 
+      .list-area
+        visibility visible
+        opacity 1
+
     &::before
       content '+'
+
+    .list-area
+      position absolute
+      z-index 4
+      width 80rem
+      left 8rem
+      bottom 10rem
+      padding 2rem
+      visibility hidden
+      opacity 0
+      checkout()
+      color atariGrey(6)
+      background atariCyan(1)
+      transition all 0.2s
+      pointer-events none
+
+      .list
+        list-style none
+        padding 0
+        margin 0
+
+        .interest
+          position relative
+          margin-bottom 1rem
+          padding-left 6rem
+          background atariCyan(1)
+
+          &::before
+            content '+'
+            position absolute
+            top 1rem
+            left 0
+
+          &:last-child
+            margin-bottom 0
 
   .required-interests
     visibility hidden

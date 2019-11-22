@@ -8,6 +8,8 @@ C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.AdmissionWeek.DayView
   @register @id()
 
+  # Commitment goal
+
   commitmentGoalCompletedClass: ->
     return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
     timeGoal = _.find chapter1.goals, (goal) -> goal instanceof C1.Goals.Time
@@ -61,6 +63,22 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.Admissio
     return unless totalHours = PAA.PixelBoy.Apps.Calendar.state('weeklyGoals')?.totalHours
 
     @_valueClassTrueOrFalse @hoursActive() >= totalHours
+
+  # Study plan
+
+  studyPlanCompletedClass: ->
+    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
+    studyPlanGoal = _.find chapter1.goals, (goal) -> goal instanceof C1.Goals.StudyPlan
+
+    'completed' if studyPlanGoal.completed()
+
+  admissionGoalAdded: -> C1.Goals.StudyPlan.AddAdmissionGoal.completedConditions()
+  admissionGoalAddedValueClass: -> @_valueClassTrueOrFalse @admissionGoalAdded()
+
+  prerequisitesPlaned: -> C1.Goals.StudyPlan.PlanAllRequirements.completedConditions()
+  prerequisitesPlanedValueClass: -> @_valueClassTrueOrFalse @prerequisitesPlaned()
+
+  # Helpers
 
   _valueClassTrueOrFalse: (value) ->
     if value then 'completed' else 'not-completed'

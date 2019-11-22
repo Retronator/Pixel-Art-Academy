@@ -12,7 +12,8 @@
       border-color atariCyan(7)
 
     .info
-      display block
+      visibility visible
+      opacity 1
 
   &.active
     .icon
@@ -39,7 +40,6 @@
         adventure()
 
   .info
-    display none
     position absolute
     z-index 1
     top 12rem
@@ -47,7 +47,11 @@
     transform translateX(-50%)
     width 120rem
     padding 5rem
+    visibility hidden
+    opacity 0
     background atariCyan(2)
+    transition all 0.2s
+    pointer-events none
 
     .directive
       margin-bottom 5rem

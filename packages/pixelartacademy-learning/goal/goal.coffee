@@ -52,9 +52,13 @@ class PAA.Learning.Goal
         IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
 
     # Create a list of interests required before attempting this goal and its tasks.
-    @_requiredInterests = @requiredInterests()
+    @_requiredInterests = @ownRequiredInterests()
     for task in @tasks()
       @_requiredInterests = _.union @_requiredInterests, task.requiredInterests()
+
+  @ownRequiredInterests: ->
+    # Override to provide any requirements directly required by the goal, not coming from the tasks.
+    []
 
   @interests: -> @_interests
   @requiredInterests: -> @_requiredInterests

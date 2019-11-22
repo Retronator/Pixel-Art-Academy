@@ -108,7 +108,7 @@ class PAA.Learning.Task
     # We need an entry made by this character.
     @entry()
 
-  active: (otherTasks) ->
+  active: ->
     # We should only be determining active state for the current character.
     unless @options.characterId() is LOI.characterId()
       console.warn "Active task determination requested for another character."
@@ -119,6 +119,7 @@ class PAA.Learning.Task
 
     # Predecessors need to be completed for the task to be active.
     predecessors = @predecessors()
+    otherTasks = @goal.tasks()
 
     if predecessors.length
       # Count how many predecessors are completed.

@@ -153,8 +153,6 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
       uniqueQuarters = _.uniqWith quarters, _.isEqual
 
-      console.log "uq", activities, quarters, uniqueQuarters
-
       uniqueQuarters.length / 4 # hours
 
     @_getActivities: ->

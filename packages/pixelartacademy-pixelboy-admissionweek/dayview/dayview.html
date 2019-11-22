@@ -80,7 +80,29 @@
           </div>
         </div>
       </div>
-      <h2>Study plan</h2>
+      <h2 class="goal-title {{studyPlanCompletedClass}}">Study plan</h2>
+      <div class="study-plan goal-info-area">
+        <div class="info-item admission-goal-added">
+          <div class="label">Admission goal added:</div>
+          <div class="value {{admissionGoalAddedValueClass}}">
+            {{#if admissionGoalAdded}}
+              yes
+            {{else}}
+              no
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item prerequisites-planed">
+          <div class="label">All prerequisites planed:</div>
+          <div class="value {{prerequisitesPlanedValueClass}}">
+            {{#if prerequisitesPlaned}}
+              yes
+            {{else}}
+              no
+            {{/if}}
+          </div>
+        </div>
+      </div>
       <h2>Study group</h2>
       <h2>Admission project</h2>
     </div>
