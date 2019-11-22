@@ -5,7 +5,7 @@
   z-index 11
   width 229rem
   margin 0 auto
-  padding 5rem 10rem 65rem
+  padding 5rem 10rem 70rem
   display none
 
   &.visible
@@ -20,7 +20,7 @@
     text-transform uppercase
     kyrou-7()
     font-weight normal
-    margin 10rem 0 5rem
+    margin 15rem 0 5rem
 
   button
     padding 0 2rem 0 3rem
@@ -109,3 +109,41 @@
         background atariGrey(2)
         color atariGrey(7)
 
+  .progress
+    margin-top 15rem
+
+    h2
+      margin 10rem 0 5rem 10rem
+      kyrou-5()
+
+    .goal-title
+      &.completed
+        color atariLime(7)
+
+        &::after
+          content ' ✓'
+          daily()
+          font-weight bold
+
+    .goal-info-area
+      margin-left 20rem
+
+      .info-item
+        display flex
+        margin-bottom 10rem
+
+        .label
+          width 80rem
+          margin-right 10rem
+          flex-shrink 0
+          color atariGrey(6)
+
+        .value
+          text-transform uppercase
+          checkout()
+
+          &.completed
+            color atariLime(6)
+
+          &.not-completed
+            color atariPeach(6)

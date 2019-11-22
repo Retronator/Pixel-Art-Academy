@@ -114,6 +114,9 @@ class PAA.Learning.Task
       console.warn "Active task determination requested for another character."
       return
 
+    # Task is not active after it's completed.
+    return if @completed()
+
     # Predecessors need to be completed for the task to be active.
     predecessors = @predecessors()
 
@@ -134,5 +137,5 @@ class PAA.Learning.Task
 
     # TODO: Check that the character has all required interests.
 
-    # Task is active until completed.
-    not @completed()
+    # All requirements to be active have been met.
+    true

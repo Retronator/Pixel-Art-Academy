@@ -8,7 +8,6 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView'
   @version: -> '0.1.0'
 
-  @register @id()
   template: -> @constructor.id()
 
   constructor: (@admissionWeek) ->

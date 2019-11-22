@@ -53,7 +53,37 @@
         Return to the <a href="{{admissionWeek.os.appPath}}">home screen</a> to try {{#if $gt unlockedApps.length 1}}them{{else}}it{{/if}} out.
       </p>
     {{/if}}
-    <h2>Progress</h2>
+    <div class="progress">
+      <h1 class="title">Progress</h1>
+      <h2 class="goal-title {{commitmentGoalCompletedClass}}">Commitment goal</h2>
+      <div class="commitment-goal goal-info-area">
+        <div class="info-item weekly-goal">
+          <div class="label">Weekly goal:</div>
+          <div class="value {{weeklyGoalValueClass}}">
+            {{#if commitmentGoal}}
+              {{commitmentGoal.description}}
+            {{else}}
+              not set
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item days-active">
+          <div class="label">Days active in previous 7 days:</div>
+          <div class="value {{daysActiveValueClass}}">
+            {{daysActive}}{{#if commitmentGoal.daysWithActivities}}/{{commitmentGoal.daysWithActivities}}{{/if}} days
+          </div>
+        </div>
+        <div class="info-item hours-active">
+          <div class="label">Hours spent on activities:</div>
+          <div class="value {{hoursActiveValueClass}}">
+            {{hoursActive}}{{#if commitmentGoal.totalHours}}/{{commitmentGoal.totalHours}}{{/if}}h
+          </div>
+        </div>
+      </div>
+      <h2>Study plan</h2>
+      <h2>Study group</h2>
+      <h2>Admission project</h2>
+    </div>
     {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
   </div>
 </template>
