@@ -16,7 +16,16 @@
       </ul>
     </div>
     {{#if goal.interests.length}}
-      <div class="provided-interests" {{style providedInterestsStyle}}></div>
+      <div class="provided-interests" {{style providedInterestsStyle}}>
+        <div class="list-area">
+          Provides interests:
+          <ul class="list">
+            {{#each goal.interests}}
+              <li class="interest">{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
     {{/if}}
     {{#if showRequiredInterests}}
       <div class="required-interests">

@@ -1,0 +1,214 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView">
+  <div class="pixelartacademy-pixelboy-apps-admissionweek-dayview {{visibleClass}}">
+    <h1 class="title">Admission week day {{admissionWeek.currentDay}}</h1>
+    <p class="instructions">
+      {{#if unlocksLeft}}
+        {{#if $gt unlocksLeft 1}}
+          You have {{unlocksLeft}} apps left to unlock today.
+        {{else}}
+          Choose an app to unlock today.
+        {{/if}}
+      {{else}}
+        {{#if lockedApps.length}}
+          Come back tomorrow to unlock another app.
+        {{else}}
+          Complete all four admission goals to complete Admission Week.
+        {{/if}}
+      {{/if}}
+    </p>
+    {{#if $and unlocksLeft lockedApps.length}}
+      <ul class="locked-apps displayed-apps">
+        {{#each lockedApps}}
+          <li class="displayed-app" data-app-id="{{_id}}">
+            {{> PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App}}
+            {{#if appRecommendedForUnlock}}
+              <div class="recommendation">
+                Suggested for your high <span class="personality-factor" {{style appRecommendationPersonalityFactorStyle}}>{{unlockRecommendation.reason.axis.key}}</span> personality score.
+              </div>
+            {{/if}}
+            {{#if unlocksLeft}}
+              <div class="app-unlock-area">
+                <button class="app-unlock-button">Unlock</button>
+              </div>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+      {{#if showUnlockRecommendationButton}}
+        <p class="unlock-recommendation">
+          <button class="unlock-recommendation-button">Help me choose</button>
+        </p>
+      {{/if}}
+    {{/if}}
+    {{#if unlockedApps.length}}
+      <h2>Unlocked apps</h2>
+      <ul class="unlocked-apps displayed-apps">
+        {{#each unlockedApps}}
+          <li class="displayed-app">
+            {{> PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App}}
+          </li>
+        {{/each}}
+      </ul>
+      <p>
+        Return to the <a href="{{admissionWeek.os.appPath}}">home screen</a> to try {{#if $gt unlockedApps.length 1}}them{{else}}it{{/if}} out.
+      </p>
+    {{/if}}
+    <div class="progress">
+      <h1 class="title">Progress</h1>
+      <h2 class="goal-title {{commitmentGoalCompletedClass}}">Commitment goal</h2>
+      <div class="commitment-goal goal-info-area">
+        <div class="info-item weekly-goal">
+          <div class="label">Weekly goal:</div>
+          <div class="value {{weeklyGoalValueClass}}">
+            {{#if commitmentGoal}}
+              {{commitmentGoal.description}}
+            {{else}}
+              not set
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item days-active">
+          <div class="label">Days active in previous 7 days:</div>
+          <div class="value {{daysActiveValueClass}}">
+            {{daysActive}}{{#if commitmentGoal.daysWithActivities}}/{{commitmentGoal.daysWithActivities}}{{/if}} days
+          </div>
+        </div>
+        <div class="info-item hours-active">
+          <div class="label">Hours spent on activities:</div>
+          <div class="value {{hoursActiveValueClass}}">
+            {{hoursActive}}{{#if commitmentGoal.totalHours}}/{{commitmentGoal.totalHours}}{{/if}} hours
+          </div>
+        </div>
+      </div>
+      <h2 class="goal-title {{studyPlanCompletedClass}}">Study plan</h2>
+      <div class="study-plan goal-info-area">
+        <div class="info-item admission-goal-added">
+          <div class="label">Admission goal added:</div>
+          <div class="value {{admissionGoalAddedValueClass}}">
+            {{#if admissionGoalAdded}}
+              yes
+            {{else}}
+              no
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item prerequisites-planed">
+          <div class="label">All prerequisites planed:</div>
+          <div class="value {{prerequisitesPlanedValueClass}}">
+            {{#if prerequisitesPlaned}}
+              yes
+            {{else}}
+              no
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      <h2 class="goal-title {{studyGroupCompletedClass}}">Study group</h2>
+      <div class="study-group goal-info-area">
+        <div class="info-item joined-study-group">
+          <div class="label">Joined study group:</div>
+          <div class="value {{joinedStudyGroupValueClass}}">
+            {{#if studyGroup}}
+              {{studyGroup.letter}}
+            {{else}}
+              none
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item coordinator">
+          <div class="label">Coordinator:</div>
+          <div class="value">
+            {{#if studyGroup.coordinator}}
+              {{studyGroup.coordinator}}
+            {{else}}
+              N/A
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item meeting-location">
+          <div class="label">Meeting location:</div>
+          <div class="value">
+            {{#if studyGroup.location}}
+              {{studyGroup.location}}
+            {{else}}
+              N/A
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item members">
+          <div class="label">Members:</div>
+          <div class="value">
+            {{#if studyGroup.members}}
+              <ul class="members">
+                {{#each studyGroup.members}}
+                  <li class="member">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{else}}
+              N/A
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item introductory-meeting">
+          <div class="label">Attended introductory meeting:</div>
+          <div class="value {{introductoryMeetingValueClass}}">
+            {{#if introductoryMeeting}}
+              yes
+            {{else}}
+              no
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      <h2 class="goal-title {{admissionProjectCompletedClass}}">Admission project</h2>
+      <div class="admission-project goal-info-area">
+        <div class="info-item discovered-admission-projects">
+          <div class="label">Projects discovered:</div>
+          <div class="value">
+            {{discoveredAdmissionProjects.length}}/{{admissionProjectsTotal}}
+            {{#if discoveredAdmissionProjects.length}}
+              <ul class="admission-projects">
+                {{#each discoveredAdmissionProjects}}
+                  <li class="admission-project">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item completed-admission-projects">
+          <div class="label">Completed:</div>
+          <div class="value {{completedAdmissionProjectsValueClass}}">
+            {{#if completedAdmissionProjects.length}}
+              <ul class="admission-projects">
+                {{#each completedAdmissionProjects}}
+                  <li class="admission-project">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{else}}
+              none
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.AdmissionWeek.DayView.App">
+  <div class="pixelartacademy-pixelboy-apps-admissionweek-dayview-app">
+    <div class="icon-area">
+      <img src="{{iconUrl}}" class="icon">
+    </div>
+    <div class="info">
+      <div class="header">
+        {{avatar.fullName}}
+      </div>
+      <ul class="features">
+        {{#each features}}
+          <li class="feature">{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

@@ -44,6 +44,8 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
     else
       finishedDeactivatingCallback()
 
+  allowsShortcutsTable: -> true
+
   apps: ->
     # Show all apps except the home screen.
     _.without @os.currentApps(), @

@@ -13,9 +13,9 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
 
     url = @url()
     @_appClassesByUrl[url] = @ if url?
-        
-  iconUrl: ->
-    @versionedUrl "/pixelartacademy/pixelboy/apps/#{@url()}/icon.png"
+
+  @iconUrl: -> @versionedUrl "/pixelartacademy/pixelboy/apps/#{@url()}/icon.png"
+  iconUrl: -> @constructor.iconUrl()
 
   constructor: (@os) ->
     super arguments...
@@ -30,6 +30,10 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     # The maximum size the device should be let to resize.
     @maxWidth = new ReactiveField null
     @maxHeight = new ReactiveField null
+
+  allowsShortcutsTable: ->
+    # Override to display shortcuts table in the app.
+    false
 
   onRendered: ->
     super arguments...

@@ -132,24 +132,6 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
       C1.Groups.AdmissionsStudyGroup.HangoutGroupListener.Script.state 'ReciprocityAskThankYou'
     ]
 
-  class @AcceptanceCelebration extends PAA.Learning.Task.Automatic
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.AcceptanceCelebration'
-    @goal: -> Goal
-
-    @directive: -> "Attend your acceptance celebration"
-
-    @instructions: -> """
-      After you've been accepted to the Academy, hang out with your group to celebrate.
-    """
-
-    @predecessors: -> [Goal.HangOutWithGroup]
-
-    @groupNumber: -> 2
-
-    @initialize()
-
-    @completedConditions: -> false
-
   @tasks: -> [
     @Yearbook
     # TODO: Add privacy settings.
@@ -159,7 +141,6 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
     @AttendIntroductoryMeeting
     @HangOutWithGroup
     @Reciprocity
-    @AcceptanceCelebration
   ]
 
   @finalTasks: -> [
