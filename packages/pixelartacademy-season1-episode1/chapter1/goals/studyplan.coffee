@@ -56,8 +56,8 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
     @directive: -> "Plan admission requirements"
 
     @instructions: -> """
-      Click on each of the requirements in the admission goal and add one of the study plan goals that provide that requirement.
-      Connect them with arrows to your admission goal.
+      Click on each of the remaining prerequisites of the "Get admitted" goal and add one of the study plan goals that provide that requirement.
+      Connect the new goals with arrows to the admission goal.
     """
 
     @predecessors: -> [Goal.ConnectStudyPlanPrerequisite]
