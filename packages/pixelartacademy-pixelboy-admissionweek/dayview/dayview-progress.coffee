@@ -33,13 +33,12 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.Admissio
       return unless groupClass = @studyGroupClass()
       member.createAvatar() for member in groupClass.npcMembers()
 
+    @admissionProjectGoalClasses = _.filter PAA.Learning.Goal.getClasses(), (goalClass) => 'academy of art admission project' in goalClass.interests()
+
   # Commitment goal
 
   commitmentGoalCompletedClass: ->
-    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
-    timeGoal = _.find chapter1.goals, (goal) -> goal instanceof C1.Goals.Time
-
-    'completed' if timeGoal.completed()
+    'completed' if @_getGoalForClass(C1.Goals.Time)?.completed()
 
   commitmentGoal: ->
     goal = _.pick PAA.PixelBoy.Apps.Calendar.state('weeklyGoals'), ['daysWithActivities', 'totalHours']
@@ -92,10 +91,7 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.Admissio
   # Study plan
 
   studyPlanCompletedClass: ->
-    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
-    studyPlanGoal = _.find chapter1.goals, (goal) -> goal instanceof C1.Goals.StudyPlan
-
-    'completed' if studyPlanGoal.completed()
+    'completed' if @_getGoalForClass(C1.Goals.StudyPlan)?.completed()
 
   admissionGoalAdded: -> C1.Goals.StudyPlan.AddAdmissionGoal.completedConditions()
   admissionGoalAddedValueClass: -> @_valueClassTrueOrFalse @admissionGoalAdded()
@@ -106,8 +102,7 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.Admissio
   # Study group
 
   studyGroupCompletedClass: ->
-    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
-    studyGroupGoal = _.find chapter1.goals, (goal) -> goal instanceof C1.Goals.StudyGroup
+    return unless studyGroupGoal = @_getGoalForClass C1.Goals.StudyGroup
 
     'completed' if studyGroupGoal.completed()
 
@@ -137,7 +132,49 @@ class PAA.PixelBoy.Apps.AdmissionWeek.DayView extends PAA.PixelBoy.Apps.Admissio
   introductoryMeeting: -> C1.Goals.StudyGroup.AttendIntroductoryMeeting.completedConditions()
   introductoryMeetingValueClass: -> @_valueClassTrueOrFalse @introductoryMeeting()
 
+  # Admission Projects
+
+  admissionProjectCompletedClass: ->
+    'completed' if @completedAdmissionProjects().length
+
+  admissionProjectsTotal: -> @admissionProjectGoalClasses.length
+
+  discoveredAdmissionProjects: ->
+    return unless admissionProjectGoals = @_getAdmissionProjectGoals()
+
+    discoveredAdmissionProjects = []
+
+    for goal in admissionProjectGoals
+      # Find the task without prerequisites and see if it was completed. We assume the first task is the discovery task.
+      discoveryTask = _.find goal.tasks(), (task) => not task.requiredInterests().length
+
+      discoveredAdmissionProjects.push goal if discoveryTask.completed()
+
+    @_getGoalNames discoveredAdmissionProjects
+
+  completedAdmissionProjects: ->
+    return unless admissionProjectGoals = @_getAdmissionProjectGoals()
+
+    completedAdmissionProjects = _.filter admissionProjectGoals, (goal) => goal.completed()
+    @_getGoalNames completedAdmissionProjects
+
+  _getAdmissionProjectGoals: ->
+    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
+
+    for goalClass in @admissionProjectGoalClasses
+      _.find chapter1.goals, (goal) -> goal instanceof goalClass
+
+  _getGoalNames: (goals) ->
+    goal.displayName() for goal in goals
+
+  completedAdmissionProjectsValueClass: ->
+    @_valueClassTrueOrFalse @completedAdmissionProjects().length
+
   # Helpers
+
+  _getGoalForClass: (goalClass) ->
+    return unless chapter1 = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof C1
+    _.find chapter1.goals, (goal) -> goal instanceof goalClass
 
   _valueClassTrueOrFalse: (value) ->
     if value then 'completed' else 'not-completed'

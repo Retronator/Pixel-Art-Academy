@@ -160,7 +160,36 @@
           </div>
         </div>
       </div>
-      <h2>Admission project</h2>
+      <h2 class="goal-title {{admissionProjectCompletedClass}}">Admission project</h2>
+      <div class="admission-project goal-info-area">
+        <div class="info-item discovered-admission-projects">
+          <div class="label">Projects discovered:</div>
+          <div class="value">
+            {{discoveredAdmissionProjects.length}}/{{admissionProjectsTotal}}
+            {{#if discoveredAdmissionProjects.length}}
+              <ul class="admission-projects">
+                {{#each discoveredAdmissionProjects}}
+                  <li class="admission-project">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </div>
+        </div>
+        <div class="info-item completed-admission-projects">
+          <div class="label">Completed:</div>
+          <div class="value {{completedAdmissionProjectsValueClass}}">
+            {{#if completedAdmissionProjects.length}}
+              <ul class="admission-projects">
+                {{#each completedAdmissionProjects}}
+                  <li class="admission-project">{{this}}</li>
+                {{/each}}
+              </ul>
+            {{else}}
+              none
+            {{/if}}
+          </div>
+        </div>
+      </div>
     </div>
     {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
   </div>

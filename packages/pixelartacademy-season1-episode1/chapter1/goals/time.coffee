@@ -117,7 +117,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
       By the end of Admission Week, spend the desired time doing drawing and related activities.
     """
 
-    @predecessors: -> [Goal.StartLog]
+    @predecessors: -> [Goal.SetDesiredTime]
 
     @interests: -> ['desired drawing time']
 
@@ -208,11 +208,11 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   @tasks: -> [
     @SetDesiredTime
-    @MeaningfulAndManageable
-    @StartLog
-    @SetDailyAlarm
-    @ScheduleSessions
-    @ExportCalendar
+    # @MeaningfulAndManageable
+    # @StartLog
+    # @SetDailyAlarm
+    # @ScheduleSessions
+    # @ExportCalendar
     @ReachDesiredTime
   ]
 
