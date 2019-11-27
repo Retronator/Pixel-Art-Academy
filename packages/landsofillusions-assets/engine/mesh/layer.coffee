@@ -28,11 +28,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends AS.RenderObject
       boundingBox = null
 
       for cluster in clusters
+        continue unless clusterBoundingBox = cluster.boundingBox()
+
         if boundingBox
-          boundingBox.union cluster.boundingBox()
+          boundingBox.union clusterBoundingBox
 
         else
-          boundingBox = cluster.boundingBox()
+          boundingBox = clusterBoundingBox
 
       boundingBox
 

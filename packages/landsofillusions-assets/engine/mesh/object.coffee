@@ -30,11 +30,13 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
       boundingBox = null
 
       for layer in layers
+        continue unless layerBoundingBox = layer.boundingBox()
+
         if boundingBox
-          boundingBox.union layer.boundingBox()
+          boundingBox.union layerBoundingBox
 
         else
-          boundingBox = layer.boundingBox()
+          boundingBox = layerBoundingBox
 
       @boundingBox boundingBox
 
@@ -83,4 +85,4 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
   destroy: ->
     super arguments...
 
-    layer.destroy() for layer in @layers()
+    layer.destroy() for layer in @engineLayers()
