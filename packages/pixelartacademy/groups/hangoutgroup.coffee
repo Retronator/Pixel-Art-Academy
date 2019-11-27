@@ -25,7 +25,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
     @characterUpdatesHelper = new PAA.CharacterUpdatesHelper
 
-    @personUpdates = _.find @listeners, (listener) -> listener instanceof PAA.PersonUpdates
+    @personUpdates = _.find @listeners, (listener) => listener instanceof PAA.PersonUpdates
 
   destroy: ->
     super arguments...

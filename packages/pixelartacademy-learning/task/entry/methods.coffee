@@ -2,8 +2,9 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-PAA.Learning.Task.Entry.insert.method (characterId, taskId, data) ->
+PAA.Learning.Task.Entry.insert.method (characterId, situation, taskId, data) ->
   check characterId, Match.DocumentId
+  # Note: Situation will be checked in the Action do call.
   check taskId, String
   check data, Match.OptionalOrNull
     upload: Match.Optional
@@ -68,9 +69,13 @@ PAA.Learning.Task.Entry.insert.method (characterId, taskId, data) ->
 
   return if existing
 
+  actionId = LOI.Memory.Action.do PAA.Learning.Task.Entry.Action.type, characterId, situation, {}
+
   entry = _.extend
     character:
       _id: characterId
+    action:
+      _id: actionId
     taskId: taskId
     time: new Date()
   ,

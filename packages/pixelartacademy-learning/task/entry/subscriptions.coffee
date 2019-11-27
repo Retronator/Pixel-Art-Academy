@@ -23,3 +23,11 @@ PAA.Learning.Task.Entry.forCharacterTaskIds.publish (characterId, taskIds) ->
   PAA.Learning.Task.Entry.documents.find
     'character._id': characterId
     taskId: $in: taskIds
+
+PAA.Learning.Task.Entry.forCharactersTaskId.publish (characterIds, taskId) ->
+  check characterIds, [Match.DocumentId]
+  check taskId, String
+
+  PAA.Learning.Task.Entry.documents.find
+    'character._id': $in: characterIds
+    taskId: taskId

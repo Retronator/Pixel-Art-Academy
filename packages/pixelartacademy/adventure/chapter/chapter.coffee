@@ -28,7 +28,7 @@ class PAA.Adventure.Chapter extends LOI.Adventure.Chapter
       for task in automaticTasks when task.active()
         if task.completedConditions()
           # Automatically create an entry for this task.
-          PAA.Learning.Task.Entry.insert characterId, task.id()
+          PAA.Learning.Task.Entry.insert characterId, LOI.adventure.currentSituationParameters(), task.id()
 
   destroy: ->
     super arguments...

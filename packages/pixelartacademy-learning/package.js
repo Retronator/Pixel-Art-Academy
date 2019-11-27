@@ -27,6 +27,10 @@ Package.onUse(function(api) {
   api.addFile('task/tasks/survey');
 
   api.addFile('task/entry..');
+  api.addFile('task/entry/action');
   api.addFile('task/entry/methods');
   api.addServerFile('task/entry/subscriptions');
+
+  api.addServerFile('task/entry/migrations/0000-addactions');
+
 });

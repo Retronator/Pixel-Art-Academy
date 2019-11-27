@@ -173,11 +173,71 @@ coordinator: Thank you, _char_.
 
 ## AcceptanceCelebrationStart 
 
+### AcceptanceCelebrationStart
+
 -> [MeetingEnd] `not _acceptanceCelebration`
 
 ## AcceptanceCelebration
 
 coordinator: Today we have a happy celebration moment!
+
+-> [AcceptanceCelebrationMultiple] `_acceptanceCelebration.studentsCount > 1`
+-> [AcceptanceCelebrationPlayerSingle] `_acceptanceCelebration.player and not _person1`
+
+coordinator: `_acceptanceCelebration.names` has completed all four admission goals and has been accepted to study at the Academy!
+
+> _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
+
+-> [AcceptanceCelebrationPlayer] `_acceptanceCelebration.player`
+
+coordinator: Congratulations! Retropolis will be happy to have you, make the best of your stay there!
+
+-> [AcceptanceCelebrationEnd]
+
+## AcceptanceCelebrationMultiple
+
+coordinator: `_acceptanceCelebration.names` have completed all four admission goals and have been accepted to study at the Academy! 
+
+> _coordinator_ hands out acceptance letters and students take them with delight.
+
+-> [AcceptanceCelebrationPlayer] `_acceptanceCelebration.player`
+
+coordinator: Make sure to find each other again in Retropolis! Have a wonderful stay there.
+
+-> [AcceptanceCelebrationEnd]
+
+## AcceptanceCelebrationPlayerSingle
+
+coordinator: You have completed all four admission goals and have been accepted to study at the Academy!
+
+> _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
+
+## AcceptanceCelebrationPlayer
+
+coordinator: 
+    _char_, you have shown commitment to improving yourself, not just for drawing, but learning in general.
+    This is the core value in Retropolis and you will fit right in. I'm sure you'll have the most wonderful time there.
+    
+> _coordinator_ gets a bit emotional.
+
+coordinator:
+    I guess this is goodbye for now. It's been really nice having you in the group. 
+    You'll find details what to do next in the application letter and an email from the Academy.
+    Take care! Have fun in your upcoming adventure!
+    
+> The final study group meeting is over, but you get a feeling _char_ will meet _their_ classmates again one day at the Academy.
+
+### AcceptanceCelebrationComplete
+    
+-> [End]        
+
+## AcceptanceCelebrationEnd
+
+coordinator: Everyone else, I'll see you tomorrow.
+
+### AcceptanceCelebrationComplete
+
+-> [End]
 
 ## MeetingEnd
 
@@ -213,6 +273,32 @@ coordinator:
 pause
 
 -> [ReportProgress]
+
+## AlreadyAccepted
+
+char: As much as I like my study group, I already completed Admission Week and it's time to move on.
+
+-> [End]
+
+## AlreadyAcceptedNotOwnGroup
+
+char: I already completed Admission Week, I wouldn't want to disturb the other students.
+
+-> [End]
+
+## NotOwnGroup
+
+coordinator: Hi, _char_, how can I help you?
+
+char: I'm here for the study group meeting.
+
+coordinator: 
+    Oh, you're not actually in my group I think.
+    Check out the Admission Week app on your PixelBoy, you should see who's your coordinator and where to meet.
+    
+char: Ah, thank you.
+
+-> [End]
 
 <!-- Not used in admission group hangout. -->
 

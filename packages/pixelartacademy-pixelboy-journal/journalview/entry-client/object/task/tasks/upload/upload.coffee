@@ -45,7 +45,7 @@ class Entry.Object.Task.Upload extends Entry.Object.Task.Component
       # Upload file.
       PAA.Practice.Journal.Entry.pictureUploadContext.upload file, (pictureUrl) =>
         # Create the entry with this picture URL.
-        PAA.Learning.Task.Entry.insert LOI.characterId(), @parent.task.id(),
+        PAA.Learning.Task.Entry.insert LOI.characterId(), LOI.adventure.currentSituationParameters(), @parent.task.id(),
           upload:
             picture:
               url: pictureUrl
