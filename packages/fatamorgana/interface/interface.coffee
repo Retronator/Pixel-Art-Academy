@@ -79,10 +79,9 @@ class FM.Interface extends AM.Component
 
     # Create file loaders.
     @files = new AE.ReactiveArray =>
-      editorViews = @allChildComponentsOfType FM.EditorView
+      editorViewsValues = @currentApplicationAreaData().findValuesOfChildrenOfType FM.EditorView
 
-      files = for editorView in editorViews
-        editorView.data().get 'files'
+      files = (editorViewValue.files for editorViewValue in editorViewsValues)
 
       _.without _.flatten(files), undefined
     ,

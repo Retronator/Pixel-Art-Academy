@@ -36,17 +36,24 @@ class FM.Interface.Data
     child = @child field
     child.value value
 
-  findChildOfType: (classOrId) ->
+  # Returns the raw value for children nodes of desired type.
+  findValuesOfChildrenOfType: (classOrId) ->
     id = classOrId?.id() or classOrId
     value = @value()
+    results = []
+
+    @_findValuesOfChildrenOfType id, value, results
+
+    results
+
+  _findValuesOfChildrenOfType: (id, value, resultArray) ->
+    return unless _.isObject value
 
     # We have found the child if we have a type or contentComponentId that matches.
-    return @ if value.type is id or value.contentComponentId is id
+    if value.type is id or value.contentComponentId is id
+      resultArray.push value
+      return
 
     # Search all the fields in the data.
-    for field of value
-      result = @child(field).findChildOfType id
-      return result if result
-
-    # We could not find the data position of this type.
-    null
+    for field, child of value
+      @_findValuesOfChildrenOfType id, child, resultArray

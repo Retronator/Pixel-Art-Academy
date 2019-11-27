@@ -2,6 +2,9 @@ AE = Artificial.Everywhere
 FM = FataMorgana
 LOI = LandsOfIllusions
 
+viewportBounds = left: 0, right: 0, top: 0, bottom: 0
+renderTargetViewportBounds = left: 0, right: 0, top: 0, bottom: 0
+
 class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
   constructor: (@renderer) ->
     # Main camera is used to render the scene in full resolution.
@@ -44,15 +47,18 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
       @reset()
 
     @renderer.meshCanvas.autorun (computation) =>
-      return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
+      return unless viewportBoundsRectangle = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds
+
+      viewportBounds.left = viewportBoundsRectangle.left()
+      viewportBounds.right = viewportBoundsRectangle.right()
+      viewportBounds.top = viewportBoundsRectangle.top()
+      viewportBounds.bottom = viewportBoundsRectangle.bottom()
       @_updateProjectionMatrix viewportBounds, @_camera
 
-      renderTargetViewportBounds =
-        left: Math.floor viewportBounds.left
-        right: Math.ceil viewportBounds.right
-        top: Math.floor viewportBounds.top
-        bottom: Math.ceil viewportBounds.bottom
-
+      renderTargetViewportBounds.left = Math.floor viewportBounds.left
+      renderTargetViewportBounds.right = Math.ceil viewportBounds.right
+      renderTargetViewportBounds.top = Math.floor viewportBounds.top
+      renderTargetViewportBounds.bottom = Math.ceil viewportBounds.bottom
       @_updateProjectionMatrix renderTargetViewportBounds, @_renderTargetCamera
 
       @_pixelRenderCamera.left = viewportBounds.left
@@ -60,6 +66,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
       @_pixelRenderCamera.top = viewportBounds.top
       @_pixelRenderCamera.bottom = viewportBounds.bottom
       @_pixelRenderCamera.updateProjectionMatrix()
+
+      console.log "Viewport bounds changed", viewportBounds, renderTargetViewportBounds, @_pixelRenderCamera if LOI.Assets.debug
 
       @camera.updated()
 

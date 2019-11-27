@@ -3,6 +3,8 @@ AB = Artificial.Base
 AM = Artificial.Mummification
 
 class LOI.Assets
+  @debug = false
+
   @addToExport: (path) ->
     for assetClassName in ['Sprite', 'Mesh', 'Audio']
       do (assetClassName) ->
