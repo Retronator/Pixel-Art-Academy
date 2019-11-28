@@ -68,7 +68,7 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     clusters = []
 
     for intersection in intersections when intersection.object.parent instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
-      clusters.push intersection.object.parent.clusterData
+      clusters.push intersection.object.parent.data
 
     # Get only one instance of each cluster (if it was picked multiple times).
     clusters = _.uniq clusters
