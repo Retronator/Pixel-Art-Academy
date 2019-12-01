@@ -36,9 +36,6 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
     copyInstances
 
   # Item instance
-    
-  # Tells if the item supports the activate interaction.
-  isActivatable: -> false
 
   constructor: (@options) ->
     super arguments...

@@ -42,6 +42,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
   _generateGeometry: ->
     return unless geometryData = @data.geometry()
 
+    console.log "Generating geometry", geometryData if LOI.Assets.debug
+
     geometry = new THREE.BufferGeometry
     geometry.addAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
     geometry.addAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
@@ -53,6 +55,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
   _generateMaterials: ->
     meshData = @data.layer.object.mesh
     return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+
+    console.log "Generating materials", meshData if LOI.Assets.debug
 
     options = @layer.object.mesh.options
     visualizeNormals = options.visualizeNormals?()
@@ -141,6 +145,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
   _generateMesh: ->
     return unless geometry = @geometry()
     return unless materials = @materials()
+
+    console.log "Generating mesh", geometry, materials if LOI.Assets.debug
 
     mesh = new THREE.Mesh geometry, materials.main
 

@@ -61,7 +61,8 @@ class C1.Goals.Admission extends PAA.Learning.Goal
 
     @initialize()
 
-    @completedConditions: -> false
+    @completedConditions: ->
+      C1.Groups.AdmissionsStudyGroup.HangoutGroupListener.Script.state 'AcceptanceCelebrationPlayer'
 
   @tasks: -> [
     @Complete

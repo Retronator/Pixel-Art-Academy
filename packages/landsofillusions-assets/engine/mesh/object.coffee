@@ -20,6 +20,8 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
 
       true
 
+    @edgeLineSegments = new ReactiveField []
+
     @boundingBox = new ReactiveField null
 
     # Reposition the object so the origin is in the center of its bounding box.
@@ -30,11 +32,13 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
       boundingBox = null
 
       for layer in layers
+        continue unless layerBoundingBox = layer.boundingBox()
+
         if boundingBox
-          boundingBox.union layer.boundingBox()
+          boundingBox.union layerBoundingBox
 
         else
-          boundingBox = layer.boundingBox()
+          boundingBox = layerBoundingBox
 
       @boundingBox boundingBox
 
@@ -43,6 +47,9 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
 
       # Offset layers in the opposite direction.
       layer.position.copy(@position).negate() for layer in layers
+
+      if @mesh.options.debug?()
+        lineSegments.position.copy(@position).negate() for lineSegments in @edgeLineSegments()
 
     # Update object children.
     @autorun (computation) =>
@@ -54,6 +61,8 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
 
       # Add new children.
       @add layer for layer in layers
+
+      edgeLineSegments = []
 
       if @mesh.options.debug?()
         currentCluster = @mesh.options.currentCluster?()
@@ -67,7 +76,12 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
           lineSegments = edge.getLineSegments @data.mesh.cameraAngles.get 0
           lineSegments.layers.set 2
           @add lineSegments
-      
+
+          lineSegments.position.copy(@position).negate()
+          edgeLineSegments.push lineSegments
+
+      @edgeLineSegments edgeLineSegments
+
       @mesh.options.sceneManager.addedSceneObjects()
 
     # Update visibility.
@@ -83,4 +97,4 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
   destroy: ->
     super arguments...
 
-    layer.destroy() for layer in @layers()
+    layer.destroy() for layer in @engineLayers()

@@ -10,6 +10,8 @@ class PAA.Learning.Task.Entry extends AM.Document
   # time: the time when task was completed
   # character: character that completed the task
   #   _id
+  # action: the action representing completion of this task
+  #   _id
   #
   # upload: data for an upload entry
   #   picture: an image without any semantic information
@@ -21,6 +23,7 @@ class PAA.Learning.Task.Entry extends AM.Document
     name: @id()
     fields: =>
       character: Document.ReferenceField LOI.Character, [], true
+      action: Document.ReferenceField LOI.Memory.Action, [], true, 'content.taskEntry', ['taskId']
 
   # Methods
   @insert: @method 'insert'
@@ -29,3 +32,4 @@ class PAA.Learning.Task.Entry extends AM.Document
   @forCharacter: @subscription 'forCharacter'
   @recentForCharacter: @subscription 'recentForCharacter'
   @forCharacterTaskIds: @subscription 'forCharacterTaskIds'
+  @forCharactersTaskId: @subscription 'forCharactersTaskId'

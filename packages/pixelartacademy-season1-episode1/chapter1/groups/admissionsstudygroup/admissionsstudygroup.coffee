@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
-AB = Artificial.Base
+AB = Artificial.Babel
+ABs = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PAA.Season1.Episode1.Chapter1
@@ -11,6 +12,8 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
   # Uses membership to determine its members for the current character.
   @fullName: -> "admissions study group"
 
+  @letter: ->  _.last @id()
+
   @listeners: ->
     super(arguments...).concat [
       @HangoutGroupListener
@@ -21,7 +24,7 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
 
   # Subscriptions
 
-  @groupMembers = new AB.Subscription
+  @groupMembers = new ABs.Subscription
     name: "PAA.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.groupMembers"
     query: (characterId, groupId) =>
       # Get the latest study group membership of character.
@@ -66,19 +69,41 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
           $gte: memberId - 2
           $lte: memberId + 2
 
+  constructor: ->
+    super arguments...
+
+    # Subscribe to admission action for the agents so that we can determine who are active members.
+    @_admissionTaskEntrySubscription = Tracker.autorun (computation) =>
+      agentIds = (agent._id for agent in @otherAgents())
+      PAA.Learning.Task.Entry.forCharactersTaskId.subscribe agentIds, C1.Goals.Admission.Complete.id()
+
+  destroy: ->
+    super arguments...
+
+    @_admissionTaskEntrySubscription.stop()
+
   agents: ->
-    @constructor.groupMembers.query(LOI.characterId(), @constructor.id()).map (membership) =>
+    agents = @constructor.groupMembers.query(LOI.characterId(), @constructor.id()).map (membership) =>
       LOI.Character.getAgent membership.character._id
+
+    @_excludeAdmittedMembers agents
 
   otherAgents: ->
     _.without @agents(), LOI.agent()
 
   actors: ->
-    for npcClass in @constructor.npcMembers()
+    actors = for npcClass in @constructor.npcMembers()
       LOI.adventure.getThing npcClass
+
+    @_excludeAdmittedMembers actors
 
   members: ->
     [@otherAgents()..., @actors()...]
+
+  _excludeAdmittedMembers: (members) ->
+    # Exclude members that have had their acceptance celebration since they should stop coming to the meetings.
+    _.filter members, (member) =>
+      not member.personState()?.admissionWeekAcceptanceCelebrationCompleted
 
   things: ->
     # Study group isn't active until the mixer is over.
@@ -238,6 +263,42 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
 
           scene.listenForReciprocityReply complete
 
+        AcceptanceCelebrationStart: (complete) =>
+          # See if any of the present members (including the character) have the admission task entry.
+          playerAgent = LOI.agent()
+          members = [scene.presentMembers()..., playerAgent]
+
+          admittedMembers = _.filter members, (member) =>
+            member.getTaskEntries(taskId: C1.Goals.Admission.Complete.id()).length
+
+          console.log "whot", members, admittedMembers, admittedMembers.length
+
+          if admittedMembers.length
+            acceptanceCelebration =
+              studentsCount: admittedMembers.length
+              names: AB.Rules.English.createNounSeries (member.fullName() for member in admittedMembers)
+              player: playerAgent in admittedMembers
+
+          else
+            # Note: We need to specifically null this value to override any previous acceptance celebration state.
+            acceptanceCelebration = null
+
+          @groupScript.ephemeralState 'acceptanceCelebration', acceptanceCelebration
+
+          complete()
+
+        AcceptanceCelebrationComplete: (complete) =>
+          admittedMembers = _.filter scene.presentMembers(), (member) =>
+            member.getTaskEntries(taskId: C1.Goals.Admission.Complete.id()).length
+
+          for member in admittedMembers
+            personState = member.personState()
+            personState.admissionWeekAcceptanceCelebrationCompleted = true
+
+          LOI.adventure.gameState.updated()
+
+          complete()
+
     onCommand: (commandResponse) ->
       super arguments...
 
@@ -339,3 +400,20 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
           action: =>
             @listenForReciprocityReply = false
             scene._reciprocityReplyCompleteCallback()
+
+      # If the student already graduated, refuse to sit down.
+      alreadyAccepted = @groupScript.state 'AcceptanceCelebrationPlayer'
+      notOwnGroup = scene.constructor.id() isnt C1.readOnlyState 'studyGroupId'
+
+      if alreadyAccepted
+        cantHangOutLabel = if notOwnGroup then 'AlreadyAcceptedNotOwnGroup' else 'AlreadyAccepted'
+
+      else if notOwnGroup
+        cantHangOutLabel = 'NotOwnGroup'
+
+      if cantHangOutLabel
+        commandResponse.onPhrase
+          form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
+          priority: 1
+          action: =>
+            LOI.adventure.director.startScript @groupScript, label: cantHangOutLabel

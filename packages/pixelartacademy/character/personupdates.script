@@ -135,6 +135,8 @@ pause
 
 person: It was the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal.
 
+`_followedUp = true`
+
 -> [FollowUp]
 
 ## LearningTaskMultiple
@@ -142,6 +144,8 @@ person: It was the `_learningTasks.tasks[0].directive` task from the `_learningT
 person: Let's see … I did `_learningTasks.taskDirectives`. All are from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.goals.length is 1`
 
 person: Let's see … I did `_learningTasks.taskDirectives`. `_learningTasks.goals.length > 1`
+
+`_followedUp = true`
 
 -> [FollowUp]
 

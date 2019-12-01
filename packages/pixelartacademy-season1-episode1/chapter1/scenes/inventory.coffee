@@ -15,15 +15,17 @@ class C1.Inventory extends LOI.Adventure.Scene
 
   things: ->
     items = [
-      C1.Mixer.NameTag if C1.Mixer.Marker.Listener.Script.state 'GetNameTag'
+      C1.Items.AcceptanceLetter if C1.Groups.AdmissionsStudyGroup.HangoutGroupListener.Script.state 'AcceptanceCelebrationPlayer'
     ]
     
     obtainableItems = [
       PAA.PixelBoy
       SanFrancisco.Soma.Items.Map
-      C1.Mixer.Marker
-      C1.Mixer.Stickers
     ]
+
+    unless C1.Mixer.finished()
+      items.push C1.Mixer.NameTag if C1.Mixer.Marker.Listener.Script.state 'GetNameTag'
+      obtainableItems.push C1.Mixer.Marker, C1.Mixer.Stickers
 
     for itemClass in obtainableItems
       hasItem = itemClass.state 'inInventory'

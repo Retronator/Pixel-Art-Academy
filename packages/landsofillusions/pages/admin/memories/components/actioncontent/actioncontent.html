@@ -18,5 +18,10 @@
     {{#if content.question}}
       <div class="question">{{content.question}}: {{content.answer}}</div>
     {{/if}}
+    {{#if content.taskEntry}}
+      {{#with taskEntry}}
+        <div class="learning-task">Completed: <span title="{{taskId}}">{{taskName}}</span></div>
+      {{/with}}
+    {{/if}}
   </div>
 </template>

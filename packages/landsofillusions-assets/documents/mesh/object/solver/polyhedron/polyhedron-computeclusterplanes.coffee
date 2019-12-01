@@ -60,18 +60,20 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
 
   edge.startLinePointRecomputation() for edge in edges
 
-  # See if we have a cluster overlapping the camera target.
-  origin = cameraAngle.unprojectPoint cameraAngle.target
-  originCluster = _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y
+  # If no clusters were fixed through manual points or attachments,
+  # see if we have a cluster overlapping the camera target.
+  if clustersLeftCount is clusters.length
+    origin = cameraAngle.unprojectPoint cameraAngle.target
+    originCluster = _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y
 
-  # Otherwise look if a cluster is at the (0, 0) pixel.
-  originCluster ?= _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate 0, 0
+    # Otherwise look if a cluster is at the (0, 0) pixel.
+    originCluster ?= _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate 0, 0
 
-  if originCluster and not originCluster.plane.point
-    # Use the origin cluster as the base to calculate other clusters from.
-    console.log "Setting cluster #{originCluster.id} to origin." if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
-    originCluster.setPlanePoint new THREE.Vector3
-    clustersLeftCount--
+    if originCluster and not originCluster.plane.point
+      # Use the origin cluster as the base to calculate other clusters from.
+      console.log "Setting cluster #{originCluster.id} to origin." if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+      originCluster.setPlanePoint new THREE.Vector3
+      clustersLeftCount--
 
   sortedEdges = _.reverse _.sortBy edges, (edge) => edge.segments.length
 

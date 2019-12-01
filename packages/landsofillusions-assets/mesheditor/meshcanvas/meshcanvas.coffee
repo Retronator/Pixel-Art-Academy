@@ -190,6 +190,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         newSize =
           width: $meshCanvas.width()
           height: $meshCanvas.height()
+
+        console.log "Updating canvas pixel size to", newSize if LOI.Assets.debug
           
         # Resize the back buffer to canvas element size, if it actually changed. If the pixel
         # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
@@ -222,6 +224,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         sceneUpdated = true
 
     sceneHelper.scene.updated() if sceneUpdated
+
+  draw: (appTime) ->
+    @renderer?.draw appTime
 
   draggingClass: ->
     'dragging' if _.some [

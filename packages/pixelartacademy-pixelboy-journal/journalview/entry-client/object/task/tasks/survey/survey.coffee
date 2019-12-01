@@ -46,7 +46,7 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
       'click .enabled.confirmation': @onClickConfirmation
 
   onClickConfirmation: (event) ->
-    PAA.Learning.Task.Entry.insert LOI.characterId(), @parent.task.id(), survey: @state()
+    PAA.Learning.Task.Entry.insert LOI.characterId(), LOI.adventure.currentSituationParameters(), @parent.task.id(), survey: @state()
 
   class @MultipleChoice extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice'

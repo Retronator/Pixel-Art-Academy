@@ -48,6 +48,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items..');
   api.addFile('chapter1/items/applicationemail');
   api.addFile('chapter1/items/admissionemail');
+  api.addComponent('chapter1/items/acceptanceletter..');
 
   api.addFile('chapter1/scenes/inventory');
   api.addFile('chapter1/scenes/inbox');
