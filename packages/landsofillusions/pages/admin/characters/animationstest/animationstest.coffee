@@ -8,7 +8,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
   @register @id()
 
   @version: ->
-    '0.1-wip'
+    '0.1'
 
   constructor: (@options) ->
     super arguments...
