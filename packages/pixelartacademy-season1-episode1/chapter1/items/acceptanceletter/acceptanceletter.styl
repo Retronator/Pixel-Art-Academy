@@ -1,0 +1,67 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-season1-episode0-chapter1-items-acceptanceletter
+  color atariGrey(5)
+
+  .landsofillusions-components-overlay
+    > .safe-area
+      display none
+
+    .background
+      overflow-y auto
+
+      .scroll-area
+        overflow hidden
+
+        .scroll
+          position relative
+          width 256rem
+          height 50rem
+          margin 0 auto 20rem
+          color atariOrange(3)
+          background-image image('/pixelartacademy/season1/episode1/chapter1/items/acceptanceletter/scroll.png')
+          background-size 256rem auto
+          thintel()
+          line-height 10rem
+
+          &::after
+            content ''
+            display block
+            position absolute
+            z-index 2
+            left 0
+            bottom -2rem
+            width 100%
+            height 25rem
+            background-image image('/pixelartacademy/season1/episode1/chapter1/items/acceptanceletter/scroll-bottom.png')
+
+          .content-viewport
+            height 100%
+            overflow hidden
+
+            .content
+              padding 30rem 25rem
+
+              p
+                margin 10rem 0
+
+              .header
+                text-align center
+                academy()
+
+                &::after
+                  content ''
+                  display block
+                  width 52rem
+                  height 45rem
+                  margin 10rem auto 20rem
+                  background-image image('/pixelartacademy/season1/episode1/chapter1/items/acceptanceletter/coatofarms.png')
+
+              .outro
+                margin 20rem 0 0 45%
+
+        .landsofillusions-components-hand
+          position absolute
+          z-index 1
+          bottom 0
+          left 16rem
