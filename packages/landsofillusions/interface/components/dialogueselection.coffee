@@ -103,6 +103,9 @@ class LOI.Interface.Components.DialogueSelection
     # Confirms the current selection and transitions the script from the choice to the selected dialog line.
     LOI.adventure.director.scriptTransition @choiceNode(), selectedDialogueLine
 
+    # Reset the selected index.
+    @selectedDialogueLineIndex null
+
   onKeyDown: (event) ->
     return unless @choiceNode() and not @paused()
 

@@ -8,7 +8,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
   @register @id()
 
   @version: ->
-    '0.1-wip'
+    '0.1'
 
   constructor: (@options) ->
     super arguments...
@@ -65,7 +65,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
     retronatorHQActorUrls = for actor in retronatorHQActors
       @versionedUrl "/retronator/hq/actors/#{actor}.json"
 
-    avatarUrls = [pixelArtAcademyActorUrls..., retronatorHQActorUrls...]
+    avatarUrls = [pixelArtAcademyActorUrls...]
     @charactersCount = avatarUrls.length
 
     # Initialize components.
@@ -97,8 +97,9 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
           @avatars[index].avatar avatar
 
           renderObject = avatar.getRenderObject()
-          renderObject.position.x = Math.random() * 10 - 5
-          renderObject.position.z = Math.random() * 10 - 5
+          #renderObject.position.x = Math.random() * 10 - 5
+          #renderObject.position.z = Math.random() * 10 - 5
+          renderObject.position.x = index
           renderObject.faceDirection LOI.Engine.RenderingSides.getDirectionForSide @renderingSide()
           @directionReferenceRenderObject ?= renderObject
 

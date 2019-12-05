@@ -7,7 +7,7 @@ class LOI.Pages.Admin.Characters.OutfitsTest extends AM.Component
   @register @id()
 
   @version: ->
-    '0.1-wip'
+    '0.1'
 
   onCreated: ->
     super arguments...
