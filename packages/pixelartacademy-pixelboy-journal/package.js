@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill': '1.3.5'
+  'quill': '1.3.7'
 });
 
 Package.onUse(function(api) {
