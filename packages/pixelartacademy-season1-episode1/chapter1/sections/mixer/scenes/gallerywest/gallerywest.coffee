@@ -154,22 +154,6 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   _movePersonToAnswerLandmark: (person, answer) ->
     @_movePersonToLandmark person, @constructor.answerLandmarks[answer]
 
-  _movePersonToLandmark: (person, landmark, options = {}) ->
-    options.faceLandmark ?= 'InFrontOfProjector'
-
-    renderObject = person.avatar.getRenderObject()
-    renderObject.setAnimation 'Walk 50'
-
-    LOI.adventure.world.navigator().moveAvatar
-      avatar: person.avatar
-      target: landmark
-      speed: 1.25
-      onCompleted: =>
-        renderObject.setAnimation 'Idle loop'
-        renderObject.facePosition options.faceLandmark
-
-        options.onCompleted?()
-
   _doAnswerAction: (question, answer) ->
     type = C1.Mixer.IceBreakers.AnswerAction.type
     situation = LOI.adventure.currentSituationParameters()
@@ -178,33 +162,3 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
     # Move the character to the landmark.
     @_movePersonToAnswerLandmark character, answer
-
-  _moveStudentsToLandmark: (landmark) ->
-    for student in @students()
-      @_movePersonToLandmark student, landmark
-
-  _faceStudentsToLandmark: (landmark) ->
-    for student in @students()
-      renderObject = student.avatar.getRenderObject()
-      renderObject.facePosition landmark
-
-  _moveStudentsToAudience: ->
-    for student in @students()
-      renderObject = student.avatar.getRenderObject()
-      center = LOI.adventure.world.getPositionVector 'InFrontOfProjector'
-      relativePositionToCenter = new THREE.Vector3().subVectors renderObject.position, center
-      angle = Math.atan2 relativePositionToCenter.x, relativePositionToCenter.z
-      distance = relativePositionToCenter.length()
-
-      # Move student to audience position.
-      maxAngle = 1
-      distanceNear = 3.5
-      distanceFar = 5
-
-      angle = _.clamp(angle, -maxAngle / 2, maxAngle / 2) + Math.random() * maxAngle / 2 unless -maxAngle < angle < maxAngle
-      distance = distanceNear + Math.random() * (distanceFar - distanceNear) unless distanceNear < distance < distanceFar
-      relativePositionToCenter.x = Math.sin(angle) * distance
-      relativePositionToCenter.z = Math.cos(angle) * distance
-      targetPosition = new THREE.Vector3().addVectors center, relativePositionToCenter
-
-      @_movePersonToLandmark student, targetPosition

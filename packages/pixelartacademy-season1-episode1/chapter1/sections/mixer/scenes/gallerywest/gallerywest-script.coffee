@@ -87,6 +87,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       StartTalkToClassmates: (complete) =>
         scene.state 'talkToClassmatesStart', Date.now()
+        scene._spreadStudentsAroundGallery()
 
         # Wait for state to be propagated.
         Tracker.afterFlush =>

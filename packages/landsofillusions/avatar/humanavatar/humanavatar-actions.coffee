@@ -29,13 +29,24 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
         # No special handler was found, default to completed.
         options.onCompleted?()
 
-  lookAt: (target) ->
-    position = target.position
-    position ?= target.getRenderObject?().position
-    position ?= target.avatar?.getRenderObject?().position
+  lookAt: (positionOrTargetOrLandmark) ->
+    if _.isString positionOrTargetOrLandmark
+      # We have a landmark string.
+      positionOrLandmark = positionOrTargetOrLandmark
 
-    unless position
-      console.warn "Look at position could not be determined."
-      return
+    else if positionOrTargetOrLandmark.x and positionOrTargetOrLandmark.y and positionOrTargetOrLandmark.z
+      # We have a vector position.
+      positionOrLandmark = positionOrTargetOrLandmark
 
-    @getRenderObject().facePosition position
+    else
+      # We should have a target object/avatar/thing.
+      target = positionOrTargetOrLandmark
+      positionOrLandmark = target.position
+      positionOrLandmark ?= target.getRenderObject?().position
+      positionOrLandmark ?= target.avatar?.getRenderObject?().position
+
+      unless positionOrLandmark
+        console.warn "Look at position could not be determined from target", target
+        return
+
+    @getRenderObject().facePosition positionOrLandmark

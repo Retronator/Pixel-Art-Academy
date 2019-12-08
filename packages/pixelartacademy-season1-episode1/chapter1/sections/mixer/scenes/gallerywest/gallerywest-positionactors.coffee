@@ -103,3 +103,47 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         direction = new THREE.Vector3 Math.random() * 2 - 1, 0, Math.random() * 2 - 1
         direction.normalize()
         actor.avatar.getRenderObject().faceDirection direction
+
+  _movePersonToLandmark: (person, landmark, options = {}) ->
+    options.faceLandmark ?= 'InFrontOfProjector'
+
+    person.avatar.walkTo
+      target: landmark
+      onCompleted: =>
+        person.avatar.lookAt options.faceLandmark
+
+        options.onCompleted?()
+
+  _moveStudentsToLandmark: (landmark) ->
+    for student in @students()
+      @_movePersonToLandmark student, landmark
+
+  _faceStudentsToLandmark: (landmark) ->
+    for student in @students()
+      renderObject = student.avatar.getRenderObject()
+      renderObject.facePosition landmark
+
+  _moveStudentsToAudience: ->
+    for student in @students()
+      renderObject = student.avatar.getRenderObject()
+      center = LOI.adventure.world.getPositionVector 'InFrontOfProjector'
+      relativePositionToCenter = new THREE.Vector3().subVectors renderObject.position, center
+      angle = Math.atan2 relativePositionToCenter.x, relativePositionToCenter.z
+      distance = relativePositionToCenter.length()
+
+      # Move student to audience position.
+      maxAngle = 1
+      distanceNear = 3.5
+      distanceFar = 5
+
+      angle = _.clamp(angle, -maxAngle / 2, maxAngle / 2) + Math.random() * maxAngle / 2 unless -maxAngle < angle < maxAngle
+      distance = distanceNear + Math.random() * (distanceFar - distanceNear) unless distanceNear < distance < distanceFar
+      relativePositionToCenter.x = Math.sin(angle) * distance
+      relativePositionToCenter.z = Math.cos(angle) * distance
+      targetPosition = new THREE.Vector3().addVectors center, relativePositionToCenter
+
+      @_movePersonToLandmark student, targetPosition
+
+  _spreadStudentsAroundGallery: ->
+    for student in @students()
+      student.avatar.walkTo target: 'GalleryFloor'
