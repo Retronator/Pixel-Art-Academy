@@ -11,6 +11,23 @@ class LOI.Engine.World.PhysicsManager
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @overlappingPairCache, @solver, @collisionConfiguration
     @dynamicsWorld.setGravity new Ammo.btVector3 0, -9.81, 0
 
+    # Add ground so that characters can't fall through.
+    # TODO: Remove when we have an upgraded scene manager.
+    addBox = (halfSize, position) =>
+      boxShape = new Ammo.btBoxShape halfSize
+      boxLocalInertia = new Ammo.btVector3 0, 0, 0
+
+      boxTransform = new Ammo.btTransform Ammo.btQuaternion.identity, position
+      boxMotionState = new Ammo.btDefaultMotionState boxTransform
+
+      boxInfo = new Ammo.btRigidBodyConstructionInfo 0, boxMotionState, boxShape, boxLocalInertia
+      boxBody = new Ammo.btRigidBody boxInfo
+
+      @dynamicsWorld.addRigidBody boxBody
+
+    # Add ground.
+    addBox new Ammo.btVector3(12.5, 1, 8), new Ammo.btVector3(0, -1, 0)
+
     # Add scene items.
     @physicalItems = new AE.ReactiveArray =>
       # Get all items with a physics object.
