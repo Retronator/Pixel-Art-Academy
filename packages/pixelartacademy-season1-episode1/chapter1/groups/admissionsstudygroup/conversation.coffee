@@ -6,6 +6,7 @@ C1 = PAA.Season1.Episode1.Chapter1
 
 class C1.Groups.AdmissionsStudyGroup.Conversation extends LOI.Memory.Context
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.Conversation'
+  @isPrivate: -> true
 
   @initialize()
 

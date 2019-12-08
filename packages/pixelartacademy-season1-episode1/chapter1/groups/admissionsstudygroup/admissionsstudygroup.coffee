@@ -271,8 +271,6 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
           admittedMembers = _.filter members, (member) =>
             member.getTaskEntries(taskId: C1.Goals.Admission.Complete.id()).length
 
-          console.log "whot", members, admittedMembers, admittedMembers.length
-
           if admittedMembers.length
             acceptanceCelebration =
               studentsCount: admittedMembers.length
