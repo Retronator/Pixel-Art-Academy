@@ -42,8 +42,7 @@ class HQ.Store extends LOI.Adventure.Location
       location: @
       floor: 2
 
-    @shelves = new HQ.Store.Shelves
-    @retro = new HQ.Store.Retro
+    @retro = LOI.adventure.getThing HQ.Store.Retro
 
     RS.Item.all.subscribe @
     @subscribe RA.User.registeredEmailsForCurrentUser
@@ -51,12 +50,6 @@ class HQ.Store extends LOI.Adventure.Location
 
     # We need payments to determine Kickstarter tier eligibility.
     RS.Payment.forCurrentUser.subscribe @
-
-  destroy: ->
-    super arguments...
-    
-    @shelves.destroy()
-    @retro.destroy()
 
   things: ->
     newestTableItem = @retro.newestTableItem()

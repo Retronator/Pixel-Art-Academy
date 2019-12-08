@@ -112,6 +112,10 @@ class AS.AnimatedMesh extends AS.RenderObject
       true
 
     @creatureRenderer = new ComputedField =>
+      # Remove any existing render mesh child.
+      @remove @_currentRenderMesh
+      @_currentRenderMesh = null
+
       return unless creature = @creature()
       return unless creatureManager = @creatureManager()
       materials = @materials()
@@ -121,8 +125,7 @@ class AS.AnimatedMesh extends AS.RenderObject
       creatureRenderer.renderMesh.receiveShadow = @options.receiveShadow
       creatureRenderer.renderMesh.customDepthMaterial = materials.depth
 
-      # Add/replace the render mesh as a child.
-      @remove @_currentRenderMesh
+      # Add new render mesh as a child.
       @_currentRenderMesh = creatureRenderer.renderMesh
       @add @_currentRenderMesh
 
@@ -185,7 +188,7 @@ class AS.AnimatedMesh extends AS.RenderObject
       @_applyBoneCorrection child, correction
 
   animationNames: ->
-    _.keys @dataEntry()?.animation
+    _.keys @dataEntry()?.animations
 
   update: (appTime, updateData = true) ->
     @_accumulatedTime += appTime.elapsedAppTime

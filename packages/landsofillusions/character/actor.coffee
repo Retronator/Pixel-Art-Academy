@@ -133,6 +133,12 @@ class LOI.Character.Actor extends LOI.Character.Person
         
       situation.things()
 
+  destroy: ->
+    # Reinstate the thing avatar so that it will get destroyed (and not the instance's!).
+    @avatar = @thingAvatar
+
+    super arguments...
+
   ready: ->
     conditions = [
       super arguments...

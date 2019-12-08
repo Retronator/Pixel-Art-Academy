@@ -42,6 +42,9 @@ class LOI.Character.Agent extends LOI.Character.Person
     @personState = new LOI.StateObject address: @personStateAddress
 
   destroy: ->
+    # Reinstate the thing avatar so that it will get destroyed (and not the instance's!).
+    @avatar = @thingAvatar
+
     super arguments...
 
     @_actionSubscription.stop()

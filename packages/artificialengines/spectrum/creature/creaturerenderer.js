@@ -123,12 +123,16 @@ CreatureRenderer.prototype.UpdateData = function()
 	
 	// points
 	var index = 0;
-	set_vertices = this.renderMesh.geometry.getAttribute("position");
-	set_vertices.needsUpdate = true;
-	for(var i = 0; i < target_creature.total_num_pts * 3; i++)
-	{
-    set_vertices.array[i] = target_creature.render_pts[i];
-	}
+
+	// Make sure the render points have been calculated.
+	if (target_creature.render_pts.length) {
+    var set_vertices = this.renderMesh.geometry.getAttribute("position");
+    set_vertices.needsUpdate = true;
+
+    for (var i = 0; i < target_creature.total_num_pts * 3; i++) {
+      set_vertices.array[i] = target_creature.render_pts[i];
+    }
+  }
 	
 	// uvs
 	set_uvs = this.renderMesh.geometry.getAttribute("uv");
