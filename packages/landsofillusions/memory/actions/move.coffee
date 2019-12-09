@@ -24,6 +24,8 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
     "_person_ enters."
 
   createStartScript: (person, nextNode, nodeOptions = {}) ->
+    return unless @content
+
     if @content.landmark
       coordinates = LOI.adventure.world.getPositionVector @content.landmark
 
