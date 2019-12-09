@@ -223,8 +223,9 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     memoryId = Random.id()
     timelineId = LOI.adventure.currentTimelineId()
     locationId = LOI.adventure.currentLocationId()
+    contextId = @id()
 
-    LOI.Memory.insert memoryId, timelineId, locationId
+    LOI.Memory.insert memoryId, timelineId, locationId, contextId
 
     # Return the memory ID so the caller can add actions to it.
     memoryId

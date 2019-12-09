@@ -20,5 +20,8 @@ class C1.Groups.AdmissionsStudyGroup.Conversation extends LOI.Memory.Context
 
     @_createDescriptionScript people, description, nextNode, nodeOptions
 
+  @canHandleMemory: (memory) ->
+    memory.contextId is @id()
+
 Meteor.startup =>
   LOI.Items.Sync.Memories.registerPreviewComponent C1.Groups.AdmissionsStudyGroup.Conversation.id(), LOI.Memory.Contexts.Conversation.MemoryPreview
