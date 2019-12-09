@@ -103,7 +103,7 @@ class LOI.Engine.World extends AM.Component
       # See if the source is a name of a thing in the scene.
       if thingClass = _.thingClass source
         return unless thing = LOI.adventure.getCurrentThing thingClass
-        return unless thing.avatar.getRenderObject()?.position
+        thing.avatar.getRenderObject()?.position
 
       else
         # See if we have a landmark with this name.
