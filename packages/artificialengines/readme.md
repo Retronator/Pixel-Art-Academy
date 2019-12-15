@@ -47,6 +47,14 @@ _Data storage_
 
 Classes, extensions and helpers for database storage.
 
+### Artificial Pyramid
+
+_Geometry and calculus_
+
+There is no programming without mathematics but while common algebra is usually as far as it goes in writing algorithms,
+computer games and simulations require quite a load of geometric calculations and integration. Artificial Pyramid 
+provides classes that extend javascript math functions with calculations that appear when developing a game.
+
 ### Artificial Reality
 
 _Laws of physics_

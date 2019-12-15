@@ -29,4 +29,8 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('mummification/admin..');
   api.addUnstyledComponent('mummification/admin/databasecontent..');
   api.addServerFile('mummification/admin/databasecontent/server');
+
+  api.addFile('spectrum/pages');
+  api.addFile('spectrum/color..');
+  api.addComponent('spectrum/color/chromaticity..');
 });

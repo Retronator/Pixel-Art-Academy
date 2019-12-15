@@ -250,6 +250,12 @@ Package.onUse(function(api) {
   api.addComponent('babel/components/translation..');
   api.addFile('babel/components/regionselection..');
 
+  // Artificial Pyramid
+
+  api.addFile('pyramid..');
+  api.addFile('pyramid/integration..');
+  api.addFile('pyramid/integration/midpoint');
+
   // Artificial Spectrum
   
   api.addFile('spectrum..');
@@ -267,7 +273,16 @@ Package.onUse(function(api) {
 
   api.addFile('spectrum/glsl..');
   api.addFile('spectrum/glsl/hsl2rgb');
-  
+
+  api.addFile('spectrum/color..');
+
+  api.addFile('spectrum/color/cie1931..');
+  api.addFile('spectrum/color/cie1931/colormatchingfunctions..');
+  api.addFile('spectrum/color/cie1931/colormatchingfunctions/colormatchingfunctions-data');
+  api.addFile('spectrum/color/cie1931/colormatchingfunctions/approximate');
+
+  api.addFile('spectrum/color/srgb..');
+
   // Artificial Reality
 
   api.addJavascript('reality/ammo/build/ammo');
