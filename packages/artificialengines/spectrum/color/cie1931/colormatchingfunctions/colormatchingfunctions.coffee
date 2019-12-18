@@ -1,12 +1,12 @@
 AS = Artificial.Spectrum
 
 class AS.Color.CIE1931.ColorMatchingFunctions
-  @x: (wavelength) -> @_interpolateTable 1, wavelength
-  @y: (wavelength) -> @_interpolateTable 2, wavelength
-  @z: (wavelength) -> @_interpolateTable 3, wavelength
+  @x: (wavelengthNanometers) -> @_interpolateTable 1, wavelengthNanometers
+  @y: (wavelengthNanometers) -> @_interpolateTable 2, wavelengthNanometers
+  @z: (wavelengthNanometers) -> @_interpolateTable 3, wavelengthNanometers
 
-  @_interpolateTable: (column, wavelength) ->
-    fractionalRow = (wavelength - 380) / 5
+  @_interpolateTable: (column, wavelengthNanometers) ->
+    fractionalRow = (wavelengthNanometers - 380) / 5
 
     middleRowIndex = _.clamp Math.round(fractionalRow), 1, 79
 
@@ -16,7 +16,7 @@ class AS.Color.CIE1931.ColorMatchingFunctions
       @table[middleRowIndex + 1]
     ]
 
-    x = (wavelength - rows[0][0]) / 5
+    x = (wavelengthNanometers - rows[0][0]) / 5
 
     y1 = rows[0][column]
     y2 = rows[1][column]

@@ -71,9 +71,22 @@ Package.onUse(function(api) {
   
 	api.addFile('everywhere/lodash/lodash');
 
-	// Artificial Everywhere
-  
-  api.addFile('everywhere/everywhere');
+	// Define all namespaces so that we can use shortcuts.
+
+  api.addFile('everywhere..');
+  api.addFile('control..');
+  api.addFile('mirage..');
+  api.addFile('base..');
+  api.addFile('mummification..');
+  api.addFile('telepathy..');
+  api.addFile('babel..');
+  api.addFile('pyramid..');
+  api.addFile('spectrum..');
+  api.addFile('reality..');
+  api.addFile('echo..');
+  api.addFile('everything..');
+
+  // Artificial Everywhere
 
   api.addClientFile('everywhere/jquery/positioncss');
 
@@ -108,16 +121,12 @@ Package.onUse(function(api) {
   api.addFile('everywhere/rectangle');
 
   // Artificial Control
-  
-  api.addFile('control..');
 
   api.addFile('control/keyboard');
   api.addFile('control/keyboardstate');
   api.addFile('control/keys');
 
   // Artificial Mirage
-  
-  api.addFile('mirage..');
 
   api.addClientFile('mirage/browser');
   api.addFile('mirage/canvas');
@@ -154,8 +163,6 @@ Package.onUse(function(api) {
   // Artificial Base
   
   // Depends on Artificial Mirage.
-  api.addFile('base/base');
-
   api.addUnstyledComponent('base/app');
 
   api.addFile('base/method');
@@ -169,8 +176,6 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('base/router/routelink');
 
   // Artificial Mummification
-  
-  api.addFile('mummification..');
 
   api.addFile('mummification/mongohelper');
   api.addFile('mummification/document');
@@ -199,8 +204,6 @@ Package.onUse(function(api) {
   api.addFile('mummification/admin/components/document..');
   
   // Artificial Telepathy
-  
-  api.addFile('telepathy/telepathy');
 
   api.addFile('telepathy/emailcomposer');
   api.addFile('telepathy/requesthelper');
@@ -212,8 +215,7 @@ Package.onUse(function(api) {
   api.addServerFile('telepathy/maxmind-server');
 
   // Artificial Babel
-  
-  api.addFile('babel..');
+
   api.addServerFile('babel/babel-server');
   api.addClientFile('babel/babel-client');
   api.addClientFile('babel/initialize-client');
@@ -252,13 +254,11 @@ Package.onUse(function(api) {
 
   // Artificial Pyramid
 
-  api.addFile('pyramid..');
   api.addFile('pyramid/integration..');
   api.addFile('pyramid/integration/midpoint');
 
   // Artificial Spectrum
   
-  api.addFile('spectrum..');
   api.addFile('spectrum/renderobject');
   api.addFile('spectrum/animatedmesh');
   api.addFile('spectrum/imagedatahelpers');
@@ -285,9 +285,9 @@ Package.onUse(function(api) {
 
   // Artificial Reality
 
-  api.addJavascript('reality/ammo/build/ammo');
+  api.addFile('reality/reality-constants');
 
-  api.addFile('reality..');
+  api.addJavascript('reality/ammo/build/ammo');
   api.addFile('reality/ammo..');
 
   api.addFile('reality/physicsobject');
@@ -296,13 +296,26 @@ Package.onUse(function(api) {
   api.addFile('reality/ammo/quaternion');
   api.addFile('reality/ammo/collisionobject');
 
+  api.addFile('reality/optics..');
+
+  api.addFile('reality/optics/lightsources..');
+  api.addFile('reality/optics/lightsources/lightsource');
+  api.addFile('reality/optics/lightsources/tabulatedlightsource');
+  api.addFile('reality/optics/lightsources/blackbody');
+
+  api.addFile('reality/optics/lightsources/cie..');
+  api.addFile('reality/optics/lightsources/cie/d65');
+  api.addFile('reality/optics/lightsources/cie/d65-data');
+
+  api.addFile('reality/optics/lightsources/cie/a..');
+  api.addFile('reality/optics/lightsources/cie/a/formulated');
+  api.addFile('reality/optics/lightsources/cie/a/tabulated');
+  api.addFile('reality/optics/lightsources/cie/a/tabulated-data');
+
   // Artificial Echo
-  
-  api.addFile('echo..');
 
   // Artificial Everything
 
-  api.addFile('everything..');
   api.addFile('everything/item');
   api.addFile('everything/part');
 });

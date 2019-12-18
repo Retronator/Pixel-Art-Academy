@@ -9,9 +9,39 @@
   <div class="artificial-spectrum-pages-color-chromaticity">
     <h1>Artificial Spectrum</h1>
     <h2>Color chromaticity test</h2>
+    <p>
+      {{> Artificial.Spectrum.Pages.Color.Chromaticity.LightSourceType}}
+    </p>
+    {{#if $is lightSourceType "BlackBody"}}
+      <p>
+        Black body with temperature
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "A"}}
+      <p>
+        CIE standard illuminant A (representing typical domestic incandescent lighting with correlated color temperature of
+        2855.54 K) will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "D65"}}
+      <p>
+        CIE standard illuminant D65 (representing average daylight with correlated color temperature of
+        6503.6 K) will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    <p>
+      CIE XYZ values are {{xyzString}}.<br/>
+      D65 normalized XYZ values are {{normalizedXYZString}}.<br/>
+      Linear sRGB values are {{linearRGBString}}.<br/>
+      Gamma-corrected sRGB values are {{rgbString}}.
+    </p>
     <div class="graphs">
       <canvas class="chromaticity-diagram" width="460" height="500"></canvas>
-      <canvas class="color-matching-functions" width="460" height="300"></canvas>
+      <canvas class="spectrum" width="460" height="500"></canvas>
     </div>
   </div>
 </template>

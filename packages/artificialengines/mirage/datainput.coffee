@@ -10,6 +10,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     Number: 'number'
     Checkbox: 'checkbox'
     Date: 'date'
+    Range: 'range'
 
   template: ->
     'Artificial.Mirage.DataInputComponent'
@@ -23,6 +24,12 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     @realtime = true
     @autoSelect = false
     @autoResizeTextarea = false
+
+  onRendered: ->
+    super arguments...
+
+    # Set the value for the first time since some controls don't do it themselves.
+    @$('input').val @value()
 
   mixins: ->
     mixins = []

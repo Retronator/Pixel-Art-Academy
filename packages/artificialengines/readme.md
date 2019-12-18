@@ -59,7 +59,8 @@ provides classes that extend javascript math functions with calculations that ap
 
 _Laws of physics_
 
-Integration of the Bullet physics engine (via Ammo.js).
+To simulate real life, we need to act in accordance to laws of physics. Artificial Reality provides these, as well as 
+integration of the Bullet physics engine (via Ammo.js) for simulation of classical mechanics.
 
 ### Artificial Spectrum
 

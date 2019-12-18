@@ -2,34 +2,33 @@ AS = Artificial.Spectrum
 AP = Artificial.Pyramid
 
 class AS.Color.CIE1931
-  @getXYZForWavelength: (wavelength) ->
+  @_minWavelength = 380e-9
+  @_maxWavelength = 780e-9
+  @_wavelengthSpacing = 5e-9
+
+  @getRelativeXYZForWavelength: (wavelength) ->
     wavelengthNanometers = wavelength * 1e9
 
     x: @ColorMatchingFunctions.x wavelengthNanometers
     y: @ColorMatchingFunctions.y wavelengthNanometers
     z: @ColorMatchingFunctions.z wavelengthNanometers
 
-  @getXYZForSpectrum: (spectrumFunction) ->
-    minWavelengthNanometers = 380
-    maxWavelengthNanometers = 780
-    wavelengthSpacingNanometers = 10
+  @getXYZForSpectrum: (spectrum) ->
+    xyz = {}
 
-    x = AP.Integration.integrateWithMidpointRule (wavelengthNanometers) =>
-      @ColorMatchingFunctions.x(wavelengthNanometers) * spectrumFunction(wavelengthNanometers / 1e9)
+    for coordinate in ['x', 'y', 'z']
+      xyz[coordinate] = AP.Integration.integrateWithMidpointRule (wavelength) =>
+        @ColorMatchingFunctions[coordinate](wavelength * 1e9) * spectrum(wavelength)
+      ,
+        @_minWavelength, @_maxWavelength, @_wavelengthSpacing
+
+    xyz
+
+  @getLuminanceForSpectrum: (spectrum) ->
+    AP.Integration.integrateWithMidpointRule (wavelength) =>
+      @ColorMatchingFunctions.y(wavelength * 1e9) * spectrum(wavelength)
     ,
-      minWavelengthNanometers, maxWavelengthNanometers, wavelengthSpacingNanometers
-
-    y = AP.Integration.integrateWithMidpointRule (wavelengthNanometers) =>
-      @ColorMatchingFunctions.x(wavelengthNanometers) * spectrumFunction(wavelengthNanometers / 1e9)
-    ,
-      minWavelengthNanometers, maxWavelengthNanometers, wavelengthSpacingNanometers
-
-    z = AP.Integration.integrateWithMidpointRule (wavelengthNanometers) =>
-      @ColorMatchingFunctions.x(wavelengthNanometers) * spectrumFunction(wavelengthNanometers / 1e9)
-    ,
-      minWavelengthNanometers, maxWavelengthNanometers, wavelengthSpacingNanometers
-
-    {x, y, z}
+      @_minWavelength, @_maxWavelength, @_wavelengthSpacing
 
   @getChromaticityForXYZ: (xyz) ->
     sum = xyz.x + xyz.y + xyz.z
@@ -38,4 +37,4 @@ class AS.Color.CIE1931
     y: xyz.y / sum
 
   @getChromaticityForWavelength: (wavelength) ->
-    @getChromaticityForXYZ @getXYZForWavelength wavelength
+    @getChromaticityForXYZ @getRelativeXYZForWavelength wavelength

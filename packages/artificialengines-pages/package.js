@@ -33,4 +33,6 @@ Package.onUse(function(api) {
   api.addFile('spectrum/pages');
   api.addFile('spectrum/color..');
   api.addComponent('spectrum/color/chromaticity..');
+  api.addFile('spectrum/color/chromaticity/chromaticity-spectrum');
+  api.addFile('spectrum/color/chromaticity/chromaticity-chromaticitydiagram');
 });
