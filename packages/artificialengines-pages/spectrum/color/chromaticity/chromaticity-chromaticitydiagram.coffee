@@ -146,7 +146,8 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
     context.stroke()
 
     # Draw position of light source.
-    lightSourceChromaticity = AS.Color.CIE1931.getChromaticityForXYZ @lightSourceXYZ()
+    if xyz = @lightSourceXYZ()
+      lightSourceChromaticity = AS.Color.CIE1931.getChromaticityForXYZ xyz
 
-    context.fillStyle = "white"
-    @_drawPoint context, getCanvasX(lightSourceChromaticity.x), getCanvasY(lightSourceChromaticity.y), 1
+      context.fillStyle = "white"
+      @_drawPoint context, getCanvasX(lightSourceChromaticity.x), getCanvasY(lightSourceChromaticity.y), 1

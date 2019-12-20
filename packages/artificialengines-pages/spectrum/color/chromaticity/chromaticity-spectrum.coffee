@@ -69,9 +69,6 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
 
     context.stroke()
 
-    # Draw light source spectrum.
-    lightSourceEmissionSpectrum = @lightSourceEmissionSpectrum()
-
     # Clip drawing to the graph area.
     context.save()
     context.beginPath()
@@ -95,30 +92,32 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
       context.stroke()
       context.setLineDash []
 
-    # Draw radiation color with screen blending mode.
-    context.globalCompositeOperation = 'screen'
+    # Draw light source spectrum.
+    if lightSourceEmissionSpectrum = @lightSourceEmissionSpectrum()
+      # Draw radiation color with screen blending mode.
+      context.globalCompositeOperation = 'screen'
 
-    context.beginPath()
+      context.beginPath()
 
-    for wavelengthNanometers in [380..780]
-      wavelength = wavelengthNanometers / 1e9
-      spectralRadiance = lightSourceEmissionSpectrum wavelength
-      y = getCanvasYinSI spectralRadiance
+      for wavelengthNanometers in [380..780]
+        wavelength = wavelengthNanometers / 1e9
+        spectralRadiance = lightSourceEmissionSpectrum wavelength
+        y = getCanvasYinSI spectralRadiance
 
-      # Draw histogram top line.
-      context.lineTo wavelengthNanometers, y
+        # Draw histogram top line.
+        context.lineTo wavelengthNanometers, y
 
-      # Color area under histogram with wavelength color.
-      rgb = AS.Color.SRGB.getRGBForLinearRGB AS.Color.SRGB.getLinearRGBForNormalizedXYZ AS.Color.CIE1931.getRelativeXYZForWavelength wavelength
-      context.fillStyle = "rgba(#{rgb.r * 255}, #{rgb.g * 255}, #{rgb.b * 255}, 0.5)"
+        # Color area under histogram with wavelength color.
+        rgb = AS.Color.SRGB.getRGBForLinearRGB AS.Color.SRGB.getLinearRGBForNormalizedXYZ AS.Color.CIE1931.getRelativeXYZForWavelength wavelength
+        context.fillStyle = "rgba(#{rgb.r * 255}, #{rgb.g * 255}, #{rgb.b * 255}, 0.5)"
 
-      height = getCanvasY(0) - y
-      context.fillRect wavelengthNanometers - 0.5, y, 1, height
+        height = getCanvasY(0) - y
+        context.fillRect wavelengthNanometers - 0.5, y, 1, height
 
-    context.globalCompositeOperation = 'source-over'
+      context.globalCompositeOperation = 'source-over'
 
-    context.strokeStyle = 'gainsboro'
-    context.stroke()
+      context.strokeStyle = 'gainsboro'
+      context.stroke()
 
     # Draw color matching functions.
     colors =

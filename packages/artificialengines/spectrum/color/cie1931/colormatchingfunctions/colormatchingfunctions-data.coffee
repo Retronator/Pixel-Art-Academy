@@ -1,8 +1,7 @@
-AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 
 # Provided by CIE for non-commercial use at http://cie.co.at/technical-work/technical-resources
-AS.Color.CIE1931.ColorMatchingFunctions.table = AE.CSVParser.parse """
+AS.Color.CIE1931.ColorMatchingFunctions.initialize """
 380,0.001368,0.000039,0.006450
 385,0.002236,0.000064,0.010550
 390,0.004243,0.000120,0.020050
@@ -85,8 +84,3 @@ AS.Color.CIE1931.ColorMatchingFunctions.table = AE.CSVParser.parse """
 775,0.000059,0.000021,0.000000
 780,0.000042,0.000015,0.000000
 """
-
-# Transform text to numbers.
-for row in AS.Color.CIE1931.ColorMatchingFunctions.table
-  row[0] = parseInt row[0]
-  row[i] = parseFloat row[i] for i in [1..3]

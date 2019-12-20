@@ -304,6 +304,8 @@ Package.onUse(function(api) {
   api.addFile('reality/optics/lightsources/blackbody');
 
   api.addFile('reality/optics/lightsources/cie..');
+  api.addFile('reality/optics/lightsources/cie/d');
+  api.addFile('reality/optics/lightsources/cie/d-data');
   api.addFile('reality/optics/lightsources/cie/d65');
   api.addFile('reality/optics/lightsources/cie/d65-data');
 

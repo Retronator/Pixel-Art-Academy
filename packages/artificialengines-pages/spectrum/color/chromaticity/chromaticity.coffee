@@ -25,11 +25,12 @@ class AS.Pages.Color.Chromaticity extends AM.Component
       switch @lightSourceType()
         when LightTypes.BlackBody then AR.Optics.LightSources.BlackBody
         when LightTypes.A then AR.Optics.LightSources.CIE.A.Formulated
+        when LightTypes.D then AR.Optics.LightSources.CIE.D
         when LightTypes.D65 then AR.Optics.LightSources.CIE.D65
 
     @spectrumYAxis = new ComputedField =>
       switch @lightSourceType()
-        when LightTypes.BlackBody, LightTypes.D65
+        when LightTypes.BlackBody, LightTypes.D, LightTypes.D65
           spacing: 10
           maxValue: 60
 
@@ -41,57 +42,90 @@ class AS.Pages.Color.Chromaticity extends AM.Component
       lightSourceClass = @lightSourceClass()
 
       switch @lightSourceType()
-        # Temperature based
         when LightTypes.BlackBody
           lightSourceClass.getEmissionSpectrumForTemperature @temperature()
 
-        # Fixed
+        when LightTypes.D
+          temperature = @temperature()
+          return unless 4000 <= temperature <= 27000
+
+          lightSourceClass.getEmissionSpectrumForCorrelatedColorTemperature temperature
+
         when LightTypes.D65, LightTypes.A
           lightSourceClass.getEmissionSpectrum()
 
     @correlatedColorTemperature = new ComputedField =>
-      lightSourceClass = @lightSourceClass()
-      _.propertyValue lightSourceClass, 'correlatedColorTemperature'
+      switch @lightSourceType()
+        when LightTypes.D
+          @temperature()
+
+        else
+          _.propertyValue @lightSourceClass(), 'correlatedColorTemperature'
 
     @lightSourceXYZ = new ComputedField =>
-      AS.Color.CIE1931.getXYZForSpectrum @lightSourceEmissionSpectrum()
+      return unless spectrum = @lightSourceEmissionSpectrum()
+      AS.Color.CIE1931.getXYZForSpectrum spectrum
 
     @lightSourceNormalizedXYZ = new ComputedField =>
-      AS.Color.SRGB.getNormalizedXYZForXYZ @lightSourceXYZ()
+      return unless xyz = @lightSourceXYZ()
+      AS.Color.SRGB.getNormalizedXYZForXYZ xyz
 
     @lightSourceLinearRGB = new ComputedField =>
-      AS.Color.SRGB.getLinearRGBForXYZ @lightSourceXYZ()
+      return unless xyz = @lightSourceXYZ()
+      AS.Color.SRGB.getLinearRGBForXYZ xyz
 
     @lightSourceRGB = new ComputedField =>
-      rgb = AS.Color.SRGB.getRGBForLinearRGB @lightSourceLinearRGB()
+      return unless linearRGB = @lightSourceLinearRGB()
+      rgb = AS.Color.SRGB.getRGBForLinearRGB linearRGB
 
       # Scale to 0–255 range.
       rgb[color] = _.clamp Math.round(rgb[color] * 255), 0, 255 for color in ['r', 'g', 'b']
 
       rgb
 
+    @lightSourceChromaticityRGB = new ComputedField =>
+      return unless xyz = @lightSourceXYZ()
+
+      linearRGB = AS.Color.SRGB.getLinearRGBForXYZ xyz
+
+      # Normalize to highest component.
+      maxComponent = _.max [linearRGB.r, linearRGB.g, linearRGB.b]
+      linearRGB[component] = linearRGB[component] / maxComponent for component in ['r', 'g', 'b'] if maxComponent
+
+      rgb = AS.Color.SRGB.getRGBForLinearRGB linearRGB
+
+      # Scale to 0–255 range.
+      rgb[component] = _.clamp Math.round(rgb[component] * 255), 0, 255 for component in ['r', 'g', 'b']
+
+      rgb
+
   lightPreviewStyle: ->
-    rgb = @lightSourceRGB()
+    return unless rgb = @lightSourceRGB()
+
+    backgroundColor: "rgb(#{rgb.r}, #{rgb.g}, #{rgb.b})"
+
+  chromaticityPreviewStyle: ->
+    return unless rgb = @lightSourceChromaticityRGB()
 
     backgroundColor: "rgb(#{rgb.r}, #{rgb.g}, #{rgb.b})"
 
   xyzString: ->
-    value = @lightSourceXYZ()
+    return "not defined" unless value = @lightSourceXYZ()
 
     @_formatTriplet value.x, value.y, value.z, 1
 
   normalizedXYZString: ->
-    value = @lightSourceNormalizedXYZ()
+    return "not defined" unless value = @lightSourceNormalizedXYZ()
 
     @_formatTriplet value.x, value.y, value.z, 4
 
   linearRGBString: ->
-    value = @lightSourceLinearRGB()
+    return "not defined" unless value = @lightSourceLinearRGB()
 
     @_formatTriplet value.r, value.g, value.b
 
   rgbString: ->
-    value = @lightSourceRGB()
+    return "not defined" unless value = @lightSourceRGB()
 
     @_formatTriplet value.r, value.g, value.b, 0
 

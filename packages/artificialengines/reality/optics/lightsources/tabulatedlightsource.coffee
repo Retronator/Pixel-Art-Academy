@@ -3,13 +3,12 @@ AR = Artificial.Reality
 
 class AR.Optics.LightSources.TabulatedLightSource extends AR.Optics.LightSources.LightSource
   @initialize: (table) ->
-    rows = AE.CSVParser.parse table
+    @table = AE.CSVParser.parse table
 
-    for row in rows
+    # Transform text to numbers.
+    for row in @table
       row[0] = parseInt row[0]
       row[1] = parseFloat row[1]
-
-    @table = rows
 
     @relativeLuminance = @getRelativeLuminance()
 

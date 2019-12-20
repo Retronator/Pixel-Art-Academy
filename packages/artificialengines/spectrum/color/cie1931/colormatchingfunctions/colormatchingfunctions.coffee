@@ -1,6 +1,15 @@
+AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 
 class AS.Color.CIE1931.ColorMatchingFunctions
+  @initialize: (table) ->
+    @table = AE.CSVParser.parse table
+
+    # Transform text to numbers.
+    for row in @table
+      row[0] = parseInt row[0]
+      row[i] = parseFloat row[i] for i in [1..3]
+
   @x: (wavelengthNanometers) -> @_interpolateTable 1, wavelengthNanometers
   @y: (wavelengthNanometers) -> @_interpolateTable 2, wavelengthNanometers
   @z: (wavelengthNanometers) -> @_interpolateTable 3, wavelengthNanometers
