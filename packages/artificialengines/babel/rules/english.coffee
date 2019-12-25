@@ -19,3 +19,10 @@ class AB.Rules.English
         nouns = _.clone nouns
         nouns[nouns.length - 1] = "and #{_.last nouns}"
         nouns.join ', '
+
+  @createOrdinal: (integer) ->
+    switch integer % 10
+      when 1 then "#{integer}st"
+      when 2 then "#{integer}nd"
+      when 3 then "#{integer}rd"
+      else "#{integer}th"

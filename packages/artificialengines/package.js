@@ -9,7 +9,7 @@ Npm.depends({
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  three: '0.96.0',
+  three: '0.111.0',
   'jaro-winkler': '0.2.8',
   'canvas': '2.3.1',
   'pako': '1.0.8',
@@ -80,6 +80,7 @@ Package.onUse(function(api) {
   api.addFile('mummification..');
   api.addFile('telepathy..');
   api.addFile('babel..');
+  api.addFile('program..');
   api.addFile('pyramid..');
   api.addFile('spectrum..');
   api.addFile('reality..');
@@ -252,10 +253,18 @@ Package.onUse(function(api) {
   api.addComponent('babel/components/translation..');
   api.addFile('babel/components/regionselection..');
 
+  // Artificial Program
+
+  api.addFile('program/search..');
+
   // Artificial Pyramid
 
   api.addFile('pyramid/integration..');
   api.addFile('pyramid/integration/midpoint');
+
+  api.addFile('pyramid/interpolation..');
+  api.addFile('pyramid/interpolation/lagrangepolynomial');
+  api.addFile('pyramid/interpolation/piecewisepolynomial');
 
   // Artificial Spectrum
   

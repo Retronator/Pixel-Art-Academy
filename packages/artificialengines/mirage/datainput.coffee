@@ -80,11 +80,19 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
       @save $(event.target).is(':checked')
       return
 
-    @save $(event.target).val() unless @realtime
+    @save @_convertValue $(event.target).val() unless @realtime
 
   onInput: (event) ->
-    @save $(event.target).val() if @realtime
+    @save @_convertValue $(event.target).val() if @realtime
 
   onChangeSelect: (event) ->
     # Return the value of the option and the text.
     @save $(event.target).val()
+
+  _convertValue: (value) ->
+    # Do any conversions of type.
+    switch @type
+      when @constructor.Types.Number, @constructor.Types.Range
+        value = parseFloat value
+
+    value

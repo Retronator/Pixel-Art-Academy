@@ -1,0 +1,38 @@
+<template name="Artificial.Pyramid.Pages.Interpolation">
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro&display=swap');
+
+    html {
+      background: slategrey;
+    }
+  </style>
+  <div class="artificial-pyramid-pages-interpolation">
+    <h1>Artificial Pyramid</h1>
+    <h2>Interpolation test</h2>
+    <p>
+      {{> Artificial.Pyramid.Pages.Interpolation.InterpolationType}}
+      <button class="reset-button">Reset</button>
+    </p>
+    {{#if $is interpolationType "PiecewisePolynomial"}}
+      <p>
+        Degree {{> Artificial.Pyramid.Pages.Interpolation.Degree}} {{degree}}<br/>
+        <label>Extrapolate {{> Artificial.Pyramid.Pages.Interpolation.Extrapolate}}</label>
+      </p>
+    {{/if}}
+    {{#if points.length}}
+      {{#if $is interpolationType "LagrangePolynomial"}}
+        <p>
+          The points have been fitted with a {{lagrangePolynomialDegreeString}} degree Lagrange polynomial.
+        </p>
+      {{/if}}
+      {{#if $is interpolationType "PiecewisePolynomial"}}
+        <p>
+          The points have been fitted with a {{piecewisePolynomialDegreeString}} degree Lagrange polynomial on each section.
+        </p>
+      {{/if}}
+    {{else}}
+      <p>Click on the graph to add points.</p>
+    {{/if}}
+    <canvas class="graph" width="800" height="600"></canvas>
+  </div>
+</template>

@@ -47,6 +47,12 @@ _Data storage_
 
 Classes, extensions and helpers for database storage.
 
+### Artificial Program
+
+_Data structures and algorithms_
+
+Common Computer Science algorithms and data structures to support them.
+
 ### Artificial Pyramid
 
 _Geometry and calculus_
