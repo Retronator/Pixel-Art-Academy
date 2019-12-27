@@ -1,7 +1,13 @@
+AB = Artificial.Base
+
 class Artificial.Pages
+  @addPublicPage: (url, pageClass) ->
+    AB.Router.addRoute url, @Layouts.PublicAccess, pageClass
+
   constructor: ->
-    Retronator.App.addPublicPage '/artificial/pyramid/interpolation', Artificial.Pyramid.Pages.Interpolation
-    Retronator.App.addPublicPage '/artificial/spectrum/color/chromaticity', Artificial.Spectrum.Pages.Color.Chromaticity
+    Artificial.Pages.addPublicPage '/artificial/pyramid/interpolation', Artificial.Pyramid.Pages.Interpolation
+    Artificial.Pages.addPublicPage '/artificial/reality/chemistry/materials', Artificial.Reality.Pages.Chemistry.Materials
+    Artificial.Pages.addPublicPage '/artificial/spectrum/color/chromaticity', Artificial.Spectrum.Pages.Color.Chromaticity
 
     Retronator.App.addAdminPage '/admin/artificial/babel', Artificial.Babel.Pages.Admin
     Retronator.App.addAdminPage '/admin/artificial/babel/scripts', Artificial.Babel.Pages.Admin.Scripts

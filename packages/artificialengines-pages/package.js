@@ -20,6 +20,9 @@ Package.onUse(function(api) {
 
   api.addFile('pages');
 
+  api.addFile('layouts..');
+  api.addComponent('layouts/publicaccess..');
+
   api.addFile('babel/pages');
   api.addUnstyledComponent('babel/admin..');
   api.addUnstyledComponent('babel/admin/scripts..');
@@ -32,6 +35,12 @@ Package.onUse(function(api) {
 
   api.addFile('pyramid/pages');
   api.addComponent('pyramid/interpolation..');
+
+  api.addFile('reality/pages');
+  api.addFile('reality/chemistry..');
+  api.addComponent('reality/chemistry/materials..');
+  api.addFile('reality/chemistry/materials/materials-propertiesgraph');
+  api.addFile('reality/chemistry/materials/materials-reflectancegraph');
 
   api.addFile('spectrum/pages');
   api.addFile('spectrum/color..');

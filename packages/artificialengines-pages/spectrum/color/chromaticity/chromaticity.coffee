@@ -99,6 +99,16 @@ class AS.Pages.Color.Chromaticity extends AM.Component
 
       rgb
 
+  onRendered: ->
+    super arguments...
+
+    # Automatically update the spectrum graph.
+    @autorun (computation) => @drawSpectrum()
+
+    # Automatically update the chromaticity diagram.
+    @prepareSRGBimage()
+    @autorun (computation) => @drawChromaticityDiagram()
+
   lightPreviewStyle: ->
     return unless rgb = @lightSourceRGB()
 
@@ -131,19 +141,6 @@ class AS.Pages.Color.Chromaticity extends AM.Component
 
   _formatTriplet: (a, b, c, digits = 2) ->
     "[#{a.toFixed digits}, #{b.toFixed digits}, #{c.toFixed digits}]"
-
-  onRendered: ->
-    super arguments...
-
-    # Automatically update the spectrum graph.
-    @autorun (computation) =>
-      @drawSpectrum()
-
-    @prepareSRGBimage()
-
-    # Automatically update the chromaticity diagram.
-    @autorun (computation) =>
-      @drawChromaticityDiagram()
 
   _drawPoint: (context, x, y, radius) ->
     context.beginPath()

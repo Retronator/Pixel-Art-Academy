@@ -259,6 +259,8 @@ Package.onUse(function(api) {
 
   // Artificial Pyramid
 
+  api.addFile('pyramid/complexnumber');
+
   api.addFile('pyramid/integration..');
   api.addFile('pyramid/integration/midpoint');
 
@@ -305,7 +307,29 @@ Package.onUse(function(api) {
   api.addFile('reality/ammo/quaternion');
   api.addFile('reality/ammo/collisionobject');
 
+  api.addFile('reality/chemistry..');
+
+  api.addFile('reality/chemistry/materials..');
+  api.addFile('reality/chemistry/materials/material');
+  api.addFile('reality/chemistry/materials/tabulatedmaterial');
+
+  api.addFile('reality/chemistry/materials/elements..');
+  api.addFile('reality/chemistry/materials/elements/calcium');
+  api.addFile('reality/chemistry/materials/elements/carbon');
+  api.addFile('reality/chemistry/materials/elements/carbon-diamond');
+  api.addFile('reality/chemistry/materials/elements/carbon-graphite');
+  api.addFile('reality/chemistry/materials/elements/copper');
+  api.addFile('reality/chemistry/materials/elements/gold');
+  api.addFile('reality/chemistry/materials/elements/silver');
+
+  api.addFile('reality/chemistry/materials/compounds..');
+
+  api.addFile('reality/chemistry/materials/mixtures..');
+
   api.addFile('reality/optics..');
+
+  api.addFile('reality/optics/snellslaw');
+  api.addFile('reality/optics/fresnelequations');
 
   api.addFile('reality/optics/lightsources..');
   api.addFile('reality/optics/lightsources/lightsource');

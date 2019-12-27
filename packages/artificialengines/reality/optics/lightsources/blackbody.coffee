@@ -10,7 +10,7 @@ class AR.Optics.LightSources.BlackBody
     #     1
     # σT⁴ -
     #     ᴨ
-    σ * Math.pow(T, 4) / ᴨ
+    σ * T ** 4 / ᴨ
 
   @getEmissionSpectrumForTemperature: (temperature) ->
     # Return spectral radiance in W / sr⋅m³
@@ -20,6 +20,7 @@ class AR.Optics.LightSources.BlackBody
       kʙ = AR.BoltzmanConstant
       c = AR.SpeedOfLight
       T = temperature
+      e = Math.E
 
       #   2hc²     1
       #   ---- ---------
@@ -27,4 +28,4 @@ class AR.Optics.LightSources.BlackBody
       #         ----
       #         λkʙT
       #        e     - 1
-      2 * h * Math.pow(c, 2) / Math.pow(λ, 5) / (Math.exp(h * c / (λ * kʙ * T)) - 1)
+      2 * h * c ** 2 / λ ** 5 / (e ** (h * c / (λ * kʙ * T)) - 1)

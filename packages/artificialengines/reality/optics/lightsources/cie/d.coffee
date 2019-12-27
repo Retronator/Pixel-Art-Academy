@@ -25,16 +25,16 @@ class AR.Optics.LightSources.CIE.D
     T = correlatedColorTemperature
 
     if 4000 <= T <= 7000
-      xᴅ = 0.244063 + 0.09911e3 / T + 2.9678e6 / Math.pow(T, 2) - 4.607e9 / Math.pow(T, 3)
+      xᴅ = 0.244063 + 0.09911e3 / T + 2.9678e6 / T ** 2 - 4.607e9 / T ** 3
 
     else if 7000 < T < 25000
-      xᴅ = 0.23704 + 0.24748e3 / T + 1.9018e6 / Math.pow(T, 2) - 2.0064e9 / Math.pow(T, 3)
+      xᴅ = 0.23704 + 0.24748e3 / T + 1.9018e6 / T ** 2 - 2.0064e9 / T ** 3
 
     else
       console.warn "D series is not defined outside the 4000–25000 K interval."
       return null
 
-    yᴅ = -3 * Math.pow(xᴅ, 2) + 2.87 * xᴅ - 0.275
+    yᴅ = -3 * xᴅ ** 2 + 2.87 * xᴅ - 0.275
 
     M = 0.0241 + 0.2562 * xᴅ - 0.7341 * yᴅ
     M1 = (-1.351 - 1.7703 * xᴅ + 5.9114 * yᴅ) / M
