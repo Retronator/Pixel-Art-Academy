@@ -320,6 +320,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/elements/carbon-graphite');
   api.addFile('reality/chemistry/materials/elements/copper');
   api.addFile('reality/chemistry/materials/elements/gold');
+  api.addFile('reality/chemistry/materials/elements/mercury');
   api.addFile('reality/chemistry/materials/elements/silver');
 
   api.addFile('reality/chemistry/materials/compounds..');

@@ -47,6 +47,9 @@ class AS.Color.SRGB
     g: @gamma linearRGB.g
     b: @gamma linearRGB.b
 
+  @getRGBForXYZ: (xyz) ->
+    @getRGBForLinearRGB @getLinearRGBForXYZ xyz
+
   @gamma: (value) ->
     if value <= 0.0031308 then 323 * value / 25 else (211 * Math.pow(value, 5 / 12) - 11) / 200
 

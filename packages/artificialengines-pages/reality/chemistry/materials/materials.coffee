@@ -6,7 +6,11 @@ class AR.Pages.Chemistry.Materials extends AM.Component
   @ReflectanceTypes:
     VacuumToMaterial: 'VacuumToMaterial'
     MaterialToVacuum: 'MaterialToVacuum'
-  
+
+  @PreviewTypes:
+    Specular: 'Specular'
+    Diffuse: 'Diffuse'
+
   constructor: (@app) ->
     super arguments...
 
@@ -21,6 +25,8 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     @reflectanceType = new ReactiveField @constructor.ReflectanceTypes.VacuumToMaterial
     @reflectanceWavelengthNanometers = new ReactiveField 380
 
+    @previewType = new ReactiveField @constructor.PreviewTypes.Specular
+
   onRendered: ->
     super arguments...
 
@@ -29,6 +35,9 @@ class AR.Pages.Chemistry.Materials extends AM.Component
 
     # Automatically update the reflectance graph.
     @autorun (computation) => @drawReflectanceGraph()
+
+    # Automatically update reflectance preview.
+    @autorun (computation) => @drawReflectancePreview()
 
   _drawPoint: (context, x, y, radius) ->
     context.beginPath()
@@ -93,5 +102,21 @@ class AR.Pages.Chemistry.Materials extends AM.Component
       names =
         VacuumToMaterial: 'Vacuum to material'
         MaterialToVacuum: 'Material to vacuum'
+
+      {value, name} for value, name of names
+
+  class @PreviewType extends @PropertyInputComponent
+    @register 'Artificial.Reality.Pages.Chemistry.Materials.PreviewType'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'previewType'
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      names =
+        Specular: 'Specular'
+        Diffuse: 'Diffuse'
 
       {value, name} for value, name of names

@@ -3,8 +3,6 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 
 class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
-  @register 'Artificial.Reality.Pages.Chemistry.Materials'
-
   drawReflectanceGraph: ->
     canvas = @$('.reflectance-graph')[0]
     context = canvas.getContext '2d'
