@@ -10,7 +10,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Calcium extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Calcium'
 
-  @displayName: -> 'calcium'
+  @displayName: -> "calcium"
   @formula: -> 'Ca'
 
   @initialize """

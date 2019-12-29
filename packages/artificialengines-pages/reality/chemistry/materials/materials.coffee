@@ -8,8 +8,9 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     MaterialToVacuum: 'MaterialToVacuum'
 
   @PreviewTypes:
-    Specular: 'Specular'
-    Diffuse: 'Diffuse'
+    SpecularReflection: 'SpecularReflection'
+    DiffuseReflection: 'DiffuseReflection'
+    Dispersion: 'Dispersion'
 
   constructor: (@app) ->
     super arguments...
@@ -17,7 +18,7 @@ class AR.Pages.Chemistry.Materials extends AM.Component
   onCreated: ->
     super arguments...
 
-    @materialId = new ReactiveField AR.Chemistry.Materials.Elements.Gold.id()
+    @materialId = new ReactiveField AR.Chemistry.Materials.Mixtures.Glass.Crown.id()
 
     @materialClass = new ComputedField =>
       AR.Chemistry.Materials.getClassForId @materialId()
@@ -25,7 +26,7 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     @reflectanceType = new ReactiveField @constructor.ReflectanceTypes.VacuumToMaterial
     @reflectanceWavelengthNanometers = new ReactiveField 380
 
-    @previewType = new ReactiveField @constructor.PreviewTypes.Specular
+    @previewType = new ReactiveField @constructor.PreviewTypes.Dispersion
 
   onRendered: ->
     super arguments...
@@ -36,8 +37,14 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     # Automatically update the reflectance graph.
     @autorun (computation) => @drawReflectanceGraph()
 
-    # Automatically update reflectance preview.
-    @autorun (computation) => @drawReflectancePreview()
+    # Automatically update the preview.
+    @autorun (computation) =>
+      switch @previewType()
+        when @constructor.PreviewTypes.SpecularReflection, @constructor.PreviewTypes.DiffuseReflection
+          @drawReflectancePreview()
+
+        when @constructor.PreviewTypes.Dispersion
+          @drawDispersionPreview()
 
   _drawPoint: (context, x, y, radius) ->
     context.beginPath()
@@ -116,7 +123,8 @@ class AR.Pages.Chemistry.Materials extends AM.Component
 
     options: ->
       names =
-        Specular: 'Specular'
-        Diffuse: 'Diffuse'
+        SpecularReflection: 'Specular reflection'
+        DiffuseReflection: 'Diffuse reflection'
+        Dispersion: 'Dispersion'
 
       {value, name} for value, name of names

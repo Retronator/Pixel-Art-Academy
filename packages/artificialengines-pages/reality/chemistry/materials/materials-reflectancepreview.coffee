@@ -3,21 +3,19 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 
 class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
-  @register 'Artificial.Reality.Pages.Chemistry.Materials'
-
   drawReflectancePreview: ->
     previewType = @previewType()
 
-    canvas = @$('.reflectance-preview')[0]
+    canvas = @$('.preview')[0]
     context = canvas.getContext '2d'
 
     context.setTransform 1, 0, 0, 1, 0, 0
 
     switch previewType
-      when @constructor.PreviewTypes.Specular
+      when @constructor.PreviewTypes.SpecularReflection
         backgroundColor = 'white'
 
-      when @constructor.PreviewTypes.Diffuse
+      when @constructor.PreviewTypes.DiffuseReflection
         backgroundColor = 'black'
 
     context.fillStyle = backgroundColor
@@ -44,10 +42,10 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       angleOfIncidence = Math.asin dr
 
       switch previewType
-        when @constructor.PreviewTypes.Specular
+        when @constructor.PreviewTypes.SpecularReflection
           reflectanceFactor = 1
 
-        when @constructor.PreviewTypes.Diffuse
+        when @constructor.PreviewTypes.DiffuseReflection
           reflectanceFactor = Math.cos angleOfIncidence
 
       reflectanceSpectrum = (wavelength) =>

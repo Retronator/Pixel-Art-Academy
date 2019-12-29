@@ -10,7 +10,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Carbon.Graphite extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Carbon.Graphite'
 
-  @displayName: -> 'carbon - graphite'
+  @displayName: -> "carbon - graphite"
   @formula: -> 'C'
 
   @initialize """

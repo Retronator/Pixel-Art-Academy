@@ -10,7 +10,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Mercury extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Mercury'
 
-  @displayName: -> 'mercury'
+  @displayName: -> "mercury"
   @formula: -> 'Hg'
 
   @initialize """

@@ -9,7 +9,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Carbon.Diamond extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Carbon.Diamond'
 
-  @displayName: -> 'carbon - diamond'
+  @displayName: -> "carbon - diamond"
   @formula: -> 'C'
 
   @initialize """

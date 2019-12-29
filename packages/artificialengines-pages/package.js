@@ -42,6 +42,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/materials-propertiesgraph');
   api.addFile('reality/chemistry/materials/materials-reflectancegraph');
   api.addFile('reality/chemistry/materials/materials-reflectancepreview');
+  api.addFile('reality/chemistry/materials/materials-dispersionpreview');
 
   api.addFile('spectrum/pages');
   api.addFile('spectrum/color..');

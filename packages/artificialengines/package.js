@@ -324,8 +324,13 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/elements/silver');
 
   api.addFile('reality/chemistry/materials/compounds..');
+  api.addFile('reality/chemistry/materials/compounds/water');
 
   api.addFile('reality/chemistry/materials/mixtures..');
+
+  api.addFile('reality/chemistry/materials/mixtures/glass..');
+  api.addFile('reality/chemistry/materials/mixtures/glass/crown');
+  api.addFile('reality/chemistry/materials/mixtures/glass/flint');
 
   api.addFile('reality/optics..');
 

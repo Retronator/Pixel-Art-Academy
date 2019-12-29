@@ -75,7 +75,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
         color: 'DarkSlateGray'
 
       reflectionAtNormalIncidence:
-        name: 'reflection at normal incidence'
+        name: 'reflectance at normal incidence'
         color: 'LightSkyBlue'
 
     legendPosition =

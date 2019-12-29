@@ -10,7 +10,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Gold extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Gold'
 
-  @displayName: -> 'gold'
+  @displayName: -> "gold"
   @formula: -> 'Au'
 
   @initialize """

@@ -10,7 +10,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Copper extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Copper'
 
-  @displayName: -> 'copper'
+  @displayName: -> "copper"
   @formula: -> 'Cu'
 
   @initialize """

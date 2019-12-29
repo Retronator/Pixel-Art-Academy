@@ -13,14 +13,14 @@ class AS.Color.CIE1931
     y: @ColorMatchingFunctions.y wavelengthNanometers
     z: @ColorMatchingFunctions.z wavelengthNanometers
 
-  @getXYZForSpectrum: (spectrum) ->
+  @getXYZForSpectrum: (spectrum, wavelengthSpacing = @_wavelengthSpacing) ->
     xyz = {}
 
     for coordinate in ['x', 'y', 'z']
       xyz[coordinate] = AP.Integration.integrateWithMidpointRule (wavelength) =>
         @ColorMatchingFunctions[coordinate](wavelength * 1e9) * spectrum(wavelength)
       ,
-        @_minWavelength, @_maxWavelength, @_wavelengthSpacing
+        @_minWavelength, @_maxWavelength, wavelengthSpacing
 
     xyz
 

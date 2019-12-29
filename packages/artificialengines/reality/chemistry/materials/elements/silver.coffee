@@ -10,7 +10,7 @@ AR = Artificial.Reality
 class AR.Chemistry.Materials.Elements.Silver extends AR.Chemistry.Materials.TabulatedMaterial
   @id: -> 'Artificial.Reality.Chemistry.Materials.Elements.Silver'
 
-  @displayName: -> 'silver'
+  @displayName: -> "silver"
   @formula: -> 'Ag'
 
   @initialize """
