@@ -1,7 +1,12 @@
 AP = Artificial.Pyramid
 
 class AP.Interpolation.PiecewisePolynomial
-  @getFunctionForPoints: (points, degree, extrapolate) ->
+  @ExtrapolationTypes:
+    None: 'None'
+    Constant: 'Constant'
+    Polynomial: 'Polynomial'
+
+  @getFunctionForPoints: (points, degree, extrapolateType = @ExtrapolationTypes.None) ->
     # Points need to be sorted.
     points = _.sortBy points, 'x'
 
@@ -17,9 +22,23 @@ class AP.Interpolation.PiecewisePolynomial
     # Cache polynomial functions.
     polynomials = {}
 
+    ExtrapolationTypes = @ExtrapolationTypes
+
     (x) ->
-      # If we're not extrapolating, make sure we're in bounds.
-      return unless extrapolate or xMin <= x <= xMax
+      # See if we're within in bounds.
+      unless xMin <= x <= xMax
+        switch extrapolateType
+          when ExtrapolationTypes.None
+            # We don't do any interpolation.
+            return
+
+          when ExtrapolationTypes.Constant
+            # We return the first or last point.
+            if x < xMin
+              return points[0].y
+
+            else
+              return _.last(points).y
 
       # Find the interval we need to interpolate on.
       interval = _.sortedIndex xValues, x

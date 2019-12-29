@@ -318,12 +318,18 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/elements/carbon');
   api.addFile('reality/chemistry/materials/elements/carbon-diamond');
   api.addFile('reality/chemistry/materials/elements/carbon-graphite');
+  api.addFile('reality/chemistry/materials/elements/chromium');
   api.addFile('reality/chemistry/materials/elements/copper');
   api.addFile('reality/chemistry/materials/elements/gold');
+  api.addFile('reality/chemistry/materials/elements/iron');
   api.addFile('reality/chemistry/materials/elements/mercury');
+  api.addFile('reality/chemistry/materials/elements/potassium');
   api.addFile('reality/chemistry/materials/elements/silver');
+  api.addFile('reality/chemistry/materials/elements/sodium');
 
   api.addFile('reality/chemistry/materials/compounds..');
+  api.addFile('reality/chemistry/materials/compounds/sapphire');
+  api.addFile('reality/chemistry/materials/compounds/tungstendisulfide');
   api.addFile('reality/chemistry/materials/compounds/water');
 
   api.addFile('reality/chemistry/materials/mixtures..');
