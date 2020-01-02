@@ -10,6 +10,11 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     context = canvas.getContext '2d'
 
     context.setTransform 1, 0, 0, 1, 0, 0
+    context.clearRect 0, 0, canvas.width, canvas.height
+
+    offsetLeft = 50
+    offsetTop = 10
+    context.translate offsetLeft, offsetTop
 
     switch previewType
       when @constructor.PreviewTypes.SpecularReflection
@@ -18,15 +23,18 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       when @constructor.PreviewTypes.DiffuseReflection
         backgroundColor = 'black'
 
+    previewWidth = 180
+    previewHeight = 150
+
     context.fillStyle = backgroundColor
-    context.fillRect 0, 0, canvas.width, canvas.height
+    context.fillRect 0, 0, previewWidth, previewHeight
 
-    previewSize = 100
-    radius = previewSize / 2
-    previewLeft = (canvas.width - previewSize) / 2
-    previewTop = (canvas.height - previewSize) / 2
+    sphereSize = 100
+    radius = sphereSize / 2
+    previewLeft = offsetLeft + (previewWidth - sphereSize) / 2
+    previewTop = offsetTop + (previewHeight - sphereSize) / 2
 
-    imageData = context.getImageData previewLeft, previewTop, previewSize, previewSize
+    imageData = context.getImageData previewLeft, previewTop, sphereSize, sphereSize
 
     D65EmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
 
@@ -59,8 +67,8 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
       rgbPerPixelDistance[pixelDistance] = AS.Color.SRGB.getRGBForXYZ xyz
 
-    for x in [0...previewSize]
-      for y in [0...previewSize]
+    for x in [0...sphereSize]
+      for y in [0...sphereSize]
         dx = x / radius - 1
         dy = y / radius - 1
         dr = Math.sqrt dx ** 2 + dy ** 2
@@ -68,10 +76,14 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
         continue unless color = rgbPerPixelDistance[pixelDistance]
 
-        pixelOffset = (x + y * previewSize) * 4
+        pixelOffset = (x + y * sphereSize) * 4
         imageData.data[pixelOffset] = color.r * 255
         imageData.data[pixelOffset + 1] = color.g * 255
         imageData.data[pixelOffset + 2] = color.b * 255
         imageData.data[pixelOffset + 3] = 255
 
     context.putImageData imageData, previewLeft, previewTop
+
+    # Draw the border.
+    context.strokeStyle = 'ghostwhite'
+    context.strokeRect 0, 0, 180, 150

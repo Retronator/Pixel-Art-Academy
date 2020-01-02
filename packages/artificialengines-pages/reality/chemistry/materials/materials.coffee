@@ -27,6 +27,8 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     @reflectanceWavelengthNanometers = new ReactiveField 380
     @reflectanceIncidentAngle = new ReactiveField 0
 
+    @transmissionDepth = new ReactiveField 0
+
     @previewType = new ReactiveField @constructor.PreviewTypes.Dispersion
 
   onRendered: ->
@@ -39,6 +41,10 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     @autorun (computation) => @drawReflectanceGraph()
 
     # Automatically update the preview.
+    @autorun (computation) =>
+      return unless @previewType() is @constructor.PreviewTypes.Dispersion
+      @prepareDispersionPreview()
+
     @autorun (computation) =>
       switch @previewType()
         when @constructor.PreviewTypes.SpecularReflection, @constructor.PreviewTypes.DiffuseReflection
@@ -56,6 +62,7 @@ class AR.Pages.Chemistry.Materials extends AM.Component
     super(arguments...).concat
       'mousemove .properties-graph': @mouseMovePropertiesGraph
       'mousemove .reflectance-graph': @mouseMoveReflectanceGraph
+      'mousemove .preview': @mouseMovePreview
 
   mouseMovePropertiesGraph: (event) ->
     @reflectanceWavelengthNanometers event.offsetX + 380 - 30
@@ -63,6 +70,13 @@ class AR.Pages.Chemistry.Materials extends AM.Component
   mouseMoveReflectanceGraph: (event) ->
     grazingAngle = Math.PI / 2
     @reflectanceIncidentAngle _.clamp (event.offsetX - 50) / 180 * grazingAngle, 0, grazingAngle
+
+  mouseMovePreview: (event) ->
+    mousePoint = new THREE.Vector2 event.offsetX - 50, event.offsetY - 10
+    mouseDistance = mousePoint.clone().sub @dispersionIncidentPoint
+    depth = Math.max 0, mouseDistance.dot @dispersionSurfaceNegativeNormal
+
+    @transmissionDepth depth / @dispersionPreviewMagnification
 
   class @PropertyInputComponent extends AM.DataInputComponent
     onCreated: ->
