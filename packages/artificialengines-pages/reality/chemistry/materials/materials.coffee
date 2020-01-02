@@ -18,13 +18,14 @@ class AR.Pages.Chemistry.Materials extends AM.Component
   onCreated: ->
     super arguments...
 
-    @materialId = new ReactiveField AR.Chemistry.Materials.Mixtures.Glass.Crown.id()
+    @materialId = new ReactiveField AR.Chemistry.Materials.Elements.Gold.id()
 
     @materialClass = new ComputedField =>
       AR.Chemistry.Materials.getClassForId @materialId()
       
     @reflectanceType = new ReactiveField @constructor.ReflectanceTypes.VacuumToMaterial
     @reflectanceWavelengthNanometers = new ReactiveField 380
+    @reflectanceIncidentAngle = new ReactiveField 0
 
     @previewType = new ReactiveField @constructor.PreviewTypes.Dispersion
 
@@ -53,10 +54,15 @@ class AR.Pages.Chemistry.Materials extends AM.Component
 
   events: ->
     super(arguments...).concat
-      'mousemove .properties-graph': @moveMovePropertiesGraph
+      'mousemove .properties-graph': @mouseMovePropertiesGraph
+      'mousemove .reflectance-graph': @mouseMoveReflectanceGraph
 
-  moveMovePropertiesGraph: (event) ->
+  mouseMovePropertiesGraph: (event) ->
     @reflectanceWavelengthNanometers event.offsetX + 380 - 30
+
+  mouseMoveReflectanceGraph: (event) ->
+    grazingAngle = Math.PI / 2
+    @reflectanceIncidentAngle _.clamp (event.offsetX - 50) / 180 * grazingAngle, 0, grazingAngle
 
   class @PropertyInputComponent extends AM.DataInputComponent
     onCreated: ->

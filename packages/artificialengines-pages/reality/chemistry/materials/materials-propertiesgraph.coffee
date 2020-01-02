@@ -18,7 +18,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     context.translate -380 + 30 + 0.5, 10 + 0.5
 
     yAxis =
-      maxValue: 4
+      maxValue: 5
       spacing: 0.5
 
     getCanvasY = (y) => (yAxis.maxValue - y) * (400 / yAxis.maxValue)
@@ -65,17 +65,20 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     context.stroke()
 
     # Draw legend.
+    reflectanceIncidentAngle = @reflectanceIncidentAngle()
+    reflectanceIncidentAngleDegrees = Math.round reflectanceIncidentAngle / Math.PI * 180
+
     properties =
       refractiveIndex:
         name: 'refractive index'
         color: 'Silver'
 
       extinctionCoefficient:
-        name: 'extinction coefficient (1/mm)'
+        name: 'extinction coefficient'
         color: 'DarkSlateGray'
 
       reflectionAtNormalIncidence:
-        name: 'reflectance at normal incidence'
+        name: if reflectanceIncidentAngleDegrees then "reflectance at #{reflectanceIncidentAngleDegrees}°" else 'reflectance at normal incidence'
         color: 'LightSkyBlue'
 
     legendPosition =
@@ -122,10 +125,10 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
       context.stroke()
 
-    # Draw reflectance at normal incidence.
+    # Draw reflectance at given incidence.
     reflectanceType = @reflectanceType()
 
-    reflectanceAtNormalIncidenceSpectrum = (wavelength) =>
+    reflectanceSpectrum = (wavelength) =>
       refractiveIndexMaterial = refractiveIndexSpectrum wavelength
       extinctionCoefficientMaterial = extinctionCoefficientSpectrum? wavelength
 
@@ -146,14 +149,14 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
           refractiveIndex2 = 1
           extinctionCoefficient2 = 0
 
-      AR.Optics.FresnelEquations.getReflectance 0, refractiveIndex1, refractiveIndex2, extinctionCoefficient1, extinctionCoefficient2
+      AR.Optics.FresnelEquations.getReflectance reflectanceIncidentAngle, refractiveIndex1, refractiveIndex2, extinctionCoefficient1, extinctionCoefficient2
 
     # Color area under reflectance.
     context.globalCompositeOperation = 'screen'
 
     for wavelengthNanometers in [380..780]
       wavelength = wavelengthNanometers / 1e9
-      reflectanceAtNormalIncidence = reflectanceAtNormalIncidenceSpectrum wavelength
+      reflectanceAtNormalIncidence = reflectanceSpectrum wavelength
       y = getCanvasY reflectanceAtNormalIncidence
 
       # Color area under histogram with wavelength color.
@@ -167,7 +170,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
     # Draw line for reflectance.
     context.strokeStyle = properties.reflectionAtNormalIncidence.color
-    drawSpectrum context, reflectanceAtNormalIncidenceSpectrum
+    drawSpectrum context, reflectanceSpectrum
 
     # Draw refractive index.
     context.strokeStyle = properties.refractiveIndex.color
@@ -176,7 +179,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     # Draw extinction coefficient.
     if extinctionCoefficientSpectrum
       context.strokeStyle = properties.extinctionCoefficient.color
-      drawSpectrum context, (wavelength) => extinctionCoefficientSpectrum(wavelength) / 1e3
+      drawSpectrum context, (wavelength) => extinctionCoefficientSpectrum(wavelength)
 
     # Draw reflectance wavelength.
     wavelengthNanometers = @reflectanceWavelengthNanometers()

@@ -19,8 +19,7 @@ class AR.Chemistry.Materials.TabulatedMaterial extends AR.Chemistry.Materials.Ma
       refractiveIndices.push {x: wavelength, y: refractiveIndex}
 
       if values[2]?
-        extinctionCoefficientCentimeters = parseFloat values[2]
-        extinctionCoefficient = extinctionCoefficientCentimeters * 1e2
+        extinctionCoefficient = parseFloat values[2]
         extinctionCoefficients ?= []
         extinctionCoefficients.push {x: wavelength, y: extinctionCoefficient}
 

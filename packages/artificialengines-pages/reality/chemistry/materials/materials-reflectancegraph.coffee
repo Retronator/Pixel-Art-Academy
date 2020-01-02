@@ -121,6 +121,20 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
     context.setLineDash []
 
+    # Draw current reflectance incident angle.
+    reflectanceIncidentAngle = @reflectanceIncidentAngle()
+    x = getCanvasX reflectanceIncidentAngle / Math.PI * 180
+
+    context.beginPath()
+    context.moveTo x, getCanvasY 0
+    context.lineTo x, getCanvasY 100
+
+    context.globalAlpha = 0.5
+    context.lineWidth = 1
+    context.strokeStyle = 'ghostwhite'
+    context.stroke()
+    context.globalAlpha = 1
+
     # Draw the border.
     context.strokeStyle = 'ghostwhite'
     context.strokeRect 0, 0, 180, 180

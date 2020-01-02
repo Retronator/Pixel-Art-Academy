@@ -22,8 +22,8 @@ class AR.Optics.FresnelEquations
     @_getReflectanceS()
 
   @_prepareCommonVariables: (angleOfIncidence, refractiveIndex1, refractiveIndex2, extinctionCoefficient1, extinctionCoefficient2) ->
-    n1.set refractiveIndex1, extinctionCoefficient1 / 1e2
-    n2.set refractiveIndex2, extinctionCoefficient2 / 1e2
+    n1.set refractiveIndex1, extinctionCoefficient1
+    n2.set refractiveIndex2, extinctionCoefficient2
     AR.Optics.SnellsLaw.getComplexAngleOfRefraction angleOfIncidence, n1, n2, complexAngleOfReflection
 
     cosθi.set(angleOfIncidence, 0).cos()
