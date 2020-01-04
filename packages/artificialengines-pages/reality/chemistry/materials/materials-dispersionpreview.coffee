@@ -181,9 +181,9 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
     offsetLeft = 50
     offsetTop = 10
-    context.translate offsetLeft, offsetTop
+    context.translate offsetLeft + 0.5, offsetTop + 0.5
 
-    context.drawImage @dispersionImage, 0, 0
+    context.drawImage @dispersionImage, 0.5, 0.5
 
     # Clip drawing to the graph area.
     context.save()

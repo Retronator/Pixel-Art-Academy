@@ -37,12 +37,17 @@ Package.onUse(function(api) {
   api.addComponent('pyramid/interpolation..');
 
   api.addFile('reality/pages');
+
   api.addFile('reality/chemistry..');
   api.addComponent('reality/chemistry/materials..');
   api.addFile('reality/chemistry/materials/materials-propertiesgraph');
   api.addFile('reality/chemistry/materials/materials-reflectancegraph');
   api.addFile('reality/chemistry/materials/materials-reflectancepreview');
   api.addFile('reality/chemistry/materials/materials-dispersionpreview');
+
+  api.addFile('reality/optics..');
+  api.addComponent('reality/optics/scattering..');
+  api.addFile('reality/optics/scattering/scattering-rayleigh');
 
   api.addFile('spectrum/pages');
   api.addFile('spectrum/color..');

@@ -313,6 +313,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials..');
   api.addFile('reality/chemistry/materials/material');
   api.addFile('reality/chemistry/materials/tabulatedmaterial');
+  api.addFile('reality/chemistry/materials/gas');
 
   api.addFile('reality/chemistry/materials/elements..');
   api.addFile('reality/chemistry/materials/elements/calcium');
@@ -324,6 +325,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/elements/gold');
   api.addFile('reality/chemistry/materials/elements/iron');
   api.addFile('reality/chemistry/materials/elements/mercury');
+  api.addFile('reality/chemistry/materials/elements/nitrogen');
   api.addFile('reality/chemistry/materials/elements/potassium');
   api.addFile('reality/chemistry/materials/elements/silver');
   api.addFile('reality/chemistry/materials/elements/sodium');

@@ -31,7 +31,7 @@ class AR.Chemistry.Materials.Mixtures.Glass extends AR.Chemistry.Materials.Mater
     B = [0, sellmeierCoefficients[1], sellmeierCoefficients[3], sellmeierCoefficients[5]]
     C = [0, sellmeierCoefficients[2], sellmeierCoefficients[4], sellmeierCoefficients[6]]
 
-    @_refractiveIndexSpectrum = (wavelength) =>
+    @_refractiveIndexSpectrum = (wavelength) ->
       x = (wavelength * 1e6) ** 2
 
       Math.sqrt 1 + B[1] / (1 - C[1] / x) + B[2] / (1 - C[2] / x) + B[3] / (1 - C[3] / x)

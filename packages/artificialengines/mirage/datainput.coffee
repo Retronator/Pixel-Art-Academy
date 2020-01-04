@@ -96,3 +96,22 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
         value = parseFloat value
 
     value
+
+# Also provide the functionality to Component to generate its
+# own data component that embedded data inputs can inherit from.
+AM.Component.initializeDataComponent = ->
+  componentClass = @
+
+  class @DataInputComponent extends AM.DataInputComponent
+    onCreated: ->
+      super arguments
+
+      @_parentComponent = @ancestorComponentOfType componentClass
+
+      throw new AE.NotImplementedException "Embedded data input component must provide the property name it binds to." unless @propertyName
+
+    load: ->
+      @_parentComponent[@propertyName]()
+
+    save: (value) ->
+      @_parentComponent[@propertyName] value
