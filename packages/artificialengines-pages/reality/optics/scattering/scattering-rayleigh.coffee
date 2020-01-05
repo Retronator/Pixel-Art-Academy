@@ -20,13 +20,17 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
     preview =
       width: 200
       height: 150
-      scale: 100 # 1px = 100m
+      scale: 1000 # 1px = 1km
 
     volume =
       left: 50
       top: 50
       width: 100
       height: 50
+
+    # Clear preview to black.
+    context.fillStyle = 'black'
+    context.fillRect 0, 0, preview.width, preview.height
 
     # Draw incident light ray.
     y = volume.top + volume.height * 0.5
@@ -40,8 +44,20 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
     # Draw transmitted light ray.
     D65EmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
 
+    volumeDistance = volume.width * preview.scale
+
+    materialClass = @materialClass()
+    molecularConcentration = materialClass.StandardMolecularConcentration / @densityFactor()
+    refractiveIndexSpectrum = materialClass.getRefractiveIndexSpectrum()
+
+    rayleighCoefficientFunction = AR.Optics.Scattering.getRayleighCoefficientFunction()
+
     transmittedLightXYZ = AS.Color.CIE1931.getXYZForSpectrum (wavelength) =>
-      D65EmissionSpectrum(wavelength)
+      refractiveIndex = refractiveIndexSpectrum wavelength
+
+      outscatteringCoefficient = rayleighCoefficientFunction refractiveIndex, wavelength, molecularConcentration
+      transmittance = Math.E ** (-outscatteringCoefficient * volumeDistance)
+      D65EmissionSpectrum(wavelength) * transmittance
 
     transmittedLightRGB = AS.Color.SRGB.getRGBForXYZ transmittedLightXYZ
     transmittedLightStyle = "rgb(#{transmittedLightRGB.r * 255}, #{transmittedLightRGB.g * 255}, #{transmittedLightRGB.b * 255})"

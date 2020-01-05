@@ -345,6 +345,7 @@ Package.onUse(function(api) {
 
   api.addFile('reality/optics/snellslaw');
   api.addFile('reality/optics/fresnelequations');
+  api.addFile('reality/optics/scattering');
 
   api.addFile('reality/optics/lightsources..');
   api.addFile('reality/optics/lightsources/lightsource');

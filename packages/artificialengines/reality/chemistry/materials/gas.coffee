@@ -18,4 +18,11 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Material
     @_refractiveIndexSpectrum = (wavelength) ->
       Math.sqrt 1 + A + B / (C - (wavelength * 1e6) ** (-2))
 
+    # Calculate molar volume at standard temperature and pressure (STP).
+    @StandardMolarVolume = options.standardMolarVolume if options.standardMolarVolume
+
+    # Calculate derived properties.
+    @StandardMolarConcentration = 1 / @StandardMolarVolume
+    @StandardMolecularConcentration = @StandardMolarConcentration * AR.AvogadroNumber
+
   @getRefractiveIndexSpectrum: -> @_refractiveIndexSpectrum

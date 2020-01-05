@@ -15,3 +15,4 @@ class AR.Chemistry.Materials.Elements.Nitrogen extends AR.Chemistry.Materials.Ga
 
   @initialize
     sellmeierCoefficients: '0 6.497378E-5 3.0738649E-2 144'
+    standardMolarVolume: 0.02239 # m³/mol
