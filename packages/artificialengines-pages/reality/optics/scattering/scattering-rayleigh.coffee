@@ -47,7 +47,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
     volumeDistance = volume.width * preview.scale
 
     materialClass = @materialClass()
-    molecularConcentration = materialClass.StandardMolecularConcentration / @densityFactor()
+    molecularConcentration = materialClass.StandardMolecularConcentration * @densityFactor()
     refractiveIndexSpectrum = materialClass.getRefractiveIndexSpectrum()
 
     rayleighCoefficientFunction = AR.Optics.Scattering.getRayleighCoefficientFunction()

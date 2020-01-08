@@ -2,15 +2,25 @@ AP = Artificial.Pyramid
 AR = Artificial.Reality
 
 class AR.Optics.Scattering
+  @getRayleighCrossSectionFunction: ->
+    unless @_rayleighCrossSectionFunction
+      # 32π³(n-1)²
+      # -----------
+      #    3N₀²λ⁴
+      factor = 32 * (Math.PI ** 3) / (3 * AR.LoschmidtConstant ** 2)
+
+      @_rayleighCrossSectionFunction = (refractiveIndex, wavelength) ->
+        factor * (refractiveIndex - 1) ** 2 / wavelength ** 4
+
+    @_rayleighCrossSectionFunction
+
   @getRayleighCoefficientFunction: ->
     unless @_rayleighCoefficientFunction
-      # 8π³(n²-1)²
-      # ----------
-      #    3Nλ⁴
-      factor = 8 * (Math.PI ** 3) / 3
+      rayleighCrossSectionFunction = @getRayleighCrossSectionFunction()
 
       @_rayleighCoefficientFunction = (refractiveIndex, wavelength, molecularConcentration) ->
-        (factor * (refractiveIndex ** 2 - 1) ** 2) / (molecularConcentration * wavelength ** 4)
+        # β = σn
+        rayleighCrossSectionFunction(refractiveIndex, wavelength) * molecularConcentration
 
     @_rayleighCoefficientFunction
 

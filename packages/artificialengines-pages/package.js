@@ -39,11 +39,15 @@ Package.onUse(function(api) {
   api.addFile('reality/pages');
 
   api.addFile('reality/chemistry..');
+
   api.addComponent('reality/chemistry/materials..');
   api.addFile('reality/chemistry/materials/materials-propertiesgraph');
   api.addFile('reality/chemistry/materials/materials-reflectancegraph');
   api.addFile('reality/chemistry/materials/materials-reflectancepreview');
   api.addFile('reality/chemistry/materials/materials-dispersionpreview');
+
+  api.addComponent('reality/chemistry/gases..');
+  api.addFile('reality/chemistry/gases/gases-propertiesgraph');
 
   api.addFile('reality/optics..');
   api.addComponent('reality/optics/scattering..');

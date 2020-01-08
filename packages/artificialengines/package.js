@@ -298,6 +298,8 @@ Package.onUse(function(api) {
   // Artificial Reality
 
   api.addFile('reality/reality-constants');
+  api.addFile('reality/reality-units');
+  api.addFile('reality/conversions');
 
   api.addJavascript('reality/ammo/build/ammo');
   api.addFile('reality/ammo..');
@@ -314,6 +316,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/material');
   api.addFile('reality/chemistry/materials/tabulatedmaterial');
   api.addFile('reality/chemistry/materials/gas');
+  api.addFile('reality/chemistry/materials/gas-vanderwaals');
 
   api.addFile('reality/chemistry/materials/elements..');
   api.addFile('reality/chemistry/materials/elements/calcium');
