@@ -9,8 +9,31 @@ class AR.Pages.Chemistry.Gases extends AM.Component
     Temperature: 'Temperature'
     AmountOfSubstance: 'AmountOfSubstance'
 
-  @PropertyFieldNames = {}
+  @PropertyFieldNames: {}
   @PropertyFieldNames[property] = _.lowerFirst property for property of @Properties
+
+  @Scales:
+    Pressure:
+      range: 200e3
+      step: 1
+      multiplier: 1e3
+      name: 'Pressure'
+      unit: 'kPa'
+    Volume:
+      range: 2
+      step: 0.1
+      name: 'Volume'
+      unit: 'm³'
+    Temperature:
+      range: 500
+      step: 1
+      name: 'Temperature'
+      unit: 'K'
+    AmountOfSubstance:
+      range: 100
+      step: 1
+      name: 'Amount of substance'
+      unit: 'mol'
 
   @initializeDataComponent()
 
@@ -117,89 +140,54 @@ class AR.Pages.Chemistry.Gases extends AM.Component
 
       _.sortBy options, 'name'
 
-  class @Pressure extends @DataInputComponent
-    @register 'Artificial.Reality.Pages.Chemistry.Gases.Pressure'
-
-    constructor: ->
+  class @PropertyValue extends @DataInputComponent
+    constructor: (@property) ->
       super arguments...
 
-      @propertyName = 'pressure'
+      @propertyName = AR.Pages.Chemistry.Gases.PropertyFieldNames[@property]
+      @scale = AR.Pages.Chemistry.Gases.Scales[@property]
+      @multiplier = @scale.multiplier or 1
+
       @type = AM.DataInputComponent.Types.Range
       @customAttributes =
         min: 0
-        max: 200
-        step: 1
+        max: @scale.range / @multiplier
+        step: @scale.step
 
     load: ->
-      super(arguments...) / 1e3
+      super(arguments...) / @multiplier
 
     save: (value) ->
-      @parentComponent.setProperty AR.Pages.Chemistry.Gases.Properties.Pressure, value * 1e3
+      @parentComponent.setProperty @property, value * @multiplier
 
-  class @Volume extends @DataInputComponent
+  class @Pressure extends @PropertyValue
+    @register 'Artificial.Reality.Pages.Chemistry.Gases.Pressure'
+    constructor: -> super AR.Pages.Chemistry.Gases.Properties.Pressure
+
+  class @Volume extends @PropertyValue
     @register 'Artificial.Reality.Pages.Chemistry.Gases.Volume'
+    constructor: -> super AR.Pages.Chemistry.Gases.Properties.Volume
 
-    constructor: ->
-      super arguments...
-
-      @propertyName = 'volume'
-      @type = AM.DataInputComponent.Types.Range
-      @customAttributes =
-        min: 0
-        max: 2
-        step: 0.01
-
-    save: (value) ->
-      @parentComponent.setProperty AR.Pages.Chemistry.Gases.Properties.Volume, value
-
-  class @Temperature extends @DataInputComponent
+  class @Temperature extends @PropertyValue
     @register 'Artificial.Reality.Pages.Chemistry.Gases.Temperature'
+    constructor: -> super AR.Pages.Chemistry.Gases.Properties.Temperature
 
-    constructor: ->
-      super arguments...
-
-      @propertyName = 'temperature'
-      @type = AM.DataInputComponent.Types.Range
-      @customAttributes =
-        min: 0
-        max: 500
-        step: 1
-
-    save: (value) ->
-      @parentComponent.setProperty AR.Pages.Chemistry.Gases.Properties.Temperature, value
-
-  class @AmountOfSubstance extends @DataInputComponent
+  class @AmountOfSubstance extends @PropertyValue
     @register 'Artificial.Reality.Pages.Chemistry.Gases.AmountOfSubstance'
+    constructor: -> super AR.Pages.Chemistry.Gases.Properties.AmountOfSubstance
 
-    constructor: ->
-      super arguments...
-
-      @propertyName = 'amountOfSubstance'
-      @type = AM.DataInputComponent.Types.Range
-      @customAttributes =
-        min: 0
-        max: 100
-        step: 1
-
-    save: (value) ->
-      @parentComponent.setProperty AR.Pages.Chemistry.Gases.Properties.AmountOfSubstance, value
-
-  class @Property extends @DataInputComponent
+  class @PropertySelection extends @DataInputComponent
     constructor: ->
       super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
     options: ->
-      names =
-        Pressure: 'Pressure'
-        Volume: 'Volume'
-        Temperature: 'Temperature'
-        AmountOfSubstance: 'Amount of substance'
+      for property, scale of AR.Pages.Chemistry.Gases.Scales
+        value: property
+        name: scale.name
 
-      {value, name} for value, name of names
-
-  class @XAxisProperty extends @Property
+  class @XAxisProperty extends @PropertySelection
     @register 'Artificial.Reality.Pages.Chemistry.Gases.XAxisProperty'
 
     constructor: ->
@@ -207,7 +195,7 @@ class AR.Pages.Chemistry.Gases extends AM.Component
 
       @propertyName = 'xAxisProperty'
 
-  class @YAxisProperty extends @Property
+  class @YAxisProperty extends @PropertySelection
     @register 'Artificial.Reality.Pages.Chemistry.Gases.YAxisProperty'
 
     constructor: ->

@@ -2,24 +2,26 @@
   <div class="artificial-reality-pages-chemistry-gases page">
     <h1>Artificial Reality</h1>
     <h2>Gas properties</h2>
-    <p>
-      Gas: {{> Artificial.Reality.Pages.Chemistry.Gases.GasId}}
-    </p>
-    <p>
-      Pressure: {{> Artificial.Reality.Pages.Chemistry.Gases.Pressure}} {{pressureString}} kPa<br/>
-      Volume: {{> Artificial.Reality.Pages.Chemistry.Gases.Volume}} {{volumeString}} m³<br/>
-      Temperature: {{> Artificial.Reality.Pages.Chemistry.Gases.Temperature}} {{temperatureString}} K<br/>
-      Amount of substance: {{> Artificial.Reality.Pages.Chemistry.Gases.AmountOfSubstance}} {{amountOfSubstanceString}} mol
-    </p>
-    <p>
-      Refractive index (λ = 500 nm): {{refractiveIndex}}
-    </p>
-    <p>
-      X axis: {{> Artificial.Reality.Pages.Chemistry.Gases.XAxisProperty}}<br/>
-      Y axis: {{> Artificial.Reality.Pages.Chemistry.Gases.YAxisProperty}}
-    </p>
+    <div class="settings">
+      <p>
+        Gas: {{> Artificial.Reality.Pages.Chemistry.Gases.GasId}}
+      </p>
+      <p>
+        Pressure: {{> Artificial.Reality.Pages.Chemistry.Gases.Pressure}} {{pressureString}} kPa<br/>
+        Volume: {{> Artificial.Reality.Pages.Chemistry.Gases.Volume}} {{volumeString}} m³<br/>
+        Temperature: {{> Artificial.Reality.Pages.Chemistry.Gases.Temperature}} {{temperatureString}} K<br/>
+        Amount of substance: {{> Artificial.Reality.Pages.Chemistry.Gases.AmountOfSubstance}} {{amountOfSubstanceString}} mol
+      </p>
+      <p>
+        Refractive index (λ = 500 nm): {{refractiveIndex}}
+      </p>
+      <p>
+        X axis: {{> Artificial.Reality.Pages.Chemistry.Gases.XAxisProperty}}<br/>
+        Y axis: {{> Artificial.Reality.Pages.Chemistry.Gases.YAxisProperty}}
+      </p>
+    </div>
     <div class="graphs">
-      <canvas class="properties-graph" width="600" height="600"></canvas>
+      <canvas class="properties-graph graph" width="500" height="500"></canvas>
     </div>
   </div>
 </template>

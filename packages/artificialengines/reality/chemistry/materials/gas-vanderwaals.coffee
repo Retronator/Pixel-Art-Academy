@@ -32,6 +32,9 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     P = state.pressure
     R = AR.GasConstant
 
+    # Avoid boundary conditions.
+    return 0 if V is 0
+
     -((b * n - V) * (a * n ** 2 + P * V ** 2)) / (n * R * V ** 2)
 
   @getVolumeForState: (state, significantDigits = 10) ->
@@ -64,8 +67,6 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     return 0 if V0 is 0
     return Number.POSITIVE_INFINITY if P is 0
 
-    console.log "volume", a, b, n, T, P, R, V0, f(V0)
-
     @_newtonRaphson(f, fDerivative, V0, significantDigits) or V0
 
   @_newtonRaphson: (f, fDerivative, initialValue, significantDigits) ->
@@ -78,11 +79,8 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     iterationCount = 0
     x = initialValue
 
-    console.log "Start"
-
     loop
       error = f(x)
-      console.log "x", iterationCount, x, error
 
       return x if Math.abs(error) < maximalError
 
@@ -123,7 +121,5 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     # Avoid boundary conditions.
     return 0 if n0 is 0
     return Number.POSITIVE_INFINITY if R * T is 0
-
-    console.log "amount", a, b, V, T, P, R, n0, f(n0)
 
     @_newtonRaphson(f, fDerivative, n0, significantDigits) or n0
