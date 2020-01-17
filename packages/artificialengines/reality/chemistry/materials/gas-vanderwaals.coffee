@@ -67,7 +67,7 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     return 0 if V0 is 0
     return Number.POSITIVE_INFINITY if P is 0
 
-    @_newtonRaphson(f, fDerivative, V0, significantDigits) or V0
+    @_newtonRaphson f, fDerivative, V0, significantDigits
 
   @_newtonRaphson: (f, fDerivative, initialValue, significantDigits) ->
     # We repeat the calculation
@@ -79,14 +79,18 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     iterationCount = 0
     x = initialValue
 
+    previousErrorSize = Number.POSITIVE_INFINITY
+
     loop
       error = f(x)
 
-      return x if Math.abs(error) < maximalError
+      iterationCount++
 
-      if iterationCount++ > 100
-        console.warn "Computing Van der Waals property did not converge."
-        return null
+      errorSize = Math.abs(error)
+
+      return x if errorSize < maximalError
+      return null if errorSize >= previousErrorSize
+      previousErrorSize = errorSize
 
       derivative = fDerivative(x)
       if derivative is 0
@@ -122,4 +126,4 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     return 0 if n0 is 0
     return Number.POSITIVE_INFINITY if R * T is 0
 
-    @_newtonRaphson(f, fDerivative, n0, significantDigits) or n0
+    @_newtonRaphson f, fDerivative, n0, significantDigits

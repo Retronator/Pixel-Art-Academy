@@ -317,8 +317,10 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/tabulatedmaterial');
   api.addFile('reality/chemistry/materials/gas');
   api.addFile('reality/chemistry/materials/gas-vanderwaals');
+  api.addFile('reality/chemistry/materials/idealgas');
 
   api.addFile('reality/chemistry/materials/elements..');
+  api.addFile('reality/chemistry/materials/elements/argon');
   api.addFile('reality/chemistry/materials/elements/calcium');
   api.addFile('reality/chemistry/materials/elements/carbon');
   api.addFile('reality/chemistry/materials/elements/carbon-diamond');
@@ -326,23 +328,33 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/elements/chromium');
   api.addFile('reality/chemistry/materials/elements/copper');
   api.addFile('reality/chemistry/materials/elements/gold');
+  api.addFile('reality/chemistry/materials/elements/helium');
   api.addFile('reality/chemistry/materials/elements/iron');
   api.addFile('reality/chemistry/materials/elements/mercury');
   api.addFile('reality/chemistry/materials/elements/nitrogen');
+  api.addFile('reality/chemistry/materials/elements/oxygen');
   api.addFile('reality/chemistry/materials/elements/potassium');
   api.addFile('reality/chemistry/materials/elements/silver');
   api.addFile('reality/chemistry/materials/elements/sodium');
 
   api.addFile('reality/chemistry/materials/compounds..');
+  api.addFile('reality/chemistry/materials/compounds/carbondioxide');
   api.addFile('reality/chemistry/materials/compounds/sapphire');
   api.addFile('reality/chemistry/materials/compounds/tungstendisulfide');
   api.addFile('reality/chemistry/materials/compounds/water');
+  api.addFile('reality/chemistry/materials/compounds/watervapor');
 
   api.addFile('reality/chemistry/materials/mixtures..');
+  api.addFile('reality/chemistry/materials/mixtures/gasmixture');
 
   api.addFile('reality/chemistry/materials/mixtures/glass..');
   api.addFile('reality/chemistry/materials/mixtures/glass/crown');
   api.addFile('reality/chemistry/materials/mixtures/glass/flint');
+
+  api.addFile('reality/chemistry/materials/mixtures/air..');
+  api.addFile('reality/chemistry/materials/mixtures/air/drydirect');
+  api.addFile('reality/chemistry/materials/mixtures/air/drymixture');
+  api.addFile('reality/chemistry/materials/mixtures/air/moistmixture3percent');
 
   api.addFile('reality/optics..');
 

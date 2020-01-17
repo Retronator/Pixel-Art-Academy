@@ -4,13 +4,13 @@ AR = Artificial.Reality
 class AR.Optics.Scattering
   @getRayleighCrossSectionFunction: ->
     unless @_rayleighCrossSectionFunction
-      # 32π³(n-1)²
-      # -----------
-      #    3N₀²λ⁴
-      factor = 32 * (Math.PI ** 3) / (3 * AR.LoschmidtConstant ** 2)
+      # 8π³(n²-1)²
+      # ---------- * Fk
+      #   3N²λ⁴
+      factor = 8 * (Math.PI ** 3) / 3
 
-      @_rayleighCrossSectionFunction = (refractiveIndex, wavelength) ->
-        factor * (refractiveIndex - 1) ** 2 / wavelength ** 4
+      @_rayleighCrossSectionFunction = (refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor = 1) ->
+        factor * (refractiveIndex ** 2 - 1) ** 2 / (molecularNumberDensity ** 2 * wavelength ** 4) * kingCorrectionFactor
 
     @_rayleighCrossSectionFunction
 

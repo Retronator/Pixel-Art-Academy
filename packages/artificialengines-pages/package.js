@@ -47,7 +47,9 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/materials-dispersionpreview');
 
   api.addComponent('reality/chemistry/gases..');
+  api.addFile('reality/chemistry/gases/gases-measurements');
   api.addFile('reality/chemistry/gases/gases-propertiesgraph');
+  api.addFile('reality/chemistry/gases/gases-spectrumgraph');
 
   api.addFile('reality/optics..');
   api.addComponent('reality/optics/scattering..');

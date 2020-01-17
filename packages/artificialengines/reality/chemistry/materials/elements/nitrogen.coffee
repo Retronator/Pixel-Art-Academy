@@ -18,7 +18,7 @@ class AR.Chemistry.Materials.Elements.Nitrogen extends AR.Chemistry.Materials.Ga
       coefficients: [6.8552e-5, 3.243157e-2, 144]
       temperature: AR.Celsius 0
       pressure: 101.325e3
-    standardMolarVolume: 0.02239 # m³ / mol
+    kingCorrectionFactorCoefficients: [1.034, 3.17e-16]
     vanDerWaalsConstants:
-      a: 1.370 * AR.Liter ** 2 * AR.Bar / AR.Mole ** 2
-      b: 0.0387 * AR.Liter / AR.Mole
+      a: 1.370 * AR.Liter ** 2 * AR.Bar
+      b: 0.0387 * AR.Liter

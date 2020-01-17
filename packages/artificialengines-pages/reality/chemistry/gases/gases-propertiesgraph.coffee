@@ -3,8 +3,6 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 
 class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
-  @register 'Artificial.Reality.Pages.Chemistry.Gases'
-
   drawPropertiesGraph: ->
     canvas = @$('.properties-graph')[0]
     context = canvas.getContext '2d'
@@ -19,6 +17,9 @@ class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
 
     xAxisProperty = @xAxisProperty()
     yAxisProperty = @yAxisProperty()
+
+    xAxisPropertyFieldName = @constructor.PropertyFieldNames[xAxisProperty]
+    yAxisPropertyFieldName = @constructor.PropertyFieldNames[yAxisProperty]
 
     xAxisScale = @constructor.Scales[xAxisProperty]
     yAxisScale = @constructor.Scales[yAxisProperty]
@@ -36,7 +37,7 @@ class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
     context.save()
     context.setTransform 1, 0, 0, 1, 0, 0
     context.rotate -Math.PI / 2
-    context.fillText "#{yAxisScale.name} (#{yAxisScale.unit})", -(graphSize / 2), 30
+    context.fillText "#{yAxisScale.name} (#{yAxisScale.unit})", -(graphSize / 2) - 10, 30
     context.restore()
 
     context.beginPath()
@@ -72,6 +73,77 @@ class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
 
     context.strokeStyle = 'lightslategrey'
     context.stroke()
+
+    # Clip drawing to the graph area.
+    context.save()
+    context.beginPath()
+    context.rect 0, 0, graphSize, graphSize
+    context.clip()
+
+    # Draw ideal gas line.
+    gasState = @getGasState()
+    context.beginPath()
+
+    for x in [0...graphSize]
+      xValue = x / graphSize * xAxisScale.range
+
+      if yAxisProperty is xAxisProperty
+        yValue = xValue
+
+      else
+        gasState[xAxisPropertyFieldName] = xValue
+
+        switch yAxisProperty
+          when @constructor.Properties.Volume
+            yValue = gasState.amountOfSubstance * AR.GasConstant * gasState.temperature / gasState.pressure
+
+          when @constructor.Properties.Pressure
+            yValue = gasState.amountOfSubstance * AR.GasConstant * gasState.temperature / gasState.volume
+
+          when @constructor.Properties.AmountOfSubstance
+            yValue = gasState.pressure * gasState.volume / (AR.GasConstant * gasState.temperature)
+
+          when @constructor.Properties.Temperature
+            yValue = gasState.pressure * gasState.volume / (AR.GasConstant * gasState.amountOfSubstance)
+
+      context.lineTo x, getCanvasY(yValue)
+
+    context.setLineDash [3, 3]
+    context.strokeStyle = 'gainsboro'
+    context.stroke()
+    context.setLineDash []
+
+    # Draw actual gas line.
+    gasClass = @gasClass()
+    context.beginPath()
+
+    for x in [0...graphSize]
+      xValue = x / graphSize * xAxisScale.range
+
+      if yAxisProperty is xAxisProperty
+        yValue = xValue
+
+      else
+        gasState[xAxisPropertyFieldName] = xValue
+        yValue = gasClass["get#{yAxisProperty}ForState"] gasState
+
+      context.lineTo x, getCanvasY yValue or 0
+
+    context.strokeStyle = 'ghostwhite'
+    context.stroke()
+
+    # Draw point on graph.
+    gasState = @getGasState()
+    point =
+      x: gasState[xAxisPropertyFieldName]
+      y: gasState[yAxisPropertyFieldName]
+
+    if point.x? and point.y?
+      context.fillStyle = "white"
+      @_drawPoint context, getCanvasX(point.x), getCanvasY(point.y), 4
+
+    # Restore to no clipping.
+    context.restore()
 
     # Draw the border.
     context.strokeStyle = 'ghostwhite'

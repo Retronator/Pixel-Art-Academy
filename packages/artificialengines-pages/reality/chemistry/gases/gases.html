@@ -2,6 +2,7 @@
   <div class="artificial-reality-pages-chemistry-gases page">
     <h1>Artificial Reality</h1>
     <h2>Gas properties</h2>
+    <canvas class="properties-graph" width="500" height="460"></canvas>
     <div class="settings">
       <p>
         Gas: {{> Artificial.Reality.Pages.Chemistry.Gases.GasId}}
@@ -13,15 +14,22 @@
         Amount of substance: {{> Artificial.Reality.Pages.Chemistry.Gases.AmountOfSubstance}} {{amountOfSubstanceString}} mol
       </p>
       <p>
-        Refractive index (λ = 500 nm): {{refractiveIndex}}
-      </p>
-      <p>
-        X axis: {{> Artificial.Reality.Pages.Chemistry.Gases.XAxisProperty}}<br/>
-        Y axis: {{> Artificial.Reality.Pages.Chemistry.Gases.YAxisProperty}}
+        Y axis: {{> Artificial.Reality.Pages.Chemistry.Gases.YAxisProperty}}<br/>
+        X axis: {{> Artificial.Reality.Pages.Chemistry.Gases.XAxisProperty}}
       </p>
     </div>
-    <div class="graphs">
-      <canvas class="properties-graph graph" width="500" height="500"></canvas>
+    <div class="spectrum">
+      <canvas class="spectrum-graph" width="500" height="310"></canvas>
+      <div class="values">
+        <p>
+          Refractive index (λ = {{wavelengthNanometersString}} nm): {{refractiveIndex}}<br/>
+          King correction factor (λ = {{wavelengthNanometersString}} nm): {{kingCorrectionFactor}}<br/>
+          Rayleigh scattering cross section (λ = {{wavelengthNanometersString}} nm): {{rayleighScatteringCrossSection}}
+        </p>
+        <p>
+          Y axis: {{> Artificial.Reality.Pages.Chemistry.Gases.SpectrumYAxisProperty}}<br/>
+        </p>
+      </div>
     </div>
   </div>
 </template>
