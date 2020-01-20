@@ -26,19 +26,19 @@ class AR.Chemistry.Materials.Mixtures.GasMixture extends AR.Chemistry.Materials.
       @options.vanDerWaalsConstants.a += gasVolumeRatios[gasId] * gasClass.options.vanDerWaalsConstants.a
       @options.vanDerWaalsConstants.b += gasVolumeRatios[gasId] * gasClass.options.vanDerWaalsConstants.b
 
-    @_refractiveIndexSpectrum = (wavelength) ->
+    @_refractiveIndexSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
       sum = 0
 
       for gasId, gasVolumeRatio of gasVolumeRatios
-        sum += gasVolumeRatio * (refractiveIndexSpectrum[gasId](wavelength) ** 2 - 1)
+        sum += gasVolumeRatio * (refractiveIndexSpectrum[gasId].getValue(wavelength) ** 2 - 1)
 
       Math.sqrt 1 + sum
 
-    @_kingCorrectionFactorSpectrum = (wavelength) ->
+    @_kingCorrectionFactorSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
       sum = 0
 
       for gasId, gasVolumeRatio of gasVolumeRatios
-        sum += gasVolumeRatio * (kingCorrectionFactorSpectrum[gasId]?(wavelength) or 1)
+        sum += gasVolumeRatio * (kingCorrectionFactorSpectrum[gasId]?.getValue(wavelength) or 1)
 
       sum
 
@@ -50,8 +50,8 @@ class AR.Chemistry.Materials.Mixtures.GasMixture extends AR.Chemistry.Materials.
 
     refractiveIndexSpectrum = @_refractiveIndexSpectrum
 
-    (wavelength) ->
-      refractiveIndex = refractiveIndexSpectrum wavelength
+    new AR.Optics.Spectrum.Formulated (wavelength) ->
+      refractiveIndex = refractiveIndexSpectrum.getValue wavelength
 
       # Derived by assuming constant molar refractivity.
       Math.sqrt 1 + TRatio * pRatio * (refractiveIndex ** 2 - 1)

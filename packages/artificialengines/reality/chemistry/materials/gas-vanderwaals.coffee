@@ -75,11 +75,9 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
     # yᵢ₊₁ = yᵢ - ------
     #             f'(xᵢ)
     # until we reach the desired number of significant digits.
-    maximalError = 10 ** (-significantDigits)
+    maximalError = 5 ** (-significantDigits)
     iterationCount = 0
     x = initialValue
-
-    previousErrorSize = Number.POSITIVE_INFINITY
 
     loop
       error = f(x)
@@ -89,8 +87,7 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Gas
       errorSize = Math.abs(error)
 
       return x if errorSize < maximalError
-      return null if errorSize >= previousErrorSize
-      previousErrorSize = errorSize
+      return null if iterationCount > 5
 
       derivative = fDerivative(x)
       if derivative is 0

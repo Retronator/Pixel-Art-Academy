@@ -1,6 +1,5 @@
 AE = Artificial.Everywhere
 AR = Artificial.Reality
-AS = Artificial.Spectrum
 
 class AR.Optics.LightSources.CIE.D
   @initialize: (table) ->
@@ -12,6 +11,8 @@ class AR.Optics.LightSources.CIE.D
       row[i] = parseFloat row[i] for i in [1..3]
 
   @getEmissionSpectrumForCorrelatedColorTemperature: (correlatedColorTemperature) ->
+    AS = Artificial.Spectrum
+
     return unless relativeEmissionSpectrum = @getRelativeEmissionSpectrumForCorrelatedColorTemperature correlatedColorTemperature
     relativeLuminance = AS.Color.CIE1931.getLuminanceForSpectrum relativeEmissionSpectrum
 
@@ -19,7 +20,7 @@ class AR.Optics.LightSources.CIE.D
     blackBodyLuminance = AS.Color.CIE1931.getLuminanceForSpectrum blackBodySpectrum
 
     # Return radiance in W / sr⋅m³
-    (wavelength) -> relativeEmissionSpectrum(wavelength) * blackBodyLuminance / relativeLuminance
+    new AR.Optics.Spectrum.Formulated (wavelength) -> relativeEmissionSpectrum.getValue(wavelength) * blackBodyLuminance / relativeLuminance
 
   @getRelativeEmissionSpectrumForCorrelatedColorTemperature: (correlatedColorTemperature) ->
     T = correlatedColorTemperature
@@ -43,7 +44,7 @@ class AR.Optics.LightSources.CIE.D
     D = @
 
     # Return spectral radiance in W / sr⋅m³
-    (wavelength) ->
+    new AR.Optics.Spectrum.Formulated (wavelength) ->
       wavelengthNanometers = wavelength * 1e9
 
       S0 = D.s0 wavelengthNanometers

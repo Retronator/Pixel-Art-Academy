@@ -269,32 +269,6 @@ Package.onUse(function(api) {
   api.addFile('pyramid/interpolation/piecewisepolynomial');
   api.addFile('pyramid/interpolation/cachedfunction2d');
 
-  // Artificial Spectrum
-  
-  api.addFile('spectrum/renderobject');
-  api.addFile('spectrum/animatedmesh');
-  api.addFile('spectrum/imagedatahelpers');
-  api.addFile('spectrum/shadowmapdebugmaterial');
-
-  api.addClientJavascript('spectrum/creature/glmatrix');
-  api.addClientJavascript('spectrum/creature/creaturemeshbone');
-  api.addClientJavascript('spectrum/creature/creaturerenderer');
-
-  api.addFile('spectrum/hqx..');
-  api.addJavascript('spectrum/hqx..');
-
-  api.addFile('spectrum/glsl..');
-  api.addFile('spectrum/glsl/hsl2rgb');
-
-  api.addFile('spectrum/color..');
-
-  api.addFile('spectrum/color/cie1931..');
-  api.addFile('spectrum/color/cie1931/colormatchingfunctions..');
-  api.addFile('spectrum/color/cie1931/colormatchingfunctions/colormatchingfunctions-data');
-  api.addFile('spectrum/color/cie1931/colormatchingfunctions/approximate');
-
-  api.addFile('spectrum/color/srgb..');
-
   // Artificial Reality
 
   api.addFile('reality/reality-constants');
@@ -310,6 +284,36 @@ Package.onUse(function(api) {
   api.addFile('reality/ammo/quaternion');
   api.addFile('reality/ammo/collisionobject');
 
+  api.addFile('reality/optics..');
+
+  api.addFile('reality/optics/snellslaw');
+  api.addFile('reality/optics/fresnelequations');
+  api.addFile('reality/optics/scattering');
+
+  api.addFile('reality/optics/spectrum..');
+  api.addFile('reality/optics/spectrum/formulated');
+  api.addFile('reality/optics/spectrum/sampled');
+  api.addFile('reality/optics/spectrum/array');
+  api.addFile('reality/optics/spectrum/uniformlysampled..');
+  api.addFile('reality/optics/spectrum/uniformlysampled/range380to780spacing5');
+
+  api.addFile('reality/optics/lightsources..');
+  api.addFile('reality/optics/lightsources/lightsource');
+  api.addFile('reality/optics/lightsources/tabulatedlightsource');
+  api.addFile('reality/optics/lightsources/blackbody');
+
+  api.addFile('reality/optics/lightsources/cie..');
+  api.addFile('reality/optics/lightsources/cie/d');
+  api.addFile('reality/optics/lightsources/cie/d-data');
+  api.addFile('reality/optics/lightsources/cie/d65');
+  api.addFile('reality/optics/lightsources/cie/d65-data');
+
+  api.addFile('reality/optics/lightsources/cie/a..');
+  api.addFile('reality/optics/lightsources/cie/a/formulated');
+  api.addFile('reality/optics/lightsources/cie/a/tabulated');
+  api.addFile('reality/optics/lightsources/cie/a/tabulated-data');
+
+  // Chemistry depends on optics.
   api.addFile('reality/chemistry..');
 
   api.addFile('reality/chemistry/materials..');
@@ -356,27 +360,31 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/mixtures/air/drymixture');
   api.addFile('reality/chemistry/materials/mixtures/air/moistmixture3percent');
 
-  api.addFile('reality/optics..');
+  // Artificial Spectrum
 
-  api.addFile('reality/optics/snellslaw');
-  api.addFile('reality/optics/fresnelequations');
-  api.addFile('reality/optics/scattering');
+  api.addFile('spectrum/renderobject');
+  api.addFile('spectrum/animatedmesh');
+  api.addFile('spectrum/imagedatahelpers');
+  api.addFile('spectrum/shadowmapdebugmaterial');
 
-  api.addFile('reality/optics/lightsources..');
-  api.addFile('reality/optics/lightsources/lightsource');
-  api.addFile('reality/optics/lightsources/tabulatedlightsource');
-  api.addFile('reality/optics/lightsources/blackbody');
+  api.addClientJavascript('spectrum/creature/glmatrix');
+  api.addClientJavascript('spectrum/creature/creaturemeshbone');
+  api.addClientJavascript('spectrum/creature/creaturerenderer');
 
-  api.addFile('reality/optics/lightsources/cie..');
-  api.addFile('reality/optics/lightsources/cie/d');
-  api.addFile('reality/optics/lightsources/cie/d-data');
-  api.addFile('reality/optics/lightsources/cie/d65');
-  api.addFile('reality/optics/lightsources/cie/d65-data');
+  api.addFile('spectrum/hqx..');
+  api.addJavascript('spectrum/hqx..');
 
-  api.addFile('reality/optics/lightsources/cie/a..');
-  api.addFile('reality/optics/lightsources/cie/a/formulated');
-  api.addFile('reality/optics/lightsources/cie/a/tabulated');
-  api.addFile('reality/optics/lightsources/cie/a/tabulated-data');
+  api.addFile('spectrum/glsl..');
+  api.addFile('spectrum/glsl/hsl2rgb');
+
+  api.addFile('spectrum/color..');
+
+  api.addFile('spectrum/color/cie1931..');
+  api.addFile('spectrum/color/cie1931/colormatchingfunctions..');
+  api.addFile('spectrum/color/cie1931/colormatchingfunctions/colormatchingfunctions-data');
+  api.addFile('spectrum/color/cie1931/colormatchingfunctions/approximate');
+
+  api.addFile('spectrum/color/srgb..');
 
   // Artificial Echo
 

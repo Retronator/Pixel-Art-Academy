@@ -1,40 +1,16 @@
 AE = Artificial.Everywhere
 AS = Artificial.Spectrum
+AR = Artificial.Reality
 
 class AS.Color.CIE1931.ColorMatchingFunctions
   @initialize: (table) ->
     @table = AE.CSVParser.parse table
+    values = [[], [], []]
 
-    # Transform text to numbers.
     for row in @table
-      row[0] = parseInt row[0]
-      row[i] = parseFloat row[i] for i in [1..3]
+      # Transform text to numbers.
+      values[i - 1].push parseFloat row[i] for i in [1..3]
 
-  @x: (wavelengthNanometers) -> @_interpolateTable 1, wavelengthNanometers
-  @y: (wavelengthNanometers) -> @_interpolateTable 2, wavelengthNanometers
-  @z: (wavelengthNanometers) -> @_interpolateTable 3, wavelengthNanometers
-
-  @_interpolateTable: (column, wavelengthNanometers) ->
-    fractionalRow = (wavelengthNanometers - 380) / 5
-
-    middleRowIndex = _.clamp Math.round(fractionalRow), 1, 79
-
-    rows = [
-      @table[middleRowIndex - 1]
-      @table[middleRowIndex]
-      @table[middleRowIndex + 1]
-    ]
-
-    x = (wavelengthNanometers - rows[0][0]) / 5
-
-    y1 = rows[0][column]
-    y2 = rows[1][column]
-    y3 = rows[2][column]
-
-    a = (y3 - 2 * y2 + y1) / 2
-    b = (y3 - 4 * y2 + 3 * y1) / -2
-    c = y1
-
-    value = a * x * x + b * x + c
-
-    Math.max 0, value
+    @x = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5 values[0]
+    @y = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5 values[1]
+    @z = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5 values[2]

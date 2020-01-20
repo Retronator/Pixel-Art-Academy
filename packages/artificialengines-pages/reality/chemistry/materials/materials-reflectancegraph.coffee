@@ -71,8 +71,8 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     refractiveIndexSpectrum = materialClass.getRefractiveIndexSpectrum()
     extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
 
-    refractiveIndexMaterial = refractiveIndexSpectrum wavelength
-    extinctionCoefficientMaterial = extinctionCoefficientSpectrum? wavelength
+    refractiveIndexMaterial = refractiveIndexSpectrum.getValue wavelength
+    extinctionCoefficientMaterial = extinctionCoefficientSpectrum?.getValue wavelength
 
     switch reflectanceType
       when @constructor.ReflectanceTypes.VacuumToMaterial

@@ -1,7 +1,6 @@
 AE = Artificial.Everywhere
 AR = Artificial.Reality
 AP = Artificial.Pyramid
-AS = Artificial.Spectrum
 
 class AR.Optics.LightSources.LightSource
   @correlatedColorTemperature: -> null # Override to be able to provide the emission spectrum at the specified CCT.
@@ -10,7 +9,7 @@ class AR.Optics.LightSources.LightSource
     return unless correlatedColorTemperature = _.propertyValue @, 'correlatedColorTemperature'
 
     blackBodySpectrum = AR.Optics.LightSources.BlackBody.getEmissionSpectrumForTemperature correlatedColorTemperature
-    blackBodyLuminance = AS.Color.CIE1931.getLuminanceForSpectrum blackBodySpectrum
+    blackBodyLuminance = Artificial.Spectrum.Color.CIE1931.getLuminanceForSpectrum blackBodySpectrum
 
     @getEmissionSpectrumForLuminance blackBodyLuminance
 
@@ -19,11 +18,11 @@ class AR.Optics.LightSources.LightSource
     return unless relativeLuminance = @relativeLuminance or @getRelativeLuminance()
 
     # Return radiance in W / sr⋅m³
-    (wavelength) -> relativeEmissionSpectrum(wavelength) * luminance / relativeLuminance
+    new AR.Optics.Spectrum.Formulated (wavelength) -> relativeEmissionSpectrum.getValue(wavelength) * luminance / relativeLuminance
 
   @getRelativeLuminance: ->
     return unless relativeEmissionSpectrum = @getRelativeEmissionSpectrum()
 
-    AS.Color.CIE1931.getLuminanceForSpectrum relativeEmissionSpectrum
+    Artificial.Spectrum.Color.CIE1931.getLuminanceForSpectrum relativeEmissionSpectrum
 
   @getRelativeEmissionSpectrum: -> null # Override to provide a relative emission spectrum.

@@ -5,7 +5,7 @@ class AR.Optics.LightSources.CIE.A.Formulated extends AR.Optics.LightSources.Lig
 
   @getRelativeEmissionSpectrum: ->
     # Return radiance in W / sr⋅m³
-    (wavelength) ->
+    new AR.Optics.Spectrum.Formulated (wavelength) ->
       λ = wavelength * 1e9
       e = Math.E
 

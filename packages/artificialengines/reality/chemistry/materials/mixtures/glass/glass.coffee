@@ -16,10 +16,10 @@ class AR.Chemistry.Materials.Mixtures.Glass extends AR.Chemistry.Materials.Mater
 
       extinctionCoefficientCentimeters = parseFloat values[1]
       extinctionCoefficient = extinctionCoefficientCentimeters * 1e2
-      extinctionCoefficients.push {x: wavelength, y: extinctionCoefficient}
+      extinctionCoefficients.push {wavelength, value: extinctionCoefficient}
 
     # Create the linearly interpolated function to query the extinction coefficient at any x.
-    @_extinctionCoefficientSpectrum = AP.Interpolation.PiecewisePolynomial.getFunctionForPoints extinctionCoefficients, 1, false if extinctionCoefficients
+    @_extinctionCoefficientSpectrum = new AR.Optics.Spectrum.Sampled extinctionCoefficients if extinctionCoefficients
 
     # Prepare refractive index function based on the supplied coefficients.
     sellmeierCoefficients = (parseFloat value for value in options.sellmeierCoefficients.split ' ')
@@ -31,7 +31,7 @@ class AR.Chemistry.Materials.Mixtures.Glass extends AR.Chemistry.Materials.Mater
     B = [0, sellmeierCoefficients[1], sellmeierCoefficients[3], sellmeierCoefficients[5]]
     C = [0, sellmeierCoefficients[2], sellmeierCoefficients[4], sellmeierCoefficients[6]]
 
-    @_refractiveIndexSpectrum = (wavelength) ->
+    @_refractiveIndexSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
       x = (wavelength * 1e6) ** 2
 
       Math.sqrt 1 + B[1] / (1 - C[1] / x) + B[2] / (1 - C[2] / x) + B[3] / (1 - C[3] / x)

@@ -25,7 +25,7 @@ class AR.Chemistry.Materials.Compounds.WaterVapor extends AR.Chemistry.Materials
     A = @options.dispersion.coefficients[0]
     B = @options.dispersion.coefficients
 
-    @_refractiveIndexSpectrum = (wavelength) ->
+    @_refractiveIndexSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
       wavelengthFactor = (wavelength * 1e6) ** 2
       wavelengthFactor2 = wavelengthFactor ** 2
       wavelengthFactor3 = wavelengthFactor * wavelengthFactor2

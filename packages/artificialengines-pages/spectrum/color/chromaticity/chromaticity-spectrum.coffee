@@ -83,7 +83,7 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
 
       for wavelengthNanometers in [380..780]
         wavelength = wavelengthNanometers / 1e9
-        spectralRadiance = blackBodyEmissionSpectrum wavelength
+        spectralRadiance = blackBodyEmissionSpectrum.getValue wavelength
         y = getCanvasYinSI spectralRadiance
         context.lineTo wavelengthNanometers, y
 
@@ -101,7 +101,7 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
 
       for wavelengthNanometers in [380..780]
         wavelength = wavelengthNanometers / 1e9
-        spectralRadiance = lightSourceEmissionSpectrum wavelength
+        spectralRadiance = lightSourceEmissionSpectrum.getValue wavelength
         y = getCanvasYinSI spectralRadiance
 
         # Draw histogram top line.
@@ -126,12 +126,12 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
       z: 'blue'
 
     for matchingFunctionLetter in ['x', 'y', 'z']
-      matchingFunction = AS.Color.CIE1931.ColorMatchingFunctions[matchingFunctionLetter].bind AS.Color.CIE1931.ColorMatchingFunctions
+      matchingFunction = AS.Color.CIE1931.ColorMatchingFunctions[matchingFunctionLetter]
 
       context.beginPath()
 
       for wavelengthNanometers in [380..780]
-        response = matchingFunction wavelengthNanometers
+        response = matchingFunction.getValue wavelengthNanometers * 1e-9
         context.lineTo wavelengthNanometers, 400 - response * 50
 
       context.strokeStyle = colors[matchingFunctionLetter]

@@ -134,7 +134,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
       for wavelengthNanometers in [380..780]
         wavelength = wavelengthNanometers / 1e9
-        value = getCanvasY spectrum wavelength
+        value = getCanvasY spectrum.getValue wavelength
         context.lineTo wavelengthNanometers, value if value?
 
       context.stroke()
@@ -142,9 +142,9 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     # Draw reflectance or transmission at given incidence.
     reflectanceType = @reflectanceType()
 
-    spectrum = (wavelength) =>
-      refractiveIndexMaterial = refractiveIndexSpectrum wavelength
-      extinctionCoefficientMaterial = extinctionCoefficientSpectrum? wavelength
+    spectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+      refractiveIndexMaterial = refractiveIndexSpectrum.getValue wavelength
+      extinctionCoefficientMaterial = extinctionCoefficientSpectrum?.getValue wavelength
 
       switch reflectanceType
         when @constructor.ReflectanceTypes.VacuumToMaterial
@@ -179,7 +179,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
     for wavelengthNanometers in [380..780]
       wavelength = wavelengthNanometers / 1e9
-      reflectanceAtNormalIncidence = spectrum wavelength
+      reflectanceAtNormalIncidence = spectrum.getValue wavelength
       y = getCanvasY reflectanceAtNormalIncidence
 
       # Color area under histogram with wavelength color.
@@ -202,7 +202,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     # Draw extinction coefficient.
     if extinctionCoefficientSpectrum
       context.strokeStyle = properties.extinctionCoefficient.color
-      drawSpectrum context, (wavelength) => extinctionCoefficientSpectrum(wavelength)
+      drawSpectrum context, new AR.Optics.Spectrum.Formulated (wavelength) => extinctionCoefficientSpectrum.getValue(wavelength)
 
     # Draw reflectance wavelength.
     wavelengthNanometers = @reflectanceWavelengthNanometers()

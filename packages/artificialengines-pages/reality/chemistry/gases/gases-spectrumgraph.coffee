@@ -105,16 +105,16 @@ class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
       when @constructor.SpectrumProperties.RayleighScatteringCrossSection
         rayleighCrossSectionFunction = AR.Optics.Scattering.getRayleighCrossSectionFunction()
 
-        spectrum = (wavelength) ->
-          refractiveIndex = refractiveIndexSpectrum wavelength
-          kingCorrectionFactor = kingCorrectionFactorSpectrum? wavelength
+        spectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
+          refractiveIndex = refractiveIndexSpectrum.getValue wavelength
+          kingCorrectionFactor = kingCorrectionFactorSpectrum?.getValue wavelength
 
           rayleighCrossSectionFunction refractiveIndex, gasState.amountOfSubstance / gasState.volume * AR.AvogadroNumber, wavelength, kingCorrectionFactor
 
     if spectrum
       for x in [0...graphWidth]
         wavelength = xAxisScale.min + x / graphWidth * (xAxisScale.max - xAxisScale.min)
-        context.lineTo x, getCanvasY spectrum(wavelength) or 0
+        context.lineTo x, getCanvasY spectrum.getValue(wavelength) or 0
 
       context.strokeStyle = 'ghostwhite'
       context.stroke()

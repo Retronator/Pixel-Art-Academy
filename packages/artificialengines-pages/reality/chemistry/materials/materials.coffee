@@ -29,7 +29,14 @@ class AR.Pages.Chemistry.Materials extends AM.Component
 
     @transmissionDepth = new ReactiveField 0
 
-    @previewType = new ReactiveField @constructor.PreviewTypes.Dispersion
+    @previewType = new ReactiveField @constructor.PreviewTypes.DiffuseReflection
+
+    @dispersionImage = new AM.Canvas 180, 150
+    @dispersionSurfaceNormal = new THREE.Vector2(-1, 0).normalize()
+    @dispersionSurfaceNegativeNormal = @dispersionSurfaceNormal.clone().negate()
+    @dispersionIncidentPoint = new THREE.Vector2(@dispersionImage.width / 2 + 0.5, @dispersionImage.height / 2 + 0.5)
+    @dispersionSurfaceTangent = new THREE.Vector2(-@dispersionSurfaceNormal.y, @dispersionSurfaceNormal.x)
+    @dispersionPreviewMagnification = 1e9 # 1px = 1nm
 
   onRendered: ->
     super arguments...

@@ -11,7 +11,7 @@ class AR.Pages.Optics.Scattering extends AM.Component
   onCreated: ->
     super arguments...
 
-    @materialId = new ReactiveField AR.Chemistry.Materials.Elements.Nitrogen.id()
+    @materialId = new ReactiveField AR.Chemistry.Materials.Mixtures.Air.DryMixture.id()
 
     @materialClass = new ComputedField =>
       AR.Chemistry.Materials.getClassForId @materialId()

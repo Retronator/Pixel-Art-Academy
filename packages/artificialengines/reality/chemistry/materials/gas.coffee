@@ -18,7 +18,7 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Material
         B.push @options.dispersion.coefficients[i]
         C.push @options.dispersion.coefficients[i + 1]
 
-      @_refractiveIndexSpectrum = (wavelength) ->
+      @_refractiveIndexSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
         wavelengthFactor = (wavelength * 1e6) ** (-2)
 
         result = 1 + A
@@ -34,7 +34,7 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Material
       F2 = @options.kingCorrectionFactorCoefficients[1]
       F3 = @options.kingCorrectionFactorCoefficients[2]
 
-      @_kingCorrectionFactorSpectrum = (wavelength) ->
+      @_kingCorrectionFactorSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) ->
         wavelengthSquared = wavelength ** 2
         result = F1 + F2 / wavelengthSquared
         return result unless F3
@@ -55,8 +55,8 @@ class AR.Chemistry.Materials.Gas extends AR.Chemistry.Materials.Material
 
     refractiveIndexSpectrum = @_refractiveIndexSpectrum
 
-    (wavelength) ->
-      refractiveIndex = refractiveIndexSpectrum wavelength
+    new AR.Optics.Spectrum.Formulated (wavelength) ->
+      refractiveIndex = refractiveIndexSpectrum.getValue wavelength
 
       # Derived by assuming constant molar refractivity.
       Math.sqrt 1 + temperatureRatio * pressureRatio * (refractiveIndex ** 2 - 1)

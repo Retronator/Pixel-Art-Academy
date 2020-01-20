@@ -7,7 +7,6 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
   @register 'Artificial.Reality.Pages.Chemistry.Materials'
 
   prepareDispersionPreview: ->
-    @dispersionImage = new AM.Canvas 180, 150
     context = @dispersionImage.context
 
     context.setTransform 1, 0, 0, 1, 0, 0
@@ -21,9 +20,9 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     refractiveIndexSpectrum = materialClass.getRefractiveIndexSpectrum()
     extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
 
-    @dispersionReflectanceSpectrum = (wavelength) =>
-      refractiveIndexMaterial = refractiveIndexSpectrum wavelength
-      extinctionCoefficientMaterial = extinctionCoefficientSpectrum? wavelength
+    @dispersionReflectanceSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+      refractiveIndexMaterial = refractiveIndexSpectrum.getValue wavelength
+      extinctionCoefficientMaterial = extinctionCoefficientSpectrum?.getValue wavelength
 
       if vacuumToMaterial
         AR.Optics.FresnelEquations.getReflectance angleOfIncidence, 1, refractiveIndexMaterial, 0, extinctionCoefficientMaterial
@@ -31,21 +30,15 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       else
         AR.Optics.FresnelEquations.getReflectance angleOfIncidence, refractiveIndexMaterial, 1, extinctionCoefficientMaterial, 0
 
-    @dispersionAbsorptanceSpectrum = (wavelength) =>
-      refractiveIndexMaterial = refractiveIndexSpectrum wavelength
-      extinctionCoefficientMaterial = extinctionCoefficientSpectrum? wavelength
+    @dispersionAbsorptanceSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+      refractiveIndexMaterial = refractiveIndexSpectrum.getValue wavelength
+      extinctionCoefficientMaterial = extinctionCoefficientSpectrum?.getValue wavelength
   
       if vacuumToMaterial
         AR.Optics.FresnelEquations.getAbsorptance angleOfIncidence, 1, refractiveIndexMaterial, 0, extinctionCoefficientMaterial
   
       else
         AR.Optics.FresnelEquations.getAbsorptance angleOfIncidence, refractiveIndexMaterial, 1, extinctionCoefficientMaterial, 0
-
-    @dispersionSurfaceNormal = new THREE.Vector2(-1, 0).normalize()
-    @dispersionSurfaceNegativeNormal = @dispersionSurfaceNormal.clone().negate()
-    @dispersionIncidentPoint = new THREE.Vector2(@dispersionImage.width / 2 + 0.5, @dispersionImage.height / 2 + 0.5)
-    @dispersionSurfaceTangent = new THREE.Vector2(-@dispersionSurfaceNormal.y, @dispersionSurfaceNormal.x)
-    @dispersionPreviewMagnification = 1e9 # 1px = 1nm
 
     incidentLightDirection = new THREE.Vector2(2, -1).normalize()
     reflectedLightDirection = incidentLightDirection.clone().addScaledVector(@dispersionSurfaceNormal, -2 * incidentLightDirection.dot(@dispersionSurfaceNormal))
@@ -63,9 +56,9 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       k2PlusN2 = k2 + N2
       Math.sqrt(k2PlusN2) * Math.sqrt(N2 - sineSquaredAngleOfIncidence) / Math.sqrt(k2PlusN2 - sineSquaredAngleOfIncidence)
 
-    refractedLightSpectrum = (wavelength) =>
-      refractiveIndex = refractiveIndexSpectrum wavelength
-      extinctionCoefficient = extinctionCoefficientSpectrum?(wavelength) or 0
+    refractedLightSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+      refractiveIndex = refractiveIndexSpectrum.getValue wavelength
+      extinctionCoefficient = extinctionCoefficientSpectrum?.getValue(wavelength) or 0
 
       if effectiveRefractiveIndexTop is Number.POSITIVE_INFINITY
         refractiveIndexTop = Number.POSITIVE_INFINITY
@@ -88,7 +81,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       attenuationCoefficient = 4 * Math.PI * extinctionCoefficient / wavelength
       attenuation = Math.E ** (-attenuationCoefficient * depth)
 
-      D65EmissionSpectrum(wavelength) * @dispersionAbsorptanceSpectrum(wavelength) * attenuation
+      D65EmissionSpectrum.getValue(wavelength) * @dispersionAbsorptanceSpectrum.getValue(wavelength) * attenuation
 
     for x in [0...@dispersionImage.width]
       for y in [-1...@dispersionImage.height]
@@ -146,8 +139,8 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     context.stroke()
 
     # Draw reflected light ray.
-    reflectedLightXYZ = AS.Color.CIE1931.getXYZForSpectrum (wavelength) =>
-      D65EmissionSpectrum(wavelength) * @dispersionReflectanceSpectrum(wavelength)
+    reflectedLightXYZ = AS.Color.CIE1931.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
+      D65EmissionSpectrum.getValue(wavelength) * @dispersionReflectanceSpectrum.getValue(wavelength)
 
     reflectedLightRGB = AS.Color.SRGB.getRGBForXYZ reflectedLightXYZ
     reflectedLightStyle = "rgb(#{reflectedLightRGB.r * 255}, #{reflectedLightRGB.g * 255}, #{reflectedLightRGB.b * 255})"
@@ -212,13 +205,13 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
     D65EmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
 
-    refractedLightSpectrum = (wavelength) =>
-      extinctionCoefficient = extinctionCoefficientSpectrum?(wavelength) or 0
+    refractedLightSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+      extinctionCoefficient = extinctionCoefficientSpectrum?.getValue(wavelength) or 0
 
       attenuationCoefficient = 4 * Math.PI * extinctionCoefficient / wavelength
       attenuation = Math.E ** (-attenuationCoefficient * depth)
 
-      D65EmissionSpectrum(wavelength) * @dispersionAbsorptanceSpectrum(wavelength) * attenuation
+      D65EmissionSpectrum.getValue(wavelength) * @dispersionAbsorptanceSpectrum.getValue(wavelength) * attenuation
 
     xyz = AS.Color.CIE1931.getXYZForSpectrum refractedLightSpectrum
     rgb = AS.Color.SRGB.getRGBForXYZ xyz

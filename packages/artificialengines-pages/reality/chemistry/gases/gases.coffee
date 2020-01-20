@@ -131,7 +131,7 @@ class AR.Pages.Chemistry.Gases extends AM.Component
     wavelength = @wavelength()
 
     refractiveIndexSpectrum = gasClass.getRefractiveIndexSpectrumForState @getGasState()
-    refractiveIndexSpectrum wavelength
+    refractiveIndexSpectrum.getValue wavelength
 
   kingCorrectionFactor: ->
     gasClass = @gasClass()
@@ -139,7 +139,7 @@ class AR.Pages.Chemistry.Gases extends AM.Component
 
     return 1 unless kingCorrectionFactorSpectrum = gasClass.getKingCorrectionFactorSpectrum()
 
-    kingCorrectionFactorSpectrum wavelength
+    kingCorrectionFactorSpectrum.getValue wavelength
 
   rayleighScatteringCrossSection: ->
     gasClass = @gasClass()
@@ -147,10 +147,10 @@ class AR.Pages.Chemistry.Gases extends AM.Component
     gasState = @getGasState()
 
     refractiveIndexSpectrum = gasClass.getRefractiveIndexSpectrumForState gasState
-    refractiveIndex = refractiveIndexSpectrum wavelength
+    refractiveIndex = refractiveIndexSpectrum.getValue wavelength
 
     kingCorrectionFactorSpectrum = gasClass.getKingCorrectionFactorSpectrum()
-    kingCorrectionFactor = kingCorrectionFactorSpectrum? wavelength
+    kingCorrectionFactor = kingCorrectionFactorSpectrum?.getValue wavelength
 
     rayleighCrossSectionFunction = AR.Optics.Scattering.getRayleighCrossSectionFunction()
     rayleighCrossSectionFunction refractiveIndex, gasState.amountOfSubstance / gasState.volume * AR.AvogadroNumber, wavelength, kingCorrectionFactor

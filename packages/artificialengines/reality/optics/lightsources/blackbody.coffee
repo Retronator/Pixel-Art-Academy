@@ -14,7 +14,7 @@ class AR.Optics.LightSources.BlackBody
 
   @getEmissionSpectrumForTemperature: (temperature) ->
     # Return spectral radiance in W / sr⋅m³
-    (wavelength) ->
+    new AR.Optics.Spectrum.Formulated (wavelength) ->
       λ = wavelength
       h = AR.PlanckConstant
       kʙ = AR.BoltzmanConstant

@@ -7,28 +7,44 @@ class AS.Color.CIE1931
   @_wavelengthSpacing = 5e-9
 
   @getRelativeXYZForWavelength: (wavelength) ->
-    wavelengthNanometers = wavelength * 1e9
-
-    x: @ColorMatchingFunctions.x wavelengthNanometers
-    y: @ColorMatchingFunctions.y wavelengthNanometers
-    z: @ColorMatchingFunctions.z wavelengthNanometers
+    x: @ColorMatchingFunctions.x.getValue wavelength
+    y: @ColorMatchingFunctions.y.getValue wavelength
+    z: @ColorMatchingFunctions.z.getValue wavelength
 
   @getXYZForSpectrum: (spectrum, wavelengthSpacing = @_wavelengthSpacing) ->
     xyz = {}
 
     for coordinate in ['x', 'y', 'z']
-      xyz[coordinate] = AP.Integration.integrateWithMidpointRule (wavelength) =>
-        @ColorMatchingFunctions[coordinate](wavelength * 1e9) * spectrum(wavelength)
-      ,
-        @_minWavelength, @_maxWavelength, wavelengthSpacing
+      colorMatchingFunction = @ColorMatchingFunctions[coordinate]
+
+      if colorMatchingFunction.matchesType spectrum
+        xyz[coordinate] = @_integrateFast colorMatchingFunction, spectrum
+
+      else
+        xyz[coordinate] = AP.Integration.integrateWithMidpointRule (wavelength) =>
+          colorMatchingFunction.getValue(wavelength) * spectrum.getValue(wavelength)
+        ,
+          @_minWavelength, @_maxWavelength, wavelengthSpacing
 
     xyz
 
+  @_integrateFast: (colorMatchingFunction, spectrum) ->
+    sum = 0
+
+    for value, index in colorMatchingFunction.array
+      sum += value * spectrum.array[index] * colorMatchingFunction.options.wavelengthSpacing
+
+    sum
+
   @getLuminanceForSpectrum: (spectrum) ->
-    AP.Integration.integrateWithMidpointRule (wavelength) =>
-      @ColorMatchingFunctions.y(wavelength * 1e9) * spectrum(wavelength)
-    ,
-      @_minWavelength, @_maxWavelength, @_wavelengthSpacing
+    if @ColorMatchingFunctions.y.matchesType spectrum
+      xyz[coordinate] = @_integrateFast @ColorMatchingFunctions.y, spectrum
+
+    else
+      AP.Integration.integrateWithMidpointRule (wavelength) =>
+        @ColorMatchingFunctions.y.getValue(wavelength) * spectrum.getValue(wavelength)
+      ,
+        @_minWavelength, @_maxWavelength, @_wavelengthSpacing
 
   @getChromaticityForXYZ: (xyz) ->
     sum = xyz.x + xyz.y + xyz.z

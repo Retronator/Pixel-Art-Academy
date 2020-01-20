@@ -10,21 +10,27 @@ class AR.Optics.Scattering
       factor = 8 * (Math.PI ** 3) / 3
 
       @_rayleighCrossSectionFunction = (refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor = 1) ->
+        # Avoid boundary conditions.
+        return 0 unless molecularNumberDensity
+
         factor * (refractiveIndex ** 2 - 1) ** 2 / (molecularNumberDensity ** 2 * wavelength ** 4) * kingCorrectionFactor
 
     @_rayleighCrossSectionFunction
 
   @getRayleighCoefficientFunction: ->
     unless @_rayleighCoefficientFunction
+      # β = σn
       rayleighCrossSectionFunction = @getRayleighCrossSectionFunction()
 
-      @_rayleighCoefficientFunction = (refractiveIndex, wavelength, molecularConcentration) ->
-        # β = σn
-        rayleighCrossSectionFunction(refractiveIndex, wavelength) * molecularConcentration
+      @_rayleighCoefficientFunction = (refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor) ->
+        # Avoid boundary conditions.
+        return 0 unless molecularNumberDensity
+
+        rayleighCrossSectionFunction(refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor) * molecularNumberDensity
 
     @_rayleighCoefficientFunction
 
-  getRayleighPhaseFunction: ->
+  @getRayleighPhaseFunction: ->
     unless @_rayleighPhaseFunction
       normalizationFactor = 3 / (16 * Math.PI)
 

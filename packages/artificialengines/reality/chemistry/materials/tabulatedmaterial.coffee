@@ -16,16 +16,16 @@ class AR.Chemistry.Materials.TabulatedMaterial extends AR.Chemistry.Materials.Ma
       wavelength = wavelengthMicrometers / 1e6
 
       refractiveIndex = parseFloat values[1]
-      refractiveIndices.push {x: wavelength, y: refractiveIndex}
+      refractiveIndices.push {wavelength, value: refractiveIndex}
 
       if values[2]?
         extinctionCoefficient = parseFloat values[2]
         extinctionCoefficients ?= []
-        extinctionCoefficients.push {x: wavelength, y: extinctionCoefficient}
+        extinctionCoefficients.push {wavelength, value: extinctionCoefficient}
 
     # Create the linearly interpolated functions to query the values at any x.
-    @_refractiveIndexSpectrum = AP.Interpolation.PiecewisePolynomial.getFunctionForPoints refractiveIndices, 1, AP.Interpolation.PiecewisePolynomial.ExtrapolationTypes.Constant
-    @_extinctionCoefficientSpectrum = AP.Interpolation.PiecewisePolynomial.getFunctionForPoints extinctionCoefficients, 1, AP.Interpolation.PiecewisePolynomial.ExtrapolationTypes.Constant if extinctionCoefficients
+    @_refractiveIndexSpectrum = new AR.Optics.Spectrum.Sampled refractiveIndices
+    @_extinctionCoefficientSpectrum = new AR.Optics.Spectrum.Sampled extinctionCoefficients if extinctionCoefficients
 
   @getRefractiveIndexSpectrum: -> @_refractiveIndexSpectrum
   @getExtinctionCoefficientSpectrum: -> @_extinctionCoefficientSpectrum

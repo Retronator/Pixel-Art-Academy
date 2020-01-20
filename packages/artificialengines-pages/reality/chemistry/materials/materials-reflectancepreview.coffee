@@ -56,14 +56,14 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
         when @constructor.PreviewTypes.DiffuseReflection
           reflectanceFactor = Math.cos angleOfIncidence
 
-      reflectanceSpectrum = (wavelength) =>
-        refractiveIndexMaterial = refractiveIndexSpectrum wavelength
-        extinctionCoefficientMaterial = extinctionCoefficientSpectrum? wavelength
+      reflectanceSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+        refractiveIndexMaterial = refractiveIndexSpectrum.getValue wavelength
+        extinctionCoefficientMaterial = extinctionCoefficientSpectrum?.getValue wavelength
 
         AR.Optics.FresnelEquations.getReflectance angleOfIncidence, 1, refractiveIndexMaterial, 0, extinctionCoefficientMaterial
 
-      xyz = AS.Color.CIE1931.getXYZForSpectrum (wavelength) =>
-        D65EmissionSpectrum(wavelength) * reflectanceSpectrum(wavelength) * reflectanceFactor
+      xyz = AS.Color.CIE1931.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
+        D65EmissionSpectrum.getValue(wavelength) * reflectanceSpectrum.getValue(wavelength) * reflectanceFactor
 
       rgbPerPixelDistance[pixelDistance] = AS.Color.SRGB.getRGBForXYZ xyz
 
