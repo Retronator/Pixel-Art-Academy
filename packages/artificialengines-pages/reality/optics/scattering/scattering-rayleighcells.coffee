@@ -4,40 +4,14 @@ AR = Artificial.Reality
 AP = Artificial.Pyramid
 
 class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
-  @register 'Artificial.Reality.Pages.Optics.Scattering'
-
-  drawRayleighScattering: ->
-    canvas = @$('.preview')[0]
-    context = canvas.getContext '2d'
-
-    context.setTransform 1, 0, 0, 1, 0, 0
-    context.clearRect 0, 0, canvas.width, canvas.height
-
-    offsetLeft = 10
-    offsetTop = 10
-    context.translate offsetLeft + 0.5, offsetTop + 0.5
-
-    preview =
-      width: 200
-      height: 151
-      scale: 2000 # 1px = 1km
-
-    volume =
-      left: 50
-      top: 50
-      width: 100
-      height: 51
-
-    volume.right = volume.left + volume.width - 1
-    volume.bottom = volume.top + volume.height - 1
-
+  drawRayleighScatteringCells: ->
     # Prepare radiance transfer data structure.
     radianceData =
-      width: preview.width
-      height: Math.ceil preview.height / 2
+      width: @preview.width
+      height: Math.ceil @preview.height / 2
       cells: []
 
-    radianceData.volumeBottom = Math.ceil volume.height / 2
+    radianceData.volumeBottom = Math.ceil @volume.height / 2
 
     SpectrumClass = AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5
 
@@ -76,10 +50,8 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
           neighbors[index] = radianceData.cells[nx][ny]
 
     # Connect source cell.
-    D65EmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
-
     sourceCell =
-      out: [null, D65EmissionSpectrum]
+      out: [null, @D65EmissionSpectrum]
 
     radianceData.cells[0][0].neighbors[3] = sourceCell
 
@@ -112,7 +84,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
     transferredSpectrum = new SpectrumClass
     scatteredSpectrumToDirection = new SpectrumClass
 
-    cellDistance = preview.scale
+    cellDistance = @preview.scale
 
     # Precalculate direction intensities for 4 sides.
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
@@ -120,15 +92,11 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
 
     for offsetDirectionIndex in [0..3]
       startDegrees = -45 + 90 * offsetDirectionIndex
-      endDegrees = startDegrees + 90
 
-      intensity = 0
+      startRadians = startDegrees * Math.PI / 180
+      endRadians = startRadians + Math.PI / 2
 
-      for degrees in [startDegrees + 0.5..endDegrees - 0.5] by 1
-        radians = degrees * Math.PI / 180
-        intensity += rayleighPhaseFunction radians
-
-      directionIntensities[offsetDirectionIndex] = intensity
+      directionIntensities[offsetDirectionIndex] = AP.Integration.integrateWithMidpointRule rayleighPhaseFunction, startRadians, endRadians, Math.PI / 180
 
     totalDirectionIntensity = _.sum directionIntensities
 
@@ -136,7 +104,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
       directionIntensities[offsetDirectionIndex] /= totalDirectionIntensity
 
     # Propagate radiation.
-    for iteration in [1..4]
+    for iteration in [1..128]
       minX = 0
       maxX = radianceData.width - 1
       dx = 1
@@ -172,15 +140,15 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
 
             cell.inTotal.add neighborOutRadiance
 
-            # See if we're inside the gas volume.
-            if volume.left <= x <= volume.right and y < radianceData.volumeBottom
+            # See if we're inside the gas @volume.
+            if @volume.left <= x <= @volume.right and y < radianceData.volumeBottom
               # Calculate how much of the light gets transferred and how much scattered.
               #            -βl
               # Lt = Lo * e
               transferredRatioSpectrum.copy(rayleighCoefficientSpectrum).negate().multiplyScalar(cellDistance).exp()
               scatteredRatioSpectrum.setConstant(1).subtract(transferredRatioSpectrum)
 
-              # Scatter the incoming radiance to all eight directions based on the rayleigh phase function.
+              # Scatter the incoming radiance to all four directions based on the rayleigh phase function.
               scatteredSpectrum.copy(neighborOutRadiance).multiply(scatteredRatioSpectrum)
 
               for offsetDirectionIndex in [0..3]
@@ -196,15 +164,13 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
             transferredSpectrum.copy(neighborOutRadiance).multiply(transferredRatioSpectrum)
             cell.out[directionIndex].add(transferredSpectrum)
 
-    # Clear preview to black.
-    context.fillStyle = 'black'
-    context.fillRect 0, 0, preview.width, preview.height
+    @_startDraw()
 
     # Draw radiance data.
-    previewImageData = context.getImageData offsetLeft, offsetTop, preview.width, preview.height
+    @previewImageData = @context.getImageData @offsetLeft, @offsetTop, @preview.width, @preview.height
     middleYIndex = radianceData.height
 
-    exposure = 2
+    exposure = 5
 
     for x in [0...radianceData.width]
       for ry in [0...radianceData.height]
@@ -215,37 +181,12 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
         rgb = AS.Color.SRGB.getRGBForXYZ xyz
 
         for y in [middleYIndex - ry, middleYIndex + ry]
-          pixelOffset = (x + y * previewImageData.width) * 4
+          pixelOffset = (x + y * @previewImageData.width) * 4
 
-          previewImageData.data[pixelOffset] = rgb.r * 255
-          previewImageData.data[pixelOffset + 1] = rgb.g * 255
-          previewImageData.data[pixelOffset + 2] = rgb.b * 255
+          @previewImageData.data[pixelOffset] = rgb.r * 255
+          @previewImageData.data[pixelOffset + 1] = rgb.g * 255
+          @previewImageData.data[pixelOffset + 2] = rgb.b * 255
 
-    context.putImageData previewImageData, offsetLeft, offsetTop
+    @context.putImageData @previewImageData, @offsetLeft, @offsetTop
 
-    # Draw the volume.
-    context.strokeStyle = 'gainsboro'
-    context.lineWidth = 1
-    context.globalAlpha = 0.2
-    context.strokeRect volume.left - 1, volume.top - 1, volume.width + 1, volume.height + 1
-    context.globalAlpha = 1
-
-    # Draw the border.
-    context.strokeStyle = 'ghostwhite'
-    context.strokeRect 0, 0, preview.width, preview.height
-
-    # Draw scale.
-    context.fillStyle = 'ghostwhite'
-    context.font = '12px "Source Sans Pro", sans-serif'
-
-    context.textAlign = 'center'
-    context.fillText "distance (km)", 90, 190
-
-    context.beginPath()
-
-    for x in [0..preview.width] by 50
-      # Write the number on the axis.
-      xKilometers = Math.round x * preview.scale / 1e3
-
-      context.textAlign = 'center'
-      context.fillText xKilometers, x, preview.height + 16
+    @_drawPreviewElements()

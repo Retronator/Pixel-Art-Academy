@@ -53,7 +53,10 @@ Package.onUse(function(api) {
 
   api.addFile('reality/optics..');
   api.addComponent('reality/optics/scattering..');
-  api.addFile('reality/optics/scattering/scattering-rayleigh');
+  api.addFile('reality/optics/scattering/scattering-rayleighcells');
+  api.addFile('reality/optics/scattering/scattering-rayleighcellsanimated');
+  api.addFile('reality/optics/scattering/scattering-rayleighsingle');
+  api.addFile('reality/optics/scattering/scattering-rayleighsingleanimated');
 
   api.addFile('spectrum/pages');
   api.addFile('spectrum/color..');

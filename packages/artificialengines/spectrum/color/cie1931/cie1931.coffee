@@ -38,7 +38,7 @@ class AS.Color.CIE1931
 
   @getLuminanceForSpectrum: (spectrum) ->
     if @ColorMatchingFunctions.y.matchesType spectrum
-      xyz[coordinate] = @_integrateFast @ColorMatchingFunctions.y, spectrum
+      @_integrateFast @ColorMatchingFunctions.y, spectrum
 
     else
       AP.Integration.integrateWithMidpointRule (wavelength) =>
