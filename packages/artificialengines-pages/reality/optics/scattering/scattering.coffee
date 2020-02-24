@@ -16,7 +16,7 @@ class AR.Pages.Optics.Scattering extends AM.Component
     @materialClass = new ComputedField =>
       AR.Chemistry.Materials.getClassForId @materialId()
 
-    @densityFactor = new ReactiveField 1
+    @densityFactor = new ReactiveField 10
 
   onRendered: ->
     super arguments...
@@ -50,13 +50,19 @@ class AR.Pages.Optics.Scattering extends AM.Component
       @densityFactor()
 
       Tracker.nonreactive =>
-        @drawRayleighScatteringCells()
-
+        # @drawRayleighScatteringCells()
         # @drawRayleighScatteringSingle()
+        @prepareRayleighScatteringCellsAnimated()
+        # @prepareRayleighScatteringCellsInscatteringAnimated()
+        # @prepareRayleighScatteringSingleAnimated()
 
-        # @prepareRayleighScatteringCellsAnimated()
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
 
-    # @drawRayleighScatteringCellsAnimated()
+  draw: (appTime) ->
+    @drawRayleighScatteringCellsAnimated()
+    # @drawRayleighScatteringCellsInscatteringAnimated()
+    # @drawRayleighScatteringSingleAnimated()
 
   _drawPoint: (context, x, y, radius) ->
     context.beginPath()

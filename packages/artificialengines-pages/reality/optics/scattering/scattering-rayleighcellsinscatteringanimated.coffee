@@ -4,7 +4,7 @@ AR = Artificial.Reality
 AP = Artificial.Pyramid
 
 class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
-  prepareRayleighScatteringCellsAnimated: ->
+  prepareRayleighScatteringCellsInscatteringAnimated: ->
     # Prepare radiance transfer data structure.
     @radianceData =
       width: @preview.width
@@ -22,6 +22,8 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
           out: []
           outNext: []
           neighbors: []
+          x: x
+          y: y
 
         for directionIndex in [0..3]
           @radianceData.cells[x][y].out[directionIndex] = new @SpectrumClass
@@ -81,26 +83,17 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
       rayleighCoefficientFunction refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor
 
     # Precalculate direction intensities for 4 sides.
-    rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
-    @directionIntensities = []
-
-    for offsetDirectionIndex in [0..3]
-      startDegrees = -45 + 90 * offsetDirectionIndex
-
-      startRadians = startDegrees * Math.PI / 180
-      endRadians = startRadians + Math.PI / 2
-
-      @directionIntensities[offsetDirectionIndex] = AP.Integration.integrateWithMidpointRule rayleighPhaseFunction, startRadians, endRadians, Math.PI / 180
+    @rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
+    @directionAngles = [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2]
 
     @time = 0
 
-  drawRayleighScatteringCellsAnimated: ->
-    scatteredRatioSpectrum = new @SpectrumClass
-    transferredRatioSpectrum = new @SpectrumClass
-    scatteredSpectrum = new @SpectrumClass
-    transferredSpectrum = new @SpectrumClass
-    scatteredSpectrumToDirection = new @SpectrumClass
+    @scatteredRatioSpectrum = new @SpectrumClass
+    @transferredRatioSpectrum = new @SpectrumClass
+    @inscatteredSpectrum = new @SpectrumClass
+    @transferredSpectrum = new @SpectrumClass
 
+  drawRayleighScatteringCellsInscatteringAnimated: ->
     cellDistance = @preview.scale
 
     #@sourceCell.out[1] = null if @time > 3
@@ -124,36 +117,34 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
 
         # Transfer the incoming radiance from all four sides.
         for neighborIndex in [0..3]
+          continue unless neighbor = @radianceData.cells[x][y].neighbors[neighborIndex]
+
           # We need to read the out spectrum in the direction opposite of the neighbor (pointing towards this cell).
           directionIndex = (neighborIndex + 2) % 4
+          neighborOutRadiance = neighbor.out[directionIndex]
 
-          continue unless neighborOutRadiance = @radianceData.cells[x][y].neighbors[neighborIndex]?.out[directionIndex]
-
-          cell.inTotal.add neighborOutRadiance
-
-          # See if we're inside the gas @volume.
-          if @volume.left <= x <= @volume.right and y < @radianceData.volumeBottom
+          # See if neighbor is inside the gas volume.
+          if @volume.left <= neighbor.x <= @volume.right and neighbor.y < @radianceData.volumeBottom
             # Calculate how much of the light gets transferred and how much scattered.
             #            -βl
             # Lt = Lo * e
-            transferredRatioSpectrum.copy(@rayleighCoefficientSpectrum).negate().multiplyScalar(cellDistance).exp()
-            scatteredRatioSpectrum.setConstant(1).subtract(transferredRatioSpectrum)
+            @transferredRatioSpectrum.copy(@rayleighCoefficientSpectrum).negate().multiplyScalar(cellDistance).exp()
 
-            # Scatter the incoming radiance to all four directions based on the rayleigh phase function.
-            scatteredSpectrum.copy(neighborOutRadiance).multiply(scatteredRatioSpectrum)
-
+            # Calculate inscattering.
             for offsetDirectionIndex in [0..3]
-              scatteredSpectrumToDirection.copy(scatteredSpectrum).multiplyScalar(@directionIntensities[offsetDirectionIndex])
-              scatteredDirectionIndex = (directionIndex + offsetDirectionIndex) % 4
-              cell.outNext[scatteredDirectionIndex].add(scatteredSpectrumToDirection)
+              scatteringSourceDirectionIndex = (directionIndex + offsetDirectionIndex) % 4
+              @inscatteredSpectrum.copy(neighbor.out[scatteringSourceDirectionIndex]).multiply(@rayleighCoefficientSpectrum).multiplyScalar(@rayleighPhaseFunction(@directionAngles[offsetDirectionIndex]) * cellDistance)
+              cell.outNext[directionIndex].add(@inscatteredSpectrum)
 
           else
-            # We're in the vacuum and no scattering is occuring.
-            transferredRatioSpectrum.setConstant(1)
+            # We're in the vacuum and no scattering is occurring.
+            @transferredRatioSpectrum.setConstant(1)
 
           # Transfer the unscattered portion to the incoming ray direction.
-          transferredSpectrum.copy(neighborOutRadiance).multiply(transferredRatioSpectrum)
-          cell.outNext[directionIndex].add(transferredSpectrum)
+          @transferredSpectrum.copy(neighborOutRadiance).multiply(@transferredRatioSpectrum)
+          cell.outNext[directionIndex].add(@transferredSpectrum)
+
+          cell.inTotal.add cell.outNext[directionIndex]
 
     @_startDraw()
 

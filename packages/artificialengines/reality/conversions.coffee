@@ -1,5 +1,11 @@
 AR = Artificial.Reality
 
 class AR.Conversions
-  @temperatureFromCelsius: (temperatureCelsius) ->
-    temperatureCelsius + 273.16 # K
+  @kelvinsToCelsius: (celsius) ->
+    celsius + 273.16 # K
+
+  @radiansToDegrees: (radians) ->
+    radians / Math.PI * 180
+
+  @degreesToRadians: (degrees) ->
+    degrees / 180 * Math.PI

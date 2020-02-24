@@ -137,7 +137,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
 
     exposure = 5
 
-    minTravelDistance = 0 # (@time - 4) * @preview.scale * 0.5
+    minTravelDistance = (@time - 4) * @preview.scale * 0.5
     maxTravelDistance = @time * @preview.scale * 0.5
 
     totalRadiance = new @SpectrumClass
@@ -183,5 +183,3 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
     @_drawPreviewElements()
 
     @time++
-
-    requestAnimationFrame => @drawRayleighScatteringSingleAnimated()

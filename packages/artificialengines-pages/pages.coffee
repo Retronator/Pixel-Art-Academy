@@ -9,6 +9,7 @@ class Artificial.Pages
     Artificial.Pages.addPublicPage '/artificial/reality/chemistry/materials', Artificial.Reality.Pages.Chemistry.Materials
     Artificial.Pages.addPublicPage '/artificial/reality/chemistry/gases', Artificial.Reality.Pages.Chemistry.Gases
     Artificial.Pages.addPublicPage '/artificial/reality/optics/scattering', Artificial.Reality.Pages.Optics.Scattering
+    Artificial.Pages.addPublicPage '/artificial/reality/optics/sky', Artificial.Reality.Pages.Optics.Sky
     Artificial.Pages.addPublicPage '/artificial/spectrum/color/chromaticity', Artificial.Spectrum.Pages.Color.Chromaticity
 
     Retronator.App.addAdminPage '/admin/artificial/babel', Artificial.Babel.Pages.Admin
