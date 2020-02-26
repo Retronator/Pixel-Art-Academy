@@ -75,3 +75,19 @@ class AR.Optics.Spectrum.Array extends AR.Optics.Spectrum
         @array[index] *= value
 
     return @
+
+  integrateWithMidpointRule: (integrand, lowerBound, upperBound, minimumSpacing) ->
+    range = upperBound - lowerBound
+    n = Math.ceil range / minimumSpacing
+    spacing = range / n
+
+    @clear()
+
+    for t in [0...n]
+      x = lowerBound + spacing * (t + 0.5)
+      spectrum = integrand x
+
+      @add spectrum
+
+    for i in [0...@array.length]
+      @array[i] *= spacing

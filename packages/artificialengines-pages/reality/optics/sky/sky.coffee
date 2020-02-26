@@ -2,12 +2,17 @@ AM = Artificial.Mirage
 AR = Artificial.Reality
 AS = Artificial.Spectrum
 
+ray = new THREE.Ray
+intersection = new THREE.Vector3
+
 class AR.Pages.Optics.Sky extends AM.Component
   @initializeDataComponent()
 
   @Methods:
     Nishita: 'Nishita'
     Formulated: 'Formulated'
+    FormulatedXYZ: 'FormulatedXYZ'
+    FormulatedRGB: 'FormulatedRGB'
 
   constructor: (@app) ->
     super arguments...
@@ -16,17 +21,19 @@ class AR.Pages.Optics.Sky extends AM.Component
     super arguments...
 
     @AirClass = AR.Chemistry.Materials.Mixtures.Air.DryMixture
-    @SpectrumClass = AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5
     @D65EmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
     @earthRadius = 6371e3 # m
+    atmosphereBoundsHeight = 50e3 #m
+    @atmosphereBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius + atmosphereBoundsHeight
+    @earthBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius - 1
 
-    @method = new ReactiveField @constructor.Methods.Formulated
+    @method = new ReactiveField @constructor.Methods.FormulatedRGB
 
     @exposureValue = new ReactiveField 1
     @integrationStepSize = new ReactiveField 10
 
     @directLightEnabled = new ReactiveField true
-    @rayleighScatteringEnabled = new ReactiveField false
+    @rayleighScatteringEnabled = new ReactiveField true
     @mieScatteringEnabled = new ReactiveField false
 
     @sunAngleDegrees = new ReactiveField 90
@@ -110,6 +117,28 @@ class AR.Pages.Optics.Sky extends AM.Component
   setSunAngleDegrees: (value) ->
     @sunAngleDegrees (value + 180) % 360 - 180
 
+  _getLengthThroughAtmosphere: (position, direction) ->
+    # Intersect atmosphere bounding sphere with the ray.
+    ray.origin.copy position
+    ray.direction.copy direction
+    ray.intersectSphere @atmosphereBoundingSphere, intersection
+    intersection.sub position
+    intersection.length()
+
+  _getLengthToEarth: (position, direction) ->
+    # Intersect earth bounding sphere with the ray.
+    ray.origin.copy position
+    ray.direction.copy direction
+    ray.intersectSphere @earthBoundingSphere, intersection
+    intersection.sub position
+    intersection.length()
+
+  _intersectsEarth: (position, direction) ->
+    # Intersect Earth bounding sphere with the ray.
+    ray.origin.copy position
+    ray.direction.copy direction
+    ray.intersectsSphere @earthBoundingSphere
+
   _drawPoint: (context, x, y, radius) ->
     context.beginPath()
     context.arc x, y, radius, 0, Math.PI * 2
@@ -140,6 +169,8 @@ class AR.Pages.Optics.Sky extends AM.Component
       names =
         Nishita: 'Nishita et al.'
         Formulated: 'Formulated'
+        FormulatedXYZ: 'Formulated (XYZ space)'
+        FormulatedRGB: 'Formulated (RGB space)'
 
       {value, name} for value, name of names
 

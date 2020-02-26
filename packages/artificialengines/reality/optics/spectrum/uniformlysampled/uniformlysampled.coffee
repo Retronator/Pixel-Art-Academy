@@ -7,9 +7,9 @@ class AR.Optics.Spectrum.UniformlySampled extends AR.Optics.Spectrum.Array
     Constant: 'Constant'
 
   constructor: (options) ->
-    super options.values
+    super options?.values
 
-    @options = options
+    @options = options or {}
     @options.extrapolationType ?= @constructor.ExtrapolationTypes.Zero
 
   matchesType: (spectrum) ->
@@ -84,21 +84,3 @@ class AR.Optics.Spectrum.UniformlySampled extends AR.Optics.Spectrum.Array
       @array[i] *= spectrum.getValue wavelength
 
     return @
-
-  integrateWithMidpointRule: (integrand, lowerBound, upperBound, minimumSpacing) ->
-    range = upperBound - lowerBound
-    n = Math.ceil range / minimumSpacing
-    spacing = range / n
-
-    @clear()
-
-    for t in [0...n]
-      x = lowerBound + spacing * (t + 0.5)
-      spectrum = integrand x
-
-      for i in [0...@array.length]
-        wavelength = @options.startingWavelength + i * @options.wavelengthSpacing
-        @array[i] += spectrum.getValue wavelength
-
-    for i in [0...@array.length]
-      @array[i] *= spacing

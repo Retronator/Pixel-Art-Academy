@@ -3,6 +3,7 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 AP = Artificial.Pyramid
 
+SpectrumClass = AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5
 rayleighCoefficientSpectrumCache = {}
 
 class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
@@ -12,7 +13,6 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     mieScatteringEnabled = @mieScatteringEnabled()
 
     stepSize = @integrationStepSize() * 1e3
-    atmosphereBoundsHeight = 50e3
     scaleHeight = 7994
     maxStepCount = 50
 
@@ -31,8 +31,11 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
 
     getRayleighCoefficientSpectrumAtHeight = (height) =>
-      roundedHeight = Math.round(height / 100) * 100
-      return rayleighCoefficientSpectrumCache[roundedHeight] if rayleighCoefficientSpectrumCache[roundedHeight]
+      heightHash = height >> 7
+      rayleighCoefficientSpectrum = rayleighCoefficientSpectrumCache[heightHash]
+      return rayleighCoefficientSpectrum if rayleighCoefficientSpectrum
+
+      roundedHeight = heightHash << 7
 
       densityRatio = getDensityRatioAtHeight roundedHeight
 
@@ -44,48 +47,24 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       refractiveIndexSpectrum = @AirClass.getRefractiveIndexSpectrumForState gasState
       molecularNumberDensity = getMolucelarNumberDensityForGasState gasState
 
-      rayleighCoefficientSpectrumCache[roundedHeight] = new @SpectrumClass().copy new AR.Optics.Spectrum.Formulated (wavelength) =>
+      rayleighCoefficientSpectrumCache[heightHash] = new SpectrumClass().copy new AR.Optics.Spectrum.Formulated (wavelength) =>
         refractiveIndex = refractiveIndexSpectrum.getValue wavelength
         kingCorrectionFactor = kingCorrectionFactorSpectrum.getValue wavelength
 
         rayleighCoefficientFunction refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor
 
-      rayleighCoefficientSpectrumCache[roundedHeight]
-
-    atmosphereBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius + atmosphereBoundsHeight
-    earthBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius - 1
-
-    getLengthThroughAtmosphere = (position, direction) =>
-      # Intersect atmosphere bounding sphere with the ray.
-      ray = new THREE.Ray position, direction
-      intersection = new THREE.Vector3
-      ray.intersectSphere atmosphereBoundingSphere, intersection
-      intersection.sub position
-      intersection.length()
-
-    getLengthToEarth = (position, direction) =>
-      # Intersect earth bounding sphere with the ray.
-      ray = new THREE.Ray position, direction
-      intersection = new THREE.Vector3
-      ray.intersectSphere earthBoundingSphere, intersection
-      intersection.sub position
-      intersection.length()
-
-    intersectsEarth = (position, direction) =>
-      # Intersect Earth bounding sphere with the ray.
-      ray = new THREE.Ray position, direction
-      ray.intersectsSphere earthBoundingSphere
+      rayleighCoefficientSpectrumCache[heightHash]
 
     # Prepare color calculation method.
-    totalRadiance = new @SpectrumClass
+    totalRadiance = new SpectrumClass
 
-    transmission = new @SpectrumClass
-    totalTransmission = new @SpectrumClass
+    transmission = new SpectrumClass
+    totalTransmission = new SpectrumClass
 
-    scatteringContribution = new @SpectrumClass
-    totalScatteringContribution = new @SpectrumClass
+    scatteringContribution = new SpectrumClass
+    totalScatteringContribution = new SpectrumClass
 
-    opticalDepthSpectrum = new @SpectrumClass
+    opticalDepthSpectrum = new SpectrumClass
 
     viewpoint = new THREE.Vector3()
     scatteringPosition = new THREE.Vector3()
@@ -107,11 +86,11 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
       if rayleighScatteringEnabled
         # See how far the view ray reaches before it exits the atmosphere or hits the earth.
-        if intersectsEarth viewpoint, viewRayDirection
-          atmosphereRayLength = getLengthToEarth viewpoint, viewRayDirection
+        if @_intersectsEarth viewpoint, viewRayDirection
+          atmosphereRayLength = @_getLengthToEarth viewpoint, viewRayDirection
 
         else
-          atmosphereRayLength = getLengthThroughAtmosphere viewpoint, viewRayDirection
+          atmosphereRayLength = @_getLengthThroughAtmosphere viewpoint, viewRayDirection
 
         # Limit the number of steps of integration.
         minStepSize = atmosphereRayLength / maxStepCount
@@ -123,7 +102,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
           scatteringHeight = scatteringPosition.length() - @earthRadius
 
           # If the sun is not visible from this sample, no (first degree) in-scattering is possible.
-          if intersectsEarth scatteringPosition, sunRayDirection
+          if @_intersectsEarth scatteringPosition, sunRayDirection
             scatteringContribution.clear()
             return scatteringContribution
 
@@ -148,7 +127,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
               opticalDepthSpectrum.array[j] += rayleighCoefficientSpectrum.array[j] * spacing
 
           # Integrate along the sun ray from the point of scattering to the exit of the atmosphere.
-          sunRayLength = getLengthThroughAtmosphere scatteringPosition, sunRayDirection
+          sunRayLength = @_getLengthThroughAtmosphere scatteringPosition, sunRayDirection
           minSunRayStepSize = sunRayLength / maxStepCount
           minimumSpacing = Math.max minSunRayStepSize, stepSize
 
@@ -176,8 +155,8 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
         totalTransmission.add(totalScatteringContribution)
 
-      if directLightEnabled and Math.abs(sunViewAngle) < AR.Degrees(0.53) and not intersectsEarth viewpoint, viewRayDirection
-        atmosphereRayLength = getLengthThroughAtmosphere viewpoint, viewRayDirection
+      if directLightEnabled and Math.abs(sunViewAngle) < AR.Degrees(0.53) and not @_intersectsEarth viewpoint, viewRayDirection
+        atmosphereRayLength = @_getLengthThroughAtmosphere viewpoint, viewRayDirection
 
         transmission = new AR.Optics.Spectrum.Formulated (wavelength) =>
           opticalDepth = AP.Integration.integrateWithMidpointRule (distance) =>

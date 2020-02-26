@@ -3,6 +3,8 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 AP = Artificial.Pyramid
 
+SpectrumClass = AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5
+
 class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
   computeNishita: ->
     directLightEnabled = @directLightEnabled()
@@ -22,19 +24,19 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     refractiveIndexSpectrumSurface = @AirClass.getRefractiveIndexSpectrumForState gasStateSurface
 
     rayleighCrossSectionFunction = AR.Optics.Scattering.getRayleighCrossSectionFunction()
-    rayleighCrossSectionSpectrum = new @SpectrumClass().copy new AR.Optics.Spectrum.Formulated (wavelength) =>
+    rayleighCrossSectionSpectrum = new SpectrumClass().copy new AR.Optics.Spectrum.Formulated (wavelength) =>
       refractiveIndex = refractiveIndexSpectrumSurface.getValue wavelength
       rayleighCrossSectionFunction refractiveIndex, molecularNumberDensitySurface, wavelength
 
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
 
     # Prepare color calculation method.
-    totalRadiance = new @SpectrumClass
+    totalRadiance = new SpectrumClass
 
-    transmission = new @SpectrumClass
-    totalTransmission = new @SpectrumClass
+    transmission = new SpectrumClass
+    totalTransmission = new SpectrumClass
 
-    scatteringContribution = new @SpectrumClass
+    scatteringContribution = new SpectrumClass
 
     stepSize = @integrationStepSize() * 1e3
     maxHeight = 50e3

@@ -2,13 +2,13 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 
 class AS.Color.SRGB
-  @XYZtoLinearRGBTransform = new THREE.Matrix3().set(
+  @NormalizedXYZtoLinearRGBTransform = new THREE.Matrix3().set(
     3.2406, -1.5372, -0.4986,
     -0.9689, 1.8758, 0.0415,
     0.0557, -0.204, 1.057
   )
 
-  @LinearRGBToXYZTransform = new THREE.Matrix3().set(
+  @LinearRGBToNormalizedXYZTransform = new THREE.Matrix3().set(
     0.4124, 0.3576, 0.1805,
     0.2126, 0.7152, 0.0722,
     0.0193, 0.1192, 0.9505
@@ -27,7 +27,7 @@ class AS.Color.SRGB
     @getLinearRGBForNormalizedXYZ @getNormalizedXYZForXYZ xyz
 
   @getLinearRGBForNormalizedXYZ: (xyz) ->
-    rgbVector = new THREE.Vector3().copy(xyz).applyMatrix3 @XYZtoLinearRGBTransform
+    rgbVector = new THREE.Vector3().copy(xyz).applyMatrix3 @NormalizedXYZtoLinearRGBTransform
 
     r: rgbVector.x
     g: rgbVector.y
@@ -37,7 +37,7 @@ class AS.Color.SRGB
     @getXYZForNormalizedXYZ @getNormalizedXYZForLinearRGB(linearRGB)
 
   @getNormalizedXYZForLinearRGB: (linearRGB) ->
-    new THREE.Vector3(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@LinearRGBToXYZTransform)
+    new THREE.Vector3(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@LinearRGBToNormalizedXYZTransform)
 
   @getXYZForNormalizedXYZ: (xyz) ->
     new THREE.Vector3().copy(xyz).multiplyScalar(@d65LuminanceFactor)

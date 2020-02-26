@@ -32,9 +32,29 @@ class AS.Color.CIE1931
     sum = 0
 
     for value, index in colorMatchingFunction.array
-      sum += value * spectrum.array[index] * colorMatchingFunction.options.wavelengthSpacing
+      sum += value * spectrum.array[index]
 
-    sum
+    sum * colorMatchingFunction.options.wavelengthSpacing
+
+  # Returns XYZ factors, i.e. multipliers that will change an XYZ spectrum as much as the spectrum
+  # would (e.g. a spectrum with all values 0.5 will give an XYZ response of 0.5 in all coordinates).
+  @getXYZFactorsForSpectrum: (spectrum) ->
+    xyz = {}
+
+    readFromArray = @ColorMatchingFunctions.x.matchesType spectrum
+
+    for coordinate in ['x', 'y', 'z']
+      colorMatchingFunction = @ColorMatchingFunctions[coordinate]
+      sum = 0
+
+      for value, index in colorMatchingFunction.array
+        response = if readFromArray then spectrum.array[index] else spectrum.getValue @_minWavelength + index * @_wavelengthSpacing
+        sum += value * response
+
+      # Set normalized factor.
+      xyz[coordinate] = sum / @ColorMatchingFunctions.yIntegral
+
+    xyz
 
   @getLuminanceForSpectrum: (spectrum) ->
     if @ColorMatchingFunctions.y.matchesType spectrum

@@ -294,6 +294,8 @@ Package.onUse(function(api) {
   api.addFile('reality/optics/spectrum/formulated');
   api.addFile('reality/optics/spectrum/sampled');
   api.addFile('reality/optics/spectrum/array');
+  api.addFile('reality/optics/spectrum/xyz');
+  api.addFile('reality/optics/spectrum/rgb');
   api.addFile('reality/optics/spectrum/uniformlysampled..');
   api.addFile('reality/optics/spectrum/uniformlysampled/range380to780spacing5');
 
