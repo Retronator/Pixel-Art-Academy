@@ -361,6 +361,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/mixtures/air/drydirect');
   api.addFile('reality/chemistry/materials/mixtures/air/drymixture');
   api.addFile('reality/chemistry/materials/mixtures/air/moistmixture3percent');
+  api.addFile('reality/chemistry/materials/mixtures/air/marsmixture');
 
   // Artificial Spectrum
 
