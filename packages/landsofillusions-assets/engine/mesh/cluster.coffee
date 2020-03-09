@@ -6,6 +6,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     super arguments...
 
     @geometry = new ComputedField => @_generateGeometry()
+    @radianceState = new ComputedField => @_generateRadianceState()
     @materials = new ComputedField => @_generateMaterials()
     @mesh = new ComputedField => @_generateMesh()
 
@@ -39,27 +40,42 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
       options.sceneManager.addedSceneObjects()
 
+  destroy: ->
+    super arguments...
+
+    @_geometry?.dispose()
+    material.dispose() for name, material of @_materials if @_materials
+    @_radianceState?.destroy()
+
   _generateGeometry: ->
     return unless geometryData = @data.geometry()
 
+    # Clean any previous geometry.
+    @_geometry?.dispose()
+
     console.log "Generating geometry", geometryData if LOI.Assets.debug
 
-    geometry = new THREE.BufferGeometry
-    geometry.addAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
-    geometry.addAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
-    geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
-    geometry.computeBoundingBox()
+    @_geometry = new THREE.BufferGeometry
+    @_geometry.setAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
+    @_geometry.setAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
+    @_geometry.setAttribute 'pixelCoordinates', new THREE.BufferAttribute geometryData.pixelCoordinates, 2 if geometryData.pixelCoordinates
+    @_geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
+    @_geometry.computeBoundingBox()
 
-    geometry
+    @_geometry
 
   _generateMaterials: ->
     meshData = @data.layer.object.mesh
     return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
 
+    # Clean any previous materials.
+    material?.dispose() for name, material of @_materials if @_materials
+
     console.log "Generating materials", meshData if LOI.Assets.debug
 
     options = @layer.object.mesh.options
     visualizeNormals = options.visualizeNormals?()
+    pbr = options.pbr?()
 
     materialOptions =
       wireframe: options.debug?()
@@ -104,8 +120,57 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         # Cluster has a direct palette color set. Add palette color's properties (ramp, shade) to material options.
         meshMaterial = clusterMaterial.paletteColor
 
+      # PBR has its own material handling.
+      if pbr
+        shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
+
+        if materialOptions.wireframe
+          if meshMaterial.extinctionCoefficient
+            color = THREE.Color.fromObject meshMaterial.extinctionCoefficient
+
+          else if meshMaterial.shade?
+            color = THREE.Color.fromObject shades[meshMaterial.shade]
+
+          else
+            color = new THREE.Color 0xffffff
+
+          material = new THREE.MeshBasicMaterial _.extend materialOptions, {color}
+
+        else
+          # Add extra data to options.
+          sizeInPicturePixels = @data.sizeInPicturePixels() or {width: 1, height: 1}
+
+          _.extend materialOptions,
+            smoothShading: options.smoothShading?()
+            clusterSize: new THREE.Vector2 sizeInPicturePixels.width, sizeInPicturePixels.height
+            radianceStateField: @radianceState
+
+          # Create material properties.
+          _.extend materialOptions,
+            refractiveIndex: new THREE.Vector3 1, 1, 1
+            extinctionCoefficient: new THREE.Vector3
+            emission: new THREE.Vector3
+
+          if n = meshMaterial.refractiveIndex
+            materialOptions.refractiveIndex.set n.r, n.g, n.b
+
+          if k = meshMaterial.extinctionCoefficient
+            materialOptions.extinctionCoefficient.set k.r, k.g, k.b
+
+          if not (n or k) and shades and meshMaterial.shade?
+            # Create an ad-hoc PBR material.
+            materialOptions.refractiveIndex.set 1.5, 1.5, 1.5
+
+            color = shades[meshMaterial.shade]
+            materialOptions.extinctionCoefficient.set 1 - color.r, 1 - color.g, 1 - color.b
+
+          if e = meshMaterial.emission
+            materialOptions.emission.set e.r, e.g, e.b
+
+          material = new LOI.Engine.Materials.PBRMaterial materialOptions
+
       # See if we have correct properties for a ramp material.
-      if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
+      else if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
         shades = palette.ramps[meshMaterial.ramp]?.shades
 
         if materialOptions.wireframe
@@ -137,10 +202,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
           color: new THREE.Color 0xffffff
 
-    main: material
-    depth: depthMaterial
-    shadowColor: shadowColorMaterial
-    preprocessing: preprocessingMaterial
+    @_materials =
+      main: material
+      depth: depthMaterial
+      shadowColor: shadowColorMaterial
+      preprocessing: preprocessingMaterial
+
+    @_materials
 
   _generateMesh: ->
     return unless geometry = @geometry()
@@ -160,3 +228,17 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     mesh.layers.set 2 if @layer.object.mesh.options.debug?()
 
     mesh
+
+  _generateRadianceState: ->
+    # Clean any previous radiance state.
+    @_radianceState?.destroy()
+
+    if size = @data.sizeInPicturePixels()
+      @_radianceState = new LOI.Engine.RadianceState
+        size: size
+        cluster: @data
+
+    else
+      @_radianceState = null
+
+    @_radianceState

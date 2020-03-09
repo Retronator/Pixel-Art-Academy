@@ -214,6 +214,6 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
       verticesArray[index * elementsPerVertex + 1] = vertexOnEdge.y
       verticesArray[index * elementsPerVertex + 2] = vertexOnEdge.z
 
-    lineSegments.geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
+    lineSegments.geometry.setAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
 
     lineSegments

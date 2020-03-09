@@ -1,7 +1,7 @@
 AR = Artificial.Reality
 AP = Artificial.Pyramid
 
-complexAngleOfReflection = new AP.ComplexNumber
+complexAngleOfRefraction = new AP.ComplexNumber
 n1 = new AP.ComplexNumber
 n2 = new AP.ComplexNumber
 sinθi = new AP.ComplexNumber
@@ -24,10 +24,10 @@ class AR.Optics.FresnelEquations
   @_prepareCommonVariables: (angleOfIncidence, refractiveIndex1, refractiveIndex2, extinctionCoefficient1, extinctionCoefficient2) ->
     n1.set refractiveIndex1, extinctionCoefficient1
     n2.set refractiveIndex2, extinctionCoefficient2
-    AR.Optics.SnellsLaw.getComplexAngleOfRefraction angleOfIncidence, n1, n2, complexAngleOfReflection
+    AR.Optics.SnellsLaw.getComplexAngleOfRefraction angleOfIncidence, n1, n2, complexAngleOfRefraction
 
     cosθi.set(angleOfIncidence, 0).cos()
-    cosθj.copy(complexAngleOfReflection).cos()
+    cosθj.copy(complexAngleOfRefraction).cos()
 
   @_getReflectanceS: ->
     # |n₁cosθᵢ-n₂cosθⱼ|²

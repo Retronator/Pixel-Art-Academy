@@ -91,6 +91,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
     # Generate geometries and send them to layer clusters.
     for cluster in changedClusters
       clusterData = clustersData[cluster.id]
+      clusterData.sizeInPicturePixels cluster.sizeInPicturePixels
       clusterData.geometry cluster.generateGeometry()
       clusterData.plane
         point: cluster.plane.point.toObject()

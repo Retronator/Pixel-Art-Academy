@@ -23,24 +23,28 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
         vertices: @_decompressData data.geometry.compressedVertices, Float32Array
         normals: @_decompressData data.geometry.compressedNormals, Float32Array
         indices: @_decompressData data.geometry.compressedIndices, Uint32Array
+        pixelCoordinates: @_decompressData data.geometry.compressedPixelCoordinates, Float32Array
 
-    for field in ['properties', 'plane', 'material', 'geometry']
+    for field in ['properties', 'plane', 'material', 'geometry', 'sizeInPicturePixels']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
-      
+
   _decompressData: (compressedByteArray, arrayClass) ->
+    return unless compressedByteArray
+
     byteArray = Pako.inflateRaw compressedByteArray
     new arrayClass byteArray.buffer
 
   toPlainObject: ->
     plainObject = {}
 
-    @[field].save plainObject for field in ['properties', 'plane', 'material', 'geometry']
+    @[field].save plainObject for field in ['properties', 'plane', 'material', 'geometry', 'sizeInPicturePixels']
 
     # Compress geometry.
     plainObject.geometry =
       compressedVertices: @_compressArray plainObject.geometry.vertices
       compressedNormals: @_compressArray plainObject.geometry.normals
       compressedIndices: @_compressArray plainObject.geometry.indices
+      compressedPixelCoordinates: @_compressArray plainObject.geometry.pixelCoordinates
 
     plainObject
     

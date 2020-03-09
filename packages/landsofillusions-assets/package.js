@@ -335,6 +335,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/recomputemesh');
   api.addFile('mesheditor/actions/smoothshadingenabled');
   api.addFile('mesheditor/actions/resetcamera');
+  api.addFile('mesheditor/actions/pbrenabled');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
@@ -343,6 +344,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/shadowsenabled');
   api.addFile('mesheditor/helpers/landmarks');
   api.addFile('mesheditor/helpers/smoothshadingenabled');
+  api.addFile('mesheditor/helpers/pbrenabled');
 
   api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');

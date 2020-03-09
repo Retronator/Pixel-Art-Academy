@@ -9,7 +9,7 @@ Npm.depends({
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  three: '0.111.0',
+  three: '0.114.0',
   'jaro-winkler': '0.2.8',
   'canvas': '2.3.1',
   'pako': '1.0.8',
@@ -52,7 +52,10 @@ Package.onUse(function(api) {
     'stevezhu:lodash',
     'velocityjs:velocityjs',
     'meteorhacks:picker',
-    'meteorhacks:inject-initial'
+    'meteorhacks:inject-initial',
+
+    // Custom API extensions
+    'retronator:api'
   ];
 
 	api.use(packages);
@@ -258,8 +261,10 @@ Package.onUse(function(api) {
   api.addFile('program/search..');
 
   // Artificial Pyramid
+  api.addGlsl('pyramid/trigonometry');
 
   api.addFile('pyramid/complexnumber');
+  api.addGlsl('pyramid/complexnumber');
 
   api.addFile('pyramid/integration..');
   api.addFile('pyramid/integration/midpoint');
@@ -286,8 +291,8 @@ Package.onUse(function(api) {
 
   api.addFile('reality/optics..');
 
-  api.addFile('reality/optics/snellslaw');
-  api.addFile('reality/optics/fresnelequations');
+  api.addFileWithGlsl('reality/optics/snellslaw');
+  api.addFileWithGlsl('reality/optics/fresnelequations');
   api.addFile('reality/optics/scattering');
 
   api.addFile('reality/optics/spectrum..');
@@ -335,8 +340,10 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/elements/copper');
   api.addFile('reality/chemistry/materials/elements/gold');
   api.addFile('reality/chemistry/materials/elements/helium');
+  api.addFile('reality/chemistry/materials/elements/hydrogen');
   api.addFile('reality/chemistry/materials/elements/iron');
   api.addFile('reality/chemistry/materials/elements/mercury');
+  api.addFile('reality/chemistry/materials/elements/neon');
   api.addFile('reality/chemistry/materials/elements/nitrogen');
   api.addFile('reality/chemistry/materials/elements/oxygen');
   api.addFile('reality/chemistry/materials/elements/potassium');
@@ -345,7 +352,7 @@ Package.onUse(function(api) {
 
   api.addFile('reality/chemistry/materials/compounds..');
   api.addFile('reality/chemistry/materials/compounds/carbondioxide');
-  api.addFile('reality/chemistry/materials/compounds/sapphire');
+  api.addFile('reality/chemistry/materials/compounds/corundum');
   api.addFile('reality/chemistry/materials/compounds/tungstendisulfide');
   api.addFile('reality/chemistry/materials/compounds/water');
   api.addFile('reality/chemistry/materials/compounds/watervapor');
@@ -363,6 +370,9 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/mixtures/air/moistmixture3percent');
   api.addFile('reality/chemistry/materials/mixtures/air/marsmixture');
 
+  api.addFile('reality/chemistry/materials/mixtures/stars..');
+  api.addFile('reality/chemistry/materials/mixtures/stars/sun');
+
   // Artificial Spectrum
 
   api.addFile('spectrum/renderobject');
@@ -377,10 +387,9 @@ Package.onUse(function(api) {
   api.addFile('spectrum/hqx..');
   api.addJavascript('spectrum/hqx..');
 
-  api.addFile('spectrum/glsl..');
-  api.addFile('spectrum/glsl/hsl2rgb');
 
   api.addFile('spectrum/color..');
+  api.addGlsl('spectrum/color/hsltorgb');
 
   api.addFile('spectrum/color/cie1931..');
   api.addFile('spectrum/color/cie1931/colormatchingfunctions..');

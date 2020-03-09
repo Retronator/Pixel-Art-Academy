@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AR = Artificial.Reality
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -360,6 +361,90 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
       @property = 'tint'
       @type = AM.DataInputComponent.Types.Checkbox
+
+  class @MaterialClass extends @MaterialProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MaterialClass'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'materialClass'
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      options = [
+        value: null
+        name: ''
+      ]
+
+      for materialClass in AR.Chemistry.Materials.getClasses()
+        if displayName = materialClass.displayName()
+          if formula = materialClass.formula()
+            name = "#{displayName} (#{formula})"
+
+          else
+            name = displayName
+
+        else
+          name = materialClass.id()
+
+        options.push
+          value: materialClass.id()
+          name: name
+
+      _.sortBy options, 'name'
+
+    save: (value) ->
+      material = @data()
+
+      if value
+        materialClass = AR.Chemistry.Materials.getClassForId value
+        refractiveIndexRGB = new AR.Optics.Spectrum.RGB().copyFactor materialClass.getRefractiveIndexSpectrum()
+
+        extinctionCoefficientRGB = new AR.Optics.Spectrum.RGB()
+        if extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
+          extinctionCoefficientRGB.copyFactor extinctionCoefficientSpectrum
+
+        material.update
+          materialClass: value
+          refractiveIndex: refractiveIndexRGB.toObject()
+          extinctionCoefficient: extinctionCoefficientRGB.toObject()
+
+      else
+        material.update
+          materialClass: null
+          refractiveIndex: null
+          extinctionCoefficient: null
+
+  class @Temperature extends @MaterialProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Temperature'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'temperature'
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 0
+      @customAttributes =
+        min: 0
+        step: 100
+
+    save: (value) ->
+      material = @data()
+      temperature = _.parseFloatOrNull value
+
+      if temperature
+        blackBodyEmissionSpectrum = AR.Optics.LightSources.BlackBody.getEmissionSpectrumForTemperature temperature
+        emissionRGB = new AR.Optics.Spectrum.RGB().copy blackBodyEmissionSpectrum
+
+        material.update
+          temperature: temperature
+          emission: emissionRGB.toObject()
+
+      else
+        material.update
+          temperature: null
+          emission: null
 
   class @TextureProperty extends AM.DataInputComponent
     load: ->

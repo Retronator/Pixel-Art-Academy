@@ -82,6 +82,10 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
                 compressedVertices: Match.Where EJSON.isBinary
                 compressedNormals: Match.Where EJSON.isBinary
                 compressedIndices: Match.Where EJSON.isBinary
+                compressedPixelCoordinates: Match.Where EJSON.isBinary
+              sizeInPicturePixels:
+                width: Number
+                height: Number
       ]
     ]
     materials: Match.Optional [
@@ -106,6 +110,11 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
         shadow: Match.Optional
           dither: Match.OptionalOrNull Number
           tint: Match.OptionalOrNull Boolean
+      materialClass: Match.OptionalOrNull String
+      refractiveIndex: Match.OptionalOrNull rgbPattern
+      extinctionCoefficient: Match.OptionalOrNull rgbPattern
+      temperature: Match.OptionalOrNull Number
+      emission: Match.OptionalOrNull rgbPattern
       texture: Match.Optional
         spriteId: Match.OptionalOrNull Match.DocumentId
         spriteName: Match.OptionalOrNull String
@@ -129,6 +138,11 @@ vectorPattern =
   x: Number
   y: Number
   z: Number
+
+rgbPattern =
+  r: Number
+  g: Number
+  b: Number
 
 sparseVectorPattern =
   x: Match.OptionalOrNull Number

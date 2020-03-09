@@ -37,8 +37,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
         colorsArray[i * elementsPerLine + offset] = shade
         horizontalColorsArray[i * elementsPerLine + offset] = shade
 
-    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
-    geometry.addAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
+    geometry.setAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
+    geometry.setAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
 
     material = new THREE.LineBasicMaterial vertexColors: THREE.VertexColors
 

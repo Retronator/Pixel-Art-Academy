@@ -1,7 +1,6 @@
-AS = Artificial.Spectrum
+// Artificial.Spectrum.Color.hslToRGB
 
-###
-  Adapted from Jam3/glsl-hsl2rgb (https://github.com/Jam3/glsl-hsl2rgb)
+/*  Adapted from Jam3/glsl-hsl2rgb (https://github.com/Jam3/glsl-hsl2rgb)
 
   The MIT License (MIT) Copyright (c) 2015 Jam3
 
@@ -17,10 +16,9 @@ AS = Artificial.Spectrum
    WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-###
+*/
 
-AS.GLSL.hsl2rgb = """
-float hue2rgb(float f1, float f2, float hue) {
+float Color_hueToRGB(float f1, float f2, float hue) {
     if (hue < 0.0)
         hue += 1.0;
     else if (hue > 1.0)
@@ -37,7 +35,7 @@ float hue2rgb(float f1, float f2, float hue) {
     return res;
 }
 
-vec3 hsl2rgb(vec3 hsl) {
+vec3 Color_hslToRGB(vec3 hsl) {
     vec3 rgb;
     
     if (hsl.y == 0.0) {
@@ -52,14 +50,13 @@ vec3 hsl2rgb(vec3 hsl) {
             
         float f1 = 2.0 * hsl.z - f2;
         
-        rgb.r = hue2rgb(f1, f2, hsl.x + (1.0/3.0));
-        rgb.g = hue2rgb(f1, f2, hsl.x);
-        rgb.b = hue2rgb(f1, f2, hsl.x - (1.0/3.0));
+        rgb.r = Color_hueToRGB(f1, f2, hsl.x + (1.0/3.0));
+        rgb.g = Color_hueToRGB(f1, f2, hsl.x);
+        rgb.b = Color_hueToRGB(f1, f2, hsl.x - (1.0/3.0));
     }   
     return rgb;
 }
 
-vec3 hsl2rgb(float h, float s, float l) {
-    return hsl2rgb(vec3(h, s, l));
+vec3 Color_hslToRGB(float h, float s, float l) {
+    return Color_hslToRGB(vec3(h, s, l));
 }
-"""

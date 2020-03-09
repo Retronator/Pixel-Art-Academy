@@ -6,10 +6,10 @@ AR = Artificial.Reality
 #
 # REFERENCES: "N. V. Smith. Optical constants of sodium and potassium from 0.5 to 4.0 eV by split-beam ellipsometry, <a href=\"https://doi.org/10.1103/PhysRev.183.634\"><i>Phs. Rev.</i> <b>183</b>, 634-644 (1969)</a>"
 
-class AR.Chemistry.Materials.Compounds.Sapphire extends AR.Chemistry.Materials.TabulatedMaterial
-  @id: -> 'Artificial.Reality.Chemistry.Materials.Compounds.Sapphire'
+class AR.Chemistry.Materials.Compounds.Corundum extends AR.Chemistry.Materials.TabulatedMaterial
+  @id: -> 'Artificial.Reality.Chemistry.Materials.Compounds.Corundum'
 
-  @displayName: -> "sapphire"
+  @displayName: -> "corundum"
   @formula: -> 'α-Al₂O₃'
 
   @initialize """

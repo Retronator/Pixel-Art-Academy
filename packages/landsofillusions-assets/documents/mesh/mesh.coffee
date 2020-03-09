@@ -77,6 +77,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #           compressedNormals: binary object with compressed version of normals, sent to the server
   #           indices: UInt32Array with indices of the cluster, not sent to the server
   #           compressedIndices: binary object with compressed version of indices, sent to the server
+  #           pixelCoordinates: UInt32Array with pixel coordinates of the cluster, not sent to the server
+  #           compressedPixelCoordinates: binary object with compressed version of pixel coordinates, sent to the server
+  #         sizeInPicturePixels: the size of the cluster in picture pixels
+  #           width, height
   # materials: array of shaders used to draw objects
   #   name: what the materials represents
   #   type: ID of the shader
@@ -99,6 +103,14 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #     shadow:
   #       dither: amount from 0 to 1, how much the shadow is dithered (default matches the translucency dither)
   #       tint: boolean whether the ramp of this material should be applied to the objects in the shadow of it
+  #   materialClass: ID of the built-in material class this material represents, null for custom material
+  #   refractiveIndex: spectral distribution of the refractive index (derived from material class, or custom)
+  #     r, g, b
+  #   extinctionCoefficient: spectral distribution of the extinction coefficient (derived from material class, or custom)
+  #     r, g, b
+  #   temperature: temperature in Kelvin the material is at, or null for custom emission
+  #   emission: spectral distribution of the maximum emission of the material (derived from temperature, or custom)
+  #     r, g, b
   #   texture:
   #     spriteId: ID of the sprite to be used as the texture
   #     spriteName: Name of the sprite or mip to be used as the texture

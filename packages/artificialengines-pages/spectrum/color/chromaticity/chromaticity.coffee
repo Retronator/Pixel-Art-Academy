@@ -9,6 +9,9 @@ class AS.Pages.Color.Chromaticity extends AM.Component
     A: 'A'
     D: 'D'
     D65: 'D65'
+    Sun: 'Sun'
+    Iron: 'Iron'
+    Gold: 'Gold'
 
   constructor: (@app) ->
     super arguments...
@@ -27,10 +30,13 @@ class AS.Pages.Color.Chromaticity extends AM.Component
         when LightTypes.A then AR.Optics.LightSources.CIE.A.Formulated
         when LightTypes.D then AR.Optics.LightSources.CIE.D
         when LightTypes.D65 then AR.Optics.LightSources.CIE.D65
+        when LightTypes.Sun then AR.Chemistry.Materials.Mixtures.Stars.Sun
+        when LightTypes.Iron then AR.Chemistry.Materials.Elements.Iron
+        when LightTypes.Gold then AR.Chemistry.Materials.Elements.Gold
 
     @spectrumYAxis = new ComputedField =>
       switch @lightSourceType()
-        when LightTypes.BlackBody, LightTypes.D, LightTypes.D65
+        when LightTypes.BlackBody, LightTypes.D, LightTypes.D65, LightTypes.Sun, LightTypes.Iron, LightTypes.Gold
           spacing: 10
           maxValue: 60
 
@@ -42,7 +48,7 @@ class AS.Pages.Color.Chromaticity extends AM.Component
       lightSourceClass = @lightSourceClass()
 
       switch @lightSourceType()
-        when LightTypes.BlackBody
+        when LightTypes.BlackBody, LightTypes.Sun, LightTypes.Iron, LightTypes.Gold
           lightSourceClass.getEmissionSpectrumForTemperature @temperature()
 
         when LightTypes.D
@@ -56,7 +62,7 @@ class AS.Pages.Color.Chromaticity extends AM.Component
 
     @correlatedColorTemperature = new ComputedField =>
       switch @lightSourceType()
-        when LightTypes.D
+        when LightTypes.D, LightTypes.Sun, LightTypes.Iron, LightTypes.Gold
           @temperature()
 
         else
@@ -166,6 +172,9 @@ class AS.Pages.Color.Chromaticity extends AM.Component
         A: 'CIE A (incandescent)'
         D: 'CIE D (daylight)'
         D65: 'CIE D65 (daylight, 6504 K)'
+        Sun: 'Sun (hydrogen-helium gas mixture)'
+        Iron: 'Iron'
+        Gold: 'Gold'
 
       {value, name} for value, name of names
 

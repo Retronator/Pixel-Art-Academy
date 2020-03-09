@@ -100,6 +100,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
           LOI.Assets.MeshEditor.Actions.SmoothShadingEnabled.id()
+          LOI.Assets.MeshEditor.Actions.PBREnabled.id()
         ]
       ,
         caption: 'Tools'

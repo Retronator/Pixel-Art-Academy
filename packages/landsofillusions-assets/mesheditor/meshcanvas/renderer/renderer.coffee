@@ -96,7 +96,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.setClearColor 0x000000, 1
     @renderer.setRenderTarget @preprocessingRenderTarget
     @renderer.clear()
-    @renderer.render scene, camera.main, @preprocessingRenderTarget
+    @renderer.render scene, camera.main
 
     if shadowsEnabled()
       # Render the color shadow maps. First set the shadow color material on all meshes.
@@ -115,7 +115,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @renderer.setClearColor 0xffff00, 1
         @renderer.setRenderTarget directionalLight.shadow.colorMap
         @renderer.clear()
-        @renderer.render scene, directionalLight.shadow.camera, directionalLight.shadow.colorMap
+        @renderer.render scene, directionalLight.shadow.camera
 
       # Render the opaque shadow maps. We need to set the depth material on all opaque meshes and hide the rest.
       scene.traverse (object) =>
@@ -133,7 +133,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @renderer.setClearColor 0xffffff, 1
         @renderer.setRenderTarget directionalLight.shadow.opaqueMap
         @renderer.clear()
-        @renderer.render scene, directionalLight.shadow.camera, directionalLight.shadow.opaqueMap
+        @renderer.render scene, directionalLight.shadow.camera
 
     # Reinstate main materials and object visibility.
     scene.traverse (object) =>
@@ -156,7 +156,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @renderer.setRenderTarget @pixelRender.renderTarget
       @renderer.setClearColor 0, 0
       @renderer.clear()
-      @renderer.render scene, camera.renderTarget, @pixelRender.renderTarget
+      @renderer.render scene, camera.renderTarget
 
       # Render the low-res picture to the main scene.
       pixelRenderScene = @pixelRender.scene.withUpdates()

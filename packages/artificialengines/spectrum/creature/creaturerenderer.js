@@ -90,9 +90,9 @@ function CreatureRenderer(name, manager_in, material_in)
 		*/
 		
 		geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
-		geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-		geometry.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
-		geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+		geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+		geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
+		geometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
 		
 		this.renderMesh = new THREE.Mesh(geometry, material);
 

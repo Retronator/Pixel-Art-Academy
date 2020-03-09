@@ -42,6 +42,30 @@
         <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
       </p>
     {{/if}}
+    {{#if $is lightSourceType "Sun"}}
+      <p>
+        Sun surface (73% hydrogen, 25% helium, 2% other) with temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "Iron"}}
+      <p>
+        Iron heated to temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "Gold"}}
+      <p>
+        Gold heated to temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
     <p>
       CIE XYZ values are {{xyzString}}.<br/>
       D65 normalized XYZ values are {{normalizedXYZString}}.<br/>

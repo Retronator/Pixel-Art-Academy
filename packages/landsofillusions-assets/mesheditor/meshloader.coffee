@@ -64,6 +64,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @debugModeData = @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).data
     @currentClusterHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @fileId
     @smoothShadingHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.SmoothShadingEnabled, @fileId
+    @pbrHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
 
     # Create the engine mesh.
     @mesh = new LOI.Assets.Engine.Mesh
@@ -73,6 +74,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster
       smoothShading: @smoothShadingHelper
+      pbr: @pbrHelper
 
     # Subscribe to the referenced palette.
     @paletteId = new ComputedField =>

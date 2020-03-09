@@ -46,7 +46,7 @@ void main()	{
 #include <packing>
 #include <lights_pars_begin>
 
-#{AS.GLSL.hsl2rgb}
+#include <Artificial.Spectrum.Color.hslToRgb>
 
 uniform mat4 modelViewMatrix;
 uniform sampler2D palette;
@@ -58,7 +58,7 @@ void main()	{
   vec2 paletteColor = rampShadeDitherAlpha.xy;
   paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
 
-  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment}
+  #include <LandsOfIllusions.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment>
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;
@@ -79,7 +79,7 @@ void main()	{
      lightness = 1.0 - absoluteVerticalAngle / PI;
     }
 
-    gl_FragColor = vec4(hsl2rgb(hue, saturation, lightness), rampShadeDitherAlpha.a);
+    gl_FragColor = vec4(Color_hslToRGB(hue, saturation, lightness), rampShadeDitherAlpha.a);
     return;
   }
 
