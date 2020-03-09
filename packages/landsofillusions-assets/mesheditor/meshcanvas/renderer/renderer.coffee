@@ -78,73 +78,80 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     # Set up main geometry.
     camera.main.layers.set 0
-    shadowsEnabled = @meshCanvas.interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled, @meshCanvas.meshId()
 
-    # Render the preprocessing step. First set the preprocessing material on all meshes.
-    scene.traverse (object) =>
-      return unless object.isMesh
+    if @meshCanvas.pbrEnabled()
+      @renderer.shadowMap.enabled = false
 
-      # Remember if the object is supposed to be visible since we'll hide it in some of the rendering steps.
-      object.wasVisible = object.visible
+      # TODO: Render radiance probes.
 
-      if object.preprocessingMaterial
-        object.material = object.preprocessingMaterial
+    else
+      shadowsEnabled = @meshCanvas.interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled, @meshCanvas.meshId()
 
-      else
-        object.visible = false
-
-    @renderer.setClearColor 0x000000, 1
-    @renderer.setRenderTarget @preprocessingRenderTarget
-    @renderer.clear()
-    @renderer.render scene, camera.main
-
-    if shadowsEnabled()
-      # Render the color shadow maps. First set the shadow color material on all meshes.
+      # Render the preprocessing step. First set the preprocessing material on all meshes.
       scene.traverse (object) =>
         return unless object.isMesh
 
-        if object.shadowColorMaterial
-          object.material = object.shadowColorMaterial
-          object.visible = object.wasVisible
+        # Remember if the object is supposed to be visible since we'll hide it in some of the rendering steps.
+        object.wasVisible = object.visible
+
+        if object.preprocessingMaterial
+          object.material = object.preprocessingMaterial
 
         else
           object.visible = false
 
-      # Render all lights' shadow color maps.
-      for directionalLight in sceneHelper.directionalLights()
-        @renderer.setClearColor 0xffff00, 1
-        @renderer.setRenderTarget directionalLight.shadow.colorMap
-        @renderer.clear()
-        @renderer.render scene, directionalLight.shadow.camera
+      @renderer.setClearColor 0x000000, 1
+      @renderer.setRenderTarget @preprocessingRenderTarget
+      @renderer.clear()
+      @renderer.render scene, camera.main
 
-      # Render the opaque shadow maps. We need to set the depth material on all opaque meshes and hide the rest.
+      if shadowsEnabled()
+        # Render the color shadow maps. First set the shadow color material on all meshes.
+        scene.traverse (object) =>
+          return unless object.isMesh
+
+          if object.shadowColorMaterial
+            object.material = object.shadowColorMaterial
+            object.visible = object.wasVisible
+
+          else
+            object.visible = false
+
+        # Render all lights' shadow color maps.
+        for directionalLight in sceneHelper.directionalLights()
+          @renderer.setClearColor 0xffff00, 1
+          @renderer.setRenderTarget directionalLight.shadow.colorMap
+          @renderer.clear()
+          @renderer.render scene, directionalLight.shadow.camera
+
+        # Render the opaque shadow maps. We need to set the depth material on all opaque meshes and hide the rest.
+        scene.traverse (object) =>
+          return unless object.isMesh
+
+          if object.customDepthMaterial
+            object.material = object.customDepthMaterial
+            object.visible = object.wasVisible and not object.mainMaterial.transparent
+
+          else
+            object.visible = false
+
+        # Render all lights' opaque shadow maps.
+        for directionalLight in sceneHelper.directionalLights()
+          @renderer.setClearColor 0xffffff, 1
+          @renderer.setRenderTarget directionalLight.shadow.opaqueMap
+          @renderer.clear()
+          @renderer.render scene, directionalLight.shadow.camera
+
+      # Reinstate main materials and object visibility.
       scene.traverse (object) =>
         return unless object.isMesh
 
-        if object.customDepthMaterial
-          object.material = object.customDepthMaterial
-          object.visible = object.wasVisible and not object.mainMaterial.transparent
+        object.visible = true if object.wasVisible
+        object.material = object.mainMaterial if object.mainMaterial
 
-        else
-          object.visible = false
-
-      # Render all lights' opaque shadow maps.
-      for directionalLight in sceneHelper.directionalLights()
-        @renderer.setClearColor 0xffffff, 1
-        @renderer.setRenderTarget directionalLight.shadow.opaqueMap
-        @renderer.clear()
-        @renderer.render scene, directionalLight.shadow.camera
-
-    # Reinstate main materials and object visibility.
-    scene.traverse (object) =>
-      return unless object.isMesh
-
-      object.visible = true if object.wasVisible
-      object.material = object.mainMaterial if object.mainMaterial
-
-    # Render main geometry pass that we use for depth and shadows (and color when not showing the render target).
-    @renderer.shadowMap.enabled = shadowsEnabled()
-    @renderer.shadowMap.needsUpdate = true
+      # Render main geometry pass that we use for depth and shadows (and color when not showing the render target).
+      @renderer.shadowMap.enabled = shadowsEnabled()
+      @renderer.shadowMap.needsUpdate = true
 
     @renderer.setClearColor 0, 0
     @renderer.setRenderTarget null

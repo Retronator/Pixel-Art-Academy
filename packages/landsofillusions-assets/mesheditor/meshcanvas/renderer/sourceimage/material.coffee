@@ -46,7 +46,7 @@ void main()	{
 #include <packing>
 #include <lights_pars_begin>
 
-#include <Artificial.Spectrum.Color.hslToRgb>
+#include <Artificial.Spectrum.Color.hslToRGB>
 
 uniform mat4 modelViewMatrix;
 uniform sampler2D palette;
@@ -58,7 +58,7 @@ void main()	{
   vec2 paletteColor = rampShadeDitherAlpha.xy;
   paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
 
-  #include <LandsOfIllusions.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment>
+  #include <LandsOfIllusions.Engine.Materials.readSourceColorFromPaletteFragment>
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;

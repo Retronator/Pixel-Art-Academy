@@ -16,8 +16,7 @@ vec4 shadowColor;
 vec3 viewDirection = normalize(vViewPosition);
 
 // Note: Unrolling a loop requires specific whitespace formatting.
-#pragma unroll_loop;
-
+#pragma unroll_loop
 for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {
 
   directionalLight = directionalLights[ i ];
