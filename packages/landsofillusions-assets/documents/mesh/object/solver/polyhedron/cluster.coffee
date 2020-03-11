@@ -104,7 +104,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
         @maxPixel.x = Math.max pixel.x, @maxPixel.x
         @maxPixel.y = Math.max pixel.y, @maxPixel.y
 
-    @sizeInPicturePixels =
+    @boundsInPicture =
+      x: @minPixel.x - bounds.x
+      y: @minPixel.y - bounds.y
       width: @maxPixel.x - @minPixel.x + 1
       height: @maxPixel.y - @minPixel.y + 1
 

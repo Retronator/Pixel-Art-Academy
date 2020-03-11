@@ -79,8 +79,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #           compressedIndices: binary object with compressed version of indices, sent to the server
   #           pixelCoordinates: UInt32Array with pixel coordinates of the cluster, not sent to the server
   #           compressedPixelCoordinates: binary object with compressed version of pixel coordinates, sent to the server
-  #         sizeInPicturePixels: the size of the cluster in picture pixels
-  #           width, height
+  #         boundsInPicture: the position and size of the cluster in picture pixels
+  #           x, y, width, height
   # materials: array of shaders used to draw objects
   #   name: what the materials represents
   #   type: ID of the shader

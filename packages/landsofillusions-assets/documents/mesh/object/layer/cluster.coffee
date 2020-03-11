@@ -6,6 +6,9 @@ Pako = require 'pako'
 compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
+_planeNormal = new THREE.Vector3()
+_planePoint = new THREE.Vector3()
+
 class LOI.Assets.Mesh.Object.Layer.Cluster
   @AttachmentTypes:
     Contact: 'contact'
@@ -25,8 +28,11 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
         indices: @_decompressData data.geometry.compressedIndices, Uint32Array
         pixelCoordinates: @_decompressData data.geometry.compressedPixelCoordinates, Float32Array
 
-    for field in ['properties', 'plane', 'material', 'geometry', 'sizeInPicturePixels']
+    for field in ['properties', 'plane', 'material', 'geometry', 'boundsInPicture']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
+
+    @planeHelper = new THREE.Plane
+    @_updatePlaneHelper()
 
   _decompressData: (compressedByteArray, arrayClass) ->
     return unless compressedByteArray
@@ -37,7 +43,7 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
   toPlainObject: ->
     plainObject = {}
 
-    @[field].save plainObject for field in ['properties', 'plane', 'material', 'geometry', 'sizeInPicturePixels']
+    @[field].save plainObject for field in ['properties', 'plane', 'material', 'geometry', 'boundsInPicture']
 
     # Compress geometry.
     plainObject.geometry =
@@ -56,5 +62,14 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
     @_updatedDependency.depend()
 
   contentUpdated: ->
+    @_updatePlaneHelper()
+
     @_updatedDependency.changed()
     @layers.contentUpdated()
+
+  _updatePlaneHelper: ->
+    return unless plane = @plane()
+
+    _planeNormal.copy plane.normal
+    _planePoint.copy plane.point
+    @planeHelper.setFromNormalAndCoplanarPoint _planeNormal, _planePoint

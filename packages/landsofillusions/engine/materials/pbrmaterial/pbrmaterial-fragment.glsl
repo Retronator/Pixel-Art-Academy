@@ -21,10 +21,6 @@ uniform vec3 refractiveIndex;
 uniform vec3 extinctionCoefficient;
 uniform vec3 emission;
 
-// Shading
-uniform bool smoothShading;
-uniform float smoothShadingQuantizationFactor;
-
 // Texture
 #include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 
@@ -55,9 +51,6 @@ void main()	{
 
   // TODO: Calculate the shaded color.
   vec3 shadedColor = sourceColor;
-
-  // Quantize if set for smooth shading.
-  #include <LandsOfIllusions.Engine.Materials.quantizeShadedColorFragment>
 
   // Convert from linear RGB to gamma-compressed RGB.
   vec3 destinationColor = AS_Color_SRGB_getRGBForLinearRGB(shadedColor);

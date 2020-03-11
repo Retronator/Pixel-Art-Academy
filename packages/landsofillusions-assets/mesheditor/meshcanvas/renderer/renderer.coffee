@@ -24,6 +24,21 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @cameraManager = new @constructor.CameraManager @
 
+    @radianceCubeCamera = new THREE.CubeCamera 0.001, 1000, 64
+    @radianceCubeCamera.layers.enable 3
+
+    # Add a debug radiance cube sphere.
+    sceneHelper = @meshCanvas.sceneHelper()
+    scene = sceneHelper.scene()
+
+    radianceDebugSphereMaterial = new THREE.MeshBasicMaterial
+      color: 0xffffff
+      envMap: @radianceCubeCamera.renderTarget.texture
+
+    radianceDebugSphere = new THREE.Mesh new THREE.SphereBufferGeometry(0.5, 32, 32), radianceDebugSphereMaterial
+    radianceDebugSphere.layers.set 4
+    scene.add radianceDebugSphere
+
     @renderSize = new ComputedField =>
       if @meshCanvas.pixelRenderEnabled()
         # We're rendering the main view at the size of the pixel render.
@@ -66,7 +81,53 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @_render()
 
   draw: (appTime) ->
-    return if @reactiveRendering()
+    radianceWasUpdated = false
+    totalUpdatedCount = 0
+
+    if @meshCanvas.pbrEnabled()
+      # We're doing PBR so we should update some of the radiance states. First, set the PBR material on all meshes.
+      scene = @meshCanvas.sceneHelper().scene()
+
+      scene.traverse (object) =>
+        return unless object.isMesh
+
+        # Remember if the object is supposed to be visible since we'll hide it in some of the rendering steps.
+        object.wasVisible = object.visible
+
+        if object.pbrMaterial
+          object.material = object.pbrMaterial
+          # TODO: Remove when CubeCamera supports layers.
+          object.layers.enable 0 if object.layers.mask & 8
+
+        else
+          object.visible = false
+
+      # Update radiance states on all clusters.
+      @renderer.shadowMap.enabled = false
+
+      scene.traverse (object) =>
+        return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
+        return unless radianceState = object.radianceState()
+
+        updatedCount = radianceState.update @radianceCubeCamera, @renderer, scene
+        radianceWasUpdated = true if updatedCount
+
+        totalUpdatedCount += updatedCount
+
+      # TODO: Remove when CubeCamera supports layers.
+      scene.traverse (object) =>
+        return unless object.isMesh
+        object.layers.disable 0 if object.layers.mask & 8
+
+      # Reinstate main materials and object visibility.
+      scene.traverse (object) =>
+        return unless object.isMesh
+
+        object.visible = true if object.wasVisible
+        object.material = object.mainMaterial if object.mainMaterial
+
+    # No need to render if we're rendering reactively and radiance hasn't changed.
+    return if @reactiveRendering() and not radianceWasUpdated
 
     @_render()
 
@@ -79,12 +140,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     # Set up main geometry.
     camera.main.layers.set 0
 
-    if @meshCanvas.pbrEnabled()
-      @renderer.shadowMap.enabled = false
+    pbr = @meshCanvas.pbrEnabled()
 
-      # TODO: Render radiance probes.
-
-    else
+    unless pbr
       shadowsEnabled = @meshCanvas.interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled, @meshCanvas.meshId()
 
       # Render the preprocessing step. First set the preprocessing material on all meshes.
@@ -149,10 +207,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         object.visible = true if object.wasVisible
         object.material = object.mainMaterial if object.mainMaterial
 
-      # Render main geometry pass that we use for depth and shadows (and color when not showing the render target).
+      # Enable/disable updating of shadow map.
       @renderer.shadowMap.enabled = shadowsEnabled()
       @renderer.shadowMap.needsUpdate = true
 
+    # Render main geometry pass that we use for depth and shadows (and color when not showing the pixel render target).
+    camera.main.layers.set 0
     @renderer.setClearColor 0, 0
     @renderer.setRenderTarget null
     @renderer.clear()
@@ -173,6 +233,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     if @meshCanvas.sourceImageEnabled() and @meshCanvas.activePicture()?.bounds()
       @sourceImage.image.material.texturesDepenency.depend()
       uniforms = @sourceImage.image.material.uniforms
+
       if uniforms.map.value and uniforms.normalMap.value
         # Render the source image to the main scene.
         sourceImageScene = @sourceImage.scene.withUpdates()
@@ -185,7 +246,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     # Render debug visuals.
     if @meshCanvas.debugMode()
       camera.main.layers.set 2
+      camera.main.layers.enable 3
       @renderer.render scene, camera.main
+
+      # Render PBR debug visuals.
+      if pbr
+        @renderer.clearDepth()
+        camera.main.layers.set 4
+        @renderer.render scene, camera.main
 
   destroy: ->
     @renderer.dispose()

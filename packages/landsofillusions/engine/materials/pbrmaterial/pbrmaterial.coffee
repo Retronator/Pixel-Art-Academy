@@ -27,11 +27,6 @@ class LOI.Engine.Materials.PBRMaterial extends LOI.Engine.Materials.Material
         emission:
           value: options.emission
 
-        # Shading
-        smoothShading:
-          value: options.smoothShading
-        smoothShadingQuantizationFactor:
-          value: options.smoothShadingQuantizationFactor
       ,
         # Texture
         LOI.Engine.Materials.RampMaterial.getTextureUniforms options

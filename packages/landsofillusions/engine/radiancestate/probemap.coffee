@@ -1,57 +1,104 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.RadianceState.ProbeMap
-  constructor: (@options) ->
-    width = @options.size.width
-    height = @options.size.height
+  constructor: (@cluster) ->
+    boundsInPicture = @cluster.boundsInPicture()
+    @width = boundsInPicture.width
+    @height = boundsInPicture.height
 
     # Map which pixels are present in the cluster.
-    @pixelMap = new Int32Array width * height
+    @distanceMap = new Int32Array @width * @height
 
-    # Go over all pixel coordinate entries and
-    pixelCoordinatesArray = @options.cluster.geometry().pixelCoordinates
+    # Go over all pixels in the cluster picture.
+    pictureCluster = @cluster.layer.getPictureCluster @cluster.id
+    clusterIdMap = pictureCluster.picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.ClusterId
 
-    for pixelCoordinatesOffset in [0...pixelCoordinatesArray.length] by 2
-      x = pixelCoordinatesArray[pixelCoordinatesOffset]
-      y = pixelCoordinatesArray[pixelCoordinatesOffset + 1]
+    maxBorderDistance = Math.ceil(@width / 2) + Math.ceil(@height / 2) - 2
 
-      # See if we've already added this pixel.
-      pixelIndex = @_getPixelIndex x, y
-      continue if @pixelMap[pixelIndex]
-
-      # Calculate distance from edges.
-      horizontalDistance = Math.min x, width - x
-      verticalDistance = Math.min y, height - y
-      edgeDistance = Math.min horizontalDistance, verticalDistance
-
-      # Start with negative distance so that the innermost pixels will get calculated firts.
-      @pixelMap[pixelIndex] = -edgeDistance - 1
+    for x in [0...boundsInPicture.width]
+      for y in [0...boundsInPicture.height]
+        continue unless @cluster.id is clusterIdMap.getPixel boundsInPicture.x + x, boundsInPicture.y + y
+        pixelIndex = @_getPixelIndex x, y
+  
+        # Calculate distance from edges.
+        horizontalDistance = Math.min x, @width - x - 1
+        verticalDistance = Math.min y, @height - y - 1
+        edgeDistance = horizontalDistance + verticalDistance
+  
+        # Start with negative distance so that the innermost pixels will get calculated firts.
+        @distanceMap[pixelIndex] = -maxBorderDistance - 1 + edgeDistance
 
     # Find which probe should be calculated first.
-    nextPixelIndex = @findLowestPixelIndex()
+    nextPixelIndex = @_findPixelIndexAtLargestDistance()
 
-    dataArray = new Float32Array width * height
+    dataArray = new Float32Array @width * @height
     dataArray.fill nextPixelIndex
 
-    @texture = new THREE.DataTexture dataArray, width, height, THREE.AlphaFormat, THREE.FloatType
+    @texture = new THREE.DataTexture dataArray, @width, @height, THREE.AlphaFormat, THREE.FloatType
 
-  findLowestPixelIndex: ->
-    minIndex = null
-    minValue = Number.POSITIVE_INFINITY
+  _findPixelIndexAtLargestDistance: ->
+    maxIndex = null
+    maxValue = Number.NEGATIVE_INFINITY
 
     # Go over all pixels that are not empty.
-    for value, index in @pixelMap when value
-      if value < minValue
-        minValue = value
-        minIndex = index
+    for value, index in @distanceMap when value
+      if value > maxValue
+        maxValue = value
+        maxIndex = index
 
-    minIndex
+    # If the largest distance is 1, we have no pixel left that hasn't been updated.
+    return if maxValue is 1
+
+    maxIndex
+    
+  getNewUpdatePixel: ->
+    # Find the larges pixel index.
+    newPixelIndex = @_findPixelIndexAtLargestDistance()
+    return unless newPixelIndex?
+
+    newPixelCoordinates = @_getPixelCoordinates newPixelIndex
+    
+    # Update proximity to reflect this pixel having the radiance state calculated.
+    for x in [0...@width]
+      for y in [0...@height]
+        pixelIndex = @_getPixelIndex x, y
+        
+        # See if this is a valid pixel.
+        if currentDistance = @distanceMap[pixelIndex]
+          # Map to the new pixel if the distance to it is smaller than current representation.
+          # Note that negative distances represent initial distance and should always be overwritten.
+          distanceFromNewPixel = Math.abs(x - newPixelCoordinates.x) + Math.abs(y - newPixelCoordinates.y)
+
+          if currentDistance < 0 or distanceFromNewPixel < currentDistance
+            # Update distance map.
+            @distanceMap[pixelIndex] = distanceFromNewPixel + 1
+
+            # Update probe index.
+            @texture.image.data[pixelIndex] = newPixelIndex
+
+    # Return pixel coordinates.
+    newPixelCoordinates
+
+  debugOutput: ->
+    for y in [0...@height]
+      row = ''
+
+      for x in [0...@width]
+        value = Math.abs @distanceMap[@_getPixelIndex(x, y)]
+
+        row += switch
+          when value is 0 then '.'
+          when value is 1 then ' '
+          when value > 9 then '#'
+          else value
+
+      console.log row
 
   _getPixelIndex: (x, y) ->
-    x + y * @options.size.width
+    x + y * @width
 
   _getPixelCoordinates: (index) ->
-    x = index % @options.size.width
-    y = Math.floor index / @options.size.height
+    x = index % @width
+    y = Math.floor index / @width
 
     {x, y}

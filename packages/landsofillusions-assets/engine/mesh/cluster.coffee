@@ -84,6 +84,46 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     clusterMaterial = @data.material()
     material = null
 
+    # Normal color mode.
+    if clusterMaterial.materialIndex?
+      # Cluster has a material assigned. Add the material properties to material options.
+      meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
+
+    else if clusterMaterial.paletteColor
+      # Cluster has a direct palette color set.
+      meshMaterial = clusterMaterial.paletteColor
+
+    # Create the PBR material as soon as PBR is enabled. We need it to render radiance probes.
+    if pbr
+      # Add extra data to options.
+      boundsInPicture = @data.boundsInPicture() or {width: 1, height: 1}
+
+      # Create material properties.
+      pbrMaterialOptions =
+        clusterSize: new THREE.Vector2 boundsInPicture.width, boundsInPicture.height
+        radianceStateField: @radianceState
+        refractiveIndex: new THREE.Vector3 1, 1, 1
+        extinctionCoefficient: new THREE.Vector3
+        emission: new THREE.Vector3
+
+      if n = meshMaterial.refractiveIndex
+        pbrMaterialOptions.refractiveIndex.set n.r, n.g, n.b
+
+      if k = meshMaterial.extinctionCoefficient
+        pbrMaterialOptions.extinctionCoefficient.set k.r, k.g, k.b
+
+      if not (n or k) and shades and meshMaterial.shade?
+        # Create an ad-hoc PBR material.
+        pbrMaterialOptions.refractiveIndex.set 1.5, 1.5, 1.5
+
+        color = shades[meshMaterial.shade]
+        pbrMaterialOptions.extinctionCoefficient.set 1 - color.r, 1 - color.g, 1 - color.b
+
+      if e = meshMaterial.emission
+        pbrMaterialOptions.emission.set e.r, e.g, e.b
+
+      pbrMaterial = new LOI.Engine.Materials.PBRMaterial pbrMaterialOptions
+
     if visualizeNormals
       # Visualized normals mode.
       if clusterMaterial.normal
@@ -111,15 +151,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         color: THREE.Color.fromObject directColor
 
     else
-      # Normal color mode.
-      if clusterMaterial.materialIndex?
-        # Cluster has a material assigned. Add the material properties to material options.
-        meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
-
-      else if clusterMaterial.paletteColor
-        # Cluster has a direct palette color set. Add palette color's properties (ramp, shade) to material options.
-        meshMaterial = clusterMaterial.paletteColor
-
       # PBR has its own material handling.
       if pbr
         shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
@@ -137,37 +168,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
           material = new THREE.MeshBasicMaterial _.extend materialOptions, {color}
 
         else
-          # Add extra data to options.
-          sizeInPicturePixels = @data.sizeInPicturePixels() or {width: 1, height: 1}
-
-          _.extend materialOptions,
-            smoothShading: options.smoothShading?()
-            clusterSize: new THREE.Vector2 sizeInPicturePixels.width, sizeInPicturePixels.height
-            radianceStateField: @radianceState
-
-          # Create material properties.
-          _.extend materialOptions,
-            refractiveIndex: new THREE.Vector3 1, 1, 1
-            extinctionCoefficient: new THREE.Vector3
-            emission: new THREE.Vector3
-
-          if n = meshMaterial.refractiveIndex
-            materialOptions.refractiveIndex.set n.r, n.g, n.b
-
-          if k = meshMaterial.extinctionCoefficient
-            materialOptions.extinctionCoefficient.set k.r, k.g, k.b
-
-          if not (n or k) and shades and meshMaterial.shade?
-            # Create an ad-hoc PBR material.
-            materialOptions.refractiveIndex.set 1.5, 1.5, 1.5
-
-            color = shades[meshMaterial.shade]
-            materialOptions.extinctionCoefficient.set 1 - color.r, 1 - color.g, 1 - color.b
-
-          if e = meshMaterial.emission
-            materialOptions.emission.set e.r, e.g, e.b
-
-          material = new LOI.Engine.Materials.PBRMaterial materialOptions
+          material = pbrMaterial
 
       # See if we have correct properties for a ramp material.
       else if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
@@ -207,6 +208,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       depth: depthMaterial
       shadowColor: shadowColorMaterial
       preprocessing: preprocessingMaterial
+      pbr: pbrMaterial
 
     @_materials
 
@@ -222,10 +224,11 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     mesh.shadowColorMaterial = materials.shadowColor
     mesh.customDepthMaterial = materials.depth
     mesh.preprocessingMaterial = materials.preprocessing
+    mesh.pbrMaterial = materials.pbr
 
     mesh.castShadow = true
     mesh.receiveShadow = true
-    mesh.layers.set 2 if @layer.object.mesh.options.debug?()
+    mesh.layers.set 3 if @layer.object.mesh.options.debug?()
 
     mesh
 
@@ -233,10 +236,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     # Clean any previous radiance state.
     @_radianceState?.destroy()
 
-    if size = @data.sizeInPicturePixels()
-      @_radianceState = new LOI.Engine.RadianceState
-        size: size
-        cluster: @data
+    if @data.boundsInPicture()
+      @_radianceState = new LOI.Engine.RadianceState @data
 
     else
       @_radianceState = null
