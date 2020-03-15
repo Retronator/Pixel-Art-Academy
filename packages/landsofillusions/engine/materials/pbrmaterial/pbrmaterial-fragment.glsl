@@ -1,6 +1,6 @@
 // LandsOfIllusions.Engine.Materials.PBRMaterial.fragment
 
-#include <common>
+#include <THREE>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
 #include <normalmap_pars_fragment>
@@ -28,17 +28,6 @@ varying vec3 vNormal;
 varying vec3 vViewPosition;
 varying vec2 vPixelCoordinates;
 
-float AS_Color_SRGB_getGammaCompressedValueForLinearValue(float value) {
-  if (value <= 0.0031308) return 12.92 * value;
-  return 1.055 * pow(value, 0.4166666667) - 0.055;
-}
-
-vec3 AS_Color_SRGB_getRGBForLinearRGB(vec3 value) {
-  return vec3(AS_Color_SRGB_getGammaCompressedValueForLinearValue(value.x),
-  AS_Color_SRGB_getGammaCompressedValueForLinearValue(value.y),
-  AS_Color_SRGB_getGammaCompressedValueForLinearValue(value.z));
-}
-
 void main()	{
   // Prepare normal.
   #include <normal_fragment_begin>
@@ -51,10 +40,11 @@ void main()	{
 
   // TODO: Calculate the shaded color.
   vec3 shadedColor = sourceColor;
-
-  // Convert from linear RGB to gamma-compressed RGB.
-  vec3 destinationColor = AS_Color_SRGB_getRGBForLinearRGB(shadedColor);
+  vec3 destinationColor = shadedColor;
 
   // Color the pixel with the best match from the palette.
-  gl_FragColor = vec4(destinationColor, 1);
+  gl_FragColor = vec4(saturate(destinationColor), 1);
+
+  #include <tonemapping_fragment>
+  #include <encodings_fragment>
 }

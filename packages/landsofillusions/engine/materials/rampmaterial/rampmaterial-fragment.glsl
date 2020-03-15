@@ -1,5 +1,5 @@
 // LandsOfIllusions.Engine.Materials.RampMaterial.fragment
-#include <common>
+#include <THREE>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
 #include <normalmap_pars_fragment>

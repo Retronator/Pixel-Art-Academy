@@ -176,7 +176,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     canvas = $meshCanvas.find('.canvas')[0]
     @canvas canvas
-    @context canvas.getContext 'webgl'
+    @context canvas.getContext 'webgl',
+      alpha: true
+      powerPreference: 'high-performance'
 
     @autorun (computation) =>
       # Depend on editor view size.

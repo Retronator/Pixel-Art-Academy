@@ -25,7 +25,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage.Material extends THR
         THREE.UniformsLib.lights
 
       vertexShader: """
-#include <common>
+#include <THREE>
 #include <uv_pars_vertex>
 
 void main()	{
@@ -39,7 +39,7 @@ void main()	{
 """
 
       fragmentShader: """
-#include <common>
+#include <THREE>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
 #include <normalmap_pars_fragment>

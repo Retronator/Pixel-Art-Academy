@@ -336,6 +336,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/smoothshadingenabled');
   api.addFile('mesheditor/actions/resetcamera');
   api.addFile('mesheditor/actions/pbrenabled');
+  api.addFile('mesheditor/actions/exposure');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
@@ -345,6 +346,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/landmarks');
   api.addFile('mesheditor/helpers/smoothshadingenabled');
   api.addFile('mesheditor/helpers/pbrenabled');
+  api.addFile('mesheditor/helpers/exposurevalue');
 
   api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');
@@ -371,6 +373,8 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/meshcanvas/renderer..');
   api.addFile('mesheditor/meshcanvas/renderer/cameramanager');
   api.addFile('mesheditor/meshcanvas/renderer/pixelrender');
+  api.addFile('mesheditor/meshcanvas/renderer/debugcluster');
+
   api.addFile('mesheditor/meshcanvas/renderer/sourceimage..');
   api.addFile('mesheditor/meshcanvas/renderer/sourceimage/material');
 

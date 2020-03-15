@@ -1,6 +1,6 @@
 // LandsOfIllusions.Engine.Materials.PBRMaterial.vertex
 
-#include <common>
+#include <THREE>
 #include <uv_pars_vertex>
 
 attribute vec2 pixelCoordinates;
@@ -22,7 +22,6 @@ void main()	{
 
   #include <begin_vertex>
   #include <project_vertex>
-  #include <worldpos_vertex>
 
   #include <LandsOfIllusions.Engine.Materials.mapTextureVertex>
 

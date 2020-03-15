@@ -6,13 +6,33 @@ Pako = require 'pako'
 compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
-_planeNormal = new THREE.Vector3()
-_planePoint = new THREE.Vector3()
-
 class LOI.Assets.Mesh.Object.Layer.Cluster
   @AttachmentTypes:
     Contact: 'contact'
     Fixed: 'fixed'
+
+  @createPlaneBasis: (normal, rightHanded, result) ->
+    result ?= new THREE.Matrix4
+
+    # Create the base of plane space.
+    plane = new THREE.Plane normal, 0
+
+    unitX = if Math.abs(normal.x) is 1 then new THREE.Vector3 0, 0, 1 else new THREE.Vector3 1, 0, 0
+    baseX = new THREE.Vector3
+    plane.projectPoint unitX, baseX
+    baseX.normalize()
+
+    baseY = new THREE.Vector3().crossVectors normal, baseX
+    baseY.multiplyScalar(-1) if rightHanded
+
+    result.makeBasis baseX, baseY, normal
+
+    result
+
+  @createPlaneWorldMatrix: (plane, rightHanded, result) ->
+    result ?= new THREE.Matrix4
+    @createPlaneBasis(plane.normal, rightHanded, result).setPosition plane.point
+    result
 
   constructor: (@layers, id, data) ->
     @layer = @layers.parent
@@ -32,7 +52,8 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
 
     @planeHelper = new THREE.Plane
-    @_updatePlaneHelper()
+    @planeBasis = new THREE.Matrix4
+    @_updatePlaneHelpers()
 
   _decompressData: (compressedByteArray, arrayClass) ->
     return unless compressedByteArray
@@ -62,14 +83,16 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
     @_updatedDependency.depend()
 
   contentUpdated: ->
-    @_updatePlaneHelper()
+    @_updatePlaneHelpers()
 
     @_updatedDependency.changed()
     @layers.contentUpdated()
 
-  _updatePlaneHelper: ->
+  _updatePlaneHelpers: ->
     return unless plane = @plane()
 
-    _planeNormal.copy plane.normal
-    _planePoint.copy plane.point
-    @planeHelper.setFromNormalAndCoplanarPoint _planeNormal, _planePoint
+    planeNormal = new THREE.Vector3().copy plane.normal
+    planePoint = new THREE.Vector3().copy plane.point
+    @planeHelper.setFromNormalAndCoplanarPoint planeNormal, planePoint
+
+    @constructor.createPlaneBasis planeNormal, false, @planeBasis

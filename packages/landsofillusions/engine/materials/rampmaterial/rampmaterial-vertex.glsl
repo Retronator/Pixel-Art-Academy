@@ -1,5 +1,5 @@
 // LandsOfIllusions.Engine.Materials.RampMaterial.vertex
-#include <common>
+#include <THREE>
 #include <shadowmap_pars_vertex>
 #include <uv_pars_vertex>
 

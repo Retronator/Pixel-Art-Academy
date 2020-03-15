@@ -36,3 +36,10 @@ class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
 
     object = cluster.layer.object
     @setObjectIndex object.index
+
+  getSceneCluster: ->
+    meshId = @cluster().layer.object.mesh._id
+    sceneHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, meshId
+    scene = sceneHelper.scene()
+
+    scene.getObjectByProperty 'data', @cluster()

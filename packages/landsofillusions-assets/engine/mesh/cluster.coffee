@@ -228,7 +228,15 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     mesh.castShadow = true
     mesh.receiveShadow = true
-    mesh.layers.set 3 if @layer.object.mesh.options.debug?()
+
+    debug = @layer.object.mesh.options.debug?()
+    mesh.layers.set 3 if debug
+
+    # Do not draw unselected clusters in debug mode. Note that we still want
+    # to have them in the scene so they can be rendered in radiance probes.
+    currentCluster = @layer.object.mesh.options.currentCluster?()
+
+    mesh.visible = false if debug and currentCluster and currentCluster isnt @data
 
     mesh
 

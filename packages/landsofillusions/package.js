@@ -87,6 +87,20 @@ Package.onUse(function(api) {
 
   api.addClientFile('engine/radiancestate..');
   api.addClientFile('engine/radiancestate/probemap');
+  api.addGlsl('engine/radiancestate/common-parameters-fragment');
+
+  api.addClientFile('engine/radiancestate/probe..');
+  api.addMaterial('engine/radiancestate/probe/octahedronmapmaterial..');
+
+  api.addClientFile('engine/radiancestate/radiancematerial..');
+  api.addGlsl('engine/radiancestate/radiancematerial/radiancematerial-vertex');
+  api.addGlsl('engine/radiancestate/radiancematerial/radiancematerial-parameters-fragment');
+
+  api.addClientFile('engine/radiancestate/radiancematerial/in..');
+  api.addGlsl('engine/radiancestate/radiancematerial/in/in-fragment');
+
+  api.addClientFile('engine/radiancestate/radiancematerial/out..');
+  api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
 
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/material');

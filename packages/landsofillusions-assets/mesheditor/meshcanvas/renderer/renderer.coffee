@@ -9,7 +9,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer = new THREE.WebGLRenderer
       canvas: @meshCanvas.canvas()
       context: @meshCanvas.context()
-      alpha: true
 
     @renderer.shadowMap.autoUpdate = false
     @renderer.shadowMap.type = THREE.BasicShadowMap
@@ -21,11 +20,13 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     
     @pixelRender = new @constructor.PixelRender @
     @sourceImage = new @constructor.SourceImage @
+    @debugCluster = new @constructor.DebugCluster @
 
     @cameraManager = new @constructor.CameraManager @
 
-    @radianceCubeCamera = new THREE.CubeCamera 0.001, 1000, 64
-    @radianceCubeCamera.layers.enable 3
+    # Initialize radiance state rendering and add enable to render hidden clusters during radiance update.
+    LOI.Engine.RadianceState.initialize()
+    LOI.Engine.RadianceState.Probe.cubeCamera.layers.enable 3
 
     # Add a debug radiance cube sphere.
     sceneHelper = @meshCanvas.sceneHelper()
@@ -33,11 +34,22 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     radianceDebugSphereMaterial = new THREE.MeshBasicMaterial
       color: 0xffffff
-      envMap: @radianceCubeCamera.renderTarget.texture
+      envMap: LOI.Engine.RadianceState.Probe.cubeCamera.renderTarget.texture
 
     radianceDebugSphere = new THREE.Mesh new THREE.SphereBufferGeometry(0.5, 32, 32), radianceDebugSphereMaterial
     radianceDebugSphere.layers.set 4
     scene.add radianceDebugSphere
+
+    radianceDebugProbeOctahedronMapMaterial = new THREE.MeshBasicMaterial
+      color: 0xffffff
+      map: LOI.Engine.RadianceState.Probe.octahedronMap
+      side: THREE.DoubleSide
+
+    radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(), radianceDebugProbeOctahedronMapMaterial
+    radianceDebugProbeOctahedronMap.position.x = 1
+    radianceDebugProbeOctahedronMap.rotation.x = Math.PI
+    radianceDebugProbeOctahedronMap.layers.set 4
+    scene.add radianceDebugProbeOctahedronMap
 
     @renderSize = new ComputedField =>
       if @meshCanvas.pixelRenderEnabled()
@@ -91,10 +103,11 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       scene.traverse (object) =>
         return unless object.isMesh
 
-        # Remember if the object is supposed to be visible since we'll hide it in some of the rendering steps.
+        # Remember if the object is supposed to be visible since we'll change it depending if it's a PBR mesh or not.
         object.wasVisible = object.visible
 
         if object.pbrMaterial
+          object.visible = true
           object.material = object.pbrMaterial
           # TODO: Remove when CubeCamera supports layers.
           object.layers.enable 0 if object.layers.mask & 8
@@ -103,13 +116,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
           object.visible = false
 
       # Update radiance states on all clusters.
+      @_setLinearRendering()
       @renderer.shadowMap.enabled = false
 
       scene.traverse (object) =>
         return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
         return unless radianceState = object.radianceState()
 
-        updatedCount = radianceState.update @radianceCubeCamera, @renderer, scene
+        updatedCount = radianceState.update @renderer, scene
         radianceWasUpdated = true if updatedCount
 
         totalUpdatedCount += updatedCount
@@ -131,6 +145,17 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @_render()
 
+  _setLinearRendering: ->
+    @renderer.outputEncoding = THREE.LinearEncoding
+    @renderer.toneMapping = THREE.NoToneMapping
+
+  _setToneMappedRendering: ->
+    @renderer.outputEncoding = THREE.sRGBEncoding
+    @renderer.toneMapping = THREE.LinearToneMapping
+
+    exposureValue = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ExposureValue
+    @renderer.toneMappingExposure = exposureValue.exposure()
+
   _render: ->
     sceneHelper = @meshCanvas.sceneHelper()
     scene = sceneHelper.scene.withUpdates()
@@ -142,8 +167,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     pbr = @meshCanvas.pbrEnabled()
 
-    unless pbr
-      shadowsEnabled = @meshCanvas.interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled, @meshCanvas.meshId()
+    if pbr
+      @_setToneMappedRendering()
+
+    else
+      @_setLinearRendering()
+      shadowsEnabled = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled
 
       # Render the preprocessing step. First set the preprocessing material on all meshes.
       scene.traverse (object) =>
@@ -251,6 +280,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
       # Render PBR debug visuals.
       if pbr
+        debugClusterScene = @debugCluster.scene.withUpdates()
+        @renderer.render debugClusterScene, camera.pixelRender
+
         @renderer.clearDepth()
         camera.main.layers.set 4
         @renderer.render scene, camera.main

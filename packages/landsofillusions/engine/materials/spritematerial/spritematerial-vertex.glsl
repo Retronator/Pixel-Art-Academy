@@ -1,5 +1,5 @@
 // LandsOfIllusions.Engine.Materials.SpriteMaterial.fragment
-#include <common>
+#include <THREE>
 #include <uv_pars_vertex>
 #include <shadowmap_pars_vertex>
 

@@ -23,7 +23,7 @@ void main()	{
 """
 
       fragmentShader: """
-#include <common>
+#include <THREE>
 #include <packing>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>

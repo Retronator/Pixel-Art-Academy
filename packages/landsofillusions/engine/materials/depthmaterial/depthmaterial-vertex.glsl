@@ -1,5 +1,5 @@
 // LandsOfIllusions.Engine.Materials.DepthMaterial.vertex
-#include <common>
+#include <THREE>
 #include <uv_pars_vertex>
 
 #ifdef USE_MAP
