@@ -151,6 +151,6 @@ getExtraPointIndex = (voidPointIndex, pixelPointIndex, extraPoints, cluster) ->
     cluster.points.push
       type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Extra
       vertex: new THREE.Vector3().subVectors(pixelPoint.vertex, voidPoint.vertex).multiplyScalar(0.5).add voidPoint.vertex
-      pixel: pixelPoint
+      pixel: pixelPoint.pixel
 
   extraPoints[smallerIndex][biggerIndex]

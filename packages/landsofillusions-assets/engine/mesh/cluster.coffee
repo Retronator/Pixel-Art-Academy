@@ -101,26 +101,9 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       # Create material properties.
       pbrMaterialOptions =
         clusterSize: new THREE.Vector2 boundsInPicture.width, boundsInPicture.height
+        clusterPlaneWorldMatrix: @data.planeWorldMatrix
+        clusterPlaneWorldMatrixInverse: @data.planeWorldMatrixInverse
         radianceStateField: @radianceState
-        refractiveIndex: new THREE.Vector3 1, 1, 1
-        extinctionCoefficient: new THREE.Vector3
-        emission: new THREE.Vector3
-
-      if n = meshMaterial.refractiveIndex
-        pbrMaterialOptions.refractiveIndex.set n.r, n.g, n.b
-
-      if k = meshMaterial.extinctionCoefficient
-        pbrMaterialOptions.extinctionCoefficient.set k.r, k.g, k.b
-
-      if not (n or k) and shades and meshMaterial.shade?
-        # Create an ad-hoc PBR material.
-        pbrMaterialOptions.refractiveIndex.set 1.5, 1.5, 1.5
-
-        color = shades[meshMaterial.shade]
-        pbrMaterialOptions.extinctionCoefficient.set 1 - color.r, 1 - color.g, 1 - color.b
-
-      if e = meshMaterial.emission
-        pbrMaterialOptions.emission.set e.r, e.g, e.b
 
       pbrMaterial = new LOI.Engine.Materials.PBRMaterial pbrMaterialOptions
 
@@ -245,7 +228,46 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     @_radianceState?.destroy()
 
     if @data.boundsInPicture()
-      @_radianceState = new LOI.Engine.RadianceState @data
+      meshData = @data.layer.object.mesh
+      return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+
+      # Determine the color.
+      clusterMaterial = @data.material()
+
+      # Normal color mode.
+      if clusterMaterial.materialIndex?
+        # Cluster has a material assigned. Add the material properties to material options.
+        meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
+
+      else if clusterMaterial.paletteColor
+        # Cluster has a direct palette color set.
+        meshMaterial = clusterMaterial.paletteColor
+
+      shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
+
+      # Generate material properties.
+      materialProperties =
+        refractiveIndex: new THREE.Vector3 1, 1, 1
+        extinctionCoefficient: new THREE.Vector3
+        emission: new THREE.Vector3
+
+      if n = meshMaterial.refractiveIndex
+        materialProperties.refractiveIndex.set n.r, n.g, n.b
+
+      if k = meshMaterial.extinctionCoefficient
+        materialProperties.extinctionCoefficient.set k.r, k.g, k.b
+
+      if not (n or k) and shades and meshMaterial.shade?
+        # Create an ad-hoc PBR material.
+        materialProperties.refractiveIndex.set 1.5, 1.5, 1.5
+
+        color = shades[meshMaterial.shade]
+        materialProperties.extinctionCoefficient.set 1 - color.r, 1 - color.g, 1 - color.b
+
+      if e = meshMaterial.emission
+        materialProperties.emission.set e.r, e.g, e.b
+
+      @_radianceState = new LOI.Engine.RadianceState @data, materialProperties
 
     else
       @_radianceState = null

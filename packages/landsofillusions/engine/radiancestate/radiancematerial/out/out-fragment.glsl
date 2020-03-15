@@ -1,6 +1,13 @@
 // LandsOfIllusions.Engine.RadianceState.RadianceMaterial.Out.fragment
 #include <LandsOfIllusions.Engine.RadianceState.RadianceMaterial.paremetersFragment>
 
+#include <Artificial.Reality.Optics.FresnelEquations>
+
+// Material information
+uniform vec3 refractiveIndex;
+uniform vec3 extinctionCoefficient;
+uniform vec3 emission;
+
 void main() {
   // Sample across the whole hemisphere.
   const float sampleLevel = 0.0;
@@ -27,6 +34,13 @@ void main() {
   }
 
   vec3 outputRadiance = irradiance / hemisphereSolidAngle;
+
+  // Add emmited light.
+  vec3 outDirection = octahedronMapToDirection(vUv);
+  float angleOfIncidence = acos(dot(normal, outDirection));
+
+  vec3 emmisivity = FresnelEquations_getAbsorptance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
+  outputRadiance += emission * emmisivity;
 
   gl_FragColor = vec4(outputRadiance, 1);
 }

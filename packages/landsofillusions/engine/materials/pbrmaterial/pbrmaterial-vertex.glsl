@@ -1,29 +1,24 @@
 // LandsOfIllusions.Engine.Materials.PBRMaterial.vertex
-
 #include <THREE>
 #include <uv_pars_vertex>
 
 attribute vec2 pixelCoordinates;
 
-varying vec3 vNormal;
 varying vec2 vPixelCoordinates;
 
 #ifdef USE_MAP
-uniform mat3 textureMapping;
+  uniform mat3 textureMapping;
 #endif
 
-varying vec3 vViewPosition;
+varying vec3 vFragmentPositionInWorldSpace;
 
 void main()	{
-  #include <beginnormal_vertex>
-  #include <defaultnormal_vertex>
-  vNormal = normalize(transformedNormal);
-  vPixelCoordinates = pixelCoordinates;
-
   #include <begin_vertex>
   #include <project_vertex>
 
-  #include <LandsOfIllusions.Engine.Materials.mapTextureVertex>
+  vFragmentPositionInWorldSpace = (modelMatrix * vec4(position, 1.0)).xyz;
 
-  vViewPosition = -mvPosition.xyz;
+  vPixelCoordinates = pixelCoordinates;
+
+  #include <LandsOfIllusions.Engine.Materials.mapTextureVertex>
 }

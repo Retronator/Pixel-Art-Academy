@@ -1,4 +1,5 @@
 // LandsOfIllusions.Engine.RadianceState.Probe.OctahedronMapMaterial.fragment
+precision highp float;
 #include <LandsOfIllusions.Engine.RadianceState.commonParametersFragment>
 
 uniform samplerCube probeCube;

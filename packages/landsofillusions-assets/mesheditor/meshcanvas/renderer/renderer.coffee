@@ -255,9 +255,13 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @renderer.render scene, camera.renderTarget
 
       # Render the low-res picture to the main scene.
+      @_setLinearRendering()
       pixelRenderScene = @pixelRender.scene.withUpdates()
       @renderer.setRenderTarget null
       @renderer.render pixelRenderScene, camera.pixelRender
+
+    else
+      @_setLinearRendering()
 
     if @meshCanvas.sourceImageEnabled() and @meshCanvas.activePicture()?.bounds()
       @sourceImage.image.material.texturesDepenency.depend()
@@ -280,6 +284,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
       # Render PBR debug visuals.
       if pbr
+        @_setToneMappedRendering()
         debugClusterScene = @debugCluster.scene.withUpdates()
         @renderer.render debugClusterScene, camera.pixelRender
 

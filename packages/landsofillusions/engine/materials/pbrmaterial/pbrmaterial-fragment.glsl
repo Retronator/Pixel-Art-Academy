@@ -1,12 +1,9 @@
 // LandsOfIllusions.Engine.Materials.PBRMaterial.fragment
-
 #include <THREE>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
 #include <normalmap_pars_fragment>
 #include <packing>
-
-#include <Artificial.Reality.Optics.FresnelEquations>
 
 #include <LandsOfIllusions.Engine.Materials.ditherParametersFragment>
 
@@ -15,35 +12,38 @@ uniform vec2 renderSize;
 
 // Cluster information
 uniform vec2 clusterSize;
-
-// Material information
-uniform vec3 refractiveIndex;
-uniform vec3 extinctionCoefficient;
-uniform vec3 emission;
+uniform mat4 clusterPlaneWorldMatrix;
+uniform mat4 clusterPlaneWorldMatrixInverse;
 
 // Texture
 #include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 
-varying vec3 vNormal;
-varying vec3 vViewPosition;
+// Radiance state
+#include <LandsOfIllusions.Engine.RadianceState.commonParametersFragment>
+uniform sampler2D radianceAtlasIn;
+uniform sampler2D radianceAtlasOut;
+uniform sampler2D probeMap;
+
 varying vec2 vPixelCoordinates;
 
+varying vec3 vFragmentPositionInWorldSpace;
+
 void main()	{
-  // Prepare normal.
-  #include <normal_fragment_begin>
+  // Find which radiance probe to use by sampling the probe map at pixel coordinates.
+  vec2 pixelCoordinates = floor(vPixelCoordinates + 0.5);
+  float probeIndex = texture2D(probeMap, pixelCoordinates / clusterSize).a;
+  vec2 probeCoordinates = vec2(
+    mod(probeIndex, clusterSize.x),
+    floor(probeIndex / clusterSize.x)
+  );
 
-  vec3 viewDirection = normalize(vViewPosition);
-  float angleOfIncidence = acos(dot(normal, viewDirection));
+  vec3 fragmentToViewDirectionInWorldSpace = normalize(cameraPosition - vFragmentPositionInWorldSpace);
+  vec3 fragmentToViewDirectionInClusterSpace = transformDirection(fragmentToViewDirectionInWorldSpace, clusterPlaneWorldMatrixInverse);
 
-  vec3 emmisivity = FresnelEquations_getAbsorptance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
-  vec3 sourceColor = emission * emmisivity;
-
-  // TODO: Calculate the shaded color.
-  vec3 shadedColor = sourceColor;
-  vec3 destinationColor = shadedColor;
+  vec3 radiance = sampleRadiance(radianceAtlasOut, clusterSize, probeCoordinates, fragmentToViewDirectionInClusterSpace);
 
   // Color the pixel with the best match from the palette.
-  gl_FragColor = vec4(saturate(destinationColor), 1);
+  gl_FragColor = vec4(radiance, 1);
 
   #include <tonemapping_fragment>
   #include <encodings_fragment>

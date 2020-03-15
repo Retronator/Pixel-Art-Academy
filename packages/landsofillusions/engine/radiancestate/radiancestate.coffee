@@ -23,7 +23,7 @@ class LOI.Engine.RadianceState
     @radianceAtlasScene = new THREE.Scene()
     @radianceAtlasScene.add @radianceAtlasQuad
 
-  @updateRadianceAtlas: (renderer, pixelCoordinates, radianceAtlas, radianceAtlasCamera, clear) ->
+  @updateRadianceAtlas: (materialProperties, renderer, pixelCoordinates, radianceAtlas, radianceAtlasCamera, clear) ->
     # Update probe map.
     @Probe.update renderer
 
@@ -48,10 +48,13 @@ class LOI.Engine.RadianceState
     renderer.setRenderTarget radianceAtlas.out
     renderer.clearColor() if clear
 
+    # Copy cluster material properties to shader uniforms.
+    @radianceMaterialOut.uniforms[property].value.copy value for property, value of materialProperties
+
     @radianceAtlasQuad.material = @radianceMaterialOut
     renderer.render @radianceAtlasScene, radianceAtlasCamera
 
-  constructor: (@cluster) ->
+  constructor: (@cluster, @materialProperties) ->
     boundsInPicture = @cluster.boundsInPicture()
     @width = boundsInPicture.width
     @height = boundsInPicture.height
@@ -93,7 +96,7 @@ class LOI.Engine.RadianceState
 
   update: (renderer, scene) ->
     # Calculate how many probes to update.
-    updateCount = Math.floor @textureSize.width * @textureSize.height / 100
+    updateCount = Math.max 1, Math.floor @textureSize.width * @textureSize.height / 10000
     updated = 0
 
     probeCubeCamera = @constructor.Probe.cubeCamera
@@ -117,7 +120,7 @@ class LOI.Engine.RadianceState
       probeCubeCamera.update renderer, scene
 
       # Update the radiance atlas.
-      @constructor.updateRadianceAtlas renderer, pixelCoordinates, @radianceAtlas, @radianceAtlasCamera, not @_performedInitialClear
+      @constructor.updateRadianceAtlas @materialProperties, renderer, pixelCoordinates, @radianceAtlas, @radianceAtlasCamera, not @_performedInitialClear
       @_performedInitialClear = true
 
       updated++

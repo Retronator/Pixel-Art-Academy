@@ -2,31 +2,18 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.RadianceState.ProbeMap
   constructor: (@cluster) ->
-    boundsInPicture = @cluster.boundsInPicture()
-    @width = boundsInPicture.width
-    @height = boundsInPicture.height
+    @boundsInPicture = @cluster.boundsInPicture()
+    @width = @boundsInPicture.width
+    @height = @boundsInPicture.height
 
     # Map which pixels are present in the cluster.
     @distanceMap = new Int32Array @width * @height
 
     # Go over all pixels in the cluster picture.
     pictureCluster = @cluster.layer.getPictureCluster @cluster.id
-    clusterIdMap = pictureCluster.picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.ClusterId
+    @clusterIdMap = pictureCluster.picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.ClusterId
 
-    maxBorderDistance = Math.ceil(@width / 2) + Math.ceil(@height / 2) - 2
-
-    for x in [0...boundsInPicture.width]
-      for y in [0...boundsInPicture.height]
-        continue unless @cluster.id is clusterIdMap.getPixel boundsInPicture.x + x, boundsInPicture.y + y
-        pixelIndex = @_getPixelIndex x, y
-  
-        # Calculate distance from edges.
-        horizontalDistance = Math.min x, @width - x - 1
-        verticalDistance = Math.min y, @height - y - 1
-        edgeDistance = horizontalDistance + verticalDistance
-  
-        # Start with negative distance so that the innermost pixels will get calculated firts.
-        @distanceMap[pixelIndex] = -maxBorderDistance - 1 + edgeDistance
+    @_resetDistanceMap()
 
     # Find which probe should be calculated first.
     nextPixelIndex = @_findPixelIndexAtLargestDistance()
@@ -35,6 +22,22 @@ class LOI.Engine.RadianceState.ProbeMap
     dataArray.fill nextPixelIndex
 
     @texture = new THREE.DataTexture dataArray, @width, @height, THREE.AlphaFormat, THREE.FloatType
+
+  _resetDistanceMap: ->
+    maxBorderDistance = Math.ceil(@width / 2) + Math.ceil(@height / 2) - 2
+
+    for x in [0...@boundsInPicture.width]
+      for y in [0...@boundsInPicture.height]
+        continue unless @cluster.id is @clusterIdMap.getPixel @boundsInPicture.x + x, @boundsInPicture.y + y
+        pixelIndex = @_getPixelIndex x, y
+
+        # Calculate distance from edges.
+        horizontalDistance = Math.min x, @width - x - 1
+        verticalDistance = Math.min y, @height - y - 1
+        edgeDistance = horizontalDistance + verticalDistance
+
+        # Start with negative distance so that the innermost pixels will get calculated first.
+        @distanceMap[pixelIndex] = -maxBorderDistance - 1 + edgeDistance
 
   _findPixelIndexAtLargestDistance: ->
     maxIndex = null
@@ -47,7 +50,11 @@ class LOI.Engine.RadianceState.ProbeMap
         maxIndex = index
 
     # If the largest distance is 1, we have no pixel left that hasn't been updated.
-    return if maxValue is 1
+    if maxValue is 1
+      # Reset the distance map to get a new update cycle.
+      @_resetDistanceMap()
+      @_initialUpdateDone = true
+      return @_findPixelIndexAtLargestDistance()
 
     maxIndex
     
@@ -74,7 +81,9 @@ class LOI.Engine.RadianceState.ProbeMap
             @distanceMap[pixelIndex] = distanceFromNewPixel + 1
 
             # Update probe index.
-            @texture.image.data[pixelIndex] = newPixelIndex
+            @texture.image.data[pixelIndex] = newPixelIndex unless @_initialUpdateDone
+
+    @texture.needsUpdate = true
 
     # Return pixel coordinates.
     newPixelCoordinates

@@ -1,13 +1,13 @@
 // LandsOfIllusions.Engine.RadianceState.RadianceMaterial.paremetersFragment
+precision highp float;
 #extension GL_EXT_shader_texture_lod : enable
+
+#include <THREE>
 #include <LandsOfIllusions.Engine.RadianceState.commonParametersFragment>
 
 uniform sampler2D probeOctahedronMap;
 uniform float probeOctahedronMapMaxLevel;
 uniform float probeOctahedronMapResolution;
-
-uniform float radianceAtlasProbeLevel;
-uniform float radianceAtlasProbeResolution;
 
 varying vec2 vUv;
 

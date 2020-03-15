@@ -31,7 +31,8 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
 
   @createPlaneWorldMatrix: (plane, rightHanded, result) ->
     result ?= new THREE.Matrix4
-    @createPlaneBasis(plane.normal, rightHanded, result).setPosition plane.point
+    @createPlaneBasis plane.normal, rightHanded, result
+    result.setPosition plane.point
     result
 
   constructor: (@layers, id, data) ->
@@ -53,6 +54,8 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
 
     @planeHelper = new THREE.Plane
     @planeBasis = new THREE.Matrix4
+    @planeWorldMatrix = new THREE.Matrix4
+    @planeWorldMatrixInverse = new THREE.Matrix4
     @_updatePlaneHelpers()
 
   _decompressData: (compressedByteArray, arrayClass) ->
@@ -91,8 +94,13 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
   _updatePlaneHelpers: ->
     return unless plane = @plane()
 
-    planeNormal = new THREE.Vector3().copy plane.normal
-    planePoint = new THREE.Vector3().copy plane.point
-    @planeHelper.setFromNormalAndCoplanarPoint planeNormal, planePoint
+    # Convert plane data into objects.
+    plane =
+      normal: new THREE.Vector3().copy plane.normal
+      point: new THREE.Vector3().copy plane.point
 
-    @constructor.createPlaneBasis planeNormal, false, @planeBasis
+    @planeHelper.setFromNormalAndCoplanarPoint plane.normal, plane.point
+
+    @constructor.createPlaneBasis plane.normal, false, @planeBasis
+    @constructor.createPlaneWorldMatrix plane, false, @planeWorldMatrix
+    @planeWorldMatrixInverse.getInverse @planeWorldMatrix

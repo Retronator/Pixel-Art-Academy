@@ -18,14 +18,10 @@ class LOI.Engine.Materials.PBRMaterial extends LOI.Engine.Materials.Material
         # Cluster information
         clusterSize:
           value: options.clusterSize
-
-        # Material information
-        refractiveIndex:
-          value: options.refractiveIndex
-        extinctionCoefficient:
-          value: options.extinctionCoefficient
-        emission:
-          value: options.emission
+        clusterPlaneWorldMatrix:
+          value: options.clusterPlaneWorldMatrix
+        clusterPlaneWorldMatrixInverse:
+          value: options.clusterPlaneWorldMatrixInverse
 
       ,
         # Texture
@@ -37,9 +33,13 @@ class LOI.Engine.Materials.PBRMaterial extends LOI.Engine.Materials.Material
           value: new THREE.Vector2 1, 1
       ,
         # Radiance state
-        probeResolution:
-          value: LOI.Engine.RadianceState.probeResolution
-        radianceMap:
+        radianceAtlasProbeLevel:
+          value: LOI.Engine.RadianceState.radianceAtlasProbeLevel
+        radianceAtlasProbeResolution:
+          value: LOI.Engine.RadianceState.radianceAtlasProbeResolution
+        radianceAtlasIn:
+          value: null
+        radianceAtlasOut:
           value: null
         probeMap:
           value: null
@@ -54,7 +54,9 @@ class LOI.Engine.Materials.PBRMaterial extends LOI.Engine.Materials.Material
       Tracker.autorun =>
         return unless radianceState = @options.radianceStateField()
 
-        @uniforms.radianceMap.value = radianceState.radianceAtlas.out.texture
+        @uniforms.radianceAtlasIn.value = radianceState.radianceAtlas.in.texture
+        @uniforms.radianceAtlasOut.value = radianceState.radianceAtlas.out.texture
+        @uniforms.probeMap.value = radianceState.probeMap.texture
 
         @needsUpdate = true
         @_dependency.changed()

@@ -1,6 +1,6 @@
 // LandsOfIllusions.Engine.RadianceState.commonParametersFragment
-precision highp float;
-#include <THREE>
+uniform float radianceAtlasProbeLevel;
+uniform float radianceAtlasProbeResolution;
 
 vec2 directionToOctahedronMap(vec3 direction, float resolution) {
   vec3 pointOnOctahedron = direction / (abs(direction.x) + abs(direction.y) + abs(direction.z));
@@ -35,4 +35,15 @@ vec3 octahedronMapToDirection(vec2 octahedronMapPosition) {
   if (octahedronMapPosition.y >= 0.5) pointOnOctahedron.z *= -1.0;
 
   return pointOnOctahedron;
+}
+
+vec3 sampleRadiance(sampler2D radianceAtlas, vec2 clusterSize, vec2 probeCoordinates, vec3 direction) {
+  vec2 octahedronMapPosition = directionToOctahedronMap(direction, radianceAtlasProbeResolution);
+
+  vec2 probePosition = probeCoordinates / clusterSize;
+  vec2 probeSize = 1.0 / clusterSize;
+
+  vec2 samplePosition = probePosition + octahedronMapPosition * probeSize;
+
+  return texture2D(radianceAtlas, samplePosition).rgb;
 }
