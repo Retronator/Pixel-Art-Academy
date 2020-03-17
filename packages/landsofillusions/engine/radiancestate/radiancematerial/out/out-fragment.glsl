@@ -7,6 +7,7 @@
 uniform vec3 refractiveIndex;
 uniform vec3 extinctionCoefficient;
 uniform vec3 emission;
+uniform vec3 albedo;
 
 void main() {
   // Sample across the whole hemisphere.
@@ -33,14 +34,29 @@ void main() {
     }
   }
 
-  vec3 outputRadiance = irradiance / hemisphereSolidAngle;
+  vec3 outDirection = octahedronMapToDirection(vUv);
+  float cosAngleOfIncidnce = dot(normal, outDirection);
+  float angleOfIncidence = acos(cosAngleOfIncidnce);
+
+  vec3 reflectance, absorptance;
+
+  if (albedo.r < 0.0) {
+    // We have a phyisicaly based material. Calculate reflectance and absorptance
+    // from refractive index and extinction coefficient using Fresnel equations.
+    reflectance = FresnelEquations_getReflectance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
+    absorptance = FresnelEquations_getAbsorptance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
+  } else {
+    // We have an ad-hoc material. Calculate reflectance and absorptance based on
+    // the albedo and Schlick's approximation instead of actual Fresnel equations.
+    reflectance = albedo;
+    absorptance = 1.0 - reflectance;
+  }
+
+  // Output reflected light.
+  vec3 outputRadiance = irradiance / hemisphereSolidAngle * reflectance;
 
   // Add emmited light.
-  vec3 outDirection = octahedronMapToDirection(vUv);
-  float angleOfIncidence = acos(dot(normal, outDirection));
-
-  vec3 emmisivity = FresnelEquations_getAbsorptance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
-  outputRadiance += emission * emmisivity;
+  outputRadiance += emission * absorptance;
 
   gl_FragColor = vec4(outputRadiance, 1);
 }

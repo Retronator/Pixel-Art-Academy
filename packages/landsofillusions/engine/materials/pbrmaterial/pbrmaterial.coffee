@@ -13,7 +13,9 @@ class LOI.Engine.Materials.PBRMaterial extends LOI.Engine.Materials.Material
       uniforms: _.extend
         # Globals
         renderSize:
-          value: null
+          value: new THREE.Vector2 1, 1
+        cameraAngleMatrix:
+          value: new THREE.Matrix4
 
         # Cluster information
         clusterSize:

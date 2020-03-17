@@ -99,7 +99,14 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     directionalLights = @directionalLights()
 
+    if cameraAngle = meshCanvas.meshData()?.cameraAngles.get 0
+      defaultViewport = left: -1, right: 1, bottom: -1, top: 1
+      cameraAngleMatrix = new THREE.Matrix4
+      cameraAngle.getProjectionMatrixForViewport defaultViewport, cameraAngleMatrix
+      cameraAngleMatrix.multiply cameraAngle.worldMatrixInverse
+
     renderSize: new THREE.Vector2 renderSize.width, renderSize.height
+    cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
     directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
     directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: meshCanvas.renderer.preprocessingRenderTarget.texture

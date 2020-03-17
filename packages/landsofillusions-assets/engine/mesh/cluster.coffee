@@ -250,6 +250,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         refractiveIndex: new THREE.Vector3 1, 1, 1
         extinctionCoefficient: new THREE.Vector3
         emission: new THREE.Vector3
+        albedo: new THREE.Vector3 -1, -1, -1
 
       if n = meshMaterial.refractiveIndex
         materialProperties.refractiveIndex.set n.r, n.g, n.b
@@ -258,11 +259,12 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         materialProperties.extinctionCoefficient.set k.r, k.g, k.b
 
       if not (n or k) and shades and meshMaterial.shade?
-        # Create an ad-hoc PBR material.
+        # Create an albedo-based material.
         materialProperties.refractiveIndex.set 1.5, 1.5, 1.5
 
         color = shades[meshMaterial.shade]
-        materialProperties.extinctionCoefficient.set 1 - color.r, 1 - color.g, 1 - color.b
+        linearColor = AS.Color.SRGB.getLinearRGBForRGB color
+        materialProperties.albedo.set linearColor.r, linearColor.g, linearColor.b
 
       if e = meshMaterial.emission
         materialProperties.emission.set e.r, e.g, e.b

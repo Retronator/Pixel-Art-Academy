@@ -91,12 +91,10 @@ class LOI.Engine.RadianceState
       type: THREE.FloatType
       stencilBuffer: false
       depthBuffer: false
-      minFilter: THREE.LinearFilter
-      magFilter: THREE.NearestFilter
 
   update: (renderer, scene) ->
     # Calculate how many probes to update.
-    updateCount = Math.max 1, Math.floor @textureSize.width * @textureSize.height / 10000
+    updateCount = Math.max 1, Math.floor @textureSize.width * @textureSize.height / 50000
     updated = 0
 
     probeCubeCamera = @constructor.Probe.cubeCamera

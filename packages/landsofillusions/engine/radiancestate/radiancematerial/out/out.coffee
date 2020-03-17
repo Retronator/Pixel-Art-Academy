@@ -11,6 +11,8 @@ class LOI.Engine.RadianceState.RadianceMaterial.Out extends LOI.Engine.RadianceS
           value: new THREE.Vector3
         emission:
           value: new THREE.Vector3
+        albedo:
+          value: new THREE.Vector3
 
       fragmentShader: '#include <LandsOfIllusions.Engine.RadianceState.RadianceMaterial.Out.fragment>'
 

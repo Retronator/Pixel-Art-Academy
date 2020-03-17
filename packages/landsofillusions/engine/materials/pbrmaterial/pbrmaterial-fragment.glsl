@@ -25,12 +25,15 @@ uniform sampler2D radianceAtlasOut;
 uniform sampler2D probeMap;
 
 varying vec2 vPixelCoordinates;
+varying float vCameraAngleW;
 
 varying vec3 vFragmentPositionInWorldSpace;
 
 void main()	{
   // Find which radiance probe to use by sampling the probe map at pixel coordinates.
-  vec2 pixelCoordinates = floor(vPixelCoordinates + 0.5);
+  vec2 pixelCoordinates = vPixelCoordinates / vCameraAngleW;
+  pixelCoordinates = floor(pixelCoordinates + 0.5);
+
   float probeIndex = texture2D(probeMap, pixelCoordinates / clusterSize).a;
   vec2 probeCoordinates = vec2(
     mod(probeIndex, clusterSize.x),

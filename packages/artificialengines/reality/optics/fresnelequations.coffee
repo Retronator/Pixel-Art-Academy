@@ -48,9 +48,9 @@ class AR.Optics.FresnelEquations
     @_getReflectanceP()
 
   @_getReflectanceP: ->
-    # |n₁cosθᵢ-n₂cosθⱼ|²
+    # |n₁cosθⱼ-n₂cosθᵢ|²
     # |---------------|
-    # |n₁cosθᵢ+n₂cosθⱼ|
+    # |n₁cosθⱼ+n₂cosθᵢ|
     n1cosθj.copy(n1).multiply(cosθj)
     n2cosθi.copy(n2).multiply(cosθi)
 
