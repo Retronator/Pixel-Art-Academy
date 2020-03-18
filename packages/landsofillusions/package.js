@@ -102,6 +102,10 @@ Package.onUse(function(api) {
   api.addClientFile('engine/radiancestate/radiancematerial/out..');
   api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
 
+  api.addClientFile('engine/skydome..');
+  api.addMaterial('engine/skydome/material..');
+  api.addMaterial('engine/skydome/rendermaterial..');
+
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/material');
 

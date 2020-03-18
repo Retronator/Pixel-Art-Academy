@@ -1,7 +1,8 @@
 // LandsOfIllusions.Engine.RadianceState.RadianceMaterial.Out.fragment
 #include <LandsOfIllusions.Engine.RadianceState.RadianceMaterial.paremetersFragment>
-
 #include <Artificial.Reality.Optics.FresnelEquations>
+
+const float hemisphereSolidAngle = 2.0 * PI;
 
 // Material information
 uniform vec3 refractiveIndex;
@@ -10,44 +11,50 @@ uniform vec3 emission;
 uniform vec3 albedo;
 
 void main() {
-  // Sample across the whole hemisphere.
-  const float sampleLevel = 0.0;
+  vec2 outOctahedronMapPosition = vUv;
+  vec3 outDirection = OctahedronMap_positionToDirection(outOctahedronMapPosition);
+  bool outGoesIntoMaterial = outOctahedronMapPosition.y > 0.5;
 
-  const float samplesPerSide = 1.0;
-  const float sampleSpacing = 1.0 / samplesPerSide;
-  const float samples = samplesPerSide * samplesPerSide;
-
-  const float hemisphereSolidAngle = 2.0 * PI;
-  const float sampleSolidAngle = hemisphereSolidAngle / samples;
-
-  vec2 octahedronMapPosition;
-  vec3 direction;
+  // Calculate geometry of the reflection.
   vec3 normal = vec3(0, 0, 1);
-
-  vec3 irradiance;
-
-  for (float x = 0.5; x < samplesPerSide; x++) {
-    for (float y = 0.5; y < samplesPerSide; y++) {
-      octahedronMapPosition = vec2(x * sampleSpacing, y * sampleSpacing * 0.5);
-      direction = octahedronMapToDirection(octahedronMapPosition);
-      irradiance += sampleProbe(octahedronMapPosition, sampleLevel).rgb * saturate(dot(direction, normal)) * sampleSolidAngle;
-    }
-  }
-
-  vec3 outDirection = octahedronMapToDirection(vUv);
+  vec3 inDirection = reflect(outDirection, normal);
   float cosAngleOfIncidnce = dot(normal, outDirection);
   float angleOfIncidence = acos(cosAngleOfIncidnce);
 
+  // Based on roughness, determine how big of a solid angle to sample.
+  float sampleLevel = 0.0;
+  float samplesPerSide = pow(2.0, sampleLevel);
+  float samplesPerHemisphere = pow2(samplesPerSide);
+  float sampleSolidAngle = hemisphereSolidAngle / samplesPerHemisphere;
+
+  // Get irradiance coming from incoming direction.
+  vec3 irradiance = sampleProbe(-inDirection, sampleLevel).rgb * sampleSolidAngle; // * saturate(cosAngleOfIncidnce)
+
+  // Calculate reflectance and absorptance of the material.
   vec3 reflectance, absorptance;
 
   if (albedo.r < 0.0) {
     // We have a phyisicaly based material. Calculate reflectance and absorptance
     // from refractive index and extinction coefficient using Fresnel equations.
-    reflectance = FresnelEquations_getReflectance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
-    absorptance = FresnelEquations_getAbsorptance(angleOfIncidence, vec3(1.0), refractiveIndex, vec3(0.0), extinctionCoefficient);
+    vec3 n1 = vec3(1.0);
+    vec3 n2 = vec3(1.0);
+    vec3 k1 = vec3(0.0);
+    vec3 k2 = vec3(0.0);
+
+    if (outGoesIntoMaterial) {
+      n1 = refractiveIndex;
+      k1 = extinctionCoefficient;
+    } else {
+      n2 = refractiveIndex;
+      k2 = extinctionCoefficient;
+    }
+
+    FresnelEquations_getReflectanceAndAbsorptance(angleOfIncidence, n1, n2, k1, k2, reflectance, absorptance);
   } else {
     // We have an ad-hoc material. Calculate reflectance and absorptance based on
     // the albedo and Schlick's approximation instead of actual Fresnel equations.
+    // TODO: Uncomment to use Schlick's approximation when specular reflections are implemented.
+    // reflectance = mix(albedo, vec3(1.0), pow(1.0 - cosAngleOfIncidnce, 5.0));
     reflectance = albedo;
     absorptance = 1.0 - reflectance;
   }

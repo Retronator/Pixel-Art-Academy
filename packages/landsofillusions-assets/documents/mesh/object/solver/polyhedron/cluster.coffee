@@ -239,6 +239,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
       # Create vertices and normals.
       verticesCount = @points.length * 2 + hullEdges.length * 4
       vertices = new Float32Array verticesCount * elementsPerVertex
+      pixelCoordinates = new Float32Array verticesCount * coordinatesPerVertex
       normals = new Float32Array verticesCount * elementsPerVertex
 
       oppositeClusterVertexIndexOffset = @points.length
@@ -256,6 +257,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
         normals[index * elementsPerVertex + 1] = @plane.normal.y
         normals[index * elementsPerVertex + 2] = @plane.normal.z
 
+        pixelCoordinates[index * coordinatesPerVertex] = point.pixel.x - @minPixel.x
+        pixelCoordinates[index * coordinatesPerVertex + 1] = point.pixel.y - @minPixel.y
+
         # Offset the position by the extrusion
         vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex] = point.vertex.x + extrusionVector.x
         vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 1] = point.vertex.y + extrusionVector.y
@@ -265,6 +269,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
         normals[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex] = -@plane.normal.x
         normals[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 1] = -@plane.normal.y
         normals[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 2] = -@plane.normal.z
+
+        pixelCoordinates[(oppositeClusterVertexIndexOffset + index) * coordinatesPerVertex] = point.pixel.x - @minPixel.x
+        pixelCoordinates[(oppositeClusterVertexIndexOffset + index) * coordinatesPerVertex + 1] = point.pixel.y - @minPixel.y
 
         if not nanWarned and _.isNaN point.vertex.x
           console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
@@ -302,6 +309,10 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
           normals[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + pointIndex * 3] = normal.x
           normals[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + pointIndex * 3 + 1] = normal.y
           normals[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + pointIndex * 3 + 2] = normal.z
+
+          point = if pointIndex % 2 then endPoint else startPoint
+          pixelCoordinates[(extrusionVertexIndexOffset + edgeIndex * 4) * coordinatesPerVertex + pointIndex * 3] = point.pixel.x - @minPixel.x
+          pixelCoordinates[(extrusionVertexIndexOffset + edgeIndex * 4) * coordinatesPerVertex + pointIndex * 3 + 1] = point.pixel.y - @minPixel.y
 
       # Create indices.
       oppositeClusterIndicesIndexOffset = @indices.length

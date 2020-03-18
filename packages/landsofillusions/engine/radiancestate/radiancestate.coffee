@@ -93,34 +93,24 @@ class LOI.Engine.RadianceState
       depthBuffer: false
 
   update: (renderer, scene) ->
-    # Calculate how many probes to update.
-    updateCount = Math.max 1, Math.floor @textureSize.width * @textureSize.height / 50000
-    updated = 0
+    pixelCoordinates = @probeMap.getNewUpdatePixel()
 
+    # Put the camera into plane's basis (z points away from the cluster surface).
     probeCubeCamera = @constructor.Probe.cubeCamera
+    probeCubeCamera.setRotationFromMatrix @cluster.planeBasis
 
-    for i in [0...updateCount]
-      return updated unless pixelCoordinates = @probeMap.getNewUpdatePixel()
+    # Place the camera on the spot on the cluster where we should render from.
+    absolutePixelCoordinates =
+      x: @absoluteClusterPosition.x + pixelCoordinates.x
+      y: @absoluteClusterPosition.y + pixelCoordinates.y
 
-      # Put the camera into plane's basis (z points away from the cluster surface).
-      probeCubeCamera.setRotationFromMatrix @cluster.planeBasis
+    @cameraAngle.projectPoint absolutePixelCoordinates, @cluster.planeHelper, 0, 0, probeCubeCamera.position
 
-      # Place the camera on the spot on the cluster where we should render from.
-      absolutePixelCoordinates =
-        x: @absoluteClusterPosition.x + pixelCoordinates.x
-        y: @absoluteClusterPosition.y + pixelCoordinates.y
+    # Render the probe cube.
+    renderer.setClearColor 0, 1
+    probeCubeCamera.clear renderer
+    probeCubeCamera.update renderer, scene
 
-      @cameraAngle.projectPoint absolutePixelCoordinates, @cluster.planeHelper, 0, 0, probeCubeCamera.position
-
-      # Render the probe cube.
-      renderer.setClearColor 0, 1
-      probeCubeCamera.clear renderer
-      probeCubeCamera.update renderer, scene
-
-      # Update the radiance atlas.
-      @constructor.updateRadianceAtlas @materialProperties, renderer, pixelCoordinates, @radianceAtlas, @radianceAtlasCamera, not @_performedInitialClear
-      @_performedInitialClear = true
-
-      updated++
-
-    updated
+    # Update the radiance atlas.
+    @constructor.updateRadianceAtlas @materialProperties, renderer, pixelCoordinates, @radianceAtlas, @radianceAtlasCamera, not @_performedInitialClear
+    @_performedInitialClear = true

@@ -44,7 +44,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     super arguments...
 
     @_geometry?.dispose()
-    material.dispose() for name, material of @_materials if @_materials
+    material?.dispose() for name, material of @_materials if @_materials
     @_radianceState?.destroy()
 
   _generateGeometry: ->
@@ -226,52 +226,53 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
   _generateRadianceState: ->
     # Clean any previous radiance state.
     @_radianceState?.destroy()
+    @_radianceState = null
 
-    if @data.boundsInPicture()
-      meshData = @data.layer.object.mesh
-      return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+    # Make sure bounds and picture cluster exist.
+    return unless @data.boundsInPicture()
+    return unless @data.layer.getPictureCluster @data.id
 
-      # Determine the color.
-      clusterMaterial = @data.material()
+    meshData = @data.layer.object.mesh
 
-      # Normal color mode.
-      if clusterMaterial.materialIndex?
-        # Cluster has a material assigned. Add the material properties to material options.
-        meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
+    # Determine the color.
+    return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+    clusterMaterial = @data.material()
 
-      else if clusterMaterial.paletteColor
-        # Cluster has a direct palette color set.
-        meshMaterial = clusterMaterial.paletteColor
+    # Normal color mode.
+    if clusterMaterial.materialIndex?
+      # Cluster has a material assigned. Add the material properties to material options.
+      meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
 
-      shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
+    else if clusterMaterial.paletteColor
+      # Cluster has a direct palette color set.
+      meshMaterial = clusterMaterial.paletteColor
 
-      # Generate material properties.
-      materialProperties =
-        refractiveIndex: new THREE.Vector3 1, 1, 1
-        extinctionCoefficient: new THREE.Vector3
-        emission: new THREE.Vector3
-        albedo: new THREE.Vector3 -1, -1, -1
+    shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
 
-      if n = meshMaterial.refractiveIndex
-        materialProperties.refractiveIndex.set n.r, n.g, n.b
+    # Generate material properties.
+    materialProperties =
+      refractiveIndex: new THREE.Vector3 1, 1, 1
+      extinctionCoefficient: new THREE.Vector3
+      emission: new THREE.Vector3
+      albedo: new THREE.Vector3 -1, -1, -1
 
-      if k = meshMaterial.extinctionCoefficient
-        materialProperties.extinctionCoefficient.set k.r, k.g, k.b
+    if n = meshMaterial.refractiveIndex
+      materialProperties.refractiveIndex.set n.r, n.g, n.b
 
-      if not (n or k) and shades and meshMaterial.shade?
-        # Create an albedo-based material.
-        materialProperties.refractiveIndex.set 1.5, 1.5, 1.5
+    if k = meshMaterial.extinctionCoefficient
+      materialProperties.extinctionCoefficient.set k.r, k.g, k.b
 
-        color = shades[meshMaterial.shade]
-        linearColor = AS.Color.SRGB.getLinearRGBForRGB color
-        materialProperties.albedo.set linearColor.r, linearColor.g, linearColor.b
+    if not (n or k) and shades and meshMaterial.shade?
+      # Create an albedo-based material.
+      materialProperties.refractiveIndex.set 1.5, 1.5, 1.5
 
-      if e = meshMaterial.emission
-        materialProperties.emission.set e.r, e.g, e.b
+      color = shades[meshMaterial.shade]
+      linearColor = AS.Color.SRGB.getLinearRGBForRGB color
+      materialProperties.albedo.set linearColor.r, linearColor.g, linearColor.b
 
-      @_radianceState = new LOI.Engine.RadianceState @data, materialProperties
+    if e = meshMaterial.emission
+      materialProperties.emission.set e.r, e.g, e.b
 
-    else
-      @_radianceState = null
+    @_radianceState = new LOI.Engine.RadianceState @data, materialProperties
 
     @_radianceState

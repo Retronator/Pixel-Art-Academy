@@ -275,6 +275,8 @@ Package.onUse(function(api) {
   api.addFile('pyramid/interpolation/piecewisepolynomial');
   api.addFile('pyramid/interpolation/cachedfunction2d');
 
+  api.addGlsl('pyramid/octahedronmap..');
+
   // Artificial Reality
 
   api.addFile('reality/reality-constants');

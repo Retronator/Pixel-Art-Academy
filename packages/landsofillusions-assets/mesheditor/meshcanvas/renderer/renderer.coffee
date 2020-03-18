@@ -45,7 +45,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       map: LOI.Engine.RadianceState.Probe.octahedronMap
       side: THREE.DoubleSide
 
-    radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(), radianceDebugProbeOctahedronMapMaterial
+    radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(0.5, 1), radianceDebugProbeOctahedronMapMaterial
     radianceDebugProbeOctahedronMap.position.x = 1
     radianceDebugProbeOctahedronMap.rotation.x = Math.PI
     radianceDebugProbeOctahedronMap.layers.set 4
@@ -92,56 +92,119 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
       @_render()
 
+      # Indicate that screen has been re-rendered due to user activity.
+      @_lastRenderTime = Date.now()
+
+    # Handle updating radiance state.
+    @radianceUpdateMaxDuration =
+      realtime: 0
+      interactive: 1 / 50
+      idle: 1 / 25
+
+    @radianceUpdateCooldown =
+      realtime: 0.5
+      interactive: 0.5
+
+    @_lastRenderTime = Date.now()
+    @_radianceStatesToBeUpdated = []
+
+    unless @constructor._lastMouseMoveTime
+      @constructor._lastMouseMoveTime = Date.now()
+
+      $(document).on "mousemove.landsofillusions-assets-mesheditor-meshcanvas-renderer", (event) =>
+        @constructor._lastMouseMoveTime = Date.now()
+
+  destroy: ->
+    @renderer.dispose()
+
   draw: (appTime) ->
     radianceWasUpdated = false
     totalUpdatedCount = 0
 
     if @meshCanvas.pbrEnabled()
-      # We're doing PBR so we should update some of the radiance states. First, set the PBR material on all meshes.
-      scene = @meshCanvas.sceneHelper().scene()
+      # We're doing PBR so we should update some of the radiance
+      # states. Calculate how much time we can we spend for this.
+      updateStartTime = Date.now()
+      timeSinceLastRender = (updateStartTime - @_lastRenderTime) / 1000
+      timeSinceLastInteraction = (updateStartTime - @constructor._lastMouseMoveTime) / 1000
 
-      scene.traverse (object) =>
-        return unless object.isMesh
+      updateDuration = @radianceUpdateMaxDuration.idle
 
-        # Remember if the object is supposed to be visible since we'll change it depending if it's a PBR mesh or not.
-        object.wasVisible = object.visible
+      if timeSinceLastInteraction < @radianceUpdateCooldown.interactive
+        updateDuration = @radianceUpdateMaxDuration.interactive
 
-        if object.pbrMaterial
-          object.visible = true
-          object.material = object.pbrMaterial
+      if timeSinceLastRender < 2 * @radianceUpdateCooldown.realtime
+        updateDuration = @radianceUpdateMaxDuration.realtime
+
+      if updateDuration
+        highPrecisionUpdateEndTime = performance.now() + updateDuration * 1000
+
+        # Set the PBR material on all meshes.
+        scene = @meshCanvas.sceneHelper().scene()
+
+        scene.traverse (object) =>
+          return unless object.isMesh
+
+          # Remember if the object is supposed to be visible since we'll change it depending if it's a PBR mesh or not.
+          object.wasVisible = object.visible
+
+          if object.pbrMaterial or object.material.pbr
+            object.visible = true
+            object.material = object.pbrMaterial if object.pbrMaterial
+
+            # Enable double sided rendering during radiance transfer.
+            object.pbrMaterial?.side = THREE.DoubleSide
+
+            # TODO: Remove when CubeCamera supports layers.
+            object.layers.enable 0 if object.layers.mask & 8
+
+          else
+            object.visible = false
+
+        # Start rendering loop.
+        @_setLinearRendering()
+        @renderer.shadowMap.enabled = false
+
+        while performance.now() < highPrecisionUpdateEndTime
+          # Make sure we have a radiance state to update.
+          unless @_radianceStatesToBeUpdated.length
+            scene.traverse (object) =>
+              return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
+              return unless radianceState = object.radianceState()
+
+              # We should update one radiance state per 100×100 cluster pixels.
+              updatesCount = Math.ceil radianceState.probeMap.pixelsCount / 10000
+
+              @_radianceStatesToBeUpdated.push radianceState for i in [0...updatesCount]
+
+          # If we still don't have any radiance states to update, there aren't any clusters in the scene.
+          break unless @_radianceStatesToBeUpdated.length
+
+          # Update next radiance state.
+          radianceState = @_radianceStatesToBeUpdated.shift()
+          radianceState.update @renderer, scene
+          radianceWasUpdated = true
+          totalUpdatedCount++
+
+        # Reinstate main materials and object visibility.
+        scene.traverse (object) =>
+          return unless object.isMesh
+
+          object.visible = object.wasVisible
+          object.material = object.mainMaterial if object.mainMaterial
+
+          # Reinstate single-sided rendering for main render.
+          object.pbrMaterial?.side = THREE.FrontSide
+
           # TODO: Remove when CubeCamera supports layers.
-          object.layers.enable 0 if object.layers.mask & 8
-
-        else
-          object.visible = false
-
-      # Update radiance states on all clusters.
-      @_setLinearRendering()
-      @renderer.shadowMap.enabled = false
-
-      scene.traverse (object) =>
-        return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
-        return unless radianceState = object.radianceState()
-
-        updatedCount = radianceState.update @renderer, scene
-        radianceWasUpdated = true if updatedCount
-
-        totalUpdatedCount += updatedCount
-
-      # TODO: Remove when CubeCamera supports layers.
-      scene.traverse (object) =>
-        return unless object.isMesh
-        object.layers.disable 0 if object.layers.mask & 8
-
-      # Reinstate main materials and object visibility.
-      scene.traverse (object) =>
-        return unless object.isMesh
-
-        object.visible = true if object.wasVisible
-        object.material = object.mainMaterial if object.mainMaterial
+          object.layers.disable 0 if object.layers.mask & 8
 
     # No need to render if we're rendering reactively and radiance hasn't changed.
     return if @reactiveRendering() and not radianceWasUpdated
+
+    unless radianceWasUpdated
+      # Indicate that render has executed due to real-time rendering.
+      @_lastRenderTime = Date.now()
 
     @_render()
 
@@ -291,6 +354,3 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @renderer.clearDepth()
         camera.main.layers.set 4
         @renderer.render scene, camera.main
-
-  destroy: ->
-    @renderer.dispose()

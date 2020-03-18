@@ -34,6 +34,4 @@ class LOI.Engine.RadianceState.Probe
   @update: (renderer) ->
     # Update octahedron map (it is assumed cube camera was used to render new data prior to this).
     renderer.setRenderTarget @octahedronMapRenderTarget
-    renderer.setClearColor 0xffbbaa, 1
-    renderer.clearColor()
     renderer.render @octahedronMapScene, @octahedronMapCamera

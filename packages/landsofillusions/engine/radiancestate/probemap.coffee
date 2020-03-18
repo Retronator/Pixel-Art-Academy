@@ -25,6 +25,7 @@ class LOI.Engine.RadianceState.ProbeMap
 
   _resetDistanceMap: ->
     maxBorderDistance = Math.ceil(@width / 2) + Math.ceil(@height / 2) - 2
+    @pixelsCount = 0
 
     for x in [0...@boundsInPicture.width]
       for y in [0...@boundsInPicture.height]
@@ -38,6 +39,8 @@ class LOI.Engine.RadianceState.ProbeMap
 
         # Start with negative distance so that the innermost pixels will get calculated first.
         @distanceMap[pixelIndex] = -maxBorderDistance - 1 + edgeDistance
+
+        @pixelsCount++
 
   _findPixelIndexAtLargestDistance: ->
     maxIndex = null

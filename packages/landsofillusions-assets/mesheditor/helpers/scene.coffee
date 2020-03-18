@@ -16,12 +16,15 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
-    @directionalLights = new ReactiveField []
+    # Setup the PBR skydome.
+    @skydome = new LOI.Engine.Skydome
+    scene.add @skydome
 
     # Setup default lights.
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
     scene.add ambientLight
 
+    @directionalLights = new ReactiveField []
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
 
     directionalLight.castShadow = true
@@ -49,6 +52,11 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     # Move light around.
     @lightDirectionHelper = @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @fileId
 
+    @meshCanvas = new ComputedField =>
+      @interface.getEditorViewForFile(@fileId)?.getActiveEditor()
+    ,
+      (a, b) => a is b
+
     @autorun (computation) =>
       # Set the new position.
       lightDirection = @lightDirectionHelper()
@@ -61,14 +69,15 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       directionalLight.shadow.camera.lookAt lookTarget
       directionalLight.shadow.camera.updateMatrixWorld()
 
+      # Update the skydome.
+      meshCanvas = @meshCanvas()
+
+      if meshCanvas?.isRendered()
+        @skydome.updateTexture meshCanvas.renderer.renderer, lightDirection
+
       @scene.updated()
 
     # Apply uniforms to new objects when they get added.
-    @meshCanvas = new ComputedField =>
-      @interface.getEditorForActiveFile()
-    ,
-      (a, b) => a is b
-
     @autorun (computation) =>
       return unless uniforms = @getUniforms()
       @sceneObjectsAddedDependency.depend()
@@ -89,6 +98,11 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
         @_applyUniformsToMaterial uniforms, object.mainMaterial
 
       @scene.updated()
+
+  destroy: ->
+    super arguments...
+
+    @skydome.destroy()
 
   getUniforms: ->
     return unless meshCanvas = @meshCanvas()
