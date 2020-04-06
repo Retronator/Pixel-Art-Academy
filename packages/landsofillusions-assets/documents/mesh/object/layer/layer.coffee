@@ -27,6 +27,9 @@ class LOI.Assets.Mesh.Object.Layer
     @_updatedDependency.changed()
     @layers.contentUpdated()
 
+  isVisible: ->
+    @object.isVisible() and (@visible() ? true)
+
   getPictureForCameraAngleIndex: (cameraAngleIndex) ->
     picture = @pictures.get cameraAngleIndex
     return picture if picture

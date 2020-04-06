@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.RadianceState.Probe
   @cubeResolution: 256
-  @octahedronMapMaxLevel: 8
+  @octahedronMapMaxLevel: 9
   @octahedronMapResolution: 2 ** @octahedronMapMaxLevel
 
   @initialize: ->

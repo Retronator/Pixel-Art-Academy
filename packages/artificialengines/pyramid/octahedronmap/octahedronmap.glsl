@@ -27,10 +27,9 @@ vec2 OctahedronMap_directionToPosition(vec3 direction) {
   return OctahedronMap_directionToPosition(direction, 0.0);
 }
 
-// Converts a position on an octahedron map to a direction. Note that direction is not normalized, but is instead a
-// point on the octahedron itself. This is done for speed purposes since cubemap sampling doesn't require normalized
-// vectors.
-vec3 OctahedronMap_positionToDirection(vec2 octahedronMapPosition) {
+// Converts a position on an octahedron map to a point on the octahedron.
+// You can use this directly to sample a cubemap without the need for normalization.
+vec3 OctahedronMap_positionToPointOnOctahedron(vec2 octahedronMapPosition) {
   vec2 hemispherePosition = vec2(
     octahedronMapPosition.x,
     mod(octahedronMapPosition.y, 0.5) * 2.0
@@ -46,4 +45,9 @@ vec3 OctahedronMap_positionToDirection(vec2 octahedronMapPosition) {
   if (octahedronMapPosition.y >= 0.5) pointOnOctahedron.z *= -1.0;
 
   return pointOnOctahedron;
+}
+
+// Converts a position on an octahedron map to a direction.
+vec3 OctahedronMap_positionToDirection(vec2 octahedronMapPosition) {
+  return normalize(OctahedronMap_positionToPointOnOctahedron(octahedronMapPosition));
 }

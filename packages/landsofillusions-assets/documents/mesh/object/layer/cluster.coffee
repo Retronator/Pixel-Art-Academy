@@ -91,6 +91,9 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
     @_updatedDependency.changed()
     @layers.contentUpdated()
 
+  isVisible: ->
+    @layer.isVisible()
+
   _updatePlaneHelpers: ->
     return unless plane = @plane()
 

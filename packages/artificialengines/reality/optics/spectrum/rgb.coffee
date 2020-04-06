@@ -31,6 +31,9 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
     g: @array[1]
     b: @array[2]
 
+  toVector3: ->
+    new THREE.Vector3 @array[0], @array[1], @array[2]
+
   toXYZ: ->
     Artificial.Spectrum.Color.SRGB.getXYZForLinearRGB @toObject()
 

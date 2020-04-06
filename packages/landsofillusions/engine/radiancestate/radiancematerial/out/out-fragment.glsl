@@ -16,10 +16,9 @@ void main() {
   bool outGoesIntoMaterial = outOctahedronMapPosition.y > 0.5;
 
   // Calculate geometry of the reflection.
-  vec3 normal = vec3(0, 0, 1);
-  vec3 inDirection = reflect(outDirection, normal);
-  float cosAngleOfIncidnce = dot(normal, outDirection);
-  float angleOfIncidence = acos(cosAngleOfIncidnce);
+  vec3 inDirection = vec3(outDirection.x, outDirection.y, -outDirection.z); // = reflect(outDirection, [0, 0, 1]);
+  float cosAngleOfIncidence = outDirection.z; // = [0, 0, 1] ⋅ outDirection
+  float angleOfIncidence = acos(cosAngleOfIncidence);
 
   // Based on roughness, determine how big of a solid angle to sample.
   float sampleLevel = 0.0;
@@ -28,7 +27,7 @@ void main() {
   float sampleSolidAngle = hemisphereSolidAngle / samplesPerHemisphere;
 
   // Get irradiance coming from incoming direction.
-  vec3 irradiance = sampleProbe(-inDirection, sampleLevel).rgb * sampleSolidAngle; // * saturate(cosAngleOfIncidnce)
+  vec3 irradiance = sampleProbe(-inDirection, sampleLevel).rgb;
 
   // Calculate reflectance and absorptance of the material.
   vec3 reflectance, absorptance;

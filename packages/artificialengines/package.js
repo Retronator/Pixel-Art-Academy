@@ -263,6 +263,7 @@ Package.onUse(function(api) {
 
   // Artificial Pyramid
   api.addGlsl('pyramid/trigonometry');
+  api.addGlsl('pyramid/integeroperations');
 
   api.addFile('pyramid/complexnumber');
   api.addGlsl('pyramid/complexnumber');
@@ -297,6 +298,7 @@ Package.onUse(function(api) {
   api.addFileWithGlsl('reality/optics/snellslaw');
   api.addFileWithGlsl('reality/optics/fresnelequations');
   api.addFile('reality/optics/scattering');
+  api.addGlsl('reality/optics/scattering');
 
   api.addFile('reality/optics/spectrum..');
   api.addFile('reality/optics/spectrum/formulated');

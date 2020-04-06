@@ -10,7 +10,7 @@ class LOI.Engine.Skydome extends AS.RenderObject
     super arguments...
 
     # Create render target for rendering the sky to.
-    @renderTarget = new THREE.WebGLRenderTarget @constructor.resolution, @constructor.resolution * 2,
+    @renderTarget = new THREE.WebGLRenderTarget @constructor.resolution, @constructor.resolution,
       type: THREE.FloatType
       stencilBuffer: false
       depthBuffer: false
@@ -27,10 +27,12 @@ class LOI.Engine.Skydome extends AS.RenderObject
     sphere = new THREE.Mesh new THREE.SphereBufferGeometry(950, 32, 16), new @constructor.Material
       map: @renderTarget.texture
 
+    sphere.layers.set 3
+
     @add sphere
 
-  updateTexture: (renderer, sunDirection) ->
-    @renderMaterial.uniforms.sunDirection.value.copy(sunDirection).applyMatrix4(@constructor.worldToSkydomeMatrix)
+  updateTexture: (renderer, starDirection) ->
+    @renderMaterial.uniforms.starDirection.value.copy(starDirection).applyMatrix4(@constructor.worldToSkydomeMatrix)
 
     renderer.setRenderTarget @renderTarget
     renderer.render @scene, @camera

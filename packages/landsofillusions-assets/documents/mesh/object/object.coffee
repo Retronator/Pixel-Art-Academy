@@ -55,6 +55,9 @@ class LOI.Assets.Mesh.Object
     @_updatedDependency.changed()
     @objects.contentUpdated()
 
+  isVisible: ->
+    @visible() ? true
+
   generateNewClusterId: ->
     # Increment and return a new cluster ID.
     ++@lastClusterId

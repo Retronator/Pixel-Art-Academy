@@ -98,8 +98,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     # Handle updating radiance state.
     @radianceUpdateMaxDuration =
       realtime: 0
-      interactive: 1 / 50
-      idle: 1 / 25
+      interactive: 1 / 30
+      idle: 1 / 10
 
     @radianceUpdateCooldown =
       realtime: 0.5
@@ -170,10 +170,19 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
           unless @_radianceStatesToBeUpdated.length
             scene.traverse (object) =>
               return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
-              return unless radianceState = object.radianceState()
+              engineCluster = object
 
-              # We should update one radiance state per 100×100 cluster pixels.
-              updatesCount = Math.ceil radianceState.probeMap.pixelsCount / 10000
+              return unless engineCluster.data.isVisible()
+              return unless radianceState = engineCluster.radianceState()
+
+              # We should update one radiance state per 10×10 cluster pixels.
+              updatesCount = Math.ceil radianceState.probeMap.pixelsCount / 100
+
+              if updatesCount < 1
+                updatesCount = if updatesCount > Math.random() then 1 else 0
+
+              else
+                updatesCount = Math.ceil updatesCount
 
               @_radianceStatesToBeUpdated.push radianceState for i in [0...updatesCount]
 

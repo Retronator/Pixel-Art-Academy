@@ -5,6 +5,7 @@
 #include <normalmap_pars_fragment>
 #include <packing>
 
+#include <Artificial.Pyramid.IntegerOperations>
 #include <LandsOfIllusions.Engine.Materials.ditherParametersFragment>
 
 // Globals
@@ -34,18 +35,18 @@ void main()	{
   vec2 pixelCoordinates = vPixelCoordinates / vCameraAngleW;
   pixelCoordinates = floor(pixelCoordinates + 0.5);
 
-  float probeIndex = texture2D(probeMap, pixelCoordinates / clusterSize).a;
+  // Note: We need to use integer arithmetics to avoid rounding errors when computing probe coordinates.
+  int probeIndex = int(texture2D(probeMap, pixelCoordinates / clusterSize).a);
+  int clusterWidth = int(clusterSize.x);
   vec2 probeCoordinates = vec2(
-    mod(probeIndex, clusterSize.x),
-    floor(probeIndex / clusterSize.x)
+    mod(probeIndex, clusterWidth),
+    probeIndex / clusterWidth
   );
 
   vec3 fragmentToViewDirectionInWorldSpace = normalize(cameraPosition - vFragmentPositionInWorldSpace);
   vec3 fragmentToViewDirectionInClusterSpace = transformDirection(fragmentToViewDirectionInWorldSpace, clusterPlaneWorldMatrixInverse);
 
   vec3 radiance = sampleRadiance(radianceAtlasOut, clusterSize, probeCoordinates, fragmentToViewDirectionInClusterSpace);
-
-  // Color the pixel with the best match from the palette.
   gl_FragColor = vec4(radiance, 1);
 
   #include <tonemapping_fragment>
