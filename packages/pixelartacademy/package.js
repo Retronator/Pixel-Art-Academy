@@ -22,8 +22,6 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-things');
   api.addFile('adventure/chapter..');
 
-  // Layouts
-
   api.addFile('layouts..');
   api.addFile('layouts/adminaccess..');
 
@@ -42,4 +40,13 @@ Package.onUse(function(api) {
   api.addFile('student..');
   api.addThing('student/conversation..');
 
+  api.addComponent('stilllifestand..');
+  api.addFile('stilllifestand/cameramanager');
+  api.addFile('stilllifestand/scenemanager');
+  api.addFile('stilllifestand/renderermanager');
+  api.addFile('stilllifestand/physicsmanager');
+  api.addFile('stilllifestand/mouse');
+
+  api.addFile('stilllifestand/item..');
+  api.addFile('stilllifestand/item/sphere');
 });

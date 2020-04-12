@@ -21,6 +21,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
   api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartacademy');
 
   api.export('Retronator');
 
@@ -140,6 +141,8 @@ Package.onUse(function(api) {
   api.addComponent('floor4/artstudio/southwest..');
   api.addComponent('floor4/artstudio/southeast..');
   api.addComponent('floor4/artstudio/pencils..');
+
+  api.addFile('floor4/artstudio/stilllifestand');
 
   // Pages
   

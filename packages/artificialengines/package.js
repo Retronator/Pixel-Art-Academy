@@ -384,6 +384,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum/animatedmesh');
   api.addFile('spectrum/imagedatahelpers');
   api.addFile('spectrum/shadowmapdebugmaterial');
+  api.addFile('spectrum/screenquad');
 
   api.addClientJavascript('spectrum/creature/glmatrix');
   api.addClientJavascript('spectrum/creature/creaturemeshbone');

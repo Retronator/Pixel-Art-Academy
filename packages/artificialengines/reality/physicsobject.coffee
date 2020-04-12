@@ -48,10 +48,10 @@ class AR.PhysicsObject
     @motionState.getWorldTransform @_transform
     @_transform.getRotation().toObject()
 
-  setRotation: (rotation) ->
+  setRotation: (rotationQuaternion) ->
     @motionState.getWorldTransform @_transform
 
-    @_quaternion.copy rotation
+    @_quaternion.copy rotationQuaternion
     @_transform.setRotation @_quaternion
     @motionState.setWorldTransform @_transform
 

@@ -27,7 +27,7 @@ class LOI.Items.Map extends LOI.Adventure.Item
     super arguments...
 
     # The map is active, but not visible by default.
-    @activatedState LOI.Adventure.Item.activatedStates.Activated
+    @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     @fullscreenOverlay = new ReactiveField false
 
     $(document).on 'keydown.landsofillusions-items-map', (event) =>
@@ -66,7 +66,7 @@ class LOI.Items.Map extends LOI.Adventure.Item
       # We only need to jump out of fullscreen and leave the map active.
       @fullscreenOverlay false
       @map.showUserInterface false
-      @activatedState LOI.Adventure.Item.activatedStates.Activated
+      @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     ,
       500
 

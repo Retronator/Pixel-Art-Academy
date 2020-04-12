@@ -117,8 +117,8 @@ class LOI.Engine.World.PhysicsManager
   destroy: ->
     @sceneItems.stop()
 
-    Ammo.destroy dynamicsWorld
-    Ammo.destroy solver
-    Ammo.destroy overlappingPairCache
-    Ammo.destroy dispatcher
-    Ammo.destroy collisionConfiguration
+    Ammo.destroy @dynamicsWorld
+    Ammo.destroy @solver
+    Ammo.destroy @overlappingPairCache
+    Ammo.destroy @dispatcher
+    Ammo.destroy @collisionConfiguration

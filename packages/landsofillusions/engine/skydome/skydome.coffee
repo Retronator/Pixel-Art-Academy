@@ -27,12 +27,10 @@ class LOI.Engine.Skydome extends AS.RenderObject
     sphere = new THREE.Mesh new THREE.SphereBufferGeometry(950, 32, 16), new @constructor.Material
       map: @renderTarget.texture
 
-    sphere.layers.set 3
-
     @add sphere
 
   updateTexture: (renderer, starDirection) ->
-    @renderMaterial.uniforms.starDirection.value.copy(starDirection).applyMatrix4(@constructor.worldToSkydomeMatrix)
+    @renderMaterial.uniforms.starDirection.value.copy(starDirection).normalize().applyMatrix4(@constructor.worldToSkydomeMatrix)
 
     renderer.setRenderTarget @renderTarget
     renderer.render @scene, @camera

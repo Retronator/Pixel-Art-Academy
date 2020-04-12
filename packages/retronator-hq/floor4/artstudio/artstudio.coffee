@@ -34,6 +34,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
   things: -> [
     @constructor.Alexandra
     @constructor.Artworks
+    @constructor.StillLifeStand
     @elevatorButton
   ]
 

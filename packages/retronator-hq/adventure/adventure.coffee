@@ -35,6 +35,9 @@ class HQ.Adventure extends LOI.Adventure
     ,
       item: HQ.Store.Display
       location: HQ.Store
+    ,
+      item: HQ.ArtStudio.StillLifeStand
+      location: HQ.ArtStudio
     ]
 
     for directItem in directItems

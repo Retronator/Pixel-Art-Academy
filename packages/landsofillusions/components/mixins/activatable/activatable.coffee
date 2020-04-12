@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Components.Mixins.Activatable extends AM.Component
-  @activatedStates:
+  @ActivatedStates:
     Deactivated: 'Deactivated'
     Activating: 'Activating'
     Activated: 'Activated'
@@ -13,31 +13,31 @@ class LOI.Components.Mixins.Activatable extends AM.Component
 
     # An dialog that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the dialog is currently in.
-    @activatedState = new ReactiveField @constructor.activatedStates.Deactivated
+    @activatedState = new ReactiveField @constructor.ActivatedStates.Deactivated
 
-  deactivated: -> @activatedState() is @constructor.activatedStates.Deactivated
-  activating: -> @activatedState() is @constructor.activatedStates.Activating
-  activated: -> @activatedState() is @constructor.activatedStates.Activated
-  deactivating: -> @activatedState() is @constructor.activatedStates.Deactivating
+  deactivated: -> @activatedState() is @constructor.ActivatedStates.Deactivated
+  activating: -> @activatedState() is @constructor.ActivatedStates.Activating
+  activated: -> @activatedState() is @constructor.ActivatedStates.Activated
+  deactivating: -> @activatedState() is @constructor.ActivatedStates.Deactivating
 
   activate: (onActivatedCallback) ->
     return if @activating() or @activated()
 
     # The dialog gets activated (used).
-    @activatedState @constructor.activatedStates.Activating
+    @activatedState @constructor.ActivatedStates.Activating
 
     @mixinParent().callFirstWith null, 'onActivate', =>
-      @activatedState @constructor.activatedStates.Activated
+      @activatedState @constructor.ActivatedStates.Activated
       onActivatedCallback?()
 
   deactivate: (onDeactivatedCallback) ->
     return if @deactivating() or @deactivated()
 
     # The dialog gets deactivated.
-    @activatedState @constructor.activatedStates.Deactivating
+    @activatedState @constructor.ActivatedStates.Deactivating
 
     @mixinParent().callFirstWith null, 'onDeactivate', =>
-      @activatedState @constructor.activatedStates.Deactivated
+      @activatedState @constructor.ActivatedStates.Deactivated
       onDeactivatedCallback?()
 
   # Handlers
