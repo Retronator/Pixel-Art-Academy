@@ -33,7 +33,7 @@ class LOI.HumanAvatar.PhysicsObject extends AR.PhysicsObject
     @setFixedRotation()
 
     # Disable deactivation so we can manually move the body by direct positioning.
-    @body.setActivationState 4
+    @body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
     
   createCollisionShape: (options) ->
     occupationMargin = options?.occupationMargin or 0

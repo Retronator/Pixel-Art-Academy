@@ -9,6 +9,7 @@ class PAA.StillLifeStand.RendererManager
     @renderer = new THREE.WebGLRenderer
       powerPreference: 'high-performance'
 
+    @renderer.autoClear = false
     @renderer.physicallyCorrectLights = true
 
     @mainRenderTarget = new THREE.WebGLRenderTarget 1, 1,
@@ -23,13 +24,13 @@ class PAA.StillLifeStand.RendererManager
       viewport = LOI.adventure.interface.display.viewport()
       scale = LOI.adventure.interface.display.scale()
 
-      width = viewport.viewportBounds.width()
-      height = viewport.viewportBounds.height()
+      renderTargetWidth = Math.ceil viewport.viewportBounds.width() / scale
+      renderTargetHeight = Math.ceil viewport.viewportBounds.height() / scale
 
-      return unless width and height
+      return unless renderTargetWidth and renderTargetHeight
 
-      @renderer.setSize width, height
-      @mainRenderTarget.setSize width / scale, height / scale
+      @renderer.setSize renderTargetWidth * scale, renderTargetHeight * scale
+      @mainRenderTarget.setSize renderTargetWidth, renderTargetHeight
 
   destroy: ->
     @renderer.dispose()
@@ -37,7 +38,8 @@ class PAA.StillLifeStand.RendererManager
 
   draw: (appTime) ->
     scene = @stillLifeStand.sceneManager().scene
-    camera = @stillLifeStand.cameraManager().camera
+    debugScene = @stillLifeStand.sceneManager().debugScene
+    camera = @stillLifeStand.cameraManager().camera()
 
     # Render main pass.
     @renderer.outputEncoding = THREE.sRGBEncoding
@@ -46,7 +48,11 @@ class PAA.StillLifeStand.RendererManager
 
     @renderer.setClearColor 0xff8800, 1
     @renderer.setRenderTarget @mainRenderTarget
+    @renderer.clear()
     @renderer.render scene, camera
+
+    # Render debug pass.
+    @renderer.render debugScene, camera
 
     # Render result to the screen.
     @renderer.outputEncoding = THREE.LinearEncoding

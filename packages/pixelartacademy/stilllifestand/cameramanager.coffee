@@ -5,7 +5,8 @@ PAA = PixelArtAcademy
 
 class PAA.StillLifeStand.CameraManager
   constructor: (@stillLifeStand) ->
-    @camera = new THREE.PerspectiveCamera 60, 1, 0.01, 1000
+    @_camera = new THREE.PerspectiveCamera 60, 1, 0.01, 1000
+    @camera = new AE.ReactiveWrapper @_camera
 
     @_properties = new ReactiveField
       azimuthalAngle: 0
@@ -21,8 +22,9 @@ class PAA.StillLifeStand.CameraManager
 
       return unless width and height
 
-      @camera.aspect = width / height
-      @camera.updateProjectionMatrix()
+      @_camera.aspect = width / height
+      @_camera.updateProjectionMatrix()
+      @camera.updated()
 
     # Update camera position when properties change.
     @stillLifeStand.autorun =>
@@ -31,13 +33,15 @@ class PAA.StillLifeStand.CameraManager
       ɸ = properties.azimuthalAngle
       θ = properties.polarAngle
 
-      @camera.position.copy
+      @_camera.position.copy
         x: r * Math.sin(θ) * Math.cos(ɸ)
         y: r * Math.cos(θ)
         z: r * Math.sin(θ) * Math.sin(ɸ)
 
       # Update rotation to look at the center.
-      @camera.rotation.set -Math.PI / 2 + θ, Math.PI / 2 - ɸ, 0, 'YXZ'
+      @_camera.rotation.set -Math.PI / 2 + θ, Math.PI / 2 - ɸ, 0, 'YXZ'
+
+      @camera.updated()
 
     @rotatingCamera = new ReactiveField false
     @stillLifeStand.autorun =>

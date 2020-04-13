@@ -19,8 +19,10 @@ class PAA.StillLifeStand.PhysicsManager
       new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
     ,
       new Ammo.btStaticPlaneShape new Ammo.btVector3(0, 1, 0), 0
-    ,
-      new Ammo.btVector3
+
+    # Add cursor.
+    @cursor = new @constructor.Cursor
+    @dynamicsWorld.addRigidBody @cursor.body
 
     # Add scene items.
     @items = new AE.ReactiveArray =>
@@ -52,3 +54,17 @@ class PAA.StillLifeStand.PhysicsManager
     Ammo.destroy @overlappingPairCache
     Ammo.destroy @dispatcher
     Ammo.destroy @collisionConfiguration
+
+  class @Cursor extends AR.PhysicsObject
+    constructor: ->
+      super arguments...
+
+      @mass = 0
+      @motionState = new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
+      @collisionShape = new Ammo.btSphereShape 0
+
+      @body = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape
+
+      # Mark as kinematic object and disable deactivation so we can manually move the cursor by direct positioning.
+      @body.setCollisionFlags Ammo.btCollisionObject.CollisionFlags.KinematicObject
+      @body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation

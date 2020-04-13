@@ -2,6 +2,11 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+_cursorIntersectionPoints = []
+_cursorRaycaster = new THREE.Raycaster
+_cursorPlane = new THREE.Plane new THREE.Vector3(0, 1, 0), 0
+_cursorPosition = new THREE.Vector3
+
 class PAA.StillLifeStand extends LOI.Adventure.Item
   template: -> 'PixelArtAcademy.StillLifeStand'
 
@@ -38,6 +43,9 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ]
+
+    @hoveredItem = new ReactiveField null, (a, b) => a is b
+    @movingItem = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -79,8 +87,59 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     ,
       500
 
+  cursorClass: ->
+    return 'grabbing' if @movingItem()
+    return 'can-grab' if @hoveredItem()
+
+    null
+
   update: (appTime) ->
-    @physicsManager()?.update appTime
+    # Update physics.
+    physicsManager = @physicsManager()
+    physicsManager.update appTime
+
+    # Update the cursor.
+    if viewportCoordinates = @mouse().viewportCoordinates()
+      sceneManager = @sceneManager()
+      scene = sceneManager.scene
+      camera = @cameraManager().camera()
+
+      # Update the raycaster.
+      _cursorRaycaster.setFromCamera viewportCoordinates, camera
+
+      # See if we're currently moving an item.
+      if @movingItem()
+        # We need to move the cursor in the movement plane.
+        _cursorRaycaster.ray.intersectPlane _cursorPlane, _cursorPosition
+        physicsManager.cursor.setPosition _cursorPosition
+
+      else
+        # We need to find out what we're hovering over.
+        hoveredItem = null
+
+        # Update intersection points.
+        _cursorIntersectionPoints.length = 0
+        _cursorRaycaster.intersectObjects scene.children, true, _cursorIntersectionPoints
+
+        if intersectionPoint = _cursorIntersectionPoints[0]
+          # Update cursor to this intersection.
+          physicsManager.cursor.setPosition intersectionPoint.point
+
+          # See if this mesh is part of a still life item.
+          searchObject = intersectionPoint.object
+
+          while searchObject
+            if searchObject instanceof @constructor.Item.RenderObject
+              hoveredItem = searchObject.parentItem
+              break
+
+            searchObject = searchObject.parent
+
+        @hoveredItem hoveredItem
+
+      # Transfer cursor position from physics engine to render scene.
+      physicsManager.cursor.getPositionTo _cursorPosition
+      sceneManager.cursor.position.copy _cursorPosition
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime
@@ -97,8 +156,16 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     # Prevent browser select/dragging behavior.
     event.preventDefault()
 
-    # We should drag the blueprint if we're not dragging a goal.
-    @cameraManager().startRotateCamera event.coordinates
+    # See if we're starting to move an item.
+    if hoveredItem = @hoveredItem()
+      @movingItem hoveredItem
+
+      # Set movement plane to be at the height of the cursor.
+      _cursorPlane.constant = @sceneManager().cursor.position.y
+
+    else
+      # We should rotate the camera instead.
+      @cameraManager().startRotateCamera event.coordinates
 
   onMouseMove: (event) ->
     @mouse().onMouseMove event

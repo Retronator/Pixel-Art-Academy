@@ -1,5 +1,15 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-stilllifestand
+  .safe-area
+    display none
+
   .background
     background none
+
+    .viewport-area
+      &.can-grab
+        cursor grab
+
+      &.grabbing
+        cursor grabbing

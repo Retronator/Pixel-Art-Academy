@@ -57,6 +57,12 @@ class PAA.StillLifeStand.SceneManager
       if sceneItemsChanged
         @items @_items
 
+    # Create debug scene.
+    @debugScene = new THREE.Scene
+
+    @cursor = new THREE.Mesh new THREE.SphereBufferGeometry(0.05), new THREE.MeshBasicMaterial color: 0xdddd00
+    @debugScene.add @cursor
+
   destroy: ->
     item.destroy() for item in @_items
     @skydome.destroy()
