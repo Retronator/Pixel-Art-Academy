@@ -4,7 +4,7 @@
 
 ## UsePixelBoyEditorChoice
 
-* I've decided, I want to use the PixelBoy editor. `not AfterTutorial`
+* I've decided, I want to use the PixelBoy editor. `not AfterTutorial or not ReceiveDesktopEditor`
 
 ## UsePixelBoyEditor
 

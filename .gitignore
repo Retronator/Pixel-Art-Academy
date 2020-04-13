@@ -1,7 +1,7 @@
 .meteor/local
 .idea/
 node_modules
-run
-build
-deploy
+/run
+/build
+/deploy
 .DS_Store
