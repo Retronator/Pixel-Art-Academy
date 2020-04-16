@@ -8,7 +8,7 @@ class LOI.Engine.Skydome.Material extends THREE.ShaderMaterial
 
       uniforms:
         resolution:
-          value: LOI.Engine.Skydome.resolution
+          value: options.resolution
         uvTransform:
           value: new THREE.Matrix3
         map:

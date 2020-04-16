@@ -9,15 +9,32 @@ class PAA.StillLifeStand.SceneManager
     @scene.manager = @
 
     # Create lighting.
-    @ambientLight = new THREE.AmbientLight 0xffffff, 0.1
+    @ambientLight = new THREE.AmbientLight 0x151820, 0.2
     @scene.add @ambientLight
 
-    @directionalLight = new THREE.DirectionalLight 0xffffff, 0.5
-    @directionalLight.position.set -100, 20, 100
+    @directionalLight = new THREE.DirectionalLight 0xa59e88, 0.1
+    @directionalLight.position.set -120, 40, 60
+    @directionalLight.castShadow = true
+    @directionalLight.shadow.mapSize.width = 4096
+    @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
 
     @skydome = new LOI.Engine.Skydome
+      resolution: 4096
+      generateCubeTexture: true
+
     @scene.add @skydome
+
+    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
+      color: 0x606060
+      envMap: @skydome.cubeTexture
+      roughness: 0.9
+      metalness: 0
+      reflectivity: 0.1
+
+    @ground.receiveShadow = true
+    @ground.rotation.x = -Math.PI / 2
+    @scene.add @ground
 
     @_items = []
     @items = new ReactiveField @_items
@@ -70,6 +87,11 @@ class PAA.StillLifeStand.SceneManager
   _addItem: (itemData) ->
     itemClass = PAA.StillLifeStand.Item.getClassForId itemData.type
     item = new itemClass itemData
+
+    item.renderObject.material.envMap = @skydome.cubeTexture
+    item.renderObject.material.roughness = 0.9
+    item.renderObject.material.metalness = 0
+    item.renderObject.material.reflectivity = 0.1
 
     @_items.push item
     @scene.add item.renderObject

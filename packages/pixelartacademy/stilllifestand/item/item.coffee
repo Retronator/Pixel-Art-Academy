@@ -5,6 +5,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.StillLifeStand.Item
+  @roughEdgeMargin: 0.001
+
   @_itemClassesById = {}
 
   @getClassForId: (id) ->
@@ -26,10 +28,12 @@ class PAA.StillLifeStand.Item
     constructor: (@parentItem) ->
       super arguments...
 
-      @material = new THREE.MeshStandardMaterial
+      @material = new THREE.MeshPhysicalMaterial
       @geometry = @createGeometry()
 
       @mesh = new THREE.Mesh @geometry, @material
+      @mesh.receiveShadow = true
+      @mesh.castShadow = true
 
       @add @mesh
 
@@ -54,9 +58,15 @@ class PAA.StillLifeStand.Item
       @collisionShape = @createCollisionShape()
       @collisionShape.calculateLocalInertia @mass, @localInertia
 
+      # Items should have slightly rounded edges.
+      @collisionShape.setMargin PAA.StillLifeStand.Item.roughEdgeMargin
+
       bodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
       @body = new Ammo.btRigidBody bodyInfo
-      @body.setRestitution 1
+
+      @body.setRestitution 0.6
+      @body.setFriction 0.8
+      @body.setRollingFriction 0.05
 
     createCollisionShape: ->
       throw new AE.NotImplementedException "Still life item physics object must provide a collision shape."

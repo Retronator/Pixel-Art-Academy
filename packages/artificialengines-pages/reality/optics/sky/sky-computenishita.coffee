@@ -116,6 +116,6 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
         transmission.copy(rayleighCrossSectionSpectrum).multiplyScalar(-stepSize * viewRayTotalMolecularNumberDensity).exp()
         totalTransmission.add(transmission)
 
-      totalRadiance.copy(@D65EmissionSpectrum).multiply(totalTransmission)
+      totalRadiance.copy(@SunEmissionSpectrum).multiply(totalTransmission)
 
       AS.Color.CIE1931.getXYZForSpectrum totalRadiance

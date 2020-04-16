@@ -11,6 +11,9 @@ class PAA.StillLifeStand.RendererManager
 
     @renderer.autoClear = false
     @renderer.physicallyCorrectLights = true
+    @renderer.shadowMap.enabled = true
+    @renderer.shadowMap.autoUpdate = false
+    @renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
     @mainRenderTarget = new THREE.WebGLRenderTarget 1, 1,
       minFilter: THREE.NearestFilter
@@ -32,27 +35,31 @@ class PAA.StillLifeStand.RendererManager
       @renderer.setSize renderTargetWidth * scale, renderTargetHeight * scale
       @mainRenderTarget.setSize renderTargetWidth, renderTargetHeight
 
+    @renderDebug = false
+
   destroy: ->
     @renderer.dispose()
     @mainRenderTarget.dispose()
 
   draw: (appTime) ->
     scene = @stillLifeStand.sceneManager().scene
-    debugScene = @stillLifeStand.sceneManager().debugScene
     camera = @stillLifeStand.cameraManager().camera()
 
     # Render main pass.
     @renderer.outputEncoding = THREE.sRGBEncoding
     @renderer.toneMapping = THREE.LinearToneMapping
-    @renderer.toneMappingExposure = 2 ** 3
+    @renderer.toneMappingExposure = 2 ** 4.5
 
     @renderer.setClearColor 0xff8800, 1
     @renderer.setRenderTarget @mainRenderTarget
     @renderer.clear()
+    @renderer.shadowMap.needsUpdate = true
     @renderer.render scene, camera
 
-    # Render debug pass.
-    @renderer.render debugScene, camera
+    if @renderDebug
+      # Render debug pass.
+      debugScene = @stillLifeStand.sceneManager().debugScene
+      @renderer.render debugScene, camera
 
     # Render result to the screen.
     @renderer.outputEncoding = THREE.LinearEncoding

@@ -22,7 +22,7 @@ class AR.Pages.Optics.Sky extends AM.Component
     super arguments...
 
     @AirClass = AR.Chemistry.Materials.Mixtures.Air.DryMixture
-    @D65EmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
+    @SunEmissionSpectrum = AR.Chemistry.Materials.Mixtures.Stars.Sun.getEmissionSpectrumForTemperature 5778
     @earthRadius = 6371e3 # m
     atmosphereBoundsHeight = 50e3 #m
     @atmosphereBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius + atmosphereBoundsHeight

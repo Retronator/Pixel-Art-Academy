@@ -48,5 +48,8 @@ Package.onUse(function(api) {
   api.addFile('stilllifestand/mouse');
 
   api.addFile('stilllifestand/item..');
+  api.addFile('stilllifestand/item/box');
+  api.addFile('stilllifestand/item/cone');
+  api.addFile('stilllifestand/item/cylinder');
   api.addFile('stilllifestand/item/sphere');
 });

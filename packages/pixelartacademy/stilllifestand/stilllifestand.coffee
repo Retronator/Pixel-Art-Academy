@@ -4,7 +4,6 @@ PAA = PixelArtAcademy
 
 _cursorIntersectionPoints = []
 _cursorRaycaster = new THREE.Raycaster
-_cursorPlane = new THREE.Plane new THREE.Vector3(0, 1, 0), 0
 _cursorPosition = new THREE.Vector3
 
 class PAA.StillLifeStand extends LOI.Adventure.Item
@@ -27,9 +26,9 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       type: 'PixelArtAcademy.StillLifeStand.Item.Sphere'
       properties:
         radius: 0.1
-        mass: 4
+        mass: 3
       position:
-        x: 0, y: 1.1, z: 0
+        x: -0.6, y: 0.2, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -39,13 +38,72 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         radius: 0.05
         mass: 1
       position:
-        x: 0.2, y: 0.6, z: 0
+        x: -0.4, y: 0.2, z: 0
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Box'
+      properties:
+        size:
+          x: 0.1, y: 0.2, z: 0.3
+        mass: 3
+      position:
+        x: -0.2, y: 0.2, z: 0
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Box'
+      properties:
+        size:
+          x: 0.15, y: 0.15, z: 0.15
+        mass: 3
+      position:
+        x: 0, y: 0.2, z: 0
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Cone'
+      properties:
+        radius: 0.1
+        height: 0.3
+        mass: 2
+      position:
+        x: 0.2, y: 0.2, z: 0
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Cylinder'
+      properties:
+        radius: 0.05
+        height: 0.15
+        mass: 2
+      position:
+        x: 0.4, y: 0.075, z: 0
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Cylinder'
+      properties:
+        radius: 0.1
+        height: 0.05
+        mass: 2
+      position:
+        x: 0.6, y: 0.025, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ]
 
     @hoveredItem = new ReactiveField null, (a, b) => a is b
     @movingItem = new ReactiveField null
+
+    @_cursorVerticalPlane = new THREE.Plane
+    @_cursorHorizontalPlane = new THREE.Plane
+    @_cursorVerticalPlaneActive = true
 
   onCreated: ->
     super arguments...
@@ -109,9 +167,17 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
       # See if we're currently moving an item.
       if @movingItem()
-        # We need to move the cursor in the movement plane.
-        _cursorRaycaster.ray.intersectPlane _cursorPlane, _cursorPosition
-        physicsManager.cursor.setPosition _cursorPosition
+        # We need to move the cursor in the movement planes. Try the vertical plane first if it's still active.
+        if @_cursorVerticalPlaneActive
+          _cursorRaycaster.ray.intersectPlane @_cursorVerticalPlane, _cursorPosition
+
+        # We need to use the horizontal axis unless the vertical one is active and we are above the horizontal one.
+        unless @_cursorVerticalPlaneActive and _cursorPosition.y >= -@_cursorHorizontalPlane.constant - 0.01
+          @_cursorVerticalPlaneActive = false
+          _cursorRaycaster.ray.intersectPlane @_cursorHorizontalPlane, _cursorPosition
+
+        sceneManager.cursor.position.copy _cursorPosition
+        physicsManager.moveItem _cursorPosition
 
       else
         # We need to find out what we're hovering over.
@@ -123,7 +189,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
         if intersectionPoint = _cursorIntersectionPoints[0]
           # Update cursor to this intersection.
-          physicsManager.cursor.setPosition intersectionPoint.point
+          sceneManager.cursor.position.copy intersectionPoint.point
 
           # See if this mesh is part of a still life item.
           searchObject = intersectionPoint.object
@@ -136,10 +202,6 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
             searchObject = searchObject.parent
 
         @hoveredItem hoveredItem
-
-      # Transfer cursor position from physics engine to render scene.
-      physicsManager.cursor.getPositionTo _cursorPosition
-      sceneManager.cursor.position.copy _cursorPosition
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime
@@ -160,8 +222,31 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     if hoveredItem = @hoveredItem()
       @movingItem hoveredItem
 
-      # Set movement plane to be at the height of the cursor.
-      _cursorPlane.constant = @sceneManager().cursor.position.y
+      # Set cursor movement planes. By default we move in the horizontal plane.
+      cursorPosition = @sceneManager().cursor.position
+      @_cursorHorizontalPlane.setFromNormalAndCoplanarPoint new THREE.Vector3(0, 1, 0), cursorPosition
+
+      # If camera is looking relatively sideways, we also allow lifting items.
+      camera = @cameraManager().camera()
+      cameraDirection = camera.position.clone().normalize()
+
+      @_cursorVerticalPlaneActive = Math.abs(cameraDirection.y) < 0.5
+
+      if @_cursorVerticalPlaneActive
+        verticalPlaneNormal = new THREE.Vector3().copy cameraDirection
+        verticalPlaneNormal.y = 0
+
+        @_cursorVerticalPlane.setFromNormalAndCoplanarPoint verticalPlaneNormal, cursorPosition
+
+      physicsManager = @physicsManager()
+      physicsManager.startMovingItem hoveredItem, cursorPosition
+
+      # Wire end of dragging on mouse up anywhere in the window.
+      $(document).on 'mouseup.pixelartacademy-stilllifestand', =>
+        $(document).off 'mouseup.pixelartacademy-stilllifestand'
+
+        @movingItem null
+        physicsManager.endMovingItem()
 
     else
       # We should rotate the camera instead.

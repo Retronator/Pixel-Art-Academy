@@ -9,7 +9,7 @@ class PAA.StillLifeStand.CameraManager
     @camera = new AE.ReactiveWrapper @_camera
 
     @_properties = new ReactiveField
-      azimuthalAngle: 0
+      azimuthalAngle: AR.Degrees 90
       polarAngle: AR.Degrees 80
       radialDistance: 2
 

@@ -9,7 +9,7 @@ rayleighCoefficientSpectrumCacheXYZ = []
 
 class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
   computeFormulatedXYZ: ->
-    D65EmissionSpectrumXYZ ?= new SpectrumClass().copy @D65EmissionSpectrum
+    D65EmissionSpectrumXYZ ?= new SpectrumClass().copy @SunEmissionSpectrum
 
     @_computeFormulatedFast SpectrumClass, D65EmissionSpectrumXYZ, rayleighCoefficientSpectrumCacheXYZ
 

@@ -14,15 +14,17 @@ class PAA.StillLifeStand.PhysicsManager
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @overlappingPairCache, @solver, @collisionConfiguration
     @dynamicsWorld.setGravity new Ammo.btVector3 0, -9.81, 0
 
-    # Add ground.
-    @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
-      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
+    # Add ground of wooden material.
+    @ground = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3(0, -0.5, 0)
     ,
-      new Ammo.btStaticPlaneShape new Ammo.btVector3(0, 1, 0), 0
+      new Ammo.btBoxShape new Ammo.btVector3(500, 0.5, 500), 0
 
-    # Add cursor.
-    @cursor = new @constructor.Cursor
-    @dynamicsWorld.addRigidBody @cursor.body
+    @ground.setRestitution 0.6
+    @ground.setFriction 0.7
+    @ground.setRollingFriction 0.05
+
+    @dynamicsWorld.addRigidBody @ground
 
     # Add scene items.
     @items = new AE.ReactiveArray =>
@@ -34,18 +36,6 @@ class PAA.StillLifeStand.PhysicsManager
       removed: (item) =>
         @dynamicsWorld.removeRigidBody item.physicsObject.body
 
-  update: (appTime) ->
-    return unless appTime.elapsedAppTime
-
-    @dynamicsWorld.stepSimulation appTime.elapsedAppTime, 10
-
-    for item in @items()
-      # Transfer transforms from physics to render objects.
-      item.physicsObject.motionState.getWorldTransform _transform
-
-      item.renderObject.position.setFromBulletVector3 _transform.getOrigin()
-      item.renderObject.quaternion.setFromBulletQuaternion _transform.getRotation()
-
   destroy: ->
     @items.stop()
 
@@ -55,16 +45,51 @@ class PAA.StillLifeStand.PhysicsManager
     Ammo.destroy @dispatcher
     Ammo.destroy @collisionConfiguration
 
-  class @Cursor extends AR.PhysicsObject
-    constructor: ->
-      super arguments...
+  startMovingItem: (item, cursorPosition) ->
+    @_clearCursorConstraint()
 
-      @mass = 0
-      @motionState = new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
-      @collisionShape = new Ammo.btSphereShape 0
+    # Calculate cursor position in item space.
+    item.renderObject.updateMatrixWorld true
+    worldToMovingItem = new THREE.Matrix4().getInverse item.renderObject.matrixWorld
+    cursorPositionInItemSpace = cursorPosition.clone().applyMatrix4 worldToMovingItem
 
-      @body = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape
+    # Add a constraint to the cursor.
+    @_movingBody = item.physicsObject.body
+    @_cursorConstraint = new Ammo.btPoint2PointConstraint @_movingBody, cursorPositionInItemSpace.toBulletVector3()
+    @_cursorConstraint.m_setting.m_tau = 0.001
 
-      # Mark as kinematic object and disable deactivation so we can manually move the cursor by direct positioning.
-      @body.setCollisionFlags Ammo.btCollisionObject.CollisionFlags.KinematicObject
-      @body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
+    @dynamicsWorld.addConstraint @_cursorConstraint
+
+    # Disable deactivation for the object.
+    @_movingBody.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
+
+  moveItem: (cursorPosition) ->
+    return unless @_cursorConstraint
+
+    @_cursorConstraint.setPivotB cursorPosition.toBulletVector3()
+
+  endMovingItem: ->
+    @_clearCursorConstraint()
+
+  _clearCursorConstraint: ->
+    return unless @_cursorConstraint
+
+    @dynamicsWorld.removeConstraint @_cursorConstraint
+    @_cursorConstraint = null
+
+    # Re-enable deactivation.
+    @_movingBody.setActivationState Ammo.btCollisionObject.ActivationStates.ActiveTag
+
+  update: (appTime) ->
+    return unless appTime.elapsedAppTime
+
+    @dynamicsWorld.stepSimulation appTime.elapsedAppTime, 10
+
+    @_updateItem item for item in @items()
+
+  _updateItem: (item) ->
+    # Transfer transforms from physics to render objects.
+    item.physicsObject.motionState.getWorldTransform _transform
+
+    item.renderObject.position.setFromBulletVector3 _transform.getOrigin()
+    item.renderObject.quaternion.setFromBulletQuaternion _transform.getRotation()

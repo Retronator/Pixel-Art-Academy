@@ -27,7 +27,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       rayleighCrossSectionFunction refractiveIndex, molecularNumberDensitySurface, wavelength
 
     rayleighCrossSection = rayleighCrossSectionSpectrum.toVector3()
-    emissionSpectrum = new AR.Optics.Spectrum.RGB().copy(@D65EmissionSpectrum).toVector3()
+    emissionSpectrum = new AR.Optics.Spectrum.RGB().copy(@SunEmissionSpectrum).toVector3()
 
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
 

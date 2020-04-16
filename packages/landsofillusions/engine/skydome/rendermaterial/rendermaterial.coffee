@@ -38,7 +38,7 @@ class LOI.Engine.Skydome.RenderMaterial extends THREE.RawShaderMaterial
     # Prepare star properties.
     starAngularSizeHalf = 0.004625
 
-    starEmissionSpectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
+    starEmissionSpectrum = AR.Chemistry.Materials.Mixtures.Stars.Sun.getEmissionSpectrumForTemperature 5778
     starEmission = new RGBSpectrum().copy(starEmissionSpectrum).toVector3()
 
     # Create the shader.

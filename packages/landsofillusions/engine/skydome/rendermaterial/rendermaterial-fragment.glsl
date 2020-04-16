@@ -90,7 +90,7 @@ void main() {
 
   if (starViewAngle < starAngularSizeHalf) {
     float viewRayMolecularNumberDensity = atmosphereMolecularNumberDensitySurface * viewRayTotalDensityRatio;
-    totalTransmission += 1e3 * exp(-atmosphereRayleighCrossSection * viewRayStepSize * viewRayMolecularNumberDensity);
+    totalTransmission += exp(-atmosphereRayleighCrossSection * viewRayStepSize * viewRayMolecularNumberDensity);
   }
 
   vec3 skyRadiance = starEmission * totalTransmission;
