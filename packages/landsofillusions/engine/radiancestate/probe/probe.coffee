@@ -18,7 +18,6 @@ class LOI.Engine.RadianceState.Probe
       type: THREE.FloatType
       stencilBuffer: false
       depthBuffer: false
-      generateMipmaps: true
       minFilter: THREE.LinearMipmapNearestFilter
 
     @octahedronMap = @octahedronMapRenderTarget.texture

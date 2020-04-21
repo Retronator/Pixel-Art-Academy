@@ -105,6 +105,9 @@ Package.onUse(function(api) {
   api.addClientFile('engine/skydome..');
   api.addMaterial('engine/skydome/material..');
   api.addMaterial('engine/skydome/rendermaterial..');
+  api.addGlsl('engine/skydome/rendermaterial/rendermaterial-parameters-fragment');
+  api.addClientFile('engine/skydome/rendermaterial/rendermaterial-scattering');
+  api.addGlsl('engine/skydome/rendermaterial/rendermaterial-scattering-fragment');
 
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/material');

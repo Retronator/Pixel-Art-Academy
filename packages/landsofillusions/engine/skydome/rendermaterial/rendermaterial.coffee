@@ -73,7 +73,10 @@ class LOI.Engine.Skydome.RenderMaterial extends THREE.RawShaderMaterial
           value: starEmission
 
       vertexShader: '#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.vertex>'
-      fragmentShader: '#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.fragment>'
+      fragmentShader: options.fragmentShader or '#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.fragment>'
+
+    if options?.scatteringMap
+      parameters.uniforms.scatteringMap = value: options.scatteringMap
 
     super parameters
     @options = options

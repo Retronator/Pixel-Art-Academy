@@ -14,14 +14,15 @@ class AS.Color.SRGB
     0.0193, 0.1192, 0.9505
   )
 
-  @d65LuminanceFactor = 4508707.775774763 # Calculated with getD65LuminanceFactor method and cached for speed.
+  @xyzNormalizationFactor = 2.2178461498317438e-7 # Calculated with getXYZNormalizationFactor method and cached for speed.
 
-  @getD65LuminanceFactor: ->
+  @getXYZNormalizationFactor: ->
+    # We want to normalize XYZ values such that Y is 1 for the D65 spectrum.
     d65Spectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
-    AS.Color.CIE1931.getLuminanceForSpectrum d65Spectrum
+    1 / AS.Color.CIE1931.getYForSpectrum d65Spectrum
 
   @getNormalizedXYZForXYZ: (xyz) ->
-    new THREE.Vector3().copy(xyz).multiplyScalar(1 / @d65LuminanceFactor)
+    new THREE.Vector3().copy(xyz).multiplyScalar(@xyzNormalizationFactor)
 
   @getLinearRGBForXYZ: (xyz) ->
     @getLinearRGBForNormalizedXYZ @getNormalizedXYZForXYZ xyz
@@ -40,7 +41,7 @@ class AS.Color.SRGB
     new THREE.Vector3(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@LinearRGBToNormalizedXYZTransform)
 
   @getXYZForNormalizedXYZ: (xyz) ->
-    new THREE.Vector3().copy(xyz).multiplyScalar(@d65LuminanceFactor)
+    new THREE.Vector3().copy(xyz).multiplyScalar(1 / @xyzNormalizationFactor)
 
   @getRGBForLinearRGB: (linearRGB) ->
     r: @gamma linearRGB.r

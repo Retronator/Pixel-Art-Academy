@@ -2,6 +2,7 @@
 #include <THREE>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
+#include <dithering_pars_fragment>
 
 #include <Artificial.Pyramid.OctahedronMap>
 
@@ -27,4 +28,5 @@ void main() {
 
   #include <tonemapping_fragment>
   #include <encodings_fragment>
+  #include <dithering_fragment>
 }

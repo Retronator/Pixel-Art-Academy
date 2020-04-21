@@ -9,10 +9,10 @@ class PAA.StillLifeStand.SceneManager
     @scene.manager = @
 
     # Create lighting.
-    @ambientLight = new THREE.AmbientLight 0x151820, 0.2
+    @ambientLight = new THREE.AmbientLight
     @scene.add @ambientLight
 
-    @directionalLight = new THREE.DirectionalLight 0xa59e88, 0.1
+    @directionalLight = new THREE.DirectionalLight
     @directionalLight.position.set -120, 40, 60
     @directionalLight.castShadow = true
     @directionalLight.shadow.mapSize.width = 4096
@@ -20,17 +20,18 @@ class PAA.StillLifeStand.SceneManager
     @scene.add @directionalLight
 
     @skydome = new LOI.Engine.Skydome
-      resolution: 4096
       generateCubeTexture: true
+      readColors: true
 
     @scene.add @skydome
 
     @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
       color: 0x606060
       envMap: @skydome.cubeTexture
-      roughness: 0.9
+      roughness: 1
       metalness: 0
-      reflectivity: 0.1
+      reflectivity: 0
+      dithering: true
 
     @ground.receiveShadow = true
     @ground.rotation.x = -Math.PI / 2
@@ -80,6 +81,18 @@ class PAA.StillLifeStand.SceneManager
     @cursor = new THREE.Mesh new THREE.SphereBufferGeometry(0.05), new THREE.MeshBasicMaterial color: 0xdddd00
     @debugScene.add @cursor
 
+    @skydomeReadColorQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), new THREE.MeshBasicMaterial
+      map: @skydome.readColorsRenderTarget.texture
+
+    @skydomeReadColorQuad.position.y = 1
+    @skydomeReadColorQuad.scale.x = 2
+    @debugScene.add @skydomeReadColorQuad
+
+    # Create sun helper.
+    @sunHelper = new THREE.Mesh new THREE.SphereBufferGeometry(100)
+    @sunHelper.visible = false
+    @scene.add @sunHelper
+
   destroy: ->
     item.destroy() for item in @_items
     @skydome.destroy()
@@ -89,9 +102,10 @@ class PAA.StillLifeStand.SceneManager
     item = new itemClass itemData
 
     item.renderObject.material.envMap = @skydome.cubeTexture
-    item.renderObject.material.roughness = 0.9
+    item.renderObject.material.roughness = 1
     item.renderObject.material.metalness = 0
-    item.renderObject.material.reflectivity = 0.1
+    item.renderObject.material.reflectivity = 0
+    item.renderObject.material.dithering = true
 
     @_items.push item
     @scene.add item.renderObject

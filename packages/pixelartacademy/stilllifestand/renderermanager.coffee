@@ -58,6 +58,8 @@ class PAA.StillLifeStand.RendererManager
 
     if @renderDebug
       # Render debug pass.
+      @renderer.outputEncoding = THREE.LinearEncoding
+      @renderer.toneMapping = THREE.NoToneMapping
       debugScene = @stillLifeStand.sceneManager().debugScene
       @renderer.render debugScene, camera
 

@@ -56,7 +56,7 @@ class AS.Color.CIE1931
 
     xyz
 
-  @getLuminanceForSpectrum: (spectrum) ->
+  @getYForSpectrum: (spectrum) ->
     if @ColorMatchingFunctions.y.matchesType spectrum
       @_integrateFast @ColorMatchingFunctions.y, spectrum
 
@@ -65,6 +65,10 @@ class AS.Color.CIE1931
         @ColorMatchingFunctions.y.getValue(wavelength) * spectrum.getValue(wavelength)
       ,
         @_minWavelength, @_maxWavelength, @_wavelengthSpacing
+
+  @getLuminanceForSpectrum: (spectrum) ->
+    # Return luminance in cd/m².
+    @getYForSpectrum(spectrum) * 683.002
 
   @getChromaticityForXYZ: (xyz) ->
     sum = xyz.x + xyz.y + xyz.z

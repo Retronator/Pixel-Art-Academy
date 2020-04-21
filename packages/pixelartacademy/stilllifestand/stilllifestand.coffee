@@ -100,6 +100,9 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
     @hoveredItem = new ReactiveField null, (a, b) => a is b
     @movingItem = new ReactiveField null
+    @movingSun = new ReactiveField false
+
+    @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
 
     @_cursorVerticalPlane = new THREE.Plane
     @_cursorHorizontalPlane = new THREE.Plane
@@ -122,10 +125,30 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @autorun (computation) =>
       renderer = @rendererManager().renderer
       sceneManager = @sceneManager()
+      sunPosition = sceneManager.directionalLight.position
 
-      lightDirection = sceneManager.directionalLight.position.clone().multiplyScalar(-1)
+      if @movingSun()
+        # Move directional light to come from cursor direction.
+        camera = @cameraManager().camera()
+        cursorPosition = @cursorPosition()
+        lightDirection = new THREE.Vector3().subVectors(camera.position, cursorPosition).normalize()
+        sunPosition.copy(lightDirection).multiplyScalar(-100)
+
+      else
+        # Read light direction from directional light position.
+        lightDirection = sunPosition.clone().normalize().multiplyScalar(-1)
 
       sceneManager.skydome.updateTexture renderer, lightDirection
+
+      # Update light colors.
+      sceneManager.directionalLight.color.copy sceneManager.skydome.starColor
+      sceneManager.directionalLight.intensity = sceneManager.skydome.starIntensity
+
+      sceneManager.ambientLight.color.copy sceneManager.skydome.skyColor
+      sceneManager.ambientLight.intensity = sceneManager.skydome.skyIntensity
+
+      # Update sun helper position.
+      sceneManager.sunHelper.position.copy(sunPosition).normalize().multiplyScalar(1000)
 
   onRendered: ->
     super arguments...
@@ -146,7 +169,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       500
 
   cursorClass: ->
-    return 'grabbing' if @movingItem()
+    return 'grabbing' if @movingItem() or @movingSun()
     return 'can-grab' if @hoveredItem()
 
     null
@@ -189,13 +212,18 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
         if intersectionPoint = _cursorIntersectionPoints[0]
           # Update cursor to this intersection.
+          @cursorPosition intersectionPoint.point
           sceneManager.cursor.position.copy intersectionPoint.point
 
           # See if this mesh is part of a still life item.
           searchObject = intersectionPoint.object
 
           while searchObject
-            if searchObject instanceof @constructor.Item.RenderObject
+            if searchObject is sceneManager.sunHelper
+              hoveredItem = searchObject
+              break
+
+            else if searchObject instanceof @constructor.Item.RenderObject
               hoveredItem = searchObject.parentItem
               break
 
@@ -220,33 +248,45 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
     # See if we're starting to move an item.
     if hoveredItem = @hoveredItem()
-      @movingItem hoveredItem
+      sceneManager = @sceneManager()
 
-      # Set cursor movement planes. By default we move in the horizontal plane.
-      cursorPosition = @sceneManager().cursor.position
-      @_cursorHorizontalPlane.setFromNormalAndCoplanarPoint new THREE.Vector3(0, 1, 0), cursorPosition
+      if hoveredItem is sceneManager.sunHelper
+        @movingSun true
 
-      # If camera is looking relatively sideways, we also allow lifting items.
-      camera = @cameraManager().camera()
-      cameraDirection = camera.position.clone().normalize()
+        # Wire end of dragging on mouse up anywhere in the window.
+        $(document).on 'mouseup.pixelartacademy-stilllifestand', =>
+          $(document).off 'mouseup.pixelartacademy-stilllifestand'
 
-      @_cursorVerticalPlaneActive = Math.abs(cameraDirection.y) < 0.5
+          @movingSun false
 
-      if @_cursorVerticalPlaneActive
-        verticalPlaneNormal = new THREE.Vector3().copy cameraDirection
-        verticalPlaneNormal.y = 0
+      else
+        @movingItem hoveredItem
 
-        @_cursorVerticalPlane.setFromNormalAndCoplanarPoint verticalPlaneNormal, cursorPosition
+        # Set cursor movement planes. By default we move in the horizontal plane.
+        cursorPosition = sceneManager.cursor.position
+        @_cursorHorizontalPlane.setFromNormalAndCoplanarPoint new THREE.Vector3(0, 1, 0), cursorPosition
 
-      physicsManager = @physicsManager()
-      physicsManager.startMovingItem hoveredItem, cursorPosition
+        # If camera is looking relatively sideways, we also allow lifting items.
+        camera = @cameraManager().camera()
+        cameraDirection = camera.position.clone().normalize()
 
-      # Wire end of dragging on mouse up anywhere in the window.
-      $(document).on 'mouseup.pixelartacademy-stilllifestand', =>
-        $(document).off 'mouseup.pixelartacademy-stilllifestand'
+        @_cursorVerticalPlaneActive = Math.abs(cameraDirection.y) < 0.5
 
-        @movingItem null
-        physicsManager.endMovingItem()
+        if @_cursorVerticalPlaneActive
+          verticalPlaneNormal = new THREE.Vector3().copy cameraDirection
+          verticalPlaneNormal.y = 0
+
+          @_cursorVerticalPlane.setFromNormalAndCoplanarPoint verticalPlaneNormal, cursorPosition
+
+        physicsManager = @physicsManager()
+        physicsManager.startMovingItem hoveredItem, cursorPosition
+
+        # Wire end of dragging on mouse up anywhere in the window.
+        $(document).on 'mouseup.pixelartacademy-stilllifestand', =>
+          $(document).off 'mouseup.pixelartacademy-stilllifestand'
+
+          @movingItem null
+          physicsManager.endMovingItem()
 
     else
       # We should rotate the camera instead.

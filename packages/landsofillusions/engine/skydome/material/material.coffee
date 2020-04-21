@@ -5,6 +5,7 @@ class LOI.Engine.Skydome.Material extends THREE.ShaderMaterial
     parameters =
       depthWrite: false
       side: THREE.BackSide
+      dithering: true
 
       uniforms:
         resolution:
