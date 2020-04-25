@@ -48,7 +48,7 @@ class PAA.StillLifeStand.RendererManager
     # Render main pass.
     @renderer.outputEncoding = THREE.sRGBEncoding
     @renderer.toneMapping = THREE.LinearToneMapping
-    @renderer.toneMappingExposure = 2 ** 4.5
+    @renderer.toneMappingExposure = 2 ** 4.7
 
     @renderer.setClearColor 0xff8800, 1
     @renderer.setRenderTarget @mainRenderTarget

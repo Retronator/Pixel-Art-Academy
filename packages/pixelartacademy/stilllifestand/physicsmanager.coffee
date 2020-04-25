@@ -14,6 +14,9 @@ class PAA.StillLifeStand.PhysicsManager
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @overlappingPairCache, @solver, @collisionConfiguration
     @dynamicsWorld.setGravity new Ammo.btVector3 0, -9.81, 0
 
+    @simulationTimestep = 1 / 300
+    @maxSimulationStepsPerFrame = 0.1 / @simulationTimestep
+
     # Add ground of wooden material.
     @ground = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
       new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3(0, -0.5, 0)
@@ -83,7 +86,7 @@ class PAA.StillLifeStand.PhysicsManager
   update: (appTime) ->
     return unless appTime.elapsedAppTime
 
-    @dynamicsWorld.stepSimulation appTime.elapsedAppTime, 10
+    @dynamicsWorld.stepSimulation appTime.elapsedAppTime, @maxSimulationStepsPerFrame, @simulationTimestep
 
     @_updateItem item for item in @items()
 

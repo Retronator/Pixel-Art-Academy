@@ -96,6 +96,33 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         x: 0.6, y: 0.025, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/banana.glb'
+      position:
+        x: 0, y: 0.025, z: 0.2
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/apple-green.glb'
+      position:
+        x: 0.2, y: 0.5, z: 0.2
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/kiwi-half.glb'
+      position:
+        x: 0.4, y: 0.5, z: 0.2
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
     ]
 
     @hoveredItem = new ReactiveField null, (a, b) => a is b

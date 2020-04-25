@@ -11,7 +11,7 @@ class AE.ReactiveArray
     updateAutorun = Tracker.autorun (computation) ->
       oldItems = Tracker.nonreactive => reactiveArray()
       newItems = sourceFunction() or []
-      reactiveArray newItems
+      reactiveArray _.clone newItems
 
       # Report changes.
       for item in newItems

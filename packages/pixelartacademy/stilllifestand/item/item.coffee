@@ -18,7 +18,7 @@ class PAA.StillLifeStand.Item
     # Store item class by ID.
     @_itemClassesById[@id()] = @
 
-  constructor: (@data) ->
+  constructor: (@data, @options) ->
 
   destroy: ->
     @renderObject.destroy()
@@ -28,22 +28,11 @@ class PAA.StillLifeStand.Item
     constructor: (@parentItem) ->
       super arguments...
 
-      @material = new THREE.MeshPhysicalMaterial
-      @geometry = @createGeometry()
-
-      @mesh = new THREE.Mesh @geometry, @material
-      @mesh.receiveShadow = true
-      @mesh.castShadow = true
-
-      @add @mesh
-
-    createGeometry: ->
-      throw new AE.NotImplementedException "Still life item render object must provide a geometry."
-
   class @PhysicsObject extends AR.PhysicsObject
     constructor: (@parentItem) ->
       super arguments...
 
+    initialize: ->
       positionData = @parentItem.data.position or x: 0, y: 0, z: 0
       position = Ammo.btVector3.fromObject positionData
 
@@ -58,15 +47,9 @@ class PAA.StillLifeStand.Item
       @collisionShape = @createCollisionShape()
       @collisionShape.calculateLocalInertia @mass, @localInertia
 
-      # Items should have slightly rounded edges.
-      @collisionShape.setMargin PAA.StillLifeStand.Item.roughEdgeMargin
-
       bodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
       @body = new Ammo.btRigidBody bodyInfo
 
       @body.setRestitution 0.6
       @body.setFriction 0.8
       @body.setRollingFriction 0.05
-
-    createCollisionShape: ->
-      throw new AE.NotImplementedException "Still life item physics object must provide a collision shape."

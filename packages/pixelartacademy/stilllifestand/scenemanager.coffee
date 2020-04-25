@@ -13,7 +13,7 @@ class PAA.StillLifeStand.SceneManager
     @scene.add @ambientLight
 
     @directionalLight = new THREE.DirectionalLight
-    @directionalLight.position.set -120, 40, 60
+    @directionalLight.position.set -20, 100, 60
     @directionalLight.castShadow = true
     @directionalLight.shadow.mapSize.width = 4096
     @directionalLight.shadow.mapSize.height = 4096
@@ -46,8 +46,6 @@ class PAA.StillLifeStand.SceneManager
 
       newItemsData = @stillLifeStand.itemsData()
 
-      sceneItemsChanged = false
-
       for newItemData in newItemsData
         if newItemData.id in remainingItemIds
           # Item has already been instantiated. See if its properties have changed.
@@ -57,23 +55,16 @@ class PAA.StillLifeStand.SceneManager
             # Replace item with a new instance.
             @_removeItemWithId item.id
             @_addItem newItemData
-            sceneItemsChanged = true
 
           _.pull remainingItemIds, newItemData.id
 
         else
           # This is a new item. Instantiate it and add it to the scene.
           @_addItem newItemData
-          sceneItemsChanged = true
 
       # Any leftover remaining items have been removed.
       for itemId in remainingItemIds
         @_removeItemWithId itemId
-        sceneItemsChanged = true
-
-      # Update items array if any items were added or removed.
-      if sceneItemsChanged
-        @items @_items
 
     # Create debug scene.
     @debugScene = new THREE.Scene
@@ -99,19 +90,39 @@ class PAA.StillLifeStand.SceneManager
 
   _addItem: (itemData) ->
     itemClass = PAA.StillLifeStand.Item.getClassForId itemData.type
-    item = new itemClass itemData
 
-    item.renderObject.material.envMap = @skydome.cubeTexture
-    item.renderObject.material.roughness = 1
-    item.renderObject.material.metalness = 0
-    item.renderObject.material.reflectivity = 0
-    item.renderObject.material.dithering = true
+    new itemClass itemData, onInitialized: (item) =>
+      # Do not complete initialization if it was canceled.
+      return if item._initializationCanceled
 
-    @_items.push item
-    @scene.add item.renderObject
+      # Update items array.
+      @_items.push item
+      @items @_items
+
+      # Set material properties.
+      item.renderObject.material.envMap = @skydome.cubeTexture
+      item.renderObject.material.roughness = 1
+      item.renderObject.material.metalness = 0
+      item.renderObject.material.reflectivity = 0
+      item.renderObject.material.dithering = true
+
+      # Add render object to the scene.
+      @scene.add item.renderObject
 
   _removeItemWithId: (itemId) ->
     item = _.find @_items, (item) => item.id is itemId
+
+    unless item
+      # If we couldn't find the item it's probably still loading.
+      console.log "canceling"
+      item._initializationCanceled = true
+      item.destroy()
+      return
+
+    # Update items array.
     _.pull @_items, item
+    @items @_items
+
+    # Remove render object from the scene.
     @scene.remove item.renderObject
     item.destroy()

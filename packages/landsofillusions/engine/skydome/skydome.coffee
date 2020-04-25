@@ -140,7 +140,7 @@ class LOI.Engine.Skydome extends AS.RenderObject
       @skySpectrum.array[i] = _readColorsArray[i] for i in [0..2]
       @skyColor.setRGB(_readColorsArray[0], _readColorsArray[1], _readColorsArray[2]).normalize()
 
-      skyIlluminance = AS.Color.CIE1931.getLuminanceForSpectrum(@skySpectrum) * 0.01
+      skyIlluminance = AS.Color.CIE1931.getLuminanceForSpectrum(@skySpectrum) * 0.015
       @skyIntensity = skyIlluminance
 
       if starIsUnderHorizon
@@ -151,7 +151,7 @@ class LOI.Engine.Skydome extends AS.RenderObject
         @starColor.setRGB(_readColorsArray[4], _readColorsArray[5], _readColorsArray[6]).normalize()
         @starSpectrum.array[i] = _readColorsArray[4 + i] for i in [0..2]
 
-      starIlluminance = AS.Color.CIE1931.getLuminanceForSpectrum(@starSpectrum) * 6.807e-5 * 5
+      starIlluminance = AS.Color.CIE1931.getLuminanceForSpectrum(@starSpectrum) * 6.807e-5 * 8
       @starIntensity = starIlluminance
 
   destroy: ->
