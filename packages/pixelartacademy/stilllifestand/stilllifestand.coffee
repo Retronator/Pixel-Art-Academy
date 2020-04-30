@@ -28,7 +28,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/bowl-1.glb'
         mass: 2.5
       position:
-        x: 0, y: 0.1, z: 0.4
+        x: 0, y: 0.1, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -38,7 +38,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/banana.glb'
         mass: 0.1
       position:
-        x: -0.4, y: 0.025, z: 0.4
+        x: -0.4, y: 0.025, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -48,7 +48,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/apple-green.glb'
         mass: 0.08
       position:
-        x: -0.6, y: 0.5, z: 0.4
+        x: -0.6, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -58,7 +58,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/apple-green-half.glb'
         mass: 0.04
       position:
-        x: -0.6, y: 0.5, z: 0.6
+        x: -0.6, y: 0.5, z: 0.2
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -68,7 +68,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/kiwi.glb'
         mass: 0.05
       position:
-        x: -0.8, y: 0.5, z: 0.4
+        x: -0.8, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -78,7 +78,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/kiwi-half.glb'
         mass: 0.05
       position:
-        x: -0.8, y: 0.5, z: 0.6
+        x: -0.8, y: 0.5, z: 0.2
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -88,7 +88,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
         mass: 0.007
       position:
-        x: -1.1, y: 0.5, z: 0.4
+        x: -1.1, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -99,7 +99,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         mass: 0.005
         dragMultiplier: 30
       position:
-        x: -1, y: 0.5, z: 0.4
+        x: -1, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -109,7 +109,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/raspberry.glb'
         mass: 0.04
       position:
-        x: -1.1, y: 0.5, z: 0.6
+        x: -1.1, y: 0.5, z: 0.2
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -120,7 +120,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         mass: 0.005
         dragMultiplier: 30
       position:
-        x: -1, y: 0.5, z: 0.6
+        x: -1, y: 0.5, z: 0.2
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -130,7 +130,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/watermelon.glb'
         mass: 5
       position:
-        x: 0.7, y: 0.5, z: 0.4
+        x: 1, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -140,7 +140,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/mango.glb'
         mass: 0.2
       position:
-        x: 1, y: 0.5, z: 0.4
+        x: 0.4, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -150,7 +150,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/orange.glb'
         mass: 0.1
       position:
-        x: 1.2, y: 0.5, z: 0.4
+        x: 0.6, y: 0.5, z: 0
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -160,7 +160,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/orange-half.glb'
         mass: 0.05
       position:
-        x: 1.2, y: 0.5, z: 0.6
+        x: 0.6, y: 0.5, z: 0.2
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ]
