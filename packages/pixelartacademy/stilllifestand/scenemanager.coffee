@@ -22,12 +22,13 @@ class PAA.StillLifeStand.SceneManager
     @skydome = new LOI.Engine.Skydome
       generateCubeTexture: true
       readColors: true
+      dithering: true
 
     @scene.add @skydome
+    @scene.environment = @skydome.cubeTexture
 
     @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
-      color: 0x606060
-      envMap: @skydome.cubeTexture
+      color: 0x444444
       roughness: 1
       metalness: 0
       reflectivity: 0
@@ -42,14 +43,14 @@ class PAA.StillLifeStand.SceneManager
 
     # Instantiate still life items based on the data.
     @stillLifeStand.autorun =>
-      remainingItemIds = (item.id for item in @_items)
+      remainingItemIds = (item.data.id for item in @_items)
 
       newItemsData = @stillLifeStand.itemsData()
 
       for newItemData in newItemsData
         if newItemData.id in remainingItemIds
           # Item has already been instantiated. See if its properties have changed.
-          item = _.find @_items, (item) => item.id is newItemData.id
+          item = _.find @_items, (item) => item.data.id is newItemData.id
 
           unless EJSON.equals newItemData.properties, item.data.properties
             # Replace item with a new instance.
@@ -100,10 +101,6 @@ class PAA.StillLifeStand.SceneManager
       @items @_items
 
       # Set material properties.
-      item.renderObject.material.envMap = @skydome.cubeTexture
-      item.renderObject.material.roughness = 1
-      item.renderObject.material.metalness = 0
-      item.renderObject.material.reflectivity = 0
       item.renderObject.material.dithering = true
 
       # Add render object to the scene.
@@ -114,7 +111,6 @@ class PAA.StillLifeStand.SceneManager
 
     unless item
       # If we couldn't find the item it's probably still loading.
-      console.log "canceling"
       item._initializationCanceled = true
       item.destroy()
       return

@@ -16,7 +16,12 @@ class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
       constructor: (@parentItem) ->
         super arguments...
 
-        @material = new THREE.MeshPhysicalMaterial color: 0xaaaaaa
+        @material = new THREE.MeshPhysicalMaterial
+          color: 0xaaaaaa
+          reflectivity: 0
+          metalness: 0
+          roughness: 1
+
         @geometry = @createGeometry()
 
         @mesh = new THREE.Mesh @geometry, @material
@@ -30,12 +35,18 @@ class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
     class @PhysicsObject extends PAA.StillLifeStand.Item.PhysicsObject
       constructor: ->
         super arguments...
+
+        @addDragObjects()
+
         @initialize()
 
       createCollisionShape: ->
         collisionShape = @parentItem.createCollisionShape.call @
-        collisionShape.setMargin PAA.StillLifeStand.Item.roughEdgeMargin
+        margin = @parentItem.collisionShapeMargin.call @
+        collisionShape.setMargin margin if margin?
         collisionShape
+
+      addDragObjects: -> @parentItem.addDragObjects.call @
 
   constructor: ->
     super arguments...
@@ -50,3 +61,7 @@ class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
 
   createCollisionShape: ->
     throw new AE.NotImplementedException "Still life procedural model must provide a collision shape."
+
+  addDragObjects: -> # Implement to add drag objects.
+
+  collisionShapeMargin: -> PAA.StillLifeStand.Item.roughEdgeMargin

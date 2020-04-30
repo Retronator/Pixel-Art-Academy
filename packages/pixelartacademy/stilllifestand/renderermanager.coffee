@@ -47,10 +47,9 @@ class PAA.StillLifeStand.RendererManager
 
     # Render main pass.
     @renderer.outputEncoding = THREE.sRGBEncoding
-    @renderer.toneMapping = THREE.LinearToneMapping
+    @renderer.toneMapping = THREE.ACESFilmicToneMapping
     @renderer.toneMappingExposure = 2 ** 4.7
 
-    @renderer.setClearColor 0xff8800, 1
     @renderer.setRenderTarget @mainRenderTarget
     @renderer.clear()
     @renderer.shadowMap.needsUpdate = true
@@ -67,6 +66,5 @@ class PAA.StillLifeStand.RendererManager
     @renderer.outputEncoding = THREE.LinearEncoding
     @renderer.toneMapping = THREE.NoToneMapping
 
-    @renderer.setClearColor 0x8888ff, 1
     @renderer.setRenderTarget null
     @renderer.render @screenQuad.scene, @screenQuad.camera

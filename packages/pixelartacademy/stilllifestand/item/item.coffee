@@ -32,6 +32,34 @@ class PAA.StillLifeStand.Item
     constructor: (@parentItem) ->
       super arguments...
 
+      @dragObjects = []
+
+    addDragObject: (dragObject) ->
+      if size = dragObject.size
+        dragFactors =
+          x: @_calculateDragFactors size.x, size.y, size.z
+          y: @_calculateDragFactors size.y, size.x, size.z
+          z: @_calculateDragFactors size.z, size.y, size.x
+
+        dragObject.linearDragFactor ?= new THREE.Vector3 dragFactors.x.linear, dragFactors.y.linear, dragFactors.z.linear
+        dragObject.angularDragFactor ?= new THREE.Vector3 dragFactors.x.angular, dragFactors.y.angular, dragFactors.z.angular
+
+      @dragObjects.push dragObject
+
+    _calculateDragFactors: (height, width, depth) ->
+      area = width * depth
+      dragCoefficient = 1 / (((height ** 2) / (width * depth)) + 1)
+      linearDragFactor = area * dragCoefficient
+
+      longerSide = Math.max width, depth
+      shorterSide = Math.min width, depth
+      angularArea = longerSide * height
+      angularDragCoefficient = 1 / ((shorterSide / longerSide) + 1)
+      angularDragFactor = (longerSide / 2) ** 3 * angularArea * angularDragCoefficient
+
+      linear: linearDragFactor
+      angular: angularDragFactor
+
     initialize: ->
       positionData = @parentItem.data.position or x: 0, y: 0, z: 0
       position = Ammo.btVector3.fromObject positionData

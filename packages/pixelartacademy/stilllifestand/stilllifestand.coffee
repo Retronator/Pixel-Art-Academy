@@ -23,77 +23,12 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
     @itemsData = new ReactiveField [
       id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Sphere'
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
       properties:
-        radius: 0.1
-        mass: 3
+        path: '/pixelartacademy/stilllifestand/items/bowl-1.glb'
+        mass: 2.5
       position:
-        x: -0.6, y: 0.2, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Sphere'
-      properties:
-        radius: 0.05
-        mass: 1
-      position:
-        x: -0.4, y: 0.2, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Box'
-      properties:
-        size:
-          x: 0.1, y: 0.2, z: 0.3
-        mass: 3
-      position:
-        x: -0.2, y: 0.2, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Box'
-      properties:
-        size:
-          x: 0.15, y: 0.15, z: 0.15
-        mass: 3
-      position:
-        x: 0, y: 0.2, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Cone'
-      properties:
-        radius: 0.1
-        height: 0.3
-        mass: 2
-      position:
-        x: 0.2, y: 0.2, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Cylinder'
-      properties:
-        radius: 0.05
-        height: 0.15
-        mass: 2
-      position:
-        x: 0.4, y: 0.075, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Cylinder'
-      properties:
-        radius: 0.1
-        height: 0.05
-        mass: 2
-      position:
-        x: 0.6, y: 0.025, z: 0
+        x: 0, y: 0.1, z: 0.4
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -101,8 +36,9 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       type: 'PixelArtAcademy.StillLifeStand.Item.Model'
       properties:
         path: '/pixelartacademy/stilllifestand/items/banana.glb'
+        mass: 0.1
       position:
-        x: 0, y: 0.025, z: 0.2
+        x: -0.4, y: 0.025, z: 0.4
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -110,8 +46,29 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       type: 'PixelArtAcademy.StillLifeStand.Item.Model'
       properties:
         path: '/pixelartacademy/stilllifestand/items/apple-green.glb'
+        mass: 0.08
       position:
-        x: 0.2, y: 0.5, z: 0.2
+        x: -0.6, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/apple-green-half.glb'
+        mass: 0.04
+      position:
+        x: -0.6, y: 0.5, z: 0.6
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/kiwi.glb'
+        mass: 0.05
+      position:
+        x: -0.8, y: 0.5, z: 0.4
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -119,8 +76,91 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       type: 'PixelArtAcademy.StillLifeStand.Item.Model'
       properties:
         path: '/pixelartacademy/stilllifestand/items/kiwi-half.glb'
+        mass: 0.05
       position:
-        x: 0.4, y: 0.5, z: 0.2
+        x: -0.8, y: 0.5, z: 0.6
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
+        mass: 0.007
+      position:
+        x: -1.1, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
+        mass: 0.005
+        dragMultiplier: 30
+      position:
+        x: -1, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/raspberry.glb'
+        mass: 0.04
+      position:
+        x: -1.1, y: 0.5, z: 0.6
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/raspberry-leaf.glb'
+        mass: 0.005
+        dragMultiplier: 30
+      position:
+        x: -1, y: 0.5, z: 0.6
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/watermelon.glb'
+        mass: 5
+      position:
+        x: 0.7, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/mango.glb'
+        mass: 0.2
+      position:
+        x: 1, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/orange.glb'
+        mass: 0.1
+      position:
+        x: 1.2, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/orange-half.glb'
+        mass: 0.05
+      position:
+        x: 1.2, y: 0.5, z: 0.6
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ]

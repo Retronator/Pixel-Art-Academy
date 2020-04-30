@@ -35,14 +35,27 @@ class PAA.StillLifeStand.Item.Model extends PAA.StillLifeStand.Item
       @options.onInitialized @
 
   class @RenderObject extends PAA.StillLifeStand.Item.RenderObject
-    initialize: (@mesh) ->
+    initialize: (mesh) ->
+      @mesh = mesh.clone()
+
       # Create physical material with our maps.
       @material = new THREE.MeshPhysicalMaterial
 
-      for mapName in ['map', 'normalMap', 'roughnessMap']
+      for mapName in ['map', 'normalMap', 'roughnessMap'] when @mesh.material[mapName]
         @material[mapName] = @mesh.material[mapName]
         @material[mapName].wrapS = THREE.ClampToEdgeWrapping
         @material[mapName].wrapT = THREE.ClampToEdgeWrapping
+
+      # Transfer other properties.
+      for property in ['color', 'metalness', 'reflectivity', 'roughness', 'alphaTest', 'side']
+        value = @mesh.material[property] ? @mesh.material.userData?[property]
+        continue unless value?
+
+        if @material[property].copy
+          @material[property].copy value
+
+        else
+          @material[property] = value
 
       @mesh.material = @material
 
@@ -60,24 +73,65 @@ class PAA.StillLifeStand.Item.Model extends PAA.StillLifeStand.Item
     createCollisionShape: ->
       if @collisionObject instanceof THREE.Mesh
         # We have a single convex hull shape.
-        @createConvexHullShape @collisionObject
+        {shape} = @createCollisionShapeFromMesh @collisionObject, false
+        shape
 
       else
         # We have a compound object.
         compoundShape = new Ammo.btCompoundShape
 
         for child in @collisionObject.children
-          childTransform = new Ammo.btTransform Ammo.btQuaternion.identity,
-            child.geometry.boundingSphere.center.toBulletVector3()
-
-          childConvexHullShape = @createConvexHullShape child, child.geometry.boundingSphere.center
-          compoundShape.addChildShape childTransform, childConvexHullShape
+          {shape, transform} = @createCollisionShapeFromMesh child
+          compoundShape.addChildShape transform, shape
 
         compoundShape
 
-    createConvexHullShape: (mesh, center) ->
+    createCollisionShapeFromMesh: (mesh, calculateTransform = true) ->
+      name = mesh.name.toLowerCase()
+      if name.includes 'cylinder'
+        {shape, transform} = @createCylinderShape mesh
+
+      else if name.includes 'ellipsoid'
+        {shape, transform} = @createEllipsoidShape mesh
+
+      else
+        {shape, transform} = @createConvexHullShape mesh, calculateTransform
+
+      shape.setMargin mesh.userData?.margin ? PAA.StillLifeStand.Item.roughEdgeMargin
+
+      # Add mesh to drag objects.
+      boundingBox = mesh.geometry.boundingBox
+      boundingBoxSize = boundingBox.max.clone().sub boundingBox.min
+      boundingBoxCenter = boundingBoxSize.clone().multiplyScalar(0.5).add boundingBox.min
+
+      @addDragObject position: boundingBoxCenter, size: boundingBoxSize
+
+      {shape, transform}
+
+    createCylinderShape: (mesh) ->
+      transform = new Ammo.btTransform mesh.quaternion.toBulletQuaternion(), mesh.position.toBulletVector3()
+
+      # We assume the bounding box holds the extents of the cylinder.
+      shape = new Ammo.btCylinderShape mesh.geometry.boundingBox.max.toBulletVector3()
+
+      {shape, transform}
+
+    createEllipsoidShape: (mesh) ->
+      transform = new Ammo.btTransform mesh.quaternion.toBulletQuaternion(), mesh.position.toBulletVector3()
+
+      # We assume the bounding box holds the extents of the ellipsoid.
+      shape = new Ammo.btMultiSphereShape [new Ammo.btVector3()], [1], 1
+      shape.setLocalScaling mesh.geometry.boundingBox.max.toBulletVector3()
+
+      {shape, transform}
+
+    createConvexHullShape: (mesh, calculateTransform) ->
+      if calculateTransform
+        center = mesh.geometry.boundingSphere.center
+        transform = new Ammo.btTransform Ammo.btQuaternion.identity, center.toBulletVector3()
+
       vertexArray = mesh.geometry.attributes.position.array
-      convexHullShape = new Ammo.btConvexHullShape
+      shape = new Ammo.btConvexHullShape
 
       for vertexOffset in [0...vertexArray.length] by 3
         _vector3.setX vertexArray[vertexOffset] - (center?.x or 0)
@@ -86,7 +140,6 @@ class PAA.StillLifeStand.Item.Model extends PAA.StillLifeStand.Item
 
         recalculateLocalAABB = vertexOffset is vertexArray.length - 3
 
-        convexHullShape.addPoint _vector3, recalculateLocalAABB
+        shape.addPoint _vector3, recalculateLocalAABB
 
-      convexHullShape.setMargin mesh.userData?.margin ? PAA.StillLifeStand.Item.roughEdgeMargin
-      convexHullShape
+      {shape, transform}

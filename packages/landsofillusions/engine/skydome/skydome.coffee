@@ -42,6 +42,7 @@ class LOI.Engine.Skydome extends AS.RenderObject
     sphere = new THREE.Mesh new THREE.SphereBufferGeometry(950, 32, 16), new @constructor.Material
       map: @renderTarget.texture
       resolution: @options.resolution
+      dithering: @options.dithering
 
     @add sphere
 
@@ -102,7 +103,10 @@ class LOI.Engine.Skydome extends AS.RenderObject
     renderer.render @scene, @camera
 
     # Optionally re-render the skydome to a cube texture.
-    @cubeCamera.update renderer, @cubeScene if @options.generateCubeTexture
+    if @options.generateCubeTexture
+      renderer.outputEncoding = THREE.LinearEncoding
+      renderer.toneMapping = THREE.NoToneMapping
+      @cubeCamera.update renderer, @cubeScene
 
     if @options.readColors
       # Update star sample position.

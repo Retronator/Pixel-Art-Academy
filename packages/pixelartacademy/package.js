@@ -45,6 +45,7 @@ Package.onUse(function(api) {
   api.addFile('stilllifestand/scenemanager');
   api.addFile('stilllifestand/renderermanager');
   api.addFile('stilllifestand/physicsmanager');
+  api.addFile('stilllifestand/physicsmanager-drag');
   api.addFile('stilllifestand/mouse');
 
   api.addFile('stilllifestand/item..');
