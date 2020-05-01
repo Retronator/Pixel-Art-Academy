@@ -78,6 +78,6 @@ class PAA.StillLifeStand.Item
       bodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
       @body = new Ammo.btRigidBody bodyInfo
 
-      @body.setRestitution 0.6
-      @body.setFriction 0.8
-      @body.setRollingFriction 0.05
+      @body.setRestitution @parentItem.data.properties.restitution or 0.6
+      @body.setFriction @parentItem.data.properties.friction or 0.8
+      @body.setRollingFriction @parentItem.data.properties.rollingFriction or 0.05

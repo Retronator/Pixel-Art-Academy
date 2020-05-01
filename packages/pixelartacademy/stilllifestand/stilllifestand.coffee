@@ -97,7 +97,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       properties:
         path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
         mass: 0.005
-        dragMultiplier: 30
+        dragMultiplier: 40
       position:
         x: -1, y: 0.5, z: 0
       rotationQuaternion:
@@ -108,6 +108,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       properties:
         path: '/pixelartacademy/stilllifestand/items/raspberry.glb'
         mass: 0.04
+        restitution: 0.1
       position:
         x: -1.1, y: 0.5, z: 0.2
       rotationQuaternion:
@@ -118,7 +119,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       properties:
         path: '/pixelartacademy/stilllifestand/items/raspberry-leaf.glb'
         mass: 0.005
-        dragMultiplier: 30
+        dragMultiplier: 40
       position:
         x: -1, y: 0.5, z: 0.2
       rotationQuaternion:
