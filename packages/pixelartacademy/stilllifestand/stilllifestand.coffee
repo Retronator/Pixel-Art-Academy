@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -27,6 +28,8 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       properties:
         path: '/pixelartacademy/stilllifestand/items/bowl-1.glb'
         mass: 2.5
+      reflectionsRenderOffset:
+        y: 0.1
       position:
         x: 0, y: 0.1, z: 0
       rotationQuaternion:
@@ -95,6 +98,26 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       id: Random.id()
       type: 'PixelArtAcademy.StillLifeStand.Item.Model'
       properties:
+        path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
+        mass: 0.007
+      position:
+        x: -1.1, y: 0.5, z: 0.2
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
+        path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
+        mass: 0.007
+      position:
+        x: -1.1, y: 0.5, z: 0.4
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+      properties:
         path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
         mass: 0.005
         dragMultiplier: 40
@@ -106,18 +129,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       id: Random.id()
       type: 'PixelArtAcademy.StillLifeStand.Item.Model'
       properties:
-        path: '/pixelartacademy/stilllifestand/items/raspberry.glb'
-        mass: 0.04
-        restitution: 0.1
-      position:
-        x: -1.1, y: 0.5, z: 0.2
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/raspberry-leaf.glb'
+        path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
         mass: 0.005
         dragMultiplier: 40
       position:
@@ -131,27 +143,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/watermelon.glb'
         mass: 5
       position:
-        x: 1, y: 0.5, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/mango.glb'
-        mass: 0.2
-      position:
-        x: 0.4, y: 0.5, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/orange.glb'
-        mass: 0.1
-      position:
-        x: 0.6, y: 0.5, z: 0
+        x: 0.2, y: 0.5, z: 0.7
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ,
@@ -161,7 +153,18 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         path: '/pixelartacademy/stilllifestand/items/orange-half.glb'
         mass: 0.05
       position:
-        x: 0.6, y: 0.5, z: 0.2
+        x: 0.4, y: 0.5, z: 0.2
+      rotationQuaternion:
+        x: 0, y: 0, z: 0, w: 1
+    ,
+      id: Random.id()
+      type: 'PixelArtAcademy.StillLifeStand.Item.Box'
+      properties:
+        size:
+          x: 2, y: 1, z: 2
+        mass: 10
+      position:
+        x: 0, y: 0.5, z: -1.3
       rotationQuaternion:
         x: 0, y: 0, z: 0, w: 1
     ]
@@ -201,6 +204,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         cursorPosition = @cursorPosition()
         lightDirection = new THREE.Vector3().subVectors(camera.position, cursorPosition).normalize()
         sunPosition.copy(lightDirection).multiplyScalar(-100)
+        sceneManager.bouncedLight.position.copy(sunPosition).negate()
 
       else
         # Read light direction from directional light position.
@@ -215,8 +219,13 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       sceneManager.ambientLight.color.copy sceneManager.skydome.skyColor
       sceneManager.ambientLight.intensity = sceneManager.skydome.skyIntensity
 
+      sceneManager.bouncedLight.color.copy(sceneManager.skydome.starColor).multiplyScalar(sceneManager.skydome.starIntensity)
+      sceneManager.bouncedLight.color.add(sceneManager.skydome.skyColor.clone().multiplyScalar(sceneManager.skydome.skyIntensity))
+
       # Update sun helper position.
       sceneManager.sunHelper.position.copy(sunPosition).normalize().multiplyScalar(1000)
+
+    $(document).on 'keydown.pixelartacademy-stilllifestand', (event) => @onKeyDown event
 
   onRendered: ->
     super arguments...
@@ -229,6 +238,8 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @app.removeComponent @
     @rendererManager()?.destroy()
     @sceneManager()?.destroy()
+
+    $(document).off '.pixelartacademy-stilllifestand'
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -372,3 +383,13 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   onContextMenu: (event) ->
     # Prevent context menu opening.
     event.preventDefault()
+
+  onKeyDown: (event) ->
+    key = event.which
+    return unless key is AC.Keys.r
+
+    sceneManager = @sceneManager()
+    renderer = @rendererManager().renderer
+
+    for item in sceneManager.items() when item.renderObject.material.reflectivity > 0.01
+      item.renderObject.renderReflections renderer, sceneManager.scene

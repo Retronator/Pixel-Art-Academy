@@ -19,20 +19,25 @@ class PAA.StillLifeStand.SceneManager
     @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
 
-    @skydome = new LOI.Engine.Skydome
-      generateCubeTexture: true
-      readColors: true
-      dithering: true
-
-    @scene.add @skydome
-    @scene.environment = @skydome.cubeTexture
+    @bouncedLight = new THREE.HemisphereLight 0, 0, 0.1
+    @bouncedLight.position.copy(@directionalLight.position).negate()
+    @scene.add @bouncedLight
 
     @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
-      color: 0x444444
+      color: 0xaaaaaa
       roughness: 1
       metalness: 0
       reflectivity: 0
       dithering: true
+
+    @skydome = new LOI.Engine.Skydome
+      generateCubeTexture: true
+      readColors: true
+      dithering: true
+      planetColor: @ground.material.color
+
+    @scene.add @skydome
+    @scene.environment = @skydome.cubeTexture
 
     @ground.receiveShadow = true
     @ground.rotation.x = -Math.PI / 2

@@ -28,6 +28,27 @@ class PAA.StillLifeStand.Item
     constructor: (@parentItem) ->
       super arguments...
 
+      @cubeCamera = new THREE.CubeCamera 0.001, 1000, 256,
+        type: THREE.FloatType
+        stencilBuffer: false
+
+    renderReflections: (renderer, scene) ->
+      @visible = false
+      @cubeCamera.position.copy @position
+
+      if offset = @parentItem.data.reflectionsRenderOffset
+        @cubeCamera.position.add new THREE.Vector3 offset.x or 0, offset.y or 0, offset.z or 0
+
+      renderer.outputEncoding = THREE.LinearEncoding
+      renderer.toneMapping = THREE.NoToneMapping
+      renderer.shadowMap.needsUpdate = true
+      @cubeCamera.clear renderer
+      @cubeCamera.update renderer, scene
+
+      @visible = true
+
+      @material.envMap = @cubeCamera.renderTarget.texture
+
   class @PhysicsObject extends AR.PhysicsObject
     constructor: (@parentItem) ->
       super arguments...
