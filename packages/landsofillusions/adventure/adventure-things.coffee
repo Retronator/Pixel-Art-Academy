@@ -128,3 +128,8 @@ class LOI.Adventure extends LOI.Adventure
       @_avatarsByThingId[thingClass.id()] ?= thingClass.createAvatar()
 
     @_avatarsByThingId[thingClass.id()]
+
+  thingsReady: ->
+    return false unless LOI.adventureInitialized()
+
+    _.every (thing.ready() for thing in @currentThings() when thing)

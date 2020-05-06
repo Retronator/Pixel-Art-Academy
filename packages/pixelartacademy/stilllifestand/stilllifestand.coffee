@@ -236,8 +236,10 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     super arguments...
 
     @app.removeComponent @
+
     @rendererManager()?.destroy()
     @sceneManager()?.destroy()
+    @physicsManager()?.destroy()
 
     $(document).off '.pixelartacademy-stilllifestand'
 
@@ -247,6 +249,16 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     ,
       500
 
+  ready: ->
+    conditions = [
+      super arguments...
+    ]
+
+    if @isCreated()
+      conditions.push @sceneManager()?.ready()
+
+    _.every conditions
+
   cursorClass: ->
     return 'grabbing' if @movingItem() or @movingSun()
     return 'can-grab' if @hoveredItem()
@@ -254,13 +266,16 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     null
 
   update: (appTime) ->
-    # Update physics.
-    physicsManager = @physicsManager()
-    physicsManager.update appTime
+    # Wait until the scene is initialized.
+    sceneManager = @sceneManager()
+
+    if sceneManager.ready()
+      # Update physics.
+      physicsManager = @physicsManager()
+      physicsManager.update appTime
 
     # Update the cursor.
     if viewportCoordinates = @mouse().viewportCoordinates()
-      sceneManager = @sceneManager()
       scene = sceneManager.scene
       camera = @cameraManager().camera()
 

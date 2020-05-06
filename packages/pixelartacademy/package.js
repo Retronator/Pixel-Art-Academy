@@ -50,6 +50,7 @@ Package.onUse(function(api) {
 
   api.addFile('stilllifestand/item..');
   api.addFile('stilllifestand/item/model');
+  api.addClientFile('stilllifestand/item/model-loader');
   api.addFile('stilllifestand/item/proceduralmodel');
   api.addFile('stilllifestand/item/box');
   api.addFile('stilllifestand/item/cone');

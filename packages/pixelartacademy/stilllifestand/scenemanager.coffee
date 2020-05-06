@@ -46,6 +46,19 @@ class PAA.StillLifeStand.SceneManager
     @_items = []
     @items = new ReactiveField @_items
 
+    @startingItemsHaveBeenInitialized = new ReactiveField false
+
+    # Notify when all starting items have been initialized.
+    @stillLifeStand.autorun (computation) =>
+      # Wait for items data to have been loaded.
+      return unless LOI.adventureInitialized()
+
+      # Wait until all items in the data have been added.
+      return unless @stillLifeStand.itemsData().length is @items().length
+      computation.stop()
+
+      @startingItemsHaveBeenInitialized true
+
     # Instantiate still life items based on the data.
     @stillLifeStand.autorun =>
       remainingItemIds = (item.data.id for item in @_items)
@@ -71,6 +84,10 @@ class PAA.StillLifeStand.SceneManager
       # Any leftover remaining items have been removed.
       for itemId in remainingItemIds
         @_removeItemWithId itemId
+
+    @ready = new ComputedField =>
+      # Scene is ready when all starting items have been initialized.
+      @startingItemsHaveBeenInitialized()
 
     # Create debug scene.
     @debugScene = new THREE.Scene
