@@ -18,3 +18,6 @@ _.mixin
 
   outdent: (string, length) ->
     _.indent string, -length
+
+  insertIntoString: (string, position, textToInsert) ->
+    string.substring(0, position) + textToInsert + string.substring(position)

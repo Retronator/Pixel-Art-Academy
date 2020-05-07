@@ -89,6 +89,7 @@ Package.onUse(function(api) {
   api.addFile('reality..');
   api.addFile('echo..');
   api.addFile('everything..');
+  api.addFile('workforce..');
 
   // Artificial Everywhere
 
@@ -411,4 +412,8 @@ Package.onUse(function(api) {
 
   api.addFile('everything/item');
   api.addFile('everything/part');
+
+  // Artificial Workforce
+
+  api.addFile('workforce/work');
 });
