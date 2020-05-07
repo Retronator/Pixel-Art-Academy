@@ -85,7 +85,7 @@ RS.Pages.Admin.Patreon.importPledges.method (date, csvData) ->
     # Convert parts to payments.
     email = parts[columnIndices['Email']]
     amount = parseFloat parts[columnIndices['Pledge']]
-    return unless email and not _.isNaN amount
+    continue unless email and not _.isNaN amount
 
     existingPledgeTransaction = RS.Transaction.documents.findOne
       time: date
