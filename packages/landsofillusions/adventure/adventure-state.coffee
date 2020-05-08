@@ -221,17 +221,6 @@ class LOI.Adventure extends LOI.Adventure
         gameState = LOI.GameState.documents.findOne 'user._id': userId
         
       gameState?.readOnlyState
-    
-    # Flush the state updates to the database when the page is about to unload.
-    window.addEventListener 'beforeunload', (event) =>
-      @gameState?.updated? flush: true
-      @userGameState?.updated? flush: true
-
-      # If we're signed in, but aren't saving login information, quit game to remove all local data.
-      if Meteor.userId() and not LOI.settings.persistLogin.allowed()
-        @clearLocalGameState()
-        @clearLocalStorageGameStateParts()
-        @clearLoginInformation()
 
     if LOI.Adventure.debugState
       @autorun (computation) =>

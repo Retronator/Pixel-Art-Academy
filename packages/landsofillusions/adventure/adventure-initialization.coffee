@@ -24,10 +24,16 @@ class LOI.Adventure extends LOI.Adventure
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency
 
+    # Adventure's end run should happen last.
+    @endRunOrder = 1000
+
   onCreated: ->
     super arguments...
 
     console.log "Adventure created." if LOI.debug
+
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
 
     $('html').addClass('adventure')
 
@@ -75,6 +81,8 @@ class LOI.Adventure extends LOI.Adventure
   onDestroyed: ->
     super arguments...
 
+    @app.removeComponent @
+
     Meteor.clearInterval @_gameTimeInterval
 
     LOI.adventure = null
@@ -83,3 +91,14 @@ class LOI.Adventure extends LOI.Adventure
     console.log "Adventure destroyed." if LOI.debug
 
     $('html').removeClass('adventure')
+
+  endRun: ->
+    # Flush the state updates to the database when the page is about to unload.
+    @gameState?.updated? flush: true
+    @userGameState?.updated? flush: true
+
+    # If we're signed in, but aren't saving login information, quit game to remove all local data.
+    if Meteor.userId() and not LOI.settings.persistLogin.allowed()
+      @clearLocalGameState()
+      @clearLocalStorageGameStateParts()
+      @clearLoginInformation()

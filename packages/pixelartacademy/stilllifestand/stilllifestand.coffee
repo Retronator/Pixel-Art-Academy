@@ -22,152 +22,161 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @physicsManager = new ReactiveField null
     @mouse = new ReactiveField null
 
-    @itemsData = new ReactiveField [
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/bowl-1.glb'
-        mass: 2.5
-      reflectionsRenderOffset:
-        y: 0.1
-      position:
-        x: 0, y: 0.1, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/banana.glb'
-        mass: 0.1
-      position:
-        x: -0.4, y: 0.025, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/apple-green.glb'
-        mass: 0.08
-      position:
-        x: -0.6, y: 0.5, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/apple-green-half.glb'
-        mass: 0.04
-      position:
-        x: -0.6, y: 0.5, z: 0.2
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/kiwi.glb'
-        mass: 0.05
-      position:
-        x: -0.8, y: 0.5, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/kiwi-half.glb'
-        mass: 0.05
-      position:
-        x: -0.8, y: 0.5, z: 0.2
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
-        mass: 0.007
-      position:
-        x: -1.1, y: 0.5, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
-        mass: 0.007
-      position:
-        x: -1.1, y: 0.5, z: 0.2
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
-        mass: 0.007
-      position:
-        x: -1.1, y: 0.5, z: 0.4
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
-        mass: 0.005
-        dragMultiplier: 40
-      position:
-        x: -1, y: 0.5, z: 0
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
-        mass: 0.005
-        dragMultiplier: 40
-      position:
-        x: -1, y: 0.5, z: 0.2
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/watermelon.glb'
-        mass: 5
-      position:
-        x: 0.2, y: 0.5, z: 0.7
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Model'
-      properties:
-        path: '/pixelartacademy/stilllifestand/items/orange-half.glb'
-        mass: 0.05
-      position:
-        x: 0.4, y: 0.5, z: 0.2
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ,
-      id: Random.id()
-      type: 'PixelArtAcademy.StillLifeStand.Item.Box'
-      properties:
-        size:
-          x: 2, y: 1, z: 2
-        mass: 10
-      position:
-        x: 0, y: 0.5, z: -1.3
-      rotationQuaternion:
-        x: 0, y: 0, z: 0, w: 1
-    ]
+    @itemsData = @state.field 'items'
+
+    @autorun (computation) =>
+      # Wait for items data to have been loaded.
+      return unless LOI.adventureInitialized()
+      computation.stop()
+
+      return if @itemsData()?.length
+
+      @itemsData [
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/bowl-1.glb'
+          mass: 2.5
+        reflectionsRenderOffset:
+          y: 0.1
+        position:
+          x: 0, y: 0.1, z: 0
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/banana.glb'
+          mass: 0.1
+        position:
+          x: -0.4, y: 0.025, z: 0
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/apple-green.glb'
+          mass: 0.08
+        position:
+          x: -0.6, y: 0.5, z: 0
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/apple-green-half.glb'
+          mass: 0.04
+        position:
+          x: -0.6, y: 0.5, z: 0.2
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/kiwi.glb'
+          mass: 0.05
+        position:
+          x: -0.8, y: 0.5, z: 0
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/kiwi-half.glb'
+          mass: 0.05
+        position:
+          x: -0.8, y: 0.5, z: 0.2
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
+          mass: 0.007
+        position:
+          x: -1.1, y: 0.5, z: 0
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
+          mass: 0.007
+        position:
+          x: -1.1, y: 0.5, z: 0.2
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/blueberry.glb'
+          mass: 0.007
+        position:
+          x: -1.1, y: 0.5, z: 0.4
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
+          mass: 0.005
+          dragMultiplier: 40
+        position:
+          x: -1, y: 0.5, z: 0
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/blueberry-leaf.glb'
+          mass: 0.005
+          dragMultiplier: 40
+        position:
+          x: -1, y: 0.5, z: 0.2
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/watermelon.glb'
+          mass: 5
+        position:
+          x: 0.2, y: 0.5, z: 0.7
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Model'
+        properties:
+          path: '/pixelartacademy/stilllifestand/items/orange-half.glb'
+          mass: 0.05
+        position:
+          x: 0.4, y: 0.5, z: 0.2
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ,
+        id: Random.id()
+        type: 'PixelArtAcademy.StillLifeStand.Item.Box'
+        properties:
+          size:
+            x: 2, y: 1, z: 2
+          mass: 10
+        position:
+          x: 0, y: 0.5, z: -1.3
+        rotationQuaternion:
+          x: 0, y: 0, z: 0, w: 1
+      ]
 
     @hoveredItem = new ReactiveField null, (a, b) => a is b
     @movingItem = new ReactiveField null
@@ -235,6 +244,9 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   onDestroyed: ->
     super arguments...
 
+    # Save state of items before we exit the stand.
+    @_saveItemsState()
+
     @app.removeComponent @
 
     @rendererManager()?.destroy()
@@ -242,6 +254,23 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @physicsManager()?.destroy()
 
     $(document).off '.pixelartacademy-stilllifestand'
+
+  endRun: ->
+    # Save state of items if player closes the window while the stand is active.
+    @_saveItemsState()
+
+  _saveItemsState: ->
+    return unless sceneManager = @sceneManager()
+
+    itemsData = @itemsData()
+    items = sceneManager.items()
+
+    for itemData in itemsData
+      item = _.find items, (item) => item.data.id is itemData.id
+      itemData.position = item.renderObject.position.toObject()
+      itemData.rotationQuaternion = item.renderObject.quaternion.toObject()
+
+    @itemsData itemsData
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
