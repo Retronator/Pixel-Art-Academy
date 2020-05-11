@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -35,6 +36,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
     @constructor.Alexandra
     @constructor.Artworks
     @constructor.StillLifeStand
+    PAA.Items.StillLifeItems.SmallCube.unlessCollected()
     @elevatorButton
   ]
 

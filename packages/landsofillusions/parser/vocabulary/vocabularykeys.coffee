@@ -60,6 +60,9 @@ LOI.Parser.Vocabulary.Keys =
     Write: ''
     WriteOn: ''
     Continue: ''
+    Cut: ''
+    CutWith: ''
+    CutIn: ''
 
     Be:
       Present:

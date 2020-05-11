@@ -46,7 +46,12 @@ class PAA.StillLifeStand.SceneManager
     @_items = []
     @items = new ReactiveField @_items
 
+    @_itemsById = {}
+
     @startingItemsHaveBeenInitialized = new ReactiveField false
+
+    items = PAA.Items.StillLifeItems.items()
+    return [] unless items.length
 
     # Notify when all starting items have been initialized.
     @stillLifeStand.autorun (computation) =>
@@ -61,20 +66,13 @@ class PAA.StillLifeStand.SceneManager
 
     # Instantiate still life items based on the data.
     @stillLifeStand.autorun =>
-      remainingItemIds = (item.data.id for item in @_items)
+      remainingItemIds = (item._id for item in @_items)
 
       newItemsData = @stillLifeStand.itemsData()
 
       for newItemData in newItemsData
         if newItemData.id in remainingItemIds
-          # Item has already been instantiated. See if its properties have changed.
-          item = _.find @_items, (item) => item.data.id is newItemData.id
-
-          unless EJSON.equals newItemData.properties, item.data.properties
-            # Replace item with a new instance.
-            @_removeItemWithId item.id
-            @_addItem newItemData
-
+          # Item has already been instantiated.
           _.pull remainingItemIds, newItemData.id
 
         else
@@ -112,9 +110,25 @@ class PAA.StillLifeStand.SceneManager
     @skydome.destroy()
 
   _addItem: (itemData) ->
-    itemClass = PAA.StillLifeStand.Item.getClassForId itemData.type
+    itemClass = _.thingClass itemData.type
 
-    new itemClass itemData, onInitialized: (item) =>
+    if itemData.type is itemData.id
+      # If no special ID is given, we have a unique item.
+      item = new itemClass
+
+    else
+      # Otherwise we need to get the specific copy for the ID.
+      item = itemClass.getCopyForId itemData.id
+
+    @_itemsById[itemData.id] = item
+
+    # Initialize the avatar and wait for it to complete.
+    item.avatar.initialize()
+
+    Tracker.autorun (computation) =>
+      return unless item.avatar.initialized()
+      computation.stop()
+
       # Do not complete initialization if it was canceled.
       return if item._initializationCanceled
 
@@ -123,18 +137,29 @@ class PAA.StillLifeStand.SceneManager
       @items @_items
 
       # Set material properties.
-      item.renderObject.material.dithering = true
+      renderObject = item.avatar.getRenderObject()
+      renderObject.material.dithering = true
+
+      # Set physics state.
+      physicsObject = item.avatar.getPhysicsObject()
+      physicsObject.setPosition itemData.position if itemData.position
+      physicsObject.setRotation itemData.rotationQuaternion if itemData.rotationQuaternion
 
       # Add render object to the scene.
-      @scene.add item.renderObject
+      @scene.add renderObject
 
   _removeItemWithId: (itemId) ->
-    item = _.find @_items, (item) => item.id is itemId
+    item = _.find @_items, (item) => item._id is itemId
 
     unless item
       # If we couldn't find the item it's probably still loading.
-      item._initializationCanceled = true
-      item.destroy()
+      if @_itemsById[itemId]
+        @_itemsById[itemId]._initializationCanceled = true
+        @_itemsById[itemId].destroy()
+
+      else
+        console.error "Still life item to be removed hasn't been added.", itemId
+
       return
 
     # Update items array.
@@ -142,5 +167,5 @@ class PAA.StillLifeStand.SceneManager
     @items @_items
 
     # Remove render object from the scene.
-    @scene.remove item.renderObject
+    @scene.remove item.avatar.getRenderObject()
     item.destroy()

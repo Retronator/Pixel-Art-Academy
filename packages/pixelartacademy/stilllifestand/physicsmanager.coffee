@@ -44,14 +44,17 @@ class PAA.StillLifeStand.PhysicsManager
       @stillLifeStand.sceneManager()?.items()
     ,
       added: (item) =>
+        physicsObject = item.avatar.getPhysicsObject()
+
         # Set default damping on the item.
-        item.physicsObject.body.setDamping @linearDamping, @angularDamping
+        physicsObject.body.setDamping @linearDamping, @angularDamping
 
         # Add the item to the simulation.
-        @dynamicsWorld.addRigidBody item.physicsObject.body
+        @dynamicsWorld.addRigidBody physicsObject.body
 
       removed: (item) =>
-        @dynamicsWorld.removeRigidBody item.physicsObject.body
+        physicsObject = item.avatar.getPhysicsObject()
+        @dynamicsWorld.removeRigidBody physicsObject.body
 
   destroy: ->
     @items.stop()
@@ -65,13 +68,16 @@ class PAA.StillLifeStand.PhysicsManager
   startMovingItem: (item, cursorPosition) ->
     @_clearCursorConstraint()
 
+    renderObject = item.avatar.getRenderObject()
+    physicsObject = item.avatar.getPhysicsObject()
+
     # Calculate cursor position in item space.
-    item.renderObject.updateMatrixWorld true
-    worldToMovingItem = new THREE.Matrix4().getInverse item.renderObject.matrixWorld
+    renderObject.updateMatrixWorld true
+    worldToMovingItem = new THREE.Matrix4().getInverse renderObject.matrixWorld
     cursorPositionInItemSpace = cursorPosition.clone().applyMatrix4 worldToMovingItem
 
     # Add a constraint to the cursor.
-    @_movingBody = item.physicsObject.body
+    @_movingBody = physicsObject.body
     @_cursorConstraint = new Ammo.btPoint2PointConstraint @_movingBody, cursorPositionInItemSpace.toBulletVector3()
     @_cursorConstraint.m_setting.m_tau = 0.001
 
@@ -127,8 +133,11 @@ class PAA.StillLifeStand.PhysicsManager
     @_updateItem item for item in @items()
 
   _updateItem: (item) ->
-    # Transfer transforms from physics to render objects.
-    item.physicsObject.motionState.getWorldTransform _transform
+    renderObject = item.avatar.getRenderObject()
+    physicsObject = item.avatar.getPhysicsObject()
 
-    item.renderObject.position.setFromBulletVector3 _transform.getOrigin()
-    item.renderObject.quaternion.setFromBulletQuaternion _transform.getRotation()
+    # Transfer transforms from physics to render objects.
+    physicsObject.motionState.getWorldTransform _transform
+
+    renderObject.position.setFromBulletVector3 _transform.getOrigin()
+    renderObject.quaternion.setFromBulletQuaternion _transform.getRotation()

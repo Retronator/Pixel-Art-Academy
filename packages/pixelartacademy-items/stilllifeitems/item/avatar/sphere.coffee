@@ -4,20 +4,19 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StillLifeStand.Item.Sphere extends PAA.StillLifeStand.Item.ProceduralModel
-  @id: -> 'PixelArtAcademy.StillLifeStand.Item.Sphere'
-  @initialize()
+class PAA.Items.StillLifeItems.Item.Avatar.Sphere extends PAA.Items.StillLifeItems.Item.Avatar.ProceduralModel
+  @initializeEngineObjectClasses()
 
   collisionShapeMargin: -> null
 
   createGeometry: ->
-    new THREE.SphereBufferGeometry @parentItem.data.properties.radius, 32, 32
+    new THREE.SphereBufferGeometry @avatar.properties.radius, 32, 32
 
   createCollisionShape: ->
-    new Ammo.btSphereShape @parentItem.data.properties.radius
+    new Ammo.btSphereShape @avatar.properties.radius
 
   addDragObjects: ->
-    radius = @parentItem.data.properties.radius
+    radius = @avatar.properties.radius
     area = Math.PI * radius ** 2
     dragCoefficient = 0.47
     dragFactor = area * dragCoefficient

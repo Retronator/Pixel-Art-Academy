@@ -10,14 +10,18 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
     Activated: 'Activated'
     Deactivating: 'Deactivating'
 
+  # Support for items that can be picked up.
+
+  @inInventory: -> @state 'inInventory'
+
+  @unlessInInventory: ->
+    if @inInventory() then null else @
+
   # Items with multiple copies
   
   @createCopy: (options = {}) ->
-    copyId = Random.id()
-    copyStateAddress = @stateAddress.child "copies.#{copyId}"
-
-    copy = new @
-      stateAddress: copyStateAddress
+    copyId = options.id or Random.id()
+    copy = @getCopyForId copyId
 
     copy.state 'timelineId', options.timelineId if options.timelineId
 
@@ -26,14 +30,17 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
   @getCopies: (options = {}) ->
     copies = @state 'copies'
 
-    copyInstances = for copyId of copies
-      new @
-        stateAddress: @stateAddress.child "copies.#{copyId}"
+    copyInstances = (@getCopyForId copyId for copyId of copies)
 
     if options.timelineId
       copyInstances = _.filter copyInstances, (copy) -> copy.state('timelineId') is options.timelineId
 
     copyInstances
+
+  @getCopyForId: (id) ->
+    new @
+      stateAddress: @stateAddress.child "copies.#{id}"
+      copyId: id
 
   # Item instance
 
@@ -48,6 +55,12 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
     if @options?.stateAddress
       @stateAddress = @options.stateAddress
       @state = new LOI.StateObject address: @stateAddress
+
+    if @options?.copyId
+      @copyId = @options.copyId
+
+      # Also override the _id since it's used as a unique identifier in rendering.
+      @_id = @copyId
 
   deactivated: -> @activatedState() is @constructor.ActivatedStates.Deactivated
   activating: -> @activatedState() is @constructor.ActivatedStates.Activating

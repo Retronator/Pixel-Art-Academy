@@ -4,22 +4,21 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StillLifeStand.Item.Cylinder extends PAA.StillLifeStand.Item.ProceduralModel
-  @id: -> 'PixelArtAcademy.StillLifeStand.Item.Cylinder'
-  @initialize()
+class PAA.Items.StillLifeItems.Item.Avatar.Cylinder extends PAA.Items.StillLifeItems.Item.Avatar.ProceduralModel
+  @initializeEngineObjectClasses()
 
   collisionShapeMargin: -> null
 
   createGeometry: ->
-    properties = @parentItem.data.properties
+    properties = @avatar.properties
     new THREE.CylinderBufferGeometry properties.radius, properties.radius, properties.height, 32
 
   createCollisionShape: ->
-    properties = @parentItem.data.properties
+    properties = @avatar.properties
     new Ammo.btCylinderShape new Ammo.btVector3 properties.radius, properties.height / 2, properties.radius
 
   addDragObjects: ->
-    {radius, height} = @parentItem.data.properties
+    {radius, height} = @avatar.properties
     diameter = 2 * radius
 
     yArea = Math.PI * radius ** 2

@@ -4,16 +4,10 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
-  @id: -> 'PixelArtAcademy.StillLifeStand.Item.Model'
-
-  @initialize: ->
-    super arguments...
-
-    parent = @
-
-    class @RenderObject extends PAA.StillLifeStand.Item.RenderObject
-      constructor: (@parentItem) ->
+class PAA.Items.StillLifeItems.Item.Avatar.ProceduralModel extends PAA.Items.StillLifeItems.Item.Avatar
+  @initializeEngineObjectClasses: ->
+    class @RenderObject extends PAA.Items.StillLifeItems.Item.Avatar.RenderObject
+      constructor: (@avatar) ->
         super arguments...
 
         @material = new THREE.MeshPhysicalMaterial
@@ -30,10 +24,10 @@ class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
 
         @add @mesh
 
-      createGeometry: -> @parentItem.createGeometry.call @
+      createGeometry: -> @avatar.createGeometry.call @
 
-    class @PhysicsObject extends PAA.StillLifeStand.Item.PhysicsObject
-      constructor: ->
+    class @PhysicsObject extends PAA.Items.StillLifeItems.Item.Avatar.PhysicsObject
+      constructor: (@avatar) ->
         super arguments...
 
         @addDragObjects()
@@ -41,20 +35,18 @@ class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
         @initialize()
 
       createCollisionShape: ->
-        collisionShape = @parentItem.createCollisionShape.call @
-        margin = @parentItem.collisionShapeMargin.call @
+        collisionShape = @avatar.createCollisionShape.call @
+        margin = @avatar.collisionShapeMargin.call @
         collisionShape.setMargin margin if margin?
         collisionShape
 
-      addDragObjects: -> @parentItem.addDragObjects.call @
+      addDragObjects: -> @avatar.addDragObjects.call @
 
-  constructor: ->
-    super arguments...
+  initialize: ->
+    @_renderObject = new @constructor.RenderObject @
+    @_physicsObject = new @constructor.PhysicsObject @
 
-    @renderObject = new @constructor.RenderObject @
-    @physicsObject = new @constructor.PhysicsObject @
-
-    @options.onInitialized @
+    @initialized true
 
   createGeometry: ->
     throw new AE.NotImplementedException "Still life procedural model must provide a geometry."
@@ -64,4 +56,4 @@ class PAA.StillLifeStand.Item.ProceduralModel extends PAA.StillLifeStand.Item
 
   addDragObjects: -> # Implement to add drag objects.
 
-  collisionShapeMargin: -> PAA.StillLifeStand.Item.roughEdgeMargin
+  collisionShapeMargin: -> PAA.Items.StillLifeItems.Item.Avatar.roughEdgeMargin

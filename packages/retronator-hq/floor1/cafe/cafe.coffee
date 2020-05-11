@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
+PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -36,7 +37,9 @@ class HQ.Cafe extends LOI.Adventure.Location
     HQ.Cafe.Burra
     HQ.Items.Daily
     HQ.Cafe.Artworks
-    SanFrancisco.Soma.Items.Map unless SanFrancisco.Soma.Items.Map.state 'inInventory'
+    PAA.Items.StillLifeItems.GreenApple.unlessCollected()
+    PAA.Items.KitchenKnife
+    SanFrancisco.Soma.Items.Map.unlessInInventory()
   ]
 
   exits: ->

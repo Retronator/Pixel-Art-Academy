@@ -4,28 +4,39 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StillLifeStand.Item
+class PAA.Items.StillLifeItems.Item.Avatar extends LOI.Adventure.Thing.Avatar
   @roughEdgeMargin: 0.001
 
-  @_itemClassesById = {}
+  constructor: (thing, @properties = {}) ->
+    super thing.constructor
 
-  @getClassForId: (id) ->
-    @_itemClassesById[id]
+    @thing = thing
 
-  @id: -> throw new AE.NotImplementedException "You must specify still life item's id."
-
-  @initialize: ->
-    # Store item class by ID.
-    @_itemClassesById[@id()] = @
-
-  constructor: (@data, @options) ->
+    @initialized = new ReactiveField false
 
   destroy: ->
-    @renderObject.destroy()
-    @physicsObject.destroy()
+    super arguments...
+
+    @_renderObject?.destroy()
+    @_physicsObject?.destroy()
+
+  # Note: @initialized should be set to true when initialization is completed.
+  initialize: -> throw new AE.NotImplementedException "You must initialize render and physics objects."
+
+  getRenderObject: ->
+    return @_renderObject if @_renderObject
+
+    @initialize()
+    @_renderObject
+
+  getPhysicsObject: ->
+    return @_physicsObject if @_physicsObject
+
+    @initialize()
+    @_physicsObject
 
   class @RenderObject extends AS.RenderObject
-    constructor: (@parentItem) ->
+    constructor: (@avatar) ->
       super arguments...
 
       @cubeCamera = new THREE.CubeCamera 0.001, 1000, 256,
@@ -35,9 +46,6 @@ class PAA.StillLifeStand.Item
     renderReflections: (renderer, scene) ->
       @visible = false
       @cubeCamera.position.copy @position
-
-      if offset = @parentItem.data.reflectionsRenderOffset
-        @cubeCamera.position.add new THREE.Vector3 offset.x or 0, offset.y or 0, offset.z or 0
 
       renderer.outputEncoding = THREE.LinearEncoding
       renderer.toneMapping = THREE.NoToneMapping
@@ -50,7 +58,7 @@ class PAA.StillLifeStand.Item
       @material.envMap = @cubeCamera.renderTarget.texture
 
   class @PhysicsObject extends AR.PhysicsObject
-    constructor: (@parentItem) ->
+    constructor: (@avatar) ->
       super arguments...
 
       @dragObjects = []
@@ -82,16 +90,10 @@ class PAA.StillLifeStand.Item
       angular: angularDragFactor
 
     initialize: ->
-      positionData = @parentItem.data.position or x: 0, y: 0, z: 0
-      position = Ammo.btVector3.fromObject positionData
-
-      rotationQuaternionData = @parentItem.data.rotationQuaternion or x: 0, y: 0, z: 0, w: 0
-      rotationQuaternion = Ammo.btQuaternion.fromObject rotationQuaternionData
-
-      transform = new Ammo.btTransform rotationQuaternion, position
+      transform = new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
       @motionState = new Ammo.btDefaultMotionState transform
 
-      @mass = @parentItem.data.properties.mass ? 1
+      @mass = @avatar.properties.mass ? 1
       @localInertia = new Ammo.btVector3 0, 0, 0
       @collisionShape = @createCollisionShape()
       @collisionShape.calculateLocalInertia @mass, @localInertia
@@ -99,6 +101,6 @@ class PAA.StillLifeStand.Item
       bodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
       @body = new Ammo.btRigidBody bodyInfo
 
-      @body.setRestitution @parentItem.data.properties.restitution or 0.6
-      @body.setFriction @parentItem.data.properties.friction or 0.8
-      @body.setRollingFriction @parentItem.data.properties.rollingFriction or 0.05
+      @body.setRestitution @avatar.properties.restitution or 0.6
+      @body.setFriction @avatar.properties.friction or 0.8
+      @body.setRollingFriction @avatar.properties.rollingFriction or 0.05

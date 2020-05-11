@@ -70,9 +70,6 @@ class LOI.Interface.Text extends LOI.Interface
 
     activeItems = _.filter items, (item) => not item.deactivated()
 
-    # Also add _id field to help #each not re-render things all the time.
-    item._id = item.id() for item in items
-
     console.log "Text interface is displaying active items", activeItems if LOI.debug
 
     activeItems

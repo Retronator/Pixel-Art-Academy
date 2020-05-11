@@ -30,8 +30,11 @@ class PAA.StillLifeStand.PhysicsManager extends PAA.StillLifeStand.PhysicsManage
   applyDrag: ->
     items = @items()
 
-    for item in items when item.physicsObject.dragObjects.length
-      body = item.physicsObject.body
+    for item in items
+      physicsObject = item.avatar.getPhysicsObject()
+      continue unless physicsObject.dragObjects?.length
+
+      body = physicsObject.body
 
       _velocity.setFromBulletVector3 body.getLinearVelocity()
       speedSquared = _velocity.lengthSq()
@@ -42,7 +45,7 @@ class PAA.StillLifeStand.PhysicsManager extends PAA.StillLifeStand.PhysicsManage
       continue unless speedSquared > @minSpeedSquaredToApplyDrag or angularSpeedSquared > @minSpeedSquaredToApplyDrag
 
       # Calculate transform to local space.
-      item.physicsObject.motionState.getWorldTransform _transform
+      physicsObject.motionState.getWorldTransform _transform
 
       _worldQuaternion.setFromBulletQuaternion _transform.getRotation()
       _worldQuaternionInverse.copy(_worldQuaternion).inverse()
@@ -64,10 +67,10 @@ class PAA.StillLifeStand.PhysicsManager extends PAA.StillLifeStand.PhysicsManage
 
       # We use a drag multiplier to allow lighter objects represented
       # with bigger masses (for stability of the general simulation).
-      dragMultiplier = item.data.properties.dragMultiplier or 1
-      dragMass = item.physicsObject.mass / dragMultiplier
+      dragMultiplier = item.avatar.properties.dragMultiplier or 1
+      dragMass = physicsObject.mass / dragMultiplier
 
-      for dragObject in item.physicsObject.dragObjects
+      for dragObject in physicsObject.dragObjects
         if speedSquared > @minSpeedSquaredToApplyDrag
           # Calculate weighted drag factor (corresponds to C * A below).
           linearDragFactor = dragObject.linearDragFactor.dot _dragObjectDirectionalWeights

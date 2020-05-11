@@ -20,4 +20,23 @@ Package.onUse(function(api) {
   
   api.addThing('bottle..');
   api.addFile('bottle/scene');
+
+  api.addThing('kitchenknife..');
+  api.addFile('kitchenknife/half');
+
+  api.addFile('stilllifeitems..');
+  api.addFile('stilllifeitems/scene');
+
+  api.addFile('stilllifeitems/item..');
+  api.addFile('stilllifeitems/item/avatar..');
+  api.addFile('stilllifeitems/item/avatar/model');
+  api.addClientFile('stilllifeitems/item/avatar/model-loader');
+  api.addFile('stilllifeitems/item/avatar/proceduralmodel');
+  api.addFile('stilllifeitems/item/avatar/box');
+  api.addFile('stilllifeitems/item/avatar/cone');
+  api.addFile('stilllifeitems/item/avatar/cylinder');
+  api.addFile('stilllifeitems/item/avatar/sphere');
+
+  api.addFile('stilllifeitems/items/smallcube');
+  api.addFile('stilllifeitems/items/greenapple');
 });

@@ -64,6 +64,9 @@ Document.startup ->
       Write: ['write']
       WriteOn: ['write _ on']
       Continue: ['continue', 'proceed', 'carry on']
+      Cut: ['cut']
+      CutWith: ['cut _ with']
+      CutIn: ['cut _ in']
 
       Be:
         Present:

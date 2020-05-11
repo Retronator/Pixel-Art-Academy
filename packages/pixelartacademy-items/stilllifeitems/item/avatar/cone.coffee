@@ -4,23 +4,22 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StillLifeStand.Item.Cone extends PAA.StillLifeStand.Item.ProceduralModel
-  @id: -> 'PixelArtAcademy.StillLifeStand.Item.Cone'
-  @initialize()
+class PAA.Items.StillLifeItems.Item.Avatar.Cone extends PAA.Items.StillLifeItems.Item.Avatar.ProceduralModel
+  @initializeEngineObjectClasses()
 
   createGeometry: ->
-    properties = @parentItem.data.properties
+    properties = @avatar.properties
     new THREE.ConeBufferGeometry properties.radius, properties.height, 32, 32
 
   createCollisionShape: ->
-    properties = @parentItem.data.properties
-    margin = PAA.StillLifeStand.Item.roughEdgeMargin
+    properties = @avatar.properties
+    margin = PAA.Items.StillLifeItems.Item.Avatar.roughEdgeMargin
 
     collisionShape = new Ammo.btConeShape properties.radius - 2 * margin, properties.height - 2 * margin
     collisionShape
 
   addDragObjects: ->
-    {radius, height} = @parentItem.data.properties
+    {radius, height} = @avatar.properties
     diameter = 2 * radius
 
     yArea = Math.PI * radius ** 2

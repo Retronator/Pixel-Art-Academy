@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 
 _vector3 = new Ammo.btVector3
 
-class PAA.StillLifeStand.Item.Model.Loader
+class PAA.Items.StillLifeItems.Item.Avatar.Model.Loader
   @gltfLoader = new THREE.GLTFLoader
 
   dracoLoader = new THREE.DRACOLoader
@@ -111,7 +111,7 @@ class PAA.StillLifeStand.Item.Model.Loader
     else
       {shape, transform} = @_createConvexHullShape mesh, calculateTransform
 
-    shape.setMargin mesh.userData?.margin ? PAA.StillLifeStand.Item.roughEdgeMargin
+    shape.setMargin mesh.userData?.margin ? PAA.Items.StillLifeItems.Item.Avatar.roughEdgeMargin
 
     # Add mesh to drag objects.
     boundingBox = mesh.geometry.boundingBox

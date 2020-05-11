@@ -6,6 +6,7 @@ class PAA.Items extends LOI.Adventure.Global
 
   @scenes: -> [
     @Bottle.Scene
+    @StillLifeItems.Scene
   ]
 
   @initialize()

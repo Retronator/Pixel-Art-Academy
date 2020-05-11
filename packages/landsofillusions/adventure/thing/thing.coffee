@@ -39,7 +39,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   # The long name is displayed to succinctly describe the thing. Also, we can't just use 'name'
   # instead of 'fullName' because name gets overriden by CoffeeScript with the class name.
-  @fullName: -> throw new AE.NotImplementedException "You must specify thing's full name."
+  @fullName: -> throw new AE.NotImplementedException "You must specify full name for thing #{@id()}."
 
   # The short name of the thing which is used to refer to it in the text. 
   @shortName: -> @fullName()
