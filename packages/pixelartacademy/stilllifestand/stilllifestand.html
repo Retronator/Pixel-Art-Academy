@@ -3,7 +3,9 @@
     {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
     {{else}}
-      <div class="viewport-area {{cursorClass}}"></div>
+      <div class="viewport-area {{cursorClass}}">
+        {{> Render inventory}}
+      </div>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>
 </template>

@@ -16,6 +16,11 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
   @items: ->
     @state('items') or []
 
+  @setItems: (items) ->
+    items = _.without items, null, undefined
+
+    @state 'items', items
+
   @addItemOfType: (type) ->
     items = @items()
     id = Random.id()

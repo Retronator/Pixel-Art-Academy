@@ -71,7 +71,8 @@ class PAA.StillLifeStand.PhysicsManager
     renderObject = item.avatar.getRenderObject()
     physicsObject = item.avatar.getPhysicsObject()
 
-    # Calculate cursor position in item space.
+    # Calculate cursor position in item space. Make sure render object has the latest transform.
+    @_updateItem item
     renderObject.updateMatrixWorld true
     worldToMovingItem = new THREE.Matrix4().getInverse renderObject.matrixWorld
     cursorPositionInItemSpace = cursorPosition.clone().applyMatrix4 worldToMovingItem

@@ -1,0 +1,31 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-stilllifestand-inventory
+  position absolute
+  bottom 0
+  left 0
+  right 0
+  opacity 0.5
+  transition all 0.2s
+
+  &:hover
+    opacity 1
+    background rgba(black, 0.2)
+
+  &.grabbing
+    cursor grabbing
+
+    .items
+      .item
+        cursor grabbing
+
+  .items
+    display flex
+    margin 0
+    padding 2rem
+    justify-content center
+    list-style none
+
+    .item
+      padding 2rem
+      cursor grab

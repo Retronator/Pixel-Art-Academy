@@ -47,4 +47,7 @@ Package.onUse(function(api) {
   api.addFile('stilllifestand/physicsmanager');
   api.addFile('stilllifestand/physicsmanager-drag');
   api.addFile('stilllifestand/mouse');
+
+  api.addComponent('stilllifestand/inventory..');
+  api.addComponent('stilllifestand/inventory/item..');
 });

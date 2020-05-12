@@ -21,6 +21,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @cameraManager = new ReactiveField null
     @physicsManager = new ReactiveField null
     @mouse = new ReactiveField null
+    @inventory = new ReactiveField null
 
     @itemsData = @state.field 'items', default: []
 
@@ -46,6 +47,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @rendererManager new @constructor.RendererManager @
     @physicsManager new @constructor.PhysicsManager @
     @mouse new @constructor.Mouse @
+    @inventory new @constructor.Inventory @
 
     # Reactively update lighting.
     @autorun (computation) =>
@@ -126,6 +128,62 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       finishedDeactivatingCallback()
     ,
       500
+
+  addDraggedItem: (draggedItemData) ->
+    itemsData = @itemsData()
+
+    # Make sure this item hasn't been added yet.
+    itemData = _.find itemsData, (itemData) => itemData.id is draggedItemData.id
+    return if itemData
+
+    # Add the item data to the stand. We need to create a clone so that we don't modify the inventory item's data.
+    itemData = _.cloneDeep draggedItemData
+    itemsData.push draggedItemData
+    @itemsData itemsData
+
+    # Wait for item to get added to the scene.
+    @autorun (computation) =>
+      sceneManager = @sceneManager()
+      items = sceneManager.items()
+      item = _.find items, (item) => item._id is itemData.id
+      return unless item
+      computation.stop()
+
+      # Find a point on top of the object. Render object should still be positioned at identity as the physics
+      # simulation hasn't ran yet, so we can simply pick a point from far above the center of the object. We assume
+      # that there is at least one triangle above the center.
+      renderObject = item.avatar.getRenderObject()
+      downRaycaster = new THREE.Raycaster new THREE.Vector3(0, 100, 0), new THREE.Vector3(0, -1, 0)
+      intersections = downRaycaster.intersectObject renderObject, true
+      return unless grabPosition = intersections[0]?.point
+
+      # Position the cursor in a horizontal plane halfway between the ground and the camera.
+      camera = @cameraManager().camera()
+      @_cursorHorizontalPlane.setFromNormalAndCoplanarPoint new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, camera.position.y / 2, 0)
+      @_cursorVerticalPlaneActive = false
+
+      viewportCoordinates = @mouse().viewportCoordinates()
+      _cursorRaycaster.setFromCamera viewportCoordinates, camera
+      _cursorRaycaster.ray.intersectPlane @_cursorHorizontalPlane, _cursorPosition
+
+      # Place the object so that the grab position will be at the cursor.
+      position = new THREE.Vector3().subVectors _cursorPosition, grabPosition
+
+      physicsObject = item.avatar.getPhysicsObject()
+      physicsObject.setPosition position
+
+      # Start moving the item.
+      @movingItem item
+
+      physicsManager = @physicsManager()
+      physicsManager.startMovingItem item, _cursorPosition
+
+      # Wire end of dragging on mouse up anywhere in the window.
+      $(document).on 'mouseup.pixelartacademy-stilllifestand', =>
+        $(document).off 'mouseup.pixelartacademy-stilllifestand'
+
+        @movingItem null
+        physicsManager.endMovingItem()
 
   ready: ->
     conditions = [
@@ -208,13 +266,13 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
   events: ->
     super(arguments...).concat
-      'mousedown': @onMouseDown
+      'mousedown canvas': @onMouseDownCanvas
       'mousemove': @onMouseMove
-      'mouseleave': @onMouseLeave
+      'mouseleave .pixelartacademy-stilllifestand': @onMouseLeaveStillLifeStand
       'wheel': @onMouseWheel
       'contextmenu': @onContextMenu
 
-  onMouseDown: (event) ->
+  onMouseDownCanvas: (event) ->
     # Prevent browser select/dragging behavior.
     event.preventDefault()
 
@@ -267,7 +325,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   onMouseMove: (event) ->
     @mouse().onMouseMove event
 
-  onMouseLeave: (event) ->
+  onMouseLeaveStillLifeStand: (event) ->
     @mouse().onMouseLeave event
 
   onMouseWheel: (event) ->
