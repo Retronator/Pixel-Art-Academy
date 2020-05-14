@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-TheilSenRegression = require 'ml-regression-theil-sen'
+import TheilSenRegression from 'ml-regression-theil-sen'
 
 class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
   constructor: (@clusterA, @clusterB) ->

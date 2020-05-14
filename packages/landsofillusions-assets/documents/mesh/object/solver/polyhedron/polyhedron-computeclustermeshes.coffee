@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-Delaunator = require 'delaunator'
+import Delaunator from 'delaunator'
 
 LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterMeshes = (clusters) ->
   console.log "Computing cluster meshes", clusters if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
@@ -18,7 +18,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterMeshes = (clusters) ->
       delaunay = Delaunator.from cluster.points, getX, getY
 
     catch error
-      console.warn error if LOI.Assets.Engine.Mesh.debug
+      console.warn error if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
       continue
 
     for triangle in [0...delaunay.triangles.length / 3]

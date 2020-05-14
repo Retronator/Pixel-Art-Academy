@@ -1,10 +1,13 @@
 <template name="PixelArtAcademy.StillLifeStand.Inventory">
   <div class="pixelartacademy-stilllifestand-inventory {{cursorClass}}">
+    <div class="name">Inventory</div>
     <ul class="items">
       {{#each items}}
         <li class="item">
           {{> PixelArtAcademy.StillLifeStand.Inventory.Item}}
         </li>
+      {{else}}
+        <li class="hint">Drag items here to store them.</li>
       {{/each}}
     </ul>
   </div>

@@ -35,8 +35,11 @@ class PAA.StillLifeStand.Inventory extends AM.Component
 
     items
 
-  startDrag: (itemId) ->
-    @draggedItemIndex _.findIndex @items(), (item) => item.id is itemId
+  startDrag: (itemId, startingIndex) ->
+    # Automatically calculate starting index if it's not provided.
+    startingIndex ?= _.findIndex @items(), (item) => item.id is itemId
+    @draggedItemIndex startingIndex
+
     @draggedItemId itemId
 
     # Wire end of dragging on mouse up anywhere in the window.
@@ -71,7 +74,7 @@ class PAA.StillLifeStand.Inventory extends AM.Component
 
     # Remove the dragged item.
     draggedItem = _.find items, (item) => item.id is draggedItemId
-    #_.pull items, draggedItem
+    _.pull items, draggedItem
 
     # Reset dragging fields to stop reordering.
     @draggedItemId null
@@ -86,6 +89,31 @@ class PAA.StillLifeStand.Inventory extends AM.Component
     # Do not listen to end drag any more.
     $(document).off 'mouseup.pixelartacademy-stilllifestand-inventory'
 
+  dragFromStandToIndex: (index) ->
+    newItem = @stillLifeStand.movingItem()
+    items = PAA.Items.StillLifeItems.items()
+
+    # Make sure this item hasn't been added yet.
+    existingItem = _.find items, (item) => item.id is newItem._id
+
+    return if existingItem
+
+    # Add the relevant item data to the stand.
+    PAA.Items.StillLifeItems.addItem newItem._id, newItem.id()
+
+    # Start dragging it once it's added.
+    @autorun (computation) =>
+      items = PAA.Items.StillLifeItems.items()
+      addedItem = _.find items, (item) => item.id is newItem._id
+
+      return unless addedItem
+      computation.stop()
+
+      @startDrag addedItem.id, index
+
+      # Remove the item from the stand.
+      @stillLifeStand.removeMovingItem()
+
   cursorClass: ->
     return 'grabbing' if @draggedItemId()
 
@@ -95,6 +123,7 @@ class PAA.StillLifeStand.Inventory extends AM.Component
     super(arguments...).concat
       'mousedown .item': @onMouseDownItem
       'mouseenter .item': @onMouseEnterItem
+      'mouseenter .pixelartacademy-stilllifestand-inventory': @onMouseEnterInventory
       'mouseleave .pixelartacademy-stilllifestand-inventory': @onMouseLeaveInventory
 
   onMouseDownItem: (event) ->
@@ -123,6 +152,21 @@ class PAA.StillLifeStand.Inventory extends AM.Component
     else
       # We're dragging right after the entered item. Push it after its place.
       @draggedItemIndex enteredItemIndex + 1
+
+  onMouseEnterInventory: (event) ->
+    return unless @stillLifeStand.movingItem()
+
+    # Find out where to place the new item.
+    mouse = event.clientX
+
+    itemCenters = for item in @$('.item')
+      $item = $(item)
+      $item.offset().left + $item.width() / 2
+
+    newItemIndex = 0
+    newItemIndex++ while (newItemIndex < itemCenters.length and mouse > itemCenters[newItemIndex])
+
+    @dragFromStandToIndex newItemIndex
 
   onMouseLeaveInventory: (event) ->
     return unless @draggedItemId()

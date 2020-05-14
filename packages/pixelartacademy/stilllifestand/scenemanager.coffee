@@ -34,7 +34,6 @@ class PAA.StillLifeStand.SceneManager
       generateCubeTexture: true
       readColors: true
       dithering: true
-      planetColor: @ground.material.color
 
     @scene.add @skydome
     @scene.environment = @skydome.cubeTexture
@@ -49,9 +48,6 @@ class PAA.StillLifeStand.SceneManager
     @_itemsById = {}
 
     @startingItemsHaveBeenInitialized = new ReactiveField false
-
-    items = PAA.Items.StillLifeItems.items()
-    return [] unless items.length
 
     # Notify when all starting items have been initialized.
     @stillLifeStand.autorun (computation) =>

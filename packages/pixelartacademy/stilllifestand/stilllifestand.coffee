@@ -43,6 +43,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
     # Initialize components.
     @sceneManager new @constructor.SceneManager @
+
     @cameraManager new @constructor.CameraManager @
     @rendererManager new @constructor.RendererManager @
     @physicsManager new @constructor.PhysicsManager @
@@ -184,6 +185,14 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
         @movingItem null
         physicsManager.endMovingItem()
+
+  removeMovingItem: ->
+    itemsData = @itemsData()
+    movingItemId = @movingItem()._id
+
+    _.remove itemsData, (itemData) => itemData.id is movingItemId
+
+    @itemsData itemsData
 
   ready: ->
     conditions = [
