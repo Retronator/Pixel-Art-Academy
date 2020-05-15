@@ -18,7 +18,6 @@ class PAA.Items.StillLifeItems.Scene extends LOI.Adventure.Scene
       PAA.Items.StillLifeItems
 
       # Include all actual items.
-      for item in items
-        itemClass = _.thingClass item.type
+      for item in items when itemClass = _.thingClass item.type
         itemClass.getCopyForId item.id
     ]

@@ -37,7 +37,12 @@ class PAA.Items.KitchenKnife extends LOI.Adventure.Item
 
     # See if we have any things we can cut in half.
     addCutActions = (things, action) =>
-      for thing in things when _.thingClass(thing).Half
+      for thing in things
+        thingClass = _.thingClass(thing)
+
+        # We can only cut still life items that have a Half class defined.
+        continue unless thingClass.prototype instanceof PAA.Items.StillLifeItems.Item and thingClass.Half
+
         do (thing) =>
           expandedAction = =>
             @script.ephemeralState 'thingToCut', thing.shortName()

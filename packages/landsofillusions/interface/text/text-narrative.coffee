@@ -53,7 +53,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # We could have direct HTML in the text, so we need to collect it here, to replace it back instead of the escaped
     # versions. We have to trust that the provided HTML is already escaped and malicious free.
-    htmlParts = text.match /%%html.*html%%/g
+    htmlParts = text.match /%%html.*?html%%/g
 
     text = AM.HtmlHelper.escapeText text
 
@@ -63,7 +63,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       html = htmlPart.match(/%%html(.*)html%%/)[1]
 
       # Because we don't use global match flag, replacements will happen one by one in order.
-      text = text.replace /%%html.*html%%/, html
+      text = text.replace /%%html.*?html%%/, html
 
     # Create color spans.
     text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) =>

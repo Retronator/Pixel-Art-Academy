@@ -12,6 +12,10 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
   @version: -> '0.1.0'
 
+  @startingItems: ->
+    # Override if the stand has items initially.
+    []
+
   constructor: ->
     super arguments...
 
@@ -23,7 +27,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @mouse = new ReactiveField null
     @inventory = new ReactiveField null
 
-    @itemsData = @state.field 'items', default: []
+    @itemsData = @state.field 'items', default: @startingItems()
 
     @hoveredItem = new ReactiveField null, (a, b) => a is b
     @movingItem = new ReactiveField null
@@ -203,6 +207,14 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       conditions.push @sceneManager()?.ready()
 
     _.every conditions
+
+  startingItems: ->
+    items = @constructor.startingItems()
+
+    # Assign IDs if necessary.
+    item.id ?= Random.id() for item in items
+
+    items
 
   cursorClass: ->
     return 'grabbing' if @movingItem() or @movingSun()

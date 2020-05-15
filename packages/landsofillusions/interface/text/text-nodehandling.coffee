@@ -195,7 +195,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
     return if @_waitForNode commandLine
 
     # If the command should replace the last command, we delete the previous lines.
-    @narrative.removeLastCommand() if commandLine.replaceLastCommand
+    if commandLine.replaceLastCommand
+      @narrative.removeLastCommand()
+
+      # Also replace the command in the command input history.
+      @commandInput.replaceLastCommandInHistory commandLine.line
 
     # If the command line is a silent one, it doesn't appear in the narrative.
     unless commandLine.silent

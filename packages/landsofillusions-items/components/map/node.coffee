@@ -118,20 +118,27 @@ class LOI.Items.Components.Map.Node extends AM.Component
     location = @data()
 
     # Special directions have priority except for east/west.
-    unless location.direction in [Directions.East, Directions.West]
-      direction = location.specialDirection or location.direction
+    isEastWest = location.direction in [Directions.East, Directions.West]
+
+    if isEastWest
+      direction = location.direction or location.specialDirection
 
     else
-      direction = location.direction or location.specialDirection
+      direction = location.specialDirection or location.direction
 
     return unless direction
 
     phrases = LOI.adventure.parser.vocabulary.getPhrases direction
 
-    # Find the shortest phrase.
+    # Find the shortest phrase less than 5 characters long, except for east/west as there is not enough space.
+    phrases = _.filter phrases, (phrase) => phrase.length < 5
     phrases = _.sortBy phrases, (phrase) => phrase.length
 
-    phrases[0]
+    if isEastWest
+      phrases[0]
+
+    else
+      _.last phrases
 
   directionClass: ->
     location = @data()

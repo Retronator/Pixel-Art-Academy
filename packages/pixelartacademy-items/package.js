@@ -37,6 +37,7 @@ Package.onUse(function(api) {
   api.addFile('stilllifeitems/item/avatar/cylinder');
   api.addFile('stilllifeitems/item/avatar/sphere');
 
-  api.addFile('stilllifeitems/items/smallcube');
-  api.addFile('stilllifeitems/items/greenapple');
+  api.addFile('stilllifeitems/items/cube');
+  api.addFile('stilllifeitems/items/apple');
+  api.addFile('stilllifeitems/items/apple-green');
 });

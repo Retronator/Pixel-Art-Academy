@@ -7,13 +7,17 @@ Vocabulary = LOI.Parser.Vocabulary
 class LOI.Parser.ThingListener extends LOI.Adventure.Listener
   onCommand: (commandResponse) ->
     currentPhysicalThings = LOI.adventure.currentPhysicalThings()
+    currentLocationThings = LOI.adventure.currentLocationThings()
 
     character = LOI.character()
     characterRenderObject = character?.avatar.getRenderObject()
 
     for thing in currentPhysicalThings
       do (thing) =>
-        renderObject = thing.avatar.getRenderObject?()
+        # For things that come from the location, see if we have a
+        # render object for them so that we can face or walk to them.
+        if thing in currentLocationThings
+          renderObject = thing.avatar.getRenderObject?()
 
         # Look at a thing to see its description.
         commandResponse.onPhrase

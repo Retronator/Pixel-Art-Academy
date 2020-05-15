@@ -16,7 +16,7 @@ vec4 shadowColor;
 vec3 viewDirection = normalize(vViewPosition);
 
 // Note: Unrolling a loop requires specific whitespace formatting.
-#pragma unroll_loop
+#pragma unroll_loop_start
 for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {
 
   directionalLight = directionalLights[ i ];
@@ -42,7 +42,9 @@ for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {
   totalLightIntensity += lightIntensity * shadowColor.a;
 
   // Tint the fragment if shadow color is set.
-  // Note: We don't use parenthesis since the pragma unroll would match them and close the unroll.
-  if (shadowColor.r < 1.0) paletteColor.r = (shadowColor.r * 255.0 + 0.5) / 256.0;
+  if (shadowColor.r < 1.0) {
+    paletteColor.r = (shadowColor.r * 255.0 + 0.5) / 256.0;
+  }
 
 }
+#pragma unroll_loop_end

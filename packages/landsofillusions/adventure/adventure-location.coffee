@@ -45,6 +45,9 @@ class LOI.Adventure extends LOI.Adventure
       # Wait until the timeline ID is ready.
       return unless currentTimelineId = @currentTimelineId()
 
+      # Wait until initialization has finished, since location might ask to instantiate things.
+      return unless LOI.adventureInitialized()
+
       # React to location ID changes.
       currentLocationId = @currentLocationId()
 

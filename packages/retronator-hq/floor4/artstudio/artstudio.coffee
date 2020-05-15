@@ -36,7 +36,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
     @constructor.Alexandra
     @constructor.Artworks
     @constructor.StillLifeStand
-    PAA.Items.StillLifeItems.SmallCube.unlessCollected()
+    PAA.Items.StillLifeItems.Cube.Small.unlessCollected()
     @elevatorButton
   ]
 

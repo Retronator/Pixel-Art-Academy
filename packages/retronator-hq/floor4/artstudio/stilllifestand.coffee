@@ -9,12 +9,18 @@ class HQ.ArtStudio.StillLifeStand extends PAA.StillLifeStand
   @url: -> 'retronator/artstudio/stilllife'
 
   @fullName: -> "still life stand"
+  @shortName: -> "stand"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @descriptiveName: -> "Still life ![stand](use stand)."
   @description: ->
     "
       A stand is placed in the middle of the studio with various items on display.
       Artists use this as a reference to study lighting and practice drawing and painting technique.
     "
+
+  @startingItems: -> [
+    type: PAA.Items.StillLifeItems.Apple.Green.id()
+  ]
 
   @initialize()
 

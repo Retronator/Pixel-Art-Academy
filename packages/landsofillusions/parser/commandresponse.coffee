@@ -37,6 +37,9 @@ class LOI.Parser.CommandResponse
       for formPart, i in form
         form[i] = [formPart] unless _.isArray formPart
 
+      # Prepare to collect possible shortcut replacements.
+      shortcutReplacements = {}
+
       # Expand keys and avatars into translated strings.
       for formPart, i in form
         translatedStrings = for alias in formPart
@@ -47,7 +50,14 @@ class LOI.Parser.CommandResponse
           else if _.isString alias
             # We have a phrase key.
             phraseKey = alias
-            @options.parser.vocabulary.getPhrases phraseKey
+            phrases = @options.parser.vocabulary.getPhrases phraseKey
+
+            # We consider the second phrase of length 1 or 2 to be a shortcut.
+            if phrases[1]?.length < 3
+              # We replace shortcuts with the first phrase.
+              shortcutReplacements[phrases[1]] = phrases[0]
+
+            phrases
 
           else if alias instanceof LOI.Avatar or alias instanceof LOI.Adventure.Thing or alias.possessive
             # We have an avatar (or a thing that has the same name methods as the avatar). We also allow sending the
@@ -159,12 +169,16 @@ class LOI.Parser.CommandResponse
         # for example, when overriding a generic response with a custom one.
         priority = phraseAction.priority or 0
 
+        # Replace shortcuts in translated form.
+        translatedForm = for phrase in combinationPhrases
+          shortcutReplacements[phrase] or phrase
+
         # Return an action with the likelihood that this is what the user wanted.
         phraseAction: phraseAction
         likelihood: likelihood
         precision: precision
         priority: priority
-        translatedForm: combinationPhrases
+        translatedForm: translatedForm
 
     # Likely actions include nested arrays for all actions so we return a flattened version.
     _.flattenDeep likelyActions
