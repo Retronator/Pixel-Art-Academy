@@ -92,7 +92,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   onRendered: ->
     super arguments...
 
-    @$('.viewport-area').append @rendererManager().renderer.domElement
+    @$('.render-area').append @rendererManager().renderer.domElement
 
   onDestroyed: ->
     super arguments...
@@ -287,13 +287,13 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
   events: ->
     super(arguments...).concat
-      'mousedown canvas': @onMouseDownCanvas
+      'mousedown .render-area': @onMouseDownRenderArea
       'mousemove': @onMouseMove
       'mouseleave .pixelartacademy-stilllifestand': @onMouseLeaveStillLifeStand
       'wheel': @onMouseWheel
       'contextmenu': @onContextMenu
 
-  onMouseDownCanvas: (event) ->
+  onMouseDownRenderArea: (event) ->
     # Prevent browser select/dragging behavior.
     event.preventDefault()
 

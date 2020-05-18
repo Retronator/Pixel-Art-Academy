@@ -18,3 +18,6 @@ if Meteor.isServer
   LOI.initializePackage
     id: 'retronator_pixelartacademy'
     assets: Assets
+
+  # Export assets in the pixelartacademy folder.
+  LOI.Assets.addToExport 'pixelartacademy'

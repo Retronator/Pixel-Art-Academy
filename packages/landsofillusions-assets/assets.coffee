@@ -5,7 +5,11 @@ AM = Artificial.Mummification
 class LOI.Assets
   @debug = false
 
+  @exportPaths = []
+
   @addToExport: (path) ->
+    @exportPaths.push path
+
     for assetClassName in ['Sprite', 'Mesh', 'Audio']
       do (assetClassName) ->
         AM.DatabaseContent.addToExport ->

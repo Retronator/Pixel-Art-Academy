@@ -8,10 +8,13 @@
     background none
 
     .viewport-area
+      .render-area
+        absolute-cover()
+
       &.can-grab
-        canvas
+        .render-area
           cursor grab
 
       &.grabbing
-        canvas
+        .render-area
           cursor grabbing

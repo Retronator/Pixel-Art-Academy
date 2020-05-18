@@ -11,13 +11,13 @@ class PAA.Items.StillLifeItems.Apple.Green extends PAA.Items.StillLifeItems.Item
       It's a green apple, probably a Granny Smith.
     "
 
-  @assetsPath: -> '/pixelartacademy/items/stilllifeitems/apple-green'
+  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/apple-green'
 
   @initialize()
 
   createAvatar: ->
     new PAA.Items.StillLifeItems.Item.Avatar.Model @,
-      path: "#{@constructor.assetsPath()}.glb"
+      path: "/#{@constructor.assetsPath()}.glb"
       mass: 0.08
 
   class @Half extends PAA.Items.StillLifeItems.Item
@@ -28,11 +28,11 @@ class PAA.Items.StillLifeItems.Apple.Green extends PAA.Items.StillLifeItems.Item
         It's one half of a green apple.
       "
 
-    @assetsPath: -> '/pixelartacademy/items/stilllifeitems/apple-green-half'
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/apple-green-half'
 
     @initialize()
 
     createAvatar: ->
       new PAA.Items.StillLifeItems.Item.Avatar.Model @,
-        path: "#{@constructor.assetsPath()}.glb"
+        path: "/#{@constructor.assetsPath()}.glb"
         mass: 0.04
