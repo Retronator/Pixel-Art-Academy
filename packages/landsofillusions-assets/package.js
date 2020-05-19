@@ -270,6 +270,7 @@ Package.onUse(function(api) {
   
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
+  api.addFile('spriteeditor/actions/ignorenormals');
   api.addFile('spriteeditor/actions/symmetry');
   api.addFile('spriteeditor/actions/fliphorizontal');
   api.addFile('spriteeditor/actions/zoom');

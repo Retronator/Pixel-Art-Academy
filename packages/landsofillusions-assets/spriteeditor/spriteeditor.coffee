@@ -84,6 +84,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
           LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
+          null
+          LOI.Assets.SpriteEditor.Actions.IgnoreNormals.id()
         ]
       ,
         caption: 'Window'
