@@ -72,6 +72,7 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods..');
   api.addFile('documents/sprite/methods/addpixels');
   api.addFile('documents/sprite/methods/removepixels');
+  api.addFile('documents/sprite/methods/smoothpixels');
   api.addFile('documents/sprite/methods/colorfill');
   api.addFile('documents/sprite/methods/replacepixels');
   api.addFile('documents/sprite/methods/transformpixels');
@@ -264,6 +265,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/stroke');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
+  api.addFile('spriteeditor/tools/smooth');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/translate');

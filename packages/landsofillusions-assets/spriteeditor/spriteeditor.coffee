@@ -105,6 +105,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         LOI.Assets.SpriteEditor.Tools.Translate.id()
         LOI.Assets.SpriteEditor.Tools.Pencil.id()
         LOI.Assets.SpriteEditor.Tools.Eraser.id()
+        LOI.Assets.SpriteEditor.Tools.Smooth.id()
         LOI.Assets.SpriteEditor.Tools.ColorFill.id()
         LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
       ]
