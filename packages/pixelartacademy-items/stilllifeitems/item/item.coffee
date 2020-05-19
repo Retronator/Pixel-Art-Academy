@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -5,6 +6,8 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.Items.StillLifeItems.Item extends LOI.Adventure.Item
   @collected: -> @state 'collected'
+
+  @assetsPath: -> throw new AE.NotImplementedException "You must provide an asset path where the icon for the item is found."
 
   @unlessCollected: ->
     if @collected() then null else @

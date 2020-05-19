@@ -10,7 +10,6 @@ class PAA.StillLifeStand.Inventory.Item extends AM.Component
   constructor: ->
     super arguments...
 
-    @$canvas = new ReactiveField null
     @canvas = new ReactiveField null
     @context = new ReactiveField null
 
@@ -38,8 +37,8 @@ class PAA.StillLifeStand.Inventory.Item extends AM.Component
     @spriteData = new ComputedField =>
       return unless item = @item()
 
-      spriteName = item.constructor.assetsPath()
-      LOI.Assets.Sprite.findInCache name: spriteName
+      iconSpriteName = "#{item.constructor.assetsPath()}/icon"
+      LOI.Assets.Sprite.findInCache name: iconSpriteName
 
     @sprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
@@ -70,24 +69,29 @@ class PAA.StillLifeStand.Inventory.Item extends AM.Component
     $canvas = @$('.canvas')
     canvas = $canvas[0]
 
-    @$canvas $canvas
     @canvas canvas
     @context canvas.getContext '2d'
 
+    @$item = @$('.pixelartacademy-stilllifestand-inventory-item')
+
+  canvasStyle: ->
+    return unless bounds = @spriteData()?.bounds
+
+    width: "#{bounds.width}rem"
+    height: "#{bounds.height}rem"
+
   events: ->
     super(arguments...).concat
-      'mousemove canvas': @onMouseMoveCanvas
-      'mouseleave canvas': @onMouseLeaveCanvas
+      'mousemove': @onMouseMove
+      'mouseleave': @onMouseLeave
 
-  onMouseMoveCanvas: (event) ->
-    $canvas = @$canvas()
+  onMouseMove: (event) ->
+    itemOffset = @$item.offset()
 
-    canvasOffset = $canvas.offset()
-
-    percentageX = (event.pageX - canvasOffset.left) / $canvas.outerWidth() * 2 - 1
-    percentageY = (event.pageY - canvasOffset.top) / $canvas.outerHeight() * 2 - 1
+    percentageX = (event.pageX - itemOffset.left) / @$item.outerWidth() * 2 - 1
+    percentageY = (event.pageY - itemOffset.top) / @$item.outerHeight() * 2 - 1
 
     @lightDirection new THREE.Vector3(-percentageX, percentageY, -1).normalize()
 
-  onMouseLeaveCanvas: (event) ->
+  onMouseLeave: (event) ->
     @lightDirection new THREE.Vector3(0, -1, -1).normalize()

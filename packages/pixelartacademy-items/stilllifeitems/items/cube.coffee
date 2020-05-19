@@ -12,6 +12,8 @@ class PAA.Items.StillLifeItems.Cube
         It's a small white cube, not more than 2 inches wide.
       "
 
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/cube-small'
+
     @initialize()
 
     createAvatar: ->
