@@ -30,6 +30,7 @@ LOI.Parser.Vocabulary.Keys =
     WhatIs: ''
     WhoIs: ''
     Get: ''
+    PutIn: ''
     SitDown: ''
     SitIn: ''
     Stand: ''

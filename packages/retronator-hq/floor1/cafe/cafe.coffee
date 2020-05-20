@@ -40,6 +40,7 @@ class HQ.Cafe extends LOI.Adventure.Location
     PAA.Items.StillLifeItems.Apple.Green.unlessCollected()
     PAA.Items.KitchenKnife
     SanFrancisco.Soma.Items.Map.unlessInInventory()
+    HQ.Cafe.BowlOfFruit.withItems()...
   ]
 
   exits: ->

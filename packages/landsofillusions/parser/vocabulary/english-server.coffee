@@ -34,6 +34,7 @@ Document.startup ->
       WhatIs: ['what is', 'what\'s', 'what are', 'what\'re']
       WhoIs: ['who is', 'who\'s', 'who are', 'who\'re']
       Get: ['get', 'g', 'take', 'pick up', 'grab']
+      PutIn: ['put _ in', 'place _ in', 'drop _ in']
       SitDown: ['sit down']
       SitIn: ['sit in']
       Stand: ['stand up']

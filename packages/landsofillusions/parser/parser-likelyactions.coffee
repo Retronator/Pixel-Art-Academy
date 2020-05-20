@@ -69,11 +69,12 @@ class LOI.Parser extends LOI.Parser
         likelyAction.priority is bestPriority
 
     # If we have only one possibility left and it's close enough, just choose that one (autocorrect style).
-    if likelyActions.length is 1 and likelyActions[0].likelihood > 0.8
-      likelyAction = likelyActions[0]
-
-      commandNodeSequence = @_createCommandNodeSequence likelyAction
+    startAction = (action) =>
+      commandNodeSequence = @_createCommandNodeSequence action
       LOI.adventure.director.startNode commandNodeSequence
+
+    if likelyActions.length is 1 and likelyActions[0].likelihood > 0.8
+      startAction likelyActions[0]
       return true
 
     # We still have multiple likely actions. Show a selection of choices for the user to choose from.
@@ -124,6 +125,9 @@ class LOI.Parser extends LOI.Parser
 
     # Now go over again and re-translate the duplicates with more verbose versions.
     testChoiceNode = lastChoiceNode
+    previousChoiceNode = null
+
+    includedLines = []
 
     loop
       line = testChoiceNode.node.line
@@ -133,10 +137,26 @@ class LOI.Parser extends LOI.Parser
       (lineIsSubstring = true if translatedForm.indexOf(line) > -1) for translatedForm in translatedForms when translatedForm isnt line
 
       if lineIsSubstring or line in duplicateForms
-        testChoiceNode.node.line = _.upperFirst @_createIdealForm testChoiceNode._likelyAction, fullNames: true
+        longerForm = _.upperFirst @_createIdealForm testChoiceNode._likelyAction, fullNames: true
+
+        # We don't show the line if the longer form is the same as an already
+        # included one since there would be no way to distinguish it in the interface.
+        if longerForm in includedLines
+          # Rewire previous choice node directly to the next one.
+          previousChoiceNode.next = testChoiceNode.next
+
+        else
+          includedLines.push longerForm
+          testChoiceNode.node.line = longerForm
+          previousChoiceNode = testChoiceNode
 
       testChoiceNode = testChoiceNode.next
       break if testChoiceNode.node is cancelNode
+
+    # If we ended up with just one action (and the cancel node), we simply start that action.
+    if lastChoiceNode.next.node is cancelNode
+      startAction lastChoiceNode._likelyAction
+      return true
 
     # The dialog starts with a question to the user.
     questionNode = new Nodes.InterfaceLine

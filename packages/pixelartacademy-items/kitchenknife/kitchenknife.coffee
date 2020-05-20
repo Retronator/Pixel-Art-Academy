@@ -8,6 +8,7 @@ class PAA.Items.KitchenKnife extends LOI.Adventure.Item
   @fullName: -> "kitchen knife"
   @shortName: -> "knife"
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+  @descriptiveName: -> "Kitchen ![knife](use knife)."
   @description: ->
     "
       It's an all-purpose kitchen knife. Great for cutting fruit in half.
@@ -70,7 +71,7 @@ class PAA.Items.KitchenKnife extends LOI.Adventure.Item
 
     addCutActions LOI.adventure.currentInventoryThings(), (thing) =>
       # Remove the thing we're cutting.
-      PAA.Items.StillLifeItems.removeItemForId thing.copyId
+      PAA.Items.StillLifeItems.removeItem thing.copyId
 
       @startScript label: 'CutInventoryThingInHalf'
 

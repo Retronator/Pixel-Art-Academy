@@ -22,6 +22,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-blog');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('Retronator');
 
@@ -85,6 +86,7 @@ Package.onUse(function(api) {
   api.addFile('floor1/cafe..');
   api.addFile('floor1/cafe/burra');
   api.addFile('floor1/cafe/artworks');
+  api.addFile('floor1/cafe/bowloffruit');
   api.addScript('floor1/cafe/burra');
   api.addScript('floor1/cafe/burra-character');
 

@@ -26,6 +26,7 @@ Package.onUse(function(api) {
 
   api.addFile('stilllifeitems..');
   api.addFile('stilllifeitems/scene');
+  api.addFile('stilllifeitems/container');
 
   api.addFile('stilllifeitems/item..');
   api.addFile('stilllifeitems/item/avatar..');
@@ -40,4 +41,7 @@ Package.onUse(function(api) {
   api.addFile('stilllifeitems/items/cube');
   api.addFile('stilllifeitems/items/apple');
   api.addFile('stilllifeitems/items/apple-green');
+  api.addFile('stilllifeitems/items/kiwi');
+  api.addFile('stilllifeitems/items/banana');
+  api.addFile('stilllifeitems/items/mango');
 });

@@ -13,12 +13,14 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
     "
 
   @translations: ->
-    youCurrentlyHave: "You currently have:"
+    contentsSentence: "You currently have:"
 
   @initialize()
 
+  @itemsField = @state.field 'items', default: []
+
   @items: ->
-    items = @state('items') or []
+    items = @itemsField()
 
     # Filter items to possible classes, in case we remove any of them at some point.
     _.filter items, (item) => _.thingClass item.type
@@ -49,7 +51,7 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
     id = Random.id()
     @addItem id, type
 
-  @removeItemForId: (id) ->
+  @removeItem: (id) ->
     # HACK: We get items directly from the state so the remove happens in place. If we use @items, for some reason the
     # state won't get updated with a new array that we send in time and immediate add actions for example will happen
     # on the old state, cached in the field.
@@ -69,13 +71,13 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
       action: =>
         LOI.adventure.showDescription stillLifeItems
 
-        itemsCount = PAA.Items.StillLifeItems.itemsCount()
-        listString = stillLifeItems.translations().youCurrentlyHave
+        itemsCount = stillLifeItems.constructor.itemsCount()
+        listString = stillLifeItems.translations().contentsSentence
 
         $list = $('<ul class="things">')
 
         for itemType, count of itemsCount
-          item = LOI.adventure.getCurrentInventoryThing itemType
+          item = LOI.adventure.getCurrentThing itemType
 
           $listItem = $('<li class="thing">')
           countString = if count > 1 then " x#{count}" else ""
