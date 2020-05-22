@@ -38,10 +38,18 @@ Package.onUse(function(api) {
   api.addFile('stilllifeitems/item/avatar/cylinder');
   api.addFile('stilllifeitems/item/avatar/sphere');
 
-  api.addFile('stilllifeitems/items/cube');
-  api.addFile('stilllifeitems/items/apple');
-  api.addFile('stilllifeitems/items/apple-green');
-  api.addFile('stilllifeitems/items/kiwi');
-  api.addFile('stilllifeitems/items/banana');
-  api.addFile('stilllifeitems/items/mango');
+  api.addFile('stilllifeitems/items/primitives/cube');
+
+  api.addFile('stilllifeitems/items/fruit/apple');
+  api.addFile('stilllifeitems/items/fruit/apple-green');
+  api.addFile('stilllifeitems/items/fruit/kiwi');
+  api.addFile('stilllifeitems/items/fruit/banana');
+  api.addFile('stilllifeitems/items/fruit/mango');
+  api.addFile('stilllifeitems/items/fruit/blueberry');
+  api.addFile('stilllifeitems/items/fruit/orange');
+  api.addFile('stilllifeitems/items/fruit/raspberry');
+  api.addFile('stilllifeitems/items/fruit/watermelon');
+
+  api.addFile('stilllifeitems/items/tableware/bowl');
+  api.addFile('stilllifeitems/items/tableware/bowl-large');
 });

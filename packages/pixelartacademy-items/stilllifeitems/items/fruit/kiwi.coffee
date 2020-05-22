@@ -11,14 +11,14 @@ class PAA.Items.StillLifeItems.Kiwi extends PAA.Items.StillLifeItems.Item
       It's kiwifruit with its fuzzy brown skin.
     "
 
-  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/kiwi'
+  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/kiwi'
 
   @initialize()
 
   createAvatar: ->
     new PAA.Items.StillLifeItems.Item.Avatar.Model @,
       path: "/#{@constructor.assetsPath()}.glb"
-      mass: 0.05
+      mass: 0.076
 
   class @Half extends PAA.Items.StillLifeItems.Item
     @id: -> 'PixelArtAcademy.Items.StillLifeItems.Kiwi.Half'
@@ -35,4 +35,4 @@ class PAA.Items.StillLifeItems.Kiwi extends PAA.Items.StillLifeItems.Item
     createAvatar: ->
       new PAA.Items.StillLifeItems.Item.Avatar.Model @,
         path: "/#{@constructor.assetsPath()}.glb"
-        mass: 0.025
+        mass: 0.038

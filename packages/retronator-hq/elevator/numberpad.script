@@ -9,17 +9,17 @@
 
 ## Selection
 
-* 6 - Terrace -> [Terrace]
-* 5 - Residence -> [Residence]
-* 4 - Art Studio -> [Studio]
-* 3 - Gallery -> [Gallery]
-* 2 - Store -> [Store]
-* 1 - Café -> [Cafe]
-* B1 - Lands of Illusions -> [LOI]
-* B2 - Recording Studio -> [Recording]
-* B3 - Secret Lab -> [SecretLab] `@user.itemKeys['Retropolis.SecretLabAccess']`
-* Nevermind -> [Nevermind] `not Travel`
-* Nevermind -> [End] `Travel`
+* !6 - Terrace -> [Terrace]
+* !5 - Residence -> [Residence]
+* !4 - Art Studio -> [Studio]
+* !3 - Gallery -> [Gallery]
+* !2 - Store -> [Store]
+* !1 - Café -> [Cafe]
+* !B1 - Lands of Illusions -> [LOI]
+* !B2 - Recording Studio -> [Recording]
+* !B3 - Secret Lab -> [SecretLab] `@user.itemKeys['Retropolis.SecretLabAccess']`
+* !Nevermind -> [Nevermind] `not Travel`
+* !Nevermind -> [End] `Travel`
 
 ## Cafe
 
@@ -97,7 +97,7 @@
 
 > You press the Café button, but nothing happens. `location.floor is 1`
 > You press the Store button, but nothing happens. `location.floor is 2`
-> You press the Galery button, but nothing happens. `location.floor is 3`
+> You press the Gallery button, but nothing happens. `location.floor is 3`
 > You press the Art Studio button, but nothing happens. `location.floor is 4`
 > You press the Residence button, but nothing happens. `location.floor is 5`
 > You press the Terrace button, but nothing happens. `location.floor is 6`
@@ -130,8 +130,8 @@
 
 ## TravelContinues
 
-> Number `_nextFloor` glows and the doors close. `_nextFloor > 0`
-> Number B`-_nextFloor` glows and the doors close. `_nextFloor < 0`
+> Number `_nextFloor` glows, and the doors close. `_nextFloor > 0`
+> Number B`-_nextFloor` glows, and the doors close. `_nextFloor < 0`
 
 `location.floor = 'travelling'`
 
@@ -153,37 +153,37 @@ Wait 1500ms.
 
 ## SecretLabAccess
 
-> The display asks for authorization and you use your keycard to confirm you have access to the Secret Lab.
+> The display asks for authorization, and you use your keycard to confirm you have access to the Secret Lab.
 
 -> [TravelContinues]
 
 ## IdeaGardenAccess
 
-> The display asks for authorization and you use your keycard to confirm you have access to the Idea Garden.
+> The display asks for authorization, and you use your keycard to confirm you have access to the Idea Garden.
 
 -> [TravelContinues]
 
 ## PatronClubMember
 
-> The display asks for authorization and you use your keycard to confirm you are one of the patrons of Pixel Art Academy.
+> The display asks for authorization, and you use your keycard to confirm you are one of the patrons of Pixel Art Academy.
 
 -> [TravelContinues]
 
 ## NoIdeaGardenAccess
 
-> The display asks for authorization but your keycard does not have Idea Garden access. The elevator stays put.
+> The display asks for authorization, but your keycard does not have Idea Garden access. The elevator stays put.
 
 -> [Selection]
 
 ## NoSecretLabAccess
 
-> The display asks for authorization but your keycard does not have Secret Lab access. The elevator stays put.
+> The display asks for authorization, but your keycard does not have Secret Lab access. The elevator stays put.
 
 -> [Selection]
 
 ## NoPatronClubMember
 
-> The display asks for authorization but you are not a member of the Patron Club. The elevator stays put.
+> The display asks for authorization, but you are not a member of the Patron Club. The elevator stays put.
 
 -> [Selection]
 

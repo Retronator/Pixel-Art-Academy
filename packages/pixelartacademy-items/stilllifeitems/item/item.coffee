@@ -14,6 +14,12 @@ class PAA.Items.StillLifeItems.Item extends LOI.Adventure.Item
 
   isVisible: -> false
 
+  @stillLifeItemType: ->
+    # Override in inherited classes to return the parent id, which is the actual type.
+    @id()
+
+  stillLifeItemType: -> @constructor.stillLifeItemType()
+
   # Listener
 
   onCommand: (commandResponse) ->
@@ -52,7 +58,7 @@ class PAA.Items.StillLifeItems.Item extends LOI.Adventure.Item
 
           else
             # We have a generic item, so just add one of its type to the items.
-            PAA.Items.StillLifeItems.addItemOfType item.id()
+            PAA.Items.StillLifeItems.addItemOfType item.stillLifeItemType?() or item.id()
 
           # Report OK to the user.
           true

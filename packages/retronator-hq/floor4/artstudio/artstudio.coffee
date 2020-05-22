@@ -36,7 +36,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
     @constructor.Alexandra
     @constructor.Artworks
     @constructor.StillLifeStand
-    PAA.Items.StillLifeItems.Cube.Small.unlessCollected()
+    @constructor.StorageShelves.withItems()...
     @elevatorButton
   ]
 
@@ -63,6 +63,11 @@ class HQ.ArtStudio extends LOI.Adventure.Location
 
         # Note: We don't need to call complete since entering a context will stop this script.
 
+      ContinueToApartment: (complete) =>
+        LOI.adventure.goToLocation HQ.Residence.Hallway
+
+        complete()
+
   # Listener
 
   onCommand: (commandResponse) ->
@@ -75,6 +80,16 @@ class HQ.ArtStudio extends LOI.Adventure.Location
         @startScript label: 'LookAtArtworks'
 
   onExitAttempt: (exitResponse) ->
+    # Make sure we're not already in the middle of executing our exit
+    # script. If that's the case we need to let the exit happen.
+    return if LOI.adventure.director.foregroundScriptQueue.currentScriptNode()?.script is @script
+
     if exitResponse.destinationLocationClass is HQ.Residence.Hallway
-      @startScript label: 'PreventGoingToApartment'
       exitResponse.preventExit()
+
+      if Retronator.user().hasItem Retronator.Store.Items.CatalogKeys.Retropolis.PatronClubMember
+        @_handlingExit = true
+        @startScript label: 'ContinueToApartment'
+
+      else
+        @startScript label: 'PreventGoingToApartment'

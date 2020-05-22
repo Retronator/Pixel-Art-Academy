@@ -20,6 +20,14 @@ class HQ.ArtStudio.StillLifeStand extends PAA.StillLifeStand
 
   @startingItems: -> [
     type: PAA.Items.StillLifeItems.Apple.Green.id()
+  ,
+    type: PAA.Items.StillLifeItems.Apple.Green.id()
+  ,
+    type: PAA.Items.StillLifeItems.Apple.Green.id()
+  ,
+    type: PAA.Items.StillLifeItems.Orange.id()
+  ,
+    type: PAA.Items.StillLifeItems.Orange.id()
   ]
 
   @initialize()

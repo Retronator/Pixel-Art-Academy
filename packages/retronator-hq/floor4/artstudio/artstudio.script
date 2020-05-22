@@ -3,6 +3,17 @@
 ## PreventGoingToApartment
 
 > You try to go up the stairs to the apartment, but a locked door stops you.
+> It seems only Patron Club members can visit Retro's residence.
+
+-> [End]
+
+## ContinueToApartment
+
+> You use your keycard to confirm you are one of the patrons of Pixel Art Academy and the door leading upstairs opens.
+
+pause
+
+### ContinueToApartment
 
 -> [End]
 

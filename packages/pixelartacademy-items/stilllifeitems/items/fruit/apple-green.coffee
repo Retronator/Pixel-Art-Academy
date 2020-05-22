@@ -11,7 +11,7 @@ class PAA.Items.StillLifeItems.Apple.Green extends PAA.Items.StillLifeItems.Item
       It's a green apple, probably a Granny Smith.
     "
 
-  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/apple-green'
+  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/apple-green'
 
   @initialize()
 
@@ -28,7 +28,7 @@ class PAA.Items.StillLifeItems.Apple.Green extends PAA.Items.StillLifeItems.Item
         It's one half of a green apple.
       "
 
-    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/apple-green-half'
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/apple-green-half'
 
     @initialize()
 

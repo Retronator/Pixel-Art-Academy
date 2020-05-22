@@ -135,6 +135,8 @@ Package.onUse(function(api) {
   api.addServerFile('floor4/artstudio/initialize-server');
   api.addThing('floor4/artstudio/alexandra');
   api.addFile('floor4/artstudio/artworks');
+  api.addFile('floor4/artstudio/stilllifestand');
+  api.addFile('floor4/artstudio/storageshelves');
 
   api.addComponent('floor4/artstudio/contextwithartworks');
   api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');
@@ -143,8 +145,6 @@ Package.onUse(function(api) {
   api.addComponent('floor4/artstudio/southwest..');
   api.addComponent('floor4/artstudio/southeast..');
   api.addComponent('floor4/artstudio/pencils..');
-
-  api.addFile('floor4/artstudio/stilllifestand');
 
   // Pages
   

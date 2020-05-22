@@ -108,6 +108,10 @@ class HQ.Store.Table extends LOI.Adventure.Location
   onCommand: (commandResponse) ->
     table = @options.parent
 
+    # Don't react until we're at the table location (table is also
+    # included as a thing in the store so it's listening there as well).
+    return unless LOI.adventure.currentLocationId() is HQ.Store.Table.id()
+
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.LookAt, @avatars.olderItems]
       action: => table.olderItems()

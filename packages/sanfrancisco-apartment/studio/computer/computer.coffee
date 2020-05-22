@@ -11,7 +11,7 @@ class Studio.Computer extends LOI.Components.Computer
   template: -> @constructor.id()
 
   @fullName: -> "computer"
-
+  @descriptiveName: -> "PixelFriend ![computer](use computer)."
   @description: ->
     "
       It's _char's_ trusty old computer, perfect for finding useful things on the internet.

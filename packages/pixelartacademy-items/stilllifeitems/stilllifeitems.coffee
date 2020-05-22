@@ -42,20 +42,24 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
     @state 'items', items
 
   @addItem: (id, type) ->
-    items = @items()
+    type = _.thingId type
+
+    # HACK: We get items directly from the state field so the remove happens in place. If we use @items, for some reason
+    # the state won't get updated with a new array that we send in time and immediate add actions for example will
+    # happen on the old state, cached in the field.
+    items = @itemsField()
     items.push {id, type}
 
     @state 'items', items
 
   @addItemOfType: (type) ->
+    type = _.thingId type
     id = Random.id()
     @addItem id, type
 
   @removeItem: (id) ->
-    # HACK: We get items directly from the state so the remove happens in place. If we use @items, for some reason the
-    # state won't get updated with a new array that we send in time and immediate add actions for example will happen
-    # on the old state, cached in the field.
-    items = @state 'items'
+    # HACK: Same as above.
+    items = @itemsField()
     _.remove items, (item) => item.id is id
 
     @state 'items', items
@@ -71,6 +75,10 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
       action: =>
         LOI.adventure.showDescription stillLifeItems
 
+        # Don't show the contents if there aren't any.
+        return unless stillLifeItems.constructor.items().length
+
+        # Display how many of each item there are.
         itemsCount = stillLifeItems.constructor.itemsCount()
         listString = stillLifeItems.translations().contentsSentence
 

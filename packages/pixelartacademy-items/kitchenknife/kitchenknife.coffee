@@ -67,7 +67,7 @@ class PAA.Items.KitchenKnife extends LOI.Adventure.Item
 
     addHalvesToStillLifeItems = (thing) =>
       thingHalfClass = _.thingClass(thing).Half
-      PAA.Items.StillLifeItems.addItemOfType thingHalfClass.id() for i in [1..2]
+      PAA.Items.StillLifeItems.addItemOfType thingHalfClass for i in [1..2]
 
     addCutActions LOI.adventure.currentInventoryThings(), (thing) =>
       # Remove the thing we're cutting.

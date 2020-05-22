@@ -1,0 +1,13 @@
+# Still Life Stand
+
+The assets for the still life stand come from various authors, governed by different licenses.
+
+## Tableware
+
+### [Matej Jan](https://matejjan.com)
+
+```
+bowl-1.glb
+```
+
+All models available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).

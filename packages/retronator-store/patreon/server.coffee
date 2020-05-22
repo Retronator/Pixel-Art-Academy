@@ -16,8 +16,19 @@ class RA.Patreon extends RA.Patreon
               authorizedOnly: true
         ).fetch()
 
-        patreonKeycardId = RS.Item.documents.findOne(catalogKey: RS.Items.CatalogKeys.Retronator.Patreon.PatreonKeycard)._id
-        playerAccessId = RS.Item.documents.findOne(catalogKey: RS.Items.CatalogKeys.PixelArtAcademy.PlayerAccess)._id
+        CatalogKeys = RS.Items.CatalogKeys
+        getItemId = (catalogKey) -> RS.Item.documents.findOne({catalogKey})._id
+
+        patreonKeycardId = getItemId CatalogKeys.Retronator.Patreon.PatreonKeycard
+        patronClubMemberId = getItemId CatalogKeys.Retropolis.PatronClubMember
+
+        playerAccessId = getItemId CatalogKeys.PixelArtAcademy.PlayerAccess
+
+        avatarEditorId = getItemId CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+        ideaGardenAccessId = getItemId CatalogKeys.Retropolis.IdeaGardenAccess
+
+        alphaAccessId = getItemId CatalogKeys.PixelArtAcademy.AlphaAccess
+        secretLabAccessId = getItemId CatalogKeys.Retropolis.SecretLabAccess
 
         for pledge in pledges
           patron = pledge.data.relationships.patron
@@ -53,11 +64,25 @@ class RA.Patreon extends RA.Patreon
               amount: pledgeAmount
               patronEmail: patronEmail
 
-          # Award the patron keycard to all.
-          items = [item: _id: patreonKeycardId]
+          # Award the patron keycard and patron club membership to all.
+          items = [
+            item: _id: patreonKeycardId
+          ,
+            item: _id: patronClubMemberId
+          ]
 
-          # Give player access to pledge of $3 and above.
-          items.push item: _id: playerAccessId if pledgeAmount >= 3
+          # Give player access to pledges of $2 and above.
+          items.push item: _id: playerAccessId if pledgeAmount >= 2
+
+          # Give avatar editor and idea garden access to pledges of $4 and above.
+          if pledgeAmount >= 4
+            items.push item: _id: avatarEditorId
+            items.push item: _id: ideaGardenAccessId
+
+          # Give alpha access and secret lab access to pledges of $8 and above.
+          if pledgeAmount >= 8
+            items.push item: _id: alphaAccessId
+            items.push item: _id: secretLabAccessId
 
           # Update transaction.
           RS.Transaction.documents.update transactionId,

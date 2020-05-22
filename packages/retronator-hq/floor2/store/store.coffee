@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 HQ = Retronator.HQ
 RS = Retronator.Store
 RA = Retronator.Accounts
@@ -325,6 +326,15 @@ class HQ.Store extends LOI.Adventure.Location
             
           PixelArt: (complete) =>
             HQ.Store.startRetroPixelArtScript()
+            complete()
+
+          GetRaspberry: (complete) =>
+            PAA.Items.StillLifeItems.addItemOfType PAA.Items.StillLifeItems.Raspberry
+            PAA.Items.StillLifeItems.addItemOfType PAA.Items.StillLifeItems.Raspberry.Leaf
+            complete()
+
+          AnotherRaspberry: (complete) =>
+            PAA.Items.StillLifeItems.addItemOfType PAA.Items.StillLifeItems.Raspberry
             complete()
 
     @initialize()

@@ -11,11 +11,11 @@ class PAA.Items.StillLifeItems.Banana extends PAA.Items.StillLifeItems.Item
       That's one healthy looking banana!
     "
 
-  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/banana'
+  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/banana'
 
   @initialize()
 
   createAvatar: ->
     new PAA.Items.StillLifeItems.Item.Avatar.Model @,
       path: "/#{@constructor.assetsPath()}.glb"
-      mass: 0.1
+      mass: 0.12

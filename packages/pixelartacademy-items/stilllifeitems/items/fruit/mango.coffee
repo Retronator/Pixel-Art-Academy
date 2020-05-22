@@ -11,11 +11,11 @@ class PAA.Items.StillLifeItems.Mango extends PAA.Items.StillLifeItems.Item
       It's mango, one of the most widely cultivated fruits in the tropics.
     "
 
-  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/mango'
+  @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/mango'
 
   @initialize()
 
   createAvatar: ->
     new PAA.Items.StillLifeItems.Item.Avatar.Model @,
       path: "/#{@constructor.assetsPath()}.glb"
-      mass: 0.1
+      mass: 0.2
