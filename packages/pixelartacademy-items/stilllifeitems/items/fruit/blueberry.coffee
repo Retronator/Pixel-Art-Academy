@@ -28,7 +28,7 @@ class PAA.Items.StillLifeItems.Blueberry extends PAA.Items.StillLifeItems.Item
         It's a leaf from a blueberry shrub.
       "
 
-    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/blueberry-leaf'
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/blueberry-leaf'
 
     @initialize()
 

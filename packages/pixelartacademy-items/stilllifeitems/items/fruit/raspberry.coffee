@@ -28,7 +28,7 @@ class PAA.Items.StillLifeItems.Raspberry extends PAA.Items.StillLifeItems.Item
         It's a leaf of a raspberry bush.
       "
 
-    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/raspberry-leaf'
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/raspberry-leaf'
 
     @initialize()
 

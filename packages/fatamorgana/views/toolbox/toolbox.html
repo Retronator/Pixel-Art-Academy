@@ -3,7 +3,7 @@
     <ul class="tools">
       {{#each get.tools}}
         {{#with tool}}
-          <li class="tool {{toolClass}} {{activeToolClass}}">
+          <li class="tool {{toolClass}} {{activeToolClass}}" title="{{tooltip}}">
             <button class="tool-button">
               {{#if icon}}
                 <img class="icon" src="{{icon}}"/>

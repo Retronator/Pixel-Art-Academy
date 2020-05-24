@@ -28,7 +28,7 @@ class PAA.Items.StillLifeItems.Orange extends PAA.Items.StillLifeItems.Item
         It's one half of an orange.
       "
 
-    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/orange-half'
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/orange-half'
 
     @initialize()
 

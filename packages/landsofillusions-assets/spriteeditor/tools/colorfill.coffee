@@ -25,7 +25,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
 
     paint.normal = paintHelper.normal().toObject()
 
-    spriteData = @editor().spriteData()    
+    spriteData = @editor().spriteData()
     layerIndex = paintHelper.layerIndex()
     layer = spriteData.layers?[layerIndex]
 
@@ -42,6 +42,8 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       x: layer?.origin?.x or 0
       y: layer?.origin?.y or 0
 
+    ignoreNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get 'ignoreNormals'
+
     for xCoordinate in xCoordinates
       # Make sure we're filling inside of bounds.
       continue unless spriteData.bounds.left <= xCoordinate <= spriteData.bounds.right and spriteData.bounds.top <= @mouseState.y <= spriteData.bounds.bottom
@@ -50,7 +52,9 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
         x: xCoordinate - layerOrigin.x
         y: @mouseState.y - layerOrigin.y
 
-      for property in ['normal', 'materialIndex', 'paletteColor', 'directColor']
+      for property in ['materialIndex', 'paletteColor', 'directColor']
         pixel[property] = paint[property] if paint[property]?
 
-      LOI.Assets.Sprite.colorFill spriteData._id, layerIndex, pixel
+      pixel.normal = paint.normal if paint.normal and not ignoreNormals
+
+      LOI.Assets.Sprite.colorFill spriteData._id, layerIndex, pixel, ignoreNormals

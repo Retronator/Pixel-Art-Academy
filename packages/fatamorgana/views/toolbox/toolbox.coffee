@@ -25,6 +25,17 @@ class FM.Toolbox extends FM.View
 
     'active' if tool is @interface.activeTool()
 
+  tooltip: ->
+    tool = @currentData()
+    name = tool.displayName()
+    shortcut = tool.currentShortcut()
+    return name unless shortcut
+
+    shortcut = shortcut[0] if _.isArray shortcut
+    shortcut = AM.ShortcutHelper.getShortcutString shortcut
+
+    "#{name} (#{shortcut})"
+
   events: ->
     super(arguments...).concat
       'click .tool-button': @onClickToolButton

@@ -28,7 +28,7 @@ class PAA.Items.StillLifeItems.Kiwi extends PAA.Items.StillLifeItems.Item
         It's one half of a kiwifruit.
       "
 
-    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/kiwi-half'
+    @assetsPath: -> 'pixelartacademy/items/stilllifeitems/fruit/kiwi-half'
 
     @initialize()
 
