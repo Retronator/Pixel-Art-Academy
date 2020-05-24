@@ -14,7 +14,7 @@ class HQ.Coworking extends LOI.Adventure.Location
   @shortName: -> "coworking"
   @description: ->
     "
-      The passageway opens to a dimly-lit room with a cyberpunk hacker vibe to it.
+      The passageway opens to a dimly-lit room with a cyberpunk hacker vibe.
       Tables fill the space, together with workstations for the permanent residents of the coworking space.
     "
 

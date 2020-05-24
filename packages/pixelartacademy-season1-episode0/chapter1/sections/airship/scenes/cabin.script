@@ -28,8 +28,8 @@ alex: Let's find a seat.
 
 ## AtWindows
 
-* Look at Spaceport. -> [Spaceport]
-* Look at launch pad. -> [LaunchPad]
+* !Look at Spaceport. -> [Spaceport]
+* !Look at launch pad. -> [LaunchPad]
 
 ## Spaceport
 
@@ -50,8 +50,8 @@ alex: Let's find a seat.
 
 > The table you sit at holds a display with various information.
 
-* Read about the Academy. -> [Academy]
-* Read about Retropolis. -> [Retropolis]
+* !Read about the Academy. -> [Academy]
+* !Read about Retropolis. -> [Retropolis]
 
 ## Academy
 
@@ -66,8 +66,8 @@ table:
 
 table:
     The city of Retropolis is a marvel of civil and behavioral engineering.
-    It all started with the settlement called Walden 14, designed as an experiment in radical automation by the Walden communities.
-    Harnessing the advent of digital computers in the 1940s, technological progress—in combination with a carefully planned society—led to unprecedented gains in knowledge, economy and personal freedom.
+    It all started with the settlement Walden 14, designed as an experiment in radical automation by the Walden communities.
+    Harnessing the advent of digital computers in the 1940s, technological progress—in combination with a carefully planned society—led to unprecedented gains in knowledge, economy, and personal freedom.
 
 -> [Ending]
 
