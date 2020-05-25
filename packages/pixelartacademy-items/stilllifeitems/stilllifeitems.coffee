@@ -15,9 +15,12 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
   @translations: ->
     contentsSentence: "You currently have:"
 
-  @initialize()
+  @initialize: ->
+    super arguments...
 
-  @itemsField = @state.field 'items', default: []
+    @itemsField = @state.field 'items', default: []
+
+  @initialize()
 
   @items: ->
     items = @itemsField()

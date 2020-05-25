@@ -7,7 +7,7 @@ class Studio.Bed extends LOI.Adventure.Thing
   @id: -> 'SanFrancisco.Apartment.Studio.Bed'
 
   @fullName: -> "bed"
-  @descriptiveName: -> "A comfy ![bed](look at bed)."
+  @descriptiveName: -> "Comfy ![bed](look at bed)."
   @description: ->
     "
       It's _char's_ bed. You can ![sleep](sleep) in it to skip to the next day.
