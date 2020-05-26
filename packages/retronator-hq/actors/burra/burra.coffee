@@ -14,6 +14,9 @@ class HQ.Actors.Burra extends LOI.Character.Actor
   @assetUrls: -> '/retronator/hq/actors/burra'
 
   @translations: ->
+    translations =
+      greet: 'She greets you from across the counter.'
+
     # She's the _____ at Retronator.
     shesTheDescriptions = [
       "receptionist"
@@ -50,8 +53,6 @@ class HQ.Actors.Burra extends LOI.Character.Actor
     ]
 
     @_descriptionsCount = descriptions.length
-
-    translations = {}
 
     for description, index in descriptions
       translations["description#{index}"] = description

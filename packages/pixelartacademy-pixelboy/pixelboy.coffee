@@ -40,7 +40,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     super arguments...
 
     # PixelBoy is always active to keep running apps, but we can show it or hide it.
-    @activatedState LOI.Adventure.Item.activatedStates.Activated
+    @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     @active = new ReactiveField false
     @fullscreenOverlay = new ReactiveField false
 
@@ -222,7 +222,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     Meteor.setTimeout =>
       # Hide the fullscreen overlay, but leave the device active.
       @fullscreenOverlay false
-      @activatedState LOI.Adventure.Item.activatedStates.Activated
+      @activatedState LOI.Adventure.Item.ActivatedStates.Activated
 
       # We manually trigger overlay's transition since our active state is already activated.
       @overlay.onDeactivated()

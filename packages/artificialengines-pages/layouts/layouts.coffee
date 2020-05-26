@@ -1,0 +1,1 @@
+class Artificial.Pages.Layouts

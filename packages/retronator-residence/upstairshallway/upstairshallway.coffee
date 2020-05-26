@@ -12,9 +12,10 @@ class HQ.Residence.UpstairsHallway extends LOI.Adventure.Location
 
   @fullName: -> "upstairs residence hallway"
   @shortName: -> "upstairs hallway"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: ->
     "
-      You're upstairs in the residence where most of the bedrooms are located. 
+      You're upstairs in the residence where the master bedroom is located.
       The hallway also leads to a terrace in the east.
     "
   
@@ -36,4 +37,6 @@ class HQ.Residence.UpstairsHallway extends LOI.Adventure.Location
     HQ.Elevator.addElevatorExit
       floor: 6
     ,
-      "#{Vocabulary.Keys.Directions.Down}": HQ.Residence.Hallway
+      "#{Vocabulary.Keys.Directions.Down}": HQ.Residence.Kitchen
+      "#{Vocabulary.Keys.Directions.Southeast}": HQ.Residence.Kitchen
+      "#{Vocabulary.Keys.Directions.East}": HQ.Residence.Terrace

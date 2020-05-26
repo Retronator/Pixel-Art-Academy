@@ -65,7 +65,8 @@ class LOI.Engine.World.RendererManager
     @renderer.shadowMap.needsUpdate = true
 
     @renderer.setClearColor 0x000000, 1
-    @renderer.render scene, camera, @preprocessingRenderTarget
+    @renderer.setRenderTarget @preprocessingRenderTarget
+    @renderer.render scene, camera
 
     # Render the color shadow maps. First set the shadow color material on all meshes.
     scene.traverse (object) =>
@@ -81,7 +82,8 @@ class LOI.Engine.World.RendererManager
     # Render all lights' shadow color maps.
     for directionalLight in sceneManager.directionalLights()
       @renderer.setClearColor 0xffff00, 1
-      @renderer.render scene, directionalLight.shadow.camera, directionalLight.shadow.colorMap
+      @renderer.setRenderTarget directionalLight.shadow.colorMap
+      @renderer.render scene, directionalLight.shadow.camera
 
     # Render the opaque shadow maps. We need to hide all transparent meshes.
     scene.traverse (object) =>
@@ -97,7 +99,8 @@ class LOI.Engine.World.RendererManager
     # Render all lights' opaque shadow maps.
     for directionalLight in sceneManager.directionalLights()
       @renderer.setClearColor 0xffffff, 1
-      @renderer.render scene, directionalLight.shadow.camera, directionalLight.shadow.opaqueMap
+      @renderer.setRenderTarget directionalLight.shadow.opaqueMap
+      @renderer.render scene, directionalLight.shadow.camera
 
     # Reinstate main materials and object visibility.
     scene.traverse (object) =>
@@ -113,6 +116,7 @@ class LOI.Engine.World.RendererManager
 
     # Render main pass.
     @renderer.setClearColor 0, 1
+    @renderer.setRenderTarget null
     @renderer.render scene, camera
 
   destroy: ->

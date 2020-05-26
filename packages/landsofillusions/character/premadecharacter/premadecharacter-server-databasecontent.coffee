@@ -20,6 +20,9 @@ class LOI.Character.PreMadeCharacter extends LOI.Character.PreMadeCharacter
     "landsofillusions/character/premadecharacter/#{name}"
 
   exportDatabaseContent: ->
+    # Add last edit time if needed so that documents don't need unnecessary imports.
+    @lastEditTime ?= new Date()
+
     character = LOI.Character.documents.findOne @character._id
     previewImage = character.getPreviewImage()
     imageData = AM.EmbeddedImageData.embed previewImage, @
@@ -29,7 +32,7 @@ class LOI.Character.PreMadeCharacter extends LOI.Character.PreMadeCharacter
 
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.premadecharacter.png"
-    lastEditTime: new Date
+    lastEditTime: @lastEditTime
 
 databaseContentImportDirective = 'LandsOfIllusions.Character.preMadeCharacter'
 

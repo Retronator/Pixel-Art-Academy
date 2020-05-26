@@ -1,10 +1,11 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
+LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel, ignoreNormals) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
   check newTargetPixel, LOI.Assets.Sprite.pixelPattern
+  check ignoreNormals, Boolean
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
@@ -56,8 +57,9 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
         # Is it the same color?
         return unless EJSON.equals(pixel.paletteColor, currentTargetPixel.paletteColor) and pixel.materialIndex is currentTargetPixel.materialIndex
 
-        # If the normal is present, make sure it matches too.
-        return if pixel.normal and not EJSON.equals(pixel.normal, currentTargetPixel.normal)
+        unless ignoreNormals
+          # If the normal is present, make sure it matches too.
+          return if pixel.normal and not EJSON.equals(pixel.normal, currentTargetPixel.normal)
   
         # It seems legit, add it.
         fringe.push pixel
@@ -72,7 +74,11 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
     # All the visited pixels are of correct color and should be filled!
     for pixel in visited
       pixelIndex = layerPixels.indexOf pixel
-      for key in ['paletteColor', 'directColor', 'materialIndex', 'normal']
+
+      keys = ['paletteColor', 'directColor', 'materialIndex']
+      keys.push 'normal' unless ignoreNormals
+
+      for key in keys
         if newTargetPixel[key]?
           # Set new or existing property.
           forward.$set ?= {}

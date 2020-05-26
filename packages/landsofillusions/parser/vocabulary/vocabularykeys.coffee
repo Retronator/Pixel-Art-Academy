@@ -30,6 +30,7 @@ LOI.Parser.Vocabulary.Keys =
     WhatIs: ''
     WhoIs: ''
     Get: ''
+    PutIn: ''
     SitDown: ''
     SitIn: ''
     Stand: ''
@@ -60,6 +61,9 @@ LOI.Parser.Vocabulary.Keys =
     Write: ''
     WriteOn: ''
     Continue: ''
+    Cut: ''
+    CutWith: ''
+    CutIn: ''
 
     Be:
       Present:

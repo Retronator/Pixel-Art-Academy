@@ -3,7 +3,14 @@ Package.describe({
   version: '1.0.0'
 });
 
+Package.registerBuildPlugin({
+  name: 'glsl',
+  sources: ['glslbuildplugin.js']
+});
+
 Package.onUse(function(api) {
+  api.use('isobuild:compiler-plugin@1.0.0');
+
   expandPath = function(path) {
     parts = path.split('/');
     lastPart = parts[parts.length-1];
@@ -106,4 +113,18 @@ Package.onUse(function(api) {
     this.addAssets(path + ".script", ['client', 'server']);
     this.addAssets(path + ".json", ['client', 'server']);
   };
+  api.constructor.prototype.addGlsl = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".glsl", ['client']);
+  };
+  api.constructor.prototype.addFileWithGlsl = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee");
+    this.addFiles(path + ".glsl", ['client']);
+  };
+  api.constructor.prototype.addMaterial = function(path) {
+    path = expandPath(path);
+    this.addFiles([path + ".coffee", path + "-vertex.glsl", path + "-fragment.glsl"], ['client']);
+  };
+
 });

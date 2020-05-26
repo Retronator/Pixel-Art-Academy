@@ -105,6 +105,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       landmarksHelperClass = @options?.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
       @interface.getHelperForFile landmarksHelperClass, @fileIdForHelpers()
 
+    @shadingEnabled = new ComputedField =>
+      @editorFileData()?.get('shadingEnabled') ? true
+
     @drawComponents = new ComputedField =>
       if @options?.drawComponents
         drawComponents = _.clone @options.drawComponents()
@@ -131,13 +134,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       camera.applyTransformToCanvas()
 
       lightDirection = @lightDirectionHelper()
+      shadingEnabled = @shadingEnabled()
 
       for component in @drawComponents()
         continue unless component
 
         context.save()
         component.drawToContext context,
-          lightDirection: lightDirection()
+          lightDirection: if shadingEnabled then lightDirection() else null
           camera: camera
           editor: @
 

@@ -48,7 +48,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
     # Project pixels to cluster space.
     pixelVertices = cameraAngle.projectPoints pixels, plane
 
-    for pixelVertex in pixelVertices
+    for pixelVertex, index in pixelVertices
       # Make sure this is not a duplicate of another pixel point.
       duplicate = false
 
@@ -62,6 +62,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
       cluster.points.push
         vertex: pixelVertex
         type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Pixel
+        pixel: pixels[index]
 
     # Add void pixels.
     voidPixels = []
@@ -101,7 +102,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
 
     voidPointsStart = cluster.points.length
 
-    for voidVertex in cameraAngle.projectPoints voidPixels, plane
+    for voidVertex, index in cameraAngle.projectPoints voidPixels, plane
       # Make sure this is not a duplicate of another void point.
       duplicate = false
 
@@ -115,6 +116,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
       cluster.points.push
         vertex: voidVertex
         type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Void
+        pixel: voidPixels[index]
 
     # Add all edges.
     edgePointsStart = cluster.points.length
@@ -159,20 +161,11 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
         cluster.points.push
           vertex: edgeVertex
           type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Edge
+          pixel: edgeVertices[index]
           segments: [{index: segmentIndex, positionInSegment, edge}]
 
-    # Create the base of plane space.
-    plane = new THREE.Plane cluster.plane.normal, 0
-
-    unitX = if Math.abs(plane.normal.x) is 1 then new THREE.Vector3 0, 0, 1 else new THREE.Vector3 1, 0, 0
-    baseX = new THREE.Vector3
-    plane.projectPoint unitX, baseX
-    baseX.normalize()
-
-    baseY = new THREE.Vector3().crossVectors baseX, plane.normal
-
     # Create the matrices to go to and from plane space.
-    cluster.plane.matrix = new THREE.Matrix4().makeBasis(baseX, baseY, plane.normal).setPosition cluster.plane.point
+    cluster.plane.matrix = LOI.Assets.Mesh.Object.Layer.Cluster.createPlaneWorldMatrix cluster.plane, true
     cluster.plane.matrixInverse = new THREE.Matrix4().getInverse cluster.plane.matrix
 
     # Transform points to plane space.

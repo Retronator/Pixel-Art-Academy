@@ -80,6 +80,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @debugMode = new ComputedField =>
       @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
 
+    @pbrEnabled = new ComputedField =>
+      @interface.getHelperForActiveFile(LOI.Assets.MeshEditor.Helpers.PBREnabled)?()
+
     # Provide the fake sprite data object to sprite editor views.
     # Currently this is used only to draw tool previews correctly.
     @spriteData = new ComputedField =>
@@ -173,7 +176,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     canvas = $meshCanvas.find('.canvas')[0]
     @canvas canvas
-    @context canvas.getContext 'webgl'
+    @context canvas.getContext 'webgl',
+      alpha: true
+      powerPreference: 'high-performance'
 
     @autorun (computation) =>
       # Depend on editor view size.

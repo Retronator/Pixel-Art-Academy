@@ -38,8 +38,8 @@ class AB.App extends AM.Component
     window.requestAnimationFrame (timestamp) =>
       @tick timestamp
 
-    # Listen for app unload.
-    $(window).unload =>
+    # Listen for beforeunload so we can react to application closing.
+    window.addEventListener 'beforeunload', (event) =>
       @endRun()
 
     # Dynamically update window title based on the current route.

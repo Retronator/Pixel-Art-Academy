@@ -10,6 +10,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     Number: 'number'
     Checkbox: 'checkbox'
     Date: 'date'
+    Range: 'range'
 
   template: ->
     'Artificial.Mirage.DataInputComponent'
@@ -23,6 +24,12 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     @realtime = true
     @autoSelect = false
     @autoResizeTextarea = false
+
+  onRendered: ->
+    super arguments...
+
+    # Set the value for the first time since some controls don't do it themselves.
+    @$('input').val @value()
 
   mixins: ->
     mixins = []
@@ -73,11 +80,38 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
       @save $(event.target).is(':checked')
       return
 
-    @save $(event.target).val() unless @realtime
+    @save @_convertValue $(event.target).val() unless @realtime
 
   onInput: (event) ->
-    @save $(event.target).val() if @realtime
+    @save @_convertValue $(event.target).val() if @realtime
 
   onChangeSelect: (event) ->
     # Return the value of the option and the text.
     @save $(event.target).val()
+
+  _convertValue: (value) ->
+    # Do any conversions of type.
+    switch @type
+      when @constructor.Types.Number, @constructor.Types.Range
+        value = parseFloat value
+
+    value
+
+# Also provide the functionality to Component to generate its
+# own data component that embedded data inputs can inherit from.
+AM.Component.initializeDataComponent = ->
+  componentClass = @
+
+  class @DataInputComponent extends AM.DataInputComponent
+    onCreated: ->
+      super arguments
+
+      @parentComponent = @ancestorComponentOfType componentClass
+
+      throw new AE.NotImplementedException "Embedded data input component must provide the property name it binds to." unless @propertyName
+
+    load: ->
+      @parentComponent[@propertyName]()
+
+    save: (value) ->
+      @parentComponent[@propertyName] value

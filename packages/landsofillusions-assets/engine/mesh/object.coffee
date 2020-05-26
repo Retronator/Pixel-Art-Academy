@@ -43,7 +43,7 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
       @boundingBox boundingBox
 
       # Reposition object to bounding box center.
-      boundingBox.getCenter @position
+      boundingBox?.getCenter @position
 
       # Offset layers in the opposite direction.
       layer.position.copy(@position).negate() for layer in layers

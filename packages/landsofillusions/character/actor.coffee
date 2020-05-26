@@ -95,14 +95,19 @@ class LOI.Character.Actor extends LOI.Character.Person
 
           document = new LOI.NonPlayerCharacter EJSON.parse result.content
 
-          # Inject avatar properties.
-          document.avatar ?= {}
+          # Wait for avatar translations to be ready.
+          Tracker.autorun (computation) =>
+            return unless @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
+            computation.stop()
 
-          _.extend document.avatar,
-            fullName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
-            shortName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.shortName
-            pronouns: @thingAvatar.pronouns()
-            color: @thingAvatar.color()
+            # Inject avatar properties.
+            document.avatar ?= {}
+
+            _.extend document.avatar,
+              fullName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
+              shortName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.shortName
+              pronouns: @thingAvatar.pronouns()
+              color: @thingAvatar.color()
 
             version = @constructor.version()
 
@@ -113,9 +118,9 @@ class LOI.Character.Actor extends LOI.Character.Person
                 normals:
                   url: "#{assetUrls}-normals.png?#{version}"
 
-          nonPlayerCharacterDocument document
+            nonPlayerCharacterDocument document
 
-          console.log "NPC document loaded", @id(), document if LOI.debug
+            console.log "NPC document loaded", @id(), document if LOI.debug
 
     @avatar = @instance.avatar
 

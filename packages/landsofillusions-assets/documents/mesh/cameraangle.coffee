@@ -1,6 +1,13 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
+_xOffset = 0
+_yOffset = 0
+_rayOrigin = new THREE.Vector3
+_rayDirection = new THREE.Vector3
+_ray = new THREE.Ray _rayOrigin, _rayDirection
+_worldPoint = new THREE.Vector3
+
 _raycasterPosition = new THREE.Vector3
 _raycasterDirection = new THREE.Vector3
 _raycasterWorldPoint = new THREE.Vector3
@@ -80,40 +87,55 @@ class LOI.Assets.Mesh.CameraAngle
 
     target
 
+  projectPoint: (screenPoint, worldPlane, xOffset = 0, yOffset = 0, projectedWorldPoint) ->
+    @_setupProjectionRay xOffset, yOffset
+
+    projectedWorldPoint ?= new THREE.Vector3
+
+    intersection = @_projectPoint screenPoint, worldPlane, projectedWorldPoint
+    if intersection then projectedWorldPoint else null
+
   projectPoints: (screenPoints, worldPlane, xOffset = 0, yOffset = 0) ->
+    @_setupProjectionRay xOffset, yOffset
     projectedWorldPoints = []
 
-    # The default is a ray from camera position shooting through the target.
-    # Note: We need to create vectors from the data which is a plain object.
-    position = new THREE.Vector3().copy @position
-    direction = new THREE.Vector3().copy(@target).sub position
-
-    # Apply picture plane offset.
-    if @picturePlaneOffset
-      xOffset += @picturePlaneOffset.x
-      yOffset += @picturePlaneOffset.y
-
     for screenPoint in screenPoints
-      # Transform the point from screen space to world, positioned on the picture plane.
-      worldPoint = new THREE.Vector3 screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
-      worldPoint.applyMatrix4 @worldMatrix
-
-      if @picturePlaneDistance
-        # In perspective the ray is shooting through the point in world space.
-        direction = worldPoint.clone().sub(@position).normalize()
-
-      else
-        # In orthogonal the ray is shooting from the point in world space.
-        position = worldPoint.multiplyScalar @pixelSize
-
-      ray = new THREE.Ray position, direction
-
       projectedWorldPoint = new THREE.Vector3
-      intersection = ray.intersectPlane worldPlane, projectedWorldPoint
-
+      intersection = @_projectPoint screenPoint, worldPlane, projectedWorldPoint
       projectedWorldPoints.push projectedWorldPoint if intersection
 
     projectedWorldPoints
+
+  _setupProjectionRay: (xOffset, yOffset) ->
+    # The default is a ray from camera position shooting through the target.
+    # Note: We need to create vectors from the data which is a plain object.
+    _rayOrigin.copy @position
+    _rayDirection.copy(@target).sub _rayOrigin
+
+    _xOffset = xOffset
+    _yOffset = yOffset
+
+    # Apply picture plane offset.
+    if @picturePlaneOffset
+      _xOffset += @picturePlaneOffset.x
+      _yOffset += @picturePlaneOffset.y
+
+  _projectPoint: (screenPoint, worldPlane, projectedWorldPoint) ->
+    # Transform the point from screen space to world, positioned on the picture plane.
+    _worldPoint.set screenPoint.x + _xOffset, -(screenPoint.y + _yOffset), -(@picturePlaneDistance or 0)
+    _worldPoint.applyMatrix4 @worldMatrix
+
+    if @picturePlaneDistance
+      # In perspective the ray is shooting through the point in world space.
+      _worldPoint.sub(@position).normalize()
+      _rayDirection.copy _worldPoint
+
+    else
+      # In orthogonal the ray is shooting from the point in world space.
+      _worldPoint.multiplyScalar @pixelSize
+      _rayOrigin.copy _worldPoint
+
+    _ray.intersectPlane worldPlane, projectedWorldPoint
 
   unprojectPoint: (worldPoint) ->
     # Transform to screen space.

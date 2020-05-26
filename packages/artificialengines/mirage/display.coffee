@@ -38,7 +38,7 @@ class AM.Display extends AM.Component
       maxBounds: new AE.Rectangle()
       safeArea: new AE.Rectangle()
 
-    @debug = options.debug ? false
+    @debug = new ReactiveField options.debug ? false
 
   onCreated: ->
     super arguments...
@@ -47,8 +47,9 @@ class AM.Display extends AM.Component
 
     # React to window size changes.
     @autorun =>
+      debug = @debug()
 
-      if @debug
+      if debug
         console.log ""
         console.log "DISPLAY CALCULATION"
         console.log ""
@@ -70,9 +71,9 @@ class AM.Display extends AM.Component
       # We might not have the full client bounds to work with due to aspect ratio.
       clientAspectRatio = clientWidth / clientHeight
 
-      console.log "Client size: #{clientWidth}x#{clientHeight} at #{clientAspectRatio} ratio" if @debug
-      console.log "Aspect ratio range: #{minAspectRatio or 0}–#{maxAspectRatio or "infinity"}" if @debug
-      console.log "Max client size: #{maxClientWidth or clientWidth}x#{maxClientHeight or clientHeight}" if @debug
+      console.log "Client size: #{clientWidth}x#{clientHeight} at #{clientAspectRatio} ratio" if debug
+      console.log "Aspect ratio range: #{minAspectRatio or 0}–#{maxAspectRatio or "infinity"}" if debug
+      console.log "Max client size: #{maxClientWidth or clientWidth}x#{maxClientHeight or clientHeight}" if debug
 
       usableClientSize =
         width: if maxClientWidth then Math.min clientWidth, maxClientWidth else clientWidth
@@ -80,7 +81,7 @@ class AM.Display extends AM.Component
 
       usableClientAspectRatio = usableClientSize.width / usableClientSize.height
 
-      console.log "Usable Client Size: #{usableClientSize.width}x#{usableClientSize.height} at #{usableClientAspectRatio} ratio" if @debug
+      console.log "Usable Client Size: #{usableClientSize.width}x#{usableClientSize.height} at #{usableClientAspectRatio} ratio" if debug
 
       usableClientAspectRatio = Math.max usableClientAspectRatio, minAspectRatio if minAspectRatio
       usableClientAspectRatio = Math.min usableClientAspectRatio, maxAspectRatio if maxAspectRatio
@@ -91,11 +92,11 @@ class AM.Display extends AM.Component
       # If image is too wide, add crop bars on left/right.
       usableClientSize.width = usableClientSize.height * usableClientAspectRatio if clientAspectRatio > usableClientAspectRatio
 
-      console.log "Cropped usable Client Size: #{usableClientSize.width}x#{usableClientSize.height} at #{usableClientAspectRatio} ratio" if @debug
+      console.log "Cropped usable Client Size: #{usableClientSize.width}x#{usableClientSize.height} at #{usableClientAspectRatio} ratio" if debug
 
       # Calculate new scale.
       loop
-        console.log "Testing scale at x#{scale + 1}" if @debug
+        console.log "Testing scale at x#{scale + 1}" if debug
         # Calculate safe area size at next scale level.
         scaledSafeAreaWidth = safeAreaWidth * (scale + 1)
         scaledSafeAreaHeight = safeAreaHeight * (scale + 1)
@@ -117,7 +118,7 @@ class AM.Display extends AM.Component
         # If image is too wide, expand up/down.
         minViewportSize.height = usableClientSize.width / minViewportAspectRatio if safeAreaAspectRatio > minViewportAspectRatio
 
-        console.log "Min viewport size: #{minViewportSize.width}x#{minViewportSize.height} at #{minViewportAspectRatio}" if @debug
+        console.log "Min viewport size: #{minViewportSize.width}x#{minViewportSize.height} at #{minViewportAspectRatio}" if debug
 
         # Test if next scale level would make the minimum viewport go out of usable client bounds.
         break if minViewportSize.width > usableClientSize.width or minViewportSize.height > usableClientSize.height
@@ -135,7 +136,7 @@ class AM.Display extends AM.Component
       scaledSafeAreaHeight = safeAreaHeight * scale
       safeAreaAspectRatio = safeAreaWidth / safeAreaHeight
 
-      console.log "FINAL SCALE AT x#{scale} with safe area at #{scaledSafeAreaWidth}x#{scaledSafeAreaHeight}" if @debug
+      console.log "FINAL SCALE AT x#{scale} with safe area at #{scaledSafeAreaWidth}x#{scaledSafeAreaHeight}" if debug
 
       # Calculate minimum viewport ratio.
       minViewportSize =
@@ -153,7 +154,7 @@ class AM.Display extends AM.Component
       # If image is too wide, expand up/down.
       minViewportSize.height = usableClientSize.width / minViewportAspectRatio if safeAreaAspectRatio > minViewportAspectRatio
 
-      console.log "Min viewport size: #{minViewportSize.width}x#{minViewportSize.height} at #{minViewportAspectRatio}" if @debug
+      console.log "Min viewport size: #{minViewportSize.width}x#{minViewportSize.height} at #{minViewportAspectRatio}" if debug
 
       # Make sure usable client size is not smaller than the minimum viewport.
       usableClientSize =
@@ -170,7 +171,7 @@ class AM.Display extends AM.Component
       # Calculate viewport ratio, clamped to our limits.
       maxViewportAspectRatio = maxViewportSize.width / maxViewportSize.height
 
-      console.log "Max viewport size: #{maxViewportSize.width}x#{maxViewportSize.height} at #{maxViewportAspectRatio}" if @debug
+      console.log "Max viewport size: #{maxViewportSize.width}x#{maxViewportSize.height} at #{maxViewportAspectRatio}" if debug
 
       viewportRatio = maxViewportAspectRatio
       viewportRatio = Math.max viewportRatio, minAspectRatio if minAspectRatio
@@ -191,8 +192,8 @@ class AM.Display extends AM.Component
       # If image is too wide, add crop bars on left/right.
       viewportSize.width = viewportSize.height * viewportRatio if maxViewportAspectRatio > viewportRatio
 
-      console.log "Viewport size: #{viewportSize.width}x#{viewportSize.height} at #{viewportRatio} ratio" if @debug
-      console.log "Maximum scaled display size: #{scaledMaxDisplaySize.width}x#{scaledMaxDisplaySize.height}" if @debug
+      console.log "Viewport size: #{viewportSize.width}x#{viewportSize.height} at #{viewportRatio} ratio" if debug
+      console.log "Maximum scaled display size: #{scaledMaxDisplaySize.width}x#{scaledMaxDisplaySize.height}" if debug
 
       # Make sure the bounds are centered so that at least the safe area stays within the actual client window.
       safeClientWidth = Math.max clientWidth, scaledSafeAreaWidth
@@ -224,7 +225,7 @@ class AM.Display extends AM.Component
         $('.artificial-mirage-display .horizontal-crop-bar').css height: viewportBounds.top()
         $('.artificial-mirage-display .vertical-crop-bar').css width: viewportBounds.left()
 
-        # Update @debug rectangles.
+        # Update debug rectangles.
         $('.artificial-mirage-display .viewport-bounds').css viewportBounds.toDimensions()
         $('.artificial-mirage-display .viewport-bounds .safe-area').css safeArea.toDimensions()
 
@@ -244,4 +245,4 @@ class AM.Display extends AM.Component
       $('html').addClass("scale-#{scale}-or-up") for scale in [2..@_currentScale]
 
   debugClass: ->
-    'debug' if @debug
+    'debug' if @debug()

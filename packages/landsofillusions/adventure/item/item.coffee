@@ -4,20 +4,24 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Item extends LOI.Adventure.Thing
   # Static location properties and methods
 
-  @activatedStates:
+  @ActivatedStates:
     Deactivated: 'Deactivated'
     Activating: 'Activating'
     Activated: 'Activated'
     Deactivating: 'Deactivating'
 
+  # Support for items that can be picked up.
+
+  @inInventory: -> @state 'inInventory'
+
+  @unlessInInventory: ->
+    if @inInventory() then null else @
+
   # Items with multiple copies
   
   @createCopy: (options = {}) ->
-    copyId = Random.id()
-    copyStateAddress = @stateAddress.child "copies.#{copyId}"
-
-    copy = new @
-      stateAddress: copyStateAddress
+    copyId = options.id or Random.id()
+    copy = @getCopyForId copyId
 
     copy.state 'timelineId', options.timelineId if options.timelineId
 
@@ -26,14 +30,17 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
   @getCopies: (options = {}) ->
     copies = @state 'copies'
 
-    copyInstances = for copyId of copies
-      new @
-        stateAddress: @stateAddress.child "copies.#{copyId}"
+    copyInstances = (@getCopyForId copyId for copyId of copies)
 
     if options.timelineId
       copyInstances = _.filter copyInstances, (copy) -> copy.state('timelineId') is options.timelineId
 
     copyInstances
+
+  @getCopyForId: (id) ->
+    new @
+      stateAddress: @stateAddress.child "copies.#{id}"
+      copyId: id
 
   # Item instance
 
@@ -42,32 +49,38 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
     
     # An item that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the item is currently in.
-    @activatedState = new ReactiveField @constructor.activatedStates.Deactivated
+    @activatedState = new ReactiveField @constructor.ActivatedStates.Deactivated
 
     # Override state address if it was provided (used with copies).
     if @options?.stateAddress
       @stateAddress = @options.stateAddress
       @state = new LOI.StateObject address: @stateAddress
 
-  deactivated: -> @activatedState() is @constructor.activatedStates.Deactivated
-  activating: -> @activatedState() is @constructor.activatedStates.Activating
-  activated: -> @activatedState() is @constructor.activatedStates.Activated
-  deactivating: -> @activatedState() is @constructor.activatedStates.Deactivating
+    if @options?.copyId
+      @copyId = @options.copyId
+
+      # Also override the _id since it's used as a unique identifier in rendering.
+      @_id = @copyId
+
+  deactivated: -> @activatedState() is @constructor.ActivatedStates.Deactivated
+  activating: -> @activatedState() is @constructor.ActivatedStates.Activating
+  activated: -> @activatedState() is @constructor.ActivatedStates.Activated
+  deactivating: -> @activatedState() is @constructor.ActivatedStates.Deactivating
 
   activate: (onActivatedCallback) ->
     # The item gets activated (used).
-    @activatedState @constructor.activatedStates.Activating
+    @activatedState @constructor.ActivatedStates.Activating
 
     @onActivate =>
-      @activatedState @constructor.activatedStates.Activated
+      @activatedState @constructor.ActivatedStates.Activated
       onActivatedCallback?()
 
   deactivate: (onDeactivatedCallback) ->
     # The item gets deactivated.
-    @activatedState @constructor.activatedStates.Deactivating
+    @activatedState @constructor.ActivatedStates.Deactivating
 
     @onDeactivate =>
-      @activatedState @constructor.activatedStates.Deactivated
+      @activatedState @constructor.ActivatedStates.Deactivated
       onDeactivatedCallback?()
 
   # Handlers

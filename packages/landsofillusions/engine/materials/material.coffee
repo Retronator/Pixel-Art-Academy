@@ -19,8 +19,11 @@ class LOI.Engine.Materials.Material extends THREE.ShaderMaterial
     # Store material class by ID.
     @_materialClassesById[@id()] = @
 
-  constructor: ->
+  constructor: (options) ->
     super arguments...
+
+    @vertexShader = "#include <#{@constructor.id()}.vertex>" unless options.vertexShader
+    @fragmentShader = "#include <#{@constructor.id()}.fragment>" unless options.fragmentShader
 
     @_dependency = new Tracker.Dependency
 

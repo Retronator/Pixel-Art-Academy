@@ -10,3 +10,10 @@ Ammo.btCollisionObject.CollisionFlags =
   HasCustomDebugRenderingColor: 256
   HasFrictionAnchor: 512
   HasCollisionSoundsTrigger: 1024
+
+Ammo.btCollisionObject.ActivationStates =
+  ActiveTag: 1
+  IslandSleeping: 2
+  WantsDeactivation: 3
+  DisableDeactivation: 4
+  DisableSimulation: 5

@@ -83,6 +83,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
           LOI.Assets.MeshEditor.Actions.ResetCamera.id()
           null
+          LOI.Assets.MeshEditor.Actions.IncreaseExposure.id()
+          LOI.Assets.MeshEditor.Actions.DecreaseExposure.id()
+          LOI.Assets.MeshEditor.Actions.ResetExposure.id()
+          null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
@@ -100,6 +104,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
           LOI.Assets.MeshEditor.Actions.SmoothShadingEnabled.id()
+          LOI.Assets.MeshEditor.Actions.PBREnabled.id()
         ]
       ,
         caption: 'Tools'
@@ -236,6 +241,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
       "#{LOI.Assets.MeshEditor.Actions.Save.id()}": commandOrControl: true, key: AC.Keys.s
       "#{LOI.Assets.MeshEditor.Actions.ResetCamera.id()}": key: AC.Keys.graveAccent
+      "#{LOI.Assets.MeshEditor.Actions.IncreaseExposure.id()}": shift: true, key: AC.Keys.equalSign, keyLabel: '+'
+      "#{LOI.Assets.MeshEditor.Actions.DecreaseExposure.id()}": shift: true, key: AC.Keys.dash
+      "#{LOI.Assets.MeshEditor.Actions.ResetExposure.id()}": shift: true, key: AC.Keys['0']
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null

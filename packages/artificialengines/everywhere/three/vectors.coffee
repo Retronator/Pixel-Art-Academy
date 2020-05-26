@@ -14,6 +14,11 @@ THREE.Vector3::setFromBulletVector3 = (bulletVector3) ->
   @y = bulletVector3.y()
   @z = bulletVector3.z()
 
+THREE.Vector3::exp = ->
+  @x = Math.exp @x
+  @y = Math.exp @y
+  @z = Math.exp @z
+
 # Create a new vector from a plain object.
 THREE.Vector3.fromObject = (object) ->
   return new THREE.Vector3().copy object

@@ -36,6 +36,8 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
     fullDescription: "It says it contains {{drinkName}} and even has the exact time of bottling."
     emptyDescription: "It says to return the empty bottle to a vending machine or collection station."
 
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-items/bottle/bottle.script'
+
   @initialize()
 
   constructor: ->
@@ -70,8 +72,6 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
 
   isEmpty: ->
     not @drink()
-
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-items/bottle/bottle.script'
 
   initializeScript: ->
     bottle = @options.parent

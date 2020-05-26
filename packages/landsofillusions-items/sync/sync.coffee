@@ -25,7 +25,7 @@ class LOI.Items.Sync extends LOI.Adventure.Item
     super arguments...
 
     # SYNC is active, but not visible by default.
-    @activatedState LOI.Adventure.Item.activatedStates.Activated
+    @activatedState LOI.Adventure.Item.ActivatedStates.Activated
 
   onCreated: ->
     super arguments...
@@ -96,7 +96,7 @@ class LOI.Items.Sync extends LOI.Adventure.Item
       # We only need to jump out of fullscreen and leave the map active.
       @fullscreenOverlay false
       @mapTab.map.showUserInterface false
-      @activatedState LOI.Adventure.Item.activatedStates.Activated
+      @activatedState LOI.Adventure.Item.ActivatedStates.Activated
 
       if @_fadeCover
         LOI.adventure.removeModalDialog @_fadeCover

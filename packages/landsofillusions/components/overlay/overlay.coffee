@@ -28,13 +28,13 @@ class LOI.Components.Overlay extends AM.Component
         activatedState = activatableParent.callFirstWith(null, 'activatedState')
 
         switch activatedState
-          when LOI.Adventure.Item.activatedStates.Activating
+          when LOI.Adventure.Item.ActivatedStates.Activating
             @onActivating()
 
-          when LOI.Adventure.Item.activatedStates.Deactivating
+          when LOI.Adventure.Item.ActivatedStates.Deactivating
             @onDeactivating()
 
-          when LOI.Adventure.Item.activatedStates.Deactivated
+          when LOI.Adventure.Item.ActivatedStates.Deactivated
             @onDeactivated()
 
     @onActivating()

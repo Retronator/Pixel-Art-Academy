@@ -85,20 +85,59 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures/sprite');
   api.addClientFile('engine/textures/mip');
 
+  api.addClientFile('engine/radiancestate..');
+  api.addClientFile('engine/radiancestate/probemap');
+  api.addGlsl('engine/radiancestate/common-parameters-fragment');
+
+  api.addClientFile('engine/radiancestate/probe..');
+  api.addMaterial('engine/radiancestate/probe/octahedronmapmaterial..');
+
+  api.addClientFile('engine/radiancestate/radiancematerial..');
+  api.addGlsl('engine/radiancestate/radiancematerial/radiancematerial-vertex');
+  api.addGlsl('engine/radiancestate/radiancematerial/radiancematerial-parameters-fragment');
+
+  api.addClientFile('engine/radiancestate/radiancematerial/in..');
+  api.addGlsl('engine/radiancestate/radiancematerial/in/in-fragment');
+
+  api.addClientFile('engine/radiancestate/radiancematerial/out..');
+  api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
+
+  api.addClientFile('engine/skydome..');
+  api.addMaterial('engine/skydome/material..');
+  api.addMaterial('engine/skydome/rendermaterial..');
+  api.addGlsl('engine/skydome/rendermaterial/rendermaterial-parameters-fragment');
+  api.addClientFile('engine/skydome/rendermaterial/rendermaterial-scattering');
+  api.addGlsl('engine/skydome/rendermaterial/rendermaterial-scattering-fragment');
+
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/material');
-  api.addClientFile('engine/materials/spritematerial');
-  api.addClientFile('engine/materials/rampmaterial');
-  api.addClientFile('engine/materials/depthmaterial');
-  api.addClientFile('engine/materials/shadowcolormaterial');
-  api.addClientFile('engine/materials/preprocessingmaterial');
 
-  api.addClientFile('engine/materials/shaderchunks..');
-  api.addClientFile('engine/materials/shaderchunks/lighting');
-  api.addClientFile('engine/materials/shaderchunks/palette');
-  api.addClientFile('engine/materials/shaderchunks/texture');
-  api.addClientFile('engine/materials/shaderchunks/dither');
-  api.addClientFile('engine/materials/shaderchunks/preprocessing');
+  api.addMaterial('engine/materials/spritematerial..');
+  api.addMaterial('engine/materials/rampmaterial..');
+  api.addMaterial('engine/materials/pbrmaterial..');
+  api.addMaterial('engine/materials/depthmaterial..');
+  api.addMaterial('engine/materials/shadowcolormaterial..');
+  api.addMaterial('engine/materials/preprocessingmaterial..');
+
+  api.addGlsl('engine/materials/shaderchunks/palette/palette-parameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/palette/quantizeshadedcolor-fragment');
+  api.addGlsl('engine/materials/shaderchunks/palette/readsourcecolorfrompalette-fragment');
+  api.addGlsl('engine/materials/shaderchunks/palette/setpalettecolorfromuniforms-fragment');
+
+  api.addGlsl('engine/materials/shaderchunks/lighting/shadesourcecolor-fragment');
+  api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-fragment');
+  api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-parameters-fragment');
+
+  api.addGlsl('engine/materials/shaderchunks/texture/maptexture-vertex');
+  api.addGlsl('engine/materials/shaderchunks/texture/readtexturedata-fragment');
+  api.addGlsl('engine/materials/shaderchunks/texture/readtexturedata-parameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/texture/unpacksamplepalettecolor-fragment');
+  api.addGlsl('engine/materials/shaderchunks/texture/unpacksamplereflectionparameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/texture/unpacksampleshadingdither-fragment');
+
+  api.addGlsl('engine/materials/shaderchunks/dither/dither-parameters-fragment');
+
+  api.addGlsl('engine/materials/shaderchunks/preprocessing/applypreprocessing-fragment');
 
   api.addFile('engine/debug..');
   api.addFile('engine/debug/dummysceneitem');

@@ -24,37 +24,68 @@ class AM.DatabaseContent
   @export: (archive) ->
     console.log "Starting database content export ..."
 
+    if directoryResponseContent = HTTP.get(@directoryUrl)?.content
+      currentDirectory = EJSON.parse directoryResponseContent
+      console.log "Retrieved current directory."
+
+      # Create a map of documents.
+      currentDirectoryDocumentsMap = {}
+
+      for documentClassId, documentsInformation of currentDirectory.documents
+        currentDirectoryDocumentsMap[documentClassId] = {}
+
+        console.log "Building map for #{documentsInformation.length} documents of #{documentClassId}."
+
+        for documentInformation in documentsInformation
+          currentDirectoryDocumentsMap[documentClassId][documentInformation._id] = documentInformation
+
     directory =
       exportTime: new Date
       documents: {}
 
     paths = {}
+    notChangedCount = 0
 
     for getter in @exportGetters
       exportingDocuments = getter()
 
       for document in exportingDocuments when document?.exportDatabaseContent
+        # Get document name.
         if document.name instanceof Artificial.Babel.Translation
           documentName = document.name.translate().text
 
         else
           documentName = document.name or document._id
 
-        console.log "Exporting", document.constructor.name, documentName
+        # See if we have the document in the current directory.
+        documentClassId = document.constructor.id()
+        existingDocumentInformation = currentDirectoryDocumentsMap?[documentClassId]?[document._id]
 
-        {arrayBuffer, path, lastEditTime} = document.exportDatabaseContent()
+        if existingDocumentInformation?.lastEditTime?.getTime() is document.lastEditTime?.getTime()
+          # Load the data directly from the exported file.
+          url = Meteor.absoluteUrl "databasecontent/#{existingDocumentInformation.path}"
+          documentResponse = Request.getSync url, encoding: null
+          arrayBuffer = documentResponse.body
 
-        console.log "Writing #{Math.round arrayBuffer.length / 1024, 2} kB to #{path}"
+          path = existingDocumentInformation.path
+          lastEditTime = existingDocumentInformation.lastEditTime
 
-        # Add a suffix
+          notChangedCount++
+
+        else
+          console.log "Exporting", document.constructor.name, documentName
+
+          {arrayBuffer, path, lastEditTime} = document.exportDatabaseContent()
+
+          console.log "Writing #{Math.round arrayBuffer.length / 1024, 2} kB to #{path}"
+
+        # Add a suffix if another document already had this path.
         paths[path] ?= 0
         paths[path]++
 
         if paths[path] > 1
           nameParts = path.split '.'
           path = "#{nameParts[0]}-#{paths[path]}.#{nameParts[1..].join '.'}"
-
-        documentClassId = document.constructor.id()
 
         # Store document information in directory.
         documentInformation = {path, lastEditTime, _id: document._id}
@@ -71,11 +102,12 @@ class AM.DatabaseContent
     # Complete exporting.
     archive.finalize()
 
+    console.log "#{notChangedCount} documents weren't changed." if notChangedCount
     console.log "Database content export done!"
 
   @import: (directory) ->
-    documentIds = _.keys directory.documents
-    prioritizedDocumentIds = _.sortBy documentIds, (documentId) => -(@documentImportPriority[documentId] or 0)
+    documentClassIds = _.keys directory.documents
+    prioritizedDocumentIds = _.sortBy documentClassIds, (documentClassId) => -(@documentImportPriority[documentClassId] or 0)
 
     # Create a promise for each updating document so that we can react when all documents have been updated.
     updatePromises = []

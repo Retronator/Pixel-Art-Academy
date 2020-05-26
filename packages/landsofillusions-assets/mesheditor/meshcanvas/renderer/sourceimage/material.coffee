@@ -25,7 +25,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage.Material extends THR
         THREE.UniformsLib.lights
 
       vertexShader: """
-#include <common>
+#include <THREE>
 #include <uv_pars_vertex>
 
 void main()	{
@@ -39,14 +39,14 @@ void main()	{
 """
 
       fragmentShader: """
-#include <common>
+#include <THREE>
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
 #include <normalmap_pars_fragment>
 #include <packing>
 #include <lights_pars_begin>
 
-#{AS.GLSL.hsl2rgb}
+#include <Artificial.Spectrum.Color.hslToRGB>
 
 uniform mat4 modelViewMatrix;
 uniform sampler2D palette;
@@ -58,7 +58,7 @@ void main()	{
   vec2 paletteColor = rampShadeDitherAlpha.xy;
   paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
 
-  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment}
+  #include <LandsOfIllusions.Engine.Materials.readSourceColorFromPaletteFragment>
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;
@@ -79,7 +79,7 @@ void main()	{
      lightness = 1.0 - absoluteVerticalAngle / PI;
     }
 
-    gl_FragColor = vec4(hsl2rgb(hue, saturation, lightness), rampShadeDitherAlpha.a);
+    gl_FragColor = vec4(Color_hslToRGB(hue, saturation, lightness), rampShadeDitherAlpha.a);
     return;
   }
 

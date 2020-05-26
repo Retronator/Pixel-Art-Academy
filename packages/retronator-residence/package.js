@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-hq');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('Retronator');
 
@@ -22,7 +23,10 @@ Package.onUse(function(api) {
 
   // Locations
 
-  api.addFile('hallway/hallway');
-  api.addFile('upstairshallway/upstairshallway');
-
+  api.addFile('hallway..');
+  api.addFile('upstairshallway..');
+  api.addFile('terrace..');
+  api.addFile('kitchen..');
+  api.addFile('kitchen/watermelon');
+  api.addFile('livingroom..');
 });

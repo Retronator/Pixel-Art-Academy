@@ -1,0 +1,80 @@
+<template name="Artificial.Spectrum.Pages.Color.Chromaticity">
+  <div class="artificial-spectrum-pages-color-chromaticity page">
+    <h1>Artificial Spectrum</h1>
+    <h2>Color chromaticity test</h2>
+    <p>
+      {{> Artificial.Spectrum.Pages.Color.Chromaticity.LightSourceType}}
+    </p>
+    {{#if $is lightSourceType "BlackBody"}}
+      <p>
+        Black body with temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "A"}}
+      <p>
+        CIE standard illuminant A (representing typical domestic incandescent lighting with correlated color temperature of
+        2855.54 K) will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "D"}}
+      <p>
+        CIE standard illuminant D (representing average daylight) with correlated color temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K
+        {{#if lightSourceEmissionSpectrum}}
+          will radiate light with color
+          <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+          <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+        {{else}}
+          is not defined.
+        {{/if}}
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "D65"}}
+      <p>
+        CIE standard illuminant D65 (representing average daylight with correlated color temperature of
+        6503.6 K) will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "Sun"}}
+      <p>
+        Sun surface (73% hydrogen, 25% helium, 2% other) with temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "Iron"}}
+      <p>
+        Iron heated to temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    {{#if $is lightSourceType "Gold"}}
+      <p>
+        Gold heated to temperature of
+        {{> Artificial.Spectrum.Pages.Color.Chromaticity.Temperature}} {{temperature}} K will radiate light with color
+        <span class="light-preview" {{style lightPreviewStyle}}></span> and chromaticity
+        <span class="chromaticity-preview" {{style chromaticityPreviewStyle}}></span>.
+      </p>
+    {{/if}}
+    <p>
+      CIE XYZ values are {{xyzString}}.<br/>
+      D65 normalized XYZ values are {{normalizedXYZString}}.<br/>
+      Linear sRGB values are {{linearRGBString}}.<br/>
+      Gamma-corrected sRGB values are {{rgbString}}.
+    </p>
+    <div class="graphs">
+      <canvas class="chromaticity-diagram" width="460" height="500"></canvas>
+      <canvas class="spectrum" width="460" height="500"></canvas>
+    </div>
+  </div>
+</template>

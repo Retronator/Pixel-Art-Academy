@@ -17,6 +17,10 @@ class LOI.Assets.Asset extends AM.Document
         $exists: false
     
     Meteor.startup =>
+      # Create a regex that accepts all export paths.
+      cachableDocumentsQuery =
+        name: ///^(#{LOI.Assets.exportPaths.join '|'})///
+
       Tracker.autorun =>
         # Invalidate cache on document changes.
         LOI.Assets[@className].documents.find(cachableDocumentsQuery).observeChanges
@@ -40,6 +44,8 @@ class LOI.Assets.Asset extends AM.Document
 
           cache = JSON.stringify newCache
           cacheBuildId = Random.id()
+
+          console.log "Built #{@className} cache with size #{cache.length}." if LOI.debug
 
         # See if client's cache is up to date.
         if request.headers['if-none-match'] is cacheBuildId

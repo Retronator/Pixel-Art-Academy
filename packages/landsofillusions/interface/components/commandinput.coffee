@@ -81,6 +81,14 @@ class LOI.Interface.Components.CommandInput
     @commandHistoryIndex++
     @clear()
 
+  replaceLastCommandInHistory: (command) ->
+    command = _.toLower command
+    @commandHistory[@commandHistory.length - 1] = command
+
+    storedCommandHistory = @storedCommandHistory()
+    storedCommandHistory[storedCommandHistory.length - 1] = command
+    @storedCommandHistory storedCommandHistory
+
   addText: (text) ->
     newCommand = "#{@commandBeforeCaret()}#{text}#{@commandAfterCaret()}"
 

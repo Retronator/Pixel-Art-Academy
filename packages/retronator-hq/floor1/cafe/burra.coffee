@@ -15,4 +15,4 @@ class HQ.Cafe.Burra extends HQ.Actors.Burra
 
     return justName if talked
 
-    "#{justName} She greets you across the counter."
+    "#{justName} #{@translations()?.greet}"

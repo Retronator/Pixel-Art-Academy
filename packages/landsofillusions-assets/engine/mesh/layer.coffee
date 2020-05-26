@@ -46,14 +46,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends AS.RenderObject
       clusters = @clusters()
       return unless clusters?.length
 
-      debug = @object.mesh.options.debug?()
-      currentCluster = @object.mesh.options.currentCluster?()
-
       # Add new children.
       for cluster in clusters
-        # Do not draw unselected clusters in debug mode.
-        continue if debug and currentCluster and currentCluster isnt cluster.data
-
         @add cluster
 
       @object.mesh.options.sceneManager.addedSceneObjects()

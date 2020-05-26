@@ -77,6 +77,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
           LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()
           null
+          LOI.Assets.SpriteEditor.Actions.ShowShading.id()
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
         ]
       ,
@@ -84,6 +85,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
           LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
+          null
+          LOI.Assets.SpriteEditor.Actions.IgnoreNormals.id()
         ]
       ,
         caption: 'Window'
@@ -103,6 +106,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         LOI.Assets.SpriteEditor.Tools.Translate.id()
         LOI.Assets.SpriteEditor.Tools.Pencil.id()
         LOI.Assets.SpriteEditor.Tools.Eraser.id()
+        LOI.Assets.SpriteEditor.Tools.Smooth.id()
         LOI.Assets.SpriteEditor.Tools.ColorFill.id()
         LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
       ]
@@ -183,7 +187,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   @defaultShortcutsMapping: ->
     _.extend super(arguments...),
       # Actions
+      "#{LOI.Assets.SpriteEditor.Actions.ShowShading.id()}": commandOrControl: true, shift: true, key: AC.Keys.s
       "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
+      "#{LOI.Assets.SpriteEditor.Actions.IgnoreNormals.id()}": shift: true, key: AC.Keys.n
       "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
       "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
       "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
@@ -201,6 +207,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
       "#{LOI.Assets.SpriteEditor.Tools.Translate.id()}": key: AC.Keys.v
+      "#{LOI.Assets.SpriteEditor.Tools.Smooth.id()}": key: AC.Keys.s
 
   constructor: ->
     super arguments...

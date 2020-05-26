@@ -44,10 +44,10 @@ Package.onUse(function(api) {
   api.addComponent('behavior/terminal/screens/people/people');
   api.addComponent('behavior/terminal/screens/perks/perks');
 
-  api.addFile('behavior/terminal/components/components');
-  api.addComponent('behavior/terminal/components/personalitypartpreview/personalitypartpreview');
-  api.addComponent('behavior/terminal/components/activitypartspreview/activitypartspreview');
-  api.addComponent('behavior/terminal/components/peoplepropertypreview/peoplepropertypreview');
+  api.addFile('behavior/terminal/components..');
+  api.addComponent('behavior/terminal/components/personalitypartpreview..');
+  api.addComponent('behavior/terminal/components/activitypropertypreview..');
+  api.addComponent('behavior/terminal/components/peoplepropertypreview..');
 
   api.addThing('design..');
   api.addFile('design/templatepart');

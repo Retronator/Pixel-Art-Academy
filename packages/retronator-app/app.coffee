@@ -63,6 +63,12 @@ class Retronator.App extends Artificial.Base.App
     for name, component of @components
       component.draw? appTime
 
+  endRun: (appTime) ->
+    sortedComponents = _.sortBy @components, (component) => component.endRunOrder or 0
+
+    for name, component of sortedComponents
+      component.endRun? appTime
+
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer
   Meteor.startup ->

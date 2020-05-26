@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:sanfrancisco');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('SanFrancisco');
 
@@ -27,6 +28,7 @@ Package.onUse(function(api) {
   api.addFile('studio..');
   api.addThing('studio/bed');
   api.addThing('studio/emailnotification');
+  api.addFile('studio/kitchencabinet');
 
   api.addComponent('studio/computer..');
   api.addComponent('studio/computer/app..');

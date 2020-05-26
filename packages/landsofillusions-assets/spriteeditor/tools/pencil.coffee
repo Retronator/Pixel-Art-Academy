@@ -4,6 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Stroke
   # paintNormals: boolean whether only normals are being painted
+  # ignoreNormals: boolean whether normals are not painted
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
   @displayName: -> "Pencil"
 
@@ -31,6 +32,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
   applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
     # See if we're only painting normals.
     paintNormals = @data.get 'paintNormals'
+    ignoreNormals = @data.get 'ignoreNormals'
 
     changedPixels = _.filter relativePixels, (pixel) =>
       existingPixel = spriteData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
@@ -39,6 +41,10 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         # Get the color from the existing pixel.
         for property in ['materialIndex', 'paletteColor', 'directColor']
           pixel[property] = existingPixel[property] if existingPixel[property]?
+
+      if ignoreNormals and existingPixel
+        # Get the normal from the existing pixel.
+        pixel.normal = existingPixel.normal if existingPixel.normal?
       
       # We need to add this pixel unless one just like it is already there.
       not EJSON.equals existingPixel, pixel

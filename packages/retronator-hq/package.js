@@ -21,6 +21,8 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
   api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('Retronator');
 
@@ -84,6 +86,7 @@ Package.onUse(function(api) {
   api.addFile('floor1/cafe..');
   api.addFile('floor1/cafe/burra');
   api.addFile('floor1/cafe/artworks');
+  api.addFile('floor1/cafe/bowloffruit');
   api.addScript('floor1/cafe/burra');
   api.addScript('floor1/cafe/burra-character');
 
@@ -132,6 +135,8 @@ Package.onUse(function(api) {
   api.addServerFile('floor4/artstudio/initialize-server');
   api.addThing('floor4/artstudio/alexandra');
   api.addFile('floor4/artstudio/artworks');
+  api.addFile('floor4/artstudio/stilllifestand');
+  api.addFile('floor4/artstudio/storageshelves');
 
   api.addComponent('floor4/artstudio/contextwithartworks');
   api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');

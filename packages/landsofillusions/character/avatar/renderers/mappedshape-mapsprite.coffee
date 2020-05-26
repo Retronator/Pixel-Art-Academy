@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
-Delaunator = require 'delaunator'
-barycentric = require 'barycentric'
+import Delaunator from 'delaunator'
+import barycentric from 'barycentric'
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.MappedShape
   _mapSprite: (side, spriteData, sourceLandmarks, targetLandmarks, flipHorizontal) ->

@@ -23,7 +23,7 @@ class LOI.Engine.World.Navigator.SpaceOccupation.Placeholder extends AR.PhysicsO
     @body.setAngularFactor 0 if @sourcePhysicsObject.hasFixedRotation
 
     # Disable deactivation so we can manually move the body by direct positioning.
-    @body.setActivationState 4
+    @body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
 
   createDebugObject: ->
     # Initialize debug material.

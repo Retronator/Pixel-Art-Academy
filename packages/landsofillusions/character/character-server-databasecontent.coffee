@@ -18,6 +18,9 @@ class LOI.Character extends LOI.Character
     "landsofillusions/character/#{@debugName}"
 
   exportDatabaseContent: ->
+    # Add last edit time if needed so that documents don't need unnecessary imports.
+    @lastEditTime ?= new Date()
+
     previewImage = @getPreviewImage()
     imageData = AM.EmbeddedImageData.embed previewImage, @
 
@@ -26,7 +29,7 @@ class LOI.Character extends LOI.Character
 
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.character.png"
-    lastEditTime: new Date
+    lastEditTime: @lastEditTime
 
   getPreviewImage: ->
     humanAvatar = new LOI.Character.Avatar @

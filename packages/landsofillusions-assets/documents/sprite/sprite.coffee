@@ -44,6 +44,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @addPixels: @method 'addPixels'
   @removePixel: @method 'removePixel'
   @removePixels: @method 'removePixels'
+  @smoothPixels: @method 'smoothPixels'
   @colorFill: @method 'colorFill'
   @replacePixels: @method 'replacePixels'
   @flipHorizontal: @method 'flipHorizontal'

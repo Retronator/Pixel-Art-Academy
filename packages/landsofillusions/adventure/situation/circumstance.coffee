@@ -46,7 +46,7 @@ class LOI.Adventure.Situation.Circumstance
             return false if member in newValue
 
             # Also don't include members that are instances of classes in the remove set.
-            for newMember in newValue
+            for newMember in newValue when _.isFunction newMember
               return false if member instanceof newMember
 
             true

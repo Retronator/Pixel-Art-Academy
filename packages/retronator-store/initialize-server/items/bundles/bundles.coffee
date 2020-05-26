@@ -267,8 +267,6 @@ kickstarterAlphaItemsWith = (extraItems) ->
     CatalogKeys.PixelArtAcademy.SeniorYear
     CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
     CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
-    CatalogKeys.LandsOfIllusions.Character.Creation
-    CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
     CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
   ].concat extraItems
 

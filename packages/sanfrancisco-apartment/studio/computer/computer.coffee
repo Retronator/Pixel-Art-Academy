@@ -10,11 +10,13 @@ class Studio.Computer extends LOI.Components.Computer
   @register @id()
   template: -> @constructor.id()
 
-  @fullName: -> "computer"
-
+  @fullName: -> "desktop computer"
+  @shortName: -> "computer"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+  @descriptiveName: -> "Desktop ![computer](use computer)."
   @description: ->
     "
-      It's _char's_ trusty old computer, perfect for finding useful things on the internet.
+      It's _char's_ trusty old PixelFriend computer, perfect for finding useful things on the internet.
     "
 
   @initialize()
