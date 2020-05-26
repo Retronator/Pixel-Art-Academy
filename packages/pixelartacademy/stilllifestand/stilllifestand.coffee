@@ -225,11 +225,33 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   update: (appTime) ->
     # Wait until the scene is initialized.
     sceneManager = @sceneManager()
+    movingItem = @movingItem()
 
     if sceneManager.ready()
       # Update physics.
       physicsManager = @physicsManager()
       physicsManager.update appTime
+
+      # Move objects to inventory when they fall too far.
+      farItems = _.filter sceneManager.items(), (item) =>
+        # Don't remove the dragged item.
+        return false if item is movingItem
+
+        # Make sure the position doesn't have NaN values.
+        renderObject = item.avatar.getRenderObject()
+        return true if _.isNaN renderObject.position.x
+
+        # See if the item is more than 10m away from the stand center.
+        renderObject.position.lengthSq() > 100
+
+      if farItems.length
+        itemsData = @itemsData()
+
+        for item in farItems
+          _.remove itemsData, (itemData) => itemData.id is item._id
+          PAA.Items.StillLifeItems.addItem item._id, item.id()
+
+        @itemsData itemsData
 
     # Update the cursor.
     if viewportCoordinates = @mouse().viewportCoordinates()
@@ -240,7 +262,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       _cursorRaycaster.setFromCamera viewportCoordinates, camera
 
       # See if we're currently moving an item.
-      if @movingItem()
+      if movingItem
         # We need to move the cursor in the movement planes. Try the vertical plane first if it's still active.
         if @_cursorVerticalPlaneActive
           _cursorRaycaster.ray.intersectPlane @_cursorVerticalPlane, _cursorPosition

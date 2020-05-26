@@ -98,7 +98,7 @@ class PAA.StillLifeStand.Inventory extends AM.Component
 
     return if existingItem
 
-    # Add the relevant item data to the stand.
+    # Add the relevant item data to the items.
     PAA.Items.StillLifeItems.addItem newItem._id, newItem.id()
 
     # Start dragging it once it's added.

@@ -17,9 +17,12 @@ class PAA.StillLifeStand.PhysicsManager
     @simulationTimestep = 1 / 300
     @maxSimulationStepsPerFrame = 0.1 / @simulationTimestep
 
-    # We use minimal damping for improved stability.
+    # Adjust constants for improved stability.
     @linearDamping = 0.0001
     @angularDamping = 0.0001
+    @linearSleepingThreshold = 1
+    @angularSleepingThreshold = 1
+    @contactProcessingThreshold = 0.01
 
     @surroundingGasDensity = 1.225 # Kg / m³
 
@@ -46,8 +49,10 @@ class PAA.StillLifeStand.PhysicsManager
       added: (item) =>
         physicsObject = item.avatar.getPhysicsObject()
 
-        # Set default damping on the item.
+        # Set constants for improved stability.
         physicsObject.body.setDamping @linearDamping, @angularDamping
+        physicsObject.body.setSleepingThresholds @linearSleepingThreshold, @angularSleepingThreshold
+        physicsObject.body.setContactProcessingThreshold @contactProcessingThreshold
 
         # Add the item to the simulation.
         @dynamicsWorld.addRigidBody physicsObject.body

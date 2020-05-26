@@ -138,7 +138,7 @@ class LOI.Items.Components.Map.Node extends AM.Component
       phrases[0]
 
     else
-      if phrases[0].length is 1 and phrases[1] then phrases[1] else phrases[0]
+      if phrases[0]?.length is 1 and phrases[1] then phrases[1] else phrases[0]
 
   directionClass: ->
     location = @data()

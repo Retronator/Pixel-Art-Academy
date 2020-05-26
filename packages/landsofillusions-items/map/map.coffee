@@ -30,18 +30,18 @@ class LOI.Items.Map extends LOI.Adventure.Item
     @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     @fullscreenOverlay = new ReactiveField false
 
+  onCreated: ->
+    super arguments...
+
+    @map = new LOI.Items.Components.Map
+
     $(document).on 'keydown.landsofillusions-items-map', (event) =>
       @onKeyDown event
 
     $(document).on 'keyup.landsofillusions-items-map', (event) =>
       @onKeyUp event
 
-  onCreated: ->
-    super arguments...
-
-    @map = new LOI.Items.Components.Map
-
-  destroy: ->
+  onDestroyed: ->
     super arguments...
 
     $(document).off '.landsofillusions-items-map'

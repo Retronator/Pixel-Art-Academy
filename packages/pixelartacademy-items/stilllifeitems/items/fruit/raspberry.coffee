@@ -19,6 +19,7 @@ class PAA.Items.StillLifeItems.Raspberry extends PAA.Items.StillLifeItems.Item
     new PAA.Items.StillLifeItems.Item.Avatar.Model @,
       path: "/#{@constructor.assetsPath()}.glb"
       mass: 0.005
+      restitution: 0.1
 
   class @Leaf extends PAA.Items.StillLifeItems.Item
     @id: -> 'PixelArtAcademy.Items.StillLifeItems.Raspberry.Leaf'
