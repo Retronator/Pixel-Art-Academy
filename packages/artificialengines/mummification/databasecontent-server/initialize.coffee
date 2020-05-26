@@ -11,7 +11,7 @@ Document.startup ->
 
   # Try to retrieve the database content directory.
   Artificial.Telepathy.RequestHelper.requestUntilSucceeded
-    url: directoryUrl
+    url: AM.DatabaseContent.directoryUrl
     retryAfterSeconds: 60
     callback: (result) ->
       return unless _.startsWith result.headers['content-type'], 'application/json'
