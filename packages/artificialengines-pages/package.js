@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'archiver': '3.0.0'
+  'archiver': '4.0.1'
 });
 
 Package.onUse(function(api) {

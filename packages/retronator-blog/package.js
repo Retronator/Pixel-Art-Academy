@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'webshot': '0.18.0',
+  'node-webshot': '1.0.4',
   's3-streaming-upload': '0.2.3'
 });
 

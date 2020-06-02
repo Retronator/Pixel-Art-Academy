@@ -17,7 +17,7 @@ Npm.depends({
   'pngjs': '2.3.0',
   's3-streaming-upload': '0.2.3',
   'fast-png': '4.0.1',
-  'archiver': '3.0.0'
+  'archiver': '4.0.1'
 });
 
 Package.onUse(function(api) {
