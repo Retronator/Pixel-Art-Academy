@@ -11,7 +11,7 @@ Npm.depends({
   'path-to-regexp': '2.1.0',
   three: '0.115.0',
   'jaro-winkler': '0.2.8',
-  'canvas': '2.3.1',
+  'canvas': '2.6.1',
   'pako': '1.0.8',
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0'
