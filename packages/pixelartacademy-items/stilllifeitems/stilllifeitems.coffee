@@ -9,7 +9,7 @@ class PAA.Items.StillLifeItems extends LOI.Adventure.Item
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: ->
     "
-      It's a collection of items that can be used when drawing still lives.
+      It's a collection of items that can be used when drawing still lifes.
     "
 
   @translations: ->

@@ -22,7 +22,7 @@ class PAA.Items.StillLifeItems.Orange extends PAA.Items.StillLifeItems.Item
 
   class @Half extends PAA.Items.StillLifeItems.Item
     @id: -> 'PixelArtAcademy.Items.StillLifeItems.Orange.Half'
-    @fullName: -> "half a orange"
+    @fullName: -> "half an orange"
     @description: ->
       "
         It's one half of an orange.
