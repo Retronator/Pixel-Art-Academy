@@ -13,11 +13,11 @@ Package.describe({
 Npm.depends({
   'delaunator': '3.0.2',
   'barycentric': '1.0.1',
-  'canvas': '2.3.1',
+  'canvas': '2.6.1',
   'pngjs': '2.3.0',
   's3-streaming-upload': '0.2.3',
   'fast-png': '4.0.1',
-  'archiver': '3.0.0'
+  'archiver': '4.0.1'
 });
 
 Package.onUse(function(api) {
