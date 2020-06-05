@@ -3,18 +3,27 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 class RA.Patreon extends RA.Patreon
-  @updateCurrentPledges: ->
+  @updateCurrentPledgeForPatron: (patronId) ->
+    @updateCurrentPledges patronId
+
+  # Update current pledges for all or a single patron.
+  @updateCurrentPledges: (singlePatronId) ->
+    if singlePatronId
+      console.log "Updating current Patreon pledge for patron #{singlePatronId} …"
+
+    else
+      console.log "Updating current Patreon pledges …"
+
     AT.Patreon.campaigns().then (campaigns) ->
       campaign = campaigns[0].data
 
       AT.Patreon.pledges(campaign.id).then (pledges) ->
         # Update intended pledges. These are recorded by setting authorizedOnly on their payments.
-        existingPledgeTransactions = RS.Transaction.documents.find(
+        existingPledgeTransactions = RS.Transaction.documents.fetch
           payments:
             $elemMatch:
               type: RS.Payment.Types.PatreonPledge
               authorizedOnly: true
-        ).fetch()
 
         CatalogKeys = RS.Items.CatalogKeys
         getItemId = (catalogKey) -> RS.Item.documents.findOne({catalogKey})._id
@@ -30,9 +39,13 @@ class RA.Patreon extends RA.Patreon
         alphaAccessId = getItemId CatalogKeys.PixelArtAcademy.AlphaAccess
         secretLabAccessId = getItemId CatalogKeys.Retropolis.SecretLabAccess
 
-        for pledge in pledges
+        for pledge in pledges when not pledge.data.attributes.declined_since
           patron = pledge.data.relationships.patron
           patronId = patron.data.id
+
+          # If we're updating a single patron, make sure the pledge belongs to them before processing.
+          continue if singlePatronId and patronId isnt singlePatronId
+
           patronEmail = patron.data.attributes.email
 
           pledgeAmount = pledge.data.attributes.amount_cents / 100
@@ -40,29 +53,15 @@ class RA.Patreon extends RA.Patreon
 
           existingPledgeTransaction = _.find existingPledgeTransactions, (transaction) -> transaction.patreon is patronId
 
-          if existingPledgeTransaction
-            transactionId = existingPledgeTransaction._id
-            paymentId = existingPledgeTransaction.payments[0]._id
+          # Prepare updatable payment data (patron attributes that can change over time).
+          paymentData =
+            amount: pledgeAmount
+            patronEmail: patronEmail
 
-            # Remove the transaction from the array so we know it has been processed.
-            existingPledgeTransactions = _.without existingPledgeTransactions, existingPledgeTransaction
-
-          else
-            # Create transaction and payment for this patron.
-            paymentId = RS.Payment.documents.insert
-              type: RS.Payment.Types.PatreonPledge
-              authorizedOnly: true
-              patronId: patronId
-
-            transactionId = RS.Transaction.documents.insert
-              patreon: patronId
-              payments: [_id: paymentId]
-
-          # Update payment.
-          RS.Payment.documents.update paymentId,
-            $set:
-              amount: pledgeAmount
-              patronEmail: patronEmail
+          # Prepare updatable transaction data.
+          transactionData =
+            time: pledgeDate
+            email: patronEmail
 
           # Award the patron keycard and patron club membership to all.
           items = [
@@ -84,17 +83,102 @@ class RA.Patreon extends RA.Patreon
             items.push item: _id: alphaAccessId
             items.push item: _id: secretLabAccessId
 
-          # Update transaction.
-          RS.Transaction.documents.update transactionId,
-            $set:
-              time: pledgeDate
-              email: patronEmail
-              items: items
+          transactionData.items = items
 
-        # If any pledges are left in existing pledges it means they are not active anymore and we should remove them.
-        for transaction in existingPledgeTransactions
-          RS.Transaction.documents.remove transaction._id
-          RS.Payment.documents.remove transaction.payments[0]._id
+          if existingPledgeTransaction
+            transactionId = existingPledgeTransaction._id
+            paymentId = existingPledgeTransaction.payments[0]._id
+
+            # Remove the transaction from the array so we know it has been processed.
+            existingPledgeTransactions = _.without existingPledgeTransactions, existingPledgeTransaction
+
+            # See if payment needs updating.
+            payment = RS.Payment.documents.findOne paymentId
+
+            paymentUpdateNeeded = false
+
+            for property, value of paymentData
+              paymentUpdateNeeded = true unless EJSON.equals payment[property], value
+
+            if paymentUpdateNeeded
+              # Update payment.
+              RS.Payment.documents.update paymentId,
+                $set: paymentData
+
+            # See if transaction needs updating
+            transactionUpdateNeeded = false
+
+            for property, value of transactionData
+              unless EJSON.equals existingPledgeTransaction[property], value
+                if property is 'items'
+                  # For items we need to manually check if each is present
+                  # since our array only has item IDs and would not pass as equal.
+                  for item in value
+                    itemInTransaction = _.find existingPledgeTransaction.items, (itemInTransaction) -> itemInTransaction._id is item._id
+                    transactionUpdateNeeded = true unless itemInTransaction
+
+                else
+                  transactionUpdateNeeded = true
+
+            # Update transaction.
+            if transactionUpdateNeeded
+              RS.Transaction.documents.update transactionId,
+                $set: transactionData
+
+          else
+            # Create transaction and payment for this patron.
+            _.extend paymentData,
+              type: RS.Payment.Types.PatreonPledge
+              authorizedOnly: true
+              patronId: patronId
+
+            paymentId = RS.Payment.documents.insert paymentData
+
+            _.extend transactionData,
+              patreon: patronId
+              payments: [_id: paymentId]
+
+            transactionId = RS.Transaction.documents.insert transactionData
+
+          # See if any new payments have been processed. First find current patronage.
+          payments = RS.Payment.documents.fetch
+            authorizedOnly: {$ne: true}
+            invalid: false
+            $or: [
+              patronId: patronId
+            ,
+              patronEmail: patronEmail
+            ]
+
+          totalRecordedAmount = _.sum (payment.amount for payment in payments)
+
+          # Compare it to patron's actual patronage.
+          totalHistoricalAmount = pledge.data.attributes.total_historical_amount_cents / 100
+
+          if totalRecordedAmount < totalHistoricalAmount
+            paymentAmount = totalHistoricalAmount - totalRecordedAmount
+            console.log "New Patreon payment of $#{paymentAmount} detected for #{patronEmail}."
+
+            # Create transaction and payment.
+            paymentId = RS.Payment.documents.insert
+              type: RS.Payment.Types.PatreonPledge
+              patronEmail: patronEmail
+              patronId: patronId
+              amount: paymentAmount
+
+            RS.Transaction.documents.insert
+              time: new Date()
+              email: patronEmail
+              payments: [{_id: paymentId}]
+
+        # If we're updating all pledges and any pledges are left in existing pledges,
+        # it means they are not active anymore and we should remove them.
+        unless singlePatronId
+          for transaction in existingPledgeTransactions
+            RS.Transaction.documents.remove transaction._id
+            RS.Payment.documents.remove transaction.payments[0]._id
+
+        console.log "Updating completed."
 
 # Initialize on startup.
 Document.startup ->
@@ -103,7 +187,7 @@ Document.startup ->
 
   # Update pledges every day.
   new Cron =>
-    console.log "Updating current Patreon pledges."
+    console.log "Daily Patreon pledges update."
     RA.Patreon.updateCurrentPledges()
   ,
     hour: 1

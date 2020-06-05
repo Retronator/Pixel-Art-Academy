@@ -517,9 +517,9 @@
       "integrity": "sha512-dZY7QPCPp5r9cnNuQ955mOv4ZFVDXY/yvqeV7Y1W2PJA3PEFcuow9xKFfJxbBj1pIjOAP+M2B4/7xubmykLrXw=="
     },
     "patreon": {
-      "version": "0.3.0",
-      "resolved": "https://registry.npmjs.org/patreon/-/patreon-0.3.0.tgz",
-      "integrity": "sha512-1ar/gFNzDDhsN8bzQFFFh0JABZ3x2Y7cAOOPnEgxIKkSeNopcLsVLWIvIhV0Io+LGOmBsCpo2icVlXFs9oSosA=="
+      "version": "0.4.1",
+      "resolved": "https://registry.npmjs.org/patreon/-/patreon-0.4.1.tgz",
+      "integrity": "sha512-aLhjx4rg2BArTq0Kg61MrM4dkJnTQ9kPN8F6a2IlQoYVEtIH7kUK/dprClTx+QYQKlXMfKksN9NCux1YarQJsQ=="
     },
     "performance-now": {
       "version": "2.1.0",

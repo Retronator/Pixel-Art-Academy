@@ -58,7 +58,6 @@ class AT.Patreon
       'total_historical_amount_cents'
       'is_paused'
       'has_shipping_address'
-      'outstanding_payment_amount_cents'
     ]
 
     # TODO: Update when we have more than 1000 patrons.
