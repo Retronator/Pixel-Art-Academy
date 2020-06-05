@@ -111,7 +111,9 @@ Package.onUse(function(api) {
   api.addServerFile('initialize-server/admin');
   api.addServerFile('initialize-server/test');
 
+  api.addFile('patreon..');
   api.addServerFile('patreon/server');
+  api.addServerFile('patreon/methods-server');
 
   // Components
 

@@ -88,14 +88,18 @@ class RS.Transaction extends AM.Document
         invalid = _.some fields.payments, 'invalid'
         [fields._id, invalid]
     triggers: =>
-      transactionsUpdated: Document.Trigger ['user._id', 'twitter', 'email', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
-        console.log "transaction generate items triggered!", transaction?.email or transaction?.user?._id or transaction?.twitter or oldTransaction?.email or oldTransaction?.user?._id or oldTransaction?.twitter
+      transactionsUpdated: Document.Trigger ['user._id', 'twitter', 'email', 'patreon', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
+        console.log "Transaction update detected!", transaction?.email or transaction?.user?._id or transaction?.twitter or transaction?.patreon or oldTransaction?.email or oldTransaction?.user?._id or oldTransaction?.twitter or oldTransaction?.patreon
+
+        oldUser = RS.Transaction.findUserForTransaction(oldTransaction)
+        user = RS.Transaction.findUserForTransaction(transaction)
+
         # If the user of this transaction has changed, the old user
         # should lose an item so they need to be updated as well.
-        RS.Transaction.findUserForTransaction(oldTransaction)?.onTransactionsUpdated()
+        oldUser.onTransactionsUpdated() if oldUser and oldUser._id isnt user?._id
 
         # Update the user of this transaction.
-        RS.Transaction.findUserForTransaction(transaction)?.onTransactionsUpdated()
+        user?.onTransactionsUpdated()
 
   # Subscriptions
   @topRecent: 'Retronator.Store.Transaction.topRecent'
@@ -135,12 +139,12 @@ class RS.Transaction extends AM.Document
   @findTransactionsForUser: (user) ->
     return unless user
 
-    # Transactions can be matched to validated emails, user's id or twitter handle.
+    # Transactions can be matched to validated emails, user's id, twitter handle, or patreon ID.
     verifiedEmails = []
     if user.registered_emails
       for email in user.registered_emails
         # We want to compare without case.
-        verifiedEmails.push new RegExp email.address, 'i' if email.verified
+        verifiedEmails.push new RegExp "^#{email.address}$", 'i' if email.verified
 
     query = $or: [
       'user._id': user._id
@@ -151,9 +155,13 @@ class RS.Transaction extends AM.Document
         email:
           $in: verifiedEmails
 
-    if user.services?.twitter?.screenName
+    if twitterScreenName = user.twitterScreenName
       query.$or.push
-        twitter: new RegExp "^#{user.services.twitter.screenName}$", 'i'
+        twitter: new RegExp "^#{twitterScreenName}$", 'i'
+
+    if patreonId = user.patreonId
+      query.$or.push
+        patreon: patreonId
 
     RS.Transaction.documents.find query
 
