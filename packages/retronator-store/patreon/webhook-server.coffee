@@ -16,7 +16,7 @@ WebApp.connectHandlers.use '/patreon/webhook', (request, response, next) =>
     response.end()
     return
 
-  hmac = Crypto.createHmac 'sha256', Meteor.settings.patreon.webhookSecret
+  hmac = Crypto.createHmac 'md5', Meteor.settings.patreon.webhookSecret
 
   # Receive the body of the post message.
   request.on 'data', Meteor.bindEnvironment (data) =>

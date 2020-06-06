@@ -85,7 +85,7 @@ class AT.Patreon
 
     .catch (error) =>
       switch error.error.status
-        when 401
+        when 401, 403
           # We need to refresh the access token.
           @refreshClient()
 
