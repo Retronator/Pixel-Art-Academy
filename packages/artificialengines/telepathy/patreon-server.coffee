@@ -40,11 +40,15 @@ class AT.Patreon
 
   @currentUser: ->
     @_call('/current_user').then (result) =>
+      return unless result
+      
       # Return the user.
       result.store.findAll('user')[0]?.serialize()
 
   @campaigns: ->
     @_call('/current_user/campaigns').then (result) =>
+      return unless result
+
       # Return all campaigns.
       result.store.findAll('campaign').map (campaign) => campaign.serialize()
 
@@ -58,11 +62,12 @@ class AT.Patreon
       'total_historical_amount_cents'
       'is_paused'
       'has_shipping_address'
-      'outstanding_payment_amount_cents'
     ]
 
     # TODO: Update when we have more than 1000 patrons.
     @_call("/campaigns/#{campaignId}/pledges?page%5Bcount%5D=1000&fields%5Bpledge%5D=#{fields.join ','}").then (result) =>
+      return unless result
+
       # Return all pledges.
       result.store.findAll('pledge').map (pledge) =>
         pledge = pledge.serialize()
@@ -90,7 +95,7 @@ class AT.Patreon
         else
           console.error "Error accessing Patreon API.", error
           
-          # Return nothing
+          # Return nothing.
           null
 
   class @Token extends AM.Document

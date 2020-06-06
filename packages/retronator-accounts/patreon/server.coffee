@@ -42,6 +42,9 @@ OAuth.registerService 'patreon', 2, null, (query) ->
     content = JSON.parse currentUserResponse.content
     userProfile = content.data
 
+    # Update user's Patreon pledge.
+    RA.Patreon.updateCurrentPledgeForPatron userProfile.id
+
   catch error
     console.error error
     throw new AE.InvalidOperationException "Failed to fetch account data from Patreon.", error.message

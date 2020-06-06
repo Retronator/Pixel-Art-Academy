@@ -77,16 +77,9 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
   _databaseItems: ->
     return [] unless @_itemsSubscription.ready()
 
-    items = RS.Item.documents.find
-      price:
-        $exists: true
-    ,
-      sort:
-        price: 1
-
-    # Show only items that are supposed to be on this shelf.
-    items = _.filter items.fetch(), (item) =>
-      item.catalogKey in @catalogKeys()
+    # Show items that are supposed to be on this shelf.
+    items = for catalogKey in @catalogKeys()
+      RS.Item.documents.findOne {catalogKey}
 
     # Cast the items to enable any extra functionality.
     items = (item.cast() for item in items)

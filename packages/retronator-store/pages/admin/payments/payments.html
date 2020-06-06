@@ -1,0 +1,37 @@
+<template name="Retronator.Store.Pages.Admin.Payments">
+  <h1>Payments</h1>
+  <p>
+    Patron ID: {{>Retronator.Store.Pages.Admin.Payments.PatronId}}
+    Patron email: {{>Retronator.Store.Pages.Admin.Payments.PatronEmail}}
+  </p>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Authorized only</th>
+      <th>Invalid</th>
+      <th>Patron ID</th>
+      <th>Patron email</th>
+      <th>Transaction</th>
+    </tr>
+    {{#each payments}}
+      <tr class="{{staleClass}}">
+        <td>{{_id}}</td>
+        <td>{{type}}</td>
+        <td>{{amount}}</td>
+        <td>{{authorizedOnly}}</td>
+        <td>{{invalid}}</td>
+        <td>{{this.patronId}}</td>
+        <td>{{this.patronEmail}}</td>
+        <td>
+          {{#with transaction}}
+            {{time.toLocaleDateString}} by {{ownerDisplayName}}
+          {{else}}
+            STALE
+          {{/with}}
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+</template>

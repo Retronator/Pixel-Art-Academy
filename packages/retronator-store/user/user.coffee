@@ -31,7 +31,8 @@ class RA.User extends RA.User
     triggers: (triggers) =>
       _.extend triggers,
         # Transactions for a user can update when a new registered email is added or a twitter account is linked.
-        transactionsUpdated: Document.Trigger ['registered_emails', 'services.twitter.screenName'], (user, oldUser) ->
+        transactionsUpdated: Document.Trigger ['registered_emails', 'twitterScreenName', 'patreonId'], (user, oldUser) ->
+          console.log "User update detected!", user?.debugName or user?._id or oldUser?.debugName or oldUser?._id
           user?.onTransactionsUpdated()
 
       triggers
@@ -69,6 +70,7 @@ class RA.User extends RA.User
     false
 
   onTransactionsUpdated: ->
+    console.log "Updating store-related fields for user", @displayName or @_id
     @generateItemsArray()
     @generateSupportAmount()
     @generateStoreData()
