@@ -18,6 +18,9 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
+
+  api.use('webapp', 'server');
+
   api.use('chfritz:easycron');
   api.use('peerlibrary:xml2js');
 
@@ -114,6 +117,7 @@ Package.onUse(function(api) {
   api.addFile('patreon..');
   api.addServerFile('patreon/server');
   api.addServerFile('patreon/methods-server');
+  api.addServerFile('patreon/webhook-server');
 
   // Components
 

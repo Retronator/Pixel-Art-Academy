@@ -57,11 +57,18 @@ class RA.User extends AM.Document
         [user._id, publicName]
 
       loginServices: [Document.GeneratedField 'self', ['services'], (user) ->
-        availableServices = ['facebook', 'twitter', 'google', 'patreon']
+        availableServices = ['facebook', 'twitter', 'google']
         enabledServices = _.intersection _.keys(user.services), availableServices
 
         # Add password only if it has really been set (since the password key can also have just a reset token object).
         enabledServices.push 'password' if user.services?.password?.bcrypt
+
+        [user._id, enabledServices]
+      ]
+
+      otherServices: [Document.GeneratedField 'self', ['services'], (user) ->
+        availableServices = ['patreon']
+        enabledServices = _.intersection _.keys(user.services), availableServices
 
         [user._id, enabledServices]
       ]
@@ -74,7 +81,7 @@ class RA.User extends AM.Document
         twitterScreenName = user.services?.twitter?.screenName or null
         [user._id, twitterScreenName]
 
-  @loginServicesForCurrentUser: 'Retronator.Accounts.User.loginServicesForCurrentUser'
+  @servicesForCurrentUser: @subscription 'Retronator.Accounts.User.servicesForCurrentUser'
   @twitterScreenNameForCurrentUser: @subscription 'twitterScreenNameForCurrentUser'
   @contactEmailForCurrentUser: 'Retronator.Store.User.contactEmailForCurrentUser'
   @registeredEmailsForCurrentUser: 'Retronator.Accounts.User.registeredEmailsForCurrentUser'

@@ -53,7 +53,14 @@ Meteor.methods
 
     throw new AE.UnauthorizedException "You must be logged in to send the password reset email." unless user
 
-    throw new AE.InvalidOperationException "You must have at least one email to send the reset password to." unless user.contactEmail
+    throw new AE.InvalidOperationException "You must have a contact email set to send the reset password to." unless user.contactEmail
+
+    # Make sure the contact email address is added directly to the user (and not via registered_emails).
+    email = _.find user.emails, (email) -> email.address is user.contactEmail
+
+    unless email
+      # Let's add it to the emails collection.
+      Accounts.addEmail user._id, user.contactEmail
 
     Accounts.sendResetPasswordEmail user._id, user.contactEmail
 

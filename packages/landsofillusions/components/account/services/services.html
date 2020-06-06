@@ -16,16 +16,16 @@
     </ul>
     <h3>Other connections</h3>
     <ul class="services">
-      {{#with 'Patreon'}}
+      {{#each otherServices}}
         <li class="service">
           <span class="name">Patreon</span>
-          {{#if loginServiceEnabled}}
+          {{#if otherServiceEnabled}}
             <img class="stamp patreon" src="{{image '/landsofillusions/components/account/services/patreon.png'}}" />
           {{else}}
             <button class="link-service-button patreon"></button>
           {{/if}}
         </li>
-      {{/with}}
+      {{/each}}
       <li class="service"></li>
     </ul>
   </div>

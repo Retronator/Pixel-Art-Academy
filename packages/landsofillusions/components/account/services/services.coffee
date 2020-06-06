@@ -15,7 +15,7 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
   onCreated: ->
     super arguments...
 
-    @subscribe Retronator.Accounts.User.loginServicesForCurrentUser
+    Retronator.Accounts.User.servicesForCurrentUser.subscribe()
 
   loginServices: ->
     [
@@ -25,6 +25,11 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
       'Google'
     ]
 
+  otherServices: ->
+    [
+      'Patreon'
+    ]
+
   loginServiceEnabled: ->
     serviceName = @currentData()
     user = Meteor.user()
@@ -32,6 +37,14 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
     return unless user?.loginServices?
 
     _.lowerCase(serviceName) in user.loginServices
+
+  otherServiceEnabled: ->
+    serviceName = @currentData()
+    user = Meteor.user()
+
+    return unless user?.otherServices?
+
+    _.lowerCase(serviceName) in user.otherServices
 
   stampUrl: ->
     serviceName = @currentData()
@@ -54,7 +67,10 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
           if error
             LOI.adventure.showDialogMessage error.message
             return
-            
+
+          LOI.adventure.showDialogMessage """We sent a password reset email to your contact email address.
+                                             Use it to set the password for your account."""
+
       else
         Meteor["linkWith#{serviceName}"]()
 
@@ -63,10 +79,10 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
     loginServices = @loginServices()
 
     if serviceName is 'Password'
-      message = "Do you want to change your password? A password reset email will be sent to you in that case."
+      message = "Do you want to change your password? We will send you an email with a link to reset your password."
 
       buttons = [
-        text: "Change"
+        text: "Send"
         value: true
       ,
         text: "Cancel"

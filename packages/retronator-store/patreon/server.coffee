@@ -15,15 +15,32 @@ class RA.Patreon extends RA.Patreon
       console.log "Updating current Patreon pledges …"
 
     AT.Patreon.campaigns().then (campaigns) ->
+      unless campaigns
+        console.error "Could not access Patreon campaigns."
+        return
+
       campaign = campaigns[0].data
 
       AT.Patreon.pledges(campaign.id).then (pledges) ->
+        unless pledges
+          console.error "Could not access Patreon pledges"
+          return
+
         # Update intended pledges. These are recorded by setting authorizedOnly on their payments.
-        existingPledgeTransactions = RS.Transaction.documents.fetch
-          payments:
-            $elemMatch:
-              type: RS.Payment.Types.PatreonPledge
-              authorizedOnly: true
+        if singlePatronId
+          existingPledgeTransactions = RS.Transaction.documents.fetch
+            patreon: singlePatronId
+            payments:
+              $elemMatch:
+                type: RS.Payment.Types.PatreonPledge
+                authorizedOnly: true
+
+        else
+          existingPledgeTransactions = RS.Transaction.documents.fetch
+            payments:
+              $elemMatch:
+                type: RS.Payment.Types.PatreonPledge
+                authorizedOnly: true
 
         CatalogKeys = RS.Items.CatalogKeys
         getItemId = (catalogKey) -> RS.Item.documents.findOne({catalogKey})._id
@@ -171,12 +188,10 @@ class RA.Patreon extends RA.Patreon
               email: patronEmail
               payments: [{_id: paymentId}]
 
-        # If we're updating all pledges and any pledges are left in existing pledges,
-        # it means they are not active anymore and we should remove them.
-        unless singlePatronId
-          for transaction in existingPledgeTransactions
-            RS.Transaction.documents.remove transaction._id
-            RS.Payment.documents.remove transaction.payments[0]._id
+        # If any pledges are left in existing pledges, it means they are not active anymore and we should remove them.
+        for transaction in existingPledgeTransactions
+          RS.Transaction.documents.remove transaction._id
+          RS.Payment.documents.remove transaction.payments[0]._id
 
         console.log "Updating completed."
 
