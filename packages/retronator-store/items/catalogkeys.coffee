@@ -49,6 +49,7 @@ RS.Items.CatalogKeys =
   Retronator:
     Admin: ''
     Patreon:
+      Subscriptions: ''
       PatreonKeycard: ''
       EarlyBirdKeycard: ''
   Collaborator:

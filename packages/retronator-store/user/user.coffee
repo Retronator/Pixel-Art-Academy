@@ -70,6 +70,7 @@ class RA.User extends RA.User
     false
 
   onTransactionsUpdated: ->
+    console.log "Updating store-related fields for user", @displayName or @_id
     @generateItemsArray()
     @generateSupportAmount()
     @generateStoreData()

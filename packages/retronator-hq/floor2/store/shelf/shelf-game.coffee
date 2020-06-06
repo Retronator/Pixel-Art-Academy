@@ -28,6 +28,7 @@ class HQ.Store.Shelf.Game extends HQ.Store.Shelf
       RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
       RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.FullGame
       RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
+      RS.Items.CatalogKeys.Retronator.Patreon.Subscriptions
     ]
 
   canBuyFromShelf: -> not LOI.characterId()

@@ -128,11 +128,12 @@ class RA.Patreon extends RA.Patreon
             for property, value of transactionData
               unless EJSON.equals existingPledgeTransaction[property], value
                 if property is 'items'
-                  # For items we need to manually check if each is present
+                  # For items we need to manually check if same item IDs are present
                   # since our array only has item IDs and would not pass as equal.
-                  for item in value
-                    itemInTransaction = _.find existingPledgeTransaction.items, (itemInTransaction) -> itemInTransaction._id is item._id
-                    transactionUpdateNeeded = true unless itemInTransaction
+                  newItemIds = (transactionItem.item._id for transactionItem in value)
+                  oldItemIds = (transactionItem.item._id for transactionItem in existingPledgeTransaction.items)
+
+                  transactionUpdateNeeded = true if _.xor(newItemIds, oldItemIds).length
 
                 else
                   transactionUpdateNeeded = true

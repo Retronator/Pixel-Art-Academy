@@ -202,3 +202,25 @@ RS.Pages.Admin.Patreon.fillMissingPatronIDs.method ->
     console.warn "No patron ID could be matched for patron email", patronEmail
 
   console.log "Successfully updated #{paymentsUpdatedCount} payments for #{emailsMatchedCount} emails."
+
+RS.Pages.Admin.Patreon.deleteStalePledges.method ->
+  RA.authorizeAdmin()
+
+  pledgePayments = RS.Payment.documents.fetch
+    type: RS.Payment.Types.PatreonPledge
+    authorizedOnly: true
+
+  stalePaymentsCount = 0
+
+  for payment in pledgePayments
+    # Find a transaction that matches this pledge.
+    transaction = RS.Transaction.documents.findOne
+      'payments._id': payment._id
+
+    continue if transaction
+
+    # This is a stale payment, delete it.
+    RS.Payment.documents.remove payment._id
+    stalePaymentsCount++
+
+  console.log "Successfully deleted #{stalePaymentsCount} payments."
