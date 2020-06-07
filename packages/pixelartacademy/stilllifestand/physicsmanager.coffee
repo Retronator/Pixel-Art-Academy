@@ -3,7 +3,8 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-_transform = new Ammo.btTransform
+if Meteor.isClient
+  _transform = new Ammo.btTransform
 
 class PAA.StillLifeStand.PhysicsManager
   constructor: (@stillLifeStand) ->

@@ -3,28 +3,29 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-_transform = new Ammo.btTransform
+if Meteor.isClient
+  _transform = new Ammo.btTransform
 
-_velocity = new THREE.Vector3
-_localVelocity = new THREE.Vector3
-_dragObjectDirectionalWeights = new THREE.Vector3
+  _velocity = new THREE.Vector3
+  _localVelocity = new THREE.Vector3
+  _dragObjectDirectionalWeights = new THREE.Vector3
 
-_angularVelocity = new THREE.Vector3
-_localAngularVelocity = new THREE.Vector3
-_dragObjectAngularDirectionalWeights = new THREE.Vector3
+  _angularVelocity = new THREE.Vector3
+  _localAngularVelocity = new THREE.Vector3
+  _dragObjectAngularDirectionalWeights = new THREE.Vector3
 
-_worldMatrix = new THREE.Matrix4
-_worldQuaternion = new THREE.Quaternion
-_worldQuaternionInverse = new THREE.Quaternion
-_worldPosition = new THREE.Vector3
+  _worldMatrix = new THREE.Matrix4
+  _worldQuaternion = new THREE.Quaternion
+  _worldQuaternionInverse = new THREE.Quaternion
+  _worldPosition = new THREE.Vector3
 
-_dragForce = new THREE.Vector3
-_dragForceBullet = new Ammo.btVector3
-_relativeForcePosition = new THREE.Vector3
-_relativeForcePositionBullet = new Ammo.btVector3
+  _dragForce = new THREE.Vector3
+  _dragForceBullet = new Ammo.btVector3
+  _relativeForcePosition = new THREE.Vector3
+  _relativeForcePositionBullet = new Ammo.btVector3
 
-_dragTorque = new THREE.Vector3
-_dragTorqueBullet = new Ammo.btVector3
+  _dragTorque = new THREE.Vector3
+  _dragTorqueBullet = new Ammo.btVector3
 
 class PAA.StillLifeStand.PhysicsManager extends PAA.StillLifeStand.PhysicsManager
   applyDrag: ->

@@ -286,14 +286,14 @@ Package.onUse(function(api) {
   api.addFile('reality/reality-units');
   api.addFile('reality/conversions');
 
-  api.addJavascript('reality/ammo/build/ammo');
-  api.addFile('reality/ammo..');
+  api.addClientJavascript('reality/ammo/build/ammo');
+  api.addClientFile('reality/ammo..');
 
   api.addFile('reality/physicsobject');
 
-  api.addFile('reality/ammo/vectors');
-  api.addFile('reality/ammo/quaternion');
-  api.addFile('reality/ammo/collisionobject');
+  api.addClientFile('reality/ammo/vectors');
+  api.addClientFile('reality/ammo/quaternion');
+  api.addClientFile('reality/ammo/collisionobject');
 
   api.addFile('reality/optics..');
 
