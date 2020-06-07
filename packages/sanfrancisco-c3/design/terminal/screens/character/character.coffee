@@ -192,10 +192,16 @@ class C3.Design.Terminal.Character extends AM.Component
       renderer: @characterRenderer()
       drawOutfit: false
 
+    # Don't show templates when you start the editor.
+    @terminal.screens.avatarPart.forceShowEditor true
+
     @terminal.switchToScreen @terminal.screens.avatarPart
 
   onClickOutfitPart: (event) ->
     @terminal.screens.avatarPart.pushPart @character().avatar.outfit,
       renderer: @characterRenderer()
+
+    # Don't show templates when you start the editor.
+    @terminal.screens.avatarPart.forceShowEditor true
 
     @terminal.switchToScreen @terminal.screens.avatarPart
