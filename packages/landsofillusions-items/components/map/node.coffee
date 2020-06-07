@@ -130,11 +130,11 @@ class LOI.Items.Components.Map.Node extends AM.Component
 
     phrases = LOI.adventure.parser.vocabulary.getPhrases direction
 
-    # Find the shortest phrase. We don't want 1-letter shortcuts though, except for
-    # east/west as there is not enough space (only the 1-letter shortcut will fit).
+    # Find the shortest phrase. We don't want 1-letter shortcuts though,
+    # except for cardinal directions as those are commonly abbreviated.
     phrases = _.sortBy phrases, (phrase) => phrase.length
 
-    if isEastWest
+    if direction in [Directions.North, Directions.South, Directions.East, Directions.West]
       phrases[0]
 
     else
