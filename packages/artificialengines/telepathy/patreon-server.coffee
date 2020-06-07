@@ -78,7 +78,7 @@ class AT.Patreon
 
         pledge
 
-  @_call: (url) ->
+  @_call: (url, dontRetry = false) ->
     AT.Patreon._client(url).then (result) =>
       # Return result.
       result
@@ -86,11 +86,13 @@ class AT.Patreon
     .catch (error) =>
       switch error.error.status
         when 401, 403
+          return if dontRetry
+
           # We need to refresh the access token.
           @refreshClient()
 
-          # Repeat the call.
-          @_call url
+          # Repeat the call, but don't retry again if the call still fails to prevent infinite loops.
+          @_call url, true
 
         else
           console.error "Error accessing Patreon API.", error
