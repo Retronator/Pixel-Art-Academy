@@ -16,7 +16,11 @@
         </ul>
       {{else}}
         <div class="sync-hint">
-          Character has made no memories yet.
+          {{#if memoriesSubscription.ready}}
+            Character has made no memories yet.
+          {{else}}
+            Loading memories …
+          {{/if}}
         </div>
       {{/if}}
     {{else}}

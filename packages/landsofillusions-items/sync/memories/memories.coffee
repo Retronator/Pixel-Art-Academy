@@ -37,7 +37,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
       return unless characterId = LOI.characterId()
 
       # Subscribe to the memories of this character.
-      LOI.Memory.forCharacter.subscribe characterId, @limit()
+      @memoriesSubscription = LOI.Memory.forCharacter.subscribe characterId, @limit()
 
       # Get the document with memory progress.
       LOI.Memory.Progress.forCharacter.subscribe characterId
