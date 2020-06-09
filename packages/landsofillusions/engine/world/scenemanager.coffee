@@ -114,9 +114,13 @@ class LOI.Engine.World.SceneManager
         if illustrationName is @_currentIllustrationName
           # Transition to other camera angle after illustration size has been applied.
           Tracker.afterFlush =>
-            @world.cameraManager().transitionToCameraAngle cameraAngle(),
-              duration: 3000
-              easing: 'ease-in-out'
+            newCameraAngle = cameraAngle()
+            if newCameraAngle isnt @_currentCameraAngle
+              @_currentCameraAngle = newCameraAngle
+
+              @world.cameraManager().transitionToCameraAngle @_currentCameraAngle,
+                duration: 3000
+                easing: 'ease-in-out'
   
         else
           @_currentIllustrationName = illustrationName
@@ -143,7 +147,8 @@ class LOI.Engine.World.SceneManager
           @_currentLocationMeshDependency.changed()
 
           # Initialize the camera from the camera angle.
-          @world.cameraManager().setFromCameraAngle cameraAngle()
+          @_currentCameraAngle = cameraAngle()
+          @world.cameraManager().setFromCameraAngle @_currentCameraAngle
 
           # Report we have new mesh data.
           @currentLocationMeshData meshData
