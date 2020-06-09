@@ -9,6 +9,7 @@ Yearbook.students.publish ->
   collectionName = Yearbook.studentsCollectionName
   
   RA.User.documents.find(
+    username: $ne: 'admin'
     characters: $exists: true
   ,
     fields:
