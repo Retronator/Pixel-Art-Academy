@@ -29,7 +29,7 @@ person: I wrote some new entries in my journal. `_journalEntries.entries.length 
 
 person: I finished one of the learning tasks. `_learningTasks.tasks.length is 1`
 
-person: I finished some of the learning tasks. `_learningTasks.tasks.length > 1`
+person: I finished some learning tasks. `_learningTasks.tasks.length > 1`
 
 ## CommentsOnJournalEntries
 
@@ -141,9 +141,15 @@ person: It was the `_learningTasks.tasks[0].directive` task from the `_learningT
 
 ## LearningTaskMultiple
 
-person: Let's see … I did `_learningTasks.taskDirectives`. All are from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.goals.length is 1`
+person: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 1`
 
-person: Let's see … I did `_learningTasks.taskDirectives`. `_learningTasks.goals.length > 1`
+person: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length is 1`
+
+person: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length > 1`
+
+person: I was quite productive, I finished a bunch of tasks from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length is 1`
+
+person: I was quite productive, I finished a bunch of tasks from the `_learningTasks.goalNames` goals. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length > 1`
 
 `_followedUp = true`
 

@@ -82,6 +82,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
                 goal: goal
 
             learningTasks.taskDirectives = AB.Rules.English.createNounSeries (task.directive for task in learningTasks.tasks)
+            learningTasks.goalNames = AB.Rules.English.createNounSeries (goal.displayName for goal in learningTasks.goals)
 
             # Conversations
             createConversations = => conversations: []
