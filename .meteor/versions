@@ -68,7 +68,7 @@ meteor@1.9.3
 meteor-base@1.4.0
 meteorhacks:inject-initial@1.0.4
 meteorhacks:picker@1.0.3
-minifier-css@1.5.0
+minifier-css@1.5.1
 minifier-js@2.6.0
 minimongo@1.6.0
 mobile-experience@1.1.0

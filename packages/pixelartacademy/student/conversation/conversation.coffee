@@ -71,6 +71,13 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
       # Replace any newline characters with spaces.
       profile.aspiration = profile.aspiration.replace /\n/g, ' '
 
+    # Remove ending punctuation from favorites.
+    for property, value of profile.favorites when property isnt 'quote'
+      lastCharacter = _.last value
+
+      if lastCharacter in ['.', '!', '?']
+        profile.favorites[property] = value.substring 0, value.length - 1
+
     profile
 
   # Script

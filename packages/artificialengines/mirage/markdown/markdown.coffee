@@ -3,7 +3,7 @@ AM = Artificial.Mirage
 class AM.Markdown extends AM.Component
   @register "Artificial.Mirage.Markdown"
 
-  process: (contentTemplate) ->
+  preprocess: (contentTemplate) ->
     text = Blaze.toHTML contentTemplate
 
     # Strip leading indentation.
@@ -22,3 +22,12 @@ class AM.Markdown extends AM.Component
 
     # Return processed lines.
     lines.join '\n'
+
+  class @Postprocess extends AM.Component
+    @register "Artificial.Mirage.Markdown.Postprocess"
+
+    postprocess: (contentTemplate) ->
+      text = Blaze.toHTML contentTemplate
+
+      # Add target blank to all links.
+      text.replace /<a/g, '<a target="_blank" '

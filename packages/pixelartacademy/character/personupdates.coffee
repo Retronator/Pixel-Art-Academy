@@ -82,6 +82,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
                 goal: goal
 
             learningTasks.taskDirectives = AB.Rules.English.createNounSeries (task.directive for task in learningTasks.tasks)
+            learningTasks.goalNames = AB.Rules.English.createNounSeries (goal.displayName for goal in learningTasks.goals)
 
             # Conversations
             createConversations = => conversations: []
@@ -100,20 +101,20 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             # We only need to add each conversation once so we keep track of processed memories.
             processedMemoryIds = []
 
-            for action in actions when action instanceof LOI.Memory.Actions.Say
-              continue if action.memory._id in processedMemoryIds
-              processedMemoryIds.push action.memory._id
+            for update in updates when update instanceof LOI.Memory.Actions.Say
+              continue if update.memory._id in processedMemoryIds
+              processedMemoryIds.push update.memory._id
 
               relevantUpdatesCount++
 
               # Figure out the participants.
-              memory = LOI.Memory.documents.findOne action.memory._id
+              memory = LOI.Memory.documents.findOne update.memory._id
 
               unless memory
                 console.warn "Memory was not found."
                 continue
 
-              characters = (action.character for action in memory.actions)
+              characters = (update.character for update in memory.actions)
               characters = _.uniqBy characters, '_id'
 
               # Don't include the person itself.

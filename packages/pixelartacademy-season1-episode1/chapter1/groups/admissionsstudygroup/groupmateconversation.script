@@ -15,9 +15,13 @@
 
 groupmate: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 1`
 
-groupmate: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.goals.length is 1`
+groupmate: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length is 1`
 
-groupmate: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.goals.length > 1`
+groupmate: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length > 1`
+
+groupmate: I was quite productive, I finished a bunch of tasks from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length is 1`
+
+groupmate: I was quite productive, I finished a bunch of tasks from the `_learningTasks.goalNames` goals. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length > 1`
 
 -> [Return]
 

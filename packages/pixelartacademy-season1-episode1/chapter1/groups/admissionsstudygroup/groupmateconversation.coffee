@@ -80,6 +80,7 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
               goal: goal
 
           learningTasks.taskDirectives = AB.Rules.English.createNounSeries (task.directive for task in learningTasks.tasks)
+          learningTasks.goalNames = AB.Rules.English.createNounSeries (goal.displayName for goal in learningTasks.goals)
 
           # Prepare data for completed goals answer.
 

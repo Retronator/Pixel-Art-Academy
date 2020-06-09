@@ -26,7 +26,8 @@ class Yearbook.ProfileForm.Favorites extends AM.Component
       name: "Superhero"
     ,
       field: 'quote'
-      name: "Quote"
+      name: "Quote",
+      inputType: AM.DataInputComponent.Types.TextArea
     ]
 
   class @Favorite extends AM.DataInputComponent
@@ -37,12 +38,16 @@ class Yearbook.ProfileForm.Favorites extends AM.Component
 
       @realtime = false
 
+    onCreated: ->
+      super arguments...
+      @type = @data().inputType or AM.DataInputComponent.Types.Text
+
     load: ->
-      field = @data()
+      field = @data().field
 
       LOI.character().document().profile?.favorites?[field]
 
     save: (value) ->
-      field = @data()
+      field = @data().field
 
       LOI.Character.updateProfile LOI.characterId(), "favorites.#{field}", value
