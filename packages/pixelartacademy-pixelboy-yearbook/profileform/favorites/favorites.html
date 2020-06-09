@@ -3,11 +3,11 @@
     <div class="caption">Favorites</div>
     <div class="content">
       {{#each categories}}
-        <div class="property pronouns">
+        <div class="property {{toLower field}}">
           <label class="label">
             <span class="name">{{name}}</span>
             <span class="value">
-              {{> PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.Favorites.Favorite field}}
+              {{> PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.Favorites.Favorite}}
             </span>
           </label>
         </div>
