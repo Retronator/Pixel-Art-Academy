@@ -9,7 +9,7 @@ class HQ.GalleryWest.Artworks extends LOI.Adventure.Item
   @descriptiveName: -> "Framed pixel art ![works](look at artworks)."
   @description: ->
     "
-      Big and small pixel art works are hanged on the walls of the gallery.
+      Big and small pixel art works are hanging on the walls of the gallery.
     "
 
   @initialize()
