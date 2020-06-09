@@ -1,5 +1,11 @@
 <template name="Artificial.Mirage.Markdown">
-  {{#markdown}}{{process Template.contentBlock}}{{/markdown}}
+  {{#Artificial.Mirage.Markdown.Postprocess}}
+    {{#markdown}}{{preprocess Template.contentBlock}}{{/markdown}}
+  {{/Artificial.Mirage.Markdown.Postprocess}}
+</template>
+
+<template name="Artificial.Mirage.Markdown.Postprocess">
+  {{{postprocess Template.contentBlock}}}
 </template>
 
 <template name="Markdown">
