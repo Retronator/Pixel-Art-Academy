@@ -7,6 +7,7 @@
 
 coordinator: Hello everyone!
 
+char: Hi!
 person1: Hello! `_person1`
 person2: Hey! `_person2`
 person3: Hi! `_person3`
@@ -20,6 +21,8 @@ coordinator:
 pause
 
 <!-- Report -->
+
+## WhatsNew
 
 ### WhatsNew
 
@@ -39,20 +42,38 @@ pause
 
 ### ReportProgress
 
+-> [ReportProgressContinue] `_learningTasks.tasks.length < 1`
+
+## ReportProgressWhichLearningTasks
+
+coordinator: Which learning task did you complete? -> [LearningTaskSingle] `_learningTasks.tasks.length is 1`
+coordinator: Which learning tasks did you complete? -> [LearningTaskMultiple] `_learningTasks.tasks.length > 1`
+
+## LearningTaskSingle
+
+char: It was the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal.
+
+-> [ReportProgressContinue]
+
+## LearningTaskMultiple
+
+char: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 1`
+
+char: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length is 1`
+
+char: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length > 1`
+
+char: I was quite productive, I finished a bunch of tasks from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length is 1`
+
+char: I was quite productive, I finished a bunch of tasks from the `_learningTasks.goalNames` goals. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length > 1`
+
+-> [ReportProgressContinue]
+
+## ReportProgressContinue
+
 coordinator: Good job!
 
 <!-- Reciprocity -->
-
--> [ReciprocityStart] `_person1`
-
-<!-- Don't show the dialog for no reciprocity if it hasn't been explained what it is yet. -->
--> [ReciprocityEnd] `not ReciprocityExplanation`
-
-## NoReciprocity
-
-coordinator: Since no-one else is here we'll skip the reciprocity round.
-
--> [ReciprocityEnd]
 
 ## ReciprocityStart
 
@@ -75,6 +96,8 @@ coordinator:
 
 ## Reciprocity
 
+-> [ReciprocitySingle] `not _person1`
+
 coordinator: Would anyone like to ask or share anything with the group?
 
 <!-- Reciprocity others -->
@@ -84,6 +107,7 @@ coordinator: Would anyone like to ask or share anything with the group?
 ### ReciprocityOtherAsks
 
 `_firstAnyoneElse = false`
+`_reciprocityAsked = false`
 
 ## ReciprocityOtherAsksStart
 
@@ -122,6 +146,21 @@ pause
 > _char_ changes their mind and doesn't reply.
 
 -> [ReciprocityOtherAsksStart]
+
+## ReciprocitySingle
+
+coordinator: 
+  Do you have anything you wanted to share?
+  I'll let the other groupmates know when I see them.
+  
+* Yeah, actually … -> [ReciprocityAsk]
+* No, not really. 
+
+> _coordinator_ nods with a warm smile.
+
+coordinator: No worries.
+
+-> [ReciprocityEnd]
 
 <!-- Reciprocity player -->
 
@@ -276,8 +315,40 @@ pause
 
 ## AlreadyAccepted
 
-char: As much as I like my study group, I already completed Admission Week and it's time to move on.
+coordinator: 
+  Hey, _char_, how's it going? Came back to see how your group was doing?
+  
+* Yeah, I felt like catching up. -> [AlreadyAcceptedJoin]
+* Hey! I was just passing by actually. -> [AlreadyAcceptedCancel]
 
+## AlreadyAcceptedJoin
+
+coordinator: You know you're always welcome back.
+  
+-> [AlreadyAcceptedShareNoOne] `not _person1`
+
+coordinator: Alright, everyone, let's see what you've been up to.
+
+pause
+
+-> [WhatsNew]
+  
+## AlreadyAcceptedShareNoOne
+
+coordinator: So, what have you been up to?
+
+pause
+
+-> [ReportProgress]
+
+## AlreadyAcceptedCancel
+
+coordinator: 
+  Well, it's nice to see you again. 
+  I hope you will enjoy Retropolis!
+  
+char: Thank you! See ya.
+    
 -> [End]
 
 ## AlreadyAcceptedNotOwnGroup

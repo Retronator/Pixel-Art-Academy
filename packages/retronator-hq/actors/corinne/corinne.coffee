@@ -9,6 +9,7 @@ class HQ.Actors.Corinne extends LOI.Character.Actor
   @shortName: -> "Corinne"
   @descriptiveName: -> "![Corinne](talk to Corinne) Colgan."
   @description: -> "It's Corinne Colgan, the curator of the gallery."
+  @pronouns: -> LOI.Avatar.Pronouns.Feminine
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.aqua
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
