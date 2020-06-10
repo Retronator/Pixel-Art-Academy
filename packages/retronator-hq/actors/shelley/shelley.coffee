@@ -9,6 +9,7 @@ class HQ.Actors.Shelley extends LOI.Character.Actor
   @shortName: -> "Shelley"
   @descriptiveName: -> "![Shelley](talk to Shelley) Williamson."
   @description: -> "It's Shelley Williamson, Retro's art agent."
+  @pronouns: -> LOI.Avatar.Pronouns.Feminine
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.brown
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
