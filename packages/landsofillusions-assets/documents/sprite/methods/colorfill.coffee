@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel, ignoreNormals) ->
+LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel, ignoreNormals = false) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
   check newTargetPixel, LOI.Assets.Sprite.pixelPattern

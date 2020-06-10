@@ -177,6 +177,10 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
             readyField: group.characterUpdatesHelper.ready
             nextNode: null
             endUpdateCallback: =>
+              # Transfer learning tasks information.
+              learningTasks = script.ephemeralState 'learningTasks'
+              @groupScript.ephemeralState 'learningTasks', learningTasks
+
               complete()
 
           LOI.adventure.director.startScript script, label: 'JustUpdateStart'
@@ -399,19 +403,24 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
             @listenForReciprocityReply = false
             scene._reciprocityReplyCompleteCallback()
 
-      # If the student already graduated, refuse to sit down.
+      # If the student already graduated, have a different intro.
       alreadyAccepted = @groupScript.state 'AcceptanceCelebrationPlayer'
       notOwnGroup = scene.constructor.id() isnt C1.readOnlyState 'studyGroupId'
 
       if alreadyAccepted
-        cantHangOutLabel = if notOwnGroup then 'AlreadyAcceptedNotOwnGroup' else 'AlreadyAccepted'
+        alreadyAcceptedLabel = if notOwnGroup then 'AlreadyAcceptedNotOwnGroup' else 'AlreadyAccepted'
 
       else if notOwnGroup
-        cantHangOutLabel = 'NotOwnGroup'
+        alreadyAcceptedLabel = 'NotOwnGroup'
 
-      if cantHangOutLabel
+      if alreadyAcceptedLabel
         commandResponse.onPhrase
           form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
           priority: 1
           action: =>
-            LOI.adventure.director.startScript @groupScript, label: cantHangOutLabel
+            # Prepare all data for the hangout.
+            startScriptOptions = @prepareHangout()
+
+            # Override the start to the new already-accepted script.
+            startScriptOptions.label = alreadyAcceptedLabel
+            LOI.adventure.director.startScript @groupScript, startScriptOptions

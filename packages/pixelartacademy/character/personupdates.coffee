@@ -73,12 +73,12 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
               unless goal
                 goal =
                   id: task.goal.id()
-                  displayName: task.goal.displayName()
+                  displayName: "'#{task.goal.displayName()}'"
 
                 learningTasks.goals.push goal
 
               learningTasks.tasks.push
-                directive: task.directive()
+                directive: "'#{task.directive()}'"
                 goal: goal
 
             learningTasks.taskDirectives = AB.Rules.English.createNounSeries (task.directive for task in learningTasks.tasks)

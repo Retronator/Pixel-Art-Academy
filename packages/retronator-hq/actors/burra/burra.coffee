@@ -7,6 +7,7 @@ class HQ.Actors.Burra extends LOI.Character.Actor
   @shortName: -> "Burra"
   @descriptiveName: -> "Sarah '![Burra](talk to Burra)' Burrough."
   @description: -> "It's Sarah Burrough a.k.a. Burra."
+  @pronouns: -> LOI.Avatar.Pronouns.Feminine
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.green
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest

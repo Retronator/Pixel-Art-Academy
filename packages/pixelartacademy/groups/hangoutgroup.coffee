@@ -131,50 +131,54 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
       @groupScript = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
-      scene = @options.parent
-
       commandResponse.onPhrase
         form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
         action: =>
-          presentMembers = scene.presentMembers()
+          startScriptOptions = @prepareHangout()
+          LOI.adventure.director.startScript @groupScript, startScriptOptions
 
-          switch presentMembers.length
-            when 0 then label = 'NoOne'
-            when 1
-              @groupScript.setThings person1: presentMembers[0]
-              @groupScript.ephemeralState 'person1', presentMembers[0].fullName()
+    prepareHangout: ->
+      scene = @options.parent
 
-              # See if this group has more members otherwise.
-              label = if scene.members().length is 1 then 'OnlyOne' else 'JustOne'
+      presentMembers = scene.presentMembers()
 
-            else
-              label = 'Start'
+      switch presentMembers.length
+        when 0 then label = 'NoOne'
+        when 1
+          @groupScript.setThings person1: presentMembers[0]
+          @groupScript.ephemeralState 'person1', presentMembers[0].fullName()
 
-              # Randomly assign members to person 1-3.
-              persons = []
-              freeIndices = [1..3]
-              leftMembers = _.clone presentMembers
+          # See if this group has more members otherwise.
+          label = if scene.members().length is 1 then 'OnlyOne' else 'JustOne'
 
-              while leftMembers.length and freeIndices.length
-                member = Random.choice leftMembers
-                freeIndex = Random.choice freeIndices
+        else
+          label = 'Start'
 
-                persons[freeIndex] = member
+          # Randomly assign members to person 1-3.
+          persons = []
+          freeIndices = [1..3]
+          leftMembers = _.clone presentMembers
 
-                _.pull leftMembers, member
-                _.pull freeIndices, freeIndex
+          while leftMembers.length and freeIndices.length
+            member = Random.choice leftMembers
+            freeIndex = Random.choice freeIndices
 
-              things = {}
+            persons[freeIndex] = member
 
-              for personIndex in [1..persons.length]
-                things["person#{personIndex}"] = persons[personIndex]
-                @groupScript.ephemeralState "person#{personIndex}", true
+            _.pull leftMembers, member
+            _.pull freeIndices, freeIndex
 
-              @groupScript.setThings things
+          things = {}
 
-          # Clear out the rest of the people.
-          if presentMembers.length < 3
-            for personIndex in [presentMembers.length + 1..3]
-              @groupScript.ephemeralState "person#{personIndex}", false
+          for personIndex in [1..persons.length]
+            things["person#{personIndex}"] = persons[personIndex]
+            @groupScript.ephemeralState "person#{personIndex}", true
 
-          LOI.adventure.director.startScript @groupScript, {label}
+          @groupScript.setThings things
+
+      # Clear out the rest of the people.
+      if presentMembers.length < 3
+        for personIndex in [presentMembers.length + 1..3]
+          @groupScript.ephemeralState "person#{personIndex}", false
+
+      {label}
