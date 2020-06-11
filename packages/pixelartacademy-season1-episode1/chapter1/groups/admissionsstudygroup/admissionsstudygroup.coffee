@@ -275,6 +275,11 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
           admittedMembers = _.filter members, (member) =>
             member.getTaskEntries(taskId: C1.Goals.Admission.Complete.id()).length
 
+          # Since the player character can come back after they went through the acceptance
+          # celebration, we need to remove them to prevent celebrating again.
+          if @groupScript.state 'AcceptanceCelebrationPlayer'
+            _.pull admittedMembers, playerAgent
+
           if admittedMembers.length
             acceptanceCelebration =
               studentsCount: admittedMembers.length
