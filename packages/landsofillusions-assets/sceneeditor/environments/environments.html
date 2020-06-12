@@ -1,0 +1,22 @@
+<template name="LandsOfIllusions.Assets.SceneEditor.Environments">
+  <div class="landsofillusions-assets-sceneeditor-environments landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="environments-table editor-table">
+      {{#each environments}}
+        <tr class="environment {{activeClass}}">
+          <td class="displayed">
+            <label class="label">
+              <input type="checkbox" class="displayed-checkbox" {{displayedCheckedAttribute}}/><span class="icon"></span>
+            </label>
+          </td>
+          <td class="thumbnail"><img class="image" src="{{this.image.url}}" /></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="upload-button">Upload</button>
+      {{#if showRemoveButton}}
+        <button class="remove-button">Remove</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

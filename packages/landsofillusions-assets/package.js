@@ -62,6 +62,7 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset..');
   api.addFile('documents/visualasset/methods..');
   api.addFile('documents/visualasset/methods/references');
+  api.addFile('documents/visualasset/methods/environments');
   api.addServerFile('documents/visualasset/subscriptions');
 
   api.addFile('documents/sprite..');
@@ -381,6 +382,11 @@ Package.onUse(function(api) {
 
   api.addFile('mesheditor/meshcanvas/renderer/sourceimage..');
   api.addFile('mesheditor/meshcanvas/renderer/sourceimage/material');
+
+  // Scene editor
+
+  api.addFile('sceneeditor..');
+  api.addComponent('sceneeditor/environments..');
 
   // Audio editor
 

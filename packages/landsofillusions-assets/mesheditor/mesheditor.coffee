@@ -170,6 +170,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                   ,
                     name: 'References'
                     contentComponentId: LOI.Assets.Editor.References.id()
+                  ,
+                    name: 'Environments'
+                    contentComponentId: LOI.Assets.SceneEditor.Environments.id()
                     active: true
                   ]
                 remainingArea:
