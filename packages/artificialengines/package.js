@@ -143,6 +143,7 @@ Package.onUse(function(api) {
 	api.addCss('mirage/debugfont');
   api.addStyleImport('mirage/debugfont');
 	api.addComponent('mirage/display');
+  api.addUnstyledComponent('mirage/hdrimage');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
   api.addUnstyledComponent('mirage/pixelimage');

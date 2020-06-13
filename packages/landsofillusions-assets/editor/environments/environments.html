@@ -1,5 +1,5 @@
-<template name="LandsOfIllusions.Assets.SceneEditor.Environments">
-  <div class="landsofillusions-assets-sceneeditor-environments landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+<template name="LandsOfIllusions.Assets.Editor.Environments">
+  <div class="landsofillusions-assets-editor-environments landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
     <table class="environments-table editor-table">
       {{#each environments}}
         <tr class="environment {{activeClass}}">
@@ -8,7 +8,9 @@
               <input type="checkbox" class="displayed-checkbox" {{displayedCheckedAttribute}}/><span class="icon"></span>
             </label>
           </td>
-          <td class="thumbnail"><img class="image" src="{{this.image.url}}" /></td>
+          <td class="thumbnail">
+            {{> LandsOfIllusions.Assets.Editor.Environments.EnvironmentThumbnail}}
+          </td>
         </tr>
       {{/each}}
     </table>
@@ -19,4 +21,8 @@
       {{/if}}
     </div>
   </div>
+</template>
+
+<template name="LandsOfIllusions.Assets.Editor.Environments.EnvironmentThumbnail">
+  {{> Render hdrImage}}
 </template>

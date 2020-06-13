@@ -221,9 +221,11 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/resetinterface');
   api.addFile('editor/actions/export');
   api.addFile('editor/actions/import');
+  api.addFile('editor/actions/exposure');
 
   api.addFile('editor/helpers..');
   api.addFile('editor/helpers/drawcomponent');
+  api.addFile('editor/helpers/exposurevalue');
 
   api.addComponent('editor/assetinfo..');
   api.addComponent('editor/dialog..');
@@ -231,6 +233,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/window..');
   api.addComponent('editor/materials..');
   api.addComponent('editor/navigator..');
+  api.addComponent('editor/environments..');
 
   api.addComponent('editor/references..');
   api.addComponent('editor/references/displaycomponent..');
@@ -341,7 +344,6 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/smoothshadingenabled');
   api.addFile('mesheditor/actions/resetcamera');
   api.addFile('mesheditor/actions/pbrenabled');
-  api.addFile('mesheditor/actions/exposure');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
@@ -351,7 +353,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/landmarks');
   api.addFile('mesheditor/helpers/smoothshadingenabled');
   api.addFile('mesheditor/helpers/pbrenabled');
-  api.addFile('mesheditor/helpers/exposurevalue');
+
 
   api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');
@@ -382,11 +384,6 @@ Package.onUse(function(api) {
 
   api.addFile('mesheditor/meshcanvas/renderer/sourceimage..');
   api.addFile('mesheditor/meshcanvas/renderer/sourceimage/material');
-
-  // Scene editor
-
-  api.addFile('sceneeditor..');
-  api.addComponent('sceneeditor/environments..');
 
   // Audio editor
 

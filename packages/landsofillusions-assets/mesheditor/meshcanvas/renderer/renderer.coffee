@@ -225,7 +225,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.outputEncoding = THREE.sRGBEncoding
     @renderer.toneMapping = THREE.LinearToneMapping
 
-    exposureValue = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ExposureValue
+    exposureValue = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
     @renderer.toneMappingExposure = exposureValue.exposure()
 
   _render: ->

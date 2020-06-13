@@ -2,9 +2,9 @@ AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SceneEditor.Environments extends FM.View
+class LOI.Assets.Editor.Environments extends FM.View
   # activeEnvironmentIndex: the index of the selected environment
-  @id: -> 'LandsOfIllusions.Assets.SceneEditor.Environments'
+  @id: -> 'LandsOfIllusions.Assets.Editor.Environments'
   @register @id()
 
   @environmentUploadContext = new LOI.Assets.Upload.Context
@@ -83,3 +83,24 @@ class LOI.Assets.SceneEditor.Environments extends FM.View
   onClickRemoveButton: (event) ->
     # TODO
     console.error "Removing of environments not implemented."
+
+  class @EnvironmentThumbnail extends AM.Component
+    @register 'LandsOfIllusions.Assets.Editor.Environments.EnvironmentThumbnail'
+
+    onCreated: ->
+      super arguments...
+
+      @interface = @ancestorComponentOfType FM.Interface
+
+      # Create the hdr image when URL changes.
+      @hdrImage = new ReactiveField null
+
+      @autorun (computation) =>
+        environment = @data()
+        exposureValue = @interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
+
+        hdrImage = new AM.HDRImage
+          source: environment.image.url
+          exposureValue: exposureValue
+
+        @hdrImage hdrImage
