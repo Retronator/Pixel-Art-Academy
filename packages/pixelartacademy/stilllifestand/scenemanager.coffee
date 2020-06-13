@@ -30,7 +30,7 @@ class PAA.StillLifeStand.SceneManager
       reflectivity: 0
       dithering: true
 
-    @skydome = new LOI.Engine.Skydome
+    @skydome = new LOI.Engine.Skydome.Procedural
       generateCubeTexture: true
       readColors: true
       dithering: true

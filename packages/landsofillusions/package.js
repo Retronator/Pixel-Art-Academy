@@ -103,11 +103,23 @@ Package.onUse(function(api) {
   api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
 
   api.addClientFile('engine/skydome..');
-  api.addMaterial('engine/skydome/material..');
-  api.addMaterial('engine/skydome/rendermaterial..');
-  api.addGlsl('engine/skydome/rendermaterial/rendermaterial-parameters-fragment');
-  api.addClientFile('engine/skydome/rendermaterial/rendermaterial-scattering');
-  api.addGlsl('engine/skydome/rendermaterial/rendermaterial-scattering-fragment');
+
+  api.addGlsl('engine/skydome/material/material-vertex');
+
+  api.addClientFile('engine/skydome/procedural..');
+
+  api.addClientFile('engine/skydome/procedural/material..');
+  api.addGlsl('engine/skydome/procedural/material/material-fragment');
+
+  api.addMaterial('engine/skydome/procedural/rendermaterial..');
+  api.addGlsl('engine/skydome/procedural/rendermaterial/rendermaterial-parameters-fragment');
+  api.addClientFile('engine/skydome/procedural/rendermaterial/rendermaterial-scattering');
+  api.addGlsl('engine/skydome/procedural/rendermaterial/rendermaterial-scattering-fragment');
+
+  api.addClientFile('engine/skydome/photo..');
+
+  api.addClientFile('engine/skydome/photo/material..');
+  api.addGlsl('engine/skydome/photo/material/material-fragment');
 
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/material');

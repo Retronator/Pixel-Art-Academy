@@ -16,9 +16,13 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
-    # Setup the PBR skydome.
-    @skydome = new LOI.Engine.Skydome
-    scene.add @skydome
+    # Setup the PBR skydomes.
+    @skydome =
+      procedural: new LOI.Engine.Skydome.Procedural
+      photo: new LOI.Engine.Skydome.Photo
+
+    scene.add @skydome.procedural
+    scene.add @skydome.photo
 
     # Setup default lights.
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
@@ -72,10 +76,27 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       # Update the skydome.
       meshCanvas = @meshCanvas()
 
-      if meshCanvas?.isRendered()
-        @skydome.updateTexture meshCanvas.renderer.renderer, lightDirection
+      if meshCanvas?.isRendered() and @skydome.procedural.visible
+        @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
 
       @scene.updated()
+
+    # Update environment.
+    @photoSkydomeUrl = new ComputedField =>
+      return unless meshData = @meshCanvas()?.meshData()
+
+      activeEnvironment = _.find meshData.environments, (environment) -> environment.active
+      activeEnvironment?.image.url
+
+    @autorun (computation) =>
+      photoSkydomeUrl = @photoSkydomeUrl()
+
+      if photoSkydomeUrl
+        @skydome.photo.loadFromUrl photoSkydomeUrl
+
+      # Enable the correct skydome.
+      @skydome.procedural.visible = not photoSkydomeUrl
+      @skydome.photo.visible = photoSkydomeUrl?
 
     # Apply uniforms to new objects when they get added.
     @autorun (computation) =>
@@ -102,7 +123,11 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
   destroy: ->
     super arguments...
 
-    @skydome.destroy()
+    @meshCanvas.stop()
+    @photoSkydomeUrl.stop()
+
+    @skydome.procedural.destroy()
+    @skydome.photo.destroy()
 
   getUniforms: ->
     return unless meshCanvas = @meshCanvas()

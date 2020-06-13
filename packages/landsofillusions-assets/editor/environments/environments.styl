@@ -3,7 +3,7 @@
 .landsofillusions-assets-editor-environments
   .environments-table
     .environment
-      &.active
+      &.selected
         td:not(.row-name)
           background atariGrey(2)
 
@@ -18,7 +18,7 @@
             &::placeholder
               color atariGrey(4)
 
-      .displayed
+      .active
         position relative
         width 15rem
         height 100%
@@ -27,7 +27,7 @@
           absolute-cover()
           cursor pointer
 
-          .displayed-checkbox
+          .active-checkbox
             display none
 
             &:checked + .icon

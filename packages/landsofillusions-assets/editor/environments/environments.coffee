@@ -3,7 +3,7 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.Editor.Environments extends FM.View
-  # activeEnvironmentIndex: the index of the selected environment
+  # selectedEnvironmentIndex: the index of the selected environment
   @id: -> 'LandsOfIllusions.Assets.Editor.Environments'
   @register @id()
 
@@ -28,44 +28,39 @@ class LOI.Assets.Editor.Environments extends FM.View
     @activeEnvironmentsData = new ComputedField =>
       @interface.getComponentDataForActiveFile @
 
-  activeClass: ->
+  selectedClass: ->
     environment = @currentData()
-    'active' if environment.index is @activeEnvironmentsData()?.get 'activeEnvironmentIndex'
+    'selected' if environment.index is @activeEnvironmentsData()?.get 'selectedEnvironmentIndex'
 
-  displayedCheckedAttribute: ->
+  activeCheckedAttribute: ->
     environment = @currentData()
-    'checked' if environment.displayed ? true
-
-  displayModeSelectedAttribute: ->
-    displayMode = @currentData()
-    environment = Template.parentData()
-
-    'selected' if environment.displayMode is displayMode.value
+    'checked' if environment.active
 
   showRemoveButton: ->
     # We can remove a environment if one is active.
-    @activeEnvironmentsData()?.get('activeEnvironmentIndex')?
+    @activeEnvironmentsData()?.get('selectedEnvironmentIndex')?
 
   # Events
 
   events: ->
     super(arguments...).concat
       'click .environment': @onClickEnvironment
-      'change .displayed-checkbox': @onChangeDisplayedCheckbox
-      'change .display-mode-select': @onChangeDisplayModeSelect
+      'change .active-checkbox': @onChangeActiveCheckbox
       'click .upload-button': @onClickUploadButton
       'click .remove-button': @onClickRemoveButton
 
   onClickEnvironment: (event) ->
     environment = @currentData()
-    @activeEnvironmentsData()?.set 'activeEnvironmentIndex', environment.index
+    @activeEnvironmentsData()?.set 'selectedEnvironmentIndex', environment.index
 
-  onChangeDisplayedCheckbox: (event) ->
+  onChangeActiveCheckbox: (event) ->
     environment = @currentData()
     assetData = @assetData()
 
     checked = $(event.target).is(':checked')
-    LOI.Assets.VisualAsset.updateEnvironment assetData.constructor.className, assetData._id, environment.image._id, displayed: checked
+    newActiveImageId = if checked then environment.image._id else null
+
+    LOI.Assets.VisualAsset.activateEnvironment assetData.constructor.className, assetData._id, newActiveImageId
 
   onClickUploadButton: (event) ->
     $fileInput = $('<input type="file"/>')
@@ -73,7 +68,7 @@ class LOI.Assets.Editor.Environments extends FM.View
     $fileInput.on 'change', (event) =>
       return unless file = $fileInput[0]?.files[0]
 
-      LOI.Assets.SceneEditor.Environments.environmentUploadContext.upload file, (url) =>
+      LOI.Assets.Editor.Environments.environmentUploadContext.upload file, (url) =>
         # Add environment to asset.
         assetData = @assetData()
         LOI.Assets.VisualAsset.addEnvironmentByUrl assetData.constructor.className, assetData._id, null, url
@@ -95,12 +90,15 @@ class LOI.Assets.Editor.Environments extends FM.View
       # Create the hdr image when URL changes.
       @hdrImage = new ReactiveField null
 
-      @autorun (computation) =>
+      @url = new ComputedField =>
         environment = @data()
+        environment.image.url
+
+      @autorun (computation) =>
         exposureValue = @interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
 
         hdrImage = new AM.HDRImage
-          source: environment.image.url
+          source: @url()
           exposureValue: exposureValue
 
         @hdrImage hdrImage

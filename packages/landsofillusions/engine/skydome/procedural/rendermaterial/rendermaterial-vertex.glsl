@@ -1,4 +1,4 @@
-// LandsOfIllusions.Engine.Skydome.RenderMaterial.vertex
+// LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.vertex
 attribute vec3 position;
 attribute vec2 uv;
 

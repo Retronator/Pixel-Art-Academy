@@ -1,5 +1,5 @@
-// LandsOfIllusions.Engine.Skydome.RenderMaterial.fragment
-#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.parametersFragment>
+// LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.fragment
+#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.parametersFragment>
 
 uniform sampler2D scatteringMap;
 

@@ -1,7 +1,7 @@
 AR = Artificial.Reality
 LOI = LandsOfIllusions
 
-class LOI.Engine.Skydome.RenderMaterial extends THREE.RawShaderMaterial
+class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMaterial
   constructor: (options) ->
     RGBSpectrum = AR.Optics.Spectrum.RGB
 
@@ -72,8 +72,8 @@ class LOI.Engine.Skydome.RenderMaterial extends THREE.RawShaderMaterial
         starEmission:
           value: starEmission
 
-      vertexShader: '#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.vertex>'
-      fragmentShader: options.fragmentShader or '#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.fragment>'
+      vertexShader: '#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.vertex>'
+      fragmentShader: options.fragmentShader or '#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.fragment>'
 
     if options?.scatteringMap
       parameters.uniforms.scatteringMap = value: options.scatteringMap

@@ -40,7 +40,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #   image: image document
   #     _id
   #     url
-  #   displayed: boolean if the reference is currently displayed
+  #   active: boolean if the environment is the one to be used to light the asset
   @Meta
     abstract: true
     fields: =>
@@ -73,6 +73,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   @reorderReferenceToTop: @method 'reorderReferenceToTop'
 
   @addEnvironmentByUrl: @method 'addEnvironmentByUrl'
+  @activateEnvironment: @method 'activateEnvironment'
 
   # Subscriptions
 

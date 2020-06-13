@@ -1,5 +1,5 @@
-// LandsOfIllusions.Engine.Skydome.RenderMaterial.Scattering.fragment
-#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.parametersFragment>
+// LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.Scattering.fragment
+#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.parametersFragment>
 
 #include <Artificial.Reality.Optics.Scattering>
 

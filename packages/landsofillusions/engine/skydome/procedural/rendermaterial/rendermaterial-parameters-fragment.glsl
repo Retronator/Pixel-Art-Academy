@@ -1,4 +1,4 @@
-// LandsOfIllusions.Engine.Skydome.RenderMaterial.parametersFragment
+// LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.parametersFragment
 precision highp float;
 
 #include <THREE>
