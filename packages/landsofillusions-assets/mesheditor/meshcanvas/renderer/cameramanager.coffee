@@ -28,7 +28,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
 
-    @_customMatrix = new THREE.Matrix4
     @_identityMatrix = new THREE.Matrix4
 
     # Dummy DOM element to run velocity on.
@@ -75,10 +74,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
     return unless cameraAngle.pixelSize
 
-    @_setMatrix @_customMatrix, cameraAngle.customMatrix
-
     cameraAngle.getProjectionMatrixForViewport viewportBounds, _camera.projectionMatrix
-    #_camera.projectionMatrix.premultiply @_customMatrix
     _camera.projectionMatrixInverse.getInverse _camera.projectionMatrix
 
   _setVector: (vector, vectorData = {}) ->
@@ -96,7 +92,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
     @_updateTargetCamera()
 
-    @_camera.matrix.multiply @_customMatrix
     @_camera.matrixWorldNeedsUpdate = true
 
     @camera.updated()
@@ -104,8 +99,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
   _updateTargetCamera: ->
     @_renderTargetCamera.matrix.copy @_camera.matrix
     @_renderTargetCamera.matrix.decompose @_renderTargetCamera.position, @_renderTargetCamera.quaternion, @_renderTargetCamera.scale
-
-    @_renderTargetCamera.matrix.multiply @_customMatrix
     @_renderTargetCamera.matrixWorldNeedsUpdate = true
 
     @camera.updated()
@@ -180,8 +173,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
           @_updateTargetCamera()
 
-          #@_camera.matrix.multiply @_customMatrix
-
   reset: ->
     return unless cameraAngle = @currentCameraAngle()
     cameraAngle.depend()
@@ -189,8 +180,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_setVector @_position, cameraAngle.position
     @_setVector @_target, cameraAngle.target
     @_setVector @_up, cameraAngle.up
-
-    @_setMatrix @_customMatrix, cameraAngle.customMatrix
 
     @_updateCamera()
 

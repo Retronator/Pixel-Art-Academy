@@ -17,7 +17,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #     x, y, z
   #   up: up direction of the camera
   #     x, y, z
-  #   customMatrix: array of 16 matrix elements
+  #   customMatrix: array of 9 matrix elements in row-major order
   # objects: array of scene objects
   #   name: name of the object
   #   visible: boolean if the object is rendered

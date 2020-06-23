@@ -19,6 +19,9 @@ class LOI.Assets.Mesh.CameraAngle
     @worldMatrix = new THREE.Matrix4
     @worldMatrixInverse = new THREE.Matrix4
 
+    @customMatrix4 = new THREE.Matrix4
+    @customMatrix4Inverse = new THREE.Matrix4
+
     @sourceData = {}
     @update data
 
@@ -33,14 +36,30 @@ class LOI.Assets.Mesh.CameraAngle
     _.merge @sourceData, update
     _.merge @, update
 
-    position = @_createVector @sourceData.position
-    target = @_createVector @sourceData.target
-    up = @_createVector @sourceData.up
+    if update.position or update.target or update.up
+      position = @_createVector @sourceData.position
+      target = @_createVector @sourceData.target
+      up = @_createVector @sourceData.up
 
-    @worldMatrix.lookAt position, target, up
-    @worldMatrix.setPosition position
+      @worldMatrix.lookAt position, target, up
+      @worldMatrix.setPosition position
 
-    @worldMatrixInverse.getInverse @worldMatrix if @worldMatrix.determinant()
+      @worldMatrixInverse.getInverse @worldMatrix if @worldMatrix.determinant()
+
+    # We need special handling for the custom matrix.
+    if update.customMatrix
+      for row in [0..3]
+        for column in [0..3]
+          # Source index is in row-major order.
+          sourceIndex = row * 3 + column
+
+          # Destination index is in column-major order.
+          destinationIndex = column * 4 + row
+
+          value = update.customMatrix[sourceIndex]
+          @customMatrix4.elements[destinationIndex] = value if value?
+
+      @customMatrix4Inverse.getInverse @customMatrix4 if @customMatrix4.determinant()
 
     # Signal change of the camera angle.
     @_updatedDependency.changed()
@@ -83,9 +102,9 @@ class LOI.Assets.Mesh.CameraAngle
 
     else
       # We have an orthographic projection.
-      target.makeOrthographic left, right, top, bottom, near, far
+      target.makeOrthographic left, right, top, bottom, -far / 2, far / 2
 
-    target
+    target.multiply @customMatrix4
 
   projectPoint: (screenPoint, worldPlane, xOffset = 0, yOffset = 0, projectedWorldPoint) ->
     @_setupProjectionRay xOffset, yOffset

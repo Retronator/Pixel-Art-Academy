@@ -51,7 +51,9 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
         @cameraAngle().update value
 
     @customMatrix = new LOI.Assets.MeshEditor.Matrix
-      load: => @cameraAngle().customMatrix
+      dimensions: 3
+      rowNames: ["x'", "y'", "z'"]
+      load: => @cameraAngle()?.customMatrix
       save: (value) => @cameraAngle().update customMatrix: value
 
     @sprite = new ComputedField =>
