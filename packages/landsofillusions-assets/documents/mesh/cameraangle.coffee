@@ -16,11 +16,18 @@ class LOI.Assets.Mesh.CameraAngle
   constructor: (@cameraAngles, @index, data) ->
     @_updatedDependency = new Tracker.Dependency
 
+    # The world matrix transforms from camera (view) space to world space.
     @worldMatrix = new THREE.Matrix4
-    @worldMatrixInverse = new THREE.Matrix4
+    
+    # The view matrix transforms from world space to view space.
+    @viewMatrix = new THREE.Matrix4
 
+    # The custom matrix transforms from view space to custom (distorted) view space.
     @customMatrix4 = new THREE.Matrix4
     @customMatrix4Inverse = new THREE.Matrix4
+
+    @worldToCustomTransform = new THREE.Matrix4
+    @customToWorldTransform = new THREE.Matrix4
 
     @sourceData = {}
     @update data
@@ -36,7 +43,10 @@ class LOI.Assets.Mesh.CameraAngle
     _.merge @sourceData, update
     _.merge @, update
 
-    if update.position or update.target or update.up
+    worldMatrixChanged = update.position or update.target or update.up
+    customMatrixChanged = update.customMatrix
+
+    if worldMatrixChanged
       position = @_createVector @sourceData.position
       target = @_createVector @sourceData.target
       up = @_createVector @sourceData.up
@@ -44,10 +54,10 @@ class LOI.Assets.Mesh.CameraAngle
       @worldMatrix.lookAt position, target, up
       @worldMatrix.setPosition position
 
-      @worldMatrixInverse.getInverse @worldMatrix if @worldMatrix.determinant()
+      @viewMatrix.getInverse @worldMatrix if @worldMatrix.determinant()
 
     # We need special handling for the custom matrix.
-    if update.customMatrix
+    if customMatrixChanged
       for row in [0..3]
         for column in [0..3]
           # Source index is in row-major order.
@@ -60,6 +70,10 @@ class LOI.Assets.Mesh.CameraAngle
           @customMatrix4.elements[destinationIndex] = value if value?
 
       @customMatrix4Inverse.getInverse @customMatrix4 if @customMatrix4.determinant()
+
+    if worldMatrixChanged or customMatrixChanged
+      @worldToCustomTransform.copy(@customMatrix4).multiply(@viewMatrix)
+      @customToWorldTransform.copy(@worldMatrix).multiply(@customMatrix4Inverse)
 
     # Signal change of the camera angle.
     @_updatedDependency.changed()
@@ -81,7 +95,8 @@ class LOI.Assets.Mesh.CameraAngle
 
   getProjectionMatrixForViewport: (viewportBounds, target) ->
     return unless @pixelSize
-    
+
+    # Picture plane offset says where in screen space the origin of the projection (camera position) is.
     offset = @picturePlaneOffset or x: 0, y: 0
 
     # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
@@ -90,19 +105,19 @@ class LOI.Assets.Mesh.CameraAngle
     # Note: We want the 3D Y direction to be up, so we need to reverse it (it goes down in screen space).
     top = -(viewportBounds.top - 0.5 + offset.y) * @pixelSize
     bottom = -(viewportBounds.bottom - 0.5 + offset.y) * @pixelSize
-    near = @pixelSize
-    far = 1000
 
     target ?= new THREE.Matrix4
 
     if @picturePlaneDistance
       # We have a perspective projection.
-      near *= @picturePlaneDistance
+      near = @picturePlaneDistance
+      far = @picturePlaneDistance * 10000
       target.makePerspective left, right, top, bottom, near, far
 
     else
       # We have an orthographic projection.
-      target.makeOrthographic left, right, top, bottom, -far / 2, far / 2
+      halfSize = 500
+      target.makeOrthographic left, right, top, bottom, -halfSize, halfSize
 
     target.multiply @customMatrix4
 
@@ -126,10 +141,10 @@ class LOI.Assets.Mesh.CameraAngle
     projectedWorldPoints
 
   _setupProjectionRay: (xOffset, yOffset) ->
-    # The default is a ray from camera position shooting through the target.
+    # The default is a ray from camera position shooting in the -Z direction in custom view space.
     # Note: We need to create vectors from the data which is a plain object.
     _rayOrigin.copy @position
-    _rayDirection.copy(@target).sub _rayOrigin
+    _rayDirection.set(0, 0, -1).transformDirection @customToWorldTransform
 
     _xOffset = xOffset
     _yOffset = yOffset
@@ -142,7 +157,13 @@ class LOI.Assets.Mesh.CameraAngle
   _projectPoint: (screenPoint, worldPlane, projectedWorldPoint) ->
     # Transform the point from screen space to world, positioned on the picture plane.
     _worldPoint.set screenPoint.x + _xOffset, -(screenPoint.y + _yOffset), -(@picturePlaneDistance or 0)
-    _worldPoint.applyMatrix4 @worldMatrix
+
+    # Move from screen space (1 pixel = 1) to custom view space (1 pixel = pixel size).
+    _worldPoint.x *= @pixelSize
+    _worldPoint.y *= @pixelSize
+    
+    # Move from custom view space to world space
+    _worldPoint.applyMatrix4 @customToWorldTransform
 
     if @picturePlaneDistance
       # In perspective the ray is shooting through the point in world space.
@@ -150,18 +171,22 @@ class LOI.Assets.Mesh.CameraAngle
       _rayDirection.copy _worldPoint
 
     else
-      # In orthogonal the ray is shooting from the point in world space.
-      _worldPoint.multiplyScalar @pixelSize
-      _rayOrigin.copy _worldPoint
+      # In orthogonal the ray is shooting from the point in world space,
+      # but we need to move it backwards behind the world plane.
+      _rayOrigin.copy(_rayDirection).multiplyScalar(-500).add _worldPoint
 
-    _ray.intersectPlane worldPlane, projectedWorldPoint
+    result = _ray.intersectPlane worldPlane, projectedWorldPoint
+
+    result
 
   unprojectPoint: (worldPoint) ->
     # Transform to screen space.
-    screenPoint = new THREE.Vector3().copy(worldPoint).applyMatrix4 @worldMatrixInverse
+    screenPoint = new THREE.Vector3().copy(worldPoint).applyMatrix4 @worldToCustomTransform
 
-    # Scale to picture plane.
-    screenPoint.multiplyScalar -@picturePlaneDistance / screenPoint.z
+    # Scale to screen space.
+    screenPoint.x /= @pixelSize
+    screenPoint.y /= @pixelSize
+    screenPoint.z = 0
 
     # Screen space has positive Y going down.
     screenPoint.y *= -1
@@ -176,7 +201,7 @@ class LOI.Assets.Mesh.CameraAngle
   getHorizon: (normal) ->
     # We transform the plane into camera space and put it to zero since all parallel planes will intersect in same spot.
     # Note: We need to clone the normal since the plane will directly use the given vector.
-    cameraPlane = new THREE.Plane(normal.clone()).applyMatrix4 @worldMatrixInverse
+    cameraPlane = new THREE.Plane(normal.clone()).applyMatrix4 @worldToCustomTransform
     cameraPlane.constant = 0
 
     horizonDirection = new THREE.Vector3().crossVectors normal, new THREE.Vector3(0, 0, 1)
@@ -185,7 +210,7 @@ class LOI.Assets.Mesh.CameraAngle
 
     horizonPoint = new THREE.Vector3()
     cameraPlane.projectPoint new THREE.Vector3(0, 0, -1), horizonPoint
-    horizonPoint.multiplyScalar -@picturePlaneDistance / horizonPoint.z
+    horizonPoint.multiplyScalar 1 / @pixelSize
     horizonPoint = new THREE.Vector2().copy horizonPoint
 
     # Apply plane picture offset.
@@ -216,16 +241,28 @@ class LOI.Assets.Mesh.CameraAngle
 
     pointToHorizonOrigin.cross(horizon.direction) / Math.abs denominator
 
-  getRaycaster: (screenPoint) ->
+  getRaycaster: (screenPoint, worldMatrix) ->
     raycaster = new THREE.Raycaster
-    @updateRaycaster raycaster, screenPoint
+    @updateRaycaster raycaster, screenPoint, worldMatrix
     raycaster
 
-  updateRaycaster: (raycaster, screenPoint) ->
+  updateRaycaster: (raycaster, screenPoint, worldMatrix) ->
     # The default is a ray from camera position shooting through the target.
     # Note: We need to create vectors from the data which is a plain object.
-    @_setVector _raycasterPosition, @position
-    @_setVector(_raycasterDirection, @target).sub _raycasterPosition
+    if worldMatrix
+      _raycasterPosition.x = worldMatrix.elements[12]
+      _raycasterPosition.y = worldMatrix.elements[13]
+      _raycasterPosition.z = worldMatrix.elements[14]
+
+      customToWorldTransform = new THREE.Matrix4().copy(worldMatrix).multiply @customMatrix4Inverse
+
+    else
+      @_setVector _raycasterPosition, @position
+
+      customToWorldTransform = @customToWorldTransform
+      worldMatrix = @worldMatrix
+
+    _raycasterDirection.set(0, 0 , -1).transformDirection customToWorldTransform
 
     # Apply picture plane offset.
     xOffset = @picturePlaneOffset?.x or 0
@@ -233,15 +270,23 @@ class LOI.Assets.Mesh.CameraAngle
 
     # Transform the point from screen space to world, positioned on the picture plane.
     _raycasterWorldPoint.set screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
-    _raycasterWorldPoint.applyMatrix4 @worldMatrix
+
+    # Move from screen space (1 pixel = 1) to custom view space (1 pixel = pixel size).
+    _raycasterWorldPoint.x *= @pixelSize
+    _raycasterWorldPoint.y *= @pixelSize
+
+    # Move from custom view space to world space
+    _raycasterWorldPoint.applyMatrix4 customToWorldTransform
 
     if @picturePlaneDistance
       # In perspective the ray is shooting through the point in world space.
-      _raycasterDirection = _raycasterWorldPoint.sub _raycasterPosition
+      _raycasterWorldPoint.sub _raycasterPosition
+      _raycasterDirection.copy _raycasterWorldPoint
 
     else
-      # In orthogonal the ray is shooting from the point in world space.
-      _raycasterPosition = _raycasterWorldPoint.multiplyScalar @pixelSize
+      # In orthogonal the ray is shooting from the point in world space,
+      # but we need to move it backwards behind the near plane.
+      _raycasterPosition.copy(_raycasterDirection).multiplyScalar(-500).add _raycasterWorldPoint
 
     _raycasterDirection.normalize()
     raycaster.set _raycasterPosition, _raycasterDirection

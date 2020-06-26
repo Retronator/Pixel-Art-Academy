@@ -142,7 +142,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       defaultViewport = left: -1, right: 1, bottom: -1, top: 1
       cameraAngleMatrix = new THREE.Matrix4
       cameraAngle.getProjectionMatrixForViewport defaultViewport, cameraAngleMatrix
-      cameraAngleMatrix.multiply cameraAngle.worldMatrixInverse
+      cameraAngleMatrix.multiply cameraAngle.viewMatrix
 
     renderSize: new THREE.Vector2 renderSize.width, renderSize.height
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4

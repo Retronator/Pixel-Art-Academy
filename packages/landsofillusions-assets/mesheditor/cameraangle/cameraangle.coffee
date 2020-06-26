@@ -112,6 +112,8 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
 
       @property = 'picturePlaneDistance'
       @type = AM.DataInputComponent.Types.Number
+      @customAttributes =
+        step: 0.01
 
   class @PixelSize extends @CameraProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngle.PixelSize'
@@ -122,4 +124,4 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
       @property = 'pixelSize'
       @type = AM.DataInputComponent.Types.Number
       @customAttributes =
-        step: 0.1
+        step: 0.001

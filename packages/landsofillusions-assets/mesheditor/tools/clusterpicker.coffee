@@ -52,8 +52,14 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
 
     canvasCoordinate = meshCanvas.mouse().canvasCoordinate()
     raycaster = meshCanvas.renderer.cameraManager.getRaycaster x: canvasCoordinate.x - 0.5, y: canvasCoordinate.y - 0.5
-    scene = meshCanvas.sceneHelper().scene()
 
+    # Pick also debug meshes (wireframe).
+    raycaster.layers.enable 3
+
+    # Update debug ray to show this pick.
+    meshCanvas.debugRay().set raycaster.ray.origin, raycaster.ray.direction
+
+    scene = meshCanvas.sceneHelper().scene()
     intersectionsForward = raycaster.intersectObjects scene.children, true
 
     # Since we don't use double-sided materials, we need to reverse the ray and intersect again.

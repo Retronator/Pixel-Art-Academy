@@ -28,6 +28,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     super arguments...
 
     @planeGrid = new ReactiveField null
+    @debugRay = new ReactiveField null
     @references = new ReactiveField null
 
     @$meshCanvas = new ReactiveField null
@@ -148,6 +149,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     # Initialize components.
     @planeGrid new @constructor.PlaneGrid @
+    @debugRay new @constructor.DebugRay @
 
     @references new LOI.Assets.Editor.References.DisplayComponent
       assetId: @meshId

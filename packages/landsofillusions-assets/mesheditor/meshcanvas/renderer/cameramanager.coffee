@@ -112,9 +112,21 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_updateCamera()
 
   _createDelta: (deltaX, deltaY) ->
-    scale = @renderer.meshCanvas.cameraAngle().pixelSize
+    cameraAngle = @renderer.meshCanvas.cameraAngle()
+    effectiveCanvasScale = @renderer.meshCanvas.camera().effectiveScale()
 
-    delta = new THREE.Vector3 deltaX * scale, deltaY * scale
+    if cameraAngle.picturePlaneDistance
+      # We have perspective projection, so we assume we're moving the mouse in the plane at the target of the camera.
+      distanceToTarget = @_position.distanceTo @_target
+
+      canvasPixelSizeAtTarget = cameraAngle.pixelSize * distanceToTarget / cameraAngle.picturePlaneDistance
+      factor = canvasPixelSizeAtTarget / effectiveCanvasScale
+
+    else
+      # We have orthogonal projection so we simply move based on pixel size.
+      factor = cameraAngle.pixelSize / effectiveCanvasScale
+
+    delta = new THREE.Vector3 deltaX * factor, deltaY * factor
     delta.applyQuaternion @_camera.quaternion
 
   moveAroundTarget: (deltaX, deltaY) ->
@@ -184,4 +196,4 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_updateCamera()
 
   getRaycaster: (picturePlanePoint) ->
-    @renderer.meshCanvas.cameraAngle()?.getRaycaster picturePlanePoint
+    @renderer.meshCanvas.cameraAngle()?.getRaycaster picturePlanePoint, @_camera.matrix

@@ -376,6 +376,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/meshcanvas/edges');
   api.addFile('mesheditor/meshcanvas/horizon');
   api.addFile('mesheditor/meshcanvas/planegrid');
+  api.addFile('mesheditor/meshcanvas/debugray');
 
   api.addFile('mesheditor/meshcanvas/renderer..');
   api.addFile('mesheditor/meshcanvas/renderer/cameramanager');
