@@ -1,8 +1,9 @@
+AE = Artificial.Everywhere
 AR = Artificial.Reality
 
 xyzCoordinates = ['x', 'y', 'z']
 
-# An RGB spectrum holds the sRGB linear RGB representation of the spectrum.
+# An RGB spectrum holds the (non-normalized) linear RGB representation of the spectrum.
 class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
   @ArrayLength: 3
 
@@ -16,15 +17,7 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
 
   getValue: (wavelength) ->
     # Return radiance in W / sr⋅m³
-    intensity = 0
-
-    xyz = @toXYZ()
-
-    for coordinate, index in xyzCoordinates
-      response = Artificial.Spectrum.Color.CIE1931.ColorMatchingFunctions[coordinate].getValue wavelength
-      intensity += response * xyz[coordinate]
-
-    intensity
+    throw new AE.NotImplementedException "RGB Spectrum sampling is not supported yet."
 
   toObject: ->
     r: @array[0]
@@ -35,7 +28,7 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
     new THREE.Vector3 @array[0], @array[1], @array[2]
 
   toXYZ: ->
-    Artificial.Spectrum.Color.SRGB.getXYZForLinearRGB @toObject()
+    Artificial.Spectrum.Color.SRGB.getXYZForRGB @toObject()
 
   copy: (spectrum) ->
     # If the spectrum is a matching RGB spectrum, we can simply copy the array.
@@ -51,7 +44,7 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
 
   _getRGBForSpectrum: (spectrum) ->
     xyz = Artificial.Spectrum.Color.CIE1931.getXYZForSpectrum spectrum
-    Artificial.Spectrum.Color.SRGB.getLinearRGBForXYZ xyz
+    Artificial.Spectrum.Color.SRGB.getRGBForXYZ xyz
 
   copyFactor: (spectrum) ->
     # If the spectrum is a matching RGB spectrum, we can simply copy the array.
@@ -59,10 +52,10 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
 
     # Convert the factor spectrum to XYZ.
     normalizedXYZ = Artificial.Spectrum.Color.CIE1931.getXYZFactorsForSpectrum spectrum
-    rgb = Artificial.Spectrum.Color.SRGB.getLinearRGBForNormalizedXYZ normalizedXYZ
-    @array[0] = rgb.r
-    @array[1] = rgb.g
-    @array[2] = rgb.b
+    normalizedRGB = Artificial.Spectrum.Color.SRGB.getRGBForXYZ normalizedXYZ
+    @array[0] = normalizedRGB.r
+    @array[1] = normalizedRGB.g
+    @array[2] = normalizedRGB.b
 
     return @
 

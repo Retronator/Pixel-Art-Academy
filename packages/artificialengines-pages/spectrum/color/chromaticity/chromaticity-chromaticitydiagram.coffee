@@ -20,8 +20,8 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
         rgbs.push r: i / 255, g: j / 255, b: 1
 
     for rgb in rgbs
-      linearRGB = AS.Color.SRGB.getLinearRGBForRGB rgb
-      xyz = AS.Color.SRGB.getXYZForLinearRGB linearRGB
+      linearRGB = AS.Color.SRGB.getNormalizedRGBForGammaRGB rgb
+      xyz = AS.Color.SRGB.getXYZForNormalizedRGB linearRGB
       chromaticity = AS.Color.CIE1931.getChromaticityForXYZ xyz
       @sRGBImage.context.fillStyle = "rgb(#{rgb.r * 255}, #{rgb.g * 255}, #{rgb.b * 255})"
 
@@ -130,9 +130,9 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
     context.drawImage @sRGBImage, getCanvasX(0), getCanvasY(1), 100, 100
     context.globalAlpha = 1
 
-    rXYZ = AS.Color.SRGB.getXYZForLinearRGB r: 1, g: 0, b: 0
-    gXYZ = AS.Color.SRGB.getXYZForLinearRGB r: 0, g: 1, b: 0
-    bXYZ = AS.Color.SRGB.getXYZForLinearRGB r: 0, g: 0, b: 1
+    rXYZ = AS.Color.SRGB.getXYZForNormalizedRGB r: 1, g: 0, b: 0
+    gXYZ = AS.Color.SRGB.getXYZForNormalizedRGB r: 0, g: 1, b: 0
+    bXYZ = AS.Color.SRGB.getXYZForNormalizedRGB r: 0, g: 0, b: 1
 
     context.beginPath()
 

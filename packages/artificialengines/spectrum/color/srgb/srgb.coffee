@@ -2,13 +2,13 @@ AS = Artificial.Spectrum
 AR = Artificial.Reality
 
 class AS.Color.SRGB
-  @NormalizedXYZtoLinearRGBTransform = new THREE.Matrix3().set(
+  @XYZtoRGBTransform = new THREE.Matrix3().set(
     3.2406, -1.5372, -0.4986,
     -0.9689, 1.8758, 0.0415,
     0.0557, -0.204, 1.057
   )
 
-  @LinearRGBToNormalizedXYZTransform = new THREE.Matrix3().set(
+  @RGBToXYZTransform = new THREE.Matrix3().set(
     0.4124, 0.3576, 0.1805,
     0.2126, 0.7152, 0.0722,
     0.0193, 0.1192, 0.9505
@@ -21,40 +21,46 @@ class AS.Color.SRGB
     d65Spectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
     1 / AS.Color.CIE1931.getYForSpectrum d65Spectrum
 
+  # XYZ -> RGB
+
   @getNormalizedXYZForXYZ: (xyz) ->
     new THREE.Vector3().copy(xyz).multiplyScalar(@xyzNormalizationFactor)
 
-  @getLinearRGBForXYZ: (xyz) ->
-    @getLinearRGBForNormalizedXYZ @getNormalizedXYZForXYZ xyz
+  @getNormalizedRGBForXYZ: (xyz) ->
+    @getRGBForXYZ @getNormalizedXYZForXYZ xyz
 
-  @getLinearRGBForNormalizedXYZ: (xyz) ->
-    rgbVector = new THREE.Vector3().copy(xyz).applyMatrix3 @NormalizedXYZtoLinearRGBTransform
+  @getRGBForXYZ: (xyz) ->
+    rgbVector = new THREE.Vector3().copy(xyz).applyMatrix3 @XYZtoRGBTransform
 
     r: rgbVector.x
     g: rgbVector.y
     b: rgbVector.z
 
-  @getXYZForLinearRGB: (linearRGB) ->
-    @getXYZForNormalizedXYZ @getNormalizedXYZForLinearRGB(linearRGB)
+  # RGB -> XYZ
 
-  @getNormalizedXYZForLinearRGB: (linearRGB) ->
-    new THREE.Vector3(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@LinearRGBToNormalizedXYZTransform)
+  @getXYZForNormalizedRGB: (linearRGB) ->
+    @getXYZForNormalizedXYZ @getXYZForRGB linearRGB
+
+  @getXYZForRGB: (linearRGB) ->
+    new THREE.Vector3(linearRGB.r, linearRGB.g, linearRGB.b).applyMatrix3(@RGBToXYZTransform)
 
   @getXYZForNormalizedXYZ: (xyz) ->
     new THREE.Vector3().copy(xyz).multiplyScalar(1 / @xyzNormalizationFactor)
 
-  @getRGBForLinearRGB: (linearRGB) ->
+  # Gamma
+
+  @getGammaRGBForNormalizedRGB: (linearRGB) ->
     r: @gamma linearRGB.r
     g: @gamma linearRGB.g
     b: @gamma linearRGB.b
 
-  @getRGBForXYZ: (xyz) ->
-    @getRGBForLinearRGB @getLinearRGBForXYZ xyz
+  @getGammaRGBForXYZ: (xyz) ->
+    @getGammaRGBForNormalizedRGB @getNormalizedRGBForXYZ xyz
 
   @gamma: (value) ->
     if value <= 0.0031308 then 323 * value / 25 else (211 * Math.pow(value, 5 / 12) - 11) / 200
 
-  @getLinearRGBForRGB: (rgb) ->
+  @getNormalizedRGBForGammaRGB: (rgb) ->
     r: @gammaInverse rgb.r
     g: @gammaInverse rgb.g
     b: @gammaInverse rgb.b

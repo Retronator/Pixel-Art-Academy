@@ -44,6 +44,10 @@ class AR.Optics.Spectrum.Array extends AR.Optics.Spectrum
     @array[index] = Math.exp value for value, index in @array
     return @
 
+  addConstant: (constant) ->
+    @array[index] += constant for index in [0...@array.length]
+    return @
+
   multiplyScalar: (scalar) ->
     @array[index] *= scalar for index in [0...@array.length]
     return @

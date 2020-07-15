@@ -78,11 +78,11 @@ class AS.Pages.Color.Chromaticity extends AM.Component
 
     @lightSourceLinearRGB = new ComputedField =>
       return unless xyz = @lightSourceXYZ()
-      AS.Color.SRGB.getLinearRGBForXYZ xyz
+      AS.Color.SRGB.getNormalizedRGBForXYZ xyz
 
     @lightSourceRGB = new ComputedField =>
       return unless linearRGB = @lightSourceLinearRGB()
-      rgb = AS.Color.SRGB.getRGBForLinearRGB linearRGB
+      rgb = AS.Color.SRGB.getGammaRGBForNormalizedRGB linearRGB
 
       # Scale to 0–255 range.
       rgb[color] = _.clamp Math.round(rgb[color] * 255), 0, 255 for color in ['r', 'g', 'b']
@@ -92,13 +92,13 @@ class AS.Pages.Color.Chromaticity extends AM.Component
     @lightSourceChromaticityRGB = new ComputedField =>
       return unless xyz = @lightSourceXYZ()
 
-      linearRGB = AS.Color.SRGB.getLinearRGBForXYZ xyz
+      linearRGB = AS.Color.SRGB.getNormalizedRGBForXYZ xyz
 
       # Normalize to highest component.
       maxComponent = _.max [linearRGB.r, linearRGB.g, linearRGB.b]
       linearRGB[component] = linearRGB[component] / maxComponent for component in ['r', 'g', 'b'] if maxComponent
 
-      rgb = AS.Color.SRGB.getRGBForLinearRGB linearRGB
+      rgb = AS.Color.SRGB.getGammaRGBForNormalizedRGB linearRGB
 
       # Scale to 0–255 range.
       rgb[component] = _.clamp Math.round(rgb[component] * 255), 0, 255 for component in ['r', 'g', 'b']

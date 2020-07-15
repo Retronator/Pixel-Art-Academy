@@ -1,0 +1,17 @@
+<template name="Artificial.Reality.Pages.Chemistry.Materials.Scattering">
+  <div class="artificial-reality-pages-chemistry-materials-scattering page">
+    <h1>Artificial Reality</h1>
+    <h2>Materials scattering simulation</h2>
+    <p>
+      Material: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.MaterialId}}<br/>
+      Surface image: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.SurfaceImageUrl}}<br/>
+      HQX magnification: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.SurfaceUpscaleFactor}} {{surfaceUpscaleFactor}}<br/>
+      Rays per frame: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.RaysCountPower}} {{raysCount}}<br/>
+      Scattering events: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.ScatteringEventsCount}} {{scatteringEventsCount}}<br/>
+      Beam width: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.BeamWidth}} {{beamWidth}}<br/>
+      <label>Schematic view: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.SchematicView}}<br/></label>
+      Exposure value: {{> Artificial.Reality.Pages.Chemistry.Materials.Scattering.ExposureValue}} {{exposureValue}}<br/>
+    </p>
+    <div class="render-area"></div>
+  </div>
+</template>

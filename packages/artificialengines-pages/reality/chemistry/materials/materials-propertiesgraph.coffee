@@ -183,7 +183,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       y = getCanvasY reflectanceAtNormalIncidence
 
       # Color area under histogram with wavelength color.
-      rgb = AS.Color.SRGB.getRGBForLinearRGB AS.Color.SRGB.getLinearRGBForNormalizedXYZ AS.Color.CIE1931.getRelativeXYZForWavelength wavelength
+      rgb = AS.Color.SRGB.getGammaRGBForNormalizedRGB AS.Color.SRGB.getRGBForXYZ AS.Color.CIE1931.getRelativeXYZForWavelength wavelength
       context.fillStyle = "rgba(#{rgb.r * 255}, #{rgb.g * 255}, #{rgb.b * 255}, 0.5)"
 
       height = getCanvasY(0) - y

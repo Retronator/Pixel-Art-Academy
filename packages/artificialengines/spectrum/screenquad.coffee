@@ -8,5 +8,4 @@ class AS.ScreenQuad extends THREE.Mesh
     @scene = new THREE.Scene
     @scene.add @
 
-    @camera = new THREE.OrthographicCamera -1, 1, 1, -1, 0.5, 1.5
-    @camera.position.z = 1
+    @camera = new THREE.OrthographicCamera -1, 1, 1, -1, 0, 1

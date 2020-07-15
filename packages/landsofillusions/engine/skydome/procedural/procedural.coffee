@@ -36,7 +36,8 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     @scene = new THREE.Scene()
     @scene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), @renderMaterial
 
-    @camera = new THREE.OrthographicCamera 0, 1, 0, 1, 0.5, 1.5
+    # Create a dummy camera since it's not used in the render material shader.
+    @camera = new THREE.Camera
 
     # Set material on the sphere.
     @material.map = @renderTarget.texture
