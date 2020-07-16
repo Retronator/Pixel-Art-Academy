@@ -1,6 +1,7 @@
 AM = Artificial.Mirage
 AR = Artificial.Reality
 AS = Artificial.Spectrum
+AC = Artificial.Control
 
 class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
   @initializeDataComponent()
@@ -10,6 +11,8 @@ class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
 
   onCreated: ->
     super arguments...
+
+    AC.Keyboard.initialize()
 
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -29,11 +32,11 @@ class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
     @scatteringEventsCount = new ReactiveField 6
 
     @lightRayDirection = new ReactiveField new THREE.Vector3(0, 1, 0).normalize()
-    @beamWidth = new ReactiveField 30
+    @beamWidth = new ReactiveField 1
 
     # Prepare rendering properties.
     @schematicView = new ReactiveField false
-    @exposureValue = new ReactiveField 0
+    @exposureValue = new ReactiveField -8
 
     @_initialize()
 
@@ -44,15 +47,47 @@ class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
 
   events: ->
     super(arguments...).concat
-      'mousemove .render-area canvas': @mouseMoveRenderAreaCanvas
+      'mousemove .render-area canvas': @onMouseMoveRenderAreaCanvas
 
-  mouseMoveRenderAreaCanvas: (event) ->
+  onMouseMoveRenderAreaCanvas: (event) ->
     return unless surfaceHelpers = @surfaceHelpers()
+    keyboardState = AC.Keyboard.getState()
 
-    mousePosition = new THREE.Vector3 event.offsetX, event.offsetY, 0
-    direction = surfaceHelpers.rayTarget.clone().sub(mousePosition).normalize()
+    if keyboardState.isKeyDown AC.Keys.m
+      mousePosition = new THREE.Vector3 event.offsetX, event.offsetY, 0
+      direction = surfaceHelpers.rayTarget.clone().sub(mousePosition).normalize()
 
-    @lightRayDirection direction
+      @lightRayDirection direction
+
+    else
+      surfaceCanvas = @surfaceCanvas()
+      size = @size()
+
+      surfaceCanvas.context.fillStyle = 'white'
+
+      if keyboardState.isKeyDown AC.Keys[1]
+        brushWidth = 1
+
+      else if keyboardState.isKeyDown AC.Keys[2]
+        brushWidth = 3
+
+      else if keyboardState.isKeyDown AC.Keys[3]
+        brushWidth = 5
+
+      else if keyboardState.isKeyDown AC.Keys[4]
+        brushWidth = 7
+
+      if keyboardState.isKeyDown AC.Keys.e
+        surfaceCanvas.context.fillStyle = 'black'
+
+      if brushWidth
+        x = Math.floor(event.offsetX / size.width * surfaceCanvas.width) + 0.5
+        y = Math.floor(event.offsetY / size.height * surfaceCanvas.height) + 0.5
+        h = brushWidth / 2
+
+        surfaceCanvas.context.fillRect x - h, y - h, brushWidth, brushWidth
+
+        @surfaceCanvas surfaceCanvas
 
   class @MaterialId extends @DataInputComponent
     @register 'Artificial.Reality.Pages.Chemistry.Materials.Scattering.MaterialId'
@@ -79,6 +114,11 @@ class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
         name: name
 
       _.sortBy options, 'name'
+
+    save: ->
+      super arguments...
+
+      @parentComponent.$('select').blur()
 
   class @SurfaceImageUrl extends @DataInputComponent
     @register 'Artificial.Reality.Pages.Chemistry.Materials.Scattering.SurfaceImageUrl'
