@@ -12,6 +12,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
       point: null
       direction: new THREE.Vector3().crossVectors @clusterA.plane.normal, @clusterB.plane.normal
 
+    @parallelClusters = false
+    @coplanarClusters = false
+
     @startRecomputation()
 
   startRecomputation: ->
@@ -149,18 +152,22 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
     @verticesMap[vertex.x] ?= {}
     @verticesMap[vertex.x][vertex.y] = vertex
 
-  process: ->
+  determineParallelClusters: ->
     # If direction has no length, it's a result of a cross product between two coplanar clusters.
-    @coplanarClusters = true unless @line.direction.length()
+    @parallelClusters = not @line.direction.length()
+
+  determineCoplanarClusters: ->
+    # If both clusters belong to the same cluster plane, they are coplanar.
+    @coplanarClusters = @clusterA._clusterPlane is @clusterB._clusterPlane
 
   startLinePointRecomputation: ->
     @previousLinePoint = @line.point
     @line.point = null
 
   calculateLinePoint: ->
-    # We assume both clusters have their planes fully determined, which means this edge is fully determined too.
+    # We assume both cluster planes have their planes fully determined, which means this edge is fully determined too.
     linePoint = new THREE.Vector3
-    @clusterA.getPlane().projectPoint @clusterB.plane.point, linePoint
+    @clusterA._clusterPlane.getPlane().projectPoint @clusterB._clusterPlane.plane.point, linePoint
     @setLinePoint linePoint
 
   setLinePoint: (linePoint) ->

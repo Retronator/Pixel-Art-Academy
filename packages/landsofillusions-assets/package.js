@@ -117,6 +117,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeedges');
   api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-projectclusterpoints');
   api.addFile('documents/mesh/object/solver/polyhedron/cluster');
+  api.addFile('documents/mesh/object/solver/polyhedron/clusterplane');
   api.addFile('documents/mesh/object/solver/polyhedron/edge');
 
   api.addFile('documents/audio..');

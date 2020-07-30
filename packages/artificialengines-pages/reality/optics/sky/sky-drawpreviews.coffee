@@ -12,8 +12,8 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
     exposure = 2 ** @exposureValue()
 
-    getRGBForXYZ = (xyz) =>
-      AS.Color.SRGB.getRGBForXYZ
+    getGammaRGBForXYZ = (xyz) =>
+      AS.Color.SRGB.getGammaRGBForXYZ
         x: xyz.x * exposure
         y: xyz.y * exposure
         z: xyz.z * exposure
@@ -26,7 +26,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
     for x in [0..360]
       for y in [0...@sidePreview.height]
-        rgb = getRGBForXYZ sidePreviewData[x][y]
+        rgb = getGammaRGBForXYZ sidePreviewData[x][y]
 
         pixelOffset = (x + y * previewImageData.width) * 4
 
@@ -57,7 +57,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
         azimuth = Math.abs Math.atan2 vy, vx
         azimuthStep = Math.round azimuth / Math.PI * azimuthDivisions
 
-        rgb = getRGBForXYZ hemispherePreviewData[inclinationDegrees][azimuthStep]
+        rgb = getGammaRGBForXYZ hemispherePreviewData[inclinationDegrees][azimuthStep]
 
         for ry in [y, 180 - y]
           pixelOffset = (x + ry * previewImageData.width) * 4
@@ -81,7 +81,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
         azimuthDivisions = hemispherePreviewData[inclinationDegrees].length - 1
         azimuthStep = Math.round azimuth / Math.PI * azimuthDivisions
 
-        rgb = getRGBForXYZ hemispherePreviewData[inclinationDegrees][azimuthStep]
+        rgb = getGammaRGBForXYZ hemispherePreviewData[inclinationDegrees][azimuthStep]
 
         pixelOffset = (x + y * previewImageData.width) * 4
 

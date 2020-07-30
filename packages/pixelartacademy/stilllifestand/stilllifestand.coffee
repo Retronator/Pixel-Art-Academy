@@ -66,7 +66,6 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         cursorPosition = @cursorPosition()
         lightDirection = new THREE.Vector3().subVectors(camera.position, cursorPosition).normalize()
         sunPosition.copy(lightDirection).multiplyScalar(-100)
-        sceneManager.bouncedLight.position.copy(sunPosition).negate()
 
       else
         # Read light direction from directional light position.
@@ -80,9 +79,6 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
       sceneManager.ambientLight.color.copy sceneManager.skydome.skyColor
       sceneManager.ambientLight.intensity = sceneManager.skydome.skyIntensity
-
-      sceneManager.bouncedLight.color.copy(sceneManager.skydome.starColor).multiplyScalar(sceneManager.skydome.starIntensity)
-      sceneManager.bouncedLight.color.add(sceneManager.skydome.skyColor.clone().multiplyScalar(sceneManager.skydome.skyIntensity))
 
       # Update sun helper position.
       sceneManager.sunHelper.position.copy(sunPosition).normalize().multiplyScalar(1000)
@@ -380,10 +376,20 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
   onKeyDown: (event) ->
     key = event.which
-    return unless key is AC.Keys.r
+    rendererManager = @rendererManager()
+    renderer = rendererManager.renderer
 
-    sceneManager = @sceneManager()
-    renderer = @rendererManager().renderer
+    switch key
+      when AC.Keys.r
+        sceneManager = @sceneManager()
 
-    for item in sceneManager.items() when item.renderObject.material.reflectivity > 0.01
-      item.renderObject.renderReflections renderer, sceneManager.scene
+        for item in sceneManager.items() when item.renderObject.material.reflectivity > 0.01
+          item.renderObject.renderReflections renderer, sceneManager.scene
+
+      when AC.Keys.equalSign
+        rendererManager.exposureValue rendererManager.exposureValue() + 1
+        console.log rendererManager.exposureValue()
+
+      when AC.Keys.dash
+        rendererManager.exposureValue rendererManager.exposureValue() - 1
+        console.log rendererManager.exposureValue()

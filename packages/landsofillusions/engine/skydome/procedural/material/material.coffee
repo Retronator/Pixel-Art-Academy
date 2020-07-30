@@ -13,7 +13,7 @@ class LOI.Engine.Skydome.Procedural.Material extends THREE.ShaderMaterial
         uvTransform:
           value: new THREE.Matrix3
         map:
-          value: null
+          value: new THREE.DataTexture
         sunDirection:
           value: new THREE.Vector3 0, -1, 0
 

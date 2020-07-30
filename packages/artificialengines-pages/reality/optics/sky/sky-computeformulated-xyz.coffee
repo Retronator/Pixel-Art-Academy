@@ -19,12 +19,16 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     mieScatteringEnabled = @mieScatteringEnabled()
 
     stepSize = @integrationStepSize() * 1e3
-    scaleHeight = 7994
-    maxStepCount = 50
+    scaleHeightRayleigh = 7994
+    scaleHeightMie = 1200
+    maxStepCount = 20
 
     # Prepare functions.
-    getDensityRatioAtHeight = (height) ->
-      Math.E ** (-height / scaleHeight)
+    getRayleighDensityRatioAtHeight = (height) ->
+      Math.E ** (-height / scaleHeightRayleigh)
+
+    getMieDensityRatioAtHeight = (height) ->
+      Math.E ** (-height / scaleHeightMie)
 
     getMolucelarNumberDensityForGasState = (gasState) =>
       amountOfSubstance = @AirClass.getAmountOfSubstanceForState gasState
@@ -36,6 +40,8 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     rayleighCoefficientFunction = AR.Optics.Scattering.getRayleighCoefficientFunction()
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
 
+    miePhaseFunction = AR.Optics.Scattering.getMiePhaseFunctionForAsymmetry 0.76
+
     getRayleighCoefficientSpectrumAtHeight = (height) =>
       heightHash = height >> 7
       rayleighCoefficientSpectrum = rayleighCoefficientSpectrumCache[heightHash]
@@ -43,7 +49,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
       roundedHeight = heightHash << 7
 
-      densityRatio = getDensityRatioAtHeight roundedHeight
+      densityRatio = getRayleighDensityRatioAtHeight roundedHeight
 
       gasState =
         temperature: AR.StandardTemperatureAndPressure.Temperature
@@ -60,6 +66,10 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
         rayleighCoefficientFunction refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor
 
       rayleighCoefficientSpectrumCache[heightHash]
+
+    getMieCoefficientAtHeight = (height) =>
+      densityRatio = getMieDensityRatioAtHeight height
+      21e-6 * densityRatio
 
     # Prepare color calculation method.
     totalRadiance = new SpectrumClass
@@ -94,7 +104,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       viewpoint.set 0, @earthRadius + height, 0
       sunViewAngle = sunRayDirection.angleTo viewRayDirection
 
-      if rayleighScatteringEnabled
+      if rayleighScatteringEnabled or mieScatteringEnabled
         # See how far the view ray reaches before it exits the atmosphere or hits the earth.
         if @_intersectsEarth viewpoint, viewRayDirection
           atmosphereRayLength = @_getLengthToEarth viewpoint, viewRayDirection
@@ -123,10 +133,12 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
           opticalDepthHeight = scatteringPosition.length() - @earthRadius
 
           # Calculate optical depth.
-          rayleighCoefficientSpectrumArray = getRayleighCoefficientSpectrumAtHeight(opticalDepthHeight).array
+          rayleighCoefficientSpectrumArray = getRayleighCoefficientSpectrumAtHeight(opticalDepthHeight).array if rayleighScatteringEnabled
+          mieCoefficient = getMieCoefficientAtHeight opticalDepthHeight if mieScatteringEnabled
 
           for j in [0...viewRayOpticalDepthSpectrumArray.length]
-            viewRayOpticalDepthSpectrumArray[j] += rayleighCoefficientSpectrumArray[j] * viewRaySpacing * 0.5
+            viewRayOpticalDepthSpectrumArray[j] += rayleighCoefficientSpectrumArray[j] * viewRaySpacing * 0.5 if rayleighScatteringEnabled
+            viewRayOpticalDepthSpectrumArray[j] += mieCoefficient * viewRaySpacing * 0.5 if mieScatteringEnabled
 
           # Set parameters where we're evaluating in-scattering.
           scatteringPosition.add viewRayDirectionQuarterStep
@@ -149,32 +161,46 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
               sunRayDistance = spacing * (i + 0.5)
               sunRaySamplePosition.copy(sunRayDirection).multiplyScalar(sunRayDistance).add(scatteringPosition)
               sunRaySampleHeight = sunRaySamplePosition.length() - @earthRadius
-              rayleighCoefficientSpectrumArray = getRayleighCoefficientSpectrumAtHeight(sunRaySampleHeight).array
+              rayleighCoefficientSpectrumArray = getRayleighCoefficientSpectrumAtHeight(sunRaySampleHeight).array if rayleighScatteringEnabled
+              mieCoefficient = getMieCoefficientAtHeight sunRaySampleHeight if mieScatteringEnabled
 
               for j in [0...opticalDepthSpectrumArray.length]
-                opticalDepthSpectrumArray[j] += rayleighCoefficientSpectrumArray[j] * spacing
+                opticalDepthSpectrumArray[j] += rayleighCoefficientSpectrumArray[j] * spacing if rayleighScatteringEnabled
+                opticalDepthSpectrumArray[j] += mieCoefficient * spacing if mieScatteringEnabled
 
             # Calculate the chance of scattering.
             scatteringHeight = scatteringPosition.length() - @earthRadius
-            rayleighCoefficientSpectrumAtSamplePoint = getRayleighCoefficientSpectrumAtHeight scatteringHeight
-            scatteringIntensityAtSunViewAngle = rayleighPhaseFunction sunViewAngle
+
+            if rayleighScatteringEnabled
+              rayleighCoefficientSpectrumAtSamplePoint = getRayleighCoefficientSpectrumAtHeight scatteringHeight
+              rayleighScatteringIntensityAtSunViewAngle = rayleighPhaseFunction sunViewAngle
+
+            if mieScatteringEnabled
+              mieCoefficientAtSamplePoint = getMieCoefficientAtHeight scatteringHeight
+              mieScatteringIntensityAtSunViewAngle = miePhaseFunction sunViewAngle
 
             # Calculate in-scattering.
-            scatteringContribution.copy(opticalDepthSpectrum).negate().exp().multiply(rayleighCoefficientSpectrumAtSamplePoint).multiplyScalar(scatteringIntensityAtSunViewAngle)
+            if rayleighScatteringEnabled
+              scatteringContribution.copy(opticalDepthSpectrum).negate().exp().multiply(rayleighCoefficientSpectrumAtSamplePoint).multiplyScalar(rayleighScatteringIntensityAtSunViewAngle)
+              totalScatteringContribution.add scatteringContribution
 
-            totalScatteringContribution.add scatteringContribution
+            if mieScatteringEnabled
+              scatteringContribution.copy(opticalDepthSpectrum).negate().exp().multiplyScalar(mieCoefficientAtSamplePoint * mieScatteringIntensityAtSunViewAngle)
+              totalScatteringContribution.add scatteringContribution
 
           # Set parameters where we're evaluating optical depth on the other side.
           scatteringPosition.add viewRayDirectionQuarterStep
           opticalDepthHeight = scatteringPosition.length() - @earthRadius
 
           # Calculate optical depth.
-          rayleighCoefficientSpectrumArray = getRayleighCoefficientSpectrumAtHeight(opticalDepthHeight).array
+          rayleighCoefficientSpectrumArray = getRayleighCoefficientSpectrumAtHeight(opticalDepthHeight).array if rayleighScatteringEnabled
+          mieCoefficient = getMieCoefficientAtHeight opticalDepthHeight if mieScatteringEnabled
 
           for j in [0...viewRayOpticalDepthSpectrumArray.length]
-            viewRayOpticalDepthSpectrumArray[j] += rayleighCoefficientSpectrumArray[j] * viewRaySpacing * 0.5
+            viewRayOpticalDepthSpectrumArray[j] += rayleighCoefficientSpectrumArray[j] * viewRaySpacing * 0.5 if rayleighScatteringEnabled
+            viewRayOpticalDepthSpectrumArray[j] += mieCoefficient * viewRaySpacing * 0.5 if mieScatteringEnabled
 
-          # Set parameters to end of interval
+          # Set parameters to end of interval.
           scatteringPosition.add viewRayDirectionQuarterStep
 
         for i in [0...totalScatteringContribution.array.length]
@@ -190,7 +216,8 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
             scatteringPosition.copy(viewRayDirection).multiplyScalar(distance).add(viewpoint)
             sampleHeight = scatteringPosition.length() - @earthRadius
             rayleighCoefficientSpectrum = getRayleighCoefficientSpectrumAtHeight sampleHeight
-            rayleighCoefficientSpectrum.array[coordinate]
+            mieCoefficient = getMieCoefficientAtHeight sampleHeight
+            rayleighCoefficientSpectrum.array[coordinate] + mieCoefficient
           ,
             0, atmosphereRayLength, stepSize
 

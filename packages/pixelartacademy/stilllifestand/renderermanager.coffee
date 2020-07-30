@@ -16,11 +16,13 @@ class PAA.StillLifeStand.RendererManager
     @renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
     @mainRenderTarget = new THREE.WebGLRenderTarget 1, 1,
+      type: THREE.FloatType
       minFilter: THREE.NearestFilter
       magFilter: THREE.NearestFilter
 
     # Create the screen quad with which to render the main image to the screen.
     @screenQuad = new AS.ScreenQuad @mainRenderTarget.texture
+    @screenQuad.material.dithering = true
 
     # Resize the renderer and render targets when canvas size changes.
     @stillLifeStand.autorun =>
@@ -37,6 +39,8 @@ class PAA.StillLifeStand.RendererManager
 
     @renderDebug = false
 
+    @exposureValue = new ReactiveField -9.5
+
   destroy: ->
     @renderer.dispose()
     @mainRenderTarget.dispose()
@@ -46,9 +50,8 @@ class PAA.StillLifeStand.RendererManager
     camera = @stillLifeStand.cameraManager().camera()
 
     # Render main pass.
-    @renderer.outputEncoding = THREE.sRGBEncoding
-    @renderer.toneMapping = THREE.ACESFilmicToneMapping
-    @renderer.toneMappingExposure = 2 ** 4.7
+    @renderer.outputEncoding = THREE.LinearEncoding
+    @renderer.toneMapping = THREE.NoToneMapping
 
     @renderer.setRenderTarget @mainRenderTarget
     @renderer.clear()
@@ -57,14 +60,13 @@ class PAA.StillLifeStand.RendererManager
 
     if @renderDebug
       # Render debug pass.
-      @renderer.outputEncoding = THREE.LinearEncoding
-      @renderer.toneMapping = THREE.NoToneMapping
       debugScene = @stillLifeStand.sceneManager().debugScene
       @renderer.render debugScene, camera
 
     # Render result to the screen.
     @renderer.outputEncoding = THREE.LinearEncoding
-    @renderer.toneMapping = THREE.NoToneMapping
+    @renderer.toneMapping = THREE.ACESFilmicToneMapping
+    @renderer.toneMappingExposure = 2 ** @exposureValue()
 
     @renderer.setRenderTarget null
     @renderer.render @screenQuad.scene, @screenQuad.camera

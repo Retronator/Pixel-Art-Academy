@@ -10,7 +10,8 @@ class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMateri
 
     # Prepare atmosphere properties.
     atmosphereBoundsHeight = 50e3
-    atmosphereScaleHeight = 7994
+    atmosphereRayleighScaleHeight = 7994
+    atmosphereMieScaleHeight = 1200
 
     AtmosphereClass = AR.Chemistry.Materials.Mixtures.Air.DryMixture
 
@@ -34,12 +35,16 @@ class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMateri
       rayleighCrossSectionFunction refractiveIndex, molecularNumberDensitySurface, wavelength, kingCorrectionFactor
 
     atmosphereRayleighCrossSection = rayleighCrossSectionSpectrum.toVector3()
+    atmosphereRayleighScatteringCoefficientSurface = atmosphereRayleighCrossSection.clone().multiplyScalar molecularNumberDensitySurface
+
+    atmosphereMieScatteringCoefficient = 5e-6 # 21e-6
+    atmosphereMieAsymmetry = 0.95 # 0.76
 
     # Prepare star properties.
     starAngularSizeHalf = 0.004625
 
     starEmissionSpectrum = AR.Chemistry.Materials.Mixtures.Stars.Sun.getEmissionSpectrumForTemperature 5778
-    starEmission = new RGBSpectrum().copy(starEmissionSpectrum).toVector3()
+    starEmission = new RGBSpectrum().copy(starEmissionSpectrum).toVector3().multiplyScalar(1 / 255)
 
     # Create the shader.
     parameters =
@@ -57,12 +62,18 @@ class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMateri
           value: atmosphereBoundsHeight
         atmosphereBoundsRadiusSquared:
           value: (planetRadius + atmosphereBoundsHeight) ** 2
-        atmosphereScaleHeight:
-          value: atmosphereScaleHeight
-        atmosphereRayleighCrossSection:
-          value: atmosphereRayleighCrossSection
-        atmosphereMolecularNumberDensitySurface:
-          value: molecularNumberDensitySurface
+
+        atmosphereRayleighScaleHeight:
+          value: atmosphereRayleighScaleHeight
+        atmosphereRayleighScatteringCoefficientSurface:
+          value: atmosphereRayleighScatteringCoefficientSurface
+
+        atmosphereMieScaleHeight:
+          value: atmosphereMieScaleHeight
+        atmosphereMieScatteringCoefficientSurface:
+          value: atmosphereMieScatteringCoefficient
+        atmosphereMieAsymmetry:
+          value: atmosphereMieAsymmetry
 
         # Star
         starDirection:

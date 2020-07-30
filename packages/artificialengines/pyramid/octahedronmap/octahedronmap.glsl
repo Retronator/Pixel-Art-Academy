@@ -1,4 +1,6 @@
 // Artificial.Pyramid.OctahedronMap
+#ifndef ARTIFICIAL_PYRAMID_OCTAHEDRONMAP
+#define ARTIFICIAL_PYRAMID_OCTAHEDRONMAP
 
 // Converts a direction to a position on the octahedron map. The resolution of the octahedron map can be specified in
 // which case the position on the hemisphere will be clamped to the centers of the pixels. This is to prevent bleed
@@ -51,3 +53,5 @@ vec3 OctahedronMap_positionToPointOnOctahedron(vec2 octahedronMapPosition) {
 vec3 OctahedronMap_positionToDirection(vec2 octahedronMapPosition) {
   return normalize(OctahedronMap_positionToPointOnOctahedron(octahedronMapPosition));
 }
+
+#endif

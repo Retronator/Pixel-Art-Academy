@@ -24,6 +24,10 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     scene.add @skydome.procedural
     scene.add @skydome.photo
 
+    @skydome.photo.rotation.y = Math.PI / 2
+
+    @skydome.procedural.layers.set 3
+
     # Setup default lights.
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
     scene.add ambientLight
@@ -32,7 +36,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
 
     directionalLight.castShadow = true
-    d = 20
+    d = 50
     
     shadow = directionalLight.shadow
     shadow.camera.left = -d
@@ -144,8 +148,16 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       cameraAngle.getProjectionMatrixForViewport defaultViewport, cameraAngleMatrix
       cameraAngleMatrix.multiply cameraAngle.viewMatrix
 
+    if currentCameraAngle = meshCanvas.cameraAngle()
+      cameraParallelProjection = not currentCameraAngle.picturePlaneDistance?
+
+      if cameraParallelProjection
+        cameraDirection = currentCameraAngle.getCameraDirection()
+
     renderSize: new THREE.Vector2 renderSize.width, renderSize.height
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
+    cameraParallelProjection: cameraParallelProjection or false
+    cameraDirection: cameraDirection or new THREE.Vector3
     directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
     directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: meshCanvas.renderer.preprocessingRenderTarget.texture

@@ -26,4 +26,9 @@ class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
       @material.uniforms.map.value = texture
       @material.needsUpdate = true
 
+      if @options.generateCubeTexture
+        @cubeSceneSphereMaterial.map = texture
+        @cubeSceneSphereMaterial.uniforms.map.value = texture
+        @cubeSceneSphereMaterial.needsUpdate = true
+
       @sphere.visible = true

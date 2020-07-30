@@ -12,49 +12,69 @@ void main() {
   vec3 starRayDirection = -starDirection;
   float starViewAngle = acos(dot(viewDirection, starRayDirection));
 
-  vec3 totalTransmission;
-  vec3 scatteringContribution;
+  vec3 totalRayleighAttenuationDensityFactor;
+  vec3 totalMieAttenuationDensityFactor;
 
   // See how far the view ray reaches before it exits the atmosphere or hits the planet.
   float viewRayLengthThroughAtmosphere = getLengthThroughAtmosphere(viewpoint, viewDirection);
   float viewRayStepSize = viewRayLengthThroughAtmosphere / float(viewRaySteps);
 
-  float viewRayTotalDensityRatio = 0.0;
+  float viewRayTotalRayleighDensityRatio = 0.0;
+  float viewRayTotalMieDensityRatio = 0.0;
 
   for (int viewRayStepCount = 0; viewRayStepCount < viewRaySteps; viewRayStepCount++) {
-    float viewRayStepMiddleDistance = (float(viewRayStepCount) - 0.5) * viewRayStepSize;
-    vec3 viewRayStepMiddle = viewpoint + viewDirection * viewRayStepMiddleDistance;
-    float viewRayStepMiddleHeight = length(viewRayStepMiddle) - planetRadius;
-    float viewRayStepMiddleDensityRatio = exp(-viewRayStepMiddleHeight / atmosphereScaleHeight);
-    viewRayTotalDensityRatio += viewRayStepMiddleDensityRatio / 2.0;
+    float viewRayStepMiddleDistance = (float(viewRayStepCount) + 0.5) * viewRayStepSize;
+    vec3 viewRayStepMiddlePosition = viewpoint + viewDirection * viewRayStepMiddleDistance;
+    float viewRayStepMiddleHeight = length(viewRayStepMiddlePosition) - planetRadius;
+    float viewRayStepMiddleRayleighDensityRatio = exp(-viewRayStepMiddleHeight / atmosphereRayleighScaleHeight);
+    float viewRayStepMiddleMieDensityRatio = exp(-viewRayStepMiddleHeight / atmosphereMieScaleHeight);
+    viewRayTotalRayleighDensityRatio += viewRayStepMiddleRayleighDensityRatio * 0.5;
+    viewRayTotalMieDensityRatio += viewRayStepMiddleMieDensityRatio * 0.5;
 
     // Calculate the density ratio along the star ray, if we can see the star.
-    if (!intersectsPlanet(viewRayStepMiddle, starRayDirection)) {
-      float starRayLengthThroughAtmosphere = getLengthThroughAtmosphere(viewRayStepMiddle, starRayDirection);
+    if (!intersectsPlanet(viewRayStepMiddlePosition, starRayDirection)) {
+      float starRayLengthThroughAtmosphere = getLengthThroughAtmosphere(viewRayStepMiddlePosition, starRayDirection);
       float starRayStepSize = starRayLengthThroughAtmosphere / float(starRaySteps);
 
-      float starRayTotalDensityRatio = 0.0;
+      float starRayTotalRayleighDensityRatio = 0.0;
+      float starRayTotalMieDensityRatio = 0.0;
 
       for (int starRayStepCount = 0; starRayStepCount < starRaySteps; starRayStepCount++) {
-        float starRayStepMiddleDistance = (float(starRayStepCount) - 0.5) * starRayStepSize;
-        vec3 starRayStepMiddle = viewRayStepMiddle + starRayDirection * starRayStepMiddleDistance;
-        float starRayStepMiddleHeight = length(starRayStepMiddle) - planetRadius;
-        float starRayStepMiddleDensityRatio = exp(-starRayStepMiddleHeight / atmosphereScaleHeight);
-        starRayTotalDensityRatio += starRayStepMiddleDensityRatio;
+        float starRayStepMiddleDistance = (float(starRayStepCount) + 0.5) * starRayStepSize;
+        vec3 starRayStepMiddlePosition = viewRayStepMiddlePosition + starRayDirection * starRayStepMiddleDistance;
+        float starRayStepMiddleHeight = length(starRayStepMiddlePosition) - planetRadius;
+        float starRayStepMiddleRayleighDensityRatio = exp(-starRayStepMiddleHeight / atmosphereRayleighScaleHeight);
+        float starRayStepMiddleMieDensityRatio = exp(-starRayStepMiddleHeight / atmosphereMieScaleHeight);
+        starRayTotalRayleighDensityRatio += starRayStepMiddleRayleighDensityRatio;
+        starRayTotalMieDensityRatio += starRayStepMiddleMieDensityRatio;
       }
+      
+      vec3 viewRayRayleighScatteringCoefficient = atmosphereRayleighScatteringCoefficientSurface * viewRayTotalRayleighDensityRatio;
+      float viewRayMieScatteringCoefficient = atmosphereMieScatteringCoefficientSurface * viewRayTotalMieDensityRatio;
+      vec3 viewRayOpticalDepth = viewRayStepSize * (viewRayRayleighScatteringCoefficient + viewRayMieScatteringCoefficient);
 
-      float densityRatioFactor = viewRayTotalDensityRatio * viewRayStepSize + starRayTotalDensityRatio * starRayStepSize;
-      vec3 rayOpticalDepth = atmosphereRayleighCrossSection * atmosphereMolecularNumberDensitySurface * densityRatioFactor;
-      scatteringContribution += exp(-rayOpticalDepth) * viewRayStepMiddleDensityRatio;
+      vec3 starRayRayleighScatteringCoefficient = atmosphereRayleighScatteringCoefficientSurface * starRayTotalRayleighDensityRatio;
+      float starRayMieScatteringCoefficient = atmosphereMieScatteringCoefficientSurface * starRayTotalMieDensityRatio;
+      vec3 starRayOpticalDepth = starRayStepSize * (starRayRayleighScatteringCoefficient + starRayMieScatteringCoefficient);
+
+      vec3 opticalDepth = viewRayOpticalDepth + starRayOpticalDepth;
+
+      totalRayleighAttenuationDensityFactor += exp(-opticalDepth) * viewRayStepMiddleRayleighDensityRatio;
+      totalMieAttenuationDensityFactor += exp(-opticalDepth) * viewRayStepMiddleRayleighDensityRatio;
     }
 
-    viewRayTotalDensityRatio += viewRayStepMiddleDensityRatio / 2.0;
+    viewRayTotalRayleighDensityRatio += viewRayStepMiddleRayleighDensityRatio * 0.5;
+    viewRayTotalMieDensityRatio += viewRayStepMiddleMieDensityRatio * 0.5;
   }
 
-  vec3 chanceOfScatteringFactor = atmosphereRayleighCrossSection * atmosphereMolecularNumberDensitySurface * Scattering_getRayleighPhaseFunction(starViewAngle);
-  totalTransmission += scatteringContribution * chanceOfScatteringFactor * viewRayStepSize;
+  vec3 chanceOfRayleighScatteringFactor = atmosphereRayleighScatteringCoefficientSurface * Scattering_getRayleighPhase(starViewAngle);
+  vec3 rayleighScatteringFactor = chanceOfRayleighScatteringFactor * totalRayleighAttenuationDensityFactor;
 
-  vec3 skyRadiance = starEmission * totalTransmission;
+  float chanceOfMieScatteringFactor = atmosphereMieScatteringCoefficientSurface * Scattering_getMiePhase(starViewAngle, atmosphereMieAsymmetry);
+  vec3 mieScatteringFactor = chanceOfMieScatteringFactor * totalMieAttenuationDensityFactor;
 
-  gl_FragColor = vec4(skyRadiance, 1);
+  vec3 totalScatteringContribution = viewRayStepSize * (rayleighScatteringFactor + mieScatteringFactor);
+  vec3 skyRadiance = starEmission * totalScatteringContribution;
+
+  gl_FragColor = vec4(skyRadiance, 1.0);
 }

@@ -19,10 +19,6 @@ class PAA.StillLifeStand.SceneManager
     @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
 
-    @bouncedLight = new THREE.HemisphereLight 0, 0, 0.1
-    @bouncedLight.position.copy(@directionalLight.position).negate()
-    @scene.add @bouncedLight
-
     @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
       color: 0xaaaaaa
       roughness: 1
@@ -97,7 +93,7 @@ class PAA.StillLifeStand.SceneManager
     @debugScene.add @skydomeReadColorQuad
 
     # Create sun helper.
-    @sunHelper = new THREE.Mesh new THREE.SphereBufferGeometry(100)
+    @sunHelper = new THREE.Mesh new THREE.SphereBufferGeometry(150)
     @sunHelper.visible = false
     @scene.add @sunHelper
 

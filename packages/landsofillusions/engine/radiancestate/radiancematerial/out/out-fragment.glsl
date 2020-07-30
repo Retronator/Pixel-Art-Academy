@@ -30,7 +30,7 @@ void main() {
   vec3 irradiance = sampleProbe(-inDirection, sampleLevel).rgb;
 
   // Calculate reflectance and absorptance of the material.
-  vec3 reflectance, absorptance;
+  vec3 reflectance;
 
   if (albedo.r < 0.0) {
     // We have a phyisicaly based material. Calculate reflectance and absorptance
@@ -48,15 +48,16 @@ void main() {
       k2 = extinctionCoefficient;
     }
 
-    FresnelEquations_getReflectanceAndAbsorptance(angleOfIncidence, n1, n2, k1, k2, reflectance, absorptance);
+    reflectance = FresnelEquations_getReflectance(angleOfIncidence, n1, n2, k1, k2);
   } else {
     // We have an ad-hoc material. Calculate reflectance and absorptance based on
     // the albedo and Schlick's approximation instead of actual Fresnel equations.
     // TODO: Uncomment to use Schlick's approximation when specular reflections are implemented.
     // reflectance = mix(albedo, vec3(1.0), pow(1.0 - cosAngleOfIncidnce, 5.0));
     reflectance = albedo;
-    absorptance = 1.0 - reflectance;
   }
+
+  vec3 absorptance = 1.0 - reflectance;
 
   // Output reflected light.
   vec3 outputRadiance = irradiance / hemisphereSolidAngle * reflectance;

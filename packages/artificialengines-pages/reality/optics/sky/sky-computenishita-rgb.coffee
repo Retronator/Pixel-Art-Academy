@@ -58,7 +58,9 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       viewpoint.set 0, @earthRadius + height, 0
       sunViewAngle = sunRayDirection.angleTo viewRayDirection
 
-      if @_intersectsEarth viewpoint, viewRayDirection
+      intersectsEarth = @_intersectsEarth viewpoint, viewRayDirection
+
+      if intersectsEarth
         atmosphereRayLength = @_getLengthToEarth viewpoint, viewRayDirection
 
       else
@@ -104,15 +106,14 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
         totalTransmission.add(scatteringContribution)
 
       # Include direct sun.
-      if directLightEnabled and Math.abs(sunViewAngle) < AR.Degrees 0.53
+      if directLightEnabled and Math.abs(sunViewAngle) < AR.Degrees(0.53) and not intersectsEarth
         viewRayTotalMolecularNumberDensity = molecularNumberDensitySurface * viewRayTotalDensityRatio
-        transmission.copy(rayleighCrossSection).multiplyScalar(-viewRayStepSize * viewRayTotalMolecularNumberDensity)
-        transmission.exp()
+        transmission.copy(rayleighCrossSection).multiplyScalar(-viewRayStepSize * viewRayTotalMolecularNumberDensity).exp()
         totalTransmission.add(transmission)
 
       totalRadiance.copy(emissionSpectrum).multiply(totalTransmission)
 
-      Artificial.Spectrum.Color.SRGB.getXYZForLinearRGB
+      Artificial.Spectrum.Color.SRGB.getXYZForRGB
         r: totalRadiance.x
         g: totalRadiance.y
         b: totalRadiance.z

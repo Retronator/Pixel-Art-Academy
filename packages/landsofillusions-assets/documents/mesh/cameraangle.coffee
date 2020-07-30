@@ -121,6 +121,11 @@ class LOI.Assets.Mesh.CameraAngle
 
     target.multiply @customMatrix4
 
+  getCameraDirection: (target) ->
+    target ?= new THREE.Vector3
+    target.set(0, 0 , -1).transformDirection @customToWorldTransform
+    target
+
   projectPoint: (screenPoint, worldPlane, xOffset = 0, yOffset = 0, projectedWorldPoint) ->
     @_setupProjectionRay xOffset, yOffset
 

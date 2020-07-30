@@ -11,6 +11,7 @@ class AR.Pages.Optics.Sky extends AM.Component
   @Methods:
     Nishita: 'Nishita'
     NishitaRGB: 'NishitaRGB'
+    ScratchapixelRGB: 'ScratchapixelRGB'
     Formulated: 'Formulated'
     FormulatedXYZ: 'FormulatedXYZ'
     FormulatedRGB: 'FormulatedRGB'
@@ -28,16 +29,16 @@ class AR.Pages.Optics.Sky extends AM.Component
     @atmosphereBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius + atmosphereBoundsHeight
     @earthBoundingSphere = new THREE.Sphere new THREE.Vector3(), @earthRadius - 1
 
-    @method = new ReactiveField @constructor.Methods.NishitaRGB
+    @method = new ReactiveField @constructor.Methods.FormulatedRGB
 
-    @exposureValue = new ReactiveField 1
-    @integrationStepSize = new ReactiveField 10
+    @exposureValue = new ReactiveField 3
+    @integrationStepSize = new ReactiveField 3
 
     @directLightEnabled = new ReactiveField true
     @rayleighScatteringEnabled = new ReactiveField true
-    @mieScatteringEnabled = new ReactiveField false
+    @mieScatteringEnabled = new ReactiveField true
 
-    @sunAngleDegrees = new ReactiveField 90
+    @sunAngleDegrees = new ReactiveField 30
     @hemispherePreviewHeight = new ReactiveField 0
 
   onRendered: ->
@@ -170,6 +171,7 @@ class AR.Pages.Optics.Sky extends AM.Component
       names =
         Nishita: 'Nishita et al.'
         NishitaRGB: 'Nishita et al. (RGB space)'
+        ScratchapixelRGB: 'Scratchapixel (RGB space)'
         Formulated: 'Formulated'
         FormulatedXYZ: 'Formulated (XYZ space)'
         FormulatedRGB: 'Formulated (RGB space)'

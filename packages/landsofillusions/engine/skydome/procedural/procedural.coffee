@@ -3,13 +3,13 @@ AR = Artificial.Reality
 AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 
-_readColorsArray = new Float32Array 8
+_readColorsArray = new Float32Array 9 * 2 * 4
 
 class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
   @worldToSkydomeMatrix: new THREE.Matrix4().makeRotationX(Math.PI / 2)
 
   constructor: (options = {}) ->
-    options.scatteringResolution ?= 128
+    options.scatteringResolution ?= 256
     options.resolution ?= 1024
 
     super options
@@ -43,9 +43,13 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     @material.map = @renderTarget.texture
     @material.uniforms.map.value = @renderTarget.texture
 
+    if @options.generateCubeTexture
+      @cubeSceneSphereMaterial.map = @renderTarget.texture
+      @cubeSceneSphereMaterial.uniforms.map.value = @renderTarget.texture
+
     if @options.readColors
       # Prepare for reading generated sky colors.
-      @readColorsRenderTarget = new THREE.WebGLRenderTarget 2, 1,
+      @readColorsRenderTarget = new THREE.WebGLRenderTarget 6, 3,
         type: THREE.FloatType
         magFilter: THREE.NearestFilter
         minfilter: THREE.NearestFilter
@@ -66,9 +70,6 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
 
       @readColorsCamera = new THREE.OrthographicCamera -2, 2, 1, -1, 0.5, 1.5
       @readColorsCamera.position.z = 1
-
-      @skySpectrum = new AR.Optics.Spectrum.RGB
-      @starSpectrum = new AR.Optics.Spectrum.RGB
 
       @skyColor = new THREE.Color
       @starColor = new THREE.Color
@@ -127,26 +128,50 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
       renderer.setRenderTarget @readColorsRenderTarget
       renderer.render @readColorsScene, @readColorsCamera
 
-      renderer.readRenderTargetPixels @readColorsRenderTarget, 0, 0, 2, 1, _readColorsArray
+      renderer.readRenderTargetPixels @readColorsRenderTarget, 0, 0, 6, 3, _readColorsArray
 
-      @skySpectrum.array[i] = _readColorsArray[i] for i in [0..2]
-      @skyColor.setRGB(_readColorsArray[0], _readColorsArray[1], _readColorsArray[2]).normalize()
+      # Take the average of the 8 darkest pixels in the (0, 0)–(2, 2) range for sky color.
+      # We do this to avoid the pixel that has a strong contribution of mie scattering.
+      @skyColor.set 0
+      brightestSample = null
 
-      skyIlluminance = AS.Color.CIE1931.getLuminanceForSpectrum(@skySpectrum) * 0.015
+      for x in [0..2]
+        for y in [0..2]
+          pixelOffset = (x + y * 6) * 4
+          skySample =
+            r: _readColorsArray[pixelOffset]
+            g: _readColorsArray[pixelOffset + 1]
+            b: _readColorsArray[pixelOffset + 2]
+
+          @skyColor.add skySample
+
+          if skySample.g > (brightestSample?.g or 0)
+            brightestSample = skySample
+
+      @skyColor.sub brightestSample
+      @skyColor.multiplyScalar 1 / 8
+      skyXYZ = AS.Color.SRGB.getXYZForRGB @skyColor
+      @skyColor.normalize()
+
+      skyLuminance = AS.Color.CIE1931.getLuminanceForY(skyXYZ.y)
+      skyIlluminance = skyLuminance * 0.01
+
       @skyIntensity = skyIlluminance
 
       if starIsUnderHorizon
         @starColor.set 0
-        @starSpectrum.clear()
+        starIlluminance = 0
 
       else
-        @starColor.setRGB(_readColorsArray[4], _readColorsArray[5], _readColorsArray[6]).normalize()
-        @starSpectrum.array[i] = _readColorsArray[4 + i] for i in [0..2]
+        # Read pixel (4, 1) for sun's color.
+        @starColor.setRGB _readColorsArray[40], _readColorsArray[41], _readColorsArray[42]
+        starXYZ = AS.Color.SRGB.getXYZForRGB @starColor
+        @starColor.normalize()
 
-      starIlluminance = AS.Color.CIE1931.getLuminanceForSpectrum(@starSpectrum) * 6.807e-5 * 8
+        starLuminance = AS.Color.CIE1931.getLuminanceForY(starXYZ.y)
+        starAngularDiameter = 9.310e-3 # Sun
+        starSolidAngle = 2 * Math.PI * (1 - Math.cos starAngularDiameter / 2)
+
+        starIlluminance = starLuminance * starSolidAngle
+
       @starIntensity = starIlluminance
-
-  destroy: ->
-    super arguments...
-
-    @renderTarget.dispose()

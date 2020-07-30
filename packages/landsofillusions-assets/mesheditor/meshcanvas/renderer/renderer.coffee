@@ -185,7 +185,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
               return unless radianceState = engineCluster.radianceState()
 
               # We should update one radiance state per 10×10 cluster pixels.
-              updatesCount = Math.ceil radianceState.probeMap.pixelsCount / 100
+              updatesCount = Math.max 0.1, radianceState.probeMap.pixelsCount / 100
 
               if updatesCount < 1
                 updatesCount = if updatesCount > Math.random() then 1 else 0

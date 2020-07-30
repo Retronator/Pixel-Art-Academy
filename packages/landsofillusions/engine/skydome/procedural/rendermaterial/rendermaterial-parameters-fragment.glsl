@@ -11,9 +11,13 @@ uniform float planetRadiusSquared;
 
 uniform float atmosphereBoundsHeight;
 uniform float atmosphereBoundsRadiusSquared;
-uniform float atmosphereScaleHeight;
-uniform vec3 atmosphereRayleighCrossSection;
-uniform float atmosphereMolecularNumberDensitySurface;
+
+uniform float atmosphereRayleighScaleHeight;
+uniform vec3 atmosphereRayleighScatteringCoefficientSurface;
+
+uniform float atmosphereMieScaleHeight;
+uniform float atmosphereMieScatteringCoefficientSurface;
+uniform float atmosphereMieAsymmetry;
 
 uniform vec3 starEmission;
 uniform vec3 starDirection;

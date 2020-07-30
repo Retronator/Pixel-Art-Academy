@@ -38,8 +38,8 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     clusters = []
     pixelCoordinate = meshCanvas.mouse().pixelCoordinate()
 
-    for object in mesh.objects.getAll()
-      for layer in object.layers.getAll()
+    for object in mesh.objects.getAll() when object.visible()
+      for layer in object.layers.getAll() when layer.visible()
         picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
 
         clusterId = picture.getClusterIdForPixel pixelCoordinate.x, pixelCoordinate.y

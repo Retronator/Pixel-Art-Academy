@@ -78,6 +78,7 @@ Package.onUse(function(api) {
   api.addFile('reality/optics/sky/sky-computepreviewdata');
   api.addFile('reality/optics/sky/sky-computenishita');
   api.addFile('reality/optics/sky/sky-computenishita-rgb');
+  api.addFile('reality/optics/sky/sky-computescratchapixel-rgb');
   api.addFile('reality/optics/sky/sky-computeformulated');
   api.addFile('reality/optics/sky/sky-computeformulated-xyz');
   api.addFile('reality/optics/sky/sky-computeformulated-rgb');
