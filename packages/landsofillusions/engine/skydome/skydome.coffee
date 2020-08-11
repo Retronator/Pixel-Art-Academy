@@ -30,8 +30,3 @@ class LOI.Engine.Skydome extends AS.RenderObject
       renderer.outputEncoding = THREE.LinearEncoding
       renderer.toneMapping = THREE.NoToneMapping
       @cubeCamera.update renderer, @cubeScene
-
-  destroy: ->
-    super arguments...
-
-    @cubeCamera.dispose()

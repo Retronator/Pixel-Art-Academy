@@ -133,6 +133,8 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
 
   RA.authorizeAdmin()
 
+  data.lastEditTime = new Date
+
   # Update managed fields.
   LOI.Assets.Mesh.documents.update meshId, $set: data
 

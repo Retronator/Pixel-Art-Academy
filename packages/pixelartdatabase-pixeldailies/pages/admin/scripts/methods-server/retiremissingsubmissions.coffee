@@ -23,15 +23,20 @@ Meteor.methods
         HTTP.call 'HEAD', submission.images[0].imageUrl
 
       catch error
-        console.log "submission with index", index, "returned error", error.response.statusCode
+        if error.response
+          console.log "Submission with index", index, "returned error", error.response.statusCode
 
-        # Only react to 404 Not Found errors.
-        if error.response.statusCode is 404
-          PADB.PixelDailies.Submission.documents.update submission._id,
-            $set:
-              processingError: PADB.PixelDailies.Submission.ProcessingError.ImagesNotFound
+          # Only react to 404 Not Found errors.
+          if error.response.statusCode is 404
+            PADB.PixelDailies.Submission.documents.update submission._id,
+              $set:
+                processingError: PADB.PixelDailies.Submission.ProcessingError.ImagesNotFound
 
-          count++
+            count++
+
+        else
+          console.log "Unknown error for submission", submission._id, error
+          throw error
 
       console.log "processed", index + 1, "so far" unless (index + 1) % 100
 
