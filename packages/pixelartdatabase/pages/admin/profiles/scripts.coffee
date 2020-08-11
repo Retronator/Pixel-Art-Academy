@@ -12,20 +12,20 @@ class PADB.Pages.Admin.Profiles.Scripts extends Artificial.Mummification.Admin.C
   events: ->
     super(arguments...).concat
       'click .refresh-all-button': @onClickRefreshAllButton
-      'click .refresh-one-hour-button': @onClickRefreshOneHourButton
+      'click .refresh-one-day-button': @onClickRefreshOneDayButton
       'click .twitter-refresh-all-button': @onClickTwitterRefreshAllButton
-      'click .twitter-refresh-one-hour-button': @onClickTwitterRefreshOneHourButton
+      'click .twitter-refresh-one-day-button': @onClickTwitterRefreshOneDayButton
 
   onClickRefreshAllButton: (event) ->
     @constructor.refreshAll()
 
-  onClickRefreshOneHourButton: (event) ->
-    oneHourAgo = new Date Date.now() - 60 * 1000 * 1000
-    @constructor.refreshAll oneHourAgo
+  onClickRefreshOneDayButton: (event) ->
+    oneDayAgo = new Date Date.now() - 60 * 1000 * 1000 * 24
+    @constructor.refreshAll oneDayAgo
 
   onClickTwitterRefreshAllButton: (event) ->
     @constructor.twitterRefreshAll()
 
-  onClickTwitterRefreshOneHourButton: (event) ->
-    oneHourAgo = new Date Date.now() - 60 * 1000 * 1000
-    @constructor.twitterRefreshAll oneHourAgo
+  onClickTwitterRefreshOneDayButton: (event) ->
+    oneDayAgo = new Date Date.now() - 60 * 1000 * 1000 * 24
+    @constructor.twitterRefreshAll oneDayAgo

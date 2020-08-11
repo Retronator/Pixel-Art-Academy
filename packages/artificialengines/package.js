@@ -4,7 +4,7 @@ Package.describe({
 });
 
 Npm.depends({
-  twit: '2.2.9',
+  twit: '2.2.11',
   stripe: '5.1.1',
   patreon: '0.4.1',
   'tumblr.js': '1.1.1',

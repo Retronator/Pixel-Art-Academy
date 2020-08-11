@@ -8,7 +8,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2017]
     position: ['70%', '100%']
     author: 'MarcoValeKaz'
   ,
-    # This one appears on the about page
     url: 'https://pbs.twimg.com/media/C1XpVnQXEAAiNuD.png'
     position: ['30%', '0%']
     author: 'vierbit'

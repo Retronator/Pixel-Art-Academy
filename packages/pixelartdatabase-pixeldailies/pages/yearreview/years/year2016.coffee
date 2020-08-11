@@ -8,7 +8,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2016]
     position: ['0%', '50%']
     author: 'skittlefuck'
   ,
-    # This one appears on the about page
     url: 'https://pbs.twimg.com/media/Cecn8oIW8AAK6uS.jpg'
     position: ['0%', '100%']
     author: 'orangemagik'
