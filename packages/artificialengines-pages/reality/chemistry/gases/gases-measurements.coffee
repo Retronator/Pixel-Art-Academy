@@ -56,7 +56,7 @@ class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
       wavelength: 4579 * AR.Angstrom
       rayleighScatteringCrossSection: 10.13e-31
     ]
-    "#{AR.Chemistry.Materials.Elements.CarbonDioxide.id()}": [
+    "#{AR.Chemistry.Materials.Compounds.CarbonDioxide.id()}": [
       wavelength: 6328 * AR.Angstrom
       rayleighScatteringCrossSection: 7.28e-31
     ,

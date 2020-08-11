@@ -15,4 +15,7 @@ class AS.Color.CIE1931.ColorMatchingFunctions
     @y = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5 values[1]
     @z = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5 values[2]
 
-    @yIntegral = _.sum values[1]
+    @integrals =
+      x: _.sum values[0]
+      y: _.sum values[1]
+      z: _.sum values[2]

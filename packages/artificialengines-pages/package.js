@@ -4,7 +4,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'archiver': '4.0.1'
+  'archiver': '4.0.1',
+  'bitmap-sdf': '1.0.3'
 });
 
 Package.onUse(function(api) {
@@ -46,6 +47,19 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/materials-reflectancepreview');
   api.addFile('reality/chemistry/materials/materials-dispersionpreview');
 
+  api.addComponent('reality/chemistry/materials/scattering..');
+  api.addFile('reality/chemistry/materials/scattering/scattering-draw');
+  api.addFile('reality/chemistry/materials/scattering/scattering-rayproperties');
+  api.addFile('reality/chemistry/materials/scattering/scattering-resources');
+  api.addFile('reality/chemistry/materials/scattering/scattering-surface');
+  api.addFile('reality/chemistry/materials/scattering/scattering-initialize');
+  api.addGlsl('reality/chemistry/materials/scattering/uniforms');
+  api.addMaterial('reality/chemistry/materials/scattering/displaymaterial..');
+  api.addMaterial('reality/chemistry/materials/scattering/rayinitializationmaterial..');
+  api.addMaterial('reality/chemistry/materials/scattering/raymarchingmaterial..');
+  api.addMaterial('reality/chemistry/materials/scattering/raysplittingmaterial..');
+  api.addMaterial('reality/chemistry/materials/scattering/raymaterial..');
+
   api.addComponent('reality/chemistry/gases..');
   api.addFile('reality/chemistry/gases/gases-measurements');
   api.addFile('reality/chemistry/gases/gases-propertiesgraph');
@@ -64,6 +78,7 @@ Package.onUse(function(api) {
   api.addFile('reality/optics/sky/sky-computepreviewdata');
   api.addFile('reality/optics/sky/sky-computenishita');
   api.addFile('reality/optics/sky/sky-computenishita-rgb');
+  api.addFile('reality/optics/sky/sky-computescratchapixel-rgb');
   api.addFile('reality/optics/sky/sky-computeformulated');
   api.addFile('reality/optics/sky/sky-computeformulated-xyz');
   api.addFile('reality/optics/sky/sky-computeformulated-rgb');

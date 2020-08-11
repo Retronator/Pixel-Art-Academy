@@ -6,7 +6,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
     scene = new THREE.Scene()
     @scene = new AE.ReactiveWrapper scene
 
-    @renderTarget = new THREE.WebGLRenderTarget 16, 16,
+    @renderTarget = new THREE.WebGLRenderTarget 1, 1,
+      type: THREE.FloatType
       minFilter: THREE.NearestFilter
       magFilter: THREE.NearestFilter
 

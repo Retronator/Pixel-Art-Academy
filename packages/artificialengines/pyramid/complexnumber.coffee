@@ -70,6 +70,9 @@ class AP.ComplexNumber
     @imaginary /= otherReal
     @
 
+  pow2: ->
+    @multiply @
+
   sqrt: ->
     #                  _______      _______
     #  _    _______   /|z| + x     /|z| - x

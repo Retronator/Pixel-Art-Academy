@@ -16,9 +16,17 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
-    # Setup the PBR skydome.
-    @skydome = new LOI.Engine.Skydome
-    scene.add @skydome
+    # Setup the PBR skydomes.
+    @skydome =
+      procedural: new LOI.Engine.Skydome.Procedural
+      photo: new LOI.Engine.Skydome.Photo
+
+    scene.add @skydome.procedural
+    scene.add @skydome.photo
+
+    @skydome.photo.rotation.y = Math.PI / 2
+
+    @skydome.procedural.layers.set 3
 
     # Setup default lights.
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
@@ -28,7 +36,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
 
     directionalLight.castShadow = true
-    d = 20
+    d = 50
     
     shadow = directionalLight.shadow
     shadow.camera.left = -d
@@ -72,10 +80,27 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       # Update the skydome.
       meshCanvas = @meshCanvas()
 
-      if meshCanvas?.isRendered()
-        @skydome.updateTexture meshCanvas.renderer.renderer, lightDirection
+      if meshCanvas?.isRendered() and @skydome.procedural.visible
+        @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
 
       @scene.updated()
+
+    # Update environment.
+    @photoSkydomeUrl = new ComputedField =>
+      return unless meshData = @meshCanvas()?.meshData()
+
+      activeEnvironment = _.find meshData.environments, (environment) -> environment.active
+      activeEnvironment?.image.url
+
+    @autorun (computation) =>
+      photoSkydomeUrl = @photoSkydomeUrl()
+
+      if photoSkydomeUrl
+        @skydome.photo.loadFromUrl photoSkydomeUrl
+
+      # Enable the correct skydome.
+      @skydome.procedural.visible = not photoSkydomeUrl
+      @skydome.photo.visible = photoSkydomeUrl?
 
     # Apply uniforms to new objects when they get added.
     @autorun (computation) =>
@@ -102,7 +127,11 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
   destroy: ->
     super arguments...
 
-    @skydome.destroy()
+    @meshCanvas.stop()
+    @photoSkydomeUrl.stop()
+
+    @skydome.procedural.destroy()
+    @skydome.photo.destroy()
 
   getUniforms: ->
     return unless meshCanvas = @meshCanvas()
@@ -117,10 +146,18 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       defaultViewport = left: -1, right: 1, bottom: -1, top: 1
       cameraAngleMatrix = new THREE.Matrix4
       cameraAngle.getProjectionMatrixForViewport defaultViewport, cameraAngleMatrix
-      cameraAngleMatrix.multiply cameraAngle.worldMatrixInverse
+      cameraAngleMatrix.multiply cameraAngle.viewMatrix
+
+    if currentCameraAngle = meshCanvas.cameraAngle()
+      cameraParallelProjection = not currentCameraAngle.picturePlaneDistance?
+
+      if cameraParallelProjection
+        cameraDirection = currentCameraAngle.getCameraDirection()
 
     renderSize: new THREE.Vector2 renderSize.width, renderSize.height
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
+    cameraParallelProjection: cameraParallelProjection or false
+    cameraDirection: cameraDirection or new THREE.Vector3
     directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
     directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: meshCanvas.renderer.preprocessingRenderTarget.texture

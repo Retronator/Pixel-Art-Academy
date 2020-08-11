@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AR = Artificial.Reality
 
 xyzCoordinates = ['x', 'y', 'z']
@@ -16,13 +17,7 @@ class AR.Optics.Spectrum.XYZ extends AR.Optics.Spectrum.Array
 
   getValue: (wavelength) ->
     # Return radiance in W / sr⋅m³
-    intensity = 0
-
-    for coordinate, index in xyzCoordinates
-      response = Artificial.Spectrum.Color.CIE1931.ColorMatchingFunctions[coordinate].getValue wavelength
-      intensity += response * @array[index]
-
-    intensity
+    throw new AE.NotImplementedException "XYZ Spectrum sampling is not supported yet."
 
   toObject: ->
     x: @array[0]

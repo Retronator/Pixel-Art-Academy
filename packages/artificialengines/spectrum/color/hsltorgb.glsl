@@ -1,4 +1,6 @@
 // Artificial.Spectrum.Color.hslToRGB
+#ifndef ARTIFICIAL_SPECTRUM_COLOR_HSLTORGB
+#define ARTIFICIAL_SPECTRUM_COLOR_HSLTORGB
 
 /*  Adapted from Jam3/glsl-hsl2rgb (https://github.com/Jam3/glsl-hsl2rgb)
 
@@ -60,3 +62,5 @@ vec3 Color_hslToRGB(vec3 hsl) {
 vec3 Color_hslToRGB(float h, float s, float l) {
     return Color_hslToRGB(vec3(h, s, l));
 }
+
+#endif

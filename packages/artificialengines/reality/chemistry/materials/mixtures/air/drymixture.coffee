@@ -10,4 +10,4 @@ class AR.Chemistry.Materials.Mixtures.Air.DryMixture extends AR.Chemistry.Materi
       "#{AR.Chemistry.Materials.Elements.Nitrogen.id()}": 78.084
       "#{AR.Chemistry.Materials.Elements.Oxygen.id()}": 20.946
       "#{AR.Chemistry.Materials.Elements.Argon.id()}": 0.9340
-      "#{AR.Chemistry.Materials.Elements.CarbonDioxide.id()}": 0.041332
+      "#{AR.Chemistry.Materials.Compounds.CarbonDioxide.id()}": 0.041332

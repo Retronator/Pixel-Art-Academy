@@ -89,5 +89,5 @@ class LOI.Assets.Editor.References extends FM.View
     $fileInput.click()
 
   onClickRemoveButton: (event) ->
-    object = @object()
-    object.layers.remove @paintHelper.layerIndex()
+    # TODO
+    console.error "Removing of references not implemented."

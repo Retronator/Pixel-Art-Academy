@@ -23,4 +23,9 @@ class AM.Canvas
     canvas.putFullImageData = (imageData) ->
       canvas.context.putImageData imageData, 0, 0
 
+    canvas.getImage = ->
+      image = new Image
+      image.src = canvas.toDataURL()
+      image
+
     return canvas

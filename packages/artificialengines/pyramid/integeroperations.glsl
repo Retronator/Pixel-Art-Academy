@@ -1,4 +1,7 @@
 // Artificial.Pyramid.IntegerOperations
+#ifndef ARTIFICIAL_PYRAMID_INTEGEROPERATIONS
+#define ARTIFICIAL_PYRAMID_INTEGEROPERATIONS
+
 int mod(int a, int b) {
   int whole = a / b;
   return a - whole * b;
@@ -24,3 +27,5 @@ int abs(int a) {
   if (a < 0) return -a;
   return a;
 }
+
+#endif

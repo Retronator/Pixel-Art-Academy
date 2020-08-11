@@ -13,12 +13,16 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     mieScatteringEnabled = @mieScatteringEnabled()
 
     stepSize = @integrationStepSize() * 1e3
-    scaleHeight = 7994
-    maxStepCount = 50
+    scaleHeightRayleigh = 7994
+    scaleHeightMie = 1200
+    maxStepCount = 20
 
     # Prepare functions.
-    getDensityRatioAtHeight = (height) ->
-      Math.E ** (-height / scaleHeight)
+    getRayleighDensityRatioAtHeight = (height) ->
+      Math.E ** (-height / scaleHeightRayleigh)
+
+    getMieDensityRatioAtHeight = (height) ->
+      Math.E ** (-height / scaleHeightMie)
 
     getMolucelarNumberDensityForGasState = (gasState) =>
       amountOfSubstance = @AirClass.getAmountOfSubstanceForState gasState
@@ -30,6 +34,8 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     rayleighCoefficientFunction = AR.Optics.Scattering.getRayleighCoefficientFunction()
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
 
+    miePhaseFunction = AR.Optics.Scattering.getMiePhaseFunctionForAsymmetry 0.76
+
     getRayleighCoefficientSpectrumAtHeight = (height) =>
       heightHash = height >> 7
       rayleighCoefficientSpectrum = rayleighCoefficientSpectrumCache[heightHash]
@@ -37,7 +43,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
       roundedHeight = heightHash << 7
 
-      densityRatio = getDensityRatioAtHeight roundedHeight
+      densityRatio = getRayleighDensityRatioAtHeight roundedHeight
 
       gasState =
         temperature: AR.StandardTemperatureAndPressure.Temperature
@@ -55,6 +61,10 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
       rayleighCoefficientSpectrumCache[heightHash]
 
+    getMieCoefficientSpectrumAtHeight = (height) =>
+      densityRatio = getMieDensityRatioAtHeight height
+      new SpectrumClass().setConstant 21e-6 * densityRatio
+
     # Prepare color calculation method.
     totalRadiance = new SpectrumClass
 
@@ -62,6 +72,8 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     totalTransmission = new SpectrumClass
 
     scatteringContribution = new SpectrumClass
+    scatteringContributionRayleigh = new SpectrumClass
+    scatteringContributionMie = new SpectrumClass
     totalScatteringContribution = new SpectrumClass
 
     opticalDepthSpectrum = new SpectrumClass
@@ -84,7 +96,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       viewpoint.set 0, @earthRadius + height, 0
       sunViewAngle = sunRayDirection.angleTo viewRayDirection
 
-      if rayleighScatteringEnabled
+      if rayleighScatteringEnabled or mieScatteringEnabled
         # See how far the view ray reaches before it exits the atmosphere or hits the earth.
         if @_intersectsEarth viewpoint, viewRayDirection
           atmosphereRayLength = @_getLengthToEarth viewpoint, viewRayDirection
@@ -121,10 +133,12 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
             viewRayDistance = spacing * (i + 0.5)
             viewRaySamplePosition.copy(viewRayDirection).multiplyScalar(viewRayDistance).add(viewpoint)
             viewRaySampleHeight = viewRaySamplePosition.length() - @earthRadius
-            rayleighCoefficientSpectrum = getRayleighCoefficientSpectrumAtHeight viewRaySampleHeight
+            rayleighCoefficientSpectrum = getRayleighCoefficientSpectrumAtHeight viewRaySampleHeight if rayleighScatteringEnabled
+            mieCoefficientSpectrum = getMieCoefficientSpectrumAtHeight viewRaySampleHeight if mieScatteringEnabled
 
             for j in [0...opticalDepthSpectrum.array.length]
-              opticalDepthSpectrum.array[j] += rayleighCoefficientSpectrum.array[j] * spacing
+              opticalDepthSpectrum.array[j] += rayleighCoefficientSpectrum.array[j] * spacing if rayleighScatteringEnabled
+              opticalDepthSpectrum.array[j] += mieCoefficientSpectrum.array[j] * spacing if mieScatteringEnabled
 
           # Integrate along the sun ray from the point of scattering to the exit of the atmosphere.
           sunRayLength = @_getLengthThroughAtmosphere scatteringPosition, sunRayDirection
@@ -139,17 +153,34 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
             sunRayDistance = spacing * (i + 0.5)
             sunRaySamplePosition.copy(sunRayDirection).multiplyScalar(sunRayDistance).add(scatteringPosition)
             sunRaySampleHeight = sunRaySamplePosition.length() - @earthRadius
-            rayleighCoefficientSpectrum = getRayleighCoefficientSpectrumAtHeight sunRaySampleHeight
+            rayleighCoefficientSpectrum = getRayleighCoefficientSpectrumAtHeight sunRaySampleHeight if rayleighScatteringEnabled
+            mieCoefficientSpectrum = getMieCoefficientSpectrumAtHeight sunRaySampleHeight if mieScatteringEnabled
 
             for j in [0...opticalDepthSpectrum.array.length]
-              opticalDepthSpectrum.array[j] += rayleighCoefficientSpectrum.array[j] * spacing
+              opticalDepthSpectrum.array[j] += rayleighCoefficientSpectrum.array[j] * spacing if rayleighScatteringEnabled
+              opticalDepthSpectrum.array[j] += mieCoefficientSpectrum.array[j] * spacing if mieScatteringEnabled
 
           # Calculate the chance of scattering.
-          rayleighCoefficientSpectrumAtSamplePoint = getRayleighCoefficientSpectrumAtHeight scatteringHeight
-          scatteringIntensityAtSunViewAngle = rayleighPhaseFunction sunViewAngle
+          if rayleighScatteringEnabled
+            rayleighCoefficientSpectrumAtSamplePoint = getRayleighCoefficientSpectrumAtHeight scatteringHeight
+            scatteringIntensityAtSunViewAngleRayleigh = rayleighPhaseFunction sunViewAngle
+
+          if mieScatteringEnabled
+            mieCoefficientSpectrumAtSamplePoint = getMieCoefficientSpectrumAtHeight scatteringHeight
+            scatteringIntensityAtSunViewAngleMie = miePhaseFunction sunViewAngle
 
           # Calculate in-scattering.
-          scatteringContribution.copy(opticalDepthSpectrum).negate().exp().multiply(rayleighCoefficientSpectrumAtSamplePoint).multiplyScalar(scatteringIntensityAtSunViewAngle)
+          scatteringContribution.clear()
+
+          if rayleighScatteringEnabled
+            scatteringContributionRayleigh.copy(opticalDepthSpectrum).negate().exp().multiply(rayleighCoefficientSpectrumAtSamplePoint).multiplyScalar(scatteringIntensityAtSunViewAngleRayleigh)
+            scatteringContribution.add scatteringContributionRayleigh
+
+          if mieScatteringEnabled
+            scatteringContributionMie.copy(opticalDepthSpectrum).negate().exp().multiply(mieCoefficientSpectrumAtSamplePoint).multiplyScalar(scatteringIntensityAtSunViewAngleMie)
+            scatteringContribution.add scatteringContributionMie
+
+          scatteringContribution
         ,
           0, atmosphereRayLength, Math.max minStepSize, stepSize
 

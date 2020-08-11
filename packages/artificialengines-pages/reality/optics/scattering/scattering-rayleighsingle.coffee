@@ -123,7 +123,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
         xyz.x *= exposure
         xyz.y *= exposure
         xyz.z *= exposure
-        rgb = AS.Color.SRGB.getRGBForXYZ xyz
+        rgb = AS.Color.SRGB.getGammaRGBForXYZ xyz
 
         for y in [middleYIndex - ry, middleYIndex + ry]
           pixelOffset = (x + y * previewImageData.width) * 4

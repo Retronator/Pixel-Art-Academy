@@ -3,18 +3,16 @@
     <table class="elements-table editor-table">
       <tr class="legend">
         <th class="row-name"></th>
-        <th class="element-x">x</th>
-        <th class="element-y">y</th>
-        <th class="element-z">z</th>
-        <th class="element-w">w</th>
+        {{#each columns}}
+          <th class="element-{{name}}">{{name}}</th>
+        {{/each}}
       </tr>
       {{#each rows}}
         <tr class="row">
           <td class="row-name">{{name}}</td>
-          <td class="element-x"><input class="element-input" type="number" step="0.1" value="{{x}}"/></td>
-          <td class="element-y"><input class="element-input" type="number" step="0.1" value="{{y}}"/></td>
-          <td class="element-z"><input class="element-input" type="number" step="0.1" value="{{z}}"/></td>
-          <td class="element-w"><input class="element-input" type="number" step="0.1" value="{{w}}"/></td>
+          {{#each this.columns}}
+            <td class="element-{{name}}"><input class="element-input" type="number" step="0.1" value="{{value}}"/></td>
+          {{/each}}
         </tr>
       {{/each}}
     </table>

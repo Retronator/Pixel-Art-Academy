@@ -52,7 +52,7 @@ class AS.Color.CIE1931
         sum += value * response
 
       # Set normalized factor.
-      xyz[coordinate] = sum / @ColorMatchingFunctions.yIntegral
+      xyz[coordinate] = sum / @ColorMatchingFunctions.integrals[coordinate]
 
     xyz
 
@@ -68,7 +68,14 @@ class AS.Color.CIE1931
 
   @getLuminanceForSpectrum: (spectrum) ->
     # Return luminance in cd/m².
-    @getYForSpectrum(spectrum) * 683.002
+    @getLuminanceForY @getYForSpectrum(spectrum)
+
+  @getLuminanceForXYZ: (xyz) ->
+    @getLuminanceForY xyz.y
+
+  @getLuminanceForY: (y) ->
+    # Return luminance in cd/m².
+    y * 683.002
 
   @getChromaticityForXYZ: (xyz) ->
     sum = xyz.x + xyz.y + xyz.z

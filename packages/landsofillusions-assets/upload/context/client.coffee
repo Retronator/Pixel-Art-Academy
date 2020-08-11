@@ -10,7 +10,7 @@ class LOI.Assets.Upload.Context extends LOI.Assets.Upload.Context
     validationError = @slingshot.validate file
 
     if validationError
-      console.error 'Error validating file.', error
+      console.error 'Error validating file.', validationError, file
       return
 
     @slingshot.send file, (error, fileUrl) ->

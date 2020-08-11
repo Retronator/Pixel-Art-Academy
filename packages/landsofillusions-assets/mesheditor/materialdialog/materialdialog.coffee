@@ -439,7 +439,7 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
         material.update
           temperature: temperature
-          emission: emissionRGB.toObject()
+          emission: emissionRGB.multiplyScalar(1 / 255 / 683).toObject()
 
       else
         material.update

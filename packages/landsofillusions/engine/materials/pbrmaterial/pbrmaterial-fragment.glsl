@@ -3,13 +3,13 @@
 #include <uv_pars_fragment>
 #include <map_pars_fragment>
 #include <normalmap_pars_fragment>
-#include <packing>
 
 #include <Artificial.Pyramid.IntegerOperations>
-#include <LandsOfIllusions.Engine.Materials.ditherParametersFragment>
 
 // Globals
 uniform vec2 renderSize;
+uniform bool cameraParallelProjection;
+uniform vec3 cameraDirection;
 
 // Cluster information
 uniform vec2 clusterSize;
@@ -43,12 +43,17 @@ void main()	{
     probeIndex / clusterWidth
   );
 
-  vec3 fragmentToViewDirectionInWorldSpace = normalize(cameraPosition - vFragmentPositionInWorldSpace);
+  vec3 fragmentToViewDirectionInWorldSpace;
+
+  if (cameraParallelProjection) {
+    fragmentToViewDirectionInWorldSpace = -cameraDirection;
+
+  } else {
+    fragmentToViewDirectionInWorldSpace = normalize(cameraPosition - vFragmentPositionInWorldSpace);
+  }
+
   vec3 fragmentToViewDirectionInClusterSpace = transformDirection(fragmentToViewDirectionInWorldSpace, clusterPlaneWorldMatrixInverse);
 
   vec3 radiance = sampleRadiance(radianceAtlasOut, clusterSize, probeCoordinates, fragmentToViewDirectionInClusterSpace);
   gl_FragColor = vec4(radiance, 1);
-
-  #include <tonemapping_fragment>
-  #include <encodings_fragment>
 }

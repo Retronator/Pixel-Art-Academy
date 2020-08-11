@@ -1,0 +1,28 @@
+<template name="LandsOfIllusions.Assets.Editor.Environments">
+  <div class="landsofillusions-assets-editor-environments landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="environments-table editor-table">
+      {{#each environments}}
+        <tr class="environment {{activeClass}}">
+          <td class="active">
+            <label class="label">
+              <input type="checkbox" class="active-checkbox" {{activeCheckedAttribute}}/><span class="icon"></span>
+            </label>
+          </td>
+          <td class="thumbnail">
+            {{> LandsOfIllusions.Assets.Editor.Environments.EnvironmentThumbnail}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="upload-button">Upload</button>
+      {{#if showRemoveButton}}
+        <button class="remove-button">Remove</button>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="LandsOfIllusions.Assets.Editor.Environments.EnvironmentThumbnail">
+  {{> Render hdrImage}}
+</template>

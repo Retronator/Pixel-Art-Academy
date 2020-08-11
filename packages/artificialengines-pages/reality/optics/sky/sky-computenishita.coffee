@@ -29,6 +29,9 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       rayleighCrossSectionFunction refractiveIndex, molecularNumberDensitySurface, wavelength
 
     rayleighPhaseFunction = AR.Optics.Scattering.getRayleighPhaseFunction()
+    miePhaseFunction = AR.Optics.Scattering.getMiePhaseFunctionForAsymmetry 0.76
+
+    mieScatteringCoefficient = 210e-5
 
     # Prepare color calculation method.
     totalRadiance = new SpectrumClass
@@ -36,11 +39,12 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     transmission = new SpectrumClass
     totalTransmission = new SpectrumClass
 
-    scatteringContribution = new SpectrumClass
+    scatteringContributionRayleigh = new SpectrumClass
 
     stepSize = @integrationStepSize() * 1e3
     maxHeight = 50e3
-    scaleHeight = 7994
+    scaleHeightRayleigh = 7994
+    scaleHeightMie = 1200
     maxStepCount = 500
 
     viewpoint = new THREE.Vector3()
@@ -58,13 +62,15 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
     @_computePreviewData (height, viewRayDirection) =>
       totalTransmission.clear()
-      scatteringContribution.clear()
+      scatteringContributionRayleigh.clear()
+      scatteringContributionMie = 0
 
       viewpoint.y = height
       viewRayEndHeight = viewpoint.y
       viewRayStepCount = 0
 
-      viewRayTotalDensityRatio = 0
+      viewRayTotalDensityRatioRayleigh = 0
+      viewRayTotalDensityRatioMie = 0
 
       sunViewAngle = sunRayDirection.angleTo viewRayDirection
 
@@ -74,15 +80,20 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
         viewRayEnd.copy(viewRayDirection).multiplyScalar(viewRayDistance).add(viewpoint)
         viewRayEndRelativeToEarthCenter.subVectors(viewRayEnd, earthCenter)
         viewRayEndHeight = viewRayEndRelativeToEarthCenter.length() - @earthRadius
-        viewRayEndDensityRatio = Math.E ** (-viewRayEndHeight / scaleHeight)
-        viewRayTotalDensityRatio += viewRayEndDensityRatio
+
+        viewRayEndDensityRatioRayleigh = Math.E ** (-viewRayEndHeight / scaleHeightRayleigh)
+        viewRayTotalDensityRatioRayleigh += viewRayEndDensityRatioRayleigh
+
+        viewRayEndDensityRatioMie = Math.E ** (-viewRayEndHeight / scaleHeightMie)
+        viewRayTotalDensityRatioMie += viewRayEndDensityRatioMie
 
         # Calculate the density ratio along the sun ray.
         sunRayEndHeight = viewRayEndHeight
         sunRayStepCount = 0
-        sunRayTotalDensityRatio = 0
+        sunRayTotalDensityRatioRayleigh = 0
+        sunRayTotalDensityRatioMie = 0
 
-        if rayleighScatteringEnabled
+        if rayleighScatteringEnabled or mieScatteringEnabled
           while sunRayEndHeight < maxHeight and sunRayStepCount < maxStepCount
             sunRayStepCount++
             sunRayDistance = (sunRayStepCount - 0.5) * stepSize
@@ -92,28 +103,43 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
             if sunRayEndHeight < 0
               # We've gone underground, which means we must be in earth's shadow.
-              sunRayTotalDensityRatio = Number.POSITIVE_INFINITY
+              sunRayTotalDensityRatioRayleigh = Number.POSITIVE_INFINITY
+              sunRayTotalDensityRatioMie = Number.POSITIVE_INFINITY
               break
 
-            sunRayEndDensityRatio = Math.E ** (-sunRayEndHeight / scaleHeight)
-            sunRayTotalDensityRatio += sunRayEndDensityRatio
+            if rayleighScatteringEnabled
+              sunRayEndDensityRatioRayleigh = Math.E ** (-sunRayEndHeight / scaleHeightRayleigh)
+              sunRayTotalDensityRatioRayleigh += sunRayEndDensityRatioRayleigh
+
+            if mieScatteringEnabled
+              sunRayEndDensityRatioMie = Math.E ** (-sunRayEndHeight / scaleHeightMie)
+              sunRayTotalDensityRatioMie += sunRayEndDensityRatioMie
 
           # Calculate contribution of scattering on this view ray segment.
-          unless sunRayTotalDensityRatio is Number.POSITIVE_INFINITY
-            sunViewMolecularNumberDensity = molecularNumberDensitySurface * (sunRayTotalDensityRatio + viewRayTotalDensityRatio)
-            transmission.copy(rayleighCrossSectionSpectrum).multiplyScalar(-stepSize * sunViewMolecularNumberDensity).exp()
-            transmission.multiplyScalar(molecularNumberDensitySurface * viewRayEndDensityRatio)
-            scatteringContribution.add(transmission)
+          unless (sunRayTotalDensityRatioRayleigh or sunRayTotalDensityRatioMie) is Number.POSITIVE_INFINITY
+            if rayleighScatteringEnabled
+              sunViewMolecularNumberDensityRayleigh = molecularNumberDensitySurface * (sunRayTotalDensityRatioRayleigh + viewRayTotalDensityRatioRayleigh)
+              transmission.copy(rayleighCrossSectionSpectrum).multiplyScalar(-stepSize * sunViewMolecularNumberDensityRayleigh).exp()
+              transmission.multiplyScalar(molecularNumberDensitySurface * viewRayEndDensityRatioRayleigh)
+              scatteringContributionRayleigh.add(transmission)
+
+            if mieScatteringEnabled
+              sunViewMieScatteringCoefficient = mieScatteringCoefficient * (sunRayTotalDensityRatioMie + viewRayTotalDensityRatioMie)
+              transmissionMie = Math.E ** (-stepSize * sunViewMieScatteringCoefficient) * sunViewMieScatteringCoefficient
+              scatteringContributionMie += transmissionMie
 
       if rayleighScatteringEnabled
-        scatteringContribution.multiply(rayleighCrossSectionSpectrum).multiplyScalar(rayleighPhaseFunction(sunViewAngle) * stepSize)
-        totalTransmission.add(scatteringContribution)
+        scatteringContributionRayleigh.multiply(rayleighCrossSectionSpectrum).multiplyScalar(rayleighPhaseFunction(sunViewAngle) * stepSize)
+        totalTransmission.add(scatteringContributionRayleigh)
 
-      viewRayTotalMolecularNumberDensity = molecularNumberDensitySurface * viewRayTotalDensityRatio
+      if mieScatteringEnabled
+        totalTransmission.addConstant scatteringContributionMie * miePhaseFunction(sunViewAngle) * stepSize
 
       # Include direct sun.
       if directLightEnabled and Math.abs(sunViewAngle) < AR.Degrees 0.53
-        transmission.copy(rayleighCrossSectionSpectrum).multiplyScalar(-stepSize * viewRayTotalMolecularNumberDensity).exp()
+        viewRayTotalMolecularNumberDensityRayleigh = molecularNumberDensitySurface * viewRayTotalDensityRatioRayleigh
+        viewRayMieScatteringCoefficient = mieScatteringCoefficient * viewRayTotalDensityRatioMie
+        transmission.copy(rayleighCrossSectionSpectrum).multiplyScalar(viewRayTotalMolecularNumberDensityRayleigh).addConstant(viewRayMieScatteringCoefficient).multiplyScalar(-stepSize).exp()
         totalTransmission.add(transmission)
 
       totalRadiance.copy(@SunEmissionSpectrum).multiply(totalTransmission)

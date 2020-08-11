@@ -267,7 +267,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       materialProperties.refractiveIndex.set 1.5, 1.5, 1.5
 
       color = shades[meshMaterial.shade]
-      linearColor = AS.Color.SRGB.getLinearRGBForRGB color
+      linearColor = AS.Color.SRGB.getNormalizedRGBForGammaRGB color
       materialProperties.albedo.set linearColor.r, linearColor.g, linearColor.b
 
     if e = meshMaterial.emission

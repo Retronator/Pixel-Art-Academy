@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.Renderer
@@ -17,7 +18,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.autoClearDepth = false
 
     @bounds = new AE.Rectangle()
+
+    @colorPassRenderTarget = new THREE.WebGLRenderTarget 1, 1, type: THREE.FloatType
+    @colorPassScreenQuad = new AS.ScreenQuad @colorPassRenderTarget.texture
     
+    # Color pass needs to replace the pixels but leave the depth buffer intact.
+    @colorPassScreenQuad.material.depthWrite = false
+    @colorPassScreenQuad.material.depthTest = false
+
     @pixelRender = new @constructor.PixelRender @
     @sourceImage = new @constructor.SourceImage @
     @debugCluster = new @constructor.DebugCluster @
@@ -76,6 +84,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       console.log "Changing renderer size to", canvasPixelSize if LOI.Assets.debug
 
       @renderer.setSize canvasPixelSize.width, canvasPixelSize.height
+      @colorPassRenderTarget.setSize canvasPixelSize.width, canvasPixelSize.height
 
       @bounds.width canvasPixelSize.width
       @bounds.height canvasPixelSize.height
@@ -176,7 +185,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
               return unless radianceState = engineCluster.radianceState()
 
               # We should update one radiance state per 10×10 cluster pixels.
-              updatesCount = Math.ceil radianceState.probeMap.pixelsCount / 100
+              updatesCount = Math.max 0.1, radianceState.probeMap.pixelsCount / 100
 
               if updatesCount < 1
                 updatesCount = if updatesCount > Math.random() then 1 else 0
@@ -225,7 +234,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.outputEncoding = THREE.sRGBEncoding
     @renderer.toneMapping = THREE.LinearToneMapping
 
-    exposureValue = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ExposureValue
+    exposureValue = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
     @renderer.toneMappingExposure = exposureValue.exposure()
 
   _render: ->
@@ -239,11 +248,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     pbr = @meshCanvas.pbrEnabled()
 
-    if pbr
-      @_setToneMappedRendering()
+    @_setLinearRendering()
 
-    else
-      @_setLinearRendering()
+    unless pbr
       shadowsEnabled = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled
 
       # Render the preprocessing step. First set the preprocessing material on all meshes.
@@ -312,28 +319,38 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @renderer.shadowMap.enabled = shadowsEnabled()
       @renderer.shadowMap.needsUpdate = true
 
-    # Render main geometry pass that we use for depth and shadows (and color when not showing the pixel render target).
+    # Render main geometry pass that we use for depth and shadows.
     camera.main.layers.set 0
     @renderer.setClearColor 0, 0
     @renderer.setRenderTarget null
     @renderer.clear()
     @renderer.render scene, camera.main
 
+    # Render main geometry color pass.
+    @renderer.setRenderTarget @colorPassRenderTarget
+    @renderer.clear()
+    @renderer.render scene, camera.main
+
+    # Present the color pass to screen (tone-mapped for PBR).
+    @_setToneMappedRendering() if pbr
+    @renderer.setRenderTarget null
+    @renderer.render @colorPassScreenQuad.scene, @colorPassScreenQuad.camera
+
     if @meshCanvas.pixelRenderEnabled()
-      # Render main geometry to the render target.
+      # Render main geometry to the low-res render target.
+      @_setLinearRendering()
       @renderer.setRenderTarget @pixelRender.renderTarget
       @renderer.setClearColor 0, 0
       @renderer.clear()
       @renderer.render scene, camera.renderTarget
 
-      # Render the low-res picture to the main scene.
-      @_setLinearRendering()
+      # Present the low-res render to the screen (tone-mapped for PBR).
+      @_setToneMappedRendering() if pbr
       pixelRenderScene = @pixelRender.scene.withUpdates()
       @renderer.setRenderTarget null
       @renderer.render pixelRenderScene, camera.pixelRender
 
-    else
-      @_setLinearRendering()
+    @_setLinearRendering()
 
     if @meshCanvas.sourceImageEnabled() and @meshCanvas.activePicture()?.bounds()
       @sourceImage.image.material.texturesDepenency.depend()

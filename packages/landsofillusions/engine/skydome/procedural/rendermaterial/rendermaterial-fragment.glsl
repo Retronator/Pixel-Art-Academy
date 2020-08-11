@@ -1,5 +1,5 @@
-// LandsOfIllusions.Engine.Skydome.RenderMaterial.fragment
-#include <LandsOfIllusions.Engine.Skydome.RenderMaterial.parametersFragment>
+// LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.fragment
+#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.parametersFragment>
 
 uniform sampler2D scatteringMap;
 
@@ -18,18 +18,24 @@ void main() {
     float viewRayLengthThroughAtmosphere = getLengthThroughAtmosphere(viewpoint, viewDirection);
     float viewRayStepSize = viewRayLengthThroughAtmosphere / float(viewRaySteps);
 
-    float viewRayTotalDensityRatio = 0.0;
+    float viewRayTotalRayleighDensityRatio = 0.0;
+    float viewRayTotalMieDensityRatio = 0.0;
 
     for (int viewRayStepCount = 0; viewRayStepCount < viewRaySteps; viewRayStepCount++) {
       float viewRayStepMiddleDistance = (float(viewRayStepCount) - 0.5) * viewRayStepSize;
       vec3 viewRayStepMiddle = viewpoint + viewDirection * viewRayStepMiddleDistance;
       float viewRayStepMiddleHeight = length(viewRayStepMiddle) - planetRadius;
-      float viewRayStepMiddleDensityRatio = exp(-viewRayStepMiddleHeight / atmosphereScaleHeight);
-      viewRayTotalDensityRatio += viewRayStepMiddleDensityRatio;
+      float viewRayStepMiddleRayleighDensityRatio = exp(-viewRayStepMiddleHeight / atmosphereRayleighScaleHeight);
+      float viewRayStepMiddleMieDensityRatio = exp(-viewRayStepMiddleHeight / atmosphereMieScaleHeight);
+      viewRayTotalRayleighDensityRatio += viewRayStepMiddleRayleighDensityRatio;
+      viewRayTotalMieDensityRatio += viewRayStepMiddleMieDensityRatio;
     }
 
-    float viewRayMolecularNumberDensity = atmosphereMolecularNumberDensitySurface * viewRayTotalDensityRatio;
-    vec3 transmission = exp(-atmosphereRayleighCrossSection * viewRayStepSize * viewRayMolecularNumberDensity);
+    vec3 viewRayRayleighScatteringCoefficient = atmosphereRayleighScatteringCoefficientSurface * viewRayTotalRayleighDensityRatio;
+    float viewRayMieScatteringCoefficient = atmosphereMieScatteringCoefficientSurface * viewRayTotalMieDensityRatio;
+    vec3 viewRayOpticalDepth = viewRayStepSize * (viewRayRayleighScatteringCoefficient + viewRayMieScatteringCoefficient);
+
+    vec3 transmission = exp(-viewRayOpticalDepth);
 
     skyRadiance += starEmission * transmission;
   }

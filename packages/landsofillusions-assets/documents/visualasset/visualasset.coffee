@@ -36,6 +36,11 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #   scale: data for how big to display the reference
   #   order: integer value for sorting references
   #   displayMode: where to display the reference (inside the image, over the interface …)
+  # environments: array of HDR images used to light the scene
+  #   image: image document
+  #     _id
+  #     url
+  #   active: boolean if the environment is the one to be used to light the asset
   @Meta
     abstract: true
     fields: =>
@@ -66,6 +71,9 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   @updateReferenceDisplayed: @method 'updateReferenceDisplayed'
   @updateReferenceDisplayMode: @method 'updateReferenceDisplayMode'
   @reorderReferenceToTop: @method 'reorderReferenceToTop'
+
+  @addEnvironmentByUrl: @method 'addEnvironmentByUrl'
+  @activateEnvironment: @method 'activateEnvironment'
 
   # Subscriptions
 

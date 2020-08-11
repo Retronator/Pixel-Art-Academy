@@ -93,7 +93,7 @@ class LOI.Engine.RadianceState
       depthBuffer: false
 
   update: (renderer, scene) ->
-    pixelCoordinates = @probeMap.getNewUpdatePixel()
+    return unless pixelCoordinates = @probeMap.getNewUpdatePixel()
 
     # Put the camera into plane's basis (z points away from the cluster surface).
     probeCubeCamera = @constructor.Probe.cubeCamera

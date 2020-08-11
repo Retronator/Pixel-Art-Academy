@@ -65,7 +65,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       xyz = AS.Color.CIE1931.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
         D65EmissionSpectrum.getValue(wavelength) * reflectanceSpectrum.getValue(wavelength) * reflectanceFactor
 
-      rgbPerPixelDistance[pixelDistance] = AS.Color.SRGB.getRGBForXYZ xyz
+      rgbPerPixelDistance[pixelDistance] = AS.Color.SRGB.getGammaRGBForXYZ xyz
 
     for x in [0...sphereSize]
       for y in [0...sphereSize]

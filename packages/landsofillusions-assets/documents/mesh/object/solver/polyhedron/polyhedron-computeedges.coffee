@@ -80,7 +80,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
       if edge.changed
         console.log "Edge between clusters #{clusterA.id} and #{clusterB.id} has changed.", edge if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
-        edge.process()
+        edge.determineParallelClusters()
         edge.reportChangeToClusters()
 
       # If the edge has any segments, it is a valid edge and will be part of the topology.
@@ -102,15 +102,15 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
 
       # Only delete edges based on other straight edges (not coplanar).
       for neighborClusterId, neighborEdge of cluster.edges when neighborEdge isnt edge
-        # Coplanar edges should not be considered for removal of other edges.
-        continue if neighborEdge.coplanarClusters
+        # Parallel edges should not be considered for removal of other edges.
+        continue if neighborEdge.parallelClusters
 
-        # Also make sure the two other clusters aren't coplanar.
-        if otherCluster.edges[neighborClusterId]?.coplanarClusters
+        # Also make sure the two other clusters aren't parallel.
+        if otherCluster.edges[neighborClusterId]?.parallelClusters
           continue
 
-        # Coplanar edge segments do not have priority and should be deleted where overlapping other straight edges.
-        if edge.coplanarClusters
+        # Parallel edge segments do not have priority and should be deleted where overlapping other straight edges.
+        if edge.parallelClusters
           # Throw out any of the segments that are part of another edge.
           _.remove edge.segments, (segment) => neighborEdge.segmentsMap[segment[0].x]?[segment[0].y]?[segment[1].x]?[segment[1].y] or neighborEdge.segmentsMap[segment[1].x]?[segment[1].y]?[segment[0].x]?[segment[0].y]
 

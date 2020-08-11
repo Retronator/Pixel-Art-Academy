@@ -16,6 +16,10 @@ class LOI.Engine.Materials.PBRMaterial extends LOI.Engine.Materials.Material
           value: new THREE.Vector2 1, 1
         cameraAngleMatrix:
           value: new THREE.Matrix4
+        cameraParallelProjection:
+          value: false
+        cameraDirection:
+          value: new THREE.Vector3
 
         # Cluster information
         clusterSize:

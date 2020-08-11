@@ -7,7 +7,7 @@ class AR.Chemistry.Materials.Mixtures.Air.MarsMixture extends AR.Chemistry.Mater
 
   @initialize
     relativeGasVolumes:
-      "#{AR.Chemistry.Materials.Elements.CarbonDioxide.id()}": 95.32
+      "#{AR.Chemistry.Materials.Compounds.CarbonDioxide.id()}": 95.32
       "#{AR.Chemistry.Materials.Elements.Nitrogen.id()}": 2.6
       "#{AR.Chemistry.Materials.Elements.Argon.id()}": 1.9
       "#{AR.Chemistry.Materials.Elements.Oxygen.id()}": 0.174

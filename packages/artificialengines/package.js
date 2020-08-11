@@ -143,6 +143,7 @@ Package.onUse(function(api) {
 	api.addCss('mirage/debugfont');
   api.addStyleImport('mirage/debugfont');
 	api.addComponent('mirage/display');
+  api.addUnstyledComponent('mirage/hdrimage');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
   api.addUnstyledComponent('mirage/pixelimage');
@@ -270,6 +271,8 @@ Package.onUse(function(api) {
   api.addFile('pyramid/complexnumber');
   api.addGlsl('pyramid/complexnumber');
 
+  api.addFile('pyramid/besselfunctions');
+
   api.addFile('pyramid/integration..');
   api.addFile('pyramid/integration/midpoint');
 
@@ -301,6 +304,7 @@ Package.onUse(function(api) {
   api.addFileWithGlsl('reality/optics/fresnelequations');
   api.addFile('reality/optics/scattering');
   api.addGlsl('reality/optics/scattering');
+  api.addFile('reality/optics/scattering-mie');
 
   api.addFile('reality/optics/spectrum..');
   api.addFile('reality/optics/spectrum/formulated');
@@ -336,6 +340,7 @@ Package.onUse(function(api) {
   api.addFile('reality/chemistry/materials/gas');
   api.addFile('reality/chemistry/materials/gas-vanderwaals');
   api.addFile('reality/chemistry/materials/idealgas');
+  api.addFile('reality/chemistry/materials/sellmeiermaterial');
 
   api.addFile('reality/chemistry/materials/elements..');
   api.addFile('reality/chemistry/materials/elements/argon');
@@ -359,6 +364,7 @@ Package.onUse(function(api) {
 
   api.addFile('reality/chemistry/materials/compounds..');
   api.addFile('reality/chemistry/materials/compounds/carbondioxide');
+  api.addFile('reality/chemistry/materials/compounds/cellulose');
   api.addFile('reality/chemistry/materials/compounds/corundum');
   api.addFile('reality/chemistry/materials/compounds/tungstendisulfide');
   api.addFile('reality/chemistry/materials/compounds/water');

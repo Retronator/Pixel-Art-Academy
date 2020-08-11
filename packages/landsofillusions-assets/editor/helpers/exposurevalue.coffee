@@ -1,9 +1,9 @@
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Helpers.ExposureValue extends FM.Helper
+class LOI.Assets.Editor.Helpers.ExposureValue extends FM.Helper
   # exposure value used for tone mapping
-  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Helpers.ExposureValue'
+  @id: -> 'LandsOfIllusions.Assets.Editor.Helpers.ExposureValue'
   @initialize()
 
   value: (newValue) ->

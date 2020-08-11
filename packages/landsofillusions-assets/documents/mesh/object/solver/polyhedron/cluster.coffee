@@ -45,6 +45,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     @planeChanged = false
     @previousPlane = _.clone @plane
 
+    # Reset assignment to a cluster plane.
+    @_clusterPlane = null
+
   changed: ->
     @pixelsChanged or @edgesChanged or @planeChanged
 
@@ -60,6 +63,14 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     return unless @plane.point and @plane.normal
 
     new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
+
+  getLongestEdgeLengthBetweenNonParallelClusters: ->
+    longestEdgeLength = 0
+
+    for otherClusterId, edge of @edges when not edge.parallelClusters
+      longestEdgeLength = Math.max longestEdgeLength, edge.segments.length
+
+    longestEdgeLength
 
   updatePixels: ->
     @material = @layerCluster.material()
