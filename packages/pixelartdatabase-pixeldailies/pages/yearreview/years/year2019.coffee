@@ -5,7 +5,7 @@ class PADB.PixelDailies.Pages.YearReview.Years[2019]
   @backgrounds = [
     # This is the year review header image.
     url: 'https://pbs.twimg.com/media/D2mU5AGWwAADeOi.png'
-    position: ['0%', '100%']
+    position: ['50%', '100%']
     author: '16pxl'
   ,
     url: 'https://pbs.twimg.com/media/EIaLgYwX0AA9JEo.png'

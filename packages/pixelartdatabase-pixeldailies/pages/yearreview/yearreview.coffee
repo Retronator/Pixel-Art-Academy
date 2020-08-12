@@ -9,7 +9,8 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
   @title: (options) ->
     currentYear = new Date().getFullYear()
-    subtitle = if options.year is currentYear then "Calendar" else "Retrospective"
+    reviewYear = parseInt options.year
+    subtitle = if reviewYear is currentYear then "Calendar" else "Retrospective"
 
     "Retronator // #{options.year} Pixel Dailies #{subtitle}"
 
