@@ -3,7 +3,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 
 class PAA.Learning.Task.Survey extends PAA.Learning.Task
-  @type = 'Survey'
+  @type: -> 'Survey'
 
   @QuestionType:
     MultipleChoice: 'MultipleChoice'

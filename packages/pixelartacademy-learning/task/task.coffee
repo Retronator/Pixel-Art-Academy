@@ -1,8 +1,10 @@
 AB = Artificial.Babel
 PAA = PixelArtAcademy
+IL = Illustrapedia
 
 class PAA.Learning.Task
   @_taskClassesById = {}
+  @_taskClassesUpdatedDependency = new Tracker.Dependency
 
   @PredecessorsCompleteType:
     All: 'All'
@@ -15,16 +17,20 @@ class PAA.Learning.Task
     Video: 'Video'
 
   @getClassForId: (id) ->
+    @_taskClassesUpdatedDependency.depend()
     @_taskClassesById[id]
+
+  @getTypes: ->
+    property for property, value of @ when value.prototype instanceof @
 
   # Id string for this task used to identify the task in code.
   @id: -> throw new AE.NotImplementedException "You must specify task's id."
 
   # The type that identifies the task class individual tasks inherit from.
-  @type: null
+  @type: -> null
 
   # The icon that represents the kind of work done in this task.
-  @icon: @Icons.Task
+  @icon: -> @Icons.Task
 
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
@@ -49,14 +55,19 @@ class PAA.Learning.Task
   @initialize: ->
     # Store task class by ID.
     @_taskClassesById[@id()] = @
+    @_taskClassesUpdatedDependency.changed()
 
-    # On the server, create this avatar's translated names.
+    # On the server, after document observers are started, perform initialization.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty
 
+        # Create this avatar's translated names.
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
+
+        # Initialize interests.
+        IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
 
   @getAdventureInstanceForId: (taskId) ->
     for episode in LOI.adventure.episodes()
@@ -77,12 +88,11 @@ class PAA.Learning.Task
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @type = @constructor.type
-
   destroy: ->
     @_translationSubscription.stop()
 
   id: -> @constructor.id()
+  type: -> @constructor.type()
 
   directive: -> AB.translate(@_translationSubscription, 'directive').text
   directiveTranslation: -> AB.translation @_translationSubscription, 'directive'

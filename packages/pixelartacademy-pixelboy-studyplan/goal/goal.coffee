@@ -255,6 +255,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
 
   requiredInterestEntryPointById: (interestId) ->
     if @expanded()
+      return unless @isCreated()
       return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
       return unless taskMapSize = @tasksMapSize()
       return unless requiredInterestPosition = requiredInterestsPositionsById[interestId]

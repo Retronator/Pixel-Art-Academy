@@ -54,6 +54,9 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     @blueprint new @constructor.Blueprint @
     @goalSearch new @constructor.GoalSearch @
 
+    # Initialize Study Guide activities.
+    @studyGuideSubscription = PAA.StudyGuide.Activity.initializeAll @
+
     # Subscribe to character's task entries.
     PAA.Learning.Task.Entry.forCharacter.subscribe @, LOI.characterId()
 
@@ -76,6 +79,9 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
             x: -100
             y: -20
           expanded: true
+
+  ready: ->
+    @studyGuideSubscription.ready()
 
   hasGoal: (goalId) -> @constructor.hasGoal goalId
     

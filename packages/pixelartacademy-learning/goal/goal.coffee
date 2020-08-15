@@ -5,11 +5,14 @@ IL = Illustrapedia
 
 class PAA.Learning.Goal
   @_goalClassesById = {}
+  @_goalClassesUpdatedDependency = new Tracker.Dependency
 
   @getClassForId: (id) ->
+    @_goalClassesUpdatedDependency.depend()
     @_goalClassesById[id]
     
   @getClasses: ->
+    @_goalClassesUpdatedDependency.depend()
     _.values @_goalClassesById
 
   # Id string for this goal used to identify the goal in code.
@@ -32,24 +35,24 @@ class PAA.Learning.Goal
   @initialize: ->
     # Store goal class by ID.
     @_goalClassesById[@id()] = @
+    @_goalClassesUpdatedDependency.changed()
 
-    # On the server, create this avatar's translated names.
+    # On the server, after document observers are started, perform initialization.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty
 
+        # Create this avatar's translated names.
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName']
+
+        # Initialize own interests.
+        IL.Interest.initialize interest for interest in @ownRequiredInterests()
 
     # Create a list of interests increased by completing this goal's tasks.
     @_interests = []
     for task in @tasks()
       @_interests = _.union @_interests, task.interests()
-            
-    # On the server, after document observers are started, also initialize interests.
-    if Meteor.isServer
-      Document.startup =>
-        IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
 
     # Create a list of interests required before attempting this goal and its tasks.
     @_requiredInterests = @ownRequiredInterests()
