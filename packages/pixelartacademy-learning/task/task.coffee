@@ -20,6 +20,10 @@ class PAA.Learning.Task
     @_taskClassesUpdatedDependency.depend()
     @_taskClassesById[id]
 
+  @removeClassForId: (id) ->
+    delete @_taskClassesById[id]
+    @_taskClassesUpdatedDependency.depend()
+
   @getTypes: ->
     property for property, value of @ when value.prototype instanceof @
 

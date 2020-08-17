@@ -11,6 +11,8 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Task extends AM.Component
   onCreated: ->
     super arguments...
 
+    @renaming = new ReactiveField false
+
     @activityComponent = @ancestorComponentOfType PAA.StudyGuide.Pages.Admin.Activities.Activity
 
     @taskTranslationHandle = new ComputedField =>
@@ -18,8 +20,17 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Task extends AM.Component
       translationNamespace = task.id
       AB.subscribeNamespace translationNamespace
 
-  taskDirectiveTranslation: -> AB.translation @taskTranslationHandle(), 'directive'
+  onDestroyed: ->
+    super arguments...
+
+    @_renamingStopAutorun?.stop()
+
+  taskDirectiveTranslation: ->
+    return if @renaming() or @activityComponent.renaming()
+    AB.translation @taskTranslationHandle(), 'directive'
+
   taskInstructionsTranslation: ->
+    return if @renaming() or @activityComponent.renaming()
     AB.translation @taskTranslationHandle(), 'instructions'
 
   taskInstructionsTranslationInputOptions: ->
@@ -27,12 +38,63 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Task extends AM.Component
 
   events: ->
     super(arguments...).concat
+      'click .rename-task-button': @onClickRenameTaskButton
       'click .remove-task-button': @onClickRemoveTaskButton
+
+  onClickRenameTaskButton: (event) ->
+    task = @data()
+    return unless newTaskId = prompt "Rename task to", task.id
+    return if task.id is newTaskId
+
+    @_startRenaming task.id
+    activity = @activityComponent.data()
+    PAA.StudyGuide.Activity.renameTaskId activity._id, task.id, newTaskId
+
+  _startRenaming: (oldTaskId) ->
+    @renaming true
+
+    # Wait for new document to come back to allow editing again.
+    @_renamingStopAutorun = Tracker.autorun (computation) =>
+      task = @data()
+      return if task.id is oldTaskId
+
+      @renaming false
+      computation.stop()
 
   onClickRemoveTaskButton: (event) ->
     task = @data()
+    return unless confirm "Remove task #{task.id}?"
+
+    @_startRenaming task.id
     activity = @activityComponent.data()
     PAA.StudyGuide.Activity.removeTask activity._id, task.id
+
+  class @Type extends AM.DataInputComponent
+    @register 'PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.Type'
+
+    constructor: ->
+      super arguments...
+
+      @type = AM.DataInputComponent.Types.Select
+
+    onCreated: ->
+      super arguments...
+
+      @activityComponent = @ancestorComponentOfType PAA.StudyGuide.Pages.Admin.Activities.Activity
+
+    options: ->
+      for type in _.without PAA.Learning.Task.getTypes(), PAA.Learning.Task.Automatic.type()
+        name: type
+        value: type
+
+    load: ->
+      task = @data()
+      task.type
+
+    save: (value) ->
+      task = @data()
+      activity = @activityComponent.data()
+      PAA.StudyGuide.Activity.changeTaskType activity._id, task.id, value
 
   class @StringList extends PAA.StudyGuide.Pages.Admin.Activities.Activity.StringList
     onCreated: ->

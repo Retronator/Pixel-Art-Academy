@@ -11,20 +11,56 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity extends AM.Component
   onCreated: ->
     super arguments...
 
+    @renaming = new ReactiveField false
+
     @goalTranslationHandle = new ComputedField =>
       activity = @data()
       translationNamespace = activity.goalId
       AB.subscribeNamespace translationNamespace
 
+  onDestroyed: ->
+    @_renamingStopAutorun?.stop()
+
   taskTypes: ->
     # Automatic tasks are not allowed in the journal.
     _.without PAA.Learning.Task.getTypes(), 'Automatic'
 
-  goalDisplayNameTranslation: -> AB.translation @goalTranslationHandle(), 'displayName'
+  goalDisplayNameTranslation: ->
+    return if @renaming()
+    AB.translation @goalTranslationHandle(), 'displayName'
 
   events: ->
     super(arguments...).concat
+      'click .rename-goal-button': @onClickRenameGoalButton
+      'click .remove-activity-button': @onClickRemoveActivityButton
       'click .add-task-button': @onClickAddTaskButton
+
+  onClickRenameGoalButton: (event) ->
+    activity = @data()
+
+    return unless newGoalId = prompt "Rename goal to", activity.goalId
+    return if activity.goalId is newGoalId
+
+    @_startRenaming activity.goalId
+    PAA.StudyGuide.Activity.renameGoalId activity._id, newGoalId
+
+  _startRenaming: (oldGoalId) ->
+    @renaming true
+
+    # Wait for new document to come back to allow editing again.
+    @_renamingStopAutorun = Tracker.autorun (computation) =>
+      activity = @data()
+      return if activity.goalId is oldGoalId
+
+      @renaming false
+      computation.stop()
+
+  onClickRemoveActivityButton: (event) ->
+    activity = @data()
+    return unless confirm "Remove activity #{activity.goalId}?"
+
+    @_startRenaming activity.goalId
+    PAA.StudyGuide.Activity.remove activity._id
 
   onClickAddTaskButton: ->
     taskSuffix = @$('.new-task-id').val()

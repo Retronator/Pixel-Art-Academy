@@ -1,6 +1,10 @@
 <template name="PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task">
   <div class="pixelartacademy-studyguide-pages-admin-activities-activity-task">
-    <h3>{{id}} <button class="remove-task-button">X</button></h3>
+    <h3>{{id}} <button class="rename-task-button">R</button> <button class="remove-task-button">X</button></h3>
+    <label class="property type">
+      <span class="name">Type:</span>
+      <span class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.Type}}</span>
+    </label>
     <label class="property directive">
       <span class="name">Directive:</span>
       <span class="value">{{> LandsOfIllusions.Components.TranslationInput taskDirectiveTranslation}}</span>

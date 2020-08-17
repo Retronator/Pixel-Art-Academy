@@ -42,4 +42,6 @@ PAA.StudyGuide.initializeTask = (goalId, taskId, taskType) ->
     @groupNumber: ->
       @taskDescription()?.groupNumber or super arguments...
 
+    @questions: -> [] # TODO: Provide questions for survey task.
+
     @initialize()

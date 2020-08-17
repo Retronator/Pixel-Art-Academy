@@ -24,10 +24,14 @@ class PAA.StudyGuide.Activity extends AM.Document
   # Methods
   @insert: @method 'insert'
   @update: @method 'update'
+  @remove: @method 'remove'
+  @renameGoalId: @method 'renameGoalId'
 
   @insertTask: @method 'insertTask'
   @updateTask: @method 'updateTask'
   @removeTask: @method 'removeTask'
+  @renameTaskId: @method 'renameTaskId'
+  @changeTaskType: @method 'changeTaskType'
 
   # Subscriptions
   @all: @subscription 'all'

@@ -10,7 +10,11 @@ class PAA.Learning.Goal
   @getClassForId: (id) ->
     @_goalClassesUpdatedDependency.depend()
     @_goalClassesById[id]
-    
+
+  @removeClassForId: (id) ->
+    delete @_goalClassesById[id]
+    @_goalClassesUpdatedDependency.depend()
+
   @getClasses: ->
     @_goalClassesUpdatedDependency.depend()
     _.values @_goalClassesById
