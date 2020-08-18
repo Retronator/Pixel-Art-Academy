@@ -119,8 +119,11 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       left: 6
       bottom: 6
 
-    @requiredInterestLabelHeight = 7
+    @requiredInterestsLabelHeight = 7
     @requiredInterestsMargin = 5
+
+    # Optional interests are stated in two lines when no normal required interests are present.
+    @optionalInterestsLabelHeight = if @goal.requiredInterests().length then 7 else 16
 
     # Calculate entry and exit points.
     for goalTask in @goalTasks
@@ -142,15 +145,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @nameHeight = new ReactiveField 20
     @requiredInterestsPositionsById = new ReactiveField null
     @requiredInterestsHeight = new ReactiveField null
+    @optionalInterestsTop = new ReactiveField null
 
     # Subscribe to all interests of this goal.
     @autorun (computation) =>
-      for interest in _.union @goal.interests(), @goal.requiredInterests()
+      for interest in _.union @goal.interests(), @goal.requiredInterests(), @goal.optionalInterests()
         IL.Interest.forSearchTerm.subscribe interest
-        
+
   onRendered: ->
     super arguments...
-    
+
     # Draw tasks map connections.
     @constructor.TasksMapConnections.draw @
 
@@ -173,7 +177,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       scale = @display.scale()
 
       # Depend on names of interests.
-      for interest in @goal.requiredInterests()
+      for interest in [@goal.requiredInterests()..., @goal.optionalInterests()...]
         continue unless interestDocument = IL.Interest.find interest
 
         AB.translate interestDocument.name
@@ -184,19 +188,31 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
           positions = {}
           top = 0
 
-          for interest in @$('.required-interests .interest')
-            $interest = $(interest)
-            id = $interest.data 'id'
+          analyzeInterests = ($interests) =>
+            for interest in $interests
+              $interest = $(interest)
+              id = $interest.data 'id'
 
-            top += @requiredInterestsMargin
-            positions[id] = top
+              top += @requiredInterestsMargin
+              positions[id] = top
 
-            # Move down by the title height.
-            height = $interest.outerHeight() / scale
-            top += height
+              # Move down by the title height.
+              height = $interest.outerHeight() / scale
+              top += height
 
-          # If any interests were found, also accomodate the required label.
-          top += @requiredInterestsMargin + @requiredInterestLabelHeight if top
+          $requiredInterests = @$('.required-interests .interest')
+          analyzeInterests $requiredInterests
+
+          # If any interests were found, also accommodate the required label.
+          top += @requiredInterestsMargin + @requiredInterestsLabelHeight if $requiredInterests.length
+
+          @optionalInterestsTop top
+
+          $optionalInterests = @$('.optional-interests .interest')
+          analyzeInterests $optionalInterests
+
+          # If any optional interests were found, also accommodate the optional label.
+          top += @requiredInterestsMargin + @optionalInterestsLabelHeight if $optionalInterests.length
 
           @requiredInterestsPositionsById positions
           @requiredInterestsHeight top
@@ -249,6 +265,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
 
     true
 
+  showOptionalInterests: ->
+    # Show optional interests when you have all the interest documents.
+    return unless optionalInterests = @goal.optionalInterests()
+    return unless optionalInterests.length
+
+    for interest in optionalInterests
+      return unless IL.Interest.find interest
+
+    true
+
   interestDocument: ->
     interest = @currentData()
     IL.Interest.find interest
@@ -260,7 +286,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       return unless taskMapSize = @tasksMapSize()
       return unless requiredInterestPosition = requiredInterestsPositionsById[interestId]
 
-      top = Math.ceil @nameHeight() + taskMapSize.height + @requiredInterestsMargin + @requiredInterestLabelHeight + requiredInterestPosition
+      top = Math.ceil @nameHeight() + taskMapSize.height + @requiredInterestsMargin + @requiredInterestsLabelHeight + requiredInterestPosition
 
       y = top + Math.ceil @taskHeight / 2
 
@@ -335,8 +361,13 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     x: @goalWidth()
     y: y + 1
 
-  requiredInterestLabelStyle: ->
+  requiredInterestsLabelStyle: ->
     top = @nameHeight() + @tasksMapSize().height + @requiredInterestsMargin
+
+    top: "#{top}rem"
+
+  optionalInterestsLabelStyle: ->
+    top = @nameHeight() + @tasksMapSize().height + @requiredInterestsMargin + @optionalInterestsTop()
 
     top: "#{top}rem"
 
@@ -345,7 +376,28 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
 
     requiredInterestsPosition = requiredInterestsPositionsById[interestDocument._id]
-    top = @nameHeight() + @tasksMapSize().height + @requiredInterestsMargin + @requiredInterestLabelHeight + requiredInterestsPosition
+    top = _.sum [
+      @nameHeight()
+      @tasksMapSize().height
+      @requiredInterestsMargin
+      @requiredInterestsLabelHeight
+      requiredInterestsPosition
+    ]
+
+    top: "#{top}rem"
+
+  optionalInterestStyle: ->
+    interestDocument = @currentData()
+    return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
+
+    requiredInterestsPosition = requiredInterestsPositionsById[interestDocument._id]
+    top = _.sum [
+      @nameHeight()
+      @tasksMapSize().height
+      @requiredInterestsMargin
+      @optionalInterestsLabelHeight
+      requiredInterestsPosition
+    ]
 
     top: "#{top}rem"
 

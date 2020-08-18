@@ -115,6 +115,12 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity extends AM.Component
       @$('.new-item-name').val newItemName
       @newItemName newItemName
 
+    addItem: (item) ->
+      newItems = _.union @items(), [item]
+      @save "#{@fieldName}": newItems
+
+      @setNewItemName ''
+
     events: ->
       super(arguments...).concat
         'input .new-item-name': @onInputNewItemName
@@ -127,10 +133,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity extends AM.Component
       @newItemName newItemName
 
     onClickAddItemButton: (event) ->
-      newItems = _.union @items(), [@newItemName()]
-      @save "#{@fieldName}": newItems
-
-      @setNewItemName ''
+      @addItem @newItemName()
 
     onClickRemoveItemButton: (event) ->
       item = @currentData()
@@ -139,7 +142,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity extends AM.Component
 
     onClickAutocompleteItemsItem: (event) ->
       item = @currentData()
-      @setNewItemName item
+      @addItem item
 
   class @TasksList extends @StringList
     possibleItems: ->

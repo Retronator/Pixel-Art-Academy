@@ -114,6 +114,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/inherit');
   api.addFile('everywhere/lodash/parse');
   api.addFile('everywhere/lodash/transform');
+  api.addFile('everywhere/lodash/cartesianproduct');
 
   api.addFile('everywhere/tracker/delayedautorun');
 
