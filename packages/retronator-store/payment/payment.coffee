@@ -23,10 +23,13 @@ class RS.Payment extends AM.Document
   # patronId: Patreon user ID
   #
   # STRIPE PAYMENT
-  # chargeId: charge id returned from stripe API
+  # chargeId: charge ID returned from stripe API
   # chargeError: error that occurred while trying to charge this payment (after being only authorized)
   #   failureCode: code returned directly from stripe
   #   failureMessage: message returned directly from stripe
+  #
+  # PAYPAL PAYMENT
+  # payPalTransactionId: transaction ID reported by PayPal
   #
   # REFERRAL CODE
   # referralCode: the code used for the referral
@@ -52,6 +55,7 @@ class RS.Payment extends AM.Document
     KickstarterPledge: 'KickstarterPledge'
     PatreonPledge: 'PatreonPledge'
     StripePayment: 'StripePayment'
+    PayPalPayment: 'PayPalPayment'
     ReferralCode: 'ReferralCode'
     StoreCredit: 'StoreCredit'
 
