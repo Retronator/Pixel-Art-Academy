@@ -18,6 +18,22 @@ class PAA.StudyGuide.Activity extends AM.Document
   # finalTasks: array of learning task IDs that complete this goal
   # finalGroupNumber: number at which group level the exit node appears, 0 when undefined
   # requiredInterests: array of interests directly required by the goal, not coming from the tasks
+  # [article]: array of delta operations for the Study Guide article of this activity
+  #   insert: string or object to be inserted
+  #     artwork: an artwork from the pixel art database
+  #       _id
+  #
+  #     picture: an image without any semantic information
+  #       url: the url of the image itself
+  #       sourceWebsiteUrl: optional url from which the image was extracted, if it wasn't uploaded
+  #
+  #     video: a video without any semantic information
+  #       url
+  #
+  #     task: a learning task
+  #       id: the id of the task to be displayed
+  #
+  #   attributes: object with formatting directives
   @Meta
     name: @id()
 
@@ -32,6 +48,8 @@ class PAA.StudyGuide.Activity extends AM.Document
   @removeTask: @method 'removeTask'
   @renameTaskId: @method 'renameTaskId'
   @changeTaskType: @method 'changeTaskType'
+
+  @updateArticle: @method 'updateArticle'
 
   # Subscriptions
   @all: @subscription 'all'

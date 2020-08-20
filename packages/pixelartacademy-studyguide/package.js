@@ -10,6 +10,11 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'quill-delta': '4.2.2',
+  'quill': '1.3.7'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-learning');
@@ -33,5 +38,7 @@ Package.onUse(function(api) {
   api.addComponent('pages/admin/activities..');
   api.addComponent('pages/admin/activities/activity');
   api.addComponent('pages/admin/activities/task');
+  api.addClientComponent('pages/admin/activities/article-client/article');
+  api.addCss('pages/admin/activities/article-client/quill/quill.snow');
 
 });

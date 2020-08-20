@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '3.6.2',
+  'quill-delta': '4.2.2',
   'pngjs': '2.3.0'
 });
 

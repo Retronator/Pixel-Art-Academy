@@ -3,6 +3,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Delta = require 'quill-delta'
+
 PAA.StudyGuide.Activity.insert.method (goalId) ->
   check goalId, String
   LOI.Authorize.admin()
@@ -294,3 +296,20 @@ PAA.StudyGuide.Activity.changeTaskType.method (activityId, taskId, newTaskType) 
 
   goalClass = PAA.Learning.Goal.getClassForId activity.goalId
   goalClass.initialize()
+
+PAA.StudyGuide.Activity.updateArticle.method (activityId, updateDeltaOperations) ->
+  check activityId, Match.DocumentId
+  check updateDeltaOperations, Array
+  LOI.Authorize.admin()
+
+  activity = PAA.StudyGuide.Activity.documents.findOne activityId
+  throw new AE.ArgumentException "Activity does not exist." unless activity
+
+  contentDelta = new Delta activity.article or [insert: '\n']
+  updateDelta = new Delta updateDeltaOperations
+  newContentDelta = contentDelta.compose updateDelta
+
+  # Update the text.
+  PAA.StudyGuide.Activity.documents.update activityId,
+    $set:
+      article: newContentDelta.ops
