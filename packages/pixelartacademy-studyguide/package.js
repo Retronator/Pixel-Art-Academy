@@ -33,6 +33,12 @@ Package.onUse(function(api) {
   api.addServerFile('activity/subscriptions');
 
   api.addFile('pages..');
+  api.addComponent('pages/layout..');
+  api.addComponent('pages/home..');
+  api.addComponent('pages/home/activities..');
+  api.addComponent('pages/home/studyplan..');
+  api.addComponent('pages/home/about..');
+
   api.addUnstyledComponent('pages/admin..');
 
   api.addComponent('pages/admin/activities..');
