@@ -14,10 +14,10 @@ class PAA.StudyGuide.Pages.Home.About extends AM.Component
     @left = new ComputedField => @home.studyPlan.left() + @home.studyPlan.width() + @home.widthConstants.innerGap
 
     @width = new ComputedField =>
-      120
+      200
 
   aboutStyle: ->
     left: "#{@left()}rem"
-    bottom: "#{@home.safeHeightGap()}rem"
+    bottom: "#{@home.safeHeightGap() + @home.heightConstants.tableSafeArea}rem"
     width: "#{@width()}rem"
     height: "#{@home.contentSafeHeight()}rem"

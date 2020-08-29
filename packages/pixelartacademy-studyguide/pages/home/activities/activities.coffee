@@ -14,10 +14,10 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
     @left = new ComputedField => @home.safeWidthGap()
 
     @width = new ComputedField =>
-      200
+      290
 
   activitiesStyle: ->
     left: "#{@left()}rem"
-    bottom: "#{@home.safeHeightGap()}rem"
+    bottom: "#{@home.safeHeightGap() + @home.heightConstants.tableSafeArea}rem"
     width: "#{@width()}rem"
-    height: "#{@home.contentSafeHeight()}rem"
+    height: "#{@home.contentSafeHeight() - @home.heightConstants.tableSafeArea}rem"

@@ -36,7 +36,8 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       title: 28
       navigation: 16
       header: 28 + 16 + 5
-      blueprintBottom: 30
+      blueprintBottom: 79
+      tableSafeArea: 30
 
     @viewportHeight = new ComputedField =>
       viewport = @display.viewport()
@@ -53,7 +54,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       @viewportHeight() - @heightConstants.navigation + @heightConstants.blueprintBottom + @safeHeightGap()
 
     @widthConstants =
-      innerGap: 20
+      innerGap: 40
 
     @viewportWidth = new ComputedField =>
       viewport = @display.viewport()
@@ -93,7 +94,21 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
         top = @height() - @viewportHeight()
         left = 0
 
+    backgroundHeight = 396
+    backgroundBottom = @safeHeightGap() - 50
+    backgroundTop = @height() - backgroundBottom - backgroundHeight
+
     height: "#{@height()}rem"
     width: "#{@width()}rem"
     top: "#{-top}rem"
     left: "#{-left}rem"
+    backgroundPosition: "0 #{backgroundTop}rem"
+
+  tableStyle: ->
+    leftPartWidth = 178
+    rightPartWidth = 189
+    tableHeight = 50
+
+    bottom: "#{@safeHeightGap() - (tableHeight - @heightConstants.tableSafeArea)}rem"
+    left: "#{@safeWidthGap() + leftPartWidth}rem"
+    right: "#{@safeWidthGap() + rightPartWidth}rem"
