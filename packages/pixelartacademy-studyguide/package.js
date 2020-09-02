@@ -32,6 +32,10 @@ Package.onUse(function(api) {
   api.addFile('activity/methods');
   api.addServerFile('activity/subscriptions');
 
+  api.addFile('book..');
+  api.addFile('book/methods');
+  api.addServerFile('book/subscriptions');
+
   api.addFile('pages..');
   api.addComponent('pages/layout..');
   api.addComponent('pages/home..');
@@ -47,4 +51,6 @@ Package.onUse(function(api) {
   api.addClientComponent('pages/admin/activities/article-client/article');
   api.addCss('pages/admin/activities/article-client/quill/quill.snow');
 
+  api.addComponent('pages/admin/books..');
+  api.addUnstyledComponent('pages/admin/books/book');
 });

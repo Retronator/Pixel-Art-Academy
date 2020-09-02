@@ -18,6 +18,20 @@ Match.IntegerRange = (min, max) ->
     check value, Match.Integer
     min <= value <= max
 
+Match.IntegerMin = (min) ->
+  check min, Match.Integer
+
+  Match.Where (value) ->
+    check value, Match.Integer
+    min <= value
+
+Match.IntegerMax = (max) ->
+  check max, Match.Integer
+
+  Match.Where (value) ->
+    check value, Match.Integer
+    value <= max
+
 Match.NonNegativeNumber = Match.Where (value) ->
   check value, Number
   value >= 0

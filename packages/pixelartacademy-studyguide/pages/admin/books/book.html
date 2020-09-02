@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Admin.Books.Book">
+  <div class="pixelartacademy-studyguide-pages-admin-books-book">
+    <h2>{{> t10e title}}</h2>
+    <label class="title">Title: {{> LandsOfIllusions.Components.TranslationInput title}}</label>
+    <div class="design">Design:
+      <div class="size">Size:
+        <label class="width">Width: {{> PixelArtAcademy.StudyGuide.Pages.Admin.Books.Book.Design.Size.Width}}px (≤ 320)</label>
+        <label class="height">Height: {{> PixelArtAcademy.StudyGuide.Pages.Admin.Books.Book.Design.Size.Height}}px</label>
+        <label class="thickness">Thickness: {{> PixelArtAcademy.StudyGuide.Pages.Admin.Books.Book.Design.Size.Thickness}}px (≥ 25)</label>
+      </div>
+      <label class="class">Class: {{> PixelArtAcademy.StudyGuide.Pages.Admin.Books.Book.Design.Class}}</label>
+    </div>
+  </div>
+</template>

@@ -1,5 +1,20 @@
 <template name="PixelArtAcademy.StudyGuide.Pages.Home.Activities">
   <div class="pixelartacademy-studyguide-pages-home-activities" {{style activitiesStyle}}>
-    <div class="books"></div>
+      <ul class="groups">
+        {{#each bookGroups}}
+          <li class="group">
+            <ul class="books">
+              {{#each books}}
+                <li class="book {{design.class}}" {{style bookStyle}}>
+                  <div class="spine">
+                    <div class="title">{{> t10e title}}</div>
+                  </div>
+                  <div class="pages" {{style pagesStyle}}></div>
+                </li>
+              {{/each}}
+            </ul>
+          </li>
+        {{/each}}
+      </ul>
   </div>
 </template>

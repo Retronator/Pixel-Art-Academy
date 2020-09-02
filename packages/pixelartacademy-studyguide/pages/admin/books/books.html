@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Admin.Books">
+  <style>
+    html {font-size: 2px;}
+  </style>
+  <div class="pixelartacademy-studyguide-pages-admin-books pixelartacademy-pages-admin-components-adminpage">
+    <h3>{{capitalize options.pluralName}}</h3>
+    {{# if scriptsComponent}}
+      {{> Render scriptsComponent}}
+    {{/if}}
+    {{> Artificial.Mummification.Admin.Components.Index args options}}
+    {{#if document}}
+      <div class="document-area">
+        {{> documentPage document}}
+      </div>
+    {{/if}}
+  </div>
+</template>

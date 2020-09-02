@@ -3,10 +3,60 @@
 .pixelartacademy-studyguide-pages-home-activities
   position absolute
 
-  .books
+  .groups
     position absolute
     bottom 0
-    left 18rem
-    width 266rem
-    height 40rem
-    background-image image('/pixelartacademy/studyguide/home/books.png')
+    left 0
+    padding 0
+    margin 0
+    list-style none
+
+    .group
+      margin-left 20rem
+
+      .books
+        padding 0
+        margin 0
+        list-style none
+
+        .book
+          position relative
+          border-width 4rem 1rem 4rem 2rem
+          border-style solid
+          border-image-slice 4 1 4 2
+          background-clip padding-box
+
+          &.brown
+            &.dark
+              background-image image('/pixelartacademy/studyguide/home/book-brown-dark.png')
+              border-image-source image('/pixelartacademy/studyguide/home/book-border-brown-dark.png')
+
+              .pages
+                border-image-source image('/pixelartacademy/studyguide/home/pages-border-brown-dark.png')
+
+          .spine
+            position absolute
+            top -4rem
+            bottom -4rem
+            left 0
+            right 0
+            vertical-align middle
+
+            .title
+              display inline-block
+
+          .pages
+            position absolute
+            left calc(100% + 1rem)
+            top -4rem
+            bottom -4rem
+            border-width 2rem 2rem 2rem 0
+            border-style solid
+            border-image-slice 2 2 2 0
+
+            &::after
+              content ''
+              z-index -1
+              absolute-cover()
+              bottom -1rem
+              background image('/pixelartacademy/studyguide/home/pages.png') 0 0 / 1rem 2rem

@@ -8,6 +8,7 @@ class PAA.StudyGuide
   constructor: ->
     Retronator.App.addAdminPage '/admin/studyguide', @constructor.Pages.Admin
     Retronator.App.addAdminPage '/admin/studyguide/activities/:activityId?', @constructor.Pages.Admin.Activities
+    Retronator.App.addAdminPage '/admin/studyguide/books/:documentId?', @constructor.Pages.Admin.Books
     @addStudyGuidePage 'retropolis.city/academy-of-art/study-guide/:pageOrBook?/:goal?', @constructor.Pages.Home
 
   addStudyGuidePage: (url, page) ->
