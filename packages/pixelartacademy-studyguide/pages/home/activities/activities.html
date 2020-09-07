@@ -5,9 +5,11 @@
           <li class="group">
             <ul class="books">
               {{#each books}}
-                <li class="book {{design.class}}" {{style bookStyle}}>
+                <li class="book {{design.class}} {{bookActiveClass}}" {{style bookStyle}}>
                   <div class="spine">
+                    <div class="trim top"></div>
                     <div class="title">{{> t10e title}}</div>
+                    <div class="trim bottom"></div>
                   </div>
                   <div class="pages" {{style pagesStyle}}></div>
                 </li>

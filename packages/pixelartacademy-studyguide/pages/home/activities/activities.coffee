@@ -36,11 +36,17 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
 
       bookGroups
 
+    @activeBookId = new ReactiveField null
+
   activitiesStyle: ->
     left: "#{@left()}rem"
     bottom: "#{@home.safeHeightGap() + @home.heightConstants.tableSafeArea}rem"
     width: "#{@width()}rem"
     height: "#{@home.contentSafeHeight() - @home.heightConstants.tableSafeArea}rem"
+
+  bookActiveClass: ->
+    book = @currentData()
+    'active' if book._id is @activeBookId()
 
   bookStyle: ->
     book = @currentData()
@@ -48,8 +54,13 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
     width = Math.round (size?.height or 500) / 3.75
     height = Math.round (size?.thickness or 25) / 3.75
 
+    marginTop = if book._id is @activeBookId() then -height else 0
+    marginLeft = Math.floor Math.random() * 10
+
     width: "#{width}rem"
     height: "#{height}rem"
+    marginTop: "#{marginTop}rem"
+    marginLeft: "#{marginLeft}rem"
     lineHeight: "#{height}rem"
 
   pagesStyle: ->
@@ -57,3 +68,11 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
     size = book.design?.size
 
     width: "#{1 + Math.round (size?.width or 320) / 100}rem"
+
+  events: ->
+    super(arguments...).concat
+      'click .book': @onClickBook
+
+  onClickBook: (event) ->
+    book = @currentData()
+    @activeBookId book._id
