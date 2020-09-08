@@ -9,6 +9,7 @@ class PAA.StudyGuide.Book extends AM.Document
   # title: the title of the book
   #   _id
   #   translations
+  # slug: auto-generated kebab-case of the en-US title
   # contents: an array of items that are in this book
   #   order: the position of this item in the contents
   #   activity: an activity document that represents this item
@@ -26,6 +27,11 @@ class PAA.StudyGuide.Book extends AM.Document
     name: @id()
     fields: =>
       title: Document.ReferenceField AB.Translation, ['translations'], false
+      slug: Document.GeneratedField 'self', ['title'], (book) ->
+        translations = book.title?.translations
+        slug = translations?.en?.us?.text or translations?.best?.text or null
+        slug = _.kebabCase slug if slug
+        [book._id, slug]
       contents: [
         activity: Document.ReferenceField PAA.StudyGuide.Activity
       ]

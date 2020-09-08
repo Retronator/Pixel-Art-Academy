@@ -36,7 +36,10 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
 
       bookGroups
 
-    @activeBookId = new ReactiveField null
+    @activeBookId = new ComputedField =>
+      return unless slug = AB.Router.getParameter 'pageOrBook'
+      book = PAA.StudyGuide.Book.documents.findOne {slug}
+      book?._id
 
   activitiesStyle: ->
     left: "#{@left()}rem"
@@ -75,4 +78,4 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
 
   onClickBook: (event) ->
     book = @currentData()
-    @activeBookId book._id
+    AB.Router.setParameter 'pageOrBook', book.slug

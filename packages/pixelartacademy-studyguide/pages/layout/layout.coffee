@@ -12,14 +12,21 @@ class PAA.StudyGuide.Pages.Layout extends LOI.Components.EmbeddedWebpage
   rootClass: -> 'pixelartacademy-studyguide'
 
   headerStyle: ->
-    switch AB.Router.currentParameters().pageOrBook
-      when PAA.StudyGuide.Pages.Home.Pages.StudyPlan
+    Pages = PAA.StudyGuide.Pages.Home.Pages
+    pageOrBook = AB.Router.currentParameters().pageOrBook
+
+    switch pageOrBook
+      when Pages.StudyPlan
         top: "-28rem"
         height: "44rem"
 
-      else
+      when Pages.Activities, Pages.About, undefined
         top: 0
         height: "49rem"
+
+      else
+        # We're on a book.
+        top: "-49rem"
 
   studyPlanRouteOptions: ->
     pageOrBook: PAA.StudyGuide.Pages.Home.Pages.StudyPlan

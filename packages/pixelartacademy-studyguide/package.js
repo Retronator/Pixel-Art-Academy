@@ -42,6 +42,7 @@ Package.onUse(function(api) {
   api.addComponent('pages/home/activities..');
   api.addComponent('pages/home/studyplan..');
   api.addComponent('pages/home/about..');
+  api.addComponent('pages/home/book..');
 
   api.addUnstyledComponent('pages/admin..');
 

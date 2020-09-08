@@ -28,6 +28,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     @activities = new PAA.StudyGuide.Pages.Home.Activities @
     @studyPlan = new PAA.StudyGuide.Pages.Home.StudyPlan @
     @about = new PAA.StudyGuide.Pages.Home.About @
+    @book = new PAA.StudyGuide.Pages.Home.Book @
 
     parentWithDisplay = @ancestorComponentWith 'display'
     @display = parentWithDisplay.display
@@ -77,6 +78,20 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       return false unless component.isCreated()
 
     true
+
+  showBackButton: ->
+    return unless @book.isCreated()
+    @book.book()
+
+  backButtonCallback: ->
+    # We must return the callback function.
+    =>
+      @book.close()
+
+      Meteor.setTimeout =>
+        AB.Router.setParameter 'pageOrBook', @constructor.Pages.Activities
+      ,
+        500
 
   sceneStyle: ->
     return unless @_componentsCreated()
