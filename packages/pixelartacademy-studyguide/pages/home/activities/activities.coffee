@@ -14,7 +14,7 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
     @left = new ComputedField => @home.safeWidthGap()
 
     @width = new ComputedField =>
-      290
+      295
 
     PAA.StudyGuide.Book.all.subscribe @
 
