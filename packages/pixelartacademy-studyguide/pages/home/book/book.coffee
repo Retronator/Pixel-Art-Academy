@@ -17,7 +17,8 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     @visible = new ReactiveField false
     @loaded = new ReactiveField false
     @leftPageIndex = new ReactiveField 0
-    @visiblePageIndex = new ReactiveField 0
+    @visiblePageIndex = new ReactiveField 1
+    @pagesCount = new ReactiveField null
 
     @book = new ComputedField =>
       return unless @home.activities.isCreated()
@@ -26,6 +27,10 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
       book = PAA.StudyGuide.Book.documents.findOne bookId
 
       if book
+        # Start on first page.
+        @leftPageIndex 0
+        @visiblePageIndex 1
+        
         # Mark book as loaded for transitions to start.
         Meteor.setTimeout =>
           @loaded true
@@ -51,7 +56,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
       item.activity for item in sortedContents
 
     @activity = new ComputedField =>
-      1
+      AB.Router.getParameter 'activity'
 
     @designConstants =
       pageMargins:
@@ -59,10 +64,52 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         right: 20
       moveButtonExtraWidth: 35
 
+  onRendered: ->
+    super arguments...
+
+    # Reactively update pages count.
+    @autorun (computation) =>
+      return unless @book()
+      return unless @visible()
+
+      # Update when activity or page index changes.
+      @activity()
+      @visiblePageIndex()
+
+      @updatePagesCount()
+
+    # React to activity changes.
+    @autorun (computation) =>
+      activity = @activity()
+
+      if activity
+        # If we're coming from the table of contents, go to first page of the article.
+        unless @_lastActivity
+          @leftPageIndex 0
+          @visiblePageIndex 0
+
+      else
+        # Remember which page on the table of contents we were.
+        @_lastTableOfContentsVisiblePageIndex = @visiblePageIndex()
+
+      @_lastActivity = activity
+
   close: ->
     @visible false
 
+  goToTableOfContents: ->
+    # Return to the page of the table of contents that we last saw.
+    @visiblePageIndex @_lastTableOfContentsVisiblePageIndex
+    @leftPageIndex Math.floor(@_lastTableOfContentsVisiblePageIndex / 2) * 2
+    AB.Router.setParameter 'activity', null
+
+    @scrollToTop()
+
   canMoveLeft: ->
+    unless activity = @activity()
+      # On table of contents we can't go further back than the first page.
+      return @leftPageIndex()
+
     true
 
   canMoveRight: ->
@@ -74,11 +121,21 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     leftPageIndex = @leftPageIndex()
     visiblePageIndex = @visiblePageIndex()
 
+    # Are we at the first page of the article?
+    if @activity() and not visiblePageIndex
+      # Go to previous article.
+
+      # This is the first article, so go to the table of contents.
+      @goToTableOfContents()
+      return
+
     leftPageIndex -= 2 if leftPageIndex is visiblePageIndex
     visiblePageIndex--
 
     @leftPageIndex leftPageIndex
     @visiblePageIndex visiblePageIndex
+
+    @scrollToTop()
 
   nextPage: ->
     return unless @canMoveRight()
@@ -91,6 +148,53 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     @leftPageIndex leftPageIndex
     @visiblePageIndex visiblePageIndex
+
+    @scrollToTop()
+
+  scrollToTop: ->
+    html = $("html")[0]
+    return unless currentScrollTop = html.scrollTop
+
+    targetScrollTop = 0
+
+    $(".pixelartacademy-studyguide-pages-home-book").velocity
+      tween: [targetScrollTop, currentScrollTop]
+    ,
+      duration: 500
+      easing: 'ease-in-out'
+      progress: (elements, complete, remaining, start, tweenValue) =>
+        html.scrollTop = tweenValue
+
+  updatePagesCount: ->
+    if @activity()
+      @_updatePagesCountActivity()
+
+    else
+      # Depend on activities.
+      @activities()
+
+      @_updatePagesCountTableOfContents()
+
+  _updatePagesCountActivity: ->
+    @_updatePagesCountViaEndPage()
+
+  _updatePagesCountTableOfContents: ->
+    @_updatePagesCountViaEndPage()
+
+  _updatePagesCountViaEndPage: ->
+    return unless columnProperties = @columnProperties()
+
+    scale = @display.scale()
+    pageWidth = (columnProperties.columnWidth + columnProperties.columnGap) * scale
+
+    Meteor.setTimeout =>
+      # Search for the new end page.
+      endPageLeft = @$('.end-page').position().left
+      pagesCount = Math.ceil (endPageLeft + 1) / pageWidth
+
+      @pagesCount pagesCount
+    ,
+      100
 
   loadedClass: ->
     'loaded' if @loaded()
@@ -157,6 +261,17 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
   frontPageClass: ->
     'front' unless @activity() or @leftPageIndex()
 
+  pageNumberLeft: ->
+    pageNumber = @leftPageIndex() + 1
+    pageNumber-- unless @activity()
+    pageNumber
+
+  showPageNumberRight: ->
+    @pageNumberRight() <= @pagesCount()
+
+  pageNumberRight: ->
+    @pageNumberLeft() + 1
+
   columnProperties: ->
     return unless book = @book()
     margins = @designConstants.pageMargins
@@ -167,8 +282,13 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
   contentsStyle: ->
     return unless columnProperties = @columnProperties()
 
-    left = -@leftPageIndex() * (columnProperties.columnWidth + columnProperties.columnGap)
-    pagesCount = 10
+    pageIndex = @leftPageIndex()
+
+    # Table of contents starts on the right.
+    pageIndex -= 1 unless @activity()
+
+    left = -pageIndex * (columnProperties.columnWidth + columnProperties.columnGap)
+    pagesCount = 100
     width = pagesCount * columnProperties.columnWidth + (pagesCount - 1) * columnProperties.columnGap
 
     left: "#{left}rem"

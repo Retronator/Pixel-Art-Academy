@@ -34,3 +34,8 @@ PAA.StudyGuide.initializeGoal = (goalId) ->
       @activity()?.requiredInterests or super arguments...
 
     @initialize()
+
+    slug: ->
+      return unless translations = @displayNameTranslation()?.translations
+      displayName = translations?.en?.us?.text or translations?.best?.text or null
+      _.kebabCase displayName

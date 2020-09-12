@@ -70,6 +70,9 @@
           left -12rem
           right -10rem
 
+        .footer
+          left -12rem
+
       &.right
         right 0
         border-width 7rem 52rem 14rem 25rem
@@ -79,9 +82,20 @@
           border-width 15rem 19rem 16rem 21rem
           border-image-slice 15 19 16 21
 
+          .header
+            left -1rem
+            right 22rem
+
+          .footer
+            right 12rem
+
         .header
-          left 15rem
-          right 35rem
+          left -5rem
+          right -12rem
+
+        .footer
+          right -12rem
+          text-align right
 
       .header
         position absolute
@@ -89,13 +103,17 @@
         text-align center
         text-transform uppercase
 
+      .footer
+        position absolute
+        bottom 12rem
+
     .contents-area
       position absolute
       z-index 1
       left 40rem
       right 40rem
       top 40rem
-      bottom 40rem
+      bottom 50rem
       overflow hidden
 
       .contents
@@ -107,18 +125,16 @@
 
         h1
           academy()
-          margin-bottom 10rem
+          margin 0 0 10rem
 
         p
           margin-top 0
 
         .table-of-contents
-          position absolute
-          height 100%
-
           h1
             text-align center
             text-transform uppercase
+            margin-top 10rem
 
           .activities
             academy()

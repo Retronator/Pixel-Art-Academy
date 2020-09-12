@@ -86,6 +86,14 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
   backButtonCallback: ->
     # We must return the callback function.
     =>
+      # If we're on an activity, return to table of contents.
+      if AB.Router.getParameter 'activity'
+        @book.goToTableOfContents()
+
+        # Don't hide the back button.
+        return cancel: true
+
+      # Otherwise we close the book.
       @book.close()
 
       Meteor.setTimeout =>

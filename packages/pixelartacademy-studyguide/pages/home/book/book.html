@@ -14,6 +14,9 @@
               {{> t10e title}}
             {{/if}}
           </div>
+          <div class="footer">
+            {{pageNumberLeft}}{{#if pagesCount}}/{{pagesCount}}{{/if}}
+          </div>
         </div>
         <div class="page right {{frontPageClass}}">
           <div class="header">
@@ -22,6 +25,11 @@
             {{else}}
               {{> t10e title}}
             {{/with}}
+          </div>
+          <div class="footer">
+            {{#if showPageNumberRight}}
+              {{pageNumberRight}}{{#if pagesCount}}/{{pagesCount}}{{/if}}
+            {{/if}}
           </div>
         </div>
         <div class="contents-area">
@@ -48,12 +56,13 @@
               <p>Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass. </p>
               <p>The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee. </p>
               <p>My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand? </p>
+              <div class="end-page"></div>
             {{else}}
               <div class="table-of-contents">
                 <h1>Table of Contents</h1>
                 <ol class="activities">
                   <li class="activity">
-                    <a href="/some-link">The rulers of the world</a>
+                    <a href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home' pageOrBook=book.slug activity='abc'}}">The rulers of the world</a>
                   </li>
                   <li class="activity">
                     <a href="/some-link">Nobody likes me, but I have no hands</a>
@@ -238,6 +247,7 @@
                     </li>
                   {{/each}}
                 </ol>
+                <div class="end-page"></div>
               </div>
             {{/with}}
           </div>
