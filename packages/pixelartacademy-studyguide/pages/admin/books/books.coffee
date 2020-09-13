@@ -13,3 +13,8 @@ class PAA.StudyGuide.Pages.Admin.Books extends Artificial.Mummification.Admin.Co
       nameField: 'title'
       singularName: 'book'
       pluralName: 'books'
+
+  onCreated: ->
+    super arguments...
+
+    PAA.StudyGuide.Activity.initializeAll @

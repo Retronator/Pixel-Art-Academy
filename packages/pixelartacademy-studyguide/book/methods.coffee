@@ -47,17 +47,27 @@ PAA.StudyGuide.Book.remove.method (bookId) ->
   # Clean up the translations.
   Artificial.Babel.Translation.documents.remove book.title._id
 
-PAA.StudyGuide.Book.addContentItem.method (bookId, contentItemIndex) ->
+PAA.StudyGuide.Book.addContentItem.method (bookId, activityId) ->
   check bookId, Match.DocumentId
-  check contentItemIndex, Match.Integer
+  check activityId, Match.DocumentId
 
   LOI.Authorize.admin()
 
   book = PAA.StudyGuide.Book.documents.findOne bookId
   throw new AE.ArgumentException "Book does not exist." unless book
 
+  activities = _.sortBy book.contents, 'order'
+  order = _.last(activities)?.order or 0
+
+  activity = PAA.StudyGuide.Activity.documents.findOne activityId
+  throw new AE.ArgumentException "Activity does not exist." unless activity
+
   PAA.StudyGuide.Book.documents.update bookId,
-    $push: contents: {}
+    $push:
+      contents:
+        activity:
+          _id: activityId
+        order: order
 
 PAA.StudyGuide.Book.updateContentItem.method (bookId, contentItemIndex, data) ->
   check bookId, Match.DocumentId
@@ -71,6 +81,10 @@ PAA.StudyGuide.Book.updateContentItem.method (bookId, contentItemIndex, data) ->
   book = PAA.StudyGuide.Book.documents.findOne bookId
   throw new AE.ArgumentException "Book does not exist." unless book
   throw new AE.ArgumentException "Content item does not exist." unless book.contents[contentItemIndex]
+
+  if activityId = data['activity._id']
+    activity = PAA.StudyGuide.Activity.documents.findOne activityId
+    throw new AE.ArgumentException "Activity does not exist." unless activity
 
   # Prepend contents field to properties.
   $set = {}

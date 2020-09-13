@@ -53,5 +53,5 @@ Package.onUse(function(api) {
   api.addCss('pages/admin/activities/article-client/quill/quill.snow');
 
   api.addComponent('pages/admin/books..');
-  api.addUnstyledComponent('pages/admin/books/book');
+  api.addComponent('pages/admin/books/book');
 });

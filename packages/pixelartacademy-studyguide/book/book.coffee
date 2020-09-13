@@ -14,6 +14,7 @@ class PAA.StudyGuide.Book extends AM.Document
   #   order: the position of this item in the contents
   #   activity: an activity document that represents this item
   #     _id
+  #     goalId
   # design: object with properties that define the book's look
   #   size: the size at which to display the book at
   #     width: the width of the cover in pixels (max 320, the safe width)
@@ -33,7 +34,7 @@ class PAA.StudyGuide.Book extends AM.Document
         slug = _.kebabCase slug if slug
         [book._id, slug]
       contents: [
-        activity: Document.ReferenceField PAA.StudyGuide.Activity
+        activity: Document.ReferenceField PAA.StudyGuide.Activity, ['goalId']
       ]
 
   # Methods
