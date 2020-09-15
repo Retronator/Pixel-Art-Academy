@@ -1,0 +1,26 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-article.ql-container
+  color atariGrey(1)
+  daily()
+  line-height 10rem
+  hyphens auto
+  column-fill auto
+
+  p
+    margin 10rem 0
+
+  ul
+    list-style square
+
+  .ql-editor
+    // Note: Important to prevent loss of spaces in Firefox.
+    white-space pre-wrap
+
+    > *:first-child
+      margin-top 0
+
+  .ql-clipboard
+    height 1px
+    overflow-y hidden
+    pointer-events none

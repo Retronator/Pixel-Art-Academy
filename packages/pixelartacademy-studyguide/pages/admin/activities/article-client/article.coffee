@@ -35,24 +35,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
     # Initialize quill.
     quill = new Quill @$('.writing-area')[0],
       theme: 'snow'
-      formats: [
-        'bold'
-        'italic'
-        'strike'
-        'underline'
-        'script'
-        'link'
-        'code'
-        'blockquote'
-        'header'
-        'list'
-        'code-block'
-        'image'
-        'video'
-
-        'picture'
-        'task'
-      ]
+      formats: PAA.StudyGuide.Article.quillFormats
       modules:
         toolbar: [
           [{'header': [1, 2, 3, 4, false]}]

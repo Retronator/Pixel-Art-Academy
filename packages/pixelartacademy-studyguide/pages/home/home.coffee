@@ -25,6 +25,8 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
   onCreated: ->
     super arguments...
 
+    PAA.StudyGuide.Activity.initializeAll @
+
     @activities = new PAA.StudyGuide.Pages.Home.Activities @
     @studyPlan = new PAA.StudyGuide.Pages.Home.StudyPlan @
     @about = new PAA.StudyGuide.Pages.Home.About @

@@ -25,6 +25,9 @@ Package.onUse(function(api) {
   api.addFile('studyguide');
   api.addFile('studyguide-goals');
   api.addFile('studyguide-tasks');
+  api.addFile('article');
+
+  api.addStyle('style/article');
 
   api.addFile('activity..');
   api.addClientFile('activity/activity-client');
@@ -43,6 +46,7 @@ Package.onUse(function(api) {
   api.addComponent('pages/home/studyplan..');
   api.addComponent('pages/home/about..');
   api.addComponent('pages/home/book..');
+  api.addClientComponent('pages/home/book/article-client/article');
 
   api.addUnstyledComponent('pages/admin..');
 

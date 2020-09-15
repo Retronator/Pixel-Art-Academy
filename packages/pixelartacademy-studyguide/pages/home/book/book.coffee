@@ -1,5 +1,7 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
-AB = Artificial.Base
+AB = Artificial.Babel
+ABs = Artificial.Base
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Home.Book extends AM.Component
@@ -48,15 +50,31 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
       book
 
-    @activities = new ComputedField =>
-      return unless book = @book()
+    @_goals = {}
+
+    @contentItems = new ComputedField =>
+      return [] unless book = @book()
 
       sortedContents = _.orderBy book.contents, 'order'
 
-      item.activity for item in sortedContents
+      for item in sortedContents
+        # Create goal if needed.
+        goalId = item.activity.goalId
+        goalClass = PAA.StudyGuide.Goals[goalId]
+        @_goals[goalId] ?= new goalClass
 
-    @activity = new ComputedField =>
-      AB.Router.getParameter 'activity'
+        # Generate activity slug.
+        goal = @_goals[goalId]
+        slug = _.kebabCase goal.displayName()
+
+        activity: item.activity
+        goal: goal
+        slug: slug
+
+    @activeContentItem = new ComputedField =>
+      slug = ABs.Router.getParameter 'activity'
+
+      _.find @contentItems(), (contentItem) => contentItem.slug is slug
 
     @designConstants =
       pageMargins:
@@ -72,19 +90,19 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
       return unless @book()
       return unless @visible()
 
-      # Update when activity or page index changes.
-      @activity()
+      # Update when active content item or page index changes.
+      @activeContentItem()
       @visiblePageIndex()
 
       @updatePagesCount()
 
-    # React to activity changes.
+    # React to active content item changes.
     @autorun (computation) =>
-      activity = @activity()
+      activeContentItem = @activeContentItem()
 
-      if activity
+      if activeContentItem
         # If we're coming from the table of contents, go to first page of the article.
-        unless @_lastActivity
+        unless @_lastActiveContentItem
           @leftPageIndex 0
           @visiblePageIndex 0
 
@@ -92,7 +110,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         # Remember which page on the table of contents we were.
         @_lastTableOfContentsVisiblePageIndex = @visiblePageIndex()
 
-      @_lastActivity = activity
+      @_lastActiveContentItem = activeContentItem
+
+  onDestroyed: ->
+    super arguments...
+
+    goal.destroy() for goal in @_goals
 
   close: ->
     @visible false
@@ -101,12 +124,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     # Return to the page of the table of contents that we last saw.
     @visiblePageIndex @_lastTableOfContentsVisiblePageIndex
     @leftPageIndex Math.floor(@_lastTableOfContentsVisiblePageIndex / 2) * 2
-    AB.Router.setParameter 'activity', null
+    ABs.Router.setParameter 'activity', null
 
     @scrollToTop()
 
   canMoveLeft: ->
-    unless activity = @activity()
+    unless @activeContentItem()
       # On table of contents we can't go further back than the first page.
       return @leftPageIndex()
 
@@ -122,7 +145,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     visiblePageIndex = @visiblePageIndex()
 
     # Are we at the first page of the article?
-    if @activity() and not visiblePageIndex
+    if @activeContentItem() and not visiblePageIndex
       # Go to previous article.
 
       # This is the first article, so go to the table of contents.
@@ -166,12 +189,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         html.scrollTop = tweenValue
 
   updatePagesCount: ->
-    if @activity()
+    if @activeContentItem()
       @_updatePagesCountActivity()
 
     else
-      # Depend on activities.
-      @activities()
+      # Depend on content items.
+      @contentItems()
 
       @_updatePagesCountTableOfContents()
 
@@ -259,11 +282,11 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     width: "#{width}rem"
 
   frontPageClass: ->
-    'front' unless @activity() or @leftPageIndex()
+    'front' unless @activeContentItem() or @leftPageIndex()
 
   pageNumberLeft: ->
     pageNumber = @leftPageIndex() + 1
-    pageNumber-- unless @activity()
+    pageNumber-- unless @activeContentItem()
     pageNumber
 
   showPageNumberRight: ->
@@ -285,7 +308,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     pageIndex = @leftPageIndex()
 
     # Table of contents starts on the right.
-    pageIndex -= 1 unless @activity()
+    pageIndex -= 1 unless @activeContentItem()
 
     left = -pageIndex * (columnProperties.columnWidth + columnProperties.columnGap)
     pagesCount = 100
@@ -306,3 +329,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
   onClickMoveButtonRight: ->
     @nextPage()
+
+  class @TableOfContentsItem extends AM.Component
+    @register "PixelArtAcademy.StudyGuide.Pages.Home.Book.TableOfContentsItem"
+
+    onCreated: ->
+      super arguments...
+
+      @bookComponent = @ancestorComponentOfType PAA.StudyGuide.Pages.Home.Book
+      @book = new ComputedField => @bookComponent.book()
