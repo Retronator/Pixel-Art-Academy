@@ -54,7 +54,6 @@ Package.onUse(function(api) {
   api.addComponent('pages/admin/activities/activity');
   api.addComponent('pages/admin/activities/task');
   api.addClientComponent('pages/admin/activities/article-client/article');
-  api.addCss('pages/admin/activities/article-client/quill/quill.snow');
 
   api.addComponent('pages/admin/books..');
   api.addComponent('pages/admin/books/book');

@@ -99,7 +99,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       @book.close()
 
       Meteor.setTimeout =>
-        AB.Router.setParameter 'pageOrBook', @constructor.Pages.Activities
+        AB.Router.setParameter 'pageOrBook', null
       ,
         500
 

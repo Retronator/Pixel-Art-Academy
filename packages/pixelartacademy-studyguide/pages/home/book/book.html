@@ -9,23 +9,33 @@
           <button class="move-button right" {{style moveButtonRightStyle}}></button>
         {{/if}}
         <div class="page left {{frontPageClass}}">
-          <div class="header">
-            {{#if activity}}
-              {{> t10e title}}
+          {{#if leftPageIndex}}
+            {{#if activeContentItem}}
+              <div class="header">
+                {{> t10e title}}
+              </div>
+            {{else}}
+              <div class="header">
+                Table of Contents
+              </div>
             {{/if}}
-          </div>
+          {{/if}}
           <div class="footer">
             {{pageNumberLeft}}{{#if pagesCount}}/{{pagesCount}}{{/if}}
           </div>
         </div>
         <div class="page right {{frontPageClass}}">
-          <div class="header">
-            {{#with activity}}
-              ACTIVITY GOAL DISPLAY NAME HERE
-            {{else}}
-              {{> t10e title}}
-            {{/with}}
-          </div>
+          {{#if $or activeContentItem leftPageIndex}}
+            {{#if rightPageHasContent}}
+              <div class="header">
+                {{#with activeContentItem}}
+                  {{goal.displayName}}
+                {{else}}
+                  {{> t10e title}}
+                {{/with}}
+              </div>
+            {{/if}}
+          {{/if}}
           <div class="footer">
             {{#if showPageNumberRight}}
               {{pageNumberRight}}{{#if pagesCount}}/{{pagesCount}}{{/if}}
@@ -39,7 +49,8 @@
               <div class="end-page"></div>
             {{else}}
               <div class="table-of-contents">
-                <h1>Table of Contents</h1>
+                <h1>{{> t10e title}}</h1>
+                <h2>Table of Contents</h2>
                 <ol class="activities">
                   {{#each contentItems}}
                     <li class="activity">

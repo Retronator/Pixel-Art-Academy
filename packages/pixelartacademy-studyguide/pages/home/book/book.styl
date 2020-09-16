@@ -50,12 +50,21 @@
 
     .page
       position absolute
+      z-index 0
       top 0
       width 50%
       height 100%
       border-style solid
-      background-color atariGrey(7)
-      background-clip padding-box
+
+      &::after
+        content ''
+        position absolute
+        z-index -1
+        top -1px
+        bottom -1px
+        left -1px
+        right -1px
+        background-color atariGrey(7)
 
       &.left
         left 0
@@ -67,11 +76,11 @@
           border-image-slice 15 23 16 36
 
         .header
-          left -12rem
-          right -10rem
+          left -7rem
+          right -5rem
 
         .footer
-          left -12rem
+          left -7rem
 
       &.right
         right 0
@@ -82,38 +91,38 @@
           border-width 15rem 19rem 16rem 21rem
           border-image-slice 15 19 16 21
 
-          .header
-            left -1rem
-            right 22rem
-
           .footer
-            right 12rem
+            right 17rem
 
         .header
-          left -5rem
-          right -12rem
+          left 0
+          right -7rem
+          text-align right
 
         .footer
-          right -12rem
+          right -7rem
           text-align right
 
       .header
         position absolute
         top 5rem
-        text-align center
+        padding-bottom 2rem
+        border-bottom 1rem solid atariGrey(5)
+        color atariGrey(2)
         text-transform uppercase
 
       .footer
         position absolute
-        bottom 12rem
+        bottom 16rem
+        color atariGrey(2)
 
     .contents-area
       position absolute
       z-index 1
-      left 40rem
-      right 40rem
+      left 45rem
+      right 45rem
       top 40rem
-      bottom 50rem
+      bottom 55rem
       overflow hidden
 
       > .contents
@@ -126,12 +135,15 @@
         h1
           academy()
           margin 0 0 10rem
+          text-transform uppercase
 
         .table-of-contents
           h1
             text-align center
-            text-transform uppercase
-            margin-top 10rem
+
+          h2
+            text-align center
+            margin 10rem 0 20rem
 
           .activities
             academy()

@@ -78,9 +78,10 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     @designConstants =
       pageMargins:
-        left: 40
-        right: 20
+        left: 45
+        right: 25
       moveButtonExtraWidth: 35
+      frontPageLeftOffset: 5
 
   onRendered: ->
     super arguments...
@@ -129,28 +130,27 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     @scrollToTop()
 
   canMoveLeft: ->
-    unless @activeContentItem()
-      # On table of contents we can't go further back than the first page.
-      return @leftPageIndex()
+    if @activeContentItem()
+      # On articles, we can move left if we're not on the first page.
+      @visiblePageIndex()
 
-    true
+    else
+      # Table of contents starts on the right, so we can move back only on second spread.
+      @leftPageIndex()
 
   canMoveRight: ->
-    true
+    # Are we on the last page of the section?
+    if @activeContentItem()
+      @visiblePageIndex() + 1 < @pagesCount()
+
+    else
+      @visiblePageIndex() < @pagesCount()
 
   previousPage: ->
     return unless @canMoveLeft()
 
     leftPageIndex = @leftPageIndex()
     visiblePageIndex = @visiblePageIndex()
-
-    # Are we at the first page of the article?
-    if @activeContentItem() and not visiblePageIndex
-      # Go to previous article.
-
-      # This is the first article, so go to the table of contents.
-      @goToTableOfContents()
-      return
 
     leftPageIndex -= 2 if leftPageIndex is visiblePageIndex
     visiblePageIndex--
@@ -233,6 +233,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     horizontalGap = (viewportWidth - bookWidth) / 2
     verticalGap = (viewportHeight - viewport.safeArea.height() / scale) / 2
+    verticalGap = _.clamp verticalGap, 10, 30
 
     fullWidth = (bookWidth + horizontalGap) * 2
 
@@ -284,6 +285,9 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
   frontPageClass: ->
     'front' unless @activeContentItem() or @leftPageIndex()
 
+  rightPageHasContent: ->
+    @leftPageIndex() + 1 < @pagesCount()
+
   pageNumberLeft: ->
     pageNumber = @leftPageIndex() + 1
     pageNumber-- unless @activeContentItem()
@@ -305,14 +309,19 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
   contentsStyle: ->
     return unless columnProperties = @columnProperties()
 
-    pageIndex = @leftPageIndex()
+    leftPageIndex = @leftPageIndex()
+    pageIndex = leftPageIndex
 
     # Table of contents starts on the right.
-    pageIndex -= 1 unless @activeContentItem()
+    onTableOfContents = not @activeContentItem()
+    pageIndex -= 1 if onTableOfContents
 
     left = -pageIndex * (columnProperties.columnWidth + columnProperties.columnGap)
     pagesCount = 100
     width = pagesCount * columnProperties.columnWidth + (pagesCount - 1) * columnProperties.columnGap
+
+    # On the front page, we have extra left offset.
+    left += @designConstants.frontPageLeftOffset if onTableOfContents and not leftPageIndex
 
     left: "#{left}rem"
     width: "#{width}rem"

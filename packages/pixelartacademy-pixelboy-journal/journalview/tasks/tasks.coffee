@@ -16,10 +16,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
   onCreated: ->
     super arguments...
 
+    # Initialize Study Guide activities.
+    @studyGuideSubscription = PAA.StudyGuide.Activity.initializeAll @
+
     @visible = new ReactiveField false
 
     @goals = new ComputedField =>
       return unless addedGoals = PAA.PixelBoy.Apps.StudyPlan.state()?.goals
+      return unless @studyGuideSubscription.ready()
 
       for goalId, goalData of addedGoals
         goalClass = PAA.Learning.Goal.getClassForId goalId
