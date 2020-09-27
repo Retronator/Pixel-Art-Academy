@@ -4,8 +4,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Quill = require 'quill'
-Block = Quill.import 'blots/block'
+Quill = AM.Quill
 
 class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Component
   @id: -> 'PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Article'
@@ -37,15 +36,18 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
       theme: 'snow'
       formats: PAA.StudyGuide.Article.quillFormats
       modules:
-        toolbar: [
-          [{'header': [1, 2, 3, 4, false]}]
-          ['bold', 'italic', 'underline', 'strike', {'script': 'sub'}, {'script': 'super'}]
-          ['link', 'code']
-          [{'list': 'ordered'}, {'list': 'bullet'}]
-          ['blockquote', 'code-block']
-          ['image', 'video']
-          ['clean']
-        ]
+        toolbar:
+          container: [
+              [{'header': [1, 2, 3, 4, false]}]
+              ['bold', 'italic', 'underline', 'strike', {'script': 'sub'}, {'script': 'super'}]
+              ['link', 'code']
+              [{'list': 'ordered'}, {'list': 'bullet'}]
+              ['blockquote', 'code-block']
+              ['image', 'video']
+              ['clean']
+            ]
+          handlers:
+            image: (value) => @onQuillToolbarImageClick value
 
     @quill quill
 
@@ -54,7 +56,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
 
       # Tell the blots they are part of this component.
       for blot in @quill().getLines()
-        blot.domNode.component?.articleComponent @
+        blot.domNode.component?.quillComponent @
 
       # Update the article if this was a user update.
       if source is Quill.sources.USER
@@ -90,3 +92,21 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
   moveCursorToEnd: ->
     end = @quill().getLength()
     @quill().setSelection end, 0
+
+  onQuillToolbarImageClick: ->
+    quill = @quill()
+    range = quill.getSelection()
+
+    $fileInput = $('<input type="file" multiple/>')
+
+    $fileInput.on 'change', (event) =>
+      return unless files = $fileInput[0]?.files
+
+      # Insert a figure with the images in a row.
+      figure =
+        layout: [files.length]
+        elements: (image: {file} for file in files)
+
+      quill.insertEmbed range.index, 'figure', figure, Quill.sources.USER
+
+    $fileInput.click()

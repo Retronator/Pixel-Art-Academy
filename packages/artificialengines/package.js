@@ -14,7 +14,8 @@ Npm.depends({
   'canvas': '2.6.1',
   'pako': '1.0.8',
   'bson': '4.0.2',
-  'text-encoder-lite': '2.0.0'
+  'text-encoder-lite': '2.0.0',
+  'quill': '1.3.7'
 });
 
 Package.onUse(function(api) {
@@ -141,19 +142,31 @@ Package.onUse(function(api) {
   api.addFile('mirage/canvas');
 	api.addFile('mirage/component');
 	api.addFile('mirage/csshelper');
-  api.addUnstyledComponent('mirage/datainput');
-	api.addCss('mirage/debugfont');
-  api.addStyleImport('mirage/debugfont');
-	api.addComponent('mirage/display');
-  api.addUnstyledComponent('mirage/hdrimage');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
-  api.addUnstyledComponent('mirage/pixelimage');
-  api.addUnstyledComponent('mirage/render');
   api.addFile('mirage/shortcuthelper');
   api.addClientFile('mirage/window');
 
+  api.addUnstyledComponent('mirage/datainput..');
+
+  api.addCss('mirage/debugfont..');
+  api.addStyleImport('mirage/debugfont..');
+
+  api.addComponent('mirage/display..');
+
+  api.addUnstyledComponent('mirage/hdrimage..');
+
   api.addUnstyledComponent('mirage/markdown..');
+
+  api.addFile('mirage/mixins/fullscreenscrolling..');
+  api.addStyle('mirage/mixins/fullscreenscrolling..');
+
+  api.addUnstyledComponent('mirage/pixelimage..');
+
+  api.addClientFile('mirage/quill-client/quill');
+  api.addClientFile('mirage/quill-client/blotcomponent');
+
+  api.addUnstyledComponent('mirage/render..');
 
   api.addFile('mirage/spacebars/meteorhelpers');
   api.addFile('mirage/spacebars/stringhelpers');
@@ -166,9 +179,6 @@ Package.onUse(function(api) {
   api.addFile('mirage/mixins/autoresizetextarea');
   api.addFile('mirage/mixins/autoselectinput');
   api.addFile('mirage/mixins/persistentinput');
-
-  api.addFile('mirage/mixins/fullscreenscrolling..');
-  api.addStyle('mirage/mixins/fullscreenscrolling..');
 
   // Artificial Base
   

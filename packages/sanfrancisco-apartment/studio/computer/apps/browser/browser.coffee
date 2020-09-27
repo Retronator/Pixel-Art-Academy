@@ -69,8 +69,14 @@ class Studio.Computer.Browser extends AM.Component
 
     {route, matchData} = AB.Router.findRoute host, path
 
-    # We want to blacklist Adventure routes.
-    route = null if route?.pageClass is LOI.Adventure or route?.pageClass.prototype instanceof LOI.Adventure
+    # We want to blacklist some pages.
+    blacklistedPages = [
+      LOI.Adventure
+      PixelArtAcademy.StudyGuide.Pages.Home
+    ]
+
+    for page in blacklistedPages
+      route = null if route?.pageClass is page or route?.pageClass.prototype instanceof page
 
     route
 

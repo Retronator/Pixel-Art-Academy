@@ -20,15 +20,18 @@ class PAA.StudyGuide.Activity extends AM.Document
   # requiredInterests: array of interests directly required by the goal, not coming from the tasks
   # [article]: array of delta operations for the Study Guide article of this activity
   #   insert: string or object to be inserted
-  #     artwork: an artwork from the pixel art database
-  #       _id
+  #     PixelArtAcademy.StudyGuide.Article.Figure: a collection of visual elements with a caption
+  #       layout: array of numbers controlling how many elements per row to show
+  #       caption: the text written under the figure
+  #       [elements]: array of elements that make the figure
+  #         artwork: an artwork from the pixel art database
+  #           _id
   #
-  #     picture: an image without any semantic information
-  #       url: the url of the image itself
-  #       sourceWebsiteUrl: optional url from which the image was extracted, if it wasn't uploaded
+  #         image: an image without any semantic information
+  #           url
   #
-  #     video: a video without any semantic information
-  #       url
+  #         video: a video without any semantic information
+  #           url
   #
   #     task: a learning task
   #       id: the id of the task to be displayed

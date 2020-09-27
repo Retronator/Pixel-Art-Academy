@@ -1,0 +1,33 @@
+<template name="PixelArtAcademy.StudyGuide.Article.Figure">
+  <div class="elements">
+    {{#each elementRows}}
+      <div class="elements-row">
+        {{#each elements}}
+          <div class="element">
+            {{#if this.image}}
+              {{> PixelArtAcademy.StudyGuide.Article.Figure.Image}}
+            {{/if}}
+            {{#if canEditElements}}
+              <div class="actions">
+                {{#if canMoveElementUp}}<button class="move-element-up-button">↑</button>{{/if}}
+                {{#if canMoveElementDown}}<button class="move-element-down-button">↓</button>{{/if}}
+                <button class="remove-element-button">X</button>
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+  {{#unless readOnly}}
+    <button class="add-element-button">+</button>
+    {{> PixelArtAcademy.StudyGuide.Article.Figure.Layout}}
+  {{/unless}}
+  <figcaption class="caption">
+    {{#if readOnly}}
+      {{value.caption}}
+    {{else}}
+      {{> PixelArtAcademy.StudyGuide.Article.Figure.Caption}}
+    {{/if}}
+  </figcaption>
+</template>

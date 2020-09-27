@@ -21,6 +21,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     @leftPageIndex = new ReactiveField 0
     @visiblePageIndex = new ReactiveField 1
     @pagesCount = new ReactiveField null
+    @manualContentUpdatedDependency = new Tracker.Dependency
 
     @book = new ComputedField =>
       return unless @home.activities.isCreated()
@@ -188,7 +189,13 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
       progress: (elements, complete, remaining, start, tweenValue) =>
         html.scrollTop = tweenValue
 
+  contentUpdated: ->
+    @manualContentUpdatedDependency.changed()
+
   updatePagesCount: ->
+    # Depend on manual update events.
+    @manualContentUpdatedDependency.depend()
+    
     if @activeContentItem()
       @_updatePagesCountActivity()
 

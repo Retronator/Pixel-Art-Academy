@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Quill = require 'quill'
+Quill = AM.Quill
 Block = Quill.import 'blots/block'
 
 class PAA.StudyGuide.Pages.Home.Book.Article extends AM.Component
@@ -45,3 +45,6 @@ class PAA.StudyGuide.Pages.Home.Book.Article extends AM.Component
       return unless activity = @activity()
 
       quill.setContents activity.article, Quill.sources.API
+
+  contentUpdated: ->
+    @book.contentUpdated()

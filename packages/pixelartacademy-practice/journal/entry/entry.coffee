@@ -53,7 +53,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @pictureUploadContext = new LOI.Assets.Upload.Context
     name: "#{@id()}.picture"
     folder: 'check-ins'
-    maxSize: 10 * 1024 * 1024 # 10 MB
+    maxSize: 20 * 1024 * 1024 # 20 MB
     fileTypes: [
       'image/png'
       'image/jpeg'

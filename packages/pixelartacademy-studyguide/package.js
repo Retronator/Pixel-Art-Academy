@@ -11,8 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '4.2.2',
-  'quill': '1.3.7'
+  'quill-delta': '4.2.2'
 });
 
 Package.onUse(function(api) {
@@ -25,7 +24,10 @@ Package.onUse(function(api) {
   api.addFile('studyguide');
   api.addFile('studyguide-goals');
   api.addFile('studyguide-tasks');
-  api.addFile('article');
+
+  api.addFile('article..');
+  api.addClientComponent('article/figure-client/figure');
+  api.addClientComponent('article/figure-client/image..');
 
   api.addStyle('style/article');
 
