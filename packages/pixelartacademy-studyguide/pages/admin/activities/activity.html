@@ -1,0 +1,66 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity">
+  <div class="pixelartacademy-studyguide-pages-admin-activities-activity">
+    <h2>{{goalId}} <button class="rename-goal-button">R</button> <button class="remove-activity-button">X</button></h2>
+    <label class="property display-name">
+      <span class="name">Goal name:</span>
+      <span class="value">{{> LandsOfIllusions.Components.TranslationInput goalDisplayNameTranslation}}</span>
+    </label>
+    <div class="property tasks-area">
+      <div class="name">Tasks:</div>
+      <div class="value">
+        <ul class="tasks">
+          {{#each tasks}}
+            <li class="task">
+              {{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task}}
+            </li>
+          {{/each}}
+        </ul>
+        <div class="new-task">
+          <input class="new-task-id" />
+          <select class="new-task-type">
+            {{#each taskTypes}}
+              <option value="{{this}}">{{this}}</option>
+            {{/each}}
+          </select>
+          <button class="add-task-button">Add task</button>
+        </div>
+      </div>
+    </div>
+    <div class="property final-tasks">
+      <div class="name">Final tasks:</div>
+      <div class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.FinalTasks}}</div>
+    </div>
+    <label class="property final-group-number">
+      <span class="name">Final group number:</span>
+      <span class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.FinalGroupNumber}}</span>
+    </label>
+    <div class="property required-interests">
+      <div class="name">Required interests:</div>
+      <div class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.RequiredInterests}}</div>
+    </div>
+    <div class="property article">
+      <div class="name">Article:</div>
+      <div class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Article}}</div>
+    </div>
+  </div>
+</template>
+
+<template name="PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.StringList">
+  <div class="pixelartacademy-studyguide-pages-admin-activities-activity-stringlist">
+    <ul class="items">
+      {{#each items}}
+        <li class="item">{{this}} <button class="remove-item-button">X</button></li>
+      {{/each}}
+    </ul>
+    <div class="add-item">
+      <input class="new-item-name"/> <button class="add-item-button">Add</button>
+      {{#if possibleItems}}
+        <ul class="autocomplete-items">
+          {{#each possibleItems}}
+            <li class="item">{{this}}</li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </div>
+  </div>
+</template>

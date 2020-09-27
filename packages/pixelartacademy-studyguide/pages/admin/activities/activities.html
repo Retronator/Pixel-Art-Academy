@@ -1,0 +1,23 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Admin.Activities">
+  <style>
+    html {font-size: 2px;}
+  </style>
+  <div class="pixelartacademy-studyguide-pages-admin-activities">
+    <h1>Study Guide activities</h1>
+    <div class="index">
+      <div class="actions">
+        PixelArtAcademy.StudyGuide.
+        <input class="new-activity-goalid" />
+        <button class="add-activity-button">Add activity</button>
+      </div>
+      <ul class="activities">
+        {{#each activities}}
+          <li class="activity {{activeClass}}">{{shortGoalId}}</li>
+        {{/each}}
+      </ul>
+    </div>
+    {{#with activity}}
+      {{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity}}
+    {{/with}}
+  </div>
+</template>

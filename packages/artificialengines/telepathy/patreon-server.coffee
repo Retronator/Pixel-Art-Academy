@@ -39,6 +39,8 @@ class AT.Patreon
     @initialized = true
 
   @currentUser: ->
+    @initializeClient()
+
     @_call('/current_user').then (result) =>
       return unless result
       
@@ -46,6 +48,8 @@ class AT.Patreon
       result.store.findAll('user')[0]?.serialize()
 
   @campaigns: ->
+    @initializeClient()
+
     @_call('/current_user/campaigns').then (result) =>
       return unless result
 
@@ -53,6 +57,8 @@ class AT.Patreon
       result.store.findAll('campaign').map (campaign) => campaign.serialize()
 
   @pledges: (campaignId) ->
+    @initializeClient()
+
     fields = [
       'amount_cents'
       'created_at'
@@ -64,28 +70,56 @@ class AT.Patreon
       'has_shipping_address'
     ]
 
-    # TODO: Update when we have more than 1000 patrons.
-    @_call("/campaigns/#{campaignId}/pledges?page%5Bcount%5D=1000&fields%5Bpledge%5D=#{fields.join ','}").then (result) =>
-      return unless result
+    fieldsSuffix = "&fields%5Bpledge%5D=#{fields.join ','}"
 
-      # Return all pledges.
-      result.store.findAll('pledge').map (pledge) =>
-        pledge = pledge.serialize()
+    console.log "Retrieving Patreon pledges …"
 
-        # Insert actual user data.
-        userId = pledge.data.relationships.patron.data.id
-        pledge.data.relationships.patron = result.store.find('user', userId).serialize()
+    retrieve100Pledges = (link) =>
+      @_call(link).then (result) =>
+        return unless result
 
-        pledge
+        # Get all pledges so far.
+        pledges = result.store.findAll 'pledge'
+        totalCount = result.rawJson.meta.count
+
+        console.log "So far retrieved #{pledges.length} of #{totalCount} pledges."
+
+        if pledges.length is totalCount
+          # Return pledges with actual user data retrieved from the store.
+          return _.map pledges, (pledge) =>
+            pledge = pledge.serialize()
+
+            userId = pledge.data.relationships.patron.data.id
+            pledge.data.relationships.patron = result.store.find('user', userId).serialize()
+
+            pledge
+
+        # Make sure we didn't get more pledges than reported.
+        throw new AE.InvalidOperationException "More pledges were retrieved than the total." if pledges.length > totalCount
+
+        # We don't have all pledges yet, see if we have a link to the next.
+        unless nextLink = result.rawJson.links.next
+          throw new AE.InvalidOperationException "Next pledges link not found, but we don't have all pledges yet."
+
+        # Fetch next 100. We need to remove the api link however.
+        nextLink = nextLink.substring 'https://www.patreon.com/api/oauth2/api'.length
+        retrieve100Pledges "#{nextLink}#{fieldsSuffix}"
+
+    retrieve100Pledges "/campaigns/#{campaignId}/pledges?page%5Bcount%5D=100#{fieldsSuffix}"
 
   @_call: (url, dontRetry = false) ->
+    # Call the Patreon API with the current client. Note that the client should be recreated between separate
+    # (unconnected) requests since we can otherwise get forbidden access errors from the API. Only call this method in
+    # succession (without calling initialize in between) when the store needs to retain its data (such as when paging
+    # through pledges). This is also the reason why we don't always re-initialize it here, to allow connected calls.
     AT.Patreon._client(url).then (result) =>
       # Return result.
       result
 
     .catch (error) =>
       switch error.error.status
-        when 401, 403
+        when 401
+          console.log "Patreon access token rejected."
           return if dontRetry
 
           # We need to refresh the access token.
@@ -95,7 +129,7 @@ class AT.Patreon
           @_call url, true
 
         else
-          console.error "Error accessing Patreon API.", error
+          console.error "Error accessing Patreon API.", error.error.status
           
           # Return nothing.
           null

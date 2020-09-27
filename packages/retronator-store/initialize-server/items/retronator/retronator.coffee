@@ -18,7 +18,7 @@ Document.startup ->
     name: "Pixel Art Academy - Subscription"
     description: """If you'd prefer to pay for the game on a monthly basis, you can become a patron of Matej 'Retro' Jan
                     on Patreon. The pledge tiers are offered at 80% discount of the prices, and all your payments are
-                    added to your Retronator Store account so you can buy one of the game package after you've
+                    added to your Retronator Store account so you can buy one of the game packages after you've
                     contributed enough."""
     storeUrl: 'https://www.patreon.com/retro'
     storeSeller: 'Patreon'

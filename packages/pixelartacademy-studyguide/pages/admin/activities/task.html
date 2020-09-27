@@ -1,0 +1,45 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task">
+  <div class="pixelartacademy-studyguide-pages-admin-activities-activity-task">
+    <h3>{{id}} <button class="rename-task-button">R</button> <button class="remove-task-button">X</button></h3>
+    <label class="property type">
+      <span class="name">Type:</span>
+      <span class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.Type}}</span>
+    </label>
+    <label class="property directive">
+      <span class="name">Directive:</span>
+      <span class="value">{{> LandsOfIllusions.Components.TranslationInput taskDirectiveTranslation}}</span>
+    </label>
+    <label class="property instructions">
+      <span class="name">Instructions:</span>
+      {{#with taskInstructionsTranslation}}
+        <span class="value">
+          {{> LandsOfIllusions.Components.TranslationInput args taskInstructionsTranslationInputOptions}}
+        </span>
+      {{/with}}
+    </label>
+    <label class="property icon">
+      <span class="name">Icon:</span>
+      <span class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.Icon}}</span>
+    </label>
+    <div class="property interests">
+      <div class="name">Interests:</div>
+      <div class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.Interests}}</div>
+    </div>
+    <div class="property required-interests">
+      <div class="name">Required interests:</div>
+      <div class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.RequiredInterests}}</div>
+    </div>
+    <div class="property predecessors">
+      <div class="name">Predecessors:</div>
+      <div class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.Predecessors}}</div>
+    </div>
+    <label class="property predecessors-complete-type">
+      <span class="name">Predecessors complete type:</span>
+      <span class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.PredecessorsCompleteType}}</span>
+    </label>
+    <label class="property group-number">
+      <span class="name">Group number:</span>
+      <span class="value">{{> PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Task.GroupNumber}}</span>
+    </label>
+  </div>
+</template>

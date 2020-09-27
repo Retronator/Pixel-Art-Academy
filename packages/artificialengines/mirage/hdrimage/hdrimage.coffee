@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AS = Artificial.Spectrum
 
-# Creates an image that scales down to desired pixel size.
+# Displays a high-dynamic-range image with desired exposure value.
 class AM.HDRImage extends AM.Component
   @register 'Artificial.Mirage.HDRImage'
 

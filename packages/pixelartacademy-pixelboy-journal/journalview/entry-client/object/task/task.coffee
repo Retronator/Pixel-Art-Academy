@@ -42,7 +42,7 @@ class Entry.Object.Task extends Entry.Object
 
       PAA.Learning.Task.Entry.documents.findOne entryId
 
-    @taskComponent = new @constructor[taskClass.type] @
+    @taskComponent = new @constructor[taskClass.type()] @
 
     # If we don't have an entry yet, see if one exists and automatically set it.
     unless value.entry?._id

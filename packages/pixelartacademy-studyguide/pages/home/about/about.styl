@@ -1,0 +1,36 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-about
+  position absolute
+
+  .table-stand
+    position absolute
+    bottom 0
+    right 45rem
+    border-width 4rem 9rem
+    border-style solid
+    border-image image('/pixelartacademy/studyguide/home/about/stand-border.png') 4 9
+
+    .paper
+      position relative
+      z-index 0
+      width 108rem
+      height 136rem
+      padding 5rem 0 5rem 2rem
+      color atariBrown(1)
+      checkout()
+
+      &::after
+        content ''
+        display block
+        position absolute
+        z-index -1
+        top 0
+        bottom 0
+        left -3rem
+        right -3rem
+        background atariBrown(6)
+        border-right 1rem solid atariBrown(5)
+
+      p
+        margin-top 0

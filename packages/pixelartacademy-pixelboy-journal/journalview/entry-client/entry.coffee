@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Quill = require 'quill'
+Quill = AM.Quill
 Block = Quill.import 'blots/block'
 
 class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
@@ -86,7 +86,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
       # Tell the blots they are part of this component.
       for blot in @quill().getLines()
-        blot.domNode.component?.entryComponent @
+        blot.domNode.component?.quillComponent @
 
       unless @entryId
         # This is an empty entry, so start it, but not if we have any pictures still uploading.

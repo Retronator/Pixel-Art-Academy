@@ -23,7 +23,7 @@ class RA.Patreon extends RA.Patreon
 
       AT.Patreon.pledges(campaign.id).then (pledges) ->
         unless pledges
-          console.error "Could not access Patreon pledges"
+          console.error "Could not access Patreon pledges."
           return
 
         # Update intended pledges. These are recorded by setting authorizedOnly on their payments.
