@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'color-thief': '2.2.5'
+  'colorthief': '2.3.2'
 });
 
 Package.onUse(function(api) {

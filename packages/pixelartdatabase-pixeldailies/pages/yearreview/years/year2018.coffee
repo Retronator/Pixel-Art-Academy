@@ -16,10 +16,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2018]
     position: ['0%', '40%']
     author: 'LumpyTouch'
   ,
-    url: 'https://pbs.twimg.com/media/DUfbSNzX4AAolHh.png'
-    position: ['50%', '20%']
-    author: 'Plastic_Vibes'
-  ,
     url: 'https://pbs.twimg.com/media/DZXg2SpXkAAm43X.jpg'
     position: ['70%', '30%']
     author: 'Zel_D'

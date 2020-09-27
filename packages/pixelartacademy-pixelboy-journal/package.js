@@ -10,10 +10,6 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Npm.depends({
-  'quill': '1.3.7'
-});
-
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');

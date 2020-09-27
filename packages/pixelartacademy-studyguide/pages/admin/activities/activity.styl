@@ -1,0 +1,57 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-admin-activities-activity
+  margin-left 200px
+  padding 0 50px 50px
+
+  .property
+    display block
+    margin-bottom 30px
+
+    > .name
+      display block
+      width 200px
+      float left
+      font-weight bold
+
+    > .value
+      display block
+      margin-left 200px
+
+  .tasks-area
+    .tasks
+      list-style none
+      padding 0
+
+      .task
+        margin-bottom 20px
+
+        .property
+          margin-bottom 10px
+
+.pixelartacademy-studyguide-pages-admin-activities-activity-stringlist
+  .items
+    margin 0
+
+  .add-item
+    position relative
+
+    .new-item-name:focus ~ .autocomplete-items
+      visibility visible
+
+    .autocomplete-items
+      position absolute
+      z-index 1
+      top 100%
+      margin 0
+      padding 0
+      list-style none
+      background #ccc
+      visibility hidden
+      transition visibility 0.2s
+
+      .item
+        cursor pointer
+
+        &:hover
+          background #aaa
