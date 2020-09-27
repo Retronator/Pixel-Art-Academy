@@ -141,7 +141,8 @@ class LOI.Engine.World extends AM.Component
     @_update appTime
 
   worldIsVisible: ->
-    @options.adventure.interface.illustrationSize.height()
+    # We need to render the world when we're on a named illustration.
+    @options.adventure.currentSituation()?.illustration()?.name
 
   _update: (appTime) ->
     @navigator()?.update appTime

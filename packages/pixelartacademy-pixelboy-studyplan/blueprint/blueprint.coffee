@@ -80,6 +80,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @goalConnections = new ReactiveField []
 
     @goalComponentsById = new ComputedField =>
+      return unless @studyPlan.ready()
       return unless goalsData = @studyPlan.state 'goals'
       
       previousGoalComponents = _.values @_goalComponentsById

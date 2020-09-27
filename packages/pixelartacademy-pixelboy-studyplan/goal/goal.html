@@ -29,11 +29,35 @@
     {{/if}}
     {{#if showRequiredInterests}}
       <div class="required-interests">
-        <div class="label" {{style requiredInterestLabelStyle}}>Prerequisites:</div>
+        <div class="label" {{style requiredInterestsLabelStyle}}>Prerequisites:</div>
         <ul class="list">
           {{#each goal.requiredInterests}}
             {{#with interestDocument}}
               <li class="interest {{validTargetClass}}" data-id="{{_id}}" {{style requiredInterestStyle}}>
+                <div class="name">
+                  {{> t10e name}}
+                </div>
+                <div class="connector"></div>
+                <div class="connection-target"></div>
+              </li>
+            {{/with}}
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+    {{#if showOptionalInterests}}
+      <div class="optional-interests">
+        <div class="label" {{style optionalInterestsLabelStyle}}>
+          {{#if showRequiredInterests}}
+            Optional:
+          {{else}}
+            Optional prerequisites:
+          {{/if}}
+        </div>
+        <ul class="list">
+          {{#each goal.optionalInterests}}
+            {{#with interestDocument}}
+              <li class="interest {{validTargetClass}}" data-id="{{_id}}" {{style optionalInterestStyle}}>
                 <div class="name">
                   {{> t10e name}}
                 </div>

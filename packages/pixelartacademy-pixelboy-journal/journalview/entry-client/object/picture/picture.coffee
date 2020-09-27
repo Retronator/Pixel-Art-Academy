@@ -16,33 +16,70 @@ class Entry.Object.Picture extends Entry.Object
   onCreated: ->
     super arguments...
 
-    @preview = new ReactiveField null
+    @previewSource = new ReactiveField null
+    @upload = new ReactiveField null
+    @uploadError = new ReactiveField null
 
     # Handle preview and uploading.
     @autorun (computation) =>
       value = @value()
 
       if value.file instanceof Blob
+        computation.stop()
+
         @_loadFilePreview value.file
         @_uploadFile value.file
 
   _loadFilePreview: (file) ->
     reader = new FileReader()
-    reader.onload = (event) => @preview event.target.result
+    reader.onload = (event) => @previewSource event.target.result
 
     reader.readAsDataURL file
 
   _uploadFile: (file) ->
-    PAA.Practice.Journal.Entry.pictureUploadContext.upload file, (pictureUrl) =>
+    return if @upload()
+
+    upload = PAA.Practice.Journal.Entry.pictureUploadContext.upload file, (pictureUrl) =>
       # Replace the source of the picture.
       @value url: pictureUrl
+      @upload null
+    ,
+      (error) =>
+        @uploadError error
+        @upload null
+
+    @upload upload
+
+  uploadingClass: ->
+    'uploading' if @upload()
+
+  uploadingStyle: ->
+    return unless upload = @upload()
+    progress = upload.progress()
+
+    width: if _.isNaN progress then 0 else "#{progress * 100}%"
+
+  canRetryUpload: ->
+    uploadError = @uploadError()
+    uploadError.error isnt 'Upload denied'
 
   pictureSource: ->
     value = @value()
-    value.url or @preview()
+    value.url or @previewSource()
 
   missingPictureSource: ->
     value = @value()
 
     # Picture is missing if we have a file that isn't a blob and if there is no source.
     not (value.file instanceof Blob) and not value.url
+
+  events: ->
+    super(arguments...).concat
+      'click .retry-upload-button': @onClickRetryUploadButton
+
+  onClickRetryUploadButton: (event) ->
+    value = @value()
+    return unless value.file instanceof Blob
+
+    @uploadError null
+    @_uploadFile value.file

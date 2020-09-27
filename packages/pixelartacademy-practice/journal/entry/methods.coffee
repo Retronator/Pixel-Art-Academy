@@ -63,7 +63,6 @@ PAA.Practice.Journal.Entry.updateOrder.method (entryId, order) ->
   # Make sure the check-in belongs to the current user.
   authorizeJournalAction entryId
 
-  # Associate the artist with the character.
   PAA.Practice.Journal.Entry.documents.update entryId, $set: {order}
 
 PAA.Practice.Journal.Entry.updateContent.method (entryId, updateDeltaOperations, situation) ->

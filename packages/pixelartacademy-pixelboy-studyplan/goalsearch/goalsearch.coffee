@@ -16,22 +16,18 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
     super arguments...
 
     # Instantiate all goals.
-    goalClasses = PAA.Learning.Goal.getClasses()
-
-    @goals = []
-    @goalsById = {}
-
-    for goalClass in goalClasses
-      goal = new goalClass
-      @goals.push goal
-      @goalsById[goal.id()] = goal
+    @_goals = []
+    @goals = new ComputedField =>
+      goal.destroy() for goal in @_goals
+      @_goals = (new goalClass for goalClass in PAA.Learning.Goal.getClasses())
+      @_goals
 
     @interestSearchTerm = new ReactiveField ''
 
     @goalsWithInterest = new ComputedField =>
       return unless searchTerm = _.lowerCase @interestSearchTerm()
 
-      _.filter @goals, (goal) =>
+      _.filter @goals(), (goal) =>
         # See if any of goal's interests matches the searched interest.
         for interest in goal.interests()
           # Find the interest document and see if our search term matches its interests. If we can't find
@@ -53,10 +49,7 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
     @interestsSearchInputFocused = new ReactiveField false
 
   onDestroyed: ->
-    goal.destroy() for goal in @goals
-
-  results: ->
-    @goals()
+    goal.destroy() for goal in @_goals
 
   setInterest: (interest) ->
     name = AB.translate(interest.name).text

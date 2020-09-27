@@ -1,0 +1,19 @@
+<template name="PixelArtAcademy.StudyGuide.Article.Figure.Image">
+  <div class="pixelartacademy-studyguide-article-figure-image">
+    {{#if imageSource}}
+      <img class="image" src="{{imageSource}}">
+    {{/if}}
+    {{#if $or upload uploadError}}
+      <div class="upload-info">
+        {{#if uploadError}}
+          {{uploadError.reason}}
+        {{else}}
+          {{uploadPercentage}}
+        {{/if}}
+      </div>
+    {{/if}}
+    {{#if missingImageSource}}
+      <div class="missing-image">Missing image</div>
+    {{/if}}
+  </div>
+</template>

@@ -1,0 +1,16 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Home">
+  <div class="pixelartacademy-studyguide-pages-home">
+    {{#if showBackButton}}
+      {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+    {{/if}}
+    <div class="scene" {{style sceneStyle}}>
+      {{> Render activities}}
+      {{> Render studyPlan}}
+      {{> Render about}}
+      <div class="table" {{style tableStyle}}>
+        <div class="drawer"></div>
+      </div>
+    </div>
+    {{> Render book}}
+  </div>
+</template>

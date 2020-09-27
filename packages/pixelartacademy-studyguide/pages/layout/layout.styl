@@ -1,0 +1,91 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+html.pixelartacademy-studyguide
+  margin 0
+  padding 0
+
+  body
+    width 100%
+    margin 0
+    padding 0
+
+.pixelartacademy-studyguide
+  background atariGrey(0)
+  pixel-image-rendering()
+  overflow-x hidden
+
+  *
+  *::after
+  *::before
+    background-size 100% 100%
+
+  input
+  textarea
+    font inherit
+    color inherit
+
+.pixelartacademy-studyguide-pages-layout
+  daily()
+  line-height 10rem
+  color atariGrey(5)
+  background atariGrey(0)
+
+  a
+    &:hover
+      color atariPeach(2)
+
+  h2
+    academy()
+    margin 15rem 0 8rem
+
+  > .header
+    position absolute
+    z-index 1
+    width 100%
+    background atariGrey(0)
+    transition top 1s, height 1s
+
+    .title
+      academy()
+      text-align center
+      margin 0
+      line-height 24rem
+      padding-top 4rem
+
+      .route-link
+        display block
+        width 100%
+        text-decoration none
+
+    .navigation
+      .pages
+        display flex
+        width 100%
+        max-width 200rem
+        margin 0 auto
+        padding 0
+        list-style none
+
+        .page
+          display block
+          flex-grow 1
+          text-align center
+          line-height 16rem
+
+          &.apply
+            text-transform uppercase
+
+          .route-link
+            display block
+            width 100%
+            text-decoration none
+
+            &.active
+              color atariPeach(2)
+
+.landsofillusions-components-signin
+  .title
+    kyrou-9()
+    line-height 9rem
+    font-weight bold
+    margin-top 0

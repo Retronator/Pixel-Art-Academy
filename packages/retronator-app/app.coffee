@@ -25,19 +25,26 @@ class Retronator.App extends Artificial.Base.App
 
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
+
     new Retronator.Accounts
     new Retronator.Store
     new Retronator.Blog
+
     new Illustrapedia
+
     new PixelArtAcademy.LandingPage
     new PixelArtAcademy.Practice
     new PixelArtAcademy.Pico8
     new PixelArtAcademy.Season1.Episode1.Pages
+    new PixelArtAcademy.StudyGuide
+
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies
+
     new LOI
     new LOI.Assets
     new LOI.Construct.Pages
+
     new Retropolis.City
 
     # Add adventure pages last so they capture all remaining URLs.
