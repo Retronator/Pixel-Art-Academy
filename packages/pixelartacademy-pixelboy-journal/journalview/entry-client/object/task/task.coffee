@@ -25,7 +25,7 @@ class Entry.Object.Task extends Entry.Object
       return
 
     @characterId = new ComputedField =>
-      @entryComponent()?.entry()?.journal.character._id
+      @quillComponent()?.entry()?.journal.character._id
     ,
       true
       
