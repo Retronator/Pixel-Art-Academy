@@ -1,6 +1,6 @@
 HQ = Retronator.HQ
 
-ColorThief = require 'colorthief'
+import ColorThief from 'colorthief'
 colorThief = new ColorThief if Meteor.isClient and _.isFunction ColorThief
 
 class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
@@ -267,7 +267,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
           headlineImage.crossOrigin = "Anonymous"
           headlineImage.onload = =>
             try
-              applyColors ColorThief.getPalette(headlineImage, 3)
+              applyColors colorThief.getPalette(headlineImage, 3)
 
           headlineImage.src = coverImage.src
 

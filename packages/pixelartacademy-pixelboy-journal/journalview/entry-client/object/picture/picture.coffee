@@ -1,3 +1,4 @@
+AS = Artificial.Spectrum
 PAA = PixelArtAcademy
 Entry = PAA.PixelBoy.Apps.Journal.JournalView.Entry
 
@@ -16,6 +17,7 @@ class Entry.Object.Picture extends Entry.Object
   onCreated: ->
     super arguments...
 
+    @imageInfo = new ReactiveField null
     @previewSource = new ReactiveField null
     @upload = new ReactiveField null
     @uploadError = new ReactiveField null
@@ -50,6 +52,43 @@ class Entry.Object.Picture extends Entry.Object
 
     @upload upload
 
+  pictureStyle: ->
+    return unless imageInfo = @imageInfo()
+    {pixelScale, width, height} = imageInfo
+
+    # If this is not a pixel-art image, use smooth scaling and control max height through css.
+    maxHeight = 140
+
+    unless pixelScale
+      return {
+        imageRendering: 'auto'
+        maxHeight: "#{maxHeight}rem"
+      }
+
+    # By default we want the pixel scale to match our display scale.
+    displayScale = LOI.adventure.interface.display.scale()
+    desiredPixelScale = displayScale
+
+    # If the image is taller than 140px, we want to use a smaller scale.
+    sourceHeight = height / pixelScale
+
+    if sourceHeight > maxHeight
+      cssScale = maxHeight * displayScale / height
+
+      console.log "squeeze", cssScale
+
+    else
+      cssScale = desiredPixelScale / pixelScale
+
+      console.log "do it", cssScale
+
+    # Account for 3 pixels of padding.
+    paddingRem = 3
+    paddingFull = 2 * paddingRem * desiredPixelScale
+    cssWidth = width * cssScale + paddingFull
+
+    width: "#{cssWidth}px"
+
   uploadingClass: ->
     'uploading' if @upload()
 
@@ -75,7 +114,37 @@ class Entry.Object.Picture extends Entry.Object
 
   events: ->
     super(arguments...).concat
+      'load .picture': @onLoadPicture
+      'click .picture': @onClickPicture
       'click .retry-upload-button': @onClickRetryUploadButton
+
+  onLoadPicture: (event) ->
+    image = event.target
+
+    # Detect pixel scale and resize image appropriately.
+    detectPixelScaleOptions = {}
+
+    # Mark jpegs as compressed.
+    if image.src.match /\.jpe?g$/
+      detectPixelScaleOptions.compressed = true
+
+    pixelScale =  AS.PixelArt.detectPixelScale image, detectPixelScaleOptions
+
+    @imageInfo
+      pixelScale: pixelScale
+      width: image.naturalWidth
+      height: image.naturalHeight
+
+  onClickPicture: (event) ->
+    artworks = [
+      image: event.target
+    ]
+
+    # Create the stream component.
+    stream = new PAA.PixelBoy.Apps.Journal.JournalView.Entry.ArtworksStream artworks
+
+    LOI.adventure.showActivatableModalDialog
+      dialog: stream
 
   onClickRetryUploadButton: (event) ->
     value = @value()

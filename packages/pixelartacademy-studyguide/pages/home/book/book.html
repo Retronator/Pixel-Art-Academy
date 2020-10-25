@@ -1,4 +1,9 @@
 <template name="PixelArtAcademy.StudyGuide.Pages.Home.Book">
+  {{#with focusedArtworks}}
+    <div class="pixelartacademy-studyguide-pages-home-book-focused-artworks">
+      {{> PixelArtDatabase.Components.Stream}}
+    </div>
+  {{/with}}
   {{#with book}}
     <div class="pixelartacademy-studyguide-pages-home-book {{loadedClass}}" {{style componentStyle}}>
       <div class="book {{design.class}}" {{style bookStyle}}>

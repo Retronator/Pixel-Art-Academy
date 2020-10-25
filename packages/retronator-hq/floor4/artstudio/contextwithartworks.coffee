@@ -290,6 +290,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     streamOptions: ->
       captionComponentClass: @constructor.ArtworkCaption
       scrollParentSelector: '.retronator-hq-artstudio-contextwithartworks-stream'
+      display: LOI.adventure.interface.display
 
     events: ->
       super(arguments...).concat

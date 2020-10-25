@@ -85,9 +85,21 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     return unless @book.isCreated()
     @book.book()
 
+  backButtonHiddenClass: ->
+    return unless @book.isCreated()
+
+    'back-button-hidden' if @book.focusedArtworks()
+
   backButtonCallback: ->
     # We must return the callback function.
     =>
+      # If we're focusing on an artwork, we close it.
+      if @book.focusedArtworks()
+        @book.unfocusArtworks()
+
+        # Don't hide the back button.
+        return cancel: true
+
       # If we're on an activity, return to table of contents.
       if AB.Router.getParameter 'activity'
         @book.goToTableOfContents()

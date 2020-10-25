@@ -30,3 +30,4 @@ class PAA.StudyGuide.Article
       'image/jpeg'
       'image/gif'
     ]
+    cacheControl: LOI.Assets.Upload.Context.CacheControl.Immutable

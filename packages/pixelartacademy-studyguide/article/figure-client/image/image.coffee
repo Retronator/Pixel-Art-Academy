@@ -75,6 +75,7 @@ class PAA.StudyGuide.Article.Figure.Image extends AM.Component
   events: ->
     super(arguments...).concat
       'load img': @onLoadImage
+      'click img': @onClickImage
 
   onLoadImage: (event) ->
     image = event.target
@@ -85,3 +86,11 @@ class PAA.StudyGuide.Article.Figure.Image extends AM.Component
 
     # Inform figure that content has updated so that the surrounding article can recalculate the number of pages.
     @figure.contentUpdated()
+
+  onClickImage: (event) ->
+    artworks = [
+      image: event.target
+    ]
+
+    article = @figure.quillComponent()
+    article.bookComponent.focusArtworks artworks

@@ -122,11 +122,16 @@ Package.onUse(function(api) {
   api.addFile('floor2/bookshelves..');
 
   api.addFile('floor3/gallery..');
-  api.addFile('floor3/gallery/artworksgroup');
+  api.addComponent('floor3/gallery/artworksgroup');
+  api.addServerFile('floor3/gallery/initialize-server');
 
   api.addFile('floor3/gallery/gallerywest..');
   api.addFile('floor3/gallery/gallerywest/artworks..');
   api.addFile('floor3/gallery/gallerywest/artworks/tribute');
+  api.addFile('floor3/gallery/gallerywest/artworks/pixelchinamountains');
+  api.addFile('floor3/gallery/gallerywest/artworks/computersseries');
+  api.addFile('floor3/gallery/gallerywest/artworks/julieseries');
+  api.addFile('floor3/gallery/gallerywest/artworks/zxcosmopolis');
 
   api.addFile('floor3/gallery/galleryeast..');
   api.addFile('floor3/gallery/galleryeast/corinne');

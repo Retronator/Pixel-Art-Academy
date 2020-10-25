@@ -10,7 +10,7 @@
     "util": "^0.11.1"
   },
   "devDependencies": {
-    "coffeelint": "^1.16.2"
+    "@coffeelint/cli": "^4.1.1"
   },
   "scripts": {
     "test": ""

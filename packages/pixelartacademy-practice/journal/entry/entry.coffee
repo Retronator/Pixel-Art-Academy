@@ -59,6 +59,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
       'image/jpeg'
       'image/gif'
       ]
+    cacheControl: LOI.Assets.Upload.Context.CacheControl.Immutable
 
   # Methods
 

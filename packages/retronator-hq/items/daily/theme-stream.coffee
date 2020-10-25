@@ -77,10 +77,10 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
           <li class="artwork-area">
             <figure class="artwork-with-caption">
               <div class="artwork-frame">
-                <img class="artwork" src="#{image.src}"/>
+                <img class="artwork visible" src="#{image.src}"/>
               </div>
             </figure>
-            <img class="background" src="#{image.src}"/>
+            <img class="background visible" src="#{image.src}"/>
           </li>
         """
 

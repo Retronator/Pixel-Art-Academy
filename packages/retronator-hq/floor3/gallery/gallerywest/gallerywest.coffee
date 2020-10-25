@@ -40,6 +40,10 @@ class HQ.GalleryWest extends LOI.Adventure.Location
     @constructor.Colliders
     @constructor.Artworks
     @constructor.Artworks.Tribute
+    @constructor.Artworks.PixelChinaMountains
+    @constructor.Artworks.ComputersSeries
+    @constructor.Artworks.JulieSeries
+    @constructor.Artworks.ZXCosmopolis
   ]
 
   exits: ->

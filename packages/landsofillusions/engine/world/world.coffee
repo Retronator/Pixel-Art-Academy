@@ -142,7 +142,13 @@ class LOI.Engine.World extends AM.Component
 
   worldIsVisible: ->
     # We need to render the world when we're on a named illustration.
-    @options.adventure.currentSituation()?.illustration()?.name
+    return unless @options.adventure.currentSituation()?.illustration()?.name
+
+    # Make sure none of the active items renders a fullscreen UI.
+    for item in @options.adventure.interface.activeItems()
+      return if item.hasFullscreenUI?()
+
+    true
 
   _update: (appTime) ->
     @navigator()?.update appTime

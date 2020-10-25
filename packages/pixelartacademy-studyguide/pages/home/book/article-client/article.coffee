@@ -40,6 +40,11 @@ class PAA.StudyGuide.Pages.Home.Book.Article extends AM.Component
 
     @quill quill
 
+    quill.on 'text-change', (delta, oldDelta, source) =>
+      # Tell the blots they are part of this component.
+      for blot in @quill().getLines()
+        blot.domNode.component?.quillComponent @
+
     # Update quill content.
     @autorun (computation) =>
       return unless activity = @activity()
@@ -47,4 +52,4 @@ class PAA.StudyGuide.Pages.Home.Book.Article extends AM.Component
       quill.setContents activity.article, Quill.sources.API
 
   contentUpdated: ->
-    @book.contentUpdated()
+    @bookComponent.contentUpdated()
