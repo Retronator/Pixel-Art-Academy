@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
 
@@ -46,6 +47,8 @@ Package.onUse(function(api) {
   api.addClientComponent('journalview/entry-client/object/task/tasks/manual..');
   api.addClientComponent('journalview/entry-client/object/task/tasks/upload..');
   api.addClientComponent('journalview/entry-client/object/task/tasks/survey..');
+
+  api.addClientComponent('journalview/entry-client/artworksstream..');
 
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');

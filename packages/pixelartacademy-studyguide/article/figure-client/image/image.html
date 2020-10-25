@@ -1,7 +1,7 @@
 <template name="PixelArtAcademy.StudyGuide.Article.Figure.Image">
   <div class="pixelartacademy-studyguide-article-figure-image">
     {{#if imageSource}}
-      <img class="image" src="{{imageSource}}">
+      <img class="image" src="{{imageSource}}" crossorigin="anonymous">
     {{/if}}
     {{#if $or upload uploadError}}
       <div class="upload-info">

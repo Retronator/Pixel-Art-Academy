@@ -2,7 +2,7 @@
 
 .pixelartacademy-studyguide-pages-home-book
   display none
-  position absolute
+  position relative
   left 0
 
   &.loaded
@@ -156,3 +156,9 @@
 
               a
                 text-decoration none
+
+.pixelartacademy-studyguide-pages-home-book-focused-artworks
+  cursor pointer
+
+  & + .pixelartacademy-studyguide-pages-home-book
+    display none

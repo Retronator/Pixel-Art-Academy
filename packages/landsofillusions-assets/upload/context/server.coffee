@@ -11,7 +11,7 @@ class LOI.Assets.Upload.Context extends LOI.Assets.Upload.Context
       return
 
     # On the server we create the upload directive.
-    Slingshot.createDirective @options.name, Slingshot.S3Storage,
+    directiveOptions =
       bucket: 'pixelartacademy'
       acl: 'public-read'
       AWSAccessKeyId: Meteor.settings.amazonWebServices.accessKey
@@ -28,3 +28,7 @@ class LOI.Assets.Upload.Context extends LOI.Assets.Upload.Context
 
         # Store the file into the desired folder with a random name.
         "#{@options.folder}/#{Random.id()}.#{extension}"
+
+    directiveOptions.cacheControl = @options.cacheControl if @options.cacheControl
+
+    Slingshot.createDirective @options.name, Slingshot.S3Storage, directiveOptions

@@ -400,11 +400,11 @@ Package.onUse(function(api) {
 
   // Artificial Spectrum
 
-  api.addFile('spectrum/renderobject');
-  api.addFile('spectrum/animatedmesh');
-  api.addFile('spectrum/imagedatahelpers');
-  api.addFile('spectrum/shadowmapdebugmaterial');
-  api.addFile('spectrum/screenquad');
+  api.addFile('spectrum/renderobject..');
+  api.addFile('spectrum/animatedmesh..');
+  api.addFile('spectrum/imagedatahelpers..');
+  api.addFile('spectrum/shadowmapdebugmaterial..');
+  api.addFile('spectrum/screenquad..');
 
   api.addClientJavascript('spectrum/creature/glmatrix');
   api.addClientJavascript('spectrum/creature/creaturemeshbone');
@@ -413,6 +413,11 @@ Package.onUse(function(api) {
   api.addFile('spectrum/hqx..');
   api.addJavascript('spectrum/hqx..');
 
+  api.addClientJavascript('spectrum/previewgif-client/previewgif');
+
+  api.addFile('spectrum/pixelart..');
+  api.addFile('spectrum/pixelart/pixelart-detectpixelscale');
+  api.addFile('spectrum/pixelart/pixelart-getditherthresholdmap');
 
   api.addFile('spectrum/color..');
   api.addGlsl('spectrum/color/hsltorgb');

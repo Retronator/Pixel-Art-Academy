@@ -1,6 +1,14 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-studyguide-pages-home
+  &.back-button-hidden
+    .landsofillusions-components-back-button
+      opacity 0
+
+  .landsofillusions-components-back-button
+    opacity 1
+    transition opacity 0.5s
+
   .scene
     position fixed
     background image('/pixelartacademy/studyguide/home/background-dark.png') 0 0 / 440rem 480rem

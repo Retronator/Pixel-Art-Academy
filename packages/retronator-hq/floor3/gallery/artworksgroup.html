@@ -1,0 +1,38 @@
+<template name="Retronator.HQ.Gallery.ArtworksGroup.Stream">
+  <div class="retronator-hq-gallery-artworksgroup-stream">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#with artworks}}
+      {{> PixelArtDatabase.Components.Stream args streamOptions}}
+    {{/with}}
+    <style>
+      .landsofillusions-components-menu .toolbar, html.adventure .build-version {
+        opacity: 0 !important;
+        pointer-events: none;
+      }
+      .landsofillusions-interface-text {
+        visibility: hidden;
+      }
+      html {
+        overflow: auto !important;
+      }
+      body {
+        height: auto !important;
+      }
+    </style>
+  </div>
+</template>
+
+<template name="Retronator.HQ.Gallery.ArtworksGroup.Stream.ArtworkCaption">
+  <div class="retronator-hq-gallery-artworksgroup-stream-artworkcaption">
+    <div class="main-info">
+      <span class="title">{{title}}{{#if wip}} (WIP){{/if}}</span>,
+      <span class="authors">{{authors}}</span>,
+      <span class="year">{{year}}</span>
+    </div>
+    {{#if caption}}
+      <div class="extra-info">
+        {{caption}}
+      </div>
+    {{/if}}
+  </div>
+</template>

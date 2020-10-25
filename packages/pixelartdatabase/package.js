@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'stackblur-canvas': '2.4.0'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
@@ -58,6 +62,8 @@ Package.onUse(function(api) {
 
   api.addFile('components..');
   api.addComponent('components/stream..');
+  api.addComponent('components/stream/artwork');
+  api.addClientFile('components/stream/artwork-renderbackground-client');
 
   // Pages
 
