@@ -8,8 +8,7 @@ class PAA.Practice.Journal.Entry.MemoryPreview extends AM.Component
   @register @id()
 
   Meteor.startup =>
-    # TODO: Change to @ when upgrading to CoffeeScript 2.4.
-    LOI.Items.Sync.Memories.registerPreviewComponent 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Context', PAA.Practice.Journal.Entry.MemoryPreview
+    LOI.Items.Sync.Memories.registerPreviewComponent 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Context', @
 
   onCreated: ->
     super arguments...
