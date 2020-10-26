@@ -41,6 +41,13 @@ class LOI.Parser.Vocabulary
           # Find all the translations that use this vocabulary key.
           translations = Artificial.Babel.existingTranslations @_translationSubscription.namespace, keyRegex
 
+          # Sort translations by key number so they appear in order they were defined.
+          translations = _.sortBy translations, (translation) =>
+            keyNumberMatch = translation.key.match /\.(\d+)$/
+            keyNumberText = keyNumberMatch[1]
+            keyNumber = parseInt keyNumberText
+            keyNumber
+
           # Translate all phrases and add them to this location.
           vocabularyLocation[phrase] = []
           
