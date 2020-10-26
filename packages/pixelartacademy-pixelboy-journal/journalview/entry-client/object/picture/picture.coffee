@@ -75,12 +75,8 @@ class Entry.Object.Picture extends Entry.Object
     if sourceHeight > maxHeight
       cssScale = maxHeight * displayScale / height
 
-      console.log "squeeze", cssScale
-
     else
       cssScale = desiredPixelScale / pixelScale
-
-      console.log "do it", cssScale
 
     # Account for 3 pixels of padding.
     paddingRem = 3
