@@ -2,7 +2,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Upload.Context
   @CacheControl:
-    Immutable: 'public, max-age=604800, immutable'
+    PreventCaching: 'no-store'
+    RequireRevalidation: 'no-cache, max-age=0'
+    StaticAsset: 'public, max-age=604800, immutable'
 
   constructor: (@options) ->
     # Set upload limits on both server and client.
