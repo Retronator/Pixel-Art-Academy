@@ -1,12 +1,35 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-studyguide-article
+.pixelartacademy-studyguide-article.ql-container
   .practice-section
-  .practice-section + .pixelartacademy-studyguide-article-figure
-    padding 5rem
+  .practice-section + figure
+  .practice-section + ol
+  .practice-section + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
+    padding 10rem
+    margin 0
     background atariBlue(4)
     color atariGrey(6)
 
-  .practice-section + .pixelartacademy-studyguide-article-figure
-    margin-top 0
-    margin-bottom 0
+  .practice-section + .practice-section
+  .practice-section + figure
+  .practice-section + figure + .practice-section
+  .practice-section + ol
+  .practice-section + ol + .practice-section
+  .practice-section + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
+  .practice-section + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task + .practice-section
+    padding-top 0
+
+  .practice-section + ol
+    padding-left 20rem
+
+  .practice-section + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
+    border none
+
+    .goal
+      display none
+
+    .confirmation
+      position relative
+
+      &::before
+        border-color atariGrey(6)

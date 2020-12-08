@@ -30,6 +30,9 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
 
     @displayScale = 2
 
+    @taskOwner = new ComputedField =>
+      # No owner is required in the editor.
+
   onRendered: ->
     super arguments...
 
@@ -118,4 +121,10 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
     $fileInput.click()
 
   onQuillToolbarTaskClick: (value) ->
-    console.log "task", value
+    quill = @quill()
+    range = quill.getSelection()
+
+    return unless id = prompt 'Insert task with ID'
+    task = {id}
+
+    quill.insertEmbed range.index, 'task', task, Quill.sources.USER

@@ -30,6 +30,8 @@ class PAA.StudyGuide.Pages.Home.Book.Article extends AM.Component
 
     @quill = new AE.ReactiveWrapper null
 
+    @taskOwner = new ComputedField =>
+
   onRendered: ->
     super arguments...
 
