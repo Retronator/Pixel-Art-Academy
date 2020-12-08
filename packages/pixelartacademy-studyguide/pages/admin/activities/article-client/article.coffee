@@ -6,6 +6,10 @@ PAA = PixelArtAcademy
 
 Quill = AM.Quill
 
+icons = Quill.import 'ui/icons'
+icons['practice-section'] = 'PS'
+icons['task'] = 'T'
+
 class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Component
   @id: -> 'PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Article'
   @register @id()
@@ -44,10 +48,12 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
               [{'list': 'ordered'}, {'list': 'bullet'}]
               ['blockquote', 'code-block']
               ['image', 'video']
+              ['practice-section', 'task']
               ['clean']
             ]
           handlers:
             image: (value) => @onQuillToolbarImageClick value
+            task: (value) => @onQuillToolbarTaskClick value
 
     @quill quill
 
@@ -110,3 +116,6 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
       quill.insertEmbed range.index, 'figure', figure, Quill.sources.USER
 
     $fileInput.click()
+
+  onQuillToolbarTaskClick: (value) ->
+    console.log "task", value

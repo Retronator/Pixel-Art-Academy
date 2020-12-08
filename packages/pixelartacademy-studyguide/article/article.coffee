@@ -19,6 +19,7 @@ class PAA.StudyGuide.Article
 
     'figure'
     'task'
+    'practice-section'
   ]
 
   @figureUploadContext = new LOI.Assets.Upload.Context

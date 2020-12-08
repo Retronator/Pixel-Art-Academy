@@ -20,7 +20,7 @@ class PAA.StudyGuide.Activity extends AM.Document
   # requiredInterests: array of interests directly required by the goal, not coming from the tasks
   # [article]: array of delta operations for the Study Guide article of this activity
   #   insert: string or object to be inserted
-  #     PixelArtAcademy.StudyGuide.Article.Figure: a collection of visual elements with a caption
+  #     figure: a collection of visual elements with a caption
   #       layout: array of numbers controlling how many elements per row to show
   #       caption: the text written under the figure
   #       [elements]: array of elements that make the figure
@@ -37,6 +37,7 @@ class PAA.StudyGuide.Activity extends AM.Document
   #       id: the id of the task to be displayed
   #
   #   attributes: object with formatting directives
+  #     practice-section: a visually distinct section that includes practical learning tasks
   @Meta
     name: @id()
 

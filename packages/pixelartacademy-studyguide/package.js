@@ -26,8 +26,12 @@ Package.onUse(function(api) {
   api.addFile('studyguide-tasks');
 
   api.addFile('article..');
+
   api.addClientComponent('article/figure-client/figure');
   api.addClientComponent('article/figure-client/image..');
+
+  api.addClientFile('article/practicesection-client/practicesection');
+  api.addStyle('article/practicesection-client/practicesection');
 
   api.addStyle('style/article');
 
