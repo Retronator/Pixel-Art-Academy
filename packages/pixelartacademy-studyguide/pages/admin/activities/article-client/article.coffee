@@ -8,7 +8,7 @@ Quill = AM.Quill
 
 icons = Quill.import 'ui/icons'
 icons['practice-section'] = 'PS'
-icons['task'] = 'T'
+icons['studyguide-task-reading'] = 'TR'
 
 class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Component
   @id: -> 'PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Article'
@@ -30,9 +30,6 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
 
     @displayScale = 2
 
-    @taskOwner = new ComputedField =>
-      # No owner is required in the editor.
-
   onRendered: ->
     super arguments...
 
@@ -51,12 +48,12 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
               [{'list': 'ordered'}, {'list': 'bullet'}]
               ['blockquote', 'code-block']
               ['image', 'video']
-              ['practice-section', 'task']
+              ['practice-section', 'studyguide-task-reading']
               ['clean']
             ]
           handlers:
             image: (value) => @onQuillToolbarImageClick value
-            task: (value) => @onQuillToolbarTaskClick value
+            'studyguide-task-reading': (value) => @onQuillToolbarTaskReadingClick value
 
     @quill quill
 
@@ -120,11 +117,11 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
 
     $fileInput.click()
 
-  onQuillToolbarTaskClick: (value) ->
+  onQuillToolbarTaskReadingClick: (value) ->
     quill = @quill()
     range = quill.getSelection()
 
     return unless id = prompt 'Insert task with ID'
     task = {id}
 
-    quill.insertEmbed range.index, 'task', task, Quill.sources.USER
+    quill.insertEmbed range.index, 'studyguide-task-reading', task, Quill.sources.USER

@@ -1,19 +1,9 @@
+AM = Artificial.Mirage
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
-Entry = PAA.PixelBoy.Apps.Journal.JournalView.Entry
-IL = Illustrapedia
+Quill = AM.Quill
 
-class Entry.Object.Task extends Entry.Object
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task'
-  @version: -> '0.1.0'
-
-  @register @id()
-  template: -> @constructor.id()
-
-  @registerBlot
-    name: 'task'
-    tag: 'p'
-    class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task'
-
+class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
   onCreated: ->
     super arguments...
 
@@ -24,45 +14,19 @@ class Entry.Object.Task extends Entry.Object
       console.warn "Unknown task with ID", value.id
       return
 
-    @characterId = new ComputedField =>
-      @quillComponent()?.entry()?.journal.character._id
-    ,
-      true
-      
     goalClass = taskClass.goal()
-
     @goal = new goalClass
-      characterId: @characterId
       
     @task = _.find @goal.tasks(), (task) => task instanceof taskClass
-
-    @taskEntry = new ComputedField =>
-      # Note: We must use reactive value here because it can change when setting the entry automatically below.
-      return unless entryId = @value().entry?._id
-
-      PAA.Learning.Task.Entry.documents.findOne entryId
-
-    @taskComponent = new @constructor[taskClass.type()] @
-
-    # If we don't have an entry yet, see if one exists and automatically set it.
-    unless value.entry?._id
-      # TODO: Handle resets of goals to only pick an entry after the reset date.
-      @autorun (computation) =>
-        return unless entry = @task.entry()
-
-        # We found the entry, so update our value.
-        value.entry = _id: entry._id
-        @value value
 
   onDestroyed: ->
     super arguments...
 
     @goal?.destroy()
-    @characterId?.stop()
 
   completed: ->
-    # Task is completed if we have an entry. We use the value version to forgo loading.
-    @value().entry?._id
+    # Task is completed if we have an entry.
+    @task.entry()
 
   completedClass: ->
     'completed' if @completed()

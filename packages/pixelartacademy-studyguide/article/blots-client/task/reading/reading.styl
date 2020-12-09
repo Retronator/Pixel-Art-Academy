@@ -1,0 +1,67 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-article-task-reading
+  cursor default
+  border-bottom 1rem solid atariGrey(2)
+  white-space normal
+
+  .goal
+    margin-bottom 4rem
+    border-bottom 1rem solid atariGrey(2)
+    padding 1rem
+    adventure()
+    line-height 5rem
+    text-transform uppercase
+
+  .task
+    &.completed
+      .confirmation
+        &::after
+          content '✓'
+          position absolute
+          left 2rem
+          top 0
+
+    &.completed
+    &.read-only
+      .instructions
+      .complete
+        display none
+
+    &:not(.active)
+      .complete
+        display none
+
+    .confirmation
+      position relative
+
+      &::before
+        position relative
+        content ''
+        width 8rem
+        height 8rem
+        border 1rem solid atariGrey(2)
+        float left
+
+      &.enabled
+        cursor pointer
+
+      .directive
+        margin 0 0 4rem 13rem
+
+    .instructions
+      margin 3rem auto
+      adventure()
+      line-height 7rem
+
+    .complete
+    .prerequisites
+      margin 3rem 0
+      adventure()
+      line-height 7rem
+
+    .complete
+      color atariGreen(2)
+
+    .prerequisites
+      color atariRed(2)

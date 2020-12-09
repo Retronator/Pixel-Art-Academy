@@ -36,11 +36,6 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @entry = new ComputedField =>
       PAA.Practice.Journal.Entry.documents.findOne @entryId
 
-    @taskOwner = new ComputedField =>
-      return unless characterId = @entry()?.journal.character._id
-
-      {characterId}
-
     @objectsAreaExpanded = new ReactiveField false
 
     @_mouseUpWindowHandler = (event) => @onMouseUpWindow event
