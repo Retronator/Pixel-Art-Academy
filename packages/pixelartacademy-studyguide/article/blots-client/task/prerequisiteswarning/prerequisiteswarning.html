@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.StudyGuide.Article.PrerequisitesWarning">
+  {{#if $and currentUser prerequisites.length}}
+    <div class="prerequisites">
+      Before you continue, you should complete
+      {{#unless prerequisitesAll}}one of{{/unless}} the previous tasks:
+      <ul class="tasks">
+        {{#each prerequisites}}
+          <li class="task">{{> t10e directiveTranslation}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+</template>

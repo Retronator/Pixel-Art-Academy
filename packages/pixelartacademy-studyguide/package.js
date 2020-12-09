@@ -34,6 +34,7 @@ Package.onUse(function(api) {
   api.addStyle('article/blots-client/practicesection..');
 
   api.addClientFile('article/blots-client/task..');
+  api.addClientComponent('article/blots-client/task/prerequisiteswarning..');
   api.addClientComponent('article/blots-client/task/reading..');
 
   api.addStyle('style/article');
@@ -49,7 +50,10 @@ Package.onUse(function(api) {
   api.addServerFile('book/subscriptions');
 
   api.addFile('pages..');
+
   api.addComponent('pages/layout..');
+  api.addFile('pages/layout/layout-dialogs');
+
   api.addComponent('pages/home..');
   api.addComponent('pages/home/activities..');
   api.addComponent('pages/home/studyplan..');

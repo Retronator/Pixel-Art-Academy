@@ -33,11 +33,14 @@ class PAA.StudyGuide.Activity extends AM.Document
   #         video: a video without any semantic information
   #           url
   #
-  #     task: a learning task
-  #       id: the id of the task to be displayed
+  #     studyguide-prerequisiteswarning: a warning showing prerequisite tasks
+  #       id: the id of the task for which to show prerequisites
+  #
+  #     studyguide-readingtask: a checkbox to mark reading of a section complete
+  #       id: the id of the reading task to be completed
   #
   #   attributes: object with formatting directives
-  #     practice-section: a visually distinct section that includes practical learning tasks
+  #     studyguide-practicesection: a visually distinct section that includes practical learning tasks
   @Meta
     name: @id()
 

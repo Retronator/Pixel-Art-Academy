@@ -18,7 +18,8 @@ class PAA.StudyGuide.Article
     'video'
 
     'figure'
-    'practice-section'
+    'studyguide-practicesection'
+    'studyguide-prerequisiteswarning'
     'studyguide-task-reading'
   ]
 

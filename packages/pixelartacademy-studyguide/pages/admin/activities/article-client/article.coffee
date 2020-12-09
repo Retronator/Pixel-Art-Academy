@@ -7,7 +7,8 @@ PAA = PixelArtAcademy
 Quill = AM.Quill
 
 icons = Quill.import 'ui/icons'
-icons['practice-section'] = 'PS'
+icons['studyguide-practicesection'] = 'PS'
+icons['studyguide-prerequisiteswarning'] = 'PW'
 icons['studyguide-task-reading'] = 'TR'
 
 class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Component
@@ -48,11 +49,16 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
               [{'list': 'ordered'}, {'list': 'bullet'}]
               ['blockquote', 'code-block']
               ['image', 'video']
-              ['practice-section', 'studyguide-task-reading']
+              [
+                'studyguide-practicesection'
+                'studyguide-prerequisiteswarning'
+                'studyguide-task-reading'
+              ]
               ['clean']
             ]
           handlers:
             image: (value) => @onQuillToolbarImageClick value
+            'studyguide-prerequisiteswarning': (value) => @onQuillToolbarPrerequisitesWarningClick value
             'studyguide-task-reading': (value) => @onQuillToolbarTaskReadingClick value
 
     @quill quill
@@ -116,6 +122,15 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
       quill.insertEmbed range.index, 'figure', figure, Quill.sources.USER
 
     $fileInput.click()
+
+  onQuillToolbarPrerequisitesWarningClick: (value) ->
+    quill = @quill()
+    range = quill.getSelection()
+
+    return unless id = prompt 'Insert task with ID'
+    task = {id}
+
+    quill.insertEmbed range.index, 'studyguide-prerequisiteswarning', task, Quill.sources.USER
 
   onQuillToolbarTaskReadingClick: (value) ->
     quill = @quill()

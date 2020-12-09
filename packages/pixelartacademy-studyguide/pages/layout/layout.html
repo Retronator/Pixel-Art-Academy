@@ -12,6 +12,11 @@
         </nav>
       </header>
       {{> Render page}}
+      {{#each modalDialogs}}
+        {{#unless dontRender}}
+          {{> Render dialog}}
+        {{/unless}}
+      {{/each}}
     </div>
   {{/LandsOfIllusions.Components.EmbeddedWebpage}}
 </template>

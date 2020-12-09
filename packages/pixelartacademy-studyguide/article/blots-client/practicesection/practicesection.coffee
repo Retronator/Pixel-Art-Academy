@@ -4,8 +4,8 @@ PAA = PixelArtAcademy
 Block = AM.Quill.import 'blots/block'
 
 class PAA.StudyGuide.Article.PracticeSection extends Block
-  @blotName: 'practice-section'
+  @blotName: 'studyguide-practicesection'
   @tagName: 'div'
-  @className: 'practice-section'
+  @className: 'practicesection'
 
 AM.Quill.register PAA.StudyGuide.Article.PracticeSection

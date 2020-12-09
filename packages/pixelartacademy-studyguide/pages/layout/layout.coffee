@@ -4,10 +4,32 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Layout extends LOI.Components.EmbeddedWebpage
-  @register 'PixelArtAcademy.StudyGuide.Pages.Layout'
-
   @image: (parameters) ->
     Meteor.absoluteUrl "retropolis/city/academyofart/link-image.png"
+
+  onCreated: ->
+    super arguments...
+
+    PAA.Learning.Task.Entry.forCurrentUser.subscribe @
+
+  signIn: (callback) ->
+    signInDialog = new LOI.Components.SignIn
+
+    # Wait for the user to get signed in.
+    userAutorun = Tracker.autorun (computation) =>
+      return unless Retronator.user()
+      computation.stop()
+
+      # User has signed in. Close the sign-in dialog and return control.
+      signInDialog.activatable.deactivate()
+      callback?()
+
+    @showActivatableModalDialog
+      dialog: signInDialog
+      callback: =>
+        # User has manually closed the sign-in dialog. Stop waiting and return control.
+        userAutorun.stop()
+        callback?()
 
   rootClass: -> 'pixelartacademy-studyguide'
 

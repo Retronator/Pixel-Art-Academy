@@ -1,6 +1,12 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+PAA.Learning.Task.Entry.forCurrentUser.publish ->
+  return unless userId = Meteor.userId()
+
+  PAA.Learning.Task.Entry.documents.find
+    'user._id': userId
+
 PAA.Learning.Task.Entry.forCharacter.publish (characterId) ->
   check characterId, Match.DocumentId
 

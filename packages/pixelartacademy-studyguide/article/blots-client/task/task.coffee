@@ -7,6 +7,9 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
   onCreated: ->
     super arguments...
 
+    @studyGuideLayout = new ComputedField =>
+      @quillComponent()?.ancestorComponentOfType PAA.StudyGuide.Pages.Layout
+
     value = @value()
     taskClass = PAA.Learning.Task.getClassForId value.id
     
@@ -24,6 +27,42 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
 
     @goal?.destroy()
 
+  signedIn: ->
+    Meteor.userId()?
+
+  ensureSignedIn: (callback) ->
+    # Simply perform the callback if signed in.
+    if @signedIn()
+      callback()
+      return
+
+    # Prompt the user to sign in.
+    studyGuideLayout = @studyGuideLayout()
+
+    dialog = new LOI.Components.Dialog
+      message: "
+        Tracking of completed tasks is only available with a Retronator account.
+        Do you want to sign in?
+      "
+      buttons: [
+        text: "Sign in"
+        value: true
+      ,
+        text: "Cancel"
+      ]
+
+    studyGuideLayout.showActivatableModalDialog
+      dialog: dialog
+      callback: =>
+        return unless dialog.result
+
+        studyGuideLayout.signIn =>
+          # See if sign in succeeded.
+          return unless Retronator.user()
+
+          # User has signed in, so perform the callback.
+          callback()
+
   completed: ->
     # Task is completed if we have an entry.
     @task.entry()
@@ -32,15 +71,10 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
     'completed' if @completed()
     
   active: ->
-    return if @readOnly()
-    
     @task.active @goal.tasks()
 
   activeClass: ->
     'active' if @active()
-
-  readOnlyClass: ->
-    'read-only' if @readOnly()
 
   prerequisitesAll: ->
     @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteType.All

@@ -110,20 +110,31 @@ class PAA.Learning.Task
   groupNumber: -> @constructor.groupNumber()
 
   entry: ->
-    return unless characterId = @options.characterId()
+    selector =
+      taskId: @id()
+
+    # See if we have a character selected.
+    if characterId = @options.characterId()
+      # Look for character's entries.
+      selector['character._id'] = characterId
+
+    unless characterId
+      if userId = Meteor.userId()
+        # Look for user's entries.
+        selector['user._id'] = userId
+
+    return unless characterId or userId
 
     # TODO: Add support for resetting goals/tasks
     
-    PAA.Learning.Task.Entry.documents.findOne
-      taskId: @id()
-      'character._id': characterId
+    PAA.Learning.Task.Entry.documents.findOne selector
 
   completed: ->
     # We need an entry made by this character.
     @entry()
 
   active: ->
-    # We should only be determining active state for the current character.
+    # We should only be determining active state for the current character or user.
     unless @options.characterId() is LOI.characterId()
       console.warn "Active task determination requested for another character."
       return
