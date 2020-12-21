@@ -63,6 +63,33 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
           # User has signed in, so perform the callback.
           callback()
 
+  attemptToRemoveTaskEntry: (entry) ->
+    # Prompt the user if they want to delete the task entry.
+    studyGuideLayout = @studyGuideLayout()
+
+    dialog = new LOI.Components.Dialog
+      message: "
+        Do you want to undo that you've completed this task?
+      "
+      buttons: [
+        text: "Undo"
+        value: true
+      ,
+        text: "Cancel"
+      ]
+
+    studyGuideLayout.showActivatableModalDialog
+      dialog: dialog
+      callback: =>
+        return unless dialog.result
+
+        PAA.Learning.Task.Entry.removeForUser entry._id
+
+  confirmationEnabledClass: ->
+    # Allow the user to attempt to complete the task if it's active, completed, or
+    # if the user is not signed in (in that case they will see the sign in popup).
+    'enabled' if @task.active() or not Meteor.userId() or @task.entry()
+
   completed: ->
     # Task is completed if we have an entry.
     @task.entry()

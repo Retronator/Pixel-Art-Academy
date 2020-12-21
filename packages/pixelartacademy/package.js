@@ -18,6 +18,9 @@ Package.onUse(function(api) {
 
   api.addFile('pixelartacademy');
 
+  api.addFile('components..');
+  api.addFile('components/autoscaledimagemixin..');
+
   api.addFile('adventure..');
   api.addFile('adventure/adventure-things');
   api.addFile('adventure/chapter..');

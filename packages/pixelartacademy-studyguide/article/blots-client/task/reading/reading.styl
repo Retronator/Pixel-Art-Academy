@@ -11,13 +11,6 @@
       .prompt
         color inherit
 
-      .confirmation
-        &::after
-          content '✓'
-          position absolute
-          left 2rem
-          top 0
-
     .prerequisites
     .prompt
       adventure()
@@ -33,23 +26,3 @@
     .prompt
       margin-bottom 5rem
       color atariGreen(2)
-
-    .confirmation
-      position relative
-
-      &::before
-        position relative
-        content ''
-        width 8rem
-        height 8rem
-        border 1rem solid atariGrey(2)
-        float left
-
-      &.enabled
-        cursor pointer
-
-        &::before
-          cursor text
-
-      .directive
-        margin-left 13rem

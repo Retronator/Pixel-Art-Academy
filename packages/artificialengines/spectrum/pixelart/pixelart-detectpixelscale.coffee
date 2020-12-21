@@ -30,6 +30,9 @@ AS.PixelArt.detectPixelScale = (imageSource, options = {}) ->
         shadeIsDifferent = true
         break
 
+    # If alpha differs, it's automatically a different shade.
+    shadeIsDifferent = true unless rgbaData[offset1 + 3] is rgbaData[offset2 + 3]
+
     samePixelCount++ unless shadeIsDifferent
 
     # If the pixels are different, add the current pixel count to the histogram as a potential art pixel scale.

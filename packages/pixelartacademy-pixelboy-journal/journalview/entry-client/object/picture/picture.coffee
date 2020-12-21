@@ -14,6 +14,10 @@ class Entry.Object.Picture extends Entry.Object
     tag: 'p'
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-picture'
 
+  mixins: -> [
+    PAA.Components.AutoScaledImageMixin
+  ]
+
   onCreated: ->
     super arguments...
 
@@ -51,6 +55,17 @@ class Entry.Object.Picture extends Entry.Object
         @upload null
 
     @upload upload
+
+  autoScaledImageMaxHeight: ->
+    # Images in the journal are limited to 140 rem height.
+    140
+
+  autoScaledImagePadding: ->
+    # We have a 3 rem padding on the picture.
+    3
+
+  autoScaledImageDisplayScale: ->
+    LOI.adventure.interface.display.scale()
 
   pictureStyle: ->
     return unless imageInfo = @imageInfo()

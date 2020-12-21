@@ -36,8 +36,12 @@ class PAA.StudyGuide.Activity extends AM.Document
   #     studyguide-prerequisiteswarning: a warning showing prerequisite tasks
   #       id: the id of the task for which to show prerequisites
   #
-  #     studyguide-readingtask: a checkbox to mark reading of a section complete
-  #       id: the id of the reading task to be completed
+  #     studyguide-task-reading: a checkbox to mark reading of a section complete
+  #       id: the id of the manual task to be completed
+  #
+  #     studyguide-task-upload: instructions for a task with the interface to upload an image
+  #       id: the id of the upload task to be completed
+  #       examplesFigure: same data structure as figure
   #
   #   attributes: object with formatting directives
   #     studyguide-practicesection: a visually distinct section that includes practical learning tasks

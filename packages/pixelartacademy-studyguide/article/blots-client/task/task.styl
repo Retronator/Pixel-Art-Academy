@@ -1,0 +1,45 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-article-task-reading
+.pixelartacademy-studyguide-article-task-upload
+  .task
+    &.completed
+      .prompt
+        color inherit
+
+      .confirmation.enabled
+        cursor default
+
+        &::after
+          content '✓'
+          position absolute
+          left 2rem
+          top 0
+
+        &::before
+        &::after
+          cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eraser.png?0.1.0') 4 2, default
+
+          html.scale-3-or-up &
+            cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eraser.png?0.1.0') 6 3, default
+
+    .confirmation
+      position relative
+
+      &::before
+        position relative
+        content ''
+        width 8rem
+        height 8rem
+        border 1rem solid atariGrey(2)
+        float left
+
+      &.enabled
+        cursor pointer
+
+        &::before
+          cursor text
+
+      .directive
+        text-transform uppercase
+        margin-left 13rem

@@ -54,6 +54,20 @@ PAA.Learning.Task.Entry.insertForUser.method (taskId, data) ->
 
   PAA.Learning.Task.Entry.documents.insert entry
 
+PAA.Learning.Task.Entry.removeForUser.method (entryId) ->
+  check entryId, Match.DocumentId
+
+  user = Retronator.requireUser()
+
+  # Make sure we have an entry for this task.
+  existing = PAA.Learning.Task.Entry.documents.findOne
+    _id: entryId
+    'user._id': user._id
+
+  throw new AE.ArgumentException "The requested entry could not be found." unless existing
+
+  PAA.Learning.Task.Entry.documents.remove entryId
+
 checkData = (taskId, data) ->
   check taskId, String
   check data, Match.OptionalOrNull

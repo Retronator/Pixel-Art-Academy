@@ -10,6 +10,7 @@ icons = Quill.import 'ui/icons'
 icons['studyguide-practicesection'] = 'PS'
 icons['studyguide-prerequisiteswarning'] = 'PW'
 icons['studyguide-task-reading'] = 'TR'
+icons['studyguide-task-upload'] = 'TU'
 
 class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Component
   @id: -> 'PixelArtAcademy.StudyGuide.Pages.Admin.Activities.Activity.Article'
@@ -53,6 +54,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
                 'studyguide-practicesection'
                 'studyguide-prerequisiteswarning'
                 'studyguide-task-reading'
+                'studyguide-task-upload'
               ]
               ['clean']
             ]
@@ -60,6 +62,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
             image: (value) => @onQuillToolbarImageClick value
             'studyguide-prerequisiteswarning': (value) => @onQuillToolbarPrerequisitesWarningClick value
             'studyguide-task-reading': (value) => @onQuillToolbarTaskReadingClick value
+            'studyguide-task-upload': (value) => @onQuillToolbarTaskUploadClick value
 
     @quill quill
 
@@ -133,10 +136,19 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
     quill.insertEmbed range.index, 'studyguide-prerequisiteswarning', task, Quill.sources.USER
 
   onQuillToolbarTaskReadingClick: (value) ->
+    @_insertEmbedTask 'studyguide-task-reading'
+
+  onQuillToolbarTaskUploadClick: (value) ->
+    @_insertEmbedTask 'studyguide-task-upload',
+      examplesFigure:
+        layout: []
+        elements: []
+
+  _insertEmbedTask: (format, task = {}) ->
     quill = @quill()
     range = quill.getSelection()
 
     return unless id = prompt 'Insert task with ID'
-    task = {id}
+    task.id = id
 
-    quill.insertEmbed range.index, 'studyguide-task-reading', task, Quill.sources.USER
+    quill.insertEmbed range.index, format, task, Quill.sources.USER

@@ -1,0 +1,103 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-article-task-upload
+  cursor default
+  white-space normal
+
+  .task
+    .confirmation
+      &::before
+        border-color atariGrey(6)
+
+    .prerequisites
+    .prompt
+    .instructions
+      margin-left 13rem
+      margin-top 5rem
+      adventure()
+
+    .prerequisites
+    .prompt
+      line-height 7rem
+
+    .prerequisites
+      color atariRed(6)
+
+      .tasks
+        margin-top 2rem
+
+    .prompt
+    .archive
+      button
+        padding 0
+        font inherit
+        color inherit
+        border none
+        background none
+        text-decoration underline
+
+        &:hover
+          color atariGreen(7)
+
+    .prompt
+      margin-bottom 5rem
+      color atariGreen(6)
+
+      .upload-button
+        &:hover
+          color atariGreen(7)
+
+    .submission
+      position relative
+      padding-top 10rem
+      break-inside avoid
+      text-align center
+
+      .remove-area
+        content ''
+        position absolute
+        z-index 2
+        left calc(50% - 23rem)
+        top 3rem
+        width 46rem
+        height 13rem
+        background image('/landsofillusions/components/account/tape-top.png') 0% 0% / 46rem 13rem
+        transition height 0.5s
+
+        .remove-button
+          display none
+          width 100%
+          height 100%
+          background none
+          border none
+          checkout()
+          color atariRed(4)
+          text-transform uppercase
+          cursor pointer
+
+        &:hover
+          .remove-button
+            display block
+
+      .picture
+        max-width 100%
+        filter drop-shadow(0 5rem 5rem rgba(black, 0.5))
+        cursor zoom-in
+
+    .examples
+      margin-top 10rem
+
+      .pixelartacademy-studyguide-article-figure
+        margin 5rem 0 0
+        break-inside auto
+
+    .submission + .examples
+      display none
+
+    .archive
+      adventure()
+      margin-top 5rem
+
+      .view-archive-button
+        &:hover
+          color atariGrey(7)

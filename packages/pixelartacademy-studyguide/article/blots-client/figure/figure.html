@@ -23,11 +23,15 @@
     <button class="add-element-button">+</button>
     {{> PixelArtAcademy.StudyGuide.Article.Figure.Layout}}
   {{/unless}}
-  <figcaption class="caption">
-    {{#if readOnly}}
-      {{value.caption}}
-    {{else}}
-      {{> PixelArtAcademy.StudyGuide.Article.Figure.Caption}}
+  {{#if readOnly}}
+    {{#if value.caption}}
+      <figcaption class="caption">
+        {{value.caption}}
+      </figcaption>
     {{/if}}
-  </figcaption>
+  {{else}}
+    <figcaption class="caption">
+      {{> PixelArtAcademy.StudyGuide.Article.Figure.Caption}}
+    </figcaption>
+  {{/if}}
 </template>

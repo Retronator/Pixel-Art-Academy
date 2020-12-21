@@ -4,32 +4,33 @@
   .practicesection
   .practicesection + figure
   .practicesection + ol
-  .practicesection + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
+  .practicesection + .pixelartacademy-studyguide-article-task-upload
     margin 10rem 0
     padding 10rem
     background atariBlue(4)
     color atariGrey(6)
+
+  .practicesection
+    &::before
+      content 'Practice'
+      display block
+      margin -7rem -6rem 8rem
+      padding-bottom 1rem
+      border-bottom 1rem solid atariGrey(5)
+      text-transform uppercase
+      checkout()
 
   .practicesection + .practicesection
   .practicesection + figure
   .practicesection + figure + .practicesection
   .practicesection + ol
   .practicesection + ol + .practicesection
-  .practicesection + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
-  .practicesection + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task + .practicesection
+  .practicesection + .pixelartacademy-studyguide-article-task-upload
+  .practicesection + .pixelartacademy-studyguide-article-task-upload + .practicesection
     margin-top -20rem
+
+    &::before
+      content none
 
   .practicesection + ol
     padding-left 20rem
-
-  .practicesection + .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
-    border none
-
-    .goal
-      display none
-
-    .confirmation
-      position relative
-
-      &::before
-        border-color atariGrey(6)
