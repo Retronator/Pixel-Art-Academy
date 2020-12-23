@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+RA = Retronator.Accounts
 
 PAA.Learning.Task.Entry.forCurrentUser.publish ->
   return unless userId = Meteor.userId()
@@ -37,3 +38,8 @@ PAA.Learning.Task.Entry.forCharactersTaskId.publish (characterIds, taskId) ->
   PAA.Learning.Task.Entry.documents.find
     'character._id': $in: characterIds
     taskId: taskId
+
+PAA.Learning.Task.Entry.forTaskId.publish (taskId) ->
+  check taskId, String
+
+  PAA.Learning.Task.Entry.documents.find {taskId}

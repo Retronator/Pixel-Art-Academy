@@ -60,6 +60,10 @@ Package.onUse(function(api) {
   api.addComponent('pages/home/activities..');
   api.addComponent('pages/home/studyplan..');
   api.addComponent('pages/home/about..');
+
+  api.addComponent('pages/home/submissions..');
+  api.addComponent('pages/home/submissions/picture..');
+
   api.addComponent('pages/home/book..');
   api.addClientComponent('pages/home/book/article-client/article');
 

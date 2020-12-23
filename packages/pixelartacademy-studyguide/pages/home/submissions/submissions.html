@@ -1,0 +1,55 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Home.Submissions">
+  <div class="pixelartacademy-studyguide-pages-home-submissions" {{style submissionsStyle}}>
+    <div class="folder">
+      <div class="entries-sheet">
+        <div class="title">
+          Task:
+          <div class="name">
+            {{> t10e task.directiveTranslation}}
+          </div>
+        </div>
+        <table class="entries">
+          <tr class="header">
+            <th class="name">Name:</th>
+            <th class="date">Date:</th>
+          </tr>
+          {{#each displayedEntries}}
+            <tr class="entry">
+              <td class="name">{{entryName}}</td>
+              <td class="date">{{entryDateText}}</td>
+            </tr>
+          {{/each}}
+          {{#each emptyEntries}}
+            <tr class="empty-row">
+              <td class="name"></td>
+              <td class="date"></td>
+            </tr>
+          {{/each}}
+        </table>
+        <div class="pagination">
+          <div class="previous">
+            {{#if $gt currentPageNumber 1}}
+              <button class="page-button">← back</button>
+            {{/if}}
+          </div>
+          <div class="counter">
+            {{#if pagesCount}}
+              {{currentPageNumber}}/{{pagesCount}}
+            {{/if}}
+          </div>
+          <div class="next">
+            {{#if $lt currentPageNumber pagesCount}}
+              <button class="page-button">next →</button>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      <div class="pictures">
+        {{#each reversedEntries}}
+          {{> PixelArtAcademy.StudyGuide.Pages.Home.Submissions.Picture}}
+        {{/each}}
+      </div>
+      <div class="pocket"></div>
+    </div>
+  </div>
+</template>

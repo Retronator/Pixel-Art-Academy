@@ -11,8 +11,11 @@ class PAA.Learning.Task.Entry extends AM.Document
   # time: the time when task was completed
   # user: user that completed the task, or null if a character did it
   #   _id
+  #   publicName
   # character: character that completed the task, or null if a user did it
   #   _id
+  #   avatar
+  #     fullName
   # action: the action representing completion of this task, or null if a user did it
   #   _id
   #
@@ -25,8 +28,8 @@ class PAA.Learning.Task.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: Document.ReferenceField RA.User, [], true
-      character: Document.ReferenceField LOI.Character, [], true
+      user: Document.ReferenceField RA.User, ['publicName'], true
+      character: Document.ReferenceField LOI.Character, ['avatar.fullName'], true
       action: Document.ReferenceField LOI.Memory.Action, [], true, 'content.taskEntry', ['taskId']
 
   # Methods
@@ -40,3 +43,4 @@ class PAA.Learning.Task.Entry extends AM.Document
   @recentForCharacter: @subscription 'recentForCharacter'
   @forCharacterTaskIds: @subscription 'forCharacterTaskIds'
   @forCharactersTaskId: @subscription 'forCharactersTaskId'
+  @forTaskId: @subscription 'forTaskId'

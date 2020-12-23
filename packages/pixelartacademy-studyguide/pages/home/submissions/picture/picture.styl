@@ -1,0 +1,21 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-submissions-picture
+  display none
+  position absolute
+  bottom 3rem
+  cursor zoom-in
+  transition all 0.5s
+  filter drop-shadow(-1rem 0 0rem rgba(black, 0.3))
+
+  &.loaded
+    display block
+
+  &.displayed
+    z-index 1
+
+  &.hovered
+    bottom 180rem
+    right 83rem !important
+    transform translate(50%, 50%)
+    filter drop-shadow(-30rem 5rem 5rem rgba(black, 0.2))

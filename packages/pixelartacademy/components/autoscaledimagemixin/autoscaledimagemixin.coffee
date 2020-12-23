@@ -3,7 +3,7 @@ AS = Artificial.Spectrum
 PAA = PixelArtAcademy
 
 class PAA.Components.AutoScaledImageMixin extends AM.Component
-  onCreated: ->
+  constructor: ->
     super arguments...
 
     @imageInfo = new ReactiveField null
@@ -11,35 +11,46 @@ class PAA.Components.AutoScaledImageMixin extends AM.Component
   autoScaledImageStyle: ->
     return unless imageInfo = @imageInfo()
     {pixelScale, width, height} = imageInfo
+    style = {}
 
-    # If this is not a pixel-art image, use smooth scaling and control max height through css.
-    maxHeight = @mixinParent().callFirstWith null, 'autoScaledImageMaxHeight', =>
+    maxHeight = @mixinParent().callFirstWith null, 'autoScaledImageMaxHeight'
+    maxWidth = @mixinParent().callFirstWith null, 'autoScaledImageMaxWidth'
 
+    style.maxHeight = "#{maxHeight}rem" if maxHeight
+    style.maxWidth = "#{maxWidth}rem" if maxWidth
+
+    # If this is not a pixel art image, we want smoothing on the image.
     unless pixelScale
-      style = imageRendering: 'auto'
-      style.maxHeight = "#{maxHeight}rem" if maxHeight
+      style.imageRendering = 'auto'
       return style
 
     # By default we want the pixel scale to match our display scale.
     return unless displayScale = @mixinParent().callFirstWith null, 'autoScaledImageDisplayScale'
     desiredPixelScale = displayScale
 
-    # If the image is taller than max height, we want to use a smaller scale.
+    # If the image is bigger than max size, we want to use a smaller scale.
     sourceHeight = height / pixelScale
+    sourceWidth = width / pixelScale
 
     if maxHeight and sourceHeight > maxHeight
       cssScale = maxHeight * displayScale / height
 
-    else
-      cssScale = desiredPixelScale / pixelScale
+    if maxWidth and sourceWidth > maxWidth
+      newCssScale = maxWidth * displayScale / width
+
+      cssScale = Math.min newCssScale, cssScale or newCssScale
+
+    # If we haven't set the scale yet, we can use the desired scale.
+    cssScale ?= desiredPixelScale / pixelScale
 
     # Account for padding.
-    padding = @mixinParent().callFirstWith null, 'autoScaledImagePadding', =>
+    padding = @mixinParent().callFirstWith null, 'autoScaledImagePadding'
     padding ?= 0
     paddingFull = 2 * padding * desiredPixelScale
     cssWidth = width * cssScale + paddingFull
 
-    width: "#{cssWidth}px"
+    style.width = "#{cssWidth}px"
+    style
 
   events: ->
     super(arguments...).concat

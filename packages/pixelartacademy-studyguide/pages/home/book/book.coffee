@@ -81,8 +81,11 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
       pageMargins:
         left: 45
         right: 25
-      moveButtonExtraWidth: 35
+      moveButtonExtraWidth: 23
       frontPageLeftOffset: 5
+
+    # Since the left and right borders are not equal, we need to additionally offset the book to focus on the center.
+    @designConstants.focusOffset = (@designConstants.pageMargins.right - @designConstants.pageMargins.left) / 2
 
     @focusedArtworks = new ReactiveField null
 
@@ -267,10 +270,10 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     if @visible()
       if @leftPageIndex() is @visiblePageIndex()
-        left = 0
+        left = @designConstants.focusOffset
 
       else
-        left = viewportWidth - fullWidth
+        left = viewportWidth - fullWidth - @designConstants.focusOffset
 
     else
       left = horizontalGap - fullWidth
@@ -294,20 +297,10 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     (viewportWidth - bookWidth) / 2
 
-  moveButtonLeftStyle: ->
+  moveButtonStyle: ->
     return unless horizontalGap = @_horizontalGap()
 
-    width = horizontalGap
-    width += @designConstants.moveButtonExtraWidth if @leftPageIndex() is @visiblePageIndex()
-
-    width: "#{width}rem"
-
-  moveButtonRightStyle: ->
-    return unless horizontalGap = @_horizontalGap()
-
-    width = horizontalGap
-    width += @designConstants.moveButtonExtraWidth unless @leftPageIndex() is @visiblePageIndex()
-
+    width = horizontalGap + @designConstants.moveButtonExtraWidth
     width: "#{width}rem"
 
   frontPageClass: ->

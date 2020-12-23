@@ -1,0 +1,100 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-submissions
+  position absolute
+
+  .folder
+    position absolute
+    top -1rem
+    left -13rem
+    width 346rem
+    height 241rem
+    background image('/pixelartacademy/studyguide/home/submissions/folder.png') 100% / 100%
+
+    .entries-sheet
+      position absolute
+      left 5rem
+      top 9rem
+      width 160rem
+      height 228rem
+      padding 7rem
+      background atariGrey(6)
+      color atariGrey(0)
+      checkout()
+
+      .title
+        .name
+          margin-top 2rem
+          height 8rem
+          border-bottom 1rem solid atariGrey(4)
+          text-align center
+          text-transform uppercase
+          color atariCyan(2)
+          overflow hidden
+          text-overflow ellipsis
+          white-space nowrap
+
+      .entries
+        margin-top 8rem
+        width 100%
+        border-collapse collapse
+
+        .header
+          height 11rem
+          vertical-align top
+
+        .name
+          text-align left
+
+        .date
+          text-align right
+
+        .entry
+        .empty-row
+          height 9rem
+
+          td
+            border-bottom 1rem solid atariGrey(4)
+
+        .entry
+          color atariCyan(2)
+          cursor pointer
+
+          &:hover
+            background-color atariGrey(5)
+
+          .name
+            freehand()
+
+      .pagination
+        display flex
+        margin-top 7rem
+        color atariGrey(2)
+
+        .previous
+        .next
+          width 30rem
+
+          .page-button
+            border none
+            background none
+            font inherit
+            color inherit
+
+        .counter
+          text-align center
+          flex-grow 1
+
+        .next
+          text-align right
+
+    .pocket
+      position absolute
+      right 0
+      bottom 0
+      z-index 2
+      width 167rem
+      height 75rem
+      background image('/pixelartacademy/studyguide/home/submissions/pocket.png') 100% / 100%
+      filter drop-shadow(-1rem -1rem 1rem rgba(black, 0.3))
+      pointer-events none
