@@ -40,8 +40,9 @@ class PAA.StudyGuide.Pages.Home.Submissions.Picture extends AM.Component
 
   displayedClass: ->
     entry = @data()
+    return unless entries = @submissions.displayedEntries()
 
-    'displayed' if entry in @submissions.displayedEntries()
+    'displayed' if entry in entries
 
   hoveredClass: ->
     entry = @data()

@@ -1,7 +1,13 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-studyguide-pages-home-submissions
-  position absolute
+  position fixed
+  z-index 1
+  transition top 0.5s ease-out
+  visibility hidden
+
+  &.loaded
+    visibility visible
 
   .folder
     position absolute
@@ -10,10 +16,12 @@
     width 346rem
     height 241rem
     background image('/pixelartacademy/studyguide/home/submissions/folder.png') 100% / 100%
+    transition left 0.5s
 
     .entries-sheet
       position absolute
-      left 5rem
+      z-index 0
+      left 182rem
       top 9rem
       width 160rem
       height 228rem
@@ -21,6 +29,10 @@
       background atariGrey(6)
       color atariGrey(0)
       checkout()
+      transition left 0.5s
+
+      &.displayed
+        left 5rem
 
       .title
         .name
@@ -58,7 +70,7 @@
 
         .entry
           color atariCyan(2)
-          cursor pointer
+          cursor zoom-in
 
           &:hover
             background-color atariGrey(5)
@@ -92,7 +104,7 @@
       position absolute
       right 0
       bottom 0
-      z-index 2
+      z-index 3
       width 167rem
       height 75rem
       background image('/pixelartacademy/studyguide/home/submissions/pocket.png') 100% / 100%

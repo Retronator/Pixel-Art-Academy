@@ -5,7 +5,7 @@
     </div>
   {{/with}}
   {{#with book}}
-    <div class="pixelartacademy-studyguide-pages-home-book {{loadedClass}}" {{style componentStyle}}>
+    <div class="pixelartacademy-studyguide-pages-home-book {{visibleClass}}" {{style componentStyle}}>
       <div class="book {{design.class}}" {{style bookStyle}}>
         {{#if canMoveLeft}}
           <button class="move-button left" {{style moveButtonStyle}}></button>

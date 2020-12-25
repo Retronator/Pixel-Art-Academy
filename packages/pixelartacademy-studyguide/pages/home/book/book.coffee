@@ -16,8 +16,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     parentWithDisplay = @ancestorComponentWith 'display'
     @display = parentWithDisplay.display
 
+    # Visible tells if the book is anywhere in the viewport (even when transitioning).
     @visible = new ReactiveField false
-    @loaded = new ReactiveField false
+
+    # Opened tells if the book is open or transitioning to open.
+    @opened = new ReactiveField false
+
     @leftPageIndex = new ReactiveField 0
     @visiblePageIndex = new ReactiveField 1
     @pagesCount = new ReactiveField null
@@ -36,18 +40,18 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         
         # Mark book as loaded for transitions to start.
         Meteor.setTimeout =>
-          @loaded true
+          @visible true
         ,
           100
 
         # Make book visible after it has rendered and positioned outside the screen.
         Meteor.setTimeout =>
-          @visible true
+          @open()
         ,
           500
 
       else
-        @loaded false
+        @visible false
 
       book
 
@@ -95,7 +99,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     # Reactively update pages count.
     @autorun (computation) =>
       return unless @book()
-      return unless @visible()
+      return unless @opened()
 
       # Update when active content item or page index changes.
       @activeContentItem()
@@ -124,8 +128,23 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     goal.destroy() for goal in @_goals
 
+  open: ->
+    # Mark book as visible for transitions to start.
+    @visible true
+
+    # Make book opened after it has positioned outside the screen.
+    Meteor.setTimeout =>
+      @opened true
+    ,
+      100
+
   close: ->
-    @visible false
+    @opened false
+
+    Meteor.setTimeout =>
+      @visible false
+    ,
+      500
 
   goToTableOfContents: ->
     # Return to the page of the table of contents that we last saw.
@@ -250,8 +269,8 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     ,
       100
 
-  loadedClass: ->
-    'loaded' if @loaded()
+  visibleClass: ->
+    'visible' if @visible()
 
   componentStyle: ->
     return unless book = @book()
@@ -268,7 +287,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     fullWidth = (bookWidth + horizontalGap) * 2
 
-    if @visible()
+    if @opened()
       if @leftPageIndex() is @visiblePageIndex()
         left = @designConstants.focusOffset
 
@@ -276,7 +295,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         left = viewportWidth - fullWidth - @designConstants.focusOffset
 
     else
-      left = horizontalGap - fullWidth
+      left = horizontalGap - fullWidth - 1
 
     left: "#{Math.round left}rem"
     padding: "#{Math.round verticalGap}rem #{Math.round horizontalGap}rem"

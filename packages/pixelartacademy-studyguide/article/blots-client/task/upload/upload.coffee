@@ -96,6 +96,7 @@ class PAA.StudyGuide.Article.Task.Upload extends PAA.StudyGuide.Article.Task
       'click .submission-upload-button': @onClickSubmissionUploadButton
       'click .remove-button': @onClickRemoveButton
       'click .submission .picture': @onClickSubmissionPicture
+      'click .view-submissions-button': @onClickViewSubmissionsButton
       'mouseenter .examples': @onMouseEnterExamples
       'mouseleave .examples': @onMouseLeaveExamples
 
@@ -160,6 +161,10 @@ class PAA.StudyGuide.Article.Task.Upload extends PAA.StudyGuide.Article.Task
 
     article = @quillComponent()
     article.bookComponent.focusArtworks artworks
+
+  onClickViewSubmissionsButton: (event) ->
+    article = @quillComponent()
+    article.bookComponent.home.openSubmissions @task.id()
 
   onMouseEnterExamples: (event) ->
     @examplesHovered true

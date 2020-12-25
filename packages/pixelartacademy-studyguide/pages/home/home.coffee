@@ -82,6 +82,33 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
 
     true
 
+  openSubmissions: (taskId) ->
+    # Save scroll position.
+    @_lastScrollTop = $(window).scrollTop()
+
+    # Close the book and open submissions for the task.
+    @book.close()
+    @submissions.open taskId
+
+    # After the book has closed, scroll to top.
+    Meteor.setTimeout =>
+      $(window).scrollTop 0
+    ,
+      500
+
+  closeSubmissions: ->
+    # Close submissions and re-open the book.
+    @submissions.close()
+
+    Meteor.setTimeout =>
+      @book.open()
+
+      # After the book became visible again, restore scroll position.
+      Meteor.setTimeout =>
+        $(window).scrollTop @_lastScrollTop
+    ,
+      500
+
   showBackButton: ->
     return unless @book.isCreated()
     @book.book()
@@ -97,6 +124,13 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       # If we're focusing on an artwork, we close it.
       if @book.focusedArtworks()
         @book.unfocusArtworks()
+
+        # Don't hide the back button.
+        return cancel: true
+
+      # If we're displaying submissions, close them and re-open the book.
+      if @submissions.opened()
+        @closeSubmissions()
 
         # Don't hide the back button.
         return cancel: true

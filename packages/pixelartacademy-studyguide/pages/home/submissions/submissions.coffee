@@ -10,22 +10,13 @@ class PAA.StudyGuide.Pages.Home.Submissions extends AM.Component
   constructor: (@home) ->
     super arguments...
 
-    @taskId = new ReactiveField 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Doodling'
-    @entriesPerPage = 18
-
-    @currentPageIndex = new ReactiveField 0
-    @hoveredEntry = new ReactiveField null
-
-    @setHoveredEntry = _.debounce (entry) =>
-      @hoveredEntry entry
-    ,
-      50
-
   onCreated: ->
     super arguments...
 
     parentWithDisplay = @ancestorComponentWith 'display'
     @display = parentWithDisplay.display
+
+    @taskId = new ReactiveField null
 
     @taskClass = new ComputedField =>
       return unless taskId = @taskId()
@@ -57,21 +48,77 @@ class PAA.StudyGuide.Pages.Home.Submissions extends AM.Component
 
       entries[startIndex..endIndex]
 
+    @entriesPerPage = 18
+
+    @currentPageIndex = new ReactiveField 0
+    @hoveredEntry = new ReactiveField null
+
+    @setHoveredEntry = _.debounce (entry) =>
+      @hoveredEntry entry
+    ,
+      50
+
     @pagesCount = new ComputedField =>
       return 1 unless entries = @entries()
       Math.ceil entries.length / @entriesPerPage
 
     # Reactively subscribe to task submissions.
-    @autorun (computation) =>
+    @submissionsSubscription = new ComputedField =>
       return unless taskId = @taskId()
       PAA.Learning.Task.Entry.forTaskId.subscribe @, taskId
 
+    @loaded = new ComputedField =>
+      @submissionsSubscription()?.ready()
+
+    @opened = new ReactiveField false
+    @entriesSheetDisplayed = new ReactiveField false
+
+  open: (taskId) ->
+    @taskId taskId
+    @opened true
+
+    # After the submissions have loaded and the folder has finished animating, display the entries sheet.
+    @autorun (computation) =>
+      return unless @loaded()
+      computation.stop()
+      
+      Meteor.setTimeout =>
+        @entriesSheetDisplayed true
+      ,
+        500
+
+  close: ->
+    # Store back the entries sheet.
+    @entriesSheetDisplayed false
+    
+    # After the sheet has been stored, close the sheet.
+    Meteor.setTimeout =>
+      @opened false
+  
+      Meteor.setTimeout =>
+        @taskId null
+      ,
+        500
+    ,
+      500
+    
+  loadedClass: ->
+    'loaded' if @loaded()
+
   submissionsStyle: ->
     left = @home.safeWidthGap()
-    top = @home.safeHeightGap()
+
+    if @loaded() and @opened()
+      top = @home.safeHeightGap()
+
+    else
+      top = @home.viewportHeight() + 1
 
     left: "#{left}rem"
     top: "#{top}rem"
+
+  entriesSheetDisplayedClass: ->
+    'displayed' if @entriesSheetDisplayed()
 
   emptyEntries: ->
     entriesCount = @displayedEntries()?.length or 0
