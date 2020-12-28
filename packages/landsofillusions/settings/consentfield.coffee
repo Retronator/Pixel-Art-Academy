@@ -32,7 +32,15 @@ class LOI.Settings.ConsentField
   disallow: ->
     @allow false
 
-  showDialog: (callback) ->
+  showDialog: (callbackOrOptions = {}) ->
+    if _.isFunction callbackOrOptions
+      callback = callbackOrOptions
+
+    else
+      {callback, dialogProvider} = callbackOrOptions
+
+    dialogProvider ?= LOI.adventure
+
     dialog = new LOI.Components.Dialog
       message: @options.question
       moreInfo: @options.moreInfo
@@ -43,7 +51,7 @@ class LOI.Settings.ConsentField
         text: "No"
       ]
 
-    LOI.adventure.showActivatableModalDialog
+    dialogProvider.showActivatableModalDialog
       dialog: dialog
       callback: =>
         value = dialog.result is true

@@ -41,7 +41,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       navigation: 16
       header: 28 + 16 + 5
       blueprintBottom: 79
-      tableSafeArea: 30
+      tableSafeArea: 5
 
     @viewportHeight = new ComputedField =>
       viewport = @display.viewport()

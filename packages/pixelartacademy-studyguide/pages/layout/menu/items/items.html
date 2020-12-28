@@ -1,0 +1,80 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Layout.Menu.Items">
+  <ul class="pixelartacademy-studyguide-pages-layout-menu-items">
+    {{#if inMainMenu}}
+      <li class="menu-item"><span class="continue actionable">Continue</span></li>
+      {{#unless currentUser}}
+        <li class="menu-item"><span class="sign-in actionable">Sign in</span></li>
+      {{/unless}}
+      {{#if currentUser}}
+        <li class="menu-item" title="Select whether to track your own progress or one of your characters.">
+          <span class="user-selection actionable">
+            User:
+            {{#if currentCharacter}}
+              {{currentCharacter.fullName}}
+            {{else}}
+              {{currentUser.displayName}}
+            {{/if}}
+          </span>
+        </li>
+        <li class="menu-item"><span class="account actionable">Account</span></li>
+      {{/if}}
+      <li class="menu-item"><span class="fullscreen actionable">
+        Fullscreen:
+        {{#if isFullscreen}}
+          on
+        {{else}}
+          off
+        {{/if}}
+      </span></li>
+      <li class="menu-item"><span class="settings actionable">Settings</span></li>
+      <li class="menu-item">
+        <a class="smallprint actionable" href="{{routerPath 'PixelArtAcademy.LandingPage.Pages.Smallprint'}}" target="_blank">
+          Smallprint
+        </a>
+      </li>
+      {{#if currentUser}}
+        <li class="menu-item"><span class="sign-out actionable">Sign out</span></li>
+      {{/if}}
+    {{/if}}
+    {{#if inUserSelection}}
+      <li class="menu-item"><span class="actionable select-user">{{currentUser.displayName}}</span></li>
+      {{#each activatedCharacters}}
+        <li class="menu-item"><span class="actionable select-character">{{t7e avatar.fullName}}</span></li>
+      {{/each}}
+      <li class="menu-item"><span class="user-selection-back-to-menu actionable">Back</span></li>
+    {{/if}}
+    {{#if inSettings}}
+      {{!
+      <li class="language menu-item">
+        Language: English
+      </li>
+      }}
+      <li class="graphics-scale menu-item">
+        Pixel scale:
+        {{#if graphicsMaximumScale}}
+          <button class="previous-button">◀</button>
+        {{/if}}
+        {{#if graphicsMaximumScale}}
+          {{graphicsMaximumScale}}x
+        {{else}}
+          Auto
+        {{/if}}
+        <button class="next-button">▶</button>
+      </li>
+      <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
+      <li class="menu-item"><span class="settings-back-to-menu actionable">Back</span></li>
+    {{/if}}
+    {{#if inPermissions}}
+      <li class="menu-item"><span class="permissions-persist-settings actionable">
+        Save settings: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistSettings}}
+      </span></li>
+      <li class="menu-item"><span class="permissions-persist-game-state actionable">
+        Save game state: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistGameState}}
+      </span></li>
+      <li class="menu-item"><span class="permissions-persist-login actionable">
+        Remember signed-in user: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistLogin}}
+      </span></li>
+      <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+    {{/if}}
+  </ul>
+</template>

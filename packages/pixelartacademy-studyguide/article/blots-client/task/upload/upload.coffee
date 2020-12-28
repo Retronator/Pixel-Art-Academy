@@ -131,7 +131,7 @@ class PAA.StudyGuide.Article.Task.Upload extends PAA.StudyGuide.Article.Task
       # Upload file.
       upload = PAA.Practice.Journal.Entry.pictureUploadContext.upload file, (pictureUrl) =>
         # Create the entry with this picture URL.
-        PAA.Learning.Task.Entry.insertForUser @task.id(),
+        @insertTaskEntry @task.id(),
           upload:
             picture:
               url: pictureUrl

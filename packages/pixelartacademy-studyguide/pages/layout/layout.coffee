@@ -7,25 +7,34 @@ class PAA.StudyGuide.Pages.Layout extends LOI.Components.EmbeddedWebpage
   @image: (parameters) ->
     Meteor.absoluteUrl "retropolis/city/academyofart/link-image.png"
 
+  constructor: ->
+    super arguments...
+
+    @menu = new @constructor.Menu @
+
   onCreated: ->
     super arguments...
 
-    PAA.Learning.Task.Entry.forCurrentUser.subscribe @
+    @autorun (computation) =>
+      if characterId = LOI.characterId()
+        PAA.Learning.Task.Entry.forCharacter.subscribe @, characterId
+
+      else
+        PAA.Learning.Task.Entry.forCurrentUser.subscribe @
 
   signIn: (callback) ->
-    signInDialog = new LOI.Components.SignIn
-
     # Wait for the user to get signed in.
     userAutorun = Tracker.autorun (computation) =>
       return unless Retronator.user()
       computation.stop()
 
       # User has signed in. Close the sign-in dialog and return control.
-      signInDialog.activatable.deactivate()
+      @menu.signIn.activatable.deactivate()
       callback?()
 
     @showActivatableModalDialog
-      dialog: signInDialog
+      dialog: @menu.signIn
+      dontRender: true
       callback: =>
         # User has manually closed the sign-in dialog. Stop waiting and return control.
         userAutorun.stop()
@@ -49,6 +58,22 @@ class PAA.StudyGuide.Pages.Layout extends LOI.Components.EmbeddedWebpage
       else
         # We're on a book.
         top: "-49rem"
+
+  menuStyle: ->
+    Pages = PAA.StudyGuide.Pages.Home.Pages
+    pageOrBook = AB.Router.currentParameters().pageOrBook
+
+    switch pageOrBook
+      when Pages.StudyPlan
+        top: "-4rem"
+
+      when Pages.Activities, Pages.About, undefined
+        top: 0
+
+      else
+        # We're on a book.
+        top: 0
+        opacity: 0
 
   studyPlanRouteOptions: ->
     pageOrBook: PAA.StudyGuide.Pages.Home.Pages.StudyPlan

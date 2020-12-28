@@ -35,6 +35,7 @@ class PAA.Learning.Task.Entry extends AM.Document
   # Methods
   @insert: @method 'insert'
   @insertForUser: @method 'insertForUser'
+  @remove: @method 'remove'
   @removeForUser: @method 'removeForUser'
 
   # Subscriptions

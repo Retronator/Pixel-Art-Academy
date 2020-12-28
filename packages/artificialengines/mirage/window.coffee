@@ -30,12 +30,11 @@ class AM.Window
     @_onFullscreenChange()
 
   @enterFullscreen: ->
-    body = $('body')[0]
-
-    body.requestFullscreen?()
-    body.webkitRequestFullscreen?()
-    body.mozRequestFullScreen?()
-    body.msRequestFullscreen?()
+    documentElement = document.documentElement
+    documentElement.requestFullscreen?()
+    documentElement.webkitRequestFullscreen?()
+    documentElement.mozRequestFullScreen?()
+    documentElement.msRequestFullscreen?()
 
   @exitFullscreen: ->
     document.exitFullscreen?()

@@ -17,17 +17,21 @@ PAA.Learning.Task.Entry.insert.method (characterId, situation, taskId, data) ->
 
   return if existing
 
-  actionId = LOI.Memory.Action.do PAA.Learning.Task.Entry.Action.type, characterId, situation, {}
-
   entry = _.extend
     character:
       _id: characterId
-    action:
-      _id: actionId
     taskId: taskId
     time: new Date()
   ,
     data
+
+  # If this task entry was completed during gameplay, also create an action.
+  # Otherwise it could have been done externally such us in the Study Guide.
+  if situation
+    actionId = LOI.Memory.Action.do PAA.Learning.Task.Entry.Action.type, characterId, situation, {}
+
+    entry.action =
+      _id: actionId
 
   PAA.Learning.Task.Entry.documents.insert entry
 
@@ -53,6 +57,21 @@ PAA.Learning.Task.Entry.insertForUser.method (taskId, data) ->
     data
 
   PAA.Learning.Task.Entry.documents.insert entry
+
+PAA.Learning.Task.Entry.remove.method (entryId) ->
+  check entryId, Match.DocumentId
+
+  # Make sure we have an entry for this task.
+  existing = PAA.Learning.Task.Entry.documents.findOne entryId
+
+  throw new AE.ArgumentException "The requested entry could not be found." unless existing
+
+  # Make sure the task belongs to a character that belongs to the user.
+  throw new AE.ArgumentException "The requested entry was not made by a character." unless existing.character
+  LOI.Authorize.characterAction existing.character._id
+
+  # It is now safe to remove the entry.
+  PAA.Learning.Task.Entry.documents.remove entryId
 
 PAA.Learning.Task.Entry.removeForUser.method (entryId) ->
   check entryId, Match.DocumentId

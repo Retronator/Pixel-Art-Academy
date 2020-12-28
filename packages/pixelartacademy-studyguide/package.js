@@ -55,6 +55,8 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/layout..');
   api.addFile('pages/layout/layout-dialogs');
+  api.addComponent('pages/layout/menu..');
+  api.addComponent('pages/layout/menu/items..');
 
   api.addComponent('pages/home..');
   api.addComponent('pages/home/activities..');

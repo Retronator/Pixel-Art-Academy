@@ -11,8 +11,11 @@ class LOI.Components.Account extends AM.Component
 
   mixins: -> [@activatable]
 
-  constructor: (@options) ->
+  constructor: (@options = {}) ->
     super arguments...
+
+    @options.dialogProvider ?= LOI.adventure
+    @options.useUrlRouting ?= true
 
     @activatable = new LOI.Components.Mixins.Activatable()
 
@@ -20,7 +23,7 @@ class LOI.Components.Account extends AM.Component
     @currentPageNumber = new ReactiveField 0
 
     @pages = [
-      new @constructor.Contents
+      new @constructor.Contents @
       new @constructor.General
       new @constructor.Services
       new @constructor.Characters
@@ -35,15 +38,16 @@ class LOI.Components.Account extends AM.Component
       # Add ID to avoid re-creating the component in #each.
       page._id = Random.id()
 
-    LOI.Adventure.registerDirectRoute "/#{@constructor.url()}/*", =>
-      # Show the dialog if we need to.
-      @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
+    if @options.useUrlRouting
+      LOI.Adventure.registerDirectRoute "/#{@constructor.url()}/*", =>
+        # Show the dialog if we need to.
+        @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
 
-      return unless pageUrl = AB.Router.getParameter 'parameter2'
+        return unless pageUrl = AB.Router.getParameter 'parameter2'
 
-      for page, index in @pages
-        if page.constructor.url() is pageUrl
-          @currentPageNumber index + 1
+        for page, index in @pages
+          if page.constructor.url() is pageUrl
+            @currentPageNumber index + 1
 
     @noBackground = new ReactiveField false
 
@@ -84,7 +88,7 @@ class LOI.Components.Account extends AM.Component
       @lastTurnedPageNumber = currentPageNumber
 
   show: (options = {}) ->
-    LOI.adventure.showActivatableModalDialog
+    @options.dialogProvider.showActivatableModalDialog
       dialog: @
       dontRender: true
 

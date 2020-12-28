@@ -22,7 +22,7 @@ class PAA.StudyGuide.Article.Task.Reading extends PAA.StudyGuide.Article.Task
     @ensureSignedIn =>
       # See if the task is active (the user is trying to complete it).
       if @task.active()
-        PAA.Learning.Task.Entry.insertForUser @task.id()
+        @insertTaskEntry @task.id()
 
       # See if the task is completed (the user might want to undo it).
       else if entry = @task.entry()

@@ -1,11 +1,8 @@
-@import "../../style/style.import"
+@import "{retronator:landsofillusions}/style/style.import"
 
-.landsofillusions-components-menu
-  position fixed
-  z-index 3
-
+.pixelartacademy-studyguide-pages-layout-menu
   .toolbar
-    position fixed
+    position absolute
     top 0
     right 0
     padding 4rem 6rem
@@ -17,10 +14,6 @@
     &.visible
       opacity 1
       visibility visible
-
-    &:hover
-      .toggle-audio-button
-        opacity 1
 
     button
       border none
@@ -36,20 +29,6 @@
         &:hover
           color atariGrey(2)
 
-      &.toggle-audio-button
-        width 17rem
-        height 17rem
-        padding 0
-        background image('/landsofillusions/components/menu/audio-on-off.png') 17rem 0 / 34rem 34rem
-        opacity 0
-        transition opacity 200ms
-
-        &:hover
-          background-position-y 17rem
-
-        &.audio-enabled
-          background-position-x 0
-
   .menu-overlay
     fixed-cover()
     visibility hidden
@@ -59,7 +38,7 @@
     &.visible
       visibility visible
 
-    .landsofillusions-components-menu-items
+    .pixelartacademy-studyguide-pages-layout-menu-items
       position absolute
       top 50%
       width 100%

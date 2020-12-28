@@ -63,6 +63,13 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
           # User has signed in, so perform the callback.
           callback()
 
+  insertTaskEntry: (taskId, data) ->
+    if characterId = LOI.characterId()
+      PAA.Learning.Task.Entry.insert characterId, null, taskId, data
+
+    else
+      PAA.Learning.Task.Entry.insertForUser taskId, data
+
   attemptToRemoveTaskEntry: (entry) ->
     # Prompt the user if they want to delete the task entry.
     studyGuideLayout = @studyGuideLayout()
@@ -83,7 +90,11 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
       callback: =>
         return unless dialog.result
 
-        PAA.Learning.Task.Entry.removeForUser entry._id
+        if LOI.characterId()
+          PAA.Learning.Task.Entry.remove entry._id
+
+        else
+          PAA.Learning.Task.Entry.removeForUser entry._id
 
   confirmationEnabledClass: ->
     # Allow the user to attempt to complete the task if it's active, completed, or

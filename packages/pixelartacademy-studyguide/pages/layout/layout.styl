@@ -41,7 +41,7 @@ html.pixelartacademy-studyguide
     background atariGrey(0)
     transition top 1s, height 1s
 
-    .title
+    > .title
       academy()
       text-align center
       margin 0
@@ -78,6 +78,16 @@ html.pixelartacademy-studyguide
 
             &.active
               color atariPeach(2)
+
+  .menu
+    position fixed
+    z-index 3
+    right 0
+    transition top 1s, opacity 0.5s
+    opacity 1
+
+    &:hover
+      opacity 1 !important
 
 .landsofillusions-components-signin
   .title

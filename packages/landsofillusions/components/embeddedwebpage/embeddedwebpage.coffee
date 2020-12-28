@@ -12,8 +12,9 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
     unless @embedded
       @display = new AM.Display
         safeAreaWidth: 320
-        safeAreaHeight: 240
-        minScale: 2
+        safeAreaHeight: 200
+        minScale: LOI.settings.graphics.minimumScale.value
+        maxScale: LOI.settings.graphics.maximumScale.value
 
   onRendered: ->
     super arguments...

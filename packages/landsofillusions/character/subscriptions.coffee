@@ -17,6 +17,10 @@ LOI.Character.forId.publish (characterId) ->
 
   LOI.Character.documents.find characterId,
     fields:
+      # Don't send user data.
+      user: false
+      archivedUser: false
+
       # Don't send character's email.
       contactEmail: false
 
