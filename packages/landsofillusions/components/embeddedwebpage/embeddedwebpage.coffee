@@ -9,10 +9,16 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
     adventure = @ancestorComponentOfType LOI.Adventure
     @embedded = true if adventure
 
-    unless @embedded
+    if @embedded
+      @display = new @constructor.Display @, adventure.interface.display,
+        # Safe area size accommodates for embedded browser's header and scrollbar.
+        safeAreaWidth: 310
+        safeAreaHeight: 180
+
+    else
       @display = new AM.Display
         safeAreaWidth: 320
-        safeAreaHeight: 200
+        safeAreaHeight: 240
         minScale: LOI.settings.graphics.minimumScale.value
         maxScale: LOI.settings.graphics.maximumScale.value
 
@@ -27,10 +33,14 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
 
     @$root.addClass(@rootClass())
 
+    @display.initialize() if @display instanceof @constructor.Display
+
   onDestroyed: ->
     super arguments...
 
     @$root.removeClass(@rootClass())
+
+    @display.destroy() if @display instanceof @constructor.Display
 
   rootClass: ->
     # Override to style the root element.

@@ -34,9 +34,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     @about = new @constructor.About @
     @book = new @constructor.Book @
     @submissions = new @constructor.Submissions @
-
-    parentWithDisplay = @ancestorComponentWith 'display'
-    @display = parentWithDisplay.display
+    @display = @layout.display
 
     # Create design properties.
     @heightConstants =
@@ -44,7 +42,10 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       navigation: 16
       header: 28 + 16 + 5
       blueprintBottom: 79
-      tableSafeArea: 5
+      tableSafeArea: 30
+
+    # When embedded, the table does not have to show.
+    @heightConstants.tableSafeArea = 0 if @layout.embedded
 
     @viewportHeight = new ComputedField =>
       viewport = @display.viewport()

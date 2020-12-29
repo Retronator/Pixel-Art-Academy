@@ -13,15 +13,17 @@
         </ul>
       </nav>
     </header>
-    <div class="scene" {{style sceneStyle}}>
-      {{> Render activities}}
-      {{> Render studyPlan}}
-      {{> Render about}}
-      <div class="table" {{style tableStyle}}>
-        <div class="drawer"></div>
+    <div class="viewport">
+      <div class="scene" {{style sceneStyle}}>
+        {{> Render activities}}
+        {{> Render studyPlan}}
+        {{> Render about}}
+        <div class="table" {{style tableStyle}}>
+          <div class="drawer"></div>
+        </div>
       </div>
+      {{> Render submissions}}
     </div>
-    {{> Render submissions}}
     {{> Render book}}
     {{#unless layout.embedded}}
       {{> Render menu}}
