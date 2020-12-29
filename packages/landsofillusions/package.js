@@ -608,6 +608,7 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('components/embeddedwebpage..');
   api.addFile('components/embeddedwebpage/display');
+  api.addFile('components/embeddedwebpage/router');
 
   // Typography
 

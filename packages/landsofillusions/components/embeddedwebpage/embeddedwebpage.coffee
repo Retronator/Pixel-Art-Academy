@@ -15,12 +15,17 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
         safeAreaWidth: 310
         safeAreaHeight: 180
 
+      ancestorWithUrl = @ancestorComponentWith 'url'
+      @router = new @constructor.Router @, (value, options) => ancestorWithUrl.url value, options
+
     else
       @display = new AM.Display
         safeAreaWidth: 320
         safeAreaHeight: 240
         minScale: LOI.settings.graphics.minimumScale.value
         maxScale: LOI.settings.graphics.maximumScale.value
+
+      @router = AB.Router
 
   onRendered: ->
     super arguments...
@@ -41,6 +46,7 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
     @$root.removeClass(@rootClass())
 
     @display.destroy() if @display instanceof @constructor.Display
+    @router.destroy() if @router instanceof @constructor.Router
 
   rootClass: ->
     # Override to style the root element.

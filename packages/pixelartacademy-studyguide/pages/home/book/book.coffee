@@ -1,7 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Babel
-ABs = Artificial.Base
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Home.Book extends AM.Component
@@ -77,7 +76,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         slug: slug
 
     @activeContentItem = new ComputedField =>
-      slug = ABs.Router.getParameter 'activity'
+      slug = @home.layout.router.getParameter 'activity'
 
       _.find @contentItems(), (contentItem) => contentItem.slug is slug
 
@@ -150,7 +149,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     # Return to the page of the table of contents that we last saw.
     @visiblePageIndex @_lastTableOfContentsVisiblePageIndex
     @leftPageIndex Math.floor(@_lastTableOfContentsVisiblePageIndex / 2) * 2
-    ABs.Router.setParameter 'activity', null
+    @home.layout.router.setParameter 'activity', null
 
     @scrollToTop()
 
@@ -317,7 +316,8 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     (viewportWidth - bookWidth) / 2
 
   moveButtonStyle: ->
-    return unless horizontalGap = @_horizontalGap()
+    horizontalGap = @_horizontalGap()
+    return unless horizontalGap?
 
     width = horizontalGap + @designConstants.moveButtonExtraWidth
     width: "#{width}rem"

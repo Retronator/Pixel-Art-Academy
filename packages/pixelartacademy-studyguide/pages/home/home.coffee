@@ -45,7 +45,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       tableSafeArea: 30
 
     # When embedded, the table does not have to show.
-    @heightConstants.tableSafeArea = 0 if @layout.embedded
+    @heightConstants.tableSafeArea = 5 if @layout.embedded
 
     @viewportHeight = new ComputedField =>
       viewport = @display.viewport()
@@ -153,7 +153,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
 
   pageClass: ->
     Pages = PAA.StudyGuide.Pages.Home.Pages
-    pageOrBook = AB.Router.currentParameters().pageOrBook
+    pageOrBook = @layout.router.currentParameters().pageOrBook
 
     # If first parameter is not defined, we're on activities.
     return Pages.Activities unless pageOrBook
@@ -183,7 +183,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
         return cancel: true
 
       # If we're on an activity, return to table of contents.
-      if AB.Router.getParameter 'activity'
+      if @layout.router.getParameter 'activity'
         @book.goToTableOfContents()
 
         # Don't hide the back button.
@@ -193,7 +193,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       @book.close()
 
       Meteor.setTimeout =>
-        AB.Router.setParameter 'pageOrBook', null
+        @layout.router.setParameter 'pageOrBook', null
       ,
         500
 
@@ -206,7 +206,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
   sceneStyle: ->
     return unless @_componentsCreated()
 
-    switch AB.Router.currentParameters().pageOrBook
+    switch @layout.router.currentParameters().pageOrBook
       when @constructor.Pages.StudyPlan
         top = -@heightConstants.navigation
         left = @studyPlan.left()
