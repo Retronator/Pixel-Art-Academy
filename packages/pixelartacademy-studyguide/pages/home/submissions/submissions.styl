@@ -3,7 +3,8 @@
 .pixelartacademy-studyguide-pages-home-submissions
   position fixed
   z-index 1
-  transition top 0.5s ease-out
+  transition 0.6s cubic-bezier(0.23, 1, 0.32, 1)
+  transition-property left, top
   visibility hidden
 
   &.loaded
@@ -11,32 +12,62 @@
 
   .folder
     position absolute
-    top -1rem
-    left -13rem
-    width 346rem
-    height 241rem
-    background image('/pixelartacademy/studyguide/home/submissions/folder.png') 100% / 100%
-    transition left 0.5s
+    width 282rem
+    height 189rem
+
+    &.opened
+      .cover
+        &.opened
+          visibility visible
+
+        &.closed
+          visibility hidden
+
+    .cover
+      absolute-cover()
+
+      &.back
+        background-image image('/pixelartacademy/studyguide/home/submissions/folder-back.png')
+
+      &.opened
+        background-image image('/pixelartacademy/studyguide/home/submissions/folder-cover-opened.png')
+        visibility hidden
+
+      &.closed
+        z-index 4
+        background-image image('/pixelartacademy/studyguide/home/submissions/folder-cover-closed.png')
+
+        .title
+          position absolute
+          top 33rem
+          right 36rem
+          width 62rem
+          height 28rem
+          overflow hidden
+          text-align center
+          color atariCyan(1)
+          checkout()
+          text-transform uppercase
 
     .entries-sheet
       position absolute
       z-index 0
-      left 182rem
-      top 9rem
-      width 160rem
-      height 228rem
-      padding 7rem
+      left 148rem
+      bottom 3rem
+      width 130rem
+      height 180rem
+      padding 6rem
       background atariGrey(6)
       color atariGrey(0)
       checkout()
-      transition left 0.5s
+      transition left 0.6s cubic-bezier(0.23, 1, 0.32, 1)
 
       &.displayed
-        left 5rem
+        left 4rem
 
       .title
         .name
-          margin-top 2rem
+          margin-top 1rem
           height 8rem
           border-bottom 1rem solid atariGrey(4)
           text-align center
@@ -47,16 +78,23 @@
           white-space nowrap
 
       .entries
-        margin-top 8rem
+        margin-top 5rem
         width 100%
         border-collapse collapse
 
         .header
-          height 11rem
+          height 9rem
           vertical-align top
+
+          th
+            font-weight normal
 
         .name
           text-align left
+          white-space nowrap
+          overflow hidden
+          text-overflow ellipsis
+          max-width 80rem
 
         .date
           text-align right
@@ -80,7 +118,7 @@
 
       .pagination
         display flex
-        margin-top 7rem
+        margin-top 5rem
         color atariGrey(2)
 
         .previous
@@ -105,8 +143,8 @@
       right 0
       bottom 0
       z-index 3
-      width 167rem
-      height 75rem
-      background image('/pixelartacademy/studyguide/home/submissions/pocket.png') 100% / 100%
+      width 118rem
+      height 49rem
+      background-image image('/pixelartacademy/studyguide/home/submissions/pocket.png')
       filter drop-shadow(-1rem -1rem 1rem rgba(black, 0.3))
       pointer-events none

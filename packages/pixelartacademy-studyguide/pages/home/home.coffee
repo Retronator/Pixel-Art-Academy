@@ -50,11 +50,14 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     @viewportHeight = new ComputedField =>
       viewport = @display.viewport()
       viewport.viewportBounds.height() / @display.scale()
-      
-    @contentSafeHeight = new ComputedField =>
+
+    @safeHeight = new ComputedField =>
       viewport = @display.viewport()
-      viewport.safeArea.height()  / @display.scale() - @heightConstants.header
-      
+      viewport.safeArea.height() / @display.scale()
+
+    @contentSafeHeight = new ComputedField =>
+      @safeHeight() - @heightConstants.header
+
     @safeHeightGap = new ComputedField =>
       (@viewportHeight() - @heightConstants.header - @contentSafeHeight()) / 2
       
@@ -140,7 +143,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       Meteor.setTimeout =>
         $(window).scrollTop @_lastScrollTop
     ,
-      500
+      600
 
   showBackButton: ->
     return unless @book.isCreated()

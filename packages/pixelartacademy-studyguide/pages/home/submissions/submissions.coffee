@@ -48,7 +48,7 @@ class PAA.StudyGuide.Pages.Home.Submissions extends AM.Component
 
       entries[startIndex..endIndex]
 
-    @entriesPerPage = 18
+    @entriesPerPage = 14
 
     @currentPageIndex = new ReactiveField 0
     @hoveredEntry = new ReactiveField null
@@ -70,49 +70,81 @@ class PAA.StudyGuide.Pages.Home.Submissions extends AM.Component
     @loaded = new ComputedField =>
       @submissionsSubscription()?.ready()
 
+    @displayed = new ReactiveField false
     @opened = new ReactiveField false
     @entriesSheetDisplayed = new ReactiveField false
 
   open: (taskId) ->
     @taskId taskId
-    @opened true
 
-    # After the submissions have loaded and the folder has finished animating, display the entries sheet.
-    @autorun (computation) =>
-      return unless @loaded()
-      computation.stop()
-      
-      Meteor.setTimeout =>
-        @entriesSheetDisplayed true
-      ,
-        500
+    # Wait for the book to move out of the way.
+    Meteor.setTimeout =>
+      @displayed true
+
+      # After the submissions have loaded and the folder has finished animating, open the folder.
+      @autorun (computation) =>
+        return unless @loaded()
+        computation.stop()
+
+        Meteor.setTimeout =>
+          @opened true
+
+          # After the folder has opened, display the entries sheet.
+          Meteor.setTimeout =>
+            @entriesSheetDisplayed true
+          ,
+            300
+        ,
+          600
+    ,
+      300
 
   close: ->
     # Store back the entries sheet.
     @entriesSheetDisplayed false
     
-    # After the sheet has been stored, close the sheet.
+    # After the sheet has been stored, close the cover.
     Meteor.setTimeout =>
       @opened false
-  
+
+      # After the cover has closed, hide the folder.
       Meteor.setTimeout =>
-        @taskId null
+        @displayed false
+
+        # After the folder was hidden, unload the task.
+        Meteor.setTimeout =>
+          @taskId null
+        ,
+          600
       ,
-        500
+        300
     ,
-      500
+      300
     
   loadedClass: ->
     'loaded' if @loaded()
 
-  submissionsStyle: ->
-    left = @home.safeWidthGap()
+  openedClass: ->
+    'opened' if @opened()
 
-    if @loaded() and @opened()
-      top = @home.safeHeightGap()
+  submissionsStyle: ->
+    width = 282
+    height = 189
+
+    # Calculate offsets withing the safe area.
+    leftOffset = (@home.safeWidth() - width) / 2
+    topOffset = (@home.safeHeight() - height) / 2
+
+    left = @home.safeWidthGap() + leftOffset
+
+    if @loaded() and @displayed()
+      top = @home.safeHeightGap() + topOffset
 
     else
       top = @home.viewportHeight() + 1
+
+    # Center when closed.
+    left -= width / 4 unless @opened()
 
     left: "#{left}rem"
     top: "#{top}rem"

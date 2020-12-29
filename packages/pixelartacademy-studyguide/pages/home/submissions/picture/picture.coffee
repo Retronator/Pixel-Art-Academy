@@ -24,13 +24,13 @@ class PAA.StudyGuide.Pages.Home.Submissions.Picture extends AM.Component
     # Images shouldn't be taller than half the page, but add some diversity.
     imageInfo = @autoScaledImageMixin.imageInfo()
 
-    110 - imageInfo.height % 7
+    90 - imageInfo.height % 7
 
   autoScaledImageMaxWidth: ->
     # Images shouldn't be wider than the folder, but add some diversity.
     imageInfo = @autoScaledImageMixin.imageInfo()
 
-    160 - imageInfo.width % 7
+    120 - imageInfo.width % 7
 
   autoScaledImageDisplayScale: ->
     @submissions.display.scale()

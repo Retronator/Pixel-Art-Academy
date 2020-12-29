@@ -1,6 +1,8 @@
 <template name="PixelArtAcademy.StudyGuide.Pages.Home.Submissions">
   <div class="pixelartacademy-studyguide-pages-home-submissions {{loadedClass}}" {{style submissionsStyle}}>
-    <div class="folder">
+    <div class="folder {{openedClass}}">
+      <div class="cover back"></div>
+      <div class="cover opened"></div>
       <div class="entries-sheet {{entriesSheetDisplayedClass}}">
         <div class="title">
           Task:
@@ -50,6 +52,11 @@
         {{/each}}
       </div>
       <div class="pocket"></div>
+      <div class="cover closed">
+        <div class="title">
+          {{> t10e task.directiveTranslation}}
+        </div>
+      </div>
     </div>
   </div>
 </template>
