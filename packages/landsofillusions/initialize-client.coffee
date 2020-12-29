@@ -1,3 +1,4 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
 window.LandsOfIllusions = LOI
@@ -12,7 +13,7 @@ LOI.settings = new LOI.Settings
 
 Meteor.startup ->
   # Subscribe to user's characters.
-  charactersSubscription = Retronator.Accounts.User.charactersFieldForCurrentUser.subscribe()
+  charactersFieldSubscription = RA.User.charactersFieldForCurrentUser.subscribe()
 
   # Create the current character on the client.
   Tracker.autorun ->
@@ -33,7 +34,7 @@ Meteor.startup ->
     characterId = LOI.characterId()
 
     # Nothing to do if we don't have a character or if the user/characters haven't been loaded yet.
-    return unless characterId and charactersSubscription.ready()
+    return unless characterId and charactersFieldSubscription.ready()
 
     # Wait till the user is ready.
     return unless user = Retronator.user()

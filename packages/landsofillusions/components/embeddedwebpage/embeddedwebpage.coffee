@@ -6,7 +6,7 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
   onCreated: ->
     super arguments...
     
-    adventure = @ancestorComponentOfType LandsOfIllusions.Adventure
+    adventure = @ancestorComponentOfType LOI.Adventure
     @embedded = true if adventure
 
     unless @embedded

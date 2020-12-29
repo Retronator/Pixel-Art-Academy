@@ -26,9 +26,6 @@ class C3.Stasis extends LOI.Adventure.Location
   constructor: ->
     super arguments...
 
-    # Subscribe to all user's characters to see their designed status.
-    @_charactersSubscription = LOI.Character.forCurrentUser.subscribe()
-
     @characters = new ComputedField =>
       # Create a vat for each non-activated agent.
       return unless user = Retronator.user()
@@ -59,7 +56,6 @@ class C3.Stasis extends LOI.Adventure.Location
   destroy: ->
     super arguments...
 
-    @_charactersSubscription.stop()
     @characters.stop()
     @_vats.stop()
 

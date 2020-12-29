@@ -12,7 +12,6 @@ class AOA.Application extends AM.Component
 
     @applicationSuccessful = new ReactiveField false
 
-    LOI.Character.forCurrentUser.subscribe @
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RA.User.contactEmailForCurrentUser
 

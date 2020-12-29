@@ -22,8 +22,6 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onCreated: ->
     super arguments...
 
-    LOI.Character.forCurrentUser.subscribe @
-
     @selectedCharacter = new ComputedField =>
       LOI.Character.documents.findOne @selectedCharacterId()
 

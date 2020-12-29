@@ -12,7 +12,7 @@ class Studio.Computer.Browser extends AM.Component
   onCreated: ->
     super arguments...
 
-    @currentRoute = new ReactiveField null
+    @currentRoute = new ReactiveField null, (a, b) => a is b
 
     @history = new ReactiveField [{url: 'https://retropolis.city/academy-of-art', scrollTop: 0}]
     @historyIndex = new ReactiveField 0
@@ -72,7 +72,6 @@ class Studio.Computer.Browser extends AM.Component
     # We want to blacklist some pages.
     blacklistedPages = [
       LOI.Adventure
-      PixelArtAcademy.StudyGuide.Pages.Home
     ]
 
     for page in blacklistedPages

@@ -62,6 +62,9 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeAssets()
     @_initializeGroups()
 
+    # Subscribe to user's characters.
+    LOI.Character.forCurrentUser.subscribe()
+
     LOI.adventureInitialized true
 
   onRendered: ->

@@ -97,6 +97,16 @@ class AM.Component extends CommonComponent
       
     result
 
+  ancestorComponents: ->
+    components = []
+    current = @
+
+    while parent = current.componentParent()
+      components.push parent
+      current = parent
+
+    components
+
   # Code based on childComponentsWith.
   parentDataWith: (filterParameter) ->
     filter = _.filterFunction filterParameter
