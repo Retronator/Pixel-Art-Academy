@@ -1,5 +1,6 @@
 AM = Artificial.Mirage
 AB = Artificial.Base
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Home extends AM.Component
@@ -25,17 +26,19 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
   onCreated: ->
     super arguments...
 
-    PAA.StudyGuide.Activity.initializeAll @
+    @layout = @ancestorComponentOfType PAA.StudyGuide.Pages.Layout
 
-    @activities = new PAA.StudyGuide.Pages.Home.Activities @
-    @studyPlan = new PAA.StudyGuide.Pages.Home.StudyPlan @
-    @about = new PAA.StudyGuide.Pages.Home.About @
-    @book = new PAA.StudyGuide.Pages.Home.Book @
-    @submissions = new PAA.StudyGuide.Pages.Home.Submissions @
+    @menu = new @constructor.Menu @
+    @activities = new @constructor.Activities @
+    @studyPlan = new @constructor.StudyPlan @
+    @about = new @constructor.About @
+    @book = new @constructor.Book @
+    @submissions = new @constructor.Submissions @
 
     parentWithDisplay = @ancestorComponentWith 'display'
     @display = parentWithDisplay.display
 
+    # Create design properties.
     @heightConstants =
       title: 28
       navigation: 16
@@ -76,11 +79,40 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
 
       (@safeWidthGap() + @widthConstants.innerGap) * 2 + @activities.width() + @studyPlan.width() + @about.width()
 
+    # Initialize Study Guide activities.
+    PAA.StudyGuide.Activity.initializeAll @
+
+    # Subscribe to task entries.
+    @autorun (computation) =>
+      if characterId = LOI.characterId()
+        PAA.Learning.Task.Entry.forCharacter.subscribe @, characterId
+
+      else
+        PAA.Learning.Task.Entry.forCurrentUser.subscribe @
+
   _componentsCreated: ->
     for component in [@activities, @studyPlan, @about]
       return false unless component.isCreated()
 
     true
+
+  signIn: (callback) ->
+    # Wait for the user to get signed in.
+    userAutorun = Tracker.autorun (computation) =>
+      return unless Retronator.user()
+      computation.stop()
+
+      # User has signed in. Close the sign-in dialog and return control.
+      @menu.signIn.activatable.deactivate()
+      callback?()
+
+    @layout.showActivatableModalDialog
+      dialog: @menu.signIn
+      dontRender: true
+      callback: =>
+        # User has manually closed the sign-in dialog. Stop waiting and return control.
+        userAutorun.stop()
+        callback?()
 
   openSubmissions: (taskId) ->
     # Save scroll position.
@@ -118,6 +150,20 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
 
     'back-button-hidden' if @book.focusedArtworks()
 
+  pageClass: ->
+    Pages = PAA.StudyGuide.Pages.Home.Pages
+    pageOrBook = AB.Router.currentParameters().pageOrBook
+
+    # If first parameter is not defined, we're on activities.
+    return Pages.Activities unless pageOrBook
+
+    # Output the page slug if we're on one of the pages.
+    pageClasses = _.values Pages
+    return pageOrBook if pageOrBook in pageClasses
+
+    # We are on one of the books.
+    'book'
+
   backButtonCallback: ->
     # We must return the callback function.
     =>
@@ -149,6 +195,12 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
         AB.Router.setParameter 'pageOrBook', null
       ,
         500
+
+  studyPlanRouteOptions: ->
+    pageOrBook: PAA.StudyGuide.Pages.Home.Pages.StudyPlan
+
+  aboutRouteOptions: ->
+    pageOrBook: PAA.StudyGuide.Pages.Home.Pages.About
 
   sceneStyle: ->
     return unless @_componentsCreated()

@@ -47,7 +47,7 @@ class LOI.Character extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: Document.ReferenceField RA.User, ['displayName', 'publicName'], false, 'characters', ['displayName', 'avatar.fullName', 'activated']
+      user: Document.ReferenceField RA.User, ['displayName', 'publicName'], false, 'characters', ['displayName', 'avatar.fullName', 'activated', 'designApproved']
       ownerName: Document.GeneratedField 'self', ['user'], (character) ->
         ownerName = character.user?.publicName or null
         [character._id, ownerName]

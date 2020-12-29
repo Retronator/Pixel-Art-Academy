@@ -4,10 +4,13 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StudyGuide.Pages.Layout.Menu extends AM.Component
-  @register 'PixelArtAcademy.StudyGuide.Pages.Layout.Menu'
+class PAA.StudyGuide.Pages.Home.Menu extends AM.Component
+  @register 'PixelArtAcademy.StudyGuide.Pages.Home.Menu'
 
-  constructor: (@layout) ->
+  constructor: (@home) ->
+    super arguments...
+
+  onCreated: ->
     super arguments...
 
     @menuVisible = new ReactiveField false
@@ -17,13 +20,13 @@ class PAA.StudyGuide.Pages.Layout.Menu extends AM.Component
     @signIn = new LOI.Components.SignIn
 
     @account = new LOI.Components.Account
-      dialogProvider: @layout
+      dialogProvider: @home.layout
       useUrlRouting: false
 
     @_transitionDuration = 200
 
   showMenu: ->
-    @layout.addModalDialog
+    @home.layout.addModalDialog
       dialog: @
       # We already render the menu ourselves as it only becomes an active dialog when it's visible.
       dontRender: true
@@ -36,7 +39,7 @@ class PAA.StudyGuide.Pages.Layout.Menu extends AM.Component
       duration: @_transitionDuration
 
   hideMenu: ->
-    @layout.removeModalDialog @
+    @home.layout.removeModalDialog @
 
     # Fade out and then make menu not visible.
     @$('.menu-overlay').velocity('stop').velocity

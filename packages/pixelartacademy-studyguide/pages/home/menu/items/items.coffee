@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.StudyGuide.Pages.Layout.Menu.Items extends AM.Component
-  @register 'PixelArtAcademy.StudyGuide.Pages.Layout.Menu.Items'
+class PAA.StudyGuide.Pages.Home.Menu.Items extends AM.Component
+  @register 'PixelArtAcademy.StudyGuide.Pages.Home.Menu.Items'
 
   @Screens:
     MainMenu: 'MainMenu'
@@ -28,10 +28,6 @@ class PAA.StudyGuide.Pages.Layout.Menu.Items extends AM.Component
 
   isFullscreen: ->
     AM.Window.isFullscreen()
-
-  activatedCharacters: ->
-    return [] unless characters = Retronator.user()?.characters
-    character for character in characters when character.activated
 
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
@@ -85,7 +81,7 @@ class PAA.StudyGuide.Pages.Layout.Menu.Items extends AM.Component
     @menu.hideMenu()
 
   onClickSignIn: (event) ->
-    @menu.layout.signIn()
+    @menu.home.signIn()
 
   onClickUserSelection: (event) ->
     @currentScreen @constructor.Screens.UserSelection

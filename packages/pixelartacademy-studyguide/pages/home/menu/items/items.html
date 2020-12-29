@@ -1,5 +1,5 @@
-<template name="PixelArtAcademy.StudyGuide.Pages.Layout.Menu.Items">
-  <ul class="pixelartacademy-studyguide-pages-layout-menu-items">
+<template name="PixelArtAcademy.StudyGuide.Pages.Home.Menu.Items">
+  <ul class="pixelartacademy-studyguide-pages-home-menu-items">
     {{#if inMainMenu}}
       <li class="menu-item"><span class="continue actionable">Continue</span></li>
       {{#unless currentUser}}
@@ -38,7 +38,7 @@
     {{/if}}
     {{#if inUserSelection}}
       <li class="menu-item"><span class="actionable select-user">{{currentUser.displayName}}</span></li>
-      {{#each activatedCharacters}}
+      {{#each currentUser.playableCharacters}}
         <li class="menu-item"><span class="actionable select-character">{{t7e avatar.fullName}}</span></li>
       {{/each}}
       <li class="menu-item"><span class="user-selection-back-to-menu actionable">Back</span></li>

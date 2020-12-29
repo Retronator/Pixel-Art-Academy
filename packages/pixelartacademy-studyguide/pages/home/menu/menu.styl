@@ -1,13 +1,14 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-studyguide-pages-layout-menu
+.pixelartacademy-studyguide-pages-home-menu
   .toolbar
-    position absolute
+    position fixed
+    z-index 2
     top 0
     right 0
     padding 4rem 6rem
     text-align right
-    transition opacity 200ms
+    transition top 1s, opacity 200ms
     opacity 0
     visibility hidden
 
@@ -31,22 +32,10 @@
 
   .menu-overlay
     fixed-cover()
+    z-index 3
     visibility hidden
     opacity 0
     background-color rgba(0,0,0,0.8)
 
     &.visible
       visibility visible
-
-    .pixelartacademy-studyguide-pages-layout-menu-items
-      position absolute
-      top 50%
-      width 100%
-      color atariGrey(5)
-      text-align center
-      transform translateY(-50%)
-
-      .actionable
-      button
-        &:hover
-          color atariGrey(7)

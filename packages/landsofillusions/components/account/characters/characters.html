@@ -7,8 +7,14 @@
     {{#each characters}}
       <li class="character">
         <button class="load-character">
-          {{avatar.fullName.translate.best.text}}
-          {{#unless activated}}(draft){{/unless}}
+          {{t7e avatar.fullName}}
+          {{#if activated}}
+            {{#unless designApproved}}
+              (design revoked)
+            {{/unless}}
+          {{else}}
+            (draft)
+          {{/if}}
         </button>
       </li>
     {{/each}}

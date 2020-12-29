@@ -4,79 +4,71 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Layout extends LOI.Components.EmbeddedWebpage
+  @register 'PixelArtAcademy.StudyGuide.Pages.Layout'
+
   @image: (parameters) ->
     Meteor.absoluteUrl "retropolis/city/academyofart/link-image.png"
 
   constructor: ->
     super arguments...
 
-    @menu = new @constructor.Menu @
-
-  onCreated: ->
-    super arguments...
-
-    @autorun (computation) =>
-      if characterId = LOI.characterId()
-        PAA.Learning.Task.Entry.forCharacter.subscribe @, characterId
-
-      else
-        PAA.Learning.Task.Entry.forCurrentUser.subscribe @
-
-  signIn: (callback) ->
-    # Wait for the user to get signed in.
-    userAutorun = Tracker.autorun (computation) =>
-      return unless Retronator.user()
-      computation.stop()
-
-      # User has signed in. Close the sign-in dialog and return control.
-      @menu.signIn.activatable.deactivate()
-      callback?()
-
-    @showActivatableModalDialog
-      dialog: @menu.signIn
-      dontRender: true
-      callback: =>
-        # User has manually closed the sign-in dialog. Stop waiting and return control.
-        userAutorun.stop()
-        callback?()
+    @_modalDialogs = []
+    @_modalDialogsDependency = new Tracker.Dependency
 
   rootClass: -> 'pixelartacademy-studyguide'
 
-  headerStyle: ->
-    Pages = PAA.StudyGuide.Pages.Home.Pages
-    pageOrBook = AB.Router.currentParameters().pageOrBook
+  addModalDialog: (dialogOptions) ->
+    # Delegate dialog display to adventure if embedded.
+    return LOI.adventure.addModalDialog dialogOptions if @embedded
 
-    switch pageOrBook
-      when Pages.StudyPlan
-        top: "-28rem"
-        height: "44rem"
+    # We add _id so that #each won't re-render the dialogs.
+    dialogOptions._id = Random.id()
 
-      when Pages.Activities, Pages.About, undefined
-        top: 0
-        height: "49rem"
+    # We add new dialogs at the beginning so the first is the (assumed) top-most.
+    @_modalDialogs.unshift dialogOptions
+    @_modalDialogsDependency.changed()
 
-      else
-        # We're on a book.
-        top: "-49rem"
+  removeModalDialog: (dialog) ->
+    # Delegate dialog display to adventure if embedded.
+    return LOI.adventure.removeModalDialog dialogOptions if @embedded
 
-  menuStyle: ->
-    Pages = PAA.StudyGuide.Pages.Home.Pages
-    pageOrBook = AB.Router.currentParameters().pageOrBook
+    dialogIndex = _.findIndex @_modalDialogs, (dialogOptions) -> dialogOptions.dialog is dialog
 
-    switch pageOrBook
-      when Pages.StudyPlan
-        top: "-4rem"
+    @_modalDialogs.splice dialogIndex, 1
+    @_modalDialogsDependency.changed()
 
-      when Pages.Activities, Pages.About, undefined
-        top: 0
+  modalDialogs: ->
+    @_modalDialogsDependency.depend()
+    @_modalDialogs
 
-      else
-        # We're on a book.
-        top: 0
-        opacity: 0
+  # Activates a dialog and waits for the player to complete interacting with it.
+  showActivatableModalDialog: (dialogOptions) ->
+    # Wait until dialog has been active and deactivated again.
+    dialogWasActivated = false
 
-  studyPlanRouteOptions: ->
-    pageOrBook: PAA.StudyGuide.Pages.Home.Pages.StudyPlan
+    @addModalDialog dialogOptions
 
-  aboutRouteOptions: ->
-    pageOrBook: PAA.StudyGuide.Pages.Home.Pages.About
+    # Wait for the dialog to be rendered.
+    Tracker.afterFlush =>
+      dialogOptions.dialog.activatable.activate()
+
+      Tracker.autorun (computation) =>
+        if dialogOptions.dialog.activatable.activated()
+          dialogWasActivated = true
+
+        else if dialogOptions.dialog.activatable.deactivated() and dialogWasActivated
+          computation.stop()
+          @removeModalDialog dialogOptions.dialog
+
+          # Call callback in nonreactive context in case the callback runs any of its own
+          # autoruns (we don't want them to get invalidated when this autorun completes).
+          Tracker.nonreactive =>
+            dialogOptions.callback?()
+
+  showDialogMessage: (message) ->
+    @showActivatableModalDialog
+      dialog: new LOI.Components.Dialog
+        message: message
+        buttons: [
+          text: "OK"
+        ]

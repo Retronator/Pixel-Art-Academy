@@ -1,15 +1,26 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-studyguide-pages-layout-menu-items
-  list-style none
+.pixelartacademy-studyguide-pages-home-menu-items
+  position absolute
+  top 50%
+  width 100%
   margin 0
   padding 0
+  transform translateY(-50%)
+  list-style none
+  text-align center
+  color atariGrey(5)
+  kyrou-7()
   text-transform uppercase
   line-height 14rem
-  kyrou-7()
   font-weight bold
 
   .menu-item
+    .actionable
+    button
+      &:hover
+        color atariGrey(7)
+
     .actionable
       text-decoration none
       color inherit

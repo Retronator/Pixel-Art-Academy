@@ -5,10 +5,78 @@
     .landsofillusions-components-back-button
       opacity 0
 
+  &.study-plan
+    > .header
+      top -28rem
+      height 44rem
+
+    .pixelartacademy-studyguide-pages-home-menu
+      .toolbar
+        top -4rem
+
+  &.book
+    > .header
+      top -49rem
+
+    .pixelartacademy-studyguide-pages-home-menu
+      .toolbar
+        opacity 0
+
+      &:hover
+        .toolbar
+          opacity 1
+
   .landsofillusions-components-back-button
     opacity 1
     z-index 3
     transition opacity 0.5s
+
+  > .header
+    position absolute
+    z-index 1
+    top 0
+    height 49rem
+    width 100%
+    background atariGrey(0)
+    transition top 1s, height 1s
+
+    > .title
+      academy()
+      text-align center
+      margin 0
+      line-height 24rem
+      padding-top 4rem
+
+      .route-link
+        display block
+        width 100%
+        text-decoration none
+
+    .navigation
+      .pages
+        display flex
+        width 100%
+        max-width 200rem
+        margin 0 auto
+        padding 0
+        list-style none
+
+        .page
+          display block
+          flex-grow 1
+          text-align center
+          line-height 16rem
+
+          &.apply
+            text-transform uppercase
+
+          .route-link
+            display block
+            width 100%
+            text-decoration none
+
+            &.active
+              color atariPeach(2)
 
   .scene
     position fixed

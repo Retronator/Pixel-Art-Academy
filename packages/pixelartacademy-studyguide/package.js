@@ -54,11 +54,12 @@ Package.onUse(function(api) {
   api.addFile('pages..');
 
   api.addComponent('pages/layout..');
-  api.addFile('pages/layout/layout-dialogs');
-  api.addComponent('pages/layout/menu..');
-  api.addComponent('pages/layout/menu/items..');
 
   api.addComponent('pages/home..');
+
+  api.addComponent('pages/home/menu..');
+  api.addComponent('pages/home/menu/items..');
+
   api.addComponent('pages/home/activities..');
   api.addComponent('pages/home/studyplan..');
   api.addComponent('pages/home/about..');
