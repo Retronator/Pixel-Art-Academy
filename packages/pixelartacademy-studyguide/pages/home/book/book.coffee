@@ -90,8 +90,6 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     # Since the left and right borders are not equal, we need to additionally offset the book to focus on the center.
     @designConstants.focusOffset = (@designConstants.pageMargins.right - @designConstants.pageMargins.left) / 2
 
-    @focusedArtworks = new ReactiveField null
-
   onRendered: ->
     super arguments...
 
@@ -152,25 +150,6 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     @home.layout.router.setParameter 'activity', null
 
     @scrollToTop()
-
-  focusArtworks: (artworks) ->
-    # Save scroll position.
-    @_lastScrollTop = $(window).scrollTop()
-
-    # Start display.
-    @focusedArtworks artworks
-
-    # After the page has re-rendered, scroll to top.
-    Meteor.setTimeout =>
-      $(window).scrollTop 0
-
-  unfocusArtworks: ->
-    # Stop display.
-    @focusedArtworks null
-
-    # After the page has re-rendered, restore scroll position.
-    Meteor.setTimeout =>
-      $(window).scrollTop @_lastScrollTop
 
   canMoveLeft: ->
     if @activeContentItem()
@@ -372,16 +351,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     super(arguments...).concat
       'click .move-button.left': @onClickMoveButtonLeft
       'click .move-button.right': @onClickMoveButtonRight
-      'click .pixelartacademy-studyguide-pages-home-book-focused-artworks': @onClickFocusedArtworks
 
   onClickMoveButtonLeft: (event) ->
     @previousPage()
 
   onClickMoveButtonRight: (event) ->
     @nextPage()
-
-  onClickFocusedArtworks: (event) ->
-    @unfocusArtworks()
 
   class @TableOfContentsItem extends AM.Component
     @register "PixelArtAcademy.StudyGuide.Pages.Home.Book.TableOfContentsItem"

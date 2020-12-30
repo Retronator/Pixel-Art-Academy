@@ -183,6 +183,8 @@ class PAA.StudyGuide.Pages.Home.Submissions extends AM.Component
       'mouseleave .entry': @onMouseLeaveEntry
       'click .previous .page-button': @onClickPreviousPageButton
       'click .next .page-button': @onClickNextPageButton
+      'click .entry': @onClickEntry
+      'click .pictures': @onClickPictures
 
   onMouseEnterEntry: (event) ->
     entry = @currentData()
@@ -196,3 +198,20 @@ class PAA.StudyGuide.Pages.Home.Submissions extends AM.Component
 
   onClickNextPageButton: (event) ->
     @currentPageIndex @currentPageIndex() + 1
+
+  onClickEntry: (event) ->
+    entry = @currentData()
+
+    artworks = [
+      image: url: entry.upload.picture.url
+    ]
+
+    @home.focusArtworks artworks
+
+  onClickPictures: (event) ->
+    entries = @displayedEntries()
+
+    artworks = for entry in entries
+      image: url: entry.upload.picture.url
+
+    @home.focusArtworks artworks

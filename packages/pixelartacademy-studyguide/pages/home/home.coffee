@@ -94,6 +94,9 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       else
         PAA.Learning.Task.Entry.forCurrentUser.subscribe @
 
+    # Allow for focusing artworks.
+    @focusedArtworks = new ReactiveField null
+
   _componentsCreated: ->
     for component in [@activities, @studyPlan, @about]
       return false unless component.isCreated()
@@ -117,6 +120,25 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
         # User has manually closed the sign-in dialog. Stop waiting and return control.
         userAutorun.stop()
         callback?()
+
+  focusArtworks: (artworks) ->
+    # Save scroll position.
+    @_lastScrollTop = $(window).scrollTop()
+
+    # Start display.
+    @focusedArtworks artworks
+
+    # After the page has re-rendered, scroll to top.
+    Meteor.setTimeout =>
+      $(window).scrollTop 0
+
+  unfocusArtworks: ->
+    # Stop display.
+    @focusedArtworks null
+
+    # After the page has re-rendered, restore scroll position.
+    Meteor.setTimeout =>
+      $(window).scrollTop @_lastScrollTop
 
   openSubmissions: (taskId) ->
     # Save scroll position.
@@ -152,7 +174,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
   backButtonHiddenClass: ->
     return unless @book.isCreated()
 
-    'back-button-hidden' if @book.focusedArtworks()
+    'back-button-hidden' if @focusedArtworks()
 
   pageClass: ->
     Pages = PAA.StudyGuide.Pages.Home.Pages
@@ -172,8 +194,8 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     # We must return the callback function.
     =>
       # If we're focusing on an artwork, we close it.
-      if @book.focusedArtworks()
-        @book.unfocusArtworks()
+      if @focusedArtworks()
+        @unfocusArtworks()
 
         # Don't hide the back button.
         return cancel: true
@@ -240,3 +262,10 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     bottom: "#{@safeHeightGap() - (tableHeight - @heightConstants.tableSafeArea)}rem"
     left: "#{@safeWidthGap() + leftPartWidth}rem"
     right: "#{@safeWidthGap() + rightPartWidth}rem"
+
+  events: ->
+    super(arguments...).concat
+      'click .focusedartworks': @onClickFocusedArtworks
+
+  onClickFocusedArtworks: (event) ->
+    @unfocusArtworks()

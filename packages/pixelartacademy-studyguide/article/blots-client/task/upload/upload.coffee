@@ -160,7 +160,7 @@ class PAA.StudyGuide.Article.Task.Upload extends PAA.StudyGuide.Article.Task
     ]
 
     article = @quillComponent()
-    article.bookComponent.focusArtworks artworks
+    article.bookComponent.home.focusArtworks artworks
 
   onClickViewSubmissionsButton: (event) ->
     article = @quillComponent()

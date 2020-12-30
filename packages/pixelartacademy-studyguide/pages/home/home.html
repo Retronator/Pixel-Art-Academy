@@ -13,6 +13,11 @@
         </ul>
       </nav>
     </header>
+    {{#with focusedArtworks}}
+      <div class="focusedartworks">
+        {{> PixelArtDatabase.Components.Stream}}
+      </div>
+    {{/with}}
     <div class="viewport">
       <div class="scene" {{style sceneStyle}}>
         {{> Render activities}}
