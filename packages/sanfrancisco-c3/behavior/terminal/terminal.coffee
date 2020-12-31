@@ -30,7 +30,7 @@ class C3.Behavior.Terminal extends C3.Items.Terminal
       500
 
   onCreated: ->
-    super
+    super arguments...
 
     @screens =
       mainMenu: new @constructor.MainMenu @
@@ -48,7 +48,7 @@ class C3.Behavior.Terminal extends C3.Items.Terminal
     LOI.Character.forCurrentUser.subscribe @
 
   onRendered: ->
-    super
+    super arguments...
 
     # Show an alpha-state disclaimer.
     @showDialog

@@ -1,0 +1,46 @@
+<template name="Retronator.Store.Pages.Admin.Transactions">
+  <h1>Transactions</h1>
+  <p>
+    UserID: {{>Retronator.Store.Pages.Admin.Transactions.UserId}}
+    Email: {{>Retronator.Store.Pages.Admin.Transactions.Email}}
+    Twitter: @{{>Retronator.Store.Pages.Admin.Transactions.Twitter}}
+  </p>
+  <table>
+    <tr>
+      <th>Time</th>
+      <th>Owner</th>
+      <th>Items</th>
+    </tr>
+    {{#each transactions}}
+      <tr>
+        <td>{{time.toLocaleDateString}}</td>
+        <td>{{ownerDisplayName}}</td>
+        <td>
+          <ul>
+            {{#each items}}
+              {{item.catalogKey}}
+              {{#if price}}
+                (${{price}})
+              {{/if}}
+              {{#if receivedGift}}
+                (gift from {{receivedGift.transaction.ownerDisplayName}})
+              {{/if}}
+              {{#if givenGift}}
+                (gift for {{givenGift.transaction.ownerDisplayName}})
+              {{/if}}
+            {{/each}}
+          </ul>
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+  <h2>Give item</h2>
+  <p>
+    <select class="give-item-catalog-key-select">
+      {{#each itemCatalogKeys}}
+        <option value="{{this}}">{{this}}</option>
+      {{/each}}
+    </select>
+    <button class="give-item-button">Give</button>
+  </p>
+</template>

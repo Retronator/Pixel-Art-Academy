@@ -1,0 +1,17 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters.AnimationsTest">
+  <style>
+    html {
+      font-size: {{display.scale}}px;
+    }
+  </style>
+  {{> Render display}}
+  <div class="landsofillusions-pages-admin-characters-animationstest admin-page">
+    <h1>Animations test</h1>
+    <div class="controls">
+      Direction {{> LandsOfIllusions.Pages.Admin.Characters.AnimationsTest.DirectionSelection}}
+      Animation {{> LandsOfIllusions.Pages.Admin.Characters.AnimationsTest.AnimationSelection}}
+      Outfit {{> LandsOfIllusions.Pages.Admin.Characters.AnimationsTest.OutfitSelection}}
+    </div>
+    <div class="scene"></div>
+  </div>
+</template>

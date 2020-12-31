@@ -10,7 +10,7 @@ class LOI.Components.Computer extends LOI.Adventure.Item
       500
 
   onCreated: ->
-    super
+    super arguments...
 
     @currentScreen = new ReactiveField null
     @activeDialog = new ReactiveField null
@@ -37,7 +37,7 @@ class LOI.Components.Computer extends LOI.Adventure.Item
         LOI.adventure.deactivateActiveItem()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .confirm-button': @onClickConfirmButton
       'click .cancel-button': @onClickCancelButton
 

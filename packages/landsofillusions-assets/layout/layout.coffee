@@ -8,12 +8,11 @@ class LOI.Assets.Layout extends BlazeComponent
     # TODO: Add image thumbnail.
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = new AM.Display
-      safeAreaWidth: 350
-      safeAreaHeight: 350
       minScale: 2
+      maxScale: 2
 
   loading: ->
     Meteor.loggingIn()

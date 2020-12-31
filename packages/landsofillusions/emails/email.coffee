@@ -14,7 +14,7 @@ class LOI.Emails.Email extends LOI.Adventure.Thing
   @body: (character) -> # Override to provide the body for use on the server.
 
   constructor: (data) ->
-    super
+    super arguments...
 
     @arrived = new ComputedField =>
       gameTime = LOI.adventure.gameTime()
@@ -26,7 +26,7 @@ class LOI.Emails.Email extends LOI.Adventure.Thing
       true
 
   destroy: ->
-    super
+    super arguments...
 
     @arrived.stop()
 

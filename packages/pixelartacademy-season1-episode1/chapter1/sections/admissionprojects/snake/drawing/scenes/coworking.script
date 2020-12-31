@@ -6,9 +6,9 @@
 
 ## HowToDraw
 
-aeronaut:
+reuben:
   You'll need some sort of drawing software that can handle pixel art.
-  You have two options. One is to edit the sprites directly in the Drawing app.
+  You have two options. One is to edit the sprites directly in the Drawing app on your PixelBoy.
   The other is to download the sprites and use any software you want to modify the art.
   
 ### BackToMainQuestions
@@ -21,8 +21,8 @@ aeronaut:
 
 ## HowToEditInApp
 
-aeronaut:
-  You'll need to get an editor first.
+reuben:
+  You'll need to get an editor for PixelBoy first.
   Talk to Retro upstairs in the store. He can get you set up.
   
 ### BackToMainQuestions
@@ -35,11 +35,10 @@ aeronaut:
 
 ## HowToDownload
 
-aeronaut:
+reuben:
   Yeah, that way you can open them up in any software you want.
   First you'll need to show you're comfortable on your own though.
-  Talk to Corinne in the Gallery to get a simple test to prove yourself. Use the upload option to complete the challenge.
-  This should enable you to download and upload sprites when you look at project assets in the Drawing app.
+  Talk to Retro in the store upstairs and tell him you want to use external drawing software.
   
 ### BackToMainQuestions
 
@@ -47,11 +46,11 @@ aeronaut:
   
 ## HelpWithSoftwareChoice
 
-* Can I get some help using other software? `HowToDownload`
+* Can I get some help using my own software? `HowToDownload`
 
 ## HelpWithSoftware
 
-aeronaut:
+reuben:
   Of course! Head up to the store and ask Retro to give you a rundown of software choices and other things that go with it.
   
 ### BackToMainQuestions
@@ -66,41 +65,41 @@ aeronaut:
 
 -> [HaventScored10PointsYet] `_highScore < 10`
 
-aeronaut:
+reuben:
   Alright, let's take a look!
   
 > _char_ sends the updated assets to Reuben.
 
-aeronaut: PICO-8 … launching …
+reuben: PICO-8 … launching …
 
 > You hear the familiar blip as the console boots.
 
-aeronaut: YES! Look at this splash screen.
+reuben: YES! Look at this splash screen.
 
 > Reuben continues to play the game.
 
-aeronaut: 
+reuben: 
   Ah, this is great.
   Thank you _char_, I really appreciate it.
   
 * I'm glad you like it. -> [Glad]
 * Thank you! I liked working on this a lot.
 
-aeronaut: Yeah, making games is great.
+reuben: Yeah, making games is great.
 
 -> [FinalTalk]
 
 ## Glad
 
-aeronaut: Yes! I'm glad you helped with the art.
+reuben: Yes! I'm glad you helped with the art.
 
 ## FinalTalk
 
 > Reuben sets the console aside and looks at _char_ with a big smile.
 
-aeronaut:
+reuben:
   Well, seems like your admission project is complete!
-  When you have all other admission requisites done, talk to Shelley to finalize your admission.
+  When you have all other requirements done, go meet with your study group to complete admission week.
   Thanks again!
 
 ## AdmissionProjectCompleted
@@ -109,7 +108,7 @@ aeronaut:
 
 ## HaventScored10PointsYet
 
-aeronaut:
+reuben:
   Did you test the game yet? Score at least 10 points to give it a good playthrough.
   
 * Yes, sir!

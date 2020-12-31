@@ -14,7 +14,7 @@ class C3.C3 extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   exits: ->
     "#{Vocabulary.Keys.Directions.In}": SanFrancisco.C3.Lobby

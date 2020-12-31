@@ -8,7 +8,7 @@ class AM.Admin.Components.AdminPage extends Artificial.Mirage.Component
   template: -> @constructor.id()
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @scriptsComponent = new @options.scriptsComponentClass if @options.scriptsComponentClass
     @_documentPage = new @options.adminComponentClass

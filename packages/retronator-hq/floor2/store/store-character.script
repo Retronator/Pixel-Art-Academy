@@ -8,6 +8,8 @@ retro: Can I help you with anything else? -> [MainQuestion] `_IntroductionOver`
 * Fine, thank you. -> [IntroductionOver]
 * Great, how are you?
 
+## HowAreYouAnswer
+
 retro: Doing great as well!
 
 ## IntroductionOver
@@ -27,6 +29,9 @@ retro: How can I help you today?
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
 * I want to get started with pixel art. What do I need? -> [PixelArt] `not PixelArt`
 * I have more questions about pixel art. -> [PixelArt] `PixelArt`
+* So … What's your favorite fruit? -> [FavoriteFruit] `HowAreYouAnswer and not FavoriteFruit`
+* Actually, I would love a raspberry now. -> [GetRaspberryAfterAll] `FavoriteFruit and not GetRaspberry`
+* Can I get another raspberry? -> [AnotherRaspberry] `GetRaspberry and not NoMoreRaspberries`
 * I'm just browsing, thanks. -> [EndBrowsing] `not MainQuestion`
 * That would be all, thank you. -> [EndHelped] `MainQuestion`
 
@@ -86,6 +91,67 @@ retro:
 ### PixelArt
 
 -> [End]
+
+## FavoriteFruit
+
+`raspberries = 5;`
+
+retro:
+    I love raspberries! Never get bored of them.
+    Here, you want one?
+    
+> Retro offers a box of raspberries.
+    
+* Uhm, yeah, sure! -> [GetRaspberry]
+* No, thank you.
+
+retro: No worries. What else would you like to know?
+    
+-> [MainQuestion]
+
+## GetRaspberry
+    
+> _char_ goes for a raspberry and grabs a raspberry leaf as well.
+
+### GetRaspberry
+
+`raspberries--`
+    
+retro:
+    Oh, looks like a leaf sneaked into the packaging. 
+    Keep it! Maybe you'll want to draw it or something.
+
+char: Oh, thank you.
+
+retro: Don't mention it. What else can I do for you?
+
+-> [MainQuestion]
+
+## GetRaspberryAfterAll
+
+retro: They are delicious!
+
+-> [GetRaspberry]
+
+## AnotherRaspberry
+
+-> [NoMoreRaspberries] `raspberries is 0`
+
+retro: Help yourself!
+
+> _char_ happily takes another raspberry.
+
+### AnotherRaspberry
+
+`raspberries--`
+
+-> [MainQuestion]
+
+## NoMoreRaspberries
+
+retro: Oh, sorry, I already ate them all.
+
+-> [MainQuestion]
 
 ## EndHelped
 

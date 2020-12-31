@@ -64,6 +64,8 @@ Package.onUse(function(api) {
   api.addFile('pages/yearreview/years/year2016');
   api.addFile('pages/yearreview/years/year2017');
   api.addFile('pages/yearreview/years/year2018');
+  api.addFile('pages/yearreview/years/year2019');
+  api.addFile('pages/yearreview/years/year2020');
 
   api.addComponent('pages/yearreview/layout/layout');
 

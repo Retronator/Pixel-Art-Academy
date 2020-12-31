@@ -20,14 +20,14 @@ class RS.Item extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      name: @ReferenceField AB.Translation, [], false
-      description: @ReferenceField AB.Translation, [], false
-      items: [@ReferenceField 'self', ['catalogKey']]
+      name: Document.ReferenceField AB.Translation, [], false
+      description: Document.ReferenceField AB.Translation, [], false
+      items: [Document.ReferenceField 'self', ['catalogKey']]
 
   @type: @id()
   @register @type, @
 
-  @all: 'Retronator.Store.Item.all'
+  @all: @subscription "all"
 
   # Inserts an item into the database.
   @create: (documentData) ->
@@ -77,7 +77,7 @@ class RS.Item extends AM.Document
     @name.refresh()?.translate().text or @catalogKey
 
   refresh: ->
-    super
+    super arguments...
 
     # Also refresh bundled items.
     item.refresh() for item in @items if @items

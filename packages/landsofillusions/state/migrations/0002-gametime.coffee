@@ -15,7 +15,7 @@ class Migration extends Document.MinorMigration
     ,
       multi: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -33,7 +33,7 @@ class Migration extends Document.MinorMigration
     ,
       multi: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

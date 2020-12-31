@@ -46,7 +46,8 @@ class LOI.StateField
 
         if valueChanged
           # We directly change the value of the field and trigger state update.
-          _.nestedProperty LOI.adventure[options.stateType](), options.address.string(), value
+          return unless state = LOI.adventure[options.stateType]()
+          _.nestedProperty state, options.address.string(), value
 
           # We trigger reactive state changes, unless the updates are lazy.
           if options.lazyUpdates

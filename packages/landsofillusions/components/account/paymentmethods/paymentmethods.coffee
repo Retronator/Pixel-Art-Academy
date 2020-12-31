@@ -14,7 +14,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @stripeInitialized = new ReactiveField false
     @stripeEnabled = false
@@ -22,7 +22,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
     RS.PaymentMethod.forCurrentUser.subscribe @
 
   onRendered: ->
-    super
+    super arguments...
 
     if Meteor.settings.public.stripe?.publishableKey
       @stripeEnabled = true
@@ -56,7 +56,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
     'more-than-2' if @paymentMethods().count() > 2
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .add-stripe-button': @onClickAddStripeButton
 
   onClickAddStripeButton: (event) ->
@@ -66,7 +66,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.PaymentMethods.Stripe'
 
     onCreated: ->
-      super
+      super arguments...
 
       @customerData = new ReactiveField null
       @loading = new ReactiveField false
@@ -78,7 +78,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
       'loading' if @loading()
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click .case': @onClickCase
         'click .remove-button': @onClickRemoveButton
 

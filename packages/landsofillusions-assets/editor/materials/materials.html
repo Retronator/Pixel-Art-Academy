@@ -1,0 +1,29 @@
+<template name="LandsOfIllusions.Assets.Editor.Materials">
+  <div class="landsofillusions-assets-editor-materials landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="materials-table editor-table">
+      <tr class="legend">
+        <th class="preview"></th>
+        <th class="name">name</th>
+        <th class="ramp">ramp</th>
+        <th class="shade">shade</th>
+        <th class="shade">dither</th>
+        <th class="reflection-intensity">spec</th>
+        <th class="reflection-shininess">shiny</th>
+      </tr>
+      {{#each colors}}
+        <tr class="material">
+          <td class="preview preview-color {{activeColorClass}}" {{style colorPreviewStyle}}></td>
+          <td class="name"><input class="name-input attribute-input" value="{{name}}"/></td>
+          <td class="ramp"><input class="ramp-input attribute-input" type="number" min="0" max="15" value="{{ramp}}"/></td>
+          <td class="shade"><input class="shade-input attribute-input" type="number" value="{{shade}}"/></td>
+          <td class="dither"><input class="dither-input attribute-input" type="number" min="0" max="1" step="0.1" value="{{dither}}"/></td>
+          <td class="reflection-intensity"><input class="reflection-intensity-input attribute-input" type="number" min="0" step="0.1" value="{{reflection.intensity}}"/></td>
+          <td class="reflection-shininess"><input class="reflection-shininess-input attribute-input" type="number" min="0" step="1" value="{{reflection.shininess}}"/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="add-material-button">Add material</button>
+    </div>
+  </div>
+</template>

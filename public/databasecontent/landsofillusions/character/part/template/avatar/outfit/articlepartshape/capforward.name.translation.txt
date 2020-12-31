@@ -1,0 +1,3 @@
+en-US: Cap forward
+
+{"_id":"vMuMQGtkqPQAqhEAS","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565380926072},"translations":{"en":{"us":{"text":"Cap forward","quality":0},"best":{"text":"Cap forward","quality":0,"languageRegion":"en-US"}},"best":{"text":"Cap forward","quality":0,"languageRegion":"en-US"}}}

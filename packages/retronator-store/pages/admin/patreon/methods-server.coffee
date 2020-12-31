@@ -85,7 +85,7 @@ RS.Pages.Admin.Patreon.importPledges.method (date, csvData) ->
     # Convert parts to payments.
     email = parts[columnIndices['Email']]
     amount = parseFloat parts[columnIndices['Pledge']]
-    return unless email and not _.isNaN amount
+    continue unless email and not _.isNaN amount
 
     existingPledgeTransaction = RS.Transaction.documents.findOne
       time: date
@@ -119,3 +119,108 @@ RS.Pages.Admin.Patreon.importPledges.method (date, csvData) ->
         amount: amount
 
   console.log "Successfully created", pledgesCreated, "and updated", pledgesUpdated , "pledges."
+
+RS.Pages.Admin.Patreon.fillMissingPatronIDs.method ->
+  RA.authorizeAdmin()
+
+  # Try to add patronId field in Patreon payments that don't have it.
+  paymentsWithMissingPatronID = RS.Payment.documents.fetch
+    type: RS.Payment.Types.PatreonPledge
+    patronId: $exists: false
+
+  patronIDsForEmails = {}
+  paymentsUpdatedCount = 0
+  emailsMatchedCount = 0
+
+  for payment in paymentsWithMissingPatronID
+    unless patronEmail = payment.patronEmail
+      console.warn "Payment #{payment.id} has no email set."
+      continue
+
+    # Skip if this email previously couldn't be matched.
+    continue if patronIDsForEmails[patronEmail] is false
+
+    updatePaymentWithPatronId = (patronId) ->
+      unless patronIDsForEmails[patronEmail]
+        patronIDsForEmails[patronEmail] = patronId
+        emailsMatchedCount++
+        console.log "Match was made for patron email", patronEmail
+
+      paymentsUpdatedCount++
+
+      RS.Payment.documents.update payment._id,
+        $set:
+          patronId: patronId
+
+    # See if we've already matched it during this update.
+    if patronIDsForEmails[patronEmail]
+      updatePaymentWithPatronId patronIDsForEmails[patronEmail]
+      continue
+
+    # Try to find an existing pledge that matches this email.
+    matchedPayment = RS.Payment.documents.findOne
+      patronEmail: patronEmail
+      patronId: $exists: true
+
+    if matchedPayment
+      updatePaymentWithPatronId matchedPayment.patronId
+      continue
+
+    # Find a user with this email.
+    matchedUser = RA.User.documents.findOne
+      registered_emails:
+        $elemMatch:
+          address: patronEmail
+          verified: true
+
+    if matchedUser
+      # Does the user have Patreon linked?
+      if matchedUser.services?.patreon?.id
+        updatePaymentWithPatronId matchedUser.services.patreon.id
+        continue
+
+      # Are any of the registered emails connected to a patreon pledge?
+      matchedPatronId = null
+
+      for email in matchedUser.registered_emails when email.verified
+        # Find a payment with this email and a patron ID set.
+        matchedPayment = RS.Payment.documents.findOne
+          patronEmail: email.address
+          patronId: $exists: true
+
+        if matchedPayment
+          # We found it! No need to look further.
+          matchedPatronId = matchedPayment.patronId
+          break
+
+      if matchedPatronId
+        updatePaymentWithPatronId matchedPatronId
+        continue
+
+    # We couldn't find a match.
+    patronIDsForEmails[patronEmail] = false
+    console.warn "No patron ID could be matched for patron email", patronEmail
+
+  console.log "Successfully updated #{paymentsUpdatedCount} payments for #{emailsMatchedCount} emails."
+
+RS.Pages.Admin.Patreon.deleteStalePledges.method ->
+  RA.authorizeAdmin()
+
+  pledgePayments = RS.Payment.documents.fetch
+    type: RS.Payment.Types.PatreonPledge
+    authorizedOnly: true
+
+  stalePaymentsCount = 0
+
+  for payment in pledgePayments
+    # Find a transaction that matches this pledge.
+    transaction = RS.Transaction.documents.findOne
+      'payments._id': payment._id
+
+    continue if transaction
+
+    # This is a stale payment, delete it.
+    RS.Payment.documents.remove payment._id
+    stalePaymentsCount++
+
+  console.log "Successfully deleted #{stalePaymentsCount} payments."

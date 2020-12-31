@@ -23,7 +23,7 @@ class LOI.Items.Sync.Tab extends AM.Component
           AB.createTranslation translationNamespace, translationKey, defaultText
 
   constructor: (@sync) ->
-    super
+    super arguments...
 
   url: -> @constructor.url()
     

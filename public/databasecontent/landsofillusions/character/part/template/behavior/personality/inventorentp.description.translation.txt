@@ -1,0 +1,3 @@
+en: Intellectual that likes to dissect every argument and understand the world from every perspective.
+
+{"_id":"QENbSbjGWK62KxJo5","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Intellectual that likes to dissect every argument and understand the world from every perspective.","quality":0,"best":{"text":"Intellectual that likes to dissect every argument and understand the world from every perspective.","quality":0,"languageRegion":"en"}},"best":{"text":"Intellectual that likes to dissect every argument and understand the world from every perspective.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038945414}}

@@ -1,0 +1,3 @@
+en-US: Shirt open short
+
+{"_id":"SvwbwakGHpLgYk4L2","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1572439802064},"translations":{"en":{"us":{"text":"Shirt open short","quality":0},"best":{"text":"Shirt open short","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shirt open short","quality":0,"languageRegion":"en-US"}}}

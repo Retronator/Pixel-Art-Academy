@@ -26,6 +26,28 @@ hoverable()
     transform translateZ(0)
     z-index 1
 
+    .loading-cover
+      position absolute
+      left 0
+      right 0
+      bottom 0
+      height 100%
+      z-index 1
+      background atariGrey(0)
+      cursor wait
+
+      .caption
+        position absolute
+        top 50%
+        left 50%
+        transform translate(-50%, -50%)
+        color atariGrey(7)
+        opacity 0
+        transition opacity 5s ease-in-out
+
+        &.visible
+          opacity 1
+
   > .items
     position absolute
     z-index 3
@@ -186,6 +208,7 @@ hoverable()
             .option
               position relative
               padding 0 7rem
+              cursor pointer
 
               &.active
                 background atariGrey(7)

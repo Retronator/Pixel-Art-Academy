@@ -16,7 +16,7 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @pixelArtSoftware = new C1.Goals.PixelArtSoftware
 
@@ -51,7 +51,7 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
     @_taskEntriesSubscription = PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe LOI.characterId(), taskClassIds
 
   destroy: ->
-    super
+    super arguments...
 
     @pixelArtSoftware.destroy()
     @_taskEntriesSubscription.stop()

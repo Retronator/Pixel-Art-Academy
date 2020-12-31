@@ -1,0 +1,19 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.CameraAngles">
+  <div class="landsofillusions-assets-mesheditor-cameraangles landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="camera-angles-table editor-table">
+      {{#each cameraAngles}}
+        <tr class="camera-angle {{activeClass}}">
+          <td class="thumbnail">{{> LandsOfIllusions.Assets.SpriteEditor.Thumbnail sprite}}</td>
+          <td class="name"><input class="name-input" value="{{name}}" placeholder="{{placeholderName}}"/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="add-button">Add</button>
+      {{#if cameraAngle}}
+        <button class="remove-button">Remove</button>
+        <button class="duplicate-button">Duplicate</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

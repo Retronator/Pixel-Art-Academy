@@ -29,14 +29,15 @@ LOI.Assets.VisualAsset.updateMaterial.method (assetClassName, assetId, index, ma
     ramp: Match.OptionalOrNull Match.Integer
     shade: Match.OptionalOrNull Match.Integer
     dither: Match.OptionalOrNull Number
+    reflection: Match.OptionalOrNull
+      intensity: Match.OptionalOrNull Number
+      shininess: Match.OptionalOrNull Number
+      smoothFactor: Match.OptionalOrNull Match.Integer
 
   RA.authorizeAdmin()
 
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
-
-  asset = assetClass.documents.findOne assetId
-  throw new AE.ArgumentException "Asset does not exist." unless asset
 
   # Get existing material or create new entry.
   material = asset.materials?[index] or {}
@@ -54,19 +55,13 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetClassName, assetId, index, la
   check assetId, Match.DocumentId
   check assetClassName, String
   check index, Match.Integer
-  check landmarkUpdate, Match.OptionalOrNull Match.ObjectIncluding
-    name: Match.OptionalOrNull String
-    x: Match.OptionalOrNull Number
-    y: Match.OptionalOrNull Number
-    z: Match.OptionalOrNull Number
 
   RA.authorizeAdmin()
 
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
-  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+  check landmarkUpdate, Match.OptionalOrNull Match.ObjectIncluding assetClass.landmarkPattern
 
-  asset = assetClass.documents.findOne assetId
-  throw new AE.ArgumentException "Asset does not exist." unless asset
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
 
   # If we don't have landmarks at all, we create it as an array
   # so that sets will create index entries not object properties.
@@ -86,3 +81,43 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetClassName, assetId, index, la
   assetClass.documents.update assetId,
     $set:
       "landmarks.#{index}": landmark
+
+LOI.Assets.VisualAsset.reorderLandmark.method (assetClassName, assetId, index, newIndex) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check index, Match.Integer
+  check newIndex, Match.Integer
+
+  RA.authorizeAdmin()
+
+  assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+
+  movingLandmark = asset.landmarks?[index]
+  throw new AE.ArgumentException "Asset does not have the landmark." unless movingLandmark
+
+  asset.landmarks.splice index, 1
+  asset.landmarks.splice newIndex, 0, movingLandmark
+
+  assetClass.documents.update assetId,
+    $set:
+      landmarks: asset.landmarks
+
+LOI.Assets.VisualAsset.removeLandmark.method (assetClassName, assetId, index) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check index, Match.Integer
+
+  RA.authorizeAdmin()
+
+  assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+
+  removingLandmark = asset.landmarks?[index]
+  throw new AE.ArgumentException "Asset does not have the landmark." unless removingLandmark
+
+  asset.landmarks.splice index, 1
+
+  assetClass.documents.update assetId,
+    $set:
+      landmarks: asset.landmarks

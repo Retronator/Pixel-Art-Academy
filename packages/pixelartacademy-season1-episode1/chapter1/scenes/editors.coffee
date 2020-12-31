@@ -11,7 +11,7 @@ class C1.Editors extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
     PAA.PixelBoy.Apps.Drawing.Editor.Desktop if C1.PostPixelBoy.PixelArt.Listener.Script.state 'ReceiveDesktopEditor'

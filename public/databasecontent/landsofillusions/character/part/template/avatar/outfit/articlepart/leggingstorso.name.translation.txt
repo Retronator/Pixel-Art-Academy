@@ -1,0 +1,3 @@
+en-US: Leggings torso
+
+{"_id":"6r6SsXBwQ45HyiCaK","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Leggings torso","quality":0},"best":{"text":"Leggings torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings torso","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564537824228}}

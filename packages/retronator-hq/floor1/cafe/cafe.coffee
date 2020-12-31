@@ -22,14 +22,14 @@ class HQ.Cafe extends LOI.Adventure.Location
     "
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       @BurraListener
     ]
   
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @loginButtonsSession = Accounts._loginButtonsSession
 
@@ -37,7 +37,9 @@ class HQ.Cafe extends LOI.Adventure.Location
     HQ.Cafe.Burra
     HQ.Items.Daily
     HQ.Cafe.Artworks
-    SanFrancisco.Soma.Items.Map unless SanFrancisco.Soma.Items.Map.state 'inInventory'
+    PAA.Items.KitchenKnife
+    SanFrancisco.Soma.Items.Map.unlessInInventory()
+    HQ.Cafe.BowlOfFruit.withItems()...
   ]
 
   exits: ->
@@ -70,7 +72,7 @@ class HQ.Cafe extends LOI.Adventure.Location
 
           Register: (complete) =>
             # Hook back into the Chapter 2 registration script.
-            cafeScene = LOI.adventure.getCurrentThing PAA.Season1.Episode0.Chapter2.Registration.Cafe
+            cafeScene = LOI.adventure.getCurrentThing PixelArtAcademy.Season1.Episode0.Chapter2.Registration.Cafe
             cafeListener = cafeScene.listeners[0]
 
             cafeListener.startScript label: 'PlayPixelArtAcademy'

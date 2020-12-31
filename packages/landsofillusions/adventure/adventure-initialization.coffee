@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
   @register @id()
 
   constructor: ->
-    super
+    super arguments...
 
     # Set the global instance.
     LOI.adventure = @
@@ -24,19 +24,24 @@ class LOI.Adventure extends LOI.Adventure
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency
 
+    # Adventure's end run should happen last.
+    @endRunOrder = 1000
+
   onCreated: ->
-    super
+    super arguments...
 
     console.log "Adventure created." if LOI.debug
+
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
 
     $('html').addClass('adventure')
 
     @interface = new LOI.Interface.Text
-
     @parser = new LOI.Parser
-
     @director = new LOI.Director
-
+    @world = new LOI.Engine.World adventure: @
+    
     @_initializeState()
 
     # Memories need to be initialized first because timeline and location depends on the display of a memory.
@@ -60,7 +65,7 @@ class LOI.Adventure extends LOI.Adventure
     LOI.adventureInitialized true
 
   onRendered: ->
-    super
+    super arguments...
 
     console.log "Adventure rendered." if LOI.debug
 
@@ -74,7 +79,9 @@ class LOI.Adventure extends LOI.Adventure
       @loadGame preserveActiveItem: true
 
   onDestroyed: ->
-    super
+    super arguments...
+
+    @app.removeComponent @
 
     Meteor.clearInterval @_gameTimeInterval
 
@@ -84,3 +91,14 @@ class LOI.Adventure extends LOI.Adventure
     console.log "Adventure destroyed." if LOI.debug
 
     $('html').removeClass('adventure')
+
+  endRun: ->
+    # Flush the state updates to the database when the page is about to unload.
+    @gameState?.updated? flush: true
+    @userGameState?.updated? flush: true
+
+    # If we're signed in, but aren't saving login information, quit game to remove all local data.
+    if Meteor.userId() and not LOI.settings.persistLogin.allowed()
+      @clearLocalGameState()
+      @clearLocalStorageGameStateParts()
+      @clearLoginInformation()

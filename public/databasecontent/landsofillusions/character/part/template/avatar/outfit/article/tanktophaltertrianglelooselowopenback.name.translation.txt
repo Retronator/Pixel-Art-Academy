@@ -1,0 +1,3 @@
+en-US: Tank top halter triangle loose low open back
+
+{"_id":"yNn723EQ4imCaXCAM","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564174810689},"translations":{"en":{"us":{"text":"Tank top halter triangle loose low open back","quality":0},"best":{"text":"Tank top halter triangle loose low open back","quality":0,"languageRegion":"en-US"}},"best":{"text":"Tank top halter triangle loose low open back","quality":0,"languageRegion":"en-US"}}}

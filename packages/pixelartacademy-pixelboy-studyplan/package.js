@@ -11,13 +11,14 @@ Package.describe({
 });
 
 Npm.depends({
-  'bresenham-zingl': '0.1.0'
+  'bresenham-zingl': '0.1.1'
 });
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:illustrapedia');
+  api.use('retronator:pixelartacademy-season1-episode1');
 
   api.export('PixelArtAcademy');
 

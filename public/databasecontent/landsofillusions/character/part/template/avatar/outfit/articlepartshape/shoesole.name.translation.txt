@@ -1,0 +1,3 @@
+en-US: Shoe sole
+
+{"_id":"xecSN2XFhYSkreHn4","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564595478595},"translations":{"en":{"us":{"text":"Shoe sole","quality":0},"best":{"text":"Shoe sole","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoe sole","quality":0,"languageRegion":"en-US"}}}

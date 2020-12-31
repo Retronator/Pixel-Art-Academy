@@ -1,7 +1,7 @@
 HQ = Retronator.HQ
 
-ColorThief = require 'color-thief-standalone'
-colorThief = new ColorThief
+import ColorThief from 'colorthief'
+colorThief = new ColorThief if Meteor.isClient and _.isFunction ColorThief
 
 class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
   initializeHeadlineDesigns: ->
@@ -247,28 +247,33 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       $headline.append("<div class='tags'>#{headlineTags.join ', '}</div>")
 
       # Apply headline colors.
-      headlineImage = new Image
-      do (headlineImage, $headline) =>
-        headlineImage.crossOrigin = "Anonymous"
-        headlineImage.onload = =>
-          try
-            colors = colorThief.getPalette headlineImage, 2
+      do (coverImage, $headline) =>
+        applyColors = (colors) =>
+          # Make sure some color contrast is present.
+          colorDelta = (array1, array2) ->
+            Math.abs(array1[0] - array2[0]) + Math.abs(array1[1] - array2[1]) + Math.abs(array1[2] - array2[2])
 
-            # Make sure some color contrast is present.
+          return unless colorDelta(colors[0], colors[1]) > 50
+          return unless colorDelta(colors[0], colors[2]) > 50
 
-            colorDelta = (array1, array2) ->
-              Math.abs(array1[0] - array2[0]) + Math.abs(array1[1] - array2[1]) + Math.abs(array1[2] - array2[2])
+          createRGBColor = (array) => "rgb(#{array[0]},#{array[1]},#{array[2]})"
 
-            return unless colorDelta(colors[0], colors[1]) > 50
-            return unless colorDelta(colors[0], colors[2]) > 50
+          $headline.css backgroundColor: createRGBColor colors[0]
+          $headline.find('.title').css color: createRGBColor colors[1]
+          $headline.find('.tags').css color: createRGBColor colors[2]
 
-            createRGBColor = (array) => "rgb(#{array[0]},#{array[1]},#{array[2]})"
+        if colorThief
+          headlineImage = new Image
+          headlineImage.crossOrigin = "Anonymous"
+          headlineImage.onload = =>
+            try
+              applyColors colorThief.getPalette(headlineImage, 3)
 
-            $headline.css backgroundColor: createRGBColor colors[0]
-            $headline.find('.title').css color: createRGBColor colors[1]
-            $headline.find('.tags').css color: createRGBColor colors[2]
+          headlineImage.src = coverImage.src
 
-      headlineImage.src = $images[0].src
+        else
+          ColorThief.getPalette(coverImage.src, 3).then(applyColors).catch (error) =>
+            console.warn "Could not extract colors from headline image", coverImage.src, error
 
       $group.append($headline)
       postElements.push $headline[0]

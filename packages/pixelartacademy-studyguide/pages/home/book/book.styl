@@ -1,0 +1,173 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-book
+  display none
+  position relative
+  left 0
+
+  &.loaded
+    transition left 0.5s ease-out
+    display block
+
+  .book
+    position relative
+    color atariGrey(0)
+
+    &.brown
+      &.dark
+        .page
+          &.left
+            border-image-source image('/pixelartacademy/studyguide/home/book/page-left-brown-dark.png')
+
+            &.front
+              border-image-source image('/pixelartacademy/studyguide/home/book/page-front-left-brown-dark.png')
+
+          &.right
+            border-image-source image('/pixelartacademy/studyguide/home/book/page-right-brown-dark.png')
+
+            &.front
+              border-image-source image('/pixelartacademy/studyguide/home/book/page-front-right-brown-dark.png')
+
+    .move-button
+      position fixed
+      z-index 2
+      top 0
+      bottom 0
+      background none
+      border none
+      transition background 0.2s, width 0.5s
+
+      &:hover
+        background rgba(atariGrey(3), 0.3)
+
+      &.left
+        left 0
+        cursor w-resize
+
+      &.right
+        right 0
+        cursor e-resize
+
+    .page
+      position absolute
+      z-index 0
+      top 0
+      width 50%
+      height 100%
+      border-style solid
+
+      &::after
+        content ''
+        position absolute
+        z-index -1
+        top -1px
+        bottom -1px
+        left -1px
+        right -1px
+        background-color atariGrey(7)
+
+      &.left
+        left 0
+        border-width 7rem 25rem 14rem 52rem
+        border-image-slice 7 25 14 52
+
+        &.front
+          border-width 15rem 23rem 16rem 36rem
+          border-image-slice 15 23 16 36
+
+        .header
+          left -7rem
+          right -5rem
+
+        .footer
+          left -7rem
+
+      &.right
+        right 0
+        border-width 7rem 52rem 14rem 25rem
+        border-image-slice 7 52 14 25
+
+        &.front
+          border-width 15rem 20rem 16rem 21rem
+          border-image-slice 15 20 16 21
+
+          .footer
+            right 17rem
+
+        .header
+          left 0
+          right -7rem
+          text-align right
+
+        .footer
+          right -7rem
+          text-align right
+
+      .header
+        position absolute
+        top 5rem
+        padding-bottom 2rem
+        border-bottom 1rem solid atariGrey(5)
+        color atariGrey(2)
+        text-transform uppercase
+
+      .footer
+        position absolute
+        bottom 16rem
+        color atariGrey(2)
+
+    .contents-area
+      position absolute
+      z-index 1
+      left 45rem
+      right 45rem
+      top 40rem
+      bottom 55rem
+      overflow hidden
+      mix-blend-mode multiply
+
+      > .contents
+        position absolute
+        left 0
+        width 10000rem
+        height 100%
+        column-fill auto
+
+        h1
+          academy()
+          margin 0 0 10rem
+          text-transform uppercase
+
+        h2
+          academy()
+          margin 0 0 8rem
+          break-before column
+
+          &:first-child
+            break-before auto
+
+        .table-of-contents
+          h1
+            text-align center
+
+          h2
+            text-align center
+            margin 10rem 0 20rem
+            break-before auto
+
+          .activities
+            academy()
+            margin-left 10rem
+            padding-left 20rem
+
+            .activity
+              margin-bottom 10rem
+
+              a
+                text-decoration none
+
+.pixelartacademy-studyguide-pages-home-book-focused-artworks
+  cursor pointer
+
+  & + .pixelartacademy-studyguide-pages-home-book
+    display none

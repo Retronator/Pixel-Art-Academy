@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Layout">
+  {{#LandsOfIllusions.Components.EmbeddedWebpage}}
+    <div class="pixelartacademy-studyguide-pages-layout">
+      <header class="header" {{style headerStyle}}>
+        <h1 class="title">{{> Artificial.Base.RouteLink args 'Retropolis Academy of Art Study Guide' 'PixelArtAcademy.StudyGuide.Pages.Home'}}</h1>
+        <nav class="navigation">
+          <ul class="pages">
+            <li class="page">{{> Artificial.Base.RouteLink args 'Activities' 'PixelArtAcademy.StudyGuide.Pages.Home'}}</li>
+            <li class="page">{{> Artificial.Base.RouteLink args 'Study plan' 'PixelArtAcademy.StudyGuide.Pages.Home' studyPlanRouteOptions}}</li>
+            <li class="page">{{> Artificial.Base.RouteLink args 'About' 'PixelArtAcademy.StudyGuide.Pages.Home' aboutRouteOptions}}</li>
+          </ul>
+        </nav>
+      </header>
+      {{> Render page}}
+    </div>
+  {{/LandsOfIllusions.Components.EmbeddedWebpage}}
+</template>

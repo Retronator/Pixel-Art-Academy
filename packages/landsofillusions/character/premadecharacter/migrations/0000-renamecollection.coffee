@@ -1,0 +1,1 @@
+LandsOfIllusions.Character.PreMadeCharacter.renameCollectionMigration 'LandsOfIllusions.Construct.Loading.PreMadeCharacters', 'LandsOfIllusions.Character.PreMadeCharacters'

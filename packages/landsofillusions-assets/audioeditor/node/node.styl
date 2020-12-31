@@ -1,0 +1,160 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-audioeditor-node
+  display block
+  position relative
+  z-index 0
+  border 1rem solid atariGrey(3)
+  background atariGrey(0)
+  cursor grab
+  transform-origin top left
+
+  &.expanded
+    padding-top 3rem
+
+  &:hover
+    z-index 1
+
+  > .name
+    padding 5rem
+    text-align center
+    cursor pointer
+    text-transform uppercase
+
+  .content
+    position absolute
+    z-index 2
+    visibility hidden
+    cursor default
+
+    .parameters
+      list-style none
+      min-width 74rem
+      padding 0
+      margin 0
+
+      .parameter
+        position relative
+        margin-top 5rem
+
+        &:first-child
+          margin-top 0
+
+        .connection-target
+          left -17rem
+          top -6rem
+
+        .connector
+          left -12rem
+
+          &.parameter::before
+            content '→'
+
+    .custom-content
+      margin-top 6rem
+
+  .inputs
+  .outputs
+  .parameters
+    list-style none
+    padding 0
+    margin 0
+
+    .input
+    .output
+    .parameter
+      &.valid-target
+        .connector
+          background atariGrey(7)
+
+          &:hover
+            background atariGrey(7)
+
+      .connection-target
+        position absolute
+        width 20rem
+        height 20rem
+
+      .connector
+        display block
+        position absolute
+        z-index 1
+        width 9rem
+        height 9rem
+        padding-left 1rem
+        text-align center
+        background atariGrey(3)
+        color atariGrey(0)
+        cursor text
+
+        &:hover
+          background atariGrey(4)
+
+        &::before
+          content '*'
+
+        &.number::before
+          content '1'
+
+        &.string::before
+          content 'S'
+
+        &.buffer::before
+          content '♬'
+
+        &.trigger::before
+          content '◜'
+
+        &.press::before
+          content '◠'
+
+  .inputs
+  .outputs
+    visibility hidden
+
+    .input
+    .output
+      position absolute
+      cursor default
+      color atariGrey(6)
+
+      .connection-target
+        left -10rem
+
+      .connector
+        top -4rem
+        left -5rem
+
+        &.channels::before
+          content '↓'
+
+      .name
+        position absolute
+        left 6rem
+
+  .inputs
+    .input
+      top 0
+
+      .connection-target
+        top -15rem
+
+      .name
+        top -10rem
+
+  .outputs
+    .output
+      bottom 0
+
+      .connection-target
+        top -5rem
+
+      .name
+        top 1rem
+
+  &.expanded
+    .content
+    .inputs
+    .outputs
+      visibility visible
+

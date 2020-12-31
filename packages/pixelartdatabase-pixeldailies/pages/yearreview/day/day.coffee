@@ -106,7 +106,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
       [themesCursor, submissionsCursor, artworksCursor]
 
   onCreated: ->
-    super
+    super arguments...
 
     @date = new ComputedField =>
       @constructor.date
@@ -194,7 +194,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
       @artworks artworks
 
   onRendered: ->
-    super
+    super arguments...
 
     @autorun (computation) =>
       return unless @date()

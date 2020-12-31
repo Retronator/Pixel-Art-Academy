@@ -15,7 +15,7 @@ class Migration extends Document.MajorMigration
           $unset:
             'character.name': 1
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -32,7 +32,7 @@ class Migration extends Document.MajorMigration
           $set:
             'character.name': document.character.avatar.fullName.translations.best.text
             
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

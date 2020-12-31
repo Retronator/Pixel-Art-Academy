@@ -8,7 +8,7 @@ class PAA.Practice.Journal.Entry.Action extends PAA.Practice.Journal.Entry.Actio
   @register @type, @
 
   constructor: ->
-    super
+    super arguments...
 
     @avatar = new LOI.Adventure.Thing.Avatar PAA.Practice.Journal.Entry.Avatar
 

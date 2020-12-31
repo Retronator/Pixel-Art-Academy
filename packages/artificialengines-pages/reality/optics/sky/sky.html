@@ -1,0 +1,18 @@
+<template name="Artificial.Reality.Pages.Optics.Sky">
+  <div class="artificial-reality-pages-optics-sky page">
+    <h1>Artificial Reality</h1>
+    <h2>Sky</h2>
+    <p>
+      Method: {{> Artificial.Reality.Pages.Optics.Sky.Method}}<br/>
+      Exposure value: {{> Artificial.Reality.Pages.Optics.Sky.ExposureValue}} {{exposureValue}}<br/>
+      Integration step size: {{> Artificial.Reality.Pages.Optics.Sky.IntegrationStepSize}} {{integrationStepSize}} km<br/>
+      Draw: {{> Artificial.Reality.Pages.Optics.Sky.DirectLightEnabled}} direct light
+            {{> Artificial.Reality.Pages.Optics.Sky.RayleighScatteringEnabled}} Rayleigh scatter  ing
+            {{> Artificial.Reality.Pages.Optics.Sky.MieScatteringEnabled}} Mie scattering
+    </p>
+    <p>
+      <button class="cycle-button">Cycle</button>
+    </p>
+    <canvas class="preview" width="800" height="350"></canvas>
+  </div>
+</template>

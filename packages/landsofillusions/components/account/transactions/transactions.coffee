@@ -14,11 +14,12 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
+    RA.User.twitterScreenNameForCurrentUser.subscribe @
     @subscribe Retronator.Accounts.User.supportAmountForCurrentUser
     @subscribe Retronator.Accounts.User.storeDataForCurrentUser
-    @subscribe Retronator.Store.Item.all
+    RS.Item.all.subscribe @
     @subscribe Retronator.Store.Transaction.forCurrentUser
     Retronator.Store.Payment.forCurrentUser.subscribe @
 
@@ -135,7 +136,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'change .anonymous-checkbox': @onChangeAnonymousCheckbox
       'click .load-credit-info': @onClickLoadCreditInfo
       'click .load-authorized-payments-info': @onClickLoadAuthorizedPaymentsInfo
@@ -189,7 +190,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.Transactions.SupporterMessage'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.TextArea
 

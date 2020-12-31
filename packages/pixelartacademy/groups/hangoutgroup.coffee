@@ -7,12 +7,12 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       PAA.PersonUpdates
     ]
 
   constructor: ->
-    super
+    super arguments...
 
     # Active members are the ones that have done any memorable recent actions.
     @presentMembers = new ComputedField =>
@@ -25,10 +25,10 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
     @characterUpdatesHelper = new PAA.CharacterUpdatesHelper
 
-    @personUpdates = _.find @listeners, (listener) -> listener instanceof PAA.PersonUpdates
+    @personUpdates = _.find @listeners, (listener) => listener instanceof PAA.PersonUpdates
 
   destroy: ->
-    super
+    super arguments...
 
     @characterUpdatesHelper.destroy()
 
@@ -131,44 +131,54 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
       @groupScript = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
-      scene = @options.parent
-
       commandResponse.onPhrase
         form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
         action: =>
-          presentMembers = scene.presentMembers()
-          switch presentMembers.length
-            when 0 then label = 'NoOne'
-            when 1
-              @groupScript.setThings person1: presentMembers[0]
-              @groupScript.ephemeralState 'person1', presentMembers[0].fullName()
+          startScriptOptions = @prepareHangout()
+          LOI.adventure.director.startScript @groupScript, startScriptOptions
 
-              # See if this group has more members otherwise.
-              label = if scene.members().length is 1 then 'OnlyOne' else 'JustOne'
+    prepareHangout: ->
+      scene = @options.parent
 
-            else
-              label = 'Start'
+      presentMembers = scene.presentMembers()
 
-              # Randomly assign members to person 1-3.
-              persons = []
-              freeIndices = [1..3]
-              leftMembers = _.clone presentMembers
+      switch presentMembers.length
+        when 0 then label = 'NoOne'
+        when 1
+          @groupScript.setThings person1: presentMembers[0]
+          @groupScript.ephemeralState 'person1', presentMembers[0].fullName()
 
-              while leftMembers.length and freeIndices.length
-                member = Random.choice leftMembers
-                freeIndex = Random.choice freeIndices
+          # See if this group has more members otherwise.
+          label = if scene.members().length is 1 then 'OnlyOne' else 'JustOne'
 
-                persons[freeIndex] = member
+        else
+          label = 'Start'
 
-                _.pull leftMembers, member
-                _.pull freeIndices, freeIndex
+          # Randomly assign members to person 1-3.
+          persons = []
+          freeIndices = [1..3]
+          leftMembers = _.clone presentMembers
 
-              things = {}
+          while leftMembers.length and freeIndices.length
+            member = Random.choice leftMembers
+            freeIndex = Random.choice freeIndices
 
-              for personIndex in [1..3]
-                things["person#{personIndex}"] = persons[personIndex]
-                @groupScript.ephemeralState "person#{personIndex}", persons[personIndex]?
+            persons[freeIndex] = member
 
-              @groupScript.setThings things
+            _.pull leftMembers, member
+            _.pull freeIndices, freeIndex
 
-          LOI.adventure.director.startScript @groupScript, {label}
+          things = {}
+
+          for personIndex in [1..persons.length]
+            things["person#{personIndex}"] = persons[personIndex]
+            @groupScript.ephemeralState "person#{personIndex}", true
+
+          @groupScript.setThings things
+
+      # Clear out the rest of the people.
+      if presentMembers.length < 3
+        for personIndex in [presentMembers.length + 1..3]
+          @groupScript.ephemeralState "person#{personIndex}", false
+
+      {label}

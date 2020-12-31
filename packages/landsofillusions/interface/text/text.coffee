@@ -8,6 +8,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Interface.Text'
 
+  world: ->
+    LOI.adventure.world
+
   exitAvatarName: ->
     exitAvatar = @currentData()
 
@@ -15,7 +18,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation()?.exits()[Back]
 
-    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.options.id() is backExit?.id()
+    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.thingClass.id() is backExit?.id()
 
     exitAvatar.shortName()
 
@@ -66,9 +69,6 @@ class LOI.Interface.Text extends LOI.Interface
     items = _.filter LOI.adventure.currentPhysicalThings(), (thing) => thing instanceof LOI.Adventure.Item
 
     activeItems = _.filter items, (item) => not item.deactivated()
-
-    # Also add _id field to help #each not re-render things all the time.
-    item._id = item.id() for item in items
 
     console.log "Text interface is displaying active items", activeItems if LOI.debug
 
@@ -127,12 +127,20 @@ class LOI.Interface.Text extends LOI.Interface
 
     if options.resetIntroduction
       @location()?.constructor.visited false
-      @inIntro true
+
+      # Show intro again (scrolls to top as well).
+      @showIntro()
 
       @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()
+
+  showIntro: ->
+    @inIntro true
+
+    # Scroll after intro has updated and other elements were hidden.
+    Tracker.afterFlush => @narrative.scroll animate: false
 
   stopIntro: (options = {}) ->
     options.scroll ?= true
@@ -222,18 +230,22 @@ class LOI.Interface.Text extends LOI.Interface
       100
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'wheel': @onWheel
       'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
+      'click': @onClick
       'click .command': @onClickCommand
+      'click .location': @onClickLocation
       'mouseenter .exits .exit .name': @onMouseEnterExit
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
       'mouseenter .landsofillusions-interface-text': @onMouseEnterTextInterface
       'mouseleave .landsofillusions-interface-text': @onMouseLeaveTextInterface
       'input .dummy-input': @onInputDummyInput
+      'mouseenter .dialog-selection .option': @onMouseEnterDialogSelectionOption
+      'click .dialog-selection .option': @onClickDialogSelectionOption
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).attr 'title'
@@ -241,11 +253,39 @@ class LOI.Interface.Text extends LOI.Interface
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null
 
+  onClick: (event) ->
+    # When we're waiting for user interaction, clicking doubles for pressing enter.
+    if @waitingKeypress()
+      @onCommandInputEnter()
+
+      # Do not let others handle this event.
+      event.stopPropagation()
+
   onClickCommand: (event) ->
     return if @waitingKeypress()
 
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
+
+  onClickLocation: (event) ->
+    return if @waitingKeypress()
+
+    # See if hovering pre-filled a command for us.
+    if suggestedCommand = @suggestedCommand()
+      @_executeCommand suggestedCommand
+      return
+
+    # No command was given. If we have a character and the click was inside the scene, we can move the character.
+    return unless characterId = LOI.characterId()
+    return unless cursorIntersectionPoints = LOI.adventure.world.cursorIntersectionPoints()
+    return unless cursorIntersectionPoints.length
+
+    # Create move memory action.
+    type = LOI.Memory.Actions.Move.type
+    situation = LOI.adventure.currentSituationParameters()
+
+    LOI.Memory.Action.do type, characterId, situation,
+      coordinates: _.last(cursorIntersectionPoints).point.toObject()
 
   onMouseEnterExit: (event) ->
     exitAvatar = @currentData()
@@ -254,7 +294,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation().exits()[Back]
 
-    if exitAvatar.options.id() is backExit?.id()
+    if exitAvatar.thingClass.id() is backExit?.id()
       command = "Go #{$(event.target).text()}"
       
     else
@@ -290,8 +330,8 @@ class LOI.Interface.Text extends LOI.Interface
       cursorFrame = 3 if cursorTimeFrame is 4
 
       unless cursorFrame is @_previousCursorFrame
-        $textInterface.addClass("cursor-frame-#{cursorFrame}")
-        $textInterface.removeClass("cursor-frame-#{@_previousCursorFrame}")
+        $textInterface?.addClass("cursor-frame-#{cursorFrame}")
+        $textInterface?.removeClass("cursor-frame-#{@_previousCursorFrame}")
         @_previousCursorFrame = cursorFrame
     ,
       175
@@ -310,3 +350,12 @@ class LOI.Interface.Text extends LOI.Interface
 
     # Clear the content so we don't contaminate further pastes.
     $dummyInput.val ''
+
+  onMouseEnterDialogSelectionOption: (event) ->
+    option = @currentData()
+    @dialogueSelection.selectDialogLineOption option
+
+  onClickDialogSelectionOption: (event) ->
+    option = @currentData()
+    @dialogueSelection.selectDialogLineOption option
+    @dialogueSelection.confirm()

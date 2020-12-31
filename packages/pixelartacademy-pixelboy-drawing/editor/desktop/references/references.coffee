@@ -7,7 +7,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References extends LOI.Assets.Com
   @register @id()
 
   onCreated: ->
-    super
+    super arguments...
 
     @opened = new ReactiveField false
     @hideActive = new ReactiveField false
@@ -35,7 +35,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References extends LOI.Assets.Com
     'hide-active' if @hideActive()
     
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .stored-references': @onClickStoredReferences
 
   onClickStoredReferences: (event) ->

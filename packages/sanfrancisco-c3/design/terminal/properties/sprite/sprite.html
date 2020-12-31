@@ -1,8 +1,10 @@
 <template name="SanFrancisco.C3.Design.Terminal.Properties.Sprite">
   <div class="sanfrancisco-c3-design-terminal-properties-sprite">
-    <div class="sprite-selection {{spriteListVisibleClass}}">
-      <button class="choose-sprite-button action-button">Choose sprite</button>
-      {{> Render spriteList}}
+    <div class="sprite-selection">
+      <button class="choose-sprite-button action-button">Choose</button>
+      {{#if openDialogVisible}}
+        {{> Render openDialog}}
+      {{/if}}
     </div>
     {{#if showSpritePreview}}
       <div class="sprite-preview avatar-part">

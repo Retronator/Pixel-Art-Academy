@@ -1,4 +1,16 @@
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
+
+LOI.Character.all.publish ->
+  RA.authorizeAdmin()
+
+  LOI.Character.documents.find()
+
+LOI.Character.allLive.publish ->
+  RA.authorizeAdmin()
+
+  LOI.Character.documents.find
+    user: $ne: null
 
 LOI.Character.forId.publish (characterId) ->
   check characterId, Match.DocumentId
@@ -11,8 +23,3 @@ LOI.Character.forId.publish (characterId) ->
 LOI.Character.forCurrentUser.publish ->
   LOI.Character.documents.find
     'user._id': @userId
-
-LOI.Character.activatedForCurrentUser.publish ->
-  LOI.Character.documents.find
-    'user._id': @userId
-    activated: true

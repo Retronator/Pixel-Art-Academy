@@ -12,7 +12,7 @@ class C1.Workbench extends LOI.Adventure.Scene
   @initialize()
 
   destroy: ->
-    super
+    super arguments...
 
     @_snake?.destroy()
 

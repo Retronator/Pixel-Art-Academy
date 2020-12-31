@@ -32,39 +32,7 @@ person: What's up?
 
 ## MainQuestions
 
-* What's your name? -> [YourName] `not personInstance.personState('introduced')`
 * *PersonConversationMainQuestions*
-* Can I see your study journal? -> [Journal] `personInstance.personState('introduced')`
 * Bye now! -> [End]
-
-## YourName
-
-person: I'm `personInstance.fullName()`.
-
-> _char_ extends _their_ hand.
-
-char: Nice to meet you. I'm `@character.name()`.
-
-`personInstance.personState('introduced', true)`
-
--> [MainQuestions]
-
-## Journal
-
--> [NoJournals] `not _person.journalIds.length`
-
-person: Of course! Let me know what you think.
-
-pause
-
-### Journal
-
--> [End]
-
-## NoJournals
-
-person: Oh, I don't actually have one.
-
--> [MainQuestions]
 
 ## End

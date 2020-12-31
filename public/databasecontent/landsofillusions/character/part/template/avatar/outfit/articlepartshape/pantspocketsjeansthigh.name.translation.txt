@@ -1,0 +1,3 @@
+en-US: Pants pockets jeans thigh
+
+{"_id":"XK8yGkYqi3CJJq58i","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564531686331},"translations":{"en":{"us":{"text":"Pants pockets jeans thigh","quality":0},"best":{"text":"Pants pockets jeans thigh","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants pockets jeans thigh","quality":0,"languageRegion":"en-US"}}}

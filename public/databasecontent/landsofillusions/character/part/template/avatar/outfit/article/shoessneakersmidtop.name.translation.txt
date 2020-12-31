@@ -1,0 +1,3 @@
+en-US: Shoes sneakers mid top
+
+{"_id":"dfmsRrbH69T8knT9Z","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565989175928},"translations":{"en":{"us":{"text":"Shoes sneakers mid top","quality":0},"best":{"text":"Shoes sneakers mid top","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoes sneakers mid top","quality":0,"languageRegion":"en-US"}}}

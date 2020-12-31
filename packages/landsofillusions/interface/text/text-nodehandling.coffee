@@ -44,12 +44,22 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @_lastNode null
 
   _handleNode: (node, options = {}) ->
-    # Text interface doesn't narrate background actions when the interface is busy.
-    if options.background and @busy()
-      node.cancel()
+    # Text interface doesn't narrate background actions when the interface is busy, but it does execute animations.
+    if options.background and @busy() and not (node instanceof Nodes.Animation)
+      if options.realtime
+        # Realtime nodes silently continue.
+        node.end()
+
+      else
+        # Background scripts get interrupted completely.
+        node.cancel()
+
       return
 
-    super
+    super arguments...
+
+    # Realtime nodes don't need any extra handling.
+    return if options.realtime
 
     # We don't really have to handle choice node, because the dialog selection
     # module does that, but we still want to pause before we display it.
@@ -71,8 +81,17 @@ class LOI.Interface.Text extends LOI.Interface.Text
   _handleDialogueLine: (dialogueLine, options) ->
     return if not options.background and @_waitForNode dialogueLine
 
+    if dialogueLine.command
+      # This is a command to the interface. Add it to the narrative as if it was a typed command and finish.
+      text = @_evaluateLine dialogueLine
+
+      @narrative.addText "> #{text.toUpperCase()}"
+
+      dialogueLine.end()
+      return
+
     unless dialogueLine.actor
-      # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
+      # There is no actor, which means the player is saying this. Add it to the narrative as a command in quotes and finish.
       text = @_evaluateLine dialogueLine
 
       @narrative.addText "> \"#{text.toUpperCase()}\""
@@ -176,7 +195,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
     return if @_waitForNode commandLine
 
     # If the command should replace the last command, we delete the previous lines.
-    @narrative.removeLastCommand() if commandLine.replaceLastCommand
+    if commandLine.replaceLastCommand
+      @narrative.removeLastCommand()
+
+      # Also replace the command in the command input history.
+      @commandInput.replaceLastCommandInHistory commandLine.line
 
     # If the command line is a silent one, it doesn't appear in the narrative.
     unless commandLine.silent

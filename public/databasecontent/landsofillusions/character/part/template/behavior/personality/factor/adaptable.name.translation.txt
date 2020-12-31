@@ -1,0 +1,3 @@
+en: Adaptable
+
+{"_id":"WmehT26CMbn3zbinr","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Adaptable","quality":0,"best":{"text":"Adaptable","quality":0,"languageRegion":"en"}},"best":{"text":"Adaptable","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038935764}}

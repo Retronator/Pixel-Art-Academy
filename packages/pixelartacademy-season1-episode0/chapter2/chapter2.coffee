@@ -27,8 +27,12 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   @initialize()
 
+  @finished: ->
+    # Chapter 2 ends when you finish immersion.
+    C2.Immersion.finished()
+
   constructor: ->
-    super
+    super arguments...
 
     # Move the player to Caltrain on start if coming from Dare to Dream intro.
     @autorun (computation) =>
@@ -40,7 +44,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
       LOI.adventure.goToTimeline LOI.TimelineIds.RealLife
 
   onRendered: ->
-    super
+    super arguments...
 
     # Finish intro.
     @autorun (computation) =>
@@ -58,7 +62,3 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   fadeVisibleClass: ->
     'visible' if @fadeOutNeeded()
-
-  finished: ->
-    # Chapter 2 ends when you finish immersion.
-    C2.Immersion.finished()

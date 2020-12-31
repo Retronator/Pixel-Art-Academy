@@ -20,7 +20,7 @@ class PAA.Pico8.Game extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      artwork: @ReferenceField PADB.Artwork, [], false
+      artwork: Document.ReferenceField PADB.Artwork, [], false
 
   # Subscriptions
 

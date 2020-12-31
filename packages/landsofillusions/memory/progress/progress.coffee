@@ -13,9 +13,9 @@ class LOI.Memory.Progress extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character
+      character: Document.ReferenceField LOI.Character
       observedMemories: [
-        memory: @ReferenceField LOI.Memory
+        memory: Document.ReferenceField LOI.Memory
       ]
 
   # Methods

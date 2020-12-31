@@ -1,0 +1,3 @@
+en-US: Right medium curly middle
+
+{"_id":"R2p99LZWDzFm3RTsy","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560195054092},"translations":{"en":{"us":{"text":"Right medium curly middle","quality":0},"best":{"text":"Right medium curly middle","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right medium curly middle","quality":0,"languageRegion":"en-US"}}}

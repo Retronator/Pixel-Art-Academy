@@ -1,0 +1,3 @@
+en-US: Earing earlobe left
+
+{"_id":"ck2nbPjWpYTmjWi3n","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565475191247},"translations":{"en":{"us":{"text":"Earing earlobe left","quality":0},"best":{"text":"Earing earlobe left","quality":0,"languageRegion":"en-US"}},"best":{"text":"Earing earlobe left","quality":0,"languageRegion":"en-US"}}}

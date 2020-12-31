@@ -1,0 +1,20 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.Matrix">
+  <div class="landsofillusions-assets-mesheditor-matrix landsofillusions-assets-editor-propertytable">
+    <table class="elements-table editor-table">
+      <tr class="legend">
+        <th class="row-name"></th>
+        {{#each columns}}
+          <th class="element-{{name}}">{{name}}</th>
+        {{/each}}
+      </tr>
+      {{#each rows}}
+        <tr class="row">
+          <td class="row-name">{{name}}</td>
+          {{#each this.columns}}
+            <td class="element-{{name}}"><input class="element-input" type="number" step="0.1" value="{{value}}"/></td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>

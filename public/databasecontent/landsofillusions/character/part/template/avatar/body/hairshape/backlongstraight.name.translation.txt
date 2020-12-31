@@ -1,0 +1,3 @@
+en-US: Back long straight
+
+{"_id":"2aeFXDuPtz4sYb7qt","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559561846834},"translations":{"en":{"us":{"text":"Back long straight","quality":0},"best":{"text":"Back long straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Back long straight","quality":0,"languageRegion":"en-US"}}}

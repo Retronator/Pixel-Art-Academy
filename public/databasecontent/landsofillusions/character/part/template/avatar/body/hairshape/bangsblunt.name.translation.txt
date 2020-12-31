@@ -1,0 +1,3 @@
+en: Bangs blunt
+
+{"_id":"7c9zkwQHpt2MB7MqL","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Bangs blunt","quality":0,"best":{"text":"Bangs blunt","quality":0,"languageRegion":"en"}},"best":{"text":"Bangs blunt","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559328760165}}

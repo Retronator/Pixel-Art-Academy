@@ -12,6 +12,6 @@ class LOI.Character.Behavior.Perk.NoFreeTime extends LOI.Character.Behavior.Perk
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     behaviorPart.properties.activities.extraHoursPerDay() < 5

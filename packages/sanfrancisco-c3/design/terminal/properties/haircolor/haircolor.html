@@ -1,0 +1,24 @@
+<template name="SanFrancisco.C3.Design.Terminal.Properties.HairColor">
+  <div class="sanfrancisco-c3-design-terminal-properties-color sanfrancisco-c3-design-terminal-properties-haircolor">
+    <div class="hues swatches-area">
+      <div class="name">
+        color
+      </div>
+      {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches hues}}
+    </div>
+    <div class="shades swatches-area">
+      <div class="name">
+        shade
+      </div>
+      {{#if hueIsSelected}}
+        {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches shades}}
+      {{/if}}
+    </div>
+    <div class="shine-levels swatches-area">
+      <div class="name">
+        shine
+      </div>
+      {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches shineLevels}}
+    </div>
+  </div>
+</template>

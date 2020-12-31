@@ -1,0 +1,67 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-editor-references
+  .references-table
+    .reference
+      &.active
+        td:not(.row-name)
+          background atariGrey(2)
+
+        .thumbnail
+          &::after
+            display block
+
+        .name
+          color atariGrey(5)
+
+          .name-input
+            &::placeholder
+              color atariGrey(4)
+
+      .displayed
+        position relative
+        width 15rem
+        height 100%
+
+        .label
+          absolute-cover()
+          cursor pointer
+
+          .displayed-checkbox
+            display none
+
+            &:checked + .icon
+              display block
+              position absolute
+              top 50%
+              left 50%
+              transform translate(-50%, -50%)
+              background-image image('/landsofillusions/assets/spriteeditor/layer-visible.png')
+              width 9rem
+              height 5rem
+
+      .thumbnail
+        position relative
+        cursor pointer
+        width 20rem
+
+        &::after
+          content ''
+          display none
+          position absolute
+          top -1rem
+          bottom -1rem
+          left -1rem
+          right -1rem
+          border 1rem solid atariGrey(4)
+
+        .image
+          width 100%
+          max-height 15rem
+          object-fit contain
+
+      .display-mode
+        .display-mode-select
+          width 100%
+          border none
+          background none

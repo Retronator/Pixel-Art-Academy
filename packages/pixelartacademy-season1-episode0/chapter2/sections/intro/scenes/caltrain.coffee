@@ -60,6 +60,6 @@ class C2.Intro.Caltrain extends LOI.Adventure.Scene
       action: => @startScript label: "ShowProspectus"
 
   cleanup: ->
-    super
+    super arguments...
 
     @_conductorTalksAutorun?.stop()

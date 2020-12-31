@@ -1,0 +1,3 @@
+en-US: Ponytail medium middle straight
+
+{"_id":"8hyut32cEdF9aFuco","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560728460608},"translations":{"en":{"us":{"text":"Ponytail medium middle straight","quality":0},"best":{"text":"Ponytail medium middle straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ponytail medium middle straight","quality":0,"languageRegion":"en-US"}}}

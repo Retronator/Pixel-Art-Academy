@@ -1,0 +1,3 @@
+en-US: Shirt round tight
+
+{"_id":"MHYDrbYagmNX4Rha3","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Shirt round tight","quality":0},"best":{"text":"Shirt round tight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shirt round tight","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564075687225}}

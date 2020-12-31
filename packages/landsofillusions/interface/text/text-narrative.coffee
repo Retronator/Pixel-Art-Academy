@@ -8,8 +8,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     return unless location
 
     if currentIntroductionFunction = @_currentIntroductionFunction()
-      introduction = currentIntroductionFunction()
-      return @_formatOutput introduction
+      if introduction = currentIntroductionFunction()
+        return @_formatOutput introduction
 
     if location.constructor.visited() and not LOI.adventure.currentContext()
       fullName = location.avatar.fullName()
@@ -53,7 +53,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # We could have direct HTML in the text, so we need to collect it here, to replace it back instead of the escaped
     # versions. We have to trust that the provided HTML is already escaped and malicious free.
-    htmlParts = text.match /%%html.*html%%/g
+    htmlParts = text.match /%%html.*?html%%/g
 
     text = AM.HtmlHelper.escapeText text
 
@@ -63,14 +63,14 @@ class LOI.Interface.Text extends LOI.Interface.Text
       html = htmlPart.match(/%%html(.*)html%%/)[1]
 
       # Because we don't use global match flag, replacements will happen one by one in order.
-      text = text.replace /%%html.*html%%/, html
+      text = text.replace /%%html.*?html%%/, html
 
     # Create color spans.
     text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) =>
       hue = parseInt hue
       shade = parseInt shade
 
-      colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
+      colorHexString = LOI.Avatar.colorObject({hue, shade}).getHexString()
 
       # Link should be 2 shades lighter than the text.
       linkColor = LOI.Avatar.colorObject(hue: hue, shade: shade + 2)
@@ -123,7 +123,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   _formatLinks: (escapedText, linkColor) ->
     # Replace urls with links. The regex doesn't match links inside <a> tags.
-    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-;]*[\w@?^=%&\/~+#-;])?(?!(?:[^<]|<[^a])*\<\/\a\>)/g
+    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w#-;=?@^~]*[\w#-+\-/-;=?@^~])?(?!(?:[^<]|<[^a])*\<\/\a\>)/g
 
     formattedText = escapedText.replace urlRegex, (url, protocol, domain, path) =>
       urlText = domain

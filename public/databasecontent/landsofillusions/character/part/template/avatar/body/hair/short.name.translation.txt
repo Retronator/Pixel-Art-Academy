@@ -1,0 +1,3 @@
+en-US: Short
+
+{"_id":"RwjZgdnsnQTRr2evX","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560348927276},"translations":{"en":{"us":{"text":"Short","quality":0},"best":{"text":"Short","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short","quality":0,"languageRegion":"en-US"}}}

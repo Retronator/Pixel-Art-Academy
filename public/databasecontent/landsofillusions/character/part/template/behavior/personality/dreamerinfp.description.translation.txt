@@ -1,0 +1,3 @@
+en: Idealist that always looks for good in things.
+
+{"_id":"bjgscu9jn7qer93jB","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Idealist that always looks for good in things.","quality":0,"best":{"text":"Idealist that always looks for good in things.","quality":0,"languageRegion":"en"}},"best":{"text":"Idealist that always looks for good in things.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038963051}}

@@ -5,18 +5,39 @@ class PAA.CharacterUpdatesHelper
   constructor: ->
     @person = new ReactiveField null
 
-    @actionsSubscription = new ComputedField =>
+    @agent = new ComputedField =>
       return unless person = @person()
-      person.subscribeRecentActions()
+      return unless person instanceof LOI.Character.Agent
+      person
+    ,
+      true
+
+    @actionsSubscription = new ComputedField =>
+      return unless agent = @agent()
+      agent.subscribeRecentActions()
+    ,
+      true
 
     @memoriesSubscription = new ComputedField =>
-      return unless person = @person()
-      person.subscribeRecentMemories()
+      return unless agent = @agent()
+      agent.subscribeRecentMemories()
+    ,
+      true
+
+    @tasksSubscription = new ComputedField =>
+      return unless agent = @agent()
+      agent.subscribeRecentTaskEntries()
+    ,
+      true
 
     @ready = new ComputedField =>
-      @actionsSubscription()?.ready() and @memoriesSubscription()?.ready()
+      not @agent() or (@actionsSubscription()?.ready() and @memoriesSubscription()?.ready() and @tasksSubscription()?.ready())
+    ,
+      true
 
   destroy: ->
+    @agent.stop()
     @actionsSubscription.stop()
     @memoriesSubscription.stop()
+    @tasksSubscription.stop()
     @ready.stop()

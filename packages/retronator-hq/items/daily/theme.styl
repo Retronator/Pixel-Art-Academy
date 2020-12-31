@@ -889,3 +889,16 @@
 
   &.no-cursor
     cursor none
+
+  .artworks
+    .artwork-area
+      .artwork-with-caption
+        .artwork-frame
+          .artwork
+            width 100%
+            max-width 130vh
+
+      .background
+        absolute-cover-size()
+        object-fit cover
+        filter blur(100px)

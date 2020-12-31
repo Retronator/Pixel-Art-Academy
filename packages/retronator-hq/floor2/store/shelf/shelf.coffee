@@ -14,13 +14,13 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
   isVisible: -> false
 
   constructor: ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     # Get all store items data.
-    @_itemsSubscription = @subscribe RS.Item.all
+    @_itemsSubscription = RS.Item.all.subscribe @
 
     # Get all user's transactions and payments so we can determine which store items they are
     # eligible for. Payments are needed to determine if the user has a kickstarter pledge.
@@ -77,16 +77,9 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
   _databaseItems: ->
     return [] unless @_itemsSubscription.ready()
 
-    items = RS.Item.documents.find
-      price:
-        $exists: true
-    ,
-      sort:
-        price: 1
-
-    # Show only items that are supposed to be on this shelf.
-    items = _.filter items.fetch(), (item) =>
-      item.catalogKey in @catalogKeys()
+    # Show items that are supposed to be on this shelf.
+    items = for catalogKey in @catalogKeys()
+      RS.Item.documents.findOne {catalogKey}
 
     # Cast the items to enable any extra functionality.
     items = (item.cast() for item in items)
@@ -123,7 +116,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     'can-buy' if @canBuy()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .add-to-cart-button': @onClickAddToCartButton
 
   onClickAddToCartButton: (event) ->

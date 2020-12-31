@@ -1,0 +1,3 @@
+en: Main color
+
+{"_id":"QKWaXzY2xrcE94qAd","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Main color","quality":0,"best":{"text":"Main color","quality":0,"languageRegion":"en"}},"best":{"text":"Main color","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519118865}}

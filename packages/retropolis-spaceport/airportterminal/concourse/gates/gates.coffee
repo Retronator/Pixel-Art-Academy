@@ -10,7 +10,7 @@ class RS.AirportTerminal.Gates extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Airport terminal gate"
+  @fullName: -> "airport terminal gates"
   @shortName: -> "gates"
   @description: ->
     "
@@ -22,7 +22,7 @@ class RS.AirportTerminal.Gates extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

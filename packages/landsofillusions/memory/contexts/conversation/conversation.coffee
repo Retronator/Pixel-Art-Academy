@@ -7,6 +7,8 @@ class LOI.Memory.Contexts.Conversation extends LOI.Memory.Context
 
   @initialize()
 
+  @canHandleMemory: (memory) -> true
+
   @description: -> "You engage in a conversation."
 
   @translations: ->

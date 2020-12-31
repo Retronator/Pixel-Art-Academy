@@ -5,12 +5,12 @@ PAA = PixelArtAcademy
 
 class PAA.PixelBoy.Apps.Journal.JournalView.JournalDesign extends AM.Component
   constructor: (@options) ->
-    super
+    super arguments...
 
     @entries = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
     
     @journalDocument = new ComputedField =>
       if @options.journalId

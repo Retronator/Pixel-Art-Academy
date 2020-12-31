@@ -8,10 +8,10 @@ class PAA.PixelBoy.Apps.Yearbook.Front extends AM.Component
   @register @id()
 
   constructor: (@yearbook) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
   nextPage: ->
     @yearbook.middle().currentSpreadIndex 0
@@ -34,7 +34,7 @@ class PAA.PixelBoy.Apps.Yearbook.Front extends AM.Component
       startingPage: studentsByYear[year].startingPage
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .next.page-button': @onClickNextPageButton
       'click .section': @onClickSection
       'click .pixelartacademy-pixelboy-apps-yearbook-profileform': @onClickEditProfile

@@ -1,0 +1,3 @@
+en-US: Shoes ballet
+
+{"_id":"S6WFQgj8ipErmsYhb","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565556096216},"translations":{"en":{"us":{"text":"Shoes ballet","quality":0},"best":{"text":"Shoes ballet","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoes ballet","quality":0,"languageRegion":"en-US"}}}

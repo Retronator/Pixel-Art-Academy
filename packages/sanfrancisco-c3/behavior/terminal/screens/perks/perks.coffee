@@ -7,12 +7,12 @@ class C3.Behavior.Terminal.Perks extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Perks'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
 
     @property = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
     
     @_translationSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk'
 
@@ -63,7 +63,7 @@ class C3.Behavior.Terminal.Perks extends AM.Component
     @displayedPerkKey = new ReactiveField null
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @_translationSubscription.stop()
 
@@ -100,7 +100,7 @@ class C3.Behavior.Terminal.Perks extends AM.Component
     @terminal.switchToScreen @terminal.screens.character
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'mouseenter .perk': @onMouseEnterPerk
       'mouseleave .perk': @onMouseLeavePerk
@@ -119,7 +119,7 @@ class C3.Behavior.Terminal.Perks extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Perks.Perk'
 
     onCreated: ->
-      super
+      super arguments...
 
       @perksComponent = @ancestorComponentOfType C3.Behavior.Terminal.Perks
 
@@ -137,12 +137,12 @@ class C3.Behavior.Terminal.Perks extends AM.Component
       @register 'SanFrancisco.C3.Behavior.Terminal.Perks.Perk.Selected'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Checkbox
 
       onCreated: ->
-        super
+        super arguments...
 
         @perksComponent = @ancestorComponentOfType C3.Behavior.Terminal.Perks
 

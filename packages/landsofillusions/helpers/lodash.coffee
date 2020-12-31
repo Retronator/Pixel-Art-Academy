@@ -20,4 +20,4 @@ _.mixin
     throw new AE.ArgumentException 'You must provide a thing class or id.'
 
   thingIdAndClass: (thingClassOrId) ->
-    [_.thingId thingClassOrId, _.thingClass thingClassOrId]
+    [_.thingId(thingClassOrId), _.thingClass(thingClassOrId)]

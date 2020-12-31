@@ -6,10 +6,10 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.Items.ShoppingCart.User extends HQ.Items.ShoppingCart
   onCreated: ->
-    super
+    super arguments...
 
     # Get all store items data.
-    @subscribe RS.Item.all
+    RS.Item.all.subscribe @
 
   cartItems: ->
     cartItems = []

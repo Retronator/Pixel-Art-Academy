@@ -1,0 +1,3 @@
+en: Black punk
+
+{"_id":"JJtDhs5tjxbxsQ9Qd","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Black punk","quality":0,"best":{"text":"Black punk","quality":0,"languageRegion":"en"}},"best":{"text":"Black punk","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1566740409219}}

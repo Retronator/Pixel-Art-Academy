@@ -1,0 +1,48 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+elementsGap = 2rem
+
+.pixelartacademy-studyguide-article-figure
+  white-space normal
+  margin 15rem 0 20rem 0
+  width 100%
+  break-inside avoid
+
+  .elements
+    width 100%
+
+    .elements-row
+      display flex
+      list-style none
+      width 100%
+      padding elementsGap 0 0 0
+      margin 0
+
+      &:first-child
+        padding-top 0
+
+      .element
+        position relative
+        padding-left elementsGap
+        flex-basis 0
+
+        &:first-child
+          padding-left 0
+
+        .actions
+          position absolute
+          top 0
+          right 0
+
+  .caption
+    padding 3rem
+    text-align center
+    adventure()
+    line-height 8rem
+
+    textarea
+      width 100%
+      font inherit
+
+.pixelartacademy-studyguide-article-figure + .pixelartacademy-studyguide-article-figure
+  margin-top -15rem

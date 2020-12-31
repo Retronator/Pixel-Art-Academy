@@ -1,0 +1,3 @@
+en-US: Chest open
+
+{"_id":"9kxMeTrn2qPv36qhT","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565713842781},"translations":{"en":{"us":{"text":"Chest open","quality":0},"best":{"text":"Chest open","quality":0,"languageRegion":"en-US"}},"best":{"text":"Chest open","quality":0,"languageRegion":"en-US"}}}

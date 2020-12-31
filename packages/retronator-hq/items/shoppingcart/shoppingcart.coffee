@@ -24,6 +24,7 @@ class HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
   @fullName: -> "shopping cart"
   @shortName: -> "cart"
+  @descriptiveName: -> "Shopping ![cart](look in cart)."
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
@@ -49,7 +50,7 @@ class HQ.Items.ShoppingCart extends LOI.Adventure.Item
     @state 'contents', []
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @contents = @state.field 'contents', default: []
 
@@ -73,7 +74,7 @@ class HQ.Items.ShoppingCart extends LOI.Adventure.Item
     not @state 'atCheckout'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .remove-from-cart-button': @onClickRemoveFromCartButton
       'change .gift-checkbox': @onChangeGiftCheckbox
 

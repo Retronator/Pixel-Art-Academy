@@ -24,11 +24,16 @@ class LOI.Items.Map extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # The map is active, but not visible by default.
-    @activatedState LOI.Adventure.Item.activatedStates.Activated
+    @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     @fullscreenOverlay = new ReactiveField false
+
+  onCreated: ->
+    super arguments...
+
+    @map = new LOI.Items.Components.Map
 
     $(document).on 'keydown.landsofillusions-items-map', (event) =>
       @onKeyDown event
@@ -36,13 +41,8 @@ class LOI.Items.Map extends LOI.Adventure.Item
     $(document).on 'keyup.landsofillusions-items-map', (event) =>
       @onKeyUp event
 
-  onCreated: ->
-    super
-
-    @map = new LOI.Items.Components.Map
-
-  destroy: ->
-    super
+  onDestroyed: ->
+    super arguments...
 
     $(document).off '.landsofillusions-items-map'
 
@@ -66,7 +66,7 @@ class LOI.Items.Map extends LOI.Adventure.Item
       # We only need to jump out of fullscreen and leave the map active.
       @fullscreenOverlay false
       @map.showUserInterface false
-      @activatedState LOI.Adventure.Item.activatedStates.Activated
+      @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     ,
       500
 
@@ -141,7 +141,7 @@ class LOI.Items.Map extends LOI.Adventure.Item
     @register 'LandsOfIllusions.Items.Map.ShowMinimap'
     
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Checkbox
 

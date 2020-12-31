@@ -27,7 +27,7 @@ class PADB.Artwork extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      authors: [@ReferenceField PADB.Artist, ['displayName'], true, 'artworks', ['title']]
+      authors: [Document.ReferenceField PADB.Artist, ['displayName'], true, 'artworks', ['title']]
 
   @Types:
     # Static image
@@ -60,7 +60,7 @@ class PADB.Artwork extends AM.Document
     name: "#{@id()}.forUrl"
     query: (url) =>
       # Match artworks both by image and representation urls.
-      @documents.find
+      PADB.Artwork.documents.find
         $or: [
           'image.url': url
         ,

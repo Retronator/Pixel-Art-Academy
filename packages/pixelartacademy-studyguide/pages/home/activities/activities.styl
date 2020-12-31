@@ -1,0 +1,104 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-activities
+  position absolute
+
+  .groups
+    position absolute
+    bottom 0
+    left 0
+    padding 0
+    margin 0
+    list-style none
+
+    .group
+      margin-left 20rem
+
+      .books
+        padding 0
+        margin 0
+        list-style none
+
+        .book
+          position relative
+          left 0
+          border-width 4rem 1rem 4rem 2rem
+          border-style solid
+          border-image-slice 4 1 4 2
+          background-clip padding-box
+          transition all 0.2s
+          cursor pointer
+
+          &:hover
+            left -2rem
+
+          &.active
+            left -100vw
+            transition all 0.2s, left 1s
+
+          &.brown
+            &.dark
+              background-image image('/pixelartacademy/studyguide/home/activities/book-brown-dark.png')
+              border-image-source image('/pixelartacademy/studyguide/home/activities/book-border-brown-dark.png')
+
+              .pages
+                border-image-source image('/pixelartacademy/studyguide/home/activities/pages-border-brown-dark.png')
+
+          &.brown
+          &.orange
+            .spine
+              .trim
+                &.top
+                  width 0
+                  border-width 4rem 2rem 4rem 0
+                  border-image-slice 4 2 4 0
+                  margin 0 3rem
+                  border-image-source image('/pixelartacademy/studyguide/home/activities/book-trim-single-orange-light.png')
+
+                &.bottom
+                  width 0
+                  border-width 4rem 3rem 4rem 0
+                  border-image-slice 4 3 4 0
+                  margin-right 7rem
+                  border-image-source image('/pixelartacademy/studyguide/home/activities/book-trim-thick-orange-light.png')
+
+              .title
+                color transparent
+                background-image linear-gradient(atariOrange(5), atariOrange(5) 50%, atariOrange(3) 50%)
+                background-clip text
+                -webkit-background-clip text
+
+          .spine
+            display flex
+            position absolute
+            top -4rem
+            bottom -4rem
+            left 0
+            right 0
+            vertical-align middle
+
+            .trim
+              flex-grow 0
+              border-style solid
+
+              &.top
+                width 10rem
+
+            .title
+              flex-grow 1
+
+          .pages
+            position absolute
+            left calc(100% + 1rem)
+            top -4rem
+            bottom -4rem
+            border-width 2rem 2rem 2rem 0
+            border-style solid
+            border-image-slice 2 2 2 0
+
+            &::after
+              content ''
+              z-index -1
+              absolute-cover()
+              bottom -1rem
+              background image('/pixelartacademy/studyguide/home/activities/pages.png') 0 0 / 1rem 2rem

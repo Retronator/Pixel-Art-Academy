@@ -61,6 +61,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       by completing the Basics tutorial under Challenges in the Drawing app.
     """
 
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+
     @predecessors: -> [Goal.Editor]
 
     @groupNumber: -> -1
@@ -80,6 +82,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       Get used to extra tools such as zooming and displaying references in the Helpers tutorial.
     """
 
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+
     @predecessors: -> [Goal.Basics]
 
     @groupNumber: -> -1
@@ -98,6 +102,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @instructions: -> """
       Learn how to change colors in the Colors tutorial.
     """
+
+    @icon: -> PAA.Learning.Task.Icons.Drawing
 
     @predecessors: -> [Goal.Basics]
 
@@ -142,6 +148,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
         Ask Retro about recommendations.
       """
 
+      @icon: -> PAA.Learning.Task.Icons.Video
+
       @predecessors: -> [Goal.DIY.ChooseSoftware]
 
       @groupNumber: -> 2
@@ -158,6 +166,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
         Using the software of your choice, doodle on the canvas to see how the basic tools behave.
         Figure out how to zoom in and out too. Upload your test drawing to your journal.
       """
+
+      @icon: -> PAA.Learning.Task.Icons.Drawing
 
       @predecessors: -> [Goal.DIY.ChooseSoftware, Goal.DIY.WatchTutorial]
       @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
@@ -178,6 +188,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
         They will speed up your process when you work on actual artworks.
         Upload a new test image to show things you've tried.
       """
+
+      @icon: -> PAA.Learning.Task.Icons.Drawing
 
       @predecessors: -> [Goal.DIY.Doodling]
 
@@ -281,6 +293,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @instructions: -> """
       Use the editor or software of your choice to re-create the reference.
     """
+
+    @icon: -> PAA.Learning.Task.Icons.Drawing
 
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 

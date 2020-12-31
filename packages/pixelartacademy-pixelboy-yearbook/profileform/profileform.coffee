@@ -10,7 +10,7 @@ class Yearbook.ProfileForm extends AM.Component
   @register @id()
 
   constructor: (@yearbook) ->
-    super
+    super arguments...
     
     @pages = [
       new @constructor.General @
@@ -18,12 +18,15 @@ class Yearbook.ProfileForm extends AM.Component
     ]
 
   onCreated: ->
-    super
+    super arguments...
     
     @currentPageNumber = new ReactiveField 1
     
     @currentPage = new ComputedField =>
       @pages[@currentPageNumber() - 1]
+      
+    # Mark that the player has opened the profile.
+    @yearbook.state 'profileFormOpened', true
     
   positionClass: ->
     return unless playerCharacterPage = @yearbook.playerCharacterPage()
@@ -38,7 +41,7 @@ class Yearbook.ProfileForm extends AM.Component
     'visible' if @currentPageNumber() < @pages.length
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .previous.page-button': @onClickPreviousPageButton
       'click .next.page-button': @onClickNextPageButton
 

@@ -6,7 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.Items.ShoppingCart.Character extends HQ.Items.ShoppingCart
   onCreated: ->
-    super
+    super arguments...
 
     # Items in the character's cart are Things with their IDs as catalog keys.
     @_thingAvatars = []

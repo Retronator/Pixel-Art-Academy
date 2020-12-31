@@ -1,0 +1,27 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-editor-references-displaycomponent-reference
+  position absolute
+  margin 0
+  transform translate(-50%, -50%)
+  cursor grab
+
+  &.resizing-n
+  &.resizing-s
+    cursor ns-resize
+
+  &.resizing-e
+  &.resizing-w
+    cursor ew-resize
+
+  &.resizing-nw
+  &.resizing-se
+    cursor nwse-resize
+
+  &.resizing-ne
+  &.resizing-sw
+    cursor nesw-resize
+
+  .image
+    display block
+    width 100%

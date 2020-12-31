@@ -9,26 +9,29 @@ class AM.Component extends CommonComponent
   @_componentClassesByName = {}
 
   @register: (componentName) ->
-    super
+    super arguments...
 
     @_componentClassesByName[componentName] = @
 
+  @getComponentForName: (componentName) ->
+    @_componentClassesByName[componentName]
+    
   @getClasses: ->
     _.values @_componentClassesByName
 
   constructor: ->
-    super
+    super arguments...
 
     # Make sure AB gets initialized before we create the first component.
     AB = Artificial.Babel
 
   onCreated: ->
-    super
+    super arguments...
 
     AB.subscribeComponent @ if Meteor.isClient
 
   onDestroyed: ->
-    super
+    super arguments...
 
     AB.unsubscribeComponent @ if Meteor.isClient
 
@@ -84,34 +87,26 @@ class AM.Component extends CommonComponent
     @childComponentsWith (child) ->
       child instanceof constructor
 
+  allChildComponentsOfType: (constructor) ->
+    # Start by searching the children of this component.
+    result = @childComponentsOfType constructor
+
+    # Recursively search also in each child.
+    for childComponent in @childComponents() when childComponent instanceof AM.Component
+      result.push childComponent.allChildComponentsOfType(constructor)...
+      
+    result
+
   # Code based on childComponentsWith.
-  parentDataWith: (propertyOrMatcherOrFunction) ->
-    if _.isString propertyOrMatcherOrFunction
-      property = propertyOrMatcherOrFunction
-      propertyOrMatcherOrFunction = (data) =>
-        property of data
-
-    else if not _.isFunction propertyOrMatcherOrFunction
-      assert _.isObject propertyOrMatcherOrFunction
-      matcher = propertyOrMatcherOrFunction
-      propertyOrMatcherOrFunction = (data) =>
-        for property, value of matcher
-          return false unless property of data
-
-          if _.isFunction parent[property]
-            return false unless parent[property]() is value
-
-          else
-            return false unless parent[property] is value
-
-        true
+  parentDataWith: (filterParameter) ->
+    filter = _.filterFunction filterParameter
 
     level = 0
 
     loop
       data = Template.parentData level
       return null unless data
-      return data if propertyOrMatcherOrFunction.call data, data
+      return data if filter data
 
       level++
 

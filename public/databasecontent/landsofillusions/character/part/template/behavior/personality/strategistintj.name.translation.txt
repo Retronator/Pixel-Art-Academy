@@ -1,0 +1,3 @@
+en: Strategist (INTJ)
+
+{"_id":"3jE56s8nfJWfWGxkg","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Strategist (INTJ)","quality":0,"best":{"text":"Strategist (INTJ)","quality":0,"languageRegion":"en"}},"best":{"text":"Strategist (INTJ)","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038946739}}

@@ -6,30 +6,24 @@ class C3.Service.Terminal.MainMenu extends AM.Component
   @register 'SanFrancisco.C3.Service.Terminal.MainMenu'
 
   constructor: (@terminal) ->
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
     
-    @_characters = []
-      
     @characters = new ComputedField =>
-      character.destroy() for character in @_characters
-
       user = Retronator.user()
 
       designedCharacters = _.filter user.characters, (character) =>
         LOI.Character.documents.findOne(character._id)?.designApproved
 
-      @_characters = for character in designedCharacters
-        Tracker.nonreactive =>
-          new LOI.Character.Instance character._id
-
-      @_characters
+      for character in designedCharacters
+        LOI.Character.getInstance character._id
       
     @newCharacterMade = false
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character-selection-button': @onClickCharacterSelectionButton
       'click .new-character-button': @onClickNewCharacterButton
 

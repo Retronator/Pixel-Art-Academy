@@ -1,0 +1,26 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-admin-activities
+  font-family sans-serif
+  font-size 7rem
+
+  .index
+    width 200px
+    float left
+
+    .actions
+      .new-activity-goalid
+        width 100%
+
+    .activities
+      list-style none
+      max-height 300px
+      overflow-y auto
+
+      .activity
+        cursor pointer
+
+        &.active
+          cursor default
+          background #eee
+          color black

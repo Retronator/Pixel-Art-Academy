@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
@@ -10,7 +11,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   Goal = @
 
-  class @SetDesiredTime extends PAA.Learning.Task
+  class @SetDesiredTime extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.SetDesiredTime'
     @goal: -> Goal
 
@@ -21,6 +22,11 @@ class C1.Goals.Time extends PAA.Learning.Goal
     """
 
     @initialize()
+
+    @completedConditions: ->
+      return unless weeklyGoals = PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals'
+
+      weeklyGoals.daysWithActivities or weeklyGoals.totalHours
 
   class @MeaningfulAndManageable extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.MeaningfulAndManageable'
@@ -101,29 +107,112 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
     @initialize()
 
-  class @ReachDesiredTime extends PAA.Learning.Task
+  class @ReachDesiredTime extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.ReachDesiredTime'
     @goal: -> Goal
 
     @directive: -> "Spend your desired time drawing"
 
     @instructions: -> """
-      By the end of Admission Week, spend the desired time doing drawing (and related) activities.
+      By the end of Admission Week, spend the desired time doing drawing and related activities.
     """
 
-    @predecessors: -> [Goal.StartLog]
+    @predecessors: -> [Goal.SetDesiredTime]
 
     @interests: -> ['desired drawing time']
 
     @initialize()
 
+    @daysWithActivitiesInLast7Days: ->
+      return unless LOI.characterId()
+
+      activities = @_getActivities()
+
+      # Quantize activities to separate days.
+      dates = for activity in activities
+        year: activity.time.getFullYear()
+        month: activity.time.getMonth()
+        day: activity.time.getDate()
+
+      uniqueDates = _.uniqWith dates, _.isEqual
+
+      uniqueDates.length
+
+    @totalHoursInLast7Days: ->
+      return unless LOI.characterId()
+
+      activities = @_getActivities()
+
+      # Quantize activities to 15 minute blocks.
+      quarters = for activity in activities
+        year: activity.time.getFullYear()
+        month: activity.time.getMonth()
+        day: activity.time.getDate()
+        hour: activity.time.getHours()
+        quarter: Math.floor activity.time.getMinutes() / 15
+
+      uniqueQuarters = _.uniqWith quarters, _.isEqual
+
+      uniqueQuarters.length / 4 # hours
+
+    @_getActivities: ->
+      @_subscribeToActivitiesInLast7Days()
+
+      now = new Date()
+
+      characterId = LOI.characterId()
+      time = $gte: new Date now.getFullYear(), now.getMonth(), now.getDate() - 6
+
+      _.flatten [
+        PAA.Practice.Journal.Entry.documents.fetch
+          'journal.character._id': characterId
+          time: time
+        ,
+          fields:
+            time: 1
+      ,
+        PAA.Learning.Task.Entry.documents.fetch
+          'character._id': characterId
+          time: time
+        ,
+          fields:
+            time: 1
+      ]
+
+    @_subscribeToActivitiesInLast7Days: ->
+      now = new Date()
+      year = now.getFullYear()
+      month = now.getMonth()
+      day = now.getDate()
+
+      # Create a date range of 7 days from end of today backwards.
+      dateRange = new AE.DateRange
+        start: new Date year, month, day - 6
+        end: new Date year, month, day + 1
+
+      characterId = LOI.characterId()
+
+      PAA.Practice.Journal.Entry.activityForCharacter.subscribe characterId, dateRange
+      PAA.Learning.Task.Entry.recentForCharacter.subscribe characterId, dateRange.start()
+
+    @completedConditions: ->
+      return unless weeklyGoals = PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals'
+
+      if weeklyGoals.daysWithActivities
+        return unless @daysWithActivitiesInLast7Days() >= weeklyGoals.daysWithActivities
+
+      if weeklyGoals.totalHours
+        return unless @totalHoursInLast7Days() >= weeklyGoals.totalHours
+
+      true
+
   @tasks: -> [
     @SetDesiredTime
-    @MeaningfulAndManageable
-    @StartLog
-    @SetDailyAlarm
-    @ScheduleSessions
-    @ExportCalendar
+    # @MeaningfulAndManageable
+    # @StartLog
+    # @SetDailyAlarm
+    # @ScheduleSessions
+    # @ExportCalendar
     @ReachDesiredTime
   ]
 

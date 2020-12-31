@@ -46,7 +46,7 @@ class HQ.ArtStudio.Southwest extends HQ.ArtStudio.ContextWithArtworks
     OilsStorage: ['pop', 'nineToFive', 'concreteFeet', 'blueLandscape']
 
   constructor: ->
-    super
+    super arguments...
 
     @sceneSize =
       width: 480
@@ -72,7 +72,7 @@ class HQ.ArtStudio.Southwest extends HQ.ArtStudio.ContextWithArtworks
     visibleSceneWidth < 430
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .move-button.left': @onClickMoveButtonLeft
       'click .move-button.right': @onClickMoveButtonRight
 

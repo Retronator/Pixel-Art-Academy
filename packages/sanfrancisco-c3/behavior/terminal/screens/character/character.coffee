@@ -7,7 +7,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Character'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
     
     @characterId = new ReactiveField null
     
@@ -15,7 +15,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
       LOI.Character.getInstance @characterId()
 
   onCreated: ->
-    super
+    super arguments...
 
     AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk',
       subscribeProvider: @
@@ -43,7 +43,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
     @character().behavior.part.properties.perks.toString()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .save-draft-button': @onClickSaveDraftButton
       'click .modify-personality-button': @onClickModifyPersonalityButton

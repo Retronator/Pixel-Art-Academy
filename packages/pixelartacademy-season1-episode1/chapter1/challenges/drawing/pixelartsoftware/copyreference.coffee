@@ -36,7 +36,7 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
   @initialize()
   
   constructor: ->
-    super
+    super arguments...
 
     # Allow to manually provide user sprite data.
     @manualUserSpriteData = new ReactiveField null

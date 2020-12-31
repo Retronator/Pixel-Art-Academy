@@ -10,12 +10,12 @@ class AB.Components.Translatable extends AM.Component
     TextArea: 'textarea'
 
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @options.type ?= @constructor.Types.Text
 
   onCreated: ->
-    super
+    super arguments...
 
     # Reactively subscribe to the translation so that refresh on the translation will work.
     @autorun (computation) =>
@@ -86,7 +86,7 @@ class AB.Components.Translatable extends AM.Component
     @translated()?.text or translationOrKey
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .current-translation .language': @onClickCurrentTranslationLanguage
       'click .new-translation .language': @onClickNewTranslationLanguage
       'click .translation-selector .language': @onClickTranslationSelectorLanguage
@@ -125,7 +125,7 @@ class AB.Components.Translatable extends AM.Component
     @register 'Artificial.Babel.Components.Translatable.Translation'
 
     onCreated: ->
-      super
+      super arguments...
 
       @translation = new ComputedField =>
         # Find translation document in the data context of the parent.
@@ -135,6 +135,7 @@ class AB.Components.Translatable extends AM.Component
 
       @translatableInput = new AB.Components.Translatable.Input
         type: translatableComponent.options.type
+        realtime: translatableComponent.options.realtime
         translation: => @translation()
         languageRegion: => @languageRegion()
 
@@ -159,7 +160,7 @@ class AB.Components.Translatable extends AM.Component
       @register 'Artificial.Babel.Components.Translatable.Translation.LanguageSelection'
 
       constructor: (@options) ->
-        super
+        super arguments...
 
       load: ->
         @options.languageRegion()
@@ -176,9 +177,10 @@ class AB.Components.Translatable extends AM.Component
     @register 'Artificial.Babel.Components.Translatable.Input'
 
     constructor: (@options) ->
-      super
+      super arguments...
 
       @type = @options.type
+      @realtime = @options.realtime if @options.realtime?
 
     load: ->
       return unless translation = @options.translation()
@@ -220,7 +222,7 @@ class AB.Components.Translatable extends AM.Component
     template: -> 'Artificial.Babel.Components.Translatable.Translation'
 
     onCreated: ->
-      super
+      super arguments...
 
       @translation = new ComputedField =>
         # Find translation document in the data context of the parent.
@@ -250,7 +252,7 @@ class AB.Components.Translatable extends AM.Component
       @register 'Artificial.Babel.Components.Translatable.NewTranslation.LanguageSelection'
 
       constructor: (@options) ->
-        super
+        super arguments...
 
         # Prepare a field to store the selection locally.
         @selectedLanguageRegion = new ReactiveField null
@@ -266,7 +268,7 @@ class AB.Components.Translatable extends AM.Component
     @register 'Artificial.Babel.Components.Translatable.NewInput'
 
     constructor: (@options) ->
-      super
+      super arguments...
 
       @type = @options.type
       @realtime = false

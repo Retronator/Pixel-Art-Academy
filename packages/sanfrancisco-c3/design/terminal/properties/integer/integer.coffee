@@ -2,23 +2,10 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
-class C3.Design.Terminal.Properties.Integer extends AM.Component
+class C3.Design.Terminal.Properties.Integer extends C3.Design.Terminal.Properties.Number
   @register 'SanFrancisco.C3.Design.Terminal.Properties.Integer'
 
-  onCreated: ->
-    super
-
-    property = @data()
-    @input = new @constructor.Input property.options.dataLocation
-
-  class @Input extends AM.DataInputComponent
-    constructor: (@dataLocation) ->
-      super
-
-      @type = AM.DataInputComponent.Types.Number
-
-    load: ->
-      @dataLocation()
-
+  class @Input extends C3.Design.Terminal.Properties.Number.Input
     save: (value) ->
-      @dataLocation parseInt value
+      value = parseInt value if value?.length
+      super value

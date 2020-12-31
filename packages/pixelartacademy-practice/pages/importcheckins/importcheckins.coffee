@@ -6,7 +6,7 @@ class PAA.Practice.Pages.ImportCheckIns extends AM.Component
   @register 'PixelArtAcademy.Practice.Pages.ImportCheckIns'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'submit .upload-form': @onSubmitUploadForm
 
   onSubmitUploadForm: (event) ->

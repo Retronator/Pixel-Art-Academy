@@ -11,12 +11,12 @@ class LOI.Components.Menu.Items extends AM.Component
     Permissions: 'Permissions'
 
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
 
   onRendered: ->
-    super
+    super arguments...
 
   aboutVisible: ->
     # About is visible on the landing page.
@@ -67,7 +67,13 @@ class LOI.Components.Menu.Items extends AM.Component
 
   isFullscreen: ->
     AM.Window.isFullscreen()
-    
+
+  audioEnabled: ->
+    LOI.settings.audio.enabled.value()
+
+  smoothShading: ->
+    LOI.settings.graphics.smoothShading.value()
+
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
 
@@ -90,7 +96,7 @@ class LOI.Components.Menu.Items extends AM.Component
     if consentField.decided() then consentField.allowed() else null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       # Main menu
       'click .continue': @onClickContinue
       'click .new': @onClickNew
@@ -102,8 +108,10 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .quit': @onClickQuit
 
       # Settings
+      'click .audio': @onClickAudio
       'click .graphics-scale .previous-button': @onClickGraphicsScalePreviousButton
       'click .graphics-scale .next-button': @onClickGraphicsScaleNextButton
+      'click .smooth-shading': @onClickSmoothShading
       'click .permissions': @onClickPermissions
       'click .back-to-menu': @onClickBackToMenu
 
@@ -155,6 +163,14 @@ class LOI.Components.Menu.Items extends AM.Component
     else
       AM.Window.enterFullscreen()
 
+      # HACK: If audio is not yet playing, require another interaction (after
+      # this click is handled), since Safari needs it after going fullscreen.
+      audioManager = LOI.adventure.world.audioManager()
+
+      unless audioManager.enabled()
+        Meteor.setTimeout =>
+          audioManager.waitForInteraction()
+
     # Do a late UI resize to accommodate any fullscreen transitions.
     Meteor.setTimeout =>
       LOI.adventure.interface.resize()
@@ -187,6 +203,15 @@ class LOI.Components.Menu.Items extends AM.Component
         callback: =>
           LOI.adventure.quitGame() if dialog.result
 
+  onClickAudio: (event) ->
+    currentValue = LOI.settings.audio.enabled.value()
+    values = _.values LOI.Settings.Audio.Enabled
+
+    currentIndex = _.indexOf values, currentValue
+    nextIndex = (currentIndex + 1) % values.length
+
+    LOI.settings.audio.enabled.value values[nextIndex]
+
   onClickGraphicsScalePreviousButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value()
     currentValue--
@@ -201,6 +226,10 @@ class LOI.Components.Menu.Items extends AM.Component
 
     LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
+
+  onClickSmoothShading: (event) ->
+    smoothShadingValue = LOI.settings.graphics.smoothShading.value
+    smoothShadingValue not smoothShadingValue()
 
   onClickPermissions: (event) ->
     @currentScreen @constructor.Screens.Permissions

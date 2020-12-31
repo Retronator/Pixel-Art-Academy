@@ -1,20 +1,33 @@
+AE = Artificial.Everywhere
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
-# Subscription to a specific sprite.
-LOI.Assets.Sprite.forId.publish (id) ->
-  check id, Match.DocumentId
-
-  LOI.Assets.Sprite.documents.find id
-
-LOI.Assets.Sprite.all.publish ->
+LOI.Assets.Sprite.allGeneric.publish ->
   # Only admins (and later sprite editors) can see all the sprite.
   RA.authorizeAdmin userId: @userId or null
 
   # We only return sprite names when subscribing to all so that we can list them.
-  LOI.Assets.Sprite.documents.find {},
+  LOI.Assets.Sprite.documents.find
+    authors:
+      $exists: false
+  ,
     fields:
       name: 1
+
+LOI.Assets.Sprite.forMeshId.publish (meshId) ->
+  check meshId, Match.DocumentId
+
+  @autorun ->
+    mesh = LOI.Assets.Mesh.documents.findOne meshId
+    throw new AE.ArgumentException "Mesh does not exist." unless mesh
+
+    # Nothing to return if there are no materials.
+    return unless mesh.materials
+
+    spriteIds = (material.texture?.spriteId for material in mesh.materials)
+    _.pull spriteIds, undefined
+    
+    LOI.Assets.Sprite.documents.find _id: $in: spriteIds
 
 LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
   check types, [String]
@@ -23,6 +36,4 @@ LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
   templates = LOI.Character.Part.Template._forTypes(types, {}, @userId).fetch()
   spriteIds = _.flatten (template.spriteIds for template in templates)
 
-  LOI.Assets.Sprite.documents.find
-    _id:
-      $in: spriteIds
+  LOI.Assets.Sprite.documents.find _id: $in: spriteIds

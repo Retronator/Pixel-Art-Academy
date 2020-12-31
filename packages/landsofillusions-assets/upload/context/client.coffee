@@ -1,21 +1,22 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Upload.Context extends LOI.Assets.Upload.Context
-  constructor: ->
-    super
-    
-    @slingshot = new Slingshot.Upload @options.name
-  
-  upload: (file, callback) ->
-    validationError = @slingshot.validate file
+  upload: (file, callback, errorCallback) ->
+    upload = new Slingshot.Upload @options.name
+
+    validationError = upload.validate file
 
     if validationError
-      console.error 'Error validating file.', error
+      console.error 'Error validating file.', validationError, file
+      errorCallback validationError
       return
 
-    @slingshot.send file, (error, fileUrl) ->
-      if error
-        console.error 'Error uploading file.', error
+    upload.send file, (uploadError, fileUrl) ->
+      if uploadError
+        console.error 'Error uploading file.', uploadError
+        errorCallback uploadError
         return
 
       callback fileUrl
+
+    upload

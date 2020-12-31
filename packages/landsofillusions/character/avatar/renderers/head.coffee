@@ -2,57 +2,80 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
-    # We create hair-behind renderers separately, so they won't render together with the rest of the head.
-    @hairBehindRenderers = for part in @options.part.properties.hairBehind.parts()
-      part.createRenderer()
+    rendererOptions = @_cloneRendererOptions()
+
+    # We create (facial) hair renderer separately so we can draw front and back parts in correct order.
+    hairParts = [@options.part.properties.facialHair.parts()..., @options.part.properties.hair.parts()...]
+    @hairRenderers = for part in hairParts
+      part.createRenderer rendererOptions
 
     # Create the rest of the renderers normally.
-    @neckRenderer = @_createRenderer 'neck'
     @headShapeRenderer = @_createRenderer 'shape'
     @leftEyeRenderer = @_createRenderer 'eyes'
     @rightEyeRenderer = @_createRenderer 'eyes', flippedHorizontal: true
     @rightEyeRenderer._flipHorizontal = true
-    @hairRenderers = @_createRenderer 'hair'
-    @facialHairRenderers = @_createRenderer 'facialHair'
 
-  _placeRenderers: ->
-    # Place the neck.
-    @_placeRenderer @neckRenderer, 'atlas', 'atlas'
-
+  _placeRenderers: (side) ->
     # Place the head shape.
-    @_placeRenderer @headShapeRenderer, 'atlas', 'atlas'
+    @_placeRenderer side, @headShapeRenderer, 'atlas', 'atlas'
 
     # Place the eyes.
-    @_placeRenderer @leftEyeRenderer, 'eyeCenter', 'eyeLeft'
-    @_placeRenderer @rightEyeRenderer, 'eyeCenter', 'eyeRight'
+    @_placeRenderer side, @leftEyeRenderer, 'eyeCenter', 'eyeLeft'
+    @_placeRenderer side, @rightEyeRenderer, 'eyeCenter', 'eyeRight'
 
     # Place the hair.
-    @_placeRenderer hairRenderer, 'forehead', 'forehead' for hairRenderer in @hairBehindRenderers
-    @_placeRenderer hairRenderer, 'forehead', 'forehead' for hairRenderer in @hairRenderers
+    for hairRenderer in @hairRenderers
+      @_placeRenderer side, hairRenderer, 'headCenter', 'headCenter'
+      @_placeRenderer side, hairRenderer, 'mouth', 'mouth'
 
-    # Place the facial hair.
-    @_placeRenderer facialHairRenderer, 'mouth', 'mouth' for facialHairRenderer in @facialHairRenderers
+    # Since facial hair renderers don't use the headCenter landmark but mouth instead, we need to pass the
+    # headCenter-to-mouth offset down into the renderer so that it can position the sprite correctly when rendering to
+    # the texture region as that one only has the headCenter landmark.
+    headLandmarks = @headShapeRenderer.landmarks[side]()
+    mouthLandmark = _.find headLandmarks, (landmark) => landmark.name is 'mouth'
+    headCenterLandmark = _.find headLandmarks, (landmark) => landmark.name is 'headCenter'
+
+    if mouthLandmark and headCenterLandmark
+      regionOriginOffset =
+        x: mouthLandmark.x - headCenterLandmark.x
+        y: mouthLandmark.y - headCenterLandmark.y
+
+      for hairRenderer in @hairRenderers when hairRenderer.options.part.options.type is LOI.Character.Part.Types.Avatar.Body.FacialHair.options.type
+        for hairShapeRenderer in hairRenderer.renderers()
+          hairShapeRenderer._regionOriginOffset ?= {}
+          hairShapeRenderer._regionOriginOffset[side] = regionOriginOffset
 
   drawToContext: (context, options = {}) ->
     return unless @ready()
 
-    # If we're drawing only the head also draw the hair behind.
+    # Depend on landmarks to update when renderer translations change.
+    @landmarks[options.side]()
+
+    # If we're drawing only the head also draw the hair behind and in the middle.
     if options.rootPart is @options.part
+      @drawHairRenderersToContext 'HairBehind', context, options
+      @drawHairRenderersToContext 'HairMiddle', context, options
+
+    # Draw main head renderers.
+    super arguments...
+
+    # Draw hair over head renderers.
+    @drawHairRenderersToContext 'HairFront', context, options
+
+  drawHairRenderersToContext: (regionId, context, options) ->
+    for hairRenderer in @hairRenderers
+      # Apply hair renderer's transform.
       context.save()
 
-      # Depend on landmarks to update when renderer translations change.
-      @landmarks()
-
-      translation = _.defaults {}, @_translation,
+      translation = _.defaults {}, hairRenderer._translation[options.side],
         x: 0
         y: 0
-  
-      context.translate translation.x, translation.y
-  
-      for renderer in @hairBehindRenderers
-        @drawRendererToContext renderer, context, options
-  
-      context.restore()
 
-    # Draw the rest as usual.
-    super
+      context.translate translation.x, translation.y
+
+      # Draw hair shapes in the desired region.
+      for hairShapeRenderer in hairRenderer.renderers() when hairShapeRenderer.options.part.properties.region.options.dataLocation() is regionId
+        @drawRendererToContext hairShapeRenderer, context, options
+
+      # Restore context back to head's transform.
+      context.restore()

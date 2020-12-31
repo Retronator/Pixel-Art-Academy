@@ -1,0 +1,19 @@
+<template name="PixelArtAcademy.Season1.Episode1.Pages.Admin.StudyGroups">
+  <div class="pixelartacademy-season1-episode1-pages-admin-studygroups">
+    <h1>Admission Week Study Groups</h1>
+    <ul class="study-groups">
+      {{#each studyGroupIds}}
+        <li class="study-group">
+          <ol class="members" reversed>
+            {{#each members}}
+              <li class="member" value="{{memberId}}">
+                {{character.debugName}} ({{joinTime.toDateString}})
+                <div class="introduction">{{introduction}}</div>
+              </li>
+            {{/each}}
+          </ol>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

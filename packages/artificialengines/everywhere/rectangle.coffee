@@ -81,7 +81,7 @@ class AE.Rectangle
 
   # Returns the minimum rectangle that contains both rectangles
   @union: (a, b) ->
-    UIRectangle.fromDimensions
+    AE.Rectangle.fromDimensions
       left: Math.min a.left(), b.left()
       right: Math.max a.right(), b.right()
       top: Math.min a.top(), b.top()

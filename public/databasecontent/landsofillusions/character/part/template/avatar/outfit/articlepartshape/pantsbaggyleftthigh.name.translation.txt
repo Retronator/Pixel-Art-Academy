@@ -1,0 +1,3 @@
+en-US: Pants baggy left thigh
+
+{"_id":"PN8tmej8NE3jLDnf4","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants baggy left thigh","quality":0},"best":{"text":"Pants baggy left thigh","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants baggy left thigh","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1564528799866}}

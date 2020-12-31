@@ -1,86 +1,57 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools.Tool
-  constructor: ->
-    super
+class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Stroke
+  # paintNormals: boolean whether only normals are being painted
+  # ignoreNormals: boolean whether normals are not painted
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
+  @displayName: -> "Pencil"
 
-    @name = "Pencil"
-    @shortcut = AC.Keys.b
+  @initialize()
 
-  onMouseDown: (event) ->
-    super
+  createPixelsFromCoordinates: (coordinates) ->
+    # Make sure we have paint at all.
+    paint =
+      directColor: @paintHelper.directColor()
+      paletteColor: @paintHelper.paletteColor()
+      materialIndex: @paintHelper.materialIndex()
+    
+    return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
-    @applyPencil()
+    paint.normal = @paintHelper.normal().toObject()
 
-  onMouseMove: (event) ->
-    super
+    for coordinate in coordinates
+      pixel = _.clone coordinate
 
-    @applyPencil()
+      for property in ['normal', 'materialIndex', 'paletteColor', 'directColor']
+        pixel[property] = paint[property] if paint[property]?
+                
+      pixel
 
-  applyPencil: ->
-    return unless @mouseState.leftButton
+  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
+    # See if we're only painting normals.
+    paintNormals = @data.get 'paintNormals'
+    ignoreNormals = @data.get 'ignoreNormals'
 
-    xCoordinates = [[@mouseState.x, 1]]
-
-    spriteData = @options.editor().spriteData()
-    symmetryXOrigin = @options.editor().symmetryXOrigin?()
-
-    if symmetryXOrigin?
-      mirroredX = -@mouseState.x + 2 * symmetryXOrigin
-      xCoordinates.push [mirroredX, -1]
-
-    for [xCoordinate, xNormalFactor] in xCoordinates
-      # Create the new pixel.
-      pixel =
-        x: xCoordinate
-        y: @mouseState.y
-        
-      # If we have fixed bounds, make sure we're inside.
-      if spriteData.bounds.fixed
-        continue unless spriteData.bounds.left <= pixel.x <= spriteData.bounds.right and spriteData.bounds.top <= pixel.y <= spriteData.bounds.bottom
-
-      normal = @options.editor().shadingSphere?().currentNormal().clone()
-
-      if normal
-        pixel.normal = normal
-        pixel.normal.x *= xNormalFactor
-  
-      # See if we're setting a palette color.
-      palette = @options.editor().palette()
-      ramp = palette.currentRamp()
-      shade = palette.currentShade()
-  
-      if ramp? and shade?
-        pixel.paletteColor = {ramp, shade}
-  
-      # See if we're setting a named color.
-      materialIndex = @options.editor().materials?().currentIndex()
-      pixel.materialIndex = materialIndex if materialIndex?
-  
-      # See if we're painting a normal.
-      paintNormals = @options.editor().paintNormals?()
-  
-      spriteData = @options.editor().spriteData()
-      existingPixel = _.find spriteData.layers?[0]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
+    changedPixels = _.filter relativePixels, (pixel) =>
+      existingPixel = spriteData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
   
       if paintNormals and existingPixel
         # Get the color from the existing pixel.
-        for property in ['materialIndex', 'paletteColor']
+        for property in ['materialIndex', 'paletteColor', 'directColor']
           pixel[property] = existingPixel[property] if existingPixel[property]?
-  
-      # Nothing to do if we don't have a color selected.
-      continue unless pixel.paletteColor or pixel.materialIndex?
-  
-      # Do we even need to add this pixel? See if one just like it is already there.
-      exactMatch = LOI.Assets.Sprite.documents.findOne
-        _id: spriteData._id
-        "layers.#{0}.pixels": pixel
 
-      continue if exactMatch
+      if ignoreNormals and existingPixel
+        # Get the normal from the existing pixel.
+        pixel.normal = existingPixel.normal if existingPixel.normal?
       
-      @_callMethod spriteData._id, 0, pixel
+      # We need to add this pixel unless one just like it is already there.
+      not EJSON.equals existingPixel, pixel
 
-  # Override to call another method.
-  _callMethod: (spriteId, layer, pixel) ->
-    LOI.Assets.Sprite.addPixel spriteId, layer, pixel
+    return unless changedPixels.length
+
+    LOI.Assets.Sprite.addPixels spriteData._id, layerIndex, changedPixels, not strokeStarted
+
+    # Register that we've processed the start of the stroke.
+    @startOfStrokeProcessed()

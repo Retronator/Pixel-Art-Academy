@@ -12,7 +12,7 @@ class LOI.Character.Behavior.Perk.Spontaneous extends LOI.Character.Behavior.Per
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     factorPowers = behaviorPart.properties.personality.part.factorPowers()
     spontaneityScore = factorPowers[3].negative

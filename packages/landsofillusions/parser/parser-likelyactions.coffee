@@ -29,7 +29,9 @@ class LOI.Parser extends LOI.Parser
 
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
-      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority for likelyAction in likelyActions[0...10]
+
+      for likelyAction in likelyActions[0...10]
+        console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority, likelyAction
 
     # If the most likely action is not above 60%, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
@@ -57,7 +59,7 @@ class LOI.Parser extends LOI.Parser
       likelyActions = _.filter likelyActions, (likelyAction) =>
         likelyAction.precision is bestPrecision
 
-    # If all actions that are left have the same likelihood and precision, take the one with the highest priority
+    # If all actions that are left have the same likelihood and precision, take the one with the highest priority.
     equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision
 
     if equalLikelihood and equalPrecision
@@ -66,12 +68,13 @@ class LOI.Parser extends LOI.Parser
       likelyActions = _.filter likelyActions, (likelyAction) =>
         likelyAction.priority is bestPriority
 
-    # If we have only one possibility left, just choose that one (autocorrect style).
-    if likelyActions.length is 1
-      likelyAction = likelyActions[0]
-
-      commandNodeSequence = @_createCommandNodeSequence likelyAction
+    # If we have only one possibility left and it's close enough, just choose that one (autocorrect style).
+    startAction = (action) =>
+      commandNodeSequence = @_createCommandNodeSequence action
       LOI.adventure.director.startNode commandNodeSequence
+
+    if likelyActions.length is 1 and likelyActions[0].likelihood > 0.8
+      startAction likelyActions[0]
       return true
 
     # We still have multiple likely actions. Show a selection of choices for the user to choose from.
@@ -122,6 +125,9 @@ class LOI.Parser extends LOI.Parser
 
     # Now go over again and re-translate the duplicates with more verbose versions.
     testChoiceNode = lastChoiceNode
+    previousChoiceNode = null
+
+    includedLines = []
 
     loop
       line = testChoiceNode.node.line
@@ -131,10 +137,26 @@ class LOI.Parser extends LOI.Parser
       (lineIsSubstring = true if translatedForm.indexOf(line) > -1) for translatedForm in translatedForms when translatedForm isnt line
 
       if lineIsSubstring or line in duplicateForms
-        testChoiceNode.node.line = _.upperFirst @_createIdealForm testChoiceNode._likelyAction, fullNames: true
+        longerForm = _.upperFirst @_createIdealForm testChoiceNode._likelyAction, fullNames: true
+
+        # We don't show the line if the longer form is the same as an already
+        # included one since there would be no way to distinguish it in the interface.
+        if longerForm in includedLines
+          # Rewire previous choice node directly to the next one.
+          previousChoiceNode.next = testChoiceNode.next
+
+        else
+          includedLines.push longerForm
+          testChoiceNode.node.line = longerForm
+          previousChoiceNode = testChoiceNode
 
       testChoiceNode = testChoiceNode.next
       break if testChoiceNode.node is cancelNode
+
+    # If we ended up with just one action (and the cancel node), we simply start that action.
+    if lastChoiceNode.next.node is cancelNode
+      startAction lastChoiceNode._likelyAction
+      return true
 
     # The dialog starts with a question to the user.
     questionNode = new Nodes.InterfaceLine

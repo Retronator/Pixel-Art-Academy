@@ -5,5 +5,5 @@ class AB.Pages.Admin.Scripts extends AM.Component
   @register 'Artificial.Babel.Pages.Admin.Scripts'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .generate-best-translations': => Meteor.call 'Artificial.Babel.Pages.Admin.Scripts.GenerateBestTranslations'

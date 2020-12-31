@@ -1,0 +1,44 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-audioeditor-nodelibrary
+  .search
+    position relative
+
+    .input
+      background atariGrey(0)
+      border none
+      padding 2rem 5rem
+      width 100%
+
+    .clear-input-button
+      position absolute
+      top 1rem
+      right 1rem
+      border none
+      background none
+      padding 2rem 2rem 1rem 4rem
+      font inherit
+      color atariGrey(4)
+      text-align center
+
+      &::before
+        content 'X'
+
+      &:hover
+        color atariGrey(7)
+
+  .node-classes
+    padding 0
+    margin 5rem 0 0
+    list-style none
+
+    .node-class
+      display inline-block
+      width 100%
+      margin 0 1rem 1rem 0
+
+      .landsofillusions-assets-audioeditor-node
+        width 100% !important
+
+        .name
+          pointer-events none

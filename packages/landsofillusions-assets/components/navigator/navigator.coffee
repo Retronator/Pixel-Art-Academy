@@ -6,7 +6,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
   @register "LandsOfIllusions.Assets.Components.Navigator"
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @zoomLevels = @options.zoomLevels or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
 
@@ -16,10 +16,14 @@ class LOI.Assets.Components.Navigator extends AM.Component
     @zoomInPressed = new ReactiveField false
     @zoomOutPressed = new ReactiveField false
 
+    @enabled = => not @options.enabled? or @options.enabled()
+
   onRendered: ->
-    super
+    super arguments...
 
     $(document).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
+      return unless @enabled()
+
       switch event.keyCode
         when AC.Keys.equalSign
           @zoomIn()
@@ -32,11 +36,13 @@ class LOI.Assets.Components.Navigator extends AM.Component
         else
           return
 
-      # Also allow for cmd/ctrl combination.
+      # Also allow for command/control combination.
       keyboardState = AC.Keyboard.getState()
-      event.preventDefault() if keyboardState.isCommandOrCtrlDown()
+      event.preventDefault() if keyboardState.isCommandOrControlDown()
 
     $(document).on 'keyup.landsofillusions-assets-components-navigator', (event) =>
+      return unless @enabled()
+
       switch event.which
         when AC.Keys.equalSign
           @zoomInPressed false
@@ -45,7 +51,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
           @zoomOutPressed false
 
   onDestroyed: ->
-    super
+    super arguments...
     
     $(document).off('.landsofillusions-assets-components-navigator')
 
@@ -86,7 +92,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'change .zoom-percentage-input': @onSubmitZoomPercentage
       'click .zoom-in-button': @onClickZoomIn
       'click .zoom-out-button': @onClickZoomOut

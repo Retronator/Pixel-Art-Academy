@@ -1,57 +1,378 @@
 # PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup
 
-## MainQuestions
+## Start
+## JustOne
 
-* Let's hang out sometimes. -> [HangOut] `person.introduced and not _person.inGroup`
-* What's new? -> [WhatsNew] `_person.inGroup`
-* Can I see your study journal? -> [Journal]
-* Bye now! -> [End]
+> _char_ sits down and waits for the study group meeting to start.
 
-## YourName
+coordinator: Hello everyone!
 
-person: I'm `_person.name`.
+char: Hi!
+person1: Hello! `_person1`
+person2: Hey! `_person2`
+person3: Hi! `_person3`
 
-> _char_ extends _their_ hand.
+coordinator: 
+  Let's start our study group meeting.
+  I hope you've made good progress on your admission week tasks.
+  We'll do a quick report of what you've been working on.
+  Who wants to go first?
 
-char: Nice to meet you. I'm `@character.name()`.
+pause
 
-`person.introduced = true`
-
--> [MainQuestions]
-
-## HangOut
-
-person: Sounds good! I'll see you at Retronator Café?
-char: it's a deal.
-
-### HangOut
-
--> [MainQuestions]
+<!-- Report -->
 
 ## WhatsNew
 
 ### WhatsNew
 
+> You can now ask your groupmates more about the things they worked on, or report your own progress to continue.
+
+## FollowUp
+
+### FollowUp
+
 -> [End]
 
-## Journal
+## FollowUpEnd
 
--> [NoJournals] `not _person.journalIds.length`
+* !Report own progress -> [ReportProgress]
 
-person: Of course! Let me know what you think.
+## ReportProgress
+
+### ReportProgress
+
+-> [ReportProgressContinue] `_learningTasks.tasks.length < 1`
+
+## ReportProgressWhichLearningTasks
+
+coordinator: Which learning task did you complete? -> [LearningTaskSingle] `_learningTasks.tasks.length is 1`
+coordinator: Which learning tasks did you complete? -> [LearningTaskMultiple] `_learningTasks.tasks.length > 1`
+
+## LearningTaskSingle
+
+char: It was the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal.
+
+-> [ReportProgressContinue]
+
+## LearningTaskMultiple
+
+char: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 1`
+
+char: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length is 1`
+
+char: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length > 1`
+
+char: I was quite productive, I finished a bunch of tasks from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length is 1`
+
+char: I was quite productive, I finished a bunch of tasks from the `_learningTasks.goalNames` goals. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length > 1`
+
+-> [ReportProgressContinue]
+
+## ReportProgressContinue
+
+coordinator: Good job!
+
+<!-- Reciprocity -->
+
+## ReciprocityStart
+
+### ReciprocityStart
+
+-> [ReciprocityShort] `ReciprocityExplanation`
+
+## ReciprocityExplanation
+
+coordinator: 
+  Next up we'll do a reciprocity round.
+  We're here to support each other and help in any way we can.
+  
+-> [Reciprocity]
+
+## ReciprocityShort
+
+coordinator:
+  Next up is reciprocity.
+
+## Reciprocity
+
+-> [ReciprocitySingle] `not _person1`
+
+coordinator: Would anyone like to ask or share anything with the group?
+
+<!-- Reciprocity others -->
+
+## ReciprocityOtherAsks
+
+### ReciprocityOtherAsks
+
+`_firstAnyoneElse = false`
+`_reciprocityAsked = false`
+
+## ReciprocityOtherAsksStart
+
+coordinator: Anyone else has anything to share? `_reciprocityAsked and not _firstAnyoneElse`
+coordinator: Anyone else? `_reciprocityAsked and _firstAnyoneElse`
+
+-> [ReciprocityPlayer] `not _otherAsksLeft`
+
+`if (_reciprocityAsked) _firstAnyoneElse = true;`
+
+### ReciprocityOtherAsksStart
+
+`_reciprocityAsked = true;`
 
 pause
 
-### Journal
+* !Reply -> [ReciprocityOtherAsksReply]
+* !Continue -> [ReciprocityOtherAsksStart]
+
+## ReciprocityOtherAsksReply
+
+> Use the ![say](say "") command with the message in "quotes" to reply. Type ![continue](continue) to proceed with the meeting.
+
+### ReciprocityOtherAsksReply
+
+-> [ReciprocityOtherAsksCanceled] `not _reciprocityReplied`
+
+<!-- We use this label to track if the player ever replied to something. -->
+
+## ReciprocityOtherAsksRepliedSuccessfully 
+
+-> [ReciprocityOtherAsksStart]
+
+## ReciprocityOtherAsksCanceled
+
+> _char_ changes their mind and doesn't reply.
+
+-> [ReciprocityOtherAsksStart]
+
+## ReciprocitySingle
+
+coordinator: 
+  Do you have anything you wanted to share?
+  I'll let the other groupmates know when I see them.
+  
+* Yeah, actually … -> [ReciprocityAsk]
+* No, not really. 
+
+> _coordinator_ nods with a warm smile.
+
+coordinator: No worries.
+
+-> [ReciprocityEnd]
+
+<!-- Reciprocity player -->
+
+## ReciprocityPlayer
+
+`_reciprocityAsked = false`
+
+* !Ask or share something -> [ReciprocityAsk]
+* !Continue -> [ReciprocityEnd]
+
+## ReciprocityAsk
+
+> Use the ![say](say "") command with the message in "quotes" to ask or share something. Type ![continue](continue) to proceed with the meeting.
+
+### ReciprocityAsk
+
+-> [ReciprocityAskCanceled] `not _reciprocityAsked`
+-> [ReciprocityMemoryCreated] `MemoriesExplanation`
+
+## MemoriesExplanation
+
+> In order to not have to wait for others to reply in real-time, your SYNC device has recorded this moment as a memory.
+> Using the Memories tab in your SYNC interface, you can return to any recorded point in the past.
+> When other characters reply to your question, their answers will appear inside the memory.
+
+-> [ReciprocityAskThankYou]
+
+## ReciprocityMemoryCreated
+
+> A new Memory was created for this conversation. Check your SYNC interface later to read any replies.
+
+-> [ReciprocityAskThankYou]
+
+## ReciprocityAskThankYou
+
+coordinator: Thank you, _char_.
+
+-> [AcceptanceCelebrationStart]
+
+## ReciprocityAskCanceled
+
+> _char_ changes their mind and doesn't say anything.
+
+-> [ReciprocityEnd]
+
+## ReciprocityEnd
+
+-> [AcceptanceCelebrationStart]
+
+## AcceptanceCelebrationStart 
+
+### AcceptanceCelebrationStart
+
+-> [MeetingEnd] `not _acceptanceCelebration`
+
+## AcceptanceCelebration
+
+coordinator: Today we have a happy celebration moment!
+
+-> [AcceptanceCelebrationMultiple] `_acceptanceCelebration.studentsCount > 1`
+-> [AcceptanceCelebrationPlayerSingle] `_acceptanceCelebration.player and not _person1`
+
+coordinator: `_acceptanceCelebration.names` has completed all four admission goals and has been accepted to study at the Academy!
+
+> _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
+
+-> [AcceptanceCelebrationPlayer] `_acceptanceCelebration.player`
+
+coordinator: Congratulations! Retropolis will be happy to have you, make the best of your stay there!
+
+-> [AcceptanceCelebrationEnd]
+
+## AcceptanceCelebrationMultiple
+
+coordinator: `_acceptanceCelebration.names` have completed all four admission goals and have been accepted to study at the Academy! 
+
+> _coordinator_ hands out acceptance letters and students take them with delight.
+
+-> [AcceptanceCelebrationPlayer] `_acceptanceCelebration.player`
+
+coordinator: Make sure to find each other again in Retropolis! Have a wonderful stay there.
+
+-> [AcceptanceCelebrationEnd]
+
+## AcceptanceCelebrationPlayerSingle
+
+coordinator: You have completed all four admission goals and have been accepted to study at the Academy!
+
+> _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
+
+## AcceptanceCelebrationPlayer
+
+coordinator: 
+    _char_, you have shown commitment to improving yourself, not just for drawing, but learning in general.
+    This is the core value in Retropolis and you will fit right in. I'm sure you'll have the most wonderful time there.
+    
+> _coordinator_ gets a bit emotional.
+
+coordinator:
+    I guess this is goodbye for now. It's been really nice having you in the group. 
+    You'll find details what to do next in the application letter and an email from the Academy.
+    Take care! Have fun in your upcoming adventure!
+    
+> The final study group meeting is over, but you get a feeling _char_ will meet _their_ classmates again one day at the Academy.
+
+### AcceptanceCelebrationComplete
+    
+-> [End]        
+
+## AcceptanceCelebrationEnd
+
+coordinator: Everyone else, I'll see you tomorrow.
+
+### AcceptanceCelebrationComplete
 
 -> [End]
 
-## NoJournals
+## MeetingEnd
 
-person: Oh, I don't actually have one.
-
--> [MainQuestions]
+coordinator:
+  OK, that's it for today.
+  Keep up the pace and I'll see you next time.
 
 -> [End]
+
+## ContinueMeetingHint
+
+-> [ContinueMeetingHintShort] `ContinueMeetingHintLong`
+
+## ContinueMeetingHintLong
+
+> You can add additional replies with the ![say](say "") command. You can also simply type your message within quotation marks.
+
+## ContinueMeetingHintShort
+
+> Type ![continue](continue) when you're ready to proceed with the meeting.
+
+-> [End]
+
+## NoOne
+
+> _char_ sits down by _coordinator_.
+
+coordinator: 
+  Looks like it's just you today.
+  But no problem, we'll catch up with the rest tomorrow.
+  So, what have you been working on?
+  
+pause
+
+-> [ReportProgress]
+
+## AlreadyAccepted
+
+coordinator: 
+  Hey, _char_, how's it going? Came back to see how your group was doing?
+  
+* Yeah, I felt like catching up. -> [AlreadyAcceptedJoin]
+* Hey! I was just passing by actually. -> [AlreadyAcceptedCancel]
+
+## AlreadyAcceptedJoin
+
+coordinator: You know you're always welcome back.
+  
+-> [AlreadyAcceptedShareNoOne] `not _person1`
+
+coordinator: Alright, everyone, let's see what you've been up to.
+
+pause
+
+-> [WhatsNew]
+  
+## AlreadyAcceptedShareNoOne
+
+coordinator: So, what have you been up to?
+
+pause
+
+-> [ReportProgress]
+
+## AlreadyAcceptedCancel
+
+coordinator: 
+  Well, it's nice to see you again. 
+  I hope you will enjoy Retropolis!
+  
+char: Thank you! See ya.
+    
+-> [End]
+
+## AlreadyAcceptedNotOwnGroup
+
+char: I already completed Admission Week, I wouldn't want to disturb the other students.
+
+-> [End]
+
+## NotOwnGroup
+
+coordinator: Hi, _char_, how can I help you?
+
+char: I'm here for the study group meeting.
+
+coordinator: 
+    Oh, you're not actually in my group I think.
+    Check out the Admission Week app on your PixelBoy, you should see who's your coordinator and where to meet.
+    
+char: Ah, thank you.
+
+-> [End]
+
+<!-- Not used in admission group hangout. -->
+
+### JustOne
 
 ## End

@@ -1,6 +1,6 @@
 PADB = PixelArtDatabase
 
-Webshot = require 'webshot'
+Webshot = require 'node-webshot'
 Uploader = require('s3-streaming-upload').Uploader
 PassThrough = require('stream').PassThrough
 

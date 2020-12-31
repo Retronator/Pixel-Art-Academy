@@ -1,0 +1,3 @@
+en-US: Medium curly
+
+{"_id":"LS3X538YrvSeYXTF4","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560196040057},"translations":{"en":{"us":{"text":"Medium curly","quality":0},"best":{"text":"Medium curly","quality":0,"languageRegion":"en-US"}},"best":{"text":"Medium curly","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en-US: Sleeves upper-arms medium
+
+{"_id":"nfqnFhNZjRwiFYdPP","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564069805555},"translations":{"en":{"us":{"text":"Sleeves upper-arms medium","quality":0},"best":{"text":"Sleeves upper-arms medium","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sleeves upper-arms medium","quality":0,"languageRegion":"en-US"}}}

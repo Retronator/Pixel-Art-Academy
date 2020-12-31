@@ -15,7 +15,7 @@ class Entry.Object.Task extends Entry.Object
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task'
 
   onCreated: ->
-    super
+    super arguments...
 
     value = @value()
     taskClass = PAA.Learning.Task.getClassForId value.id
@@ -25,7 +25,7 @@ class Entry.Object.Task extends Entry.Object
       return
 
     @characterId = new ComputedField =>
-      @entryComponent()?.entry()?.journal.character._id
+      @quillComponent()?.entry()?.journal.character._id
     ,
       true
       
@@ -42,7 +42,7 @@ class Entry.Object.Task extends Entry.Object
 
       PAA.Learning.Task.Entry.documents.findOne entryId
 
-    @taskComponent = new @constructor[taskClass.type] @
+    @taskComponent = new @constructor[taskClass.type()] @
 
     # If we don't have an entry yet, see if one exists and automatically set it.
     unless value.entry?._id
@@ -55,7 +55,7 @@ class Entry.Object.Task extends Entry.Object
         @value value
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @goal?.destroy()
     @characterId?.stop()

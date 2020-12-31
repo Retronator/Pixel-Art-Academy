@@ -1,10 +1,27 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
+
+LOI.Memory.Action.all.publish (limit = 10) ->
+  check limit, Match.Integer
+
+  RA.authorizeAdmin()
+
+  LOI.Memory.Action.documents.find {},
+    sort:
+      time: -1
+    limit: limit
 
 LOI.Memory.Action.forMemory.publish (memoryId) ->
   check memoryId, Match.DocumentId
 
   LOI.Memory.Action.documents.find
     'memory._id': memoryId
+
+LOI.Memory.Action.forMemories.publish (memoryIds) ->
+  check memoryIds, [Match.DocumentId]
+
+  LOI.Memory.Action.documents.find
+    'memory._id': $in: memoryIds
 
 # Returns actions at a location within the duration.
 LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, earliestTime) ->
@@ -17,7 +34,7 @@ LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, ear
     locationId: locationId
     time: $gt: earliestTime
 
-# Returns actions at a location within the duration.
+# Returns actions for a character within the duration.
 LOI.Memory.Action.recentForCharacter.publish (characterId, earliestTime) ->
   check characterId, Match.DocumentId
   check earliestTime, Date
@@ -26,7 +43,7 @@ LOI.Memory.Action.recentForCharacter.publish (characterId, earliestTime) ->
     'character._id': characterId
     time: $gt: earliestTime
 
-# Returns actions at a location within the duration.
+# Returns actions for characters within the duration.
 LOI.Memory.Action.recentForCharacters.publish (characterIds, earliestTime) ->
   check characterIds, [Match.DocumentId]
   check earliestTime, Date

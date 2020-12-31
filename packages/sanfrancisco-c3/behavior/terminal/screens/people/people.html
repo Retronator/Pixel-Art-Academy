@@ -19,58 +19,94 @@
           </ul>
         </div>
       {{else}}
-        {{#with propertyTemplate}}
-          <div class="template-info main-text">
-            {{#if isOwnPropertyTemplate}}
-              <div class="name">
-                <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+        <div class="instructions">
+          {{#if propertyTemplate}}
+            {{#with propertyTemplate}}
+              <div class="template-info">
+                {{#if isOwnPropertyTemplate}}
+                  <div class="name">
+                    <span class="label">Template</span>: {{> renderTemplateNameInput fullPropertyTemplate.name}}
+                  </div>
+                  <div class="description">
+                    {{> renderTemplateDescriptionInput description}}
+                  </div>
+                  <p>
+                    You are the designer of this template and can edit it.
+                  </p>
+                {{else}}
+                  <div class="name">
+                    <span class="label">Template</span>: {{> t9n fullPropertyTemplate.name}}
+                  </div>
+                  <div class="description">
+                    {{> t9n description}}
+                  </div>
+                  <p>
+                    Click Modify to create your own people based on this template.
+                  </p>
+                {{/if}}
               </div>
-              <div class="description">
-                {{> renderTemplateDescriptionInput description}}
-              </div>
-              <p>
-                You are the designer of this template and can edit it.
-              </p>
-            {{else}}
-              <div class="name">
-                <span class="label">Template</span>: {{> t9n name}}
-              </div>
-              <div class="description">
-                {{> t9n description}}
-              </div>
-              <p>
-                Click Customize to create your own people based on this template.
-              </p>
-            {{/if}}
+            {{/with}}
+          {{/if}}
+          {{#if isEditable}}
+            <p class="main-text">
+              Specify people that have a significant impact on agent's life.
+            </p>
+          {{/if}}
         </div>
-        {{/with}}
-        <p class="main-text">
-          Specify people that have a significant impact on agent's life.
-        </p>
         <ul class="people">
           {{#each people}}
             <li class="person">
               <div class="property">
                 <div class="description">Relationship type:</div>
-                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipType}}</div>
+                <div class="selection">
+                  {{#if isEditable}}
+                    {{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipType}}
+                  {{else}}
+                    {{relationshipType}}
+                  {{/if}}
+                </div>
               </div>
               <div class="property">
                 <div class="description">How often do they stay in touch:</div>
-                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength}}</div>
+                <div class="selection">
+                  {{#if isEditable}}
+                    {{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength}}
+                  {{else}}
+                    {{relationshipStrength}}
+                  {{/if}}
+                </div>
               </div>
               <div class="property">
                 <div class="description">How close do they live:</div>
-                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.LivingProximity}}</div>
+                <div class="selection">
+                  {{#if isEditable}}
+                    {{> SanFrancisco.C3.Behavior.Terminal.People.LivingProximity}}
+                  {{else}}
+                    {{livingProximity}}
+                  {{/if}}
+                </div>
               </div>
               <div class="property">
                 <div class="description">How much do they support agent's art pursuits:</div>
-                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.ArtSupport}}</div>
+                <div class="selection">
+                  {{#if isEditable}}
+                    {{> SanFrancisco.C3.Behavior.Terminal.People.ArtSupport}}
+                  {{else}}
+                    {{artSupport}}
+                  {{/if}}
+                </div>
               </div>
               <div class="property">
-                <label class="description">{{> SanFrancisco.C3.Behavior.Terminal.People.DoesArt}}<span class="label">This person does art as well.</span></label>
+                <label class="description">
+                  {{> SanFrancisco.C3.Behavior.Terminal.People.DoesArt}}
+                  <span class="label">This person does art as well.</span>
+                </label>
               </div>
               <div class="property">
-                <label class="description">{{> SanFrancisco.C3.Behavior.Terminal.People.Joins}}<span class="label">This person will join the agent when they move to the Academy.</span></label>
+                <label class="description">
+                  {{> SanFrancisco.C3.Behavior.Terminal.People.Joins}}
+                  <span class="label">This person will join the agent when they move to the Academy.</span>
+                </label>
               </div>
             </li>
           {{/each}}
@@ -84,15 +120,31 @@
       {{#if showTemplates}}
         <button class="main-button action-button done-button">Back</button>
       {{else}}
-        <button class="main-button action-button done-button">Done</button>
-        <button class="action-button replace-button">Replace</button>
         {{#if propertyTemplate}}
+          {{#if isTemplatePublishable}}
+            <button class="{{publishButtonMainButtonClass}} action-button publish-button">Publish</button>
+            <button class="action-button done-button">Save as draft</button>
+          {{else}}
+            <button class="main-button action-button done-button">Done</button>
+          {{/if}}
+          {{#if canUpgradeTemplate}}
+            <button class="action-button upgrade-template-button">Upgrade version</button>
+          {{/if}}
+          <button class="action-button replace-button">Replace</button>
+          {{#if canRevertTemplate}}
+            <button class="action-button revert-template-button">Revert template</button>
+          {{/if}}
           {{#if isOwnPropertyTemplate}}
+            {{#unless isTemplateEditable}}
+              <button class="action-button modify-template-button">Modify template</button>
+            {{/unless}}
             <button class="action-button unlink-template-button">Unlink template</button>
           {{else}}
             <button class="action-button unlink-template-button">Modify</button>
           {{/if}}
         {{else}}
+          <button class="main-button action-button done-button">Done</button>
+          <button class="action-button replace-button">Replace</button>
           {{#if isAdmin}}
             <button class="action-button save-as-template-button">Save as template</button>
           {{/if}}

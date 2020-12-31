@@ -1,0 +1,3 @@
+en: Short shaved high forehead
+
+{"_id":"uWiFBGRPfcgomAgRi","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Short shaved high forehead","quality":0,"best":{"text":"Short shaved high forehead","quality":0,"languageRegion":"en"}},"best":{"text":"Short shaved high forehead","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1560727752319}}

@@ -12,16 +12,24 @@ person: Hmmm, let's see …
 
 pause
 
--> [NothingNew] `_relevantActionsCount is 0`
--> [NothingUnknown] `_relevantActionsCount is _knownActionsCount`
+-> [NothingNew] `_relevantUpdatesCount is 0`
+-> [NothingUnknown] `_relevantUpdatesCount is _knownUpdatesCount`
 
 ## Update
+
+-> [EndUpdateNoPause] `_relevantUpdatesCount is 0`
 
 ## JournalEntries
 
 person: I wrote a new journal entry. `_journalEntries.entries.length is 1`
 
 person: I wrote some new entries in my journal. `_journalEntries.entries.length > 1`
+
+## JournalEntries
+
+person: I finished one of the learning tasks. `_learningTasks.tasks.length is 1`
+
+person: I finished some learning tasks. `_learningTasks.tasks.length > 1`
 
 ## CommentsOnJournalEntries
 
@@ -33,7 +41,7 @@ person: I was talking with `_journalEntryConversations.conversations[0].particip
 
 person: I was talking about one of my journal entries with others. `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length > 2`
 
-person: I was talking about my journal entries with others. `_journalEntryConversations.conversations.length > 1`
+person: I was talking about journal entries with others. `_journalEntryConversations.conversations.length > 1`
 
 ## Conversations
 
@@ -57,16 +65,21 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 
 <!-- Journal entries -->
 
-* What journal entry? -> [JournalEntrySingle] `_journalEntries.entries.length is 1`
-* Can I see the journal entries? -> [JournalEntryMultiple] `_journalEntries.entries.length > 1`
+* Which journal entry did you write? -> [JournalEntrySingle] `_journalEntries.entries.length is 1`
+* Can I see the journal entries you wrote? -> [JournalEntryMultiple] `_journalEntries.entries.length > 1`
+
+<!-- Learning tasks -->
+
+* Which learning task did you complete? -> [LearningTaskSingle] `_learningTasks.tasks.length is 1`
+* Which learning tasks did you complete? -> [LearningTaskMultiple] `_learningTasks.tasks.length > 1`
 
 <!-- Comments on journal entries -->
 
-* What journal entry from `_journalEntryConversations.conversations[0].journalEntry.author.name` was that? -> [JournalEntryConversationNotOwn] `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
+* Which journal entry from `_journalEntryConversations.conversations[0].journalEntry.author.name` was that? -> [JournalEntryConversationNotOwn] `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
 * Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` comment on? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 1`
 * Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` and `_journalEntryConversations.conversations[0].participants[1].name` talk about? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 2`
 * Which journal entry did you talk about? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length > 2`
-* Can I see the journal entries you talked about? -> [JournalEntryConversationOwnMultiple] `_journalEntryConversations.conversations.length > 1`
+* Can I see the journal entries you talked about? -> [JournalEntryConversationMultiple] `_journalEntryConversations.conversations.length > 1`
 
 <!-- Conversations -->
 
@@ -77,8 +90,8 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 
 <!-- Comments on Retronator Daily articles -->
 
-* Can I share the article? `_dailyConversations.conversations.length is 1`
-* What articles were they? `_dailyConversations.conversations.length > 1`
+* Can you share the article? `_dailyConversations.conversations.length is 1`
+* Which articles did you read? `_dailyConversations.conversations.length > 1`
 
 * Oh, that's cool. -> [End] `not _justFollowUp or _followedUp`
 * Actually … -> [End] `_justFollowUp and not _followedUp`
@@ -116,6 +129,32 @@ pause
 
 -> [Return]
 
+<!-- Learning tasks -->
+
+## LearningTaskSingle
+
+person: It was the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal.
+
+`_followedUp = true`
+
+-> [FollowUp]
+
+## LearningTaskMultiple
+
+person: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 1`
+
+person: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length is 1`
+
+person: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.tasks.length <= 3 and _learningTasks.goals.length > 1`
+
+person: I was quite productive, I finished a bunch of tasks from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length is 1`
+
+person: I was quite productive, I finished a bunch of tasks from the `_learningTasks.goalNames` goals. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length > 1`
+
+`_followedUp = true`
+
+-> [FollowUp]
+
 <!-- Journal entry conversations -->
 
 ## JournalEntryConversationNotOwn
@@ -130,9 +169,9 @@ person: Let me show you …
 
 -> [GoOverJournalEntryConversations]
 
-## JournalEntryConversationOwnMultiple
+## JournalEntryConversationMultiple
 
-person: Yeah, they're somewhere around here …
+person: Yeah, they were these …
 
 -> [GoOverJournalEntryConversations]
 
@@ -183,6 +222,40 @@ pause
 
 -> [FollowUp]
 
+## JournalEntryHint
+
+-> [JournalEntryHintShort] `JournalEntryHintLong`
+
+## JournalEntryHintLong
+
+> You can comment on the journal entry with the ![say](say "") command. You can also simply type your message within quotation marks.
+> Hover over the bottom of the journal to go to next or previous page. Type ![back](back) to stop reading.
+
+-> [EndInternal]
+
+## JournalEntryHintShort
+
+> Type ![say](say "") to comment or ![back](back) to close the journal.
+
+-> [EndInternal]
+
+## ConversationHint
+
+-> [ConversationHintShort] `ConversationHintLong`
+
+## ConversationHintLong
+
+> You can reply with the ![say](say "") command. The say keyword is optional. You can simply type your message within quotation marks.
+> Type ![back](back) to exit the conversation.
+
+-> [EndInternal]
+
+## ConversationHintShort
+
+> Type ![say](say "") to reply or ![back](back) to exit the conversation.
+
+-> [EndInternal]
+
 ## NothingNew
 
 person: Nope, nothing really.
@@ -199,8 +272,14 @@ person: Not much, I think you've been there for all of it.
 
 pause
 
+## EndUpdateNoPause
+
 ### EndUpdate
 
 -> [End]
 
 ## End
+
+<!-- We have a separate End that can be used within the person updates interaction, since the normal End will get rewired back to the calling script. -->
+
+## EndInternal

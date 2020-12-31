@@ -6,6 +6,7 @@ LOI = LandsOfIllusions
 LOI.Authorize.player = ->
   user = Retronator.requireUser()
 
+  return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
   return if user.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
 
   throw new AE.UnauthorizedException "You are not a player and cannot perform this action."
@@ -14,6 +15,7 @@ LOI.Authorize.player = ->
 LOI.Authorize.alphaAccess = ->
   user = Retronator.requireUser()
 
+  return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
   return if user.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
 
   throw new AE.UnauthorizedException "You do not have alpha access and cannot perform this action."
@@ -22,6 +24,7 @@ LOI.Authorize.alphaAccess = ->
 LOI.Authorize.avatarEditor = ->
   user = Retronator.requireUser()
 
+  return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
   return if user.hasItem Retronator.Store.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
 
   throw new AE.UnauthorizedException "You do not have the avatar editor and cannot perform this action."

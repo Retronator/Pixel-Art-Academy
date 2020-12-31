@@ -1,0 +1,23 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.Objects">
+  <div class="landsofillusions-assets-mesheditor-objects landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="objects-table editor-table">
+      {{#each objects}}
+        <tr class="object {{activeClass}}">
+          <td class="visible">
+            <label class="label">
+              <input type="checkbox" class="visible-checkbox" {{visibleCheckedAttribute}}/><span class="icon"></span>
+            </label>
+          </td>
+          <td class="thumbnail">{{> LandsOfIllusions.Assets.MeshEditor.Thumbnail objectThumbnail}}</td>
+          <td class="name"><input class="name-input" value="{{name}}" placeholder="{{placeholderName}}" {{nameDisabledAttribute}}/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="add-button">Add</button>
+      {{#if showRemoveButton}}
+        <button class="remove-button">Remove</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

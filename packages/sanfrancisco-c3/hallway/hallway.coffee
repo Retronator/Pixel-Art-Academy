@@ -21,10 +21,10 @@ class C3.Hallway extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   destroy: ->
-    super
+    super arguments...
 
   exits: ->
     "#{Vocabulary.Keys.Directions.North}": C3.Behavior

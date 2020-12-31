@@ -81,6 +81,14 @@ class LOI.Interface.Components.CommandInput
     @commandHistoryIndex++
     @clear()
 
+  replaceLastCommandInHistory: (command) ->
+    command = _.toLower command
+    @commandHistory[@commandHistory.length - 1] = command
+
+    storedCommandHistory = @storedCommandHistory()
+    storedCommandHistory[storedCommandHistory.length - 1] = command
+    @storedCommandHistory storedCommandHistory
+
   addText: (text) ->
     newCommand = "#{@commandBeforeCaret()}#{text}#{@commandAfterCaret()}"
 
@@ -112,15 +120,35 @@ class LOI.Interface.Components.CommandInput
     # Ignore keyboard shortcuts.
     return if event.metaKey or event.ctrlKey
 
-    character = String.fromCharCode charCode
+    addition = String.fromCharCode charCode
 
-    newCommand = "#{@commandBeforeCaret()}#{character}#{@commandAfterCaret()}"
+    # If space is pressed after the say command, auto-insert quotes.
+    commandBeforeCaret = @commandBeforeCaret()
+    sayCommandPhrases = LOI.adventure.parser.vocabulary.getPhrases LOI.Parser.Vocabulary.Keys.Verbs.Say
+
+    if charCode is AC.Keys.space
+      for sayCommandPhrase in sayCommandPhrases
+        if commandBeforeCaret is sayCommandPhrase
+          addition += '"'
+          break
+
+    # If quote is pressed directly after the say command, insert space in front of it.
+    if charCode is '"'.charCodeAt 0
+      for sayCommandPhrase in sayCommandPhrases
+        if commandBeforeCaret is sayCommandPhrase
+          addition = " #{addition}"
+          break
+
+    # If the quote is pressed directly behind a quote, don't add it.
+    return if addition is '"' and _.endsWith commandBeforeCaret, '"'
+
+    newCommand = "#{commandBeforeCaret}#{addition}#{@commandAfterCaret()}"
 
     @_updateCommand newCommand
-    @caretPosition @caretPosition() + 1
+    @caretPosition @caretPosition() + addition.length
 
     # Don't let space scroll.
-    return false if event.which is AC.Keys.space
+    return false if charCode is AC.Keys.space
 
   _updateCommand: (newCommand) ->
     # Always update the new command.

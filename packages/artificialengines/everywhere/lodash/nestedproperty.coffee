@@ -27,9 +27,10 @@ _.mixin
           nestedObject = nestedObject[part]
 
     # Getter that returns undefined if hit with non-objects.
-    for part in parts
-      return undefined unless _.isObject nestedObject
-      nestedObject = nestedObject[part]
+    if parts
+      for part in parts
+        return undefined unless _.isObject nestedObject
+        nestedObject = nestedObject[part]
 
     # We've dropped to the end so nestedObject should be the value of the desired property.
     nestedObject

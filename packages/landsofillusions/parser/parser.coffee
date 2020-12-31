@@ -18,11 +18,13 @@ class LOI.Parser
     @listeners = [
       new @constructor.DebugListener
       new @constructor.NavigationListener
-      new @constructor.DescriptionListener
+      new @constructor.ThingListener
       new @constructor.LookLocationListener
       new @constructor.ConversationListener
       new @constructor.AdvertisedContextListener
       new @constructor.HelpListener
+      new @constructor.TalkingListener
+      new @constructor.InteractionListener
     ]
 
   destroy: ->
@@ -34,11 +36,6 @@ class LOI.Parser
   parse: (command) ->
     # Create a rich command object.
     command = new LOI.Parser.Command command
-
-    # Report this command to analytics. Use command text as action and location ID as label.
-    eventCategory = 'Adventure Command'
-    eventAction = command.normalizedCommand
-    eventLabel = LOI.adventure.currentLocationId()
 
     # Get all command responses from all the listeners.
     commandResponses = for listener in LOI.adventure.currentListeners()
@@ -88,6 +85,9 @@ class LOI.Parser
 
         if result is true
           LOI.adventure.interface.narrative.addText "OK."
+
+        # Inform listeners that the action was executed.
+        listener.onCommandExecuted likelyAction for listener in LOI.adventure.currentListeners()
 
   # Creates a node sequence that outputs the likely command to narrative and performs its action.
   _createCommandNodeSequence: (likelyAction) ->

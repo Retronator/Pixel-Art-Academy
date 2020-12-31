@@ -5,7 +5,7 @@ class LOI.Pages.Loading extends AM.Component
   @register 'LandsOfIllusions.Pages.Loading'
 
   onCreated: ->
-    super
+    super arguments...
 
     # Create pixel scaling display.
     @display = new AM.Display
@@ -14,7 +14,7 @@ class LOI.Pages.Loading extends AM.Component
       minScale: 2
 
   onRendered: ->
-    super
+    super arguments...
 
     Meteor.setTimeout =>
       return unless @isRendered()

@@ -1,0 +1,82 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Home.Book">
+  {{#with focusedArtworks}}
+    <div class="pixelartacademy-studyguide-pages-home-book-focused-artworks">
+      {{> PixelArtDatabase.Components.Stream}}
+    </div>
+  {{/with}}
+  {{#with book}}
+    <div class="pixelartacademy-studyguide-pages-home-book {{loadedClass}}" {{style componentStyle}}>
+      <div class="book {{design.class}}" {{style bookStyle}}>
+        {{#if canMoveLeft}}
+          <button class="move-button left" {{style moveButtonLeftStyle}}></button>
+        {{/if}}
+        {{#if canMoveRight}}
+          <button class="move-button right" {{style moveButtonRightStyle}}></button>
+        {{/if}}
+        <div class="page left {{frontPageClass}}">
+          {{#if leftPageIndex}}
+            {{#if activeContentItem}}
+              <div class="header">
+                {{> t10e title}}
+              </div>
+            {{else}}
+              <div class="header">
+                Table of Contents
+              </div>
+            {{/if}}
+          {{/if}}
+          <div class="footer">
+            {{pageNumberLeft}}{{#if pagesCount}}/{{pagesCount}}{{/if}}
+          </div>
+        </div>
+        <div class="page right {{frontPageClass}}">
+          {{#if $or activeContentItem leftPageIndex}}
+            {{#if rightPageHasContent}}
+              <div class="header">
+                {{#with activeContentItem}}
+                  {{goal.displayName}}
+                {{else}}
+                  {{> t10e title}}
+                {{/with}}
+              </div>
+            {{/if}}
+          {{/if}}
+          <div class="footer">
+            {{#if showPageNumberRight}}
+              {{pageNumberRight}}{{#if pagesCount}}/{{pagesCount}}{{/if}}
+            {{/if}}
+          </div>
+        </div>
+        <div class="contents-area">
+          <div class="contents" {{style contentsStyle}}>
+            {{#with activeContentItem}}
+              {{> PixelArtAcademy.StudyGuide.Pages.Home.Book.Article}}
+              <div class="end-page"></div>
+            {{else}}
+              <div class="table-of-contents">
+                <h1>{{> t10e title}}</h1>
+                <h2>Table of Contents</h2>
+                <ol class="activities">
+                  {{#each contentItems}}
+                    <li class="activity">
+                      {{> PixelArtAcademy.StudyGuide.Pages.Home.Book.TableOfContentsItem}}
+                    </li>
+                  {{/each}}
+                </ol>
+                <div class="end-page"></div>
+              </div>
+            {{/with}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/with}}
+</template>
+
+<template name="PixelArtAcademy.StudyGuide.Pages.Home.Book.TableOfContentsItem">
+  <div class="pixelartacademy-studyguide-pages-home-book-tableofcontentsitem">
+    <a href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home' pageOrBook=book.slug activity=slug}}">
+      {{goal.displayName}}
+    </a>
+  </div>
+</template>

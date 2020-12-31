@@ -63,6 +63,8 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       for the snake body and food piece in the Projects section of the Drawing app.
     """
 
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+
     @interests: -> ['snake', 'food']
 
     @predecessors: -> [Goal.Play]
@@ -78,7 +80,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       return unless project = PAA.Practice.Project.documents.findOne projectId
 
       for asset in project.assets
-        LOI.Assets.Sprite.forId.subscribe asset.sprite._id
+        LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, asset.sprite._id
         return unless sprite = LOI.Assets.Sprite.documents.findOne asset.sprite._id
 
         # We know the player has changed the sprite if the history position is not zero.

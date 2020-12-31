@@ -1,0 +1,437 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.GalleryWest
+
+## GalleryIntro
+
+> Shelley and Retro enter and set up a desk in the back of the gallery.
+
+shelley:
+  Oh, hi! We'll be having the meeting for Academy of Art applicants here.
+  
+retro:
+   We're almost done prepping so go ahead and get ready too.
+   
+### GalleryIntroDone
+
+-> [RetroIntroInstructions]
+
+## RetroIntro
+
+-> [End] `RetroIntroDone`
+
+retro:
+  Hey, welcome to the admission week meetup! We're just about to start.
+
+## RetroIntroInstructions
+
+retro:
+  Grab a marker and make yourself a name tag. 
+  Get a bunch of extra stickers too, you'll need them later on.
+
+## RetroIntroDone
+
+-> [End]
+
+## TalkToAlexandra
+
+alexandra: Hi! I think we'll get started soon.
+  
+-> [End]
+
+## TalkToReuben
+
+reuben: 
+  Hey, how's it going? 
+  Looks like we're almost ready to start.
+  
+-> [End]
+
+## TalkToShelley
+
+shelley:
+  Nice to see you!
+  Make yourself a name tag and we'll get started.
+  
+-> [End]
+
+## TalkToRetro
+
+retro: When you're ready to start ![use marker with stickers](use marker with stickers) to make a name tag.
+  
+-> [End]
+
+## MixerStart
+
+shelley: Welcome everyone! 
+
+> Everyone turns their attention to Shelley.
+
+### MixerStart
+  
+shelley:
+  I hope your admission week is going great so far. 
+  My name is Shelley and I'm the coordinator for your application process to the Academy.
+  Now don't worry, that doesn't mean I'm deciding who gets admitted and who doesn't. That is really up to you.
+  I'm here to help in any way I can to make sure you complete admission week.
+  It's important to know you're not going through this process alone. Your time at the Academy—and during Admission Week—will be shared with your classmates.
+  Today you will join a study group. You and your groupmates will meet every day to see how you're progressing on your admission tasks.
+  But first let's get to know each other a little better so you have an easier time choosing your partners.
+
+> Everyone looks at each other, some more nervously than others, but all excited to get started.
+
+## IceBreakersStart
+
+`if (!answers) answers = {}`
+
+shelley:
+  Now, go to the middle of the room and make sure you have a marker at hand.
+  
+> Participants gather in the middle. 
+
+### IceBreakersStart
+
+shelley:
+  I will ask a question and you will go to the left or right side of the room based on your answer. You can stay in the middle too.
+  First, do you want drawing to be mainly your hobby or profession?
+
+pause
+
+### HobbyProfessionStart
+
+* !Hobby -> [AnswerHobby]
+* !Profession -> [AnswerProfession]
+* !Somewhere in between -> [AnswerHobbyProfession]
+
+## AnswerHobby
+
+`answers[0] = 0`
+
+> After some deliberation _char_ goes left.
+
+-> [HobbyProfessionContinue]
+
+## AnswerProfession
+
+`answers[0] = 2`
+
+> After some deliberation _char_ goes right.
+
+-> [HobbyProfessionContinue]
+
+## AnswerHobbyProfession
+
+`answers[0] = 1`
+
+> After some deliberation _char_ stays in the center.
+
+## HobbyProfessionContinue
+
+### HobbyProfessionEnd
+
+## HobbyProfessionWriteStart
+
+> Everyone else also finds their places.
+
+shelley:
+  Now write down your answer on a sticker and put it next to your name tag.
+  
+-> [End]
+
+## HobbyProfessionWrite
+
+> _char_ writes "`_firstAnswer`" on a sticker and places it next to _their_ name tag.
+
+## PixelArtOtherStylesStart
+
+shelley: Next question: do you want to primarily do pixel art or other styles?
+
+pause
+
+### PixelArtOtherStylesStart
+
+* !Pixel art -> [AnswerPixelArt]
+* !Other styles -> [AnswerOtherStyle]
+* !All styles! -> [AnswerAllStyles]
+
+## AnswerPixelArt
+
+`answers[1] = 0`
+
+-> [PixelArtOtherStylesContinue]
+
+## AnswerOtherStyle
+
+`answers[1] = 2`
+
+-> [PixelArtOtherStylesContinue]
+
+## AnswerAllStyles
+
+`answers[1] = 1`
+
+## PixelArtOtherStylesContinue
+
+### PixelArtOtherStylesEnd
+
+> Some people have to change sides, others stay where they were.
+> _char_ writes _their_ answer on another sticker.
+
+## ExtrovertIntrovertStart
+
+shelley: Alright, extrovert or introvert?
+
+pause
+
+### ExtrovertIntrovertStart
+
+* !Extrovert -> [AnswerExtrovert]
+* !Introvert -> [AnswerIntrovert]
+* !A bit of both -> [AnswerExtrovertIntrovert]
+
+## AnswerExtrovert
+
+`answers[2] = 0`
+
+-> [ExtrovertIntrovertContinue]
+
+## AnswerIntrovert
+
+`answers[2] = 2`
+
+-> [ExtrovertIntrovertContinue]
+
+## AnswerExtrovertIntrovert
+
+`answers[2] = 1`
+
+## ExtrovertIntrovertContinue
+
+### ExtrovertIntrovertEnd
+
+> _char_ knows exactly where to go. `not _factor1Changed`
+> You get a strange feeling your character's personality was changed by this answer. `_factor1Changed`
+
+## IndividualTeamStart
+
+shelley: Do you prefer working individually or in a team?
+
+pause
+
+### IndividualTeamStart
+
+* !Individually -> [AnswerIndividual]
+* !Team -> [AnswerTeam]
+* !No preference -> [AnswerIndividualTeam]
+
+## AnswerIndividual
+
+`answers[3] = 0`
+
+-> [IndividualTeamContinue]
+
+## AnswerTeam
+
+`answers[3] = 2`
+
+-> [IndividualTeamContinue]
+
+## AnswerIndividualTeam
+
+`answers[3] = 1`
+
+## IndividualTeamContinue
+
+### IndividualTeamEnd
+
+> You wonder if those that like to work in a team will end up in the same group. `not _factor2Changed`
+> You wonder if _char_ will start behaving differently based on this answer. `_factor2Changed`
+
+## ComputersConsolesStart
+
+shelley:
+  Finally, a less serious one, computers or consoles?
+  
+pause
+
+### ComputersConsolesStart
+
+* !Computers -> [AnswerComputers]
+* !Consoles -> [AnswerConsoles]
+* !Anything that runs games is fine -> [AnswerAnyPlatform]
+
+## AnswerComputers
+
+`answers[4] = 0`
+
+-> [ComputersConsolesContinue]
+
+## AnswerConsoles
+
+`answers[4] = 2`
+
+-> [ComputersConsolesContinue]
+
+## AnswerAnyPlatform
+
+`answers[4] = 1`
+
+## ComputersConsolesContinue
+
+### ComputersConsolesEnd
+
+> Everyone smiles as they look around to see who ended up in which camp.
+
+shelley:
+  All done! 
+  Now we'll take a 5 minute break to give you a chance to talk to each other.
+  Remember you can ![look at answers](look at answers) your classmates wrote down.
+  Get ready to decide which classmates to join.
+  
+### StartTalkToClassmates
+
+## IceBreakersDone
+
+-> [End]
+
+## TalkToRetroDuringBreak
+
+retro: You have about `_talkToClassmatesMinutesLeft` minutes left to decide which classmates you'd like to be in the study group with. `_talkToClassmatesMinutesLeft > 1`
+retro: We're almost ready to start with forming groups. Ask your classmates any last questions if you have them. `_talkToClassmatesMinutesLeft <= 1`
+  
+-> [End]
+
+## TalkToAlexandraDuringBreak
+
+alexandra:
+  You can ![look at](look at) other students and read what answers they wrote.
+  That way you can join a group with others that have similar goals to yours.
+  
+-> [End]
+
+## TalkToReubenDuringBreak
+
+reuben: 
+  If you wrote down your aspirations or favorites in your Yearbook profile, those are good things to talk about with your classmates.
+  
+-> [End]
+
+## TalkToShelleyDuringBreak
+
+shelley:
+  Get to know other students by talking to them.
+  At the end you will be split into groups so think about who you'd like to join.
+  
+-> [End]
+
+## JoinStudyGroupIntro
+
+shelley: OK, everyone, ready to continue?
+
+* Ready! -> [JoinStudyGroupStart]
+* Wait … 5 more minutes.
+
+shelley: No problem, get to know everyone better.
+
+### StartTalkToClassmates
+
+-> [End]
+
+## JoinStudyGroupStart
+
+> People stop their conversations and return to Shelley.
+
+### JoinStudyGroupStart
+
+shelley:
+  I hope you got to know each other a little.
+  You will now divide into three study groups, each of which will get a coordinator and their own gathering place.
+  All the groups will be the same, so in the end it doesn't really matter which you choose.
+  But you might want to select one with the people you would like to spend more time with.
+  Alright, ready?
+
+pause
+
+### JoinStudyGroupMovement
+
+shelley: If you want to be in Group A, go to the left side of the room. Group B will be in the middle. And Group C on the right.
+
+> Which study group do you want to join?
+
+* !Group A -> [GroupA]
+* !Group B -> [GroupB]
+* !Group C -> [GroupC]
+
+## GroupA
+
+`groupChoice = 0`
+
+-> [JoinStudyGroupMakeChoice]
+
+## GroupB
+
+`groupChoice = 1`
+
+-> [JoinStudyGroupMakeChoice]
+
+## GroupC
+
+`groupChoice = 2`
+
+## JoinStudyGroupMakeChoice
+
+### JoinStudyGroupMakeChoice
+
+> _char_ looks at others in group `_studyGroup.letter` excitedly.
+
+## JoinStudyGroupContinue
+
+shelley: Wonderful!
+
+### JoinStudyGroupContinue
+
+shelley: Group A, your coordinator will be Alexandra and you will meet with her upstairs in the Art Studio.
+
+> Alexandra heads over to group A.
+
+### JoinStudyGroupAlexandra
+
+shelley:
+  Group B, I will be your coordinator and we will meet by the bookshelves downstairs in the Retronator Store.
+  Finally, Group C will meet in the coworking space on first floor with Reuben.
+  
+> Reuben joins students in group C.
+
+### JoinStudyGroupReuben
+  
+shelley:
+  Thank you everyone for coming! 
+  Now follow your coordinator to your group's meeting place where you will get additional instructions.
+    
+> After Shelley finishes the address, she goes to meet her students in group B.
+
+### JoinStudyGroupShelley
+
+## CoordinatorIntro
+
+### CoordinatorIntro
+
+> The main part of the meetup is now over and the coordinators address their groups.
+
+coordinator: 
+  Hi everyone! Welcome to study group `_studyGroup.letter`! 
+  
+### CoordinatorAddressStart
+
+coordinator:
+  I'm _coordinator_ and I'll be your coordinator to help you get through admission week.
+  Our group will be meeting at the `_studyGroup.location`, which you can remember by our group letter `_studyGroup.letter`.
+  Let's head there now for a short introduction.
+  
+> The groups slowly disperse as people head towards their meeting locations.
+
+## MixerEnd
+
+### MixerEnd
+
+-> [End]
+  
+## End

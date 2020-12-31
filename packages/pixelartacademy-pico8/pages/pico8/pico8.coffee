@@ -12,7 +12,7 @@ class PAA.Pico8.Pages.Pico8 extends AM.Component
   @touchIcon: -> '/pixelartacademy/pico8/pages/pico8/apple-touch-icon.png'
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = new AM.Display
       safeAreaWidth: 320

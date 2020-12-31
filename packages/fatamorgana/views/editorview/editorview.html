@@ -1,0 +1,22 @@
+<template name="FataMorgana.EditorView">
+  <div class="fatamorgana-editorview">
+    {{#if showTabs}}
+      <ul class="tabs">
+        {{#each get.files}}
+          <li class="tab {{activeClass}}">
+            {{#with loader}}
+              <div class="name" title="{{displayName}}">
+                {{saveIndicator}}{{displayName}}
+              </div>
+            {{/with}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    <div class="editor">
+      {{#if get.files.length}}
+        {{> FataMorgana.DockedArea child 'editor'}}
+      {{/if}}
+    </div>
+  </div>
+</template>

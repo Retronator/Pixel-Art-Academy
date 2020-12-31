@@ -7,7 +7,7 @@ class RS.Components.BundleItem extends AM.Component
   @register 'Retronator.Store.Components.BundleItem'
 
   onCreated: ->
-    super
+    super arguments...
 
     item = @data()
     AB.Translation.forId.subscribe @, item.description._id, AB.languagePreference()

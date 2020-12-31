@@ -10,27 +10,12 @@ class Yearbook.ProfileForm.General extends AM.Component
   @register @id()
 
   constructor: (@yearbook) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
-    nameInputOptions =
-      addTranslationText: => @translation "Add language variant"
-      removeTranslationText: => @translation "Remove language variant"
-      newTranslationLanguage: ''
-
-    @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
-      placeholderText: => LOI.Character.Avatar.noNameTranslation()
-      placeholderInTargetLanguage: true
-      onTranslationInserted: (languageRegion, value) =>
-        LOI.Character.updateName LOI.characterId(), languageRegion, value
-
-      onTranslationUpdated: (languageRegion, value) =>
-        LOI.Character.updateName LOI.characterId(), languageRegion, value
-
-        # Return true to prevent the default update to be executed.
-        true
+    @fullNameInput = new LOI.Components.Account.Characters.CharacterNameTranslationInput characterId: LOI.characterId
 
   renderFullNameInput: ->
     @fullNameInput.renderComponent @currentComponent()
@@ -45,7 +30,7 @@ class Yearbook.ProfileForm.General extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.General.Age'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Number
       @realtime = false
@@ -72,7 +57,7 @@ class Yearbook.ProfileForm.General extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.General.Country'
     
     constructor: ->
-      super
+      super arguments...
       
       @allowDeselection = true
 
@@ -86,7 +71,7 @@ class Yearbook.ProfileForm.General extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.General.Aspiration'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.TextArea
       @realtime = false

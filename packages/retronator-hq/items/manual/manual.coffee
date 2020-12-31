@@ -19,4 +19,4 @@ class HQ.Items.Tablet.Apps.Manual extends HQ.Items.Tablet.OS.App
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...

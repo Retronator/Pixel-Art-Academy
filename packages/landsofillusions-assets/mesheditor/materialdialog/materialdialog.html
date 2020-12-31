@@ -1,0 +1,147 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.MaterialDialog">
+  {{#LandsOfIllusions.Assets.Editor.Window windowData}}
+    <div class="landsofillusions-assets-mesheditor-materialdialog">
+      {{#with material}}
+        <div class="preview">
+          PREVIEW
+        </div>
+        <div class="properties landsofillusions-assets-editor-propertieslist">
+          <label class="property name">
+            <span class="name">Name</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Name}}</span>
+          </label>
+          <label class="property type">
+            <span class="name">Type</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Type}}</span>
+          </label>
+          <label class="property ramp">
+            <span class="name">Ramp</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Ramp}}</span>
+          </label>
+          <label class="property shade">
+            <span class="name">Shade</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Shade}}</span>
+          </label>
+          <label class="property dither">
+            <span class="name">Dither</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Dither}}</span>
+          </label>
+          <label class="property translucency-amount">
+            <span class="name">Translucency amount</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyAmount}}</span>
+          </label>
+          <label class="property translucency-dither">
+            <span class="name">Translucency dither</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyDither}}</span>
+          </label>
+          <label class="property translucency-ting">
+            <span class="name">Translucency tint</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyTint}}<span class="checkmark"></span></span>
+          </label>
+          {{#if translucencyAmount}}
+            <label class="property translucency-blending-preset">
+              <span class="name">Blending</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingPreset}}</span>
+            </label>
+            {{#if translucencyCustomBlending}}
+              <label class="property translucency-blending-equation">
+                <span class="name">Equation</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingEquation}}</span>
+              </label>
+              <label class="property translucency-blending-sourcefactor">
+                <span class="name">Source factor</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingSourceFactor}}</span>
+              </label>
+              <label class="property translucency-blending-destinationfactor">
+                <span class="name">Destination factor</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingDestinationFactor}}</span>
+              </label>
+            {{/if}}
+          {{/if}}
+          <label class="property translucency-shadow-dither">
+            <span class="name">Shadow dither</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowDither}}</span>
+          </label>
+          <label class="property translucency-shadow-tint">
+            <span class="name">Shadow tint</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowTint}}<span class="checkmark"></span></span>
+          </label>
+          <label class="property material-class">
+            <span class="name">Material class</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MaterialClass}}</span>
+          </label>
+          <label class="property refractive-index">
+            <span class="name">Refractive index</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.RGBValue material.refractiveIndex}}</span>
+          </label>
+          <label class="property extinction-coefficient">
+            <span class="name">Extinction coefficient</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.RGBValue material.extinctionCoefficient}}</span>
+          </label>
+          <label class="property temperature">
+            <span class="name">Temperature</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Temperature}} K</span>
+          </label>
+          <label class="property emission">
+            <span class="name">Emission</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.RGBValue material.emission}}</span>
+          </label>
+          <div class="property texture">
+            <div class="name">Texture</div>
+            <div class="value">
+              <div class="texture-name"><input class="texture-name-input" value="{{textureName}}" disabled/></div>
+              <div class="texture-browse"><button class="texture-browse-button">…</button></div>
+            </div>
+          </div>
+          {{#if textureIsAssigned}}
+            <label class="property texture-mapping">
+              <span class="name">Mapping</span>
+              <span class="value">{{> Render textureMappingMatrix}}</span>
+            </label>
+            <div class="property texture-offset">
+              <div class="name">Offset</div>
+              <div class="value landsofillusions-assets-editor-propertytable">
+                <table class="editor-table">
+                  <tr class="legend">
+                    <th class="coordinate-x">x</th>
+                    <th class="coordinate-y">y</th>
+                  </tr>
+                  <tr class="coordinates">
+                    <td class="coordinate-x"><input class="coordinate-input" type="number" value="{{texture.mappingOffset.x}}" placeholder="0" step="0.01"/></td>
+                    <td class="coordinate-y"><input class="coordinate-input" type="number" value="{{texture.mappingOffset.y}}" placeholder="0" step="0.01"/></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <label class="property texture-anisotropicfiltering">
+              <span class="name">Anisotropic filtering</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.AnisotropicFiltering}}<span class="checkmark"></span></span>
+            </label>
+            <label class="property texture-minificationfilter">
+              <span class="name">Minification filter</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MinificationFilter}}</span>
+            </label>
+            <label class="property texture-magnificationfilter">
+              <span class="name">Magnification filter</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MagnificationFilter}}</span>
+            </label>
+            {{#if textureIsMip}}
+              <label class="property texture-mipmapfilter">
+                <span class="name">Mipmap filter</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MipmapFilter}}</span>
+              </label>
+              <label class="property texture-mipmapbias">
+                <span class="name">Mipmap bias</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MipmapBias}}</span>
+              </label>
+            {{/if}}
+          {{/if}}
+        </div>
+      {{/with}}
+    </div>
+  {{/LandsOfIllusions.Assets.Editor.Window}}
+</template>
+
+<template name="LandsOfIllusions.Assets.MeshEditor.MaterialDialog.RGBValue">
+  R: {{fixedDecimals r 2}}, G: {{fixedDecimals g 2}}, B: {{fixedDecimals b 2}}
+</template>

@@ -1,0 +1,3 @@
+en: You know what you want and you're prepared to work for it.
+
+{"_id":"zfDCxWPcYqY834nGf","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"You know what you want and you're prepared to work for it.","quality":0,"best":{"text":"You know what you want and you're prepared to work for it.","quality":0,"languageRegion":"en"}},"best":{"text":"You know what you want and you're prepared to work for it.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038918787}}

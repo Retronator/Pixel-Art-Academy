@@ -1,0 +1,3 @@
+en: Short side wave
+
+{"_id":"urBoDtfS5DmnYfLjA","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Short side wave","quality":0,"best":{"text":"Short side wave","quality":0,"languageRegion":"en"}},"best":{"text":"Short side wave","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1560715693140}}

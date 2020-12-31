@@ -16,6 +16,7 @@ class LOI.Adventure.Script
     
   constructor: (@options) ->
     @startNode = @options.startNode
+    @things = {}
 
     # Gather all the nodes in this graph for easier processing.
     @nodes = []
@@ -39,6 +40,9 @@ class LOI.Adventure.Script
 
     # Process nodes.
     for node in @nodes
+      # Save the original next so we can query it in cases when nodes get rewired.
+      node.originalNext = node.next
+
       # Replace jump nodes with actual label nodes they point to.
       for property in ['node', 'next']
         if node[property] instanceof @constructor.Nodes.Jump
@@ -84,7 +88,7 @@ class LOI.Adventure.Script
 
   # Sets things that have a shorthand name in the script (actors, thing variables in script context).
   setThings: (things = {}) ->
-    @things = things
+    _.extend @things, things
 
     # Set actors to thing instances, based on actor names.
     for node in @nodes
@@ -93,6 +97,17 @@ class LOI.Adventure.Script
 
         node.actor = things[node.actorName]
 
+      if node.line
+        # Store the original line text so we can later retrieve it.
+        node.sourceLine ?= node.line
+
+        # Start substitutions with the original line.
+        node.line = node.sourceLine
+
+        # Perform avatar substitutions.
+        for shorthand, person of @things when person instanceof LOI.Character.Person
+          node.line = LOI.Character.formatText node.line, shorthand, person, true
+
   setCurrentThings: (thingClasses) ->
     Tracker.autorun (computation) =>
       return unless LOI.adventureInitialized()
@@ -100,6 +115,7 @@ class LOI.Adventure.Script
       things = {}
       for key, thingClass of thingClasses
         return unless things[key] = LOI.adventure.getCurrentThing thingClass
+        return unless things[key].ready()
 
       computation.stop()
 
@@ -115,9 +131,14 @@ class LOI.Adventure.Script
       for callbackNode in @startNode.callbacks[name]
         callbackNode.callback = callback
 
-    # We expect all callbacks to be set in one go so warn about any that were left unset.
-    for name, callbacks of @startNode.callbacks
-      console.warn "Callback for #{name} was not set" unless callbacks[0]?.callback
+  startAtLatestCheckpoint: (checkpointLabels) ->
+    for label, index in checkpointLabels
+      # Start at this checkpoint if we haven't reached the next one yet.
+      nextLabel = checkpointLabels[index + 1]
+
+      unless nextLabel and @state nextLabel
+        LOI.adventure.director.startScript @, {label}
+        return
 
   _addNode: (node) ->
     # Add the node only if it hasn't already added.

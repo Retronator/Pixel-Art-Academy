@@ -12,6 +12,6 @@ RS.PaymentMethod.forCurrentUser.publish ->
       registered_emails: 1
       services:
         twitter:
-          screenname: 1
+          screenName: 1
           
     RS.PaymentMethod.findPaymentMethodsForUser user

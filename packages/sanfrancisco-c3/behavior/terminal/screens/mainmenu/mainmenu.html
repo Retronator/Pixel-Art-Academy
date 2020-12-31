@@ -14,8 +14,8 @@
         {{#each characters}}
           <li class="document">
             <button class="document-selection-button character-selection-button">
-              {{avatar.fullName}}
-              {{#unless document.behaviorApproved}} (draft){{/unless}}
+              {{translatedName}}
+              {{#unless behaviorApproved}} (draft){{/unless}}
             </button>
           </li>
         {{/each}}

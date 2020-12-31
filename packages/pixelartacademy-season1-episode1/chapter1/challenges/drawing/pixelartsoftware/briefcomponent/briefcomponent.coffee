@@ -146,4 +146,4 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
     # Don't show missing pixels.
     @sprite.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
 
-    super
+    super arguments...

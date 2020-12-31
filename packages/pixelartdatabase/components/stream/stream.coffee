@@ -5,20 +5,19 @@ PADB = PixelArtDatabase
 class PADB.Components.Stream extends AM.Component
   @register 'PixelArtDatabase.Components.Stream'
 
-  constructor: (captionComponentClassOrOptions) ->
-    super
+  constructor: (captionComponentClassOrOptions = {}) ->
+    super arguments...
 
-    if captionComponentClassOrOptions.captionComponentClass
-      @options = captionComponentClassOrOptions
-
-    else
+    if _.isFunction captionComponentClassOrOptions
       @options =
         captionComponentClass: captionComponentClassOrOptions
 
-  onCreated: ->
-    super
+    else
+      @options = captionComponentClassOrOptions
 
-    @lowPerformance = new ReactiveField false
+  onCreated: ->
+    super arguments...
+
     @playbackSkippedCount = 0
 
     @displayedArtworks = new ComputedField =>
@@ -31,7 +30,10 @@ class PADB.Components.Stream extends AM.Component
           artwork: artwork
 
         if artwork.image
-          displayedArtwork.imageUrl ?= artwork.image.url
+          displayedArtwork.imageUrl ?= artwork.image.url or artwork.image.src
+
+          if artwork.image instanceof HTMLImageElement
+            displayedArtwork.imageElement = artwork.image
 
         if artwork.representations
           for representation in artwork.representations
@@ -46,7 +48,7 @@ class PADB.Components.Stream extends AM.Component
     @_artworksVisibilityData = []
 
   onRendered: ->
-    super
+    super arguments...
     
     @_$document = $(document)
     @_$app = $('.retronator-app')
@@ -73,34 +75,12 @@ class PADB.Components.Stream extends AM.Component
         @_updateArtworkAreasVisibility()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @_$scrollParent.off '.pixelartdatabase-components-stream'
 
-  artworkStyle: ->
-    displayedArtwork = @currentData()
-
-    # We want to prevent upscaling non-pixel art artworks.
-    return unless displayedArtwork.artwork.nonPixelArt
-    
-    width: 'auto'
-    maxWidth: '100%'
-
-  hasCaption: ->
-    @options.captionComponentClass?
-
-  renderCaption: ->
-    caption = new @options.captionComponentClass
-    caption.renderComponent @currentComponent()
-    
-  lowPerformanceClass: ->
-    'low-performance' if @lowPerformance()
-
-  showVideoBackground: ->
-    artwork = @currentData()
-
-    # Show the video background if this is an animated artwork and we're not in low performance mode.
-    artwork.videoUrl and not @lowPerformance()
+  artworkOptions: ->
+    @options
 
   onScroll: ->
     # Measure artwork areas every 2s when scrolling.
@@ -153,7 +133,7 @@ class PADB.Components.Stream extends AM.Component
     visibilityEdgeTop = viewportTop - scrollParentHeight
     visibilityEdgeBottom = viewportBottom + scrollParentHeight
 
-    # Go over all the artworks and activate the ones
+    # Go over all the artworks and activate the visible ones.
     for visibilityData, index in @_artworksVisibilityData
       # Artwork is visible if it is anywhere in between the visibility edges.
       artworkShouldBeActive = visibilityData.bottom > visibilityEdgeTop and visibilityData.top < visibilityEdgeBottom
@@ -163,11 +143,8 @@ class PADB.Components.Stream extends AM.Component
         # We must activate this artwork area.
         visibilityData.active = true
 
+        # Play all the videos in this area.
         $artworkArea = visibilityData.$artworkArea
-
-        $artworkArea.css
-          visibility: 'visible'
-
         $videos = $artworkArea.find('video')
 
         playPromises = for video in $videos
@@ -192,33 +169,10 @@ class PADB.Components.Stream extends AM.Component
             $videos.css
               display: 'inline-block'
 
-        $backgroundVideo = $artworkArea.find('video.background')
-        backgroundVideo = $backgroundVideo[0]
-
-        if backgroundVideo
-          $backgroundVideo.on 'timeupdate', =>
-            return unless backgroundVideo
-
-            newTime = backgroundVideo.currentTime
-            lastTime = $backgroundVideo._lastTime
-
-            if lastTime and newTime - lastTime > 0.55
-              @playbackSkippedCount++
-              @lowPerformance true if @playbackSkippedCount > 2
-
-            $backgroundVideo._lastTime = newTime
-
       else if not artworkShouldBeActive and visibilityData.active isnt false
         # We need to deactivate this artwork area.
         visibilityData.active = false
 
+        # Stop all the videos in the area.
         $artworkArea = visibilityData.$artworkArea
-
-        $artworkArea.css
-          visibility: 'hidden'
-
-        for video in $artworkArea.find('video')
-          video.pause()
-
-        $backgroundVideo = $artworkArea.find('video.background')
-        $backgroundVideo.off 'timeupdate'
+        video.pause() for video in $artworkArea.find('video')

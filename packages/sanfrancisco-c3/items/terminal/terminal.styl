@@ -13,7 +13,7 @@
       top 1rem
       right 1rem
       bottom 0
-      z-index 1
+      z-index 10
       background rgba(atariGrey(0), 0.7)
 
       .dialog
@@ -72,7 +72,7 @@
       color atariOrange(5)
 
     .main-text
-      color atariRed(2)
+      color atariRed(3)
       margin 4rem 0
 
       strong
@@ -82,7 +82,7 @@
     .document-selection
       position relative
       width 100%
-      height 66rem
+      height 92rem
       margin 6rem 0 4rem
       padding 1rem 0 0
       overflow-y auto
@@ -149,9 +149,12 @@
       width 70rem
 
       .action-button
+        display block
         width 100%
-        padding 3rem 4rem
+        padding 4rem
+        line-height 7rem
         margin-bottom 4rem
+        z-index 1
         acme-5()
 
         &.main-button

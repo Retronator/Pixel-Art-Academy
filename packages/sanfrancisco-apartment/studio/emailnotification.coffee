@@ -18,7 +18,7 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
   @defaultScriptUrl: -> 'retronator_sanfrancisco-apartment/studio/emailnotification.script'
 
   constructor: ->
-    super
+    super arguments...
 
     @inboxLocation = new LOI.Emails.Inbox()
 
@@ -33,6 +33,8 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
         location: @inboxLocation
         timelineId: LOI.adventure.currentTimelineId()
 
+      # TODO: To prevent double notifications, implement game state merging since notified values get overridden from the server.
+
       unless _.every (email.wasNotified() for email in inbox.things())
         Tracker.nonreactive =>
           @listeners[0].startScript()
@@ -41,6 +43,6 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
             email.markAsNotified()
 
   destroy: ->
-    super
+    super arguments...
 
     @_updateAutorun.stop()

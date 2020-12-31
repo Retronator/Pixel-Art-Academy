@@ -10,8 +10,8 @@ class Entry.Object.Task.Manual extends Entry.Object.Task.Component
   template: -> @constructor.id()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .enabled.confirmation': @onClickConfirmation
 
   onClickConfirmation: (event) ->
-    PAA.Learning.Task.Entry.insert LOI.characterId(), @parent.task.id()
+    PAA.Learning.Task.Entry.insert LOI.characterId(), LOI.adventure.currentSituationParameters(), @parent.task.id()

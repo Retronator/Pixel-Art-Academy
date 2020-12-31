@@ -1,0 +1,3 @@
+en-US: Full Beard
+
+{"_id":"4DMFePaoKzbPrA53v","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1558961712493},"translations":{"en":{"us":{"text":"Full Beard","quality":0},"best":{"text":"Full Beard","quality":0,"languageRegion":"en-US"}},"best":{"text":"Full Beard","quality":0,"languageRegion":"en-US"}}}

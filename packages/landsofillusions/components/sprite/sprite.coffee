@@ -7,7 +7,7 @@ class LOI.Components.Sprite extends AM.Component
   @register 'LandsOfIllusions.Components.Sprite'
 
   onRendered: ->
-    super
+    super arguments...
     
     $canvas = @$('.landsofillusions-components-sprite')
     canvas = $canvas[0]

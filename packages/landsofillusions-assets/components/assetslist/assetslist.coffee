@@ -3,17 +3,18 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.AssetsList extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.AssetsList'
+  @id: -> 'LandsOfIllusions.Assets.Components.AssetsList'
+  @register @id()
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @assetId = @options.getAssetId
 
   onCreated: ->
-    super
+    super arguments...
 
-    @options.documentClass.all.subscribe @, =>
+    onSubscriptionReady = =>
       # Deselect asset if it gets deleted.
       @autorun (computation) =>
         return unless currentAssetId = @assetId()
@@ -24,8 +25,14 @@ class LOI.Assets.Components.AssetsList extends AM.Component
         # Clear the asset selection.
         @options.setAssetId null
 
+    if @options.subscription
+      @options.subscription.subscribe @, onSubscriptionReady
+
+    else
+      LOI.Assets.Asset.all.subscribe @, @options.documentClass.className, onSubscriptionReady
+
   assets: ->
-    @options.documentClass.documents.find {},
+    @options.documentClass.documents.find @options.selector or {},
       sort:
         name: 1
         _id: 1
@@ -38,12 +45,14 @@ class LOI.Assets.Components.AssetsList extends AM.Component
     'active' if @currentData()._id is @assetId()
 
   events: ->
-    super.concat
-      'click .new-asset-button': @onClickNewAssetButton
+    super(arguments...).concat
+      # HACK: Wiring this to mousedown to prevent a bug that triggers click of this button when
+      # clicking anywhere in the component. This only appears when component is embedded deep within.
+      'mousedown .new-asset-button': @onClickNewAssetButton
       'click .asset': @onClickAsset
 
   onClickNewAssetButton: (event) ->
-    @options.documentClass.insert (error, assetId) =>
+    LOI.Assets.Asset.insert @options.documentClass.className, (error, assetId) =>
       if error
         console.error error
         return

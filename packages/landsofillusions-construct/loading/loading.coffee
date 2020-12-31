@@ -19,11 +19,11 @@ class LOI.Construct.Loading extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     $('body').addClass('construct')
 
   destroy: ->
-    super
+    super arguments...
 
     $('body').removeClass('construct')

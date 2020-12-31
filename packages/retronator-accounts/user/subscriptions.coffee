@@ -10,12 +10,20 @@ Meteor.publish null, ->
       publicName: true
 
 # Current user's login services.
-Meteor.publish RA.User.loginServicesForCurrentUser, ->
+RA.User.servicesForCurrentUser.publish ->
   RA.User.documents.find
     _id: @userId
   ,
     fields:
       loginServices: true
+      otherServices: true
+
+RA.User.twitterScreenNameForCurrentUser.publish ->
+  RA.User.documents.find
+    _id: @userId
+  ,
+    fields:
+      'services.twitter.screenName': true
 
 # Current user's contact email.
 Meteor.publish RA.User.contactEmailForCurrentUser, ->

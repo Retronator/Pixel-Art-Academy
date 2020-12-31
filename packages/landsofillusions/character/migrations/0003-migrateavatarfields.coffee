@@ -43,7 +43,7 @@ class Migration extends Document.MajorMigration
             color: 1
             name: 1
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -70,7 +70,7 @@ class Migration extends Document.MajorMigration
 
         translationsCollection.remove _id: avatar.fullName._id
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

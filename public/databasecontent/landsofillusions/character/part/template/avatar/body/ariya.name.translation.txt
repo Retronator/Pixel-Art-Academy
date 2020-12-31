@@ -1,0 +1,3 @@
+en-US: Ariya
+
+{"_id":"hQXJFawauMLG755qS","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1566222508887},"translations":{"en":{"us":{"text":"Ariya","quality":0},"best":{"text":"Ariya","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ariya","quality":0,"languageRegion":"en-US"}}}

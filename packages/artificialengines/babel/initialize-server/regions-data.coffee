@@ -134,7 +134,7 @@ Liechtenstein,Liechtenstein,Liechtenstein,LI,LIE,438,LIE,lh,,FL,423,LIE,LS,146,L
 Lithuania,Lithuania,Lituanie,LT,LTU,440,LTU,li,LT,LT,370,LTU,LH,147,LTU,EUR,LITHUANIA,2,Euro,978,Yes,Vilnius,EU,.lt,"lt,ru,pl",597427,1Q
 Luxembourg,Luxembourg,Luxembourg,LU,LUX,442,LUX,lu,BX,L,352,LUX,LU,148,LUX,EUR,LUXEMBOURG,2,Euro,978,Yes,Luxembourg,EU,.lu,"lb,de-LU,fr-LU",2960313,N4
 Macau,"China, Macao Special Administrative Region","Chine, région administrative spéciale de Macao",MO,MAC,446,MAC,,MU,MO,853,MAC,MC,149,MAC,MOP,MACAO,2,Pataca,446,Part of CN,Macao,AS,.mo,"zh,zh-MO,pt",1821275,
-Macedonia,The former Yugoslav Republic of Macedonia,Ex-République yougoslave de Macédoine,MK,MKD,807,MKD,xn,MJ,MK,389,MKD,MK,241,MKD,MKD,"MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF",2,Denar,807,Yes,Skopje,EU,.mk,"mk,sq,tr,rmm,sr",718075,1U
+North Macedonia,North Macedonia,Macédoine du Nord,MK,MKD,807,MKD,xn,MJ,MK,389,MKD,MK,241,MKD,MKD,NORTH MACEDONIA,2,Denar,807,Yes,Skopje,EU,.mk,"mk,sq,tr,rmm,sr",718075,1U
 Madagascar,Madagascar,Madagascar,MG,MDG,450,MDG,mg,MG,RM,261,MAD,MA,150,MAD,MGA,MADAGASCAR,2,Malagasy Ariary,969,Yes,Antananarivo,AF,.mg,"fr-MG,mg",1062947,N6
 Malawi,Malawi,Malawi,MW,MWI,454,MWI,mw,MW,MW,265,MWI,MI,152,MAW,MWK,MALAWI,2,Kwacha,454,Yes,Lilongwe,AF,.mw,"ny,yao,tum,swk",927384,N7
 Malaysia,Malaysia,Malaisie,MY,MYS,458,MLA,my,MS,MAL,60,MAS,MY,153,MAS,MYR,MALAYSIA,2,Malaysian Ringgit,458,Yes,Kuala Lumpur,AS,.my,"ms-MY,en,zh,ta,te,ml,pa,th",1733045,N8

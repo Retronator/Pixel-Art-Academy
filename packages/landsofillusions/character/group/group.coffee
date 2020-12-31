@@ -14,8 +14,8 @@ class LOI.Character.Group extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, ['debugName']
-      members: [@ReferenceField LOI.Character, ['debugName']]
+      character: Document.ReferenceField LOI.Character, ['debugName']
+      members: [Document.ReferenceField LOI.Character, ['debugName']]
 
   # Methods
   

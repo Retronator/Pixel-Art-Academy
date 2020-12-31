@@ -13,7 +13,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RA.User.contactEmailForCurrentUser
@@ -47,7 +47,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .verify-email-button': @onClickVerifyEmail
       'change .address-input': @onChangeAddressInput
       'change .primary-input': @onChangePrimaryInput
@@ -57,17 +57,11 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
 
     Meteor.call RA.User.sendVerificationEmail, email.address, (error) =>
       if error
-        message = "Whoops, something went wrong with sending the verification email. Please email me at hi@retronator.com to resolve this."
+        console.error error.message
+        LOI.adventure.showDialogMessage "Something went wrong with sending the verification email (#{error.message}). Please email me at hi@retronator.com to resolve this."
 
       else
-        message = "A verification email has been sent to #{email.address}. Click the link in the email to complete verification."
-
-      LOI.adventure.showActivatableModalDialog
-        dialog: new LOI.Components.Dialog
-          message: message
-          buttons: [
-            text: "OK"
-          ]
+        LOI.adventure.showDialogMessage "A verification email has been sent to #{email.address}. Click the link in the email to complete verification."
 
   onChangeAddressInput: (event) ->
     email = @currentData()
@@ -106,7 +100,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.General.Username'
 
     onCreated: ->
-      super
+      super arguments...
 
       @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
 

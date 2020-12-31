@@ -4,15 +4,18 @@ AM = Artificial.Mummification
 class AM.Hierarchy.Field
   # For data passed to the field, refer to template document structure.
   constructor: (options) ->
-    templateSubscription = null
     node = null
+    templateNode = null
     placeholderNode = null
     metaData = null
 
     cleanTemplate = ->
-      templateSubscription?.stop()
+      templateNode?.options.load.stop?()
+      templateNode?.destroy()
+      templateNode = null
 
     cleanNode = ->
+      node?.options.load.stop()
       node?.destroy()
       node = null
 
@@ -20,7 +23,7 @@ class AM.Hierarchy.Field
       return unless data = options.load()
 
       # We look if we have the value field (we can't do data.value?
-      # because it just carry null value, but the key is there).
+      # because it can just carry null value, but the key is there).
       if 'value' of data
         # This is a raw value, clean up if we previously had templates/nodes.
         cleanTemplate()
@@ -29,11 +32,43 @@ class AM.Hierarchy.Field
         # Simply return the value.
         data.value
 
-      else if data.templateId
+      # Note: We allow templateId for backwards compatibility.
+      else if data.template or data.templateId
         cleanNode()
+        
+        if data.template?.data
+          # We need to recreate the node when template id or version changes.
+          return templateNode if templateNode?.options.template.id is data.template.id and templateNode?.options.template.version is data.template.version
 
-        # Return the template document's root node (it will be null until the subscription kicks in).
-        options.templateClass.documents.findOne(data.templateId)?.node
+          cleanTemplate()
+
+          # We create a node similarly to how the template prepares it, but we load directly the embedded data instead
+          # of needing to query template document. Note that we reset the address hierarchy from here on out to match
+          # the address relative to the template.
+          templateNode = Tracker.nonreactive => new AM.Hierarchy.Node
+            templateClass: options.templateClass
+            # We need to pass on embedded template fields, however id is saved without underscore so
+            # we need to add it to pretend this is a normal template document (and not embedded).
+            template: _.extend
+              _id: data.template.id
+            ,
+              data.template
+            address: new AM.Hierarchy.Address
+            load: => data.template.data
+            save: =>
+              throw new AE.InvalidOperationException "You cannot modify published versions of templates."
+
+          templateNode
+  
+        else
+          cleanTemplate()
+
+          # Return the template document's root node (it will be null until the subscription kicks
+          # in). We have to save the reference to the node so that it gets properly cleaned up.
+          templateId = data.templateId or data.template.id
+          templateNode = options.templateClass.documents.findOne(templateId)?.getNode()
+
+          templateNode
 
       else if data.node
         cleanTemplate()
@@ -41,6 +76,8 @@ class AM.Hierarchy.Field
         # We create a new node if needed (if not, the node's load
         # function will already be dynamically loading new values).
         unless node
+          cleanNode()
+
           # We allow sending in already instantiated nodes.
           if data.node instanceof AM.Hierarchy.Node
             node = data.node
@@ -51,10 +88,14 @@ class AM.Hierarchy.Field
             Tracker.nonreactive =>
               node = new AM.Hierarchy.Node _.extend {}, options,
                 address: options.address.nodeChild()
-                load: =>
+                load: new ComputedField =>
                   # We dynamically load the value from the parent so that we
                   # don't have to keep re-creating nodes whenever data changes.
                   options.load()?.node
+                ,
+                  EJSON.equals
+                ,
+                  true
 
         # Return the node.
         node
@@ -68,14 +109,20 @@ class AM.Hierarchy.Field
         console.trace()
         throw new AE.InvalidOperationException "Data field is not in correct format."
     ,
+      EJSON.equals
+    ,
       true
 
     # We want the hierarchy field to behave as a getter/setter.
-    field = (value) ->
+    field = (value, valueIsRaw) ->
       # Is this a setter? We compare to undefined and not just use
       # value? since we want to be able to set the value null to the field.
       if value isnt undefined
-        storedValue = AM.Hierarchy.convertObjectToStoredValue value
+        if valueIsRaw
+          storedValue = value
+
+        else
+          storedValue = AM.Hierarchy.convertObjectToStoredValue value
 
         # Add meta data if we have it set.
         _.extend storedValue, metaData if metaData
@@ -102,11 +149,7 @@ class AM.Hierarchy.Field
       # If we have a node, make sure the node is ready.
       return value.ready() if value instanceof AM.Hierarchy.Node
       
-      # We're done loading if this is not a template.
-      return true unless templateSubscription
-      
-      # Otherwise wait till the template is loaded.
-      templateSubscription.ready()
+      true
 
     # Gets a node, even if the data for it does not exist yet.
     # This allows us to save at locations that haven't been set yet.
@@ -166,7 +209,13 @@ class AM.Hierarchy.Field
       placeholderNode?.destroy()
 
     field.isTemplate = ->
-      options.load()?.templateId
+      return unless data = options.load()
+      data.template or data.templateId
+
+    field.getTemplate = ->
+      return unless data = options.load()
+      return unless templateId = data.templateId or data.template.id
+      options.templateClass.documents.findOne templateId
 
     # Return the field getter/setter function (return must be explicit).
     return field

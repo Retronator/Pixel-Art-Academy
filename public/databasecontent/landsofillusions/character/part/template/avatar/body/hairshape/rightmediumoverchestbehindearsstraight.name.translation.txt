@@ -1,0 +1,3 @@
+en-US: Right medium over-chest behind-ears straight
+
+{"_id":"ZxWndFddC8QyJ2GDA","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560352635311},"translations":{"en":{"us":{"text":"Right medium over-chest behind-ears straight","quality":0},"best":{"text":"Right medium over-chest behind-ears straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right medium over-chest behind-ears straight","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en: Greedy
+
+{"_id":"k9ZnqbH86dBv89kuc","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Greedy","quality":0,"best":{"text":"Greedy","quality":0,"languageRegion":"en"}},"best":{"text":"Greedy","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038935488}}

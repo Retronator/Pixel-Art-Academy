@@ -1,0 +1,3 @@
+en-US: Right medium over-chest straight middle
+
+{"_id":"SbMohYyEvnWQKa8uM","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559660609801},"translations":{"en":{"us":{"text":"Right medium over-chest straight middle","quality":0},"best":{"text":"Right medium over-chest straight middle","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right medium over-chest straight middle","quality":0,"languageRegion":"en-US"}}}

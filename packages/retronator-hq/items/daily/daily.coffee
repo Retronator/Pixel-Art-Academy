@@ -16,6 +16,8 @@ class HQ.Items.Daily extends LOI.Adventure.Item
   template: -> @constructor.id()
 
   @fullName: -> "Retronator Daily"
+  @shortName: -> "Daily"
+  @descriptiveName: -> "Retronator ![Daily](read Daily)."
 
   @description: ->
     "
@@ -25,7 +27,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     # Create URL state. Our options are:
     # - index page        /page/x
@@ -78,7 +80,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
   url: ->
     # Return the wildcard URL so we don't rewrite it before we manage to parse parameters into our URL state.
-    return super unless @isCreated()
+    return super(arguments...) unless @isCreated()
 
     url = AB.Router.createUrl AB.Router.currentRouteName(), parameter1: 'daily'
     url = url[1..]
@@ -130,15 +132,15 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     @register 'Retronator.HQ.Items.Daily.Issue'
 
     constructor: (@data) ->
-      super
+      super arguments...
 
     onCreated: ->
-      super
+      super arguments...
 
       @daily = @ancestorComponentOfType HQ.Items.Daily
 
     onRendered: ->
-      super
+      super arguments...
 
       @theme = new HQ.Items.Daily.Theme
       @display = @callAncestorWith 'display'

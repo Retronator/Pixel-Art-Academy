@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal.Task extends AM.Component
   @register @id()
   
   onCreated: ->
-    super
+    super arguments...
 
     @goalComponent = @ancestorComponentOfType PAA.PixelBoy.Apps.StudyPlan.Goal
     
@@ -20,4 +20,4 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal.Task extends AM.Component
   activeClass: ->
     task = @data()
 
-    'active' if task.active @goalComponent.goal.tasks()
+    'active' if task.active()

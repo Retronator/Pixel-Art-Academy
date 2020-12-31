@@ -26,7 +26,7 @@ class HQ.Adventure extends LOI.Adventure
     timelineId: LOI.TimelineIds.RealLife
 
   constructor: ->
-    super
+    super arguments...
 
     # Enable directly linking to some items.
     directItems = [
@@ -35,6 +35,9 @@ class HQ.Adventure extends LOI.Adventure
     ,
       item: HQ.Store.Display
       location: HQ.Store
+    ,
+      item: HQ.ArtStudio.StillLifeStand
+      location: HQ.ArtStudio
     ]
 
     for directItem in directItems
@@ -70,7 +73,7 @@ class HQ.Adventure extends LOI.Adventure
           LOI.adventure.setLocationId directLocation unless LOI.adventure.currentLocationId() is directLocation.id()
 
   onCreated: ->
-    super
+    super arguments...
 
     # Prepare Chapter 2 state.
     C2 = PixelArtAcademy.Season1.Episode0.Chapter2

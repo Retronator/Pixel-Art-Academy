@@ -1,0 +1,3 @@
+en-US: Bun middle with slicked hair and ponytail
+
+{"_id":"HoCR7zHckNKobQept","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560714176332},"translations":{"en":{"us":{"text":"Bun middle with slicked hair and ponytail","quality":0},"best":{"text":"Bun middle with slicked hair and ponytail","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bun middle with slicked hair and ponytail","quality":0,"languageRegion":"en-US"}}}

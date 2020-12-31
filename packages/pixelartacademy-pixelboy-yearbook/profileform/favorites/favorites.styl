@@ -1,4 +1,27 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-pixelboy-apps-yearbook-profileform-favorites
-  // TODO
+  .quote
+    position relative
+    z-index 1
+
+    .value
+      margin-top -2rem !important
+
+      textarea
+        resize none
+        line-height 10rem
+        height 31rem
+        top 4rem !important
+
+    &::before
+      content ''
+      position absolute
+      z-index -1
+      bottom 9rem
+      height 9rem
+      left 0
+      right 0
+      border 1rem solid atariGrey(4)
+      border-left none
+      border-right none

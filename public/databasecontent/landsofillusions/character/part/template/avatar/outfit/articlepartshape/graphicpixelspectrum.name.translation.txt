@@ -1,0 +1,3 @@
+en: Graphic PIXEL Spectrum
+
+{"_id":"Dyw7pctqD5A37SbZK","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Graphic PIXEL Spectrum","quality":0,"best":{"text":"Graphic PIXEL Spectrum","quality":0,"languageRegion":"en"}},"best":{"text":"Graphic PIXEL Spectrum","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1564157613239}}

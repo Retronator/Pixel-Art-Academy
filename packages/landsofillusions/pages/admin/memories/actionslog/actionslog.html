@@ -1,0 +1,22 @@
+<template name="LandsOfIllusions.Pages.Admin.Memories.ActionsLog">
+  <div class="landsofillusions-pages-admin-memories-actionslog admin-page">
+    <h1>Actions log</h1>
+    <table class="actions">
+      {{#each actions}}
+        <tr class="action">
+          <td class="time" title="{{time}} ({{timelineId}})">{{time.toLocaleString}}</td>
+          <td class="location" title="{{locationId}}">{{locationName}}</td>
+          <td class="character">{{> t9n character.avatar.fullName}}</td>
+          <td class="type" title="{{type}}">{{typeName}}</td>
+          <td class="body">
+            {{#if contextId}}
+              <div class="context">{{contextId}}</div>
+            {{/if}}
+            {{> LandsOfIllusions.Pages.Admin.Memories.Components.ActionContent}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+    <button class="display-more-button">Display more</button>
+  </div>
+</template>

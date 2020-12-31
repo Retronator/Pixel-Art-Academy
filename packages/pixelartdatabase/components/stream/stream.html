@@ -1,32 +1,8 @@
 <template name="PixelArtDatabase.Components.Stream">
-  <div class="pixelartdatabase-components-stream {{lowPerformanceClass}}">
+  <div class="pixelartdatabase-components-stream">
     <ol class="artworks">
       {{#each displayedArtworks}}
-        <li class="artwork-area">
-          <figure class="artwork-with-caption">
-            <div class="artwork-frame">
-              {{#if videoUrl}}
-                <video class="artwork" src="{{videoUrl}}" loop poster="{{imageUrl}}">
-                  <img class="artwork" src="{{imageUrl}}"/>
-                </video>
-              {{else}}
-                <img class="artwork" src="{{imageUrl}}" {{style artworkStyle}}/>
-              {{/if}}
-            </div>
-            {{#if hasCaption}}
-              <figcaption class="caption">
-                {{> renderCaption artwork}}
-              </figcaption>
-            {{/if}}
-          </figure>
-          {{#if showVideoBackground}}
-            <video class="background" src="{{videoUrl}}" loop poster="{{imageUrl}}">
-              <img class="background" src="{{imageUrl}}"/>
-            </video>
-          {{else}}
-            <img class="background" src="{{imageUrl}}"/>
-          {{/if}}
-        </li>
+        {{> PixelArtDatabase.Components.Stream.Artwork args artworkOptions}}
       {{/each}}
     </ol>
   </div>

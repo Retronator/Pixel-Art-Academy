@@ -19,6 +19,7 @@ class LOI.Memory extends AM.Document
   # endTime: auto-generated time of the last action in this memory
   # timelineId: timeline when the memory happened
   # locationId: location where the memory took place
+  # contextId: optional context in which the memory started
   #
   # journalEntry: array with one journal entry this memory relates to, reverse of Journal.Entry.memories
   #   _id
@@ -32,14 +33,14 @@ class LOI.Memory extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      startTime: @GeneratedField 'self', ['actions'], (memory) ->
+      startTime: Document.GeneratedField 'self', ['actions'], (memory) ->
         return [memory._id, undefined] unless memory.actions?.length
 
         orderedActions = _.sortBy memory.actions, (action) -> action.time.getTime()
 
         [memory._id, orderedActions[0].time]
 
-      endTime: @GeneratedField 'self', ['actions'], (memory) ->
+      endTime: Document.GeneratedField 'self', ['actions'], (memory) ->
         return [memory._id, undefined] unless memory.actions?.length
 
         orderedActions = _.sortBy memory.actions, 'time'
@@ -53,6 +54,8 @@ class LOI.Memory extends AM.Document
 
   # Subscriptions
 
+  @all: @subscription 'all'
+  @allWithActionsOfType: @subscription 'allWithActionsOfType'
   @forId: @subscription 'forId'
   @forIds: @subscription 'forIds'
   
@@ -71,7 +74,7 @@ class LOI.Memory extends AM.Document
           endTime: -1
 
   constructor: ->
-    super
+    super arguments...
 
     # Sort and cast actions, to get them in the form we'd expect.
     @actions = _.sortBy @actions, (action) => action.time.getTime()
@@ -81,3 +84,6 @@ class LOI.Memory extends AM.Document
     # Create the context for this memory document and enter it. The context will already be displaying this memory.
     context = LOI.Memory.Context.createContext @
     LOI.adventure.enterContext context
+
+  chronologicalActions: ->
+    _.sortBy @actions, 'time'

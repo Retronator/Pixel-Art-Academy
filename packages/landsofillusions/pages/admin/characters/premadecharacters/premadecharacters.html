@@ -1,0 +1,20 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters">
+  <h1>Pre-made characters</h1>
+  <ul>
+    {{#each preMadeCharacters}}
+      {{> LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters.PreMadeCharacter}}
+    {{/each}}
+  </ul>
+  <button class="new-pre-made-character">New</button>
+</template>
+
+<template name="LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters.PreMadeCharacter">
+  <li>
+    <div>
+      {{> LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters.PreMadeCharacter.CharacterSelection}}
+    </div>
+    <div>
+      {{> renderBioTranslatable bio}}
+    </div>
+  </li>
+</template>

@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.StillLifeStand">
+  <div class="pixelartacademy-stilllifestand">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      <div class="viewport-area {{cursorClass}}">
+        <div class="render-area"></div>
+        {{> Render inventory}}
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

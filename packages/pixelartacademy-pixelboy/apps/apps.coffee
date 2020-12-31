@@ -6,11 +6,13 @@ class PAA.PixelBoy.Apps extends LOI.Adventure.Location
 
   @initialize()
 
-  things: -> [
-    @constructor.HomeScreen
-    @constructor.StudyPlan
-    @constructor.Journal
-    @constructor.Calendar
-    @constructor.Yearbook
-    @constructor.Drawing
-  ]
+  things: ->
+    apps = [
+      @constructor.HomeScreen
+      @constructor.AdmissionWeek
+    ]
+
+    if unlockedApps = PAA.PixelBoy.Apps.AdmissionWeek.state 'unlockedApps'
+      apps.push _.thingClass appId for appId in unlockedApps
+
+    apps

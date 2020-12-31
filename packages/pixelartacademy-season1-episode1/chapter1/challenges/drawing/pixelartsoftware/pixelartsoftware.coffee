@@ -30,7 +30,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     """
 
   constructor: ->
-    super
+    super arguments...
     
     # Listen to asset completed changes to determine if editor and upload options are granted.
     @_assetsCompletedAutorun = Tracker.autorun =>
@@ -54,7 +54,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
 
   destroy: ->
     @_assetsCompletedAutorun.stop()
-    asset.destroy() for asset in @_pixelArtSoftwareAssets
+    asset.destroy() for asset in @_pixelArtSoftwareAssets if @_pixelArtSoftwareAssets
 
   noAssetsInstructions: ->
     @translations()?.noAssetsInstructions

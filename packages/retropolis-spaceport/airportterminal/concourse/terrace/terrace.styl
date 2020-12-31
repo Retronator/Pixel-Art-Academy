@@ -1,6 +1,10 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retropolis-spaceport-locations-terrace
+  // Start new depth context to prevent being higher than the loading cover.
+  position relative
+  z-index 0
+
   .landing-page
     position relative
     color black
@@ -112,6 +116,7 @@
         bottom 0
         uni()
         animation blink 5s ease-in-out 0s infinite
+        pointer-events none
 
         .scroll-to-start
           display inline-block

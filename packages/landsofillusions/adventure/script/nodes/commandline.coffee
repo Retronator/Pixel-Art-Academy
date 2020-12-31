@@ -3,7 +3,7 @@ Script = LOI.Adventure.Script
 
 class Script.Nodes.CommandLine extends Script.Node
   constructor: (options) ->
-    super
+    super arguments...
 
     @line = options.line
     @replaceLastCommand = options.replaceLastCommand

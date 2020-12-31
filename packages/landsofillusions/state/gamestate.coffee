@@ -36,11 +36,11 @@ class LOI.GameState extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField RA.User, ['displayName']
-      character: @ReferenceField LOI.Character, ['debugName']
+      user: Document.ReferenceField RA.User, ['displayName']
+      character: Document.ReferenceField LOI.Character, ['debugName']
       # Events and state both influence next simulation time (we need earliest event, 
       # and latest game time, as well as when that game time was written (last updated at)).
-      nextSimulateTime: @GeneratedField 'self', ['events', 'state', 'stateLastUpdatedAt'], (fields) ->
+      nextSimulateTime: Document.GeneratedField 'self', ['events', 'state', 'stateLastUpdatedAt'], (fields) ->
         return [fields._id, null] unless fields.events?.length
 
         earliestEvent = _.first _.sortBy fields.events, 'gameTime'
@@ -51,7 +51,7 @@ class LOI.GameState extends AM.Document
         [fields._id, time]
 
     triggers: =>
-      simulate: @Trigger ['nextSimulateTime'], (newDocument, oldDocument) ->
+      simulate: Document.Trigger ['nextSimulateTime'], (newDocument, oldDocument) ->
         # Don't do anything when document is removed.
         return unless newDocument?._id
 
@@ -81,7 +81,7 @@ class LOI.GameState extends AM.Document
     ReadOnly: 'readOnlyGameState'
 
   constructor: ->
-    super
+    super arguments...
 
     # On the client also transform state from underscores to dots.
     @state = @constructor._transformStateFromDatabase @state if Meteor.isClient

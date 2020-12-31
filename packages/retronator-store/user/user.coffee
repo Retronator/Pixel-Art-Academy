@@ -20,18 +20,19 @@ class RA.User extends RA.User
     collection: Meteor.users
     fields: (fields) =>
       _.extend fields,
-        supporterName: @GeneratedField 'self', ['profile'], (user) ->
+        supporterName: Document.GeneratedField 'self', ['profile'], (user) ->
           supporterName = if user.profile?.showSupporterName then user.profile?.name else null
           [user._id, supporterName]
 
-        items: [@ReferenceField RS.Item, ['catalogKey']]
+        items: [Document.ReferenceField RS.Item, ['catalogKey']]
 
       fields
 
     triggers: (triggers) =>
       _.extend triggers,
         # Transactions for a user can update when a new registered email is added or a twitter account is linked.
-        transactionsUpdated: @Trigger ['registered_emails', 'services.twitter.screenName'], (user, oldUser) ->
+        transactionsUpdated: Document.Trigger ['registered_emails', 'twitterScreenName', 'patreonId'], (user, oldUser) ->
+          console.log "User update detected!", user?.debugName or user?._id or oldUser?.debugName or oldUser?._id
           user?.onTransactionsUpdated()
 
       triggers
@@ -69,6 +70,7 @@ class RA.User extends RA.User
     false
 
   onTransactionsUpdated: ->
+    console.log "Updating store-related fields for user", @displayName or @_id
     @generateItemsArray()
     @generateSupportAmount()
     @generateStoreData()

@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Components.EmbeddedWebpage extends AM.Component
   onCreated: ->
-    super
+    super arguments...
     
     adventure = @ancestorComponentOfType LandsOfIllusions.Adventure
     @embedded = true if adventure
@@ -16,7 +16,7 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
         minScale: 2
 
   onRendered: ->
-    super
+    super arguments...
 
     if @embedded
       @$root = $('.webpage-embed-root')
@@ -27,7 +27,7 @@ class LOI.Components.EmbeddedWebpage extends AM.Component
     @$root.addClass(@rootClass())
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @$root.removeClass(@rootClass())
 

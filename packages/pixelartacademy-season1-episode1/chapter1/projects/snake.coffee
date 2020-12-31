@@ -17,7 +17,7 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
   @end: new AB.Method name: "#{@id()}.end"
 
   constructor: ->
-    super
+    super arguments...
 
     @assets = new ComputedField =>
       [

@@ -1,0 +1,56 @@
+@import "../debugfont/debugfont.import"
+
+debug-rendering = false
+
+.artificial-mirage-display
+  debug-font()
+
+  *
+    box-sizing border-box
+
+  .crop-bar
+    position fixed
+    background black
+    transform translateZ(0)
+
+    &.top-crop-bar
+      top 0
+      left 0
+      right 0
+
+    &.bottom-crop-bar
+      bottom 0
+      left 0
+      right 0
+
+    &.left-crop-bar
+      top 0
+      bottom 0
+      left 0
+
+    &.right-crop-bar
+      top 0
+      bottom 0
+      right 0
+
+  .viewport-bounds
+    display none
+
+  &.debug
+    .viewport-bounds
+      display block
+      position fixed
+      border 2px solid firebrick
+      color firebrick
+      pointer-events none
+      z-index 9999
+
+      .scale
+        position absolute
+        bottom 0
+        right 0
+        padding 2px
+
+      .safe-area
+        position absolute
+        border 2px solid goldenrod

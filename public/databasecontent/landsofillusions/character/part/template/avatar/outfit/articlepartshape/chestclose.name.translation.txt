@@ -1,0 +1,3 @@
+en: Chest close
+
+{"_id":"ssGu4HDzhbfYi4Ypg","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Chest close","quality":0,"best":{"text":"Chest close","quality":0,"languageRegion":"en"}},"best":{"text":"Chest close","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1564102174451}}

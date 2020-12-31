@@ -46,7 +46,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       options.delay
 
   destroy: ->
-    super
+    super arguments...
 
     Meteor.clearTimeout @_alexEntersTimeout
 
@@ -179,6 +179,6 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
         $('.ui').velocity('stop').css opacity: 1
 
   cleanup: ->
-    super
+    super arguments...
 
     @_alexTalksAutorun?.stop()

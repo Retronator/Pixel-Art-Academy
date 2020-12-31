@@ -1,6 +1,12 @@
 LOI = LandsOfIllusions
 
 class LOI.Settings
+  @Audio:
+    Enabled:
+      Off: 'Off'
+      Fullscreen: 'Fullscreen'
+      On: 'On'
+      
   constructor: ->
     @persistSettings = new @constructor.ConsentField
       name: 'persistSettings'
@@ -28,14 +34,28 @@ class LOI.Settings
       moreInfo: "This will use your browser's local storage to store a sign-in token so that you don't need
                  to sign in again next time. Note: this will take effect after your next sign in."
 
+    @persistEditorsInterface = new @constructor.ConsentField
+      name: 'persistEditorsInterface'
+      question: "Do you want to automatically save changes made to the user interface?"
+      moreInfo: "This will use your browser's local storage to save editor settings."
+
     # By default, we disallow all but persisting settings.
     @persistGameState.disallow() unless @persistGameState.decided()
     @persistCommandHistory.disallow() unless @persistCommandHistory.decided()
     @persistLogin.disallow() unless @persistLogin.decided()
+    @persistEditorsInterface.disallow() unless @persistEditorsInterface.decided()
 
     @graphics =
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings
       maximumScale: new @constructor.Field null, 'graphics.maximumScale', @persistSettings
+      anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings
+      smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
+      smoothShadingQuantizationLevels: new @constructor.Field 24, 'graphics.smoothShadingQuantizationLevels', @persistSettings
+
+    @audio =
+      enabled: new @constructor.Field @constructor.Audio.Enabled.Fullscreen, 'audio.enabled', @persistSettings
+      soundVolume: new @constructor.Field 100, 'audio.soundVolume', @persistSettings
+      musicVolume: new @constructor.Field 100, 'audio.musicVolume', @persistSettings
 
   toObject: ->
     values = {}

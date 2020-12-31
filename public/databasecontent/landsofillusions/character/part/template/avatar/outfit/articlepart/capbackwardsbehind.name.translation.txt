@@ -1,0 +1,3 @@
+en-US: Cap backwards behind
+
+{"_id":"F5EsaW9oBzhLQZvyX","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Cap backwards behind","quality":0},"best":{"text":"Cap backwards behind","quality":0,"languageRegion":"en-US"}},"best":{"text":"Cap backwards behind","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519143516}}

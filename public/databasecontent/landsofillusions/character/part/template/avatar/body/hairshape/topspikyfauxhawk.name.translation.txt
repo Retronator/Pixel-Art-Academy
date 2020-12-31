@@ -1,0 +1,3 @@
+en-US: Top spiky fauxhawk
+
+{"_id":"v6jT6eAmbyBdzosNi","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560727943519},"translations":{"en":{"us":{"text":"Top spiky fauxhawk","quality":0},"best":{"text":"Top spiky fauxhawk","quality":0,"languageRegion":"en-US"}},"best":{"text":"Top spiky fauxhawk","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,28 @@
+# PixelArtAcademy.Items.KitchenKnife
+
+## CantGet
+
+> You really shouldn't be running around with a knife.
+
+-> [End]
+
+## CutWhat
+
+> What do you want to cut?
+
+-> [End]
+
+## CutInventoryThingInHalf
+
+> You grab the knife and cut the unsuspecting `_thingToCut` in half.
+
+-> [End]
+
+## CutLocationThingInHalf
+
+> You pick up the `_thingToCut` and cut it in half with the knife.
+> Congratulations! You are now the proud owner of two `_thingToCut` halves.
+
+-> [End]
+
+## End

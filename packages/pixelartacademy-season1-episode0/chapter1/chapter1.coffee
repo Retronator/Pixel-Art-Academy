@@ -32,7 +32,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
     @state('playedOutro') is true or Retronator.HQ.state()?
   
   constructor: ->
-    super
+    super arguments...
     
     @inOutro = new ReactiveField false
 

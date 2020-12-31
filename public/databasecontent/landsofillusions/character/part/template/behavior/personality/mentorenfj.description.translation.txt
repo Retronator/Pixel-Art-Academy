@@ -1,0 +1,3 @@
+en: Charismatic and passionate leader that inspires people to be the best.
+
+{"_id":"vxhzwsJA42E7vygwr","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Charismatic and passionate leader that inspires people to be the best.","quality":0,"best":{"text":"Charismatic and passionate leader that inspires people to be the best.","quality":0,"languageRegion":"en"}},"best":{"text":"Charismatic and passionate leader that inspires people to be the best.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038954222}}

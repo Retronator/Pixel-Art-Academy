@@ -7,11 +7,17 @@
   {{> Render display}}
   <div class="landsofillusions-interface-text scrollable">
     <div class="location">
+      {{> Render world}}
       {{#if context}}
         {{> Render context}}
       {{else}}
         {{> Render location}}
       {{/if}}
+      <div class="loading-cover">
+        <div class="caption">
+          Loading …
+        </div>
+      </div>
     </div>
     <div class="items">
       {{#each activeItems}}
@@ -59,8 +65,8 @@
                   … <span class="keypress-hint">Press enter to continue</span>
                 {{else}}
                   &gt;
-                  {{#if hoveredCommand}}
-                    {{hoveredCommand}}
+                  {{#if suggestedCommand}}
+                    {{suggestedCommand}}
                   {{else}}
                     {{{commandBeforeCaret}}}<span class="caret {{caretIdleClass}}">■</span>{{{commandAfterCaret}}}
                  {{/if}}

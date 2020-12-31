@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -8,6 +7,7 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.LandsOfIllusions.Room'
   @url: -> 'retronator/landsofillusions/room'
   @region: -> HQ.LandsOfIllusions
+  @isPrivate: -> true
 
   @version: -> '0.0.1'
 
@@ -30,8 +30,6 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions.Hallway
     "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions.Hallway
 
-  isPrivate: -> true
-  
   # Script
 
   initializeScript: ->

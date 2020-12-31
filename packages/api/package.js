@@ -3,7 +3,14 @@ Package.describe({
   version: '1.0.0'
 });
 
+Package.registerBuildPlugin({
+  name: 'glsl',
+  sources: ['glslbuildplugin.js']
+});
+
 Package.onUse(function(api) {
+  api.use('isobuild:compiler-plugin@1.0.0');
+
   expandPath = function(path) {
     parts = path.split('/');
     lastPart = parts[parts.length-1];
@@ -28,6 +35,18 @@ Package.onUse(function(api) {
   api.constructor.prototype.addClientFile = function(path) {
     path = expandPath(path);
     this.addFiles(path + ".coffee", ['client']);
+  };
+  api.constructor.prototype.addJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js");
+  };
+  api.constructor.prototype.addServerJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js", ['server']);
+  };
+  api.constructor.prototype.addClientJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js", ['client']);
   };
   api.constructor.prototype.addHtml = function(path) {
     path = expandPath(path);
@@ -75,4 +94,37 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addAssets(path + ".script", ['client', 'server']);
   };
+  api.constructor.prototype.addData = function(path) {
+    path = expandPath(path);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addServerData = function(path) {
+    path = expandPath(path);
+    this.addAssets(path + ".json", ['server']);
+  };
+  api.constructor.prototype.addFileWithData = function(path, architecture) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee", architecture);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addThingWithData = function(path, architecture) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee", architecture);
+    this.addAssets(path + ".script", ['client', 'server']);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addGlsl = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".glsl", ['client']);
+  };
+  api.constructor.prototype.addFileWithGlsl = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee");
+    this.addFiles(path + ".glsl", ['client']);
+  };
+  api.constructor.prototype.addMaterial = function(path) {
+    path = expandPath(path);
+    this.addFiles([path + ".coffee", path + "-vertex.glsl", path + "-fragment.glsl"], ['client']);
+  };
+
 });

@@ -46,19 +46,20 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      journal: @ReferenceField PAA.Practice.Journal, ['character'], true, 'entries', []
-      action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
-      memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
+      journal: Document.ReferenceField PAA.Practice.Journal, ['character'], true, 'entries', []
+      action: Document.ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
+      memories: [Document.ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 
   @pictureUploadContext = new LOI.Assets.Upload.Context
     name: "#{@id()}.picture"
     folder: 'check-ins'
-    maxSize: 10 * 1024 * 1024 # 10 MB
+    maxSize: 20 * 1024 * 1024 # 20 MB
     fileTypes: [
       'image/png'
       'image/jpeg'
       'image/gif'
       ]
+    cacheControl: LOI.Assets.Upload.Context.CacheControl.RequireRevalidation
 
   # Methods
 

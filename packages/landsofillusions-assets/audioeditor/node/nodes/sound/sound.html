@@ -1,0 +1,10 @@
+<template name="LandsOfIllusions.Assets.AudioEditor.Node.Sound">
+  <div class="landsofillusions-assets-audioeditor-node-sound">
+    {{#if audioNode.buffer}}
+      <div class="duration">
+        {{fixedDecimals audioNode.buffer.duration 1}}s
+      </div>
+    {{/if}}
+    <canvas class="waveform-canvas" width="100" height="20"></canvas>
+  </div>
+</template>

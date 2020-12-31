@@ -12,7 +12,7 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
   middleSceneOffsetFactor = 0.5
 
   onCreated: ->
-    super
+    super arguments...
 
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
@@ -21,7 +21,7 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
     $('html').addClass('scale-2')
 
   onRendered: ->
-    super
+    super arguments...
 
     $(window).scrollTop(0)
 
@@ -135,6 +135,6 @@ class PixelArtAcademy.LandingPage.Pages.Components.Retropolis extends AM.Compone
     @initializingClass ""
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $('html').removeClass('scale-2')

@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -16,13 +15,13 @@ class HQ.Residence.Hallway extends LOI.Adventure.Location
   @description: ->
     "
       You enter Retronator residence where Retro and guests go to recover after a hard day of work.
-      There is nothing to explore for now, but be back in the future.
+      Exploring the rooms seem a bit intrusive, but the hallway leads to an open space in the east.
     "
   
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton
@@ -37,5 +36,5 @@ class HQ.Residence.Hallway extends LOI.Adventure.Location
     HQ.Elevator.addElevatorExit
       floor: 5
     ,
-      "#{Vocabulary.Keys.Directions.Up}": HQ.Residence.UpstairsHallway
+      "#{Vocabulary.Keys.Directions.East}": HQ.Residence.Kitchen
       "#{Vocabulary.Keys.Directions.Down}": HQ.ArtStudio

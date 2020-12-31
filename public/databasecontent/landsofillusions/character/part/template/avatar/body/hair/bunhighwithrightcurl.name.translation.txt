@@ -1,0 +1,3 @@
+en: Bun high with right curl
+
+{"_id":"9vu7nY95vfRRkZTMC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Bun high with right curl","quality":0,"best":{"text":"Bun high with right curl","quality":0,"languageRegion":"en"}},"best":{"text":"Bun high with right curl","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1560726190636}}

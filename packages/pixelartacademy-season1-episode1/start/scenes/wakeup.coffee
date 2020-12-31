@@ -20,7 +20,7 @@ class Start.WakeUp extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/start/scenes/wakeup.script'
 
   destroy: ->
-    super
+    super arguments...
 
     @cancelHint()
 
@@ -29,13 +29,14 @@ class Start.WakeUp extends LOI.Adventure.Scene
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
 
   removeThings: ->
-    characterPerson = LOI.Character.getPerson LOI.characterId()
+    characterPerson = LOI.Character.getAgent LOI.characterId()
 
     # Don't show things until they open their eyes.
     [
       characterPerson
       Apartment.Studio.Computer
       Apartment.Studio.Bed
+      Apartment.Studio.KitchenCabinet
     ]
 
   giveHint: (delay) ->

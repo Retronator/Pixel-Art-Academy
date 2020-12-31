@@ -6,7 +6,7 @@ class PAA.PixelBoy.OS extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.OS'
 
   constructor: (@pixelBoy) ->
-    super
+    super arguments...
 
     @justOS = not @pixelBoy
 
@@ -38,17 +38,17 @@ class PAA.PixelBoy.OS extends AM.Component
 
         @_apps[appClass.id()]
         
-    @currentAppUrl = ComputedField =>
+    @currentAppUrl = new ComputedField =>
       appUrl = AB.Router.getParameter('parameter2')
       appClass = PAA.PixelBoy.App.getClassForUrl appUrl
 
       # Make sure this app exists.
       if appClass then appUrl else null
 
-    @currentAppPath = ComputedField =>
+    @currentAppPath = new ComputedField =>
       AB.Router.getParameter('parameter3')
 
-    @currentAppParameter = ComputedField =>
+    @currentAppParameter = new ComputedField =>
       AB.Router.getParameter('parameter4')
 
     @currentApp = new ReactiveField null
@@ -92,13 +92,13 @@ class PAA.PixelBoy.OS extends AM.Component
       @display = LOI.adventure.interface.display
 
   onRendered: ->
-    super
+    super arguments...
 
     @$root = if @justOS then $('html') else @$('.pixelartacademy-pixelboy-os').closest('.os')
     @$root.addClass('pixelartacademy-pixelboy-os-root')
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @$root.removeClass('pixelartacademy-pixelboy-os-root')
 
@@ -128,6 +128,9 @@ class PAA.PixelBoy.OS extends AM.Component
 
   go: (appUrl, appPath, appParameter) ->
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
+
+  shortcutsTableVisibleClass: ->
+    'visible' if @currentApp()?.allowsShortcutsTable()
 
   backButtonCallback: ->
     # See if the app can handle it.

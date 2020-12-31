@@ -1,0 +1,3 @@
+en: Family first
+
+{"_id":"eH44SACWjiagyZaP4","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Family first","quality":0,"best":{"text":"Family first","quality":0,"languageRegion":"en"}},"best":{"text":"Family first","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038957370}}

@@ -11,7 +11,7 @@ class PAA.Practice.Journal.Entry.MemoryPreview extends AM.Component
     LOI.Items.Sync.Memories.registerPreviewComponent 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Context', @
 
   onCreated: ->
-    super
+    super arguments...
 
     memory = @data()
 

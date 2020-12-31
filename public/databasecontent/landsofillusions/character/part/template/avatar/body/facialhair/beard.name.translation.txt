@@ -1,0 +1,3 @@
+en-US: Beard
+
+{"_id":"uMM5oWd7hPX263HLi","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1558961942741},"translations":{"en":{"us":{"text":"Beard","quality":0},"best":{"text":"Beard","quality":0,"languageRegion":"en-US"}},"best":{"text":"Beard","quality":0,"languageRegion":"en-US"}}}

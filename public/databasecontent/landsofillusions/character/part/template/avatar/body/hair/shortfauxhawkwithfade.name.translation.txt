@@ -1,0 +1,3 @@
+en-US: Short fauxhawk with fade
+
+{"_id":"wrsL28XmNyBPQEJqD","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560762519886},"translations":{"en":{"us":{"text":"Short fauxhawk with fade","quality":0},"best":{"text":"Short fauxhawk with fade","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short fauxhawk with fade","quality":0,"languageRegion":"en-US"}}}

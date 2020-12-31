@@ -18,7 +18,7 @@ class C1.Challenges.Drawing.Tutorial.Colors extends C1.Challenges.Drawing.Tutori
   # Methods
 
   constructor: ->
-    super
+    super arguments...
 
     @assets = new ComputedField =>
       assets = []

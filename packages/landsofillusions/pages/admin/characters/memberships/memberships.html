@@ -1,0 +1,9 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters.Memberships">
+  <h1>Memberships</h1>
+  {{> LandsOfIllusions.Pages.Admin.Characters.Memberships.GroupSelect}}
+  <ol reversed>
+    {{#each members}}
+      <li value="{{memberId}}">{{character.debugName}} ({{joinTime.toDateString}})</li>
+    {{/each}}
+  </ol>
+</template>

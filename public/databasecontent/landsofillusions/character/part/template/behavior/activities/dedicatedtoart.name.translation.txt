@@ -1,0 +1,3 @@
+en: Dedicated to art
+
+{"_id":"Rh73FG6ebZYxdBCu5","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Dedicated to art","quality":0,"best":{"text":"Dedicated to art","quality":0,"languageRegion":"en"}},"best":{"text":"Dedicated to art","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038940587}}

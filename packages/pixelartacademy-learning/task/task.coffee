@@ -1,21 +1,40 @@
 AB = Artificial.Babel
 PAA = PixelArtAcademy
+IL = Illustrapedia
 
 class PAA.Learning.Task
   @_taskClassesById = {}
+  @_taskClassesUpdatedDependency = new Tracker.Dependency
 
   @PredecessorsCompleteType:
     All: 'All'
     Any: 'Any'
 
+  @Icons:
+    Task: 'Task'
+    Drawing: 'Drawing'
+    Reading: 'Reading'
+    Video: 'Video'
+
   @getClassForId: (id) ->
+    @_taskClassesUpdatedDependency.depend()
     @_taskClassesById[id]
+
+  @removeClassForId: (id) ->
+    delete @_taskClassesById[id]
+    @_taskClassesUpdatedDependency.depend()
+
+  @getTypes: ->
+    property for property, value of @ when value.prototype instanceof @
 
   # Id string for this task used to identify the task in code.
   @id: -> throw new AE.NotImplementedException "You must specify task's id."
 
   # The type that identifies the task class individual tasks inherit from.
-  @type: null
+  @type: -> null
+
+  # The icon that represents the kind of work done in this task.
+  @icon: -> @Icons.Task
 
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
@@ -40,16 +59,32 @@ class PAA.Learning.Task
   @initialize: ->
     # Store task class by ID.
     @_taskClassesById[@id()] = @
+    @_taskClassesUpdatedDependency.changed()
 
-    # On the server, create this avatar's translated names.
+    # On the server, after document observers are started, perform initialization.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty
 
+        # Create this avatar's translated names.
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 
+        # Initialize interests.
+        IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
+
+  @getAdventureInstanceForId: (taskId) ->
+    for episode in LOI.adventure.episodes()
+      for chapter in episode.chapters
+        for task in chapter.tasks
+          return task if task.id() is taskId
+
+    console.warn "Unknown task requested.", taskId
+    null
+
   constructor: (@options = {}) ->
+    @goal = @options.goal
+
     # By default the task is related to the current character.
     @options.characterId ?= => LOI.characterId()
 
@@ -57,12 +92,11 @@ class PAA.Learning.Task
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @type = @constructor.type
-
   destroy: ->
     @_translationSubscription.stop()
 
   id: -> @constructor.id()
+  type: -> @constructor.type()
 
   directive: -> AB.translate(@_translationSubscription, 'directive').text
   directiveTranslation: -> AB.translation @_translationSubscription, 'directive'
@@ -88,14 +122,18 @@ class PAA.Learning.Task
     # We need an entry made by this character.
     @entry()
 
-  active: (otherTasks) ->
+  active: ->
     # We should only be determining active state for the current character.
     unless @options.characterId() is LOI.characterId()
       console.warn "Active task determination requested for another character."
       return
 
+    # Task is not active after it's completed.
+    return if @completed()
+
     # Predecessors need to be completed for the task to be active.
     predecessors = @predecessors()
+    otherTasks = @goal.tasks()
 
     if predecessors.length
       # Count how many predecessors are completed.
@@ -114,5 +152,5 @@ class PAA.Learning.Task
 
     # TODO: Check that the character has all required interests.
 
-    # Task is active until completed.
-    not @completed()
+    # All requirements to be active have been met.
+    true

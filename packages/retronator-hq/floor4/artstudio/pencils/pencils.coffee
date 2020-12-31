@@ -21,7 +21,7 @@ class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
     Inventory: ['inventory']
 
   constructor: ->
-    super
+    super arguments...
     
     # Pencils context only appears in dialogue mode.
     @dialogueMode true
@@ -33,7 +33,7 @@ class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
     @_focusPoint = x: 0.5, y: 0.6
 
   onCreated: ->
-    super
+    super arguments...
 
     @handVisible = new ReactiveField false
 
@@ -41,7 +41,7 @@ class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
     @handVisible true
 
   sceneStyle: ->
-    hiddenHeight = @sceneSize.height - @illustrationHeight()
+    hiddenHeight = @sceneSize.height - @illustration().height
 
     top: "-#{hiddenHeight * 0.6}rem"
 

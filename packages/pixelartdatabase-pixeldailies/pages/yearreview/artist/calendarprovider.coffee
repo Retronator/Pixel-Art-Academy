@@ -25,7 +25,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist.CalendarProvider extends PADB.Pi
           tweetData: 0
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @yearRange = new AE.DateRange year: @options.year
 

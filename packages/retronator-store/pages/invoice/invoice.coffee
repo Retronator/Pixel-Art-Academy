@@ -8,9 +8,9 @@ class RS.Pages.Invoice extends AM.Component
   @register @id()
 
   onCreated: ->
-    super
+    super arguments...
 
-    @subscribe Retronator.Store.Item.all
+    RS.Item.all.subscribe @
 
     @accessSecret = new ComputedField =>
       AB.Router.getParameter 'accessSecret'

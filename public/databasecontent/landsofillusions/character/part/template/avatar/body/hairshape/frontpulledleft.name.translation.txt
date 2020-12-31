@@ -1,0 +1,3 @@
+en-US: Front pulled left
+
+{"_id":"AcH6oHc64L8pSK3cR","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559508592615},"translations":{"en":{"us":{"text":"Front pulled left","quality":0},"best":{"text":"Front pulled left","quality":0,"languageRegion":"en-US"}},"best":{"text":"Front pulled left","quality":0,"languageRegion":"en-US"}}}

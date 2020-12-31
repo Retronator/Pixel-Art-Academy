@@ -1,0 +1,3 @@
+en-US: Shirt loose long sleeves tight collar
+
+{"_id":"nY3W4r4T6qvQ6ToWd","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565818881823},"translations":{"en":{"us":{"text":"Shirt loose long sleeves tight collar","quality":0},"best":{"text":"Shirt loose long sleeves tight collar","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shirt loose long sleeves tight collar","quality":0,"languageRegion":"en-US"}}}

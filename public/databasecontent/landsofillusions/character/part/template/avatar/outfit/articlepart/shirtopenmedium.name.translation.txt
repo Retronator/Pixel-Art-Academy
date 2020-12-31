@@ -1,0 +1,3 @@
+en-US: Shirt open medium
+
+{"_id":"kDbqhoDcztMqzkK3B","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1572439797137},"translations":{"en":{"us":{"text":"Shirt open medium","quality":0},"best":{"text":"Shirt open medium","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shirt open medium","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en: Your family doesn't understand you, but you're not going to let that stop you.
+
+{"_id":"k973x8iJXiWaq9tdp","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Your family doesn't understand you, but you're not going to let that stop you.","quality":0,"best":{"text":"Your family doesn't understand you, but you're not going to let that stop you.","quality":0,"languageRegion":"en"}},"best":{"text":"Your family doesn't understand you, but you're not going to let that stop you.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038935455}}

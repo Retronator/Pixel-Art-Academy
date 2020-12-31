@@ -1,0 +1,25 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.Landmarks">
+  <div class="landsofillusions-assets-mesheditor-landmarks landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="landmarks-table editor-table">
+      <tr class="legend">
+        <th class="number"></th>
+        <th class="name">name</th>
+        <th class="coordinate coordinate-x">x</th>
+        <th class="coordinate coordinate-y">y</th>
+      </tr>
+      {{#each landmarks}}
+        <tr class="landmark">
+          <td class="number"><input class="number-input" value="{{number}}"/></td>
+          <td class="name"><input class="name-input" value="{{name}}"/></td>
+          <td class="coordinate coordinate-x"><input class="coordinate-input" type="number" step="0.5" value="{{x}}"/></td>
+          <td class="coordinate coordinate-y"><input class="coordinate-input" type="number" step="0.5" value="{{y}}"/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      {{#if showAddButton}}
+        <button class="add-landmark-button">Add landmark</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

@@ -10,39 +10,39 @@ Document.startup ->
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.PlayerAccess
     name: "Pixel Art Academy - Player access"
-    description: "You are a player of Pixel Art Academy! Enter the game world and play through episodes once they're released."
+    description: "You are a player of Pixel Art Academy! Enter the game world and play through chapters once they're released."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.AlphaAccess
     name: "Pixel Art Academy - Alpha access"
-    description: "You can play around with episodes while they're still in development."
+    description: "You can test chapters while they're still in development."
 
   # PIXEL ART ACADEMY YEARS
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.FoundationYear
     name: "Pixel Art Academy - Foundation Year"
-    description: "You were part of the founding class of 2016 and played with the early prototype before it was even cool."
+    description: "You were part of the founding class of 2016 and played the early prototype before it was even cool."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.FreshmanYear
     name: "Pixel Art Academy - Freshman Year"
-    description: "Season one of Pixel Art Academy! You have access to game episodes that will constitute the first year at the Academy."
+    description: "Volume one of Pixel Art Academy! You have access to game chapters that will constitute the first year at the Academy."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.SophomoreYear
     name: "Pixel Art Academy - Sophomore Year"
-    description: "Access to second season episodes that continue your story at the Academy."
+    description: "Access to second volume chapters that continue your story at the Academy."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.JuniorYear
     name: "Pixel Art Academy - Junior Year"
-    description: "Third season episodes, consisting of your third year at the academy."
+    description: "Third volume chapters, consisting of your third year at the academy."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.SeniorYear
     name: "Pixel Art Academy - Senior Year"
-    description: "Final season of Pixel Art Academy episodes, concluding the story arc of the game."
+    description: "Final volume of Pixel Art Academy chapters, concluding the story arc of the game."
     
   # CLASS HELP
 

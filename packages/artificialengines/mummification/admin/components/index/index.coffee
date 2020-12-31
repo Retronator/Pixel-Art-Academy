@@ -5,12 +5,12 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
   @register 'Artificial.Mummification.Admin.Components.Index'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @options.nameField ?= 'name'
 
   onCreated: ->
-    super
+    super arguments...
 
     @options.documentClass.all.subscribe @, =>
       # Always show the first document if none is displayed.
@@ -26,7 +26,7 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
         AB.Router.setParameters documentId: firstDocument?._id or null
 
   onDestroyed: ->
-    super
+    super arguments...
 
   documents: ->
     sort = _id: 1
@@ -49,7 +49,7 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
     'active' if @currentData()._id is AB.Router.getParameter 'documentId'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .add-document': @onClickAddDocument
       'click .document': @onClickDocument
 

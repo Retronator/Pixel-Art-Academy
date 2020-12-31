@@ -46,3 +46,11 @@ class LOI.Adventure extends LOI.Adventure
           # autoruns (we don't want them to get invalidated when this autorun completes).
           Tracker.nonreactive =>
             dialogOptions.callback?()
+
+  showDialogMessage: (message) ->
+    @showActivatableModalDialog
+      dialog: new LOI.Components.Dialog
+        message: message
+        buttons: [
+          text: "OK"
+        ]

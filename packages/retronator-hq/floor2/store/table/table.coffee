@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 Blog = Retronator.Blog
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -28,7 +27,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
   description: ->
     return @translations().openedDrawer if @openedDrawer()
 
-    super
+    super arguments...
 
   postscript: ->
     if @postsSkip() is 0
@@ -41,7 +40,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
     
     @postsSkip = new ReactiveField 0
     @openedDrawer = new ReactiveField false
@@ -67,7 +66,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
         @constructor.Item.createItem itemOptions
 
   onRendered: ->
-    super
+    super arguments...
 
     @$uiArea = $('.ui-area')
     @$table = $('.retronator-hq-store-table')
@@ -108,6 +107,10 @@ class HQ.Store.Table extends LOI.Adventure.Location
 
   onCommand: (commandResponse) ->
     table = @options.parent
+
+    # Don't react until we're at the table location (table is also
+    # included as a thing in the store so it's listening there as well).
+    return unless LOI.adventure.currentLocationId() is HQ.Store.Table.id()
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.LookAt, @avatars.olderItems]

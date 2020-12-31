@@ -1,0 +1,3 @@
+en-US: Left short curl behind
+
+{"_id":"xsempxDsrqwfhsSYS","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560523773189},"translations":{"en":{"us":{"text":"Left short curl behind","quality":0},"best":{"text":"Left short curl behind","quality":0,"languageRegion":"en-US"}},"best":{"text":"Left short curl behind","quality":0,"languageRegion":"en-US"}}}

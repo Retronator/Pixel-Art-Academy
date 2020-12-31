@@ -17,11 +17,10 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
     @constructor.timelineId() or @episode.timelineId()
 
   constructor: (@options) ->
-    # Set the episode and chapter before calling super, because super executes active, which needs these fields.
+    super arguments...
+
     @episode = @options.parent
     @previousChapter = @options.previousChapter
-
-    super
 
     @sections = new ComputedField =>
       # Create sections JIT when chapter becomes active.
@@ -35,8 +34,10 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
     ,
       true
 
+    @constructed true
+
   destroy: ->
-    super
+    super arguments...
 
     section.destroy() for section in @sections()
 
@@ -51,6 +52,8 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
     if @previousChapter then @previousChapter.finished() else @episode.startSection.finished()
 
   active: ->
+    return unless @constructed()
+    
     # Unlike a section, a chapter stays active forever to preserve inventory
     # and other permanent changes, as well as access to unfinished sections.
     @_activeAfterStarted()
@@ -65,7 +68,7 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
   ready: ->
     # Chapter is ready when all its sections are ready.
     conditions = _.flattenDeep [
-      super
+      super arguments...
       (section.ready() for section in @sections())
     ]
 

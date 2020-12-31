@@ -1,0 +1,3 @@
+en-US: Pants baggy left thigh torn
+
+{"_id":"CWicS5JTtYgjkkn9h","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565891004071},"translations":{"en":{"us":{"text":"Pants baggy left thigh torn","quality":0},"best":{"text":"Pants baggy left thigh torn","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants baggy left thigh torn","quality":0,"languageRegion":"en-US"}}}

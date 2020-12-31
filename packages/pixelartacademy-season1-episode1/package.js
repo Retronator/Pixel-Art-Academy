@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-season1');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartacademy-actors');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-landsofillusions');
@@ -29,13 +30,6 @@ Package.onUse(function(api) {
   api.addFile('scenes/inventory');
   api.addFile('scenes/chinabasinpark');
   api.addFile('scenes/store');
-
-  // Admin
-
-  api.addFile('pages..');
-  api.addUnstyledComponent('pages/admin..');
-  api.addUnstyledComponent('pages/admin/admissions..');
-  api.addServerFile('pages/admin/admissions/methods-server/processapplied');
 
   // Start
 
@@ -54,6 +48,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items..');
   api.addFile('chapter1/items/applicationemail');
   api.addFile('chapter1/items/admissionemail');
+  api.addComponent('chapter1/items/acceptanceletter..');
 
   api.addFile('chapter1/scenes/inventory');
   api.addFile('chapter1/scenes/inbox');
@@ -75,12 +70,18 @@ Package.onUse(function(api) {
   api.addFile('chapter1/goals/snake');
 
   api.addFile('chapter1/groups..');
-  api.addThing('chapter1/groups/sanfranciscofriends');
-  api.addThing('chapter1/groups/sanfranciscofriends-conversation');
+  api.addThing('chapter1/groups/sanfranciscofriends..');
+  api.addThing('chapter1/groups/sanfranciscofriends/conversation..');
   api.addFile('chapter1/groups/family');
 
   api.addThing('chapter1/groups/admissionsstudygroup..');
-  api.addFile('chapter1/groups/admissionsstudygroup/coworking');
+  api.addFile('chapter1/groups/admissionsstudygroup/a');
+  api.addFile('chapter1/groups/admissionsstudygroup/b');
+  api.addFile('chapter1/groups/admissionsstudygroup/c');
+  api.addFile('chapter1/groups/admissionsstudygroup/conversation');
+  api.addThing('chapter1/groups/admissionsstudygroup/groupmateconversation');
+  api.addThing('chapter1/groups/admissionsstudygroup/coordinatorconversation');
+  api.addServerFile('chapter1/groups/admissionsstudygroup/subscriptions');
 
   api.addFile('chapter1/projects..');
   api.addFile('chapter1/projects/snake');
@@ -120,21 +121,26 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/references');
 
   // Intro
+
   api.addFile('chapter1/sections/intro..');
   api.addThing('chapter1/sections/intro/scenes/studio');
 
   // Waiting
+
   api.addFile('chapter1/sections/waiting..');
 
   // Pre-PixelBoy
+
   api.addFile('chapter1/sections/prepixelboy..');
   api.addThing('chapter1/sections/prepixelboy/scenes/store');
 
   // PixelBoy
+
   api.addFile('chapter1/sections/pixelboy..');
   api.addThing('chapter1/sections/pixelboy/scenes/store');
 
   // Post-PixelBoy
+
   api.addFile('chapter1/sections/postpixelboy..');
   api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
@@ -146,9 +152,11 @@ Package.onUse(function(api) {
   api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/bookshelves');
 
   // Admission projects
+
   api.addFile('chapter1/sections/admissionprojects..');
 
   // Snake
+
   api.addFile('chapter1/sections/admissionprojects/snake..');
 
   api.addFile('chapter1/sections/admissionprojects/snake/intro..');
@@ -156,4 +164,65 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/sections/admissionprojects/snake/drawing..');
   api.addThing('chapter1/sections/admissionprojects/snake/drawing/scenes/coworking');
+
+  // Mixer
+
+  api.addFile('chapter1/sections/mixer..');
+  api.addFile('chapter1/sections/mixer/context');
+  
+  api.addThing('chapter1/sections/mixer/scenes/intercom');
+  api.addFile('chapter1/sections/mixer/scenes/store');
+  api.addFile('chapter1/sections/mixer/scenes/coworking');
+  api.addFile('chapter1/sections/mixer/scenes/artstudio');
+
+  api.addThing('chapter1/sections/mixer/scenes/gallerywest..');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-changepersonality');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-script');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-listener');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-positionactors');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-initialization');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/retro');
+  api.addServerFile('chapter1/sections/mixer/scenes/gallerywest/methods-server');
+  api.addServerFile('chapter1/sections/mixer/scenes/gallerywest/subscriptions');
+
+  api.addThing('chapter1/sections/mixer/scenes/gallerywest/student..');
+
+  api.addFile('chapter1/sections/mixer/scenes/participants/participant');
+  api.addFile('chapter1/sections/mixer/scenes/participants/ace');
+  api.addFile('chapter1/sections/mixer/scenes/participants/ty');
+  api.addFile('chapter1/sections/mixer/scenes/participants/saanvi');
+  api.addFile('chapter1/sections/mixer/scenes/participants/mae');
+  api.addFile('chapter1/sections/mixer/scenes/participants/lisa');
+  api.addFile('chapter1/sections/mixer/scenes/participants/jaxx');
+
+  api.addThing('chapter1/sections/mixer/items/marker');
+  api.addFile('chapter1/sections/mixer/items/sticker');
+  api.addFile('chapter1/sections/mixer/items/stickers');
+  api.addFile('chapter1/sections/mixer/items/nametag');
+  api.addFile('chapter1/sections/mixer/items/answer');
+  api.addFile('chapter1/sections/mixer/items/answers');
+  api.addFile('chapter1/sections/mixer/items/table');
+
+  api.addFile('chapter1/sections/mixer/icebreakers..');
+  api.addFile('chapter1/sections/mixer/icebreakers/answeraction');
+  api.addServerFile('chapter1/sections/mixer/icebreakers/subscriptions');
+
+  // Coordinator address
+
+  api.addFile('chapter1/sections/coordinatoraddress..');
+  api.addFile('chapter1/sections/coordinatoraddress/context');
+  api.addFile('chapter1/sections/coordinatoraddress/characterintroduction');
+  api.addServerFile('chapter1/sections/coordinatoraddress/subscriptions');
+
+  api.addThing('chapter1/sections/coordinatoraddress/scenes/meetingspace');
+
+  // Admin
+
+  api.addFile('pages..');
+  api.addUnstyledComponent('pages/admin..');
+  api.addComponent('pages/admin/studygroups..');
+
+  api.addUnstyledComponent('pages/admin/admissions..');
+  api.addServerFile('pages/admin/admissions/methods-server/processapplied');
+
 });

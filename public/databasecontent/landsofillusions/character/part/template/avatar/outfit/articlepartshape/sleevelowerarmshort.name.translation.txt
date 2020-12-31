@@ -1,0 +1,3 @@
+en-US: Sleeve lower-arm short
+
+{"_id":"66TCurgnv9ejTJfG7","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565555292549},"translations":{"en":{"us":{"text":"Sleeve lower-arm short","quality":0},"best":{"text":"Sleeve lower-arm short","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sleeve lower-arm short","quality":0,"languageRegion":"en-US"}}}

@@ -9,7 +9,7 @@ class LOI.Items.Components.Map.Node extends AM.Component
   @register 'LandsOfIllusions.Items.Components.Map.Node'
   
   onCreated: ->
-    super
+    super arguments...
 
     location = @data()
 
@@ -103,7 +103,7 @@ class LOI.Items.Components.Map.Node extends AM.Component
       EJSON.equals
 
   onRendered: ->
-    super
+    super arguments...
 
     Meteor.setTimeout =>
       @$('.landsofillusions-items-components-map-node')?.addClass('visible')
@@ -118,20 +118,27 @@ class LOI.Items.Components.Map.Node extends AM.Component
     location = @data()
 
     # Special directions have priority except for east/west.
-    unless location.direction in [Directions.East, Directions.West]
-      direction = location.specialDirection or location.direction
+    isEastWest = location.direction in [Directions.East, Directions.West]
+
+    if isEastWest
+      direction = location.direction or location.specialDirection
 
     else
-      direction = location.direction or location.specialDirection
+      direction = location.specialDirection or location.direction
 
     return unless direction
 
     phrases = LOI.adventure.parser.vocabulary.getPhrases direction
 
-    # Find the shortest phrase.
+    # Find the shortest phrase. We don't want 1-letter shortcuts though,
+    # except for cardinal directions as those are commonly abbreviated.
     phrases = _.sortBy phrases, (phrase) => phrase.length
 
-    phrases[0]
+    if direction in [Directions.North, Directions.South, Directions.East, Directions.West]
+      phrases[0]
+
+    else
+      if phrases[0]?.length is 1 and phrases[1] then phrases[1] else phrases[0]
 
   directionClass: ->
     location = @data()

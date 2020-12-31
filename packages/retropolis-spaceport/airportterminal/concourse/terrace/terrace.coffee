@@ -37,7 +37,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   coatOfArmsOffset = -2
 
   constructor: ->
-    super
+    super arguments...
 
     @_sceneBounds = new ReactiveField null
 
@@ -70,17 +70,19 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   titleSectionVisibleClass: ->
     'visible' if @isLandingPage()
 
-  illustrationHeight: ->
+  illustration: ->
     if @isLandingPage()
-      illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
-
-      illustrationHeight or 0
+      height = @_sceneBounds()?.height() / @display?.scale()
 
     else
-      middleSceneHeight
+      height = middleSceneHeight
+
+    height ?= 0
+
+    {height}
 
   onCreated: ->
-    super
+    super arguments...
 
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
@@ -102,7 +104,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       @hasResized = true
 
   onRendered: ->
-    super
+    super arguments...
 
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -256,7 +258,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     @initializingClass ""
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @app?.removeComponent @
 

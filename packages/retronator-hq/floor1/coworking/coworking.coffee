@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -15,18 +14,18 @@ class HQ.Coworking extends LOI.Adventure.Location
   @shortName: -> "coworking"
   @description: ->
     "
-      The passageway opens to a dimly-lit room with a cyberpunk hacker vibe to it.
+      The passageway opens to a dimly-lit room with a cyberpunk hacker vibe.
       Tables fill the space, together with workstations for the permanent residents of the coworking space.
     "
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
     ]
 
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton
@@ -34,7 +33,7 @@ class HQ.Coworking extends LOI.Adventure.Location
       floor: 1
 
   things: -> [
-    HQ.Actors.Aeronaut
+    @constructor.Reuben
     @elevatorButton
   ]
 

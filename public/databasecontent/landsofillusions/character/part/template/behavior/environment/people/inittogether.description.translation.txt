@@ -1,0 +1,3 @@
+en: You're lucky to have a partner in crime who shares your enthusiasm for art and is going to the Academy as well.
+
+{"_id":"qEFYcjrWiXEsXM4yB","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"You're lucky to have a partner in crime who shares your enthusiasm for art and is going to the Academy as well.","quality":0,"best":{"text":"You're lucky to have a partner in crime who shares your enthusiasm for art and is going to the Academy as well.","quality":0,"languageRegion":"en"}},"best":{"text":"You're lucky to have a partner in crime who shares your enthusiasm for art and is going to the Academy as well.","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038961397}}

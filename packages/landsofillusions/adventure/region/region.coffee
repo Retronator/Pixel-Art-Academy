@@ -47,13 +47,13 @@ class LOI.Adventure.Region extends LOI.Adventure.Thing
     @userForItemChecking()?.hasItem Retronator.Store.Items.CatalogKeys.Retropolis.PatronClubMember
 
   constructor: ->
-    super
+    super arguments...
 
     @_scenes = for sceneClass in @constructor.scenes()
       new sceneClass parent: @
 
   destroy: ->
-    super
+    super arguments...
 
     scene.destroy() for scene in @_scenes
 

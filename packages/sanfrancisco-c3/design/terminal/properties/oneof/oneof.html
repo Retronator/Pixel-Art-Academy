@@ -1,5 +1,7 @@
 <template name="SanFrancisco.C3.Design.Terminal.Properties.OneOf">
-  <div class="sanfrancisco-c3-design-terminal-properties-oneof avatar-part">
-    {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview part}}
+  <div class="sanfrancisco-c3-design-terminal-properties-oneof avatar-part {{draftTemplateClass}} {{canUpgradeClass}}">
+    {{#with part}}
+      {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarPartPreviewOptions}}
+    {{/with}}
   </div>
 </template>

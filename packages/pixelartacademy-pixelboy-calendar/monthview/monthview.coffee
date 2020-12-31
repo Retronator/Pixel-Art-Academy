@@ -13,16 +13,17 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
   @ActivityTypes:
     JournalEntries: 'JournalEntries'
+    Tasks: 'Tasks'
 
   constructor: (@calendar) ->
-    super
+    super arguments...
 
   mixins: -> [
     PAA.PixelBoy.Components.Mixins.PageTurner
   ]
 
   onCreated: ->
-    super
+    super arguments...
 
     @weekdays = [1..7]
 
@@ -70,7 +71,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
       PAA.Practice.Journal.Entry.activityForCharacter.subscribe @, characterId, dateRange
 
-    @weeks = ComputedField =>
+    @weeks = new ComputedField =>
       characterId = LOI.characterId()
 
       weeks = []
@@ -107,18 +108,28 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
           # Generate activities.
           activities = []
 
-          query =
-            'journal.character._id': characterId
-
+          # Add journal entries.
+          query = 'journal.character._id': characterId
           dayRange.addToMongoQuery query, 'time'
 
-          journalEntries = PAA.Practice.Journal.Entry.documents.find(query).fetch()
+          journalEntries = PAA.Practice.Journal.Entry.documents.fetch query
 
           if journalEntries.length
             activities.push
               type: @constructor.ActivityTypes.JournalEntries
               data: journalEntries
-              
+
+          # Add tasks.
+          query = 'character._id': characterId
+          dayRange.addToMongoQuery query, 'time'
+
+          tasks = PAA.Learning.Task.Entry.documents.fetch query
+
+          if tasks.length
+            activities.push
+              type: @constructor.ActivityTypes.Tasks
+              data: tasks
+
           activities = _.sortBy activities, 'time'
 
           week.days.push {date, activities}
@@ -215,7 +226,8 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
     startOfMonth.toLocaleString AB.currentLanguage(), year: 'numeric', month: 'long'
 
   activitiesAreJournalEntries: -> @activitiesAreType @constructor.ActivityTypes.JournalEntries
-    
+  activitiesAreTasks: -> @activitiesAreType @constructor.ActivityTypes.Tasks
+
   activitiesAreType: (type) ->
     activity = @currentData()
     activity.type is type
@@ -238,7 +250,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
     'visible' unless goalSettings.isCreated() and not goalSettings.hasGoal()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .previous-month-button': @onClickPreviousMonthButton
       'click .next-month-button': @onClickNextMonthButton
       'click .active .weekly-goals': @onClickActiveWeeklyGoals

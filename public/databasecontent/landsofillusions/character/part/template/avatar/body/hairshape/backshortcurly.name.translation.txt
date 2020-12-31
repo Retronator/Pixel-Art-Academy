@@ -1,0 +1,3 @@
+en-US: Back short curly
+
+{"_id":"DSECY4Te7wN8oK2p5","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559561367901},"translations":{"en":{"us":{"text":"Back short curly","quality":0},"best":{"text":"Back short curly","quality":0,"languageRegion":"en-US"}},"best":{"text":"Back short curly","quality":0,"languageRegion":"en-US"}}}

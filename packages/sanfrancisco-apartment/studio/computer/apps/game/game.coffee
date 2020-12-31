@@ -6,13 +6,13 @@ class Studio.Computer.Game extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.Game'
 
   constructor: (@computer, @gameId, @gameName, @embedName) ->
-    super
+    super arguments...
 
   appId: -> @gameId
   name: -> @gameName
     
   onRendered: ->
-    super
+    super arguments...
 
     @autorun (computation) =>
       display = @callAncestorWith 'display'

@@ -1,0 +1,54 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home
+  &.back-button-hidden
+    .landsofillusions-components-back-button
+      opacity 0
+
+  .landsofillusions-components-back-button
+    opacity 1
+    transition opacity 0.5s
+
+  .scene
+    position fixed
+    background image('/pixelartacademy/studyguide/home/background-dark.png') 0 0 / 440rem 480rem
+    background-repeat repeat-x
+    transition top 1s, left 1s
+
+    .table
+      position absolute
+      height 50rem
+      background image('/pixelartacademy/studyguide/home/table-center.png') 0 0 / 250rem 50rem
+
+      &::before
+      &::after
+        content ''
+        position absolute
+        top 0
+        height 212rem
+
+      &::before
+        left -178rem
+        width 178rem
+        background-image image('/pixelartacademy/studyguide/home/table-left.png')
+
+      &::after
+        right -189rem
+        width 189rem
+        background-image image('/pixelartacademy/studyguide/home/table-right.png')
+
+      .drawer
+        &::before
+        &::after
+          content ''
+          position absolute
+          top 20rem
+          width 30rem
+          height 20rem
+          background-image image('/pixelartacademy/studyguide/home/table-drawer-handle.png')
+
+        &::before
+          left 55rem
+
+        &::after
+          right 55rem

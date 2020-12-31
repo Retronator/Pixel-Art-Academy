@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 
 class LOI.Interface.Text extends LOI.Interface.Text
   onCreated: ->
-    super
+    super arguments...
 
     console.log "Text interface is being created." if LOI.debug
 
@@ -20,6 +20,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       minAspectRatio: 1 / 2
       maxAspectRatio: 2
       debug: false
+      
+    @illustrationSize = new AE.Rectangle
 
     @narrative = new LOI.Interface.Components.Narrative
       textInterface: @
@@ -33,6 +35,28 @@ class LOI.Interface.Text extends LOI.Interface.Text
       onEnter: => @onDialogueSelectionEnter()
 
     @hoveredCommand = new ReactiveField null
+
+    @suggestedCommand = new ComputedField =>
+      # If we're hovering a command in the narrative, show that.
+      hoveredCommand = @hoveredCommand()
+      return hoveredCommand if hoveredCommand
+
+      # See if we're hovering an avatar in the world.
+      return unless avatar = LOI.adventure.world.avatarUnderCursor()
+
+      # See if the avatar belongs to a thing.
+      thing = _.find LOI.adventure.currentPhysicalThings(), (thing) => thing.avatar is avatar
+      target = thing or avatar
+
+      # See if we have a descriptive name.
+      if descriptiveName = target.descriptiveName()
+        # See if there is a command in the description.
+        if match = descriptiveName.match /!\[(.*?)]\((.*?)\)/
+          # The second capture group contains the command.
+          return match[2]
+
+      # We couldn't get a full command so just write the avatar name.
+      target.fullName()
 
     @inIntro = new ReactiveField false
 
@@ -56,17 +80,22 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @initializeHandlers()
 
   onRendered: ->
-    super
+    super arguments...
 
     console.log "Rendering text interface." if LOI.debug
 
     @initializeScrolling()
 
-    # Resize on viewport, fullscreen, and illustration height changes.
+    # Resize on viewport, fullscreen, and illustration changes.
+    @_illustration = new ComputedField =>
+      LOI.adventure.currentSituation()?.illustration()
+    ,
+      EJSON.equals
+
     @autorun (computation) =>
       @display.viewport()
       AM.Window.isFullscreen()
-      LOI.adventure.currentSituation()?.illustrationHeight()
+      @_illustration()
 
       Tracker.afterFlush =>
         @resize()
@@ -105,8 +134,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
       ,
         hintDelayTime * 1000
 
+    # Prepare location loading cover.
+    @$locationLoadingCover = @$('.location .loading-cover')
+    @$locationLoadingCover.css(height: '100%')
+    @$locationLoadingCaption = @$locationLoadingCover.find('.caption')
+
   onDestroyed: ->
-    super
+    super arguments...
 
     console.log "Destroying text interface." if LOI.debug
 

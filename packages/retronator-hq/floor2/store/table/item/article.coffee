@@ -171,7 +171,7 @@ class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
     nodes[0]
 
   onCommand: (commandResponse) ->
-    super
+    super arguments...
 
     article = @options.parent
 

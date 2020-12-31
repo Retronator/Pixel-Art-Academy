@@ -3,7 +3,7 @@ AB = Artificial.Babel
 Document.startup ->
   return if Meteor.settings.startEmpty
 
-  # Generate all default english vocabulary phrases
+  # Generate all default english vocabulary phrases.
   phrases =
     Directions:
       North: ['north', 'n']
@@ -14,25 +14,27 @@ Document.startup ->
       Northwest: ['northwest', 'nw']
       Southeast: ['southeast', 'se']
       Southwest: ['southwest', 'sw']
-      In: ['in', 'enter', 'inside']
-      Out: ['out', 'exit', 'outside']
-      Up: ['up', 'upstairs']
-      Down: ['down', 'downstairs']
-      Back: ['back']
+      In: ['in', 'i', 'enter', 'inside']
+      Out: ['out', 'o', 'exit', 'outside']
+      Up: ['up', 'u', 'upstairs']
+      Down: ['down', 'd', 'downstairs']
+      Back: ['back', 'b']
 
     Verbs:
       GoToLocationName: ['go to', 'travel to', 'enter', 'leave to']
       GoToDirection: ['go', 'towards', 'move', 'travel']
+      GoToThing: ['go to', 'move to', 'approach']
       ExitLocation: ['exit', 'leave']
-      TalkTo: ['talk to', 'talk with', 'speak to', 'speak with', 'chat with']
-      LookAt: ['look at', 'examine', 'see', 'view', 'watch']
-      Look: ['look', 'look around', 'description']
-      Use: ['use']
+      TalkTo: ['talk to', 't', 'talk with', 'speak to', 'speak with', 'chat with']
+      LookAt: ['look at', 'l', 'examine', 'see', 'view', 'watch']
+      Look: ['look', 'l', 'look around', 'description']
+      Use: ['use', 'u']
       Press: ['press', 'push']
       Read: ['read']
       WhatIs: ['what is', 'what\'s', 'what are', 'what\'re']
       WhoIs: ['who is', 'who\'s', 'who are', 'who\'re']
-      Get: ['get', 'take', 'pick up', 'grab']
+      Get: ['get', 'g', 'take', 'pick up', 'grab']
+      PutIn: ['put _ in', 'place _ in', 'drop _ in']
       SitDown: ['sit down']
       SitIn: ['sit in']
       Stand: ['stand up']
@@ -59,6 +61,13 @@ Document.startup ->
       HangOut: ['hang out']
       Cheat: ['cheat']
       Help: ['help']
+      Create: ['create', 'make']
+      Write: ['write']
+      WriteOn: ['write _ on']
+      Continue: ['continue', 'proceed', 'carry on']
+      Cut: ['cut']
+      CutWith: ['cut _ with']
+      CutIn: ['cut _ in']
 
       Be:
         Present:
@@ -89,8 +98,14 @@ Document.startup ->
         Feminine: ['hers']
         Masculine: ['his']
         Neutral: ['theirs']
+      Reflexive:
+        Feminine: ['herself']
+        Masculine: ['himself']
+        Neutral: ['themselves']
 
-    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'are', 'at', 'in', 'up', 'down', 'out', 'the']
+    # Note: Ignored prepositions should include those from multi-part
+    # phrases, as they will otherwise not report perfect likelihood.
+    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'are', 'at', 'in', 'up', 'down', 'out', 'the', 'on']
 
     Questions:
       WhichPlace: ['where']

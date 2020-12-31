@@ -9,16 +9,16 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @_appClassesByUrl[url]
 
   @initialize: ->
-    super
+    super arguments...
 
     url = @url()
     @_appClassesByUrl[url] = @ if url?
-        
-  iconUrl: ->
-    @versionedUrl "/pixelartacademy/pixelboy/apps/#{@url()}/icon.png"
+
+  @iconUrl: -> @versionedUrl "/pixelartacademy/pixelboy/apps/#{@url()}/icon.png"
+  iconUrl: -> @constructor.iconUrl()
 
   constructor: (@os) ->
-    super
+    super arguments...
 
     # Does this app lets the device resize?
     @resizable = new ReactiveField true
@@ -31,8 +31,12 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @maxWidth = new ReactiveField null
     @maxHeight = new ReactiveField null
 
+  allowsShortcutsTable: ->
+    # Override to display shortcuts table in the app.
+    false
+
   onRendered: ->
-    super
+    super arguments...
     
     $appWrapper = $('.app-wrapper')
     $appWrapper.velocity 'transition.slideUpIn', complete: ->

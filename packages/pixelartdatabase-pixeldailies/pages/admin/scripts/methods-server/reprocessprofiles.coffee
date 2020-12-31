@@ -3,6 +3,8 @@ RA = Retronator.Accounts
 PADB = PixelArtDatabase
 
 Meteor.methods
+  # This method reprocesses profiles using existing source data, if it's present on the profile.
+  # To refresh profiles with new source data, use the Pixel Art Database admin scripts.
   'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.reprocessProfiles': ->
     RA.authorizeAdmin()
 

@@ -8,7 +8,7 @@ class AOA.Application extends AM.Component
   @version: -> "0.1.0"
 
   onCreated: ->
-    super
+    super arguments...
 
     @applicationSuccessful = new ReactiveField false
 
@@ -33,7 +33,7 @@ class AOA.Application extends AM.Component
     _.filter characters, (character) -> character?.activated
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .load-character-button': @onClickLoadCharacterButton
       'click .change-character-button': @onClickChangeCharacterButton
       'click .sign-in-button': @onClickSignInButton
@@ -68,7 +68,7 @@ class AOA.Application extends AM.Component
     @register 'Retropolis.City.Pages.AcademyOfArt.Application.Form'
 
     onCreated: ->
-      super
+      super arguments...
 
       @submitting = new ReactiveField false
       @applicationError = new ReactiveField false
@@ -80,22 +80,7 @@ class AOA.Application extends AM.Component
         return unless characterId = @applicationComponent.selectedCharacterId()
         LOI.GameState.forCharacter.subscribe @, characterId
 
-      nameInputOptions =
-        addTranslationText: => @translation "Add language variant"
-        removeTranslationText: => @translation "Remove language variant"
-        newTranslationLanguage: ''
-
-      @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
-        placeholderText: => LOI.Character.Avatar.noNameTranslation()
-        placeholderInTargetLanguage: true
-        onTranslationInserted: (languageRegion, value) =>
-          LOI.Character.updateName @applicationComponent.selectedCharacterId(), languageRegion, value
-
-        onTranslationUpdated: (languageRegion, value) =>
-          LOI.Character.updateName @applicationComponent.selectedCharacterId(), languageRegion, value
-
-          # Return true to prevent the default update to be executed.
-          true
+      @fullNameInput = new LOI.Components.Account.Characters.CharacterNameTranslationInput characterId: @applicationComponent.selectedCharacterId
 
     alreadyApplied: ->
       return unless gameState = LOI.GameState.documents.findOne 'character._id': @applicationComponent.selectedCharacterId()
@@ -126,7 +111,7 @@ class AOA.Application extends AM.Component
       'selected' if emailOption is contactEmail
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click .apply-button': @onClickApplyButton
 
     onClickApplyButton: (event) ->

@@ -1,0 +1,3 @@
+en: Introvert
+
+{"_id":"mGrjzwznqKebTzok2","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Introvert","quality":0,"best":{"text":"Introvert","quality":0,"languageRegion":"en"}},"best":{"text":"Introvert","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038956649}}

@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
-HQ = Retronator.HQ
 PAA = PixelArtAcademy
+HQ = Retronator.HQ
 RS = Retronator.Store
 RA = Retronator.Accounts
 
@@ -24,7 +24,7 @@ class HQ.Store extends LOI.Adventure.Location
     "
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       @RetroListener
     ]
 
@@ -36,28 +36,21 @@ class HQ.Store extends LOI.Adventure.Location
     LOI.adventure.director.startScript script, label: 'PixelArt'
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton
       location: @
       floor: 2
 
-    @shelves = new HQ.Store.Shelves
-    @retro = new HQ.Store.Retro
+    @retro = LOI.adventure.getThing HQ.Store.Retro
 
-    @subscribe RS.Item.all
+    RS.Item.all.subscribe @
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RS.Transaction.forCurrentUser
 
     # We need payments to determine Kickstarter tier eligibility.
     RS.Payment.forCurrentUser.subscribe @
-
-  destroy: ->
-    super
-    
-    @shelves.destroy()
-    @retro.destroy()
 
   things: ->
     newestTableItem = @retro.newestTableItem()
@@ -333,6 +326,15 @@ class HQ.Store extends LOI.Adventure.Location
             
           PixelArt: (complete) =>
             HQ.Store.startRetroPixelArtScript()
+            complete()
+
+          GetRaspberry: (complete) =>
+            PAA.Items.StillLifeItems.addItemOfType PAA.Items.StillLifeItems.Raspberry
+            PAA.Items.StillLifeItems.addItemOfType PAA.Items.StillLifeItems.Raspberry.Leaf
+            complete()
+
+          AnotherRaspberry: (complete) =>
+            PAA.Items.StillLifeItems.addItemOfType PAA.Items.StillLifeItems.Raspberry
             complete()
 
     @initialize()

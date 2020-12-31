@@ -21,7 +21,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @setDefaultPixelBoySize()
 
@@ -32,7 +32,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
       AB.Router.getParameter 'parameter3'
 
   onCreated: ->
-    super
+    super arguments...
 
     @journalsView new @constructor.JournalsView @
     @journalView new @constructor.JournalView @

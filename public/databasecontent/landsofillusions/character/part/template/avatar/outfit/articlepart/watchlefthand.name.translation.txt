@@ -1,0 +1,3 @@
+en-US: Watch left hand
+
+{"_id":"M8fM4sTXQr2W6TbCs","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565383866293},"translations":{"en":{"us":{"text":"Watch left hand","quality":0},"best":{"text":"Watch left hand","quality":0,"languageRegion":"en-US"}},"best":{"text":"Watch left hand","quality":0,"languageRegion":"en-US"}}}

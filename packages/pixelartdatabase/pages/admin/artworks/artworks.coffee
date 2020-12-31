@@ -8,7 +8,7 @@ class PADB.Pages.Admin.Artworks extends Artificial.Mummification.Admin.Component
   constructor: ->
     super
       documentClass: PADB.Artwork
-      adminComponentClass: @constructor.Artwork
+      adminComponentClass: PADB.Pages.Admin.Artworks.Artwork
       nameField: 'title'
       singularName: 'artwork'
       pluralName: 'artworks'

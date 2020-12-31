@@ -3,6 +3,6 @@ Script = LOI.Adventure.Script
 
 class Script.Nodes.Jump extends Script.Node
   constructor: (options) ->
-    super
+    super arguments...
 
     @labelName = options.labelName

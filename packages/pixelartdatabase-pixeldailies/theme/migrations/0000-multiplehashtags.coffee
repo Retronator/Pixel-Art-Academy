@@ -51,7 +51,7 @@ class Migration extends Document.MajorMigration
           $set: set
           $unset: unset
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -80,7 +80,7 @@ class Migration extends Document.MajorMigration
           $unset:
             hashtags: 1
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

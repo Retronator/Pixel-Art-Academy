@@ -1,0 +1,3 @@
+en: Manager (ESTJ)
+
+{"_id":"ipqQFn8NscGXEzBk3","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Manager (ESTJ)","quality":0,"best":{"text":"Manager (ESTJ)","quality":0,"languageRegion":"en"}},"best":{"text":"Manager (ESTJ)","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1567038944896}}

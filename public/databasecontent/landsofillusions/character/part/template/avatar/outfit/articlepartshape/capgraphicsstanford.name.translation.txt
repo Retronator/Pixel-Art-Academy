@@ -1,0 +1,3 @@
+en-US: Cap graphics Stanford
+
+{"_id":"B3QrfuhbzxetwgyJC","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565381928905},"translations":{"en":{"us":{"text":"Cap graphics Stanford","quality":0},"best":{"text":"Cap graphics Stanford","quality":0,"languageRegion":"en-US"}},"best":{"text":"Cap graphics Stanford","quality":0,"languageRegion":"en-US"}}}

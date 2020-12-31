@@ -6,7 +6,7 @@ class LOI.Character.Avatar.Properties.Sprite extends LOI.Character.Part.Property
   #     spriteId: ID of the sprite document
   #       value
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @type = 'sprite'
 

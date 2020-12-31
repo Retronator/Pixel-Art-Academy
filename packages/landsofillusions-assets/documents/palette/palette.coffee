@@ -22,13 +22,13 @@ class LOI.Assets.Palette extends AM.Document
 
   # Enumeration of palette names provided by the system.
   @SystemPaletteNames:
-    atari2600: "Atari 2600"
+    pixelArtAcademy: "Pixel Art Academy"
     pico8: "PICO-8"
     black: "Black"
     zxSpectrum: "ZX Spectrum"
 
-  # Default palette is the Atari 2600
-  @defaultPaletteName = @SystemPaletteNames.atari2600
+  # Default palette is the modified Atari 2600.
+  @defaultPaletteName = @SystemPaletteNames.pixelArtAcademy
 
   @defaultPalette: ->
     @documents.findOne name: @defaultPaletteName
@@ -43,3 +43,8 @@ class LOI.Assets.Palette extends AM.Document
     colorData = ramp.shades[shadeIndex]
 
     new THREE.Color.fromObject colorData
+
+if Meteor.isServer
+  # Export all palette documents.
+  AM.DatabaseContent.addToExport ->
+    LOI.Assets.Palette.documents.fetch()

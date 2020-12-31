@@ -21,7 +21,7 @@ class Soma.SecondStreet extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
     Soma.SecondStreet.RetronatorHQ

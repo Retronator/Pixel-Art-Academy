@@ -40,14 +40,14 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
     @register 'Retronator.HQ.Items.Prospectus.Content'
 
     onCreated: ->
-      super
+      super arguments...
 
-      @subscribe RS.Item.all
+      RS.Item.all.subscribe @
 
       @selectedItem = new ReactiveField null
 
     onRendered: ->
-      super
+      super arguments...
 
       Tracker.afterFlush =>
         @measureSectionTops()
@@ -61,7 +61,7 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
       @_$scrollTarget.on 'scroll.prospectus', => @watchScroll()
 
     onDestroyed: ->
-      super
+      super arguments...
 
       $(window).off '.prospectus'
       @_$scrollTarget.off '.prospectus'
@@ -116,7 +116,7 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
         $('nav > a:eq(' + index + ')').addClass('active')
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click .social-media-icon': @onClickSocialMediaIcon
         'click .play-button': @onClickPlayButton
 

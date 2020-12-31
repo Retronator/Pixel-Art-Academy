@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Quill = require 'quill'
+Quill = AM.Quill
 Block = Quill.import 'blots/block'
 
 class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
@@ -16,7 +16,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
   @debug = false
 
   constructor: (@entries, @entryId) ->
-    super
+    super arguments...
 
     @journalDesign = @entries.journalDesign
 
@@ -24,7 +24,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @_id = @entryId if @entryId
 
   onCreated: ->
-    super
+    super arguments...
 
     @quill = new AE.ReactiveWrapper null
 
@@ -54,7 +54,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
       PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe @, characterId, taskIds
 
   onRendered: ->
-    super
+    super arguments...
 
     @$entry = @$('.pixelartacademy-pixelboy-apps-journal-journalview-entry')
 
@@ -86,7 +86,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
       # Tell the blots they are part of this component.
       for blot in @quill().getLines()
-        blot.domNode.component?.entryComponent @
+        blot.domNode.component?.quillComponent @
 
       unless @entryId
         # This is an empty entry, so start it, but not if we have any pictures still uploading.
@@ -132,7 +132,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
       quill.setContents entry.content, Quill.sources.API
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(window).off 'mouseup', @_mouseUpWindowHandler
 
@@ -307,7 +307,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     'read-only' if @readOnly()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'scroll .pixelartacademy-pixelboy-apps-journal-journalview-entry': @onScrollEntry
       'click .writing-area': @onClickWritingArea
       'click .toggle-objects-button': @onClickToggleObjectsButton

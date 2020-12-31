@@ -20,7 +20,7 @@ class Migration extends Document.PatchMigration
 
         count += updated
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

@@ -20,12 +20,12 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
   template: -> @id()
 
   constructor: ->
-    super
+    super arguments...
     
     @setMinimumPixelBoySize()
 
   onRendered: ->
-    super
+    super arguments...
     
     # Run intro animation.
     @$('.pixelartacademy-pixelboy-apps-homescreen').css
@@ -43,6 +43,8 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
 
     else
       finishedDeactivatingCallback()
+
+  allowsShortcutsTable: -> true
 
   apps: ->
     # Show all apps except the home screen.

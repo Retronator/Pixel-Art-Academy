@@ -1,0 +1,93 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-study-plan
+  position absolute
+
+  .board
+    position absolute
+    top 0
+    right -15rem
+    bottom -42rem
+    left -13rem
+    border-width 0 15rem 42rem 13rem
+    border-style solid
+    border-image image('/pixelartacademy/studyguide/home/studyplan/board-border.png') 0 15 42 13
+
+    .arm
+      position absolute
+
+      &::after
+        content ''
+        position absolute
+
+      &.left
+        width 11rem
+        top 50%
+        bottom -14rem
+        left -24rem
+        background-image image('/pixelartacademy/studyguide/home/studyplan/board-arm-left.png')
+
+        &::after
+          top -22rem
+          left -3rem
+          width 16rem
+          height 44rem
+          background-image image('/pixelartacademy/studyguide/home/studyplan/board-axis-left.png')
+
+      &.right
+        width 14rem
+        top 50%
+        bottom -12rem
+        right -26rem
+        background-image image('/pixelartacademy/studyguide/home/studyplan/board-arm-right.png')
+
+        &::after
+          top -22rem
+          right -3rem
+          width 17rem
+          height 44rem
+          background-image image('/pixelartacademy/studyguide/home/studyplan/board-axis-right.png')
+
+    .leg
+      position absolute
+      width 11rem
+      background-image image('/pixelartacademy/studyguide/home/studyplan/board-leg.png')
+
+      &::after
+        content ''
+        position absolute
+
+      &.left
+        top calc(100% + 42rem)
+        bottom -500rem
+        left -24rem
+
+        &::after
+          top -28rem
+          left 0
+          width 90rem
+          height 109rem
+          background-image image('/pixelartacademy/studyguide/home/studyplan/board-diagonal-left.png')
+
+      &.right
+        top calc(100% - 2rem)
+        bottom -500rem
+        right -26rem
+
+        &::after
+          top 44rem
+          right 11rem
+          width 79rem
+          height 79rem
+          background-image image('/pixelartacademy/studyguide/home/studyplan/board-diagonal-right.png')
+
+  .paper
+    absolute-cover()
+    background atariCyan(1)
+
+    .coming-soon
+      position absolute
+      top 50%
+      left 50%
+      transform translate(-50%, -50%)
+      color atariCyan(5)

@@ -1,0 +1,3 @@
+en-US: Medium wavy
+
+{"_id":"8YZLfypGbPjGXmjHk","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560341900825},"translations":{"en":{"us":{"text":"Medium wavy","quality":0},"best":{"text":"Medium wavy","quality":0,"languageRegion":"en-US"}},"best":{"text":"Medium wavy","quality":0,"languageRegion":"en-US"}}}

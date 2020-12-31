@@ -11,16 +11,18 @@ Package.describe({
 });
 
 Npm.depends({
-  'color-thief-standalone': '1.0.3'
+  'colorthief': '2.3.2'
 });
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:landsofillusions-assets');
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
-  api.use('retronator:pixelartacademy-cast');
   api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('Retronator');
 
@@ -33,13 +35,13 @@ Package.onUse(function(api) {
   // Actors
 
   api.addFile('actors/actors');
-  api.addFile('actors/operator');
-  api.addThing('actors/aeronaut');
-  api.addFile('actors/burra');
-  api.addThing('actors/corinne');
-  api.addThing('actors/retro');
-  api.addFile('actors/shelley');
-  api.addThing('actors/alexandra');
+  api.addFile('actors/operator..');
+  api.addFile('actors/reuben..');
+  api.addFile('actors/burra..');
+  api.addThing('actors/corinne..');
+  api.addThing('actors/retro..');
+  api.addThing('actors/shelley..');
+  api.addFile('actors/alexandra..');
 
   // Items
 
@@ -84,10 +86,12 @@ Package.onUse(function(api) {
   api.addFile('floor1/cafe..');
   api.addFile('floor1/cafe/burra');
   api.addFile('floor1/cafe/artworks');
+  api.addFile('floor1/cafe/bowloffruit');
   api.addScript('floor1/cafe/burra');
   api.addScript('floor1/cafe/burra-character');
 
   api.addFile('floor1/coworking..');
+  api.addThing('floor1/coworking/reuben');
 
   api.addThing('floor2/store..');
   api.addFile('floor2/store/retro');
@@ -117,14 +121,27 @@ Package.onUse(function(api) {
 
   api.addFile('floor2/bookshelves..');
 
-  api.addFile('floor3/gallery/galleryeast');
-  api.addFile('floor3/gallery/gallerywest');
-  api.addFile('floor3/gallery/corinne');
+  api.addFile('floor3/gallery..');
+  api.addComponent('floor3/gallery/artworksgroup');
+  api.addServerFile('floor3/gallery/initialize-server');
+
+  api.addFile('floor3/gallery/gallerywest..');
+  api.addFile('floor3/gallery/gallerywest/artworks..');
+  api.addFile('floor3/gallery/gallerywest/artworks/tribute');
+  api.addFile('floor3/gallery/gallerywest/artworks/pixelchinamountains');
+  api.addFile('floor3/gallery/gallerywest/artworks/computersseries');
+  api.addFile('floor3/gallery/gallerywest/artworks/julieseries');
+  api.addFile('floor3/gallery/gallerywest/artworks/zxcosmopolis');
+
+  api.addFile('floor3/gallery/galleryeast..');
+  api.addFile('floor3/gallery/galleryeast/corinne');
 
   api.addThing('floor4/artstudio..');
   api.addServerFile('floor4/artstudio/initialize-server');
-
+  api.addThing('floor4/artstudio/alexandra');
   api.addFile('floor4/artstudio/artworks');
+  api.addFile('floor4/artstudio/stilllifestand');
+  api.addFile('floor4/artstudio/storageshelves');
 
   api.addComponent('floor4/artstudio/contextwithartworks');
   api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');

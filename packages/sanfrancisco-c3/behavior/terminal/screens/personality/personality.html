@@ -25,7 +25,7 @@
               <div class="template-info">
                 {{#if isOwnPartTemplate}}
                   <div class="name">
-                    <span class="label">Profile</span>: {{> renderTemplateNameInput name}}
+                    <span class="label">Profile</span>: {{> renderTemplateNameInput fullPartTemplate.name}}
                   </div>
                   <div class="description">
                     {{> renderTemplateDescriptionInput description}}
@@ -35,7 +35,7 @@
                   </p>
                 {{else}}
                   <div class="name">
-                    <span class="label">Profile</span>: {{> t9n name}}
+                    <span class="label">Profile</span>: {{> t9n fullPartTemplate.name}}
                   </div>
                   <div class="description">
                     {{> t9n description}}
@@ -44,7 +44,7 @@
                     Click Modify to create your own personality based on this profile.
                   </p>
                 {{/if}}
-            </div>
+              </div>
             {{/with}}
           {{/if}}
           {{#if isEditable}}
@@ -81,15 +81,31 @@
       {{#if showTemplates}}
         <button class="main-button action-button done-button">Back</button>
       {{else}}
-        <button class="main-button action-button done-button">Done</button>
-        <button class="action-button replace-button">Replace</button>
         {{#if partTemplate}}
+          {{#if isTemplatePublishable}}
+            <button class="{{publishButtonMainButtonClass}} action-button publish-button">Publish</button>
+            <button class="action-button done-button">Save as draft</button>
+          {{else}}
+            <button class="main-button action-button done-button">Done</button>
+          {{/if}}
+          {{#if canUpgradeTemplate}}
+            <button class="action-button upgrade-template-button">Upgrade version</button>
+          {{/if}}
+          <button class="action-button replace-button">Replace</button>
+          {{#if canRevertTemplate}}
+            <button class="action-button revert-template-button">Revert template</button>
+          {{/if}}
           {{#if isOwnPartTemplate}}
+            {{#unless isTemplateEditable}}
+              <button class="action-button modify-template-button">Modify template</button>
+            {{/unless}}
             <button class="action-button unlink-template-button">Unlink template</button>
           {{else}}
             <button class="action-button unlink-template-button">Modify</button>
           {{/if}}
         {{else}}
+          <button class="main-button action-button done-button">Done</button>
+          <button class="action-button replace-button">Replace</button>
           {{#if isAdmin}}
             <button class="action-button save-as-template-button">Save as template</button>
           {{/if}}

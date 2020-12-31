@@ -37,10 +37,10 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     ScreenBottom: 'screen-bottom'
 
   constructor: ->
-    super
+    super arguments...
 
     # PixelBoy is always active to keep running apps, but we can show it or hide it.
-    @activatedState LOI.Adventure.Item.activatedStates.Activated
+    @activatedState LOI.Adventure.Item.ActivatedStates.Activated
     @active = new ReactiveField false
     @fullscreenOverlay = new ReactiveField false
 
@@ -77,7 +77,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     @positioningClass = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
 
     @overlay = @childComponentsOfType(LOI.Components.Overlay)[0]
     @backButton = @childComponentsOfType(LOI.Components.BackButton)[0]
@@ -190,7 +190,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
       @fullscreen size.width * scale >= clientWidth
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off('.pixelartacademy-pixelboy')
     $('body').removeClass('pixelartacademy-pixelboy-resizing')
@@ -222,7 +222,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     Meteor.setTimeout =>
       # Hide the fullscreen overlay, but leave the device active.
       @fullscreenOverlay false
-      @activatedState LOI.Adventure.Item.activatedStates.Activated
+      @activatedState LOI.Adventure.Item.ActivatedStates.Activated
 
       # We manually trigger overlay's transition since our active state is already activated.
       @overlay.onDeactivated()
@@ -258,7 +258,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     => @os.backButtonCallback()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown .glass': @onMouseDownGlass
       'scroll .os': @onScrollOS
 
@@ -317,7 +317,8 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
   # Routing
 
-  LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
+  LOI.Adventure.registerDirectRoute "/#{@url()}/*", @pixelBoyRouteHandler
+  @pixelBoyRouteHandler: =>
     # HACK: Remember which app we're trying to open.
     appUrl = AB.Router.getParameter('parameter2')
     appPath = AB.Router.getParameter('parameter3')

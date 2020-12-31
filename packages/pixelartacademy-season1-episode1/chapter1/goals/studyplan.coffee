@@ -10,53 +10,107 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
 
   Goal = @
 
-  class @ChooseAdmissionProject extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.ChooseAdmissionProject'
+  class @AddAdmissionGoal extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.AddAdmissionGoal'
     @goal: -> Goal
 
-    @directive: -> "Choose admission project"
+    @directive: -> "Add Academy of Art admission goal"
 
     @instructions: -> """
-      Search for admission projects and drag one into your study plan. Click on the project name to show the goal's tasks.
-      Drag an arrow from the ending plus sign to the admission goal.
+      Search for the "Academy of Art admission" interest and drag the "Get admitted" goal into your study plan.
     """
 
     @initialize()
 
-  class @PlanAdmissionProjectRequirements extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.PlanAdmissionProjectRequirements'
+    @completedConditions: ->
+      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+
+      # The Admission goal must be present in the goals state.
+      goals[C1.Goals.Admission.id()]
+
+  class @ConnectStudyPlanPrerequisite extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.ConnectStudyPlanPrerequisite'
     @goal: -> Goal
 
-    @directive: -> "Plan admission project requirements"
+    @directive: -> "Connect study plan and admission goals"
 
     @instructions: -> """
-      Click on each of the requirements in the admission project and add study plan goals that provide that requirement.
-      Connect them with arrows to your admission project.
+      Drag an arrow from the plus sign of the "Start study plan" goal to the "study plan" prerequisite of the "Get admitted" goal.
     """
 
-    @predecessors: -> [Goal.ChooseAdmissionProject]
+    @predecessors: -> [Goal.AddAdmissionGoal]
 
     @initialize()
 
-  class @PlanAllRequirements extends PAA.Learning.Task
+    @completedConditions: ->
+      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      return unless connections = goals[Goal.id()]?.connections
+
+      # The connection from this goal to the admission goal must be established.
+      _.find connections, (connection) => connection.goalId is C1.Goals.Admission.id() and connection.interest is 'study plan'
+
+  class @PlanAdmissionRequirements extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.PlanAdmissionRequirements'
+    @goal: -> Goal
+
+    @directive: -> "Plan admission requirements"
+
+    @instructions: -> """
+      Click on each of the remaining prerequisites of the "Get admitted" goal and add one of the study plan goals that provide that requirement.
+      Connect the new goals with arrows to the admission goal.
+    """
+
+    @predecessors: -> [Goal.ConnectStudyPlanPrerequisite]
+
+    @initialize()
+
+    @completedConditions: ->
+      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      goalsArray = _.values goals
+
+      # Make sure all four required interests are wired into the admission goal.
+      for requiredInterest in C1.Goals.Admission.requiredInterests()
+        return unless _.find goalsArray, (goal) =>
+          _.find goal.connections, (connection) =>
+            connection.goalId is C1.Goals.Admission.id() and connection.interest is requiredInterest
+
+      true
+
+  class @PlanAllRequirements extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.PlanAllRequirements'
     @goal: -> Goal
 
     @directive: -> "Plan all requirements"
 
     @instructions: -> """
-      Over time, plan goals to meet all requirements in your study plan.
+      Over time, plan goals to meet all requirements of all goals in your study plan.
     """
 
     @interests: -> ['study plan']
 
-    @predecessors: -> [Goal.PlanAdmissionProjectRequirements]
+    @predecessors: -> [Goal.PlanAdmissionRequirements]
 
     @initialize()
 
+    @completedConditions: ->
+      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      goalsArray = _.values goals
+
+      # Make sure all interests of all goals are wired into the admission goal.
+      for goalId, goal of goals
+        goalClass = PAA.Learning.Goal.getClassForId goalId
+
+        for requiredInterest in goalClass.requiredInterests()
+          return unless _.find goalsArray, (goal) =>
+            _.find goal.connections, (connection) =>
+              connection.goalId is goalId and connection.interest is requiredInterest
+
+      true
+
   @tasks: -> [
-    @ChooseAdmissionProject
-    @PlanAdmissionProjectRequirements
+    @AddAdmissionGoal
+    @ConnectStudyPlanPrerequisite
+    @PlanAdmissionRequirements
     @PlanAllRequirements
   ]
 

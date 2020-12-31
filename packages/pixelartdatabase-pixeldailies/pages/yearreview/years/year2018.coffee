@@ -8,7 +8,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2018]
     position: ['50%', '10%']
     author: 'Erien27'
   ,
-    # This one appears on the about page
     url: 'https://pbs.twimg.com/media/DYxUnhUVoAAqsxh.jpg'
     position: ['30%', '80%']
     author: 'Hainsaw'
@@ -16,10 +15,6 @@ class PADB.PixelDailies.Pages.YearReview.Years[2018]
     url: 'https://pbs.twimg.com/media/DSq0PJeVAAE55Ml.png'
     position: ['0%', '40%']
     author: 'LumpyTouch'
-  ,
-    url: 'https://pbs.twimg.com/media/DUfbSNzX4AAolHh.png'
-    position: ['50%', '20%']
-    author: 'Plastic_Vibes'
   ,
     url: 'https://pbs.twimg.com/media/DZXg2SpXkAAm43X.jpg'
     position: ['70%', '30%']

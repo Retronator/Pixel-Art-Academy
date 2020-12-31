@@ -6,7 +6,7 @@ class Studio.Computer.Desktop extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.Desktop'
 
   constructor: (@computer) ->
-    super
+    super arguments...
     
   apps: ->
     [
@@ -22,7 +22,7 @@ class Studio.Computer.Desktop extends AM.Component
     "/sanfrancisco/apartment/studio/computer/icons/#{app.appId()}.png"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .app-button': @onClickAppButton
 
   onClickAppButton: (event) ->

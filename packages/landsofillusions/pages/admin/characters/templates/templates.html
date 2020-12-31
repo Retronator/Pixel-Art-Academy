@@ -1,0 +1,50 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters.Templates">
+  <div class="landsofillusions-pages-admin-characters-templates admin-page">
+    <h1>Character part templates</h1>
+    <label><input class="show-only-stale-checkbox" type="checkbox" {{showOnlyStaleCheckedAttribute}}>Show only stale</label>
+    <label><input class="show-only-not-published-checkbox" type="checkbox" {{showOnlySNotPublishedCheckedAttribute}}>Show only not published</label>
+    <button class="upgrade-all-button">Upgrade all</button>
+    <table class="templates {{showOnlyStaleClass}} {{showOnlyNotPublishedClass}}">
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Last edit time</th>
+        <th>Author</th>
+        <th>Published</th>
+        <th>Latest version</th>
+        <th>Used templates</th>
+        <th>Actions</th>
+      </tr>
+      {{#each templates}}
+        <tr class="template {{staleTemplateClass}} {{notPublishedClass}}">
+          <td>{{type}}</td>
+          <td>{{t7e name}}</td>
+          <td>{{lastEditTime.toUTCString}}</td>
+          <td>{{authorName}}</td>
+          <td>{{dataPublished}}</td>
+          <td>{{latestVersion.index}}</td>
+          <td class="used-templates">
+            <table>
+              {{#each usedTemplates}}
+                <tr class="used-template {{staleUsedTemplateClass}}">
+                  <td>{{usedTemplate.type}}</td>
+                  <td>{{name}}</td>
+                  <td>{{this.version}}</td>
+                  <td>{{usedTemplate.latestVersion.index}}</td>
+                </tr>
+              {{/each}}
+            </table>
+          </td>
+          <td>
+            {{#if templateStale}}
+              <button class="upgrade-button">Upgrade</button>
+            {{/if}}
+            {{#unless dataPublished}}
+              <button class="publish-button">Publish</button>
+            {{/unless}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>

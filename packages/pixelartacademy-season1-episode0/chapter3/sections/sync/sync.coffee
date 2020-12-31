@@ -22,14 +22,3 @@ class C3.Sync extends LOI.Adventure.Section
     # Sync section is over when the player has synced with a character
     # from the operator dialog. Make sure we don't return undefined.
     HQ.Items.OperatorLink.scriptState('CharacterSync') is true
-
-  constructor: ->
-    super
-
-    # Subscribe to user's activated characters.
-    @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
-
-  destroy: ->
-    super
-
-    @_charactersSubscription.stop()

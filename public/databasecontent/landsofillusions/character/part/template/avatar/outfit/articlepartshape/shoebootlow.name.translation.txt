@@ -1,0 +1,3 @@
+en-US: Shoe boot low
+
+{"_id":"iyjzCTy7fyfF54rpf","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1565646178314},"translations":{"en":{"us":{"text":"Shoe boot low","quality":0},"best":{"text":"Shoe boot low","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shoe boot low","quality":0,"languageRegion":"en-US"}}}

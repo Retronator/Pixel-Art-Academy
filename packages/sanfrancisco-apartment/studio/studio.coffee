@@ -7,6 +7,7 @@ class Apartment.Studio extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Apartment.Studio'
   @url: -> 'sf/apartment/studio'
   @region: -> Apartment
+  @isPrivate: -> true
 
   @version: -> '0.0.1'
 
@@ -21,21 +22,20 @@ class Apartment.Studio extends LOI.Adventure.Location
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @emailNotification = new @constructor.EmailNotification
     
   onDestroyed: ->
-    super
+    super arguments...
 
     @emailNotification.destroy()
 
   things: -> [
     @constructor.Computer
     @constructor.Bed
+    @constructor.KitchenCabinet.withItems()...
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
-
-  isPrivate: -> true

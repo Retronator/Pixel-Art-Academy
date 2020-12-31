@@ -1,0 +1,3 @@
+en: Short longer slicked back
+
+{"_id":"LGx22ZucqPD5LaYPA","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Short longer slicked back","quality":0,"best":{"text":"Short longer slicked back","quality":0,"languageRegion":"en"}},"best":{"text":"Short longer slicked back","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1560716229494}}

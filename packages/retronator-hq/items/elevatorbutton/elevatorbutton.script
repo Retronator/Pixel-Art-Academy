@@ -6,7 +6,7 @@
 
 > You press the button and it glows with a cool light …
 
-wait 1500
+wait 1000
 
 `@things.Retronator.HQ.Elevator.floor = _buttonFloor`
 

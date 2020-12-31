@@ -17,10 +17,10 @@ class IL.Pages.Admin.Interests.Interest extends Artificial.Mummification.Admin.C
     @register 'Illustrapedia.Pages.Admin.Interests.Interest.Name'
   
     constructor: (@options) ->
-      super
+      super arguments...
   
     onCreated: ->
-      super
+      super arguments...
   
       # We create a translatable that is always editable.
       @translatable = new AB.Components.Translatable _.extend {}, @options,
@@ -35,7 +35,7 @@ class IL.Pages.Admin.Interests.Interest extends Artificial.Mummification.Admin.C
     @register 'Illustrapedia.Pages.Admin.Interests.Interest.Synonyms'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.TextArea
 

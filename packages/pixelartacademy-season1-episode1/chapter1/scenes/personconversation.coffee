@@ -22,23 +22,22 @@ class C1.PersonConversation extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/scenes/personconversation.script'
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       PAA.PersonUpdates
     ]
 
   constructor: ->
-    super
+    super arguments...
 
     # Subscribe to everyone's journals.
     @_journalsSubscriptionAutorun = Tracker.autorun =>
-      people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
-      characterIds = (person._id for person in people)
+      agents = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
+      characterIds = (agent._id for agent in agents)
 
       PAA.Practice.Journal.forCharacterIds.subscribe characterIds
 
-
   destroy: ->
-    super
+    super arguments...
 
     @_journalsSubscriptionAutorun.stop()
     

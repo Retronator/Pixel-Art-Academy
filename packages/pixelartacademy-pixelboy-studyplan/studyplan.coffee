@@ -3,6 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+
 class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
   # goals: object of goals placed in the study plan
   #   {id}:
@@ -41,25 +43,45 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     @state('goals')?[goalId]?
 
   constructor: ->
-    super
+    super arguments...
 
     @blueprint = new ReactiveField null
     @goalSearch = new ReactiveField null
     
   onCreated: ->
-    super
+    super arguments...
 
     @blueprint new @constructor.Blueprint @
     @goalSearch new @constructor.GoalSearch @
+
+    # Initialize Study Guide activities.
+    @studyGuideSubscription = PAA.StudyGuide.Activity.initializeAll @
 
     # Subscribe to character's task entries.
     PAA.Learning.Task.Entry.forCharacter.subscribe @, LOI.characterId()
 
     # We set size in an autorun so that it adapts to window resizes.
-    @autorun (computation) => @setDefaultPixelBoySize()
+    @autorun (computation) => @setMaximumPixelBoySize fullscreen: true
 
     # Maximize on run.
     @maximize()
+
+    # Add Study Plan task on first run.
+    @autorun (computation) =>
+      return unless LOI.adventure.gameState()
+      computation.stop()
+
+      return if @state 'goals'
+
+      @state 'goals',
+        "#{C1.Goals.StudyPlan.id()}":
+          position:
+            x: -100
+            y: -20
+          expanded: true
+
+  ready: ->
+    @studyGuideSubscription.ready()
 
   hasGoal: (goalId) -> @constructor.hasGoal goalId
     
@@ -94,6 +116,7 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
       goalPosition: canvasCoordinate
       goalId: goalId
       requireMove: true
+      expandOnEnd: true
       
   removeGoal: (goalId) ->
     goals = @state('goals') or {}

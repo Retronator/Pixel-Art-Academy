@@ -11,7 +11,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
   @classes = []
 
   @initialize: ->
-    super
+    super arguments...
     
     # Subscribe to context's namespace.
     if Meteor.isClient
@@ -53,6 +53,8 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
   # Override to create a context if the memory document matches this context.
   @tryCreateContext: (memory) ->
+    return unless @canHandleMemory memory
+
     # Create the context for this entry.
     context = new @
 
@@ -70,7 +72,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     return unless description
 
     # Format people into the description.
-    description = LOI.Character.People.formatText description, 'people', people
+    description = LOI.Character.Agents.formatText description, 'people', people
 
     options = _.extend {}, nodeOptions,
       line: description
@@ -82,15 +84,15 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     # Add all characters that have actions in the memory.
     characterIds = _.uniq _.map memory.actions, (action) => action.character._id
 
-    LOI.Character.getPerson characterId for characterId in characterIds
+    LOI.Character.getAgent characterId for characterId in characterIds
 
   constructor: ->
-    super
+    super arguments...
 
     @memoryId = new ReactiveField null
   
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to all the memories.
     @autorun (computation) =>
@@ -132,7 +134,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
         characterId = action.character._id
 
         # Convert the character into a person, performing the starting action.
-        person = new LOI.Character.Person characterId
+        person = new LOI.Character.Agent characterId
         person.setAction action
 
         person
@@ -145,7 +147,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
           characterPresent = _.find people, (person) => person._id is characterId
 
           # Create a person without an action set.
-          people.push new LOI.Character.Person characterId unless characterPresent
+          people.push new LOI.Character.Agent characterId unless characterPresent
 
       people
     ,
@@ -221,8 +223,9 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     memoryId = Random.id()
     timelineId = LOI.adventure.currentTimelineId()
     locationId = LOI.adventure.currentLocationId()
+    contextId = @id()
 
-    LOI.Memory.insert memoryId, timelineId, locationId
+    LOI.Memory.insert memoryId, timelineId, locationId, contextId
 
     # Return the memory ID so the caller can add actions to it.
     memoryId
@@ -274,7 +277,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
   onCommandWhileAdvertised: (commandResponse) ->
 
   onCommand: (commandResponse) ->
-    super
+    super arguments...
 
     # We allow to exit memories.
     return unless LOI.adventure.currentMemoryId()

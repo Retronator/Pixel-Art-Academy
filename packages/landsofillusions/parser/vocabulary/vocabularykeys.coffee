@@ -19,6 +19,7 @@ LOI.Parser.Vocabulary.Keys =
   Verbs:
     GoToLocationName: ''
     GoToDirection: ''
+    GoToThing: ''
     ExitLocation: ''
     TalkTo: ''
     LookAt: ''
@@ -29,6 +30,7 @@ LOI.Parser.Vocabulary.Keys =
     WhatIs: ''
     WhoIs: ''
     Get: ''
+    PutIn: ''
     SitDown: ''
     SitIn: ''
     Stand: ''
@@ -55,6 +57,13 @@ LOI.Parser.Vocabulary.Keys =
     HangOut: ''
     Cheat: ''
     Help: ''
+    Create: ''
+    Write: ''
+    WriteOn: ''
+    Continue: ''
+    Cut: ''
+    CutWith: ''
+    CutIn: ''
 
     Be:
       Present:
@@ -82,6 +91,10 @@ LOI.Parser.Vocabulary.Keys =
       Masculine: ''
       Neutral: ''
     Possessive:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Reflexive:
       Feminine: ''
       Masculine: ''
       Neutral: ''

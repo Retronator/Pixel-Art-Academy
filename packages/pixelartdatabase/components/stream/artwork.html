@@ -1,0 +1,21 @@
+<template name="PixelArtDatabase.Components.Stream.Artwork">
+  <li class="artwork-area">
+    <figure class="artwork-with-caption">
+      <div class="artwork-frame">
+        {{#if videoUrl}}
+          <video class="artwork" src="{{videoUrl}}" loop poster="{{imageUrl}}" {{style artworkStyle}}>
+            <img class="artwork" src="{{imageUrl}}" {{style artworkStyle}}/>
+          </video>
+        {{else}}
+          <img class="artwork" src="{{imageUrl}}" {{style artworkStyle}}/>
+        {{/if}}
+      </div>
+      {{#if hasCaption}}
+        <figcaption class="caption">
+          {{> renderCaption artwork}}
+        </figcaption>
+      {{/if}}
+    </figure>
+    <canvas class="background"></canvas>
+  </li>
+</template>

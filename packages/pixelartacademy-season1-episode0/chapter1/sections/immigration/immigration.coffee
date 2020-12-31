@@ -23,7 +23,7 @@ class C1.Immigration extends LOI.Adventure.Section
 
   onExit: (exitResponse) ->
     return unless exitResponse.currentLocationClass is RS.AirportTerminal.Customs
-    super
+    super arguments...
 
     # Mark the goal condition when the player exits the customs.
     @options.parent.state 'leftCustoms', true

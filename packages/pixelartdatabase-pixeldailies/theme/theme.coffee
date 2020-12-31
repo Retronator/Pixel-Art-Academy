@@ -24,7 +24,7 @@ class PADB.PixelDailies.Theme extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      topSubmissions: [@ReferenceField PADB.PixelDailies.Submission, ['favoritesCount', 'time', 'images', 'text', 'user']]
+      topSubmissions: [Document.ReferenceField PADB.PixelDailies.Submission, ['favoritesCount', 'time', 'images', 'text', 'user']]
 
   @ProcessingError:
     MissingPixelDailiesHashtag: 'Missing #pixel_dailies hashtag.'

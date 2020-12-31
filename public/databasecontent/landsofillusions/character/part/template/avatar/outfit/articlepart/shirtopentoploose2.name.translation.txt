@@ -1,0 +1,3 @@
+en-US: Shirt open top loose 2
+
+{"_id":"7YxqFM7KCNYyv7h6G","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1564076017838},"translations":{"en":{"us":{"text":"Shirt open top loose 2","quality":0},"best":{"text":"Shirt open top loose 2","quality":0,"languageRegion":"en-US"}},"best":{"text":"Shirt open top loose 2","quality":0,"languageRegion":"en-US"}}}

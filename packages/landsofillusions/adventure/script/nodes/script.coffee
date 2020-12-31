@@ -1,9 +1,10 @@
 LOI = LandsOfIllusions
-Script = LOI.Adventure.Script
 
-class Script.Nodes.Script extends Script.Node
+# Note: We can't create a shorthand LOI.Adventure.Script since
+# it would clash with the class declaration that also uses Script.
+class LOI.Adventure.Script.Nodes.Script extends LOI.Adventure.Script.Node
   constructor: (options) ->
-    super
+    super arguments...
     
     @id = options.id
     @labels = options.labels

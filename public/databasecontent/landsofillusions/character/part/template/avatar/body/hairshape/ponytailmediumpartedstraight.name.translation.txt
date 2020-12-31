@@ -1,0 +1,3 @@
+en-US: Ponytail medium parted straight
+
+{"_id":"x4iiCTTbjY2aoftLr","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560728506005},"translations":{"en":{"us":{"text":"Ponytail medium parted straight","quality":0},"best":{"text":"Ponytail medium parted straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ponytail medium parted straight","quality":0,"languageRegion":"en-US"}}}

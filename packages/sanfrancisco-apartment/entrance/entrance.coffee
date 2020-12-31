@@ -21,7 +21,7 @@ class Apartment.Entrance extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

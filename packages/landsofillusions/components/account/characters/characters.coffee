@@ -13,37 +13,22 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # We want to be able to set the selected user even before the page gets rendered,
     # so that it's already displaying it when the account is turned to the characters page.
     @selectedCharacterId = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     LOI.Character.forCurrentUser.subscribe @
 
     @selectedCharacter = new ComputedField =>
       LOI.Character.documents.findOne @selectedCharacterId()
 
-    nameInputOptions =
-      addTranslationText: => @translation "Add language variant"
-      removeTranslationText: => @translation "Remove language variant"
-      newTranslationLanguage: ''
+    @fullNameInput = new @constructor.CharacterNameTranslationInput characterId: @selectedCharacterId
 
-    @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
-      placeholderText: => LOI.Character.Avatar.noNameTranslation()
-      placeholderInTargetLanguage: true
-      onTranslationInserted: (languageRegion, value) =>
-        LOI.Character.updateName @selectedCharacterId(), languageRegion, value
-
-      onTranslationUpdated: (languageRegion, value) =>
-        LOI.Character.updateName @selectedCharacterId(), languageRegion, value
-
-        # Return true to prevent the default update to be executed.
-        true
-        
   renderFullNameInput: ->
     @fullNameInput.renderComponent @currentComponent()
 
@@ -77,7 +62,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .new-character': @onClickNewCharacter
       'click .load-character': @onClickLoadCharacter
       'click .unload-character': @onClickUnloadCharacter
@@ -92,11 +77,37 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onClickUnloadCharacter: (event) ->
     @selectedCharacterId null
 
+  class @CharacterNameTranslationInput extends LOI.Components.TranslationInput
+    @register 'LandsOfIllusions.Components.Account.Characters.CharacterNameTranslationInput'
+
+    template: -> 'LandsOfIllusions.Components.TranslationInput'
+
+    constructor: (options) ->
+      super arguments...
+
+      # Note: We extend options directly since we want to refer to this
+      # object in callbacks (@ could not be used inside a call to super).
+      _.extend @options,
+        realtime: false
+        newTranslationLanguage: ''
+        addTranslationText: => @translation "Add language variant"
+        removeTranslationText: => @translation "Remove language variant"
+        placeholderText: => LOI.Character.Avatar.noNameTranslation()
+        placeholderInTargetLanguage: true
+        onTranslationInserted: (languageRegion, value) =>
+          LOI.Character.updateName options.characterId(), languageRegion, value
+
+        onTranslationUpdated: (languageRegion, value) =>
+          LOI.Character.updateName options.characterId(), languageRegion, value
+
+          # Return true to prevent the default update to be executed.
+          true
+
   class @CharacterColorHue extends AM.DataInputComponent
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorHue'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = 'select'
 
@@ -119,7 +130,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorShade'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = 'select'
 
@@ -140,7 +151,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterPronouns'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 

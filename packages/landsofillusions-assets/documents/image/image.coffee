@@ -10,7 +10,7 @@ class LOI.Assets.Image extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      uploader: @ReferenceField LOI.Character, [], false
+      uploader: Document.ReferenceField LOI.Character, [], false
 
   # Methods
 

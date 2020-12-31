@@ -1,0 +1,3 @@
+en-US: Right short wavy
+
+{"_id":"34GwhXEA7KJ6Z9Cyx","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559601312068},"translations":{"en":{"us":{"text":"Right short wavy","quality":0},"best":{"text":"Right short wavy","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right short wavy","quality":0,"languageRegion":"en-US"}}}

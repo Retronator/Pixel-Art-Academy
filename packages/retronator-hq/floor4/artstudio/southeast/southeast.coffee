@@ -35,7 +35,7 @@ class HQ.ArtStudio.Southeast extends HQ.ArtStudio.ContextWithArtworks
     AcrylicsShoes: ['streetFighterConverseChucks']
 
   constructor: ->
-    super
+    super arguments...
 
     @sceneSize =
       width: 480
@@ -63,7 +63,7 @@ class HQ.ArtStudio.Southeast extends HQ.ArtStudio.ContextWithArtworks
     visibleSceneWidth < 350
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .move-button.left': @onClickMoveButtonLeft
       'click .move-button.right': @onClickMoveButtonRight
 

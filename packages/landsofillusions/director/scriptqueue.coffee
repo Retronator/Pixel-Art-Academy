@@ -55,7 +55,7 @@ class LOI.Director.ScriptQueue
     isActive = endingScriptNode is currentScriptNode
     isPaused = endingScriptNode in pausedScriptNodes
 
-    console.log "Transitioning from", endingScriptNode, "to", nextScriptNode, "in queue", @, isActive, isPaused if LOI.debug
+    console.log "Transitioning from", endingScriptNode, "to", nextScriptNode, "in queue", @, isActive, isPaused if LOI.debug or LOI.Director.debugDirector
 
     # Give out warnings if nodes don't exist or are already present.
     console.warn "Node to be transitioned from is not active.", endingScriptNode if endingScriptNode and not (isActive or isPaused)
@@ -92,3 +92,5 @@ class LOI.Director.ScriptQueue
     @pausedScriptNodes [] unless options.paused is false
     @queuedScriptNodes []
     @currentScriptNode null
+
+    console.log "Stopped all scripts in queue", @, options if LOI.debug or LOI.Director.debugDirector

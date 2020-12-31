@@ -44,29 +44,39 @@ Package.onUse(function(api) {
   api.addComponent('behavior/terminal/screens/people/people');
   api.addComponent('behavior/terminal/screens/perks/perks');
 
-  api.addFile('behavior/terminal/components/components');
-  api.addComponent('behavior/terminal/components/personalitypartpreview/personalitypartpreview');
-  api.addComponent('behavior/terminal/components/activitypartspreview/activitypartspreview');
-  api.addComponent('behavior/terminal/components/peoplepropertypreview/peoplepropertypreview');
+  api.addFile('behavior/terminal/components..');
+  api.addComponent('behavior/terminal/components/personalitypartpreview..');
+  api.addComponent('behavior/terminal/components/activitypropertypreview..');
+  api.addComponent('behavior/terminal/components/peoplepropertypreview..');
 
-  api.addThing('design/design');
-  api.addComponent('design/terminal/terminal');
-  api.addComponent('design/terminal/screens/mainmenu/mainmenu');
-  api.addComponent('design/terminal/screens/character/character');
-  api.addComponent('design/terminal/screens/avatarpart/avatarpart');
+  api.addThing('design..');
+  api.addFile('design/templatepart');
+  api.addComponent('design/terminal..');
+  api.addComponent('design/terminal/screens/mainmenu..');
+  api.addComponent('design/terminal/screens/character..');
+  api.addComponent('design/terminal/screens/avatarpart..');
 
   api.addFile('design/terminal/components/components');
   api.addComponent('design/terminal/components/avatarpartpreview/avatarpartpreview');
   api.addComponent('design/terminal/components/customcolorpreview/customcolorpreview');
 
-  api.addFile('design/terminal/properties/properties');
-  api.addComponent('design/terminal/properties/oneof/oneof');
-  api.addComponent('design/terminal/properties/array/array');
-  api.addComponent('design/terminal/properties/color/color');
-  api.addComponent('design/terminal/properties/relativecolorshade/relativecolorshade');
-  api.addComponent('design/terminal/properties/sprite/sprite');
-  api.addComponent('design/terminal/properties/string/string');
-  api.addComponent('design/terminal/properties/integer/integer');
+  api.addFile('design/terminal/properties..');
+  api.addFile('design/terminal/properties/input');
+  api.addFile('design/terminal/properties/property');
+  api.addComponent('design/terminal/properties/oneof..');
+  api.addComponent('design/terminal/properties/array..');
+  api.addComponent('design/terminal/properties/color..');
+  api.addComponent('design/terminal/properties/relativecolorshade..');
+  api.addComponent('design/terminal/properties/haircolor..');
+  api.addComponent('design/terminal/properties/outfitcolor..');
+  api.addComponent('design/terminal/properties/sprite..');
+  api.addComponent('design/terminal/properties/sprite/opendialog');
+  api.addComponent('design/terminal/properties/string..');
+  api.addComponent('design/terminal/properties/number..');
+  api.addComponent('design/terminal/properties/integer..');
+  api.addComponent('design/terminal/properties/boolean..');
+  api.addComponent('design/terminal/properties/renderingcondition..');
+  api.addComponent('design/terminal/properties/hideregions..');
 
   api.addThing('service..');
   api.addComponent('service/terminal..');

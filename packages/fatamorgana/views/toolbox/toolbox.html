@@ -1,0 +1,20 @@
+<template name="FataMorgana.Toolbox">
+  <div class="fatamorgana-toolbox">
+    <ul class="tools">
+      {{#each get.tools}}
+        {{#with tool}}
+          <li class="tool {{toolClass}} {{activeToolClass}}" title="{{tooltip}}">
+            <button class="tool-button">
+              {{#if icon}}
+                <img class="icon" src="{{icon}}"/>
+              {{/if}}
+              {{#if name}}
+                <span class="name">{{name}}</span>
+              {{/if}}
+            </button>
+          </li>
+        {{/with}}
+      {{/each}}
+    </ul>
+  </div>
+</template>

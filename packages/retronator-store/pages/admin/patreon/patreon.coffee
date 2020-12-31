@@ -11,13 +11,17 @@ class RS.Pages.Admin.Patreon extends AM.Component
   @updateCurrentPledges: new AB.Method name: "#{@id()}.updateCurrentPledges"
   @refreshClient: new AB.Method name: "#{@id()}.refreshClient"
   @grantEarlyKeycards: new AB.Method name: "#{@id()}.grantEarlyKeycards"
+  @fillMissingPatronIDs: new AB.Method name: "#{@id()}.fillMissingPatronIDs"
+  @deleteStalePledges: new AB.Method name: "#{@id()}.deleteStalePledges"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .update-current-pledges': @onClickUpdateCurrentPledges
       'submit .upload-form': @onSubmitUploadForm
       'submit .refresh-form': @onSubmitRefreshForm
       'click .grant-early-keycards': @onClickGrantEarlyKeycards
+      'click .fill-missing-patron-ids': @onClickFillMissingPatronIds
+      'click .delete-stale-pledges': @onClickDeleteStalePledges
 
   onClickUpdateCurrentPledges: (event) ->
     @constructor.updateCurrentPledges()
@@ -52,3 +56,9 @@ class RS.Pages.Admin.Patreon extends AM.Component
 
     refreshToken = @$('.refresh-token').val()
     @constructor.refreshClient refreshToken
+
+  onClickFillMissingPatronIds: (event) ->
+    @constructor.fillMissingPatronIDs()
+
+  onClickDeleteStalePledges: (event) ->
+    @constructor.deleteStalePledges()

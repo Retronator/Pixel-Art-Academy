@@ -9,7 +9,8 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
   @title: (options) ->
     currentYear = new Date().getFullYear()
-    subtitle = if options.year is currentYear then "Calendar" else "Retrospective"
+    reviewYear = parseInt options.year
+    subtitle = if reviewYear is currentYear then "Calendar" else "Retrospective"
 
     "Retronator // #{options.year} Pixel Dailies #{subtitle}"
 
@@ -17,14 +18,14 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     "Gallery of the best pixel art works from the Pixel Dailies community in #{options.year}."
 
   constructor: ->
-    super
+    super arguments...
 
     @currentBackgroundIndex = new ReactiveField null
     @yearCalendarProvider = new ReactiveField null
     @isValidYear = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
 
     # React to year changes.
     @autorun (computation) =>
@@ -51,7 +52,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
         @yearCalendarProvider @constructor.themeProvidersByYears[year]
 
   onRendered: ->
-    super
+    super arguments...
 
     @_changeBackgroundInterval = Meteor.setInterval =>
       newIndex = (@currentBackgroundIndex() + 1) % @backgrounds.length
@@ -90,7 +91,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     _.last(calendar.months())?.number is 11
 
   insertDOMElement: (parent, node, before) ->
-    super
+    super arguments...
     $node = $(node)
 
     return unless $node.hasClass 'background'
@@ -112,7 +113,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     $node = $(node)
 
     unless $node.hasClass 'background'
-      super
+      super arguments...
       return
 
     $node.addClass('old').velocity

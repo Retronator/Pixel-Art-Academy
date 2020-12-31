@@ -6,13 +6,13 @@ class AB.Router.Route
   constructor: (optionsOrUrl, @layoutClass, @pageClass) ->
     if _.isObject optionsOrUrl
       # We were passed an options object so destructure it.
-      {@url, @layoutClass, @pageClass, @parameterDefaults} = optionsOrUrl
+      {@url, @layoutClass, @pageClass, @parameterDefaults, @name} = optionsOrUrl
 
     else
       # We were passed an url. We expect the rest of the parameters to be set
       @url = optionsOrUrl
 
-    @name = @pageClass.componentName()
+    @name ?= @pageClass.componentName()
 
     # Split the url into host and path parts
     [match, @host, @path] = @url.match /(.*?)(\/.*)/
