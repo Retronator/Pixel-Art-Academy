@@ -14,6 +14,7 @@ class LOI.Pages.Admin.Characters.PreMadeCharacters extends AM.Component
     super arguments...
     
     LOI.Character.PreMadeCharacter.all.subscribe @
+    LOI.Character.forCurrentUser.subscribe @
 
   preMadeCharacters: ->
     LOI.Character.PreMadeCharacter.documents.find()
