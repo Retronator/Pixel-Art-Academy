@@ -102,15 +102,15 @@ class RS.Pages.Admin.Vat extends AM.Component
     if transaction.taxInfo.country.billing is 'si'
       'si'
 
-    else if transaction.taxInfo.country.billing in AB.Region.Lists.EuropeanUnion
+    else if transaction.taxInfo.vatRate
       if transaction.taxInfo.business
-        'eu-business'
+        'vat-business'
 
       else
-        'eu-consumer'
+        'vat-consumer'
 
     else
-      'non-eu'
+      'non-vat'
 
   formatDate: (date) ->
     date.toLocaleString 'en',
@@ -122,18 +122,17 @@ class RS.Pages.Admin.Vat extends AM.Component
   dobaveBlagaInStoritev: ->
     Math.round _.sum (transaction.taxInfo.amountEur.net for transaction in @transactions().fetch() when transaction.taxInfo.country.billing is 'si')
 
-  euBusinessesTransactions: ->
-    euCountriesExceptSi = _.without AB.Region.Lists.EuropeanUnion, 'si'
-    transaction for transaction in @transactions().fetch() when transaction.taxInfo.business and transaction.taxInfo.country.billing in euCountriesExceptSi
+  vatBusinessesTransactions: ->
+    transaction for transaction in @transactions().fetch() when transaction.taxInfo.business and transaction.taxInfo.vatRate and transaction.taxInfo.country.billing isnt 'si'
 
   dobaveBlagaInStoritevVDrugeDrzaveClaniceEU: ->
-    Math.round _.sum (transaction.taxInfo.amountEur.net for transaction in @euBusinessesTransactions())
+    Math.round _.sum (transaction.taxInfo.amountEur.net for transaction in @vatBusinessesTransactions())
 
   poStopnji22: ->
     Math.round _.sum (transaction.taxInfo.amountEur.vat for transaction in @transactions().fetch() when transaction.taxInfo.country.billing is 'si')
 
-  euBusinesses: ->
-    transactions = @euBusinessesTransactions()
+  vatBusinesses: ->
+    transactions = @vatBusinessesTransactions()
 
     vatIds = _.uniq (transaction.taxInfo.business.vatId for transaction in transactions)
 
@@ -142,12 +141,11 @@ class RS.Pages.Admin.Vat extends AM.Component
       vatIdNumber: vatId[2..]
       totalAmount: _.sum (transaction.taxInfo.amountEur.net for transaction in _.filter transactions, (transaction) => transaction.taxInfo.business.vatId is vatId)
 
-  totalEuBusinessAmount: ->
-    _.sum (transaction.taxInfo.amountEur.net for transaction in @euBusinessesTransactions())
+  totalVatBusinessAmount: ->
+    _.sum (transaction.taxInfo.amountEur.net for transaction in @vatBusinessesTransactions())
 
-  euCountries: ->
-    euCountriesExceptSi = _.without AB.Region.Lists.EuropeanUnion, 'si'
-    transactions = (transaction for transaction in @transactions().fetch() when not transaction.taxInfo.business and transaction.taxInfo.country.billing in euCountriesExceptSi)
+  vatCountries: ->
+    transactions = (transaction for transaction in @transactions().fetch() when not transaction.taxInfo.business and transaction.taxInfo.vatRate and transaction.taxInfo.country.billing isnt 'si')
 
     countries = _.uniq (transaction.taxInfo.country.billing for transaction in transactions)
 

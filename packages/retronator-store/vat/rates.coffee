@@ -27,4 +27,3 @@ Retronator.Store.Vat.Rates =
     sk: 0.20
     fi: 0.24
     se: 0.25
-    gb: 0.20
