@@ -570,9 +570,7 @@ Package.onUse(function(api) {
   api.addComponent('pages/admin/memories/latest..');
   api.addComponent('pages/admin/memories/actionslog..');
 
-  api.addUnstyledComponent('pages/admin..');
   api.addComponent('pages/admin/groupphoto..');
-  api.addServerFile('pages/admin/groupphoto/subscriptions');
 
   // Components
 

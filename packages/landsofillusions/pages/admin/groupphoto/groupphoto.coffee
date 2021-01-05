@@ -6,15 +6,10 @@ class LOI.Pages.Admin.GroupPhoto extends AM.Component
   @id: -> 'LandsOfIllusions.Pages.Admin.GroupPhoto'
   @register @id()
 
-  @characters: new AB.Subscription name: "#{@id()}.characters"
-
   onCreated: ->
     super arguments...
 
-    @constructor.characters.subscribe @
-
-    types = LOI.Character.Part.allPartTypeIds()
-    LOI.Character.Part.Template.forTypes.subscribe @, types
+    LOI.Pages.Admin.Characters.ApprovedDesigns.characters.subscribe @, 200
 
     # Create pixel scaling display.
     @display = new AM.Display
