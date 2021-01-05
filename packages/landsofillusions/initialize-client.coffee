@@ -12,7 +12,7 @@ LOI.characterId localCharacterId if localCharacterId
 LOI.settings = new LOI.Settings
 
 Meteor.startup ->
-  # Subscribe to user's characters.
+  # Subscribe to user's characters field.
   charactersFieldSubscription = RA.User.charactersFieldForCurrentUser.subscribe()
 
   # Create the current character on the client.
