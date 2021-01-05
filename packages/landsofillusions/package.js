@@ -571,6 +571,8 @@ Package.onUse(function(api) {
   api.addComponent('pages/admin/memories/latest..');
   api.addComponent('pages/admin/memories/actionslog..');
 
+  api.addComponent('pages/admin/groupphoto..');
+
   // Components
 
   api.addFile('components..');
