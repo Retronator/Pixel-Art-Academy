@@ -18,7 +18,10 @@ class PAA.StudyGuide.Article
     'video'
 
     'figure'
-    'task'
+    'studyguide-practicesection'
+    'studyguide-prerequisiteswarning'
+    'studyguide-task-reading'
+    'studyguide-task-upload'
   ]
 
   @figureUploadContext = new LOI.Assets.Upload.Context

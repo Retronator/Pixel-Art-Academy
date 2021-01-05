@@ -6,7 +6,7 @@ class LOI.Components.SignIn extends AM.Component
   @register 'LandsOfIllusions.Components.SignIn'
   @url: -> 'signin'
 
-  @version: -> '0.0.1'
+  @version: -> '0.0.2'
 
   constructor: (@options) ->
     super arguments...
@@ -32,6 +32,13 @@ class LOI.Components.SignIn extends AM.Component
 
   inMessageOnlyFlow: ->
     @loginButtonsSession.get 'inMessageOnlyFlow'
+
+  message: ->
+    @loginButtonsSession.get('infoMessage') or @loginButtonsSession.get('errorMessage')
+
+  messageClass: ->
+    return 'info' if @loginButtonsSession.get 'infoMessage'
+    return 'error' if @loginButtonsSession.get 'errorMessage'
 
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>

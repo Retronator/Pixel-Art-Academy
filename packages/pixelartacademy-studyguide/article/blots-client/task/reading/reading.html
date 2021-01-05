@@ -1,0 +1,26 @@
+<template name="PixelArtAcademy.StudyGuide.Article.Task.Reading">
+  <div class="task {{completedClass}} {{activeClass}} {{readOnlyClass}}">
+    {{#if prerequisites.length}}
+      {{#if currentUser}}
+        <div class="prerequisites">
+          Before you can mark that you've read this section,
+          you need to complete {{#unless prerequisitesAll}}one of{{/unless}} the previous tasks:
+          <ul class="tasks">
+            {{#each prerequisites}}
+              <li class="task">{{> t10e directiveTranslation}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    {{else}}
+      <div class="prompt">
+        Mark that you've read this section.
+      </div>
+    {{/if}}
+    <div class="confirmation {{confirmationEnabledClass}}" title="{{task.instructions}}">
+      <div class="directive">
+        {{> t10e task.directiveTranslation}}
+      </div>
+    </div>
+  </div>
+</template>

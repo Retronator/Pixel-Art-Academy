@@ -1,0 +1,36 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-article.ql-container
+  .practicesection
+  .practicesection + figure
+  .practicesection + ol
+  .practicesection + .pixelartacademy-studyguide-article-task-upload
+    margin 10rem 0
+    padding 10rem
+    background atariBlue(4)
+    color atariGrey(6)
+
+  .practicesection
+    &::before
+      content 'Activity'
+      display block
+      margin -7rem -6rem 8rem
+      padding-bottom 1rem
+      border-bottom 1rem solid atariGrey(5)
+      text-transform uppercase
+      checkout()
+
+  .practicesection + .practicesection
+  .practicesection + figure
+  .practicesection + figure + .practicesection
+  .practicesection + ol
+  .practicesection + ol + .practicesection
+  .practicesection + .pixelartacademy-studyguide-article-task-upload
+  .practicesection + .pixelartacademy-studyguide-article-task-upload + .practicesection
+    margin-top -20rem
+
+    &::before
+      content none
+
+  .practicesection + ol
+    padding-left 20rem

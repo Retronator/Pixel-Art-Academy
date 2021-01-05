@@ -3,16 +3,22 @@
     <h2>Account folder</h2>
     <h3>Contents</h3>
     <ol class="contents">
-      {{#each pages}}
+      {{#each account.pages}}
         <li class="content">
           {{#if currentPage}}
             <span class="current-page">
               {{> LandsOfIllusions.Components.Account.Contents.PageLine}}
             </span>
           {{else}}
-            <a class="page-link" href="/{{accountUrl}}/{{this.url}}">
-              {{> LandsOfIllusions.Components.Account.Contents.PageLine}}
-            </a>
+            {{#if account.options.useUrlRouting}}
+              <a class="page-link" href="/{{accountUrl}}/{{this.url}}">
+                {{> LandsOfIllusions.Components.Account.Contents.PageLine}}
+              </a>
+            {{else}}
+              <span class="page-link">
+                {{> LandsOfIllusions.Components.Account.Contents.PageLine}}
+              </span>
+            {{/if}}
           {{/if}}
         </li>
       {{/each}}

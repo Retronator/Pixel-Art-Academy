@@ -30,14 +30,14 @@ class AM.Quill.BlotComponent extends AM.Component
     @autorun (computation) =>
       value = @value()
 
-      console.log "Writing value data attribute", value, @ if @constructor.Debug
+      console.log "Writing value data attribute", value, @ if @constructor.debug
 
       @node.setAttribute 'data-value', EJSON.stringify value
     
     @autorun (computation) =>
       formats = @formats()
 
-      console.log "Writing formats data attribute", formats, @ if @constructor.Debug
+      console.log "Writing formats data attribute", formats, @ if @constructor.debug
 
       @node.setAttribute 'data-formats', EJSON.stringify formats
 

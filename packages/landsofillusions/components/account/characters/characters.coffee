@@ -33,11 +33,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @fullNameInput.renderComponent @currentComponent()
 
   characters: ->
-    user = Retronator.user()
-    return unless user?.characters
-
-    for character in user.characters
-      LOI.Character.documents.findOne character._id
+    Retronator.user()?.characters
 
   emptyLines: ->
     charactersCount = @characters()?.length or 0

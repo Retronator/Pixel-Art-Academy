@@ -93,4 +93,4 @@ class PAA.StudyGuide.Article.Figure.Image extends AM.Component
     ]
 
     article = @figure.quillComponent()
-    article.bookComponent.focusArtworks artworks
+    article.bookComponent.home.focusArtworks artworks

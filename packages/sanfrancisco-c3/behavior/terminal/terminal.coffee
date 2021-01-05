@@ -44,9 +44,6 @@ class C3.Behavior.Terminal extends C3.Items.Terminal
 
     @switchToScreen @screens.mainMenu
 
-    # Subscribe to all user's characters to see their designed status.
-    LOI.Character.forCurrentUser.subscribe @
-
   onRendered: ->
     super arguments...
 

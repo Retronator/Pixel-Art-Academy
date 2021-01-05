@@ -26,8 +26,18 @@ Package.onUse(function(api) {
   api.addFile('studyguide-tasks');
 
   api.addFile('article..');
-  api.addClientComponent('article/figure-client/figure');
-  api.addClientComponent('article/figure-client/image..');
+
+  api.addClientComponent('article/blots-client/figure..');
+  api.addClientComponent('article/blots-client/figure/image..');
+
+  api.addClientFile('article/blots-client/practicesection..');
+  api.addStyle('article/blots-client/practicesection..');
+
+  api.addClientFile('article/blots-client/task..');
+  api.addStyle('article/blots-client/task..');
+  api.addClientComponent('article/blots-client/task/prerequisiteswarning..');
+  api.addClientComponent('article/blots-client/task/reading..');
+  api.addClientComponent('article/blots-client/task/upload..');
 
   api.addStyle('style/article');
 
@@ -42,11 +52,21 @@ Package.onUse(function(api) {
   api.addServerFile('book/subscriptions');
 
   api.addFile('pages..');
+
   api.addComponent('pages/layout..');
+
   api.addComponent('pages/home..');
+
+  api.addComponent('pages/home/menu..');
+  api.addComponent('pages/home/menu/items..');
+
   api.addComponent('pages/home/activities..');
   api.addComponent('pages/home/studyplan..');
   api.addComponent('pages/home/about..');
+
+  api.addComponent('pages/home/submissions..');
+  api.addComponent('pages/home/submissions/picture..');
+
   api.addComponent('pages/home/book..');
   api.addClientComponent('pages/home/book/article-client/article');
 

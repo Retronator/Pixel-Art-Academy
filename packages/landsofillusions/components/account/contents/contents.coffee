@@ -12,20 +12,27 @@ class LOI.Components.Account.Contents extends LOI.Components.Account.Page
 
   @initialize()
 
-  account: ->
-    @ancestorComponent LOI.Components.Account
+  constructor: (@account) ->
+    super arguments...
 
   accountUrl: ->
     # Return the root url of the account, since url points to
     # the current active url (depending on which page is active).
-    @account().constructor.url()
-
-  pages: ->
-    # Return all pages after contents.
-    @account().pages
+    @account.constructor.url()
 
   currentPage: ->
     page = @currentData()
+    currentPage = @account.pages[@account.currentPageNumber() - 1]
 
-    # This page is the current page if its URL is the second router parameter.
-    page.url() is AB.Router.getParameter 'parameter2'
+    page is currentPage
+
+  events: ->
+    super(arguments...).concat
+      'click .page-link': @onClickPageLink
+
+  onClickPageLink: (event) ->
+    page = @currentData()
+    return if @account.options.useUrlRouting
+
+    pageIndex = _.indexOf @account.pages, page
+    @account.currentPageNumber pageIndex + 1

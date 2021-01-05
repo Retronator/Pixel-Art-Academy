@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.StudyGuide.Pages.Home.Menu">
+  <div class="pixelartacademy-studyguide-pages-home-menu">
+    <div class="menu-overlay {{menuVisibleClass}}">
+      {{#if menuVisible}}
+        {{> Render menuItems}}
+      {{/if}}
+    </div>
+    <div class="toolbar {{toolbarVisible}}">
+      <button class="menu-button">Menu</button>
+    </div>
+    {{> Render signIn}}
+    {{> Render account}}
+  </div>
+</template>

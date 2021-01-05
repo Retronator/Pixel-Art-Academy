@@ -1,5 +1,4 @@
 AM = Artificial.Mirage
-AB = Artificial.Base
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
@@ -37,7 +36,7 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
       bookGroups
 
     @activeBookId = new ComputedField =>
-      return unless slug = AB.Router.getParameter 'pageOrBook'
+      return unless slug = @home.layout.router.getParameter 'pageOrBook'
       book = PAA.StudyGuide.Book.documents.findOne {slug}
       book?._id
 
@@ -78,4 +77,4 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
 
   onClickBook: (event) ->
     book = @currentData()
-    AB.Router.setParameter 'pageOrBook', book.slug
+    @home.layout.router.setParameter 'pageOrBook', book.slug

@@ -1,0 +1,41 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-menu-items
+  position absolute
+  top 50%
+  width 100%
+  margin 0
+  padding 0
+  transform translateY(-50%)
+  list-style none
+  text-align center
+  color atariGrey(5)
+  kyrou-7()
+  text-transform uppercase
+  line-height 14rem
+  font-weight bold
+
+  .menu-item
+    .actionable
+    button
+      &:hover
+        color atariGrey(7)
+
+    .actionable
+      text-decoration none
+      color inherit
+      cursor pointer
+
+    button
+      position relative
+      top -1rem
+      border none
+      background none
+      font inherit
+      color inherit
+      padding 0 3rem
+      margin 0
+
+    &.graphics-scale
+      button
+        adventure()

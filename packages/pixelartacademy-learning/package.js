@@ -32,5 +32,6 @@ Package.onUse(function(api) {
   api.addServerFile('task/entry/subscriptions');
 
   api.addServerFile('task/entry/migrations/0000-addactions');
+  api.addServerFile('task/entry/migrations/0001-addsubjectnames');
 
 });

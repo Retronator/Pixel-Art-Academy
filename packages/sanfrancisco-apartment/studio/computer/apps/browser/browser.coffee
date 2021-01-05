@@ -12,7 +12,7 @@ class Studio.Computer.Browser extends AM.Component
   onCreated: ->
     super arguments...
 
-    @currentRoute = new ReactiveField null
+    @currentRoute = new ReactiveField null, (a, b) => a is b
 
     @history = new ReactiveField [{url: 'https://retropolis.city/academy-of-art', scrollTop: 0}]
     @historyIndex = new ReactiveField 0
@@ -29,21 +29,36 @@ class Studio.Computer.Browser extends AM.Component
       route = @routeFromUrl url
       @currentRoute route
 
-  url: -> @history()[@historyIndex()].url
+  url: (url, options) ->
+    # Allow setting the url by sending in the new value.
+    return @setUrl url if url?
 
-  setUrl: (url) ->
+    @history()[@historyIndex()].url
+
+  setUrl: (url, options = {}) ->
     # Make sure the url actually changed.
     return if url is @url()
 
-    @_updateCurrentScrollTop()
+    # By default changing the URL gets written to browser history.
+    options.createHistory ?= true
 
-    historyIndex = @historyIndex()
     history = @history()
+    historyIndex = @historyIndex()
 
-    # First shorten history to current index.
-    history = history.slice 0, historyIndex + 1
-    history.push {url}
-    historyIndex++
+    if options.createHistory
+      # Store the scroll position before we move on.
+      @_updateCurrentScrollTop()
+
+      # Shorten history to current index (cutting away any pages after current).
+      history = history.slice 0, historyIndex + 1
+
+      # Add new url.
+      history.push {url}
+      historyIndex++
+
+    else
+      # Replace the url of the current history item.
+      history.url = url
 
     @history history
     @historyIndex historyIndex
@@ -72,7 +87,6 @@ class Studio.Computer.Browser extends AM.Component
     # We want to blacklist some pages.
     blacklistedPages = [
       LOI.Adventure
-      PixelArtAcademy.StudyGuide.Pages.Home
     ]
 
     for page in blacklistedPages

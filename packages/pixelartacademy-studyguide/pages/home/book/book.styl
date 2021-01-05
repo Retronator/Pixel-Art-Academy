@@ -3,9 +3,10 @@
 .pixelartacademy-studyguide-pages-home-book
   display none
   position relative
+  z-index 2
   left 0
 
-  &.loaded
+  &.visible
     transition left 0.5s ease-out
     display block
 
@@ -166,8 +167,5 @@
               a
                 text-decoration none
 
-.pixelartacademy-studyguide-pages-home-book-focused-artworks
-  cursor pointer
-
-  & + .pixelartacademy-studyguide-pages-home-book
-    display none
+.focusedartworks ~ .pixelartacademy-studyguide-pages-home-book
+  display none

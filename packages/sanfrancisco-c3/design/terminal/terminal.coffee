@@ -36,9 +36,6 @@ class C3.Design.Terminal extends C3.Items.Terminal
 
     @switchToScreen @screens.mainMenu
 
-    # Subscribe to all user's characters to see their designed status.
-    LOI.Character.forCurrentUser.subscribe @
-
     # Subscribe to all character part templates.
     types = LOI.Character.Part.allAvatarPartTypeIds()
 

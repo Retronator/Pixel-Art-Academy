@@ -20,7 +20,7 @@ class PAA.StudyGuide.Activity extends AM.Document
   # requiredInterests: array of interests directly required by the goal, not coming from the tasks
   # [article]: array of delta operations for the Study Guide article of this activity
   #   insert: string or object to be inserted
-  #     PixelArtAcademy.StudyGuide.Article.Figure: a collection of visual elements with a caption
+  #     figure: a collection of visual elements with a caption
   #       layout: array of numbers controlling how many elements per row to show
   #       caption: the text written under the figure
   #       [elements]: array of elements that make the figure
@@ -33,10 +33,18 @@ class PAA.StudyGuide.Activity extends AM.Document
   #         video: a video without any semantic information
   #           url
   #
-  #     task: a learning task
-  #       id: the id of the task to be displayed
+  #     studyguide-prerequisiteswarning: a warning showing prerequisite tasks
+  #       id: the id of the task for which to show prerequisites
+  #
+  #     studyguide-task-reading: a checkbox to mark reading of a section complete
+  #       id: the id of the manual task to be completed
+  #
+  #     studyguide-task-upload: instructions for a task with the interface to upload an image
+  #       id: the id of the upload task to be completed
+  #       examplesFigure: same data structure as figure
   #
   #   attributes: object with formatting directives
+  #     studyguide-practicesection: a visually distinct section that includes practical learning tasks
   @Meta
     name: @id()
 

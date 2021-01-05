@@ -18,8 +18,14 @@ Package.onUse(function(api) {
 
   api.addFile('pixelartacademy');
 
-  api.addFile('adventure..');
+  api.addFile('components..');
+  api.addFile('components/autoscaledimagemixin..');
+
+  // We need to add adventure-things first because it extends LOI.Adventure
+  // and we need it to be modified before PAA.Adventure extends LOI.Adventure.
   api.addFile('adventure/adventure-things');
+
+  api.addFile('adventure..');
   api.addFile('adventure/chapter..');
 
   api.addFile('layouts..');

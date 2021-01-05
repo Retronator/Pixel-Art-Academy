@@ -1,3 +1,4 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
 window.LandsOfIllusions = LOI
@@ -11,8 +12,8 @@ LOI.characterId localCharacterId if localCharacterId
 LOI.settings = new LOI.Settings
 
 Meteor.startup ->
-  # Subscribe to user's characters.
-  charactersSubscription = Retronator.Accounts.User.charactersFieldForCurrentUser.subscribe()
+  # Subscribe to user's characters field.
+  charactersFieldSubscription = RA.User.charactersFieldForCurrentUser.subscribe()
 
   # Create the current character on the client.
   Tracker.autorun ->
@@ -33,15 +34,16 @@ Meteor.startup ->
     characterId = LOI.characterId()
 
     # Nothing to do if we don't have a character or if the user/characters haven't been loaded yet.
-    return unless characterId and charactersSubscription.ready()
+    return unless characterId and charactersFieldSubscription.ready()
 
-    characters = Retronator.user()?.characters
+    # Wait till the user is ready.
+    return unless user = Retronator.user()
 
-    characterBelongsToUser = _.find characters, ((character) -> character._id is characterId)
-    characterHasApprovedDesign = LOI.Character.documents.findOne(characterId)?.designApproved
+    # The character must be one of user's playable characters.
+    character = _.find user.playableCharacters(), (character) -> character._id is characterId
 
-    unless characterBelongsToUser and characterHasApprovedDesign
-      LOI.switchCharacter null
+    # Unload it if it's not.
+    LOI.switchCharacter null unless character
 
   # Persist character choice if we allow storing game state.
   Tracker.autorun (computation) ->

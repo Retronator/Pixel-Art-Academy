@@ -1,0 +1,59 @@
+<template name="PixelArtAcademy.StudyGuide.Article.Task.Upload">
+  <div class="task {{completedClass}} {{activeClass}} {{readOnlyClass}}">
+    <div class="confirmation {{confirmationEnabledClass}}">
+      <div class="directive">
+        {{> t10e task.directiveTranslation}}:
+      </div>
+    </div>
+    {{#if instructionSteps}}
+      <ol class="instructions">
+        {{#each instructionSteps}}
+          <li class="instructions-step">{{this}}</li>
+        {{/each}}
+      </ol>
+    {{else}}
+      <div class="instructions">
+        {{> t10e task.instructionsTranslation}}
+      </div>
+    {{/if}}
+    {{#if prerequisites.length}}
+      {{#if currentUser}}
+        <div class="prerequisites">
+          Before you can submit this task,
+          you need to complete {{#unless prerequisitesAll}}one of{{/unless}} the previous tasks:
+          <ul class="tasks">
+            {{#each prerequisites}}
+              <li class="task">{{> t10e directiveTranslation}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    {{else}}
+      {{#unless $or completed submissionPictureSource}}
+        <div class="prompt">
+          To complete this task, <button class="submission-upload-button">submit</button> the required image.
+        </div>
+      {{/unless}}
+    {{/if}}
+    {{#if submissionPictureSource}}
+      <div class="submission">
+        <div class="remove-area" {{style submissionUploadingStyle}}>
+          {{#unless upload}}
+            <button class="remove-button">Remove</button>
+          {{/unless}}
+        </div>
+        <img class="picture autoscaledimage" src="{{submissionPictureSource}}" {{style autoScaledImageStyle}} crossorigin="anonymous"/>
+      </div>
+    {{/if}}
+    <!-- Examples get hidden via CSS so that the figure node is persistent -->
+    <div class="examples">
+      Example result{{#if multipleExamples}}s{{/if}}:
+      <figure class="pixelartacademy-studyguide-article-figure">
+        {{> Render examplesFigure}}
+      </figure>
+    </div>
+    <div class="archive">
+      You can view everyone's submissions in the <button class="view-submissions-button">archive</button>.
+    </div>
+  </div>
+</template>

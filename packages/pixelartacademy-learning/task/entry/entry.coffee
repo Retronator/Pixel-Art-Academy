@@ -1,4 +1,5 @@
 AM = Artificial.Mummification
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -8,9 +9,14 @@ class PAA.Learning.Task.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Learning.Task.Entry'
   # taskId: task ID of the task this is an entry for
   # time: the time when task was completed
-  # character: character that completed the task
+  # user: user that completed the task, or null if a character did it
   #   _id
-  # action: the action representing completion of this task
+  #   publicName
+  # character: character that completed the task, or null if a user did it
+  #   _id
+  #   avatar
+  #     fullName
+  # action: the action representing completion of this task, or null if a user did it
   #   _id
   #
   # upload: data for an upload entry
@@ -22,14 +28,20 @@ class PAA.Learning.Task.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: Document.ReferenceField LOI.Character, [], true
+      user: Document.ReferenceField RA.User, ['publicName'], true
+      character: Document.ReferenceField LOI.Character, ['avatar.fullName'], true
       action: Document.ReferenceField LOI.Memory.Action, [], true, 'content.taskEntry', ['taskId']
 
   # Methods
   @insert: @method 'insert'
+  @insertForUser: @method 'insertForUser'
+  @remove: @method 'remove'
+  @removeForUser: @method 'removeForUser'
 
   # Subscriptions
+  @forCurrentUser: @subscription 'forCurrentUser'
   @forCharacter: @subscription 'forCharacter'
   @recentForCharacter: @subscription 'recentForCharacter'
   @forCharacterTaskIds: @subscription 'forCharacterTaskIds'
   @forCharactersTaskId: @subscription 'forCharactersTaskId'
+  @forTaskId: @subscription 'forTaskId'

@@ -1,7 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Babel
-ABs = Artificial.Base
 PAA = PixelArtAcademy
 
 class PAA.StudyGuide.Pages.Home.Book extends AM.Component
@@ -16,8 +15,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     parentWithDisplay = @ancestorComponentWith 'display'
     @display = parentWithDisplay.display
 
+    # Visible tells if the book is anywhere in the viewport (even when transitioning).
     @visible = new ReactiveField false
-    @loaded = new ReactiveField false
+
+    # Opened tells if the book is open or transitioning to open.
+    @opened = new ReactiveField false
+
     @leftPageIndex = new ReactiveField 0
     @visiblePageIndex = new ReactiveField 1
     @pagesCount = new ReactiveField null
@@ -36,18 +39,18 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         
         # Mark book as loaded for transitions to start.
         Meteor.setTimeout =>
-          @loaded true
+          @visible true
         ,
           100
 
         # Make book visible after it has rendered and positioned outside the screen.
         Meteor.setTimeout =>
-          @visible true
+          @open()
         ,
           500
 
       else
-        @loaded false
+        @visible false
 
       book
 
@@ -73,7 +76,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
         slug: slug
 
     @activeContentItem = new ComputedField =>
-      slug = ABs.Router.getParameter 'activity'
+      slug = @home.layout.router.getParameter 'activity'
 
       _.find @contentItems(), (contentItem) => contentItem.slug is slug
 
@@ -81,10 +84,11 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
       pageMargins:
         left: 45
         right: 25
-      moveButtonExtraWidth: 35
+      moveButtonExtraWidth: 23
       frontPageLeftOffset: 5
 
-    @focusedArtworks = new ReactiveField null
+    # Since the left and right borders are not equal, we need to additionally offset the book to focus on the center.
+    @designConstants.focusOffset = (@designConstants.pageMargins.right - @designConstants.pageMargins.left) / 2
 
   onRendered: ->
     super arguments...
@@ -92,7 +96,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     # Reactively update pages count.
     @autorun (computation) =>
       return unless @book()
-      return unless @visible()
+      return unless @opened()
 
       # Update when active content item or page index changes.
       @activeContentItem()
@@ -121,35 +125,31 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     goal.destroy() for goal in @_goals
 
+  open: ->
+    # Mark book as visible for transitions to start.
+    @visible true
+
+    # Make book opened after it has positioned outside the screen.
+    Meteor.setTimeout =>
+      @opened true
+    ,
+      100
+
   close: ->
-    @visible false
+    @opened false
+
+    Meteor.setTimeout =>
+      @visible false
+    ,
+      500
 
   goToTableOfContents: ->
     # Return to the page of the table of contents that we last saw.
     @visiblePageIndex @_lastTableOfContentsVisiblePageIndex
     @leftPageIndex Math.floor(@_lastTableOfContentsVisiblePageIndex / 2) * 2
-    ABs.Router.setParameter 'activity', null
+    @home.layout.router.setParameter 'activity', null
 
     @scrollToTop()
-
-  focusArtworks: (artworks) ->
-    # Save scroll position.
-    @_lastScrollTop = $(window).scrollTop()
-
-    # Start display.
-    @focusedArtworks artworks
-
-    # After the page has re-rendered, scroll to top.
-    Meteor.setTimeout =>
-      $(window).scrollTop 0
-
-  unfocusArtworks: ->
-    # Stop display.
-    @focusedArtworks null
-
-    # After the page has re-rendered, restore scroll position.
-    Meteor.setTimeout =>
-      $(window).scrollTop @_lastScrollTop
 
   canMoveLeft: ->
     if @activeContentItem()
@@ -247,8 +247,8 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     ,
       100
 
-  loadedClass: ->
-    'loaded' if @loaded()
+  visibleClass: ->
+    'visible' if @visible()
 
   componentStyle: ->
     return unless book = @book()
@@ -265,15 +265,15 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     fullWidth = (bookWidth + horizontalGap) * 2
 
-    if @visible()
+    if @opened()
       if @leftPageIndex() is @visiblePageIndex()
-        left = 0
+        left = @designConstants.focusOffset
 
       else
-        left = viewportWidth - fullWidth
+        left = viewportWidth - fullWidth - @designConstants.focusOffset
 
     else
-      left = horizontalGap - fullWidth
+      left = horizontalGap - fullWidth - 1
 
     left: "#{Math.round left}rem"
     padding: "#{Math.round verticalGap}rem #{Math.round horizontalGap}rem"
@@ -294,20 +294,11 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
     (viewportWidth - bookWidth) / 2
 
-  moveButtonLeftStyle: ->
-    return unless horizontalGap = @_horizontalGap()
+  moveButtonStyle: ->
+    horizontalGap = @_horizontalGap()
+    return unless horizontalGap?
 
-    width = horizontalGap
-    width += @designConstants.moveButtonExtraWidth if @leftPageIndex() is @visiblePageIndex()
-
-    width: "#{width}rem"
-
-  moveButtonRightStyle: ->
-    return unless horizontalGap = @_horizontalGap()
-
-    width = horizontalGap
-    width += @designConstants.moveButtonExtraWidth unless @leftPageIndex() is @visiblePageIndex()
-
+    width = horizontalGap + @designConstants.moveButtonExtraWidth
     width: "#{width}rem"
 
   frontPageClass: ->
@@ -360,16 +351,12 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     super(arguments...).concat
       'click .move-button.left': @onClickMoveButtonLeft
       'click .move-button.right': @onClickMoveButtonRight
-      'click .pixelartacademy-studyguide-pages-home-book-focused-artworks': @onClickFocusedArtworks
 
   onClickMoveButtonLeft: (event) ->
     @previousPage()
 
   onClickMoveButtonRight: (event) ->
     @nextPage()
-
-  onClickFocusedArtworks: (event) ->
-    @unfocusArtworks()
 
   class @TableOfContentsItem extends AM.Component
     @register "PixelArtAcademy.StudyGuide.Pages.Home.Book.TableOfContentsItem"

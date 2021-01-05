@@ -1,16 +1,37 @@
 <template name="PixelArtAcademy.StudyGuide.Pages.Home">
-  <div class="pixelartacademy-studyguide-pages-home {{backButtonHiddenClass}}">
+  <div class="pixelartacademy-studyguide-pages-home {{backButtonHiddenClass}} {{pageClass}}">
     {{#if showBackButton}}
       {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
     {{/if}}
-    <div class="scene" {{style sceneStyle}}>
-      {{> Render activities}}
-      {{> Render studyPlan}}
-      {{> Render about}}
-      <div class="table" {{style tableStyle}}>
-        <div class="drawer"></div>
+    <header class="header">
+      <h1 class="title">{{> Artificial.Base.RouteLink args 'Retropolis Academy of Art Study Guide' 'PixelArtAcademy.StudyGuide.Pages.Home'}}</h1>
+      <nav class="navigation">
+        <ul class="pages">
+          <li class="page">{{> Artificial.Base.RouteLink args 'Activities' 'PixelArtAcademy.StudyGuide.Pages.Home'}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'Study plan' 'PixelArtAcademy.StudyGuide.Pages.Home' studyPlanRouteOptions}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'About' 'PixelArtAcademy.StudyGuide.Pages.Home' aboutRouteOptions}}</li>
+        </ul>
+      </nav>
+    </header>
+    {{#with focusedArtworks}}
+      <div class="focusedartworks">
+        {{> PixelArtDatabase.Components.Stream}}
       </div>
+    {{/with}}
+    <div class="viewport">
+      <div class="scene" {{style sceneStyle}}>
+        {{> Render activities}}
+        {{> Render studyPlan}}
+        {{> Render about}}
+        <div class="table" {{style tableStyle}}>
+          <div class="drawer"></div>
+        </div>
+      </div>
+      {{> Render submissions}}
     </div>
     {{> Render book}}
+    {{#unless layout.embedded}}
+      {{> Render menu}}
+    {{/unless}}
   </div>
 </template>

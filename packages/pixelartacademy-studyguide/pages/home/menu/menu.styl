@@ -1,0 +1,41 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-studyguide-pages-home-menu
+  .toolbar
+    position fixed
+    z-index 2
+    top 0
+    right 0
+    padding 4rem 6rem
+    text-align right
+    transition top 1s, opacity 200ms
+    opacity 0
+    visibility hidden
+
+    &.visible
+      opacity 1
+      visibility visible
+
+    button
+      border none
+      vertical-align top
+
+      &.menu-button
+        padding 4rem 2rem
+        background none
+        color atariGrey(1)
+        adventure()
+        text-transform uppercase
+
+        &:hover
+          color atariGrey(2)
+
+  .menu-overlay
+    fixed-cover()
+    z-index 3
+    visibility hidden
+    opacity 0
+    background-color rgba(0,0,0,0.8)
+
+    &.visible
+      visibility visible

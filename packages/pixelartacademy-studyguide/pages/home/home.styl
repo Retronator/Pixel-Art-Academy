@@ -5,50 +5,129 @@
     .landsofillusions-components-back-button
       opacity 0
 
+  &.study-plan
+    > .header
+      top -28rem
+      height 44rem
+
+    .pixelartacademy-studyguide-pages-home-menu
+      .toolbar
+        top -4rem
+
+  &.book
+    > .header
+      top -49rem
+
+    .pixelartacademy-studyguide-pages-home-menu
+      .toolbar
+        opacity 0
+
+      &:hover
+        .toolbar
+          opacity 1
+
   .landsofillusions-components-back-button
     opacity 1
+    z-index 3
     transition opacity 0.5s
 
-  .scene
-    position fixed
-    background image('/pixelartacademy/studyguide/home/background-dark.png') 0 0 / 440rem 480rem
-    background-repeat repeat-x
-    transition top 1s, left 1s
+  > .header
+    position absolute
+    z-index 1
+    top 0
+    height 49rem
+    width 100%
+    background atariGrey(0)
+    transition top 1s, height 1s
 
-    .table
+    > .title
+      academy()
+      text-align center
+      margin 0
+      line-height 24rem
+      padding-top 4rem
+
+      .route-link
+        display block
+        width 100%
+        text-decoration none
+
+    .navigation
+      .pages
+        display flex
+        width 100%
+        max-width 200rem
+        margin 0 auto
+        padding 0
+        list-style none
+
+        .page
+          display block
+          flex-grow 1
+          text-align center
+          line-height 16rem
+
+          &.apply
+            text-transform uppercase
+
+          .route-link
+            display block
+            width 100%
+            text-decoration none
+
+            &.active
+              color atariPeach(2)
+
+  .focusedartworks
+    position relative
+    z-index 4
+    cursor pointer
+
+  .viewport
+    fixed-cover()
+    overflow hidden
+    transform translateZ(0)
+
+    .scene
       position absolute
-      height 50rem
-      background image('/pixelartacademy/studyguide/home/table-center.png') 0 0 / 250rem 50rem
+      background image('/pixelartacademy/studyguide/home/background-dark.png') 0 0 / 440rem 480rem
+      background-repeat repeat-x
+      transition top 1s, left 1s
 
-      &::before
-      &::after
-        content ''
+      .table
         position absolute
-        top 0
-        height 212rem
+        height 50rem
+        background image('/pixelartacademy/studyguide/home/table-center.png') 0 0 / 250rem 50rem
 
-      &::before
-        left -178rem
-        width 178rem
-        background-image image('/pixelartacademy/studyguide/home/table-left.png')
-
-      &::after
-        right -189rem
-        width 189rem
-        background-image image('/pixelartacademy/studyguide/home/table-right.png')
-
-      .drawer
         &::before
         &::after
           content ''
           position absolute
-          top 20rem
-          width 30rem
-          height 20rem
-          background-image image('/pixelartacademy/studyguide/home/table-drawer-handle.png')
+          top 0
+          height 212rem
 
         &::before
-          left 55rem
+          left -178rem
+          width 178rem
+          background-image image('/pixelartacademy/studyguide/home/table-left.png')
 
         &::after
-          right 55rem
+          right -189rem
+          width 189rem
+          background-image image('/pixelartacademy/studyguide/home/table-right.png')
+
+        .drawer
+          &::before
+          &::after
+            content ''
+            position absolute
+            top 20rem
+            width 30rem
+            height 20rem
+            background-image image('/pixelartacademy/studyguide/home/table-drawer-handle.png')
+
+          &::before
+            left 55rem
+
+          &::after
+            right 55rem

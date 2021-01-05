@@ -10,15 +10,15 @@
     </div>
     <div class="complete">
       {{#if uploading}}
-        Uploading …
+        Attaching …
       {{else}}
-        Upload the required image to complete the task.
+        Attach the required image to complete the task.
       {{/if}}
     </div>
     {{#if showUpload}}
       <div class="upload">
         {{#if pictureSource}}
-            <img class="picture" src="{{pictureSource}}">
+            <img class="picture" src="{{pictureSource}}" crossorigin="anonymous">
         {{else}}
           {{#unless readOnly}}
             <button class="insert-picture-button">
