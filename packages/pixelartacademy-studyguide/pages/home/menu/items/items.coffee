@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -180,7 +181,7 @@ class PAA.StudyGuide.Pages.Home.Menu.Items extends AM.Component
       # Also delete any login info.
       Accounts._autoLoginEnabled = false
       
-      LOI.adventure.clearLoginInformation()
+      RA.clearLoginInformation()
 
     else
       LOI.settings.persistLogin.showDialog

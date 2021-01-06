@@ -1,5 +1,8 @@
 AE = Artificial.Everywhere
 
+# We need to save Meteor's Accounts since defining a class with the same name will overwrite it in this scope.
+AccountsMeteor = Accounts
+
 class Retronator.Accounts
   constructor: ->
     Retronator.App.addAdminPage '/admin/accounts', @constructor.Pages.Admin
@@ -12,3 +15,8 @@ class Retronator.Accounts
     return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
 
     throw new AE.UnauthorizedException "You do not have administrator privileges to perform this action."
+
+  @clearLoginInformation: ->
+    AccountsMeteor._unstoreLoginToken()
+    localStorage.removeItem 'Meteor.loginToken'
+    localStorage.removeItem 'Meteor.loginTokenExpires'

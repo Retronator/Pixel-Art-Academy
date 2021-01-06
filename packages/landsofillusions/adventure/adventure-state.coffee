@@ -1,5 +1,6 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
@@ -482,9 +483,7 @@ class LOI.Adventure extends LOI.Adventure
     @_immersionExitLocationId undefined
 
   clearLoginInformation: ->
-    Accounts._unstoreLoginToken()
-    localStorage.removeItem 'Meteor.loginToken'
-    localStorage.removeItem 'Meteor.loginTokenExpires'
+    RA.clearLoginInformation()
 
   loadCharacter: (characterId) ->
     console.log "Loading character", characterId if LOI.debug or LOI.Adventure.debugState
