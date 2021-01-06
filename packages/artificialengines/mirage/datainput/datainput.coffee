@@ -71,6 +71,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
 
   events: -> [
     'change input, change textarea': @onChange
+    'blur input, blur textarea': @onBlur
     'input input, input textarea': @onInput
     'change select': @onChangeSelect
   ]
@@ -80,6 +81,9 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
       @save $(event.target).is(':checked')
       return
 
+    @save @_convertValue $(event.target).val() unless @realtime
+
+  onBlur: (event) ->
     @save @_convertValue $(event.target).val() unless @realtime
 
   onInput: (event) ->
