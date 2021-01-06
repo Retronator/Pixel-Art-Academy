@@ -162,7 +162,7 @@ class PAA.StudyGuide.Pages.Home.Menu.Items extends AM.Component
       else
         # Settings have changed. Ask to save and return to menu when answered.
         LOI.settings.persistSettings.showDialog
-          dialogProvider: @menu.layout
+          dialogProvider: @menu.home.layout
           callback: =>
             @currentScreen @constructor.Screens.MainMenu
 
@@ -185,7 +185,7 @@ class PAA.StudyGuide.Pages.Home.Menu.Items extends AM.Component
 
     else
       LOI.settings.persistLogin.showDialog
-        dialogProvider: @menu.layout
+        dialogProvider: @menu.home.layout
         callback: (value) =>
           Accounts._autoLoginEnabled = value
           Accounts._enableAutoLogin() if value
@@ -196,7 +196,7 @@ class PAA.StudyGuide.Pages.Home.Menu.Items extends AM.Component
 
     else
       consentField.showDialog
-        dialogProvider: @menu.layout
+        dialogProvider: @menu.home.layout
 
   onClickBackToSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
