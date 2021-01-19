@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 RA = Retronator.Accounts
@@ -22,6 +23,17 @@ PAA.Learning.Task.Entry.recentForCharacter.publish (characterId, earliestTime) -
   PAA.Learning.Task.Entry.documents.find
     'character._id': characterId
     time: $gt: earliestTime
+
+PAA.Learning.Task.Entry.activityForCharacter.publish (characterId, dateRange) ->
+  check characterId, Match.DocumentId
+  check dateRange, AE.DateRange
+
+  query =
+    'character._id': characterId
+
+  dateRange.addToMongoQuery query, 'time'
+
+  PAA.Learning.Task.Entry.documents.find query
 
 PAA.Learning.Task.Entry.forCharacterTaskIds.publish (characterId, taskIds) ->
   check characterId, Match.DocumentId

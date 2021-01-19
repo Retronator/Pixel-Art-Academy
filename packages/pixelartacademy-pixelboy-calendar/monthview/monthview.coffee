@@ -70,6 +70,10 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
       characterId = LOI.characterId()
 
       PAA.Practice.Journal.Entry.activityForCharacter.subscribe @, characterId, dateRange
+      PAA.Learning.Task.Entry.activityForCharacter.subscribe @, characterId, dateRange
+
+    # Initialize Study Guide activities.
+    PAA.StudyGuide.Activity.initializeAll @
 
     @weeks = new ComputedField =>
       characterId = LOI.characterId()
@@ -129,8 +133,6 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
             activities.push
               type: @constructor.ActivityTypes.Tasks
               data: tasks
-
-          activities = _.sortBy activities, 'time'
 
           week.days.push {date, activities}
 

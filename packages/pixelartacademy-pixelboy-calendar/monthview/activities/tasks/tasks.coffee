@@ -20,9 +20,9 @@ class PAA.PixelBoy.Apps.Calendar.MonthView.Tasks extends AM.Component
       counts = {}
 
       for taskEntry in taskEntries
-        taskClass = PAA.Learning.Task.getClassForId taskEntry.taskId
+        continue unless taskClass = PAA.Learning.Task.getClassForId taskEntry.taskId
 
-        icon = _.toLower taskClass.icon
+        icon = _.toLower taskClass.icon()
         counts[icon] ?= 0
         counts[icon]++
 

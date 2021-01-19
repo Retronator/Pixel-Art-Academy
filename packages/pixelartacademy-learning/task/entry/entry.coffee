@@ -42,6 +42,7 @@ class PAA.Learning.Task.Entry extends AM.Document
   @forCurrentUser: @subscription 'forCurrentUser'
   @forCharacter: @subscription 'forCharacter'
   @recentForCharacter: @subscription 'recentForCharacter'
+  @activityForCharacter: @subscription 'activityForCharacter'
   @forCharacterTaskIds: @subscription 'forCharacterTaskIds'
   @forCharactersTaskId: @subscription 'forCharactersTaskId'
   @forTaskId: @subscription 'forTaskId'

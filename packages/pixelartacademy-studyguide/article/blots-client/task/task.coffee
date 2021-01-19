@@ -7,8 +7,8 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
   onCreated: ->
     super arguments...
 
-    @studyGuideLayout = new ComputedField =>
-      @quillComponent()?.ancestorComponentOfType PAA.StudyGuide.Pages.Layout
+    @home = new ComputedField =>
+      @quillComponent()?.ancestorComponentOfType PAA.StudyGuide.Pages.Home
 
     value = @value()
     taskClass = PAA.Learning.Task.getClassForId value.id
@@ -37,7 +37,7 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
       return
 
     # Prompt the user to sign in.
-    studyGuideLayout = @studyGuideLayout()
+    home = @home()
 
     dialog = new LOI.Components.Dialog
       message: "
@@ -51,12 +51,12 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
         text: "Cancel"
       ]
 
-    studyGuideLayout.showActivatableModalDialog
+    home.layout.showActivatableModalDialog
       dialog: dialog
       callback: =>
         return unless dialog.result
 
-        studyGuideLayout.signIn =>
+        home.signIn =>
           # See if sign in succeeded.
           return unless Retronator.user()
 
@@ -72,7 +72,7 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
 
   attemptToRemoveTaskEntry: (entry) ->
     # Prompt the user if they want to delete the task entry.
-    studyGuideLayout = @studyGuideLayout()
+    home = @home()
 
     dialog = new LOI.Components.Dialog
       message: "
@@ -85,7 +85,7 @@ class PAA.StudyGuide.Article.Task extends AM.Quill.BlotComponent
         text: "Cancel"
       ]
 
-    studyGuideLayout.showActivatableModalDialog
+    home.layout.showActivatableModalDialog
       dialog: dialog
       callback: =>
         return unless dialog.result

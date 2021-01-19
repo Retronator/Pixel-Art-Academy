@@ -193,7 +193,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
       characterId = LOI.characterId()
 
       PAA.Practice.Journal.Entry.activityForCharacter.subscribe characterId, dateRange
-      PAA.Learning.Task.Entry.recentForCharacter.subscribe characterId, dateRange.start()
+      PAA.Learning.Task.Entry.activityForCharacter.subscribe characterId, dateRange
 
     @completedConditions: ->
       return unless weeklyGoals = PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals'
