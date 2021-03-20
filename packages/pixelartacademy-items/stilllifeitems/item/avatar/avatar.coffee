@@ -39,18 +39,22 @@ class PAA.Items.StillLifeItems.Item.Avatar extends LOI.Adventure.Thing.Avatar
     constructor: (@avatar) ->
       super arguments...
 
-      @cubeCamera = new THREE.CubeCamera 0.001, 1000, 256,
-        type: THREE.FloatType
-        stencilBuffer: false
-
     renderReflections: (renderer, scene) ->
+      unless @cubeCamera
+        @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget 256,
+          format: THREE.RGBAFormat
+          type: THREE.FloatType
+          stencilBuffer: false
+
+        @cubeCamera = new THREE.CubeCamera 0.001, 1000, @cubeCameraRenderTarget
+
       @visible = false
       @cubeCamera.position.copy @position
 
       renderer.outputEncoding = THREE.LinearEncoding
       renderer.toneMapping = THREE.NoToneMapping
       renderer.shadowMap.needsUpdate = true
-      @cubeCamera.clear renderer
+      @cubeCameraRenderTarget.clear renderer
       @cubeCamera.update renderer, scene
 
       @visible = true

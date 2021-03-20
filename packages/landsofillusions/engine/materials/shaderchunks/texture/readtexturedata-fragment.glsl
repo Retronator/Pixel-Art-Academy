@@ -8,10 +8,10 @@ if (!powerOf2Texture) {
 }
 
 // Read palette color from main map.
-vec4 sample = texture2D(map, spriteUv, mipmapBias);
+vec4 mapSample = texture2D(map, spriteUv, mipmapBias);
 
 // Discard transparent pixels.
-if (sample.a == 0.0) discard;
+if (mapSample.a == 0.0) discard;
 
 #ifdef USE_NORMALMAP
 // Read normal from normal map.

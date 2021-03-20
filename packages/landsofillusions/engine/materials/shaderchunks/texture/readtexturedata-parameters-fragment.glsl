@@ -1,11 +1,10 @@
 // LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment
+// IMPORTANT: To use this code the material needs to have derivatives enabled.
 
 uniform bool powerOf2Texture;
 uniform float mipmapBias;
 
 #ifdef USE_NORMALMAP
-  #extension GL_OES_standard_derivatives : enable
-
   // Based on perturbNormal2Arb from https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/ShaderChunk/normalmap_pars_fragment.glsl.js#L16
   vec3 applyNormalMap(vec3 eye_pos, vec3 surf_norm, vec3 mapN) {
     vec3 q0 = vec3(dFdx(eye_pos.x), dFdx(eye_pos.y), dFdx(eye_pos.z));

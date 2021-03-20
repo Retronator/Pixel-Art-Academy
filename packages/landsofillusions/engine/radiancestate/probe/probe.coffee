@@ -6,12 +6,15 @@ class LOI.Engine.RadianceState.Probe
   @octahedronMapResolution: 2 ** @octahedronMapMaxLevel
 
   @initialize: ->
-    # Prepare rendering of the radiance cube.
-    @cubeCamera = new THREE.CubeCamera 0.001, 1000, @cubeResolution,
+    @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget @cubeResolution,
       # Note: Support for RGB Float textures is not as wide as RGBA so
-      # we don't enable RGB, even though we don't need the alpha channel.
+      # we don't use RGB, even though we don't need the alpha channel.
+      format: THREE.RGBAFormat
       type: THREE.FloatType
       stencilBuffer: false
+
+    # Prepare rendering of the radiance cube.
+    @cubeCamera = new THREE.CubeCamera 0.001, 1000, @cubeCameraRenderTarget
 
     # Create render target for extracting the probe cube to an octahedron map.
     @octahedronMapRenderTarget = new THREE.WebGLRenderTarget @octahedronMapResolution, @octahedronMapResolution * 2,

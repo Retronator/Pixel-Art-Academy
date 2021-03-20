@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "bcrypt": "^5.0.0",
+    "jquery": "^3.6.0",
     "meteor-node-stubs": "^1.0.0",
     "minimist": "^1.2.5",
     "util": "^0.11.1"

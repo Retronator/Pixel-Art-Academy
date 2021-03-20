@@ -10,7 +10,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
   @register @id()
   template: -> @constructor.id()
 
-  constructor: (@calendar) ->
+  constructor: (@journalView) ->
     super arguments...
   
   onCreated: ->

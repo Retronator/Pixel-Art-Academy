@@ -383,8 +383,11 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
       when AC.Keys.r
         sceneManager = @sceneManager()
 
-        for item in sceneManager.items() when item.renderObject.material.reflectivity > 0.01
-          item.renderObject.renderReflections renderer, sceneManager.scene
+        for item in sceneManager.items()
+          renderObject = item.avatar.getRenderObject()
+          continue unless renderObject.material.reflectivity > 0.01
+
+          renderObject.renderReflections renderer, sceneManager.scene
 
       when AC.Keys.equalSign
         rendererManager.exposureValue rendererManager.exposureValue() + 1

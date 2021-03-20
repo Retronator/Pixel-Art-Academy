@@ -75,7 +75,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     return unless cameraAngle.pixelSize
 
     cameraAngle.getProjectionMatrixForViewport viewportBounds, _camera.projectionMatrix
-    _camera.projectionMatrixInverse.getInverse _camera.projectionMatrix
+    _camera.projectionMatrixInverse.copy(_camera.projectionMatrix).invert()
 
   _setVector: (vector, vectorData = {}) ->
     vector[field] = vectorData[field] or 0 for field in ['x', 'y', 'z']
@@ -178,10 +178,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
           # Update projection matrices.
           @_camera.projectionMatrix.lerpMatrices startProjection, endProjection, tweenValue
-          @_camera.projectionMatrixInverse.getInverse @_camera.projectionMatrix
+          @_camera.projectionMatrixInverse.copy(@_camera.projectionMatrix).invert()
 
           @_renderTargetCamera.projectionMatrix.lerpMatrices startProjectionRenderTarget, endProjectionRenderTarget, tweenValue
-          @_renderTargetCamera.projectionMatrixInverse.getInverse @_renderTargetCamera.projectionMatrix
+          @_renderTargetCamera.projectionMatrixInverse.copy(@_renderTargetCamera.projectionMatrix).invert()
 
           @_updateTargetCamera()
 

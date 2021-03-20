@@ -25,7 +25,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
   onCreated: ->
     super arguments...
 
-    @autorun =>
+    @journalsSubscription = new ComputedField =>
       PAA.Practice.Journal.forCharacterId.subscribe @, LOI.characterId()
 
     @sceneManager new @constructor.SceneManager @

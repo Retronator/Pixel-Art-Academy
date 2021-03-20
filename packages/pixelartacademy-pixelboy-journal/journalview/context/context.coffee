@@ -80,6 +80,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     # Start with a clear interface when viewing a journal.
     LOI.adventure.interface.narrative.clear()
 
+    # Initialize Study Guide activities.
+    @studyGuideSubscription = PAA.StudyGuide.Activity.initializeAll @
+
     # Subscribe to the selected entry so it loads up quicker.
     @_entrySubscription = PAA.Practice.Journal.Entry.forId.subscribe @options.entryId if @options.entryId
 
@@ -170,6 +173,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
       super arguments...
       @memoryIds()
       @description()
+      @isCreated() and @studyGuideSubscription.ready()
     ]
 
     _.every conditions

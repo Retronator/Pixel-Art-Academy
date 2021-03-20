@@ -1,7 +1,7 @@
 // LandsOfIllusions.Engine.Materials.unpackSampleReflectionParametersFragment
 
 // Reflection parameters are stored in the green channel.
-float reflectionParametersPacked = sample.g * 255.0;
+float reflectionParametersPacked = mapSample.g * 255.0;
 
 reflectionParameters = vec3(
 floor(reflectionParametersPacked / 16.0) / 16.0 * 0.3,
