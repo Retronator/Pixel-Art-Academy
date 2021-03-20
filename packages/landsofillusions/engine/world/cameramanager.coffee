@@ -29,7 +29,7 @@ class LOI.Engine.World.CameraManager
   _updateProjectionMatrix: ->
     viewportBounds = @_getViewportBounds()
     @cameraAngle().getProjectionMatrixForViewport viewportBounds, @_camera.projectionMatrix
-    @_camera.projectionMatrixInverse.getInverse @_camera.projectionMatrix
+    @_camera.projectionMatrixInverse.copy(@_camera.projectionMatrix).invert()
 
   _getViewportBounds: ->
     # Depend on illustration size changes.
@@ -82,7 +82,7 @@ class LOI.Engine.World.CameraManager
 
           # Update projection matrices.
           @_camera.projectionMatrix.lerpMatrices startProjection, endProjection, tweenValue
-          @_camera.projectionMatrixInverse.getInverse @_camera.projectionMatrix
+          @_camera.projectionMatrixInverse.copy(@_camera.projectionMatrix).invert()
 
           @camera.updated()
 

@@ -56,6 +56,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
     maxSize: 20 * 1024 * 1024 # 20 MB
     fileTypes: [
       'image/png'
+      'image/apng'
       'image/jpeg'
       'image/gif'
       ]

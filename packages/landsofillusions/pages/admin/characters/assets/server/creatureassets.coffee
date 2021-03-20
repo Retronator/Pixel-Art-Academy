@@ -399,7 +399,7 @@ createRigTemplate = (side, landmarks) ->
   addBones = (parent, boneName, data, transform) ->
     if parent
       # Add bone spanning from child to parent landmark.
-      transformInverse = new THREE.Matrix4().getInverse transform
+      transformInverse = new THREE.Matrix4().copy(transform).invert()
 
       getLandmarkVector = (name, regionId) ->
         if regionId

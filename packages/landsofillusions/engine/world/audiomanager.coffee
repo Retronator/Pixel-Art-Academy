@@ -37,7 +37,7 @@ class LOI.Engine.World.AudioManager
     unless @world.options.isolatedAudio
       # Subscribe to audio assets based on location.
       @world.autorun =>
-        return unless locationId = LOI.adventure.currentLocationId()
+        return unless locationId = LOI.adventure?.currentLocationId()
         LOI.Assets.Audio.forLocation.subscribe @world, locationId
   
       # Create engine audio assets.

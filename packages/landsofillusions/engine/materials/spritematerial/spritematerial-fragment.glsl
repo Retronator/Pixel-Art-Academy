@@ -27,10 +27,10 @@ varying vec3 vViewPosition;
 
 void main()	{
   // Read palette color from main map.
-  vec4 sample = texture2D(map, vUv);
+  vec4 mapSample = texture2D(map, vUv);
 
   // Discard transparent pixels.
-  if (sample.a < 1.0) discard;
+  if (mapSample.a < 1.0) discard;
 
   // Unpack sample palette color and reflection parameters.
   vec2 paletteColor;

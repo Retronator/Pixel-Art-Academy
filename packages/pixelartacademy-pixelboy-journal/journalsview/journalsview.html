@@ -4,19 +4,23 @@
     <div class="overlay">
       <div class="overlay-content">
         <div class="padding-placeholder"></div>
-        <ul class="journals">
-          {{#each activeJournals}}
-            <li class="journal"></li>
-          {{/each}}
-        </ul>
-        <button class="new-journal-button">Create new journal</button>
-        <div class="archive">
+        {{#if journalsSubscription.ready}}
           <ul class="journals">
-            {{#each archivedJournals}}
+            {{#each activeJournals}}
               <li class="journal"></li>
             {{/each}}
           </ul>
-        </div>
+          <button class="new-journal-button">Create new journal</button>
+          <div class="archive">
+            <ul class="journals">
+              {{#each archivedJournals}}
+                <li class="journal"></li>
+              {{/each}}
+            </ul>
+          </div>
+        {{else}}
+          <div class="loading">Loading …</div>
+        {{/if}}
         <div class="padding-placeholder"></div>
       </div>
     </div>

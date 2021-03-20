@@ -26,7 +26,19 @@ class Entry.Object.Task.Upload extends Entry.Object.Task.Component
   
   events: ->
     super(arguments...).concat
+      'click .picture': @onClickPicture
       'click .insert-picture-button': @onClickInsertPictureButton
+
+  onClickPicture: (event) ->
+    artworks = [
+      image: event.target
+    ]
+
+    # Create the stream component.
+    stream = new PAA.PixelBoy.Apps.Journal.JournalView.Entry.ArtworksStream artworks
+
+    LOI.adventure.showActivatableModalDialog
+      dialog: stream
 
   onClickInsertPictureButton: (event) ->
     $fileInput = $('<input type="file"/>')

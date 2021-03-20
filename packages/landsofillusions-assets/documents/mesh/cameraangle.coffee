@@ -54,7 +54,7 @@ class LOI.Assets.Mesh.CameraAngle
       @worldMatrix.lookAt position, target, up
       @worldMatrix.setPosition position
 
-      @viewMatrix.getInverse @worldMatrix if @worldMatrix.determinant()
+      @viewMatrix.copy(@worldMatrix).invert() if @worldMatrix.determinant()
 
     # We need special handling for the custom matrix.
     if customMatrixChanged
@@ -69,7 +69,7 @@ class LOI.Assets.Mesh.CameraAngle
           value = update.customMatrix[sourceIndex]
           @customMatrix4.elements[destinationIndex] = value if value?
 
-      @customMatrix4Inverse.getInverse @customMatrix4 if @customMatrix4.determinant()
+      @customMatrix4Inverse.copy(@customMatrix4).invert() if @customMatrix4.determinant()
 
     if worldMatrixChanged or customMatrixChanged
       @worldToCustomTransform.copy(@customMatrix4).multiply(@viewMatrix)

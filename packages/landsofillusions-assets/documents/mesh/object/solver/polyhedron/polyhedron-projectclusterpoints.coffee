@@ -166,7 +166,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
 
     # Create the matrices to go to and from plane space.
     cluster.plane.matrix = LOI.Assets.Mesh.Object.Layer.Cluster.createPlaneWorldMatrix cluster.plane, true
-    cluster.plane.matrixInverse = new THREE.Matrix4().getInverse cluster.plane.matrix
+    cluster.plane.matrixInverse = new THREE.Matrix4().copy(cluster.plane.matrix).invert()
 
     # Transform points to plane space.
     planeVector = new THREE.Vector3

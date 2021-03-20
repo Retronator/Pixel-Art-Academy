@@ -49,7 +49,7 @@ class PAA.StillLifeStand.PhysicsManager extends PAA.StillLifeStand.PhysicsManage
       physicsObject.motionState.getWorldTransform _transform
 
       _worldQuaternion.setFromBulletQuaternion _transform.getRotation()
-      _worldQuaternionInverse.copy(_worldQuaternion).inverse()
+      _worldQuaternionInverse.copy(_worldQuaternion).invert()
 
       if speedSquared
         # Calculate velocity in local space.

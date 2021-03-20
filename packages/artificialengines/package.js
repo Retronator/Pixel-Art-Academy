@@ -4,18 +4,19 @@ Package.describe({
 });
 
 Npm.depends({
-  twit: '2.2.11',
-  stripe: '5.1.1',
-  patreon: '0.4.1',
+  'twit': '2.2.11',
+  'stripe': '5.1.1',
+  'patreon': '0.4.1',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  three: '0.115.0',
+  'three': '0.126.1',
   'jaro-winkler': '0.2.8',
   'canvas': '2.6.1',
   'pako': '1.0.8',
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0',
-  'quill': '1.3.7'
+  'quill': '1.3.7',
+  "velocity-animate": "1.5.2"
 });
 
 Package.onUse(function(api) {
@@ -23,7 +24,6 @@ Package.onUse(function(api) {
     // Meteor
     'coffeescript',
     'spacebars',
-    'stylus',
     'tracker',
     'mongo',
     'ddp-client',
@@ -33,9 +33,10 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'markdown',
-    'http',
+    'http@=1.4.2',
     'oauth',
     'modules',
+    'stylus',
 
     // 3rd party
     'peerlibrary:assert',
@@ -51,7 +52,6 @@ Package.onUse(function(api) {
     'peerlibrary:directcollection',
     'okgrow:router-autoscroll',
     'stevezhu:lodash',
-    'velocityjs:velocityjs',
     'meteorhacks:picker',
     'meteorhacks:inject-initial',
 
@@ -138,14 +138,15 @@ Package.onUse(function(api) {
 
   // Artificial Mirage
 
-  api.addClientFile('mirage/browser');
+  api.addClientFile('mirage/browser-client');
   api.addFile('mirage/canvas');
 	api.addFile('mirage/component');
 	api.addFile('mirage/csshelper');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
   api.addFile('mirage/shortcuthelper');
-  api.addClientFile('mirage/window');
+  api.addClientFile('mirage/velocity-client');
+  api.addClientFile('mirage/window-client');
 
   api.addUnstyledComponent('mirage/datainput..');
 

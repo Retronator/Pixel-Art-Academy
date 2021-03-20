@@ -179,7 +179,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       source = $image.attr('src')
 
       # Load a copy for measuring purposes.
-      $('<img/>').attr(src: source).load ->
+      $('<img/>').attr(src: source).on 'load', ->
         loadedImage = @
         # Store size from loaded image to the original image.
         data =

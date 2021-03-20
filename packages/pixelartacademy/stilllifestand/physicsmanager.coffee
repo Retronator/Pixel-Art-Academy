@@ -80,7 +80,7 @@ class PAA.StillLifeStand.PhysicsManager
     # Calculate cursor position in item space. Make sure render object has the latest transform.
     @_updateItem item
     renderObject.updateMatrixWorld true
-    worldToMovingItem = new THREE.Matrix4().getInverse renderObject.matrixWorld
+    worldToMovingItem = new THREE.Matrix4().copy(renderObject.matrixWorld).invert()
     cursorPositionInItemSpace = cursorPosition.clone().applyMatrix4 worldToMovingItem
 
     # Add a constraint to the cursor.

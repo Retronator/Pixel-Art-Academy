@@ -20,6 +20,10 @@ class LOI.Engine.Materials.Material extends THREE.ShaderMaterial
     @_materialClassesById[@id()] = @
 
   constructor: (options) ->
+    # Include derivatives extension as required by readTextureDataParametersFragment.
+    options.extensions ?= {}
+    options.extensions.derivatives = true
+
     super arguments...
 
     @vertexShader = "#include <#{@constructor.id()}.vertex>" unless options.vertexShader

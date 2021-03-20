@@ -15,10 +15,13 @@ class LOI.Engine.Skydome extends AS.RenderObject
 
     if @options.generateCubeTexture
       # Prepare for rendering the cube texture.
-      @cubeCamera = new THREE.CubeCamera 1, 100, @options.resolution,
+      @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget @options.resolution,
+        format: THREE.RGBAFormat
         type: THREE.FloatType
 
-      @cubeTexture = @cubeCamera.renderTarget.texture
+      @cubeCamera = new THREE.CubeCamera 1, 100, @cubeCameraRenderTarget
+
+      @cubeTexture = @cubeCameraRenderTarget.texture
 
       @cubeScene = new THREE.Scene()
       @cubeSceneSphereMaterial = @createMaterial()

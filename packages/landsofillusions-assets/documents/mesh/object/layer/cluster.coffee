@@ -106,4 +106,4 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
 
     @constructor.createPlaneBasis plane.normal, false, @planeBasis
     @constructor.createPlaneWorldMatrix plane, false, @planeWorldMatrix
-    @planeWorldMatrixInverse.getInverse @planeWorldMatrix
+    @planeWorldMatrixInverse.copy(@planeWorldMatrix).invert()

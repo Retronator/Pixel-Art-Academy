@@ -17,9 +17,9 @@ Package.onUse(function(api) {
   api.use('oauth-encryption');
   api.use('email');
 
-  api.use('bozhao:link-accounts@1.2.11');
-  api.use('splendido:accounts-meld@1.3.1');
-  api.use('splendido:accounts-emails-field@1.2.0');
+  api.use('bozhao:link-accounts');
+  api.use('splendido:accounts-meld');
+  api.use('splendido:accounts-emails-field');
   api.use('jparker:crypto-aes');
 
   api.imply('accounts-password');
