@@ -114,11 +114,19 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     goalSettings = @goalSettings()
     return unless goalSettings.visible()
 
-    # Directly quit if goal hasn't been set.
-    return unless goalSettings.hasGoal()
+    # Directly quit if goal hasn't been set. Note that we should not use goal settings' version of has goal
+    # since that one determines if a goal has been set in the UI (and not yet transfered to the game state).
+    return unless @hasGoal()
 
     # We have a goal, so just return to the month view.
-    goalSettings.visible false
+    goalSettings.close()
 
     # Inform that we've handled the back button.
     true
+
+  # Tells if the goal has been set in the state.
+  hasGoal: ->
+    for goal in ['daysWithActivities', 'totalHours']
+      return true if @state "weeklyGoals.#{goal}"
+
+    false

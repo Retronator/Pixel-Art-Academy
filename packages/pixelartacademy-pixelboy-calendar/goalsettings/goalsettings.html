@@ -9,7 +9,7 @@
           {{#each daysPerWeekOptions}}
             <label class="option">
               <div class="label">{{#if this}}{{this}}{{else}}N/A{{/if}}</div>
-              <input class="option-input" type="radio" name="days-per-week" value="{{this}}" {{checkedAttribute}}/><span class="radio"></span>
+              <input class="option-input" type="radio" name="days-per-week" value="{{this}}" {{daysPerWeekCheckedAttribute}}/><span class="radio"></span>
             </label>
           {{/each}}
         </div>
