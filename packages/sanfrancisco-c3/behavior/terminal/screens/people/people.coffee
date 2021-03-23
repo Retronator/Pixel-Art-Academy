@@ -310,9 +310,12 @@ class C3.Behavior.Terminal.People extends AM.Component
 
     options: (options) ->
       unless @load()
-        options.unshift
+        options = [
           value: null
           name: ''
+        ,
+          options...
+        ]
 
       options
 
