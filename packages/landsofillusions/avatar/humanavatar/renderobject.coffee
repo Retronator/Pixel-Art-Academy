@@ -313,6 +313,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @animatedMeshes[@currentSide].update appTime
 
     # Avatar sprite should always face the camera.
+    camera.matrix.decompose @_cameraPosition, @_cameraRotation, @_cameraScale
     @_cameraEuler.setFromQuaternion @_cameraRotation, "YXZ"
     @rotation.y = @_cameraEuler.y
 
