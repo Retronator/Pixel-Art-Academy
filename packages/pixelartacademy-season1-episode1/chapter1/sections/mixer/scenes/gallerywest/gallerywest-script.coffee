@@ -121,6 +121,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       JoinStudyGroupMakeChoice: (complete) =>
+        # Flush the game state so that it's up to date before joining the group modifies it on the server.
+        LOI.adventure.gameState.updated flush: true
+
         # Read which group the player chose.
         groupIndex = @state 'groupChoice'
 
@@ -128,17 +131,22 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         group = scene.constructor.groups[groupIndex]
         C1.Mixer.GalleryWest.joinGroup LOI.characterId(), group.id()
 
-        # Move character to his group.
-        landmark = scene.constructor.answerLandmarks[groupIndex]
+        # Wait for the group to be registered in the read-only state.
+        Tracker.autorun (computation) =>
+          return unless C1.readOnlyState 'studyGroupId'
+          computation.stop()
 
-        # Temporarily add just group letter information.
-        studyGroup = letter: _.last group.id()
-        @ephemeralState 'studyGroup', studyGroup
+          # Move character to their group.
+          landmark = scene.constructor.answerLandmarks[groupIndex]
 
-        scene._movePersonToLandmark LOI.character(), landmark,
-          faceLandmark: landmark
-          onCompleted: =>
-            complete()
+          # Temporarily add just group letter information.
+          studyGroup = letter: _.last group.id()
+          @ephemeralState 'studyGroup', studyGroup
+
+          scene._movePersonToLandmark LOI.character(), landmark,
+            faceLandmark: landmark
+            onCompleted: =>
+              complete()
 
       JoinStudyGroupContinue: (complete) =>
         # Everyone looks at Shelly.

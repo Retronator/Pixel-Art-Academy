@@ -74,6 +74,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         label = 'GalleryIntro'
 
       computation.stop()
+
+      # Start the intro script. Note that if the intro has already
+      # played before, the script will immediately quit on its own.
       LOI.adventure.director.startScript script, {label}
 
     @_autoStartScriptAutorun = @autorun (computation) =>
@@ -104,10 +107,11 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           ]
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
-          script.startAtLatestCheckpoint [
-            'JoinStudyGroupStart'
-            'JoinStudyGroupContinue'
-          ]
+          if C1.readOnlyState 'studyGroupId'
+            LOI.adventure.director.startScript script, label: 'JoinStudyGroupContinue'
+
+          else
+            LOI.adventure.director.startScript script, label: 'JoinStudyGroupStart'
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
           LOI.adventure.director.startScript script, label: 'CoordinatorIntro'
