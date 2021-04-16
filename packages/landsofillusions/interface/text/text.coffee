@@ -235,7 +235,7 @@ class LOI.Interface.Text extends LOI.Interface
       'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
-      'click': @onClick
+      'click .ui-area': @onClickUIArea
       'click .command': @onClickCommand
       'click .location': @onClickLocation
       'mouseenter .exits .exit .name': @onMouseEnterExit
@@ -253,8 +253,8 @@ class LOI.Interface.Text extends LOI.Interface
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null
 
-  onClick: (event) ->
-    # When we're waiting for user interaction, clicking doubles for pressing enter.
+  onClickUIArea: (event) ->
+    # When we're waiting for user interaction, clicking on the bottom UI part doubles for pressing enter.
     if @waitingKeypress()
       @onCommandInputEnter()
 
