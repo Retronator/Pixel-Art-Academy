@@ -118,6 +118,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
           new Nodes.DialogueLine
             line: "I want to sync with #{character.avatar.fullName()}."
             next: callbackNode
+            actorName: 'player'
 
         choiceNode = new Nodes.Choice
           node: dialogueLineNode
@@ -221,7 +222,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     operatorLink = @options.parent
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, @avatars.operator]]
+      form: [Vocabulary.Keys.Verbs.UserTalkTo, [operatorLink.avatar, @avatars.operator]]
       priority: -1
       action: => operatorLink.start()
 

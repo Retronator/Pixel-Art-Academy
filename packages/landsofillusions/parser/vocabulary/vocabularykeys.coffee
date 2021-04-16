@@ -22,6 +22,7 @@ LOI.Parser.Vocabulary.Keys =
     GoToThing: ''
     ExitLocation: ''
     TalkTo: ''
+    UserTalkTo: ''
     LookAt: ''
     Look: ''
     Use: ''
