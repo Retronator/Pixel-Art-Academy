@@ -304,7 +304,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @_frustumReferencePosition.set(1, 0, @_viewReferencePosition.z).applyMatrix4 camera.projectionMatrix
 
     xScalingFactor = @_frustumReferencePosition.x / @_frustumPosition.x
-    @_viewCurrentDirection.x *= xScalingFactor
+    @_viewReferencePosition.x *= xScalingFactor
+    @_viewCurrentDirection.subVectors @_viewReferencePosition, @_viewPosition
 
     # Get the side based on where in the view the character is facing.
     side = LOI.Engine.RenderingSides.getSideForDirection @_viewCurrentDirection
