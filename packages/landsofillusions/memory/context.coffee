@@ -285,8 +285,8 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     exitAction = => LOI.adventure.exitMemory()
 
     commandResponse.onExactPhrase
-      form: [Vocabulary.Keys.Directions.Back]
-      # We want to override the back command that just exits the context.
+      form: [[Vocabulary.Keys.Directions.Back, Vocabulary.Keys.Verbs.Continue]]
+      # We want to override the back/continue commands that just exits the context.
       priority: 1
       action: exitAction
 
