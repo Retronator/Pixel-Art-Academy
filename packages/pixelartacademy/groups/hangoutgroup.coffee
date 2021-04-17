@@ -17,8 +17,8 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
     # Active members are the ones that have done any memorable recent actions.
     @presentMembers = new ComputedField =>
       _.filter @members(), (member) =>
-        # Find any actions this member has performed.
-        recentActions = member.recentActions()
+        # Find any actions this member has performed since the previous hangout.
+        recentActions = member.recentActions true
 
         # See if any of them are memorable
         _.find recentActions, (action) => action.isMemorable or action.memory

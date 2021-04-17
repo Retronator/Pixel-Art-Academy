@@ -175,7 +175,7 @@ class LOI.Character.Actor extends LOI.Character.Person
   dialogTextTransform: -> @thingAvatar?.dialogTextTransform()
   dialogueDeliveryType: -> @thingAvatar?.dialogueDeliveryType()
 
-  recentActions: ->
+  recentActions: (requireInitialHangoutCompleted = false) ->
     [] # TODO: Provide actions via storyline.
     
   getActions: (query = {}) ->

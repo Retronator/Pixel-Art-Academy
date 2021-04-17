@@ -14,19 +14,19 @@ class PAA.CharacterUpdatesHelper
 
     @actionsSubscription = new ComputedField =>
       return unless agent = @agent()
-      agent.subscribeRecentActions()
+      agent.subscribeRecentActions true
     ,
       true
 
     @memoriesSubscription = new ComputedField =>
       return unless agent = @agent()
-      agent.subscribeRecentMemories()
+      agent.subscribeRecentMemories true
     ,
       true
 
     @tasksSubscription = new ComputedField =>
       return unless agent = @agent()
-      agent.subscribeRecentTaskEntries()
+      agent.subscribeRecentTaskEntries true
     ,
       true
 

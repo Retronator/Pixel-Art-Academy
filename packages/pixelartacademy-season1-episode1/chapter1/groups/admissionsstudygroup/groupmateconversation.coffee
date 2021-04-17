@@ -63,7 +63,7 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
 
           @ephemeralState 'learningTasks', learningTasks
 
-          for taskEntry in scene.currentGroupmate.recentTaskEntries()
+          for taskEntry in scene.currentGroupmate.recentTaskEntries true
             continue unless task = PAA.Learning.Task.getAdventureInstanceForId taskEntry.taskId
 
             goal = _.find learningTasks.goals, (goal) => goal.id is task.goal.id()

@@ -56,6 +56,9 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
         # Save the new state.
         membersStateField members
 
+        # Record hangout so that we don't show updates from before adding to the group.
+        @things.person.recordHangout()
+
         # Return back to main questions of the calling script.
         LOI.adventure.director.startScript @_returnScript, label: 'MainQuestions'
         complete()

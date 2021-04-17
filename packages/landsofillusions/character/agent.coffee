@@ -69,27 +69,27 @@ class LOI.Character.Agent extends LOI.Character.Person
 
   # Actions
 
-  subscribeRecentActions: ->
-    LOI.Memory.Action.recentForCharacter.subscribe @_id, @recentActionsEarliestTime()
+  subscribeRecentActions: (requireInitialHangoutCompleted = false) ->
+    LOI.Memory.Action.recentForCharacter.subscribe @_id, @recentActionsEarliestTime requireInitialHangoutCompleted
 
-  subscribeRecentMemories: ->
-    actions = @_recentActions()
+  subscribeRecentMemories: (requireInitialHangoutCompleted = false) ->
+    actions = @_recentActions requireInitialHangoutCompleted
     memoryIds = _.uniq (action.memory._id for action in actions when action.memory)
 
     LOI.Memory.forIds.subscribe memoryIds
 
-  recentActions: ->
+  recentActions: (requireInitialHangoutCompleted = false) ->
     # Automatically subscribe to actions. We assume this is asked from a reactive 
     # computation so the subscription will stop when computation ends.
-    @subscribeRecentActions()
+    @subscribeRecentActions requireInitialHangoutCompleted
     
     # Return the actions.
-    @_recentActions()
+    @_recentActions requireInitialHangoutCompleted
     
-  _recentActions: ->
+  _recentActions: (requireInitialHangoutCompleted = false) ->
     LOI.Memory.Action.documents.fetch
       'character._id': @_id
-      time: $gte: @recentActionsEarliestTime()
+      time: $gte: @recentActionsEarliestTime requireInitialHangoutCompleted
 
   getActions: (query) ->
     LOI.Memory.Action.documents.fetch _.extend {}, query,
