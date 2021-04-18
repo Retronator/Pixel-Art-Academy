@@ -109,6 +109,10 @@ class LOI.Adventure extends LOI.Adventure
   getCurrentLocationThing: (thingClassOrId) -> @_getThingInThings thingClassOrId, @currentLocationThings()
 
   _getThingInThings: (thingClassOrId, things) ->
+    # For ease of use, allow querying with an instance. In that case, simply return itself if it's present in things.
+    return thingClassOrId if thingClassOrId in things
+
+    # Get the class we're trying to search for.
     thingClass = _.thingClass thingClassOrId
 
     # If we couldn't find a thing class, ID should be a character ID.

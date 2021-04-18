@@ -34,6 +34,10 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       @_agentActionsSubscriptions subscriptions
 
+    # Hide other students from the text interface description.
+    @_hideOtherStudentsAutorun = @autorun (computation) =>
+      LOI.adventure.interface.hiddenThings? @otherStudents()
+
     # Position actors based on event phase.
     @_positionActorsAutorun = @autorun (computation) =>
       # Wait until the location mesh has loaded, so that we have landmark positions.
@@ -131,6 +135,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
   onDeactivated: ->
     super arguments...
+
+    @_hideOtherStudentsAutorun?.stop()
+    LOI.adventure.interface.hiddenThings? []
 
     @_positionActorsAutorun?.stop()
     @_eventIntroAutorun?.stop()

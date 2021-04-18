@@ -102,6 +102,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       HQ.Actors.Reuben
       @constructor.actorClasses
       @otherAgents()
+      C1.Mixer.Applicants
       C1.Mixer.Table
       C1.Mixer.Marker
       C1.Mixer.Stickers
