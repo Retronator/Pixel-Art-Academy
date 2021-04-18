@@ -97,26 +97,30 @@ class LOI.Character.Agents extends LOI.Adventure.Global
             earliestRetainTime = new Date now - retainDurationInMilliseconds
             action.time < earliestRetainTime
 
-          # Remove actions performed by characters in private contexts.
+          # Determine valid actions based on privacy of location/context.
           playerCharacterId = LOI.characterId()
           currentContext = LOI.adventure.currentContext()
+          currentContextId = currentContext?.id()
 
-          _.remove actions, (action) =>
-            # Keep all actions that have no context.
-            return unless action.contextId
+          # See if we're in a private location or in a private context ourselves.
+          if LOI.adventure.currentLocation().constructor.isPrivate() or currentContext?.constructor.isPrivate()
+            # In private places, no other agents should be present (unless added from other
+            # scenes). We only care about the actions of our character in the current context.
+            _.remove actions, (action) =>
+              action.character._id isnt playerCharacterId or action.contextId isnt currentContextId
 
-            # Keep actions of the current character in current context.
-            return if action.character._id is playerCharacterId and action.contextId is currentContext?.id()
+          else
+            # We're in a public place/context so remove actions performed by characters in private contexts.
+            _.remove actions, (action) =>
+              # Keep all actions that have no context.
+              return unless action.contextId
 
-            # Otherwise remove the action if it's private.
-            contextClass = LOI.Adventure.Thing.getClassForId action.contextId
-            contextClass.isPrivate()
+              # Remove the action if the context is private.
+              contextClass = LOI.Adventure.Thing.getClassForId action.contextId
+              contextClass.isPrivate()
 
-          # Get all the characters performing the remaining actions.
+          # Get all the characters performing the valid actions.
           characterIds = _.uniq (action.character._id for action in actions)
-
-          # Don't include other characters on private locations and in private contexts.
-          characterIds = [] if LOI.adventure.currentLocation().constructor.isPrivate() or currentContext?.constructor.isPrivate()
 
           # Always include player's character.
           characterIds.push playerCharacterId if playerCharacterId and playerCharacterId not in characterIds
