@@ -243,14 +243,18 @@ class LOI.Engine.World extends AM.Component
 
   _updateAvatarUnderCursor: ->
     # Find any avatars we're hovering over from front to back.
+    playerCharacterAvatar = LOI.character()?.avatar
+
     for point in @_cursorIntersectionPoints
       # See if this mesh is part of a render object with an avatar.
       searchObject = point.object
 
       while searchObject
         if searchObject.avatar
-          @avatarUnderCursor searchObject.avatar
-          return
+          # Ignore the player character since it will be often in the way of interacting with other things.
+          unless searchObject.avatar is playerCharacterAvatar
+            @avatarUnderCursor searchObject.avatar
+            return
 
         searchObject = searchObject.parent
 
