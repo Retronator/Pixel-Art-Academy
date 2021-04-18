@@ -29,6 +29,7 @@ Package.onUse(function(api) {
 
   // Add other files.
   api.addUnstyledComponent('app');
+  api.addUnstyledComponent('admin');
 
   // Layouts
 

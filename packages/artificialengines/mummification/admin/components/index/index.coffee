@@ -13,17 +13,15 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
     super arguments...
 
     @options.documentClass.all.subscribe @, =>
-      # Always show the first document if none is displayed.
+      # Unselect the current document if it gets deleted.
       @autorun (computation) =>
         documentId = AB.Router.getParameter 'documentId'
 
         # Make sure the current document exists.
         return if documentId and @options.documentClass.documents.findOne documentId
 
-        # Switch to the first document on the display list (or no document if we can't find it).
-        firstDocument = @documents().fetch()[0]
-
-        AB.Router.setParameters documentId: firstDocument?._id or null
+        # Route back to index.
+        @goToDocument null
 
   onDestroyed: ->
     super arguments...
@@ -45,6 +43,13 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
 
     name or "#{data._id.substring 0, 5}…"
 
+  goToDocument: (documentId) ->
+    # Switch to document, but don't create history so that it's easy to get back out from the admin page.
+    AB.Router.setParameters
+      documentId: documentId
+    ,
+      createHistory: false
+
   activeClass: ->
     'active' if @currentData()._id is AB.Router.getParameter 'documentId'
 
@@ -59,7 +64,7 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
       return console.error if error
 
       # Switch to the new document.
-      AB.Router.setParameters documentId: newId
+      @goToDocument newId
 
   onClickDocument: ->
-    AB.Router.setParameters documentId: @currentData()._id
+    @goToDocument @currentData()._id
