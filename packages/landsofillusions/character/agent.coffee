@@ -8,10 +8,20 @@ class LOI.Character.Agent extends LOI.Character.Person
   @id: -> 'LandsOfIllusions.Character.Agent'
 
   @fullName: -> "Person"
-  @description: -> "It's _person_."
+  @description: -> "It's _person_, {{personalityAdjectives}} {{descriptor}}."
 
   @translations: ->
     yourCharacter: "It's your character."
+    teenage: "teenage"
+    youngAdult: "young adult"
+    older: "older"
+    girl: "girl"
+    boy: "boy"
+    woman: "woman"
+    man: "man"
+    person: "person"
+    mysterious: "mysterious"
+    neutralPronounsTip: "They use neutral pronouns (they/them)."
 
   @initialize()
   
@@ -59,13 +69,6 @@ class LOI.Character.Agent extends LOI.Character.Person
     _.every conditions
 
   characterId: -> @_id
-
-  description: ->
-    if @_id is LOI.characterId()
-      @translations().yourCharacter
-
-    else
-      LOI.Character.formatText @thingAvatar.description(), 'person', @instance
 
   # Actions
 
