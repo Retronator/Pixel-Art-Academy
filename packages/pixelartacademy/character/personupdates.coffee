@@ -190,10 +190,10 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             complete()
 
         GoOverJournalEntryConversations: (complete) =>
-          @options.listener._goOverConversations complete, 'journalEntryConversations', hintLabel: 'JournalEntryHint'
+          @options.listener._goOverConversations complete, 'journalEntryConversations', 'JournalEntryHint'
 
         GoOverConversations: (complete) =>
-          @options.listener._goOverConversations complete, 'plainConversations', hintLabel: 'ConversationHint'
+          @options.listener._goOverConversations complete, 'plainConversations', 'ConversationHint'
 
         NextConversation: => # Dummy callback as it will be set from GoOverConversations.
 
