@@ -32,11 +32,11 @@ methods[C2.Immersion.userProblemMessage] =  ->
 
   email.addParagraph "Sorry for having trouble with signing in to Lands of Illusions."
 
-  email.addParagraph "I will look into it at the earliest convenience."
+  email.addParagraph "Can you let me know if you are a Kickstarter backer, Patreon supporter, or you pre-ordered the game through the store? And include whether you used this email or another one for the purchase."
 
-  email.addParagraph "I really do apologize. It's my first priority to make things work for supporters, but since it's mainly just me working on the system, things sometimes go wrong."
+  email.addParagraph "I really do apologize. It's my first priority to make things work for people who support the game, but since it's mainly just me working on the system, things sometimes go wrong."
 
-  email.addParagraph "I will email back as soon as I've investigated what the problem could be."
+  email.addParagraph "Let me know your information and I'll investigate as soon as I can."
 
   email.addParagraph "Best,\n
                       Retro"
