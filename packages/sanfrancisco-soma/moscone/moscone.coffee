@@ -16,7 +16,7 @@ class Soma.MosconeCenter extends LOI.Adventure.Location
     "
       You are on the corner of 4th and Howard in the SOMA district of San Francisco. 
       The three halls of Moscone convention center envelop the intersection.
-      Game developers are rushing from hall to hall — GDC is in town!
+      Game developers are rushing from hall to hall — GDC is in town!
     "
   
   @initialize()
@@ -25,6 +25,7 @@ class Soma.MosconeCenter extends LOI.Adventure.Location
     super arguments...
 
   things: -> [
+    Soma.Actors.James
   ]
 
   exits: ->

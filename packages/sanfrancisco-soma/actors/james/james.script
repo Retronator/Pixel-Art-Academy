@@ -1,0 +1,47 @@
+# SanFrancisco.Soma.Actors.James
+
+## Start
+
+`_lineIndex ||= 0`
+
+-> [Line0] `_lineIndex is 0`
+-> [Line1] `_lineIndex is 1`
+
+## Line0
+
+> James walks around feverishly and doesn't pay attention to you.
+
+james: 
+    I mean; a voxel is basically a pixel with an extra dimension. 
+    What do we get if we add one more dimension? 
+    Oww, my head hurts...
+
+> Maybe it's best to leave him alone.
+ 
+-> [LineEnd]
+
+## Line1
+
+> You try to talk to James, but he stops you.
+
+james: Ssh... I need to get ready for band practice. 
+
+> James starts singing.
+
+james: 
+    while true, do the electric boga-loo. 
+    If false, make a break for the waltz?
+
+> He looks amused with himself.
+
+james: That rhymes right?
+
+> You decide not to answer.
+
+-> [LineEnd]
+
+## LineEnd
+
+`_lineIndex = (_lineIndex + 1) % 2`
+
+## End
