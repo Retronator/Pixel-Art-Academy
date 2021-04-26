@@ -43,16 +43,16 @@ RS.Transaction.emailCustomer = ({customer, payments, shoppingCart, taxInfo, invo
   email.addParagraph "Best,\n
                       Matej 'Retro' Jan // Retronator"
   
-  email.addParagraph "p.s. We have a secret Facebook group for the game. If you want
-                      to join, just reply and let me know the email you use for Facebook
-                      and I'll send you an invite."
+  email.addParagraph "p.s. If you run into any trouble, the fastest way to talk to me is on Discord.
+                      You can join the server I'm on at the link below, and don't forget to choose the Pixel Art Academy role in the lobby:"
 
-  email.addParagraph "p.p.s. There is a lo-fi prototype of the drawing activities available
-                      in the form of articles in Retronator Magazine. Currently it's a hidden
-                      draft, but it already has a ton of knowledge and 50 tasks to complete.
-                      You can start learning at:"
+  email.addLinkParagraph 'https://discord.gg/d6V8Say', "Indie Games House Discord"
 
-  email.addLinkParagraph 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', "Pixel Art Academy Study Guide"
+  email.addParagraph "p.p.s. Don't miss the ever-growing library of learning resources and activities in the in-game
+                      Study Guide. It's a great way to continue your learning journey once you're finished with
+                      the story of the current alpha version (end of Admission Week). Read it here:"
+
+  email.addLinkParagraph 'https://retropolis.city/academy-of-art/study-guide', "Retropolis Academy of Art Study Guide"
 
   email.end()
   

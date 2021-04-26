@@ -223,7 +223,13 @@ class HQ.Store extends LOI.Adventure.Location
               complete()
 
           ReadPixelArtAcademyPosts: (complete) =>
-            patreon = window.open 'https://www.patreon.com/retro/posts?tag=Pixel%20Art%20Academy', '_blank'
+            patreon = window.open 'https://www.patreon.com/retro/posts?filters[tag]=Pixel%20Art%20Academy', '_blank'
+
+            # Make sure opening the page worked.
+            unless patreon
+              complete()
+              return
+
             patreon.focus()
 
             # Wait for our window to get focus.
@@ -235,19 +241,29 @@ class HQ.Store extends LOI.Adventure.Location
             patreon = window.open 'https://www.patreon.com/retro', '_blank'
             patreon.focus()
 
+            # Make sure opening the page worked.
+            unless patreon
+              complete()
+              return
+
             # Wait for our window to get focus.
             $(window).on 'focus.patreon', =>
               complete()
               $(window).off '.patreon'
 
           ReadStudyGuide: (complete) =>
-            medium = window.open 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', '_blank'
-            medium.focus()
+            studyGuide = window.open 'https://retropolis.city/academy-of-art/study-guide', '_blank'
+            studyGuide.focus()
+
+            # Make sure opening the page worked.
+            unless studyGuide
+              complete()
+              return
 
             # Wait for our window to get focus.
-            $(window).on 'focus.medium', =>
+            $(window).on 'focus.study-guide', =>
               complete()
-              $(window).off '.medium'
+              $(window).off '.study-guide'
 
           PixelArt: (complete) =>
             HQ.Store.startRetroPixelArtScript()
