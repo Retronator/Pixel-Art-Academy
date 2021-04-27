@@ -12,7 +12,7 @@ class PAA.Learning.Task.Entry.Action extends LOI.Memory.Action
   @isMemorable: -> true
 
   @startDescription: ->
-    "_person_ smiles as _they_ completes one of the learning tasks."
+    "_person_ smiles as _they_ complete_s one of the learning tasks."
 
   shouldSkipTransition: (oldAction) ->
     # Skip if we're transitioning from another entry action.

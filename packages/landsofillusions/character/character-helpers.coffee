@@ -75,13 +75,26 @@ class LOI.Character extends LOI.Character
       # Replace pronouns qualified with the keyword.
       text = text.replace new RegExp("_#{keyword}:(t|T)#{pronounPair[0].substring(1)}_", 'g'), pronounReplacement
 
-    beSubstituion = (match) ->
+    beSubstitution = (match) ->
       # We assume neutral pronouns use plural verbs.
       # TODO: Can we make this assumption? Probably depends on language's properties.
       numberCategory = if pronouns is LOI.Avatar.Pronouns.Neutral then 'Plural' else 'Singular'
       LOI.adventure.parser.vocabulary.getPhrases("Verbs.Be.Present.3rdPerson.#{numberCategory}")?[0]
 
-    text = text.replace /_are_/g, beSubstituion unless onlyQualifiedPronouns
-    text = text.replace new RegExp("_#{keyword}:are", 'g'), beSubstituion
+    text = text.replace /_are_/g, beSubstitution unless onlyQualifiedPronouns
+    text = text.replace new RegExp("_#{keyword}:are", 'g'), beSubstitution
+
+    # TODO: Move this to an English-specific substitution class.
+    presentSimpleSubstitution = (match, verb, suffix) ->
+      if pronouns is LOI.Avatar.Pronouns.Neutral
+        # Return just the verb without the suffix.
+        verb
+
+      else
+        # The suffix is used.
+        "#{verb}#{suffix}"
+
+    text = text.replace /(\w+)_(e?s)/g, presentSimpleSubstitution unless onlyQualifiedPronouns
+    text = text.replace new RegExp("#{keyword}:(\\w+)_(e?s)", 'g'), presentSimpleSubstitution
 
     text

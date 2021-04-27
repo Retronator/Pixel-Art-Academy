@@ -147,6 +147,8 @@ The case of the command (`_they_` vs `_They_`) is preserved (she/he/they and She
 
 `_are_` will be substituted with singular (is) or plural (are) verb depending on the pronouns of the character.
 
+`_s` and `_es` suffix will be substituted with s/es (singular) or removed (plural). For example: she eats, they eat, she catches, they catch.
+
 #### Other names and pronouns
 
 Similar to character names, substitutions can be created for other things using their shorthand name.
@@ -158,6 +160,8 @@ Similar to character names, substitutions can be created for other things using 
 `_thing's_` will be substituted with possessive form of thing's name.
 
 `_thing:are_` will be substituted with singular or plural verb.
+
+`thing:VERB_s` and `thing:VERB_es` suffix will be substituted with s/es or removed.
 
 #### Character groups
 
