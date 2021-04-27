@@ -28,7 +28,7 @@ class LOI.Assets.Components.PixelCanvas.Mouse
         @_lastPageY = event.pageY
         @updateCoordinates()
 
-      $pixelCanvas.pointermove (event) =>
+      $pixelCanvas.on 'pointermove', (event) =>
         @_lastPageX = event.pageX
         @_lastPageY = event.pageY
         @updateCoordinates()
