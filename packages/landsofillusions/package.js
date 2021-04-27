@@ -462,6 +462,7 @@ Package.onUse(function(api) {
   api.addComponent('memory/contexts/conversation/memorypreview..');
 
   api.addFile('memory/flashback');
+  api.addFile('memory/exit');
 
   api.addFile('memory/action..');
   api.addFile('memory/action/methods');
