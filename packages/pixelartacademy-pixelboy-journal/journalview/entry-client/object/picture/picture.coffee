@@ -109,6 +109,10 @@ class Entry.Object.Picture extends Entry.Object
 
     width: if _.isNaN progress then 0 else "#{progress * 100}%"
 
+  transparentClass: ->
+    return unless imageInfo = @imageInfo()
+    'transparent' if imageInfo.hasTransparency
+
   canRetryUpload: ->
     uploadError = @uploadError()
     uploadError.error isnt 'Upload denied'
@@ -139,10 +143,13 @@ class Entry.Object.Picture extends Entry.Object
     if image.src.match /\.jpe?g$/
       detectPixelScaleOptions.compressed = true
 
-    pixelScale =  AS.PixelArt.detectPixelScale image, detectPixelScaleOptions
+    imageData = AS.ImageDataHelpers.getImageData image
+    pixelScale = AS.PixelArt.detectPixelScale imageData, detectPixelScaleOptions
+    hasTransparency = AS.ImageDataHelpers.hasTransparency imageData
 
     @imageInfo
       pixelScale: pixelScale
+      hasTransparency: hasTransparency
       width: image.naturalWidth
       height: image.naturalHeight
 

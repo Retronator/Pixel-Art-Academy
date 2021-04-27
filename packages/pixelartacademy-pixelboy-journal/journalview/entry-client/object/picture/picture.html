@@ -1,10 +1,10 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Picture">
   <div class="picture-area {{uploadingClass}}">
     {{#if pictureSource}}
-      <img class="picture autoscaledimage" src="{{pictureSource}}" {{style autoScaledImageStyle}} crossorigin="anonymous">
+      <img class="picture autoscaledimage {{transparentClass}}" src="{{pictureSource}}" {{style autoScaledImageStyle}} crossorigin="anonymous">
       {{#if upload}}
         <div class="uploading-picture-area" {{style uploadingStyle}}>
-          <img class="uploading-picture" src="{{pictureSource}}" >
+          <img class="uploading-picture {{transparentClass}}" src="{{pictureSource}}" >
         </div>
       {{/if}}
       {{#if uploadError}}
