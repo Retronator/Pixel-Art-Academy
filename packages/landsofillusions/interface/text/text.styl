@@ -6,18 +6,18 @@ lineHeight = gridSpacing
 sideMargin = gridSpacing
 
 hoverable()
-  color atariGrey(7)
+  color atariGray(7)
   text-transform uppercase
   cursor pointer
 
   &:hover
-    background atariGrey(7)
-    color atariGrey(0)
+    background atariGray(7)
+    color atariGray(0)
 
 .landsofillusions-interface-text
   fixed-cover()
-  background atariGrey(0)
-  color atariGrey(5)
+  background atariGray(0)
+  color atariGray(5)
   line-height lineHeight
   cursor crosshair
 
@@ -33,7 +33,7 @@ hoverable()
       bottom 0
       height 100%
       z-index 1
-      background atariGrey(0)
+      background atariGray(0)
       cursor wait
 
       .caption
@@ -41,7 +41,7 @@ hoverable()
         top 50%
         left 50%
         transform translate(-50%, -50%)
-        color atariGrey(7)
+        color atariGray(7)
         opacity 0
         transition opacity 5s ease-in-out
 
@@ -67,7 +67,7 @@ hoverable()
     .ui-background
       position absolute
       z-index 1
-      background atariGrey(0)
+      background atariGray(0)
 
     .ui
       position absolute
@@ -88,12 +88,12 @@ hoverable()
 
           a
             &:hover
-              color atariGrey(6)
+              color atariGray(6)
 
           blockquote
             margin-left 0
             padding-left 1em
-            border-left 1rem solid atariGrey(1)
+            border-left 1rem solid atariGray(1)
 
           .in-background
             padding-left gridSpacing * 2
@@ -110,13 +110,13 @@ hoverable()
               content ''
               absolute-cover()
               right 1rem
-              border-bottom 1rem solid atariGrey(5)
+              border-bottom 1rem solid atariGray(5)
 
             .background
               display none
 
             &:hover
-              color atariGrey(0) !important
+              color atariGray(0) !important
 
               .underline
                 display none
@@ -127,7 +127,7 @@ hoverable()
                 absolute-cover()
                 z-index -1
                 right 1rem
-                background-color atariGrey(7)
+                background-color atariGray(7)
 
           .exits
             .exit
@@ -211,8 +211,8 @@ hoverable()
               cursor pointer
 
               &.active
-                background atariGrey(7)
-                color atariGrey(0)
+                background atariGray(7)
+                color atariGray(0)
 
                 &::before
                   content "> "

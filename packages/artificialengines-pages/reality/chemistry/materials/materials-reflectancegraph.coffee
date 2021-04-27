@@ -46,7 +46,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       context.textAlign = 'center'
       context.fillText incidentAngleDegrees, incidentAngleDegrees * 2, 196
 
-    context.strokeStyle = 'lightslategrey'
+    context.strokeStyle = 'lightslategray'
     context.stroke()
 
     for y in [0..100] by 10

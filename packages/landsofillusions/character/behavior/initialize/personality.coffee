@@ -4,7 +4,7 @@ Personality = LOI.Character.Behavior.Personality
 # We can't use LOI.Assets since it comes from another package. We also can't wait for startup to happen since on
 # startup a character already needs to be created and we need the factors to be initialized.
 hues =
-  grey: 0
+  gray: 0
   yellow: 1
   orange: 2
   peach: 3
@@ -29,7 +29,7 @@ _.extend Personality.Factors,
       color: hue: hues.yellow, shade: 6
     negative:
       key: 'Peace'
-      color: hue: hues.grey, shade: 6
+      color: hue: hues.gray, shade: 6
     displayReversed: true
 
   2: new Personality.Factor

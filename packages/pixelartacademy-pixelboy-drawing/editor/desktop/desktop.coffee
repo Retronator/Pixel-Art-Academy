@@ -94,7 +94,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
         # Set extra info to components
         backgroundColor = displayedAsset?.backgroundColor()
-        backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.grey, 7
+        backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
 
         for component in components
           component.options.backgroundColor = backgroundColor

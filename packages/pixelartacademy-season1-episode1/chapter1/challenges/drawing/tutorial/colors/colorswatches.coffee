@@ -13,7 +13,7 @@ class C1.Challenges.Drawing.Tutorial.Colors.ColorSwatches extends PAA.Practice.C
 
   @fixedDimensions: -> width: 14, height: 14
   @restrictedPaletteName: -> C1.Challenges.Drawing.Tutorial.Colors.pacManPaletteName
-  @backgroundColor: -> LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.grey, 2
+  @backgroundColor: -> LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 2
 
   @goalBitmapString: -> """
       |     4444

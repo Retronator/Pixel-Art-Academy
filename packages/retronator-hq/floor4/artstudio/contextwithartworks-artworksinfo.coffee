@@ -107,15 +107,15 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
       bouguereauStudy:
         artistInfo: @artistsInfo.gabrielleBrickey
         title: 'Bouguereau Study'
-        caption: "Grey pastel pencils, chalks, charcoal, and white charcoal on grey paper, 9 × 12 inches"
+        caption: "Gray pastel pencils, chalks, charcoal, and white charcoal on gray paper, 9 × 12 inches"
       inAFeeling:
         artistInfo: @artistsInfo.gabrielleBrickey
         title: 'In a Feeling'
-        caption: "Charcoal on grey paper, 9 × 12 inches"
+        caption: "Charcoal on gray paper, 9 × 12 inches"
       inAMoment:
         artistInfo: @artistsInfo.gabrielleBrickey
         title: 'In a Moment'
-        caption: "Charcoal on grey paper, 9 × 12 inches"
+        caption: "Charcoal on gray paper, 9 × 12 inches"
       oilPainting:
         artistInfo: @artistsInfo.gabrielleBrickey
         title: 'Oil Painting'
@@ -183,7 +183,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         title: 'Cardinal City'
         caption: """
           Mixed media on tan paper panel
-          (Paper Mate Flair felt tip pen, Prismacolor warm grey markers, red and white chalk pencils, Gelly Roll white gel pen, Molotov white acrylic pen),
+          (Paper Mate Flair felt tip pen, Prismacolor warm gray markers, red and white chalk pencils, Gelly Roll white gel pen, Molotov white acrylic pen),
           40 × 32 inches
         """
       cardinalCityTools:
@@ -191,7 +191,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         title: 'Cardinal City tools'
         caption: """
           Tools used for Cardinal City
-          (Paper Mate Flair felt tip pen, Prismacolor warm grey markers, white chalk pencil, Molotov white acrylic pen, Gelly Roll white gel pen, not pictured: red chalk pencil)
+          (Paper Mate Flair felt tip pen, Prismacolor warm gray markers, white chalk pencil, Molotov white acrylic pen, Gelly Roll white gel pen, not pictured: red chalk pencil)
         """
       dayAtTheBeach:
         artistInfo: @artistsInfo.matejJan
@@ -214,7 +214,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
       lotusEspritTurbo:
         artistInfo: @artistsInfo.matejJan
         title: 'Lotus Esprit Turbo'
-        caption: "Soft pastels on dark grey paper, 16.5 × 11.7 inches"
+        caption: "Soft pastels on dark gray paper, 16.5 × 11.7 inches"
       handStudy:
         artistInfo: @artistsInfo.matejJan
         title: 'Hand Study'

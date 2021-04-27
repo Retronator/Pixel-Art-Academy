@@ -9,7 +9,7 @@ class HQ.Actors.Operator extends LOI.Adventure.Thing
   @description: -> "It's Henrik 'Panzer' Schumacher, the operator of the Lands of Illusions alternate reality center."
   @pronouns: -> LOI.Avatar.Pronouns.Masculine
   @color: ->
-    hue: LOI.Assets.Palette.Atari2600.hues.grey
+    hue: LOI.Assets.Palette.Atari2600.hues.gray
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
   @initialize()

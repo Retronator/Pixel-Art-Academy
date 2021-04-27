@@ -71,7 +71,7 @@ class AR.Pages.Chemistry.Gases extends AR.Pages.Chemistry.Gases
       yNumber = y / 10 / (yAxisScale.multiplier or 1) * yAxisScale.range
       context.fillText formatAxisNumber(yNumber), -8, offset + 4
 
-    context.strokeStyle = 'lightslategrey'
+    context.strokeStyle = 'lightslategray'
     context.stroke()
 
     # Clip drawing to the graph area.

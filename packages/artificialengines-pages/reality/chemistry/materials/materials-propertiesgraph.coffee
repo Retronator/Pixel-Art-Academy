@@ -11,7 +11,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
     # Color the canvas the same as the background. We do not want
     # transparent color so that we can do blending operations over it.
-    context.fillStyle = 'slategrey'
+    context.fillStyle = 'slategray'
     context.fillRect 0, 0, canvas.width, canvas.height
 
     # Prepare coordinate system.
@@ -41,7 +41,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
       context.textAlign = 'center'
       context.fillText wavelengthNanometers, wavelengthNanometers, 416
 
-    context.strokeStyle = 'lightslategrey'
+    context.strokeStyle = 'lightslategray'
     context.stroke()
 
     for y in [0..yAxis.maxValue] by yAxis.spacing

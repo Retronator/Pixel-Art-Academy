@@ -39,17 +39,17 @@
           position relative
           top 0
           left 0
-          background atariGrey(1)
+          background atariGray(1)
           transition top 0.2s, left 0.2s, opacity 0.2s
 
           &::after
             content ''
             absolute-cover()
             transition box-shadow 0.2s
-            box-shadow  1rem 1rem 0 atariGrey(1),
-                        2rem 2rem 0 atariGrey(1),
-                        3rem 3rem 0 atariGrey(1),
-                        4rem 4rem 0 atariGrey(1)
+            box-shadow  1rem 1rem 0 atariGray(1),
+                        2rem 2rem 0 atariGray(1),
+                        3rem 3rem 0 atariGray(1),
+                        4rem 4rem 0 atariGray(1)
 
           .face
             z-index 1
@@ -82,8 +82,8 @@
               padding 3rem 6rem
               overflow hidden
               text-overflow ellipsis
-              background transparentify(atariGrey(7), 0.5)
-              color atariGrey(0)
+              background transparentify(atariGray(7), 0.5)
+              color atariGray(0)
               transition background-color 0.2s
 
           &.has-submission
@@ -96,19 +96,19 @@
               &::after
                 content ''
                 absolute-cover()
-                box-shadow  1rem 1rem 0 atariGrey(3),
-                            2rem 2rem 0 atariGrey(3),
-                            3rem 3rem 0 atariGrey(3),
-                            4rem 4rem 0 atariGrey(3)
+                box-shadow  1rem 1rem 0 atariGray(3),
+                            2rem 2rem 0 atariGray(3),
+                            3rem 3rem 0 atariGray(3),
+                            4rem 4rem 0 atariGray(3)
               .face
                 z-index 2
-                box-shadow 5rem 5rem 10rem 5rem transparentify(atariGrey(0), 0.5)
+                box-shadow 5rem 5rem 10rem 5rem transparentify(atariGray(0), 0.5)
 
                 .number
-                  color atariGrey(7)
+                  color atariGray(7)
 
                 .hashtag
-                  background transparentify(atariGrey(7), 0.7)
+                  background transparentify(atariGray(7), 0.7)
 
       &::after
         content ''

@@ -75,7 +75,7 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
       context.textAlign = 'center'
       context.fillText number, i, 104
 
-    context.strokeStyle = 'lightslategrey'
+    context.strokeStyle = 'lightslategray'
     context.stroke()
 
     # Draw the border.

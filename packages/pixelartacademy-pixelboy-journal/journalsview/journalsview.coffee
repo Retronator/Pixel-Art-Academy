@@ -137,7 +137,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
           shade: 7
       cover:
         color:
-          hue: LOI.Assets.Palette.Atari2600.hues.grey
+          hue: LOI.Assets.Palette.Atari2600.hues.gray
           shade: 2
 
   onScrollOverlay: (event) ->
