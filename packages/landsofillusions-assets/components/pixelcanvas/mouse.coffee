@@ -28,6 +28,11 @@ class LOI.Assets.Components.PixelCanvas.Mouse
         @_lastPageY = event.pageY
         @updateCoordinates()
 
+      $pixelCanvas.pointermove (event) =>
+        @_lastPageX = event.pageX
+        @_lastPageY = event.pageY
+        @updateCoordinates()
+
       # Also react to viewport origin changes.
       Tracker.nonreactive =>
         @pixelCanvas.autorun (computation) =>
