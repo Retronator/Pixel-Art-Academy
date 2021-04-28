@@ -150,6 +150,9 @@ class LOI.Engine.World extends AM.Component
 
     true
 
+  visibleClass: ->
+    'visible' if @worldIsVisible()
+
   _update: (appTime) ->
     @navigator()?.update appTime
     @physicsManager()?.update appTime

@@ -76,6 +76,10 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       smoothShading: @smoothShadingHelper
       pbr: @pbrHelper
 
+    # Add mesh to the scene.
+    @sceneHelper.scene().add @mesh
+    @sceneHelper.addedSceneObjects()
+
     # Subscribe to the referenced palette.
     @paletteId = new ComputedField =>
       @meshData()?.palette?._id

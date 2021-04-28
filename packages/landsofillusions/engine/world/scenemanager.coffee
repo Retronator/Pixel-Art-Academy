@@ -10,6 +10,8 @@ class LOI.Engine.World.SceneManager
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
+    @meshesCache = {}
+
     @directionalLights = new ReactiveField []
     
     ambientLight = new THREE.AmbientLight 0xffffff, 0.5
@@ -97,12 +99,13 @@ class LOI.Engine.World.SceneManager
 
     @world.autorun (computation) =>
       illustration = @illustration()
-      return unless illustrationName = illustration?.name
-      return unless meshData = LOI.Assets.Mesh.findInCache name: illustrationName
+      illustrationName = illustration?.name or null
+      meshData = LOI.Assets.Mesh.findInCache name: illustrationName
 
       # Only react to illustration and mesh changes.
       Tracker.nonreactive =>
         cameraAngle = =>
+          return unless @_currentLocationMesh
           cameraAngles = @_currentLocationMesh.options.meshData().cameraAngles
 
           if illustration.cameraAngle
@@ -123,32 +126,23 @@ class LOI.Engine.World.SceneManager
                 easing: 'ease-in-out'
   
         else
-          @_currentIllustrationName = illustrationName
-
           # Remove previous mesh.
           if @_currentLocationMesh
+            @_currentIllustrationName = null
             scene.remove @_currentLocationMesh
-            @_currentLocationMesh.destroy()
 
-          # Initialize mesh data, since it's a rich document, and create an engine mesh based on the data.
-          meshData.initialize()
-          @_currentLocationMesh = new LOI.Assets.Engine.Mesh
-            meshData: => meshData
-            sceneManager: @
-            objectVisibility: (objectName) =>
-              return unless locationThings = @world.options.adventure.currentLocationThings()
-
-              for thing in locationThings
-                if thingIllustration = thing.illustration()
-                  return true if thingIllustration.mesh is illustrationName and thingIllustration.object is objectName
-
-              null
+          # Add new mesh, if the location has an illustration.
+          if meshData
+            @_currentIllustrationName = illustrationName
+            @_currentLocationMesh = @getMesh meshData
+            scene.add @_currentLocationMesh
+            @addedSceneObjects()
 
           @_currentLocationMeshDependency.changed()
 
           # Initialize the camera from the camera angle.
           @_currentCameraAngle = cameraAngle()
-          @world.cameraManager().setFromCameraAngle @_currentCameraAngle
+          @world.cameraManager().setFromCameraAngle @_currentCameraAngle if @_currentCameraAngle
 
           # Report we have new mesh data.
           @currentLocationMeshData meshData
@@ -213,6 +207,27 @@ class LOI.Engine.World.SceneManager
 
   destroy: ->
     @locationThings.stop()
+
+  getMesh: (meshData) ->
+    # Returned cached version, if available.
+    return @meshesCache[meshData._id] if @meshesCache[meshData._id]
+
+    # Initialize mesh data, since it's a rich document, and create an engine mesh based on the data.
+    meshData.initialize()
+
+    @meshesCache[meshData._id] = new LOI.Assets.Engine.Mesh
+      meshData: => meshData
+      sceneManager: @
+      objectVisibility: (objectName) =>
+        return unless locationThings = @world.options.adventure.currentLocationThings()
+
+        for thing in locationThings
+          if thingIllustration = thing.illustration()
+            return true if thingIllustration.mesh is meshData.name and thingIllustration.object is objectName
+
+        null
+
+    @meshesCache[meshData._id]
 
   getMeshObject: (illustrationName, objectName) ->
     return unless illustrationName is @illustration()?.name

@@ -152,6 +152,11 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     Linear: 'Linear'
 
   initialize: ->
+    # Make sure we don't initialize it multiple times.
+    if @_initialized
+      console.warn "Multiple calls to initialize of mesh", @
+      return
+
     # Track whether we need to save the mesh.
     @dirty = new ReactiveField false
     @_updatedDependency = new Tracker.Dependency
