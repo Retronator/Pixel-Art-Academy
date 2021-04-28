@@ -19,7 +19,10 @@ class Script.Nodes.ChoicePlaceholder extends Script.Node
 
       response
 
-    nodes = _.flatten (response.nodes() for response in responses)
+    # Get choice nodes sorted by priority
+    choices = _.flatten (response.choices for response in responses)
+    prioritizedChoices = _.sortBy choices, (choice) => -(choice.options.priority or 0)
+    nodes = (choice.node for choice in prioritizedChoices)
 
     # Daisy chain choices.
     lastNode = @
@@ -44,14 +47,12 @@ class Script.Nodes.ChoicePlaceholder extends Script.Node
       @scriptId = @options.script.id()
       @placeholderId = @options.placeholderId
 
-      @_nodes = []
+      @choices = []
 
-    addChoice: (node) ->
-      @_nodes.push node
+    addChoice: (node, options = {}) ->
+      @choices.push {node, options}
 
-    addChoices: (node) ->
+    addChoices: (node, options = {}) ->
       while node and (node instanceof Script.Nodes.Choice) or (node.node instanceof Script.Nodes.Choice)
-        @addChoice node
+        @addChoice node, options
         node = node.originalNext or node.next
-
-    nodes: -> @_nodes
