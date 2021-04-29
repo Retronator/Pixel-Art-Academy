@@ -33,7 +33,7 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'markdown',
-    'http@=1.4.2',
+    'http@=1.4.3',
     'oauth',
     'modules',
     'stylus',
