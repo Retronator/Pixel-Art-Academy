@@ -35,7 +35,7 @@ PAA.PixelBoy.Apps.AdmissionWeek.DayView.AppInfo =
 
   "#{PAA.PixelBoy.Apps.Yearbook.id()}":
     features: [
-      "Introduce yourself to other students."
+      "Introduce yourself to your classmates."
       "Meet other participants of Admission Week and form a study group."
     ]
     factors:

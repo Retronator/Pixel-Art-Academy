@@ -267,7 +267,7 @@ coordinator: Today we have a happy celebration moment!
 -> [AcceptanceCelebrationMultiple] `_acceptanceCelebration.studentsCount > 1`
 -> [AcceptanceCelebrationPlayerSingle] `_acceptanceCelebration.player and not _person1`
 
-coordinator: `_acceptanceCelebration.names` has completed all four admission goals and has been accepted to study at the Academy!
+coordinator: `_acceptanceCelebration.names` has completed all four admission goals and has been accepted to move to the Academy!
 
 > _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
 
@@ -279,9 +279,9 @@ coordinator: Congratulations! Retropolis will be happy to have you, make the bes
 
 ## AcceptanceCelebrationMultiple
 
-coordinator: `_acceptanceCelebration.names` have completed all four admission goals and have been accepted to study at the Academy! 
+coordinator: `_acceptanceCelebration.names` have completed all four admission goals and have been accepted to move to the Academy! 
 
-> _coordinator_ hands out acceptance letters and students take them with delight.
+> _coordinator_ hands out acceptance letters and the group members take them with delight.
 
 -> [AcceptanceCelebrationPlayer] `_acceptanceCelebration.player`
 
@@ -291,7 +291,7 @@ coordinator: Make sure to find each other again in Retropolis! Have a wonderful 
 
 ## AcceptanceCelebrationPlayerSingle
 
-coordinator: You have completed all four admission goals and have been accepted to study at the Academy!
+coordinator: You have completed all four admission goals and have been accepted to move to the Academy!
 
 > _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
 
@@ -399,7 +399,7 @@ char: Thank you! See ya.
 
 ## AlreadyAcceptedNotOwnGroup
 
-char: I already completed Admission Week, I wouldn't want to disturb the other students.
+char: I already completed Admission Week, I wouldn't want to disturb the other applicants.
 
 -> [End]
 

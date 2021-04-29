@@ -11,7 +11,7 @@ class PAA.Adventure extends LOI.Adventure
     "Pixel Art Academy // Adventure game for learning how to draw"
 
   @description: ->
-    "Become a pixel art student in the text/point-and-click adventure game by Retronator."
+    "Become an artist in the text/point-and-click adventure game by Retronator."
 
   titleSuffix: -> ' // Pixel Art Academy'
 

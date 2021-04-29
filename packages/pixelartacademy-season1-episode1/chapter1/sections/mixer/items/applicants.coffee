@@ -15,7 +15,7 @@ class C1.Mixer.Applicants extends LOI.Adventure.Thing
 
   @description: ->
     "
-      Other students partaking in Admission Week are present at the meeting. Looking at their name tags, their names
+      Other participants of Admission Week are present at the meeting. Looking at their name tags, their names
       are {{applicantNames}}. You can look at each individual to learn more about them.
     "
 
