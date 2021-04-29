@@ -105,7 +105,7 @@ class LOI.Engine.World.SceneManager
       # Only react to illustration and mesh changes.
       Tracker.nonreactive =>
         cameraAngle = =>
-          return unless @_currentLocationMesh
+          return unless illustration and @_currentLocationMesh
           cameraAngles = @_currentLocationMesh.options.meshData().cameraAngles
 
           if illustration.cameraAngle
@@ -117,7 +117,8 @@ class LOI.Engine.World.SceneManager
         if illustrationName is @_currentIllustrationName
           # Transition to other camera angle after illustration size has been applied.
           Tracker.afterFlush =>
-            newCameraAngle = cameraAngle()
+            return unless newCameraAngle = cameraAngle()
+
             if newCameraAngle isnt @_currentCameraAngle
               @_currentCameraAngle = newCameraAngle
 
