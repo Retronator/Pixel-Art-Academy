@@ -366,3 +366,19 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
 
       @bookComponent = @ancestorComponentOfType PAA.StudyGuide.Pages.Home.Book
       @book = new ComputedField => @bookComponent.book()
+
+    started: ->
+      {goal} = @data()
+
+      # At least one task needs to be completed.
+      return true for task in goal.tasks() when task.completed()
+
+      false
+
+    allTasksCompleted: ->
+      {goal} = @data()
+
+      # All tasks need to be completed.
+      return for task in goal.tasks() when not task.completed()
+
+      true

@@ -156,5 +156,24 @@
               a
                 text-decoration none
 
+              .indicator
+                daily()
+                font-weight bold
+
+                &::before
+                  content '✓'
+
+                &.started
+                  color atariGray(5)
+
+                &.completed
+                  color atariGreen(6)
+
+                &.all-tasks-completed
+                  color atariGreen(4)
+
+                & ~ .indicator
+                  display none
+
 .focusedartworks ~ .pixelartacademy-studyguide-pages-home-book
   display none
