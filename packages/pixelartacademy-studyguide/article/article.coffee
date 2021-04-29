@@ -28,9 +28,5 @@ class PAA.StudyGuide.Article
     name: "PixelArtAcademy.StudyGuide.Article.figure"
     folder: 'studyguide'
     maxSize: 50 * 1024 * 1024 # 50 MB
-    fileTypes: [
-      'image/png'
-      'image/jpeg'
-      'image/gif'
-    ]
+    fileTypes: LOI.Assets.Upload.Context.FileTypes.Images
     cacheControl: LOI.Assets.Upload.Context.CacheControl.RequireRevalidation

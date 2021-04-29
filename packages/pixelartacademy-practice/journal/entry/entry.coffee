@@ -54,12 +54,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
     name: "#{@id()}.picture"
     folder: 'check-ins'
     maxSize: 20 * 1024 * 1024 # 20 MB
-    fileTypes: [
-      'image/png'
-      'image/apng'
-      'image/jpeg'
-      'image/gif'
-      ]
+    fileTypes: LOI.Assets.Upload.Context.FileTypes.Images
     cacheControl: LOI.Assets.Upload.Context.CacheControl.RequireRevalidation
 
   # Methods
