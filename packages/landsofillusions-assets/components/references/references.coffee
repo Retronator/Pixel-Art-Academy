@@ -10,11 +10,7 @@ class LOI.Assets.Components.References extends AM.Component
     name: "#{@id()}.reference"
     folder: 'references'
     maxSize: 10 * 1024 * 1024 # 10 MB
-    fileTypes: [
-      'image/png'
-      'image/jpeg'
-      'image/gif'
-    ]
+    fileTypes: LOI.Assets.Upload.Context.FileTypes.Images
     
   constructor: (@options) ->
     super arguments...

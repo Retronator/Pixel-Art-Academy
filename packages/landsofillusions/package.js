@@ -255,11 +255,11 @@ Package.onUse(function(api) {
 
   // Behavior parts
 
-  api.addFile('character/behavior/behavior');
+  api.addFile('character/behavior..');
   
-  api.addFile('character/behavior/parts/parts');
-  api.addFile('character/behavior/parts/personality');
-  api.addFile('character/behavior/parts/personality-factor');
+  api.addFile('character/behavior/parts..');
+  api.addFile('character/behavior/parts/personality..');
+  api.addFile('character/behavior/parts/personality/factor');
   api.addFile('character/behavior/parts/trait');
   api.addFile('character/behavior/parts/activity');
   api.addFile('character/behavior/parts/environment');
@@ -408,6 +408,7 @@ Package.onUse(function(api) {
 
   api.addFile('character/person');
   api.addFile('character/agent');
+  api.addFile('character/agent-description');
   api.addFile('character/actor');
 
   // Storylines
@@ -461,6 +462,7 @@ Package.onUse(function(api) {
   api.addComponent('memory/contexts/conversation/memorypreview..');
 
   api.addFile('memory/flashback');
+  api.addFile('memory/exit');
 
   api.addFile('memory/action..');
   api.addFile('memory/action/methods');

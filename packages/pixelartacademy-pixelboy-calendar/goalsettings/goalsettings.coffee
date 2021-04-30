@@ -16,12 +16,38 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
   onCreated: ->
     super arguments...
 
+    # Prepare field for temporarily storing new weekly goals.
+    @draftWeeklyGoals = new ReactiveField null
+
     # Start on the goal settings screen if no goal has been set.
     @visible = new ReactiveField not @hasGoal()
-    
+
+  close: ->
+    # Remove draft changes.
+    @draftWeeklyGoals null
+
+    # Only proceed/return to the calendar view if a goal has been set.
+    if @hasGoal()
+      @visible false
+
+    else
+      @calendar.os.go()
+
+  getWeeklyGoalsField: (field) =>
+    # Return the draft field or the game state field if draft was not set.
+    draftField = @draftWeeklyGoals()?[field]
+
+    if draftField isnt undefined then draftField else @calendar.state "weeklyGoals.#{field}"
+
+  setWeeklyGoalsField: (field, value) =>
+    draftWeeklyGoals = @draftWeeklyGoals() or {}
+    draftWeeklyGoals[field] = value
+    @draftWeeklyGoals draftWeeklyGoals
+
+  # Tells if the goal has currently been set in the settings UI.
   hasGoal: ->
     for goal in ['daysWithActivities', 'totalHours']
-      return true if @calendar.state "weeklyGoals.#{goal}"
+      return true if @getWeeklyGoalsField goal
 
     false
 
@@ -31,17 +57,17 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
   daysPerWeekOptions: ->
     [0..7]
 
-  checkedAttribute: ->
-    daysPerWeek = @currentData()
-    daysWithActivities = @calendar.state "weeklyGoals.daysWithActivities"
+  daysPerWeekCheckedAttribute: ->
+    daysPerWeekOption = @currentData()
+    daysWithActivities = @getWeeklyGoalsField 'daysWithActivities'
 
-    checked: 'checked' if daysPerWeek is daysWithActivities
+    checked: 'checked' if daysPerWeekOption is daysWithActivities
 
   daysPerWeek: ->
-    @calendar.state "weeklyGoals.daysWithActivities"
+    @getWeeklyGoalsField 'daysWithActivities'
 
   hoursPerWeek: ->
-    daysWithActivities = @calendar.state "weeklyGoals.daysWithActivities"
+    daysWithActivities = @getWeeklyGoalsField 'daysWithActivities'
 
     switch daysWithActivities
       when 1 then "5 min–1 hour"
@@ -53,9 +79,9 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
       when 7 then "2–4 hours"
 
   difficulty: ->
-    difficulty = @calendar.state("weeklyGoals.daysWithActivities") or 0
+    difficulty = @getWeeklyGoalsField('daysWithActivities') or 0
     
-    totalHours = @calendar.state "weeklyGoals.totalHours"
+    totalHours = @getWeeklyGoalsField 'totalHours'
     
     if totalHours
       if totalHours >= 14 then difficulty = Math.max difficulty, 7
@@ -87,14 +113,18 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
     # We convert 0 to null to disable this goal.
     daysPerWeek = parseInt($(event.target).val()) or null
 
-    PAA.PixelBoy.Apps.Calendar.setDaysWithActivities daysPerWeek
+    @setWeeklyGoalsField 'daysWithActivities', daysPerWeek
 
   onClickConfirmButton: (event) ->
-    if @hasGoal()
-      @visible false
+    # Copy changes if they were made.
+    if draftWeeklyGoals = @draftWeeklyGoals()
+      unless draftWeeklyGoals.daysWithActivities is undefined
+        PAA.PixelBoy.Apps.Calendar.setDaysWithActivities draftWeeklyGoals.daysWithActivities
 
-    else
-      @calendar.os.go()
+      unless draftWeeklyGoals.totalHours is undefined
+        PAA.PixelBoy.Apps.Calendar.setTotalHours draftWeeklyGoals.totalHours
+
+    @close()
 
   # Components
 
@@ -109,8 +139,13 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
         min: 0
         step: 1
 
+    onCreated: ->
+      super arguments...
+
+      @goalSettings = @ancestorComponentOfType PAA.PixelBoy.Apps.Calendar.GoalSettings
+
     load: ->
-      PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals.totalHours'
+      @goalSettings.getWeeklyGoalsField 'totalHours'
 
     save: (value) ->
       if value > 0
@@ -119,7 +154,7 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
       else
         value = null
 
-      PAA.PixelBoy.Apps.Calendar.setTotalHours value
+      @goalSettings.setWeeklyGoalsField 'totalHours', value
 
     _saveFactor: ->
       1

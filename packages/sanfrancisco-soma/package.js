@@ -19,26 +19,31 @@ Package.onUse(function(api) {
 
   api.addFile('soma');
 
+  // Actors
+
+  api.addFile('actors..');
+  api.addThing('actors/james..');
+
   // Items
 
-  api.addFile('items/items');
+  api.addFile('items..');
 
-  api.addComponent('items/map/map');
-  api.addThing('items/muni/muni');
+  api.addComponent('items/map..');
+  api.addThing('items/muni..');
 
   // Locations
 
-  api.addFile('caltrain/caltrain');
-  api.addFile('4thking/4thking');
-  api.addFile('moscone/moscone');
+  api.addFile('caltrain..');
+  api.addFile('4thking..');
+  api.addFile('moscone..');
   api.addFile('moscone/station');
-  api.addFile('2nd/2nd');
+  api.addFile('2nd..');
   api.addFile('2nd/retronatorhq');
   api.addFile('2nd/artistsign');
-  api.addFile('2ndking/2ndking');
-  api.addFile('c3/c3');
-  api.addFile('missionbay/missionbay');
-  api.addFile('missionrock/missionrock');
-  api.addFile('chinabasinpark/chinabasinpark');
-  api.addFile('transbay/transbay');
+  api.addFile('2ndking..');
+  api.addFile('c3..');
+  api.addFile('missionbay..');
+  api.addFile('missionrock..');
+  api.addFile('chinabasinpark..');
+  api.addFile('transbay..');
 });

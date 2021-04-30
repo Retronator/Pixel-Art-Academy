@@ -24,7 +24,7 @@ class AM.EmbeddedImageData
       emptyImageSize: 10
       minimumSize: 200
       maximumMagnification: 8
-      backgroundColor: 'grey'
+      backgroundColor: 'gray'
 
     # Compress the save data of this asset.
     encoder = new TextEncoder

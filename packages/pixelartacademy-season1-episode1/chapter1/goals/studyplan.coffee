@@ -98,7 +98,8 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
 
       # Make sure all interests of all goals are wired into the admission goal.
       for goalId, goal of goals
-        goalClass = PAA.Learning.Goal.getClassForId goalId
+        # Make sure the goal has been loaded (dynamic goals aren't immediately available).
+        return unless goalClass = PAA.Learning.Goal.getClassForId goalId
 
         for requiredInterest in goalClass.requiredInterests()
           return unless _.find goalsArray, (goal) =>

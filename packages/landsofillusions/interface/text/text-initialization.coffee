@@ -68,6 +68,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return unless currentSituation = LOI.adventure.currentSituation()
 
       LOI.adventure.getAvatar exit for exitId, exit of currentSituation.exitsById()
+
+    # Allow to hide specific things from running scripts.
+    @hiddenThings = new ReactiveField []
         
     # Subscribe to all action translations.
     actionTypes = LOI.Memory.Action.getTypes()

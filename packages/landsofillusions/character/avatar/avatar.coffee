@@ -105,7 +105,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
   color: ->
     return super(arguments...) unless color = @_avatar()?.color
 
-    hue: color?.hue or LOI.Assets.Palette.Atari2600.hues.grey
+    hue: color?.hue or LOI.Assets.Palette.Atari2600.hues.gray
     shade: color?.shade or LOI.Assets.Palette.Atari2600.characterShades.normal
 
   @noNameTranslationKey = 'NoName'

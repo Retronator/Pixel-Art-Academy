@@ -79,6 +79,12 @@ class PAA.Learning.Task
         for task in chapter.tasks
           return task if task.id() is taskId
 
+    # If task is not part of the storyline, it might be in the Study Guide.
+    studyGuideGlobal = _.find LOI.adventure.globals, (global) => global instanceof PAA.StudyGuide.Global
+
+    for task in studyGuideGlobal.tasks()
+      return task if task.id() is taskId
+
     console.warn "Unknown task requested.", taskId
     null
 

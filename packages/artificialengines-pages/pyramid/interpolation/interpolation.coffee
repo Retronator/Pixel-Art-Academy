@@ -64,7 +64,7 @@ class AP.Pages.Interpolation extends AM.Component
       context.moveTo i * 100, 0
       context.lineTo i * 100, 600
 
-    context.strokeStyle = 'lightslategrey'
+    context.strokeStyle = 'lightslategray'
     context.stroke()
 
     # Draw polynomial.

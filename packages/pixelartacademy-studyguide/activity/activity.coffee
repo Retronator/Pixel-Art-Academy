@@ -64,3 +64,4 @@ class PAA.StudyGuide.Activity extends AM.Document
 
   # Subscriptions
   @all: @subscription 'all'
+  @articleForActivityId: @subscription 'articleForActivityId'

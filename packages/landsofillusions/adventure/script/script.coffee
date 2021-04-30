@@ -48,7 +48,7 @@ class LOI.Adventure.Script
         if node[property] instanceof @constructor.Nodes.Jump
           jumpNode = node[property]
           node[property] = @startNode.labels[jumpNode.labelName]
-      
+
       # Replace char actor with character instance's avatar.
       node.actor = character?.avatar if node.actorName is 'char'
 
@@ -93,9 +93,7 @@ class LOI.Adventure.Script
     # Set actors to thing instances, based on actor names.
     for node in @nodes
       if node.actorName
-        continue unless things[node.actorName]
-
-        node.actor = things[node.actorName]
+        node.actor = things[node.actorName] if things[node.actorName]
 
       if node.line
         # Store the original line text so we can later retrieve it.

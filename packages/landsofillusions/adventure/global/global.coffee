@@ -7,7 +7,7 @@ class LOI.Adventure.Global extends LOI.Adventure.Thing
   @timelineId: -> # Override to set a default timeline for scenes.
   timelineId: -> @constructor.timelineId()
 
-  @scenes: -> # Override to provide global scenes.
+  @scenes: -> [] # Override to provide global scenes.
 
   constructor: ->
     super arguments...

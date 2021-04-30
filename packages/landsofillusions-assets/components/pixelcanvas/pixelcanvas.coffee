@@ -150,6 +150,10 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
         'mousemove .canvas': @onMouseMoveCanvas
         'mouseenter .canvas': @onMouseEnterCanvas
         'mouseleave .canvas': @onMouseLeaveCanvas
+        'pointerdown .canvas': @onPointerDownCanvas
+        'pointermove .canvas': @onPointerMoveCanvas
+        'pointerenter .canvas': @onPointerEnterCanvas
+        'pointerleave .canvas': @onPointerLeaveCanvas
         'dragstart .canvas': @onDragStartCanvas
 
     events
@@ -164,6 +168,18 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @options.activeTool()?.onMouseEnter? event
 
   onMouseLeaveCanvas: (event) ->
+    @options.activeTool()?.onMouseLeave? event
+
+  onPointerDownCanvas: (event) ->
+    @options.activeTool()?.onMouseDown? event
+
+  onPointerMoveCanvas: (event) ->
+    @options.activeTool()?.onMouseMove? event
+
+  onPointerEnterCanvas: (event) ->
+    @options.activeTool()?.onMouseEnter? event
+
+  onPointerLeaveCanvas: (event) ->
     @options.activeTool()?.onMouseLeave? event
 
   onDragStartCanvas: (event) ->

@@ -50,6 +50,9 @@ class PAA.PixelBoy.Apps.AdmissionWeek extends PAA.PixelBoy.App
   instructionsVisible: ->
     not PAA.PixelBoy.Apps.AdmissionWeek.state 'startDay'
 
+  instructionsVisibleClass: ->
+    'instructions-visible' if @instructionsVisible()
+
   allowsShortcutsTable: ->
     # Shortcuts table is in its place when we're showing the instructions or if we scrolled to bottom of the main page.
     @instructionsVisible() or @scrolledToBottom()

@@ -73,5 +73,14 @@
     <a href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home' pageOrBook=book.slug activity=slug}}">
       {{goal.displayName}}
     </a>
+    {{#if allTasksCompleted}}
+      <span class="all-tasks-completed indicator" title="You've completed all available activities."></span>
+    {{/if}}
+    {{#if goal.completed}}
+      <span class="completed indicator" title="You've completed all required activities. There are some optional ones left."></span>
+    {{/if}}
+    {{#if started}}
+      <span class="started indicator" title="You've completed some of the activities. More are required to complete the chapter."></span>
+    {{/if}}
   </div>
 </template>

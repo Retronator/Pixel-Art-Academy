@@ -34,6 +34,10 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       @_agentActionsSubscriptions subscriptions
 
+    # Hide other students from the text interface description.
+    @_hideOtherStudentsAutorun = @autorun (computation) =>
+      LOI.adventure.interface.hiddenThings? @otherStudents()
+
     # Position actors based on event phase.
     @_positionActorsAutorun = @autorun (computation) =>
       # Wait until the location mesh has loaded, so that we have landmark positions.
@@ -74,6 +78,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         label = 'GalleryIntro'
 
       computation.stop()
+
+      # Start the intro script. Note that if the intro has already
+      # played before, the script will immediately quit on its own.
       LOI.adventure.director.startScript script, {label}
 
     @_autoStartScriptAutorun = @autorun (computation) =>
@@ -104,10 +111,11 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           ]
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
-          script.startAtLatestCheckpoint [
-            'JoinStudyGroupStart'
-            'JoinStudyGroupContinue'
-          ]
+          if C1.readOnlyState 'studyGroupId'
+            LOI.adventure.director.startScript script, label: 'JoinStudyGroupContinue'
+
+          else
+            LOI.adventure.director.startScript script, label: 'JoinStudyGroupStart'
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
           LOI.adventure.director.startScript script, label: 'CoordinatorIntro'
@@ -127,6 +135,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
   onDeactivated: ->
     super arguments...
+
+    @_hideOtherStudentsAutorun?.stop()
+    LOI.adventure.interface.hiddenThings? []
 
     @_positionActorsAutorun?.stop()
     @_eventIntroAutorun?.stop()

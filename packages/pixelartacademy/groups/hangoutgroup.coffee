@@ -15,10 +15,10 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
     super arguments...
 
     # Active members are the ones that have done any memorable recent actions.
-    @presentMembers = new ComputedField =>
+    @_presentMembers = new ComputedField =>
       _.filter @members(), (member) =>
-        # Find any actions this member has performed.
-        recentActions = member.recentActions()
+        # Find any actions this member has performed since the previous hangout.
+        recentActions = member.recentActions true
 
         # See if any of them are memorable
         _.find recentActions, (action) => action.isMemorable or action.memory
@@ -36,6 +36,9 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
     # Override to provide things that are members of this group.
     # Each thing must be able to provide a list of their recent actions.
     []
+
+  presentMembers: ->
+    @_presentMembers()
 
   startMainQuestionsWithPerson: ->
     throw new AE.NotImplementedException "You must provide a way to start a default conversation with a group member."
@@ -142,43 +145,36 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
       presentMembers = scene.presentMembers()
 
-      switch presentMembers.length
-        when 0 then label = 'NoOne'
-        when 1
-          @groupScript.setThings person1: presentMembers[0]
-          @groupScript.ephemeralState 'person1', presentMembers[0].fullName()
-
+      if presentMembers.length
+        # Determine which start variant to use.
+        if presentMembers.length is 1
           # See if this group has more members otherwise.
           label = if scene.members().length is 1 then 'OnlyOne' else 'JustOne'
 
         else
           label = 'Start'
 
-          # Randomly assign members to person 1-3.
-          persons = []
-          freeIndices = [1..3]
-          leftMembers = _.clone presentMembers
+        # We want the members to be introduced in a random order.
+        persons = _.shuffle presentMembers
 
-          while leftMembers.length and freeIndices.length
-            member = Random.choice leftMembers
-            freeIndex = Random.choice freeIndices
+        # Set the people to things and mark that they're present.
+        things = {}
 
-            persons[freeIndex] = member
+        for person, index in persons
+          things["person#{index + 1}"] = person
+          @groupScript.ephemeralState "person#{index + 1}", true
 
-            _.pull leftMembers, member
-            _.pull freeIndices, freeIndex
+        @groupScript.setThings things
 
-          things = {}
-
-          for personIndex in [1..persons.length]
-            things["person#{personIndex}"] = persons[personIndex]
-            @groupScript.ephemeralState "person#{personIndex}", true
-
-          @groupScript.setThings things
+      else
+        label = 'NoOne'
 
       # Clear out the rest of the people.
-      if presentMembers.length < 3
-        for personIndex in [presentMembers.length + 1..3]
-          @groupScript.ephemeralState "person#{personIndex}", false
+      ephemeralState = @groupScript.ephemeralState()
+      testIndex = presentMembers.length + 1
+
+      while ephemeralState["person#{testIndex}"]?
+        @groupScript.ephemeralState "person#{testIndex}", false
+        testIndex++
 
       {label}

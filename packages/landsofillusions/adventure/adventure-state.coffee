@@ -152,7 +152,7 @@ class LOI.Adventure extends LOI.Adventure
       @gameState?.updated = _gameStateUpdated
       @gameState?.resetNamespaces = _gameStateResetNamespaces
 
-      console.log "%cNew game state has been set.", 'background: SlateGrey; color: white', state if LOI.debug or LOI.Adventure.debugState
+      console.log "%cNew game state has been set.", 'background: slategray; color: white', state if LOI.debug or LOI.Adventure.debugState
 
       state
       

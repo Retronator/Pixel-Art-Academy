@@ -15,14 +15,6 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
 
       true
 
-    # Add the mesh to the scene.
-    @autorun (computation) =>
-      return unless scene = @options.sceneManager.scene()
-      computation.stop()
-
-      scene.add @
-      @options.sceneManager.addedSceneObjects()
-
     # Generate objects.
     @autorun (computation) =>
       return unless meshData = @options.meshData()

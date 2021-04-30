@@ -25,6 +25,12 @@ class LOI.Interface.Text extends LOI.Interface
   things: ->
     return [] unless things = LOI.adventure.currentLocationThings()
 
+    # Remove any externally hidden things. We need to get instances in case classes were added to the array.
+    hiddenThings = for thing in @hiddenThings()
+      LOI.adventure.getCurrentLocationThing thing
+
+    things = _.difference things, hiddenThings
+
     thing for thing in things when thing.displayInLocation()
 
   thingDescription: ->
@@ -235,7 +241,7 @@ class LOI.Interface.Text extends LOI.Interface
       'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
-      'click': @onClick
+      'click .ui-area': @onClickUIArea
       'click .command': @onClickCommand
       'click .location': @onClickLocation
       'mouseenter .exits .exit .name': @onMouseEnterExit
@@ -253,8 +259,8 @@ class LOI.Interface.Text extends LOI.Interface
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null
 
-  onClick: (event) ->
-    # When we're waiting for user interaction, clicking doubles for pressing enter.
+  onClickUIArea: (event) ->
+    # When we're waiting for user interaction, clicking on the bottom UI part doubles for pressing enter.
     if @waitingKeypress()
       @onCommandInputEnter()
 

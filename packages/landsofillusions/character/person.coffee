@@ -14,6 +14,13 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   # previousHangout: information about the hangout prior to last hangout
   #   time: real-world time of the hangout in milliseconds
   #   gameTime: fractional time in game days
+
+  # The time after start of hangout that we're showing events since previous hangout.
+  @preserveHangoutDuration = 10 * 60 * 1000 # 10 minutes
+
+  # The maximum duration we're showing recent actions for.
+  @recentActionsEarliestTimeMaxDuration = 30 * 24 * 60 * 60 * 1000 # 30 days
+
   constructor: ->
     super arguments...
 
@@ -66,28 +73,32 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       action = new LOI.Memory.Actions.Leave
       action.start @
 
-  recentActions: -> throw AE.NotImplementedException "Person must provide recent actions."
+  recentActions: (requireInitialHangoutCompleted = false) -> throw AE.NotImplementedException "Person must provide recent actions."
   getActions: (query) -> throw AE.NotImplementedException "Person must implement querying actions."
 
-  # The time after start of hangout that we're showing events since previous hangout.
-  @preserveHangoutDuration = 10 * 60 * 1000 # 10 minutes
-
-  # The maximum duration we're showing recent actions for.
-  @recentActionsEarliestTimeMaxDuration = 30 * 24 * 60 * 60 * 1000 # 30 days
-
-  recentActionsEarliestTime: ->
+  recentActionsEarliestTime: (requireInitialHangoutCompleted = false) ->
     lastHangout = @personState 'lastHangout'
+
+    # If we require initial hangout, and it hasn't happened yet, return zero-length time window.
+    return new Date if requireInitialHangoutCompleted and not lastHangout
+
     lastHangoutTime = lastHangout?.time or 0
 
-    # Within 10 minutes of the last hangout we still show all events since previous hangout so that you can quickly
+    # Within some time since the last hangout we still show all events since previous hangout so that you can quickly
     # ask the person what's new again and get the same results (and that people don't just disappear immediately after
     # hanging out with them.
     time = Date.now()
     timeSinceLastHangout = time - lastHangoutTime
 
     if timeSinceLastHangout < @constructor.preserveHangoutDuration
-      lastHangout = @personState 'previousHangout'
-      lastHangoutTime = lastHangout?.time or 0
+      # The last hangout is very recent, so act as if it hasn't happened.
+      previousHangout = @personState 'previousHangout'
+
+      # If we require initial hangout to be completed (must be farther than
+      # preserve hangout duration), return zero-length time window.
+      return new Date if requireInitialHangoutCompleted and not previousHangout
+
+      lastHangoutTime = previousHangout?.time or 0
 
     # Take the last hangout time, but not earlier than 1 month.
     earliestTime = Math.max lastHangoutTime, Date.now() - @constructor.recentActionsEarliestTimeMaxDuration

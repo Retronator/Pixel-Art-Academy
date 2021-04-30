@@ -9,6 +9,8 @@ char: Hey gang!
 person1: Hey _char_! `_person1`
 person2: Hey! `_person2`
 person3: Hi! `_person3`
+person4: Hey, everyone! `_person4`
+person5: Hello! `_person5`
 
 ## MainQuestions
 
@@ -35,7 +37,7 @@ pause
 
 > _char_ sits down next to one of _their_ friends.
 
-char: Hey `_person1`.
+char: Hey _person1_.
 
 person1: Hey!
 
@@ -45,7 +47,7 @@ person1: Looks like it's just you and me today.
 
 char: The best ones around.
 
-> _char_ and `_person1` fist bump.
+> _char_ and _person1_ fist bump.
 
 ### JustOne
 
@@ -53,7 +55,7 @@ char: The best ones around.
 
 ## OnlyOne
 
-> _char_ sees _their_ friend `_person1` and sits down.
+> _char_ sees _their_ friend _person1_ and sits down.
 
 person1: Hey, nice to see you!
 

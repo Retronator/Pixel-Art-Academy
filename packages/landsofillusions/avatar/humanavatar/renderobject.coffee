@@ -31,6 +31,12 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @_cameraScale = new THREE.Vector3
     @_cameraEuler = new THREE.Euler
     @_cameraDirection = new THREE.Vector3
+    @_currentDirection = new THREE.Vector3
+    @_viewCurrentDirection = new THREE.Vector3
+    @_viewPosition = new THREE.Vector3
+    @_viewReferencePosition = new THREE.Vector3
+    @_frustumPosition = new THREE.Vector3
+    @_frustumReferencePosition = new THREE.Vector3
 
     mainRenderingSides = ['front', 'frontLeft', 'left', 'backLeft', 'back']
     mirroredRenderingSides = ['frontRight', 'right', 'backRight']
@@ -274,6 +280,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     return unless @_textureRendered
 
     if @_targetAngle?
+      # Rotate the character towards target angle.
       angleDelta = @_angleChangeSpeed * appTime.elapsedAppTime
       @_angleChange += Math.abs angleDelta
       @currentAngle += angleDelta
@@ -282,20 +289,32 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         @currentAngle = @_targetAngle
         @_targetAngle = null
 
-    # Project the direction and calculate angle in screen coordinates.
+    # Choose the correct avatar sprite side for the current character rotation and camera.
     camera = options.camera or LOI.adventure.world.cameraManager().camera()
-    camera.matrix.decompose @_cameraPosition, @_cameraRotation, @_cameraScale
+    LOI.Engine.RenderingSides.getDirectionForAngle @currentAngle, @_currentDirection
 
-    @_cameraDirection.subVectors @_cameraPosition, @position
-    cameraAngle = LOI.Engine.RenderingSides.getAngleForDirection @_cameraDirection
+    # We need to do the determination of rotation in view space since sprite sides are relative to the camera direction.
+    @_viewPosition.copy(@position).applyMatrix4 camera.matrixWorldInverse
+    @_viewReferencePosition.copy(@position).add(@_currentDirection).applyMatrix4 camera.matrixWorldInverse
+    @_viewCurrentDirection.subVectors @_viewReferencePosition, @_viewPosition
 
-    # Get the side based on how much the camera is away from where the character is facing.
-    side = LOI.Engine.RenderingSides.getSideForAngle @currentAngle - cameraAngle
+    # Scale the direction's X component to correct for perspective distortion
+    # (direction towards the camera should result in the Z axis direction).
+    @_frustumPosition.set(1, 0, @_viewPosition.z).applyMatrix4 camera.projectionMatrix
+    @_frustumReferencePosition.set(1, 0, @_viewReferencePosition.z).applyMatrix4 camera.projectionMatrix
+
+    xScalingFactor = @_frustumReferencePosition.x / @_frustumPosition.x
+    @_viewReferencePosition.x *= xScalingFactor
+    @_viewCurrentDirection.subVectors @_viewReferencePosition, @_viewPosition
+
+    # Get the side based on where in the view the character is facing.
+    side = LOI.Engine.RenderingSides.getSideForDirection @_viewCurrentDirection
     @setCurrentSide side unless side is @currentSide
 
     @animatedMeshes[@currentSide].update appTime
 
     # Avatar sprite should always face the camera.
+    camera.matrix.decompose @_cameraPosition, @_cameraRotation, @_cameraScale
     @_cameraEuler.setFromQuaternion @_cameraRotation, "YXZ"
     @rotation.y = @_cameraEuler.y
 

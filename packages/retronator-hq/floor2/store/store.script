@@ -447,26 +447,26 @@ retro:
 ## LearnToDraw
 
 retro:
-    The content for the game is first prototyped in form of articles with tasks to complete.
-    It's called the Pixel Art Academy Study Guide and it's a working draft right now.
+    The content for the game is first prototyped in form of articles with activities to complete.
+    It's published as the Retropolis Academy of Art Study Guide and is completely public and free. 
     Do you want to visit it?
     
 * Yes, please. -> [ReadStudyGuide]
 * Maybe later.
 
-retro: No problem. It'll appear in Retronator Magazine once it's not a draft anymore.
+retro: No problem. You'll also come across it when you play the game.
 
 -> [PixelArtAcademyQuestions]
 
 ## ReadStudyGuide
 
-> Retro turns around his computer screen and shows you the guide introduction.
+> Retro turns around his computer screen and shows you the current selection of Study Guide books.
 
 pause
 
 ### ReadStudyGuide
 
-retro: There's a ton of content written already. Make sure to check out the Table of Contents at the end of the article.
+retro: I'm writing new content quite often these days. Check back every once in a while to see what's new.
 
 -> [PixelArtAcademyQuestions]    
 
@@ -567,7 +567,9 @@ retro:
 `_helped = true`
 
 retro: 
-    You can always ask me any other questions by writing to hi@retronator.com. 
+    The fastest way to ask me more questions is by catching me on Discord.
+    You can join the server I'm on at https://discord.gg/d6V8Say and don't forget to choose the Pixel Art Academy role in the lobby.
+    You can also always send me an email to hi@retronator.com. 
     I'll get back to you as soon as I have more time.
     
 -> [MainQuestion]

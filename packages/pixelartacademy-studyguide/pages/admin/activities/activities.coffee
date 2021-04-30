@@ -15,7 +15,7 @@ class PAA.StudyGuide.Pages.Admin.Activities extends AM.Component
 
     activitiesSubscription = PAA.StudyGuide.Activity.initializeAll @
 
-    # Always show the first activity if none is displayed.
+    # Unselect the current activity if it gets deleted.
     @autorun (computation) =>
       return unless activitiesSubscription.ready()
 
@@ -24,10 +24,8 @@ class PAA.StudyGuide.Pages.Admin.Activities extends AM.Component
       # Make sure the current document exists.
       return if activityId and PAA.StudyGuide.Activity.documents.findOne activityId
 
-      # Switch to the first document on the display list (or no document if we can't find it).
-      firstDocument = @activities().fetch()[0]
-
-      AB.Router.setParameters activityId: firstDocument?._id or null
+      # Route back to index.
+      @goToActivity null
 
   onDestroyed: ->
     super arguments...
@@ -38,6 +36,13 @@ class PAA.StudyGuide.Pages.Admin.Activities extends AM.Component
     PAA.StudyGuide.Activity.documents.find {},
       sort:
         goalId: 1
+
+  goToActivity: (activityId) ->
+    # Switch to document, but don't create history so that it's easy to get back out from the admin page.
+    AB.Router.setParameters
+      activityId: activityId
+    ,
+      createHistory: false
 
   activeClass: ->
     'active' if @currentData()._id is AB.Router.getParameter 'activityId'
@@ -64,4 +69,4 @@ class PAA.StudyGuide.Pages.Admin.Activities extends AM.Component
       return console.error error if error
 
   onClickActivity: ->
-    AB.Router.setParameters activityId: @currentData()._id
+    @goToActivity @currentData()._id

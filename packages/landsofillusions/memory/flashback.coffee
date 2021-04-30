@@ -44,9 +44,6 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
         people = @people()
         return unless people.length
 
-        # Don't run if we're inside a context.
-        return if LOI.adventure.currentContext()
-
         # Reset actions of involved people.
         person.setAction null for person in people
 
@@ -116,6 +113,9 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
 
       # Generate all people that need to be present for this flashback.
       @people = new ComputedField =>
+        # Don't show flashback people in private contexts.
+        return [] if LOI.adventure.currentContext()?.constructor.isPrivate()
+
         return [] unless memory = @memory()
 
         contextClass = LOI.Memory.Context.findContextClassForMemory memory

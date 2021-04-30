@@ -22,7 +22,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
             # We've now got all documents we need to carry out this conversation.
             # Find the actions this person made since earliest time.
-            actions = @_options.person.recentActions()
+            actions = @_options.person.recentActions true
             tasks = @_options.person.recentTaskEntries()
 
             updates = [actions..., tasks...]
@@ -190,10 +190,10 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             complete()
 
         GoOverJournalEntryConversations: (complete) =>
-          @options.listener._goOverConversations complete, 'journalEntryConversations', hintLabel: 'JournalEntryHint'
+          @options.listener._goOverConversations complete, 'journalEntryConversations', 'JournalEntryHint'
 
         GoOverConversations: (complete) =>
-          @options.listener._goOverConversations complete, 'plainConversations', hintLabel: 'ConversationHint'
+          @options.listener._goOverConversations complete, 'plainConversations', 'ConversationHint'
 
         NextConversation: => # Dummy callback as it will be set from GoOverConversations.
 

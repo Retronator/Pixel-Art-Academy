@@ -45,7 +45,7 @@ class LOI.Avatar
   nameNounType: -> @constructor.NameNounType.Common
 
   color: ->
-    hue: LOI.Assets.Palette.Atari2600.hues.grey
+    hue: LOI.Assets.Palette.Atari2600.hues.gray
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
   colorObject: (relativeShade) ->

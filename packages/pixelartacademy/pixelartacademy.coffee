@@ -13,6 +13,7 @@ class PixelArtAcademy
 
 if Meteor.isClient
   window.PixelArtAcademy = PixelArtAcademy
+  window.PAA = PixelArtAcademy
   
 if Meteor.isServer
   LOI.initializePackage

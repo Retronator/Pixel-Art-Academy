@@ -10,7 +10,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     Default:
       width: 9
       hues: [
-        hues.grey
+        hues.gray
         hues.red
         hues.peach
         hues.orange
@@ -48,7 +48,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.purple
         hues.magenta
         hues.red
-        hues.grey
+        hues.gray
       ]
       shades: [2, 3, 4, 5, 6, 7, 8]
       huePreviewShade: 4

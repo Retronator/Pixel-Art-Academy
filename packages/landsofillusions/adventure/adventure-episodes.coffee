@@ -10,6 +10,7 @@ class LOI.Adventure extends LOI.Adventure
       LOI.Character.Agents
       LOI.Memory.Flashback
       PAA.Items
+      PAA.StudyGuide.Global
     ]
 
     @globals = for globalClass in @globalClasses

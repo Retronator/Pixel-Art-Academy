@@ -56,6 +56,9 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
         # Save the new state.
         membersStateField members
 
+        # Record hangout so that we don't show updates from before adding to the group.
+        @things.person.recordHangout()
+
         # Return back to main questions of the calling script.
         LOI.adventure.director.startScript @_returnScript, label: 'MainQuestions'
         complete()
@@ -95,7 +98,12 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
     if C1.Groups.SanFranciscoFriends.state("members")?[person._id]?.active
       label = 'MainQuestionsMember'
 
+      # Asking what's new should be top priority (you want to get updates when you see someone again).
+      priority = 1
+
     else
       label = 'MainQuestionsNonMember'
+      # Asking to hang out should be low priority (you want to get to know people before you invite them to hang out).
+      priority = -1
 
-    choicePlaceholderResponse.addChoice @script.startNode.labels[label].next
+    choicePlaceholderResponse.addChoice @script.startNode.labels[label].next, {priority}

@@ -25,6 +25,8 @@ Package.onUse(function(api) {
   api.addFile('studyguide-goals');
   api.addFile('studyguide-tasks');
 
+  api.addFile('global');
+
   api.addFile('article..');
 
   api.addClientComponent('article/blots-client/figure..');

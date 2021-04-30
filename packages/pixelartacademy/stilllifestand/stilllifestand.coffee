@@ -108,6 +108,9 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     # Save state of items if player closes the window while the stand is active.
     @_saveItemsState()
 
+  # Inform the graphics engine that this item renders a fullscreen UI, hiding the rest of the interface.
+  hasFullscreenUI: -> true
+
   _saveItemsState: ->
     return unless sceneManager = @sceneManager()
 

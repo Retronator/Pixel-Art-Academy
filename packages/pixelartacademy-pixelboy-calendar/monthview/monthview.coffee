@@ -72,9 +72,6 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
       PAA.Practice.Journal.Entry.activityForCharacter.subscribe @, characterId, dateRange
       PAA.Learning.Task.Entry.activityForCharacter.subscribe @, characterId, dateRange
 
-    # Initialize Study Guide activities.
-    PAA.StudyGuide.Activity.initializeAll @
-
     @weeks = new ComputedField =>
       characterId = LOI.characterId()
 

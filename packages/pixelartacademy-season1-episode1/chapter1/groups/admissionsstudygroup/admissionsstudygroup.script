@@ -11,16 +11,60 @@ char: Hi!
 person1: Hello! `_person1`
 person2: Hey! `_person2`
 person3: Hi! `_person3`
+person4: Heya! `_person4`
+person5: Hi, everybody! `_person5`
 
 coordinator: 
   Let's start our study group meeting.
+
+-> [ReportIntro] `_newMembers.count is 0`
+
+-> [IntroduceMultiple] `_newMembers.count > 1`
+
+## IntroduceSingle
+
+coordinator:
+  Before we begin, we have a new member!
+    `_newMembers.names`, why don't you introduce yourself.
+
+-> [AgentsIntroduction]
+
+## IntroduceMultiple
+
+coordinator:
+    Before we begin, we have some new members!
+    `_newMembers.names`, why don't you introduce yourselves.
+
+## AgentsIntroduction
+
+### IntroduceNext
+
+-> [End]
+
+## DefaultIntroduction
+
+pc: Hi! I'm _pc_.
+
+### IntroduceNext
+
+-> [end]
+
+<!-- Report -->
+
+## IntroductionsEnd
+
+coordinator:
+  Welcome to the group! 
+  Now let's begin with the meeting.
+
+## ReportIntro
+
+coordinator:
   I hope you've made good progress on your admission week tasks.
   We'll do a quick report of what you've been working on.
   Who wants to go first?
 
 pause
-
-<!-- Report -->
 
 ## WhatsNew
 
@@ -223,7 +267,7 @@ coordinator: Today we have a happy celebration moment!
 -> [AcceptanceCelebrationMultiple] `_acceptanceCelebration.studentsCount > 1`
 -> [AcceptanceCelebrationPlayerSingle] `_acceptanceCelebration.player and not _person1`
 
-coordinator: `_acceptanceCelebration.names` has completed all four admission goals and has been accepted to study at the Academy!
+coordinator: `_acceptanceCelebration.names` has completed all four admission goals and has been accepted to move to the Academy!
 
 > _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
 
@@ -235,9 +279,9 @@ coordinator: Congratulations! Retropolis will be happy to have you, make the bes
 
 ## AcceptanceCelebrationMultiple
 
-coordinator: `_acceptanceCelebration.names` have completed all four admission goals and have been accepted to study at the Academy! 
+coordinator: `_acceptanceCelebration.names` have completed all four admission goals and have been accepted to move to the Academy! 
 
-> _coordinator_ hands out acceptance letters and students take them with delight.
+> _coordinator_ hands out acceptance letters and the group members take them with delight.
 
 -> [AcceptanceCelebrationPlayer] `_acceptanceCelebration.player`
 
@@ -247,7 +291,7 @@ coordinator: Make sure to find each other again in Retropolis! Have a wonderful 
 
 ## AcceptanceCelebrationPlayerSingle
 
-coordinator: You have completed all four admission goals and have been accepted to study at the Academy!
+coordinator: You have completed all four admission goals and have been accepted to move to the Academy!
 
 > _coordinator_ hands out the acceptance letter to `_acceptanceCelebration.names`.
 
@@ -283,6 +327,8 @@ coordinator: Everyone else, I'll see you tomorrow.
 coordinator:
   OK, that's it for today.
   Keep up the pace and I'll see you next time.
+
+### MeetingEnd
 
 -> [End]
 
@@ -353,7 +399,7 @@ char: Thank you! See ya.
 
 ## AlreadyAcceptedNotOwnGroup
 
-char: I already completed Admission Week, I wouldn't want to disturb the other students.
+char: I already completed Admission Week, I wouldn't want to disturb the other applicants.
 
 -> [End]
 

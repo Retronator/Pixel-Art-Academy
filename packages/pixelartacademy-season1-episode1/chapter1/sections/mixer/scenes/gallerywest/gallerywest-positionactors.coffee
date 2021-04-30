@@ -20,6 +20,8 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       "#{HQ.Actors.Reuben.id()}": 'MixerMiddle'
       "#{HQ.Actors.Alexandra.id()}": 'MixerMiddle'
 
+    selectedStudyGroupId = C1.readOnlyState 'studyGroupId'
+
     if eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
       # Position the students based on their answer to the previous
       # question (so that they will animate to the new one).
@@ -63,7 +65,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         startingPositions[personId] = C1.Mixer.GalleryWest.answerLandmarks[action.content.answer]
         startingFacingPositions[personId] = 'InFrontOfProjector'
 
-    else if (eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup and script.state 'JoinStudyGroupContinue') or eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
+    else if (eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup and selectedStudyGroupId) or eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
       # Position students in their groups.
       for actorClass in @constructor.actorClasses
         groupIndex = _.findIndex @constructor.groups, (group) => actorClass in group.npcMembers()
@@ -74,7 +76,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         groupIndex = @constructor.groups.indexOf group
         startingPositions[agent._id] = @constructor.answerLandmarks[groupIndex]
 
-      group = LOI.Adventure.Thing.getClassForId C1.readOnlyState 'studyGroupId'
+      group = LOI.Adventure.Thing.getClassForId selectedStudyGroupId
       groupIndex = @constructor.groups.indexOf group
       startingPositions[LOI.characterId()] = @constructor.answerLandmarks[groupIndex]
 

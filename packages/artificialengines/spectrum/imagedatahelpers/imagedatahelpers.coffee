@@ -51,3 +51,12 @@ class AS.ImageDataHelpers
     return source if source instanceof ImageData
 
     throw new AE.ArgumentException "You must provide image data, context, canvas, or an image to get image data."
+
+  @hasTransparency: (source) ->
+    imageData = @getImageData source
+
+    # Check the alpha channel if there is a value below 255.
+    for i in [3...imageData.data.length] by 4
+      return true if imageData.data[i] < 255
+
+    false

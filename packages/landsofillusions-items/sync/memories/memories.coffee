@@ -82,7 +82,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
             # Draw characters with revoked design in silhouette.
             unless characterDocument?.designApproved
               drawOptions.silhouette =
-                ramp: LOI.Assets.Palette.Atari2600.hues.grey
+                ramp: LOI.Assets.Palette.Atari2600.hues.gray
                 shade: 2
 
             # Draw and pass the root part in options so we can do different rendering paths based on it.

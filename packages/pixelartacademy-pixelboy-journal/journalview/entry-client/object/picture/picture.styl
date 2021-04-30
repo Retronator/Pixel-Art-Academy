@@ -13,9 +13,14 @@
     .picture
     .missing-picture
     .uploading-picture
-      background atariGrey(7)
+      background atariGray(7)
       box-shadow -2rem 1rem 0 transparentify(atariBrown(6), atariBrown(7))
       margin 0 auto
+
+      &.transparent
+        background none
+        box-shadow none
+        filter drop-shadow(-1rem 1rem 0 transparentify(atariBrown(6), atariBrown(7)))
 
     .picture
       padding 3rem
@@ -43,7 +48,7 @@
 
     .upload-error
       absolute-cover()
-      background rgba(atariGrey(7), 0.9)
+      background rgba(atariGray(7), 0.9)
 
       .message-area
         position absolute
@@ -62,9 +67,9 @@
 
           .retry-upload-button
             border none
-            background atariGrey(6)
-            color atariGrey(0)
+            background atariGray(6)
+            color atariGray(0)
             font inherit
 
             &:hover
-              background atariGrey(5)
+              background atariGray(5)

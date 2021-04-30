@@ -256,7 +256,9 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     # Only remove exits when in a memory.
     return unless LOI.adventure.currentMemoryId()
 
-    {}
+    # Indicate that it's possible to get back/out of the memory.
+    "#{Vocabulary.Keys.Directions.Back}": LOI.Memory.Exit
+    "#{Vocabulary.Keys.Directions.Out}": LOI.Memory.Exit
 
   deactivate: ->
     # If we're in a memory, deactivate the memory itself which will also deactivate the context.
@@ -285,15 +287,19 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     exitAction = => LOI.adventure.exitMemory()
 
     commandResponse.onExactPhrase
-      form: [Vocabulary.Keys.Directions.Back]
-      # We want to override the back command that just exits the context.
-      priority: 1
+      form: [[Vocabulary.Keys.Directions.Back, Vocabulary.Keys.Directions.Out, Vocabulary.Keys.Verbs.Continue]]
+      # We use priority 2 because we want to override the back/continue commands that
+      # just exits the context (priority 0), and navigation keywords (priority 1).
+      priority: 2
       action: exitAction
 
+    # Allow "GO BACK".
     commandResponse.onExactPhrase
-      form: [Vocabulary.Keys.Directions.Out]
+      form: [Vocabulary.Keys.Verbs.GoToDirection, [Vocabulary.Keys.Directions.Back, Vocabulary.Keys.Directions.Out]]
+      priority: 2
       action: exitAction
 
+    # Allow "EXIT MEMORY".
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.ExitLocation, @avatars.memory]
       action: exitAction

@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 LOI.Assets.Palette.Atari2600 =
   hues:
-    grey: 0
+    gray: 0
     yellow: 1
     orange: 2
     peach: 3

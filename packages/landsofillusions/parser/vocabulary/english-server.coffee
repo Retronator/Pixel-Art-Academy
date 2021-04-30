@@ -26,6 +26,7 @@ Document.startup ->
       GoToThing: ['go to', 'move to', 'approach']
       ExitLocation: ['exit', 'leave']
       TalkTo: ['talk to', 't', 'talk with', 'speak to', 'speak with', 'chat with']
+      UserTalkTo: ['talk to', 't', 'talk with', 'speak to', 'speak with', 'chat with']
       LookAt: ['look at', 'l', 'examine', 'see', 'view', 'watch']
       Look: ['look', 'l', 'look around', 'description']
       Use: ['use', 'u']

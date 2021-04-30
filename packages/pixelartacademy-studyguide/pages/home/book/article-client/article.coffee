@@ -30,7 +30,9 @@ class PAA.StudyGuide.Pages.Home.Book.Article extends AM.Component
 
     @quill = new AE.ReactiveWrapper null
 
-    @taskOwner = new ComputedField =>
+    # Subscribe to the article.
+    @autorun (computation) =>
+      PAA.StudyGuide.Activity.articleForActivityId.subscribe @, @activity()._id
 
   onRendered: ->
     super arguments...

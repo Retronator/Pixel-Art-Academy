@@ -46,41 +46,13 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
   listenForCharacterIntroduction: ->
     @listeners[0].listenForCharacterIntroduction = true
 
-  _introduceNextAgent: ->
+  introduceNextAgent: ->
     unless agentId = @_agentIdsLeftForIntruductions.shift()
       # Continue to the rest of the meeting.
       @listeners[0].startScript label: 'PlayerIntroduction'
       return
 
-    agent = LOI.Character.getAgent agentId
-
-    # Mark agent as met and introduced.
-    agent.personState 'alreadyMet', true
-    agent.personState 'introduced', true
-
-    # Record hangout with agent.
-    agent.recordHangout()
-
-    # See if this agent made a custom introduction.
-    if introductionAction = C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.query(agentId).fetch()[0]
-      # Agent says the introduction directly.
-      dialogueLine = new Nodes.DialogueLine
-        actor: agent
-        line: introductionAction.content.introduction
-        next: new Nodes.Callback
-          callback: (complete) =>
-            complete()
-
-            @_introduceNextAgent()
-
-      LOI.adventure.director.startNode dialogueLine
-
-    else
-      # Agent does the default introduction.
-      script = @listeners[0].script
-      script.setThings pc: agent
-
-      @listeners[0].startScript label: 'DefaultIntroduction'
+    C1.Groups.AdmissionsStudyGroup.introduceMember agentId, @listeners[0], => @introduceNextAgent()
 
   # Script
     
@@ -93,11 +65,11 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
         
         # Schedule introductions for the agents in the group before the character.
         scene._agentIdsLeftForIntruductions = _.without scene.memberCharacterIds(), LOI.characterId()
-        scene._introduceNextAgent()
+        scene.introduceNextAgent()
 
       DefaultIntroductionEnd: (complete) =>
         complete()
-        scene._introduceNextAgent()
+        scene.introduceNextAgent()
 
       PlayerIntroduction: (complete) =>
         scene.listenForCharacterIntroduction()
@@ -119,27 +91,27 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
     # Subscribe to latest group members.
     @_studyGroupMembershipSubscription = new ReactiveField null
 
-    @_studyGroupMembershipSubscriptionAutorun = @autorun (computation) =>
+    @autorun (computation) =>
       return unless studyGroupId = C1.readOnlyState 'studyGroupId'
       @_studyGroupMembershipSubscription C1.Groups.AdmissionsStudyGroup.groupMembers.subscribe LOI.characterId(), studyGroupId
 
     # Subscribe to group members' introductions.
     @_characterIntroductionsSubscriptions = new ReactiveField null
 
-    @_characterIntroductionSubscriptionsAutorun = @autorun (computation) =>
+    @autorun (computation) =>
       subscriptions = for characterId in scene.memberCharacterIds()
         C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.subscribe characterId
 
       @_characterIntroductionsSubscriptions subscriptions
 
     # Player should be in the coordinator address context.
-    @_enterContextAutorun = @autorun (computation) =>
+    @autorun (computation) =>
       return if LOI.adventure.currentContext() instanceof C1.CoordinatorAddress.Context
 
       LOI.adventure.enterContext C1.CoordinatorAddress.Context
       
     # Script should start automatically when at location.
-    @_scriptStartAutorun = @autorun (computation) =>
+    @autorun (computation) =>
       return unless @scriptsReady()
       return unless group = scene.group()
       return unless coordinator = LOI.adventure.getCurrentThing group.coordinatorInMeetingSpace()
@@ -168,9 +140,6 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
       
   cleanup: ->
     @_characterMembershipSubscription?.stop()
-    @_studyGroupMembershipSubscriptionAutorun?.stop()
-    @_enterContextAutorun?.stop()
-    @_scriptStartAutorun?.stop()
 
   onCommand: (commandResponse) ->
     if @listenForCharacterIntroduction

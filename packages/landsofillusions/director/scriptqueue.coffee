@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Director.ScriptQueue
@@ -44,6 +45,8 @@ class LOI.Director.ScriptQueue
     @startNode startNode
 
   startNode: (scriptNode) ->
+    throw new AE.ArgumentNullException "Script node cannot be null." unless scriptNode
+
     queuedScriptNodes = @queuedScriptNodes()
     queuedScriptNodes.push scriptNode
     @queuedScriptNodes queuedScriptNodes

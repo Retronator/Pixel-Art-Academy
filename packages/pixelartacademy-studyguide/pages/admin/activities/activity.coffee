@@ -13,6 +13,10 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity extends AM.Component
 
     @renaming = new ReactiveField false
 
+    @autorun (computation) =>
+      activity = @data()
+      PAA.StudyGuide.Activity.articleForActivityId.subscribe @, activity._id
+
     @goalTranslationHandle = new ComputedField =>
       activity = @data()
       translationNamespace = activity.goalId

@@ -8,8 +8,9 @@ C1 = PAA.Season1.Episode1.Chapter1
 Vocabulary = LOI.Parser.Vocabulary
 Nodes = LOI.Adventure.Script.Nodes
 
+# Uses membership to determine its members for the current character.
 class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
-  # Uses membership to determine its members for the current character.
+  # lastIntroducedMemberId: the member ID for the last PC the coordinator introduced during a follow-up meeting.
   @fullName: -> "admissions study group"
 
   @letter: ->  _.last @id()
@@ -22,18 +23,56 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
   @coordinator: -> throw new AE.NotImplementedException "You must provide who coordinates this group."
   @coordinatorInMeetingSpace: -> @coordinator()
 
+  @getCharacterMembership: (characterId) ->
+    LOI.Character.Membership.documents.findOne
+      groupId: /PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup/
+      'character._id': characterId
+    ,
+      sort:
+        joinTime: -1
+
+  @introduceMember: (agentId, script, nextAgentCallback) ->
+    agent = LOI.Character.getAgent agentId
+
+    # Mark agent as met and introduced.
+    agent.personState 'alreadyMet', true
+    agent.personState 'introduced', true
+
+    # Record hangout with agent.
+    agent.recordHangout()
+
+    # If the agent has no previous hangout, set it to their group join date. This way they will report
+    # their progress at the first study group meeting the player sees, if this agent joined later.
+    unless agent.personState 'previousHangout'
+      membership = @getCharacterMembership agentId
+      agent.personState 'previousHangout', time: membership.joinTime.getTime()
+
+    # See if this agent made a custom introduction.
+    if introductionAction = C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.query(agentId).fetch()[0]
+      # Agent says the introduction directly.
+      dialogueLine = new Nodes.DialogueLine
+        actor: agent
+        line: introductionAction.content.introduction
+        next: new Nodes.Callback
+          callback: (complete) =>
+            complete()
+            nextAgentCallback()
+
+      LOI.adventure.director.startNode dialogueLine
+
+    else
+      # Agent does the default introduction.
+      script.setThings pc: agent
+
+      LOI.adventure.director.startScript script, label: 'DefaultIntroduction'
+
   # Subscriptions
 
   @groupMembers = new ABs.Subscription
     name: "PAA.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.groupMembers"
     query: (characterId, groupId) =>
       # Get the latest study group membership of character.
-      characterMembership = LOI.Character.Membership.documents.findOne
-        groupId: /PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup/
-        'character._id': characterId
-      ,
-        sort:
-          joinTime: -1
+      characterMembership = @getCharacterMembership characterId
 
       if characterMembership
         if characterMembership.groupId is groupId
@@ -100,6 +139,26 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
   members: ->
     [@otherAgents()..., @actors()...]
 
+  presentMembers: ->
+    presentMembers = super arguments...
+
+    # Include unintroduced members even if they had no recent actions.
+    for member in @unintroducedMembers()
+      agent = LOI.Character.getAgent member.character._id
+      presentMembers.push agent unless agent in presentMembers
+
+    presentMembers
+
+  unintroducedMembers: ->
+    characterId = LOI.characterId()
+    return [] unless characterMembership = @constructor.getCharacterMembership characterId
+
+    lastIntroducedMemberId = @state('lastIntroducedMemberId') or characterMembership.memberId
+
+    members = @constructor.groupMembers.query(characterId, @constructor.id()).fetch()
+
+    member for member in members when member.memberId > lastIntroducedMemberId
+
   _excludeAdmittedMembers: (members) ->
     # Exclude members that have had their acceptance celebration since they should stop coming to the meetings.
     _.filter members, (member) =>
@@ -115,14 +174,40 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
     ]
 
   listenForReciprocityAsk: (@_reciprocityAskCompleteCallback) ->
-    groupListener = _.find @listeners, (listener) => listener instanceof @constructor.HangoutGroupListener
+    groupListener = @_getGroupListener()
     groupListener.listenForReciprocityAsk = true
     groupListener.groupScript.ephemeralState 'reciprocityAsked', false
 
   listenForReciprocityReply: (@_reciprocityReplyCompleteCallback) ->
-    groupListener = _.find @listeners, (listener) => listener instanceof @constructor.HangoutGroupListener
+    groupListener = @_getGroupListener()
     groupListener.listenForReciprocityReply = true
     groupListener.groupScript.ephemeralState 'reciprocityReplied', false
+
+  introduceNextAgent: ->
+    groupListener = @_getGroupListener()
+
+    unless agentId = @_agentIdsLeftForIntruductions.shift()
+      # Continue to the rest of the meeting.
+      LOI.adventure.director.startScript groupListener.groupScript, label: 'IntroductionsEnd'
+      return
+
+    @constructor.introduceMember agentId, groupListener.groupScript, =>
+      member = @constructor.getCharacterMembership agentId
+
+      # Temporarily store that we've introduced this person, so
+      # that we can update it in the state at the end of the meeting.
+      @_newLastIntroducedMemberId = member.memberId
+
+      @introduceNextAgent()
+
+  _getGroupListener: ->
+    _.find @listeners, (listener) => listener instanceof @constructor.HangoutGroupListener
+
+  updateLastIntroducedMemberId: ->
+    return unless @_newLastIntroducedMemberId
+
+    @state 'lastIntroducedMemberId', @_newLastIntroducedMemberId
+    @_newLastIntroducedMemberId = null
 
   # Listener
 
@@ -131,6 +216,11 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
 
     # Subscribe to see group members.
     @_studyGroupMembershipSubscription = C1.Groups.AdmissionsStudyGroup.groupMembers.subscribe LOI.characterId(), scene.id()
+
+    # Subscribe to group members' introductions.
+    @autorun (computation) =>
+      for member in scene.unintroducedMembers()
+        C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.subscribe member.character._id
 
   cleanup: ->
     super arguments...
@@ -163,6 +253,10 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
         coordinator: scene.constructor.coordinatorInMeetingSpace()
 
       @groupScript.setCallbacks
+        IntroduceNext: (complete) =>
+          complete()
+          scene.introduceNextAgent()
+
         ReportProgress: (complete) =>
           # Pause current callback node so dialogues can execute.
           LOI.adventure.director.pauseCurrentNode()
@@ -306,6 +400,12 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
 
           complete()
 
+        MeetingEnd: (complete) =>
+          # Update members that have been introduced.
+          scene.updateLastIntroducedMemberId()
+
+          complete()
+
     onCommand: (commandResponse) ->
       super arguments...
 
@@ -429,3 +529,20 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
             # Override the start to the new already-accepted script.
             startScriptOptions.label = alreadyAcceptedLabel
             LOI.adventure.director.startScript @groupScript, startScriptOptions
+
+    prepareHangout: ->
+      scene = @options.parent
+
+      # See if new members must be introduced.
+      unintroducedMembers = scene.unintroducedMembers()
+
+      scene._agentIdsLeftForIntruductions = (member.character._id for member in unintroducedMembers)
+      unintroducedAgents = (LOI.Character.getAgent id for id in scene._agentIdsLeftForIntruductions)
+
+      newMembers =
+        count: unintroducedMembers.length
+        names: AB.Rules.English.createNounSeries (agent.fullName() for agent in unintroducedAgents)
+
+      @groupScript.ephemeralState 'newMembers', newMembers
+
+      super arguments...

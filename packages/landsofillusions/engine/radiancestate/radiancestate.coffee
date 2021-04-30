@@ -108,7 +108,7 @@ class LOI.Engine.RadianceState
 
     # Render the probe cube.
     renderer.setClearColor 0, 1
-    probeCubeCamera.clear renderer
+    probeCubeCamera.renderTarget.clear renderer
     probeCubeCamera.update renderer, scene
 
     # Update the radiance atlas.

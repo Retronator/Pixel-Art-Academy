@@ -12,7 +12,7 @@
 
   .book
     position relative
-    color atariGrey(0)
+    color atariGray(0)
 
     &.brown
       &.dark
@@ -39,7 +39,7 @@
       transition background 0.2s, width 0.5s
 
       &:hover
-        background rgba(atariGrey(3), 0.3)
+        background rgba(atariGray(3), 0.3)
 
       &.left
         left 0
@@ -65,7 +65,7 @@
         bottom -1px
         left -1px
         right -1px
-        background-color atariGrey(7)
+        background-color atariGray(7)
 
       &.left
         left 0
@@ -108,14 +108,14 @@
         position absolute
         top 5rem
         padding-bottom 2rem
-        border-bottom 1rem solid atariGrey(5)
-        color atariGrey(2)
+        border-bottom 1rem solid atariGray(5)
+        color atariGray(2)
         text-transform uppercase
 
       .footer
         position absolute
         bottom 16rem
-        color atariGrey(2)
+        color atariGray(2)
 
     .contents-area
       position absolute
@@ -155,6 +155,25 @@
 
               a
                 text-decoration none
+
+              .indicator
+                daily()
+                font-weight bold
+
+                &::before
+                  content '✓'
+
+                &.started
+                  color atariGray(5)
+
+                &.completed
+                  color atariGreen(6)
+
+                &.all-tasks-completed
+                  color atariGreen(4)
+
+                & ~ .indicator
+                  display none
 
 .focusedartworks ~ .pixelartacademy-studyguide-pages-home-book
   display none
