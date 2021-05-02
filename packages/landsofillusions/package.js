@@ -73,6 +73,7 @@ Package.onUse(function(api) {
   api.addServerFile('state/migrations/0003-addinggamestatefields');
   api.addServerFile('state/migrations/0004-admissionapplication');
   api.addServerFile('state/migrations/0005-tutorialspritesremove');
+  api.addServerFile('state/migrations/0006-recordfirststudygrouphangout');
 
   // Engine
 

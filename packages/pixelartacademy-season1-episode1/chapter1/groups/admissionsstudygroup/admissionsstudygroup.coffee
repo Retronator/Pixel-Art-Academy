@@ -261,12 +261,15 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
           # Pause current callback node so dialogues can execute.
           LOI.adventure.director.pauseCurrentNode()
 
+          # Record that your PC has reported progress.
           person = LOI.agent()
+          person.recordHangout()
 
           group.characterUpdatesHelper.person person
 
           script = group.personUpdates.getScript
             person: person
+            # Don't use the default text when player has no updates, we'll use a custom one.
             justUpdate: true
             readyField: group.characterUpdatesHelper.ready
             nextNode: null
@@ -274,6 +277,10 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
               # Transfer learning tasks information.
               learningTasks = script.ephemeralState 'learningTasks'
               @groupScript.ephemeralState 'learningTasks', learningTasks
+
+              # See if there were any tasks reported at all.
+              nothingToReport = script.ephemeralState('relevantUpdatesCount') is 0
+              @groupScript.ephemeralState 'nothingToReport', nothingToReport
 
               complete()
 

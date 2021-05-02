@@ -17,6 +17,8 @@ person5: Hi, everybody! `_person5`
 coordinator: 
   Let's start our study group meeting.
 
+## IntroductionsCheck
+
 -> [ReportIntro] `_newMembers.count is 0`
 
 -> [IntroduceMultiple] `_newMembers.count > 1`
@@ -86,6 +88,7 @@ pause
 
 ### ReportProgress
 
+-> [ReportProgressNothing] `_nothingToReport`
 -> [ReportProgressContinue] `_learningTasks.tasks.length < 1`
 
 ## ReportProgressWhichLearningTasks
@@ -112,6 +115,14 @@ char: I was quite productive, I finished a bunch of tasks from the `_learningTas
 char: I was quite productive, I finished a bunch of tasks from the `_learningTasks.goalNames` goals. `_learningTasks.tasks.length > 3 and _learningTasks.goals.length > 1`
 
 -> [ReportProgressContinue]
+
+## ReportProgressNothing
+
+char: Oh, I haven't done much recently.
+
+coordinator: No worries, there's always next time.
+
+-> [ReciprocityStart]
 
 ## ReportProgressContinue
 
@@ -374,6 +385,8 @@ coordinator: You know you're always welcome back.
 -> [AlreadyAcceptedShareNoOne] `not _person1`
 
 coordinator: Alright, everyone, let's see what you've been up to.
+
+-> [IntroductionsCheck] `_newMembers.count > 0`
 
 pause
 

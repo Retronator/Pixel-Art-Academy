@@ -149,9 +149,10 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
         LOI.adventure.interface.narrative.removeLastCommand()
 
         introduction = _.trim _.last(likelyAction.translatedForm), '"'
+        agent = LOI.agent()
 
         dialogueLine = new Nodes.DialogueLine
-          actor: LOI.agent()
+          actor: agent
           line: introduction
           next: @script.startNode.labels.PlayerIntroductionEnd
 
@@ -162,6 +163,9 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
           LOI.adventure.currentSituationParameters()
         ,
           {introduction}
+
+        # Record that your PC has been introduced, so that the next progress report is relative to this point.
+        agent.recordHangout()
 
       commandResponse.onPhrase
         form: [Vocabulary.Keys.Verbs.Say, '""']
