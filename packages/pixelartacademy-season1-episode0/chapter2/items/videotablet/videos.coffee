@@ -103,10 +103,10 @@ C2.Items.VideoTablet.Videos = [
       pixelArt: 2
       art: 1
   ,
-    title: "Life and Music"
+    title: "Alan Watts - Life and Music"
     author: "Trey Parker and Matt Stone"
-    id: 'iuUz9lUtPnU'
-    time: 2 * 60 + 34
+    id: '6I2pcIbyq-0'
+    time: 2 * 60 + 40
     weights:
       art: 1
       think: 1

@@ -18,8 +18,8 @@ Package.onUse(function(api) {
   api.use('email');
 
   api.use('bozhao:link-accounts');
-  api.use('splendido:accounts-meld');
-  api.use('splendido:accounts-emails-field');
+  api.use('retronator:accounts-meld');
+  api.use('retronator:accounts-emails-field');
   api.use('jparker:crypto-aes');
 
   api.imply('accounts-password');

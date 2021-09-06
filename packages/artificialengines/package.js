@@ -33,7 +33,7 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'markdown',
-    'http@=1.4.3',
+    'http',
     'oauth',
     'modules',
     'stylus',
@@ -41,9 +41,10 @@ Package.onUse(function(api) {
     // 3rd party
     'peerlibrary:assert',
     'peerlibrary:peerdb',
-    'peerlibrary:peerdb-migrations',
+    'retronator:peerdb-migrations',
     'peerlibrary:reactive-publish',
-    'retronator:blaze-components',
+    'peerlibrary:blaze-components',
+    'peerlibrary:blaze-common-component',
     'peerlibrary:reactive-field',
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
@@ -59,7 +60,7 @@ Package.onUse(function(api) {
     'retronator:api'
   ];
 
-	api.use(packages);
+  api.use(packages);
   api.imply(packages);
 
   api.use('webapp', 'server');
