@@ -15,6 +15,9 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:landsofillusions');
 
+  api.use('facts-base');
+  api.use('facts-ui');
+
   // Routing portion, fork from force-ssl.
   api.use('webapp', 'server');
   
@@ -29,7 +32,9 @@ Package.onUse(function(api) {
 
   // Add other files.
   api.addUnstyledComponent('app');
-  api.addUnstyledComponent('admin');
+  api.addUnstyledComponent('admin..');
+  api.addUnstyledComponent('admin/facts');
+  api.addServerFile('facts-server');
 
   // Layouts
 

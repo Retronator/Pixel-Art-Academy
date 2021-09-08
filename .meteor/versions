@@ -38,6 +38,8 @@ ejson@1.1.1
 email@2.1.1
 es5-shim@4.8.0
 facebook-oauth@1.9.1
+facts-base@1.0.1
+facts-ui@1.0.0
 fetch@0.1.1
 froatsnook:request@2.74.0
 geojson-utils@1.0.10
