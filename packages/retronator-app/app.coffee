@@ -23,8 +23,9 @@ class Retronator.App extends Artificial.Base.App
   constructor: ->
     super arguments...
 
-    # Wire the main admin page.
+    # Wire the main admin pages.
     @constructor.addAdminPage '/admin', @constructor.Admin
+    @constructor.addAdminPage '/admin/facts', @constructor.Admin.Facts
 
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages

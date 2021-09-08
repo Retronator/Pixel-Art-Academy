@@ -5,6 +5,8 @@ C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
 
+Showdown = require 'showdown'
+
 class C1.Items.ApplicationEmail extends LOI.Emails.Email
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Items.ApplicationEmail'
 
@@ -49,7 +51,7 @@ class C1.Items.ApplicationEmail extends LOI.Emails.Email
     text = text.replace /_char_/g, character.avatar.fullName.translate().text
 
     # Create the html version by treating it as markdown.
-    converter = new Showdown.converter()
+    converter = new Showdown.Converter
     html = converter.makeHtml text
 
     # Remove HTML from text.

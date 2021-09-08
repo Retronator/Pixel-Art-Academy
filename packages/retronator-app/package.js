@@ -15,6 +15,9 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:landsofillusions');
 
+  api.use('facts-base');
+  api.use('facts-ui');
+
   // Routing portion, fork from force-ssl.
   api.use('webapp', 'server');
   
@@ -24,12 +27,14 @@ Package.onUse(function(api) {
   api.addServerFile('routing-server');
 
   // Add global user meld (it needs to be in top-level package to have access to all documents).
-  api.use('splendido:accounts-meld@1.3.1');
+  api.use('retronator:accounts-meld');
   api.addServerFile('accountsmeld-server');
 
   // Add other files.
   api.addUnstyledComponent('app');
-  api.addUnstyledComponent('admin');
+  api.addUnstyledComponent('admin..');
+  api.addUnstyledComponent('admin/facts');
+  api.addServerFile('facts-server');
 
   // Layouts
 

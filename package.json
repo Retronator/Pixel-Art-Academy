@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "description": "An adventure game for learning how to draw.",
   "dependencies": {
-    "@babel/runtime": "^7.9.6",
+    "@babel/runtime": "^7.15.4",
     "bcrypt": "^5.0.1",
     "jquery": "^3.6.0",
-    "meteor-node-stubs": "^1.0.0",
+    "meteor-node-stubs": "^1.1.0",
     "minimist": "^1.2.5",
     "util": "^0.11.1"
   },
   "devDependencies": {
-    "@coffeelint/cli": "^4.1.1"
+    "@coffeelint/cli": "^4.1.5"
   },
   "scripts": {
     "test": ""
