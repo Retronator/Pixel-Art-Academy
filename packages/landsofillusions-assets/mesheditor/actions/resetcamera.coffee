@@ -10,7 +10,7 @@ class LOI.Assets.MeshEditor.Actions.ResetCamera extends LOI.Assets.Editor.Action
 
   enabled: ->
     # We can reset the camera when we have an active camera angle.
-    editor = @interface.getEditorForActiveFile()
+    return unless editor = @interface.getEditorForActiveFile()
     editor.cameraAngle()
 
   execute: ->

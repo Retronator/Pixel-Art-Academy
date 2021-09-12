@@ -32,7 +32,7 @@ class LOI.Assets.Editor.Actions.ResetExposure extends Exposure
   @initialize()
 
   enabled: ->
-    exposureValue = @interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
+    return unless exposureValue = @interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
     exposureValue()
 
   execute: ->

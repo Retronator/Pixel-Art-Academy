@@ -10,7 +10,7 @@ class LOI.Assets.MeshEditor.Actions.Undo extends LOI.Assets.Editor.Actions.Asset
   @initialize()
 
   enabled: ->
-    return unless sprite = @editor().spriteData()
+    return unless sprite = @editor()?.spriteData()
     sprite.historyPosition
 
   execute: ->
@@ -24,7 +24,7 @@ class LOI.Assets.MeshEditor.Actions.Redo extends LOI.Assets.Editor.Actions.Asset
   @initialize()
 
   enabled: ->
-    return unless sprite = @editor().spriteData()
+    return unless sprite = @editor()?.spriteData()
     sprite.historyPosition < sprite.history?.length
 
   execute: ->

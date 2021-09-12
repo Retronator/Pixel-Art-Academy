@@ -7,7 +7,7 @@ class LOI.Assets.Editor.Actions.ShowHelperAction extends LOI.Assets.Editor.Actio
   @helperClass: -> throw new AE.NotImplementedException "Show helper action must specify the helper class."
     
   active: ->
-    @_helper().enabled()
+    @_helper()?.enabled()
 
   execute: ->
     @_helper().toggle()
