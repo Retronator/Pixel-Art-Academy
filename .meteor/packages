@@ -6,13 +6,13 @@
 
 meteor-base@1.5.1
 mobile-experience@1.1.0
-mongo@1.12.0
+mongo@1.13.0-rc240.6
 session@1.2.0
 tracker@1.2.0
 shell-server@0.5.0
 
-standard-minifier-css@1.7.3
-standard-minifier-js@2.6.1
+standard-minifier-css@1.7.4-rc240.6
+standard-minifier-js@2.7.0-rc240.6
 es5-shim@4.8.0
 ecmascript@0.15.3
 dynamic-import@0.7.1
