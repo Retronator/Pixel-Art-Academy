@@ -41,7 +41,7 @@ Package.onUse(function(api) {
     // 3rd party
     'peerlibrary:assert',
     'peerlibrary:peerdb',
-    'retronator:peerdb-migrations',
+    'peerlibrary:peerdb-migrations',
     'peerlibrary:reactive-publish',
     'peerlibrary:blaze-components',
     'peerlibrary:blaze-common-component',
