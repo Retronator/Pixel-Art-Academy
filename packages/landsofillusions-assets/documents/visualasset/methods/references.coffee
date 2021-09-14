@@ -94,3 +94,22 @@ LOI.Assets.VisualAsset.reorderReferenceToTop.method (assetClassName, assetId, im
   assetClass.documents.update assetId,
     $set:
       "references.#{referenceIndex}.order": highestOrder + 1
+
+LOI.Assets.VisualAsset.removeReference.method (assetClassName, assetId, imageId) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check imageId, Match.DocumentId
+
+  # Authorize action.
+  assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+  LOI.Assets.Asset._authorizeAssetAction asset
+
+  referenceIndex = _.findIndex asset.references, (reference) -> reference.image._id is imageId
+  throw new AE.ArgumentException "Image is not one of the references." if referenceIndex is -1
+
+  # Remove the reference.
+  assetClass.documents.update assetId,
+    $pull:
+      references:
+        "image._id": imageId

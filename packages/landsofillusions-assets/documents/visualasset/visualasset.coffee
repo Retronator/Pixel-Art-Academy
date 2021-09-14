@@ -71,6 +71,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   @updateReferenceDisplayed: @method 'updateReferenceDisplayed'
   @updateReferenceDisplayMode: @method 'updateReferenceDisplayMode'
   @reorderReferenceToTop: @method 'reorderReferenceToTop'
+  @removeReference: @method 'removeReference'
 
   @addEnvironmentByUrl: @method 'addEnvironmentByUrl'
   @activateEnvironment: @method 'activateEnvironment'

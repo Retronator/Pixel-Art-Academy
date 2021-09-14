@@ -89,5 +89,9 @@ class LOI.Assets.Editor.References extends FM.View
     $fileInput.click()
 
   onClickRemoveButton: (event) ->
-    # TODO
-    console.error "Removing of references not implemented."
+    activeReferenceIndex = @activeReferencesData()?.get 'activeReferenceIndex'
+    reference = @assetData()?.references[activeReferenceIndex]
+
+    assetData = @assetData()
+
+    LOI.Assets.VisualAsset.removeReference assetData.constructor.className, assetData._id, reference.image._id
