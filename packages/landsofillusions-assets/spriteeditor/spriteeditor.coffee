@@ -191,8 +191,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
       "#{LOI.Assets.SpriteEditor.Actions.IgnoreNormals.id()}": shift: true, key: AC.Keys.n
       "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}, {commandOrControl: true, key: AC.Keys.numPlus}]
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}, {commandOrControl: true, key: AC.Keys.numMinus}]
       "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}": commandOrControl: true, key: AC.Keys.singleQuote
       "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}": commandOrControl: true, shift: true, key: AC.Keys.l
       "#{LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()}": commandOrControl: true, shift: true, key: AC.Keys.a

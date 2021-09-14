@@ -65,6 +65,8 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     ,
       (a, b) => a is b
 
+    @pbrEnabledHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
+
     @autorun (computation) =>
       # Set the new position.
       lightDirection = @lightDirectionHelper()
@@ -76,12 +78,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       lookTarget = new THREE.Vector3().setFromMatrixPosition directionalLight.target.matrixWorld
       directionalLight.shadow.camera.lookAt lookTarget
       directionalLight.shadow.camera.updateMatrixWorld()
-
-      # Update the skydome.
-      meshCanvas = @meshCanvas()
-
-      if meshCanvas?.isRendered() and @skydome.procedural.visible
-        @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
 
       @scene.updated()
 
@@ -99,8 +95,19 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
         @skydome.photo.loadFromUrl photoSkydomeUrl
 
       # Enable the correct skydome.
-      @skydome.procedural.visible = not photoSkydomeUrl
-      @skydome.photo.visible = photoSkydomeUrl?
+      pbrEnabled = @pbrEnabledHelper()
+      @skydome.procedural.visible = pbrEnabled and not photoSkydomeUrl
+      @skydome.photo.visible = pbrEnabled and photoSkydomeUrl?
+
+    @autorun (computation) =>
+      return unless @pbrEnabledHelper()
+      return if @photoSkydomeUrl()
+      return unless meshCanvas = @meshCanvas()
+      return unless meshCanvas.isRendered()
+
+      # Update the skydome texture.
+      lightDirection = @lightDirectionHelper()
+      @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
 
     # Apply uniforms to new objects when they get added.
     @autorun (computation) =>

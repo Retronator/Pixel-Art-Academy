@@ -30,14 +30,20 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.ClusterPlane
       # See if the clusters are coplanar.
       coplanarClusters = false
 
+      # The edges must be parallel to be coplanar.
       if edge.parallelClusters
-        # The clusters are parallel which is a necessary precondition. The edge
-        # must also be longer than the longest edge between non-parallel clusters.
-        edgeLength = edge.segments.length
-        thisLongestEdge = cluster.getLongestEdgeLengthBetweenNonParallelClusters()
-        otherLongestEdge = otherCluster.getLongestEdgeLengthBetweenNonParallelClusters()
+        # Coplanar clusters need to come from the same layer, under the assumption that we're using
+        # different layers so that clusters can overlap (since overlapping clusters can't be coplanar).
+        # TODO: To support non-overlapping coplanar clusters on multiple layers, a full check should instead be performed, whether the overlap is happening.
+        if edge.clusterA.layerCluster.layer is edge.clusterB.layerCluster.layer
+          # The edge must also be longer than the longest edge between non-parallel clusters for at least one of the
+          # clusters. This means that the parallel edge is more significant than others and we will use it to stick the
+          # two clusters into the same plane.
+          edgeLength = edge.segments.length
+          thisLongestEdge = cluster.getLongestEdgeLengthBetweenNonParallelClusters()
+          otherLongestEdge = otherCluster.getLongestEdgeLengthBetweenNonParallelClusters()
 
-        coplanarClusters = true if edgeLength > thisLongestEdge and edgeLength > otherLongestEdge
+          coplanarClusters = true if edgeLength > thisLongestEdge or edgeLength > otherLongestEdge
 
       if coplanarClusters
         # Make sure the other cluster doesn't already belong to another cluster plane.

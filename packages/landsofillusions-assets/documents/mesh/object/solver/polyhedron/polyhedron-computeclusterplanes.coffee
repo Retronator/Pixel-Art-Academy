@@ -72,7 +72,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
     # Otherwise look if a cluster is at the (0, 0) pixel.
     originCluster ?= _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate 0, 0
 
-    if originCluster and not originCluster.plane.point
+    if originCluster and not originCluster._clusterPlane.plane.point
       # Use the origin cluster as the base to calculate other clusters from.
       console.log "Setting cluster #{originCluster.id} to origin." if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
       originCluster._clusterPlane.setPlanePoint new THREE.Vector3
@@ -151,7 +151,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
   # Determine coplanar clusters.
   edge.determineCoplanarClusters() for edge in edges
 
-  # Remove all edges between parallel cluster that didn't end up in the same cluster planes.
+  # Remove all edges between parallel clusters that didn't end up in the same cluster planes.
   edge.removeFromClusters() for edge in edges when edge.parallelClusters and not edge.coplanarClusters
   _.remove edges, (edge) => edge.parallelClusters and not edge.coplanarClusters
 

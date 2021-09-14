@@ -78,7 +78,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     pbr = options.pbr?()
 
     materialOptions =
-      wireframe: options.debug?()
+      wireframe: options.debug?() or false
 
     # Determine the color.
     clusterMaterial = @data.material()
