@@ -49,7 +49,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       return unless @_meshData
 
       # Overwrite plain properties of the singleton mesh data.
-      for property in ['name', 'editor', 'palette', 'authors', 'references', 'environments']
+      for property in ['name', 'editor', 'palette', 'authors', 'planeGrid', 'references', 'environments']
         if meshData[property]
           @_meshData[property] = meshData[property]
 

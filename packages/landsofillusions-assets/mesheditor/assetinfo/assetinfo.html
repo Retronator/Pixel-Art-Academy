@@ -1,0 +1,30 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.AssetInfo">
+  <div class="landsofillusions-assets-mesheditor-assetinfo landsofillusions-assets-editor-assetinfo landsofillusions-assets-editor-panel">
+    <div class="properties">
+      {{#with asset}}
+        <label class="name">Name:
+          {{> LandsOfIllusions.Assets.Editor.AssetInfo.Name}}
+        </label>
+        {{#if showPalette}}
+          <label class="palette">Palette:
+            {{> LandsOfIllusions.Assets.Editor.AssetInfo.Palette}}
+          </label>
+        {{/if}}
+        <div class="planegrid landsofillusions-assets-editor-propertieslist">
+          <label class="property size">
+            <span class="name">Grid size</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.AssetInfo.PlaneGrid.Size}}</span>
+          </label>
+          <label class="property spacing">
+            <span class="name">Spacing</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.AssetInfo.PlaneGrid.Spacing}}</span>
+          </label>
+          <label class="property subdivisions">
+            <span class="name">Subdivisions</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.AssetInfo.PlaneGrid.Subdivisions}}</span>
+          </label>
+        </div>
+      {{/with}}
+    </div>
+  </div>
+</template>

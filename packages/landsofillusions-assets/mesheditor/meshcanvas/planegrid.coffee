@@ -1,56 +1,93 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
+class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.Object3D
   constructor: (@meshCanvas) ->
-    geometry = new THREE.BufferGeometry
+    super arguments...
 
-    # We create a unit grid from -gridSize to gridSize. That's 2 * gridSize + 1
-    # lines in each direction and each line has 2 vertices (start and end).
-    gridSize = 100
-    spacing = 1
-    linesCount = 2 * (gridSize / spacing) + 1
-    elementsPerVertex = 3
-    elementsPerLine = elementsPerVertex * 2
-
-    verticesArray = new Float32Array linesCount * 2 * elementsPerLine
-    horizontalVerticesArray = verticesArray.subarray linesCount * elementsPerLine
-
-    colorsArray = new Float32Array linesCount * 2 * elementsPerLine
-    horizontalColorsArray = colorsArray.subarray linesCount * elementsPerLine
-
-    for i in [0...linesCount]
-      x = -gridSize + i * spacing
-
-      verticesArray[i * elementsPerLine] = x
-      verticesArray[i * elementsPerLine + 1] = -gridSize
-      verticesArray[i * elementsPerLine + 3] = x
-      verticesArray[i * elementsPerLine + 4] = gridSize
-
-      horizontalVerticesArray[i * elementsPerLine] = -gridSize
-      horizontalVerticesArray[i * elementsPerLine + 1] = x
-      horizontalVerticesArray[i * elementsPerLine + 3] = gridSize
-      horizontalVerticesArray[i * elementsPerLine + 4] = x
-
-      shade = if x then 0.5 else 1
-
-      for offset in [0..5]
-        colorsArray[i * elementsPerLine + offset] = shade
-        horizontalColorsArray[i * elementsPerLine + offset] = shade
-
-    geometry.setAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
-    geometry.setAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
+    @grid = new ReactiveField null
 
     material = new THREE.LineBasicMaterial vertexColors: THREE.VertexColors
 
-    super geometry, material
+    # Reactively generate grid geometry.
+    @meshCanvas.autorun (computation) =>
+      return unless meshData = @meshCanvas.meshData()
 
-    @layers.set 1
+      geometry = new THREE.BufferGeometry
+      
+      planeGridData = _.defaults meshData.planeGrid,
+        size: 100
+        spacing: 1
+        subdivisions: 0
 
-    @meshCanvas.sceneHelper().scene().add @
+      minorSpacing = planeGridData.spacing / (planeGridData.subdivisions + 1)
+      gridlinesCountPerExtent = Math.ceil planeGridData.size / minorSpacing
+      extent = gridlinesCountPerExtent * minorSpacing
 
+      # We create a grid from -gridlinesCountPerExtent to gridlinesCountPerExtent. That's 2 * gridlinesCountPerExtent + 1
+      # lines in each direction and each line has 2 vertices (start and end).
+      linesCount = 2 * gridlinesCountPerExtent + 1
+      elementsPerVertex = 3
+      elementsPerLine = elementsPerVertex * 2
+  
+      verticesArray = new Float32Array linesCount * 2 * elementsPerLine
+      horizontalVerticesArray = verticesArray.subarray linesCount * elementsPerLine
+  
+      colorsArray = new Float32Array linesCount * 2 * elementsPerLine
+      horizontalColorsArray = colorsArray.subarray linesCount * elementsPerLine
+
+      spacingEpsilon = 1e-5
+  
+      for i in [0...linesCount]
+        x = -extent + i * minorSpacing
+  
+        verticesArray[i * elementsPerLine] = x
+        verticesArray[i * elementsPerLine + 1] = -extent
+        verticesArray[i * elementsPerLine + 3] = x
+        verticesArray[i * elementsPerLine + 4] = extent
+  
+        horizontalVerticesArray[i * elementsPerLine] = -extent
+        horizontalVerticesArray[i * elementsPerLine + 1] = x
+        horizontalVerticesArray[i * elementsPerLine + 3] = extent
+        horizontalVerticesArray[i * elementsPerLine + 4] = x
+
+        absX = Math.abs(x)
+
+        if absX < spacingEpsilon
+          shade = 1
+
+        else if (absX + spacingEpsilon) % planeGridData.spacing < 2 * spacingEpsilon
+          shade = 0.5
+
+        else
+          shade = 0.25
+  
+        for offset in [0..5]
+          colorsArray[i * elementsPerLine + offset] = shade
+          horizontalColorsArray[i * elementsPerLine + offset] = shade
+  
+      geometry.setAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
+      geometry.setAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
+
+      grid = new THREE.LineSegments geometry, material
+      grid.layers.set 1
+      
+      # Remove previous grid.
+      Tracker.nonreactive =>
+        if previousGrid = @grid()
+          previousGrid.geometry.dispose()
+          @meshCanvas.sceneHelper().scene().remove previousGrid
+
+      # Add new grid.
+      @meshCanvas.sceneHelper().scene().add grid
+      @grid grid
+
+      @meshCanvas.sceneHelper().scene.updated()
+      
     # Reactively change visibility of the grid.
     @meshCanvas.autorun =>
-      @visible = @meshCanvas.planeGridEnabled()
+      return unless grid = @grid()
+
+      grid.visible = @meshCanvas.planeGridEnabled()
       @meshCanvas.sceneHelper().scene.updated()
 
     # Match orientation to normal.
@@ -59,6 +96,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
     right = new THREE.Vector3 1, 0, 0
 
     @meshCanvas.autorun (computation) =>
+      return unless grid = @grid()
+      
       coplanarPoint = new THREE.Vector3()
 
       if cluster = @meshCanvas.currentClusterHelper().cluster()
@@ -74,10 +113,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
 
       # Note: We use right to align the grid at the poles since
       # there the normal and up get very close and unpredictable.
-      @matrix.lookAt zero, plane.normal, if Math.abs(plane.normal.y) > 0.99 then right else up
+      grid.matrix.lookAt zero, plane.normal, if Math.abs(plane.normal.y) > 0.99 then right else up
 
       # Move the grid slightly above the cluster to prevent Z-fighting.
-      @matrix.setPosition planeZero.add plane.normal.clone().multiplyScalar 0.001
-      @matrix.decompose @position, @quaternion, @scale
+      grid.matrix.setPosition planeZero.add plane.normal.clone().multiplyScalar 0.001
+      grid.matrix.decompose grid.position, grid.quaternion, grid.scale
 
       @meshCanvas.sceneHelper().scene.updated()

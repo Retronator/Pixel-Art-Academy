@@ -163,7 +163,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     contentComponentId: LOI.Assets.MeshEditor.Navigator.id()
                   ,
                     name: 'File info'
-                    contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()
+                    contentComponentId: LOI.Assets.MeshEditor.AssetInfo.id()
                   ,
                     name: 'Objects'
                     contentComponentId: LOI.Assets.MeshEditor.Objects.id()

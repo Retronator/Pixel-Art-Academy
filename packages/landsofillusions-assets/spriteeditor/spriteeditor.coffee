@@ -140,7 +140,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
                     active: true
                   ,
                     name: 'File info'
-                    contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()
+                    contentComponentId: LOI.Assets.Editor.AssetInfo.id()
                   ]
                 remainingArea:
                   type: FM.SplitView.id()

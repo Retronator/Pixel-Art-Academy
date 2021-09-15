@@ -367,6 +367,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('mesheditor/thumbnail..');
   api.addFile('mesheditor/thumbnail/picture');
   api.addFile('mesheditor/thumbnail/pictures');
+  api.addComponent('mesheditor/assetinfo..');
   api.addComponent('mesheditor/cameraangle..');
   api.addComponent('mesheditor/cluster..');
   api.addComponent('mesheditor/materialdialog..');

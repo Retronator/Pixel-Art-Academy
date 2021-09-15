@@ -5,6 +5,10 @@ LOI = LandsOfIllusions
 # A 3D model asset.
 class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Mesh'
+  # planeGrid:
+  #   size: the number of units the grid covers
+  #   spacing: the spacing in units between major lines
+  #   subdivisions: the number of minor lines between the major lines
   # cameraAngles: array of scene viewpoints
   #   name: text identifier
   #   picturePlaneDistance: the distance in pixels the camera is away from the picture plane or null for ortographic
