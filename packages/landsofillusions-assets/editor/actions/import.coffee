@@ -7,7 +7,7 @@ PNG = require 'fast-png'
 
 class LOI.Assets.Editor.Actions.Import extends FM.Action
   @id: -> 'LandsOfIllusions.Assets.Editor.Actions.Import'
-  @displayName: -> "Import"
+  @displayName: -> "Import …"
 
   @initialize()
 

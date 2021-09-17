@@ -1,0 +1,15 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.CharacterSelectionDialog">
+  {{#LandsOfIllusions.Assets.Editor.Window title="Character selection"}}
+    <div class="landsofillusions-assets-mesheditor-characterselectiondialog">
+      <ul class="characters">
+        {{#each characters}}
+          <li class="character {{selectedClass}}">{{t7e avatar.fullName}}</li>
+        {{/each}}
+      </ul>
+      <div class="actions">
+        <button class="cancel-button">Cancel</button>
+        <button class="select-button" {{selectButtonDisabledAttribute}}>Select</button>
+      </div>
+    </div>
+  {{/LandsOfIllusions.Assets.Editor.Window}}
+</template>

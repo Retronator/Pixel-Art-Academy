@@ -102,6 +102,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       ,
         caption: 'Scene'
         items: [
+          LOI.Assets.MeshEditor.Actions.CharacterPreviewEnabled.id()
+          LOI.Assets.MeshEditor.Actions.CharacterPreviewSelection.id()
+          null
           LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
           LOI.Assets.MeshEditor.Actions.SmoothShadingEnabled.id()
           LOI.Assets.MeshEditor.Actions.PBREnabled.id()
@@ -133,6 +136,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         LOI.Assets.MeshEditor.Tools.ColorFill.id()
         LOI.Assets.MeshEditor.Tools.ClusterPicker.id()
         LOI.Assets.MeshEditor.Tools.MoveCamera.id()
+        LOI.Assets.MeshEditor.Tools.PositionCharacterPreview.id()
       ]
 
     layouts =

@@ -227,6 +227,7 @@ Package.onUse(function(api) {
   api.addFile('editor/helpers..');
   api.addFile('editor/helpers/drawcomponent');
   api.addFile('editor/helpers/exposurevalue');
+  api.addFile('editor/helpers/enabled');
 
   api.addComponent('editor/assetinfo..');
   api.addComponent('editor/dialog..');
@@ -330,6 +331,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/eraser');
   api.addFile('mesheditor/tools/colorfill');
   api.addFile('mesheditor/tools/translate');
+  api.addFile('mesheditor/tools/positioncharacterpreview');
 
   api.addFile('mesheditor/actions..');
   api.addFile('mesheditor/actions/debugmode');
@@ -345,6 +347,8 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/smoothshadingenabled');
   api.addFile('mesheditor/actions/resetcamera');
   api.addFile('mesheditor/actions/pbrenabled');
+  api.addFile('mesheditor/actions/characterpreviewenabled');
+  api.addFile('mesheditor/actions/characterpreviewselection');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
@@ -354,7 +358,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/landmarks');
   api.addFile('mesheditor/helpers/smoothshadingenabled');
   api.addFile('mesheditor/helpers/pbrenabled');
-
+  api.addFile('mesheditor/helpers/characterpreview');
 
   api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');
@@ -373,6 +377,7 @@ Package.onUse(function(api) {
   api.addComponent('mesheditor/materialdialog..');
   api.addUnstyledComponent('mesheditor/spriteselectdialog..');
   api.addUnstyledComponent('mesheditor/texturemappingmatrix..');
+  api.addComponent('mesheditor/characterselectiondialog..');
 
   api.addComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/edges');

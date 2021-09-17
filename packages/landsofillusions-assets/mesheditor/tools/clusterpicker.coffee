@@ -3,7 +3,7 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.Tools.Tool
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.ClusterPicker'
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Tools.ClusterPicker'
   @displayName: -> "Cluster picker"
 
   @initialize()

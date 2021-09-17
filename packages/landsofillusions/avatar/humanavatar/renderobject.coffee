@@ -131,22 +131,21 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         textureLoader = new THREE.TextureLoader()
         textureLoader.crossOrigin = 'use-credentials'
 
-        @updatePaletteDataTexture textureLoader.load textures.paletteData.url
-        @updateNormalsTexture textureLoader.load textures.normals.url
-        @textureUpdateFinished()
+        palleteDataTexturePromise = new Promise (resolve, reject) =>
+          @updatePaletteDataTexture textureLoader.load textures.paletteData.url, (=> resolve()), (=>), (=> reject())
 
-        # Make sure the textures are actually reachable and fallback to on-the-fly rendering otherwise.
-        image = new Image
-        image.crossOrigin = 'use-credentials'
-        image.addEventListener 'error', =>
-          console.warn "Couldn't reach avatar texture", textures.paletteData.url
-          
+        palleteDataNormalsPromise = new Promise (resolve, reject) =>
+          @updateNormalsTexture textureLoader.load textures.normals.url, (=> resolve()), (=>), (=> reject())
+
+        # Notify when both textures have loaded.
+        Promise.all([palleteDataTexturePromise, palleteDataNormalsPromise]).then( =>
+          @textureUpdateFinished()
+
+        ).catch (error) =>
+          console.warn "Couldn't reach avatar texture", textures.paletteData.url, error
+
           # Set the current outfit as a custom outfit to trigger rendering.
           @humanAvatar.customOutfit @humanAvatar.outfit.options.dataLocation.options.rootField.options.load()
-        ,
-          false
-
-        image.src = textures.paletteData.url
 
       else
         console.log "Rendering ad-hoc", @humanAvatarRenderer?, @textureRenderer? if LOI.debug

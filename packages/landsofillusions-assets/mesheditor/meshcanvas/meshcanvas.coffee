@@ -142,6 +142,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @sceneHelper = new ComputedField =>
       @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, @meshId()
 
+    @characterPreviewHelper = new ComputedField =>
+      @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CharacterPreview, @meshId()
+
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
     
     @currentClusterHelper = new ComputedField =>

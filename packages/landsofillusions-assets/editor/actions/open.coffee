@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Editor.Actions.Open extends FM.Action
   @id: -> 'LandsOfIllusions.Assets.Editor.Actions.Open'
-  @displayName: -> "Open"
+  @displayName: -> "Open …"
 
   @initialize()
     

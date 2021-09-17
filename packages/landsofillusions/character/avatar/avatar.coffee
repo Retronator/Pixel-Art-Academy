@@ -6,15 +6,15 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar extends LOI.HumanAvatar
   @id: -> 'LOI.Character.Avatar'
 
-  constructor: (characterInstanceOrDocument) ->
-    console.log "Creating character avatar", characterInstanceOrDocument if LOI.debug
+  constructor: (documentProvider) ->
+    console.log "Creating character avatar", documentProvider if LOI.debug
 
-    # We allow the avatar to be constructed for the character instance or directly for the document.
-    if characterInstanceOrDocument instanceof LOI.Character.Instance
-      document = => characterInstanceOrDocument.document avatar: true
+    # We allow the document to be reactive.
+    if _.isFunction documentProvider
+      document = documentProvider
 
     else
-      document = => characterInstanceOrDocument
+      document = => documentProvider
 
     # Create the body and outfit data hierarchies first.
     bodyDataField = AM.Hierarchy.create

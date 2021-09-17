@@ -94,8 +94,9 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       if photoSkydomeUrl
         @skydome.photo.loadFromUrl photoSkydomeUrl
 
-      # Enable the correct skydome.
-      pbrEnabled = @pbrEnabledHelper()
+      # Enable the correct skydome. We need to have a proper boolean so
+      # that the visible property below also has an explicit false value.
+      pbrEnabled = @pbrEnabledHelper() or false
       @skydome.procedural.visible = pbrEnabled and not photoSkydomeUrl
       @skydome.photo.visible = pbrEnabled and photoSkydomeUrl?
 

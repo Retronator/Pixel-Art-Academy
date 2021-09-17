@@ -12,7 +12,7 @@ class LOI.Character.Instance
       # Subscribe to get all the data for the character.
       @_documentSubscription = LOI.Character.forId.subscribe @id
 
-    @avatar = new LOI.Character.Avatar @
+    @avatar = new LOI.Character.Avatar => @document avatar: true
     @behavior = new LOI.Character.Behavior @
 
   destroy: ->

@@ -1,0 +1,22 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-mesheditor-characterselectiondialog
+  min-width 150rem
+  padding 8rem
+
+  .characters
+    border 1rem solid atariGray(0)
+    list-style none
+    padding 0
+
+    .character
+      padding 0 3rem
+      cursor pointer
+
+      &:hover
+        color atariGray(6)
+
+      &.selected
+        background atariGray(2)
+        color atariGray(7)
+        cursor default
