@@ -215,10 +215,11 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
   canvasCoordinateToNormal: (coordinate, angleSnap) ->
     radius = @radius()
 
-    # We reverse the y coordinate because normal is in right-handed 3D space.
     x = coordinate.x
+    # We reverse the y coordinate because normal is in right-handed 3D space.
     y = -coordinate.y
-    z = Math.sqrt(Math.pow(radius, 2) - Math.pow(x, 2) - Math.pow(y, 2))
+    z = Math.sqrt(radius ** 2 - x ** 2 - y ** 2)
+    z = 0 if _.isNaN z
 
     normal = new THREE.Vector3(x, y, z).normalize()
 
