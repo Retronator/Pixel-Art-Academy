@@ -39,7 +39,12 @@ class AB.Router extends AB.Router
         # We reuse the protocol from the root url.
         rootUrl = _absoluteUrl()
         protocol = rootUrl.match(/(.*:\/\/).*/)[1]
-        rootUrl = "#{protocol}#{_requestHost}"
+
+        # We strip the localhost part and port since that would be added by the proxy in production to address
+        # the node server behind the proxy, but we need the redirect URI's to point to the proxy.
+        requestHost = _requestHost.match(/(?:localhost\.)?([^:]*)(?::.*)?/)[1]
+
+        rootUrl = "#{protocol}#{requestHost}"
 
         options ?= {}
         options.rootUrl = rootUrl
