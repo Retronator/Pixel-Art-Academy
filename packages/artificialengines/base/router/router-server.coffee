@@ -19,10 +19,15 @@ class AB.Router extends AB.Router
         OAuth._requestHandlers[name] = (service, query, response) ->
           _requestHost = response._requestHost
 
-          # Call the original handler. We expect it will call absolute URL at some point.
-          handler arguments...
+          try
+            # Call the original handler. We expect it will call absolute URL at some point.
+            handler arguments...
 
-          _requestHost = null
+          catch exception
+            console.error "Exception in OAuth flow", exception
+
+          finally
+            _requestHost = null
 
     # HACK: Override absolute URL function to use the request host as the root url.
     _absoluteUrl = Meteor.absoluteUrl
