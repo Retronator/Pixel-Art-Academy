@@ -1,5 +1,7 @@
 AM = Artificial.Mirage
 
+Showdown = require 'showdown'
+
 class AM.Markdown extends AM.Component
   @register "Artificial.Mirage.Markdown"
 
@@ -20,8 +22,10 @@ class AM.Markdown extends AM.Component
     lines = for line in lines
       _.outdent line, indentationLength
 
-    # Return processed lines.
-    lines.join '\n'
+    # Format processed lines.
+    markdown = lines.join '\n'
+    converter = new Showdown.Converter
+    converter.makeHtml markdown
 
   class @Postprocess extends AM.Component
     @register "Artificial.Mirage.Markdown.Postprocess"
