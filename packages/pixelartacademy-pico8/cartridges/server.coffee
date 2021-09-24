@@ -24,13 +24,10 @@ WebApp.connectHandlers.use '/pico8/cartridge.png', (request, response, next) ->
 
   # Create a local URL if needed.
   cartridgeUrl = Meteor.absoluteUrl cartridgeUrl unless cartridgeUrl.indexOf('http') > -1
-  console.log "url", cartridgeUrl
 
   # Get the cartridge url
   cartridgeResponse = Request.getSync cartridgeUrl, encoding: null
-  console.log "response", cartridgeResponse
   png = PNG.sync.read cartridgeResponse.body
-  console.log "png", png
 
   try
     # Prepare helper methods.
