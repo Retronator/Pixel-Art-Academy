@@ -65,7 +65,7 @@ class AB.Router extends AB.Router
           # Kill connection if the body becomes too big
           if body.length > 1e6
             body = null
-            response.writeHead(413, 'Content-Type': 'text/plain')
+            response.writeHead 413, 'Content-Type': 'text/plain'
             response.end()
             request.connection.destroy()
 
@@ -89,6 +89,10 @@ class AB.Router extends AB.Router
           if postData?.loginToken
             script = "<script>window._meteorLoginToken = '#{postData.loginToken}';</script>"
             Inject.rawHead 'Artificial.Base.Router', script, response
+
+          # HACK: Someone down the line doesn't want to respond to post requests
+          # (returns 405 error), so we pretend this was a get request from here on.
+          request.method = "GET"
 
           next()
 
