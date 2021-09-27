@@ -42,7 +42,9 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       x: layer?.origin?.x or 0
       y: layer?.origin?.y or 0
 
-    ignoreNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get 'ignoreNormals'
+    # Note: We can't be sending undefined in the method as it will
+    # be converted to null, so we need an explicit boolean here.
+    ignoreNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get('ignoreNormals') or false
 
     for xCoordinate in xCoordinates
       # Make sure we're filling inside of bounds.

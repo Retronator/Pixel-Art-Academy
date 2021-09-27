@@ -68,12 +68,29 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
       @lines.push line
 
     # Calculate best line fit.
+    minX = Number.POSITIVE_INFINITY
+    maxX = Number.NEGATIVE_INFINITY
+    minY = Number.POSITIVE_INFINITY
+    maxY = Number.NEGATIVE_INFINITY
     verticesX = []
     verticesY = []
 
     for segment in @segments
-      verticesX.push (segment[0].x + segment[1].x) / 2
-      verticesY.push (segment[0].y + segment[1].y) / 2
+      x = (segment[0].x + segment[1].x) / 2
+      y = (segment[0].y + segment[1].y) / 2
+      verticesX.push x
+      verticesY.push y
+      minX = x if x < minX
+      maxX = x if x > maxX
+      minY = y if y < minY
+      maxY = y if y > maxY
+
+    width = maxX - minX
+    height = maxY - minY
+
+    # Flip axes if the edge is more vertical than horizontal to prevent bad fits on nearly vertical segments.
+    flipAxes = height > width
+    [verticesX, verticesY] = [verticesY, verticesX] if flipAxes
 
     regression = new TheilSenRegression verticesX, verticesY
 
@@ -91,6 +108,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
 
       verticesX = (vertex.x for vertex in vertices)
       verticesY = (vertex.y for vertex in vertices)
+      [verticesX, verticesY] = [verticesY, verticesX] if flipAxes
 
       line.score = regression.score verticesX, verticesY
 

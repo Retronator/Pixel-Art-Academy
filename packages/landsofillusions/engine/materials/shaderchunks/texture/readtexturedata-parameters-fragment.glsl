@@ -5,23 +5,23 @@ uniform bool powerOf2Texture;
 uniform float mipmapBias;
 
 #ifdef USE_NORMALMAP
-  // Based on perturbNormal2Arb from https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/ShaderChunk/normalmap_pars_fragment.glsl.js#L16
-  vec3 applyNormalMap(vec3 eye_pos, vec3 surf_norm, vec3 mapN) {
-    vec3 q0 = vec3(dFdx(eye_pos.x), dFdx(eye_pos.y), dFdx(eye_pos.z));
-    vec3 q1 = vec3(dFdy(eye_pos.x), dFdy(eye_pos.y), dFdy(eye_pos.z));
-    vec2 st0 = dFdx(vUv.st);
-    vec2 st1 = dFdy(vUv.st);
+  // Based on Normal Mapping Without Precomputed Tangents from http://www.thetenthplanet.de/archives/1180
+  vec3 applyNormalMap(vec3 p, vec3 N, vec3 mapN) {
+    vec3 dp1 = dFdx(p);
+    vec3 dp2 = dFdy(p);
+    vec2 duv1 = dFdx(vUv);
+    vec2 duv2 = dFdy(vUv);
 
-    float scale = sign(st1.t * st0.s - st0.t * st1.s);
+    // solve the linear system
+    vec3 dp2perp = cross(dp2, N);
+    vec3 dp1perp = cross(N, dp1);
+    vec3 T = dp2perp * duv1.x + dp1perp * duv2.x;
+    vec3 B = dp2perp * duv1.y + dp1perp * duv2.y;
 
-    vec3 S = normalize((q0 * st1.t - q1 * st0.t) * scale);
-    vec3 T = normalize((- q0 * st1.s + q1 * st0.s) * scale);
-    vec3 N = normalize(surf_norm);
-    mat3 tsn = mat3(S, T, N);
+    // construct a scale-invariant frame
+    float invmax = inversesqrt(max(dot(T,T), dot(B,B)));
+    mat3 TBN = mat3(T * invmax, B * invmax, N);
 
-    mapN.xy *= normalScale;
-    mapN.xy *= (float(gl_FrontFacing) * 2.0 - 1.0);
-
-    return normalize(tsn * mapN);
+    return normalize(TBN * mapN);
   }
 #endif

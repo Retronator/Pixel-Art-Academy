@@ -119,6 +119,9 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
           # into the top-left corner of the pixel, so we use the -0.5 offset.
           vertices = cameraAngle.projectPoints edge.vertices, sourceCluster._clusterPlane.getPlane(), -0.5, -0.5
 
+          # Note: When clusters rely on coplanar points to be positioned initially, they will not be correct during the
+          # first pass in recomputation so the edge vertices will not be projected successfully. After the cluster
+          # matching is performed after the first pass, they will be recomputed successfully during the second pass.
           console.warn "Edge vertices not projected successfully.", cameraAngle, edge.vertices, sourceCluster._clusterPlane.getPlane() unless vertices.length
 
           # Edge point is the average of the projected vertices.

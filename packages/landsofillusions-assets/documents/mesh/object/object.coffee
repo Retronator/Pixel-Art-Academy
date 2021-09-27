@@ -66,6 +66,7 @@ class LOI.Assets.Mesh.Object
     @solver = new @constructor.Solver[solverClassName] @
     
   recompute: ->
+    console.log "Recomputing clusters in object", @name()  if LOI.debug
     previousLayerClusters = []
 
     # Clear all layer clusters, but store their data.
@@ -110,8 +111,12 @@ class LOI.Assets.Mesh.Object
           # Mark that we've changed properties to this cluster.
           clustersWithChangedProperties.push newCluster.id
 
+    console.log "First pass complete. Updating clusters with changed properties", clustersWithChangedProperties if LOI.debug
+
     # Trigger solver update to recompute cluster based on new properties.
     @solver.update [], clustersWithChangedProperties, []
+
+    console.log 'Recomputation completed.' if LOI.debug
 
   getSpriteBoundsAndLayersForCameraAngle: (cameraAngleIndex) ->
     bounds = null
