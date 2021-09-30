@@ -378,6 +378,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('mesheditor/spriteselectdialog..');
   api.addUnstyledComponent('mesheditor/texturemappingmatrix..');
   api.addComponent('mesheditor/characterselectiondialog..');
+  api.addComponent('mesheditor/statusbar..');
 
   api.addComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/edges');

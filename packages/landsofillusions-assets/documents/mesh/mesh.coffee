@@ -11,7 +11,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   subdivisions: the number of minor lines between the major lines
   # cameraAngles: array of scene viewpoints
   #   name: text identifier
-  #   picturePlaneDistance: the distance in pixels the camera is away from the picture plane or null for ortographic
+  #   picturePlaneDistance: the distance in world units the picture plane is from the camera, or null for ortographic
   #   picturePlaneOffset: offset of the center of the picture plane in pixels
   #     x, y
   #   pixelSize: the size of a camera pixel in world units

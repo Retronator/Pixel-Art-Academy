@@ -217,9 +217,16 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     ]
 
               remainingArea:
-                type: FM.EditorView.id()
-                editor:
-                  contentComponentId: LOI.Assets.MeshEditor.MeshCanvas.id()
+                type: FM.SplitView.id()
+                fixed: true
+                dockSide: FM.SplitView.DockSide.Bottom
+                mainArea:
+                  type: LOI.Assets.MeshEditor.StatusBar.id()
+                  height: 10
+                remainingArea:
+                  type: FM.EditorView.id()
+                  editor:
+                    contentComponentId: LOI.Assets.MeshEditor.MeshCanvas.id()
 
     shortcuts =
       currentMappingId: 'default'

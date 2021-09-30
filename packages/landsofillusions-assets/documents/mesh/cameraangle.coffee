@@ -7,6 +7,7 @@ _rayOrigin = new THREE.Vector3
 _rayDirection = new THREE.Vector3
 _ray = new THREE.Ray _rayOrigin, _rayDirection
 _worldPoint = new THREE.Vector3
+_screenPoint = new THREE.Vector3
 
 _raycasterPosition = new THREE.Vector3
 _raycasterDirection = new THREE.Vector3
@@ -160,12 +161,12 @@ class LOI.Assets.Mesh.CameraAngle
       _yOffset += @picturePlaneOffset.y
 
   _projectPoint: (screenPoint, worldPlane, projectedWorldPoint) ->
-    # Transform the point from screen space to world, positioned on the picture plane.
-    _worldPoint.set screenPoint.x + _xOffset, -(screenPoint.y + _yOffset), -(@picturePlaneDistance or 0)
+    # Move from screen space (1 pixel = 1 unit) to custom view space (1 pixel = pixel size units).
+    _worldPoint.x = (screenPoint.x + _xOffset) * @pixelSize
+    _worldPoint.y = -(screenPoint.y + _yOffset) * @pixelSize
 
-    # Move from screen space (1 pixel = 1) to custom view space (1 pixel = pixel size).
-    _worldPoint.x *= @pixelSize
-    _worldPoint.y *= @pixelSize
+    # The pixel needs to be on the picture plane.
+    _worldPoint.z = -(@picturePlaneDistance or 0)
     
     # Move from custom view space to world space
     _worldPoint.applyMatrix4 @customToWorldTransform
@@ -185,23 +186,25 @@ class LOI.Assets.Mesh.CameraAngle
     result
 
   unprojectPoint: (worldPoint) ->
-    # Transform to screen space.
-    screenPoint = new THREE.Vector3().copy(worldPoint).applyMatrix4 @worldToCustomTransform
+    # Transform to custom view space.
+    _screenPoint.copy(worldPoint).applyMatrix4 @worldToCustomTransform
+
+    # In perspective projection, we need to project the point onto the picture plane (towards the origin).
+    _screenPoint.multiplyScalar -@picturePlaneDistance / _screenPoint.z if @picturePlaneDistance
 
     # Scale to screen space.
-    screenPoint.x /= @pixelSize
-    screenPoint.y /= @pixelSize
-    screenPoint.z = 0
+    _screenPoint.x /= @pixelSize
+    _screenPoint.y /= @pixelSize
 
     # Screen space has positive Y going down.
-    screenPoint.y *= -1
+    _screenPoint.y *= -1
 
     # Apply picture plane offset.
     if @picturePlaneOffset
-      screenPoint.x -= @picturePlaneOffset.x
-      screenPoint.y -= @picturePlaneOffset.y
+      _screenPoint.x -= @picturePlaneOffset.x
+      _screenPoint.y -= @picturePlaneOffset.y
 
-    screenPoint
+    return new THREE.Vector2().copy _screenPoint
 
   getHorizon: (normal) ->
     # We transform the plane into camera space and put it to zero since all parallel planes will intersect in same spot.
