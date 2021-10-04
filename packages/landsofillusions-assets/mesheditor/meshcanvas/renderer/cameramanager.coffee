@@ -104,14 +104,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @camera.updated()
 
   move: (deltaX, deltaY) ->
-    delta = @_createDelta deltaX, deltaY
+    delta = @_createDeltaTranslation deltaX, deltaY
 
     @_position.add delta
     @_target.add delta
 
     @_updateCamera()
 
-  _createDelta: (deltaX, deltaY) ->
+  _createDeltaTranslation: (deltaX, deltaY) ->
     cameraAngle = @renderer.meshCanvas.cameraAngle()
     effectiveCanvasScale = @renderer.meshCanvas.camera().effectiveScale()
 
@@ -130,7 +130,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     delta.applyQuaternion @_camera.quaternion
 
   moveAroundTarget: (deltaX, deltaY) ->
-    delta = @_createDelta deltaX, deltaY
+    delta = @_createDeltaRotation deltaX, deltaY
 
     distanceToTarget = @_position.distanceTo @_target
 
@@ -140,6 +140,23 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_position.subVectors(@_position, @_target).normalize().multiplyScalar(distanceToTarget).add @_target
 
     @_updateCamera()
+
+  _createDeltaRotation: (deltaX, deltaY) ->
+    # Make it so that the screen covers the full 360 degree rotation.
+    radius = @_position.distanceTo @_target
+    factor = 2 * Math.PI * radius
+
+    viewportBoundsRectangle = @renderer.meshCanvas.pixelCanvas.camera().viewportBounds
+    effectiveCanvasScale = @renderer.meshCanvas.camera().effectiveScale()
+
+    width = viewportBoundsRectangle.width() * effectiveCanvasScale
+    height = viewportBoundsRectangle.height() * effectiveCanvasScale
+
+    percentageX = deltaX / width
+    percentageY = deltaY / height
+
+    delta = new THREE.Vector3 percentageX * factor, percentageY * factor
+    delta.applyQuaternion @_camera.quaternion
 
   transition: (cameraAngle, options) ->
     startPosition = @_camera.position.clone()
