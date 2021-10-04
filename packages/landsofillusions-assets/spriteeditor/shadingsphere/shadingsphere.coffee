@@ -266,7 +266,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
       @type = AM.DataInputComponent.Types.Select
 
     options: ->
-      for angle in [0, 22.5, 30, 45, 90]
+      for angle in [0, 15, 22.5, 30, 45, 90]
         name: if angle then "#{angle}°" else "None"
         value: angle
 

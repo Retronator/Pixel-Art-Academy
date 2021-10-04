@@ -33,7 +33,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         new THREE.Vector3(2, -4, -3).normalize().toObject()
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
-        radius: 30
+        radius: 60
         angleSnap: 45
 
       "#{_.snakeCase LOI.Assets.MeshEditor.MeshCanvas.id()}":
