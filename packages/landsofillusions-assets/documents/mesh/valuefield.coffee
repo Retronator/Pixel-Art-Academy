@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.ValueField
-  constructor: (parent, field, value) ->
+  constructor: (parent, field, value, defaultValue) ->
     updatedDependency = new Tracker.Dependency
 
     valueField = (newValue) =>
@@ -14,10 +14,13 @@ class LOI.Assets.Mesh.ValueField
         return
 
       updatedDependency.depend()
-      value
+      value ? defaultValue
 
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf valueField, @constructor.prototype
+
+    valueField.setDefaultValue = (newDefaultValue) ->
+      defaultValue = newDefaultValue
 
     valueField.clear = ->
       value = undefined

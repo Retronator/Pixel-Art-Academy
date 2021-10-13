@@ -10,6 +10,8 @@ class LOI.Assets.Mesh.Object.Layer
     for field in ['name', 'visible', 'order']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
 
+    @visible.setDefaultValue true
+
     @clusters = new LOI.Assets.Mesh.MapField @, 'clusters', data.clusters, @constructor.Cluster
     @pictures = new LOI.Assets.Mesh.ArrayField @, 'pictures', data.pictures, @constructor.Picture
 
