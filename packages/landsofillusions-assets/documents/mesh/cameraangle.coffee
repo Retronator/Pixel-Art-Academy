@@ -185,7 +185,7 @@ class LOI.Assets.Mesh.CameraAngle
 
     result
 
-  unprojectPoint: (worldPoint) ->
+  unprojectPoint: (worldPoint, xOffset = 0, yOffset = 0) ->
     # Transform to custom view space.
     _screenPoint.copy(worldPoint).applyMatrix4 @worldToCustomTransform
 
@@ -203,6 +203,9 @@ class LOI.Assets.Mesh.CameraAngle
     if @picturePlaneOffset
       _screenPoint.x -= @picturePlaneOffset.x
       _screenPoint.y -= @picturePlaneOffset.y
+
+    _screenPoint.x += xOffset
+    _screenPoint.y += yOffset
 
     return new THREE.Vector2().copy _screenPoint
 

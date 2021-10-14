@@ -69,6 +69,21 @@ class LOI.Assets.MeshEditor.StatusBar extends FM.View
     intersections = raycaster.intersectObjects scene.children, true
     return unless intersection = intersections[0]
 
+    @_coordinateString intersection.point, 2
+
+  projectedCoordinatesVerbose: ->
+    return unless meshCanvas = @meshCanvas()
+    return unless cameraAngle = @cameraAngle()
+    return unless raycaster = @raycaster()
+
+    mouse = meshCanvas.mouse()
+    return unless canvasCoordinate = mouse.canvasCoordinate()
+
+    cameraAngle.updateRaycaster raycaster, canvasCoordinate
+    scene = meshCanvas.sceneHelper().scene()
+    intersections = raycaster.intersectObjects scene.children, true
+    return unless intersection = intersections[0]
+
     projectedPosition = @_coordinateString intersection.point, 2
     unprojectedCoordinate = @_coordinateString cameraAngle.unprojectPoint(intersection.point), 2
 

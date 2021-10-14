@@ -336,6 +336,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions..');
   api.addFile('mesheditor/actions/debugmode');
   api.addFile('mesheditor/actions/showedges');
+  api.addFile('mesheditor/actions/showedgepixels');
   api.addFile('mesheditor/actions/showhorizon');
   api.addFile('mesheditor/actions/showpixelrender');
   api.addFile('mesheditor/actions/showplanegrid');
@@ -382,6 +383,7 @@ Package.onUse(function(api) {
 
   api.addComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/edges');
+  api.addFile('mesheditor/meshcanvas/edgepixels');
   api.addFile('mesheditor/meshcanvas/horizon');
   api.addFile('mesheditor/meshcanvas/planegrid');
   api.addFile('mesheditor/meshcanvas/debugray');

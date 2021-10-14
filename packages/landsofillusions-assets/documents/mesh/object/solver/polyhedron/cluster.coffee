@@ -122,26 +122,29 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
       height: @maxPixel.y - @minPixel.y + 1
 
     # Mark edges.
-    for x, column of @pixelMap
+    @_markPixelEdges @pixelMap
+
+    @recomputePixels = false
+    @pixelsChanged = true
+
+  _markPixelEdges: (pixelMap) ->
+    for x, column of pixelMap
       for y, pixel of column
         pixel.clusterNeighbors =
-          left: @pixelMap[pixel.x - 1]?[pixel.y]
-          right: @pixelMap[pixel.x + 1]?[pixel.y]
-          up: @pixelMap[pixel.x]?[pixel.y - 1]
-          down: @pixelMap[pixel.x]?[pixel.y + 1]
-          leftUp: @pixelMap[pixel.x - 1]?[pixel.y - 1]
-          rightUp: @pixelMap[pixel.x + 1]?[pixel.y - 1]
-          leftDown: @pixelMap[pixel.x - 1]?[pixel.y + 1]
-          rightDown: @pixelMap[pixel.x + 1]?[pixel.y + 1]
+          left: pixelMap[pixel.x - 1]?[pixel.y]
+          right: pixelMap[pixel.x + 1]?[pixel.y]
+          up: pixelMap[pixel.x]?[pixel.y - 1]
+          down: pixelMap[pixel.x]?[pixel.y + 1]
+          leftUp: pixelMap[pixel.x - 1]?[pixel.y - 1]
+          rightUp: pixelMap[pixel.x + 1]?[pixel.y - 1]
+          leftDown: pixelMap[pixel.x - 1]?[pixel.y + 1]
+          rightDown: pixelMap[pixel.x + 1]?[pixel.y + 1]
 
         pixel.clusterEdges = {}
 
         # Edge is on each side that doesn't have a neighbor.
         for side in ['left', 'right', 'up', 'down', 'leftUp', 'rightUp', 'leftDown', 'rightDown']
           pixel.clusterEdges[side] = not pixel.clusterNeighbors[side]
-
-    @recomputePixels = false
-    @pixelsChanged = true
     
   addEdge: (edge) ->
     otherCluster = edge.getOtherCluster @
@@ -162,6 +165,115 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     y = Math.floor absoluteY - @origin.y
     
     @pixelMap[x]?[y]
+
+  prepareGeometryPixels: (cleanEdgePixels, cameraAngle) ->
+    # Geometry pixels are the potentially changed pixels that are used for generation of 3D geometry points.
+    unless cleanEdgePixels
+      # By default geometry pixels match source pixels.
+      @geometryPixels = @pixels
+      @geometryPixelMap = @pixelMap
+      return
+
+    # We have to create a clone of pixels so that we can add/remove new ones.
+    @geometryPixels = (_.clone pixel for pixel in @pixels)
+    @geometryPixelMap = {}
+
+    for pixel in @geometryPixels
+      @geometryPixelMap[pixel.x] ?= {}
+      @geometryPixelMap[pixel.x][pixel.y] = pixel
+
+    # Reconsider every pixel on both sides of an edge segment, whether it belongs to this cluster or not.
+    @cleanupPixels = []
+    @cleanedPixels = []
+
+    linePoint2D = new THREE.Vector2
+    otherLinePoint = new THREE.Vector3
+    otherLinePoint2D = new THREE.Vector2
+    lineDirection2D = new THREE.Vector2
+    lineNormal2D = new THREE.Vector2
+    firstPixel = new THREE.Vector2
+    secondPixel = new THREE.Vector2
+    firstPixelCenter = new THREE.Vector2
+    secondPixelCenter = new THREE.Vector2
+    centerOffset = new THREE.Vector2 0.5, 0.5
+
+    for otherClusterId, edge of @edges
+      # Project 3D edge onto canvas.
+      linePoint2D.copy cameraAngle.unprojectPoint edge.line.point, 0.5, 0.5
+
+      otherLinePoint.copy(edge.line.point).add edge.line.direction
+      otherLinePoint2D.copy cameraAngle.unprojectPoint otherLinePoint, 0.5, 0.5
+
+      lineDirection2D.copy(otherLinePoint2D).sub linePoint2D
+      lineDirection2D.z = 0
+      lineDirection2D.normalize()
+
+      # Create projection normal (perpendicular to the line direction)
+      lineNormal2D.set -lineDirection2D.y, lineDirection2D.x
+
+      for segment in edge.segments
+        if segment[0].x is segment[1].x
+          # This is a vertical segment.
+          topVertexIndex = if segment[1].y is segment[0].y + 1 then 0 else 1
+          firstPixel.set segment[topVertexIndex].x - 1, segment[topVertexIndex].y
+          secondPixel.set segment[topVertexIndex].x, segment[topVertexIndex].y
+          lineNormalIsPositive = lineNormal2D.x > 0
+
+        else
+          # This is a horizontal segment
+          leftVertexIndex = if segment[1].x is segment[0].x + 1 then 0 else 1
+          firstPixel.set segment[leftVertexIndex].x, segment[leftVertexIndex].y - 1
+          secondPixel.set segment[leftVertexIndex].x, segment[leftVertexIndex].y
+          lineNormalIsPositive = lineNormal2D.y > 0
+
+        # Flip normal if necessary
+        firstPixelBelongsToCluster = @pixelMap[firstPixel.x]?[firstPixel.y]?
+        lineNormal2D.multiplyScalar -1 unless firstPixelBelongsToCluster is lineNormalIsPositive
+
+        # Project pixels on the normal.
+        firstPixelCenter.copy(firstPixel).add(centerOffset).sub linePoint2D
+        firstPixelDistance = firstPixelCenter.dot lineNormal2D
+        secondPixelCenter.copy(secondPixel).add(centerOffset).sub linePoint2D
+        secondPixelDistance = secondPixelCenter.dot lineNormal2D
+
+        # Pixels that should be in the cluster must have negative distance.
+        @_cleanPixel firstPixel if firstPixelBelongsToCluster and firstPixelDistance > 0
+        @_addCleanupPixel firstPixel if not firstPixelBelongsToCluster and firstPixelDistance < 0
+        @_cleanPixel secondPixel if not firstPixelBelongsToCluster and secondPixelDistance > 0
+        @_addCleanupPixel secondPixel if firstPixelBelongsToCluster and secondPixelDistance < 0
+
+    # Update pixel map.
+    for pixel in @cleanupPixels
+      @geometryPixelMap[pixel.x] ?= {}
+      @geometryPixelMap[pixel.x][pixel.y] = pixel
+
+    for pixel in @cleanedPixels
+      delete @geometryPixelMap[pixel.x][pixel.y]
+
+    # Recompute pixel edges.
+    @_markPixelEdges @geometryPixelMap
+
+  _cleanPixel: (pixel) ->
+    return unless clusterPixel = _.find @geometryPixels, (clusterPixel) => clusterPixel.x is pixel.x and clusterPixel.y is pixel.y
+
+    _.pull @geometryPixels, clusterPixel
+    @cleanedPixels.push clusterPixel
+    # Note: we don't remove the pixel from the map yet since the map
+    # is being used to determine which pixels are in the cluster.
+
+  _addCleanupPixel: (pixel) ->
+    return if _.find @geometryPixels, (clusterPixel) => clusterPixel.x is pixel.x and clusterPixel.y is pixel.y
+
+    clusterPixel = _.extend
+      x: pixel.x
+      y: pixel.y
+    ,
+      @picture.getMapValuesForPixel pixel.x, pixel.y
+
+    @geometryPixels.push clusterPixel
+    @cleanupPixels.push clusterPixel
+    # Note: we don't add the pixel to the map yet since the map
+    # is being used to determine which pixels are in the cluster.
 
   getPoints: (options) ->
     elementsPerVertex = 3

@@ -4,6 +4,8 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
   # Construct cluster plane objects.
   clusterPlanes = []
 
+  # Note: creating a cluster plane will automatically expand to other coplanar clusters and put them into the same
+  # cluster plane, so as we iterate over all clusters here, more and more will already be positioned when we reach them.
   for cluster in clusters when not cluster._clusterPlane
     clusterPlanes.push new LOI.Assets.Mesh.Object.Solver.Polyhedron.ClusterPlane cluster
 
@@ -42,7 +44,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
 
             otherPixel = layer.picture.getMapValuesForPixel pixel.x, pixel.y
 
-            # See if the normals are
+            # See if the normals are opposite.
             otherNormal = new THREE.Vector3().copy(otherPixel.normal).normalize()
 
             dotProduct = normal.dot otherNormal

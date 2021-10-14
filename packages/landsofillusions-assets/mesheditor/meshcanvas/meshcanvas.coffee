@@ -19,6 +19,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
   @editorFileDataFieldsWithDefaults: ->
     cameraAngleIndex: 0
     edgesEnabled: false
+    edgePixelsEnabled: false
     horizonEnabled: true
     pixelRenderEnabled: true
     planeGridEnabled: true
@@ -98,8 +99,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
-    # Create the engine sprite.
+    # Create the pixel canvas and its components.
     @edges = new @constructor.Edges @
+    @edgePixels = new @constructor.EdgePixels @
     @horizon = new @constructor.Horizon @
 
     @pixelCanvas = new LOI.Assets.SpriteEditor.PixelCanvas
@@ -116,6 +118,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         [
           @pixelCanvas.operationPreview()
           @pixelCanvas.pixelGrid()
+          @edgePixels if drawCameraAngleZeroElements
           @edges if sourceImageEnabled and drawCameraAngleZeroElements
           @horizon if sourceImageEnabled
           @pixelCanvas.cursor()

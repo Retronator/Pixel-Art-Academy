@@ -16,6 +16,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
   orthogonal = not cameraAngle.picturePlaneDistance
   
   for cluster in clusters
+    cluster.prepareGeometryPixels LOI.Assets.Mesh.Object.Solver.Polyhedron.cleanEdgePixels, cameraAngle
     cluster.points = []
     
     plane = cluster.getPlane()
@@ -24,7 +25,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
     # Start with cluster pixels.
     pixels = []
 
-    for pixel in cluster.pixels
+    for pixel in cluster.geometryPixels
       # We only need to add pixels on the edges of the cluster.
       allDirectionsAreSameCluster = true
 
@@ -67,7 +68,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
     # Add void pixels.
     voidPixels = []
     
-    for pixel in cluster.pixels
+    for pixel in cluster.geometryPixels
       for direction in pixelDirections
         continue unless pixel.clusterEdges[direction.property]
         

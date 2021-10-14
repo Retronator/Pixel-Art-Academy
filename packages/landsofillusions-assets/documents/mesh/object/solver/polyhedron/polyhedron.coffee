@@ -4,6 +4,7 @@ LOI = LandsOfIllusions
 class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.Solver
   @type = LOI.Assets.Mesh.Object.Solver.Types.Polyhedron
   @debug = false
+  @cleanEdgePixels = true
 
   constructor: ->
     super arguments...
@@ -20,7 +21,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
 
     console.log "Initialize solver with clusters", @clusters if @constructor.debug
 
-    # Update pixels in clusters that need recomputation.
+    # Update pixels in all clusters.
     cluster.updatePixels() for cluster in clustersArray
 
     # Compute edges.

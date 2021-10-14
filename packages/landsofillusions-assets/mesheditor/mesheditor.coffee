@@ -92,6 +92,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
           LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()
           LOI.Assets.MeshEditor.Actions.ShowEdges.id()
+          LOI.Assets.MeshEditor.Actions.ShowEdgePixels.id()
           LOI.Assets.MeshEditor.Actions.ShowHorizon.id()
           LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()
           LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()
