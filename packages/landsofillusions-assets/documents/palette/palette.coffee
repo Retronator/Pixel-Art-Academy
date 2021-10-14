@@ -26,6 +26,7 @@ class LOI.Assets.Palette extends AM.Document
     pico8: "PICO-8"
     black: "Black"
     zxSpectrum: "ZX Spectrum"
+    cga: "Color Graphics Adapter"
 
   # Default palette is the modified Atari 2600.
   @defaultPaletteName = @SystemPaletteNames.pixelArtAcademy

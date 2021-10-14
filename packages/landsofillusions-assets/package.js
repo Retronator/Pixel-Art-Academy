@@ -50,6 +50,7 @@ Package.onUse(function(api) {
   api.addServerFile('documents/palette/palettes-server/pico8');
   api.addServerFile('documents/palette/palettes-server/black');
   api.addServerFile('documents/palette/palettes-server/zxspectrum');
+  api.addServerFile('documents/palette/palettes-server/cga');
 
   api.addClientFile('documents/asset/asset-cache-client');
   api.addServerFile('documents/asset/asset-cache-server');
