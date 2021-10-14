@@ -10,6 +10,8 @@ class LOI.Assets.Mesh.Object
     for field in ['name', 'visible']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
 
+    @visible.setDefaultValue true
+
     # Set last cluster ID before we initialize layers, since pictures might create new clusters.
     @lastClusterId = data.lastClusterId or 0
 
