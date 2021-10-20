@@ -4,7 +4,6 @@ LOI = LandsOfIllusions
 class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.Solver
   @type = LOI.Assets.Mesh.Object.Solver.Types.Polyhedron
   @debug = false
-  @cleanEdgePixels = true
 
   constructor: ->
     super arguments...

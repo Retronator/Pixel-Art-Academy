@@ -25,12 +25,15 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   # objects: array of scene objects
   #   name: name of the object
   #   visible: boolean if the object is rendered
-  #   solver: name of the solver used to construct the mesh from the pictures, with possible values:
-  #     polyhedron (default, object with only flat surfaces)
-  #     organic (object with a continuously curved surface)
-  #     plane (all clusters are positioned in one plane)
-  #     rope (deformable lines)
-  #     cloth (deformable surface)
+  #   solver:
+  #     type: name of the solver used to construct the mesh from the pictures, with possible values:
+  #       polyhedron (default, object with only flat surfaces)
+  #       organic (object with a continuously curved surface)
+  #       plane (all clusters are positioned in one plane)
+  #       rope (deformable lines)
+  #       cloth (deformable surface)
+  #     polyhedron: additional options for the polyhedron solver
+  #       cleanEdgePixels: boolean whether to add/remove edge pixels to better fit possible geometry
   #   lastClusterId: the last unique integer used to create a cluster
   #   layers: array of
   #     name: name of the layer

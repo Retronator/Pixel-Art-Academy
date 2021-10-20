@@ -6,9 +6,9 @@
         <th class="name">name</th>
       </tr>
       {{#each materials}}
-        <tr class="material">
-          <td class="preview preview-color {{activeColorClass}}" {{style colorPreviewStyle}}></td>
-          <td class="name"><input class="name-input" value="{{name}}"/></td>
+        <tr class="material {{activeClass}}">
+          <td class="preview preview-color" {{style colorPreviewStyle}}></td>
+          <td class="name"><input class="name-input" value="{{name}}" {{nameDisabledAttribute}}/></td>
         </tr>
       {{/each}}
     </table>

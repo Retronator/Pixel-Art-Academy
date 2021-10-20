@@ -25,7 +25,10 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
     objects: Match.Optional [ Match.OptionalOrNull
       name: Match.Optional String
       visible: Match.Optional Boolean
-      solver: Match.Optional String
+      solver: Match.Optional
+        type: Match.Optional String
+        polyhedron: Match.Optional
+          cleanEdgePixels: Match.Optional Boolean
       lastClusterId: Match.Optional Match.Integer
       layers: Match.Optional [ Match.OptionalOrNull
         name: Match.Optional String

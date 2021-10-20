@@ -12,6 +12,12 @@ class LOI.Assets.Mesh.Object
 
     @visible.setDefaultValue true
 
+    @solverOptions = {}
+
+    for type, field of @constructor.Solver.Types
+      @solverOptions[field] = new LOI.Assets.Mesh.ValueField @, field, data.solver?[field]
+      @solverOptions[field].setDefaultValue {}
+
     # Set last cluster ID before we initialize layers, since pictures might create new clusters.
     @lastClusterId = data.lastClusterId or 0
 
@@ -28,7 +34,7 @@ class LOI.Assets.Mesh.Object
       clusters
 
     # Create the solver.
-    solverClassName = _.upperFirst data.solver or @constructor.Solver.Types.Polyhedron
+    solverClassName = _.upperFirst data.solver?.type or @constructor.Solver.Types.Polyhedron
     @solver = new @constructor.Solver[solverClassName] @
 
     # Run solver for the first time if we don't have clusters yet.
@@ -44,7 +50,11 @@ class LOI.Assets.Mesh.Object
   toPlainObject: ->
     plainObject =
       lastClusterId: @lastClusterId
-      solver: @solver.constructor.type
+      solver:
+        type: @solver.constructor.type
+
+    for type, field of @constructor.Solver.Types
+      @solverOptions[field].save plainObject.solver
 
     @[field].save plainObject for field in ['name', 'visible', 'layers']
 
@@ -64,10 +74,10 @@ class LOI.Assets.Mesh.Object
     # Increment and return a new cluster ID.
     ++@lastClusterId
 
-  setSolver: (solverClassName) ->
-    @solver = new @constructor.Solver[solverClassName] @
+  setSolver: (solverName) ->
+    @recompute solverName
     
-  recompute: ->
+  recompute: (solverName) ->
     console.log "Recomputing clusters in object", @name()  if LOI.debug
     previousLayerClusters = []
 
@@ -77,7 +87,8 @@ class LOI.Assets.Mesh.Object
       layer.clusters.clear()
 
     # Create a fresh solver.
-    @solver = new @solver.constructor @
+    solverClass = if solverName then @constructor.Solver[_.upperFirst solverName] else @solver.constructor
+    @solver = new solverClass @
 
     # Recompute all clusters.
     @lastClusterId = 0

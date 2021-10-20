@@ -14,9 +14,10 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
   ]
   
   orthogonal = not cameraAngle.picturePlaneDistance
-  
+  cleanEdgePixels = @object.solverOptions.polyhedron().cleanEdgePixels
+
   for cluster in clusters
-    cluster.prepareGeometryPixels LOI.Assets.Mesh.Object.Solver.Polyhedron.cleanEdgePixels, cameraAngle
+    cluster.prepareGeometryPixels cleanEdgePixels, cameraAngle
     cluster.points = []
     
     plane = cluster.getPlane()

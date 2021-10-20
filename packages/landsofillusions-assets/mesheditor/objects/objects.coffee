@@ -76,7 +76,8 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
 
   events: ->
     super(arguments...).concat
-      'click .object': @onClickObject
+      'click .thumbnail, click .name': @onClickObject
+      'dblclick .thumbnail': @onDoubleClickThumbnail
       'change .name-input, change .visible-checkbox': @onChangeObject
       'click .add-button': @onClickAddButton
       'click .remove-button': @onClickRemoveButton
@@ -84,6 +85,14 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
   onClickObject: (event) ->
     object = @currentData()
     @setObjectIndex object.index
+
+  onDoubleClickThumbnail: (event) ->
+    object = @currentData()
+
+    @interface.displayDialog
+      contentComponentId: LOI.Assets.MeshEditor.ObjectDialog.id()
+      contentComponentData:
+        objectIndex: object.index
 
   onChangeObject: (event) ->
     object = @currentData()

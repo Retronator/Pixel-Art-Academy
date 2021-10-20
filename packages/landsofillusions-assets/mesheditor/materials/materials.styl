@@ -7,6 +7,12 @@
         width 15rem
 
     .material
+      cursor pointer
+
+      &.active
+        .preview::after
+          display block
+
       .preview
         position relative
         height 15rem !important
@@ -21,5 +27,7 @@
           right -1rem
           border 1rem solid atariGray(4)
 
-        &.active::after
-          display block
+      .name
+        .name-input
+          &:disabled
+            cursor pointer

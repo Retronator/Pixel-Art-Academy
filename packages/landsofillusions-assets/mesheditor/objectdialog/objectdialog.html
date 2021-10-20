@@ -1,0 +1,24 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.ObjectDialog">
+  {{#LandsOfIllusions.Assets.Editor.Window windowData}}
+    <div class="landsofillusions-assets-mesheditor-objectdialog">
+      {{#with object}}
+        <div class="properties landsofillusions-assets-editor-propertieslist">
+          <label class="property name">
+            <span class="name">Name</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.ObjectDialog.Name}}</span>
+          </label>
+          <label class="property type">
+            <span class="name">Type</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.ObjectDialog.Type}}</span>
+          </label>
+          {{#if $is solverType 'polyhedron'}}
+            <label class="property cleanedgepixels">
+              <span class="name">Clean edge pixels</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.ObjectDialog.CleanEdgePixels}}<span class="checkmark"></span></span>
+            </label>
+          {{/if}}
+        </div>
+      {{/with}}
+    </div>
+  {{/LandsOfIllusions.Assets.Editor.Window}}
+</template>

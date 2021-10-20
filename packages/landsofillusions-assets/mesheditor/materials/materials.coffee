@@ -72,18 +72,25 @@ class LOI.Assets.MeshEditor.Materials extends FM.View
 
     backgroundColor: "##{color.getHexString()}"
 
-  activeColorClass: ->
+  active: ->
     material = @currentData()
-    'active' if material.index is @paintHelper.materialIndex()
+    material.index is @paintHelper.materialIndex()
+
+  activeClass: ->
+    'active' if @active()
+
+  nameDisabledAttribute: ->
+    # Disable name editing until the object is active.
+    disabled: true unless @active()
 
   events: ->
     super(arguments...).concat
-      'click .preview-color': @onClickPreviewColor
+      'click .preview-color, click .name': @onClickMaterial
       'dblclick .preview-color': @onDoubleClickPreviewColor
       'change .name-input': @onChangeName
       'click .add-material-button': @onClickAddMaterialButton
 
-  onClickPreviewColor: (event) ->
+  onClickMaterial: (event) ->
     material = @currentData()
     @setIndex material.index
 
