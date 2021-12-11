@@ -117,6 +117,18 @@ class LOI.Assets.Mesh.Object.Layer.Picture
 
     mapValues
 
+  getMapValueForPixel: (type, x, y) ->
+    return unless @_bounds
+    @getMapValueForPixelRelative type, x - @_bounds.x, y - @_bounds.y
+
+  getMapValueForPixelRelative: (type, x, y) ->
+    return unless @_relativeCoordinateInBounds x, y
+    return unless flagsMap = @maps[@constructor.Map.Types.Flags]
+    return unless flagsMap.getPixel x, y
+    return unless map = @getMap type
+
+    map.getPixel x, y
+
   _relativeCoordinateInBounds: (x, y) ->
     return unless @_bounds
     0 <= x < @_bounds.width and 0 <= y < @_bounds.height

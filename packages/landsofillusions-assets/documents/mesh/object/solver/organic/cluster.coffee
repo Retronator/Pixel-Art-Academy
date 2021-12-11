@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
+OrganicSolver = LOI.Assets.Mesh.Object.Solver.Organic
 
-class LOI.Assets.Mesh.Object.Solver.Organic.Cluster
+class OrganicSolver.Cluster
   constructor: (@layerCluster) ->
     @id = @layerCluster.id
     @pictureCluster = @layerCluster.layer.getPictureCluster @id
@@ -59,7 +60,7 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Cluster
 
   addPixelAt: (x, y) ->
     # Create the pixel with neighbors from the pixel map.
-    pixel = new LOI.Assets.Mesh.Object.Solver.Organic.Pixel x, y, @
+    pixel = new OrganicSolver.Pixel x, y, @
 
     # Add the pixel to this cluster.
     @pixels.push pixel
@@ -73,8 +74,9 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Cluster
     _.pull @pixels, pixel
     @pixelsMap[x][y] = null
 
-  findPictureNeighbors: (clusters) ->
-    # Find all the clusters this cluster is next to in the same picture.
+  findNeighbors: (clusters) ->
+    # Find all the clusters this cluster is next to.
+    oldNeighbors = @neighbors
     @neighbors = {}
 
     # Go over all the pixels in the cluster and see if it has neighbors in any other cluster.
@@ -82,21 +84,58 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Cluster
       for side, edge of pixel.clusterEdges when edge
         coordinates = pixel.getNeighborCoordinates side
 
-        for cluster in clusters when cluster isnt @ and @picture is cluster.picture
+        for cluster in clusters when cluster isnt @
           if otherPixel = cluster.pixelsMap[coordinates.x]?[coordinates.y]
-            # This cluster is a neighbor in the same picture.
-            @neighbors[cluster.id] = cluster
+            if @picture is cluster.picture
+              # Inside the same picture, it's enough that the pixel is
+              # there since it will definitely have a cluster edge with us.
+              @neighbors[cluster.id] = cluster
 
-            # Link the two pixels together.
-            pixel.setNeighbor side, otherPixel
-            oppositeSide = LOI.Assets.Mesh.Object.Solver.Organic.Pixel.sides[side].opposite
-            otherPixel.setNeighbor oppositeSide, pixel
+            else
+              # Across pictures, we must first make sure this is the edge of island
+              # parts (there is no pixel on the other side in the same picture).
+              if pixel.isPictureEdgeTowards(otherPixel) and otherPixel.isPictureEdgeTowards(pixel)
+                # Now there must also not be any overlap between these two clusters in the vicinity of the pixel.
+                overlap = false
+                for testX in [pixel.x - 1..pixel.x + 1]
+                  for testY in [pixel.y - 1..pixel.y + 1]
+                    if @picture.pixelExists(testX, testY) and cluster.picture.pixelExists(textX, testY)
+                      overlap = true
+                      break
 
-  initializeIslandPart: (islandParts) ->
-    # Nothing to do if we're already assigned to an island part.
-    return if @islandPart
+                  break if overlap
 
-    # Create a new island part for this cluster. This will flood-fill
-    # and assign this island part to all its neighbors as well.
-    islandPart = new LOI.Assets.Mesh.Object.Solver.Organic.IslandPart @
-    islandParts.push islandPart
+                unless overlap
+                  # Link the two pixels together.
+                  pixel.setNeighbor side, otherPixel
+                  oppositeSide = LOI.Assets.Mesh.Object.Solver.Organic.Pixel.sides[side].opposite
+                  otherPixel.setNeighbor oppositeSide, pixel
+
+                  # Record neighbor relationship.
+                  @neighbors[cluster.id] = cluster
+
+    # Detect adjacency change.
+    @adjacencyChanged = false
+
+    for clusterId of @neighbors
+      unless oldNeighbors[clusterId]
+        @adjacencyChanged = true
+        break
+
+    unless @adjacencyChanged
+      for clusterId of oldNeighbors
+        unless neighbors[clusterId]
+          @adjacencyChanged = true
+          break
+
+  initializeIsland: (islands) ->
+    # Nothing to do if we're already assigned to an island.
+    return if @island
+
+    # Create a new island for this cluster. This will flood-fill
+    # and assign this island to all its neighbors as well.
+    island = new LOI.Assets.Mesh.Object.Solver.Organic.Island @
+    islands.push island
+
+  updatePixelNormals: ->
+    pixel.updateNormal() for pixel in @pixels

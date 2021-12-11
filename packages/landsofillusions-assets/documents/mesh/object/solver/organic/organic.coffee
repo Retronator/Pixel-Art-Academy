@@ -9,7 +9,7 @@ class LOI.Assets.Mesh.Object.Solver.Organic extends LOI.Assets.Mesh.Object.Solve
     super arguments...
 
     @clusters = {}
-    @islandParts = []
+    @islands = []
 
     # Initialize clusters.
     for clusterId, clusterData of @object.clusters()
@@ -19,21 +19,18 @@ class LOI.Assets.Mesh.Object.Solver.Organic extends LOI.Assets.Mesh.Object.Solve
     clustersArray = _.values @clusters
 
     # Determine cluster adjacency.
-    cluster.findPictureNeighbors clustersArray for cluster in clustersArray
+    cluster.findNeighbors clustersArray for cluster in clustersArray
 
-    # Determine island parts.
-    cluster.initializeIslandPart @islandParts for cluster in clustersArray
-
-    # Determine island part edges.
-    islandPart.determineEdges @islandParts for islandPart in @islandParts
-
-    # Determine islands.
+    # Initialize islands.
+    cluster.initializeIsland @islands for cluster in clustersArray
 
     # Determine island origins.
-
-    # Create pixel network.
+    island.determineOriginPixel() for island in @islands
 
     # Calculate depth.
+    @depthCalculationIteration = 1
+    cluster.updatePixelNormals() for cluster in clustersArray
+    island.calculateDepth @depthCalculationIteration for island in @islands
 
     # Create vertices.
 

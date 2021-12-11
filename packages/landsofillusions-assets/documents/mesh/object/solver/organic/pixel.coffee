@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
+OrganicSolver = LOI.Assets.Mesh.Object.Solver.Organic
 
-class LOI.Assets.Mesh.Object.Solver.Organic.Pixel
+class OrganicSolver.Pixel
   @sides =
     up: opposite: 'down', direction: new THREE.Vector2 0, -1
     down: opposite: 'up', direction: new THREE.Vector2 0, 1
@@ -13,7 +14,7 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Pixel
 
   @sideProperties = _.keys @sides
 
-  constructor: (@x, @y, @cluster) ->  
+  constructor: (@x, @y, @cluster) ->
     @clusterNeighbors =
       left: @cluster.pixelsMap[@x - 1]?[@y]
       right: @cluster.pixelsMap[@x + 1]?[@y]
@@ -38,6 +39,8 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Pixel
     @neighbors = _.clone @clusterNeighbors
     @isEdge = _.clone @isClusterEdge
 
+    @depthCalculationIteration = 0
+
   setClusterNeighbor: (side, pixel) ->
     @clusterNeighbors[side] = pixel
     @isClusterEdge[side] = false
@@ -50,6 +53,9 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Pixel
     for side, neighbor of @neighbors when neighbor is detachingNeighbor
       @neighbors[side] = null
 
+    for side, clusterNeighbor of @clusterNeighbors when clusterNeighbor is detachingNeighbor
+      @clusterNeighbors[side] = null
+
   getNeighborCoordinates: (side) ->
     direction = @constructor.sides[side].direction
 
@@ -59,3 +65,7 @@ class LOI.Assets.Mesh.Object.Solver.Organic.Pixel
   setNeighbor: (side, pixel) ->
     @neighbors[side] = pixel
     @isEdge[side] = false
+
+  isPictureEdgeTowards: (pixel) ->
+    # There is an edge between this pixel and the target if there is no pixel at target in the same picture.
+    not @cluster.picture.pixelExists pixel.x, pixel.y

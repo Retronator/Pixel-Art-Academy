@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
+OrganicSolver = LOI.Assets.Mesh.Object.Solver.Organic
 
-class LOI.Assets.Mesh.Object.Solver.Organic.IslandPart
+class OrganicSolver.Island.Part
   constructor: (initialCluster) ->
     @clusters = []
 
@@ -17,5 +18,24 @@ class LOI.Assets.Mesh.Object.Solver.Organic.IslandPart
       cluster.islandPart = @
       clustersFringe.push _.values(cluster.neighbors)...
 
-  determineEdges: (islandParts) ->
+    @contour = new OrganicSolver.Island.Part.Contour @
+
+  initialize: (@id) ->
+    @borders = {}
+
+  recomputeContour: ->
+    # Add all contour segments of this island part.
+    @contour.startRecomputation()
+
     for cluster in @clusters
+      for pixel in cluster.pixels
+        coordinates = cluster.getAbsolutePixelCoordinates pixel
+
+        # Detect edges on all 4 sides. Edge vertices are directed
+        # so that the island part is on the right of the segment.
+        @contour.addSegment coordinates, 0, 1, 0, 0 if pixel.isEdge.left
+        @contour.addSegment coordinates, 1, 0, 1, 1 if pixel.isEdge.right
+        @contour.addSegment coordinates, 0, 0, 1, 0 if pixel.isEdge.up
+        @contour.addSegment coordinates, 1, 1, 0, 1 if pixel.isEdge.down
+
+    @contour.endRecomputation()
