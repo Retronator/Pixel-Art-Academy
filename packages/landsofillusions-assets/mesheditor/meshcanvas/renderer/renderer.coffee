@@ -116,6 +116,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @_lastRenderTime = Date.now()
     @_radianceStatesToBeUpdated = []
+    @globalRadianceStateUpdateTime = 0
+    @globalRadianceStatePixelsUpdatedCount = 0
+    @durationSinceLastRadianceStateUpdateReport = 0
 
     unless @constructor._lastMouseMoveTime
       @constructor._lastMouseMoveTime = Date.now()
@@ -174,6 +177,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @_setLinearRendering()
         @renderer.shadowMap.enabled = false
 
+        radianceStateUpdateStartTime = performance.now()
+
         while performance.now() < highPrecisionUpdateEndTime
           # Make sure we have a radiance state to update.
           unless @_radianceStatesToBeUpdated.length
@@ -204,6 +209,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
           radianceWasUpdated = true
           totalUpdatedCount++
 
+        radianceStateUpdateEndTime = performance.now()
+        radianceStateUpdateTime = radianceStateUpdateEndTime - radianceStateUpdateStartTime
+
+        @globalRadianceStateUpdateTime += radianceStateUpdateTime
+        @globalRadianceStatePixelsUpdatedCount += totalUpdatedCount
+
+        @durationSinceLastRadianceStateUpdateReport += radianceStateUpdateTime / 1000
+
         # Reinstate main materials and object visibility.
         scene.traverse (object) =>
           return unless object.isMesh
@@ -216,6 +229,11 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
           # TODO: Remove when CubeCamera supports layers.
           object.layers.disable 0 if object.layers.mask & 8
+
+      if @durationSinceLastRadianceStateUpdateReport > 1
+        @durationSinceLastRadianceStateUpdateReport--
+        globalAverage = @globalRadianceStateUpdateTime / @globalRadianceStatePixelsUpdatedCount
+        console.log "Radiance state average update time per pixel: #{globalAverage}ms."
 
     # No need to render if we're rendering reactively and radiance hasn't changed.
     return if @reactiveRendering() and not radianceWasUpdated
