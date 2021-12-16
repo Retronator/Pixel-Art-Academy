@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures/palette');
   api.addClientFile('engine/textures/sprite');
   api.addClientFile('engine/textures/mip');
+  api.addClientFile('engine/textures/materialproperties');
 
   api.addClientFile('engine/radiancestate..');
   api.addClientFile('engine/radiancestate/probemap');

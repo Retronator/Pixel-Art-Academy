@@ -54,6 +54,9 @@ class LOI.Assets.Mesh.Object.Layer
   newCluster: (clusterId, material) ->
     @clusters.insert clusterId, {material}
 
+    # Register the material with material properties.
+    @object.mesh.materialProperties.register material
+
   duplicateCluster: (clusterId, newClusterId) ->
     sourceCluster = @clusters.get clusterId
     

@@ -177,7 +177,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     @dirty false
 
     @_initialized = true
-    
+
+    # Initialize runtime data.
+    @materialProperties = new @constructor.MaterialProperties @
+
   depend: ->
     @_updatedDependency.depend()
 

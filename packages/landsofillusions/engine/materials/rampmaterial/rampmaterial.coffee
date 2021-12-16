@@ -59,6 +59,8 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
   constructor: (options) ->
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 
+    materialPropertiesTexture = new LOI.Engine.Textures.MaterialProperties options.mesh
+
     transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
 
     parameters =
@@ -130,3 +132,9 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
     @options = options
 
     LOI.Engine.Materials.RampMaterial.updateTextures @ if @options.texture
+
+    # Update material properties.
+    Tracker.nonreactive =>
+      Tracker.autorun =>
+        # Update with new data.
+        materialPropertiesTexture.update @options.mesh

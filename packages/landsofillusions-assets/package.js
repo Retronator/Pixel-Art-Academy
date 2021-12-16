@@ -88,6 +88,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/mapfield');
   api.addFile('documents/mesh/cameraangle');
   api.addFile('documents/mesh/material');
+  api.addFile('documents/mesh/materialproperties');
 
   api.addFile('documents/mesh/object..');
 
