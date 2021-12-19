@@ -106,6 +106,8 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three/matrices');
   api.addFile('everywhere/three/object3d');
 
+  api.addJavascript('everywhere/three/examples/utils/BufferGeometryUtils');
+
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');
   api.addFile('everywhere/lodash/urls');

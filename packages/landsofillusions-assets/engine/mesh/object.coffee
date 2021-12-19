@@ -12,6 +12,55 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
       for layerData in layersData
         new @constructor.Layer @, layerData
 
+    @_renderMeshes = []
+    @renderMeshes = new ComputedField =>
+      return unless layers = @engineLayers()
+
+      mainMaterials = []
+      clusterLists = []
+
+      for layer in layers when layer.data.visible()
+        for cluster in layer.clusters()
+          return unless cluster.geometry()
+          return unless mainMaterial = cluster.materials()?.main
+          index = mainMaterials.indexOf mainMaterial
+
+          # Add new material if necessary.
+          if index is -1
+            index = mainMaterials.length
+            mainMaterials.push mainMaterial
+            clusterLists.push []
+
+          # Add cluster to the list of clusters for this material.
+          clusterLists[index].push cluster
+
+      # Clean any previous geometry.
+      mesh.geometry.dispose() for mesh in @_renderMeshes
+
+      @_renderMeshes = for material, index in mainMaterials
+        clusterList = clusterLists[index]
+        materials = clusterList[0].materials()
+        clusterGeometries = (cluster.geometry() for cluster in clusterList)
+
+        geometry = THREE.BufferGeometryUtils.mergeBufferGeometries clusterGeometries
+
+        console.log "Generating mesh", geometry, materials if LOI.Assets.debug
+
+        mesh = new THREE.Mesh geometry, materials.main
+
+        mesh.mainMaterial = materials.main
+        mesh.shadowColorMaterial = materials.shadowColor
+        mesh.customDepthMaterial = materials.depth
+        mesh.preprocessingMaterial = materials.preprocessing
+        mesh.pbrMaterial = materials.pbr
+
+        mesh.castShadow = true
+        mesh.receiveShadow = true
+
+        mesh
+
+      @_renderMeshes
+
     @ready = new ComputedField =>
       return unless layers = @engineLayers()
 
@@ -27,6 +76,7 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
     # Reposition the object so the origin is in the center of its bounding box.
     @autorun (computation) =>
       return unless layers = @engineLayers()
+      return unless renderMeshes = @renderMeshes()
 
       # Calculate the bounding box.
       boundingBox = null
@@ -47,6 +97,7 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
 
       # Offset layers in the opposite direction.
       layer.position.copy(@position).negate() for layer in layers
+      mesh.position.copy(@position).negate() for mesh in renderMeshes
 
       if @mesh.options.debug?()
         lineSegments.position.copy(@position).negate() for lineSegments in @edgeLineSegments()
@@ -56,15 +107,25 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
       # Clean up previous children.
       @remove @children[0] while @children.length
 
-      layers = @engineLayers()
-      return unless layers?.length
+      debug = @mesh.options.debug?()
 
-      # Add new children.
-      @add layer for layer in layers
+      if debug
+        # In debug mode, we draw layers directly.
+        layers = @engineLayers()
+        return unless layers?.length
+
+        @add layer for layer in layers
+
+      else
+        # Otherwise, we add our own meshes.
+        renderMeshes = @renderMeshes()
+        return unless renderMeshes?.length
+
+        @add mesh for mesh in renderMeshes
 
       edgeLineSegments = []
 
-      if @mesh.options.debug?()
+      if debug
         currentCluster = @mesh.options.currentCluster?()
 
         # Add edge lines.
@@ -98,3 +159,4 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
     super arguments...
 
     layer.destroy() for layer in @engineLayers()
+    mesh.geometry.dispose() for mesh in @renderMeshes()

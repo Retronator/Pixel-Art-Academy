@@ -56,7 +56,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     return unless materialPropertiesIndex?
 
     # Create the data for the material properties index attribute.
-    materialPropertiesIndices = new Uint8Array geometryData.vertices.length
+    materialPropertiesIndices = new Uint8Array geometryData.vertices.length / 3
     materialPropertiesIndices.fill materialPropertiesIndex
 
     # Clean any previous geometry.
