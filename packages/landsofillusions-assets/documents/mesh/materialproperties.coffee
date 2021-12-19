@@ -11,6 +11,13 @@ class LOI.Assets.Mesh.MaterialProperties
 
     @initialize()
 
+    @texture = new LOI.Engine.Textures.MaterialProperties
+
+    # Update material properties. We need to do it in an autorun to depend on material changes.
+    Tracker.nonreactive =>
+      Tracker.autorun =>
+        @texture.update @
+
   initialize: ->
     # Build the initial list from existing mesh data.
     objects = @mesh.objects.getAllWithoutUpdates()
@@ -28,6 +35,8 @@ class LOI.Assets.Mesh.MaterialProperties
               @register cluster.material()
 
   register: (materialProperties) ->
+    materialProperties = @_pickRelevantMaterialProperties materialProperties
+
     # See if we already have these properties.
     existingIndex = @getIndex materialProperties
     return if existingIndex?
@@ -50,6 +59,8 @@ class LOI.Assets.Mesh.MaterialProperties
     @_updatedDependency.changed()
 
   getIndex: (materialProperties) ->
+    materialProperties = @_pickRelevantMaterialProperties materialProperties
+
     if paletteColor = materialProperties.paletteColor
       return @indicesByPaletteColor[paletteColor.ramp]?[paletteColor.shade]
 
@@ -63,3 +74,6 @@ class LOI.Assets.Mesh.MaterialProperties
   getAll: ->
     @_updatedDependency.depend()
     @materialProperties
+
+  _pickRelevantMaterialProperties: (materialProperties) ->
+    _.pick materialProperties, ['paletteColor', 'materialIndex']

@@ -50,6 +50,15 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
   _generateGeometry: ->
     return unless geometryData = @data.geometry()
 
+    # Get the index in the material properties texture.
+    meshData = @data.layer.object.mesh
+    materialPropertiesIndex = meshData.materialProperties.getIndex @data.material()
+    return unless materialPropertiesIndex?
+
+    # Create the data for the material properties index attribute.
+    materialPropertiesIndices = new Uint8Array geometryData.vertices.length
+    materialPropertiesIndices.fill materialPropertiesIndex
+
     # Clean any previous geometry.
     @_geometry?.dispose()
 
@@ -58,6 +67,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     @_geometry = new THREE.BufferGeometry
     @_geometry.setAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
     @_geometry.setAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
+    @_geometry.setAttribute 'materialPropertiesIndex', new THREE.BufferAttribute materialPropertiesIndices, 1, true
     @_geometry.setAttribute 'pixelCoordinates', new THREE.BufferAttribute geometryData.pixelCoordinates, 2 if geometryData.pixelCoordinates
     @_geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
     @_geometry.computeBoundingBox()
@@ -78,6 +88,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     pbr = options.pbr?()
 
     materialOptions =
+      mesh: meshData
       wireframe: options.debug?() or false
 
     # Determine the color.
@@ -98,7 +109,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       # Add extra data to options.
       boundsInPicture = @data.boundsInPicture() or {width: 1, height: 1}
 
-      # Create material properties.
+      # Create material options.
       pbrMaterialOptions =
         clusterSize: new THREE.Vector2 boundsInPicture.width, boundsInPicture.height
         clusterPlaneWorldMatrix: @data.planeWorldMatrix
@@ -163,19 +174,20 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
         else
           # Note: We can't set extra properties on material options sooner since other materials don't support them.
-          _.extend materialOptions, meshMaterial,
+          _.extend materialOptions,
             palette: palette
             smoothShading: options.smoothShading?()
 
+          # If the meshMaterial has a texture, that's something we have to get a separate material for.
+          materialOptions.texture = meshMaterial.texture if meshMaterial.texture
+
+          # Translucent materials need to be separate from opaque ones to render second.
+          materialOptions.translucency = meshMaterial.translucency if meshMaterial.translucency
+
           materialId = materialOptions.type or LOI.Engine.Materials.RampMaterial.id()
           material = LOI.Engine.Materials.getMaterial materialId, materialOptions
-
-          depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(),
-            texture: meshMaterial?.texture
-            translucency: meshMaterial?.translucency
-
+          depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
           shadowColorMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.ShadowColorMaterial.id(), materialOptions
-
           preprocessingMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.PreprocessingMaterial.id(), materialOptions
 
       else if clusterMaterial.directColor

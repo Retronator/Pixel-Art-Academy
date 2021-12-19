@@ -116,9 +116,13 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @_lastRenderTime = Date.now()
     @_radianceStatesToBeUpdated = []
+
     @globalRadianceStateUpdateTime = 0
     @globalRadianceStatePixelsUpdatedCount = 0
     @durationSinceLastRadianceStateUpdateReport = 0
+
+    @renderTimeFrameCount = 0
+    @renderTimeDuration = 0
 
     unless @constructor._lastMouseMoveTime
       @constructor._lastMouseMoveTime = Date.now()
@@ -256,6 +260,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.toneMappingExposure = exposureValue.exposure()
 
   _render: ->
+    renderStartTime = performance.now()
+
     sceneHelper = @meshCanvas.sceneHelper()
     scene = sceneHelper.scene.withUpdates()
 
@@ -398,3 +404,16 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @renderer.clearDepth()
         camera.main.layers.set 4
         @renderer.render scene, camera.main
+
+    renderEndTime = performance.now()
+    renderTime = renderEndTime - renderStartTime
+
+    @renderTimeFrameCount++
+    @renderTimeDuration += renderTime
+
+    if @renderTimeDuration > 1000 or @renderTimeFrameCount > 60
+      renderTimeAverage = @renderTimeDuration / @renderTimeFrameCount
+      console.log "Current average render time: #{renderTimeAverage}ms."
+
+      @renderTimeDuration = 0
+      @renderTimeFrameCount = 0

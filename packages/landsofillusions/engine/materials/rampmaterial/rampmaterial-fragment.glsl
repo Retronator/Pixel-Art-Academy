@@ -13,16 +13,8 @@
 uniform vec2 renderSize;
 
 // Color information
-uniform float ramp;
-uniform float shade;
-uniform float dither;
 uniform sampler2D palette;
 #include <LandsOfIllusions.Engine.Materials.paletteParametersFragment>
-
-// Reflection
-uniform float reflectionIntensity;
-uniform float reflectionShininess;
-uniform float reflectionSmoothFactor;
 
 // Shading
 uniform bool smoothShading;
@@ -30,18 +22,21 @@ uniform float smoothShadingQuantizationFactor;
 #include <LandsOfIllusions.Engine.Materials.totalLightIntensityParametersFragment>
 uniform sampler2D preprocessingMap;
 
+// Material properties
+#include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersFragment>
+
 // Texture
 #include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 
 // Translucency
 uniform float opacity;
-uniform float translucencyDither;
 
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 
 void main()	{
   // Apply translucency dither first since that can discard the whole fragment altogether.
+  float translucencyDither = readMaterialProperty(materialPropertyTranslucencyDither);
   if (dither4levels(translucencyDither)) discard;
 
   // Prepare normal.
@@ -60,9 +55,13 @@ void main()	{
 
   #else
     // We're using constants, read from uniforms.
-    #include <LandsOfIllusions.Engine.Materials.setPaletteColorFromUniformsFragment>
-    reflectionParameters = vec3(reflectionIntensity, reflectionShininess, reflectionSmoothFactor);
-    shadingDither = dither;
+    #include <LandsOfIllusions.Engine.Materials.setPaletteColorFromMaterialPropertiesFragment>
+    reflectionParameters = vec3(
+      readMaterialProperty(materialPropertyReflectionIntensity),
+      readMaterialProperty(materialPropertyReflectionShininess),
+      readMaterialProperty(materialPropertyReflectionSmoothFactor)
+    );
+    shadingDither = readMaterialProperty(materialPropertyDither);
 
   #endif
 

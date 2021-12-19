@@ -11,6 +11,8 @@ varying vec3 vNormal;
 
 varying vec3 vViewPosition;
 
+#include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersVertex>
+
 void main()	{
   #include <beginnormal_vertex>
   #include <defaultnormal_vertex>
@@ -22,6 +24,7 @@ void main()	{
 	#include <shadowmap_vertex>
 
   #include <LandsOfIllusions.Engine.Materials.mapTextureVertex>
+  #include <LandsOfIllusions.Engine.Materials.materialPropertiesVertex>
 
   vViewPosition = -mvPosition.xyz;
 }

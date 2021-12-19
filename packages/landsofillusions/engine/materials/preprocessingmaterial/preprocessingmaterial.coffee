@@ -10,18 +10,12 @@ class LOI.Engine.Materials.PreprocessingMaterial extends LOI.Engine.Materials.Ma
       blending: THREE.NoBlending
 
       uniforms: _.extend
-        # Color information
-        ramp:
-          value: options.ramp
-        shade:
-          value: options.shade
+        # Material properties
+        materialProperties:
+          value: options.mesh.materialProperties.texture
       ,
         # Texture
         LOI.Engine.Materials.RampMaterial.getTextureUniforms options
-      ,
-        # Translucency
-        translucencyTint:
-          value: options.translucency?.tint or false
 
     super parameters
     @options = options

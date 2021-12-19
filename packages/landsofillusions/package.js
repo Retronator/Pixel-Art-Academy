@@ -137,6 +137,11 @@ Package.onUse(function(api) {
   api.addGlsl('engine/materials/shaderchunks/palette/quantizeshadedcolor-fragment');
   api.addGlsl('engine/materials/shaderchunks/palette/readsourcecolorfrompalette-fragment');
   api.addGlsl('engine/materials/shaderchunks/palette/setpalettecolorfromuniforms-fragment');
+  api.addGlsl('engine/materials/shaderchunks/palette/setpalettecolorfrommaterialproperties-fragment');
+
+  api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-parameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-parameters-vertex');
+  api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-vertex');
 
   api.addGlsl('engine/materials/shaderchunks/lighting/shadesourcecolor-fragment');
   api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-fragment');

@@ -59,8 +59,6 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
   constructor: (options) ->
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 
-    materialPropertiesTexture = new LOI.Engine.Textures.MaterialProperties options.mesh
-
     transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
 
     parameters =
@@ -75,22 +73,8 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
           value: null
 
         # Color information
-        ramp:
-          value: options.ramp
-        shade:
-          value: options.shade
-        dither:
-          value: options.dither
         palette:
           value: paletteTexture
-
-        # Reflection
-        reflectionIntensity:
-          value: options.reflection?.intensity
-        reflectionShininess:
-          value: options.reflection?.shininess or 1
-        reflectionSmoothFactor:
-          value: options.reflection?.smoothFactor
 
         # Shading
         smoothShading:
@@ -103,6 +87,10 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
           value: []
         preprocessingMap:
           value: null
+
+        # Material properties
+        materialProperties:
+          value: options.mesh.materialProperties.texture
       ,
         # Texture
         LOI.Engine.Materials.RampMaterial.getTextureUniforms options
@@ -115,8 +103,6 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         # Translucency
         opacity:
           value: 1 - (options.translucency?.amount or 0)
-        translucencyDither:
-          value: options.translucency?.dither or 0
       ,
         THREE.UniformsLib.lights
 
@@ -132,9 +118,3 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
     @options = options
 
     LOI.Engine.Materials.RampMaterial.updateTextures @ if @options.texture
-
-    # Update material properties.
-    Tracker.nonreactive =>
-      Tracker.autorun =>
-        # Update with new data.
-        materialPropertiesTexture.update @options.mesh

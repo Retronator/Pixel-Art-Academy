@@ -4,14 +4,13 @@
 #include <map_pars_fragment>
 #include <packing>
 
-uniform float ramp;
-uniform float shade;
-
-uniform bool translucencyTint;
-
+#include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersFragment>
 #include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 
 void main()	{
+  // Read material properties.
+  bool translucencyTint = readMaterialProperty(materialPropertyTranslucencyTint) > 0.5;
+
   // Determine palette color (ramp and shade).
   vec2 paletteColor;
 
@@ -26,7 +25,7 @@ void main()	{
       #include <LandsOfIllusions.Engine.Materials.unpackSamplePaletteColorFragment>
     #else
       // We're using constants, read from uniforms.
-      #include <LandsOfIllusions.Engine.Materials.setPaletteColorFromUniformsFragment>
+      #include <LandsOfIllusions.Engine.Materials.setPaletteColorFromMaterialPropertiesFragment>
     #endif
 
     // Ramp is offset by 1 so that 0 can mean no preprocessing info.

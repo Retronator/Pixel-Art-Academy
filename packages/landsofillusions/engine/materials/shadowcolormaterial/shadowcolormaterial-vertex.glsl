@@ -6,10 +6,13 @@
 uniform mat3 textureMapping;
 #endif
 
+#include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersVertex>
+
 void main()	{
   #include <begin_vertex>
   #include <project_vertex>
   #include <worldpos_vertex>
 
   #include <LandsOfIllusions.Engine.Materials.mapTextureVertex>
+  #include <LandsOfIllusions.Engine.Materials.materialPropertiesVertex>
 }
