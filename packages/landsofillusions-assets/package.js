@@ -89,6 +89,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/cameraangle');
   api.addFile('documents/mesh/material');
   api.addFile('documents/mesh/materialproperties');
+  api.addFile('documents/mesh/layerproperties');
 
   api.addFile('documents/mesh/object..');
 
@@ -352,6 +353,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/pbrenabled');
   api.addFile('mesheditor/actions/characterpreviewenabled');
   api.addFile('mesheditor/actions/characterpreviewselection');
+  api.addFile('mesheditor/actions/gienabled');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
@@ -362,6 +364,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/smoothshadingenabled');
   api.addFile('mesheditor/helpers/pbrenabled');
   api.addFile('mesheditor/helpers/characterpreview');
+  api.addFile('mesheditor/helpers/gienabled');
 
   api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');

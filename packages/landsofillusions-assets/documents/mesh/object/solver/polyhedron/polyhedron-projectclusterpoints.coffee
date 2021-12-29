@@ -37,13 +37,13 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
 
       continue if allDirectionsAreSameCluster
 
-      pixels.push cluster.getAbsolutePixelCoordinates pixel
+      pixels.push pixel
 
       # Also add connections between neighbors at half the distance.
       for direction in pixelDirections
         continue if pixel.clusterEdges[direction.property]
 
-        pixels.push cluster.getAbsolutePixelCoordinates
+        pixels.push
           x: pixel.x + direction.vector.x * 0.5
           y: pixel.y + direction.vector.y * 0.5
 
@@ -78,7 +78,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
           factor = 1
           
         else
-          position = new THREE.Vector2(pixel.x + cluster.origin.x, pixel.y + cluster.origin.y)
+          position = new THREE.Vector2 pixel.x, pixel.y
           distance = cameraAngle.distanceInDirectionToHorizon position, direction.vector, horizon
 
           # The pixel is pointing away from camera if distance to horizon is negative.
@@ -96,7 +96,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
           # Use a factor to bring void point 0.5 pixels or more away from the horizon.
           factor = Math.min 1, distance - 0.5
 
-        voidPixel = cluster.getAbsolutePixelCoordinates
+        voidPixel =
           x: pixel.x + direction.vector.x * factor
           y: pixel.y + direction.vector.y * factor
 

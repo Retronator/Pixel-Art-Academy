@@ -85,7 +85,9 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures/palette');
   api.addClientFile('engine/textures/sprite');
   api.addClientFile('engine/textures/mip');
+  api.addClientFile('engine/textures/properties');
   api.addClientFile('engine/textures/materialproperties');
+  api.addClientFile('engine/textures/layerproperties');
 
   api.addClientFile('engine/radiancestate..');
   api.addClientFile('engine/radiancestate/probemap');
@@ -103,6 +105,15 @@ Package.onUse(function(api) {
 
   api.addClientFile('engine/radiancestate/radiancematerial/out..');
   api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
+
+  api.addClientFile('engine/illuminationstate..');
+  api.addClientFile('engine/illuminationstate/probemapatlas');
+  api.addClientFile('engine/illuminationstate/probemap');
+  api.addGlsl('engine/illuminationstate/common-parameters-fragment');
+
+  api.addClientFile('engine/illuminationstate/illuminationmaterial..');
+  api.addGlsl('engine/illuminationstate/illuminationmaterial/illuminationmaterial-vertex');
+  api.addGlsl('engine/illuminationstate/illuminationmaterial/illuminationmaterial-fragment');
 
   api.addClientFile('engine/skydome..');
 
@@ -129,6 +140,7 @@ Package.onUse(function(api) {
   api.addMaterial('engine/materials/spritematerial..');
   api.addMaterial('engine/materials/rampmaterial..');
   api.addMaterial('engine/materials/pbrmaterial..');
+  api.addMaterial('engine/materials/gimaterial..');
   api.addMaterial('engine/materials/depthmaterial..');
   api.addMaterial('engine/materials/shadowcolormaterial..');
   api.addMaterial('engine/materials/preprocessingmaterial..');
@@ -142,6 +154,10 @@ Package.onUse(function(api) {
   api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-parameters-fragment');
   api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-parameters-vertex');
   api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-vertex');
+
+  api.addGlsl('engine/materials/shaderchunks/layerproperties/layerproperties-parameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/layerproperties/layerproperties-parameters-vertex');
+  api.addGlsl('engine/materials/shaderchunks/layerproperties/layerproperties-vertex');
 
   api.addGlsl('engine/materials/shaderchunks/lighting/shadesourcecolor-fragment');
   api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-fragment');

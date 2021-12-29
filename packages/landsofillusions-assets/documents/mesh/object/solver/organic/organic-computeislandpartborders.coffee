@@ -33,29 +33,29 @@ OrganicSolver::computeIslandPartBorders = (islandParts) ->
 
         # Detect edges with neighboring pixels on all 4 sides. Edge vertices are directed
         # so that islandPart A is on the right of the segment, islandPart B on the left.
-        if pixel.islandPartEdges.left and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x - 1, coordinates.y)?.islandPartEdges.right
+        if pixel.islandPartEdges.left and islandPartB.findPixelAtCoordinates(coordinates.x - 1, coordinates.y)?.islandPartEdges.right
           edge.addSegment coordinates, 0, 1, 0, 0
 
-        if pixel.islandPartEdges.right and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x + 1, coordinates.y)?.islandPartEdges.left
+        if pixel.islandPartEdges.right and islandPartB.findPixelAtCoordinates(coordinates.x + 1, coordinates.y)?.islandPartEdges.left
           edge.addSegment coordinates, 1, 0, 1, 1
 
-        if pixel.islandPartEdges.up and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y - 1)?.islandPartEdges.down
+        if pixel.islandPartEdges.up and islandPartB.findPixelAtCoordinates(coordinates.x, coordinates.y - 1)?.islandPartEdges.down
           edge.addSegment coordinates, 0, 0, 1, 0
 
-        if pixel.islandPartEdges.down and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y + 1)?.islandPartEdges.up
+        if pixel.islandPartEdges.down and islandPartB.findPixelAtCoordinates(coordinates.x, coordinates.y + 1)?.islandPartEdges.up
           edge.addSegment coordinates, 1, 1, 0, 1
 
         # Detect edges with overlapping pixels.
-        if pixel.islandPartEdges.left and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x , coordinates.y)?.islandPartEdges.left
+        if pixel.islandPartEdges.left and islandPartB.findPixelAtCoordinates(coordinates.x , coordinates.y)?.islandPartEdges.left
           edge.addSegment coordinates, 0, 1, 0, 0
 
-        if pixel.islandPartEdges.right and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.islandPartEdges.right
+        if pixel.islandPartEdges.right and islandPartB.findPixelAtCoordinates(coordinates.x, coordinates.y)?.islandPartEdges.right
           edge.addSegment coordinates, 1, 0, 1, 1
 
-        if pixel.islandPartEdges.up and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.islandPartEdges.up
+        if pixel.islandPartEdges.up and islandPartB.findPixelAtCoordinates(coordinates.x, coordinates.y)?.islandPartEdges.up
           edge.addSegment coordinates, 0, 0, 1, 0
 
-        if pixel.islandPartEdges.down and islandPartB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.islandPartEdges.down
+        if pixel.islandPartEdges.down and islandPartB.findPixelAtCoordinates(coordinates.x, coordinates.y)?.islandPartEdges.down
           edge.addSegment coordinates, 1, 1, 0, 1
 
       edge.endRecomputation()

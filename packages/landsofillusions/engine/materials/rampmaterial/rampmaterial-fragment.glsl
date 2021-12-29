@@ -54,7 +54,7 @@ void main()	{
     #include <LandsOfIllusions.Engine.Materials.unpackSampleShadingDitherFragment>
 
   #else
-    // We're using constants, read from uniforms.
+    // We're using constants, read from material properties.
     #include <LandsOfIllusions.Engine.Materials.setPaletteColorFromMaterialPropertiesFragment>
     reflectionParameters = vec3(
       readMaterialProperty(materialPropertyReflectionIntensity),

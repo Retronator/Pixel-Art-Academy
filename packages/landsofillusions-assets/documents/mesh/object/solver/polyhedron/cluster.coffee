@@ -29,10 +29,6 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
       
     @points = []
     @indices = []
-    
-    @origin =
-      x: @picture.bounds?.x or 0
-      y: @picture.bounds?.y or 0
 
     @recomputePixels = true
     @recomputeEdges = true
@@ -156,14 +152,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     delete @edges[otherCluster.id]
     @edgesChanged = true
 
-  getAbsolutePixelCoordinates: (pixel) ->
-    x: pixel.x + @origin.x
-    y: pixel.y + @origin.y
-
-  findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
-    x = Math.floor absoluteX - @origin.x
-    y = Math.floor absoluteY - @origin.y
-    
+  findPixelAtCoordinates: (x, y) ->
     @pixelMap[x]?[y]
 
   prepareGeometryPixels: (cleanEdgePixels, cameraAngle) ->
@@ -320,6 +309,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     nanWarned = false
     elementsPerVertex = 3
     coordinatesPerVertex = 2
+    bounds = @picture.bounds()
 
     if @properties?.extrusion
       # Calculate hull edges.
@@ -363,6 +353,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
       verticesCount = @points.length * 2 + hullEdges.length * 4
       vertices = new Float32Array verticesCount * elementsPerVertex
       pixelCoordinates = new Float32Array verticesCount * coordinatesPerVertex
+      layerPixelCoordinates = new Float32Array verticesCount * coordinatesPerVertex
       normals = new Float32Array verticesCount * elementsPerVertex
 
       oppositeClusterVertexIndexOffset = @points.length
@@ -383,6 +374,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
         pixelCoordinates[index * coordinatesPerVertex] = point.pixel.x - @minPixel.x
         pixelCoordinates[index * coordinatesPerVertex + 1] = point.pixel.y - @minPixel.y
 
+        layerPixelCoordinates[index * coordinatesPerVertex] = point.pixel.x - bounds.x
+        layerPixelCoordinates[index * coordinatesPerVertex + 1] = point.pixel.y - bounds.y
+
         # Offset the position by the extrusion
         vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex] = point.vertex.x + extrusionVector.x
         vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 1] = point.vertex.y + extrusionVector.y
@@ -395,6 +389,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
 
         pixelCoordinates[(oppositeClusterVertexIndexOffset + index) * coordinatesPerVertex] = point.pixel.x - @minPixel.x
         pixelCoordinates[(oppositeClusterVertexIndexOffset + index) * coordinatesPerVertex + 1] = point.pixel.y - @minPixel.y
+
+        layerPixelCoordinates[(oppositeClusterVertexIndexOffset + index) * coordinatesPerVertex] = point.pixel.x - bounds.x
+        layerPixelCoordinates[(oppositeClusterVertexIndexOffset + index) * coordinatesPerVertex + 1] = point.pixel.y - bounds.y
 
         if not nanWarned and _.isNaN point.vertex.x
           console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
@@ -436,6 +433,8 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
           point = if pointIndex % 2 then endPoint else startPoint
           pixelCoordinates[(extrusionVertexIndexOffset + edgeIndex * 4) * coordinatesPerVertex + pointIndex * 3] = point.pixel.x - @minPixel.x
           pixelCoordinates[(extrusionVertexIndexOffset + edgeIndex * 4) * coordinatesPerVertex + pointIndex * 3 + 1] = point.pixel.y - @minPixel.y
+          layerPixelCoordinates[(extrusionVertexIndexOffset + edgeIndex * 4) * coordinatesPerVertex + pointIndex * 3] = point.pixel.x - bounds.x
+          layerPixelCoordinates[(extrusionVertexIndexOffset + edgeIndex * 4) * coordinatesPerVertex + pointIndex * 3 + 1] = point.pixel.y - bounds.y
 
       # Create indices.
       oppositeClusterIndicesIndexOffset = @indices.length
@@ -469,6 +468,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
       vertices = new Float32Array @points.length * elementsPerVertex
       normals = new Float32Array @points.length * elementsPerVertex
       pixelCoordinates = new Float32Array @points.length * coordinatesPerVertex
+      layerPixelCoordinates = new Float32Array @points.length * coordinatesPerVertex
       indices = new Uint32Array @indices
 
       for point, index in @points
@@ -483,10 +483,13 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
         pixelCoordinates[index * coordinatesPerVertex] = point.pixel.x - @minPixel.x
         pixelCoordinates[index * coordinatesPerVertex + 1] = point.pixel.y - @minPixel.y
 
+        layerPixelCoordinates[index * coordinatesPerVertex] = point.pixel.x - bounds.x
+        layerPixelCoordinates[index * coordinatesPerVertex + 1] = point.pixel.y - bounds.y
+
         if not nanWarned and _.isNaN point.vertex.x
           console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
           nanWarned = true
 
     console.log "Created geometry for cluster", @, vertices, normals, pixelCoordinates, indices if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
-    {vertices, normals, pixelCoordinates, indices}
+    {vertices, normals, pixelCoordinates, layerPixelCoordinates, indices}

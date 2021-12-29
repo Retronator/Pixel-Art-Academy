@@ -16,7 +16,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
-    # Setup the PBR skydomes.
+    # Setup the PBR/GI skydomes.
     @skydome =
       procedural: new LOI.Engine.Skydome.Procedural
       photo: new LOI.Engine.Skydome.Photo
@@ -36,7 +36,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
 
     directionalLight.castShadow = true
-    d = 50
+    d = 10
     
     shadow = directionalLight.shadow
     shadow.camera.left = -d
@@ -66,6 +66,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       (a, b) => a is b
 
     @pbrEnabledHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
+    @giEnabledHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.GIEnabled, @fileId
 
     @autorun (computation) =>
       # Set the new position.
@@ -96,12 +97,12 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
       # Enable the correct skydome. We need to have a proper boolean so
       # that the visible property below also has an explicit false value.
-      pbrEnabled = @pbrEnabledHelper() or false
-      @skydome.procedural.visible = pbrEnabled and not photoSkydomeUrl
-      @skydome.photo.visible = pbrEnabled and photoSkydomeUrl?
+      radianceTransferEnabled = @pbrEnabledHelper() or @giEnabledHelper() or false
+      @skydome.procedural.visible = radianceTransferEnabled and not photoSkydomeUrl
+      @skydome.photo.visible = radianceTransferEnabled and photoSkydomeUrl?
 
     @autorun (computation) =>
-      return unless @pbrEnabledHelper()
+      return unless @pbrEnabledHelper() or @giEnabledHelper()
       return if @photoSkydomeUrl()
       return unless meshCanvas = @meshCanvas()
       return unless meshCanvas.isRendered()

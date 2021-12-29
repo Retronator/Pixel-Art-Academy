@@ -33,33 +33,33 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
         continue unless edge.line.direction.length() or clusterA.plane.normal.dot(clusterB.plane.normal) > 0
 
       for pixel in clusterA.pixels
-        coordinates = clusterA.getAbsolutePixelCoordinates pixel
+        coordinates = pixel
 
         # Detect edges with neighboring pixels on all 4 sides. Edge vertices are directed
         # so that cluster A is on the right of the segment, cluster B on the left.
-        if pixel.clusterEdges.left and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x - 1, coordinates.y)?.clusterEdges.right
+        if pixel.clusterEdges.left and clusterB.findPixelAtCoordinates(coordinates.x - 1, coordinates.y)?.clusterEdges.right
           edge.addSegment coordinates, 0, 1, 0, 0
 
-        if pixel.clusterEdges.right and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x + 1, coordinates.y)?.clusterEdges.left
+        if pixel.clusterEdges.right and clusterB.findPixelAtCoordinates(coordinates.x + 1, coordinates.y)?.clusterEdges.left
           edge.addSegment coordinates, 1, 0, 1, 1
 
-        if pixel.clusterEdges.up and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y - 1)?.clusterEdges.down
+        if pixel.clusterEdges.up and clusterB.findPixelAtCoordinates(coordinates.x, coordinates.y - 1)?.clusterEdges.down
           edge.addSegment coordinates, 0, 0, 1, 0
 
-        if pixel.clusterEdges.down and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y + 1)?.clusterEdges.up
+        if pixel.clusterEdges.down and clusterB.findPixelAtCoordinates(coordinates.x, coordinates.y + 1)?.clusterEdges.up
           edge.addSegment coordinates, 1, 1, 0, 1
 
         # Detect edges with overlapping pixels.
-        if pixel.clusterEdges.left and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x , coordinates.y)?.clusterEdges.left
+        if pixel.clusterEdges.left and clusterB.findPixelAtCoordinates(coordinates.x , coordinates.y)?.clusterEdges.left
           edge.addSegment coordinates, 0, 1, 0, 0
 
-        if pixel.clusterEdges.right and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.clusterEdges.right
+        if pixel.clusterEdges.right and clusterB.findPixelAtCoordinates(coordinates.x, coordinates.y)?.clusterEdges.right
           edge.addSegment coordinates, 1, 0, 1, 1
 
-        if pixel.clusterEdges.up and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.clusterEdges.up
+        if pixel.clusterEdges.up and clusterB.findPixelAtCoordinates(coordinates.x, coordinates.y)?.clusterEdges.up
           edge.addSegment coordinates, 0, 0, 1, 0
 
-        if pixel.clusterEdges.down and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.clusterEdges.down
+        if pixel.clusterEdges.down and clusterB.findPixelAtCoordinates(coordinates.x, coordinates.y)?.clusterEdges.down
           edge.addSegment coordinates, 1, 1, 0, 1
 
       edge.endRecomputation()

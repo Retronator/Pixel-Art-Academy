@@ -86,6 +86,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
                 compressedNormals: Match.Where EJSON.isBinary
                 compressedIndices: Match.Where EJSON.isBinary
                 compressedPixelCoordinates: Match.Where EJSON.isBinary
+                compressedLayerPixelCoordinates: Match.Where EJSON.isBinary
               boundsInPicture:
                 x: Number
                 y: Number

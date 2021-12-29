@@ -23,5 +23,6 @@ class LOI.Engine.Skydome.Procedural.Material extends THREE.ShaderMaterial
     super parameters
     @options = options
 
-    # Mark as a PBR material so it gets rendered during radiance transfer.
+    # Mark as a PBR and GI material so it gets rendered during radiance transfer.
     @pbr = true
+    @gi = true

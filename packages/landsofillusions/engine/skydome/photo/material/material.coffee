@@ -22,5 +22,6 @@ class LOI.Engine.Skydome.Photo.Material extends THREE.ShaderMaterial
     # Set a temporary map onto the material so that proper shader defines get set.
     @map = new THREE.DataTexture
 
-    # Mark as a PBR material so it gets rendered during radiance transfer.
+    # Mark as a PBR and GI material so it gets rendered during radiance transfer.
     @pbr = true
+    @gi = true

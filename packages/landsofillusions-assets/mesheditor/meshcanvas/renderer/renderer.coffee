@@ -32,11 +32,13 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @cameraManager = new @constructor.CameraManager @
 
-    # Initialize radiance state rendering and add enable to render hidden clusters during radiance update.
+    # Initialize radiance transfer rendering and add enable to render hidden clusters during radiance update.
     LOI.Engine.RadianceState.initialize()
+    LOI.Engine.IlluminationState.initialize()
+
     LOI.Engine.RadianceState.Probe.cubeCamera.layers.enable 3
 
-    # Add a debug radiance cube sphere.
+    # Add radiance debug helpers.
     sceneHelper = @meshCanvas.sceneHelper()
     scene = sceneHelper.scene()
 
@@ -58,6 +60,22 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     radianceDebugProbeOctahedronMap.rotation.x = Math.PI
     radianceDebugProbeOctahedronMap.layers.set 4
     scene.add radianceDebugProbeOctahedronMap
+
+    illuminationDebugMaterial = new THREE.MeshBasicMaterial
+      color: 0xffffff
+      map: null
+      side: THREE.DoubleSide
+      transparent: true
+
+    illuminationDebug = new THREE.Mesh new THREE.PlaneBufferGeometry(1, 1), illuminationDebugMaterial
+    illuminationDebug.position.x = 2
+    illuminationDebug.rotation.x = Math.PI
+    illuminationDebug.layers.set 4
+    scene.add illuminationDebug
+
+    @meshCanvas.autorun =>
+      return unless illuminationState = @meshCanvas.mesh()?.illuminationState()
+      illuminationDebugMaterial.map = illuminationState.illuminationAtlas.texture
 
     @renderSize = new ComputedField =>
       if @meshCanvas.pixelRenderEnabled()
@@ -117,9 +135,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @_lastRenderTime = Date.now()
     @_radianceStatesToBeUpdated = []
 
-    @globalRadianceStateUpdateTime = 0
-    @globalRadianceStatePixelsUpdatedCount = 0
-    @durationSinceLastRadianceStateUpdateReport = 0
+    @globalRadianceUpdateTime = 0
+    @globalRadianceUpdatePixelsUpdatedCount = 0
+    @durationSinceLastRadianceUpdateReport = 0
 
     @renderTimeFrameCount = 0
     @renderTimeDuration = 0
@@ -137,8 +155,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     radianceWasUpdated = false
     totalUpdatedCount = 0
 
-    if @meshCanvas.pbrEnabled()
-      # We're doing PBR so we should update some of the radiance
+    pbrEnabled = @meshCanvas.pbrEnabled()
+    giEnabled = @meshCanvas.giEnabled()
+    illuminationState = @meshCanvas.mesh().illuminationState() if giEnabled
+
+    if pbrEnabled or giEnabled and illuminationState
+      # We're doing PBR or GI so we should update some of the radiance
       # states. Calculate how much time we can we spend for this.
       updateStartTime = Date.now()
       timeSinceLastRender = (updateStartTime - @_lastRenderTime) / 1000
@@ -161,18 +183,20 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         scene.traverse (object) =>
           return unless object.isMesh
 
-          # Remember if the object is supposed to be visible since we'll change it depending if it's a PBR mesh or not.
+          # Remember if the object is supposed to be visible since we'll change it depending if it's a PBR/GI mesh or not.
           object.wasVisible = object.visible
 
-          if object.pbrMaterial or object.material.pbr
+          isVisibleInPBR = pbrEnabled and (object.pbrMaterial or object.material.pbr)
+          isVisibleInGI = giEnabled and (object.giMaterial or object.material.gi)
+
+          if isVisibleInPBR or isVisibleInGI
             object.visible = true
-            object.material = object.pbrMaterial if object.pbrMaterial
+            object.material = object.pbrMaterial if pbrEnabled and object.pbrMaterial
+            object.material = object.giMaterial if giEnabled and object.giMaterial
 
             # Enable double sided rendering during radiance transfer.
-            object.pbrMaterial?.side = THREE.DoubleSide
-
-            # TODO: Remove when CubeCamera supports layers.
-            object.layers.enable 0 if object.layers.mask & 8
+            object.pbrMaterial?.side = THREE.DoubleSide if pbrEnabled
+            object.giMaterial?.side = THREE.DoubleSide if giEnabled
 
           else
             object.visible = false
@@ -181,45 +205,51 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @_setLinearRendering()
         @renderer.shadowMap.enabled = false
 
-        radianceStateUpdateStartTime = performance.now()
+        radianceUpdateStartTime = performance.now()
 
         while performance.now() < highPrecisionUpdateEndTime
-          # Make sure we have a radiance state to update.
-          unless @_radianceStatesToBeUpdated.length
-            scene.traverse (object) =>
-              return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
-              engineCluster = object
+          if pbrEnabled
+            # Make sure we have a radiance state to update.
+            unless @_radianceStatesToBeUpdated.length
+              scene.traverse (object) =>
+                return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
+                engineCluster = object
 
-              return unless engineCluster.data.isVisible()
-              return unless radianceState = engineCluster.radianceState()
+                return unless engineCluster.data.isVisible()
+                return unless radianceState = engineCluster.radianceState()
 
-              # We should update one radiance state per 10×10 cluster pixels.
-              updatesCount = Math.max 0.1, radianceState.probeMap.pixelsCount / 100
+                # We should update one radiance state per 10×10 cluster pixels.
+                updatesCount = Math.max 0.1, radianceState.probeMap.pixelsCount / 100
 
-              if updatesCount < 1
-                updatesCount = if updatesCount > Math.random() then 1 else 0
+                if updatesCount < 1
+                  updatesCount = if updatesCount > Math.random() then 1 else 0
 
-              else
-                updatesCount = Math.ceil updatesCount
+                else
+                  updatesCount = Math.ceil updatesCount
 
-              @_radianceStatesToBeUpdated.push radianceState for i in [0...updatesCount]
+                @_radianceStatesToBeUpdated.push radianceState for i in [0...updatesCount]
 
-          # If we still don't have any radiance states to update, there aren't any clusters in the scene.
-          break unless @_radianceStatesToBeUpdated.length
+            # If we still don't have any radiance states to update, there aren't any clusters in the scene.
+            break unless @_radianceStatesToBeUpdated.length
 
-          # Update next radiance state.
-          radianceState = @_radianceStatesToBeUpdated.shift()
-          radianceState.update @renderer, scene
-          radianceWasUpdated = true
-          totalUpdatedCount++
+            # Update next radiance state.
+            radianceState = @_radianceStatesToBeUpdated.shift()
+            radianceState.update @renderer, scene
+            radianceWasUpdated = true
+            totalUpdatedCount++
 
-        radianceStateUpdateEndTime = performance.now()
-        radianceStateUpdateTime = radianceStateUpdateEndTime - radianceStateUpdateStartTime
+          else if giEnabled
+            illuminationState.update @renderer, scene
+            radianceWasUpdated = true
+            totalUpdatedCount++
 
-        @globalRadianceStateUpdateTime += radianceStateUpdateTime
-        @globalRadianceStatePixelsUpdatedCount += totalUpdatedCount
+        radianceUpdateEndTime = performance.now()
+        radianceUpdateTime = radianceUpdateEndTime - radianceUpdateStartTime
 
-        @durationSinceLastRadianceStateUpdateReport += radianceStateUpdateTime / 1000
+        @globalRadianceUpdateTime += radianceUpdateTime
+        @globalRadianceUpdatePixelsUpdatedCount += totalUpdatedCount
+
+        @durationSinceLastRadianceUpdateReport += radianceUpdateTime / 1000
 
         # Reinstate main materials and object visibility.
         scene.traverse (object) =>
@@ -229,15 +259,18 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
           object.material = object.mainMaterial if object.mainMaterial
 
           # Reinstate single-sided rendering for main render.
-          object.pbrMaterial?.side = THREE.FrontSide
+          object.pbrMaterial?.side = THREE.FrontSide if pbrEnabled
+          object.giMaterial?.side = THREE.FrontSide if giEnabled
 
-          # TODO: Remove when CubeCamera supports layers.
-          object.layers.disable 0 if object.layers.mask & 8
+      if @durationSinceLastRadianceUpdateReport > 1
+        @durationSinceLastRadianceUpdateReport--
+        globalAverage = @globalRadianceUpdateTime / @globalRadianceUpdatePixelsUpdatedCount
+        console.log "Radiance update average time per pixel: #{globalAverage}ms."
 
-      if @durationSinceLastRadianceStateUpdateReport > 1
-        @durationSinceLastRadianceStateUpdateReport--
-        globalAverage = @globalRadianceStateUpdateTime / @globalRadianceStatePixelsUpdatedCount
-        console.log "Radiance state average update time per pixel: #{globalAverage}ms."
+        # Reset average every 3 seconds.
+        if @globalRadianceUpdateTime > 3000
+          @globalRadianceUpdateTime = 0
+          @globalRadianceUpdatePixelsUpdatedCount = 0
 
     # No need to render if we're rendering reactively and radiance hasn't changed.
     return if @reactiveRendering() and not radianceWasUpdated
@@ -270,11 +303,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     # Set up main geometry.
     camera.main.layers.set 0
 
-    pbr = @meshCanvas.pbrEnabled()
+    pbrEnabled = @meshCanvas.pbrEnabled()
+    giEnabled = @meshCanvas.giEnabled()
 
     @_setLinearRendering()
 
-    unless pbr
+    unless pbrEnabled or giEnabled
       shadowsEnabled = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled
 
       # Render the preprocessing step. First set the preprocessing material on all meshes.
@@ -356,7 +390,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.render scene, camera.main
 
     # Present the color pass to screen (tone-mapped for PBR).
-    @_setToneMappedRendering() if pbr
+    @_setToneMappedRendering() if pbrEnabled or giEnabled
     @renderer.setRenderTarget null
     @renderer.render @colorPassScreenQuad.scene, @colorPassScreenQuad.camera
 
@@ -369,7 +403,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @renderer.render scene, camera.renderTarget
 
       # Present the low-res render to the screen (tone-mapped for PBR).
-      @_setToneMappedRendering() if pbr
+      @_setToneMappedRendering() if pbrEnabled or giEnabled
       pixelRenderScene = @pixelRender.scene.withUpdates()
       @renderer.setRenderTarget null
       @renderer.render pixelRenderScene, camera.pixelRender
@@ -396,7 +430,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @renderer.render scene, camera.main
 
       # Render PBR debug visuals.
-      if pbr
+      if pbrEnabled or giEnabled
         @_setToneMappedRendering()
         debugClusterScene = @debugCluster.scene.withUpdates()
         @renderer.render debugClusterScene, camera.pixelRender

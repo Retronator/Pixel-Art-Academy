@@ -51,14 +51,12 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
 
         # Maps need to be set on the object itself as well for shader defines to kick in.
         material.map = spriteTextures.paletteColorTexture
-        material.normalMap = spriteTextures.normalTexture  if material.uniforms.normalMap
+        material.normalMap = spriteTextures.normalTexture if material.uniforms.normalMap
 
         material.needsUpdate = true
         material._dependency.changed()
 
   constructor: (options) ->
-    paletteTexture = new LOI.Engine.Textures.Palette options.palette
-
     transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
 
     parameters =
@@ -74,7 +72,7 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
 
         # Color information
         palette:
-          value: paletteTexture
+          value: options.mesh.paletteTexture
 
         # Shading
         smoothShading:

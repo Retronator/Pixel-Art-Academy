@@ -86,6 +86,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #           compressedIndices: binary object with compressed version of indices, sent to the server
   #           pixelCoordinates: UInt32Array with pixel coordinates of the cluster, not sent to the server
   #           compressedPixelCoordinates: binary object with compressed version of pixel coordinates, sent to the server
+  #           layerPixelCoordinates: UInt32Array with pixel coordinates of the cluster relative to layer origin, not sent to the server
+  #           compressedLayerPixelCoordinates: binary object with compressed version of layer pixel coordinates, sent to the server
   #         boundsInPicture: the position and size of the cluster in picture pixels
   #           x, y, width, height
   # materials: array of shaders used to draw objects
@@ -158,7 +160,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     Nearest: 'Nearest'
     Linear: 'Linear'
 
-  initialize: ->
+  initialize: (initializeRuntimeData, propertiesChangedDependency) ->
     # Make sure we don't initialize it multiple times.
     if @_initialized
       console.warn "Multiple calls to initialize of mesh", @
@@ -178,8 +180,23 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     @_initialized = true
 
+    return unless initializeRuntimeData
+
     # Initialize runtime data.
     @materialProperties = new @constructor.MaterialProperties @
+    @layerProperties = new @constructor.LayerProperties @
+
+    @paletteTexture = new LOI.Engine.Textures.Palette
+
+    # Update palette data. We need to do it in an autorun to depend on palette changes.
+    Tracker.nonreactive =>
+      @_updatePaletteTextureAutorun = Tracker.autorun =>
+        propertiesChangedDependency.depend()
+        return unless palette = @customPalette or LOI.Assets.Palette.documents.findOne @palette._id
+        @paletteTexture.update palette
+
+  destroy: ->
+    @_updatePaletteTextureAutorun.stop()
 
   depend: ->
     @_updatedDependency.depend()

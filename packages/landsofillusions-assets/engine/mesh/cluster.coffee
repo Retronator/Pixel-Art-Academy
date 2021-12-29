@@ -55,9 +55,21 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     materialPropertiesIndex = meshData.materialProperties.getIndex @data.material()
     return unless materialPropertiesIndex?
 
-    # Create the data for the material properties index attribute.
+    # Create the data for the material properties index attribute. We need to stretch possible values to the maximum
+    # typed array value, since we'll use a normalized buffer that will map to float values between 0.0 and 1.0.
     materialPropertiesIndices = new Uint8Array geometryData.vertices.length / 3
-    materialPropertiesIndices.fill materialPropertiesIndex
+    maxUint8Value = 255
+    stretchFactor = maxUint8Value / (LOI.Engine.Textures.MaterialProperties.maxItems - 1)
+    materialPropertiesIndices.fill materialPropertiesIndex * stretchFactor
+    
+    # Get the index in the layer properties texture.
+    layerPropertiesIndex = meshData.layerProperties.getIndex @data.layer
+    return unless layerPropertiesIndex?
+    
+    # Create the data for the layer properties index attribute.
+    layerPropertiesIndices = new Uint8Array geometryData.vertices.length / 3
+    stretchFactor = maxUint8Value / (LOI.Engine.Textures.LayerProperties.maxItems - 1)
+    layerPropertiesIndices.fill layerPropertiesIndex * stretchFactor
 
     # Clean any previous geometry.
     @_geometry?.dispose()
@@ -68,7 +80,9 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     @_geometry.setAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
     @_geometry.setAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
     @_geometry.setAttribute 'materialPropertiesIndex', new THREE.BufferAttribute materialPropertiesIndices, 1, true
+    @_geometry.setAttribute 'layerPropertiesIndex', new THREE.BufferAttribute layerPropertiesIndices, 1, true
     @_geometry.setAttribute 'pixelCoordinates', new THREE.BufferAttribute geometryData.pixelCoordinates, 2 if geometryData.pixelCoordinates
+    @_geometry.setAttribute 'layerPixelCoordinates', new THREE.BufferAttribute geometryData.layerPixelCoordinates, 2 if geometryData.layerPixelCoordinates
     @_geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
     @_geometry.computeBoundingBox()
 
@@ -88,7 +102,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     pbr = options.pbr?()
 
     materialOptions =
-      mesh: meshData
       wireframe: options.debug?() or false
 
     # Determine the color.
@@ -175,6 +188,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         else
           # Note: We can't set extra properties on material options sooner since other materials don't support them.
           _.extend materialOptions,
+            mesh: meshData
             palette: palette
             smoothShading: options.smoothShading?()
 
@@ -236,6 +250,9 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     mesh
 
   _generateRadianceState: ->
+    options = @layer.object.mesh.options
+    return unless options.pbr?()
+
     # Clean any previous radiance state.
     @_radianceState?.destroy()
     @_radianceState = null

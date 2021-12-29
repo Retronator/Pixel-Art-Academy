@@ -16,6 +16,9 @@ const float materialPropertyTranslucencyDither = 7.5 / maxMaterialProperties;
 const float materialPropertyTranslucencyTint = 8.5 / maxMaterialProperties;
 const float materialPropertyTranslucencyShadowDither = 9.5 / maxMaterialProperties;
 const float materialPropertyTranslucencyShadowTint = 10.5 / maxMaterialProperties;
+const float materialPropertyEmissionR = 11.5 / maxMaterialProperties;
+const float materialPropertyEmissionG = 12.5 / maxMaterialProperties;
+const float materialPropertyEmissionB = 13.5 / maxMaterialProperties;
 
 float readMaterialProperty(float property) {
   return texture2D(materialProperties, vec2(vMaterialPropertiesIndex, property)).a;

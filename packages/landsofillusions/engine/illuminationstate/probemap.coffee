@@ -1,35 +1,51 @@
+'use strict'
+
 LOI = LandsOfIllusions
 
-class LOI.Engine.RadianceState.ProbeMap
-  constructor: (@cluster) ->
-    @boundsInPicture = @cluster.boundsInPicture()
-    @width = @boundsInPicture.width
-    @height = @boundsInPicture.height
+class LOI.Engine.IlluminationState.ProbeMap
+  constructor: (@atlas, @layer) ->
+    @picture = @layer.pictures.get 0
+    @bounds = @picture.bounds()
+    @width = @bounds.width
+    @height = @bounds.height
 
-    # Map which pixels are present in the cluster.
+    @layerProperties = @atlas.mesh.layerProperties.getPropertiesForLayer @layer
+    @positionInAtlas =
+      x: @layerProperties.atlasPositionX
+      y: @layerProperties.atlasPositionY
+
+    @flagsMap = @picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.Flags
+    @clusterIdMap = @picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.ClusterId
+
+    @iteration = 0
     @distanceMap = new Int32Array @width * @height
-
-    # Go over all pixels in the cluster picture.
-    pictureCluster = @cluster.layer.getPictureCluster @cluster.id
-    @clusterIdMap = pictureCluster.picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.ClusterId
-
     @_resetDistanceMap()
 
     # Find which probe should be calculated first.
     nextPixelIndex = @_findPixelIndexAtLargestDistance()
 
-    dataArray = new Float32Array @width * @height
-    dataArray.fill nextPixelIndex
+    # Write initial value to this layer's part of the atlas.
+    for x in [0...@width]
+      for y in [0...@height]
+        @atlas.writeToPixel @positionInAtlas.x + x, @positionInAtlas.y + y, nextPixelIndex
 
-    @texture = new THREE.DataTexture dataArray, @width, @height, THREE.AlphaFormat, THREE.FloatType
+    @_updatePixel =
+      cluster: null
+      pixelCoordinates:
+        x: 0
+        y: 0
+      atlasCoordinates:
+        x: 0
+        y: 0
 
   _resetDistanceMap: ->
     maxBorderDistance = Math.ceil(@width / 2) + Math.ceil(@height / 2) - 2
     @pixelsCount = 0
+    @updatedPixelsCount = 0
 
-    for x in [0...@boundsInPicture.width]
-      for y in [0...@boundsInPicture.height]
-        continue unless @cluster.id is @clusterIdMap.getPixel @boundsInPicture.x + x, @boundsInPicture.y + y
+    for x in [0...@width]
+      for y in [0...@height]
+        continue unless @flagsMap.pixelExists x, y
         pixelIndex = @_getPixelIndex x, y
 
         # Calculate distance from edges.
@@ -41,6 +57,8 @@ class LOI.Engine.RadianceState.ProbeMap
         @distanceMap[pixelIndex] = -maxBorderDistance - 1 + edgeDistance
 
         @pixelsCount++
+
+    @iteration++
 
   _findPixelIndexAtLargestDistance: ->
     maxIndex = null
@@ -62,11 +80,16 @@ class LOI.Engine.RadianceState.ProbeMap
     maxIndex
     
   getNewUpdatePixel: ->
+    # First iteration only renders the central pixel, so skip to new iteration after it was rendered.
+    if @iteration < 2 and @updatedPixelsCount > 0
+      @_resetDistanceMap()
+
     # Find the largest pixel index.
     newPixelIndex = @_findPixelIndexAtLargestDistance()
     return unless newPixelIndex?
 
-    newPixelCoordinates = @_getPixelCoordinates newPixelIndex
+    newPixelX = newPixelIndex % @width
+    newPixelY = Math.floor newPixelIndex / @width
     
     # Update proximity to reflect this pixel having the radiance state calculated.
     for x in [0...@width]
@@ -77,21 +100,37 @@ class LOI.Engine.RadianceState.ProbeMap
         if currentDistance = @distanceMap[pixelIndex]
           # Map to the new pixel if the distance to it is smaller than current representation.
           # Note that negative distances represent initial distance and should always be overwritten.
-          distanceFromNewPixel = Math.abs(x - newPixelCoordinates.x) + Math.abs(y - newPixelCoordinates.y)
+          distanceFromNewPixel = Math.abs(x - newPixelX) + Math.abs(y - newPixelY)
 
           if currentDistance < 0 or distanceFromNewPixel < currentDistance
             # Update distance map.
             @distanceMap[pixelIndex] = distanceFromNewPixel + 1
 
             # Update probe index.
-            @texture.image.data[pixelIndex] = newPixelIndex unless @_initialUpdateDone
+            @atlas.writeToPixel @positionInAtlas.x + x, @positionInAtlas.y + y, newPixelIndex unless @_initialUpdateDone
 
-    @texture.needsUpdate = true
+    # Return pixel coordinates and which cluster it's on.
+    clusterId = @clusterIdMap.getPixel newPixelX, newPixelY
 
-    # Return pixel coordinates.
-    newPixelCoordinates
+    @_updatePixel.cluster = @layer.clusters.get clusterId
+    @_updatePixel.pixelCoordinates.x = @bounds.x + newPixelX
+    @_updatePixel.pixelCoordinates.y = @bounds.y + newPixelY
+    @_updatePixel.atlasCoordinates.x = @positionInAtlas.x + newPixelX
+    @_updatePixel.atlasCoordinates.y = @positionInAtlas.y + newPixelY
+
+    @updatedPixelsCount++
+
+    @_updatePixel
+
+  visible: ->
+    @layer.visible() and @layer.object.visible()
+
+  completeness: ->
+    @iteration + @updatedPixelsCount / @pixelsCount
 
   debugOutput: ->
+    console.log "DISTANCE MAP FOR PROBE MAP", @
+
     for y in [0...@height]
       row = ''
 
@@ -108,9 +147,3 @@ class LOI.Engine.RadianceState.ProbeMap
 
   _getPixelIndex: (x, y) ->
     x + y * @width
-
-  _getPixelCoordinates: (index) ->
-    x = index % @width
-    y = Math.floor index / @width
-
-    {x, y}

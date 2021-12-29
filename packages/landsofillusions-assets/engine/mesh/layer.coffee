@@ -38,7 +38,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends AS.RenderObject
 
       boundingBox
 
-    # Update object children.
+    # Update layer children.
     @autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
@@ -46,12 +46,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends AS.RenderObject
       clusters = @clusters()
       return unless clusters?.length
 
-      debug = @object.mesh.options.debug?()
-
-      if debug
-        # In debug mode, we draw clusters directly.
-        for cluster in clusters
-          @add cluster
+      @add cluster for cluster in clusters
 
       @object.mesh.options.sceneManager.addedSceneObjects()
 

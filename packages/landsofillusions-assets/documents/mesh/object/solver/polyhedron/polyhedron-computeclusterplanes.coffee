@@ -69,10 +69,10 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edge
   # see if we have a cluster overlapping the camera target.
   if clustersLeftCount is clusters.length
     origin = cameraAngle.unprojectPoint cameraAngle.target
-    originCluster = _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y
+    originCluster = _.find clusters, (cluster) => cluster.findPixelAtCoordinates origin.x, origin.y
 
     # Otherwise look if a cluster is at the (0, 0) pixel.
-    originCluster ?= _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate 0, 0
+    originCluster ?= _.find clusters, (cluster) => cluster.findPixelAtCoordinates 0, 0
 
     if originCluster and not originCluster._clusterPlane.plane.point
       # Use the origin cluster as the base to calculate other clusters from.

@@ -35,7 +35,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
 
       # Initialize the singleton mesh data.
       @_meshData = new LOI.Assets.Mesh meshData
-      @_meshData.initialize()
+      @_meshData.initialize true, @_meshDataDependency
       object.solver.initialize() for object in @_meshData.objects.getAll()
 
       # Signal initial change.
@@ -65,6 +65,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @currentClusterHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @fileId
     @smoothShadingHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.SmoothShadingEnabled, @fileId
     @pbrHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
+    @giHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.GIEnabled, @fileId
 
     # Create the engine mesh.
     @mesh = new LOI.Assets.Engine.Mesh
@@ -75,6 +76,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       currentCluster: @currentClusterHelper.cluster
       smoothShading: @smoothShadingHelper
       pbr: @pbrHelper
+      gi: @giHelper
 
     # Add mesh to the scene.
     @sceneHelper.scene().add @mesh
@@ -119,6 +121,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @paletteId.stop()
     @palette.stop()
 
+    @_meshData.destroy()
     @mesh.destroy()
 
   getPictureThumbnail: (picture) ->
