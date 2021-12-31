@@ -1,0 +1,4 @@
+// LandsOfIllusions.Engine.Materials.lightmapAreaPropertiesParametersVertex
+
+attribute float lightmapAreaPropertiesIndex;
+varying float vLightmapAreaPropertiesIndex;

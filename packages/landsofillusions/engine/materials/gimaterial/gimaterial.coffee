@@ -10,6 +10,9 @@ class LOI.Engine.Materials.GIMaterial extends LOI.Engine.Materials.Material
     parameters =
       lights: false
 
+      extensions:
+        shaderTextureLOD: true
+
       uniforms: _.extend
         # Globals
         renderSize:
@@ -30,18 +33,16 @@ class LOI.Engine.Materials.GIMaterial extends LOI.Engine.Materials.Material
           value: options.mesh.materialProperties.texture
 
         # Layer properties
-        layerProperties:
-          value: options.mesh.layerProperties.texture
+        lightmapAreaProperties:
+          value: options.mesh.lightmapAreaProperties.texture
       ,
         # Texture
         if options.texture then LOI.Engine.Materials.RampMaterial.getTextureUniforms(options) else {}
       ,
         # Illumination state
-        illuminationAtlas:
+        lightmap:
           value: null
-        probeMapAtlas:
-          value: null
-        layerAtlasSize:
+        lightmapSize:
           value: new THREE.Vector2
 
     super parameters
@@ -54,11 +55,10 @@ class LOI.Engine.Materials.GIMaterial extends LOI.Engine.Materials.Material
       Tracker.autorun =>
         return unless illuminationState = @options.illuminationStateField()
 
-        @uniforms.illuminationAtlas.value = illuminationState.illuminationAtlas.texture
-        @uniforms.probeMapAtlas.value = illuminationState.probeMapAtlas.texture
+        @uniforms.lightmap.value = illuminationState.lightmap.texture
 
-        layerAtlasSize = options.mesh.layerProperties.layerAtlasSize()
-        @uniforms.layerAtlasSize.value.set layerAtlasSize.width, layerAtlasSize.height
+        lightmapSize = options.mesh.lightmapAreaProperties.lightmapSize()
+        @uniforms.lightmapSize.value.set lightmapSize.width, lightmapSize.height
 
         @needsUpdate = true
         @_dependency.changed()

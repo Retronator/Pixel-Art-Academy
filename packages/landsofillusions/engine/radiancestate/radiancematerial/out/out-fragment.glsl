@@ -1,5 +1,5 @@
 // LandsOfIllusions.Engine.RadianceState.RadianceMaterial.Out.fragment
-#include <LandsOfIllusions.Engine.RadianceState.RadianceMaterial.paremetersFragment>
+#include <LandsOfIllusions.Engine.RadianceState.RadianceMaterial.parametersFragment>
 #include <Artificial.Reality.Optics.FresnelEquations>
 
 const float hemisphereSolidAngle = 2.0 * PI;

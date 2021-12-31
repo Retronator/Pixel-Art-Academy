@@ -19,3 +19,9 @@ _.mixin
     # Use Euclid's algorithm to reduce the integers until there's no remainder.
     [a, b] = [b, a % b] while b
     a
+
+  # Calculates the first power of the given base bigger than value.
+  ceilToPower: (value, base) ->
+    exponent = if base is 2 then Math.log2(value) else Math.log(value) / Math.log(base)
+    exponent = Math.ceil exponent
+    base ** exponent

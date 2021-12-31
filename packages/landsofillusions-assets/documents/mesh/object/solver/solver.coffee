@@ -6,8 +6,15 @@ class LOI.Assets.Mesh.Object.Solver
     Plane: 'plane'
     Polyhedron: 'polyhedron'
     Organic: 'organic'
+
+  @LightmapAreaTypes:
+    Cluster: 'Cluster'
+    Layer: 'Layer'
     
   constructor: (@object) ->
+
+  @lightmapAreaType: ->
+    throw AE.NotImplementedException "Solver must define what area is used in the light map."
 
   update: (addedClusterIds, updatedClusterIds, removedClusterIds) ->
     throw AE.NotImplementedException "Solver must define the update function."

@@ -63,13 +63,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     materialPropertiesIndices.fill materialPropertiesIndex * stretchFactor
     
     # Get the index in the layer properties texture.
-    layerPropertiesIndex = meshData.layerProperties.getIndex @data.layer
-    return unless layerPropertiesIndex?
+    lightmapAreaPropertiesIndex = meshData.lightmapAreaProperties.getIndex @data
+    return unless lightmapAreaPropertiesIndex?
     
     # Create the data for the layer properties index attribute.
-    layerPropertiesIndices = new Uint8Array geometryData.vertices.length / 3
-    stretchFactor = maxUint8Value / (LOI.Engine.Textures.LayerProperties.maxItems - 1)
-    layerPropertiesIndices.fill layerPropertiesIndex * stretchFactor
+    lightmapAreaPropertiesIndices = new Uint8Array geometryData.vertices.length / 3
+    stretchFactor = maxUint8Value / (LOI.Engine.Textures.LightmapAreaProperties.maxItems - 1)
+    lightmapAreaPropertiesIndices.fill lightmapAreaPropertiesIndex * stretchFactor
 
     # Clean any previous geometry.
     @_geometry?.dispose()
@@ -80,9 +80,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     @_geometry.setAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
     @_geometry.setAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
     @_geometry.setAttribute 'materialPropertiesIndex', new THREE.BufferAttribute materialPropertiesIndices, 1, true
-    @_geometry.setAttribute 'layerPropertiesIndex', new THREE.BufferAttribute layerPropertiesIndices, 1, true
-    @_geometry.setAttribute 'pixelCoordinates', new THREE.BufferAttribute geometryData.pixelCoordinates, 2 if geometryData.pixelCoordinates
-    @_geometry.setAttribute 'layerPixelCoordinates', new THREE.BufferAttribute geometryData.layerPixelCoordinates, 2 if geometryData.layerPixelCoordinates
+    @_geometry.setAttribute 'lightmapAreaPropertiesIndex', new THREE.BufferAttribute lightmapAreaPropertiesIndices, 1, true
+    @_geometry.setAttribute 'lightmapCoordinates', new THREE.BufferAttribute geometryData.pixelCoordinates, 2 if geometryData.pixelCoordinates
     @_geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
     @_geometry.computeBoundingBox()
 

@@ -87,7 +87,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures/mip');
   api.addClientFile('engine/textures/properties');
   api.addClientFile('engine/textures/materialproperties');
-  api.addClientFile('engine/textures/layerproperties');
+  api.addClientFile('engine/textures/lightmapareaproperties');
 
   api.addClientFile('engine/radiancestate..');
   api.addClientFile('engine/radiancestate/probemap');
@@ -107,8 +107,9 @@ Package.onUse(function(api) {
   api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
 
   api.addClientFile('engine/illuminationstate..');
-  api.addClientFile('engine/illuminationstate/probemapatlas');
-  api.addClientFile('engine/illuminationstate/probemap');
+  api.addClientFile('engine/illuminationstate/lightmapareas');
+  api.addClientFile('engine/illuminationstate/lightmaparea');
+  api.addClientFile('engine/illuminationstate/lightmaparea-initializecoordinatemaps');
   api.addGlsl('engine/illuminationstate/common-parameters-fragment');
 
   api.addClientFile('engine/illuminationstate/illuminationmaterial..');
@@ -155,9 +156,9 @@ Package.onUse(function(api) {
   api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-parameters-vertex');
   api.addGlsl('engine/materials/shaderchunks/materialproperties/materialproperties-vertex');
 
-  api.addGlsl('engine/materials/shaderchunks/layerproperties/layerproperties-parameters-fragment');
-  api.addGlsl('engine/materials/shaderchunks/layerproperties/layerproperties-parameters-vertex');
-  api.addGlsl('engine/materials/shaderchunks/layerproperties/layerproperties-vertex');
+  api.addGlsl('engine/materials/shaderchunks/lightmapareaproperties/lightmapareaproperties-parameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/lightmapareaproperties/lightmapareaproperties-parameters-vertex');
+  api.addGlsl('engine/materials/shaderchunks/lightmapareaproperties/lightmapareaproperties-vertex');
 
   api.addGlsl('engine/materials/shaderchunks/lighting/shadesourcecolor-fragment');
   api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-fragment');

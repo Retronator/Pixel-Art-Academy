@@ -1,4 +1,4 @@
-// LandsOfIllusions.Engine.RadianceState.RadianceMaterial.paremetersFragment
+// LandsOfIllusions.Engine.RadianceState.RadianceMaterial.parametersFragment
 #extension GL_EXT_shader_texture_lod : enable
 precision highp float;
 

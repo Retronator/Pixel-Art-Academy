@@ -5,6 +5,8 @@ class LOI.Assets.Mesh.Object.Solver.Organic extends LOI.Assets.Mesh.Object.Solve
   @type = LOI.Assets.Mesh.Object.Solver.Types.Organic
   @debug = false
 
+  @lightmapAreaType: -> LOI.Assets.Mesh.Object.Solver.LightmapAreaTypes.Layer
+
   constructor: ->
     super arguments...
 

@@ -61,21 +61,25 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     radianceDebugProbeOctahedronMap.layers.set 4
     scene.add radianceDebugProbeOctahedronMap
 
-    illuminationDebugMaterial = new THREE.MeshBasicMaterial
+    lightmapDebugMaterial = new THREE.MeshBasicMaterial
       color: 0xffffff
       map: null
       side: THREE.DoubleSide
       transparent: true
 
-    illuminationDebug = new THREE.Mesh new THREE.PlaneBufferGeometry(1, 1), illuminationDebugMaterial
-    illuminationDebug.position.x = 2
-    illuminationDebug.rotation.x = Math.PI
-    illuminationDebug.layers.set 4
-    scene.add illuminationDebug
+    lightmapDebug = new THREE.Mesh new THREE.PlaneBufferGeometry(1, 1), lightmapDebugMaterial
+    lightmapDebug.position.x = 2
+    lightmapDebug.rotation.x = Math.PI
+    lightmapDebug.layers.set 4
+    scene.add lightmapDebug
 
     @meshCanvas.autorun =>
       return unless illuminationState = @meshCanvas.mesh()?.illuminationState()
-      illuminationDebugMaterial.map = illuminationState.illuminationAtlas.texture
+      lightmapDebugMaterial.map = illuminationState.lightmap.texture
+
+    @meshCanvas.autorun =>
+      return unless lightmapSize = @meshCanvas.meshData()?.lightmapAreaProperties.lightmapSize()
+      lightmapDebug.scale.y = lightmapSize.height / lightmapSize.width
 
     @renderSize = new ComputedField =>
       if @meshCanvas.pixelRenderEnabled()
@@ -211,6 +215,22 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
           if pbrEnabled
             # Make sure we have a radiance state to update.
             unless @_radianceStatesToBeUpdated.length
+              # First converge the lighting quickly by rendering each cluster once 3 times.
+              radianceStates = []
+
+              scene.traverse (object) =>
+                return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
+                engineCluster = object
+
+                return unless engineCluster.data.isVisible()
+                return unless radianceState = engineCluster.radianceState()
+
+                radianceStates.push radianceState
+
+              for i in [1..3]
+                for radianceState in radianceStates
+                  @_radianceStatesToBeUpdated.push radianceState
+
               scene.traverse (object) =>
                 return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
                 engineCluster = object
@@ -219,14 +239,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
                 return unless radianceState = engineCluster.radianceState()
 
                 # We should update one radiance state per 10×10 cluster pixels.
-                updatesCount = Math.max 0.1, radianceState.probeMap.pixelsCount / 100
-
-                if updatesCount < 1
-                  updatesCount = if updatesCount > Math.random() then 1 else 0
-
-                else
-                  updatesCount = Math.ceil updatesCount
-
+                updatesCount = Math.floor radianceState.probeMap.pixelsCount / 100
                 @_radianceStatesToBeUpdated.push radianceState for i in [0...updatesCount]
 
             # If we still don't have any radiance states to update, there aren't any clusters in the scene.

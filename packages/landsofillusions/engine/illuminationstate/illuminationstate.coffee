@@ -8,61 +8,68 @@ class LOI.Engine.IlluminationState
     @illuminationMaterial = new @IlluminationMaterial
       modelViewProjectionMatrix: @modelViewProjectionMatrix
 
-    @illuminationAtlasQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), @illuminationMaterial
-    @illuminationAtlasQuad.position.z = -1
+    @lightmapQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), @illuminationMaterial
+    @lightmapQuad.position.z = -1
 
-    @illuminationAtlasScene = new THREE.Scene()
-    @illuminationAtlasScene.add @illuminationAtlasQuad
+    @lightmapScene = new THREE.Scene()
+    @lightmapScene.add @lightmapQuad
 
-  @updateIlluminationAtlas: (renderer, atlasCoordinates, illuminationAtlas, illuminationAtlasCamera, clear) ->
+  @updateLightmap: (renderer, lightmapCoordinates, lightmapMipmapLevel, lightmap, lightmapCamera, clear) ->
     # Update probe map.
     LOI.Engine.RadianceState.Probe.update renderer
 
     # Position the update quad over the destination.
-    @illuminationAtlasQuad.position.x = atlasCoordinates.x + 0.5
-    @illuminationAtlasQuad.position.y = atlasCoordinates.y + 0.5
-    @illuminationAtlasQuad.updateWorldMatrix()
+    size = 2 ** lightmapMipmapLevel
+    halfSize = size / 2
+    @lightmapQuad.position.x = lightmapCoordinates.x + halfSize
+    @lightmapQuad.position.y = lightmapCoordinates.y + halfSize
+    @lightmapQuad.scale.set size, size, size
+    @lightmapQuad.updateWorldMatrix()
 
-    @modelViewProjectionMatrix.copy(@illuminationAtlasQuad.matrixWorld).premultiply(illuminationAtlasCamera.projectionMatrix)
+    @modelViewProjectionMatrix.copy(@lightmapQuad.matrixWorld).premultiply(lightmapCamera.projectionMatrix)
 
     # Transfer probe illumination to illumination in atlas.
-    renderer.setRenderTarget illuminationAtlas
+    renderer.setRenderTarget lightmap
 
     if clear
       renderer.setClearColor 0, 0
       renderer.clearColor()
 
-    renderer.render @illuminationAtlasScene, illuminationAtlasCamera
+    renderer.render @lightmapScene, lightmapCamera
 
   constructor: (@mesh) ->
-    layerAtlasSize = @mesh.layerProperties.layerAtlasSize()
+    lightmapSize = @mesh.lightmapAreaProperties.lightmapSize()
 
     @textureSize =
-      width: layerAtlasSize.width
-      height: layerAtlasSize.height
+      width: lightmapSize.width
+      height: lightmapSize.height
 
     # Create the atlas texture.
-    @illuminationAtlas = new THREE.WebGLRenderTarget @textureSize.width, @textureSize.height,
+    @lightmap = new THREE.WebGLRenderTarget @textureSize.width, @textureSize.height,
       type: THREE.FloatType
       stencilBuffer: false
       depthBuffer: false
-      #minFilter: THREE.NearestFilter
-      #magFilter: THREE.NearestFilter
+      generateMipmaps: true
+      minFilter: THREE.LinearMipmapLinearFilter
+      magFilter: THREE.LinearFilter
 
     # Create the probe maps atlas (which illumination probe should a certain pixel use).
-    @probeMapAtlas = new @constructor.ProbeMapAtlas @mesh
+    @lightmapAreas = new @constructor.LightmapAreas @mesh
 
     @cameraAngle = @mesh.cameraAngles.get 0
 
-    @illuminationAtlasCamera = new THREE.OrthographicCamera 0, @textureSize.width, @textureSize.height, 0, 0.5, 1.5
+    @lightmapCamera = new THREE.OrthographicCamera 0, @textureSize.width, @textureSize.height, 0, 0.5, 1.5
+
+  activeMipmapLevels: ->
+    @lightmapAreas.activeMipmapLevels()
 
   destroy: ->
-    @illuminationAtlas.dispose()
+    @lightmap.dispose()
 
   update: (renderer, scene) ->
-    return unless updatePixel = @probeMapAtlas.getNewUpdatePixel()
+    return unless updatePixel = @lightmapAreas.getNewUpdatePixel()
 
-    {cluster, pixelCoordinates, atlasCoordinates} = updatePixel
+    {cluster, pixelCoordinates, lightmapCoordinates, lightmapMipmapLevel} = updatePixel
 
     # Determine which cluster the pixel coordinates lie on.
     probeCubeCamera = LOI.Engine.RadianceState.Probe.cubeCamera
@@ -77,5 +84,5 @@ class LOI.Engine.IlluminationState
     probeCubeCamera.update renderer, scene
 
     # Update the illumination atlas.
-    @constructor.updateIlluminationAtlas renderer, atlasCoordinates, @illuminationAtlas, @illuminationAtlasCamera, not @_performedInitialClear
+    @constructor.updateLightmap renderer, lightmapCoordinates, lightmapMipmapLevel, @lightmap, @lightmapCamera, not @_performedInitialClear
     @_performedInitialClear = true

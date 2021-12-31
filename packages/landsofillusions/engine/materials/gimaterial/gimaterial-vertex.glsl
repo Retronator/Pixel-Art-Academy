@@ -8,9 +8,9 @@
 // Globals
 uniform mat4 cameraAngleMatrix;
 
-attribute vec2 layerPixelCoordinates;
+attribute vec2 lightmapCoordinates;
 
-varying vec2 vLayerPixelCoordinates;
+varying vec2 vLightmapCoordinates;
 varying float vCameraAngleW;
 
 #ifdef USE_MAP
@@ -18,7 +18,7 @@ varying float vCameraAngleW;
 #endif
 
 #include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersVertex>
-#include <LandsOfIllusions.Engine.Materials.layerPropertiesParametersVertex>
+#include <LandsOfIllusions.Engine.Materials.lightmapAreaPropertiesParametersVertex>
 
 void main()	{
   #include <begin_vertex>
@@ -27,9 +27,9 @@ void main()	{
   // We need to linearly interpolate pixel coordinates in the picture's camera angle clip
   // space so we need to calculate the W component of the vertex in camera angle's space.
   vCameraAngleW = (cameraAngleMatrix * modelMatrix * vec4(position, 1.0)).w;
-  vLayerPixelCoordinates = layerPixelCoordinates * vCameraAngleW;
+  vLightmapCoordinates = lightmapCoordinates * vCameraAngleW;
 
   #include <LandsOfIllusions.Engine.Materials.mapTextureVertex>
   #include <LandsOfIllusions.Engine.Materials.materialPropertiesVertex>
-  #include <LandsOfIllusions.Engine.Materials.layerPropertiesVertex>
+  #include <LandsOfIllusions.Engine.Materials.lightmapAreaPropertiesVertex>
 }

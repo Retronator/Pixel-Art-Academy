@@ -25,41 +25,28 @@ uniform sampler2D palette;
 // Material properties
 #include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersFragment>
 
-// Layer properties
-#include <LandsOfIllusions.Engine.Materials.layerPropertiesParametersFragment>
+// Lightmap properties
+#include <LandsOfIllusions.Engine.Materials.lightmapAreaPropertiesParametersFragment>
 
 // Translucency
 uniform float opacity;
 
-varying vec2 vLayerPixelCoordinates;
+varying vec2 vLightmapCoordinates;
 varying float vCameraAngleW;
 
 void main()	{
-  // Read layer properties.
-  vec2 layerAtlasPosition = vec2(
-    readLayerProperty(layerPropertyAtlasPositionX),
-    readLayerProperty(layerPropertyAtlasPositionY)
+  // Read lightmap properties.
+  vec2 lightmapAreaPosition = vec2(
+    readLightmapAreaProperty(lightmapAreaPropertyPositionX),
+    readLightmapAreaProperty(lightmapAreaPropertyPositionY)
   );
 
-  vec2 layerSize = vec2(
-    readLayerProperty(layerPropertyWidth),
-    readLayerProperty(layerPropertyHeight)
-  );
+  float lightmapAreaSize = readLightmapAreaProperty(lightmapAreaPropertySize);
+  float lightmapAreaActiveMipmapLevel = readLightmapAreaProperty(lightmapAreaPropertyActiveMipmapLevel);
 
-  // Find which illumination probe to use by sampling the probe map at pixel coordinates.
-  vec2 layerPixelCoordinates = vLayerPixelCoordinates / vCameraAngleW;
-  layerPixelCoordinates = floor(layerPixelCoordinates + 0.5);
-
-  // Note: We need to use integer arithmetics to avoid rounding errors when computing probe coordinates.
-  vec2 pixelPositionInAtlas = layerAtlasPosition + layerPixelCoordinates;
-  int probeIndex = int(texture2D(probeMapAtlas, pixelPositionInAtlas / layerAtlasSize).a);
-  int layerWidth = int(layerSize.x);
-  vec2 probeCoordinates = vec2(
-    mod(probeIndex, layerWidth),
-    probeIndex / layerWidth
-  );
-
-  vec3 illumination = sampleIllumination(layerAtlasPosition, probeCoordinates);
+  // Read illumination from the lightmap.
+  vec2 lightmapCoordinates = (vLightmapCoordinates / vCameraAngleW + lightmapAreaPosition + vec2(0.5)) / lightmapSize;
+  vec3 illumination = sampleLightmap(lightmapCoordinates, lightmapAreaActiveMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
 
   // Shade local color with illumination.
   vec2 paletteColor;

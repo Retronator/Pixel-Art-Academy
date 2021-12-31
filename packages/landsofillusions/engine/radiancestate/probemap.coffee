@@ -23,6 +23,8 @@ class LOI.Engine.RadianceState.ProbeMap
 
     @texture = new THREE.DataTexture dataArray, @width, @height, THREE.AlphaFormat, THREE.FloatType
 
+    @_updatedCount = 0
+
   _resetDistanceMap: ->
     maxBorderDistance = Math.ceil(@width / 2) + Math.ceil(@height / 2) - 2
     @pixelsCount = 0
@@ -67,6 +69,11 @@ class LOI.Engine.RadianceState.ProbeMap
     return unless newPixelIndex?
 
     newPixelCoordinates = @_getPixelCoordinates newPixelIndex
+
+    @_updatedCount++
+
+    # Return the first pixel coordinates 3 times at the start for faster convergence.
+    return newPixelCoordinates if @_updatedCount < 3
     
     # Update proximity to reflect this pixel having the radiance state calculated.
     for x in [0...@width]

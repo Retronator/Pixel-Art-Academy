@@ -25,8 +25,16 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
 
       @objects engineObjects
 
+    # Create illumination state.
     @illuminationState = new ReactiveField null
     @autorun (computation) => @_generateIlluminationState()
+
+    # Update light map properties texture.
+    @autorun (computation) =>
+      return unless meshData = @options.meshData()
+      return unless illuminationState = @illuminationState()
+
+      meshData.lightmapAreaProperties.updateTexture illuminationState
 
     @_renderMeshes = []
     @renderMeshes = new ReactiveField null
@@ -67,7 +75,7 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
         giMaterial = new LOI.Engine.Materials.GIMaterial
           illuminationStateField: @illuminationState
           mesh: @options.meshData()
-          texture: materials.main.options.texture
+          texture: materials.main.options?.texture
 
         material = if gi then giMaterial else materials.main
 
@@ -125,8 +133,8 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
     @_illuminationState?.destroy()
     @_illuminationState = null
 
-    # Make sure layer atlas size isn't zero.
-    return unless meshData.layerProperties.layerAtlasSize().width > 0
+    # Make sure lightmap size isn't zero.
+    return unless meshData.lightmapAreaProperties.lightmapSize().width > 0
 
     @_illuminationState = new LOI.Engine.IlluminationState meshData
     @illuminationState @_illuminationState

@@ -5,6 +5,8 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
   @type = LOI.Assets.Mesh.Object.Solver.Types.Polyhedron
   @debug = false
 
+  @lightmapAreaType: -> LOI.Assets.Mesh.Object.Solver.LightmapAreaTypes.Cluster
+
   constructor: ->
     super arguments...
     

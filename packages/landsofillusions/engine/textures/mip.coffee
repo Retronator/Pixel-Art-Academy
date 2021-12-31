@@ -112,16 +112,16 @@ class LOI.Engine.Textures.Mip
       if validMipmaps
         # We can use mipmapping. See if any of the filters are set to linear (nearest is default for data textures).
         if @options.minificationFilter is LOI.Assets.Mesh.TextureFilters.Linear and @options.mipmapFilter is LOI.Assets.Mesh.TextureFilters.Linear
-          texture.minFilter = THREE.LinearMipMapLinearFilter
+          texture.minFilter = THREE.LinearMipmapLinearFilter
 
         else if @options.minificationFilter is LOI.Assets.Mesh.TextureFilters.Linear
-          texture.minFilter = THREE.LinearMipMapNearestFilter
+          texture.minFilter = THREE.LinearMipmapNearestFilter
 
         else if @options.mipmapFilter is LOI.Assets.Mesh.TextureFilters.Linear
-          texture.minFilter = THREE.NearestMipMapLinearFilter
+          texture.minFilter = THREE.NearestMipmapLinearFilter
 
         else
-          texture.minFilter = THREE.NearestMipMapNearestFilter
+          texture.minFilter = THREE.NearestMipmapNearestFilter
 
       else
         # The textures are not power of two so we can't use mipmap filters.

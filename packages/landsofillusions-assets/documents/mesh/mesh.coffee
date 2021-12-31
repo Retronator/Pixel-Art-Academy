@@ -184,7 +184,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Initialize runtime data.
     @materialProperties = new @constructor.MaterialProperties @
-    @layerProperties = new @constructor.LayerProperties @
+    @lightmapAreaProperties = new @constructor.LightmapAreaProperties @
 
     @paletteTexture = new LOI.Engine.Textures.Palette
 
