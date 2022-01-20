@@ -63,7 +63,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @sceneHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, @fileId
     @debugModeData = @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).data
     @currentClusterHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @fileId
-    @smoothShadingHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.SmoothShadingEnabled, @fileId
+    @colorQuantizationHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.ColorQuantizationEnabled, @fileId
     @pbrHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
     @giHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.GIEnabled, @fileId
 
@@ -74,7 +74,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       sceneManager: @sceneHelper
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster
-      smoothShading: @smoothShadingHelper
+      colorQuantization: @colorQuantizationHelper
       pbr: @pbrHelper
       gi: @giHelper
 

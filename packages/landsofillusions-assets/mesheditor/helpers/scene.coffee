@@ -170,6 +170,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
     directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: meshCanvas.renderer.preprocessingRenderTarget.texture
+    colorQuantizationFactor: (LOI.settings.graphics.colorQuantizationLevels.value() or 1) - 1
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()

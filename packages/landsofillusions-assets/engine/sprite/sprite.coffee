@@ -85,8 +85,8 @@ class LOI.Assets.Engine.Sprite
     smoothShading = renderOptions.smoothShading ? LOI.settings?.graphics.smoothShading.value()
 
     if smoothShading
-      smoothShadingQuantizationLevels = renderOptions.smoothShadingQuantizationLevels ? LOI.settings.graphics.smoothShadingQuantizationLevels.value()
-      smoothShadingQuantizationFactor = (smoothShadingQuantizationLevels or 1) - 1
+      colorQuantizationLevels = renderOptions.colorQuantizationLevels ? LOI.settings.graphics.colorQuantizationLevels.value()
+      colorQuantizationFactor = (colorQuantizationLevels or 1) - 1
 
     for layer in spriteData.layers when layer?.pixels and layer.visible isnt false
       layerOrigin =
@@ -300,10 +300,10 @@ class LOI.Assets.Engine.Sprite
               shadedColor.add _lightColor
 
             if palette and paletteColor
-              if smoothShadingQuantizationFactor
-                shadedColor.r = Math.round(shadedColor.r * smoothShadingQuantizationFactor) / smoothShadingQuantizationFactor
-                shadedColor.g = Math.round(shadedColor.g * smoothShadingQuantizationFactor) / smoothShadingQuantizationFactor
-                shadedColor.b = Math.round(shadedColor.b * smoothShadingQuantizationFactor) / smoothShadingQuantizationFactor
+              if colorQuantizationFactor
+                shadedColor.r = Math.round(shadedColor.r * colorQuantizationFactor) / colorQuantizationFactor
+                shadedColor.g = Math.round(shadedColor.g * colorQuantizationFactor) / colorQuantizationFactor
+                shadedColor.b = Math.round(shadedColor.b * colorQuantizationFactor) / colorQuantizationFactor
 
               destinationColor = @_boundColorToPaletteRamp pixel, shadedColor, palette.ramps[paletteColor.ramp], paletteColor.dither, smoothShading
 

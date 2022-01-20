@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
-class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
-  @id: -> 'LandsOfIllusions.Engine.Materials.RampMaterial'
+class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Material
+  @id: -> 'LandsOfIllusions.Engine.Materials.UniversalMaterial'
   @initialize()
 
   @createTextureMappingMatrices: (textureOptions) ->
@@ -19,13 +19,8 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
 
     {mapping, offset}
 
-  @getTransparentProperty: (options) ->
-    # Note: We make dithered materials transparent too (even though this is not
-    # required for rendering) so that they get properly hidden for opaque shadow map.
-    options.translucency?.amount or options.translucency?.dither
-
   @getTextureUniforms: (options) ->
-    textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture if options.texture
+    textureMapping = LOI.Engine.Materials.UniversalMaterial.createTextureMappingMatrices options.texture if options.texture
 
     map:
       value: null
@@ -57,62 +52,62 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         material._dependency.changed()
 
   constructor: (options) ->
-    transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
-
     parameters =
       lights: true
 
-      # Note: We need the transparent property to be a boolean since it's compared by equality against true/false.
-      transparent: transparent > 0
+      transparent: false
+
+      defines:
+        IOR: true
+        SPECULAR: true
 
       uniforms: _.extend
         # Globals
         renderSize:
           value: null
+        cameraAngleMatrix:
+          value: new THREE.Matrix4
+        cameraParallelProjection:
+          value: false
+        cameraDirection:
+          value: new THREE.Vector3
 
         # Color information
         palette:
           value: options.mesh.paletteTexture
 
         # Shading
-        smoothShading:
-          value: options.smoothShading
+        colorQuantization:
+          value: options.colorQuantization
         colorQuantizationFactor:
           value: options.colorQuantizationFactor
-        directionalShadowColorMap:
-          value: []
-        directionalOpaqueShadowMap:
-          value: []
-        preprocessingMap:
-          value: null
 
         # Material properties
         materialProperties:
           value: options.mesh.materialProperties.texture
+
+        # Lightmap area properties
+        lightmapAreaProperties:
+          value: options.mesh.lightmapAreaProperties.texture
+
+        # Illumination state
+        lightmap:
+          value: null
+        lightmapSize:
+          value: new THREE.Vector2
       ,
         # Texture
-        LOI.Engine.Materials.RampMaterial.getTextureUniforms options
+        LOI.Engine.Materials.UniversalMaterial.getTextureUniforms options
       ,
         normalMap:
           value: null
         normalScale:
           value: new THREE.Vector2 1, 1
-
-        # Translucency
-        opacity:
-          value: 1 - (options.translucency?.amount or 0)
       ,
+        # Light sources
         THREE.UniformsLib.lights
-
-    blending = options.translucency?.blending
-
-    if transparent and blending
-      parameters.blending = THREE[blending.preset] if blending.preset?
-      parameters.blendEquation = THREE[blending.equation] if blending.equation?
-      parameters.blendSrc = THREE[blending.sourceFactor] if blending.sourceFactor?
-      parameters.blendDst = THREE[blending.destinationFactor] if blending.destinationFactor?
 
     super parameters
     @options = options
 
-    LOI.Engine.Materials.RampMaterial.updateTextures @ if @options.texture
+    LOI.Engine.Materials.UniversalMaterial.updateTextures @ if @options.texture

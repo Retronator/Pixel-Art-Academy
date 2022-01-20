@@ -32,7 +32,7 @@ class LOI.Engine.Materials.GIMaterial extends LOI.Engine.Materials.Material
         materialProperties:
           value: options.mesh.materialProperties.texture
 
-        # Layer properties
+        # Lightmap area properties
         lightmapAreaProperties:
           value: options.mesh.lightmapAreaProperties.texture
       ,

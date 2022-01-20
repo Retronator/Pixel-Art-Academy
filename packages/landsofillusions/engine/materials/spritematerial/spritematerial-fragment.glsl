@@ -18,7 +18,7 @@ uniform sampler2D palette;
 
 // Shading
 uniform bool smoothShading;
-uniform float smoothShadingQuantizationFactor;
+uniform float colorQuantizationFactor;
 #include <LandsOfIllusions.Engine.Materials.totalLightIntensityParametersFragment>
 uniform sampler2D preprocessingMap;
 

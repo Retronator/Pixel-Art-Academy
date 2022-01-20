@@ -19,8 +19,8 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
         # Shading
         smoothShading:
           value: options.smoothShading or false
-        smoothShadingQuantizationFactor:
-          value: options.smoothShadingQuantizationFactor
+        colorQuantizationFactor:
+          value: options.colorQuantizationFactor
         directionalShadowColorMap:
           value: []
         directionalOpaqueShadowMap:
