@@ -4,8 +4,12 @@ AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 
 class LOI.Engine.Skydome extends AS.RenderObject
-  constructor: (@options = {}) ->
+  constructor: (options = {}) ->
+    options.resolution ?= 1024
+
     super arguments...
+
+    @options = options
 
     # Create the sphere mesh.
     @material = @createMaterial()
@@ -25,7 +29,10 @@ class LOI.Engine.Skydome extends AS.RenderObject
 
       @cubeScene = new THREE.Scene()
       @cubeSceneSphereMaterial = @createMaterial()
-      @cubeScene.add new THREE.Mesh new THREE.SphereBufferGeometry(10, 64, 64), @cubeSceneSphereMaterial
+      cubeSceneSphere = new THREE.Mesh new THREE.SphereBufferGeometry(10, 64, 64), @cubeSceneSphereMaterial
+      # We flip the sphere so the cube map directions will match the scene when applied as an environment map.
+      cubeSceneSphere.scale.x = -1
+      @cubeScene.add cubeSceneSphere
 
   updateTexture: (renderer) ->
     # Optionally re-render the skydome to a cube texture.

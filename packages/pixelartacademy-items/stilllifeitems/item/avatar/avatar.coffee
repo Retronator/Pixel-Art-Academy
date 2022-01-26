@@ -39,27 +39,22 @@ class PAA.Items.StillLifeItems.Item.Avatar extends LOI.Adventure.Thing.Avatar
     constructor: (@avatar) ->
       super arguments...
 
-    renderReflections: (renderer, scene) ->
-      unless @cubeCamera
-        @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget 256,
-          format: THREE.RGBAFormat
-          type: THREE.FloatType
-          stencilBuffer: false
+    renderReflections: (renderer, environmentMapGenerator, scene) ->
+      # Render from the position of the item.
+      scene.position.copy(@position).negate()
 
-        @cubeCamera = new THREE.CubeCamera 0.001, 1000, @cubeCameraRenderTarget
-
+      # Don't render itself in the reflection.
       @visible = false
-      @cubeCamera.position.copy @position
-
-      renderer.outputEncoding = THREE.LinearEncoding
-      renderer.toneMapping = THREE.NoToneMapping
       renderer.shadowMap.needsUpdate = true
-      @cubeCameraRenderTarget.clear renderer
-      @cubeCamera.update renderer, scene
 
+      # Generate the custom environment map.
+      @_environmentMapRenderTarget?.dispose()
+      @_environmentMapRenderTarget = environmentMapGenerator.fromScene scene, 0, 0.001, 1000
+      @material.envMap = @_environmentMapRenderTarget.texture
+
+      # Reset the scene.
+      scene.position.set 0, 0, 0
       @visible = true
-
-      @material.envMap = @cubeCamera.renderTarget.texture
 
   class @PhysicsObject extends AR.PhysicsObject
     constructor: (@avatar) ->

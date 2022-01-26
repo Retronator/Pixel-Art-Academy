@@ -96,8 +96,7 @@ function CreatureRenderer(name, manager_in, material_in)
 		
 		this.renderMesh = new THREE.Mesh(geometry, material);
 
-		this.renderMesh.geometry.computeFaceNormals();		
-		this.renderMesh.geometry.computeVertexNormals();	
+		this.renderMesh.geometry.computeVertexNormals();
 		
 		this.renderMesh.geometry.elementsNeedUpdate = true;	
 		this.renderMesh.geometry.normalsNeedUpdate = true;	

@@ -60,6 +60,10 @@ Package.onUse(function(api) {
   api.addMaterial('reality/chemistry/materials/scattering/raysplittingmaterial..');
   api.addMaterial('reality/chemistry/materials/scattering/raymaterial..');
 
+  api.addComponent('reality/chemistry/materials/shaders..');
+  api.addFile('reality/chemistry/materials/shaders/shaders-rendering');
+  api.addFile('reality/chemistry/materials/shaders/shaders-scene');
+
   api.addComponent('reality/chemistry/gases..');
   api.addFile('reality/chemistry/gases/gases-measurements');
   api.addFile('reality/chemistry/gases/gases-propertiesgraph');

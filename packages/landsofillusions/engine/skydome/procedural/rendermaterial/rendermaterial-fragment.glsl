@@ -11,7 +11,7 @@ void main() {
   float starViewAngle = acos(dot(viewDirection, starRayDirection));
 
   // Start with scattered radiance.
-  vec3 skyRadiance = texture2D(scatteringMap, vUv.xy).rgb;
+  vec3 radiance = texture2D(scatteringMap, vUv.xy).rgb * scatteringFactor;
 
   if (starViewAngle < starAngularSizeHalf) {
     // See how far the view ray reaches before it exits the atmosphere or hits the planet.
@@ -37,8 +37,8 @@ void main() {
 
     vec3 transmission = exp(-viewRayOpticalDepth);
 
-    skyRadiance += starEmission * transmission;
+    radiance += starEmission * transmission * starFactor;
   }
 
-  gl_FragColor = vec4(skyRadiance, 1);
+  gl_FragColor = vec4(radiance, 1);
 }

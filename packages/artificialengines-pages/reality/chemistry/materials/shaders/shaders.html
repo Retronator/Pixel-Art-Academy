@@ -1,0 +1,33 @@
+<template name="Artificial.Reality.Pages.Chemistry.Materials.Shaders">
+  <div class="artificial-reality-pages-chemistry-materials-shaders page">
+    <h1>Artificial Reality</h1>
+    <h2>Material shaders comparison</h2>
+    <div class="render-area"></div>
+    <div class="column">
+      <p>
+        Environment: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.Environment}}<br/>
+        {{#if environmentIsProcedural}}
+          Sun inclination: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.SunInclination}} {{sunInclinationDegrees}}°<br/>
+          Sun azimuth: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.SunAzimuth}} {{sunAzimuthDegrees}}°<br/>
+          Sun factor: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.SunFactor}}<br/>
+          Sky factor: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.SkyFactor}}<br/>
+        {{/if}}
+      </p>
+    </div>
+    <div class="column">
+      <p>
+        Material: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.MaterialId}}<br/>
+        Subsurface heterogeneity: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.SubsurfaceHeterogeneity}}<br/>
+      </p>
+      <p>
+        Shader: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.ShaderClass}}<br/>
+      </p>
+    </div>
+    <div class="column">
+      <p>
+        Tone mapping: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.ToneMapping}}<br/>
+        Exposure value: {{> Artificial.Reality.Pages.Chemistry.Materials.Shaders.ExposureValue}} {{exposureValue}}<br/>
+      </p>
+    </div>
+  </div>
+</template>

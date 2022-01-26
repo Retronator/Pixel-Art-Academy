@@ -71,14 +71,16 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
         # Read light direction from directional light position.
         lightDirection = sunPosition.clone().normalize().multiplyScalar(-1)
 
+      # Update the skydomes.
       sceneManager.skydome.updateTexture renderer, lightDirection
+      sceneManager.sunColorMeasureSkydome.updateTexture renderer, lightDirection
 
       # Update light colors.
-      sceneManager.directionalLight.color.copy sceneManager.skydome.starColor
-      sceneManager.directionalLight.intensity = sceneManager.skydome.starIntensity
+      sceneManager.directionalLight.color.copy sceneManager.sunColorMeasureSkydome.starColor
+      sceneManager.directionalLight.intensity = sceneManager.sunColorMeasureSkydome.starLuminance * 2e-8
 
-      sceneManager.ambientLight.color.copy sceneManager.skydome.skyColor
-      sceneManager.ambientLight.intensity = sceneManager.skydome.skyIntensity
+      # Update environment map for indirect lighting.
+      Tracker.nonreactive => sceneManager.updateEnvironmentMap()
 
       # Update sun helper position.
       sceneManager.sunHelper.position.copy(sunPosition).normalize().multiplyScalar(1000)
@@ -380,7 +382,6 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   onKeyDown: (event) ->
     key = event.which
     rendererManager = @rendererManager()
-    renderer = rendererManager.renderer
 
     switch key
       when AC.Keys.r
@@ -390,7 +391,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
           renderObject = item.avatar.getRenderObject()
           continue unless renderObject.material.reflectivity > 0.01
 
-          renderObject.renderReflections renderer, sceneManager.scene
+          renderObject.renderReflections rendererManager.renderer, rendererManager.environmentMapGenerator, sceneManager.scene
 
       when AC.Keys.equalSign
         rendererManager.exposureValue rendererManager.exposureValue() + 1

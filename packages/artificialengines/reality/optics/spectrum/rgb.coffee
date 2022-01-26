@@ -30,6 +30,10 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
   toXYZ: ->
     Artificial.Spectrum.Color.SRGB.getXYZForRGB @toObject()
 
+  r: -> @array[0]
+  g: -> @array[1]
+  b: -> @array[2]
+
   copy: (spectrum) ->
     # If the spectrum is a matching RGB spectrum, we can simply copy the array.
     return super arguments... if @matchesType spectrum

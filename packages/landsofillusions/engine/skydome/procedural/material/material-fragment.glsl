@@ -12,7 +12,8 @@ void main() {
   float azimuthAngle = (vUv.x - 0.5) * PI2;
   float altitudeAngle = (vUv.y - 0.5) * PI;
   float radius = cos(altitudeAngle);
-  vec3 direction = vec3(cos(azimuthAngle) * radius, sin(azimuthAngle) * radius, sin(altitudeAngle));
+  // We need to specify the direction in octahedron map space, which has X right, Y forward, Z up.
+  vec3 direction = vec3(cos(azimuthAngle) * radius, -sin(azimuthAngle) * radius, sin(altitudeAngle));
 
   // Bottom hemisphere should fade out the edge color to prevent bleed.
   float fadeMultiplier = 1.0;

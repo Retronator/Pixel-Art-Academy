@@ -9,7 +9,7 @@ Npm.depends({
   'patreon': '0.4.1',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  'three': '0.126.1',
+  'three': '0.136.0',
   'jaro-winkler': '0.2.8',
   'canvas': '2.6.1',
   'pako': '1.0.8',
@@ -99,14 +99,12 @@ Package.onUse(function(api) {
 
   api.addFile('everywhere/three..');
   api.addGlsl('everywhere/three..');
-  api.addClientFile('everywhere/three/loaders');
+  api.addClientFile('everywhere/three/examples');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
   api.addFile('everywhere/three/quaternion');
   api.addFile('everywhere/three/matrices');
   api.addFile('everywhere/three/object3d');
-
-  api.addJavascript('everywhere/three/examples/utils/BufferGeometryUtils');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');

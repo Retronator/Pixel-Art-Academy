@@ -4,7 +4,7 @@ AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 
 class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
-  constructor: (@options = {}) ->
+  constructor: (options = {}) ->
     super arguments...
 
     @loader = new THREE.RGBELoader()
@@ -32,3 +32,5 @@ class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
         @cubeSceneSphereMaterial.needsUpdate = true
 
       @sphere.visible = true
+
+      @options.onLoaded?()

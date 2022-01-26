@@ -39,7 +39,9 @@ class PAA.StillLifeStand.RendererManager
 
     @renderDebug = false
 
-    @exposureValue = new ReactiveField -9.5
+    @exposureValue = new ReactiveField -1
+
+    @environmentMapGenerator = new THREE.PMREMGenerator @renderer
 
   destroy: ->
     @renderer.dispose()
@@ -64,7 +66,7 @@ class PAA.StillLifeStand.RendererManager
       @renderer.render debugScene, camera
 
     # Render result to the screen.
-    @renderer.outputEncoding = THREE.LinearEncoding
+    @renderer.outputEncoding = THREE.sRGBEncoding
     @renderer.toneMapping = THREE.ACESFilmicToneMapping
     @renderer.toneMappingExposure = 2 ** @exposureValue()
 

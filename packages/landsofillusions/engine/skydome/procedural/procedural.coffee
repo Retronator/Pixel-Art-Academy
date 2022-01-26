@@ -10,7 +10,7 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
 
   constructor: (options = {}) ->
     options.scatteringResolution ?= 256
-    options.resolution ?= 1024
+    options.renderStar ?= true
 
     super options
 
@@ -22,12 +22,14 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
 
     @scatteringRenderTarget = new THREE.WebGLRenderTarget @options.scatteringResolution, @options.scatteringResolution, renderTargetOptions
 
-    @scatteringRenderMaterial = new @constructor.RenderMaterial.Scattering
+    @scatteringRenderMaterial = new @constructor.RenderMaterial.Scattering @options
 
     # Create render target for the final render target with direct and scattered light.
     @renderTarget = new THREE.WebGLRenderTarget @options.resolution, @options.resolution, renderTargetOptions
-    @renderMaterial = new @constructor.RenderMaterial
+    @renderMaterial = new @constructor.RenderMaterial _.extend
       scatteringMap: @scatteringRenderTarget.texture
+    ,
+      @options
 
     # Create the scenes and camera for rendering.
     @scatteringScene = new THREE.Scene()
@@ -79,16 +81,19 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
       resolution: @options.resolution
       dithering: @options.dithering
 
-  updateTexture: (renderer, starDirection) ->
+  updateTexture: (renderer, starDirection, starFactor, scatteringFactor) ->
     # Update star light direction.
     starDirectionOctahedron = new THREE.Vector3().copy(starDirection).normalize().applyMatrix4(@constructor.worldToSkydomeMatrix)
 
     @scatteringRenderMaterial.uniforms.starDirection.value.copy starDirectionOctahedron
     @renderMaterial.uniforms.starDirection.value.copy starDirectionOctahedron
+    @renderMaterial.uniforms.starFactor.value = starFactor ? @renderMaterial.options.intensityFactors.star
+    @renderMaterial.uniforms.scatteringFactor.value = scatteringFactor ? @renderMaterial.options.intensityFactors.scattering
 
     # Render the low-resolution scattering contribution.
-    renderer.setRenderTarget @scatteringRenderTarget
-    renderer.render @scatteringScene, @camera
+    if @renderMaterial.uniforms.scatteringFactor.value > 0
+      renderer.setRenderTarget @scatteringRenderTarget
+      renderer.render @scatteringScene, @camera
 
     # Render the high-resolution full sky.
     renderer.setRenderTarget @renderTarget
@@ -148,19 +153,16 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
           if skySample.g > (brightestSample?.g or 0)
             brightestSample = skySample
 
-      @skyColor.sub brightestSample
-      @skyColor.multiplyScalar 1 / 8
+      @skyColor.sub brightestSample if brightestSample
+      @skyColor.multiplyScalar 1 / (if brightestSample then 8 else 9)
       skyXYZ = AS.Color.SRGB.getXYZForRGB @skyColor
       @skyColor.normalize()
 
-      skyLuminance = AS.Color.CIE1931.getLuminanceForY(skyXYZ.y)
-      skyIlluminance = skyLuminance * 0.01
-
-      @skyIntensity = skyIlluminance
+      @skyLuminance = AS.Color.CIE1931.getLuminanceForY(skyXYZ.y)
 
       if starIsUnderHorizon
         @starColor.set 0
-        starIlluminance = 0
+        @starLuminance = 0
 
       else
         # Read pixel (4, 1) for sun's color.
@@ -168,10 +170,4 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
         starXYZ = AS.Color.SRGB.getXYZForRGB @starColor
         @starColor.normalize()
 
-        starLuminance = AS.Color.CIE1931.getLuminanceForY(starXYZ.y)
-        starAngularDiameter = 9.310e-3 # Sun
-        starSolidAngle = 2 * Math.PI * (1 - Math.cos starAngularDiameter / 2)
-
-        starIlluminance = starLuminance * starSolidAngle
-
-      @starIntensity = starIlluminance
+        @starLuminance = AS.Color.CIE1931.getLuminanceForY(starXYZ.y)

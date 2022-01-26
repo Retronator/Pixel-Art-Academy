@@ -22,6 +22,8 @@ uniform float atmosphereMieAsymmetry;
 uniform vec3 starEmission;
 uniform vec3 starDirection;
 uniform float starAngularSizeHalf;
+uniform float starFactor;
+uniform float scatteringFactor;
 
 varying vec2 vUv;
 

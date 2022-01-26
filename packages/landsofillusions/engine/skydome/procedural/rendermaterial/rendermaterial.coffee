@@ -3,29 +3,46 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMaterial
   constructor: (options) ->
+    # Set defaults to Earth and Sun.
+    _.defaultsDeep options,
+      planet:
+        radius: 6371e3
+
+      atmosphere:
+        class: AR.Chemistry.Materials.Mixtures.Air.DryMixture
+        boundsHeight: 50e3
+        rayleighScaleHeight: 7994
+        mieScaleHeight: 1200
+        mieScatteringCoefficient: 5e-6
+        mieAsymmetry: 0.95
+        surface:
+          temperature: AR.StandardTemperatureAndPressure.Temperature
+          pressure: AR.StandardTemperatureAndPressure.Pressure
+
+      # Star
+      star:
+        angularSize: 0.00931
+        class: AR.Chemistry.Materials.Mixtures.Stars.Sun
+        temperature: 5778
+
+      # Output
+      intensityFactors:
+        scattering: 1
+        star: 1
+
     RGBSpectrum = AR.Optics.Spectrum.RGB
 
-    # Prepare planet properties.
-    planetRadius = 6371e3
-
-    # Prepare atmosphere properties.
-    atmosphereBoundsHeight = 50e3
-    atmosphereRayleighScaleHeight = 7994
-    atmosphereMieScaleHeight = 1200
-
-    AtmosphereClass = AR.Chemistry.Materials.Mixtures.Air.DryMixture
-
     gasStateSurface =
-      temperature: AR.StandardTemperatureAndPressure.Temperature
-      pressure: AR.StandardTemperatureAndPressure.Pressure
+      temperature: options.atmosphere.surface.temperature
+      pressure: options.atmosphere.surface.pressure
       volume: 1
 
-    amountOfSubstanceSurface = AtmosphereClass.getAmountOfSubstanceForState gasStateSurface
+    amountOfSubstanceSurface = options.atmosphere.class.getAmountOfSubstanceForState gasStateSurface
     molarConcentrationSurface = amountOfSubstanceSurface / gasStateSurface.volume
     molecularNumberDensitySurface = molarConcentrationSurface * AR.AvogadroNumber
 
-    refractiveIndexSpectrumSurface = AtmosphereClass.getRefractiveIndexSpectrumForState gasStateSurface
-    kingCorrectionFactorSpectrum = AtmosphereClass.getKingCorrectionFactorSpectrum()
+    refractiveIndexSpectrumSurface = options.atmosphere.class.getRefractiveIndexSpectrumForState gasStateSurface
+    kingCorrectionFactorSpectrum = options.atmosphere.class.getKingCorrectionFactorSpectrum()
 
     rayleighCrossSectionFunction = AR.Optics.Scattering.getRayleighCrossSectionFunction()
     rayleighCrossSectionSpectrum = new RGBSpectrum().copyFactor new AR.Optics.Spectrum.Formulated (wavelength) =>
@@ -37,13 +54,7 @@ class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMateri
     atmosphereRayleighCrossSection = rayleighCrossSectionSpectrum.toVector3()
     atmosphereRayleighScatteringCoefficientSurface = atmosphereRayleighCrossSection.clone().multiplyScalar molecularNumberDensitySurface
 
-    atmosphereMieScatteringCoefficient = 5e-6 # 21e-6
-    atmosphereMieAsymmetry = 0.95 # 0.76
-
-    # Prepare star properties.
-    starAngularSizeHalf = 0.004625
-
-    starEmissionSpectrum = AR.Chemistry.Materials.Mixtures.Stars.Sun.getEmissionSpectrumForTemperature 5778
+    starEmissionSpectrum = options.star.class.getEmissionSpectrumForTemperature options.star.temperature
     starEmission = new RGBSpectrum().copy(starEmissionSpectrum).toVector3().multiplyScalar(1 / 255)
 
     # Create the shader.
@@ -53,35 +64,39 @@ class LOI.Engine.Skydome.Procedural.RenderMaterial extends THREE.RawShaderMateri
       uniforms:
         # Planet
         planetRadius:
-          value: planetRadius
+          value: options.planet.radius
         planetRadiusSquared:
-          value: planetRadius ** 2
+          value: options.planet.radius ** 2
 
         # Atmosphere
         atmosphereBoundsHeight:
-          value: atmosphereBoundsHeight
+          value: options.atmosphere.boundsHeight
         atmosphereBoundsRadiusSquared:
-          value: (planetRadius + atmosphereBoundsHeight) ** 2
+          value: (options.planet.radius + options.atmosphere.boundsHeight) ** 2
 
         atmosphereRayleighScaleHeight:
-          value: atmosphereRayleighScaleHeight
+          value: options.atmosphere.rayleighScaleHeight
         atmosphereRayleighScatteringCoefficientSurface:
           value: atmosphereRayleighScatteringCoefficientSurface
 
         atmosphereMieScaleHeight:
-          value: atmosphereMieScaleHeight
+          value: options.atmosphere.mieScaleHeight
         atmosphereMieScatteringCoefficientSurface:
-          value: atmosphereMieScatteringCoefficient
+          value: options.atmosphere.mieScatteringCoefficient
         atmosphereMieAsymmetry:
-          value: atmosphereMieAsymmetry
+          value: options.atmosphere.mieAsymmetry
 
         # Star
         starDirection:
           value: new THREE.Vector3 0, -1, 0
         starAngularSizeHalf:
-          value: starAngularSizeHalf
+          value: options.star.angularSize / 2
         starEmission:
           value: starEmission
+        starFactor:
+          value: options.intensityFactors.star
+        scatteringFactor:
+          value: options.intensityFactors.scattering
 
       vertexShader: '#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.vertex>'
       fragmentShader: options.fragmentShader or '#include <LandsOfIllusions.Engine.Skydome.Procedural.RenderMaterial.fragment>'

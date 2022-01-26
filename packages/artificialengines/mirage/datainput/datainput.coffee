@@ -110,12 +110,13 @@ AM.Component.initializeDataComponent = ->
     onCreated: ->
       super arguments
 
-      @parentComponent = @ancestorComponentOfType componentClass
+      # Note: We can't call this parentComponent because it already exists as a function on the component.
+      @dataProviderComponent = @ancestorComponentOfType componentClass
 
       throw new AE.NotImplementedException "Embedded data input component must provide the property name it binds to." unless @propertyName
 
     load: ->
-      @parentComponent[@propertyName]()
+      @dataProviderComponent[@propertyName]()
 
     save: (value) ->
-      @parentComponent[@propertyName] value
+      @dataProviderComponent[@propertyName] value

@@ -5,13 +5,10 @@ PAA = PixelArtAcademy
 
 class PAA.StillLifeStand.SceneManager
   constructor: (@stillLifeStand) ->
-    @scene = new THREE.Scene()
+    @scene = new THREE.Scene
     @scene.manager = @
 
     # Create lighting.
-    @ambientLight = new THREE.AmbientLight
-    @scene.add @ambientLight
-
     @directionalLight = new THREE.DirectionalLight
     @directionalLight.position.set -20, 100, 60
     @directionalLight.castShadow = true
@@ -19,20 +16,28 @@ class PAA.StillLifeStand.SceneManager
     @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
 
-    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
-      color: 0xaaaaaa
-      roughness: 1
-      metalness: 0
-      reflectivity: 0
+    @environmentMapRenderTarget = null
+
+    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhysicalMaterial
+      color: 0x8899aa
       dithering: true
 
+    # We render the visible skydome without the sun so that it will give correct irradiance in the environment map.
+    # Note: the values 20 and 0.0013 for star/scattering factors were determined experimentally to match typical real environment maps.
     @skydome = new LOI.Engine.Skydome.Procedural
-      generateCubeTexture: true
-      readColors: true
       dithering: true
+      intensityFactors:
+        star: 0
+        scattering: 0.0013
 
     @scene.add @skydome
-    @scene.environment = @skydome.cubeTexture
+
+    # To measure the color of the sun we don't want to have scattering contribution.
+    @sunColorMeasureSkydome = new LOI.Engine.Skydome.Procedural
+      readColors: true
+      intensityFactors:
+        star: 20
+        scattering: 0
 
     @ground.receiveShadow = true
     @ground.rotation.x = -Math.PI / 2
@@ -86,7 +91,7 @@ class PAA.StillLifeStand.SceneManager
     @debugScene.add @cursor
 
     @skydomeReadColorQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), new THREE.MeshBasicMaterial
-      map: @skydome.readColorsRenderTarget.texture
+      map: @sunColorMeasureSkydome.readColorsRenderTarget.texture
 
     @skydomeReadColorQuad.position.y = 1
     @skydomeReadColorQuad.scale.x = 2
@@ -161,3 +166,37 @@ class PAA.StillLifeStand.SceneManager
     # Remove render object from the scene.
     @scene.remove item.avatar.getRenderObject()
     item.destroy()
+
+  updateEnvironmentMap: ->
+    rendererManager = @stillLifeStand.rendererManager()
+    itemRenderObjects = (item.avatar.getRenderObject() for item in @items())
+
+    # Hide all the items so we just capture the sky and the ground in the reflections.
+    itemRenderObject.visible = false for itemRenderObject in itemRenderObjects
+    rendererManager.renderer.shadowMap.needsUpdate = true
+
+    # Render environment from slightly above ground.
+    @scene.position.set 0, -0.1, 0
+
+    # We need to do an extra first pass so that the ground will already have
+    # the correct color when we render the environment map we'll use on the scene.
+    unless @environmentMapRenderTarget
+      @environmentMapRenderTarget = rendererManager.environmentMapGenerator.fromScene @scene, 0, 0.01, 1000
+      @scene.environment = @environmentMapRenderTarget.texture
+
+    # Render the environment map.
+    oldEnvironmentMapRenderTarget = @environmentMapRenderTarget
+    @environmentMapRenderTarget = rendererManager.environmentMapGenerator.fromScene @scene, 0, 0.01, 1000
+    oldEnvironmentMapRenderTarget.dispose()
+
+    # Reset the objects and the scene.
+    for itemRenderObject in itemRenderObjects
+      itemRenderObject.visible = true
+
+      # Remove any custom environment map set by rendering individual reflections.
+      itemRenderObject.material.envMap = null
+
+    @scene.position.set 0, 0, 0
+
+    # Activate the new environment map.
+    @scene.environment = @environmentMapRenderTarget.texture
