@@ -158,7 +158,7 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
       skyXYZ = AS.Color.SRGB.getXYZForRGB @skyColor
       @skyColor.normalize()
 
-      @skyLuminance = AS.Color.CIE1931.getLuminanceForY(skyXYZ.y)
+      @skyLuminance = AS.Color.XYZ.getLuminanceForY(skyXYZ.y)
 
       if starIsUnderHorizon
         @starColor.set 0
@@ -170,4 +170,4 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
         starXYZ = AS.Color.SRGB.getXYZForRGB @starColor
         @starColor.normalize()
 
-        @starLuminance = AS.Color.CIE1931.getLuminanceForY(starXYZ.y)
+        @starLuminance = AS.Color.XYZ.getLuminanceForY(starXYZ.y)

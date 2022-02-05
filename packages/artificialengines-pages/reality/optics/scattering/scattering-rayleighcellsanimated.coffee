@@ -165,7 +165,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
 
     for x in [0...@radianceData.width]
       for ry in [0...@radianceData.height]
-        xyz = AS.Color.CIE1931.getXYZForSpectrum @radianceData.cells[x][ry].inTotal
+        xyz = AS.Color.XYZ.getXYZForSpectrum @radianceData.cells[x][ry].inTotal
         xyz.x *= exposure
         xyz.y *= exposure
         xyz.z *= exposure

@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 AR = Artificial.Reality
 
-class AS.Color.CIE1931.ColorMatchingFunctions
+class AS.Color.XYZ.ColorMatchingFunctions
   @initialize: (table) ->
     @table = AE.CSVParser.parse table
     values = [[], [], []]

@@ -22,7 +22,7 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
     for rgb in rgbs
       linearRGB = AS.Color.SRGB.getNormalizedRGBForGammaRGB rgb
       xyz = AS.Color.SRGB.getXYZForNormalizedRGB linearRGB
-      chromaticity = AS.Color.CIE1931.getChromaticityForXYZ xyz
+      chromaticity = AS.Color.XYZ.getChromaticityForXYZ xyz
       @sRGBImage.context.fillStyle = "rgb(#{rgb.r * 255}, #{rgb.g * 255}, #{rgb.b * 255})"
 
       @_drawPoint @sRGBImage.context, chromaticity.x, 1 - chromaticity.y, 0.0025
@@ -91,10 +91,10 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
     context.beginPath()
 
     for wavelengthNanometers in [380..780]
-      chromaticity = nextChromaticity or AS.Color.CIE1931.getChromaticityForWavelength wavelengthNanometers / 1e9
+      chromaticity = nextChromaticity or AS.Color.XYZ.getChromaticityForWavelength wavelengthNanometers / 1e9
       context.lineTo getCanvasX(chromaticity.x), getCanvasY(chromaticity.y)
 
-      nextChromaticity = AS.Color.CIE1931.getChromaticityForWavelength (wavelengthNanometers + 1) / 1e9
+      nextChromaticity = AS.Color.XYZ.getChromaticityForWavelength (wavelengthNanometers + 1) / 1e9
 
       # Draw a label dash perpendicular to the spectral locus line.
       labelDashesPath.moveTo getCanvasX(chromaticity.x), getCanvasY(chromaticity.y)
@@ -137,7 +137,7 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
     context.beginPath()
 
     for xyz in [rXYZ, gXYZ, bXYZ]
-      chromaticity = AS.Color.CIE1931.getChromaticityForXYZ xyz
+      chromaticity = AS.Color.XYZ.getChromaticityForXYZ xyz
       context.lineTo getCanvasX(chromaticity.x), getCanvasY(chromaticity.y)
 
     context.closePath()
@@ -147,7 +147,7 @@ class AS.Pages.Color.Chromaticity extends AS.Pages.Color.Chromaticity
 
     # Draw position of light source.
     if xyz = @lightSourceXYZ()
-      lightSourceChromaticity = AS.Color.CIE1931.getChromaticityForXYZ xyz
+      lightSourceChromaticity = AS.Color.XYZ.getChromaticityForXYZ xyz
 
       context.fillStyle = "white"
       @_drawPoint context, getCanvasX(lightSourceChromaticity.x), getCanvasY(lightSourceChromaticity.y), 1

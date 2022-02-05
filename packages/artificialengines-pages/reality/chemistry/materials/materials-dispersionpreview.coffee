@@ -121,7 +121,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
         depth = dBottom.dot(@dispersionSurfaceNegativeNormal) / @dispersionPreviewMagnification
 
-        refractedLightXYZ = AS.Color.CIE1931.getXYZForSpectrum refractedLightSpectrum, 5e-10
+        refractedLightXYZ = AS.Color.XYZ.getXYZForSpectrum refractedLightSpectrum, 5e-10
         refractedLightRGB = AS.Color.SRGB.getGammaRGBForXYZ refractedLightXYZ
 
         pixelOffset = (x + y * @dispersionImage.width) * 4
@@ -139,7 +139,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
     context.stroke()
 
     # Draw reflected light ray.
-    reflectedLightXYZ = AS.Color.CIE1931.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
+    reflectedLightXYZ = AS.Color.XYZ.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
       D65EmissionSpectrum.getValue(wavelength) * @dispersionReflectanceSpectrum.getValue(wavelength)
 
     reflectedLightRGB = AS.Color.SRGB.getGammaRGBForXYZ reflectedLightXYZ
@@ -213,7 +213,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
       D65EmissionSpectrum.getValue(wavelength) * @dispersionAbsorptanceSpectrum.getValue(wavelength) * attenuation
 
-    xyz = AS.Color.CIE1931.getXYZForSpectrum refractedLightSpectrum
+    xyz = AS.Color.XYZ.getXYZForSpectrum refractedLightSpectrum
     rgb = AS.Color.SRGB.getGammaRGBForXYZ xyz
     context.fillStyle = "rgba(#{rgb.r * 255}, #{rgb.g * 255}, #{rgb.b * 255}, 0.5)"
 

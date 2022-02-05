@@ -46,7 +46,7 @@ void main()	{
 
   // Read illumination from the lightmap.
   vec2 lightmapCoordinates = (vLightmapCoordinates / vCameraAngleW + lightmapAreaPosition + vec2(0.5)) / lightmapSize;
-  vec3 illumination = sampleLightmap(lightmapCoordinates, lightmapAreaActiveMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
+  vec3 irradiance = sampleLightmap(lightmapCoordinates, lightmapAreaActiveMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
 
   // Shade local color with illumination.
   vec2 paletteColor;
@@ -67,14 +67,10 @@ void main()	{
   vec3 linearSourceColor = sRGBToLinear(vec4(sourceColor, 1.0)).rgb;
 
   // Shade the source color.
-  vec3 outputRadiance = linearSourceColor * illumination;
+  vec3 outputRadiance = linearSourceColor * irradiance / PI;
 
   // Add emmited light.
-  vec3 emission = vec3(
-    readMaterialProperty(materialPropertyEmissionR),
-    readMaterialProperty(materialPropertyEmissionG),
-    readMaterialProperty(materialPropertyEmissionB)
-  );
+  vec3 emission = readMaterialProperty3(materialPropertyEmission);
 
   vec3 absorptance = 1.0 - linearSourceColor;
   outputRadiance += emission * absorptance;

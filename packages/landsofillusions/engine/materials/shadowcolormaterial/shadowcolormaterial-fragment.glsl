@@ -9,9 +9,10 @@
 
 void main()	{
   // Read material properties.
-  float translucencyAmount = readMaterialProperty(materialPropertyTranslucencyShadowTint);
-  float translucencyShadowDither = readMaterialProperty(materialPropertyTranslucencyShadowDither);
-  bool translucencyShadowTint = readMaterialProperty(materialPropertyTranslucencyShadowTint) > 0.5;
+  float translucencyAmount = readMaterialProperty(materialPropertyTranslucency);
+  vec3 translucenyShadow = readMaterialProperty(materialPropertyTranslucencyShadow);
+  float translucencyShadowDither = translucenyShadow.x;
+  bool translucencyShadowTint = translucenyShadow.y > 0.5;
 
   // Determine palette color (ramp and shade).
   vec2 paletteColor;

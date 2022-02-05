@@ -13,6 +13,8 @@ class AS.Pages.Color.Chromaticity extends AM.Component
     Iron: 'Iron'
     Gold: 'Gold'
 
+  @initializeDataComponent()
+
   constructor: (@app) ->
     super arguments...
 
@@ -70,7 +72,7 @@ class AS.Pages.Color.Chromaticity extends AM.Component
 
     @lightSourceXYZ = new ComputedField =>
       return unless spectrum = @lightSourceEmissionSpectrum()
-      AS.Color.CIE1931.getXYZForSpectrum spectrum
+      AS.Color.XYZ.getXYZForSpectrum spectrum
 
     @lightSourceNormalizedXYZ = new ComputedField =>
       return unless xyz = @lightSourceXYZ()
@@ -153,18 +155,14 @@ class AS.Pages.Color.Chromaticity extends AM.Component
     context.arc x, y, radius, 0, Math.PI * 2
     context.fill()
 
-  class @LightSourceType extends AM.DataInputComponent
+  class @LightSourceType extends @DataInputComponent
     @register 'Artificial.Spectrum.Pages.Color.Chromaticity.LightSourceType'
 
     constructor: ->
       super arguments...
 
+      @propertyName = 'lightSourceType'
       @type = AM.DataInputComponent.Types.Select
-
-    onCreated: ->
-      super arguments
-
-      @chromaticity = @ancestorComponentOfType AS.Pages.Color.Chromaticity
 
     options: ->
       names =
@@ -178,30 +176,14 @@ class AS.Pages.Color.Chromaticity extends AM.Component
 
       {value, name} for value, name of names
 
-    load: ->
-      @chromaticity.lightSourceType()
-
-    save: (value) ->
-      @chromaticity.lightSourceType value
-
-  class @Temperature extends AM.DataInputComponent
+  class @Temperature extends @DataInputComponent
     @register 'Artificial.Spectrum.Pages.Color.Chromaticity.Temperature'
 
     constructor: ->
       super arguments...
 
+      @propertyName = 'temperature'
       @type = AM.DataInputComponent.Types.Range
       @customAttributes =
         min: 0
         max: 10000
-
-    onCreated: ->
-      super arguments
-
-      @chromaticity = @ancestorComponentOfType AS.Pages.Color.Chromaticity
-
-    load: ->
-      @chromaticity.temperature()
-
-    save: (value) ->
-      @chromaticity.temperature value

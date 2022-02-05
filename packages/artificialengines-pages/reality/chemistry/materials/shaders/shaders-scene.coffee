@@ -3,8 +3,6 @@ AR = Artificial.Reality
 AS = Artificial.Spectrum
 
 class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.Shaders
-  @register 'Artificial.Reality.Pages.Chemistry.Materials.Shaders'
-
   onCreated: ->
     super arguments...
 
@@ -111,101 +109,20 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
       @sunBlocker.position.copy(@sunPosition()).multiplyScalar 950
 
     # Create the 5 preview spheres.
-    sphereRadius = 0.25
-    sphereGeometry = new THREE.SphereGeometry sphereRadius, 64, 32
+    @sphereRadius = 0.25
     material = new THREE.MeshBasicMaterial color: 0xffffff
 
     @spheres = for i in [-2..2]
+      sphereGeometry = new THREE.SphereGeometry @sphereRadius, 64, 32
+
+      materialPropertiesIndices = new Uint8Array sphereGeometry.attributes.position.count
+      maxUint8Value = 255
+      stretchFactor = maxUint8Value / (LOI.Engine.Textures.MaterialProperties.maxItems - 1)
+      materialPropertiesIndices.fill (i + 2) * stretchFactor
+
+      sphereGeometry.setAttribute 'materialPropertiesIndex', new THREE.BufferAttribute materialPropertiesIndices, 1, true
+
       sphere = new THREE.Mesh sphereGeometry, material
       sphere.position.z = i
       @scene.add sphere
       sphere
-
-    # Reactively set chosen material and shader on the spheres.
-    @autorun (computation) =>
-      shaderClass = @shaderClass()
-      environmentMap = @environmentMap()
-      materialClass = @materialClass()
-
-      # Determine reflectance at normal incidence (specular color).
-      refractiveIndexSpectrum = materialClass.getRefractiveIndexSpectrum()
-      extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
-
-      reflectanceSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
-        refractiveIndex = refractiveIndexSpectrum.getValue wavelength
-        extinctionCoefficient = extinctionCoefficientSpectrum?.getValue wavelength
-        AR.Optics.FresnelEquations.getReflectance 0, 1, refractiveIndex, 0, extinctionCoefficient
-
-      reflectanceRGB = new AR.Optics.Spectrum.RGB().copyFactor reflectanceSpectrum
-
-      # Determine how conductive this material is.
-      if extinctionCoefficientSpectrum
-        extinctionCoefficientRGB = new AR.Optics.Spectrum.RGB().copyFactor extinctionCoefficientSpectrum
-        conductivity = _.clamp extinctionCoefficientRGB.r(), 0, 1
-
-      else
-        conductivity = 0
-
-      # Conductor color is simply the light it reflects.
-      conductorColor = reflectanceRGB.toObject()
-
-      # Dielectrics reflect color that entered the material.
-      dielectricColor =
-        r: 1 - conductorColor.r
-        g: 1 - conductorColor.g
-        b: 1 - conductorColor.b
-
-      # Choose color between the two modes (dielectric/conductor).
-      color = new THREE.Color().lerpColors dielectricColor, conductorColor, conductivity
-
-      # Determine the average refractive index.
-      refractiveIndexValues = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5().copy refractiveIndexSpectrum
-      refractiveIndex = _.sum(refractiveIndexValues.array) / refractiveIndexValues.array.length
-
-      # Determine how heterogeneous the subsurface structure is.
-      subsurfaceHeterogeneity = @subsurfaceHeterogeneity()
-
-      # Create materials on the spheres.
-      for sphere, index in @spheres
-        # The spheres differ in surface roughness. We make the last one the most reflective because that one will
-        # be updated last and we'll be able to clearly see the other sphere's reflection of itself this way.
-        surfaceRoughness = 1 - index / (@spheres.length - 1)
-
-        if shaderClass is @constructor.ShaderClasses.PhysicalMaterial
-          # We want to use three.js' Physical Material
-          material = new THREE.MeshPhysicalMaterial
-          material.color = color
-          material.roughness = surfaceRoughness
-          material.metalness = conductivity
-          material.envMap = environmentMap
-          material.ior = refractiveIndex
-          material.refractionRatio = 1 / refractiveIndex
-          # The more the material is heterogeneous, the less light it transmits.
-          material.transmission = (1 - subsurfaceHeterogeneity) - conductivity
-          # We approximate thickness by assuming the light ray will travel through the whole sphere.
-          material.thickness = 2 * sphereRadius
-
-        sphere.material = material
-
-      # Render the individual environment maps from the perspective of each sphere.
-      # Turn on the sun blocker if we know where the sun is.
-      environmentName = @environmentName()
-      @sunBlocker.visible = @constructor.ProceduralSkySettings[environmentName]?
-
-      for sphere, index in @spheres
-        # Generator will render from the origin, so we translate the scene for the sphere to be in the origin.
-        @scene.position.copy(sphere.position).negate()
-
-        # To create a slightly more accurate reflection of the most reflective sphere (accounting for sphere thickness),
-        # we render the reflection from its surface. We can do this only for the edge sphere since it doesn't have
-        # another sphere on the other side.
-        @scene.position.z += sphereRadius if index is 4
-
-        # Render the environment map and set it on the material.
-        sphere._environmentMapRenderTarget?.dispose()
-        sphere._environmentMapRenderTarget = @environmentMapGenerator.fromScene @scene, 0, 0.1, 1000
-        sphere.material.envMap = sphere._environmentMapRenderTarget.texture
-
-      # Reset the scene.
-      @scene.position.set 0, 0, 0
-      @sunBlocker.visible = false

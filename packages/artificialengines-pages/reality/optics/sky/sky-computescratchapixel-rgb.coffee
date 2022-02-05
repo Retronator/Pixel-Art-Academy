@@ -42,7 +42,7 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
     scaleHeightRayleigh = 7994
     scaleHeightMie = 1200
 
-    emissionSpectrum = new AR.Optics.Spectrum.RGB().copy(@SunEmissionSpectrum).toVector3()
+    emissionSpectrum = new AR.Optics.Spectrum.RGB().copy(@sunEmissionSpectrum).toVector3()
 
     # Prepare color calculation method.
     totalRadiance = new THREE.Vector3()

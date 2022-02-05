@@ -145,6 +145,7 @@ Package.onUse(function(api) {
   api.addMaterial('engine/materials/depthmaterial..');
   api.addMaterial('engine/materials/shadowcolormaterial..');
   api.addMaterial('engine/materials/preprocessingmaterial..');
+  api.addMaterial('engine/materials/universalmaterial..');
 
   api.addGlsl('engine/materials/shaderchunks/palette/palette-parameters-fragment');
   api.addGlsl('engine/materials/shaderchunks/palette/quantizeshadedcolor-fragment');
@@ -163,6 +164,7 @@ Package.onUse(function(api) {
   api.addGlsl('engine/materials/shaderchunks/lighting/shadesourcecolor-fragment');
   api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-fragment');
   api.addGlsl('engine/materials/shaderchunks/lighting/totallightintensity-parameters-fragment');
+  api.addGlsl('engine/materials/shaderchunks/lighting/physicalmaterial-parameters-fragment');
 
   api.addGlsl('engine/materials/shaderchunks/texture/maptexture-vertex');
   api.addGlsl('engine/materials/shaderchunks/texture/readtexturedata-fragment');

@@ -2,6 +2,7 @@
 precision highp float;
 precision highp int;
 
+#include <Artificial.Pyramid.Trigonometry>
 #include <Artificial.Reality.Optics.FresnelEquations>
 #include <Artificial.Reality.Pages.Chemistry.Materials.Scattering.uniforms>
 

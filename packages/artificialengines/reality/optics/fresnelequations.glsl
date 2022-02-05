@@ -10,8 +10,8 @@
 
 float FresnelEquations_getReflectance(const float angleOfIncidence, const ComplexNumber n1, const ComplexNumber n2) {
   ComplexNumber angleOfRefraction = SnellsLaw_getAngleOfRefraction(angleOfIncidence, n1, n2);
-  ComplexNumber cosI = cos(ComplexNumber(angleOfIncidence, 0.0));
-  ComplexNumber cosJ = cos(angleOfRefraction);
+  ComplexNumber cosI = complexCos(ComplexNumber(angleOfIncidence, 0.0));
+  ComplexNumber cosJ = complexCos(angleOfRefraction);
 
   ComplexNumber n1cosI = multiply(n1, cosI);
   ComplexNumber n2cosJ = multiply(n2, cosJ);

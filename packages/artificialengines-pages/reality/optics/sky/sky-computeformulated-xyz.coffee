@@ -4,16 +4,17 @@ AR = Artificial.Reality
 AP = Artificial.Pyramid
 
 SpectrumClass = AR.Optics.Spectrum.XYZ
-D65EmissionSpectrumXYZ = null
+sunEmissionSpectrumXYZ = null
+d65EmissionSpectrum = null
 rayleighCoefficientSpectrumCacheXYZ = []
 
 class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
   computeFormulatedXYZ: ->
-    D65EmissionSpectrumXYZ ?= new SpectrumClass().copy @SunEmissionSpectrum
+    sunEmissionSpectrumXYZ ?= new SpectrumClass().copy @sunEmissionSpectrum
 
-    @_computeFormulatedFast SpectrumClass, D65EmissionSpectrumXYZ, rayleighCoefficientSpectrumCacheXYZ
+    @_computeFormulatedFast SpectrumClass, sunEmissionSpectrumXYZ, rayleighCoefficientSpectrumCacheXYZ
 
-  _computeFormulatedFast: (SpectrumClass, D65EmissionSpectrum, rayleighCoefficientSpectrumCache) ->
+  _computeFormulatedFast: (SpectrumClass, sunEmissionSpectrum, rayleighCoefficientSpectrumCache) ->
     directLightEnabled = @directLightEnabled()
     rayleighScatteringEnabled = @rayleighScatteringEnabled()
     mieScatteringEnabled = @mieScatteringEnabled()
@@ -59,11 +60,15 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
       refractiveIndexSpectrum = @AirClass.getRefractiveIndexSpectrumForState gasState
       molecularNumberDensity = getMolucelarNumberDensityForGasState gasState
 
-      rayleighCoefficientSpectrumCache[heightHash] = new SpectrumClass().copyFactor new AR.Optics.Spectrum.Formulated (wavelength) =>
+      d65EmissionSpectrum ?= AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
+
+      rayleighCoefficientSpectrumCache[heightHash] = new SpectrumClass().copyFactor new AR.Optics.Spectrum.Formulated((wavelength) =>
         refractiveIndex = refractiveIndexSpectrum.getValue wavelength
         kingCorrectionFactor = kingCorrectionFactorSpectrum.getValue wavelength
 
         rayleighCoefficientFunction refractiveIndex, molecularNumberDensity, wavelength, kingCorrectionFactor
+      ),
+        d65EmissionSpectrum
 
       rayleighCoefficientSpectrumCache[heightHash]
 
@@ -225,4 +230,4 @@ class AR.Pages.Optics.Sky extends AR.Pages.Optics.Sky
 
         totalTransmission.add(transmission)
 
-      totalRadiance.copy(D65EmissionSpectrum).multiply(totalTransmission).toXYZ()
+      totalRadiance.copy(sunEmissionSpectrum).multiply(totalTransmission).toXYZ()

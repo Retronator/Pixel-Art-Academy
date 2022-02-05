@@ -1,7 +1,7 @@
 AS = Artificial.Spectrum
 
 # Provided by CIE for non-commercial use at http://cie.co.at/technical-work/technical-resources
-AS.Color.CIE1931.ColorMatchingFunctions.initialize """
+AS.Color.XYZ.ColorMatchingFunctions.initialize """
 380,0.001368,0.000039,0.006450
 385,0.002236,0.000064,0.010550
 390,0.004243,0.000120,0.020050

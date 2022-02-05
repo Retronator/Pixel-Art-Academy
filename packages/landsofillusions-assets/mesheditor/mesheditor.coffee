@@ -105,11 +105,14 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.MeshEditor.Actions.CharacterPreviewEnabled.id()
           LOI.Assets.MeshEditor.Actions.CharacterPreviewSelection.id()
-          null
+        ]
+      ,
+        caption: 'Rendering'
+        items: [
           LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
-          LOI.Assets.MeshEditor.Actions.SmoothShadingEnabled.id()
-          LOI.Assets.MeshEditor.Actions.PBREnabled.id()
           LOI.Assets.MeshEditor.Actions.GIEnabled.id()
+          LOI.Assets.MeshEditor.Actions.PBREnabled.id()
+          LOI.Assets.MeshEditor.Actions.ColorQuantizationEnabled.id()
         ]
       ,
         caption: 'Tools'

@@ -165,7 +165,7 @@ class AR.Pages.Optics.Scattering extends AR.Pages.Optics.Scattering
 
             totalRadiance.add radiance
 
-        xyz = AS.Color.CIE1931.getXYZForSpectrum totalRadiance
+        xyz = AS.Color.XYZ.getXYZForSpectrum totalRadiance
         xyz.x *= exposure
         xyz.y *= exposure
         xyz.z *= exposure

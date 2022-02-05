@@ -9,7 +9,7 @@
 
 void main()	{
   // Read material properties.
-  bool translucencyTint = readMaterialProperty(materialPropertyTranslucencyTint) > 0.5;
+  bool translucencyTint = readMaterialProperty3(materialPropertyTranslucency).z > 0.5;
 
   // Determine palette color (ramp and shade).
   vec2 paletteColor;

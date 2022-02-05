@@ -5,11 +5,22 @@ uniform sampler2D lightmapAreaProperties;
 
 // Correlates to the LandsOfIllusions.Engine.Textures.LightmapAreaProperties constants.
 const float maxLightmapAreaProperties = 4.0;
-const float lightmapAreaPropertyPositionX = 0.5 / maxLightmapAreaProperties;
-const float lightmapAreaPropertyPositionY = 1.5 / maxLightmapAreaProperties;
-const float lightmapAreaPropertySize = 2.5 / maxLightmapAreaProperties;
-const float lightmapAreaPropertyActiveMipmapLevel = 3.5 / maxLightmapAreaProperties;
+const float lightmapAreaPropertyPosition = 0.5 / maxLightmapAreaProperties;
+const float lightmapAreaPropertySize = 1.5 / maxLightmapAreaProperties;
+const float lightmapAreaPropertyActiveMipmapLevel = 2.5 / maxLightmapAreaProperties;
 
 float readLightmapAreaProperty(float property) {
-  return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).a;
+  return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).r;
+}
+
+vec2 readLightmapAreaProperty2(float property) {
+  return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).rg;
+}
+
+vec2 readLightmapAreaProperty3(float property) {
+  return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).rgb;
+}
+
+vec2 readLightmapAreaProperty4(float property) {
+  return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).rgba;
 }

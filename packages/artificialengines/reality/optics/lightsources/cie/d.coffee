@@ -14,10 +14,10 @@ class AR.Optics.LightSources.CIE.D
     AS = Artificial.Spectrum
 
     return unless relativeEmissionSpectrum = @getRelativeEmissionSpectrumForCorrelatedColorTemperature correlatedColorTemperature
-    relativeLuminance = AS.Color.CIE1931.getLuminanceForSpectrum relativeEmissionSpectrum
+    relativeLuminance = AS.Color.XYZ.getLuminanceForSpectrum relativeEmissionSpectrum
 
     blackBodySpectrum = AR.Optics.LightSources.BlackBody.getEmissionSpectrumForTemperature correlatedColorTemperature
-    blackBodyLuminance = AS.Color.CIE1931.getLuminanceForSpectrum blackBodySpectrum
+    blackBodyLuminance = AS.Color.XYZ.getLuminanceForSpectrum blackBodySpectrum
 
     # Return radiance in W / sr⋅m³
     new AR.Optics.Spectrum.Formulated (wavelength) -> relativeEmissionSpectrum.getValue(wavelength) * blackBodyLuminance / relativeLuminance

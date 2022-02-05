@@ -62,7 +62,7 @@ class AR.Pages.Chemistry.Materials extends AR.Pages.Chemistry.Materials
 
         AR.Optics.FresnelEquations.getReflectance angleOfIncidence, 1, refractiveIndexMaterial, 0, extinctionCoefficientMaterial
 
-      xyz = AS.Color.CIE1931.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
+      xyz = AS.Color.XYZ.getXYZForSpectrum new AR.Optics.Spectrum.Formulated (wavelength) =>
         D65EmissionSpectrum.getValue(wavelength) * reflectanceSpectrum.getValue(wavelength) * reflectanceFactor
 
       rgbPerPixelDistance[pixelDistance] = AS.Color.SRGB.getGammaRGBForXYZ xyz

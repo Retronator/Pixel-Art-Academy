@@ -262,7 +262,8 @@ class LOI.Engine.World.SceneManager
     directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: rendererManager.preprocessingRenderTarget.texture
     smoothShading: LOI.settings.graphics.smoothShading.value()
-    smoothShadingQuantizationFactor: (LOI.settings.graphics.smoothShadingQuantizationLevels.value() or 1) - 1
+    colorQuantization: LOI.settings.graphics.colorQuantization.value()
+    colorQuantizationFactor: (LOI.settings.graphics.colorQuantizationLevels.value() or 1) - 1
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()

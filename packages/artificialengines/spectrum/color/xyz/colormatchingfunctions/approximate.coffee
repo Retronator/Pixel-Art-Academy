@@ -6,7 +6,7 @@
 
 AS = Artificial.Spectrum
 
-class AS.Color.CIE1931.ColorMatchingFunctions.Approximate
+class AS.Color.XYZ.ColorMatchingFunctions.Approximate
   @x: (wavelengthNanometers) ->
     t1 = (wavelengthNanometers - 442.0) * (if wavelengthNanometers < 442.0 then 0.0624 else 0.0374)
     t2 = (wavelengthNanometers - 599.8) * (if wavelengthNanometers < 599.8 then 0.0264 else 0.0323)

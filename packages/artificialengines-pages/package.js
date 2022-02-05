@@ -63,6 +63,7 @@ Package.onUse(function(api) {
   api.addComponent('reality/chemistry/materials/shaders..');
   api.addFile('reality/chemistry/materials/shaders/shaders-rendering');
   api.addFile('reality/chemistry/materials/shaders/shaders-scene');
+  api.addFile('reality/chemistry/materials/shaders/shaders-materials');
 
   api.addComponent('reality/chemistry/gases..');
   api.addFile('reality/chemistry/gases/gases-measurements');

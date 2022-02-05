@@ -72,7 +72,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest.SceneManager
     directionalOpaqueShadowMap: []
     directionalShadowColorMap: []
     smoothShading: LOI.settings.graphics.smoothShading.value()
-    smoothShadingQuantizationFactor: (LOI.settings.graphics.smoothShadingQuantizationLevels.value() or 1) - 1
+    colorQuantizationFactor: (LOI.settings.graphics.colorQuantizationLevels.value() or 1) - 1
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()

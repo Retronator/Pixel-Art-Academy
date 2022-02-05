@@ -6,8 +6,6 @@ precision highp float;
 #include <THREE>
 #include <LandsOfIllusions.Engine.IlluminationState.commonParametersFragment>
 
-const float hemisphereSolidAngle = 2.0 * PI;
-
 uniform sampler2D probeOctahedronMap;
 uniform float probeOctahedronMapMaxLevel;
 uniform float probeOctahedronMapResolution;
@@ -24,8 +22,5 @@ void main() {
 
   vec3 irradiance = texture2DLodEXT(probeOctahedronMap, vec2(0.5, 0.25), mipmapLevel).rgb * mipmapFactor;
 
-  // Diffuse the irradiance equally into all directions.
-  vec3 radiance = irradiance / hemisphereSolidAngle;
-
-  gl_FragColor = vec4(radiance, 1.0);
+  gl_FragColor = vec4(irradiance, 1.0);
 }

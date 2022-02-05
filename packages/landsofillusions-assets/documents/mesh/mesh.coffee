@@ -98,7 +98,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   dither: amount of dither used from 0 to 1
   #   reflection:
   #     intensity: amount of perfectly reflected light
-  #     shininess: the Phong exponent controlling how smooth the surface is (high is less smooth producing sharp, shiny reflections)
+  #     shininess: the Phong exponent controlling how smooth the surface is (high is more smooth, producing sharp, shiny reflections)
   #     smoothFactor: option to smooth the normals of the texture itself
   #   translucency:
   #     amount: amount from 0 to 1, how much the rest of the scene should be seen through this material
@@ -113,13 +113,16 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #       dither: amount from 0 to 1, how much the shadow is dithered (default matches the translucency dither)
   #       tint: boolean whether the ramp of this material should be applied to the objects in the shadow of it
   #   materialClass: ID of the built-in material class this material represents, null for custom material
-  #   refractiveIndex: spectral distribution of the refractive index (derived from material class, or custom)
-  #     r, g, b
-  #   extinctionCoefficient: spectral distribution of the extinction coefficient (derived from material class, or custom)
+  #   refractiveIndex: spectral distribution of the refractive index (derived from the material class, or custom — custom only has the r component set)
   #     r, g, b
   #   temperature: temperature in Kelvin the material is at, or null for custom emission
   #   emission: spectral distribution of the maximum emission of the material (derived from temperature, or custom)
   #     r, g, b
+  #   reflectance: reflected light of the material at normal incidence (precomputed from the material class' refractive index)
+  #     r, g, b
+  #   surfaceRoughness: how smooth or rough the surface is from 0 to 1
+  #   subsurfaceHeterogeneity: how much the refractive index varies under the surface from 0 to 1
+  #   conductivity: how much the material conducts electricity from 0 to 1 (derived from the material class, or custom)
   #   texture:
   #     spriteId: ID of the sprite to be used as the texture
   #     spriteName: Name of the sprite or mip to be used as the texture

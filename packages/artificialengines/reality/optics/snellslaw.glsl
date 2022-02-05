@@ -9,7 +9,7 @@ float SnellsLaw_getAngleOfRefraction(const float angleOfIncidence, const float r
 }
 
 ComplexNumber SnellsLaw_getAngleOfRefraction(const float angleOfIncidence, const ComplexNumber refractiveIndex1, const ComplexNumber refractiveIndex2) {
-  return asin(divide(multiply(refractiveIndex1, sin(angleOfIncidence)), refractiveIndex2));
+  return complexAsin(divide(multiply(refractiveIndex1, sin(angleOfIncidence)), refractiveIndex2));
 }
 
 #endif

@@ -98,7 +98,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     options = @layer.object.mesh.options
     visualizeNormals = options.visualizeNormals?()
-    pbr = options.pbr?()
 
     materialOptions =
       wireframe: options.debug?() or false
@@ -115,20 +114,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     else if clusterMaterial.paletteColor
       # Cluster has a direct palette color set.
       meshMaterial = clusterMaterial.paletteColor
-
-    # Create the PBR material as soon as PBR is enabled. We need it to render radiance probes.
-    if pbr
-      # Add extra data to options.
-      boundsInPicture = @data.boundsInPicture() or {width: 1, height: 1}
-
-      # Create material options.
-      pbrMaterialOptions =
-        clusterSize: new THREE.Vector2 boundsInPicture.width, boundsInPicture.height
-        clusterPlaneWorldMatrix: @data.planeWorldMatrix
-        clusterPlaneWorldMatrixInverse: @data.planeWorldMatrixInverse
-        radianceStateField: @radianceState
-
-      pbrMaterial = new LOI.Engine.Materials.PBRMaterial pbrMaterialOptions
 
     if visualizeNormals
       # Visualized normals mode.
@@ -157,27 +142,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
         color: THREE.Color.fromObject directColor
 
     else
-      # PBR has its own material handling.
-      if pbr
-        shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
-
-        if materialOptions.wireframe
-          if meshMaterial.extinctionCoefficient
-            color = THREE.Color.fromObject meshMaterial.extinctionCoefficient
-
-          else if meshMaterial.shade?
-            color = THREE.Color.fromObject shades[meshMaterial.shade]
-
-          else
-            color = new THREE.Color 0xffffff
-
-          material = new THREE.MeshBasicMaterial _.extend materialOptions, {color}
-
-        else
-          material = pbrMaterial
-
       # See if we have correct properties for a ramp material.
-      else if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
+      if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
         shades = palette.ramps[meshMaterial.ramp]?.shades
 
         if materialOptions.wireframe
@@ -189,7 +155,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
           _.extend materialOptions,
             mesh: meshData
             palette: palette
-            smoothShading: options.smoothShading?()
+            colorQuantization: options.colorQuantization?()
 
           # If the meshMaterial has a texture, that's something we have to get a separate material for.
           materialOptions.texture = meshMaterial.texture if meshMaterial.texture
@@ -197,8 +163,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
           # Translucent materials need to be separate from opaque ones to render second.
           materialOptions.translucency = meshMaterial.translucency if meshMaterial.translucency
 
-          materialId = materialOptions.type or LOI.Engine.Materials.RampMaterial.id()
-          material = LOI.Engine.Materials.getMaterial materialId, materialOptions
+          material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
           depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
           shadowColorMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.ShadowColorMaterial.id(), materialOptions
           preprocessingMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.PreprocessingMaterial.id(), materialOptions
@@ -216,7 +181,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       depth: depthMaterial
       shadowColor: shadowColorMaterial
       preprocessing: preprocessingMaterial
-      pbr: pbrMaterial
 
     @_materials
 

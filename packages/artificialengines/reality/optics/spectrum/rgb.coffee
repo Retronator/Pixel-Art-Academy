@@ -47,16 +47,14 @@ class AR.Optics.Spectrum.RGB extends AR.Optics.Spectrum.Array
     return @
 
   _getRGBForSpectrum: (spectrum) ->
-    xyz = Artificial.Spectrum.Color.CIE1931.getXYZForSpectrum spectrum
+    xyz = Artificial.Spectrum.Color.XYZ.getXYZForSpectrum spectrum
     Artificial.Spectrum.Color.SRGB.getRGBForXYZ xyz
 
   copyFactor: (spectrum) ->
     # If the spectrum is a matching RGB spectrum, we can simply copy the array.
     return @copy spectrum if @matchesType spectrum
 
-    # Convert the factor spectrum to XYZ.
-    normalizedXYZ = Artificial.Spectrum.Color.CIE1931.getXYZFactorsForSpectrum spectrum
-    normalizedRGB = Artificial.Spectrum.Color.SRGB.getRGBForXYZ normalizedXYZ
+    normalizedRGB = Artificial.Spectrum.Color.SRGB.getRGBFactorsForSpectrum spectrum
     @array[0] = normalizedRGB.r
     @array[1] = normalizedRGB.g
     @array[2] = normalizedRGB.b

@@ -9,7 +9,7 @@ class AR.Optics.LightSources.LightSource
     return unless correlatedColorTemperature = _.propertyValue @, 'correlatedColorTemperature'
 
     blackBodySpectrum = AR.Optics.LightSources.BlackBody.getEmissionSpectrumForTemperature correlatedColorTemperature
-    blackBodyLuminance = Artificial.Spectrum.Color.CIE1931.getLuminanceForSpectrum blackBodySpectrum
+    blackBodyLuminance = Artificial.Spectrum.Color.XYZ.getLuminanceForSpectrum blackBodySpectrum
 
     @getEmissionSpectrumForLuminance blackBodyLuminance
 
@@ -23,6 +23,6 @@ class AR.Optics.LightSources.LightSource
   @getRelativeLuminance: ->
     return unless relativeEmissionSpectrum = @getRelativeEmissionSpectrum()
 
-    Artificial.Spectrum.Color.CIE1931.getLuminanceForSpectrum relativeEmissionSpectrum
+    Artificial.Spectrum.Color.XYZ.getLuminanceForSpectrum relativeEmissionSpectrum
 
   @getRelativeEmissionSpectrum: -> null # Override to provide a relative emission spectrum.

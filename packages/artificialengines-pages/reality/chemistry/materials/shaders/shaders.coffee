@@ -5,8 +5,7 @@ AC = Artificial.Control
 
 class AR.Pages.Chemistry.Materials.Shaders extends AM.Component
   @ShaderClasses:
-    UniversalMaterialFresnel: "Universal material (fresnel colors)"
-    UniversalMaterialApproximation: "Universal material (schlick fresnel)"
+    UniversalMaterial: "Universal material (Lands of Illusions)"
     PhysicalMaterial: "Physical material (three.js)"
 
   @Environments:
@@ -110,8 +109,10 @@ class AR.Pages.Chemistry.Materials.Shaders extends AM.Component
       AR.Chemistry.Materials.getClassForId @materialId()
 
     @subsurfaceHeterogeneity = new ReactiveField 1
+    @hue = new ReactiveField 0
+    @shade = new ReactiveField 8
 
-    @shaderClass = new ReactiveField @constructor.ShaderClasses.PhysicalMaterial
+    @shaderClass = new ReactiveField @constructor.ShaderClasses.UniversalMaterial
 
     # Rendering settings
     @toneMappingName = new ReactiveField 'Reinhard'
@@ -125,6 +126,10 @@ class AR.Pages.Chemistry.Materials.Shaders extends AM.Component
     super arguments...
 
     @$('.render-area').append @renderer.domElement
+
+  colorPreviewStyle: ->
+    return unless palette = LOI.palette()
+    backgroundColor: palette.color(@hue(), @shade()).getStyle()
 
   events: ->
     super(arguments...).concat
@@ -236,6 +241,30 @@ class AR.Pages.Chemistry.Materials.Shaders extends AM.Component
         min: 0
         max: 1
         step: 0.1
+
+  class @Hue extends @DataInputComponent
+    @register 'Artificial.Reality.Pages.Chemistry.Materials.Shaders.Hue'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'hue'
+      @type = AM.DataInputComponent.Types.Range
+      @customAttributes =
+        min: 0
+        max: 15
+
+  class @Shade extends @DataInputComponent
+    @register 'Artificial.Reality.Pages.Chemistry.Materials.Shaders.Shade'
+
+    constructor: ->
+      super arguments...
+
+      @propertyName = 'shade'
+      @type = AM.DataInputComponent.Types.Range
+      @customAttributes =
+        min: 1
+        max: 8
 
   class @ShaderClass extends @DataInputComponent
     @register 'Artificial.Reality.Pages.Chemistry.Materials.Shaders.ShaderClass'

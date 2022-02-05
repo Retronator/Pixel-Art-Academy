@@ -422,12 +422,13 @@ Package.onUse(function(api) {
   api.addFile('spectrum/pixelart/pixelart-getditherthresholdmap');
 
   api.addFile('spectrum/color..');
+  api.addFile('spectrum/color/conversion');
   api.addGlsl('spectrum/color/hsltorgb');
 
-  api.addFile('spectrum/color/cie1931..');
-  api.addFile('spectrum/color/cie1931/colormatchingfunctions..');
-  api.addFile('spectrum/color/cie1931/colormatchingfunctions/colormatchingfunctions-data');
-  api.addFile('spectrum/color/cie1931/colormatchingfunctions/approximate');
+  api.addFile('spectrum/color/xyz..');
+  api.addFile('spectrum/color/xyz/colormatchingfunctions..');
+  api.addFile('spectrum/color/xyz/colormatchingfunctions/colormatchingfunctions-data');
+  api.addFile('spectrum/color/xyz/colormatchingfunctions/approximate');
 
   api.addFile('spectrum/color/srgb..');
 

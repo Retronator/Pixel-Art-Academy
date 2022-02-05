@@ -25,7 +25,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
 
         wavelength = wavelengthNanometers * 1e-9
 
-        rayXYZ = AS.Color.CIE1931.getRelativeXYZForWavelength wavelength
+        rayXYZ = AS.Color.XYZ.getRelativeXYZForWavelength wavelength
         rayRGB = AS.Color.SRGB.getRGBForXYZ rayXYZ
 
         refractiveIndex = refractiveIndexSpectrum.getValue wavelength

@@ -14,12 +14,23 @@ class AS.Color.SRGB
     0.0193, 0.1192, 0.9505
   )
 
+  # Store the D65 illuminant as a sampled spectrum for quick calculations.
+  @d65Illuminant = new AR.Optics.Spectrum.UniformlySampled.Range380To780Spacing5()
+
+  Meteor.startup =>
+    @d65Illuminant.copy AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
+
   @xyzNormalizationFactor = 2.2178461498317438e-7 # Calculated with getXYZNormalizationFactor method and cached for speed.
 
   @getXYZNormalizationFactor: ->
     # We want to normalize XYZ values such that Y is 1 for the D65 spectrum.
     d65Spectrum = AR.Optics.LightSources.CIE.D65.getEmissionSpectrum()
     1 / AS.Color.CIE1931.getYForSpectrum d65Spectrum
+
+  # Spectrum -> RGB
+  @getRGBFactorsForSpectrum: (spectrum) ->
+    normalizedXYZ = Artificial.Spectrum.Color.XYZ.getXYZFactorsForSpectrum spectrum, @d65Illuminant
+    @getRGBForXYZ normalizedXYZ
 
   # XYZ -> RGB
 

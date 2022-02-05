@@ -2,8 +2,6 @@
 #ifndef ARTIFICIAL_PYRAMID_COMPLEXNUMBER
 #define ARTIFICIAL_PYRAMID_COMPLEXNUMBER
 
-#include <Artificial.Pyramid.Trigonometry>
-
 struct ComplexNumber {
   float real;
   float imaginary;
@@ -86,30 +84,31 @@ ComplexNumber sqrt(const ComplexNumber a) {
   );
 }
 
-ComplexNumber log(const ComplexNumber a) {
+ComplexNumber complexLog(const ComplexNumber a) {
   return ComplexNumber(
     log(abs(a)),
     argument(a)
   );
 }
 
-ComplexNumber sin(const ComplexNumber a) {
+ComplexNumber complexSin(const ComplexNumber a) {
   return ComplexNumber(
     sin(a.real) * cosh(a.imaginary),
     cos(a.real) * sinh(a.imaginary)
   );
 }
 
-ComplexNumber cos(const ComplexNumber a) {
+ComplexNumber complexCos(const ComplexNumber a) {
   return ComplexNumber(
     cos(a.real) * cosh(a.imaginary),
     -sin(a.real) * sinh(a.imaginary)
   );
 }
 
-ComplexNumber asin(const ComplexNumber a) {
-  ComplexNumber i = ComplexNumber(0.0, -1.0);
-  return multiply(i, log(add(multiply(i, a), sqrt(subtract(1.0, pow2(a))))));
+ComplexNumber complexAsin(const ComplexNumber a) {
+  ComplexNumber i = ComplexNumber(0.0, 1.0);
+  ComplexNumber minusI = ComplexNumber(0.0, -1.0);
+  return multiply(minusI, complexLog(add(multiply(i, a), sqrt(subtract(1.0, pow2(a))))));
 }
 
 #endif
