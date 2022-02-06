@@ -711,9 +711,9 @@
       "integrity": "sha1-BF+XgtARrppoA93TgrJDkrPYkPc="
     },
     "signal-exit": {
-      "version": "3.0.6",
-      "resolved": "https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.6.tgz",
-      "integrity": "sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ=="
+      "version": "3.0.7",
+      "resolved": "https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.7.tgz",
+      "integrity": "sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ=="
     },
     "simple-concat": {
       "version": "1.0.1",
@@ -721,9 +721,9 @@
       "integrity": "sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q=="
     },
     "simple-get": {
-      "version": "3.1.0",
-      "resolved": "https://registry.npmjs.org/simple-get/-/simple-get-3.1.0.tgz",
-      "integrity": "sha512-bCR6cP+aTdScaQCnQKbPKtJOKDp/hj9EDLJo3Nw4y1QksqaovlW/bnptB6/c1e+qmNIDHRK+oXFDdEqBT8WzUA=="
+      "version": "3.1.1",
+      "resolved": "https://registry.npmjs.org/simple-get/-/simple-get-3.1.1.tgz",
+      "integrity": "sha512-CQ5LTKGfCpvE1K0n2us+kuMPbk/q0EKl82s4aheV9oXjFEz6W/Y7oQFVJuU6QG77hRT4Ghb5RURteF5vnWjupA=="
     },
     "sshpk": {
       "version": "1.17.0",
@@ -778,9 +778,9 @@
       "integrity": "sha512-bo08ND8LlBwPeU23EluRUcO3p2Rsb/eN5EIfOVqfRmblNDEVKK5IzM9Qfidvo+odT0hhV8mpXQcP/M5MMzABXw=="
     },
     "three": {
-      "version": "0.136.0",
-      "resolved": "https://registry.npmjs.org/three/-/three-0.136.0.tgz",
-      "integrity": "sha512-+fEMX7nYLz2ZesVP/dyifli5Jf8gR3XPAnFJveQ80aMhibFduzrADnjMbARXh8+W9qLK7rshJCjAIL/6cDxC+A=="
+      "version": "0.137.5",
+      "resolved": "https://registry.npmjs.org/three/-/three-0.137.5.tgz",
+      "integrity": "sha512-rTyr+HDFxjnN8+N/guZjDgfVxgHptZQpf6xfL/Mo7a5JYIFwK6tAq3bzxYYB4Ae0RosDZlDuP+X5aXDXz+XnHQ=="
     },
     "tough-cookie": {
       "version": "2.5.0",

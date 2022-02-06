@@ -9,7 +9,7 @@ Npm.depends({
   'patreon': '0.4.1',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  'three': '0.136.0',
+  'three': '0.137.5',
   'jaro-winkler': '0.2.8',
   'canvas': '2.6.1',
   'pako': '1.0.8',

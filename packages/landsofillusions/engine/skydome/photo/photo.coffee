@@ -13,6 +13,10 @@ class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
     # Don't draw the sphere until a map is loaded.
     @sphere.visible = false
 
+    # A photo skydome is used both in the final render and to render indirect lights (even though it can include direct
+    # lights, but we assume these will not be replicated with geometric lights, so it's OK that they are there).
+    @sphere.layers.enable LOI.Engine.RenderLayers.Indirect
+
   createMaterial: -> new @constructor.Material
 
   loadFromUrl: (url) ->

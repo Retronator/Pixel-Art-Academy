@@ -8,6 +8,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @reactiveRendering = new ReactiveField true
 
     @renderer = new THREE.WebGLRenderer
+      physicallyCorrectLights: true
       canvas: @meshCanvas.canvas()
       context: @meshCanvas.context()
 
@@ -47,7 +48,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       envMap: LOI.Engine.RadianceState.Probe.cubeCamera.renderTarget.texture
 
     radianceDebugSphere = new THREE.Mesh new THREE.SphereBufferGeometry(0.5, 32, 32), radianceDebugSphereMaterial
-    radianceDebugSphere.layers.set 4
+    radianceDebugSphere.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
     scene.add radianceDebugSphere
 
     radianceDebugProbeOctahedronMapMaterial = new THREE.MeshBasicMaterial
@@ -58,7 +59,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(0.5, 1), radianceDebugProbeOctahedronMapMaterial
     radianceDebugProbeOctahedronMap.position.x = 1
     radianceDebugProbeOctahedronMap.rotation.x = Math.PI
-    radianceDebugProbeOctahedronMap.layers.set 4
+    radianceDebugProbeOctahedronMap.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
     scene.add radianceDebugProbeOctahedronMap
 
     lightmapDebugMaterial = new THREE.MeshBasicMaterial
@@ -70,7 +71,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     lightmapDebug = new THREE.Mesh new THREE.PlaneBufferGeometry(1, 1), lightmapDebugMaterial
     lightmapDebug.position.x = 2
     lightmapDebug.rotation.x = Math.PI
-    lightmapDebug.layers.set 4
+    lightmapDebug.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
     scene.add lightmapDebug
 
     @meshCanvas.autorun =>
@@ -159,11 +160,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     radianceWasUpdated = false
     totalUpdatedCount = 0
 
-    pbrEnabled = @meshCanvas.pbrEnabled()
-    giEnabled = @meshCanvas.giEnabled()
-    illuminationState = @meshCanvas.mesh().illuminationState() if giEnabled
+    lightmapEnabled = @meshCanvas.lightmapEnabled()
+    illuminationState = @meshCanvas.mesh().illuminationState() if lightmapEnabled
 
-    if pbrEnabled or giEnabled and illuminationState
+    if lightmapEnabled and illuminationState
       # We're doing PBR or GI so we should update some of the radiance
       # states. Calculate how much time we can we spend for this.
       updateStartTime = Date.now()
@@ -181,30 +181,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       if updateDuration
         highPrecisionUpdateEndTime = performance.now() + updateDuration * 1000
 
-        # Set the PBR material on all meshes.
-        scene = @meshCanvas.sceneHelper().scene()
-
-        scene.traverse (object) =>
-          return unless object.isMesh
-
-          # Remember if the object is supposed to be visible since we'll change it depending if it's a PBR/GI mesh or not.
-          object.wasVisible = object.visible
-
-          isVisibleInPBR = pbrEnabled and (object.pbrMaterial or object.material.pbr)
-          isVisibleInGI = giEnabled and (object.giMaterial or object.material.gi)
-
-          if isVisibleInPBR or isVisibleInGI
-            object.visible = true
-            object.material = object.pbrMaterial if pbrEnabled and object.pbrMaterial
-            object.material = object.giMaterial if giEnabled and object.giMaterial
-
-            # Enable double sided rendering during radiance transfer.
-            object.pbrMaterial?.side = THREE.DoubleSide if pbrEnabled
-            object.giMaterial?.side = THREE.DoubleSide if giEnabled
-
-          else
-            object.visible = false
-
         # Start rendering loop.
         @_setLinearRendering()
         @renderer.shadowMap.enabled = false
@@ -212,49 +188,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         radianceUpdateStartTime = performance.now()
 
         while performance.now() < highPrecisionUpdateEndTime
-          if pbrEnabled
-            # Make sure we have a radiance state to update.
-            unless @_radianceStatesToBeUpdated.length
-              # First converge the lighting quickly by rendering each cluster once 3 times.
-              radianceStates = []
-
-              scene.traverse (object) =>
-                return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
-                engineCluster = object
-
-                return unless engineCluster.data.isVisible()
-                return unless radianceState = engineCluster.radianceState()
-
-                radianceStates.push radianceState
-
-              for i in [1..3]
-                for radianceState in radianceStates
-                  @_radianceStatesToBeUpdated.push radianceState
-
-              scene.traverse (object) =>
-                return unless object instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
-                engineCluster = object
-
-                return unless engineCluster.data.isVisible()
-                return unless radianceState = engineCluster.radianceState()
-
-                # We should update one radiance state per 10×10 cluster pixels.
-                updatesCount = Math.floor radianceState.probeMap.pixelsCount / 100
-                @_radianceStatesToBeUpdated.push radianceState for i in [0...updatesCount]
-
-            # If we still don't have any radiance states to update, there aren't any clusters in the scene.
-            break unless @_radianceStatesToBeUpdated.length
-
-            # Update next radiance state.
-            radianceState = @_radianceStatesToBeUpdated.shift()
-            radianceState.update @renderer, scene
-            radianceWasUpdated = true
-            totalUpdatedCount++
-
-          else if giEnabled
-            illuminationState.update @renderer, scene
-            radianceWasUpdated = true
-            totalUpdatedCount++
+          illuminationState.update @renderer, scene
+          radianceWasUpdated = true
+          totalUpdatedCount++
 
         radianceUpdateEndTime = performance.now()
         radianceUpdateTime = radianceUpdateEndTime - radianceUpdateStartTime
@@ -263,17 +199,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @globalRadianceUpdatePixelsUpdatedCount += totalUpdatedCount
 
         @durationSinceLastRadianceUpdateReport += radianceUpdateTime / 1000
-
-        # Reinstate main materials and object visibility.
-        scene.traverse (object) =>
-          return unless object.isMesh
-
-          object.visible = object.wasVisible
-          object.material = object.mainMaterial if object.mainMaterial
-
-          # Reinstate single-sided rendering for main render.
-          object.pbrMaterial?.side = THREE.FrontSide if pbrEnabled
-          object.giMaterial?.side = THREE.FrontSide if giEnabled
 
       if @durationSinceLastRadianceUpdateReport > 1
         @durationSinceLastRadianceUpdateReport--
@@ -300,7 +225,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
   _setToneMappedRendering: ->
     @renderer.outputEncoding = THREE.sRGBEncoding
-    @renderer.toneMapping = THREE.LinearToneMapping
+    @renderer.toneMapping = THREE.ACESFilmicToneMapping
 
     exposureValue = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue
     @renderer.toneMappingExposure = exposureValue.exposure()
@@ -313,110 +238,28 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     camera = @cameraManager.camera.withUpdates()
 
-    # Set up main geometry.
-    camera.main.layers.set 0
-
-    pbrEnabled = @meshCanvas.pbrEnabled()
-    giEnabled = @meshCanvas.giEnabled()
-
-    @_setLinearRendering()
-
-    unless pbrEnabled or giEnabled
-      shadowsEnabled = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.ShadowsEnabled
-
-      # Render the preprocessing step. First set the preprocessing material on all meshes.
-      scene.traverse (object) =>
-        return unless object.isMesh
-
-        # Remember if the object is supposed to be visible since we'll hide it in some of the rendering steps.
-        object.wasVisible = object.visible
-
-        if object.preprocessingMaterial
-          object.material = object.preprocessingMaterial
-
-        else
-          object.visible = false
-
-      @renderer.setClearColor 0x000000, 1
-      @renderer.setRenderTarget @preprocessingRenderTarget
-      @renderer.clear()
-      @renderer.render scene, camera.main
-
-      if shadowsEnabled()
-        # Render the color shadow maps. First set the shadow color material on all meshes.
-        scene.traverse (object) =>
-          return unless object.isMesh
-
-          if object.shadowColorMaterial
-            object.material = object.shadowColorMaterial
-            object.visible = object.wasVisible
-
-          else
-            object.visible = false
-
-        # Render all lights' shadow color maps.
-        for directionalLight in sceneHelper.directionalLights()
-          @renderer.setClearColor 0xffff00, 1
-          @renderer.setRenderTarget directionalLight.shadow.colorMap
-          @renderer.clear()
-          @renderer.render scene, directionalLight.shadow.camera
-
-        # Render the opaque shadow maps. We need to set the depth material on all opaque meshes and hide the rest.
-        scene.traverse (object) =>
-          return unless object.isMesh
-
-          if object.customDepthMaterial
-            object.material = object.customDepthMaterial
-            object.visible = object.wasVisible and not object.mainMaterial.transparent
-
-          else
-            object.visible = false
-
-        # Render all lights' opaque shadow maps.
-        for directionalLight in sceneHelper.directionalLights()
-          @renderer.setClearColor 0xffffff, 1
-          @renderer.setRenderTarget directionalLight.shadow.opaqueMap
-          @renderer.clear()
-          @renderer.render scene, directionalLight.shadow.camera
-
-      # Reinstate main materials and object visibility.
-      scene.traverse (object) =>
-        return unless object.isMesh
-
-        object.visible = true if object.wasVisible
-        object.material = object.mainMaterial if object.mainMaterial
-
-      # Enable/disable updating of shadow map.
-      @renderer.shadowMap.enabled = shadowsEnabled()
-      @renderer.shadowMap.needsUpdate = true
+    # Enable/disable updating of shadow map.
+    shadowsEnabled = @meshCanvas.interface.getHelperForActiveFile(LOI.Assets.MeshEditor.Helpers.LightShadowsEnabled)()
+    @renderer.shadowMap.enabled = shadowsEnabled
+    @renderer.shadowMap.needsUpdate = shadowsEnabled
 
     # Render main geometry pass that we use for depth and shadows.
-    camera.main.layers.set 0
+    @_setToneMappedRendering()
+    camera.main.layers.set LOI.Engine.RenderLayers.FinalRender
     @renderer.setClearColor 0, 0
     @renderer.setRenderTarget null
     @renderer.clear()
     @renderer.render scene, camera.main
 
-    # Render main geometry color pass.
-    @renderer.setRenderTarget @colorPassRenderTarget
-    @renderer.clear()
-    @renderer.render scene, camera.main
-
-    # Present the color pass to screen (tone-mapped for PBR).
-    @_setToneMappedRendering() if pbrEnabled or giEnabled
-    @renderer.setRenderTarget null
-    @renderer.render @colorPassScreenQuad.scene, @colorPassScreenQuad.camera
-
     if @meshCanvas.pixelRenderEnabled()
       # Render main geometry to the low-res render target.
-      @_setLinearRendering()
       @renderer.setRenderTarget @pixelRender.renderTarget
       @renderer.setClearColor 0, 0
       @renderer.clear()
       @renderer.render scene, camera.renderTarget
 
-      # Present the low-res render to the screen (tone-mapped for PBR).
-      @_setToneMappedRendering() if pbrEnabled or giEnabled
+      # Present the low-res render directly to the screen.
+      @_setLinearRendering()
       pixelRenderScene = @pixelRender.scene.withUpdates()
       @renderer.setRenderTarget null
       @renderer.render pixelRenderScene, camera.pixelRender
@@ -433,24 +276,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @renderer.render sourceImageScene, camera.pixelRender
 
     # Render helpers that overlay the geometry.
-    camera.main.layers.set 1
+    camera.main.layers.set LOI.Assets.MeshEditor.RenderLayers.OverlayHelpers
+    camera.main.layers.enable LOI.Assets.MeshEditor.RenderLayers.OverlayDebug if @meshCanvas.debugMode()
     @renderer.render scene, camera.main
-
-    # Render debug visuals.
-    if @meshCanvas.debugMode()
-      camera.main.layers.set 2
-      camera.main.layers.enable 3
-      @renderer.render scene, camera.main
-
-      # Render PBR debug visuals.
-      if pbrEnabled or giEnabled
-        @_setToneMappedRendering()
-        debugClusterScene = @debugCluster.scene.withUpdates()
-        @renderer.render debugClusterScene, camera.pixelRender
-
-        @renderer.clearDepth()
-        camera.main.layers.set 4
-        @renderer.render scene, camera.main
 
     renderEndTime = performance.now()
     renderTime = renderEndTime - renderStartTime

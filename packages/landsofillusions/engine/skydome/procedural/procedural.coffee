@@ -24,6 +24,17 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
 
     @scatteringRenderMaterial = new @constructor.RenderMaterial.Scattering @options
 
+    # The scattering contribution is used for rendering indirect light.
+    @indirectMaterial = @createMaterial()
+    @indirectMaterial.map = @scatteringRenderTarget.texture
+    @indirectMaterial.uniforms.map.value = @scatteringRenderTarget.texture
+
+    @indirectSphere = new THREE.Mesh @geometry, @indirectMaterial
+    @indirectSphere.scale.multiply options.distance
+    @indirectSphere.layers.set LOI.Engine.RenderLayers.Indirect
+
+    @add @indirectSphere
+
     # Create render target for the final render target with direct and scattered light.
     @renderTarget = new THREE.WebGLRenderTarget @options.resolution, @options.resolution, renderTargetOptions
     @renderMaterial = new @constructor.RenderMaterial _.extend
@@ -46,12 +57,14 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     @material.uniforms.map.value = @renderTarget.texture
 
     if @options.generateCubeTexture
-      @cubeSceneSphereMaterial.map = @renderTarget.texture
-      @cubeSceneSphereMaterial.uniforms.map.value = @renderTarget.texture
+      # Cube texture should only have indirect light since it is used
+      # to render an environment map, which should have indirect light only.
+      @cubeSceneSphereMaterial.map = @scatteringRenderTarget.texture
+      @cubeSceneSphereMaterial.uniforms.map.value = @scatteringRenderTarget.texture
 
     if @options.readColors
       # Prepare for reading generated sky colors.
-      @readColorsRenderTarget = new THREE.WebGLRenderTarget 6, 3,
+      @readColorsRenderTarget = new THREE.WebGLRenderTarget 9, 3,
         type: THREE.FloatType
         magFilter: THREE.NearestFilter
         minfilter: THREE.NearestFilter

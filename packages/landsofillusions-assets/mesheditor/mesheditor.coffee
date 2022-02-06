@@ -9,6 +9,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
   @id: -> 'LandsOfIllusions.Assets.MeshEditor'
   @register @id()
 
+  @RenderLayers =
+    OverlayHelpers: 2
+    OverlayDebug: 3
+    DebugIndirect: 4
+
   @defaultInterfaceData: ->
     # Operators
 
@@ -87,6 +92,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.Editor.Actions.DecreaseExposure.id()
           LOI.Assets.Editor.Actions.ResetExposure.id()
           null
+          LOI.Assets.MeshEditor.Actions.DirectSurfaceReflectionsVisible.id()
+          LOI.Assets.MeshEditor.Actions.DirectSubsurfaceScatteringVisible.id()
+          LOI.Assets.MeshEditor.Actions.IndirectSurfaceReflectionsVisible.id()
+          LOI.Assets.MeshEditor.Actions.IndirectSubsurfaceScatteringVisible.id()
+          null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
@@ -99,6 +109,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
           LOI.Assets.MeshEditor.Actions.DebugMode.id()
+          LOI.Assets.MeshEditor.Actions.ShowIndirectLayer.id()
         ]
       ,
         caption: 'Scene'
@@ -109,10 +120,21 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       ,
         caption: 'Rendering'
         items: [
-          LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
-          LOI.Assets.MeshEditor.Actions.GIEnabled.id()
-          LOI.Assets.MeshEditor.Actions.PBREnabled.id()
+          LOI.Assets.MeshEditor.Actions.LightsEnabled.id()
+          LOI.Assets.MeshEditor.Actions.LightShadowsEnabled.id()
+          LOI.Assets.MeshEditor.Actions.LightUniformClustersEnabled.id()
+          LOI.Assets.MeshEditor.Actions.LightmapEnabled.id()
+          LOI.Assets.MeshEditor.Actions.LightmapUniformClustersEnabled.id()
+          LOI.Assets.MeshEditor.Actions.EnvironmentMapsEnabled.id()
+          LOI.Assets.MeshEditor.Actions.EnvironmentRendersEnabled.id()
+          null
+          LOI.Assets.MeshEditor.Actions.RestrictRampColors.id()
+          LOI.Assets.MeshEditor.Actions.RestrictRampShades.id()
+          null
           LOI.Assets.MeshEditor.Actions.ColorQuantizationEnabled.id()
+          LOI.Assets.MeshEditor.Actions.IncreaseQuantizationLevels.id()
+          LOI.Assets.MeshEditor.Actions.DecreaseQuantizationLevels.id()
+          LOI.Assets.MeshEditor.Actions.ResetQuantizationLevels.id()
         ]
       ,
         caption: 'Tools'

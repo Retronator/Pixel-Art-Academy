@@ -12,7 +12,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.DebugRay extends THREE.LineSegments
 
     super geometry, material
 
-    @layers.set 2
+    @layers.set LOI.Assets.MeshEditor.RenderLayers.OverlayDebug
 
     @meshCanvas.sceneHelper().scene().add @
 

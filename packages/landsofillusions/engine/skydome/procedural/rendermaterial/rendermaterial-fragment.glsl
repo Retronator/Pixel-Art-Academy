@@ -4,16 +4,17 @@
 uniform sampler2D scatteringMap;
 
 void main() {
+  vec3 radiance;
+
   vec2 octahedronMapPosition = vec2(vUv.x, vUv.y / 2.0);
   vec3 viewDirection = normalize(OctahedronMap_positionToDirection(octahedronMapPosition));
-  vec3 viewpoint = vec3(0, 0, planetRadius + 1.0);
   vec3 starRayDirection = -starDirection;
   float starViewAngle = acos(dot(viewDirection, starRayDirection));
 
-  // Start with scattered radiance.
-  vec3 radiance = texture2D(scatteringMap, vUv.xy).rgb * scatteringFactor;
-
   if (starViewAngle < starAngularSizeHalf) {
+    // We are looking at the star directly.
+    vec3 viewpoint = vec3(0, 0, planetRadius + 1.0);
+
     // See how far the view ray reaches before it exits the atmosphere or hits the planet.
     float viewRayLengthThroughAtmosphere = getLengthThroughAtmosphere(viewpoint, viewDirection);
     float viewRayStepSize = viewRayLengthThroughAtmosphere / float(viewRaySteps);
@@ -37,7 +38,11 @@ void main() {
 
     vec3 transmission = exp(-viewRayOpticalDepth);
 
-    radiance += starEmission * transmission * starFactor;
+    radiance = starEmission * transmission * starFactor;
+
+  } else {
+    // We are looking at the sky.
+    radiance = texture2D(scatteringMap, vUv.xy).rgb * scatteringFactor;
   }
 
   gl_FragColor = vec4(radiance, 1);

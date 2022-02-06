@@ -13,6 +13,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
   # pixelRenderEnabled: boolean whether to show the pixel art render instead of the high-res source
   # planeGridEnabled: boolean whether to show the plane of the current cluster
   # sourceImageEnabled: boolean whether to show the source sprite instead of the render
+  # indirectLayerOnly: boolean whether to show only the meshes for indirect light rendering
+  # skydomeVisible: boolean whether to show the skydome in the final render
   @id: -> 'LandsOfIllusions.Assets.MeshEditor.MeshCanvas'
   @register @id()
   
@@ -24,6 +26,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     pixelRenderEnabled: true
     planeGridEnabled: true
     sourceImageEnabled: false
+    indirectLayerOnly: false
+    skydomeVisible: false
 
   constructor: ->
     super arguments...
@@ -82,11 +86,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @debugMode = new ComputedField =>
       @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
 
-    @pbrEnabled = new ComputedField =>
-      @interface.getHelperForActiveFile(LOI.Assets.MeshEditor.Helpers.PBREnabled)?()
-
-    @giEnabled = new ComputedField =>
-      @interface.getHelperForActiveFile(LOI.Assets.MeshEditor.Helpers.GIEnabled)?()
+    @lightmapEnabled = new ComputedField =>
+      @interface.getHelper(LOI.Assets.MeshEditor.Helpers.LightSources)?.lightmap()
 
     # Provide the fake sprite data object to sprite editor views.
     # Currently this is used only to draw tool previews correctly.
@@ -187,7 +188,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     canvas = $meshCanvas.find('.canvas')[0]
     @canvas canvas
-    @context canvas.getContext 'webgl',
+    @context canvas.getContext 'webgl2',
       alpha: true
       powerPreference: 'high-performance'
 

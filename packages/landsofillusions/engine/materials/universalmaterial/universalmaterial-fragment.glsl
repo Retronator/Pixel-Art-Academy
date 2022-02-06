@@ -1,5 +1,4 @@
 // LandsOfIllusions.Engine.Materials.UniversalMaterial.fragment
-precision highp float;
 #include <THREE>
 
 #define STANDARD

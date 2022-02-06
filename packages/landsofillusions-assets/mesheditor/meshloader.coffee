@@ -63,9 +63,11 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @sceneHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, @fileId
     @debugModeData = @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).data
     @currentClusterHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @fileId
-    @colorQuantizationHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.ColorQuantizationEnabled, @fileId
-    @pbrHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
-    @giHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.GIEnabled, @fileId
+    @colorQuantizationHelper = @interface.getHelper LOI.Assets.MeshEditor.Helpers.ColorQuantization
+    @lightSourcesHelper = @interface.getHelper LOI.Assets.MeshEditor.Helpers.LightSources
+    @lightVisibilityHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightVisibility, @fileId
+    @restrictColorsHelper = @interface.getHelper LOI.Assets.MeshEditor.Helpers.RestrictColors
+    @uniformClustersHelper = @interface.getHelper LOI.Assets.MeshEditor.Helpers.UniformClusters
 
     # Create the engine mesh.
     @mesh = new LOI.Assets.Engine.Mesh
@@ -75,8 +77,10 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster
       colorQuantization: @colorQuantizationHelper
-      pbr: @pbrHelper
-      gi: @giHelper
+      lightSources: @lightSourcesHelper
+      lightVisibility: @lightVisibilityHelper
+      restrictColors: @restrictColorsHelper
+      uniformClusters: @uniformClustersHelper
 
     # Add mesh to the scene.
     @sceneHelper.scene().add @mesh

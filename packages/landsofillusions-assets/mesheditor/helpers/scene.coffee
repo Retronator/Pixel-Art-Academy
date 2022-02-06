@@ -26,8 +26,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @skydome.photo.rotation.y = Math.PI / 2
 
-    @skydome.procedural.layers.set 3
-
     # Setup default lights.
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
     scene.add ambientLight
@@ -65,8 +63,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     ,
       (a, b) => a is b
 
-    @pbrEnabledHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.PBREnabled, @fileId
-    @giEnabledHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.GIEnabled, @fileId
+    @lightSourcesHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightSources
 
     @autorun (computation) =>
       # Set the new position.
@@ -97,12 +94,10 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
       # Enable the correct skydome. We need to have a proper boolean so
       # that the visible property below also has an explicit false value.
-      radianceTransferEnabled = @pbrEnabledHelper() or @giEnabledHelper() or false
-      @skydome.procedural.visible = radianceTransferEnabled and not photoSkydomeUrl
-      @skydome.photo.visible = radianceTransferEnabled and photoSkydomeUrl?
+      @skydome.procedural.visible = not photoSkydomeUrl
+      @skydome.photo.visible = photoSkydomeUrl?
 
     @autorun (computation) =>
-      return unless @pbrEnabledHelper() or @giEnabledHelper()
       return if @photoSkydomeUrl()
       return unless meshCanvas = @meshCanvas()
       return unless meshCanvas.isRendered()

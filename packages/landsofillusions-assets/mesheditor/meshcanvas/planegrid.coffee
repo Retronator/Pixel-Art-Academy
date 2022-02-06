@@ -69,16 +69,18 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.Object3D
       geometry.setAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
 
       grid = new THREE.LineSegments geometry, material
-      grid.layers.set 1
-      
+      grid.layers.set LOI.Assets.MeshEditor.RenderLayers.OverlayHelpers
+
       # Remove previous grid.
+      scene = @meshCanvas.sceneHelper().scene()
+
       Tracker.nonreactive =>
         if previousGrid = @grid()
           previousGrid.geometry.dispose()
-          @meshCanvas.sceneHelper().scene().remove previousGrid
+          scene.remove previousGrid
 
       # Add new grid.
-      @meshCanvas.sceneHelper().scene().add grid
+      scene.add grid
       @grid grid
 
       @meshCanvas.sceneHelper().scene.updated()

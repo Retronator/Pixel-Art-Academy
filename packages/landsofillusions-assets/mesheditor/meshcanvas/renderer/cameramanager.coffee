@@ -13,7 +13,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
     # Render target camera is the same as main, but slightly bigger viewport rounded to whole pixels.
     @_renderTargetCamera = new THREE.Camera
-    @_renderTargetCamera.layers.set 0
+    @_renderTargetCamera.layers.set LOI.Engine.RenderLayers.FinalRender
     @_renderTargetCamera.matrixAutoUpdate = false
 
     # Pixel render camera is used to render the render target to the screen.

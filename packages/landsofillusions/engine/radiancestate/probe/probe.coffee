@@ -15,6 +15,7 @@ class LOI.Engine.RadianceState.Probe
 
     # Prepare rendering of the radiance cube.
     @cubeCamera = new THREE.CubeCamera 0.001, 1000, @cubeCameraRenderTarget
+    @cubeCamera.layers.set LOI.Engine.RenderLayers.Indirect
 
     # Create render target for extracting the probe cube to an octahedron map.
     @octahedronMapRenderTarget = new THREE.WebGLRenderTarget @octahedronMapResolution, @octahedronMapResolution * 2,
