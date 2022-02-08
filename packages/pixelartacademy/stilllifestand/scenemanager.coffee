@@ -26,6 +26,7 @@ class PAA.StillLifeStand.SceneManager
         star: 20
         scattering: 0.0013
 
+    @skydome.directionalLight.position.set -20, 100, 60
     @skydome.directionalLight.castShadow = true
     @skydome.directionalLight.shadow.mapSize.width = 4096
     @skydome.directionalLight.shadow.mapSize.height = 4096
