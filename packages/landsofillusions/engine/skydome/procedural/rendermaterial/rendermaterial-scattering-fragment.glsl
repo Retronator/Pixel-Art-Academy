@@ -74,7 +74,7 @@ void main() {
   vec3 mieScatteringFactor = chanceOfMieScatteringFactor * totalMieAttenuationDensityFactor;
 
   vec3 totalScatteringContribution = viewRayStepSize * (rayleighScatteringFactor + mieScatteringFactor);
-  vec3 skyRadiance = starEmission * totalScatteringContribution;
+  vec3 skyRadiance = starEmission * totalScatteringContribution * scatteringFactor;
 
   gl_FragColor = vec4(skyRadiance, 1.0);
 }

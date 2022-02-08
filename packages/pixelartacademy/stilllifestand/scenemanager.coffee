@@ -8,40 +8,29 @@ class PAA.StillLifeStand.SceneManager
     @scene = new THREE.Scene
     @scene.manager = @
 
-    # Create lighting.
-    @directionalLight = new THREE.DirectionalLight
-    @directionalLight.position.set -20, 100, 60
-    @directionalLight.castShadow = true
-    @directionalLight.shadow.mapSize.width = 4096
-    @directionalLight.shadow.mapSize.height = 4096
-    @scene.add @directionalLight
-
-    @environmentMapRenderTarget = null
-
     @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhysicalMaterial
       color: 0x8899aa
       dithering: true
 
-    # We render the visible skydome without the sun so that it will give correct irradiance in the environment map.
-    # Note: the values 20 and 0.0013 for star/scattering factors were determined experimentally to match typical real environment maps.
-    @skydome = new LOI.Engine.Skydome.Procedural
-      dithering: true
-      intensityFactors:
-        star: 0
-        scattering: 0.0013
-
-    @scene.add @skydome
-
-    # To measure the color of the sun we don't want to have scattering contribution.
-    @sunColorMeasureSkydome = new LOI.Engine.Skydome.Procedural
-      readColors: true
-      intensityFactors:
-        star: 20
-        scattering: 0
-
+    @ground.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
     @ground.receiveShadow = true
     @ground.rotation.x = -Math.PI / 2
     @scene.add @ground
+
+    # Create lighting.
+    # Note: the values 20 and 0.0013 for star/scattering factors were determined experimentally to match typical real environment maps.
+    @skydome = new LOI.Engine.Skydome.Procedural
+      addDirectionalLight: true
+      directionalLightDistance: 100
+      intensityFactors:
+        star: 20
+        scattering: 0.0013
+
+    @skydome.directionalLight.castShadow = true
+    @skydome.directionalLight.shadow.mapSize.width = 4096
+    @skydome.directionalLight.shadow.mapSize.height = 4096
+
+    @scene.add @skydome
 
     @_items = []
     @items = new ReactiveField @_items
@@ -91,7 +80,7 @@ class PAA.StillLifeStand.SceneManager
     @debugScene.add @cursor
 
     @skydomeReadColorQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), new THREE.MeshBasicMaterial
-      map: @sunColorMeasureSkydome.readColorsRenderTarget.texture
+      map: @skydome.readColorsRenderTarget.texture
 
     @skydomeReadColorQuad.position.y = 1
     @skydomeReadColorQuad.scale.x = 2
@@ -172,6 +161,8 @@ class PAA.StillLifeStand.SceneManager
     itemRenderObjects = (item.avatar.getRenderObject() for item in @items())
 
     # Hide all the items so we just capture the sky and the ground in the reflections.
+    # Note: We don't want to put items on just the final render layer to achieve this because we want to render
+    # them when rendering individual reflections on each item where they should be visible to each other.
     itemRenderObject.visible = false for itemRenderObject in itemRenderObjects
     rendererManager.renderer.shadowMap.needsUpdate = true
 

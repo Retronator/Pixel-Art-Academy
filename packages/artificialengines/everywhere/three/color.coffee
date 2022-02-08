@@ -21,6 +21,8 @@ THREE.Color::normalize = ->
     @r = 1
     @g = 1
     @b = 1
+
+  return @
   
 # Create a new color from a plain object.
 THREE.Color.fromObject = (object) ->

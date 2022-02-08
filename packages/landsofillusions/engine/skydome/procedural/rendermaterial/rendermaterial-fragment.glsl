@@ -42,7 +42,7 @@ void main() {
 
   } else {
     // We are looking at the sky.
-    radiance = texture2D(scatteringMap, vUv.xy).rgb * scatteringFactor;
+    radiance = texture2D(scatteringMap, vUv.xy).rgb;
   }
 
   gl_FragColor = vec4(radiance, 1);

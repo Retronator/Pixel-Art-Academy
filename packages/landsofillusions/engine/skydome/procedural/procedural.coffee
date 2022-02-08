@@ -30,19 +30,19 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     @indirectMaterial.uniforms.map.value = @scatteringRenderTarget.texture
 
     @indirectSphere = new THREE.Mesh @geometry, @indirectMaterial
-    @indirectSphere.scale.multiply options.distance
+    @indirectSphere.scale.multiplyScalar options.distance
     @indirectSphere.layers.set LOI.Engine.RenderLayers.Indirect
 
     @add @indirectSphere
 
-    # Create render target for the final render target with direct and scattered light.
+    # Create render target for the final render with direct and scattered light.
     @renderTarget = new THREE.WebGLRenderTarget @options.resolution, @options.resolution, renderTargetOptions
     @renderMaterial = new @constructor.RenderMaterial _.extend
       scatteringMap: @scatteringRenderTarget.texture
     ,
       @options
 
-    # Create the scenes and camera for rendering.
+    # Create the scenes for rendering the sky textures.
     @scatteringScene = new THREE.Scene()
     @scatteringScene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), @scatteringRenderMaterial
 
@@ -56,15 +56,15 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     @material.map = @renderTarget.texture
     @material.uniforms.map.value = @renderTarget.texture
 
-    if @options.generateCubeTexture
+    if @options.generateCubeTexture or @options.generateEnvironmentMap
       # Cube texture should only have indirect light since it is used
       # to render an environment map, which should have indirect light only.
       @cubeSceneSphereMaterial.map = @scatteringRenderTarget.texture
       @cubeSceneSphereMaterial.uniforms.map.value = @scatteringRenderTarget.texture
 
-    if @options.readColors
+    if @options.readColors or @options.addDirectionalLight
       # Prepare for reading generated sky colors.
-      @readColorsRenderTarget = new THREE.WebGLRenderTarget 9, 3,
+      @readColorsRenderTarget = new THREE.WebGLRenderTarget 6, 3,
         type: THREE.FloatType
         magFilter: THREE.NearestFilter
         minfilter: THREE.NearestFilter
@@ -89,6 +89,12 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
       @skyColor = new THREE.Color
       @starColor = new THREE.Color
 
+    if @options.addDirectionalLight
+      @directionalLight = new THREE.DirectionalLight
+      @directionalLight.layers.mask = LOI.Engine.RenderLayerMasks.GeometricLight
+
+      @add @directionalLight
+
   createMaterial: ->
     new @constructor.Material
       resolution: @options.resolution
@@ -98,10 +104,10 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     # Update star light direction.
     starDirectionOctahedron = new THREE.Vector3().copy(starDirection).normalize().applyMatrix4(@constructor.worldToSkydomeMatrix)
 
+    @scatteringRenderMaterial.uniforms.scatteringFactor.value = scatteringFactor ? @renderMaterial.options.intensityFactors.scattering
     @scatteringRenderMaterial.uniforms.starDirection.value.copy starDirectionOctahedron
     @renderMaterial.uniforms.starDirection.value.copy starDirectionOctahedron
     @renderMaterial.uniforms.starFactor.value = starFactor ? @renderMaterial.options.intensityFactors.star
-    @renderMaterial.uniforms.scatteringFactor.value = scatteringFactor ? @renderMaterial.options.intensityFactors.scattering
 
     # Render the low-resolution scattering contribution.
     if @renderMaterial.uniforms.scatteringFactor.value > 0
@@ -115,7 +121,7 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
     # Do any additional rendering.
     super arguments...
 
-    if @options.readColors
+    if @options.readColors or @options.addDirectionalLight
       # Update star sample position.
       starSampleCenter = AP.OctahedronMap.directionToPosition starDirectionOctahedron.clone().negate(), @options.resolution
 
@@ -184,3 +190,9 @@ class LOI.Engine.Skydome.Procedural extends LOI.Engine.Skydome
         @starColor.normalize()
 
         @starLuminance = AS.Color.XYZ.getLuminanceForY(starXYZ.y)
+
+    if @options.addDirectionalLight
+      @directionalLight.position.copy(starDirection).normalize().multiplyScalar -(@options.directionalLightDistance or @options.distance)
+      @directionalLight.color.copy @starColor
+      # TODO: 2e-8 factor was determined experimentally to match real HDR probes. The math behind this needs to be rechecked.
+      @directionalLight.intensity = @starLuminance * 2e-8

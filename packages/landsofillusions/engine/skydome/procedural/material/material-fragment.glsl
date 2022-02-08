@@ -32,4 +32,7 @@ void main() {
   vec2 octahedronMapPosition = OctahedronMap_directionToPosition(direction, resolution);
   vec2 hemispherePosition = vec2(octahedronMapPosition.x, octahedronMapPosition.y * 2.0);
   gl_FragColor = vec4(texture2D(map, hemispherePosition).rgb * fadeMultiplier, 1);
+
+  #include <tonemapping_fragment>
+  #include <encodings_fragment>
 }

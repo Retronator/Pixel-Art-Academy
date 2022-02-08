@@ -11,6 +11,7 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
 
     # Setup directional light.
     @directionalLight = new THREE.DirectionalLight
+    @directionalLight.layers.mask = LOI.Engine.RenderLayerMasks.GeometricLight
     @sunColorMeasureSkydome = new LOI.Engine.Skydome.Procedural readColors: true
 
     # Reactively adjust directional light to match the environment.
@@ -61,8 +62,7 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
         sunScale = if indirectOnly then 5 else 1
         sunAreaFactor = sunScale ** 2
 
-        # We don't want to render the sun in the main procedural sky as the light will come from the direct light.
-        starFactor = if indirectOnly then @sunFactor() / sunAreaFactor else 0
+        starFactor = @sunFactor() / sunAreaFactor
         scatteringFactor = @skyFactor()
 
         # Create the procedural skydome in case the previous one was a photo.
@@ -102,6 +102,7 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
     sunBlockerGeometry = new THREE.SphereGeometry 25
     @sunBlockerMaterial = new THREE.MeshBasicMaterial color: 0
     @sunBlocker = new THREE.Mesh sunBlockerGeometry, @sunBlockerMaterial
+    @sunBlocker.layers.set LOI.Engine.RenderLayers.Indirect
     @sunBlocker.visible = false
     @scene.add @sunBlocker
 
@@ -123,6 +124,7 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
       sphereGeometry.setAttribute 'materialPropertiesIndex', new THREE.BufferAttribute materialPropertiesIndices, 1, true
 
       sphere = new THREE.Mesh sphereGeometry, material
+      sphere.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
       sphere.position.z = i
       @scene.add sphere
       sphere

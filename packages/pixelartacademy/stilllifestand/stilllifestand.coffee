@@ -58,26 +58,20 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
     @autorun (computation) =>
       renderer = @rendererManager().renderer
       sceneManager = @sceneManager()
-      sunPosition = sceneManager.directionalLight.position
+      sunPosition = sceneManager.skydome.directionalLight.position
 
       if @movingSun()
         # Move directional light to come from cursor direction.
         camera = @cameraManager().camera()
         cursorPosition = @cursorPosition()
         lightDirection = new THREE.Vector3().subVectors(camera.position, cursorPosition).normalize()
-        sunPosition.copy(lightDirection).multiplyScalar(-100)
 
       else
         # Read light direction from directional light position.
         lightDirection = sunPosition.clone().normalize().multiplyScalar(-1)
 
-      # Update the skydomes.
+      # Update the skydome.
       sceneManager.skydome.updateTexture renderer, lightDirection
-      sceneManager.sunColorMeasureSkydome.updateTexture renderer, lightDirection
-
-      # Update light colors.
-      sceneManager.directionalLight.color.copy sceneManager.sunColorMeasureSkydome.starColor
-      sceneManager.directionalLight.intensity = sceneManager.sunColorMeasureSkydome.starLuminance * 2e-8
 
       # Update environment map for indirect lighting.
       Tracker.nonreactive => sceneManager.updateEnvironmentMap()

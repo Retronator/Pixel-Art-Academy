@@ -19,10 +19,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.ProceduralModel extends PAA.Items.Sti
         @geometry = @createGeometry()
 
         @mesh = new THREE.Mesh @geometry, @material
-        @mesh.receiveShadow = true
-        @mesh.castShadow = true
-
-        @add @mesh
+        @initializeMesh @mesh
 
       createGeometry: -> @avatar.createGeometry.call @
 

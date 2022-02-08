@@ -16,9 +16,13 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
-    # Setup the PBR/GI skydomes.
+    # Setup the environment skydomes.
     @skydome =
       procedural: new LOI.Engine.Skydome.Procedural
+        intensityFactors:
+          star: 20
+          scattering: 0.0013
+
       photo: new LOI.Engine.Skydome.Photo
 
     scene.add @skydome.procedural
@@ -47,11 +51,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     shadow.mapSize.height = 4096
     shadow.bias = 0
 
-    for extraShadowMap in ['opaqueMap', 'colorMap']
-      shadow[extraShadowMap] = new THREE.WebGLRenderTarget shadow.mapSize.x, shadow.mapSize.y,
-        minFilter: THREE.NearestFilter
-        magFilter: THREE.NearestFilter
-
     scene.add directionalLight
     @directionalLights [directionalLight]
 
@@ -69,13 +68,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       # Set the new position.
       lightDirection = @lightDirectionHelper()
       directionalLight.position.copy lightDirection.clone().multiplyScalar -100
-
-      # Update the shadow camera matrix since it needs to be updated before the shadow casting pass.
-      directionalLight.shadow.camera.position.copy directionalLight.position
-
-      lookTarget = new THREE.Vector3().setFromMatrixPosition directionalLight.target.matrixWorld
-      directionalLight.shadow.camera.lookAt lookTarget
-      directionalLight.shadow.camera.updateMatrixWorld()
 
       @scene.updated()
 
@@ -96,6 +88,13 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       # that the visible property below also has an explicit false value.
       @skydome.procedural.visible = not photoSkydomeUrl
       @skydome.photo.visible = photoSkydomeUrl?
+
+      # See if the sphere in the final render should be visible.
+      skydomeVisible = @meshCanvas()?.skydomeVisible()
+      @skydome.procedural.sphere.visible = skydomeVisible
+      @skydome.photo.sphere.visible = skydomeVisible
+
+      @scene.updated()
 
     @autorun (computation) =>
       return if @photoSkydomeUrl()
@@ -144,8 +143,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     return unless meshCanvas.isRendered()
     return unless renderSize = meshCanvas.renderer.renderSize()
 
-    directionalLights = @directionalLights()
-
     if cameraAngle = meshCanvas.meshData()?.cameraAngles.get 0
       defaultViewport = left: -1, right: 1, bottom: -1, top: 1
       cameraAngleMatrix = new THREE.Matrix4
@@ -162,8 +159,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
     cameraParallelProjection: cameraParallelProjection or false
     cameraDirection: cameraDirection or new THREE.Vector3
-    directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
-    directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: meshCanvas.renderer.preprocessingRenderTarget.texture
     colorQuantizationFactor: (LOI.settings.graphics.colorQuantizationLevels.value() or 1) - 1
 

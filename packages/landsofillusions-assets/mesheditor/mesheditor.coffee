@@ -106,6 +106,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.MeshEditor.Actions.ShowHorizon.id()
           LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()
           LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()
+          LOI.Assets.MeshEditor.Actions.ShowSkydome.id()
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
           LOI.Assets.MeshEditor.Actions.DebugMode.id()

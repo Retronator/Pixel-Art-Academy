@@ -93,7 +93,6 @@ void main() {
     #include <LandsOfIllusions.Engine.Materials.unpackSamplePaletteColorFragment>
     #include <LandsOfIllusions.Engine.Materials.unpackSampleReflectionParametersFragment>
     #include <LandsOfIllusions.Engine.Materials.unpackSampleShadingDitherFragment>
-    albedo = sRGBToLinear(vec4(sourceColor, 1.0));
 
   #else
     // We're using constants, read from material properties.
@@ -105,8 +104,6 @@ void main() {
 
   // Get actual RGB values for this palette color.
   #include <LandsOfIllusions.Engine.Materials.readSourceColorFromPaletteFragment>
-
-  vec3 linearPaletteColor = sRGBToLinear(vec4(sourceColor, 1.0)).rgb;
 
   // Materials can be defined physically by their fully-defined refractive indices (rgb) or manually by setting a
   // constant refractive index (in r). We don't really need the full refractive index for physical materials because
@@ -124,7 +121,7 @@ void main() {
 
   } else {
     // We only have the palette color defined, which specifies the color for conductors.
-    vec3 conductorReflectance = linearPaletteColor;
+    vec3 conductorReflectance = sourceColor;
 
     // Dielectrics calculate reflectance from the refractive index, conductors from the palette color.
     float reflectanceValue = pow2((refractiveIndex.r - 1.0) / (refractiveIndex.r + 1.0));
@@ -136,7 +133,7 @@ void main() {
   material.specularColor = reflectance;
 
   // Diffuse color describes which light gets transmitted inside the material (none for conductors).
-  material.diffuseColor = linearPaletteColor * (1.0 - conductivity);
+  material.diffuseColor = sourceColor * (1.0 - conductivity);
 
   // Accumulate direct lights and setup indirect ambient/probe light.
   ReflectedLight reflectedLight = ReflectedLight(vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0));
@@ -168,4 +165,7 @@ void main() {
 
   // Output the radiance.
   gl_FragColor = vec4(totalRadiance, 1.0);
+
+  #include <tonemapping_fragment>
+  #include <encodings_fragment>
 }

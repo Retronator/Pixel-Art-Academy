@@ -19,11 +19,12 @@ class PAA.Items.StillLifeItems.Item.Avatar.Model extends PAA.Items.StillLifeItem
   class @RenderObject extends PAA.Items.StillLifeItems.Item.Avatar.RenderObject
     initialize: (mesh) ->
       @mesh = mesh.clone()
+      @mesh.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
 
       @material = @mesh.material
       @geometry = @mesh.geometry
 
-      @add @mesh
+      @initializeMesh @mesh
 
   class @PhysicsObject extends PAA.Items.StillLifeItems.Item.Avatar.PhysicsObject
     initialize: (@_collisionShape, dragObjects) ->

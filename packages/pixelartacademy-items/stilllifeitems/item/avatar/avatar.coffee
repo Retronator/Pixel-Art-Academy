@@ -39,6 +39,14 @@ class PAA.Items.StillLifeItems.Item.Avatar extends LOI.Adventure.Thing.Avatar
     constructor: (@avatar) ->
       super arguments...
 
+    initializeMesh: (mesh) ->
+      @mesh.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
+
+      @mesh.receiveShadow = true
+      @mesh.castShadow = true
+
+      @add @mesh
+
     renderReflections: (renderer, environmentMapGenerator, scene) ->
       # Render from the position of the item.
       scene.position.copy(@position).negate()

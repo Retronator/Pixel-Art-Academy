@@ -6,6 +6,7 @@ PAA = PixelArtAcademy
 class PAA.StillLifeStand.CameraManager
   constructor: (@stillLifeStand) ->
     @_camera = new THREE.PerspectiveCamera 60, 1, 0.01, 1000
+    @_camera.layers.set LOI.Engine.RenderLayers.FinalRender
     @camera = new AE.ReactiveWrapper @_camera
 
     @_properties = new ReactiveField

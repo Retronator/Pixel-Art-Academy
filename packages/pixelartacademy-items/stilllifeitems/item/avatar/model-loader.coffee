@@ -74,9 +74,6 @@ class PAA.Items.StillLifeItems.Item.Avatar.Model.Loader
 
     renderMesh.material = material
 
-    renderMesh.receiveShadow = true
-    renderMesh.castShadow = true
-
     renderMesh
 
   @_createPhysicsData: (collisionObject) ->
