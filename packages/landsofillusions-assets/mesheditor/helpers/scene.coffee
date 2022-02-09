@@ -22,6 +22,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     @skydome =
       procedural: new LOI.Engine.Skydome.Procedural
         addDirectionalLight: true
+        directionalLightDistance: 100
         generateEnvironmentMap: true
         intensityFactors:
           star: 20

@@ -12,6 +12,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
       magFilter: THREE.NearestFilter
 
     material = new THREE.MeshBasicMaterial
+      transparent: true
       map: @renderTarget.texture
       depthWrite: false
 

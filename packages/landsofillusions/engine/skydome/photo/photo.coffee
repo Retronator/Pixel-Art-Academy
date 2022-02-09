@@ -21,6 +21,7 @@ class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
 
   loadFromUrl: (url) ->
     # Temporarily hide the sphere until the map is loaded.
+    sphereWasVisible = @sphere.visible
     @sphere.visible = false
 
     @loader.load url, (texture) =>
@@ -35,6 +36,6 @@ class LOI.Engine.Skydome.Photo extends LOI.Engine.Skydome
         @cubeSceneSphereMaterial.uniforms.map.value = texture
         @cubeSceneSphereMaterial.needsUpdate = true
 
-      @sphere.visible = true
+      @sphere.visible = sphereWasVisible
 
       @options.onLoaded?()

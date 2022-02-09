@@ -8,9 +8,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @reactiveRendering = new ReactiveField true
 
     @renderer = new THREE.WebGLRenderer
+      powerPreference: 'high-performance'
+      alpha: true
       physicallyCorrectLights: true
       canvas: @meshCanvas.canvas()
-      context: @meshCanvas.context()
 
     @renderer.shadowMap.autoUpdate = false
     @renderer.shadowMap.type = THREE.BasicShadowMap
@@ -234,7 +235,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.shadowMap.enabled = shadowsEnabled
     @renderer.shadowMap.needsUpdate = shadowsEnabled
 
-    # Render main geometry pass that we use for depth and shadows.
     @_setToneMappedRendering()
     camera.main.layers.set LOI.Engine.RenderLayers.FinalRender
     @renderer.setClearColor 0, 0
