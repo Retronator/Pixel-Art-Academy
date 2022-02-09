@@ -9,6 +9,9 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
     # Create the scene.
     @scene = new THREE.Scene
 
+    # Allow reactive updates of reflections when anything in the scene changes.
+    @sceneUpdated = new Tracker.Dependency
+
     # Setup directional light.
     @directionalLight = new THREE.DirectionalLight
     @directionalLight.layers.mask = LOI.Engine.RenderLayerMasks.GeometricLight

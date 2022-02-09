@@ -21,6 +21,13 @@ class LOI.Engine.Skydome extends AS.RenderObject
 
     @add @sphere
 
+    if @options.generateCubeTexture or @options.generateEnvironmentMap
+      @cubeScene = new THREE.Scene()
+      @cubeSceneSphereMaterial = @createMaterial()
+      @cubeSceneSphere = new THREE.Mesh @geometry, @cubeSceneSphereMaterial
+      @cubeSceneSphere.scale.multiplyScalar 10
+      @cubeScene.add @cubeSceneSphere
+
     if @options.generateCubeTexture
       # Prepare for rendering the cube texture.
       @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget @options.resolution,
@@ -29,14 +36,6 @@ class LOI.Engine.Skydome extends AS.RenderObject
 
       @cubeCamera = new THREE.CubeCamera 1, 100, @cubeCameraRenderTarget
       @cubeTexture = @cubeCameraRenderTarget.texture
-
-    if @options.generateCubeTexture or @options.generateEnvironmentMap
-      @cubeScene = new THREE.Scene()
-      @cubeSceneSphereMaterial = @createMaterial()
-      cubeSceneSphere = new THREE.Mesh @geometry, @cubeSceneSphereMaterial
-      # We flip the sphere so the cube map directions will match the scene when applied as an environment map.
-      cubeSceneSphere.scale.set -10, 10, 10
-      @cubeScene.add cubeSceneSphere
 
   updateTexture: (renderer) ->
     if @options.generateCubeTexture or @options.generateEnvironmentMap

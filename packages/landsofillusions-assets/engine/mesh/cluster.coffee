@@ -152,8 +152,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
           # Note: We can't set extra properties on material options sooner since other materials don't support them.
           _.extend materialOptions,
             mesh: meshData
-            palette: palette
-            colorQuantization: options.colorQuantization?()
 
           # If the meshMaterial has a texture, that's something we have to get a separate material for.
           materialOptions.texture = meshMaterial.texture if meshMaterial.texture
@@ -166,7 +164,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
           material = new THREE.MeshPhysicalMaterial
             color: THREE.Color.fromObject THREE.Color.fromObject shades[meshMaterial.shade]
-            roughness: 0
+            roughness: 1
 
       else if clusterMaterial.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,

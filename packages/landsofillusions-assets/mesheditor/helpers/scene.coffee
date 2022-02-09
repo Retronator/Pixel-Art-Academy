@@ -38,6 +38,11 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @skydome.photo.rotation.y = Math.PI / 2
 
+    @environmentMap = new ReactiveField null
+
+    @autorun (computation) =>
+      scene.environment = @environmentMap()
+
     directionalLight = @skydome.procedural.directionalLight
 
     directionalLight.castShadow = true
@@ -103,12 +108,12 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       if @photoSkydomeUrl()
         photoSkydomeUpdatedDependency.depend()
         @skydome.photo.updateTexture meshCanvas.renderer.renderer
-        scene.environment = @skydome.photo.environmentMap
+        @environmentMap @skydome.photo.environmentMap
 
       else
         lightDirection = @lightDirectionHelper()
         @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
-        scene.environment = @skydome.procedural.environmentMap
+        @environmentMap @skydome.procedural.environmentMap
 
       @scene.updated()
 
@@ -166,8 +171,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
     cameraParallelProjection: cameraParallelProjection or false
     cameraDirection: cameraDirection or new THREE.Vector3
-    preprocessingMap: meshCanvas.renderer.preprocessingRenderTarget.texture
-    colorQuantizationFactor: (LOI.settings.graphics.colorQuantizationLevels.value() or 1) - 1
+    envMap: @environmentMap()
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()
@@ -177,4 +181,8 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     for uniform, value of uniforms
       if material.uniforms[uniform]
         material.uniforms[uniform].value = value
+
+        # Maps need to be also added on the material itself for defines to kick in.
+        material[uniform] = value if _.endsWith uniform, 'Map'
+
         material.needsUpdate = true

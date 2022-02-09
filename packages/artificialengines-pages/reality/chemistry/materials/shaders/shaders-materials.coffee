@@ -77,6 +77,8 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
         getAll: => materialProperties
         mesh: materials: getAll: => materials
 
+      @sceneUpdated.changed()
+
     @universalMaterialOptions = new ComputedField =>
       mesh:
         paletteTexture: @paletteTexture
@@ -90,9 +92,11 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
       shaderClass = @shaderClass()
       environmentMap = @environmentMap()
 
-      if shaderClass is @constructor.ShaderClasses.PhysicalMaterial
-        materialClass = @materialClass()
+      # Note: We want to react to material class changes so that reflections get re-rendered, even if
+      # we're using the universal material, which wouldn't otherwise require re-creation of the material.
+      materialClass = @materialClass()
 
+      if shaderClass is @constructor.ShaderClasses.PhysicalMaterial
         # Conductor color is simply the light it reflects.
         conductorColor = @reflectance()
 
@@ -147,6 +151,11 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
           material.uniforms.envMap.value = environmentMap
           material.envMap = environmentMap
           sphere.material = material
+
+      @sceneUpdated.changed()
+
+    @autorun (computation) =>
+      @sceneUpdated.depend()
 
       # Render the individual environment maps from the perspective of each sphere.
       # Turn on the sun blocker if we know where the sun is.
