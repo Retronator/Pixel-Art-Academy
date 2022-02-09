@@ -6,7 +6,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     super arguments...
 
     @geometry = new ComputedField => @_generateGeometry()
-    @radianceState = new ComputedField => @_generateRadianceState()
     @materials = new ComputedField => @_generateMaterials()
     @mesh = new ComputedField => @_generateMesh()
 
@@ -45,7 +44,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     @_geometry?.dispose()
     material?.dispose() for name, material of @_materials if @_materials
-    @_radianceState?.destroy()
 
   _generateGeometry: ->
     return unless geometryData = @data.geometry()
@@ -165,8 +163,10 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
           material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
           depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
-          shadowColorMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.ShadowColorMaterial.id(), materialOptions
-          preprocessingMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.PreprocessingMaterial.id(), materialOptions
+
+          material = new THREE.MeshPhysicalMaterial
+            color: THREE.Color.fromObject THREE.Color.fromObject shades[meshMaterial.shade]
+            roughness: 0
 
       else if clusterMaterial.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
@@ -179,8 +179,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     @_materials =
       main: material
       depth: depthMaterial
-      shadowColor: shadowColorMaterial
-      preprocessing: preprocessingMaterial
 
     @_materials
 
@@ -191,18 +189,16 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     console.log "Generating mesh", geometry, materials if LOI.Assets.debug
 
     mesh = new THREE.Mesh geometry, materials.main
+    mesh.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
 
     mesh.mainMaterial = materials.main
-    mesh.shadowColorMaterial = materials.shadowColor
     mesh.customDepthMaterial = materials.depth
-    mesh.preprocessingMaterial = materials.preprocessing
-    mesh.pbrMaterial = materials.pbr
 
     mesh.castShadow = true
     mesh.receiveShadow = true
 
     debug = @layer.object.mesh.options.debug?()
-    mesh.layers.set 3 if debug
+    mesh.layers.set LOI.Assets.MeshEditor.RenderLayers.OverlayDebug if debug
 
     # Do not draw unselected clusters in debug mode. Note that we still want
     # to have them in the scene so they can be rendered in radiance probes.
@@ -211,60 +207,3 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     mesh.visible = false if debug and currentCluster and currentCluster isnt @data
 
     mesh
-
-  _generateRadianceState: ->
-    options = @layer.object.mesh.options
-    return unless options.pbr?()
-
-    # Clean any previous radiance state.
-    @_radianceState?.destroy()
-    @_radianceState = null
-
-    # Make sure bounds and picture cluster exist.
-    return unless @data.boundsInPicture()
-    return unless @data.layer.getPictureCluster @data.id
-
-    meshData = @data.layer.object.mesh
-
-    # Determine the color.
-    return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
-    clusterMaterial = @data.material()
-
-    # Normal color mode.
-    if clusterMaterial.materialIndex?
-      # Cluster has a material assigned. Add the material properties to material options.
-      meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
-
-    else if clusterMaterial.paletteColor
-      # Cluster has a direct palette color set.
-      meshMaterial = clusterMaterial.paletteColor
-
-    shades = palette.ramps[meshMaterial.ramp]?.shades if meshMaterial.ramp?
-
-    # Generate material properties.
-    materialProperties =
-      refractiveIndex: new THREE.Vector3 1, 1, 1
-      extinctionCoefficient: new THREE.Vector3
-      emission: new THREE.Vector3
-      albedo: new THREE.Vector3 -1, -1, -1
-
-    if n = meshMaterial.refractiveIndex
-      materialProperties.refractiveIndex.set n.r, n.g, n.b
-
-    if k = meshMaterial.extinctionCoefficient
-      materialProperties.extinctionCoefficient.set k.r, k.g, k.b
-
-    if not (n or k) and shades and meshMaterial.shade?
-      # Create an albedo-based material.
-      materialProperties.refractiveIndex.set 1.5, 1.5, 1.5
-
-      color = shades[meshMaterial.shade]
-      linearColor = AS.Color.SRGB.getNormalizedRGBForGammaRGB color
-      materialProperties.albedo.set linearColor.r, linearColor.g, linearColor.b
-
-    if e = meshMaterial.emission
-      materialProperties.emission.set e.r, e.g, e.b
-
-    @_radianceState = new LOI.Engine.RadianceState @data, materialProperties
-
-    @_radianceState

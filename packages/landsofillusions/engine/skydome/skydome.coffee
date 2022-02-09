@@ -28,10 +28,9 @@ class LOI.Engine.Skydome extends AS.RenderObject
         type: THREE.FloatType
 
       @cubeCamera = new THREE.CubeCamera 1, 100, @cubeCameraRenderTarget
-      @cubeCamera.layers.set LOI.Engine.RenderLayers.Indirect
-
       @cubeTexture = @cubeCameraRenderTarget.texture
 
+    if @options.generateCubeTexture or @options.generateEnvironmentMap
       @cubeScene = new THREE.Scene()
       @cubeSceneSphereMaterial = @createMaterial()
       cubeSceneSphere = new THREE.Mesh @geometry, @cubeSceneSphereMaterial
@@ -40,13 +39,14 @@ class LOI.Engine.Skydome extends AS.RenderObject
       @cubeScene.add cubeSceneSphere
 
   updateTexture: (renderer) ->
-    # Optionally re-render the skydome to a cube texture.
     if @options.generateCubeTexture or @options.generateEnvironmentMap
       renderer.outputEncoding = THREE.LinearEncoding
       renderer.toneMapping = THREE.NoToneMapping
+
+    if @options.generateCubeTexture
       @cubeCamera.update renderer, @cubeScene
 
     if @options.generateEnvironmentMap
       @environmentMapGenerator ?= new THREE.PMREMGenerator renderer
-      @environmentMapRenderTarget = @environmentMapGenerator.fromCubemap @cubeTexture
+      @environmentMapRenderTarget = @environmentMapGenerator.fromScene @cubeScene
       @environmentMap = @environmentMapRenderTarget.texture

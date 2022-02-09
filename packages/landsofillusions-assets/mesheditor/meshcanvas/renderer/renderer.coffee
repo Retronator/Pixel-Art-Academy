@@ -20,13 +20,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @bounds = new AE.Rectangle()
 
-    @colorPassRenderTarget = new THREE.WebGLRenderTarget 1, 1, type: THREE.FloatType
-    @colorPassScreenQuad = new AS.ScreenQuad @colorPassRenderTarget.texture
-    
-    # Color pass needs to replace the pixels but leave the depth buffer intact.
-    @colorPassScreenQuad.material.depthWrite = false
-    @colorPassScreenQuad.material.depthTest = false
-
     @pixelRender = new @constructor.PixelRender @
     @sourceImage = new @constructor.SourceImage @
     @debugCluster = new @constructor.DebugCluster @
@@ -107,7 +100,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       console.log "Changing renderer size to", canvasPixelSize if LOI.Assets.debug
 
       @renderer.setSize canvasPixelSize.width, canvasPixelSize.height
-      @colorPassRenderTarget.setSize canvasPixelSize.width, canvasPixelSize.height
 
       @bounds.width canvasPixelSize.width
       @bounds.height canvasPixelSize.height
@@ -138,7 +130,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       interactive: 0.5
 
     @_lastRenderTime = Date.now()
-    @_radianceStatesToBeUpdated = []
 
     @globalRadianceUpdateTime = 0
     @globalRadianceUpdatePixelsUpdatedCount = 0
@@ -253,13 +244,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     if @meshCanvas.pixelRenderEnabled()
       # Render main geometry to the low-res render target.
+      @_setLinearRendering()
       @renderer.setRenderTarget @pixelRender.renderTarget
       @renderer.setClearColor 0, 0
       @renderer.clear()
       @renderer.render scene, camera.renderTarget
 
       # Present the low-res render directly to the screen.
-      @_setLinearRendering()
+      @_setToneMappedRendering()
       pixelRenderScene = @pixelRender.scene.withUpdates()
       @renderer.setRenderTarget null
       @renderer.render pixelRenderScene, camera.pixelRender

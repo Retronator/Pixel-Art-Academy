@@ -17,25 +17,27 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
     # Setup the environment skydomes.
+    photoSkydomeUpdatedDependency = new Tracker.Dependency
+
     @skydome =
       procedural: new LOI.Engine.Skydome.Procedural
+        addDirectionalLight: true
+        generateEnvironmentMap: true
         intensityFactors:
           star: 20
           scattering: 0.0013
 
       photo: new LOI.Engine.Skydome.Photo
+        generateEnvironmentMap: true
+        onLoaded: =>
+          photoSkydomeUpdatedDependency.changed()
 
     scene.add @skydome.procedural
     scene.add @skydome.photo
 
     @skydome.photo.rotation.y = Math.PI / 2
 
-    # Setup default lights.
-    ambientLight = new THREE.AmbientLight 0xffffff, 0.4
-    scene.add ambientLight
-
-    @directionalLights = new ReactiveField []
-    directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
+    directionalLight = @skydome.procedural.directionalLight
 
     directionalLight.castShadow = true
     d = 10
@@ -50,9 +52,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     shadow.mapSize.width = 4096
     shadow.mapSize.height = 4096
     shadow.bias = 0
-
-    scene.add directionalLight
-    @directionalLights [directionalLight]
 
     # Move light around.
     @lightDirectionHelper = @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @fileId
@@ -97,13 +96,20 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       @scene.updated()
 
     @autorun (computation) =>
-      return if @photoSkydomeUrl()
       return unless meshCanvas = @meshCanvas()
       return unless meshCanvas.isRendered()
 
-      # Update the skydome texture.
-      lightDirection = @lightDirectionHelper()
-      @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
+      if @photoSkydomeUrl()
+        photoSkydomeUpdatedDependency.depend()
+        @skydome.photo.updateTexture meshCanvas.renderer.renderer
+        scene.environment = @skydome.photo.environmentMap
+
+      else
+        lightDirection = @lightDirectionHelper()
+        @skydome.procedural.updateTexture meshCanvas.renderer.renderer, lightDirection
+        scene.environment = @skydome.procedural.environmentMap
+
+      @scene.updated()
 
     # Apply uniforms to new objects when they get added.
     @autorun (computation) =>
