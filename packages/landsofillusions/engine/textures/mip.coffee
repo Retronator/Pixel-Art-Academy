@@ -63,7 +63,7 @@ class LOI.Engine.Textures.Mip
 
     # Create data textures.
     @paletteColorTexture = new THREE.DataTexture spriteData.paletteColorData, spriteData.width, spriteData.height, THREE.RGBAFormat
-    @normalTexture = new THREE.DataTexture spriteData.normalData, spriteData.width, spriteData.height, THREE.RGBFormat
+    @normalTexture = new THREE.DataTexture spriteData.normalData, spriteData.width, spriteData.height, THREE.RGBAFormat
 
     @isPowerOf2 = spriteData.isPowerOf2
     console.warn "Mip textures must be power of 2" unless @isPowerOf2

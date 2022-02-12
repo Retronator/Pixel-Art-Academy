@@ -235,14 +235,15 @@ void main()	{
 
       for y in [0...bounds.height]
         for x in [0...bounds.width]
-          dataIndex = (x + y * bounds.width) * 3
+          dataIndex = (x + y * bounds.width) * 4
           normalMapIndex = normalMap.calculateDataIndex x, y
 
           textureData[dataIndex] = normalMap.signedData[normalMapIndex] + 127
           textureData[dataIndex + 1] = normalMap.signedData[normalMapIndex + 1] + 127
           textureData[dataIndex + 2] = normalMap.signedData[normalMapIndex + 2] + 127
+          textureData[dataIndex + 3] = 255
 
-      @normalMap = new THREE.DataTexture textureData, bounds.width, bounds.height, THREE.RGBFormat
+      @normalMap = new THREE.DataTexture textureData, bounds.width, bounds.height, THREE.RGBAFormat
       @normalMap.needsUpdate = true
       @uniforms.normalMap.value = @normalMap
       @needsUpdate = true

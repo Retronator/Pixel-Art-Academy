@@ -67,7 +67,7 @@ class LOI.Engine.Textures.Sprite
           spriteData.isPowerOf2 = (spriteData.width & (spriteData.width - 1)) is 0 and (spriteData.height & (spriteData.height - 1)) is 0
 
           spriteData.paletteColorData = new Uint8Array spriteData.width * spriteData.height * 4
-          spriteData.normalData = new Uint8Array spriteData.width * spriteData.height * 3
+          spriteData.normalData = new Uint8Array spriteData.width * spriteData.height * 4
           buffersChanged = true
 
         @_fillData sprite, spriteData.paletteColorData, spriteData.normalData
@@ -111,9 +111,10 @@ class LOI.Engine.Textures.Sprite
           paletteColorData[pixelIndex * 4 + 3] = 255
 
         if pixel.normal
-          normalData[pixelIndex * 3] = (pixel.normal.x + 1) * 127
-          normalData[pixelIndex * 3 + 1] = (pixel.normal.y + 1) * 127
-          normalData[pixelIndex * 3 + 2] = (pixel.normal.z + 1) * 127
+          normalData[pixelIndex * 4] = (pixel.normal.x + 1) * 127
+          normalData[pixelIndex * 4 + 1] = (pixel.normal.y + 1) * 127
+          normalData[pixelIndex * 4 + 2] = (pixel.normal.z + 1) * 127
+          normalData[pixelIndex * 4 + 3] = 255
 
   @depend: ->
     @_spriteDataCacheDependency.depend()
@@ -139,7 +140,7 @@ class LOI.Engine.Textures.Sprite
 
     # Create data textures.
     @paletteColorTexture = new THREE.DataTexture spriteData.paletteColorData, spriteData.width, spriteData.height, THREE.RGBAFormat
-    @normalTexture = new THREE.DataTexture spriteData.normalData, spriteData.width, spriteData.height, THREE.RGBFormat
+    @normalTexture = new THREE.DataTexture spriteData.normalData, spriteData.width, spriteData.height, THREE.RGBAFormat
 
     @isPowerOf2 = spriteData.isPowerOf2
 

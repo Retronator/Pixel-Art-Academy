@@ -40,12 +40,13 @@ struct LightVisibility {
 uniform LightVisibility lightVisibility;
 
 // Texture
-#include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 #ifdef USE_MAP
   #include <uv_pars_fragment>
   #include <map_pars_fragment>
   #include <normalmap_pars_fragment>
 #endif
+
+#include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 
 // Illumination state
 #ifdef USE_ILLUMINATION_STATE
