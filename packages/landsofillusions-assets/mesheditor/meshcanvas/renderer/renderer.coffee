@@ -231,7 +231,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     camera = @cameraManager.camera.withUpdates()
 
     # Enable/disable updating of shadow map.
-    shadowsEnabled = @meshCanvas.interface.getHelperForActiveFile(LOI.Assets.MeshEditor.Helpers.LightShadowsEnabled)()
+    shadowsEnabled = @meshCanvas.interface.getHelper(LOI.Assets.MeshEditor.Helpers.LightShadowsEnabled)()
     @renderer.shadowMap.enabled = shadowsEnabled
     @renderer.shadowMap.needsUpdate = shadowsEnabled
 

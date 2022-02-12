@@ -16,6 +16,9 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
+    @lightSourcesHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightSources
+    @lightVisibilityHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightVisibility, @fileId
+
     # Setup the environment skydomes.
     photoSkydomeUpdatedDependency = new Tracker.Dependency
 
@@ -42,6 +45,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
 
     @autorun (computation) =>
       scene.environment = @environmentMap()
+      @scene.updated()
 
     directionalLight = @skydome.procedural.directionalLight
 
@@ -67,8 +71,6 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     ,
       (a, b) => a is b
 
-    @lightSourcesHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightSources
-
     @autorun (computation) =>
       # Set the new position.
       lightDirection = @lightDirectionHelper()
@@ -87,6 +89,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       photoSkydomeUrl = @photoSkydomeUrl()
 
       if photoSkydomeUrl
+        # Load the photo skydome.
         @skydome.photo.loadFromUrl photoSkydomeUrl
 
       # Enable the correct skydome. We need to have a proper boolean so
@@ -94,7 +97,10 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       @skydome.procedural.visible = not photoSkydomeUrl
       @skydome.photo.visible = photoSkydomeUrl?
 
-      # See if the sphere in the final render should be visible.
+      @scene.updated()
+
+    @autorun (computation) =>
+      # Set if the sphere in the final render should be visible (the indirect sphere needs to be visible in any case).
       skydomeVisible = @meshCanvas()?.skydomeVisible()
       @skydome.procedural.sphere.visible = skydomeVisible
       @skydome.photo.sphere.visible = skydomeVisible
@@ -172,6 +178,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     cameraParallelProjection: cameraParallelProjection or false
     cameraDirection: cameraDirection or new THREE.Vector3
     envMap: @environmentMap()
+    lightVisibility: @lightVisibilityHelper.toObject()
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()

@@ -6,6 +6,7 @@ class LOI.Assets.MeshEditor.Helpers.LightVisibility extends FM.Helper
   # directSubsurface: boolean whether to show direct light scattered from materials
   # indirectSurface: boolean whether to show the indirect reflected from surfaces
   # indirectSubsurface: boolean whether to show the indirect scattered from materials
+  # emissive: boolean whether to show light emitting from materials
   @id: -> 'LandsOfIllusions.Assets.MeshEditor.Helpers.LightVisibility'
   @initialize()
 
@@ -20,3 +21,14 @@ class LOI.Assets.MeshEditor.Helpers.LightVisibility extends FM.Helper
 
   indirectSubsurface: -> @data.get('indirectSubsurface') ? true
   setIndirectSubsurface: (value) -> @data.set 'indirectSubsurface', value
+
+  emissive: -> @data.get('emissive') ? true
+  setEmissive: (value) -> @data.set 'emissive', value
+
+  toObject: ->
+    _.defaults @data.value(),
+      directSurface: true
+      directSubsurface: true
+      indirectSurface: true
+      indirectSubsurface: true
+      emissive: true

@@ -88,6 +88,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/mapfield');
   api.addFile('documents/mesh/cameraangle');
   api.addFile('documents/mesh/material');
+  api.addFile('documents/mesh/material-physical');
   api.addFile('documents/mesh/materialproperties');
   api.addFile('documents/mesh/lightmapareaproperties');
 
@@ -358,6 +359,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/uniformclusters');
   api.addFile('mesheditor/actions/showindirectlayer');
   api.addFile('mesheditor/actions/showskydome');
+  api.addFile('mesheditor/actions/comparetophysicalmaterial');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');

@@ -23,19 +23,20 @@ class LOI.Engine.Textures.MaterialProperties extends LOI.Engine.Textures.Propert
 
     for materialPropertiesEntry, materialIndex in materialProperties.getAll()
       if materialPropertiesEntry.paletteColor
-        material = _.clone materialPropertiesEntry.paletteColor
+        options = LOI.Assets.Mesh.Material.createUniversalMaterialOptions materialPropertiesEntry.paletteColor
 
       else if materialPropertiesEntry.materialIndex?
         material = materials[materialPropertiesEntry.materialIndex]
+        options = material.toUniversalMaterialOptions()
 
-      @_writeToData materialIndex, @constructor.propertyIndices.paletteColor, material.ramp, material.shade
-      @_writeToData materialIndex, @constructor.propertyIndices.dither, material.dither
-      @_writeToData materialIndex, @constructor.propertyIndices.reflectionProperties, material.reflection?.intensity ? 0, material.reflection?.shininess ? 1, material.reflection?.smoothFactor ? 0
-      @_writeToData materialIndex, @constructor.propertyIndices.translucency, material.translucency?.amount ? 0, material.translucency?.dither ? 0, material.translucency?.tint ? false
-      @_writeToData materialIndex, @constructor.propertyIndices.translucencyShadow, material.translucency?.shadow?.dither ? material.translucency?.dither ? 0, material.translucency?.shadow?.tint ? false
-      @_writeToData materialIndex, @constructor.propertyIndices.reflectance, material.reflectance?.r ? 0, material.reflectance?.g ? 0, material.reflectance?.b ? 0, if material.reflectance then 1 else 0
-      @_writeToData materialIndex, @constructor.propertyIndices.emission, material.emission?.r ? 0, material.emission?.g ? 0, material.emission?.b ? 0
-      @_writeToData materialIndex, @constructor.propertyIndices.refractiveIndex, material.refractiveIndex?.r ? 0, material.refractiveIndex?.g ? 0, material.refractiveIndex?.b ? 0
-      @_writeToData materialIndex, @constructor.propertyIndices.structure, material.surfaceRoughness ? 1, material.subsurfaceHeterogeneity ? 1, material.conductivity ? 0
+      @_writeToData materialIndex, @constructor.propertyIndices.paletteColor, options.ramp, options.shade
+      @_writeToData materialIndex, @constructor.propertyIndices.dither, options.dither
+      @_writeToData materialIndex, @constructor.propertyIndices.reflectionProperties, options.reflection.intensity, options.reflection.shininess, options.reflection.smoothFactor
+      @_writeToData materialIndex, @constructor.propertyIndices.translucency, options.translucency.amount, options.translucency.dither, options.translucency.tint
+      @_writeToData materialIndex, @constructor.propertyIndices.translucencyShadow, options.translucency.shadow.dither ? options.translucency.dither, options.translucency.shadow.tint
+      @_writeToData materialIndex, @constructor.propertyIndices.reflectance, options.reflectance.r, options.reflectance.g, options.reflectance.b
+      @_writeToData materialIndex, @constructor.propertyIndices.emission, options.emission.r, options.emission.g, options.emission.b
+      @_writeToData materialIndex, @constructor.propertyIndices.refractiveIndex, options.refractiveIndex.r, options.refractiveIndex.g, options.refractiveIndex.b
+      @_writeToData materialIndex, @constructor.propertyIndices.structure, options.surfaceRoughness, options.subsurfaceHeterogeneity, options.conductivity
 
     @needsUpdate = true

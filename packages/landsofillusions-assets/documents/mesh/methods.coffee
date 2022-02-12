@@ -121,6 +121,10 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       extinctionCoefficient: Match.OptionalOrNull rgbPattern
       temperature: Match.OptionalOrNull Number
       emission: Match.OptionalOrNull rgbPattern
+      reflectance: Match.OptionalOrNull rgbPattern
+      surfaceRoughness: Match.OptionalOrNull Number
+      subsurfaceHeterogeneity: Match.OptionalOrNull Number
+      conductivity: Match.OptionalOrNull Number
       texture: Match.Optional
         spriteId: Match.OptionalOrNull Match.DocumentId
         spriteName: Match.OptionalOrNull String

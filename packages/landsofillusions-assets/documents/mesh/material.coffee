@@ -1,7 +1,9 @@
-AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.Material
+  @createUniversalMaterialOptions: (material) ->
+    return _.defaultsDeep {}, material, LOI.Engine.Materials.UniversalMaterial.defaults
+
   constructor: (@materials, @index, data) ->
     @_updatedDependency = new Tracker.Dependency
 
@@ -23,5 +25,5 @@ class LOI.Assets.Mesh.Material
     @_updatedDependency.changed()
     @materials.contentUpdated()
 
-  _createVector: (vectorData = {}) ->
-    new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
+  toUniversalMaterialOptions: -> @constructor.createUniversalMaterialOptions this
+  toPhysicalMaterialParameters: (palette) -> @constructor.createPhysicalMaterialParameters this, palette

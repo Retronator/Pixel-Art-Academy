@@ -28,6 +28,17 @@ varying vec3 vViewPosition;
 
 #include <LandsOfIllusions.Engine.Materials.physicalMaterialParametersFragment>
 
+// Light visibility
+struct LightVisibility {
+  bool directSurface;
+  bool directSubsurface;
+  bool indirectSurface;
+  bool indirectSubsurface;
+  bool emissive;
+};
+
+uniform LightVisibility lightVisibility;
+
 // Texture
 #include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 #ifdef USE_MAP
@@ -154,14 +165,16 @@ void main() {
   #include <lights_fragment_maps>
   #include <lights_fragment_end>
 
-  vec3 totalDiffuseRadiance = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
-  vec3 totalSpecularRadiance = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+  // Sum the total outgoing radiance.
+  vec3 totalRadiance;
+  if (lightVisibility.directSurface) totalRadiance += reflectedLight.directSpecular;
+  if (lightVisibility.directSubsurface) totalRadiance += reflectedLight.directDiffuse;
+  if (lightVisibility.indirectSurface) totalRadiance += reflectedLight.indirectSpecular;
+  if (lightVisibility.indirectSubsurface) totalRadiance += reflectedLight.indirectDiffuse;
 
   // Add light emmited from the material.
   vec3 totalEmissiveRadiance = readMaterialProperty3(materialPropertyEmission);
-
-  // Sum the total outgoing radiance.
-  vec3 totalRadiance = totalDiffuseRadiance + totalSpecularRadiance + totalEmissiveRadiance;
+  if (lightVisibility.emissive) totalRadiance += totalEmissiveRadiance;
 
   // Output the radiance.
   gl_FragColor = vec4(totalRadiance, 1.0);

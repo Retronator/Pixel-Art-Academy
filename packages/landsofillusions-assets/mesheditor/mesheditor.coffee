@@ -96,6 +96,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.MeshEditor.Actions.DirectSubsurfaceScatteringVisible.id()
           LOI.Assets.MeshEditor.Actions.IndirectSurfaceReflectionsVisible.id()
           LOI.Assets.MeshEditor.Actions.IndirectSubsurfaceScatteringVisible.id()
+          LOI.Assets.MeshEditor.Actions.EmissiveVisible.id()
           null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()
@@ -110,6 +111,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
           LOI.Assets.MeshEditor.Actions.DebugMode.id()
+          LOI.Assets.MeshEditor.Actions.CompareToPhysicalMaterial.id()
           LOI.Assets.MeshEditor.Actions.ShowIndirectLayer.id()
         ]
       ,

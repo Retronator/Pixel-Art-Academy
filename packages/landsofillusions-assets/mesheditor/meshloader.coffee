@@ -68,6 +68,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @lightVisibilityHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightVisibility, @fileId
     @restrictColorsHelper = @interface.getHelper LOI.Assets.MeshEditor.Helpers.RestrictColors
     @uniformClustersHelper = @interface.getHelper LOI.Assets.MeshEditor.Helpers.UniformClusters
+    @compareToPhysicalMaterialData = @interface.getOperator(LOI.Assets.MeshEditor.Actions.CompareToPhysicalMaterial).data
 
     # Create the engine mesh.
     @mesh = new LOI.Assets.Engine.Mesh
@@ -81,6 +82,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       lightVisibility: @lightVisibilityHelper
       restrictColors: @restrictColorsHelper
       uniformClusters: @uniformClustersHelper
+      compareToPhysicalMaterial: @compareToPhysicalMaterialData.value
 
     # Add mesh to the scene.
     @sceneHelper.scene().add @mesh

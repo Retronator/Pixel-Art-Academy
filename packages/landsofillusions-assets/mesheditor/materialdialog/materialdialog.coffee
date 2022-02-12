@@ -399,22 +399,106 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
       if value
         materialClass = AR.Chemistry.Materials.getClassForId value
-        refractiveIndexRGB = new AR.Optics.Spectrum.RGB().copyFactor materialClass.getRefractiveIndexSpectrum()
+        refractiveIndexSpectrum = materialClass.getRefractiveIndexSpectrum()
+        extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
+
+        refractiveIndexRGB = new AR.Optics.Spectrum.RGB().copyFactor refractiveIndexSpectrum
 
         extinctionCoefficientRGB = new AR.Optics.Spectrum.RGB()
-        if extinctionCoefficientSpectrum = materialClass.getExtinctionCoefficientSpectrum()
-          extinctionCoefficientRGB.copyFactor extinctionCoefficientSpectrum
+        extinctionCoefficientRGB.copyFactor extinctionCoefficientSpectrum if extinctionCoefficientSpectrum
+
+        reflectanceSpectrum = new AR.Optics.Spectrum.Formulated (wavelength) =>
+          refractiveIndex = refractiveIndexSpectrum.getValue wavelength
+          extinctionCoefficient = extinctionCoefficientSpectrum?.getValue wavelength
+          AR.Optics.FresnelEquations.getReflectance 0, 1, refractiveIndex, 0, extinctionCoefficient
+
+        reflectanceRGB = new AR.Optics.Spectrum.RGB().copyFactor reflectanceSpectrum
 
         material.update
           materialClass: value
           refractiveIndex: refractiveIndexRGB.toObject()
           extinctionCoefficient: extinctionCoefficientRGB.toObject()
+          reflectance: reflectanceRGB.toObject()
+          conductivity: _.clamp extinctionCoefficientRGB.r(), 0, 1
 
       else
         material.update
           materialClass: null
           refractiveIndex: null
           extinctionCoefficient: null
+          reflectance: null
+          conductivity: null
+
+  class @Conductor extends @MaterialProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Conductor'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'conductivity'
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    save: (value) ->
+      material = @data()
+      material.update conductivity: if value then 1 else 0
+
+  class @RefractiveIndex extends @MaterialProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.RefractiveIndex'
+
+    constructor: ->
+      super arguments...
+
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 1.5
+      @customAttributes =
+        min: 0
+        max: 3
+        step: 0.1
+
+    load: ->
+      material = @data()
+      material.refractiveIndex?.r
+
+    save: (value) ->
+      material = @data()
+
+      if value = _.parseFloatOrNull value
+        material.update
+          refractiveIndex:
+            r: value
+            g: 0
+            b: 0
+
+      else
+        material.update refractiveIndex: null
+
+  class @SurfaceRoughness extends @MaterialProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.SurfaceRoughness'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'surfaceRoughness'
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 1
+      @customAttributes =
+        min: 0
+        max: 1
+        step: 0.1
+
+  class @SubsurfaceHeterogeneity extends @MaterialProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.SubsurfaceHeterogeneity'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'subsurfaceHeterogeneity'
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 1
+      @customAttributes =
+        min: 0
+        max: 1
+        step: 0.1
 
   class @Temperature extends @MaterialProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Temperature'

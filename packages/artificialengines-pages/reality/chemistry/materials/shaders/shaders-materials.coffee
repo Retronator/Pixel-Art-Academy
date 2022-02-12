@@ -64,6 +64,8 @@ class AR.Pages.Chemistry.Materials.Shaders extends AR.Pages.Chemistry.Materials.
         refractiveIndex: refractiveIndexRGB.toObject()
         subsurfaceHeterogeneity: @subsurfaceHeterogeneity()
         conductivity: @conductivity()
+        toUniversalMaterialOptions: ->
+          LOI.Assets.Mesh.Material.createUniversalMaterialOptions @
 
       materials = for sphere, index in @spheres
         _.defaultsDeep

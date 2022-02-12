@@ -133,11 +133,12 @@ void RE_Direct_Physical(const in IncidentLight directLight, const in GeometricCo
 }
 
 void RE_IndirectDiffuse_Physical(const in vec3 irradiance, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight) {
+  // Indirect diffuse light from a lightmap accumulates here.
   reflectedLight.indirectDiffuse += irradiance * BRDF_Lambert(material.diffuseColor);
 }
 
 void RE_IndirectSpecular_Physical(const in vec3 radiance, const in vec3 irradiance, const in vec3 clearcoatRadiance, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight) {
-  // Both indirect specular and indirect diffuse light accumulate here
+  // Both indirect specular and indirect diffuse IBL accumulate here.
   vec3 singleScattering = vec3(0.0);
   vec3 multiScattering = vec3(0.0);
   vec3 cosineWeightedIrradiance = irradiance * RECIPROCAL_PI;

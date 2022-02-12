@@ -146,6 +146,7 @@ Package.onUse(function(api) {
   api.addMaterial('engine/materials/shadowcolormaterial..');
   api.addMaterial('engine/materials/preprocessingmaterial..');
   api.addMaterial('engine/materials/universalmaterial..');
+  api.addClientFile('engine/materials/universalmaterial/universalmaterial-defaults');
 
   api.addGlsl('engine/materials/shaderchunks/palette/palette-parameters-fragment');
   api.addGlsl('engine/materials/shaderchunks/palette/quantizeshadedcolor-fragment');

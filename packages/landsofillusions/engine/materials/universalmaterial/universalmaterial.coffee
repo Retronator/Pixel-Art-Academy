@@ -92,6 +92,15 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
           value: null
         envMapIntensity:
           value: 1
+
+        # Light visibility
+        lightVisibility:
+          value:
+            directSurface: true
+            directSubsurface: true
+            indirectSurface: true
+            indirectSubsurface: true
+            emissive: true
       ,
         # Texture
         LOI.Engine.Materials.UniversalMaterial.getTextureUniforms options

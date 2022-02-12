@@ -35,10 +35,4 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.DebugCluster
       @clusterImage.position.y = bounds.y + bounds.height / 2
       @clusterImage.position.z = -1
 
-      # Set cluster radiance map to material.
-      sceneCluster = currentClusterHelper.getSceneCluster()
-      if radianceState = sceneCluster?.radianceState()
-        @clusterImage.material.map = radianceState.radianceAtlas.out.texture
-        @clusterImage.material.needsUpdate = true
-
       @scene.updated()

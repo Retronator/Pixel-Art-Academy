@@ -57,3 +57,16 @@ class LOI.Assets.MeshEditor.Actions.IndirectSubsurfaceScatteringVisible extends 
   execute: ->
     helper = @_helper()
     helper.setIndirectSubsurface not helper.indirectSubsurface()
+
+class LOI.Assets.MeshEditor.Actions.EmissiveVisible extends LOI.Assets.MeshEditor.Actions.LightVisibility
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Actions.EmissiveVisible'
+  @displayName: -> "Show emissive light"
+
+  @initialize()
+
+  active: ->
+    @_helper()?.emissive()
+
+  execute: ->
+    helper = @_helper()
+    helper.setEmissive not helper.emissive()

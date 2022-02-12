@@ -1,4 +1,5 @@
 AS = Artificial.Spectrum
+AR = Artificial.Reality
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
@@ -96,6 +97,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     options = @layer.object.mesh.options
     visualizeNormals = options.visualizeNormals?()
+    compareToPhysicalMaterial = options.compareToPhysicalMaterial?()
 
     materialOptions =
       wireframe: options.debug?() or false
@@ -139,8 +141,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       material = new THREE.MeshBasicMaterial _.extend materialOptions,
         color: THREE.Color.fromObject directColor
 
+    else if compareToPhysicalMaterial
+      # We want to use three.js' Physical Material
+      parameters = LOI.Assets.Mesh.Material.createPhysicalMaterialParameters meshMaterial, palette
+      material = new THREE.MeshPhysicalMaterial parameters
+
     else
-      # See if we have correct properties for a ramp material.
+      # See if we have correct properties for a universal material.
       if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
         shades = palette.ramps[meshMaterial.ramp]?.shades
 
@@ -161,10 +168,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
           material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
           depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
-
-          material = new THREE.MeshPhysicalMaterial
-            color: THREE.Color.fromObject THREE.Color.fromObject shades[meshMaterial.shade]
-            roughness: 1
 
       else if clusterMaterial.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
