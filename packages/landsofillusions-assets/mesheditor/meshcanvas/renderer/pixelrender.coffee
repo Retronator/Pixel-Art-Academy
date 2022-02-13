@@ -21,32 +21,31 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
     @picture = new THREE.Mesh geometry, material
     scene.add @picture
 
-    @size = new ReactiveField null
+    @bounds = new AE.Rectangle
 
     @renderer.meshCanvas.autorun (computation) =>
-      return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
+      return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds.toObject()
       return unless viewportBounds.width
 
-      topLeft =
-        x: Math.floor viewportBounds.left
-        y: Math.floor viewportBounds.top
+      Tracker.nonreactive =>
+        dimensions =
+          top: Math.floor viewportBounds.top
+          left: Math.floor viewportBounds.left
+          bottom: Math.ceil viewportBounds.bottom
+          right: Math.ceil viewportBounds.right
 
-      bottomRight =
-        x: Math.ceil viewportBounds.right
-        y: Math.ceil viewportBounds.bottom
+        @bounds.fromDimensions dimensions
 
-      width = bottomRight.x - topLeft.x
-      height = bottomRight.y - topLeft.y
+        @renderTarget.setSize @bounds.width(), @bounds.height()
+        center = @bounds.center()
 
-      @size {width, height}
+        @picture.scale.x = @bounds.width()
+        @picture.scale.y = -@bounds.height()
+        @picture.scale.z = -1
+        @picture.position.x = center.x
+        @picture.position.y = center.y
+        @picture.position.z = -1
 
-      @renderTarget.setSize width, height
+        console.log "Pixel render updated", viewportBounds, @bounds.toObject(), @picture.scale, @picture.position if LOI.Assets.debug
 
-      @picture.scale.x = width
-      @picture.scale.y = -height
-      @picture.scale.z = -1
-      @picture.position.x = topLeft.x + width / 2
-      @picture.position.y = topLeft.y + height / 2
-      @picture.position.z = -1
-
-      @scene.updated()
+        @scene.updated()

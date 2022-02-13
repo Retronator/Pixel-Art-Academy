@@ -27,12 +27,20 @@ class AE.Rectangle
   @_fromDimensions: (dimensions) ->
     left = dimensions.x ? dimensions.left
     top = dimensions.y ? dimensions.top
+
     x: left ? dimensions.right - dimensions.width
     y: top ? dimensions.bottom - dimensions.height
     width: dimensions.width ? dimensions.right - dimensions.left
     height: dimensions.height ? dimensions.bottom - dimensions.top
 
   # Dimensions
+
+  fromDimensions: (dimensions) ->
+    values = @constructor._fromDimensions dimensions
+    @x values.x
+    @y values.y
+    @width values.width
+    @height values.height
 
   left: (value) ->
     @x value if value?

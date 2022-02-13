@@ -19,7 +19,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.autoClearColor = false
     @renderer.autoClearDepth = false
 
-    @bounds = new AE.Rectangle()
+    @bounds = new AE.Rectangle
 
     @pixelRender = new @constructor.PixelRender @
     @sourceImage = new @constructor.SourceImage @
@@ -79,20 +79,11 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderSize = new ComputedField =>
       if @meshCanvas.pixelRenderEnabled()
         # We're rendering the main view at the size of the pixel render.
-        @pixelRender.size()
+        @pixelRender.bounds.toDimensions()
 
       else
         # We're rendering at the full renderer size.
         @bounds.toDimensions()
-
-    @preprocessingRenderTarget = new THREE.WebGLRenderTarget 16, 16,
-      minFilter: THREE.NearestFilter
-      magFilter: THREE.NearestFilter
-
-    # Resize the preprocessing render target when render size changes.
-    @meshCanvas.autorun =>
-      return unless renderSize = @renderSize()
-      @preprocessingRenderTarget.setSize renderSize.width, renderSize.height
 
     # Resize the renderer when canvas size changes.
     @meshCanvas.autorun =>
@@ -100,7 +91,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
       console.log "Changing renderer size to", canvasPixelSize if LOI.Assets.debug
 
-      @renderer.setSize canvasPixelSize.width, canvasPixelSize.height
+      @renderer.setSize canvasPixelSize.width, canvasPixelSize.height, false
 
       @bounds.width canvasPixelSize.width
       @bounds.height canvasPixelSize.height
@@ -254,6 +245,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @_setToneMappedRendering()
       pixelRenderScene = @pixelRender.scene.withUpdates()
       @renderer.setRenderTarget null
+      @renderer.clearColor()
       @renderer.render pixelRenderScene, camera.pixelRender
 
     @_setLinearRendering()

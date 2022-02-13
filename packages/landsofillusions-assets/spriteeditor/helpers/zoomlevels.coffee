@@ -6,4 +6,4 @@ class LOI.Assets.SpriteEditor.Helpers.ZoomLevels extends FM.Helper
   @initialize()
 
   value: ->
-    @data.value() or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
+    @data.value() or [12.5, 25, 50, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]

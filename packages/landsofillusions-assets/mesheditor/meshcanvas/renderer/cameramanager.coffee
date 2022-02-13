@@ -46,36 +46,35 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
       @reset()
 
     @renderer.meshCanvas.autorun (computation) =>
-      return unless viewportBoundsRectangle = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds
-
-      viewportBounds.left = viewportBoundsRectangle.left()
-      viewportBounds.right = viewportBoundsRectangle.right()
-      viewportBounds.top = viewportBoundsRectangle.top()
-      viewportBounds.bottom = viewportBoundsRectangle.bottom()
+      return unless pixelCanvasCamera = @renderer.meshCanvas.pixelCanvas.camera()
+      return unless viewportBounds = pixelCanvasCamera.viewportBounds.toObject()
       @_updateProjectionMatrix viewportBounds, @_camera
 
-      renderTargetViewportBounds.left = Math.floor viewportBounds.left
-      renderTargetViewportBounds.right = Math.ceil viewportBounds.right
-      renderTargetViewportBounds.top = Math.floor viewportBounds.top
-      renderTargetViewportBounds.bottom = Math.ceil viewportBounds.bottom
-      @_updateProjectionMatrix renderTargetViewportBounds, @_renderTargetCamera
+      return unless pixelRenderBounds = @renderer.pixelRender.bounds.toObject()
+      @_updateProjectionMatrix pixelRenderBounds, @_renderTargetCamera
 
-      @_pixelRenderCamera.left = viewportBounds.left
-      @_pixelRenderCamera.right = viewportBounds.right
-      @_pixelRenderCamera.top = viewportBounds.top
-      @_pixelRenderCamera.bottom = viewportBounds.bottom
+      # We want the window pixels to align with the edges of canvas
+      # pixels to prevent sampling artifacts in the pixel render.
+      effectiveScale = pixelCanvasCamera.effectiveScale()
+      left = Math.round(viewportBounds.left * effectiveScale) / effectiveScale
+      top = Math.round(viewportBounds.top * effectiveScale) / effectiveScale
+
+      @_pixelRenderCamera.left = left
+      @_pixelRenderCamera.right = left + viewportBounds.width
+      @_pixelRenderCamera.top = top
+      @_pixelRenderCamera.bottom = top + viewportBounds.height
       @_pixelRenderCamera.updateProjectionMatrix()
 
-      console.log "Viewport bounds changed", viewportBounds, renderTargetViewportBounds, @_pixelRenderCamera if LOI.Assets.debug
+      console.log "Viewport bounds changed", viewportBounds, pixelRenderBounds, @_pixelRenderCamera if LOI.Assets.debug
 
       @camera.updated()
 
-  _updateProjectionMatrix: (viewportBounds, _camera) ->
+  _updateProjectionMatrix: (viewportBounds, camera) ->
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
     return unless cameraAngle.pixelSize
 
-    cameraAngle.getProjectionMatrixForViewport viewportBounds, _camera.projectionMatrix
-    _camera.projectionMatrixInverse.copy(_camera.projectionMatrix).invert()
+    cameraAngle.getProjectionMatrixForViewport viewportBounds, camera.projectionMatrix
+    camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert()
 
   _setVector: (vector, vectorData = {}) ->
     vector[field] = vectorData[field] or 0 for field in ['x', 'y', 'z']
