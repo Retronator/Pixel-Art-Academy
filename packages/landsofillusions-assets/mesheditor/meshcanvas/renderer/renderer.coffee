@@ -227,7 +227,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.shadowMap.needsUpdate = shadowsEnabled
 
     @_setToneMappedRendering()
-    camera.main.layers.set LOI.Engine.RenderLayers.FinalRender
+    renderLayer = if @meshCanvas.indirectLayerOnly() then LOI.Engine.RenderLayers.Indirect else LOI.Engine.RenderLayers.FinalRender
+    camera.main.layers.set renderLayer
     @renderer.setClearColor 0, 0
     @renderer.setRenderTarget null
     @renderer.clear()
@@ -236,6 +237,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     if @meshCanvas.pixelRenderEnabled()
       # Render main geometry to the low-res render target.
       @_setLinearRendering()
+      camera.renderTarget.layers.set renderLayer
       @renderer.setRenderTarget @pixelRender.renderTarget
       @renderer.setClearColor 0, 0
       @renderer.clear()
