@@ -101,6 +101,12 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
             indirectSurface: true
             indirectSubsurface: true
             emissive: true
+
+        # Color restrictions
+        restrictColors:
+          value:
+            ramps: false
+            shades: false
       ,
         # Texture
         LOI.Engine.Materials.UniversalMaterial.getTextureUniforms options

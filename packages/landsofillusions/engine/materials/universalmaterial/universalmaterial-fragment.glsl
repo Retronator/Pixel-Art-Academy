@@ -39,6 +39,14 @@ struct LightVisibility {
 
 uniform LightVisibility lightVisibility;
 
+// Color restrictions
+struct RestrictColors {
+  bool ramps;
+  bool shades;
+};
+
+uniform RestrictColors restrictColors;
+
 // Texture
 #ifdef USE_MAP
   #include <uv_pars_fragment>
@@ -176,6 +184,11 @@ void main() {
   // Add light emmited from the material.
   vec3 totalEmissiveRadiance = readMaterialProperty3(materialPropertyEmission);
   if (lightVisibility.emissive) totalRadiance += totalEmissiveRadiance;
+
+  // Restrict to palette colors.
+  if (restrictColors.ramps) {
+    totalRadiance = boundColorToPaletteRamp(totalRadiance, paletteColor.r, shadingDither, !restrictColors.shades);
+  }
 
   // Output the radiance.
   gl_FragColor = vec4(totalRadiance, 1.0);

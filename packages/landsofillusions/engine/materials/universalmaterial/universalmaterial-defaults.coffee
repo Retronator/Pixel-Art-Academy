@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 LOI.Engine.Materials.UniversalMaterial.defaults =
   ramp: 0
   shade: 0
-  dither: 1
+  dither: 0
   reflection:
     intensity: 0
     shininess: 1

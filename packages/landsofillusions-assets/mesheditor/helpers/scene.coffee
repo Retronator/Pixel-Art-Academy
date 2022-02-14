@@ -17,6 +17,8 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
     @lightSourcesHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightSources
+    @restrictColorsHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.RestrictColors
+
     @lightVisibilityHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightVisibility, @fileId
 
     # Setup the environment skydomes.
@@ -179,6 +181,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     cameraDirection: cameraDirection or new THREE.Vector3
     envMap: @environmentMap()
     lightVisibility: @lightVisibilityHelper.toObject()
+    restrictColors: @restrictColorsHelper.toObject()
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()

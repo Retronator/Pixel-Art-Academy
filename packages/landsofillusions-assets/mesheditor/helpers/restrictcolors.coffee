@@ -12,3 +12,8 @@ class LOI.Assets.MeshEditor.Helpers.RestrictColors extends FM.Helper
 
   shades: -> @data.get('shades') ? false
   setShades: (value) -> @data.set 'shades', value
+
+  toObject: ->
+    _.defaults @data.value(),
+      ramps: false
+      shades: false
