@@ -46,14 +46,16 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     @environmentMap = new ReactiveField null
 
     @autorun (computation) =>
-      scene.environment = @environmentMap()
+      environmentMapsEnabled = @lightSourcesHelper.environmentMaps()
+      scene.environment = if environmentMapsEnabled then @environmentMap() else null
+
       @scene.updated()
 
     directionalLight = @skydome.procedural.directionalLight
 
     directionalLight.castShadow = true
     d = 10
-    
+
     shadow = directionalLight.shadow
     shadow.camera.left = -d
     shadow.camera.right = d
@@ -106,6 +108,13 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       skydomeVisible = @meshCanvas()?.skydomeVisible()
       @skydome.procedural.sphere.visible = skydomeVisible
       @skydome.photo.sphere.visible = skydomeVisible
+
+      @scene.updated()
+
+    @autorun (computation) =>
+      # Enable direct light in the skydome if geometric lights are enabled.
+      lightsEnabled = @lightSourcesHelper.lights()
+      @skydome.procedural.directionalLight.visible = lightsEnabled
 
       @scene.updated()
 
@@ -175,11 +184,13 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       if cameraParallelProjection
         cameraDirection = currentCameraAngle.getCameraDirection()
 
+    environmentMapsEnabled = @lightSourcesHelper.environmentMaps()
+
     renderSize: new THREE.Vector2 renderSize.width, renderSize.height
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
     cameraParallelProjection: cameraParallelProjection or false
     cameraDirection: cameraDirection or new THREE.Vector3
-    envMap: @environmentMap()
+    envMap: if environmentMapsEnabled then @environmentMap() else null
     lightVisibility: @lightVisibilityHelper.toObject()
     restrictColors: @restrictColorsHelper.toObject()
 
