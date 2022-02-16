@@ -59,7 +59,6 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       # Signal change from server.
       @_meshDataDependency.changed()
 
-    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
     @sceneHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, @fileId
     @debugModeData = @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).data
     @currentClusterHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @fileId
@@ -73,7 +72,6 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     # Create the engine mesh.
     @mesh = new LOI.Assets.Engine.Mesh
       meshData: @meshData
-      visualizeNormals: @paintNormalsData.value
       sceneManager: @sceneHelper
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster

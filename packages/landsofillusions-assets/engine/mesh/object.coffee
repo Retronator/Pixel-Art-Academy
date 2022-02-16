@@ -74,9 +74,9 @@ class LOI.Assets.Engine.Mesh.Object extends AS.RenderObject
           # Do not draw edges of unselected clusters in debug mode.
           continue if currentCluster and currentCluster not in [edge.clusterA.layerCluster, edge.clusterB.layerCluster]
 
-          lineSegments = edge.getLineSegments @data.mesh.cameraAngles.get 0
-          lineSegments.layers.set 2
-          @add lineSegments
+          if lineSegments = edge.getLineSegments @data.mesh.cameraAngles.get 0
+            lineSegments.layers.set LOI.Assets.MeshEditor.RenderLayers.Wireframe
+            @add lineSegments
 
           lineSegments.position.copy(@position).negate()
           edgeLineSegments.push lineSegments

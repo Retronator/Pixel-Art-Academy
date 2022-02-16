@@ -8,13 +8,14 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     @geometry = new ComputedField => @_generateGeometry()
     @materials = new ComputedField => @_generateMaterials()
-    @mesh = new ComputedField => @_generateMesh()
+    @meshes = new ComputedField => @_generateMeshes()
+    @points = new ComputedField => @_generatePoints()
 
     @ready = new ComputedField =>
       _.every [
         @geometry()
         @materials()
-        @mesh()
+        @meshes()
       ]
 
     @boundingBox = new ComputedField =>
@@ -25,17 +26,18 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       # Clean up previous children.
       @remove @children[0] while @children.length
 
-      # Add the new mesh.
-      if mesh = @mesh()
-        @add mesh
-
       options = @layer.object.mesh.options
 
-      if options.debug?()
-        # Add points.
-        solverCluster = @data.layer.object.solver.clusters[@data.id]
-        points = solverCluster.getPoints()
-        points.layers.set 2
+      # Add the new mesh.
+      if meshes = @meshes()
+        @add meshes.selection
+        @add meshes.visualizeNormals
+
+        # If we have a selected cluster, don't draw others.
+        currentCluster = options.currentCluster?()
+        @add meshes.wireframe if not currentCluster or currentCluster is @data
+
+      if points = @points()
         @add points
 
       options.sceneManager.addedSceneObjects()
@@ -96,17 +98,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     console.log "Generating materials", meshData if LOI.Assets.debug
 
     options = @layer.object.mesh.options
-    visualizeNormals = options.visualizeNormals?()
     compareToPhysicalMaterial = options.compareToPhysicalMaterial?()
+    debug = options.debug?()
 
-    materialOptions =
-      wireframe: options.debug?() or false
-
-    # Determine the color.
+    # Create the main and depth materials.
     clusterMaterial = @data.material()
     material = null
 
-    # Normal color mode.
     if clusterMaterial.materialIndex?
       # Cluster has a material assigned. Add the material properties to material options.
       meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
@@ -115,96 +113,88 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
       # Cluster has a direct palette color set.
       meshMaterial = clusterMaterial.paletteColor
 
-    if visualizeNormals
-      # Visualized normals mode.
-      if clusterMaterial.normal
-        normal = new THREE.Vector3 clusterMaterial.normal.x, clusterMaterial.normal.y, clusterMaterial.normal.z
-        backward = new THREE.Vector3 0, 0, 1
-
-        horizontalAngle = Math.atan2(normal.y, normal.x) + Math.PI
-        verticalAngle = normal.angleTo backward
-
-        hue = horizontalAngle / (2 * Math.PI)
-        saturation = verticalAngle / (Math.PI / 2)
-
-        if Math.abs(verticalAngle) > Math.PI / 2
-          lightness = 1 - Math.abs(verticalAngle) / Math.PI
-
-        else
-          lightness = 0.5
-
-        directColor = new THREE.Color().setHSL hue, saturation, lightness
-
-      else
-        directColor = r: 0, g: 0, b: 0
-
-      material = new THREE.MeshBasicMaterial _.extend materialOptions,
-        color: THREE.Color.fromObject directColor
-
-    else if compareToPhysicalMaterial
+    if compareToPhysicalMaterial
       # We want to use three.js' Physical Material
       parameters = LOI.Assets.Mesh.Material.createPhysicalMaterialParameters meshMaterial, palette
       material = new THREE.MeshPhysicalMaterial parameters
 
     else
-      # See if we have correct properties for a universal material.
-      if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
-        shades = palette.ramps[meshMaterial.ramp]?.shades
+      materialOptions =
+        mesh: meshData
 
-        if materialOptions.wireframe
-          material = new THREE.MeshBasicMaterial _.extend materialOptions,
-            color: THREE.Color.fromObject shades[meshMaterial.shade]
+      # If the meshMaterial has a texture, that's something we have to get a separate material for.
+      materialOptions.texture = meshMaterial.texture if meshMaterial.texture
 
-        else
-          # Note: We can't set extra properties on material options sooner since other materials don't support them.
-          _.extend materialOptions,
-            mesh: meshData
+      # Translucent materials need to be separate from opaque ones to render second.
+      materialOptions.translucency = meshMaterial.translucency if meshMaterial.translucency
 
-          # If the meshMaterial has a texture, that's something we have to get a separate material for.
-          materialOptions.texture = meshMaterial.texture if meshMaterial.texture
+      material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
+      depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
 
-          # Translucent materials need to be separate from opaque ones to render second.
-          materialOptions.translucency = meshMaterial.translucency if meshMaterial.translucency
+    # Visualized normals mode.
+    if clusterMaterial.normal
+      normal = new THREE.Vector3 clusterMaterial.normal.x, clusterMaterial.normal.y, clusterMaterial.normal.z
+      backward = new THREE.Vector3 0, 0, 1
 
-          material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
-          depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
+      horizontalAngle = Math.atan2(normal.y, normal.x) + Math.PI
+      verticalAngle = normal.angleTo backward
 
-      else if clusterMaterial.directColor
-        material = new THREE.MeshLambertMaterial _.extend materialOptions,
-          color: THREE.Color.fromObject clusterMaterial.directColor
+      hue = horizontalAngle / (2 * Math.PI)
+      saturation = verticalAngle / (Math.PI / 2)
+
+      if Math.abs(verticalAngle) > Math.PI / 2
+        lightness = 1 - Math.abs(verticalAngle) / Math.PI
 
       else
-        material = new THREE.MeshLambertMaterial _.extend materialOptions,
-          color: new THREE.Color 0xffffff
+        lightness = 0.5
+
+      directColor = new THREE.Color().setHSL hue, saturation, lightness
+
+    else
+      directColor = r: 0, g: 0, b: 0
+
+    visualizeNormalsMaterial = new THREE.MeshBasicMaterial
+      color: THREE.Color.fromObject directColor
+      wireframe: debug
+
+    shades = palette.ramps[meshMaterial.ramp]?.shades
+
+    wireframeMaterial = new THREE.MeshBasicMaterial
+      wireframe: true
+      color: THREE.Color.fromObject shades[meshMaterial.shade]
 
     @_materials =
       main: material
       depth: depthMaterial
+      visualizeNormals: visualizeNormalsMaterial
+      wireframe: wireframeMaterial
 
     @_materials
 
-  _generateMesh: ->
+  _generateMeshes: ->
     return unless geometry = @geometry()
     return unless materials = @materials()
 
-    console.log "Generating mesh", geometry, materials if LOI.Assets.debug
+    console.log "Generating meshes", geometry, materials if LOI.Assets.debug
 
-    mesh = new THREE.Mesh geometry, materials.main
-    mesh.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
+    selectionMesh = new THREE.Mesh geometry, materials.main
+    selectionMesh.layers.set LOI.Assets.MeshEditor.RenderLayers.Selection
 
-    mesh.mainMaterial = materials.main
-    mesh.customDepthMaterial = materials.depth
+    visualizeNormalsMesh = new THREE.Mesh geometry, materials.visualizeNormals
+    visualizeNormalsMesh.layers.set LOI.Assets.MeshEditor.RenderLayers.VisualizeNormals
 
-    mesh.castShadow = true
-    mesh.receiveShadow = true
+    wireframeMesh = new THREE.Mesh geometry, materials.wireframe
+    wireframeMesh.layers.set LOI.Assets.MeshEditor.RenderLayers.Wireframe
 
-    debug = @layer.object.mesh.options.debug?()
-    mesh.layers.set LOI.Assets.MeshEditor.RenderLayers.OverlayDebug if debug
+    selection: selectionMesh
+    visualizeNormals: visualizeNormalsMesh
+    wireframe: wireframeMesh
 
-    # Do not draw unselected clusters in debug mode. Note that we still want
-    # to have them in the scene so they can be rendered in radiance probes.
-    currentCluster = @layer.object.mesh.options.currentCluster?()
+  _generatePoints: ->
+    # Only generate points during debug to minimize creation of geometry when not needed.
+    return unless @layer.object.mesh.options.debug?()
 
-    mesh.visible = false if debug and currentCluster and currentCluster isnt @data
-
-    mesh
+    solverCluster = @data.layer.object.solver.clusters[@data.id]
+    points = solverCluster.getPoints()
+    points.layers.set LOI.Assets.MeshEditor.RenderLayers.Wireframe
+    points

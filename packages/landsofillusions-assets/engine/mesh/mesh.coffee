@@ -25,22 +25,10 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
 
       @objects engineObjects
 
-    # Create illumination state.
-    @illuminationState = new ReactiveField null
-    @autorun (computation) => @_generateIlluminationState()
-
-    # Update light map properties texture.
-    @autorun (computation) =>
-      return unless meshData = @options.meshData()
-      return unless illuminationState = @illuminationState()
-
-      meshData.lightmapAreaProperties.updateTexture illuminationState
-
     @_renderMeshes = []
     @renderMeshes = new ReactiveField null
 
     @autorun (computation) =>
-      return unless gi = @options.gi?()
       return unless objects = @objects()
 
       mainMaterials = []
@@ -72,20 +60,11 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
 
         geometry = THREE.BufferGeometryUtils.mergeBufferGeometries clusterGeometries
 
-        giMaterial = new LOI.Engine.Materials.GIMaterial
-          illuminationStateField: @illuminationState
-          mesh: @options.meshData()
-          texture: materials.main.options?.texture
+        mesh = new THREE.Mesh geometry, materials.main
+        mesh.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
 
-        material = if gi then giMaterial else materials.main
-
-        mesh = new THREE.Mesh geometry, material
-
-        mesh.mainMaterial = material
-        mesh.shadowColorMaterial = materials.shadowColor
+        mesh.mainMaterial = materials.main
         mesh.customDepthMaterial = materials.depth
-        mesh.preprocessingMaterial = materials.preprocessing
-        mesh.giMaterial = giMaterial
 
         mesh.castShadow = true
         mesh.receiveShadow = true
@@ -99,22 +78,12 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
       # Clean up previous children.
       @remove @children[0] while @children.length
 
-      debug = @options.debug?()
-      pbr = @options.pbr?()
-      gi = @options.gi?()
-
-      if debug or pbr or not gi
-        # We always add individual objects, except in GI mode.
-        objects = @objects()
-        return unless objects?.length
-
+      # Add individual objects (used for debugging).
+      if objects = @objects()
         @add object for object in objects
 
-      if gi
-        # During GI we always need the merged mesh.
-        renderMeshes = @renderMeshes()
-        return unless renderMeshes?.length
-
+      # Add merged meshes.
+      if renderMeshes = @renderMeshes()
         @add mesh for mesh in renderMeshes
 
       @options.sceneManager.addedSceneObjects()
@@ -124,17 +93,3 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
 
     object.destroy() for object in @objects()
     mesh.geometry.dispose() for mesh in @_renderMeshes
-
-  _generateIlluminationState: ->
-    return unless @options.gi?()
-    return unless meshData = @options.meshData()
-
-    # Clean any previous illumination state.
-    @_illuminationState?.destroy()
-    @_illuminationState = null
-
-    # Make sure lightmap size isn't zero.
-    return unless meshData.lightmapAreaProperties.lightmapSize().width > 0
-
-    @_illuminationState = new LOI.Engine.IlluminationState meshData
-    @illuminationState @_illuminationState

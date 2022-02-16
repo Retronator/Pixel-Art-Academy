@@ -1,9 +1,9 @@
 LOI = LandsOfIllusions
 
-class LOI.Engine.RadianceState.Probe
-  @cubeResolution: 256
-  @octahedronMapMaxLevel: 9
-  @octahedronMapResolution: 2 ** @octahedronMapMaxLevel
+class LOI.Engine.Lightmap.Probe
+  @cubeResolution = 256
+  @octahedronMapMaxLevel = 9
+  @octahedronMapResolution = 2 ** @octahedronMapMaxLevel
 
   @initialize: ->
     @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget @cubeResolution,

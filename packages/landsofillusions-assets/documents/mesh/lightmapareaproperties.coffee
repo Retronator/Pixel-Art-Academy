@@ -17,8 +17,20 @@ class LOI.Assets.Mesh.LightmapAreaProperties
 
     # Update area properties. We need to do it in an autorun to depend on area changes.
     Tracker.nonreactive =>
-      Tracker.autorun =>
+      @_updateAutorun = Tracker.autorun =>
         @update()
+
+    # Update texture when lightmap area or lightmap values change.
+    Tracker.nonreactive =>
+      @_updateTextureAutorun = Tracker.autorun =>
+        return unless lightmap = @mesh.lightmap()
+        @_updatedDependency.depend()
+
+        @texture.update @areaProperties, lightmap
+
+  destroy: ->
+    @_updateAutorun.stop()
+    @_updateTextureAutorun.stop()
 
   update: ->
     # Get all the areas.
@@ -118,10 +130,6 @@ class LOI.Assets.Mesh.LightmapAreaProperties
         @indicesMap[entry.objectIndex][entry.layerIndex] = index
 
     @_updatedDependency.changed()
-
-  updateTexture: (illuminationState) ->
-    @texture.update @areaProperties, illuminationState
-    @_updatedDependency.depend()
 
   getIndex: (area) ->
     @_updatedDependency.depend()

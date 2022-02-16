@@ -89,32 +89,16 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures/materialproperties');
   api.addClientFile('engine/textures/lightmapareaproperties');
 
-  api.addClientFile('engine/radiancestate..');
-  api.addClientFile('engine/radiancestate/probemap');
-  api.addGlsl('engine/radiancestate/common-parameters-fragment');
+  api.addClientFile('engine/lightmap..');
+  api.addClientFile('engine/lightmap/areas');
+  api.addClientFile('engine/lightmap/area');
+  api.addClientFile('engine/lightmap/area-initializecoordinatemaps');
+  api.addGlsl('engine/lightmap/common-parameters-fragment');
 
-  api.addClientFile('engine/radiancestate/probe..');
-  api.addMaterial('engine/radiancestate/probe/octahedronmapmaterial..');
+  api.addMaterial('engine/lightmap/updatematerial..');
 
-  api.addClientFile('engine/radiancestate/radiancematerial..');
-  api.addGlsl('engine/radiancestate/radiancematerial/radiancematerial-vertex');
-  api.addGlsl('engine/radiancestate/radiancematerial/radiancematerial-parameters-fragment');
-
-  api.addClientFile('engine/radiancestate/radiancematerial/in..');
-  api.addGlsl('engine/radiancestate/radiancematerial/in/in-fragment');
-
-  api.addClientFile('engine/radiancestate/radiancematerial/out..');
-  api.addGlsl('engine/radiancestate/radiancematerial/out/out-fragment');
-
-  api.addClientFile('engine/illuminationstate..');
-  api.addClientFile('engine/illuminationstate/lightmapareas');
-  api.addClientFile('engine/illuminationstate/lightmaparea');
-  api.addClientFile('engine/illuminationstate/lightmaparea-initializecoordinatemaps');
-  api.addGlsl('engine/illuminationstate/common-parameters-fragment');
-
-  api.addClientFile('engine/illuminationstate/illuminationmaterial..');
-  api.addGlsl('engine/illuminationstate/illuminationmaterial/illuminationmaterial-vertex');
-  api.addGlsl('engine/illuminationstate/illuminationmaterial/illuminationmaterial-fragment');
+  api.addClientFile('engine/lightmap/probe..');
+  api.addMaterial('engine/lightmap/probe/octahedronmapmaterial..');
 
   api.addClientFile('engine/skydome..');
 
@@ -138,13 +122,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/material');
 
-  api.addMaterial('engine/materials/spritematerial..');
-  api.addMaterial('engine/materials/rampmaterial..');
-  api.addMaterial('engine/materials/pbrmaterial..');
-  api.addMaterial('engine/materials/gimaterial..');
   api.addMaterial('engine/materials/depthmaterial..');
-  api.addMaterial('engine/materials/shadowcolormaterial..');
-  api.addMaterial('engine/materials/preprocessingmaterial..');
   api.addMaterial('engine/materials/universalmaterial..');
   api.addClientFile('engine/materials/universalmaterial/universalmaterial-defaults');
 
@@ -224,7 +202,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/template-server-databasecontent');
   api.addServerFile('character/part/methods-server');
   api.addServerFile('character/part/subscriptions');
-  
+
   api.addServerFile('character/part/migrations/0000-embeddedtranslations');
   api.addServerFile('character/part/migrations/0001-spriteids');
   api.addServerFile('character/part/migrations/0002-articlepartstoarticlepartshapes');
@@ -283,7 +261,7 @@ Package.onUse(function(api) {
   // Behavior parts
 
   api.addFile('character/behavior..');
-  
+
   api.addFile('character/behavior/parts..');
   api.addFile('character/behavior/parts/personality..');
   api.addFile('character/behavior/parts/personality/factor');
@@ -393,7 +371,7 @@ Package.onUse(function(api) {
   // Listener
 
   api.addFile('adventure/listener..');
-  
+
   // Thing
 
   api.addUnstyledComponent('adventure/thing/thing');
@@ -459,7 +437,7 @@ Package.onUse(function(api) {
   api.addFile('adventure/group..');
 
   // Events
-  
+
   api.addFile('adventure/event..');
   api.addFile('adventure/event/stopevent');
 
@@ -633,7 +611,7 @@ Package.onUse(function(api) {
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
-  
+
   api.addUnstyledComponent('components/sprite..');
   api.addUnstyledComponent('components/computer..');
 
@@ -658,7 +636,7 @@ Package.onUse(function(api) {
 
   api.addFile('helpers/spacebars');
   api.addFile('helpers/lodash');
-  
+
   // Emails
 
   api.addFile('emails..');

@@ -185,9 +185,24 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     return unless initializeRuntimeData
 
+    # Reactively generate the lightmap
+    @lightmap = new ReactiveField null
+
     # Initialize runtime data.
     @materialProperties = new @constructor.MaterialProperties @
     @lightmapAreaProperties = new @constructor.LightmapAreaProperties @
+
+    Tracker.nonreactive =>
+      @_generateLightmapAutorun = Tracker.autorun =>
+        # Clean previous lightmap.
+        @_lightmap?.destroy()
+        @_lightmap = null
+
+        # Make sure lightmap size isn't zero.
+        return unless @lightmapAreaProperties.lightmapSize().width > 0
+
+        @_lightmap = new LOI.Engine.Lightmap @
+        @lightmap @_lightmap
 
     @paletteTexture = new LOI.Engine.Textures.Palette
 
@@ -199,7 +214,11 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
         @paletteTexture.update palette
 
   destroy: ->
+    @_generateLightmapAutorun.stop()
     @_updatePaletteTextureAutorun.stop()
+
+    @materialProperties.destroy()
+    @lightmapAreaProperties.destroy()
 
   depend: ->
     @_updatedDependency.depend()

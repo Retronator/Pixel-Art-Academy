@@ -56,18 +56,12 @@ uniform RestrictColors restrictColors;
 
 #include <LandsOfIllusions.Engine.Materials.readTextureDataParametersFragment>
 
-// Illumination state
-#ifdef USE_ILLUMINATION_STATE
-  #include <LandsOfIllusions.Engine.IlluminationState.commonParametersFragment>
-#endif
+// Lightmap
+#include <LandsOfIllusions.Engine.Lightmap.commonParametersFragment>
+#include <LandsOfIllusions.Engine.Materials.lightmapAreaPropertiesParametersFragment>
 
 // Material properties
 #include <LandsOfIllusions.Engine.Materials.materialPropertiesParametersFragment>
-
-// Lightmap area properties
-#ifdef USE_ILLUMINATION_STATE
-  #include <LandsOfIllusions.Engine.Materials.lightmapAreaPropertiesParametersFragment>
-#endif
 
 varying vec2 vLightmapCoordinates;
 varying float vCameraAngleW;
@@ -159,19 +153,22 @@ void main() {
   ReflectedLight reflectedLight = ReflectedLight(vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0));
   #include <lights_fragment_begin>
 
-  #ifdef USE_ILLUMINATION_STATE
-    // Read lightmap properties.
+  // Accumulate indirect light.
+  float lightmapAreaSize = readLightmapAreaProperty(lightmapAreaPropertySize);
+
+  if (lightmapSize.x > 0.0) {
     vec2 lightmapAreaPosition = readLightmapAreaProperty2(lightmapAreaPropertyPosition);
-    float lightmapAreaSize = readLightmapAreaProperty(lightmapAreaPropertySize);
     float lightmapAreaActiveMipmapLevel = readLightmapAreaProperty(lightmapAreaPropertyActiveMipmapLevel);
 
-    // Read illumination from the lightmap.
+    // Read irradiance from the lightmap.
     vec2 lightmapCoordinates = (vLightmapCoordinates / vCameraAngleW + lightmapAreaPosition + vec2(0.5)) / lightmapSize;
     irradiance += sampleLightmap(lightmapCoordinates, lightmapAreaActiveMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
-  #endif
 
-  // Accumulate indirect light.
-  #include <lights_fragment_maps>
+  } else {
+    // Read irradiance from the environment map.
+    #include <lights_fragment_maps>
+  }
+
   #include <lights_fragment_end>
 
   // Sum the total outgoing radiance.

@@ -19,19 +19,29 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
 
     {mapping, offset}
 
-  @getTextureUniforms: (options) ->
+  @getTextureUniforms: (options, normalMap = true) ->
     textureMapping = LOI.Engine.Materials.UniversalMaterial.createTextureMappingMatrices options.texture if options.texture
 
-    map:
-      value: null
-    powerOf2Texture:
-      value: null
-    textureMapping:
-      value: textureMapping?.mapping
-    uvTransform:
-      value: textureMapping?.offset
-    mipmapBias:
-      value: options.texture?.mipmapBias or 0
+    uniforms =
+      map:
+        value: null
+      powerOf2Texture:
+        value: null
+      textureMapping:
+        value: textureMapping?.mapping
+      uvTransform:
+        value: textureMapping?.offset
+      mipmapBias:
+        value: options.texture?.mipmapBias or 0
+
+    if normalMap
+      _.extend uniforms,
+        normalMap:
+          value: null
+        normalScale:
+          value: new THREE.Vector2 1, 1
+
+    uniforms
 
   @updateTextures: (material) ->
     spriteTextures = LOI.Engine.Textures.getTextures material.options.texture
@@ -57,13 +67,12 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
 
       transparent: false
 
-      defines:
-        USE_ILLUMINATION_STATE: options.illuminationStateField?
-
       uniforms: _.extend
         # Globals
         renderSize:
           value: null
+
+        # Camera
         cameraAngleMatrix:
           value: new THREE.Matrix4
         cameraParallelProjection:
@@ -71,28 +80,17 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
         cameraDirection:
           value: new THREE.Vector3
 
-        # Color information
+        # Color palette
         palette:
           value: options.mesh.paletteTexture
 
         # Material properties
         materialProperties:
           value: options.mesh.materialProperties.texture
-
-        # Lightmap area properties
-        lightmapAreaProperties:
-          value: options.mesh.lightmapAreaProperties.texture
-
-        # Illumination state
-        lightmap:
-          value: null
-        lightmapSize:
-          value: new THREE.Vector2
-        envMap:
-          value: null
-        envMapIntensity:
-          value: 1
-
+      ,
+        # Textures
+        LOI.Engine.Materials.UniversalMaterial.getTextureUniforms options
+      ,
         # Light visibility
         lightVisibility:
           value:
@@ -101,39 +99,31 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
             indirectSurface: true
             indirectSubsurface: true
             emissive: true
+      ,
+        # Geometric lights
+        THREE.UniformsLib.lights
+      ,
+        # Lightmap
+        lightmap:
+          value: null
+        lightmapSize:
+          value: new THREE.Vector2
+        lightmapAreaProperties:
+          value: options.mesh.lightmapAreaProperties.texture
+
+        # Environment map
+        envMap:
+          value: null
+        envMapIntensity:
+          value: 1
 
         # Color restrictions
         restrictColors:
           value:
             ramps: false
             shades: false
-      ,
-        # Texture
-        LOI.Engine.Materials.UniversalMaterial.getTextureUniforms options
-      ,
-        normalMap:
-          value: null
-        normalScale:
-          value: new THREE.Vector2 1, 1
-      ,
-        # Light sources
-        THREE.UniformsLib.lights
 
     super parameters
     @options = options
 
     LOI.Engine.Materials.UniversalMaterial.updateTextures @ if @options.texture
-
-    # Update illumination state.
-    if @options.illuminationStateField
-      Tracker.nonreactive =>
-        Tracker.autorun =>
-          return unless illuminationState = @options.illuminationStateField()
-
-          @uniforms.lightmap.value = illuminationState.lightmap.texture
-
-          lightmapSize = options.mesh.lightmapAreaProperties.lightmapSize()
-          @uniforms.lightmapSize.value.set lightmapSize.width, lightmapSize.height
-
-          @needsUpdate = true
-          @_dependency.changed()

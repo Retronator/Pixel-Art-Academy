@@ -10,9 +10,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
   @register @id()
 
   @RenderLayers =
-    OverlayHelpers: 2
-    OverlayDebug: 3
-    DebugIndirect: 4
+    VisualizeNormals: 2
+    Wireframe: 3
+    OverlayHelpers: 4
+    DebugIndirect: 5
+    Selection: 6
 
   @defaultInterfaceData: ->
     # Operators

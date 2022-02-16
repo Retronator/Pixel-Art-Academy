@@ -53,8 +53,8 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     canvasCoordinate = meshCanvas.mouse().canvasCoordinate()
     raycaster = meshCanvas.renderer.cameraManager.getRaycaster x: canvasCoordinate.x - 0.5, y: canvasCoordinate.y - 0.5
 
-    # Pick also debug meshes (wireframe).
-    raycaster.layers.enable 3
+    # Pick from the selection layer that has individual clusters.
+    raycaster.layers.set LOI.Assets.MeshEditor.RenderLayers.Selection
 
     # Update debug ray to show this pick.
     meshCanvas.debugRay().set raycaster.ray.origin, raycaster.ray.direction

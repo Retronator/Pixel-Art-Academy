@@ -1,8 +1,8 @@
-// LandsOfIllusions.Engine.RadianceState.Probe.OctahedronMapMaterial.fragment
+// LandsOfIllusions.Engine.Lightmap.Probe.OctahedronMapMaterial.fragment
 precision highp float;
 
 #include <THREE>
-#include <LandsOfIllusions.Engine.RadianceState.commonParametersFragment>
+#include <Artificial.Pyramid.OctahedronMap>
 
 uniform samplerCube probeCube;
 uniform float sampleSolidAngle;

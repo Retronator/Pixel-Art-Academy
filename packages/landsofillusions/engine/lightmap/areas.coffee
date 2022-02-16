@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Engine.IlluminationState.LightmapAreas
+class LOI.Engine.Lightmap.Areas
   constructor: (@mesh) ->
     lightmapSize = @mesh.lightmapAreaProperties.lightmapSize()
     @width = lightmapSize.width
@@ -9,7 +9,7 @@ class LOI.Engine.IlluminationState.LightmapAreas
     @areas = []
 
     for areaProperties in @mesh.lightmapAreaProperties.getAll()
-      area = new LOI.Engine.IlluminationState.LightmapArea @mesh, areaProperties
+      area = new LOI.Engine.Lightmap.Area @mesh, areaProperties
       @areas.push area if area.totalProbeCount
 
     @activeMipmapLevels = new ComputedField =>

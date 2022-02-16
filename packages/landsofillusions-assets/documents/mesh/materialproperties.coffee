@@ -15,8 +15,11 @@ class LOI.Assets.Mesh.MaterialProperties
 
     # Update material properties. We need to do it in an autorun to depend on material changes.
     Tracker.nonreactive =>
-      Tracker.autorun =>
+      @_updateAutorun = Tracker.autorun =>
         @texture.update @
+
+  destroy: ->
+    @_updateAutorun.stop()
 
   initialize: ->
     # Build the initial list from existing mesh data.

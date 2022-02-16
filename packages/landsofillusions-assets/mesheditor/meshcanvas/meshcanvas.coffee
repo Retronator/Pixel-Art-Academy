@@ -85,9 +85,6 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @debugMode = new ComputedField =>
       @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
 
-    @lightmapEnabled = new ComputedField =>
-      @interface.getHelper(LOI.Assets.MeshEditor.Helpers.LightSources)?.lightmap()
-
     # Provide the fake sprite data object to sprite editor views.
     # Currently this is used only to draw tool previews correctly.
     @spriteData = new ComputedField =>
@@ -205,14 +202,14 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
           height: $meshCanvas.height()
 
         console.log "Updating canvas pixel size to", newSize if LOI.Assets.debug
-          
+        
         # Resize the back buffer to canvas element size, if it actually changed. If the pixel
         # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
         for key, value of newSize
           canvas[key] = value unless canvas[key] is value
 
         @canvasPixelSize newSize
-          
+        
     @renderer = new @constructor.Renderer @
     
   onDestroyed: ->

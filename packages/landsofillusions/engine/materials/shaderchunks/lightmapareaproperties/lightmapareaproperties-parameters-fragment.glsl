@@ -17,10 +17,10 @@ vec2 readLightmapAreaProperty2(float property) {
   return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).rg;
 }
 
-vec2 readLightmapAreaProperty3(float property) {
+vec3 readLightmapAreaProperty3(float property) {
   return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).rgb;
 }
 
-vec2 readLightmapAreaProperty4(float property) {
+vec4 readLightmapAreaProperty4(float property) {
   return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).rgba;
 }

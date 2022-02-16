@@ -12,8 +12,8 @@ class LOI.Engine.Textures.LightmapAreaProperties extends LOI.Engine.Textures.Pro
   constructor: ->
     super LOI.Engine.Textures.LightmapAreaProperties
 
-  update: (lightmapAreaProperties, illuminationState) ->
-    activeMipmapLevels = illuminationState.activeMipmapLevels()
+  update: (lightmapAreaProperties, lightmap) ->
+    activeMipmapLevels = lightmap.activeMipmapLevels()
 
     for area, areaIndex in lightmapAreaProperties
       @_writeToData areaIndex, @constructor.propertyIndices.position, area.positionX, area.positionY

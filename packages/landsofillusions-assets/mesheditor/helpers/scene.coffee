@@ -171,8 +171,9 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     # Mesh canvas needs to be rendered for the renderer to be available.
     return unless meshCanvas.isRendered()
     return unless renderSize = meshCanvas.renderer.renderSize()
+    return unless meshData = @meshCanvas()?.meshData()
 
-    if cameraAngle = meshCanvas.meshData()?.cameraAngles.get 0
+    if cameraAngle = meshData.cameraAngles.get 0
       defaultViewport = left: -1, right: 1, bottom: -1, top: 1
       cameraAngleMatrix = new THREE.Matrix4
       cameraAngle.getProjectionMatrixForViewport defaultViewport, cameraAngleMatrix
@@ -184,13 +185,21 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       if cameraParallelProjection
         cameraDirection = currentCameraAngle.getCameraDirection()
 
-    environmentMapsEnabled = @lightSourcesHelper.environmentMaps()
+    lightmapSize = new THREE.Vector2
+
+    if @lightSourcesHelper.lightmap()
+      lightmap = meshData.lightmap()
+
+      lightmapSizeData = meshData.lightmapAreaProperties.lightmapSize()
+      lightmapSize.set lightmapSizeData.width, lightmapSizeData.height
 
     renderSize: new THREE.Vector2 renderSize.width, renderSize.height
     cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
     cameraParallelProjection: cameraParallelProjection or false
     cameraDirection: cameraDirection or new THREE.Vector3
-    envMap: if environmentMapsEnabled then @environmentMap() else null
+    lightmap: lightmap?.texture
+    lightmapSize: lightmapSize
+    envMap: if @lightSourcesHelper.environmentMaps() then @environmentMap() else null
     lightVisibility: @lightVisibilityHelper.toObject()
     restrictColors: @restrictColorsHelper.toObject()
 

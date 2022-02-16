@@ -27,34 +27,33 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @cameraManager = new @constructor.CameraManager @
 
-    # Initialize radiance transfer rendering and add enable to render hidden clusters during radiance update.
-    LOI.Engine.RadianceState.initialize()
-    LOI.Engine.IlluminationState.initialize()
+    @lightSourcesHelper = @meshCanvas.interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightSources
 
-    LOI.Engine.RadianceState.Probe.cubeCamera.layers.enable 3
+    # Initialize lightmap rendering.
+    LOI.Engine.Lightmap.initialize()
 
-    # Add radiance debug helpers.
+    # Add lightmap debug helpers.
     sceneHelper = @meshCanvas.sceneHelper()
     scene = sceneHelper.scene()
 
-    radianceDebugSphereMaterial = new THREE.MeshBasicMaterial
+    lightmapDebugSphereMaterial = new THREE.MeshBasicMaterial
       color: 0xffffff
-      envMap: LOI.Engine.RadianceState.Probe.cubeCamera.renderTarget.texture
+      envMap: LOI.Engine.Lightmap.Probe.cubeCamera.renderTarget.texture
 
-    radianceDebugSphere = new THREE.Mesh new THREE.SphereBufferGeometry(0.5, 32, 32), radianceDebugSphereMaterial
-    radianceDebugSphere.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
-    scene.add radianceDebugSphere
+    lightmapDebugSphere = new THREE.Mesh new THREE.SphereBufferGeometry(0.5, 32, 32), lightmapDebugSphereMaterial
+    lightmapDebugSphere.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
+    scene.add lightmapDebugSphere
 
-    radianceDebugProbeOctahedronMapMaterial = new THREE.MeshBasicMaterial
+    lightmapDebugProbeOctahedronMapMaterial = new THREE.MeshBasicMaterial
       color: 0xffffff
-      map: LOI.Engine.RadianceState.Probe.octahedronMap
+      map: LOI.Engine.Lightmap.Probe.octahedronMap
       side: THREE.DoubleSide
 
-    radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(0.5, 1), radianceDebugProbeOctahedronMapMaterial
-    radianceDebugProbeOctahedronMap.position.x = 1
-    radianceDebugProbeOctahedronMap.rotation.x = Math.PI
-    radianceDebugProbeOctahedronMap.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
-    scene.add radianceDebugProbeOctahedronMap
+    lightmapDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(0.5, 1), lightmapDebugProbeOctahedronMapMaterial
+    lightmapDebugProbeOctahedronMap.position.x = 1
+    lightmapDebugProbeOctahedronMap.rotation.x = Math.PI
+    lightmapDebugProbeOctahedronMap.layers.set LOI.Assets.MeshEditor.RenderLayers.DebugIndirect
+    scene.add lightmapDebugProbeOctahedronMap
 
     lightmapDebugMaterial = new THREE.MeshBasicMaterial
       color: 0xffffff
@@ -69,8 +68,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     scene.add lightmapDebug
 
     @meshCanvas.autorun =>
-      return unless illuminationState = @meshCanvas.mesh()?.illuminationState()
-      lightmapDebugMaterial.map = illuminationState.lightmap.texture
+      return unless lightmap = @meshCanvas.meshData()?.lightmap()
+      lightmapDebugMaterial.map = lightmap.texture
 
     @meshCanvas.autorun =>
       return unless lightmapSize = @meshCanvas.meshData()?.lightmapAreaProperties.lightmapSize()
@@ -111,21 +110,21 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       # Indicate that screen has been re-rendered due to user activity.
       @_lastRenderTime = Date.now()
 
-    # Handle updating radiance state.
-    @radianceUpdateMaxDuration =
+    # Handle updating of the lightmap.
+    @lightmapUpdateMaxDuration =
       realtime: 0
-      interactive: 1 / 30
-      idle: 1 / 10
+      interactive: 1 / 100
+      idle: 1 / 60
 
-    @radianceUpdateCooldown =
+    @lightmapUpdateCooldown =
       realtime: 0.5
       interactive: 0.5
 
     @_lastRenderTime = Date.now()
 
-    @globalRadianceUpdateTime = 0
-    @globalRadianceUpdatePixelsUpdatedCount = 0
-    @durationSinceLastRadianceUpdateReport = 0
+    @globalLightmapUpdateTime = 0
+    @globalLightmapUpdatePixelsUpdatedCount = 0
+    @durationSinceLastLightmapUpdateReport = 0
 
     @renderTimeFrameCount = 0
     @renderTimeDuration = 0
@@ -140,26 +139,25 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.dispose()
 
   draw: (appTime) ->
-    radianceWasUpdated = false
+    lightmapWasUpdated = false
     totalUpdatedCount = 0
 
-    lightmapEnabled = @meshCanvas.lightmapEnabled()
-    illuminationState = @meshCanvas.mesh().illuminationState() if lightmapEnabled
+    lightmapEnabled = @lightSourcesHelper.lightmap()
+    lightmap = @meshCanvas.meshData()?.lightmap() if lightmapEnabled
 
-    if lightmapEnabled and illuminationState
-      # We're doing PBR or GI so we should update some of the radiance
-      # states. Calculate how much time we can we spend for this.
+    if lightmapEnabled and lightmap
+      # Lightmap is enabled so we should update some lightmap areas. Calculate how much time we can we spend for this.
       updateStartTime = Date.now()
       timeSinceLastRender = (updateStartTime - @_lastRenderTime) / 1000
       timeSinceLastInteraction = (updateStartTime - @constructor._lastMouseMoveTime) / 1000
 
-      updateDuration = @radianceUpdateMaxDuration.idle
+      updateDuration = @lightmapUpdateMaxDuration.idle
 
-      if timeSinceLastInteraction < @radianceUpdateCooldown.interactive
-        updateDuration = @radianceUpdateMaxDuration.interactive
+      if timeSinceLastInteraction < @lightmapUpdateCooldown.interactive
+        updateDuration = @lightmapUpdateMaxDuration.interactive
 
-      if timeSinceLastRender < 2 * @radianceUpdateCooldown.realtime
-        updateDuration = @radianceUpdateMaxDuration.realtime
+      if timeSinceLastRender < 2 * @lightmapUpdateCooldown.realtime
+        updateDuration = @lightmapUpdateMaxDuration.realtime
 
       if updateDuration
         highPrecisionUpdateEndTime = performance.now() + updateDuration * 1000
@@ -168,35 +166,38 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @_setLinearRendering()
         @renderer.shadowMap.enabled = false
 
-        radianceUpdateStartTime = performance.now()
+        lightmapUpdateStartTime = performance.now()
 
-        while performance.now() < highPrecisionUpdateEndTime
-          illuminationState.update @renderer, scene
-          radianceWasUpdated = true
-          totalUpdatedCount++
+        sceneHelper = @meshCanvas.sceneHelper()
+        scene = sceneHelper.scene()
 
-        radianceUpdateEndTime = performance.now()
-        radianceUpdateTime = radianceUpdateEndTime - radianceUpdateStartTime
+        #while performance.now() < highPrecisionUpdateEndTime
+        lightmap.update @renderer, scene
+        lightmapWasUpdated = true
+        totalUpdatedCount++
 
-        @globalRadianceUpdateTime += radianceUpdateTime
-        @globalRadianceUpdatePixelsUpdatedCount += totalUpdatedCount
+        lightmapUpdateEndTime = performance.now()
+        lightmapUpdateTime = lightmapUpdateEndTime - lightmapUpdateStartTime
 
-        @durationSinceLastRadianceUpdateReport += radianceUpdateTime / 1000
+        @globalLightmapUpdateTime += lightmapUpdateTime
+        @globalLightmapUpdatePixelsUpdatedCount += totalUpdatedCount
 
-      if @durationSinceLastRadianceUpdateReport > 1
-        @durationSinceLastRadianceUpdateReport--
-        globalAverage = @globalRadianceUpdateTime / @globalRadianceUpdatePixelsUpdatedCount
-        console.log "Radiance update average time per pixel: #{globalAverage}ms."
+        @durationSinceLastLightmapUpdateReport += lightmapUpdateTime / 1000
+
+      if @durationSinceLastLightmapUpdateReport > 1
+        @durationSinceLastLightmapUpdateReport--
+        globalAverage = @globalLightmapUpdateTime / @globalLightmapUpdatePixelsUpdatedCount
+        console.log "Lightmap update average time per pixel: #{globalAverage}ms."
 
         # Reset average every 3 seconds.
-        if @globalRadianceUpdateTime > 3000
-          @globalRadianceUpdateTime = 0
-          @globalRadianceUpdatePixelsUpdatedCount = 0
+        if @globalLightmapUpdateTime > 3000
+          @globalLightmapUpdateTime = 0
+          @globalLightmapUpdatePixelsUpdatedCount = 0
 
-    # No need to render if we're rendering reactively and radiance hasn't changed.
-    return if @reactiveRendering() and not radianceWasUpdated
+    # No need to render if we're rendering reactively and lightmap hasn't changed.
+    return if @reactiveRendering() and not lightmapWasUpdated
 
-    unless radianceWasUpdated
+    unless lightmapWasUpdated
       # Indicate that render has executed due to real-time rendering.
       @_lastRenderTime = Date.now()
 
@@ -227,8 +228,25 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.shadowMap.needsUpdate = shadowsEnabled
 
     @_setToneMappedRendering()
-    renderLayer = if @meshCanvas.indirectLayerOnly() then LOI.Engine.RenderLayers.Indirect else LOI.Engine.RenderLayers.FinalRender
+
+    # Determine which layer to draw.
+    paintNormals = @meshCanvas.interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child('paintNormals').value()
+
+    if @meshCanvas.indirectLayerOnly()
+      renderLayer = LOI.Engine.RenderLayers.Indirect
+
+    else if paintNormals
+      renderLayer = LOI.Assets.MeshEditor.RenderLayers.VisualizeNormals
+
+    else if @meshCanvas.debugMode()
+      renderLayer = LOI.Assets.MeshEditor.RenderLayers.Wireframe
+
+    else
+      renderLayer = LOI.Engine.RenderLayers.FinalRender
+
     camera.main.layers.set renderLayer
+    camera.main.layers.enable LOI.Assets.MeshEditor.RenderLayers.DebugIndirect if @meshCanvas.debugMode() and @meshCanvas.indirectLayerOnly()
+
     @renderer.setClearColor 0, 0
     @renderer.setRenderTarget null
     @renderer.clear()
@@ -237,7 +255,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     if @meshCanvas.pixelRenderEnabled()
       # Render main geometry to the low-res render target.
       @_setLinearRendering()
-      camera.renderTarget.layers.set renderLayer
+      camera.renderTarget.layers.mask = camera.main.layers.mask
       @renderer.setRenderTarget @pixelRender.renderTarget
       @renderer.setClearColor 0, 0
       @renderer.clear()
@@ -263,7 +281,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     # Render helpers that overlay the geometry.
     camera.main.layers.set LOI.Assets.MeshEditor.RenderLayers.OverlayHelpers
-    camera.main.layers.enable LOI.Assets.MeshEditor.RenderLayers.OverlayDebug if @meshCanvas.debugMode()
     @renderer.render scene, camera.main
 
     renderEndTime = performance.now()

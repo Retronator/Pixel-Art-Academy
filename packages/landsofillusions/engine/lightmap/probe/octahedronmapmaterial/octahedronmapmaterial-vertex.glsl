@@ -1,4 +1,4 @@
-// LandsOfIllusions.Engine.RadianceState.Probe.OctahedronMapMaterial.vertex
+// LandsOfIllusions.Engine.Lightmap.Probe.OctahedronMapMaterial.vertex
 attribute vec3 position;
 attribute vec2 uv;
 

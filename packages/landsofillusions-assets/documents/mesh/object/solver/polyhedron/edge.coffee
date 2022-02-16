@@ -232,8 +232,14 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
     vertexOnEdge = new THREE.Vector3
 
     for vertex, index in vertices
-      # Project the vertex onto the edge.
-      line.closestPointToPoint vertex, false, vertexOnEdge
+      if @parallelClusters
+        # For parallel clusters, the planes don't meet in a line
+        # so we have to simply draw the line between the vertices.
+        vertexOnEdge.copy vertex
+
+      else
+        # Project the vertex onto the edge.
+        line.closestPointToPoint vertex, false, vertexOnEdge
 
       verticesArray[index * elementsPerVertex] = vertexOnEdge.x
       verticesArray[index * elementsPerVertex + 1] = vertexOnEdge.y

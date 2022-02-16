@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Engine.IlluminationState.LightmapArea
+class LOI.Engine.Lightmap.Area
   constructor: (@mesh, @areaProperties) ->
     @object = @mesh.objects.get @areaProperties.objectIndex
     @layer = @object.layers.get @areaProperties.layerIndex
@@ -19,7 +19,6 @@ class LOI.Engine.IlluminationState.LightmapArea
     @width = @bounds.width
     @height = @bounds.height
 
-    @flagsMap = @picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.Flags
     @clusterIdMap = @picture.getMap LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.ClusterId
 
     @_initializeCoordinateMaps()

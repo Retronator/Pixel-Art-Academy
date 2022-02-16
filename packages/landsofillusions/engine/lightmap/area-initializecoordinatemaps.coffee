@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-LOI.Engine.IlluminationState.LightmapArea::_initializeCoordinateMaps = ->
+LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
   # We need to generate at which pixel coordinates we're supposed to render the probes from, at each resolution level.
   @coordinateMaps = for level in [0..@areaProperties.level]
     size = 2 ** level
