@@ -17,6 +17,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     @sceneObjectsAddedDependency = new Tracker.Dependency
 
     @lightSourcesHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightSources
+    @uniformClustersHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.UniformClusters
     @restrictColorsHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.RestrictColors
 
     @lightVisibilityHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.LightVisibility, @fileId
@@ -133,6 +134,14 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
         @environmentMap @skydome.procedural.environmentMap
 
       @scene.updated()
+  
+    @visualizeNormals = new ComputedField =>
+      return unless meshCanvas = @meshCanvas()
+      meshCanvas.normalsOnly()
+  
+    @visualizeLightmap = new ComputedField =>
+      return unless meshCanvas = @meshCanvas()
+      meshCanvas.lightmapOnly()
 
     # Apply uniforms to new objects when they get added.
     @autorun (computation) =>
@@ -140,27 +149,24 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       @sceneObjectsAddedDependency.depend()
 
       scene.traverse (object) =>
-        return unless object.mainMaterial?.uniforms and not object.mainMaterial.uniformsInitialized
-        object.mainMaterial.uniformsInitialized = true
+        return unless object.material?.uniforms and not object.material.uniformsInitialized
+        object.material.uniformsInitialized = true
 
-        @_applyUniformsToMaterial uniforms, object.mainMaterial
+        @_applyUniformsToObject uniforms, object
 
     # Apply uniforms to all objects when uniforms change.
     @autorun (computation) =>
       return unless uniforms = @getUniforms()
 
       scene.traverse (object) =>
-        return unless object.mainMaterial?.uniforms
-
-        @_applyUniformsToMaterial uniforms, object.mainMaterial
+        return unless object.material?.uniforms
+  
+        @_applyUniformsToObject uniforms, object
 
       @scene.updated()
 
   destroy: ->
     super arguments...
-
-    @meshCanvas.stop()
-    @photoSkydomeUrl.stop()
 
     @skydome.procedural.destroy()
     @skydome.photo.destroy()
@@ -193,21 +199,36 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       lightmapSizeData = meshData.lightmapAreaProperties.lightmapSize()
       lightmapSize.set lightmapSizeData.width, lightmapSizeData.height
 
-    renderSize: new THREE.Vector2 renderSize.width, renderSize.height
-    cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
-    cameraParallelProjection: cameraParallelProjection or false
-    cameraDirection: cameraDirection or new THREE.Vector3
-    lightmap: lightmap?.texture
-    lightmapSize: lightmapSize
-    envMap: if @lightSourcesHelper.environmentMaps() then @environmentMap() else null
-    lightVisibility: @lightVisibilityHelper.toObject()
-    restrictColors: @restrictColorsHelper.toObject()
+    indirectUniforms =
+      renderSize: new THREE.Vector2 renderSize.width, renderSize.height
+      cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
+      cameraParallelProjection: cameraParallelProjection or false
+      cameraDirection: cameraDirection or new THREE.Vector3
+      lightmap: lightmap?.texture
+      lightmapSize: lightmapSize
+      envMap: if @lightSourcesHelper.environmentMaps() then @environmentMap() else null
+      
+    mainUniforms = _.extend
+      lightVisibility: @lightVisibilityHelper.toObject()
+      uniformClusters: @uniformClustersHelper.toObject()
+      restrictColors: @restrictColorsHelper.toObject()
+      visualizeNormals: @visualizeNormals() or false
+      visualizeLightmap: @visualizeLightmap() or false
+    ,
+      indirectUniforms
+    
+    main: mainUniforms
+    indirect: indirectUniforms
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()
     @scene.updated()
 
-  _applyUniformsToMaterial: (uniforms, material) ->
+  _applyUniformsToObject: (uniforms, object) ->
+    # Choose main or indirect uniforms.
+    uniforms = if object.layers.isEnabled LOI.Engine.RenderLayers.Indirect then uniforms.indirect else uniforms.main
+    material = object.material
+    
     for uniform, value of uniforms
       if material.uniforms[uniform]
         material.uniforms[uniform].value = value

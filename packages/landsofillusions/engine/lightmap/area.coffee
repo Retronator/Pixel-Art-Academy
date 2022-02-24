@@ -1,7 +1,8 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.Lightmap.Area
-  constructor: (@mesh, @areaProperties) ->
+  constructor: (@areas, @areaProperties) ->
+    @mesh = @areas.mesh
     @object = @mesh.objects.get @areaProperties.objectIndex
     @layer = @object.layers.get @areaProperties.layerIndex
     @picture = @layer.pictures.get 0
@@ -44,8 +45,8 @@ class LOI.Engine.Lightmap.Area
       iteration = @iteration()
 
       switch iteration
-        when 0 then @writeLevel() - 2 + @levelProgress()
-        when 1 then @areaProperties.level - 1 + @levelProgress()
+        when 0 then Math.max 0, @writeLevel() - 3 + @levelProgress()
+        when 1 then Math.max 0, @areaProperties.level - 1 + @levelProgress()
         else @areaProperties.level
 
     # Mip map levels are inverted and start at 0 for the max level.
@@ -58,7 +59,6 @@ class LOI.Engine.Lightmap.Area
       iteration + @updatedProbesCountForIteration() / totalProbesForIteration
 
     @_nextLevel = 0
-    @_nextLevelPixelsCount = 1
     @_nextIndex = 0
 
     @_updatePixel =
@@ -69,6 +69,7 @@ class LOI.Engine.Lightmap.Area
       lightmapCoordinates:
         x: 0
         y: 0
+      level: 0
       lightmapMipmapLevel: 0
 
   _advancePixel: ->
@@ -76,7 +77,7 @@ class LOI.Engine.Lightmap.Area
     @_nextIndex++
 
     # If we're out of bounds, go down a level or start a new iteration.
-    if @_nextIndex > @_nextLevelPixelsCount
+    if @_nextIndex >= @mapIndexLists[@_nextLevel].length
       @_nextIndex = 0
       @updatedProbesCountForLevel 0
 
@@ -86,20 +87,20 @@ class LOI.Engine.Lightmap.Area
 
       else
         @_nextLevel++
-        @_nextLevelPixelsCount = 2 ** (2 * @_nextLevel)
         @writeLevel @_nextLevel
 
   getNewUpdatePixel: ->
     # Return pixel coordinates and which cluster it's on.
-    newPixelIndex = @coordinateMaps[@_nextLevel][@_nextIndex]
+    mapIndex = @mapIndexLists[@_nextLevel][@_nextIndex]
+    newPixelIndex = @coordinateMaps[@_nextLevel][mapIndex]
     newPixelX = newPixelIndex % @width + @bounds.x
     newPixelY = Math.floor(newPixelIndex / @width) + @bounds.y
 
     clusterId = @clusterIdMap.getPixel newPixelX, newPixelY
 
     sizeAtLevel = 2 ** @_nextLevel
-    cellX = @_nextIndex % sizeAtLevel
-    cellY = Math.floor @_nextIndex / sizeAtLevel
+    cellX = mapIndex % sizeAtLevel
+    cellY = Math.floor mapIndex / sizeAtLevel
     lightmapMipmapLevel = @areaProperties.level - @_nextLevel
     factorToBottomLevel = 2 ** lightmapMipmapLevel
 
@@ -108,12 +109,12 @@ class LOI.Engine.Lightmap.Area
     @_updatePixel.pixelCoordinates.y = @pictureBounds.y + newPixelY
     @_updatePixel.lightmapCoordinates.x = cellX * factorToBottomLevel + @areaProperties.positionX
     @_updatePixel.lightmapCoordinates.y = cellY * factorToBottomLevel + @areaProperties.positionY
+    @_updatePixel.level = @_nextLevel
     @_updatePixel.lightmapMipmapLevel = lightmapMipmapLevel
+    @_updatePixel.iteration = @iteration()
 
-    # Find the next pixel that needs rendering, which also updates the iteration and which layer we're writing to.
-    loop
-      @_advancePixel()
-      break if @coordinateMaps[@_nextLevel][@_nextIndex] >= 0
+    # Go to the next pixel that needs rendering, which also updates the iteration and which layer we're writing to.
+    @_advancePixel()
 
     @updatedProbesCountForIteration @updatedProbesCountForIteration() + 1
     @updatedProbesCountForLevel @updatedProbesCountForLevel() + 1
@@ -142,3 +143,24 @@ class LOI.Engine.Lightmap.Area
 
   _getPixelIndex: (x, y) ->
     x + y * @width
+
+  resetActiveLevel: ->
+    @iteration 0
+    @writeLevel 0
+    @updatedProbesCountForLevel 0
+    @updatedProbesCountForIteration 0
+    @_nextLevel = 0
+    @_nextIndex = 0
+
+  setInitialTextureData: (initialTextureData) ->
+    size = 2 ** @areaProperties.level
+
+    for y in [0...@height]
+      for x in [0...@width]
+        value = @coordinateMaps[@areaProperties.level][x + y * size]
+        continue if value < 0
+        
+        textureY = @areaProperties.positionY + y
+        textureX = @areaProperties.positionX + x
+        textureIndexAlpha = (textureY * @areas.width + textureX) * 4 + 3
+        initialTextureData[textureIndexAlpha] = 255

@@ -21,6 +21,11 @@ class LOI.Assets.Mesh.Material
     _.merge @sourceData, update
     _.merge @, update
 
+    # Delete keys without a value so that defaults will kick in (they have to be undefined, not null).
+    for key, value of @sourceData when not value?
+      delete @sourceData[key]
+      delete @[key]
+
     # Signal change of the material.
     @_updatedDependency.changed()
     @materials.contentUpdated()

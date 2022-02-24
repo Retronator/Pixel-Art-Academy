@@ -53,24 +53,29 @@ class LOI.Assets.Engine.Mesh extends AS.RenderObject
       # Clean any previous geometry.
       mesh.geometry.dispose() for mesh in @_renderMeshes
 
-      @_renderMeshes = for material, index in mainMaterials
+      @_renderMeshes = []
+      
+      for material, index in mainMaterials
         clusterList = clusterLists[index]
         materials = clusterList[0].materials()
         clusterGeometries = (cluster.geometry() for cluster in clusterList)
 
         geometry = THREE.BufferGeometryUtils.mergeBufferGeometries clusterGeometries
 
-        mesh = new THREE.Mesh geometry, materials.main
-        mesh.layers.mask = LOI.Engine.RenderLayerMasks.NonEmissive
-
-        mesh.mainMaterial = materials.main
-        mesh.customDepthMaterial = materials.depth
-
-        mesh.castShadow = true
-        mesh.receiveShadow = true
-
-        mesh
-
+        mainMesh = new THREE.Mesh geometry, materials.main
+        mainMesh.layers.set LOI.Engine.RenderLayers.FinalRender
+  
+        indirectMesh = new THREE.Mesh geometry, materials.indirect
+        indirectMesh.layers.set LOI.Engine.RenderLayers.Indirect
+  
+        for mesh in [mainMesh, indirectMesh]
+          mesh.customDepthMaterial = materials.depth
+  
+          mesh.castShadow = true
+          mesh.receiveShadow = true
+  
+        @_renderMeshes.push mainMesh, indirectMesh
+  
       @renderMeshes @_renderMeshes
 
     # Update mesh children.

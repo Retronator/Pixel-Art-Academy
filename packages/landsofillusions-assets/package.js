@@ -36,7 +36,7 @@ Package.onUse(function(api) {
   api.addComponent('layout/layout');
 
   // Documents
-  
+
   api.addFile('documents/image..');
   api.addFile('documents/image/methods');
 
@@ -200,9 +200,9 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
   api.addFile('engine/audio/nodes/adsr');
-  
+
   // Editors
-  
+
   api.addComponent('editor..');
   api.addStyle('editor/editor-cursors');
   api.addStyle('editor/editor-fatamorgana');
@@ -279,7 +279,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/translate');
-  
+
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
   api.addFile('spriteeditor/actions/ignorenormals');
@@ -360,6 +360,8 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/showindirectlayer');
   api.addFile('mesheditor/actions/showskydome');
   api.addFile('mesheditor/actions/comparetophysicalmaterial');
+  api.addFile('mesheditor/actions/showlightmap');
+  api.addFile('mesheditor/actions/shownormals');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');

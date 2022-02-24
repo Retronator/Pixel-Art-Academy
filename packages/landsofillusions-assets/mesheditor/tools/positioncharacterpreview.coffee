@@ -27,7 +27,7 @@ class LOI.Assets.MeshEditor.Tools.PositionCharacterPreview extends LOI.Assets.Me
     raycaster = meshCanvas.renderer.cameraManager.getRaycaster x: canvasCoordinate.x - 0.5, y: canvasCoordinate.y - 0.5
 
     # Pick also debug meshes (wireframe).
-    raycaster.layers.enable 3
+    raycaster.layers.enable LOI.Assets.MeshEditor.RenderLayers.Wireframe
 
     # Update debug ray to show this pick.
     meshCanvas.debugRay().set raycaster.ray.origin, raycaster.ray.direction

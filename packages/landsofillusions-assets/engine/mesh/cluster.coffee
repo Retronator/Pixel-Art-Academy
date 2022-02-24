@@ -112,25 +112,31 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
     else if clusterMaterial.paletteColor
       # Cluster has a direct palette color set.
       meshMaterial = clusterMaterial.paletteColor
+  
+    materialOptions =
+      mesh: meshData
 
+    # If the meshMaterial has a texture, that's something we have to get a separate material for.
+    materialOptions.texture = meshMaterial.texture if meshMaterial.texture
+
+    # Translucent materials need to be separate from opaque ones to render second.
+    materialOptions.translucency = meshMaterial.translucency if meshMaterial.translucency
+
+    material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
+    depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
+    
+    indirectMaterialOptions = _.extend
+      indirectLayer: true
+    ,
+      materialOptions
+  
+    indirectMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), indirectMaterialOptions
+  
     if compareToPhysicalMaterial
       # We want to use three.js' Physical Material
       parameters = LOI.Assets.Mesh.Material.createPhysicalMaterialParameters meshMaterial, palette
       material = new THREE.MeshPhysicalMaterial parameters
-
-    else
-      materialOptions =
-        mesh: meshData
-
-      # If the meshMaterial has a texture, that's something we have to get a separate material for.
-      materialOptions.texture = meshMaterial.texture if meshMaterial.texture
-
-      # Translucent materials need to be separate from opaque ones to render second.
-      materialOptions.translucency = meshMaterial.translucency if meshMaterial.translucency
-
-      material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
-      depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), materialOptions
-
+    
     # Visualized normals mode.
     if clusterMaterial.normal
       normal = new THREE.Vector3 clusterMaterial.normal.x, clusterMaterial.normal.y, clusterMaterial.normal.z
@@ -155,7 +161,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     visualizeNormalsMaterial = new THREE.MeshBasicMaterial
       color: THREE.Color.fromObject directColor
-      wireframe: debug
+      wireframe: debug or false
 
     shades = palette.ramps[meshMaterial.ramp]?.shades
 
@@ -165,6 +171,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends AS.RenderObject
 
     @_materials =
       main: material
+      indirect: indirectMaterial
       depth: depthMaterial
       visualizeNormals: visualizeNormalsMaterial
       wireframe: wireframeMaterial

@@ -64,13 +64,16 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
   constructor: (options) ->
     parameters =
       lights: true
-
       transparent: false
+      side: if options.indirectLayer then THREE.DoubleSide else THREE.FrontSide
+      shadowSide: THREE.BackSide
 
       uniforms: _.extend
         # Globals
         renderSize:
           value: null
+        indirectLayer:
+          value: options.indirectLayer or false
 
         # Camera
         cameraAngleMatrix:
@@ -99,6 +102,11 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
             indirectSurface: true
             indirectSubsurface: true
             emissive: true
+            
+        visualizeNormals:
+          value: false
+        visualizeLightmap:
+          value: false
       ,
         # Geometric lights
         THREE.UniformsLib.lights
@@ -116,6 +124,12 @@ class LOI.Engine.Materials.UniversalMaterial extends LOI.Engine.Materials.Materi
           value: null
         envMapIntensity:
           value: 1
+          
+        # Uniform clusters
+        uniformClusters:
+          value:
+            lights: false
+            lightmap: false
 
         # Color restrictions
         restrictColors:

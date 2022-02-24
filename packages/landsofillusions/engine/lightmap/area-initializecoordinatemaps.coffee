@@ -13,8 +13,8 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
   @probeCountPerLevel = (0 for level in [0..bottomLevel])
 
   # Fill the nearest neighbor map and bottom coordinate map with data from the picture.
-  for x in [0...bottomSize]
-    for y in [0...bottomSize]
+  for y in [0...bottomSize]
+    for x in [0...bottomSize]
       mapIndex = x + y * bottomSize
 
       # See if we have a pixel for this layer or cluster.
@@ -48,9 +48,10 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
     console.warn "Bad area with no pixels.", @
     return
 
-  # Nothing more to do if we only have one pixel.
+  # If we only have one pixel, simply create a list with just this element.
   if @areaProperties.level is 0
     @totalProbeCount = 1
+    @mapIndexLists = [new Int32Array 1]
     return
 
   # Determine nearest neighbors, by expanding existing values outwards until all pixels are covered.
@@ -76,8 +77,8 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
   while negativePixelsCount > 0
     negativePixelsCount = 0
 
-    for x in [0...bottomSize]
-      for y in [0...bottomSize]
+    for y in [0...bottomSize]
+      for x in [0...bottomSize]
         mapIndex = x + y * bottomSize
 
         if @nearestNeighborMap[mapIndex] < 0
@@ -106,8 +107,8 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
     lowerSize = 2 ** lowerLevel
     factorToBottomMap = 2 ** (bottomLevel - level)
 
-    for x in [0...size]
-      for y in [0...size]
+    for y in [0...size]
+      for x in [0...size]
         mapIndex = x + y * size
 
         # See if any of the 4 children has a value.
@@ -131,3 +132,24 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
           @coordinateMaps[level][mapIndex] = @nearestNeighborMap[bottomIndex]
 
   @totalProbeCount = _.sum @probeCountPerLevel
+  
+  # Generate random index lists.
+  @mapIndexLists = for level in [0..@areaProperties.level]
+    size = 2 ** level
+
+    mapIndexList = new Int32Array @probeCountPerLevel[level]
+    mapIndexListIndex = 0
+    
+    for y in [0...size]
+      for x in [0...size]
+        mapIndex = x + y * size
+        continue if @coordinateMaps[level][mapIndex] < 0
+        
+        mapIndexList[mapIndexListIndex] = mapIndex
+        mapIndexListIndex++
+        
+    # Shuffle the indices.
+    _.shuffleSelf mapIndexList
+
+    # Return the list.
+    mapIndexList

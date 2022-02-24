@@ -138,7 +138,7 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
         value: id
 
     load: ->
-      super(arguments...) or LOI.Engine.Materials.RampMaterial.id()
+      super(arguments...) or LOI.Engine.Materials.UniversalMaterial.id()
 
   class @Ramp extends @MaterialProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Ramp'

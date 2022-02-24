@@ -4,6 +4,19 @@ AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.Renderer
+  @LightmapUpdateModes =
+    Pause: 'pause'
+    Interactive: 'interactive'
+    Idle: 'idle'
+  
+  @lightmapUpdateMaxDuration =
+    interactive: 1 / 60
+    idle: 1 / 10
+  
+  @lightmapUpdateCooldown =
+    pause: 0.5
+    interactive: 1
+  
   constructor: (@meshCanvas) ->
     @reactiveRendering = new ReactiveField true
 
@@ -70,6 +83,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @meshCanvas.autorun =>
       return unless lightmap = @meshCanvas.meshData()?.lightmap()
       lightmapDebugMaterial.map = lightmap.texture
+      lightmapDebugMaterial.needsUpdate = true
 
     @meshCanvas.autorun =>
       return unless lightmapSize = @meshCanvas.meshData()?.lightmapAreaProperties.lightmapSize()
@@ -95,111 +109,126 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @bounds.width canvasPixelSize.width
       @bounds.height canvasPixelSize.height
 
-    # Start the reactive redraw routine.
-    @meshCanvas.autorun =>
-      return unless @reactiveRendering()
-
-      # Depend on renderer bounds.
-      @bounds.width() and @bounds.height()
-
-      # Depend on material changes.
-      LOI.Engine.Materials.depend()
-
-      @_render()
-
-      # Indicate that screen has been re-rendered due to user activity.
-      @_lastRenderTime = Date.now()
-
     # Handle updating of the lightmap.
-    @lightmapUpdateMaxDuration =
-      realtime: 0
-      interactive: 1 / 100
-      idle: 1 / 60
+    @lightmapUpdateMode = @constructor.LightmapUpdateModes.Pause
+    @lightmapUpdateIterations = 1
 
-    @lightmapUpdateCooldown =
-      realtime: 0.5
-      interactive: 0.5
-
-    @_lastRenderTime = Date.now()
-
-    @globalLightmapUpdateTime = 0
-    @globalLightmapUpdatePixelsUpdatedCount = 0
-    @durationSinceLastLightmapUpdateReport = 0
-
-    @renderTimeFrameCount = 0
-    @renderTimeDuration = 0
+    @lightmapUpdatePixelsUpdatedCount = 0
+    @lightmapUpdateDurationSinceReport = 0
 
     unless @constructor._lastMouseMoveTime
       @constructor._lastMouseMoveTime = Date.now()
 
-      $(document).on "mousemove.landsofillusions-assets-mesheditor-meshcanvas-renderer", (event) =>
+      $(document).on "mousemove.landsofillusions-assets-mesheditor-meshcanvas-renderer, keydown.landsofillusions-assets-mesheditor-meshcanvas-renderer", (event) =>
         @constructor._lastMouseMoveTime = Date.now()
+        
+        @lightmapUpdateMode = @constructor.LightmapUpdateModes.Interactive
+        @lightmapUpdateIterations = 1
 
+    # Reset lightmap iteration when lighting changes.
+    @meshCanvas.autorun =>
+      # Depend on light direction.
+      lightDirectionHelper = @meshCanvas.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.LightDirection
+      lightDirectionHelper()
+  
+      # Depend on light sources.
+      @lightSourcesHelper.value()
+      
+      # Depend on skydome.
+      @meshCanvas.sceneHelper().photoSkydomeUrl()
+      
+      Tracker.nonreactive =>
+        @meshCanvas.meshData()?.lightmap()?.resetActiveLevels()
+  
+    # Prepare rendering statistics.
+    @renderTimeFrameCount = 0
+    @renderTimeDuration = 0
+  
+    # Start the reactive redraw routine.
+    @meshCanvas.autorun =>
+      return unless @reactiveRendering()
+    
+      # Depend on renderer bounds.
+      @bounds.width() and @bounds.height()
+    
+      # Depend on material changes.
+      LOI.Engine.Materials.depend()
+    
+      @_render()
+    
+      # Indicate that screen has been re-rendered due to user activity.
+      @lightmapUpdateMode = @constructor.LightmapUpdateModes.Pause
+      @_lastRenderTime = Date.now()
+      
   destroy: ->
     @renderer.dispose()
+    $(document).off ".landsofillusions-assets-mesheditor-meshcanvas-renderer"
 
   draw: (appTime) ->
+    reactiveRendering = @reactiveRendering()
+  
     lightmapWasUpdated = false
-    totalUpdatedCount = 0
-
     lightmapEnabled = @lightSourcesHelper.lightmap()
     lightmap = @meshCanvas.meshData()?.lightmap() if lightmapEnabled
-
+    
     if lightmapEnabled and lightmap
-      # Lightmap is enabled so we should update some lightmap areas. Calculate how much time we can we spend for this.
-      updateStartTime = Date.now()
-      timeSinceLastRender = (updateStartTime - @_lastRenderTime) / 1000
-      timeSinceLastInteraction = (updateStartTime - @constructor._lastMouseMoveTime) / 1000
+      # Lightmap is enabled so we should update some lightmap areas. Calculate how many update iterations we should do.
+      if reactiveRendering
+        updateStartTime = Date.now()
+        
+        if @lightmapUpdateMode is @constructor.LightmapUpdateModes.Pause
+          # When lightmap updating has paused we're waiting for rendering to stop for the cooldown duration.
+          timeSinceLastRender = (updateStartTime - @_lastRenderTime) / 1000
 
-      updateDuration = @lightmapUpdateMaxDuration.idle
+          if timeSinceLastRender > @constructor.lightmapUpdateCooldown.pause
+            @lightmapUpdateMode = @constructor.LightmapUpdateModes.Interactive
+            @lightmapUpdateIterations = 1
 
-      if timeSinceLastInteraction < @lightmapUpdateCooldown.interactive
-        updateDuration = @lightmapUpdateMaxDuration.interactive
-
-      if timeSinceLastRender < 2 * @lightmapUpdateCooldown.realtime
-        updateDuration = @lightmapUpdateMaxDuration.realtime
-
-      if updateDuration
-        highPrecisionUpdateEndTime = performance.now() + updateDuration * 1000
-
+        else if @lightmapUpdateMode is @constructor.LightmapUpdateModes.Interactive
+          # When updating in interactive mode, we wait for interactions to stop before going idle.
+          timeSinceLastInteraction = (updateStartTime - @constructor._lastMouseMoveTime) / 1000
+          if timeSinceLastInteraction > @constructor.lightmapUpdateCooldown.interactive
+            @lightmapUpdateMode = @constructor.LightmapUpdateModes.Idle
+            
+          else
+            # If interactive mode can't keep interactive rates even with just 1 render, disable it.
+            if @lightmapUpdateIterations is 1 and appTime.elapsedAppTime > @constructor.lightmapUpdateMaxDuration.interactive
+              @lightmapUpdateMode = @constructor.LightmapUpdateModes.Pause
+            
+      else
+        # When we're not rendering reactively, we want to render at interactive rates.
+        @lightmapUpdateMode = @constructor.LightmapUpdateModes.Interactive
+  
+      # Only continue if we're not paused.
+      unless @lightmapUpdateMode is @constructor.LightmapUpdateModes.Pause
+        # Decrease or increase number of update iterations to get closer to the ideal update time.
+        if appTime.elapsedAppTime > @constructor.lightmapUpdateMaxDuration[@lightmapUpdateMode]
+          @lightmapUpdateIterations = Math.max 1, @lightmapUpdateIterations - 1
+  
+        else if appTime.elapsedAppTime < @constructor.lightmapUpdateMaxDuration[@lightmapUpdateMode] / 2
+          @lightmapUpdateIterations++
+  
         # Start rendering loop.
         @_setLinearRendering()
-        @renderer.shadowMap.enabled = false
-
-        lightmapUpdateStartTime = performance.now()
-
+        
         sceneHelper = @meshCanvas.sceneHelper()
         scene = sceneHelper.scene()
-
-        #while performance.now() < highPrecisionUpdateEndTime
-        lightmap.update @renderer, scene
+        
+        for i in [1..@lightmapUpdateIterations]
+          lightmap.update @renderer, scene
+      
+        @lightmapUpdatePixelsUpdatedCount += @lightmapUpdateIterations
+        @lightmapUpdateDurationSinceReport += appTime.elapsedAppTime
+  
+        if @lightmapUpdateDurationSinceReport > 1
+          console.log "Lightmap pixels updated per second:", @lightmapUpdatePixelsUpdatedCount if LOI.Assets.debug
+          @lightmapUpdateDurationSinceReport = 0
+          @lightmapUpdatePixelsUpdatedCount= 0
+  
         lightmapWasUpdated = true
-        totalUpdatedCount++
-
-        lightmapUpdateEndTime = performance.now()
-        lightmapUpdateTime = lightmapUpdateEndTime - lightmapUpdateStartTime
-
-        @globalLightmapUpdateTime += lightmapUpdateTime
-        @globalLightmapUpdatePixelsUpdatedCount += totalUpdatedCount
-
-        @durationSinceLastLightmapUpdateReport += lightmapUpdateTime / 1000
-
-      if @durationSinceLastLightmapUpdateReport > 1
-        @durationSinceLastLightmapUpdateReport--
-        globalAverage = @globalLightmapUpdateTime / @globalLightmapUpdatePixelsUpdatedCount
-        console.log "Lightmap update average time per pixel: #{globalAverage}ms."
-
-        # Reset average every 3 seconds.
-        if @globalLightmapUpdateTime > 3000
-          @globalLightmapUpdateTime = 0
-          @globalLightmapUpdatePixelsUpdatedCount = 0
 
     # No need to render if we're rendering reactively and lightmap hasn't changed.
-    return if @reactiveRendering() and not lightmapWasUpdated
-
-    unless lightmapWasUpdated
-      # Indicate that render has executed due to real-time rendering.
-      @_lastRenderTime = Date.now()
+    return if reactiveRendering and not lightmapWasUpdated
 
     @_render()
 
@@ -236,6 +265,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       renderLayer = LOI.Engine.RenderLayers.Indirect
 
     else if paintNormals
+      @_setLinearRendering()
       renderLayer = LOI.Assets.MeshEditor.RenderLayers.VisualizeNormals
 
     else if @meshCanvas.debugMode()
@@ -291,7 +321,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     if @renderTimeDuration > 1000 or @renderTimeFrameCount > 60
       renderTimeAverage = @renderTimeDuration / @renderTimeFrameCount
-      console.log "Current average render time: #{renderTimeAverage}ms."
+      console.log "Current average render time: #{renderTimeAverage}ms." if LOI.Assets.debug
 
       @renderTimeDuration = 0
       @renderTimeFrameCount = 0

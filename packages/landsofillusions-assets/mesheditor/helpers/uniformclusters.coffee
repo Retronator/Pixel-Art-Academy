@@ -12,3 +12,8 @@ class LOI.Assets.MeshEditor.Helpers.UniformClusters extends FM.Helper
 
   lightmap: -> @data.get('lightmap') ? false
   setLightmap: (value) -> @data.set 'lightmap', value
+
+  toObject: ->
+    _.defaults @data.value(),
+      lights: false
+      lightmap: false

@@ -4,7 +4,17 @@ uniform vec2 lightmapSize;
 
 vec3 sampleLightmapMinMax(vec2 position, float mipmapLevel, vec2 areaMin, vec2 areaMax) {
   position = clamp(position, areaMin, areaMax);
-  return textureLod(lightmap, position, mipmapLevel).rgb;
+  vec4 value = textureLod(lightmap, position, mipmapLevel);
+  vec3 irradiance = value.rgb;
+
+  // The mipmaped value needs to be weighted by the alpha channel, so that empty pixels don't attribute to the average
+  // color. We can only do this on pixels that fall inside the lightmap area (some parts of triangles on a sub-pixel
+  // level can fall outside the lightmap).
+  if (value.a > 0.0) {
+    irradiance /= value.a;
+  }
+
+  return irradiance;
 }
 
 vec3 sampleLightmap(vec2 position, float mipmapLevel, vec2 areaPosition, float areaSize) {

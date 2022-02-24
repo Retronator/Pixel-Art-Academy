@@ -1,10 +1,19 @@
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.Engine.Lightmap
   @initialize: ->
     # Prepare rendering the probe.
     @Probe.initialize()
+    
+    # Create a material that will overwrite the render target with initial data.
+    @initializationMaterial = new THREE.MeshBasicMaterial
+      blending: THREE.CustomBlending
+      blendDst: THREE.ZeroFactor
+      blendSrc: THREE.OneFactor
 
+    @initializationQuad = new AS.ScreenQuad @initializationMaterial
+  
     # Prepare rendering of the lightmap atlas.
     @modelViewProjectionMatrix = new THREE.Matrix4
 
@@ -16,8 +25,15 @@ class LOI.Engine.Lightmap
 
     @lightmapScene = new THREE.Scene()
     @lightmapScene.add @lightmapQuad
+    
+  @initializeLightmap: (renderer, renderTarget, initialTexture) ->
+    @initializationMaterial.map = initialTexture
+    @initializationMaterial.needsUpdate = true
+    
+    renderer.setRenderTarget renderTarget
+    renderer.render @initializationQuad.scene, @initializationQuad.camera
 
-  @updateLightmap: (renderer, coordinates, mipmapLevel, renderTarget, camera, clear) ->
+  @updateLightmap: (renderer, coordinates, mipmapLevel, renderTarget, camera, blendFactor) ->
     # Update probe map.
     LOI.Engine.Lightmap.Probe.update renderer
 
@@ -30,13 +46,14 @@ class LOI.Engine.Lightmap
     @lightmapQuad.updateWorldMatrix()
 
     @modelViewProjectionMatrix.copy(@lightmapQuad.matrixWorld).premultiply camera.projectionMatrix
+    
+    # Update blend factor.
+    unless @updateMaterial.uniforms.blendFactor.value is blendFactor
+      @updateMaterial.uniforms.blendFactor.value = blendFactor
+      @updateMaterial.needsUpdate = true
 
     # Transfer probe radiance to the lightmap.
     renderer.setRenderTarget renderTarget
-
-    if clear
-      renderer.setClearColor 0, 0
-      renderer.clearColor()
 
     renderer.render @lightmapScene, camera
 
@@ -65,6 +82,8 @@ class LOI.Engine.Lightmap
 
     @updateCamera = new THREE.OrthographicCamera 0, @textureSize.width, @textureSize.height, 0, 0.5, 1.5
     @updateCamera.layers.set LOI.Engine.RenderLayers.Indirect
+    
+    console.log "Created new lightmap.", @ if LOI.debug
 
   activeMipmapLevels: ->
     @areas.activeMipmapLevels()
@@ -73,9 +92,13 @@ class LOI.Engine.Lightmap
     @renderTarget.dispose()
 
   update: (renderer, scene) ->
+    unless @_initialized
+      @constructor.initializeLightmap renderer, @renderTarget, @areas.initialTexture
+      @_initialized = true
+    
     return unless updatePixel = @areas.getNewUpdatePixel()
 
-    {cluster, pixelCoordinates, lightmapCoordinates, lightmapMipmapLevel} = updatePixel
+    {cluster, pixelCoordinates, lightmapCoordinates, level, lightmapMipmapLevel, iteration} = updatePixel
 
     # Determine which cluster the pixel coordinates lie on.
     probeCubeCamera = LOI.Engine.Lightmap.Probe.cubeCamera
@@ -89,6 +112,12 @@ class LOI.Engine.Lightmap
     probeCubeCamera.renderTarget.clear renderer
     probeCubeCamera.update renderer, scene
 
-    # Update the lightmap atlas.
-    @constructor.updateLightmap renderer, lightmapCoordinates, lightmapMipmapLevel, @renderTarget, @updateCamera, not @_performedInitialClear
-    @_performedInitialClear = true
+    # Update the lightmap atlas. On the very first iteration we
+    # don't want to do any blending so that the initial color gets set.
+    blendFactor = if iteration > 0 or @_wasReset then Math.min 1, (1 + level) * 0.1 else 1
+    @constructor.updateLightmap renderer, lightmapCoordinates, lightmapMipmapLevel, @renderTarget, @updateCamera, blendFactor
+
+  resetActiveLevels: ->
+    console.log "Resetting lightmap levels." if LOI.debug
+    @areas.resetActiveLevels()
+    @_wasReset = true

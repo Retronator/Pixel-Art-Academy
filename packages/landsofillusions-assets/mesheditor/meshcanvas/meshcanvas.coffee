@@ -28,6 +28,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     sourceImageEnabled: false
     indirectLayerOnly: false
     skydomeVisible: false
+    lightmapOnly: false
+    normalsOnly: false
 
   constructor: ->
     super arguments...

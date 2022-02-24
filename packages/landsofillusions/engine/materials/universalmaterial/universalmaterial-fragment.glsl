@@ -12,6 +12,9 @@
 
 // Globals
 uniform vec2 renderSize;
+uniform bool indirectLayer;
+
+// Camera
 uniform bool cameraParallelProjection;
 uniform vec3 cameraDirection;
 
@@ -38,6 +41,17 @@ struct LightVisibility {
 };
 
 uniform LightVisibility lightVisibility;
+
+uniform bool visualizeNormals;
+uniform bool visualizeLightmap;
+
+// Uniform clusters
+struct UniformClusters {
+  bool lights;
+  bool lightmap;
+};
+
+uniform UniformClusters uniformClusters;
 
 // Color restrictions
 struct RestrictColors {
@@ -81,6 +95,12 @@ void main() {
   vec3 normal = normalize(vNormal);
   vec3 geometryNormal = normal;
 
+  // Make back facing polygons black (for lightmap rendering which uses double-sided triangles).
+  if (!gl_FrontFacing) {
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    return;
+  }
+
   // Set physical material properties.
   PhysicalMaterial material;
 
@@ -115,6 +135,11 @@ void main() {
     shadingDither = readMaterialProperty(materialPropertyDither);
 
   #endif
+
+  if (visualizeNormals) {
+    gl_FragColor = vec4((normal + 1.0) * 0.5, 1.0);
+    return;
+  }
 
   // Get actual RGB values for this palette color.
   #include <LandsOfIllusions.Engine.Materials.readSourceColorFromPaletteFragment>
@@ -158,11 +183,35 @@ void main() {
 
   if (lightmapSize.x > 0.0) {
     vec2 lightmapAreaPosition = readLightmapAreaProperty2(lightmapAreaPropertyPosition);
-    float lightmapAreaActiveMipmapLevel = readLightmapAreaProperty(lightmapAreaPropertyActiveMipmapLevel);
+    vec2 lightmapAreaMipmapLevel = readLightmapAreaProperty2(lightmapAreaPropertyMipmapLevel);
 
     // Read irradiance from the lightmap.
     vec2 lightmapCoordinates = (vLightmapCoordinates / vCameraAngleW + lightmapAreaPosition + vec2(0.5)) / lightmapSize;
-    irradiance += sampleLightmap(lightmapCoordinates, lightmapAreaActiveMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
+    vec3 lightmapIrradiance;
+
+    if (indirectLayer) {
+      // On the indirect layer, we always see the most detailed level (0).
+      lightmapIrradiance = sampleLightmap(lightmapCoordinates, 0.0, lightmapAreaPosition, lightmapAreaSize);
+    } else if (uniformClusters.lightmap) {
+      // To get a uniform cluster color, we need to sample the least detailed level (highest).
+      float lightmapAreaHighestMipmapLevel = lightmapAreaMipmapLevel.g;
+      lightmapIrradiance = sampleLightmap(lightmapCoordinates, lightmapAreaHighestMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
+    } else {
+      // Otherwise we use the active layer.
+      float lightmapAreaActiveMipmapLevel = lightmapAreaMipmapLevel.r;
+      lightmapIrradiance = sampleLightmap(lightmapCoordinates, lightmapAreaActiveMipmapLevel, lightmapAreaPosition, lightmapAreaSize);
+    }
+
+    vec3 lightmapRadiance = lightmapIrradiance * RECIPROCAL_PI2;
+
+    if (visualizeLightmap) {
+      gl_FragColor = vec4(lightmapRadiance, 1.0);
+      #include <tonemapping_fragment>
+      return;
+    }
+
+    iblIrradiance += lightmapIrradiance;
+    radiance += lightmapRadiance;
 
   } else {
     // Read irradiance from the environment map.

@@ -24,7 +24,7 @@ class LOI.Engine.Debug.DummySceneItem
         dither: 0
         smoothShading: false
 
-      material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.RampMaterial.id(), materialOptions
+      material = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.UniversalMaterial.id(), materialOptions
       depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id()
       shadowColorMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.ShadowColorMaterial.id(), materialOptions
       preprocessingMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.PreprocessingMaterial.id(), materialOptions

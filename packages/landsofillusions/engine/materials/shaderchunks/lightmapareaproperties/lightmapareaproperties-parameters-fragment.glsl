@@ -7,7 +7,7 @@ uniform sampler2D lightmapAreaProperties;
 const float maxLightmapAreaProperties = 4.0;
 const float lightmapAreaPropertyPosition = 0.5 / maxLightmapAreaProperties;
 const float lightmapAreaPropertySize = 1.5 / maxLightmapAreaProperties;
-const float lightmapAreaPropertyActiveMipmapLevel = 2.5 / maxLightmapAreaProperties;
+const float lightmapAreaPropertyMipmapLevel = 2.5 / maxLightmapAreaProperties;
 
 float readLightmapAreaProperty(float property) {
   return texture2D(lightmapAreaProperties, vec2(vLightmapAreaPropertiesIndex, property)).r;

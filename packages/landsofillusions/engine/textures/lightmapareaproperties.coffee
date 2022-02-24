@@ -4,7 +4,7 @@ class LOI.Engine.Textures.LightmapAreaProperties extends LOI.Engine.Textures.Pro
   @propertyIndices:
     position: 0
     size: 1
-    activeMipmapLevel: 2
+    mipmapLevel: 2 # active, highest
 
   @maxItems: 256
   @maxProperties: 4
@@ -18,6 +18,6 @@ class LOI.Engine.Textures.LightmapAreaProperties extends LOI.Engine.Textures.Pro
     for area, areaIndex in lightmapAreaProperties
       @_writeToData areaIndex, @constructor.propertyIndices.position, area.positionX, area.positionY
       @_writeToData areaIndex, @constructor.propertyIndices.size, area.size
-      @_writeToData areaIndex, @constructor.propertyIndices.activeMipmapLevel, activeMipmapLevels[areaIndex]
+      @_writeToData areaIndex, @constructor.propertyIndices.mipmapLevel, activeMipmapLevels[areaIndex], area.level
 
     @needsUpdate = true

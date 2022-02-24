@@ -73,7 +73,7 @@ Package.onUse(function(api) {
 	api.addFile('artificial');
 
 	// Global initialization
-  
+
 	api.addFile('everywhere/lodash/lodash');
 
 	// Define all namespaces so that we can use shortcuts.
@@ -117,6 +117,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/parse');
   api.addFile('everywhere/lodash/transform');
   api.addFile('everywhere/lodash/cartesianproduct');
+  api.addFile('everywhere/lodash/shuffle');
 
   api.addFile('everywhere/tracker/delayedautorun');
 
@@ -183,7 +184,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/mixins/persistentinput');
 
   // Artificial Base
-  
+
   // Depends on Artificial Mirage.
   api.addUnstyledComponent('base/app');
 
@@ -224,7 +225,7 @@ Package.onUse(function(api) {
   api.addComponent('mummification/admin/components/adminpage..');
   api.addComponent('mummification/admin/components/index..');
   api.addFile('mummification/admin/components/document..');
-  
+
   // Artificial Telepathy
 
   api.addFile('telepathy/emailcomposer');

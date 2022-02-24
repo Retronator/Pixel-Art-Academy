@@ -112,9 +112,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.MeshEditor.Actions.ShowSkydome.id()
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
+          LOI.Assets.MeshEditor.Actions.ShowNormals.id()
           LOI.Assets.MeshEditor.Actions.DebugMode.id()
           LOI.Assets.MeshEditor.Actions.CompareToPhysicalMaterial.id()
           LOI.Assets.MeshEditor.Actions.ShowIndirectLayer.id()
+          LOI.Assets.MeshEditor.Actions.ShowLightmap.id()
         ]
       ,
         caption: 'Scene'
