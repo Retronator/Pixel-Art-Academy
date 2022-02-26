@@ -88,3 +88,7 @@ class LOI.Assets.MeshEditor.StatusBar extends FM.View
     unprojectedCoordinate = @_coordinateString cameraAngle.unprojectPoint(intersection.point), 2
 
     "world: #{projectedPosition} canvas: #{unprojectedCoordinate}"
+  
+  lightmapPercentage: ->
+    return unless lightmap = @meshCanvas()?.meshData()?.lightmap()
+    Math.round lightmap.completeness() * 100

@@ -51,6 +51,7 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
   # If we only have one pixel, simply create a list with just this element.
   if @areaProperties.level is 0
     @totalProbeCount = 1
+    @probeCountUpToLevel = [1]
     @mapIndexLists = [new Int32Array 1]
     return
 
@@ -131,6 +132,9 @@ LOI.Engine.Lightmap.Area::_initializeCoordinateMaps = ->
           bottomIndex = bottomX + bottomY * bottomSize
           @coordinateMaps[level][mapIndex] = @nearestNeighborMap[bottomIndex]
 
+  @probeCountUpToLevel = for level in [0...@probeCountPerLevel.length]
+    _.sum @probeCountPerLevel[0..level]
+  
   @totalProbeCount = _.sum @probeCountPerLevel
   
   # Generate random index lists.

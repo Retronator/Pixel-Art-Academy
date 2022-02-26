@@ -215,17 +215,22 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         scene = sceneHelper.scene()
         
         for i in [1..@lightmapUpdateIterations]
-          lightmap.update @renderer, scene
+          updated = lightmap.update @renderer, scene
+          
+          if updated
+            lightmapWasUpdated = true
+            
+          else
+            break
       
-        @lightmapUpdatePixelsUpdatedCount += @lightmapUpdateIterations
-        @lightmapUpdateDurationSinceReport += appTime.elapsedAppTime
-  
-        if @lightmapUpdateDurationSinceReport > 1
-          console.log "Lightmap pixels updated per second:", @lightmapUpdatePixelsUpdatedCount if LOI.Assets.debug
-          @lightmapUpdateDurationSinceReport = 0
-          @lightmapUpdatePixelsUpdatedCount= 0
-  
-        lightmapWasUpdated = true
+        if lightmapWasUpdated
+          @lightmapUpdatePixelsUpdatedCount += @lightmapUpdateIterations
+          @lightmapUpdateDurationSinceReport += appTime.elapsedAppTime
+    
+          if @lightmapUpdateDurationSinceReport > 1
+            console.log "Lightmap pixels updated per second:", @lightmapUpdatePixelsUpdatedCount if LOI.Assets.debug
+            @lightmapUpdateDurationSinceReport = 0
+            @lightmapUpdatePixelsUpdatedCount= 0
 
     # No need to render if we're rendering reactively and lightmap hasn't changed.
     return if reactiveRendering and not lightmapWasUpdated

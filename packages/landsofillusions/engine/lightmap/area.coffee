@@ -24,39 +24,62 @@ class LOI.Engine.Lightmap.Area
 
     @_initializeCoordinateMaps()
 
-    # Iteration counts how many times we've updated the area across all levels.
+    # Iteration counts how many times we've updated the area from the top level down.
     @iteration = new ReactiveField 0
-
-    # Write level tells which level we're writing to in the current iteration.
+  
+    # Write level tells which level we're writing to currently.
     @writeLevel = new ReactiveField 0
-
+  
     # Track how far we are in the iteration and level.
-    @updatedProbesCountForLevel = new ReactiveField 0
     @updatedProbesCountForIteration = new ReactiveField 0
-
-    @levelProgress = new ComputedField =>
-      level = @writeLevel()
-      count = @updatedProbesCountForLevel()
-
-      count / @probeCountPerLevel[level]
-
-    # Active level is where the data should be read from.
-    @activeLevel = new ComputedField =>
+  
+    # Set initial values.
+    @resetActiveLevel()
+  
+    # Determine the maximum write level we will reach in this iteration.
+    @maxWriteLevelForIteration = new ComputedField =>
       iteration = @iteration()
+      minUpdateLevelForIteration = @areas.maxUpdateLevel - iteration
 
-      switch iteration
-        when 0 then Math.max 0, @writeLevel() - 3 + @levelProgress()
-        when 1 then Math.max 0, @areaProperties.level - 1 + @levelProgress()
-        else @areaProperties.level
+      Math.max 0, @areaProperties.level - minUpdateLevelForIteration
+    ,
+      true
+
+    @iterationProgress = new ComputedField =>
+      level = @maxWriteLevelForIteration()
+      count = @updatedProbesCountForIteration()
+
+      count / @probeCountUpToLevel[level]
+    ,
+      true
+
+    # Active level is where the data should be read from. We only want to get to deeper levels through first iterations.
+    @_deepestLevel = 0
+    
+    @activeLevel = new ComputedField =>
+      maxWriteLevelForIteration = @maxWriteLevelForIteration()
+  
+      @_deepestLevel = Math.max @_deepestLevel, maxWriteLevelForIteration - LOI.Engine.Lightmap.drawLevelDifference + @iterationProgress()
+    ,
+      true
 
     # Mip map levels are inverted and start at 0 for the max level.
     @activeMipmapLevel = new ComputedField =>
       @areaProperties.level - @activeLevel()
+    ,
+      true
 
     @completeness = new ComputedField =>
+      iterationProgress = @iterationProgress()
       iteration = @iteration()
-      totalProbesForIteration = if iteration is 0 then @totalProbeCount else @probeCountPerLevel[@areaProperties.level]
-      iteration + @updatedProbesCountForIteration() / totalProbesForIteration
+
+      if LOI.Engine.Lightmap.progressiveDeepening
+        (iteration + iterationProgress) / LOI.Engine.Lightmap.iterationsCount
+        
+      else
+        iteration + iterationProgress - LOI.Engine.Lightmap.iterationsCount + 1
+    ,
+      true
 
     @_nextLevel = 0
     @_nextIndex = 0
@@ -71,23 +94,33 @@ class LOI.Engine.Lightmap.Area
         y: 0
       level: 0
       lightmapMipmapLevel: 0
+      iteration: 0
+      blendFactor: 0
+      
+  destroy: ->
+    @maxWriteLevelForIteration.stop()
+    @iterationProgress.stop()
+    @activeLevel.stop()
+    @activeMipmapLevel.stop()
+    @completeness.stop()
 
   _advancePixel: ->
     # Push index forward.
     @_nextIndex++
 
-    # If we're out of bounds, go down a level or start a new iteration.
-    if @_nextIndex >= @mapIndexLists[@_nextLevel].length
+    # If we're at the end of the indices at this level, go down a level or start a new iteration.
+    if @_nextIndex is @mapIndexLists[@_nextLevel].length
       @_nextIndex = 0
-      @updatedProbesCountForLevel 0
 
-      if @_nextLevel is @areaProperties.level
+      if @_nextLevel is @maxWriteLevelForIteration()
+        @_nextLevel = 0
         @iteration @iteration() + 1
         @updatedProbesCountForIteration 0
 
       else
         @_nextLevel++
-        @writeLevel @_nextLevel
+        
+      @writeLevel @_nextLevel
 
   getNewUpdatePixel: ->
     # Return pixel coordinates and which cluster it's on.
@@ -111,13 +144,21 @@ class LOI.Engine.Lightmap.Area
     @_updatePixel.lightmapCoordinates.y = cellY * factorToBottomLevel + @areaProperties.positionY
     @_updatePixel.level = @_nextLevel
     @_updatePixel.lightmapMipmapLevel = lightmapMipmapLevel
-    @_updatePixel.iteration = @iteration()
+    iteration = @iteration()
+    @_updatePixel.iteration = iteration
 
+    # Calculate blend factor. We want the last level of the last iteration
+    # to end at 100% and each previous level/iteration half of the next one.
+    differenceToLastIteration = LOI.Engine.Lightmap.iterationsCount - iteration - 1
+    differenceToLastLevel = @maxWriteLevelForIteration() - @_nextLevel
+    
+    @_updatePixel.blendFactor = LOI.Engine.Lightmap.blendingFactorBase ** (differenceToLastLevel + differenceToLastIteration)
+  
+    # Count this pixel as updated.
+    @updatedProbesCountForIteration @updatedProbesCountForIteration() + 1
+  
     # Go to the next pixel that needs rendering, which also updates the iteration and which layer we're writing to.
     @_advancePixel()
-
-    @updatedProbesCountForIteration @updatedProbesCountForIteration() + 1
-    @updatedProbesCountForLevel @updatedProbesCountForLevel() + 1
 
     @_updatePixel
 
@@ -145,9 +186,8 @@ class LOI.Engine.Lightmap.Area
     x + y * @width
 
   resetActiveLevel: ->
-    @iteration 0
+    @iteration if LOI.Engine.Lightmap.progressiveDeepening then 0 else LOI.Engine.Lightmap.iterationsCount - 1
     @writeLevel 0
-    @updatedProbesCountForLevel 0
     @updatedProbesCountForIteration 0
     @_nextLevel = 0
     @_nextIndex = 0

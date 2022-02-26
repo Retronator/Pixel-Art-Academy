@@ -2,6 +2,18 @@ AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.Engine.Lightmap
+  # How many levels deep to render the lightmap.
+  @iterationsCount = 5
+  
+  # How many levels above the write level should the lightmap be used when drawing.
+  @drawLevelDifference = 3
+  
+  # How steep the blending factor curve is (lower is slower blending).
+  @blendingFactorBase = 0.4
+  
+  # Whether to progressively deepen the final write level across multiple iterations.
+  @progressiveDeepening = true
+  
   @initialize: ->
     # Prepare rendering the probe.
     @Probe.initialize()
@@ -90,15 +102,17 @@ class LOI.Engine.Lightmap
 
   destroy: ->
     @renderTarget.dispose()
+    @areas.destroy()
 
   update: (renderer, scene) ->
     unless @_initialized
       @constructor.initializeLightmap renderer, @renderTarget, @areas.initialTexture
       @_initialized = true
     
-    return unless updatePixel = @areas.getNewUpdatePixel()
+    # Report that there was nothing left to update.
+    return false unless updatePixel = @areas.getNewUpdatePixel()
 
-    {cluster, pixelCoordinates, lightmapCoordinates, level, lightmapMipmapLevel, iteration} = updatePixel
+    {cluster, pixelCoordinates, lightmapCoordinates, lightmapMipmapLevel, iteration, level, blendFactor} = updatePixel
 
     # Determine which cluster the pixel coordinates lie on.
     probeCubeCamera = LOI.Engine.Lightmap.Probe.cubeCamera
@@ -114,10 +128,21 @@ class LOI.Engine.Lightmap
 
     # Update the lightmap atlas. On the very first iteration we
     # don't want to do any blending so that the initial color gets set.
-    blendFactor = if iteration > 0 or @_wasReset then Math.min 1, (1 + level) * 0.1 else 1
+    if @constructor.progressiveDeepening
+      blendFactor = 1 if iteration is 0 and not @_wasReset
+      
+    else
+      blendFactor = 1 if level is 0 and not @_wasReset
+
     @constructor.updateLightmap renderer, lightmapCoordinates, lightmapMipmapLevel, @renderTarget, @updateCamera, blendFactor
+    
+    # Report that we've done an update.
+    true
 
   resetActiveLevels: ->
     console.log "Resetting lightmap levels." if LOI.debug
     @areas.resetActiveLevels()
     @_wasReset = true
+
+  completeness: ->
+    @areas.completeness()

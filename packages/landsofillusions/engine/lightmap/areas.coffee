@@ -5,10 +5,15 @@ class LOI.Engine.Lightmap.Areas
     lightmapSize = @mesh.lightmapAreaProperties.lightmapSize()
     @width = lightmapSize.width
     @height = lightmapSize.height
-
+  
+    lightmapAreaProperties = @mesh.lightmapAreaProperties.getAll()
+    
+    @maxAreaLevel = _.maxBy(lightmapAreaProperties, (areaProperties) => areaProperties.level).level
+    @maxUpdateLevel = @maxAreaLevel
+  
     @areas = []
-
-    for areaProperties in @mesh.lightmapAreaProperties.getAll()
+  
+    for areaProperties in lightmapAreaProperties
       area = new LOI.Engine.Lightmap.Area @, areaProperties
       @areas.push area if area.totalProbeCount
 
@@ -16,6 +21,8 @@ class LOI.Engine.Lightmap.Areas
       area.activeMipmapLevel() for area in @areas
     ,
       EJSON.equals
+    ,
+      true
     
     initialTextureData = new Uint8Array @width * @height * 4
     @initialTexture = new THREE.DataTexture initialTextureData, @width, @height
@@ -23,14 +30,25 @@ class LOI.Engine.Lightmap.Areas
     
     for area in @areas
       area.setInitialTextureData initialTextureData
+      
+  destroy: ->
+    @activeMipmapLevels.stop()
+    area.destroy() for area in @areas
 
   getNewUpdatePixel: ->
     # Find area with lowest completeness.
-    area = _.minBy @areas, (probeMap) => probeMap.completeness()
-    area.getNewUpdatePixel()
+    leastCompleteArea = _.minBy @areas, (area) => area.completeness()
+
+    # Nothing to do if all areas completed their update.
+    return if leastCompleteArea.completeness() >= 1
+  
+    leastCompleteArea.getNewUpdatePixel()
 
   debugOutput: ->
     probeMap.debugOutput() for area in @areas
 
   resetActiveLevels: ->
     area.resetActiveLevel() for area in @areas
+
+  completeness: ->
+    _.sumBy(@areas, (area) => area.completeness()) / @areas.length
