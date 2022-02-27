@@ -204,16 +204,17 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       cameraAngleMatrix: cameraAngleMatrix or new THREE.Matrix4
       cameraParallelProjection: cameraParallelProjection or false
       cameraDirection: cameraDirection or new THREE.Vector3
-      lightmap: lightmap?.texture
+      lightmap: lightmap?.indirectTexture
       lightmapSize: lightmapSize
       envMap: if @lightSourcesHelper.environmentMaps() then @environmentMap() else null
       
-    mainUniforms = _.extend
+    mainUniforms = _.defaults
       lightVisibility: @lightVisibilityHelper.toObject()
       uniformClusters: @uniformClustersHelper.toObject()
       restrictColors: @restrictColorsHelper.toObject()
       visualizeNormals: @visualizeNormals() or false
       visualizeLightmap: @visualizeLightmap() or false
+      lightmap: lightmap?.texture
     ,
       indirectUniforms
     

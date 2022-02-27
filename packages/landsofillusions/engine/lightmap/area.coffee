@@ -38,8 +38,10 @@ class LOI.Engine.Lightmap.Area
   
     # Determine the maximum write level we will reach in this iteration.
     @maxWriteLevelForIteration = new ComputedField =>
-      iteration = @iteration()
-      minUpdateLevelForIteration = @areas.maxUpdateLevel - iteration
+      minUpdateLevelForIteration = @areas.maxUpdateLevel - (LOI.Engine.Lightmap.levelsCount() - 1)
+      
+      if LOI.Engine.Lightmap.progressiveDeepening()
+        minUpdateLevelForIteration += (LOI.Engine.Lightmap.iterationsCount() - 1) - @iteration()
 
       Math.max 0, @areaProperties.level - minUpdateLevelForIteration
     ,
@@ -59,7 +61,7 @@ class LOI.Engine.Lightmap.Area
     @activeLevel = new ComputedField =>
       maxWriteLevelForIteration = @maxWriteLevelForIteration()
   
-      @_deepestLevel = Math.max @_deepestLevel, maxWriteLevelForIteration - LOI.Engine.Lightmap.drawLevelDifference + @iterationProgress()
+      @_deepestLevel = Math.max @_deepestLevel, maxWriteLevelForIteration - LOI.Engine.Lightmap.drawLevelDifference() + @iterationProgress()
     ,
       true
 
@@ -73,11 +75,7 @@ class LOI.Engine.Lightmap.Area
       iterationProgress = @iterationProgress()
       iteration = @iteration()
 
-      if LOI.Engine.Lightmap.progressiveDeepening
-        (iteration + iterationProgress) / LOI.Engine.Lightmap.iterationsCount
-        
-      else
-        iteration + iterationProgress - LOI.Engine.Lightmap.iterationsCount + 1
+      (iteration + iterationProgress) / LOI.Engine.Lightmap.iterationsCount()
     ,
       true
 
@@ -147,12 +145,14 @@ class LOI.Engine.Lightmap.Area
     iteration = @iteration()
     @_updatePixel.iteration = iteration
 
-    # Calculate blend factor. We want the last level of the last iteration
-    # to end at 100% and each previous level/iteration half of the next one.
-    differenceToLastIteration = LOI.Engine.Lightmap.iterationsCount - iteration - 1
+    # Calculate blend factor. We want the last level of the iteration to end at 100%.
     differenceToLastLevel = @maxWriteLevelForIteration() - @_nextLevel
     
-    @_updatePixel.blendFactor = LOI.Engine.Lightmap.blendingFactorBase ** (differenceToLastLevel + differenceToLastIteration)
+    if LOI.Engine.Lightmap.progressiveDeepening()
+      # With progressive deepening, each previous iteration is an additional step away from completeness.
+      differenceToLastLevel += LOI.Engine.Lightmap.iterationsCount() - iteration - 1
+    
+    @_updatePixel.blendFactor = LOI.Engine.Lightmap.blendingFactorBase() ** differenceToLastLevel
   
     # Count this pixel as updated.
     @updatedProbesCountForIteration @updatedProbesCountForIteration() + 1
@@ -186,7 +186,7 @@ class LOI.Engine.Lightmap.Area
     x + y * @width
 
   resetActiveLevel: ->
-    @iteration if LOI.Engine.Lightmap.progressiveDeepening then 0 else LOI.Engine.Lightmap.iterationsCount - 1
+    @iteration 0
     @writeLevel 0
     @updatedProbesCountForIteration 0
     @_nextLevel = 0
@@ -204,3 +204,14 @@ class LOI.Engine.Lightmap.Area
         textureX = @areaProperties.positionX + x
         textureIndexAlpha = (textureY * @areas.width + textureX) * 4 + 3
         initialTextureData[textureIndexAlpha] = 255
+
+  completnessPercentage: ->
+    "#{(@completeness() * 100).toFixed(5)}%"
+    
+  completenessDebugOutput: (index) ->
+    console.log "#{_.padStart index, 5}.",
+      "completeness: #{_.padStart @completnessPercentage(), 10}",
+      "iteration: #{@iteration()} (#{LOI.Engine.Lightmap.iterationsCount() - 1})",
+      "level: #{@_nextLevel} (#{@maxWriteLevelForIteration()})",
+      "index: #{@_nextIndex} (#{@mapIndexLists[@_nextLevel].length})",
+      "count: #{@updatedProbesCountForIteration()}/#{@probeCountUpToLevel[@maxWriteLevelForIteration()]}"

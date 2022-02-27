@@ -10,12 +10,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     Idle: 'idle'
   
   @lightmapUpdateMaxDuration =
-    interactive: 1 / 60
+    interactive: 1 / 30
     idle: 1 / 10
   
   @lightmapUpdateCooldown =
-    pause: 0.5
-    interactive: 1
+    pause: 0
+    interactive: 0.1
+    
+  @lightmapBlendingDuration = 2
   
   constructor: (@meshCanvas) ->
     @reactiveRendering = new ReactiveField true
@@ -82,7 +84,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
     @meshCanvas.autorun =>
       return unless lightmap = @meshCanvas.meshData()?.lightmap()
-      lightmapDebugMaterial.map = lightmap.texture
+      lightmapDebugMaterial.map = lightmap.sourceRenderTarget.texture
       lightmapDebugMaterial.needsUpdate = true
 
     @meshCanvas.autorun =>
@@ -124,6 +126,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         
         @lightmapUpdateMode = @constructor.LightmapUpdateModes.Interactive
         @lightmapUpdateIterations = 1
+        
+    @lightmapDurationSinceLastUpdate = 0
 
     # Reset lightmap iteration when lighting changes.
     @meshCanvas.autorun =>
@@ -224,6 +228,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
             break
       
         if lightmapWasUpdated
+          @lightmapDurationSinceLastUpdate = 0
+          
           @lightmapUpdatePixelsUpdatedCount += @lightmapUpdateIterations
           @lightmapUpdateDurationSinceReport += appTime.elapsedAppTime
     
@@ -233,7 +239,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
             @lightmapUpdatePixelsUpdatedCount= 0
 
     # No need to render if we're rendering reactively and lightmap hasn't changed.
-    return if reactiveRendering and not lightmapWasUpdated
+    return if reactiveRendering and not lightmapWasUpdated and @lightmapDurationSinceLastUpdate > @constructor.lightmapBlendingDuration
+  
+    # Blend lightmap towards latest state.
+    @_setLinearRendering()
+    lightmap?.updateBlending @renderer
+    @lightmapDurationSinceLastUpdate += appTime.elapsedAppTime
 
     @_render()
 

@@ -39,6 +39,12 @@ class LOI.Engine.Lightmap.Areas
     # Find area with lowest completeness.
     leastCompleteArea = _.minBy @areas, (area) => area.completeness()
 
+    if LOI.Engine.Lightmap.debug
+      if leastCompleteArea.completeness() < 1
+        console.log "Updating lightmap area", leastCompleteArea, "with completeness", leastCompleteArea.completnessPercentage()
+        console.log "Full completeness report:"
+        area.completenessDebugOutput index for area, index in @areas
+        
     # Nothing to do if all areas completed their update.
     return if leastCompleteArea.completeness() >= 1
   
