@@ -124,7 +124,7 @@ class LOI.Engine.Lightmap
     @areas.activeMipmapLevels()
 
   destroy: ->
-    @renderTarget.dispose()
+    renderTarget.dispose() for renderTarget in [@sourceRenderTarget, @finalRenderTarget]
     @areas.destroy()
 
   update: (renderer, scene) ->
