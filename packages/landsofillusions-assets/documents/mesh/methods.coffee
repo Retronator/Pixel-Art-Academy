@@ -67,6 +67,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
                 coplanarPoint: Match.Optional sparseVectorPattern
                 attachment: Match.Optional String
                 extrusion: Match.Optional Number
+                mirror: Match.Optional Boolean
               plane: Match.Optional
                 point: vectorPattern
                 normal: vectorPattern

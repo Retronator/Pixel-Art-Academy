@@ -157,3 +157,12 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       # Trigger solver update with the changed cluster.
       cluster = @data()
       cluster.layer.object.solver.update [], [cluster.id], []
+  
+  class @Mirror extends @ClusterProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.Cluster.Mirror'
+    
+    constructor: ->
+      super arguments...
+      
+      @property = 'mirror'
+      @type = AM.DataInputComponent.Types.Checkbox

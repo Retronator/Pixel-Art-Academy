@@ -55,7 +55,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     directionalLight = @skydome.procedural.directionalLight
 
     directionalLight.castShadow = true
-    d = 10
+    d = 20
 
     shadow = directionalLight.shadow
     shadow.camera.left = -d

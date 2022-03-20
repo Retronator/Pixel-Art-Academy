@@ -117,8 +117,6 @@ class LOI.Assets.Mesh.LightmapAreaProperties
       height: _.ceilToPower lightmapHeight, 2
 
     # Index for querying by area.
-    @indexMap = []
-
     for entry, index in @areaProperties
       @indicesMap[entry.objectIndex] ?= []
 
