@@ -22,75 +22,105 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   up: up direction of the camera
   #     x, y, z
   #   customMatrix: array of 9 matrix elements in row-major order
+  # clusterProperties: object with default cluster properties for all objects
   # objects: array of scene objects
+  #   id: id string of this object
   #   name: name of the object
   #   visible: boolean if the object is rendered
-  #   solver:
-  #     type: name of the solver used to construct the mesh from the pictures, with possible values:
-  #       polyhedron (default, object with only flat surfaces)
-  #       organic (object with a continuously curved surface)
-  #       plane (all clusters are positioned in one plane)
-  #       rope (deformable lines)
-  #       cloth (deformable surface)
-  #     polyhedron: additional options for the polyhedron solver
-  #       cleanEdgePixels: boolean whether to add/remove edge pixels to better fit possible geometry
-  #   lastClusterId: the last unique integer used to create a cluster
-  #   layers: array of
-  #     name: name of the layer
-  #     visible: boolean if this layer should be drawn
-  #     order: floating point order of the layer
-  #     pictures: array of images that describe the object, indexed by cameraAngle index
-  #       bounds: dimensions of the bitmap
-  #         x, y: top-left corner relative to the camera origin (z-axis)
-  #         width, height: size of the bitmap
-  #       maps: object of texture maps that hold information for this picture
-  #         {type}: what information is contained in this map, with possible values:
-  #             flags (1 byte per pixel: which of the maps are valid at each pixel)
-  #             clusterId (2 bytes per pixel: which cluster this pixel belongs to)
-  #             materialIndex (flag value 1, 1 byte per pixel: index)
-  #             paletteColor (flag value 2, 2 bytes per pixel: ramp, shade)
-  #             directColor (flag value 4, 3 bytes per pixel: r, g, b)
-  #             alpha (flag value 8, 1 byte per pixel: a)
-  #             normal (flag value 16, 3 bytes per pixel: x, y, z as signed bytes (-1 to 1 float mapped to -127 to 127))
-  #           data: array buffer holding the pixels, not sent to the server
-  #           compressedData: binary object with compressed version of data, sent to the server
-  #       clusters: map of auto-generated clusters detected in the picture
+  #   rootPartId: id of the part at the top of the part hierarchy
+  #   clusterProperties: object with default cluster properties for all parts
+  #   parts:
+  #     id: ID string of the part
+  #     name: display name of the part
+  #     visible: boolean if the part is rendered
+  #     order: floating point order of the subpart
+  #     solver:
+  #       type: name of the solver used to construct the mesh from the pictures, with possible values:
+  #         Polyhedron (default, object with only flat surfaces)
+  #         Organic (object with a continuously curved surface)
+  #       polyhedron: additional options for the polyhedron solver
+  #         cleanEdgePixels: boolean whether to add/remove edge pixels to better fit possible geometry
+  #     lastClusterId: the last unique integer used to create a cluster
+  #     geometricLight:
+  #       type: the type of the light source with possible values:
+  #         Point
+  #         Spot
+  #       intensity: luminous intensity in candelas
+  #       color: the spectral distribution of the light energy
+  #       surfaceRadius: distance at which the light starts throwing shadows
+  #       distance: maximum range of the light
+  #       angle: angle of the spotlight cone
+  #       penumbra: percentage of the spotlight cone that is attenuated
+  #     softBody: TODO: properties for a soft-body representation of the part
+  #     clusterProperties: object with default cluster properties for all layers
+  #     layers: array of
+  #       id: ID string of the layer
+  #       name: display name of the layer
+  #       visible: boolean if this layer should be drawn
+  #       order: floating point order of the layer
+  #       clusterProperties: object with default cluster properties for all clusters
+  #       pictures: array of images that describe the object, indexed by cameraAngle index
+  #         bounds: dimensions of the bitmap
+  #           x, y: top-left corner relative to the camera origin (z-axis)
+  #           width, height: size of the bitmap
+  #         maps: object of texture maps that hold information for this picture
+  #           {type}: what information is contained in this map, with possible values:
+  #               flags (1 byte per pixel: which of the maps are valid at each pixel)
+  #               clusterId (2 bytes per pixel: which cluster this pixel belongs to)
+  #               materialIndex (flag value 1, 1 byte per pixel: index)
+  #               paletteColor (flag value 2, 2 bytes per pixel: ramp, shade)
+  #               directColor (flag value 4, 3 bytes per pixel: r, g, b)
+  #               alpha (flag value 8, 1 byte per pixel: a)
+  #               normal (flag value 16, 3 bytes per pixel: x, y, z as signed bytes (-1 to 1 float mapped to -127 to 127))
+  #             data: array buffer holding the pixels, not sent to the server
+  #             compressedData: binary object with compressed version of data, sent to the server
+  #         clusters: map of auto-generated clusters detected in the picture
+  #           {id}: unique integer identifying this cluster in the layer
+  #             name: unique name by which the cluster can be referenced in code
+  #             sourceCoordinates: absolute coordinates in the picture where this cluster's map information is taken from
+  #               x, y
+  #             boundsInPicture: the position and size of the cluster in picture pixels
+  #               x, y, width, height
+  #             coplanarPoint: forces the cluster to use this point for its plane
+  #               x, y, z
+  #             attachment: how the cluster relates to other objects in the scene, with possible values:
+  #               Contact (gets positioned against another object's cluster with the opposite normal
+  #             extrusion: how much to extrude the cluster by (generates extra geometry)
+  #             depthType: how to represent the depth of the material under the surface, with possible values:
+  #               Infinite (default, assume infinite depth so that it's impossible to see through the material)
+  #               Constant (use a specified numerical value for the depth)
+  #               Raytraced (measure depth in the scene to find the other side of the material)
+  #             depthConstant: how thick the material is under the surface
+  #             indirectLightProvider: what information source to use for calculating indirect light, with possible values:
+  #               Automatic (default, choose based on material properties and solver)
+  #               Lightmap (irradiance regardless of direction, automatically assigned to rough surfaces)
+  #               SetEnvironmentMap (directional radiance measured from the set center, automatically assigned to shiny organic surfaces)
+  #               PartEnvironmentMap (directional radiance measure from the part center, automatically assigned to shiny organic surfaces with precise reflections turned on the part level)
+  #               ClusterEnvironmentMap (directional radiance measure from the cluster center, automatically assigned to shiny organic surfaces with precise reflections turned on the cluster level)
+  #               CameraEnvironmentRender (directional radiance measured in screen space, automatically assigned to shiny flat surfaces
+  #               ClusterEnvironmentRender (directional radiance measured from a reflected camera viewpoint, automatically assigned to shiny flat surfaces with precise reflections turned on)
+  #             preciseReflections: boolean whether to render reflections from this cluster's perspective, used in automatic mode
+  #       clusters: map of auto-generated clusters in world space
   #         {id}: unique integer identifying this cluster in the layer
-  #           sourceCoordinates: absolute coordinates in the picture where this cluster's map information is taken from
-  #             x, y
-  #     clusters: map of auto-generated clusters in world space
-  #       {id}: unique integer identifying this cluster in the layer
-  #         properties: user-defined properties set on the cluster
-  #           name: unique name by which the cluster can be referenced in code
-  #           navigable: boolean if the cluster is navigable for pathfinding purposes
-  #           coplanarPoint: forces the cluster to use this point for its plane
-  #             x, y, z
-  #           attachment: how the cluster relates to other objects in the scene, with possible values:
-  #             null (does not relate to other objects)
-  #             contact (gets positioned against another object's cluster with the opposite normal
-  #             fixed (same as contact, but also creates a physical bond to the other object)
-  #           extrusion: how much to extrude the cluster by (generates extra geometry)
-  #           mirror: boolean whether the cluster should be rendered as a mirror
-  #         plane: the world plane for flat clusters
-  #           point: a point in the plane
-  #             x, y, z
-  #           normal: the normal of the plane
-  #             x, y, z
-  #         material: subset of properties of the picture cluster (relevant map values at source coordinates)
-  #           materialIndex, paletteColor, directColor, alpha, normal
-  #         geometry:
-  #           vertices: Float32Array with vertices of the cluster, not sent to the server
-  #           compressedVertices: binary object with compressed version of vertices, sent to the server
-  #           normals: Float32Array with normals of the cluster, not sent to the server
-  #           compressedNormals: binary object with compressed version of normals, sent to the server
-  #           indices: UInt32Array with indices of the cluster, not sent to the server
-  #           compressedIndices: binary object with compressed version of indices, sent to the server
-  #           pixelCoordinates: UInt32Array with pixel coordinates of the cluster, not sent to the server
-  #           compressedPixelCoordinates: binary object with compressed version of pixel coordinates, sent to the server
-  #           layerPixelCoordinates: UInt32Array with pixel coordinates of the cluster relative to layer origin, not sent to the server
-  #           compressedLayerPixelCoordinates: binary object with compressed version of layer pixel coordinates, sent to the server
-  #         boundsInPicture: the position and size of the cluster in picture pixels
-  #           x, y, width, height
+  #           plane: the world plane for flat clusters
+  #             point: a point in the plane
+  #               x, y, z
+  #             normal: the normal of the plane
+  #               x, y, z
+  #           material: subset of properties of the picture cluster (relevant map values at source coordinates)
+  #             materialIndex, paletteColor, directColor, alpha, normal
+  #           geometry:
+  #             vertices: Float32Array with vertices of the cluster, not sent to the server
+  #             compressedVertices: binary object with compressed version of vertices, sent to the server
+  #             normals: Float32Array with normals of the cluster, not sent to the server
+  #             compressedNormals: binary object with compressed version of normals, sent to the server
+  #             indices: UInt32Array with indices of the cluster, not sent to the server
+  #             compressedIndices: binary object with compressed version of indices, sent to the server
+  #             pixelCoordinates: UInt32Array with pixel coordinates of the cluster, not sent to the server
+  #             compressedPixelCoordinates: binary object with compressed version of pixel coordinates, sent to the server
+  #             layerPixelCoordinates: UInt32Array with pixel coordinates of the cluster relative to layer origin, not sent to the server
+  #             compressedLayerPixelCoordinates: binary object with compressed version of layer pixel coordinates, sent to the server
+  #     subpartIds: array of part IDs that are children of this part
   # materials: array of shaders used to draw objects
   #   name: what the materials represents
   #   type: ID of the shader

@@ -14,7 +14,8 @@ class LOI.Assets.Mesh.Object
 
     @solverOptions = {}
 
-    for type, field of @constructor.Solver.Types
+    for type, name of @constructor.Solver.Types
+      field = _.lowerFirst name
       @solverOptions[field] = new LOI.Assets.Mesh.ValueField @, field, data.solver?[field]
       @solverOptions[field].setDefaultValue {}
 
@@ -34,7 +35,7 @@ class LOI.Assets.Mesh.Object
       clusters
 
     # Create the solver.
-    solverClassName = _.upperFirst data.solver?.type or @constructor.Solver.Types.Polyhedron
+    solverClassName = data.solver?.type or @constructor.Solver.Types.Polyhedron
     @solver = new @constructor.Solver[solverClassName] @
 
     # Run solver for the first time if we don't have clusters yet.

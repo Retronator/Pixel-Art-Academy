@@ -8,8 +8,7 @@ compressionOptions =
 
 class LOI.Assets.Mesh.Object.Layer.Cluster
   @AttachmentTypes:
-    Contact: 'contact'
-    Fixed: 'fixed'
+    Contact: 'Contact'
 
   @createPlaneBasis: (normal, rightHanded, result) ->
     result ?= new THREE.Matrix4

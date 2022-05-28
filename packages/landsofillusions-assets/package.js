@@ -124,6 +124,9 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/object/solver/polyhedron/clusterplane');
   api.addFile('documents/mesh/object/solver/polyhedron/edge');
 
+  api.addServerFile('documents/mesh/migrations/0000-capitalizeconstants');
+  api.addServerFile('documents/mesh/migrations/0001-removefixedattachment');
+
   api.addFile('documents/audio..');
   api.addFile('documents/audio/audio-getpreviewimage');
   api.addServerFile('documents/audio/subscriptions');

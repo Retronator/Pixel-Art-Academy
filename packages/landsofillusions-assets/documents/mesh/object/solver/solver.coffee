@@ -3,9 +3,8 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.Object.Solver
   @Types:
-    Plane: 'plane'
-    Polyhedron: 'polyhedron'
-    Organic: 'organic'
+    Polyhedron: 'Polyhedron'
+    Organic: 'Organic'
 
   @LightmapAreaTypes:
     Cluster: 'Cluster'

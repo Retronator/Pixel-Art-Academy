@@ -67,19 +67,24 @@ class LOI.Assets.MeshEditor.ObjectDialog extends FM.View
   class @SolverProperty extends AM.DataInputComponent
     load: ->
       object = @data()
-      options = object.solverOptions[@solverType]()
+      
+      solverField = _.lowerFirst @solverType
+      options = object.solverOptions[solverField]()
+      
       options?[@property]
 
     save: (value) ->
       object = @data()
-      options = object.solverOptions[@solverType]() or {}
+
+      solverField = _.lowerFirst @solverType
+      options = object.solverOptions[solverField]() or {}
 
       if @type is AM.DataInputComponent.Types.Number
         value = _.parseFloatOrNull value
 
       options[@property] = value
 
-      object.solverOptions[@solverType] options
+      object.solverOptions[solverField] options
 
       # Recompute the object to apply new solver options.
       object.recompute()
