@@ -29,7 +29,14 @@ class LOI.Assets.Mesh.Object.Layer.Picture
 
     # Recompute clusters for the first time if we didn't get them.
     @recomputeClusters() unless data.clusters and data.maps?.clusterId
-    
+
+  getAddress: ->
+    _.extend @layer.getAddress(),
+      picture: @index
+  
+  resolveAddress: (address) ->
+    @
+
   recomputeClusters: ->
     # Remove all cluster data.
     @clusters = {}
@@ -124,8 +131,9 @@ class LOI.Assets.Mesh.Object.Layer.Picture
   getMapValueForPixelRelative: (type, x, y) ->
     return unless @_relativeCoordinateInBounds x, y
     return unless flagsMap = @maps[@constructor.Map.Types.Flags]
-    return unless flagsMap.getPixel x, y
+    return unless flags = flagsMap.getPixel x, y
     return unless map = @getMap type
+    return unless flags & map.constructor.flagValue
 
     map.getPixel x, y
 

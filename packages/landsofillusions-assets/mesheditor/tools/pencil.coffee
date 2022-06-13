@@ -14,6 +14,12 @@ class LOI.Assets.MeshEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.P
       pixel.materialIndex ?= null
       pixel.paletteColor ?= null
       pixel.directColor ?= null
-
+      
+    # Create the pencil action.
     picture = @editor().activePicture()
-    picture.setPixels pixels
+    action = new LOI.Assets.MeshEditor.Helpers.History.Action.Pencil
+    action.generateOperations picture, pixels
+
+    # Execute it.
+    history = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.History
+    history.addAction action

@@ -20,33 +20,35 @@ class LOI.Assets.Mesh.Object.Layer.Picture extends LOI.Assets.Mesh.Object.Layer.
   
       boundsUpdated = true
       
-    for pixel in pixels
+    pixels = for pixel in pixels
       # Isolate just the properties we're setting.
-      pixel.properties = _.omit pixel, ['x', 'y']
+      properties = _.omit pixel, ['x', 'y']
 
       # We need to update bounds in absolute coordinates.
-      pixel.absoluteX = pixel.x
-      pixel.absoluteY = pixel.y
+      absoluteX = pixel.x
+      absoluteY = pixel.y
   
       if relative
-        pixel.absoluteX += @_bounds.x
-        pixel.absoluteY += @_bounds.y
+        absoluteX += @_bounds.x
+        absoluteY += @_bounds.y
   
-      if pixel.absoluteX < @_bounds.left
+      if absoluteX < @_bounds.left
         boundsUpdated = true
-        @_bounds.left = pixel.absoluteX
+        @_bounds.left = absoluteX
   
-      if pixel.absoluteX > @_bounds.right
+      if absoluteX > @_bounds.right
         boundsUpdated = true
-        @_bounds.right = pixel.absoluteX
+        @_bounds.right = absoluteX
   
-      if pixel.absoluteY < @_bounds.top
+      if absoluteY < @_bounds.top
         boundsUpdated = true
-        @_bounds.top = pixel.absoluteY
+        @_bounds.top = absoluteY
   
-      if pixel.absoluteY > @_bounds.bottom
+      if absoluteY > @_bounds.bottom
         boundsUpdated = true
-        @_bounds.bottom = pixel.absoluteY
+        @_bounds.bottom = absoluteY
+  
+      {properties, absoluteX, absoluteY}
   
     # Ensure we have the flags and clusters maps before we resize bounds.
     flagsMap = @getMap @constructor.Map.Types.Flags
@@ -61,15 +63,11 @@ class LOI.Assets.Mesh.Object.Layer.Picture extends LOI.Assets.Mesh.Object.Layer.
     addList = []
     removeList = []
 
-    # Transfer pixels to maps.      
+    # Transfer pixels to maps.
     for pixel in pixels
       # We need to send pixels with relative coordinates.
-      pixel.relativeX = pixel.x
-      pixel.relativeY = pixel.y
-  
-      unless relative
-        pixel.relativeX -= @_bounds.x
-        pixel.relativeY -= @_bounds.y
+      pixel.relativeX = pixel.absoluteX - @_bounds.x
+      pixel.relativeY = pixel.absoluteY - @_bounds.y
 
       # See if we're replacing a pixel.
       pixelExists = @maps.flags.pixelExists pixel.relativeX, pixel.relativeY

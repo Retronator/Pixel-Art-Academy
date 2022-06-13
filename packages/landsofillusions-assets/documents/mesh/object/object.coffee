@@ -48,13 +48,23 @@ class LOI.Assets.Mesh.Object
 
     @solver.update [], [], [] unless clustersExist
 
+  getAddress: ->
+    object: @index
+    
+  resolveAddress: (address) ->
+    return @ unless address.layer?
+  
+    layer = @layers.get address.layer
+    layer.resolveAddress address
+
   toPlainObject: ->
     plainObject =
       lastClusterId: @lastClusterId
       solver:
         type: @solver.constructor.type
 
-    for type, field of @constructor.Solver.Types
+    for type, name of @constructor.Solver.Types
+      field = _.lowerFirst name
       @solverOptions[field].save plainObject.solver
 
     @[field].save plainObject for field in ['name', 'visible', 'layers']

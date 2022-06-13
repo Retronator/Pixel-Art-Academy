@@ -6,16 +6,16 @@ RA = Retronator.Accounts
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @id: -> 'LandsOfIllusions.Assets.Asset'
   # name: text identifier for the asset including the path
-  # history: array of operations that produce this asset
-  #   forward: update delta that creates the result of the operation
-  #   backward: update delta that undoes the operation from the resulting state
+  # history: array of actions that produce this asset
+  #   forward: update operations that creates the result of the action
+  #   backward: update operations that undoes the action from the resulting state
   # historyPosition: how many steps of history brings you to the current state of the asset
   # lastEditTime: time when last history item was added
   # editor: custom object with settings that do not get sent to normal users
   @Meta
     abstract: true
 
-  # Set the class name of the asset by which we can reach the class by querying LOI.Assets. We can't simply use the 
+  # Set the class name of the asset by which we can reach the class by querying LOI.Assets. We can't simply use the
   # name parameter, because in production the name field has a minimized value. Must be set in child class.
   @className: null
 

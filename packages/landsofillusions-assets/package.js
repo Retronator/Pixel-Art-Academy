@@ -379,6 +379,15 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/restrictcolors');
   api.addFile('mesheditor/helpers/uniformclusters');
 
+  api.addFile('mesheditor/helpers/history..');
+  api.addFile('mesheditor/helpers/history/action');
+  api.addFile('mesheditor/helpers/history/operation');
+
+  api.addFile('mesheditor/helpers/history/actions/pencil');
+
+  api.addFile('mesheditor/helpers/history/operations/setpixels');
+  api.addFile('mesheditor/helpers/history/operations/clearpixels');
+
   api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');
   api.addUnstyledComponent('mesheditor/matrix..');

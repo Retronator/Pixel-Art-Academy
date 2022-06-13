@@ -15,6 +15,16 @@ class LOI.Assets.Mesh.Object.Layer
     @clusters = new LOI.Assets.Mesh.MapField @, 'clusters', data.clusters, @constructor.Cluster
     @pictures = new LOI.Assets.Mesh.ArrayField @, 'pictures', data.pictures, @constructor.Picture
 
+  getAddress: ->
+    _.extend @object.getAddress(),
+      layer: @index
+
+  resolveAddress: (address) ->
+    return @ unless address.picture?
+  
+    picture = @pictures.get address.picture
+    picture.resolveAddress address
+    
   toPlainObject: ->
     plainObject = {}
 

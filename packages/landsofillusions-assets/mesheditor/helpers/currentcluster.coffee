@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
   # objectIndex: index of the object for this cluster
   # clusterId: ID of the cluster within the object
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Helpers.CurrentCluster'
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Helpers.CurrentCluster'
   @initialize()
   
   constructor: ->

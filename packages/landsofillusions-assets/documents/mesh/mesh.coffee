@@ -241,7 +241,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     Tracker.nonreactive =>
       @_updatePaletteTextureAutorun = Tracker.autorun =>
         propertiesChangedDependency.depend()
-        return unless palette = @customPalette or LOI.Assets.Palette.documents.findOne @palette._id
+        return unless palette = @customPalette or LOI.Assets.Palette.documents.findOne @palette?._id
         @paletteTexture.update palette
 
   destroy: ->
@@ -250,6 +250,12 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     @materialProperties.destroy()
     @lightmapAreaProperties.destroy()
+
+  resolveAddress: (address) ->
+    return unless address.object?
+
+    object = @objects.get address.object
+    object.resolveAddress address
 
   depend: ->
     @_updatedDependency.depend()

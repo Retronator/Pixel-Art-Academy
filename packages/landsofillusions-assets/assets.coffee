@@ -3,7 +3,7 @@ AB = Artificial.Base
 AM = Artificial.Mummification
 
 class LOI.Assets
-  @debug = false
+  @debug = true
 
   @exportPaths = []
 

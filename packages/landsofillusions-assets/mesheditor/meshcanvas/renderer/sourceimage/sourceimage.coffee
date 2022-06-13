@@ -14,11 +14,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
     scene.add directionalLight
 
-    @lightDirectionHelper = meshCanvas.interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @fileId
-
     # Move light around.
     meshCanvas.autorun (computation) =>
-      lightDirection = @lightDirectionHelper()
+      lightDirectionHelper = meshCanvas.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.LightDirection
+      lightDirection = lightDirectionHelper()
       directionalLight.position.copy lightDirection.clone().multiplyScalar -100
       @scene.updated()
 

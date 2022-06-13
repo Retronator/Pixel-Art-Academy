@@ -67,8 +67,8 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
 
   onClickAddButton: (event) ->
     index = @mesh().cameraAngles.insert
-      picturePlaneDistance: 0.05
-      pixelSize: 0.001
+      picturePlaneDistance: 0.5
+      pixelSize: 0.01
       position: x: 0, y: 1, z: 2
       target: x: 0, y: 1, z: 0
       up: x: 0, y: 1, z: 0
