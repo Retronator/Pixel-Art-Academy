@@ -46,6 +46,14 @@ The project is using these fonts:
 
   Attribution 4.0 International License
 
+- **PixelPlay** by Aleksander Shevchuk (https://www.behance.net/shevchuk)
+
+  Uploaded as Freeware (no license)
+
+- **Typecast** by Font End Dev (https://fontenddev.com)
+
+  Attribution 4.0 International License
+
 Fonts are served in the WOFF cross-browser format as base64 encoded data URIs directly inside the CSS.
 
 The CSS files are generated with Font Squirrel (http://www.fontsquirrel.com)

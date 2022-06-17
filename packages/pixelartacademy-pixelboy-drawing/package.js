@@ -23,6 +23,13 @@ Package.onUse(function(api) {
 
   api.addComponent('portfolio..');
   api.addFile('portfolio/portfolio-initialize');
+  api.addFile('portfolio/formasset');
+
+  api.addFile('portfolio/newartwork..');
+  api.addComponent('portfolio/newartwork/portfoliocomponent..');
+  api.addComponent('portfolio/newartwork/clipboardcomponent..');
+
+  api.addFile('portfolio/importartwork..');
 
   api.addComponent('clipboard..');
 

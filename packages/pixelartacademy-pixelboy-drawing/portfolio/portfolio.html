@@ -24,9 +24,7 @@
                   <ul class="assets">
                     {{#each assets}}
                       <li class="asset {{assetActiveClass}} {{asset.styleClasses}}" {{style assetStyle}}>
-                        <div class="sprite" {{style spriteStyle}}>
-                          {{> Render spriteImage}}
-                        </div>
+                        {{> Render asset.portfolioComponent}}
                       </li>
                     {{/each}}
                   </ul>

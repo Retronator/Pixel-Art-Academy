@@ -1,0 +1,84 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent">
+  <form class="pixelartacademy-pixelboy-apps-drawing-portfolio-newartwork-clipboardcomponent">
+    <div class="form-title">Purchase order form</div>
+    <div class="properties">
+      <label class="property title">
+        <span class="name">Title</span>
+        <span class="value"><input name="title" type="text" placeholder="Enter artwork title"/></span>
+      </label>
+      <div class="property type">
+        <span class="name">Type</span>
+        <span class="value">
+          <label class="option">
+            <input class="option-input" type="radio" name="type" value="Sprite"/><span class="radio"></span>
+            <span class="label">Sprite</span>
+          </label>
+          <label class="option">
+            <input class="option-input" type="radio" name="type" value="Canvas"/><span class="radio"></span>
+            <span class="label">Canvas</span>
+          </label>
+        </span>
+      </div>
+      <label class="property size">
+        <span class="name">Size</span>
+        <span class="value">
+          <span class="selection">
+            {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType}}
+          </span>
+          {{#if $is sizeType 'Fixed'}}
+            <span class="dimensions">
+              <span class="dimension">
+                <input class="dimension-value" name="width" type="number" min="1" placeholder="width">
+              </span>
+              <span class="multiplication-symbol">&times;</span>
+              <span class="dimension">
+                <input class="dimension-value" name="width" type="number" min="1" placeholder="height">
+              </span>
+              <span class="unit">pixels</span>
+            </span>
+          {{/if}}
+        </span>
+      </label>
+    </div>
+    <div class="extras-title">
+      <span class="text">Extra items</span>
+    </div>
+    <div class="extras">
+      <label class="extra">
+        <span class="name">Colors</span>
+        <span class="value">
+          <select class="palette">
+            {{#each palettes}}
+              <option value="{{_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+    </div>
+    <div class="submit-area">
+      <div class="title">Signature</div>
+      <div class="button-area">
+        <button class="submit-button">{{currentCharacter.avatar.fullName}}</button>
+        <div class="prompt">
+          Click on the line above to order
+        </div>
+      </div>
+    </div>
+  </form>
+</template>

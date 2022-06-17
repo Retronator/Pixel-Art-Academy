@@ -55,9 +55,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     super arguments...
 
     @activeAsset = new ComputedField =>
+      return unless @spriteId()
       @drawing.portfolio().activeAsset()?.asset
 
     @displayedAsset = new ComputedField =>
+      return unless @spriteId()
       @drawing.portfolio().displayedAsset()?.asset
 
     # Initialize components.
@@ -209,7 +211,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     @autorun (computation) =>
       return unless camera = @pixelCanvas().camera()
       return unless assetData = @drawing.portfolio().displayedAsset()
-      return unless clipboardSpriteSize = @drawing.clipboard().spriteSize()
+      return unless clipboardSpriteSize = @spriteClipboardComponent()?.spriteSize()
 
       # Dictate sprite scale when asset is on clipboard and when setting for the first time.
       clipboardSpriteScale = clipboardSpriteSize.scale
@@ -283,9 +285,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
   resizingDirectionClass: ->
     @references().resizingReference()?.resizingDirectionClass()
 
+  spriteClipboardComponent: ->
+    return unless clipboardComponent = @displayedAsset()?.clipboardComponent
+    return unless clipboardComponent.isCreated()
+    clipboardComponent
+    
   spriteVisible: ->
     # Don't show the sprite when clipboard is on the second page.
-    not @drawing.clipboard().secondPageActive()
+    not @spriteClipboardComponent()?.secondPageActive()
 
   spriteStyle: ->
     # Allow to be updated externally.
@@ -300,7 +307,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     # If we don't have size data, don't return anything so transition will start form first value.
     return offScreenStyle unless spriteData = @spriteData()
     return offScreenStyle unless scale = @pixelCanvas()?.camera()?.scale()
-    return offScreenStyle unless clipboardSpriteSize = @drawing.clipboard().spriteSize()
+    return offScreenStyle unless clipboardSpriteSize = @spriteClipboardComponent()?.spriteSize()
 
     width = spriteData.bounds.width * scale
     height = spriteData.bounds.height * scale
@@ -336,6 +343,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
     else
       $spritePlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .sprite-placeholder')
+      return {} unless $spritePlaceholder.length
       spriteOffset = $spritePlaceholder.offset()
 
       $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')

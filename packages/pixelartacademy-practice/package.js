@@ -79,6 +79,8 @@ Package.onUse(function(api) {
   api.addFile('project/asset');
 
   api.addFile('project/assets/sprite..');
+  api.addComponent('project/assets/sprite/portfoliocomponent..');
+  api.addComponent('project/assets/sprite/clipboardcomponent..');
   api.addUnstyledComponent('project/assets/sprite/briefcomponent..');
 
   // Challenges

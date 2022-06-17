@@ -58,11 +58,46 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
           groups: groups
 
         @["#{sectionThingName}sSection"] = section
+  
+    @_newArtworkAsset = new PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork
+    @_importArtworkAsset = new PAA.PixelBoy.Apps.Drawing.Portfolio.ImportArtwork
 
+    @_wipArtworksGroup =
+      index: 0
+      name: => "WIP"
+      assets: new ComputedField =>
+        assets = []
+        
+        # TODO: Fetch WIP artworks.
+  
+        # New artworks can be created if the player can edit art with built-in editors.
+        if PAA.Practice.Project.Asset.Sprite.state 'canEdit'
+          assets.push
+            index: assets.length
+            asset: @_newArtworkAsset
+            scale: => 1
+  
+        # Artworks can be imported if the player can upload art made with external software.
+        if PAA.Practice.Project.Asset.Sprite.state 'canUpload'
+          assets.push
+            index: assets.length
+            asset: @_importArtworkAsset
+            scale: => 1
+  
+        assets
+        
     @artworksSection =
       nameKey: @constructor.Sections.Artworks
-      groups: => []
-        
+      groups: =>
+        groups = []
+  
+        if @_wipArtworksGroup.assets().length
+          groups.push @_wipArtworksGroup
+          
+        # TODO: Fetch all artworks.
+    
+        groups
+  
     @sections = new ComputedField =>
       sections = []
 
@@ -112,13 +147,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>
-      return unless spriteId = AB.Router.getParameter 'parameter3'
+      return unless parameter = AB.Router.getParameter 'parameter3'
 
-      # Find the asset that uses this sprite.
+      # Find the asset that uses this parameter.
       for section in @sections()
         for group in section.groups()
           for assetData in group.assets()
-            if assetData.asset.spriteId() is spriteId
+            if assetData.asset.urlParameter() is parameter
               @activeSection section
               @activeGroup group
               return assetData

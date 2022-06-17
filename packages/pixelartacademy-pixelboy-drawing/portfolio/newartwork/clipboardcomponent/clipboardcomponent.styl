@@ -1,0 +1,250 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+printColor = atariCyan(2)
+paperColor = atariGreen(7)
+inputColor = atariGray(2)
+
+typecastLabel()
+  typecast()
+  font-style italic
+  letter-spacing -2rem
+
+freehandValue()
+  freehand()
+  color inputColor
+
+.pixelartacademy-pixelboy-apps-drawing-portfolio-newartwork-clipboardcomponent
+  position absolute
+  left 27rem
+  top 10rem
+  width 145rem
+  z-index 1
+  margin-right 1rem
+  padding 0 8rem 8rem
+  background paperColor
+  box-shadow -1rem 0 0 atariAzure(0)
+  color printColor
+
+  &::before
+    content ''
+    display block
+    height 21rem
+    width 129rem
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/forms/newartwork.png')
+
+  input
+  select
+  button
+    border none
+    width 100%
+    height 10rem
+    padding 0
+    background none
+    font inherit
+    color inherit
+    input-placeholder atariGray(3)
+
+  select
+    height 9rem
+    padding-left 2rem
+
+  input[type=text]
+    padding-left 4rem
+
+  .option
+    padding 0 0 2rem 4rem
+    cursor pointer
+
+    .option-input
+      display none
+
+      &:checked ~ .radio
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/forms/radio-full.png')
+
+    .radio
+      display inline-block
+      position relative
+      vertical-align baseline
+      width 7rem
+      height 7rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/forms/radio-empty.png')
+
+    .label
+      thintel()
+      text-transform uppercase
+      color printColor
+
+  .title .value
+  .size .value .selection
+  .size .value .dimension
+    position relative
+
+    &::before
+      content ''
+      position absolute
+      bottom 3rem
+      left 0
+      right 0
+      z-index 0
+      border-bottom 1rem dotted printColor
+
+    input
+    select
+      position relative
+      top -2rem
+
+  .form-title
+    margin 5rem 0
+    thintel()
+    text-align center
+    text-transform uppercase
+
+  .properties
+    display table
+    width 100%
+
+    .property
+      display table-row
+
+      .name
+      .value
+        display table-cell
+
+      .name
+        padding 1rem 5rem 1rem 0
+        width 1%
+        vertical-align top
+        typecastLabel()
+
+      .value
+        padding 2rem 0 1rem
+        freehandValue()
+
+    .title
+      .value
+        &::before
+          bottom 4rem
+
+    .type
+      .option
+        display block
+
+    .size
+      .dimensions
+        display block
+
+        .dimension
+          display inline-block
+          width 31rem
+          padding-top 1rem
+
+          input
+            text-align center
+
+        .multiplication-symbol
+          daily()
+          color printColor
+
+        .unit
+          thintel()
+          color printColor
+
+  .extras-title
+    position relative
+    z-index 1
+    margin-top 2rem
+    typecastLabel()
+    text-align center
+
+    .text
+      display inline-block
+      background paperColor
+      padding 1rem
+
+  .extras
+    display table
+    position relative
+    margin -2rem 3rem 3rem 3rem
+    width calc(100% - 6rem)
+    border 1rem solid printColor
+    padding 0 2rem
+    freehandValue()
+
+    &::before
+      content ''
+      display block
+      position absolute
+      left -4rem
+      top -4rem
+      right -4rem
+      bottom -4rem
+      border 2rem solid printColor
+      pointer-events none
+
+    .extra
+      display table-row
+      height 10rem
+
+      &:last-child
+        height 9rem
+
+        .name
+        .value
+          padding-top 0
+
+          &::before
+            display none
+
+      .name
+      .value
+        display table-cell
+        position relative
+        padding-top 1rem
+
+        &::before
+          content ''
+          position absolute
+          bottom 0
+          left 0
+          right 0
+          z-index 0
+          border-bottom 1rem dotted printColor
+
+      .name
+        border-right 1rem solid printColor
+
+  .submit-area
+    display flex
+    margin-top 8rem
+
+    .title
+      padding-right 5rem
+      typecastLabel()
+
+    .button-area
+      position relative
+
+      &::before
+        content ''
+        position absolute
+        top 7rem
+        left 0
+        right 0
+        z-index 0
+        border-bottom 1rem solid printColor
+
+      .submit-button
+        position relative
+        top -1rem
+        padding 0
+        freehand()
+        color transparent
+
+        &:hover
+          freehandValue()
+
+      .prompt
+        margin-top 2rem
+        checkout()
+        text-align center
+        line-height 1em

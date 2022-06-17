@@ -80,21 +80,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     zIndex = group.assets().length - assetData.index
 
     zIndex: zIndex
-    width: "#{assetData.asset.width() *  assetData.scale() + 12}rem"
-
-  spriteStyle: ->
-    assetData = @currentData()
-    scale = assetData.scale()
-
-    style =
-      width: "#{assetData.asset.width() * scale}rem"
-      height: "#{assetData.asset.height() * scale}rem"
-
-    if backgroundColor = assetData.asset.backgroundColor()
-      style.backgroundColor = "##{backgroundColor.getHexString()}"
-      style.borderColor = style.backgroundColor
-
-    style
+    width: "#{assetData.asset.width() * assetData.scale() + 12}rem"
 
   _assetScale: (asset) ->
     # Scale the sprite as much as possible (up to 7) while remaining under 84px.
@@ -109,14 +95,6 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     scale++ while scale < 6 and (scale + 1) * maxSize < 84
 
     scale
-
-  spriteImage: ->
-    assetData = @currentData()
-    return unless spriteId = assetData.asset.spriteId()
-
-    new LOI.Assets.Components.SpriteImage
-      spriteId: => spriteId
-      loadPalette: true
 
   coverStyle: ->
     sections = @sections()
@@ -232,7 +210,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     assetData = @currentData()
 
     # Set active sprite ID.
-    AB.Router.setParameter 'parameter3', assetData.asset.spriteId()
+    AB.Router.setParameter 'parameter3', assetData.asset.urlParameter()
 
   onClickPixelBoyEditor: (event) ->
     editor = @currentData()
