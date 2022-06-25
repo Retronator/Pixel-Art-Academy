@@ -112,7 +112,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   
   imageUrl: ->
     return unless spriteId = @spriteId()
-    "/assets/sprite.png?spriteId=#{spriteId}"
+    "/assets/sprite.png?id=#{spriteId}"
 
 # We want a generic state for sprite assets so we create it outside of the constructor as inherited classes don't need it.
 # canEdit: can the user edit the sprites with built-in editors

@@ -48,6 +48,8 @@ class PADB.Artwork extends AM.Document
     Timelapse: 'Timelapse'
     # Online article or blog post about this artwork
     Post: 'Post'
+    # In-game data document
+    Document: 'Document'
 
   # Methods
 

@@ -1,5 +1,6 @@
 AM = Artificial.Mummification
 AE = Artificial.Everywhere
+LOI = LandsOfIllusions
 PADB = PixelArtDatabase
 
 PADB.Artist.create = (documentData) ->
@@ -13,6 +14,13 @@ PADB.Artist.create = (documentData) ->
   else if documentData.pseudonym
     # Some artists are only known under their pseudonym
     artistQuery.pseudonym = documentData.pseudonym
+    
+  else if documentData.characters?.length
+    if documentData.characters.length is 1
+      artistQuery["character._id"] = documentData.characters[0]._id
+      
+    else
+      artistQuery["character._id"] = $in: (character._id for character in documentData.characters[0])
 
   artists = PADB.Artist.documents.fetch artistQuery
 
@@ -38,7 +46,16 @@ PADB.Artist.create = (documentData) ->
 
   else
     # This is a new artist, we can simply insert them.
+    # If characters were set, we will need to link them on the character documents instead.
+    if characters = documentData.characters
+      delete documentData.characters
+    
     artistId = PADB.Artist.documents.insert documentData
+    
+    if characters
+      for character in characters
+        LOI.Character.documents.update character._id,
+          $set: artist: _id: artistId
 
   # Return the new document.
   PADB.Artist.documents.findOne artistId

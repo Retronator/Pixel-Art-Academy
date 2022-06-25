@@ -21,6 +21,7 @@ Snake.start.method (characterId) ->
 
   # Create two pre-made sprites.
   createCommonSpriteData = ->
+    creationTime: new Date()
     palette:
       _id: pico8Palette._id
     bounds:

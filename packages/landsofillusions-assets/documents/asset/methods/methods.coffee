@@ -8,7 +8,8 @@ LOI.Assets.Asset.insert.method (assetClassName) ->
   RA.authorizeAdmin()
   
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
-  assetClass.documents.insert {}
+  assetClass.documents.insert
+    creationTime: new Date()
 
 LOI.Assets.Asset.update.method (assetClassName, assetId, update, options) ->
   check assetClassName, String

@@ -3,6 +3,7 @@
 printColor = atariCyan(2)
 paperColor = atariGreen(7)
 inputColor = atariGray(2)
+errorColor = atariRed(4)
 
 typecastLabel()
   typecast()
@@ -12,6 +13,18 @@ typecastLabel()
 freehandValue()
   freehand()
   color inputColor
+
+errorTransform()
+  transform rotate(-3deg)
+
+errorUnderline()
+  content ''
+  display block
+  position absolute
+  left 0
+  width 100%
+  border-bottom 1rem solid errorColor
+  errorTransform()
 
 .pixelartacademy-pixelboy-apps-drawing-portfolio-newartwork-clipboardcomponent
   position absolute
@@ -32,6 +45,32 @@ freehandValue()
     width 129rem
     background-image image('/pixelartacademy/pixelboy/apps/drawing/forms/newartwork.png')
 
+  &.error-type
+    .property.type
+      .label
+        position relative
+
+        &::before
+          errorUnderline()
+          bottom 2rem
+
+  &.error-width
+    .property.size
+      .width
+        position relative
+
+        &::after
+          errorUnderline()
+          bottom 3rem
+
+  &.error-height
+    .property.size
+      .height
+        position relative
+
+        &::after
+          errorUnderline()
+          bottom 3rem
   input
   select
   button
@@ -213,6 +252,13 @@ freehandValue()
       .name
         border-right 1rem solid printColor
 
+        &::before
+          right 2rem
+
+      .value
+        &::before
+          left 2rem
+
   .submit-area
     display flex
     margin-top 8rem
@@ -248,3 +294,10 @@ freehandValue()
         checkout()
         text-align center
         line-height 1em
+
+  .error-message
+    margin-top 8rem
+    color errorColor
+    freehand()
+    text-align center
+    errorTransform()

@@ -59,6 +59,12 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
 
         @["#{sectionThingName}sSection"] = section
   
+    @autorun (computation) =>
+      return unless artworks = PAA.PixelBoy.Apps.Drawing.state 'artworks'
+      artworkIds = artwork.artworkId for artwork in artworks
+      
+      # TODO: Subscribe to all the artworks and associated assets.
+      
     @_newArtworkAsset = new PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork
     @_importArtworkAsset = new PAA.PixelBoy.Apps.Drawing.Portfolio.ImportArtwork
 

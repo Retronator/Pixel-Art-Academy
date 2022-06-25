@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent">
-  <form class="pixelartacademy-pixelboy-apps-drawing-portfolio-newartwork-clipboardcomponent">
+  <form class="pixelartacademy-pixelboy-apps-drawing-portfolio-newartwork-clipboardcomponent newartwork-form {{errorClasses}}">
     <div class="form-title">Purchase order form</div>
     <div class="properties">
       <label class="property title">
@@ -27,12 +27,12 @@
           </span>
           {{#if $is sizeType 'Fixed'}}
             <span class="dimensions">
-              <span class="dimension">
-                <input class="dimension-value" name="width" type="number" min="1" placeholder="width">
+              <span class="dimension width">
+                <input class="dimension-value" name="width" type="number" min="1" max="{{maxSize}}" placeholder="width">
               </span>
               <span class="multiplication-symbol">&times;</span>
-              <span class="dimension">
-                <input class="dimension-value" name="width" type="number" min="1" placeholder="height">
+              <span class="dimension height">
+                <input class="dimension-value" name="height" type="number" min="1" max="{{maxSize}}" placeholder="height">
               </span>
               <span class="unit">pixels</span>
             </span>
@@ -47,7 +47,7 @@
       <label class="extra">
         <span class="name">Colors</span>
         <span class="value">
-          <select class="palette">
+          <select class="palette" name="palette">
             {{#each palettes}}
               <option value="{{_id}}">{{name}}</option>
             {{/each}}
@@ -80,5 +80,12 @@
         </div>
       </div>
     </div>
+    {{#if errorClasses}}
+      <div class="error-message">
+        {{#if typeError}}Please choose the artwork type.{{/if}}
+        {{#if $or widthError heightError}}Please enter a valid size.{{/if}}
+        {{#if sizeOutOfRangeError}}The maximum size for a {{toLower type}} is {{maxSize}}.{{/if}}
+      </div>
+    {{/if}}
   </form>
 </template>

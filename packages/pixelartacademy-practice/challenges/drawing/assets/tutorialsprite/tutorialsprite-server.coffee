@@ -8,6 +8,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
     size = @fixedDimensions()
     
     spriteData =
+      creationTime: new Date()
       bounds:
         left: 0
         right: size.width - 1

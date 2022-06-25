@@ -10,12 +10,13 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   #   forward: update delta that creates the result of the operation
   #   backward: update delta that undoes the operation from the resulting state
   # historyPosition: how many steps of history brings you to the current state of the asset
+  # creationTime: time when the document was created
   # lastEditTime: time when last history item was added
   # editor: custom object with settings that do not get sent to normal users
   @Meta
     abstract: true
 
-  # Set the class name of the asset by which we can reach the class by querying LOI.Assets. We can't simply use the 
+  # Set the class name of the asset by which we can reach the class by querying LOI.Assets. We can't simply use the
   # name parameter, because in production the name field has a minimized value. Must be set in child class.
   @className: null
 

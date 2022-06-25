@@ -7,6 +7,8 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   # editorId: which editor component to use for editing sprites in the app
   # externalSoftware: which external software the player is using to edit sprites
+  # artworks: array of manually created artworks
+  #   artworkId: the ID of the artwork document
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing'
   @url: -> 'drawing'
 

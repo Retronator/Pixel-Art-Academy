@@ -55,12 +55,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     super arguments...
 
     @activeAsset = new ComputedField =>
-      return unless @spriteId()
-      @drawing.portfolio().activeAsset()?.asset
+      asset = @drawing.portfolio().activeAsset()?.asset
+      return unless asset instanceof PAA.Practice.Project.Asset.Sprite
+      asset
 
     @displayedAsset = new ComputedField =>
-      return unless @spriteId()
-      @drawing.portfolio().displayedAsset()?.asset
+      asset = @drawing.portfolio().displayedAsset()?.asset
+      return unless asset instanceof PAA.Practice.Project.Asset.Sprite
+      asset
 
     # Initialize components.
     @sprite new LOI.Assets.Engine.Sprite

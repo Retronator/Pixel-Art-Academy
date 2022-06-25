@@ -99,4 +99,8 @@ Package.onUse(function(api) {
   // Software
   api.addFile('software..');
   api.addFile('software/tools');
+
+  // Artworks
+  api.addFile('artworks..');
+  api.addFile('artworks/methods');
 });
