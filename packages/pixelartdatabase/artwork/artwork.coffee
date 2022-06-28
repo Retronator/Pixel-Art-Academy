@@ -29,7 +29,7 @@ class PADB.Artwork extends AM.Document
     fields: =>
       authors: [Document.ReferenceField PADB.Artist, ['displayName'], true, 'artworks', ['title']]
 
-  @Types:
+  @Types =
     # Static image
     Image: 'Image'
     # Short animated work, usually in form of a GIF
@@ -39,7 +39,7 @@ class PADB.Artwork extends AM.Document
     # Physical 2D artwork
     Physical: 'Physical'
 
-  @RepresentationTypes:
+  @RepresentationTypes =
     # Resource of MIME type image
     Image: 'Image'
     # Resource of MIME type video
@@ -53,12 +53,13 @@ class PADB.Artwork extends AM.Document
 
   # Methods
 
-  @insert: @method 'insert'
+  @insert = @method 'insert'
+  @updateCharacterArtwork = @method 'updateCharacterArtwork'
 
   # Subscriptions
 
-  @all: @subscription 'all'
-  @forUrl: new AB.Subscription
+  @all = @subscription 'all'
+  @forUrl = new AB.Subscription
     name: "#{@id()}.forUrl"
     query: (url) =>
       # Match artworks both by image and representation urls.
@@ -68,8 +69,8 @@ class PADB.Artwork extends AM.Document
         ,
           'representations.url': url
         ]
-  @forArtistName: @subscription 'forArtistName'
-  @forArtistPseudonym: @subscription 'forArtistPseudonym'
+  @forArtistName = @subscription 'forArtistName'
+  @forArtistPseudonym = @subscription 'forArtistPseudonym'
 
   # Returns the first image representation.
   firstImageRepresentation: ->

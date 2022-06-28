@@ -24,6 +24,20 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     "
     
   @initialize()
+  
+  @canEdit: ->
+    # Editor needs to be selected.
+    return unless @state('editorId')
+
+    # Player must have completed the reference copy challenge with a built-in editor.
+    PAA.Practice.Project.Asset.Sprite.state 'canEdit'
+
+  @canUpload: ->
+    # External software needs to be selected.
+    return unless @state('externalSoftware')
+  
+    # Player must have completed the reference copy challenge by uploading the result.
+    PAA.Practice.Project.Asset.Sprite.state 'canUpload'
 
   constructor: ->
     super arguments...

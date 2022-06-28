@@ -3,7 +3,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.FormAsset
+class PAA.PixelBoy.Apps.Drawing.Portfolio.FormAsset extends PAA.PixelBoy.Apps.Drawing.Portfolio.Asset
   # Id string for this asset used to identify the asset in code.
   @id: -> throw new AE.NotImplementedException "You must specify asset's id."
 
@@ -24,13 +24,14 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.FormAsset
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'description']
 
   constructor: ->
+    super arguments...
+    
     # Subscribe to this asset's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
   destroy: ->
     @_translationSubscription.stop()
-    @data.stop()
 
   id: -> @constructor.id()
 
@@ -40,9 +41,5 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.FormAsset
   description: -> AB.translate(@_translationSubscription, 'description').text
   descriptionTranslation: -> AB.translation @_translationSubscription, 'description'
 
-  styleClasses: -> '' # Override to provide a string with class names for styling the asset.
-
-  editorStyleClasses: -> '' # Override to provide a string with class names for styling the surrounding editor.
-  
   width: -> 48
   height: -> 64

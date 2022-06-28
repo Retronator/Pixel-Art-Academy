@@ -4,7 +4,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
+class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio'
   
   @Sections:
@@ -13,6 +13,9 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     Artworks: 'Artworks'
     Settings: 'Settings'
 
+  # Subscriptions
+  @artworksWithAssets = new AB.Subscription name: "#{@id()}.artworks"
+  
   constructor: (@drawing) ->
     super arguments...
 
@@ -83,9 +86,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     width: "#{assetData.asset.width() * assetData.scale() + 12}rem"
 
   _assetScale: (asset) ->
-    # Scale the sprite as much as possible (up to 7) while remaining under 84px.
-    scale = 1
+    # Scale the sprite as much as possible (up to 6) while remaining under 84px.
     maxSize = Math.max asset.width(), asset.height()
+    return 1 if _.isNaN maxSize
+    
+    scale = 1
 
     if maxSize > 84
       # Scale downwards while interpreting scale as the denominator.

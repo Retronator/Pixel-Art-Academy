@@ -30,17 +30,8 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
   noActions: ->
     not (@canEdit() or @canUpload())
 
-  canEdit: ->
-    # Editor needs to be selected.
-    return unless PAA.PixelBoy.Apps.Drawing.state('editorId')
-
-    PAA.Practice.Project.Asset.Sprite.state 'canEdit'
-
-  canUpload: ->
-    # External software needs to be selected.
-    return unless PAA.PixelBoy.Apps.Drawing.state('externalSoftware')
-
-    PAA.Practice.Project.Asset.Sprite.state 'canUpload'
+  canEdit: -> PAA.PixelBoy.Apps.Drawing.canEdit()
+  canUpload: -> PAA.PixelBoy.Apps.Drawing.canUpload()
 
   customPaletteColorsString: ->
     count = 0
@@ -118,7 +109,7 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
       backgroundColor = palette.ramps[backgroundColor.paletteColor.ramp].shades[backgroundColor.paletteColor.shade]
 
     pixels = @_createPixels imageData, palette, backgroundColor
-      
+    
     LOI.Assets.Sprite.replacePixels @sprite.spriteId(), 0, pixels
 
   _createPixels: (imageData, palette, backgroundColor) ->
@@ -135,7 +126,7 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
         r = imageData.data[pixelIndex] / 255
         g = imageData.data[pixelIndex + 1] / 255
         b = imageData.data[pixelIndex + 2] / 255
-          
+        
         pixel = null
         
         # This is a full pixel. If we have a palette, find the closest palette color.
@@ -171,6 +162,6 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
         pixels.push pixel if pixel
         
     pixels
-      
+    
   _colorDistance: (color, r, g, b) ->
     Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)
