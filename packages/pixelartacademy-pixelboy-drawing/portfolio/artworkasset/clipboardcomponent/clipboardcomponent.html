@@ -1,0 +1,57 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent">
+  <div class="pixelartacademy-pixelboy-apps-drawing-portfolio-artworkasset-clipboardcomponent {{activeAssetClass}} {{editorActiveClass}}">
+    {{#if asset.clipboardPageComponent}}
+      <div class="bottom">
+        {{> Render asset.clipboardPageComponent}}
+      </div>
+    {{/if}}
+    {{#if secondPageActive}}
+      <button class="turned-page back-button"></button>
+    {{else}}
+      <div class="brief">
+        <div class="artwork {{styleClasses}}">
+          {{#with artworkAsset.artwork}}
+            <div class="title">{{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title}}</div>
+          {{/with}}
+          {{#with artworkAsset.document}}
+            <ul class="properties">
+              <li class="property dimensions">
+                <span class="property-name">Size</span>:
+                  {{#with bounds}}
+                    {{width}}×{{height}}{{#if freeform}},{{/if}}
+                  {{/with}}
+                  {{#if artworkAsset.freeform}}freeform{{/if}}
+              </li>
+              <li class="property palette">
+                <span class="property-name">Palette</span>:
+                {{#if palette}}
+                  {{#if palette.lospecSlug}}
+                    <a href="https://lospec.com/palette-list/{{palette.lospecSlug}}" target="_blank">{{palette.name}}</a>
+                  {{else}}
+                    {{palette.name}}
+                  {{/if}}
+                {{/if}}
+              </li>
+            </ul>
+            <ul class="actions">
+              {{#if canEdit}}
+                <li class="action">
+                  <button class="button edit-button">Edit</button>
+                </li>
+              {{/if}}
+              {{#if canUpload}}
+                <li class="action">
+                  <a class="link download" href="{{sprite.imageUrl}}" download="{{spriteImageFileName}}.png">Download</a>
+                </li>
+                <li class="action">
+                  <button class="button upload-button">Upload</button>
+                </li>
+              {{/if}}
+            </ul>
+          {{/with}}
+        </div>
+        <div class="sprite-placeholder" {{style spritePlaceholderStyle}}></div>
+      </div>
+    {{/if}}
+  </div>
+</template>

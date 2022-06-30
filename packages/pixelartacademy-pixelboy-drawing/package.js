@@ -29,6 +29,7 @@ Package.onUse(function(api) {
 
   api.addFile('portfolio/artworkasset..');
   api.addComponent('portfolio/artworkasset/portfoliocomponent..');
+  api.addComponent('portfolio/artworkasset/clipboardcomponent..');
 
   api.addFile('portfolio/newartwork..');
   api.addComponent('portfolio/newartwork/portfoliocomponent..');

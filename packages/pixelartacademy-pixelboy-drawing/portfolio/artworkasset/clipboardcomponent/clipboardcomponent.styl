@@ -1,0 +1,174 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-portfolio-artworkasset-clipboardcomponent
+  absolute-cover()
+  color atariGray(1)
+  daily()
+
+  .brief
+    position absolute
+    top 10rem
+    left 11rem
+    width 178rem
+    padding 14rem 12rem
+
+    &::before
+      content ''
+      display block
+      absolute-cover()
+      z-index 1
+      background-color atariGray(7)
+      box-shadow -1rem 0 0 atariAzure(0),
+                 0 1rem 0 rgba(atariGray(0), 0.1)
+
+    &::after
+      content ''
+      display block
+      position absolute
+      z-index 1
+      top 0
+      left 42rem
+      width 87rem
+      height 14rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/page-top.png')
+
+    .artwork
+      position relative
+      z-index 1
+
+      .title
+        text-transform uppercase
+
+        input
+          background none
+          border none
+
+      .description
+        margin 8rem 0
+
+        ul
+          list-style square
+
+      .properties
+        list-style none
+        padding 0
+
+        .property
+          margin-bottom 4rem
+
+          .property-name
+            text-transform uppercase
+
+          a
+            text-decoration none
+            border-bottom 1rem solid atariGray(4)
+
+            &:hover
+              color atariGray(2)
+
+      .no-actions
+        margin 8rem 0
+        padding 4rem
+        border 1rem solid atariGray(4)
+        text-align center
+
+      .actions
+        list-style none
+        width 100%
+        padding 0
+        display table
+        border-collapse collapse
+
+        .action
+          display table-cell
+          position relative
+          border 1rem solid atariGray(4)
+          width 33.3%
+          height 10rem
+          text-transform uppercase
+          checkout()
+          text-align center
+
+          &.completed
+            background atariGreen(5)
+            padding 1rem
+
+            .button
+              &:hover
+                background atariGreen(6)
+
+          .button
+          .link
+            color atariGray(2)
+
+            &:hover
+              background atariGray(6)
+
+          .button
+            absolute-cover-size()
+            border none
+            background none
+            font inherit
+            text-transform inherit
+
+          .link
+            absolute-cover()
+            text-decoration none
+            line-height 9rem
+
+    .sprite-placeholder
+      position relative
+      left -10rem
+
+      &::after
+        content ''
+        position absolute
+        z-index 3
+        top 15rem
+        left -6rem
+        width 23rem
+        height 9rem
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/paperclip.png')
+
+  .bottom
+    z-index 1
+    position absolute
+    top 11rem
+    left 12rem
+    width 178rem
+    padding 5rem 12rem 14rem
+    background-color atariGray(7)
+    box-shadow -1rem 0 0 atariAzure(0)
+
+    h2
+      daily()
+      font-weight bold
+
+    .asset
+      float right
+      position relative
+      right -11rem
+
+      &:hover
+        .image
+          right 2rem
+
+      &::after
+        content ''
+        position absolute
+        z-index 1
+        width 23rem
+
+      .image
+        position relative
+        width 100%
+        right 0
+        transition right 0.1s
+
+  .turned-page
+    absolute-cover-size()
+    height 30rem
+    z-index 3
+    background image('/pixelartacademy/practice/project/asset/sprite/clipboardcomponent/page-top-turned.png') center / 100%
+    border none
+    cursor pointer

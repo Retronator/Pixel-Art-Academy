@@ -56,12 +56,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
     @activeAsset = new ComputedField =>
       asset = @drawing.portfolio().activeAsset()?.asset
-      return unless asset instanceof PAA.Practice.Project.Asset.Sprite
+      return unless asset instanceof PAA.Practice.Project.Asset.Sprite or asset instanceof PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset
       asset
 
     @displayedAsset = new ComputedField =>
       asset = @drawing.portfolio().displayedAsset()?.asset
-      return unless asset instanceof PAA.Practice.Project.Asset.Sprite
+      return unless asset instanceof PAA.Practice.Project.Asset.Sprite or asset instanceof PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset
       asset
 
     # Initialize components.
@@ -75,7 +75,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       grid: => @drawingActive()
       gridInvertColor: =>
         displayedAsset = @displayedAsset()
-        return unless backgroundColor = displayedAsset?.backgroundColor()
+        return unless backgroundColor = displayedAsset?.backgroundColor?()
         backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
 
       cursor: => @drawingActive()
@@ -97,7 +97,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
             components.push assetComponents...
 
         # Set extra info to components
-        backgroundColor = displayedAsset?.backgroundColor()
+        backgroundColor = displayedAsset?.backgroundColor?()
         backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
 
         for component in components
@@ -119,7 +119,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       documentClass: LOI.Assets.Sprite
       editorActive: => @active()
       assetOptions: =>
-        @displayedAsset()?.editorOptions()?.references
+        @displayedAsset()?.editorOptions?()?.references
 
     @pico8 new @constructor.Pico8
       asset: @activeAsset
@@ -294,7 +294,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     
   spriteVisible: ->
     # Don't show the sprite when clipboard is on the second page.
-    not @spriteClipboardComponent()?.secondPageActive()
+    not @spriteClipboardComponent()?.secondPageActive?()
 
   spriteStyle: ->
     # Allow to be updated externally.
@@ -376,7 +376,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       top: top
       borderWidth: "#{borderWidth}rem"
 
-    if backgroundColor = @displayedAsset()?.backgroundColor()
+    if backgroundColor = @displayedAsset()?.backgroundColor?()
       style.backgroundColor = "##{backgroundColor.getHexString()}"
       style.borderColor = style.backgroundColor
 
@@ -408,4 +408,4 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     toolKey in availableKeys
 
   pico8Enabled: ->
-    @displayedAsset()?.project.pico8Cartridge?
+    @displayedAsset()?.project?.pico8Cartridge?

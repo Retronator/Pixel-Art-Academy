@@ -21,8 +21,9 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelBoy.Apps
       LOI.Assets.Sprite.documents.findOne id if _.startsWith documentRepresentation.url, LOI.Assets.Sprite.documentUrl
   
     @portfolioComponent = new @constructor.PortfolioComponent @
+    @clipboardComponent = new @constructor.ClipboardComponent @
 
-  displayName: -> @artwork()?.title
+  displayName: -> @artwork()?.title or 'Untitled'
   
   description: ->
     return unless document = @document()
@@ -40,7 +41,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelBoy.Apps
   width: -> @document()?.bounds?.width or 1
   height: -> @document()?.bounds?.height or 1
   
-  urlParameter: -> @artworkId
+  urlParameter: -> @document()?._id
   
   freeform: ->
     return unless document = @document()
