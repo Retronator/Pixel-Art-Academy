@@ -41,8 +41,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelBoy.Apps
   width: -> @document()?.bounds?.width or 1
   height: -> @document()?.bounds?.height or 1
   
-  urlParameter: -> @document()?._id
+  urlParameter: -> @artworkId
   
   freeform: ->
     return unless document = @document()
     not document.bounds?.fixed
+    
+  spriteId: ->
+    return unless document = @document()
+    return unless document instanceof LOI.Assets.Sprite
+    document._id

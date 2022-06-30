@@ -34,12 +34,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
     # Only update spriteId when it has a value, to prevent from destroying the sprite during transitions.
     @autorun (computation) =>
-      return unless parameter = AB.Router.getParameter 'parameter3'
-      
-      # Make sure the parameter is a sprite ID.
-      return unless LOI.Assets.Sprite.documents.findOne parameter
+      return unless asset = @drawing.portfolio().activeAsset()?.asset
+      return unless spriteId = asset.spriteId?()
 
-      @spriteId parameter
+      @spriteId spriteId
 
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'

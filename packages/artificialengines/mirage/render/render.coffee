@@ -14,11 +14,15 @@ class AM.Render extends BlazeComponent
     if component._blazeTemplate and not component.isDestroyed()
       if component.isRendered() and (component.parentComponent() isnt @)
         console.error "Render component error for", component, "and it is created", component.isCreated(), "rendered", component.isRendered(), "destroyed", component.isDestroyed()
+
         console.error "The parent chain is:"
-        console.error component while component = component.parentComponent()
+        currentParent = component
+        console.error currentParent while currentParent = currentParent.parentComponent()
+
         console.error "New parent chain tries to be:"
-        newComponent = @
-        console.error newComponent while newComponent = newComponent.parentComponent()
+        newParent = @
+        console.error newParent
+        console.error newParent while newParent = newParent.parentComponent()
 
         throw new AE.InvalidOperationException "We're trying to include a rendered component that we're not a parent of."
 
