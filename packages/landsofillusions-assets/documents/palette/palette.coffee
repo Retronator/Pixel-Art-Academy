@@ -15,11 +15,11 @@ class LOI.Assets.Palette extends AM.Document
     name: @id()
 
   @all: @subscription 'all'
+  @allLospec: @subscription 'allLospec'
   @forId: @subscription 'forId'
   @forName: @subscription 'forName'
   
   @insert: @method 'insert'
-  @importFromLospec = @method 'importFromLospec'
 
   # Enumeration of palette names provided by the system.
   @SystemPaletteNames:
