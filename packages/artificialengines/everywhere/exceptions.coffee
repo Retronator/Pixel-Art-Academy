@@ -29,3 +29,6 @@ class AE.UnauthorizedException extends Meteor.Error
 
 class AE.ExternalException extends Meteor.Error
   constructor: (reason, details) -> super 'external-exception', reason, details
+  
+class AE.HttpRequestException extends Meteor.Error
+  constructor: (reason, details) -> super 'http-request-exception', reason, details

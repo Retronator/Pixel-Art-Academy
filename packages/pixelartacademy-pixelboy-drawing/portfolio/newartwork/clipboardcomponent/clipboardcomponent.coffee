@@ -18,14 +18,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   onCreated: ->
     super arguments...
     
-    @paletteNames = [
-      LOI.Assets.Palette.SystemPaletteNames.pico8
-      LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
-      LOI.Assets.Palette.SystemPaletteNames.black
-    ]
-    
-    for paletteName in @paletteNames
-      LOI.Assets.Palette.forName.subscribe @, paletteName
+    LOI.Assets.Palette.allLospec.subscribe @
   
     @type = new ReactiveField null
     @maxSize = new ComputedField =>
@@ -54,7 +47,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     errorClasses.join ' '
   
   palettes: ->
-    LOI.Assets.Palette.documents.find(name: $in: @paletteNames).fetch()
+    LOI.Assets.Palette.documents.find(lospecSlug: $exists: true).fetch()
 
   events: ->
     super(arguments...).concat

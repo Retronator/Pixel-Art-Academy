@@ -48,9 +48,11 @@
         <span class="name">Colors</span>
         <span class="value">
           <select class="palette" name="palette">
+            <option value=""></option>
             {{#each palettes}}
               <option value="{{_id}}">{{name}}</option>
             {{/each}}
+            <option value="lospec">Import from Lospec</option>
           </select>
         </span>
       </label>

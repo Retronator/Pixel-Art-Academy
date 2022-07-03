@@ -14,15 +14,16 @@ class LOI.Assets.Palette extends AM.Document
   @Meta
     name: @id()
 
-  @all: @subscription 'all'
-  @forId: @subscription 'forId'
-  @forName: @subscription 'forName'
+  @all = @subscription 'all'
+  @allLospec = @subscription 'allLospec'
+  @forId = @subscription 'forId'
+  @forName = @subscription 'forName'
   
-  @insert: @method 'insert'
+  @insert = @method 'insert'
   @importFromLospec = @method 'importFromLospec'
 
   # Enumeration of palette names provided by the system.
-  @SystemPaletteNames:
+  @SystemPaletteNames =
     pixelArtAcademy: "Pixel Art Academy"
     pico8: "PICO-8"
     black: "Black"
