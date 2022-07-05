@@ -135,8 +135,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       artworks.push {artworkId}
       PAA.PixelBoy.Apps.Drawing.state 'artworks', artworks
       
-      # Navigate to the artwork.
-      AB.Router.setParameter 'parameter3', artworkId
+      # Wait for the artwork to be available on the client.
+      Tracker.autorun (computation) =>
+        return unless PADB.Artwork.documents.findOne artworkId
+        computation.stop()
+
+        # Navigate to the artwork.
+        AB.Router.setParameter 'parameter3', artworkId
   
   class @SizeType extends @DataInputComponent
     @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType'

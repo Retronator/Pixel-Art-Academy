@@ -108,6 +108,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
       zoomLevels: [50, 100, 200, 300, 400, 600, 800, 1200, 1600]
+      enabled: => @active()
 
     @palette new @constructor.Palette
       paletteId: @paletteId
@@ -240,6 +241,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         @drawingActive false
 
     $(document).on 'keydown.pixelartacademy-pixelboy-apps-drawing-editor-desktop', (event) =>
+      return unless @active()
+      
       switch event.which
         when AC.Keys.f
           # Toggle focused mode.
