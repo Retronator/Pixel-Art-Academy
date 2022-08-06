@@ -6,7 +6,7 @@ RA = Retronator.Accounts
 PNG = require 'fast-png'
 
 class LOI.Assets.Asset extends LOI.Assets.Asset
-  @importDatabaseContent: (arrayBuffer) ->
+  @deserializeDatabaseContent: (arrayBuffer) ->
     imageData = PNG.decode arrayBuffer
     AM.EmbeddedImageData.extract imageData
 
@@ -16,7 +16,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
 
   getPreviewImage: -> throw new AE.NotImplementedException "Asset must provide a preview image for exporting database content."
 
-  exportDatabaseContent: ->
+  getDatabaseContent: ->
     saveData = @getSaveData()
     previewImage = @getPreviewImage()
 

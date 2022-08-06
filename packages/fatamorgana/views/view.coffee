@@ -26,9 +26,13 @@ class FM.View extends AM.Component
         do (dataField, defaultValue) =>
           @[dataField] = new ComputedField =>
             @data().get(dataField) ? defaultValue
-
+  
+    if dataFields = @constructor.componentDataFields?()
+      for dataField in dataFields
+        @[dataField] = @componentData.child(dataField).value
+        
     if dataFields = @constructor.componentDataFieldsWithDefaults?()
       for dataField, defaultValue of dataFields
         do (dataField, defaultValue) =>
           @[dataField] = new ComputedField =>
-            componentData.get(dataField) ? defaultValue
+            @componentData.get(dataField) ? defaultValue

@@ -14,7 +14,7 @@ class FM.Helper extends FM.Operator
       getterSetter[key] = value
 
     # Change the prototype of the instance.
-    Object.setPrototypeOf getterSetter, @constructor::
+    Object.setPrototypeOf getterSetter, @constructor.prototype
 
     # Return the function instead of constructed object. Return must be explicit.
     return getterSetter

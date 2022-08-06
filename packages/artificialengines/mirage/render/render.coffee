@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 
-class AM.Render extends BlazeComponent
+class AM.Render extends AM.Component
   @register 'Render'
 
   renderContext: ->

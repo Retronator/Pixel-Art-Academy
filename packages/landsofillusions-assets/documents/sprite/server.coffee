@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 {PNG} = require 'pngjs'
 
-WebApp.connectHandlers.use LOI.Assets.Sprite.documentUrl, (request, response, next) ->
+WebApp.connectHandlers.use LOI.Assets.Sprite.documentUrl(), (request, response, next) ->
   query = request.query
   
   sprite = LOI.Assets.Sprite.documents.findOne query.id
@@ -13,7 +13,7 @@ WebApp.connectHandlers.use LOI.Assets.Sprite.documentUrl, (request, response, ne
   response.write JSON.stringify sprite
   response.end()
 
-WebApp.connectHandlers.use LOI.Assets.Sprite.imageUrl, (request, response, next) ->
+WebApp.connectHandlers.use LOI.Assets.Sprite.imageUrl(), (request, response, next) ->
   query = request.query
   
   sprite = LOI.Assets.Sprite.documents.findOne query.id

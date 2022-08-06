@@ -6,45 +6,59 @@ RA = Retronator.Accounts
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @id: -> 'LandsOfIllusions.Assets.Asset'
   # name: text identifier for the asset including the path
-  # history: array of operations that produce this asset
-  #   forward: update delta that creates the result of the operation
-  #   backward: update delta that undoes the operation from the resulting state
-  # historyPosition: how many steps of history brings you to the current state of the asset
   # creationTime: time when the document was created
   # lastEditTime: time when last history item was added
+  # authors: array of characters that are allowed to edit this asset or null if this is a system asset
+  #   _id
+  #   avatar
+  #     fullName
   # editor: custom object with settings that do not get sent to normal users
   @Meta
     abstract: true
+    fields: =>
+      authors: [Document.ReferenceField LOI.Character, ['avatar.fullName']]
 
   # Set the class name of the asset by which we can reach the class by querying LOI.Assets. We can't simply use the
   # name parameter, because in production the name field has a minimized value. Must be set in child class.
   @className: null
-
+  
+  @documentUrl: -> "/landsofillusions/assets/#{_.toLower @className}.json"
+  @imageUrl: -> "/landsofillusions/assets/#{_.toLower @className}.png"
+  @cacheUrl: -> "/landsofillusions/assets/#{_.toLower @className}/cache.json"
+  
   # Methods
+  
+  @load: @method 'load'
 
   @insert: @method 'insert'
+  @insertVersioned: @method 'insertVersioned'
   @update: @method 'update'
   @remove: @method 'remove'
   @duplicate: @method 'duplicate'
-
+  @exists: @method 'exists'
+  
+  @executeAction: @method 'executeAction'
   @undo: @method 'undo'
   @redo: @method 'redo'
   @clearHistory: @method 'clearHistory'
 
-  @exists: @method 'exists'
-
-  @getData: @method 'getData'
-
   # Subscriptions
 
   @forId: @subscription 'forId'
+  @forIdVersioned: @subscription 'forIdVersioned'
   @forName: @subscription 'forName'
   @forPath: @subscription 'forPath'
   @all: @subscription 'all'
+  
+  @latestHistoryForId: @subscription 'latestHistoryForId'
+  
+  @executePartialAction: (assetClassName, assetId, action) ->
+    assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+    asset = LOI.Assets.Asset._requireAsset assetId, assetClass
+    
+    AM.Document.Versioning.executePartialAction asset, action
 
   # Helper methods
-
-  @cacheUrl: -> "/landsofillusions/assets/#{_.toLower @className}/cache.json"
 
   @_requireAssetClass = (assetClassName) ->
     assetClass = LOI.Assets[assetClassName]
@@ -53,7 +67,12 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
     assetClass
 
   @_requireAsset = (assetId, assetClass) ->
-    asset = assetClass.documents.findOne assetId
+    if Meteor.isClient and assetClass.versionedDocuments
+      asset = assetClass.versionedDocuments.getDocumentForId assetId
+      
+    else
+      asset = assetClass.documents.findOne assetId
+
     throw new AE.ArgumentException "Asset does not exist." unless asset
 
     asset

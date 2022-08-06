@@ -29,8 +29,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     name: @id()
 
   @className: 'Sprite'
-  @documentUrl: '/assets/sprite.json'
-  @imageUrl: '/assets/sprite.png'
 
   # Subscriptions
   

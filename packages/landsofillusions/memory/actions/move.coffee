@@ -9,7 +9,7 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
   #   coordinates: direct location coordinates, if landmark is not specified
   #     x, y, z
   @type: 'LandsOfIllusions.Memory.Actions.Move'
-  @register @type, @
+  @registerType @type, @
 
   @registerContentPattern @type, Match.OptionalOrNull
     landmark: Match.Optional String

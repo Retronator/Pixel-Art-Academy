@@ -115,7 +115,7 @@ class FM.Interface extends FM.Interface
       targetToolShortcut = @getShortcutForOperator targetTool
 
       if _.isArray targetToolShortcut
-        storePreviousTool = _.find targetToolShortcut, (shortcut) => shortcut.holdKey
+        storePreviousTool = _.find targetToolShortcut, (shortcut) => key is shortcut.holdKey
 
       else
         storePreviousTool = key is targetToolShortcut.holdKey

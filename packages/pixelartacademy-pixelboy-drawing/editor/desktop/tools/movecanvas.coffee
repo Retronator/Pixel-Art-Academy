@@ -3,25 +3,26 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LOI.Assets.Components.Tools.Tool
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas'
+  @displayName: -> "Move canvas"
+  
+  @initialize()
+  
   constructor: ->
     super arguments...
 
-    @name = "Move canvas"
-    @shortcut = AC.Keys.h
-    @holdShortcut = AC.Keys.space
-
     @moving = new ReactiveField false
 
-    @display = @options.editor().callAncestorWith 'display'
+    @display = @interface.callAncestorWith 'display'
 
   onActivated: ->
     # Listen for mouse down.
     $(document).on "mousedown.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move", (event) =>
       $target = $(event.target)
 
-      # Only activate when we're moving from the sprite or the background.
-      return unless $target.hasClass('background') or $target.closest('.sprite').length
+      # Only activate when we're moving from the background or the canvas.
+      return unless $target.hasClass('background') or $target.closest('.canvas-area').length
 
       @moving true
 
@@ -41,9 +42,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LOI.Asse
           x: (event.clientX - @_mousePosition.x) / scale
           y: (event.clientY - @_mousePosition.y) / scale
 
-        editor = @options.editor()
-        offset = editor.spritePositionOffset()
-        editor.spritePositionOffset
+        editor = @interface.getEditorForActiveFile()
+        offset = editor.desktop.canvasPositionOffset()
+        editor.desktop.canvasPositionOffset
           x: offset.x + dragDelta.x
           y: offset.y + dragDelta.y
 

@@ -50,7 +50,7 @@ class LOI.Memory.Action extends AM.Document
       character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   @type: @id()
-  @register @type, @
+  @registerType @type, @
 
   # A place for actions to add their content patterns.
   @contentPatterns = {}
@@ -116,7 +116,7 @@ class LOI.Memory.Action extends AM.Document
       script = createScriptFunction.call @, person
       LOI.adventure.director.startRealtimeNode script if script
 
-  # Override to provide what happens when an action is started or ends. 
+  # Override to provide what happens when an action is started or ends.
   # By default, start and end actions output the description to the narrative.
   createStartScript: (person, nextNode, nodeOptions) ->
     @_createDescriptionScript person, @startDescription(), nextNode, nodeOptions

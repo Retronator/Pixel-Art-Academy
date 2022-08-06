@@ -5,7 +5,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
     @pixels = new ReactiveField []
     
     @spriteData = new ComputedField =>
-      return unless originalSpriteData = @pixelCanvas.spriteData()
+      return unless assetData = @pixelCanvas.assetData()
 
       pixels = @pixels()
       _pixelMap = {}
@@ -15,11 +15,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
           _pixelMap[pixel.x] ?= {}
           _pixelMap[pixel.x][pixel.y] = pixel
 
-      spriteData = _.clone originalSpriteData
-      spriteData.layers = [{pixels, _pixelMap}]
-
-      # Reset bounds and recompute.
-      spriteData.recomputeBounds()
+      spriteData = new LOI.Assets.Sprite
+        layers: [{pixels, _pixelMap}]
 
       spriteData
 

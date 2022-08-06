@@ -1,6 +1,19 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+LOI.Assets.Asset.executeAction.method (assetClassName, assetId, action) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check action, AM.Document.Versioning.actionPattern
+  
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+  asset = LOI.Assets.Asset._requireAsset assetId, assetClass
+  
+  LOI.Assets.Asset._authorizeAssetAction asset if Meteor.isServer
+  
+  AM.Document.Versioning.executeAction asset, action
+  
 LOI.Assets.Asset.undo.method (assetClassName, assetId) ->
   check assetId, Match.DocumentId
   check assetClassName, String
@@ -9,6 +22,11 @@ LOI.Assets.Asset.undo.method (assetClassName, assetId) ->
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
   asset = LOI.Assets.Asset._requireAsset assetId, assetClass
   LOI.Assets.Asset._authorizeAssetAction asset
+  
+  # Handle versioned assets.
+  if asset.versioned
+    AM.Document.Versioning.undo asset
+    return
 
   # Find history entry.
   throw new AE.InvalidOperationException "There is nothing to undo." unless asset.historyPosition
@@ -41,6 +59,11 @@ LOI.Assets.Asset.redo.method (assetClassName, assetId) ->
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
   asset = LOI.Assets.Asset._requireAsset assetId, assetClass
   LOI.Assets.Asset._authorizeAssetAction asset
+  
+  # Handle versioned assets.
+  if asset.versioned
+    AM.Document.Versioning.redo asset
+    return
 
   # Find history entry.
   throw new AE.InvalidOperationException "There is nothing to redo." unless asset.historyPosition < asset.history.length
@@ -48,7 +71,7 @@ LOI.Assets.Asset.redo.method (assetClassName, assetId) ->
 
   history = EJSON.parse asset.history[asset.historyPosition]
 
-  # Create the modifier that will undo the change at this position.
+  # Create the modifier that will redo the change at this position.
   modifier = history.forward
 
   # See if this is part of a connected step.

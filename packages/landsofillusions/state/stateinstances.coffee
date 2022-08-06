@@ -35,7 +35,7 @@ class LOI.StateInstances
       _.every _.flattenDeep conditions
 
     # Allow correct handling of instanceof operator.
-    Object.setPrototypeOf stateInstances, @constructor::
+    Object.setPrototypeOf stateInstances, @constructor.prototype
 
     # Instantiate state property objects.
     stateUpdatedAutorun = Tracker.autorun (computation) ->

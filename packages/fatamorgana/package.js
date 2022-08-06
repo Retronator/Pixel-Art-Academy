@@ -35,6 +35,7 @@ Package.onUse(function(api) {
   api.addFile('areas/floatingarea');
 
   api.addFile('views/view');
+  api.addUnstyledComponent('views/multiview..');
   api.addComponent('views/splitview..');
   api.addComponent('views/tabbedview..');
   api.addComponent('views/menu..');

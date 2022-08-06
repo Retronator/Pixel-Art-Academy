@@ -22,7 +22,7 @@ PAA.PixelBoy.Apps.Drawing.Portfolio.artworksWithAssets.publish (characterId, art
     url = new URL Meteor.absoluteUrl documentRepresentation.url
     id = url.searchParams.get 'id'
 
-    spriteIds.push id if _.startsWith documentRepresentation.url, LOI.Assets.Sprite.documentUrl
+    spriteIds.push id if _.startsWith documentRepresentation.url, LOI.Assets.Sprite.documentUrl()
 
   # Get all assets.
   spritesCursor = LOI.Assets.Sprite.documents.find _id: $in: spriteIds

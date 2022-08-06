@@ -18,7 +18,7 @@ class PAA.Practice.Journal.Entry.Action extends LOI.Memory.Action
   #           fullName
   #           color
   @type: 'PixelArtAcademy.Practice.Journal.Entry.Action'
-  @register @type, @
+  @registerType @type, @
 
   @isMemorable: -> true
 

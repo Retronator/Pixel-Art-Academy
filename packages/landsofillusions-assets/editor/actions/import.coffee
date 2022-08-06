@@ -22,7 +22,7 @@ class LOI.Assets.Editor.Actions.Import extends FM.Action
       fileReader = new FileReader
       fileReader.addEventListener 'load', =>
         # Retrieve asset from image.
-        asset = LOI.Assets.Asset.importDatabaseContent fileReader.result
+        asset = LOI.Assets.Asset.deserializeDatabaseContent fileReader.result
 
         @_saveAsset asset
 

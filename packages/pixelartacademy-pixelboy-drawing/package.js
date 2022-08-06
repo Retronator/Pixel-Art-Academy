@@ -41,12 +41,20 @@ Package.onUse(function(api) {
 
   api.addFile('editor..');
   api.addFile('editor/editors');
+  api.addFile('editor/assetloader');
+  api.addFile('editor/pixelcanvascomponents');
+
   api.addComponent('editor/desktop..');
+  api.addComponent('editor/desktop/pixelcanvas..');
+  api.addComponent('editor/desktop/testpaper..');
   api.addComponent('editor/desktop/colorfill..');
   api.addComponent('editor/desktop/palette..');
+  api.addComponent('editor/desktop/zoom..');
+  api.addComponent('editor/desktop/pico8..');
+
   api.addComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/reference..');
-  api.addComponent('editor/desktop/pico8..');
+
   api.addFile('editor/desktop/tools..');
   api.addFile('editor/desktop/tools/movecanvas');
 });

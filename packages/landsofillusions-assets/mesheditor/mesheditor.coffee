@@ -39,12 +39,6 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.MeshEditor.MeshCanvas.id()}":
         components: [
         ]
-        
-      "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
-        initialCameraScale: 2
-        components: [
-          LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
-        ]
 
     # Layouts
 
@@ -216,6 +210,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                 type: FM.EditorView.id()
                 editor:
                   contentComponentId: LOI.Assets.MeshEditor.MeshCanvas.id()
+                  contentComponentData:
+                    initialCameraScale: 2
+                    components: [
+                      LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
+                    ]
 
     shortcuts =
       currentMappingId: 'default'

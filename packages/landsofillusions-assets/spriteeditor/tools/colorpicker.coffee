@@ -21,11 +21,11 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
   pickColor: ->
     return unless @mouseState.leftButton
 
-    spriteData = @editor().spriteData()    
+    assetData = @editor().assetData()    
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
     # Go over all pixels to find the one we want.
-    for layer in spriteData.layers when layer?.pixels and layer.visible isnt false
+    for layer in assetData.layers when layer?.pixels and layer.visible isnt false
       layerOrigin =
         x: layer.origin?.x or 0
         y: layer.origin?.y or 0

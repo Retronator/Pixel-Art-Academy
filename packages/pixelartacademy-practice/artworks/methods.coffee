@@ -58,9 +58,9 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
     startDate: assetData.creationTime
     wip: true
     authors: [_id: artistId]
-    image: url: "#{assetClass.imageUrl}?id=#{assetId}"
+    image: url: "#{assetClass.imageUrl()}?id=#{assetId}"
     representations: [
-      url: "#{assetClass.documentUrl}?id=#{assetId}"
+      url: "#{assetClass.documentUrl()}?id=#{assetId}"
       type: PADB.Artwork.RepresentationTypes.Document
     ]
 

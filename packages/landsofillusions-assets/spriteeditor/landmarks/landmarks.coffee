@@ -31,14 +31,14 @@ class LOI.Assets.SpriteEditor.Landmarks extends FM.View
     # HACK: Replace the number back since it won't update by itself (probably since it's the edited input).
     $(event.target).val landmark.number
 
-    sprite = @landmarksHelper().sprite()
+    asset = @landmarksHelper().asset()
 
     if _.isNaN number
-      LOI.Assets.VisualAsset.removeLandmark sprite.constructor.className, sprite._id, landmark.index
+      LOI.Assets.VisualAsset.removeLandmark asset.constructor.className, asset._id, landmark.index
 
     else
       newIndex = number - 1
-      LOI.Assets.VisualAsset.reorderLandmark sprite.constructor.className, sprite._id, landmark.index, newIndex
+      LOI.Assets.VisualAsset.reorderLandmark asset.constructor.className, asset._id, landmark.index, newIndex
 
   onChangeLandmark: (event) ->
     $landmark = $(event.target).closest('.landmark')
@@ -52,10 +52,10 @@ class LOI.Assets.SpriteEditor.Landmarks extends FM.View
     for property in ['x', 'y', 'z']
       landmark[property] = _.parseFloatOrNull $landmark.find(".coordinate-#{property} .coordinate-input").val()
 
-    sprite = @landmarksHelper().sprite()
-    LOI.Assets.VisualAsset.updateLandmark sprite.constructor.className, sprite._id, index, landmark
+    asset = @landmarksHelper().asset()
+    LOI.Assets.VisualAsset.updateLandmark asset.constructor.className, asset._id, index, landmark
 
   onClickAddLandmarkButton: (event) ->
-    sprite = @landmarksHelper().sprite()
-    index = sprite.landmarks?.length or 0
-    LOI.Assets.VisualAsset.updateLandmark sprite.constructor.className, sprite._id, index, {}
+    asset = @landmarksHelper().asset()
+    index = asset.landmarks?.length or 0
+    LOI.Assets.VisualAsset.updateLandmark asset.constructor.className, asset._id, index, {}

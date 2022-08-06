@@ -5,6 +5,6 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Memory.Actions.Idle extends LOI.Memory.Action
   @type: 'LandsOfIllusions.Memory.Actions.Idle'
-  @register @type, @
+  @registerType @type, @
 
   @retainDuration: -> 60 # seconds

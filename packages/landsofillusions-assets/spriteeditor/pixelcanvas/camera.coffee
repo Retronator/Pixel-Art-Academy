@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Assets.SpriteEditor.PixelCanvas.Camera
   constructor: (@pixelCanvas, options) ->
     @cameraData = new ComputedField =>
-      @pixelCanvas.editorFileData()?.child 'camera'
+      @pixelCanvas.interface.getActiveFileData()?.child 'camera'
 
     @scaleData = new ComputedField =>
       @cameraData()?.child 'scale'
@@ -13,19 +13,35 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     # At camera scale 1, a canvas pixel matches a display pixel (and not window pixel).
     # Scale is used to go from canvas pixels to display pixels.
     @scale = new ComputedField =>
-      @scaleData()?.value() or @pixelCanvas.componentData.get('initialCameraScale') or 1
+      @scaleData()?.value() or @pixelCanvas.initialCameraScale() or 1
 
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
     @effectiveScale = new ComputedField =>
       displayScale = @pixelCanvas.display.scale()
       @scale() * displayScale
-
+  
+    @scrollingEnabledData = new ComputedField =>
+      @cameraData()?.child 'scrollingEnabled'
+  
+    @scrollingEnabled = new ComputedField =>
+      @scrollingEnabledData()?.value()
+      
     @originData = new ComputedField =>
       @cameraData()?.child 'origin'
 
     @origin = new ComputedField =>
-      @originData()?.value() or @pixelCanvas.componentData.get('initialCameraOrigin') or x: 0, y: 0
+      if @scrollingEnabled()
+        origin = @originData()?.value()
+        
+      else
+        # When we can't scroll, we should show the center of the image.
+        if bounds = @pixelCanvas.assetData()?.bounds
+          origin =
+            x: bounds.left + bounds.width / 2
+            y: bounds.top + bounds.height / 2
+  
+      origin or @pixelCanvas.componentData.get('initialCameraOrigin') or x: 0, y: 0
     ,
       EJSON.equals
 
@@ -53,56 +69,67 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       $parent = options.$parent()
       return unless $parent
       computation.stop()
+      
+      scrollingEnabled = @scrollingEnabled()
+      
+      if scrollingEnabled and not @_scrollingFunction
+        # Enable the wheel event.
+        @_scrollingFunction = (event) => @_onWheel event
+        $parent.on 'wheel', @_scrollingFunction
+        
+      else if @_scrollingFunction and not scrollingEnabled
+        # Disable the wheel event.
+        $parent.off 'wheel', @_scrollingFunction
+    
+  _onWheel: (event) ->
+    event.preventDefault()
 
-      $parent.on 'wheel', (event) =>
-        event.preventDefault()
+    effectiveScale = @effectiveScale()
 
-        effectiveScale = @effectiveScale()
+    if event.ctrlKey
+      # User is zooming in/out.
+      delta = event.originalEvent.deltaY
 
-        if event.ctrlKey
-          # User is zooming in/out.
-          delta = event.originalEvent.deltaY
+      scale = @scale()
+      scaleChange = Math.pow(0.99, delta)
 
-          scale = @scale()
-          scaleChange = Math.pow(0.99, delta)
+      @setScale scale * scaleChange
 
-          @setScale scale * scaleChange
+      # Also move the origin, depending on how much off-center we were zooming.
+      canvasOrigin = $parent.offset()
 
-          # Also move the origin, depending on how much off-center we were zooming.
-          canvasOrigin = $parent.offset()
+      mouseWindowCoordinate =
+        x: event.originalEvent.pageX - canvasOrigin.left
+        y: event.originalEvent.pageY - canvasOrigin.top
 
-          mouseWindowCoordinate =
-            x: event.originalEvent.pageX - canvasOrigin.left
-            y: event.originalEvent.pageY - canvasOrigin.top
+      mouseCanvasCoordinate = @transformWindowToCanvas mouseWindowCoordinate
 
-          mouseCanvasCoordinate = @transformWindowToCanvas mouseWindowCoordinate
+      oldOrigin = @origin()
 
-          oldOrigin = @origin()
+      offCenter =
+        x: mouseCanvasCoordinate.x - oldOrigin.x
+        y: mouseCanvasCoordinate.y - oldOrigin.y
 
-          offCenter =
-            x: mouseCanvasCoordinate.x - oldOrigin.x
-            y: mouseCanvasCoordinate.y - oldOrigin.y
+      @originData().value
+        x: oldOrigin.x + offCenter.x * (scaleChange - 1)
+        y: oldOrigin.y + offCenter.y * (scaleChange - 1)
 
-          @originData().value
-            x: oldOrigin.x + offCenter.x * (scaleChange - 1)
-            y: oldOrigin.y + offCenter.y * (scaleChange - 1)
+    else
+      # User is translating.
 
-        else
-          # User is translating.
+      windowDelta =
+        x: event.originalEvent.deltaX
+        y: event.originalEvent.deltaY
 
-          windowDelta =
-            x: event.originalEvent.deltaX
-            y: event.originalEvent.deltaY
+      canvasDelta =
+        x: windowDelta.x / effectiveScale
+        y: windowDelta.y / effectiveScale
 
-          canvasDelta =
-            x: windowDelta.x / effectiveScale
-            y: windowDelta.y / effectiveScale
+      oldOrigin = @origin()
 
-          oldOrigin = @origin()
-
-          @originData().value
-            x: oldOrigin.x + canvasDelta.x
-            y: oldOrigin.y + canvasDelta.y
+      @originData().value
+        x: oldOrigin.x + canvasDelta.x
+        y: oldOrigin.y + canvasDelta.y
 
   setScale: (scale) ->
     @scaleData().value scale
@@ -122,13 +149,15 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     # Move to center of screen.
     width = canvasPixelSize.width
     height = canvasPixelSize.height
-    context.translate width / 2, height / 2
+    context.translate Math.floor(width / 2), Math.floor(height / 2)
 
     # Scale the canvas around the origin.
     context.scale effectiveScale, effectiveScale
 
     # Move to origin.
-    context.translate -origin.x, -origin.y
+    translateX = Math.floor(origin.x * effectiveScale) / effectiveScale
+    translateY = Math.floor(origin.y * effectiveScale) / effectiveScale
+    context.translate -translateX, -translateY
 
   transformCanvasToWindow: (canvasCoordinate) ->
     canvasPixelSize = @pixelCanvas.canvasPixelSize()

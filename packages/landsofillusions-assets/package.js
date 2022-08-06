@@ -36,7 +36,7 @@ Package.onUse(function(api) {
   api.addComponent('layout/layout');
 
   // Documents
-  
+
   api.addFile('documents/image..');
   api.addFile('documents/image/methods');
 
@@ -66,6 +66,7 @@ Package.onUse(function(api) {
   api.addServerFile('documents/visualasset/subscriptions');
 
   api.addFile('documents/sprite..');
+  api.addClientFile('documents/sprite/sprite-executeaction-client');
   api.addFile('documents/sprite/rot8');
   api.addFile('documents/sprite/mip');
   api.addServerFile('documents/sprite/subscriptions');
@@ -79,6 +80,8 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/transformpixels');
   api.addFile('documents/sprite/methods/layers');
   api.addFile('documents/sprite/methods/resize');
+
+  api.addFile('documents/bitmap..');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/methods');
@@ -196,9 +199,9 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
   api.addFile('engine/audio/nodes/adsr');
-  
+
   // Editors
-  
+
   api.addComponent('editor..');
   api.addStyle('editor/editor-cursors');
   api.addStyle('editor/editor-fatamorgana');
@@ -274,7 +277,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/translate');
-  
+
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
   api.addFile('spriteeditor/actions/ignorenormals');

@@ -4,24 +4,23 @@ AM = Artificial.Mummification
 
 # Extended PeerDB document with common operations.
 class AM.Document extends Document
+  @id: -> throw new AE.NotImplementedException "You must specify document's id."
+  
   @_documentClassesById = {}
-
-  @getClassForId: (id) ->
-    @_documentClassesById[id]
 
   @Meta: (meta) ->
     super arguments...
 
     # This stores registered subclasses for this Document class.
-    @_documentClasses = {}
+    @_documentClassesByType = {}
 
     return if meta.abstract
 
     # This enables retrieval of all document classes in general.
-    @_documentClassesById[meta.name] = @
+    @_documentClassesById[@id()] = @
 
     # Referrers are incoming references from other documents.
-    @referrers = []
+    @_referrers = []
 
     # Analyze field references to add the referrers, after all documents have been defined.
     Document.prepare => @_analyzeFields @Meta.fields, ''
@@ -47,13 +46,54 @@ class AM.Document extends Document
 
       else if field.constructor is Object
         @_analyzeFields field, fieldPath
+  
+  @Meta
+    abstract: true
+  
+  @method: (name) ->
+    return new AB.Method
+      name: "#{@type or @id()}.#{name}"
+  
+  @subscription: (name, options) ->
+    return new AB.Subscription _.extend {}, options,
+      name: "#{@type or @id()}.#{name}"
+      
+  @getClassForId: (id) ->
+    @_documentClassesById[id]
+  
+  @registerType: (typeName, documentClass) ->
+    throw new AE.ArgumentNullException "You must specify a document class." unless documentClass
+    
+    # Make sure the document class inherits from Document.
+    throw new AE.ArgumentException "Provided document class is not a Document." unless documentClass.prototype instanceof Document
+    
+    # Save the document class to our map.
+    @_documentClassesByType[typeName] = documentClass
+    
+  @getClassForType: (typeName) ->
+    # Retrieve the document class from the map.
+    @_documentClassesByType[typeName]
 
+    # Returns all registered type names.
+  @getTypes: ->
+    _.keys @_documentClassesByType
+    
+  @enableVersioning: ->
+    @versionedDocuments = new AM.Document.Versioning.VersionedCollection @
+  
+  @getDocumentForId: (id) ->
+    return unless document = @documents.findOne id
+
+    return document unless document.versioned and @versionedDocuments
+
+    @versionedDocuments.getDocumentForId id
+  
   @addReferrer: (referenceField) ->
-    @referrers.push referenceField
-
+    @_referrers.push referenceField
+    
   # Replaces all references to the document with sourceId to point to targetId instead.
   @substituteDocument: (sourceId, targetId) ->
-    for referrer in @referrers
+    for referrer in @_referrers
       updatePath = referrer.sourcePath
 
       if referrer.inArray
@@ -73,37 +113,7 @@ class AM.Document extends Document
       ,
         multi: true
 
-      console.log "Substituted", referrer.sourceDocument.name, referrer.sourcePath, sourceId, "with", updatePath, targetId, count, "times"
-
-  @Meta
-    abstract: true
-
-  @id: -> throw new AE.NotImplementedException
-    
-  @method: (name) ->
-    return new AB.Method
-      name: "#{@type or @id()}.#{name}"
-
-  @subscription: (name, options) ->
-    return new AB.Subscription _.extend {}, options,
-      name: "#{@type or @id()}.#{name}"
-
-  @register: (typeName, documentClass) ->
-    throw new AE.ArgumentNullException "You must specify a document class." unless documentClass
-
-    # Make sure the document class inherits from Document.
-    throw new AE.ArgumentException "Provided document class is not a Document." unless documentClass.prototype instanceof Document
-
-    # Save the document class to our map.
-    @_documentClasses[typeName] = documentClass
-
-  @getClassForType: (typeName) ->
-    # Retrieve the document class from the map.
-    @_documentClasses[typeName]
-
-  # Returns all registered type names.
-  @getTypes: ->
-    _.keys @_documentClasses
+      console.log "Substituted", referrer.sourceDocument.id(), referrer.sourcePath, sourceId, "with", updatePath, targetId, count, "times"
 
   # Casting functionality based on implementation by @mitar.
   cast: (typeFieldName = 'type') ->

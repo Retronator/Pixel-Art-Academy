@@ -9,7 +9,7 @@ class C1.Mixer.IceBreakers.AnswerAction extends LOI.Memory.Action
   #   question: ID of the question
   #   answer: integer representing the side the character chose 
   @type: 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.IceBreakers.AnswerAction'
-  @register @type, @
+  @registerType @type, @
 
   @registerContentPattern @type,
     question: String

@@ -3,6 +3,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+FM = FataMorgana
 
 class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing.Editor
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop'
@@ -19,212 +20,257 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
   constructor: ->
     super arguments...
-
-    @sprite = new ReactiveField null
-    @pixelCanvas = new ReactiveField null
-    @navigator = new ReactiveField null
-    @palette = new ReactiveField null
-    @tools = new ReactiveField null
-    @actions = new ReactiveField null
-    @references = new ReactiveField null
-    @pico8 = new ReactiveField null
-    @toolbox = new ReactiveField null
-
-    @paletteId = new ComputedField =>
-      # Minimize reactivity to only palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
-        fields:
-          palette: 1
-      )?.palette?._id
-      
-    @paletteData = new ComputedField =>
-      # Minimize reactivity to only custom palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
-        fields:
-          customPalette: 1
-      )?.customPalette
-
-    @activeTool = new ReactiveField null
-
-    @drawingActive = new ReactiveField false
+    
     @focusedMode = new ReactiveField false
+    @canvasPositionOffset = new ReactiveField x: 0, y: 0
 
-    @spritePositionOffset = new ReactiveField x: 0, y: 0
+  ###
+  @navigator = new ReactiveField null
+  @palette = new ReactiveField null
+  @tools = new ReactiveField null
+  @actions = new ReactiveField null
+  @references = new ReactiveField null
+  @pico8 = new ReactiveField null
 
+  @paletteId = new ComputedField =>
+    # Minimize reactivity to only palette changes.
+    LOI.Assets.Sprite.documents.findOne(@spriteId(),
+      fields:
+        palette: 1
+    )?.palette?._id
+    
+  @paletteData = new ComputedField =>
+    # Minimize reactivity to only custom palette changes.
+    LOI.Assets.Sprite.documents.findOne(@spriteId(),
+      fields:
+        customPalette: 1
+    )?.customPalette
+
+  @activeTool = new ReactiveField null
+
+  ###
+  
   onCreated: ->
     super arguments...
-
-    @activeAsset = new ComputedField =>
-      asset = @drawing.portfolio().activeAsset()?.asset
-      return unless asset instanceof PAA.Practice.Project.Asset.Sprite or asset instanceof PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset
-      asset
-
-    @displayedAsset = new ComputedField =>
-      asset = @drawing.portfolio().displayedAsset()?.asset
-      return unless asset instanceof PAA.Practice.Project.Asset.Sprite or asset instanceof PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset
-      asset
-
-    # Initialize components.
-    @sprite new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-
-    @pixelCanvas new LOI.Assets.Components.PixelCanvas
-      initialCameraScale: 0
-      activeTool: @activeTool
-      cameraInput: false
-      grid: => @drawingActive()
-      gridInvertColor: =>
-        displayedAsset = @displayedAsset()
-        return unless backgroundColor = displayedAsset?.backgroundColor?()
-        backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
-
-      cursor: => @drawingActive()
-      canvasSize: => @spriteData()?.bounds
-      drawComponents: =>
-        components = [
-          @sprite()
-        ]
-
-        # Add any custom components that are visible all the time.
-        displayedAsset = @displayedAsset()
-
-        if assetComponents = displayedAsset?.drawComponents?()
-          components.push assetComponents...
-          
-        # Add components visible only in the editor.
-        if @active()
-          if assetComponents = displayedAsset?.editorDrawComponents?()
-            components.push assetComponents...
-
-        # Set extra info to components
-        backgroundColor = displayedAsset?.backgroundColor?()
-        backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
-
-        for component in components
-          component.options.backgroundColor = backgroundColor
-
-        components
-
-    @navigator new LOI.Assets.Components.Navigator
-      camera: @pixelCanvas().camera
-      zoomLevels: [50, 100, 200, 300, 400, 600, 800, 1200, 1600]
-      enabled: => @active()
-
-    @palette new @constructor.Palette
-      paletteId: @paletteId
-      paletteData: @paletteData
-      theme: @
-
-    @references new @constructor.References
-      assetId: @spriteId
-      documentClass: LOI.Assets.Sprite
-      editorActive: => @active()
-      assetOptions: =>
-        @displayedAsset()?.editorOptions?()?.references
-
-    @pico8 new @constructor.Pico8
-      asset: @activeAsset
-
-    # Automatically enter focused mode when PICO-8 is active.
-    @autorun (computation) =>
-      @focusedMode @pico8().active()
-
-    # Automatically deactivate PICO-8 when exiting focused mode.
-    @autorun (computation) =>
-      @pico8().active false unless @focusedMode()
-
-    @toolbox new LOI.Assets.Components.Toolbox
-      tools: @tools
-      activeTool: @activeTool
-      actions: @actions
-      enabled: => @active()
-      
-    # Create tools.
-    @toolClasses =
-      "#{PAA.Practice.Software.Tools.ToolKeys.Pencil}": LOI.Assets.Components.Tools.Pencil
-      "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.Components.Tools.Eraser
-      "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.Components.Tools.ColorFill
-      "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.Components.Tools.ColorPicker
-      "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
-      "#{PAA.Practice.Software.Tools.ToolKeys.Undo}": LOI.Assets.Components.Tools.Undo
-      "#{PAA.Practice.Software.Tools.ToolKeys.Redo}": LOI.Assets.Components.Tools.Redo
-
-    @toolInstances = {}
     
-    for toolKey, toolClass of @toolClasses
-      @toolInstances[toolKey] = new toolClass
-        editor: => @
+    # Reactively add views.
+    viewsToolRequirements =
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Zoom.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.TestPaper.id()}": [PAA.Practice.Software.Tools.ToolKeys.Pencil, PAA.Practice.Software.Tools.ToolKeys.Eraser, PAA.Practice.Software.Tools.ToolKeys.Undo, PAA.Practice.Software.Tools.ToolKeys.Redo]
+    
+    for viewId, toolKeys of viewsToolRequirements
+      do (viewId, toolKeys) =>
+        toolKeys = [toolKeys] unless _.isArray toolKeys
 
-    # Allow the asset to control which tools are available.
+        @autorun (computation) =>
+          return unless @interface.isCreated()
+          applicationAreaData = @interface.currentApplicationAreaData()
+          views = applicationAreaData.get 'views'
+          existingViewIndex = _.findIndex views, (view) => view.type is viewId
+          
+          anyToolIsAvailable = _.some toolKeys, (toolKey) => @toolIsAvailable toolKey
+          
+          if anyToolIsAvailable
+            # Add the view if it's not yet added.
+            if existingViewIndex is -1
+              view = type: viewId
+ 
+              views.push view
+              Tracker.nonreactive => applicationAreaData.set 'views', views
+            
+          else
+            # Remove the view if it's there.
+            if existingViewIndex > -1
+              views.splice existingViewIndex, 1
+              Tracker.nonreactive => applicationAreaData.set 'views', views
+    
+
+    # Reactively add tools and actions.
+    toolRequirements =
+      "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
+      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
+      "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+      "#{@constructor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      
     @autorun (computation) =>
-      activeAsset = @activeAsset()
-
-      if availableToolKeys = activeAsset?.availableToolKeys?()
-        tools = _.at @toolInstances, availableToolKeys
-        @tools _.without tools, undefined
-
-      else
-        @tools _.values @toolInstances
-
-    # Deactivate active tool when closing the editor.
+      return unless @interface.isCreated()
+      applicationAreaData = @interface.currentApplicationAreaData()
+      views = applicationAreaData.get 'views'
+      toolboxViewIndex = _.findIndex views, (view) => view.type is FM.Toolbox.id()
+      
+      tools = [
+        LOI.Assets.Editor.Tools.Arrow.id()
+      ]
+  
+      tools.push toolId for toolId, toolKey of toolRequirements when @toolIsAvailable toolKey
+  
+      Tracker.nonreactive => applicationAreaData.set "views.#{toolboxViewIndex}.tools", tools
+  
+    historyActionRequirements =
+      "#{LOI.Assets.Editor.Actions.Undo.id()}": PAA.Practice.Software.Tools.ToolKeys.Undo
+      "#{LOI.Assets.Editor.Actions.Redo.id()}": PAA.Practice.Software.Tools.ToolKeys.Redo
+  
     @autorun (computation) =>
-      if @active()
-        unless @activeTool()
-          # Make sure the last active tool is still allowed.
-          if @_lastActiveTool in @tools()
-            @toolbox().activateTool @_lastActiveTool
-
-      else
-        if activeTool = @activeTool()
-          @_lastActiveTool = activeTool
-          @toolbox().deactivateTool()
-
-    # Select first color if no color is set.
-    @autorun (computation) =>
-      palette = @palette()
-
-      palette.setColor 0, 0 unless palette.currentColor()
-
-    # Keep pixel canvas centered on the sprite.
-    @autorun (computation) =>
-      return unless spriteData = @spriteData()
-
-      @pixelCanvas().camera().origin
-        x: spriteData.bounds.width / 2
-        y: spriteData.bounds.height / 2
-
-    # Allow triggering sprite style change.
-    @spriteStyleChangeDependency = new Tracker.Dependency
-
-    # Do updates when asset changes.
-    @autorun (computation) =>
-      @drawing.portfolio().displayedAsset()
-
-      # Trigger sprite style change after delay. We need this delay to allow for asset data in the
-      # clipboard to update, which will change the position of the sprite when attached to the clipboard.
-      Meteor.setTimeout => @spriteStyleChangeDependency.changed()
-
-    # Reset sprite offset when entering the editor
+      return unless @interface.isCreated()
+      applicationAreaData = @interface.currentApplicationAreaData()
+      views = applicationAreaData.get 'views'
+      testPaperViewIndex = _.findIndex views, (view) => view.type is PAA.PixelBoy.Apps.Drawing.Editor.Desktop.TestPaper.id()
+      return unless testPaperViewIndex > -1
+  
+      actions = (actionId for actionId, toolKey of historyActionRequirements when @toolIsAvailable toolKey)
+  
+      Tracker.nonreactive => applicationAreaData.set "views.#{testPaperViewIndex}.actions", actions
+      
+    # Reset canvas offset when entering the editor
     @autorun (computation) =>
       return unless @active()
-      
-      @spritePositionOffset x: 0, y: 0
-
-    # Update sprite scale.
+  
+      @canvasPositionOffset x: 0, y: 0
+  
+    # Invert grid color for assets with dark backgrounds.
     @autorun (computation) =>
-      return unless camera = @pixelCanvas().camera()
-      return unless assetData = @drawing.portfolio().displayedAsset()
-      return unless clipboardSpriteSize = @spriteClipboardComponent()?.spriteSize()
+      return unless @interface.isCreated()
+      return unless fileData = @interface.getActiveFileData()
+      
+      invert = false
+  
+      if backgroundColor = @displayedAsset()?.backgroundColor?()
+        invert = backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
+      
+      Tracker.nonreactive => fileData.child('pixelGrid').set 'invertColor', invert
+  
+    # Select the first color if no color is set.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+  
+      unless @paintHelper.paletteColor()
+        Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
+  
+  toolIsAvailable: (toolKey) ->
+    return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
+    toolKey in availableKeys
 
-      # Dictate sprite scale when asset is on clipboard and when setting for the first time.
-      clipboardSpriteScale = clipboardSpriteSize.scale
+  ###
+# Initialize components.
+@sprite new LOI.Assets.Engine.Sprite
+  spriteData: @spriteData
 
-      unless @active() and assetData.asset is @_previousDisplayedAsset and clipboardSpriteScale is @_previousClipboardSpriteScale
-        camera.setScale clipboardSpriteScale
+@pixelCanvas new LOI.Assets.Components.PixelCanvas
+  initialCameraScale: 0
+  activeTool: @activeTool
+  cameraInput: false
+  grid: => @drawingActive()
+  gridInvertColor: =>
+    displayedAsset = @displayedAsset()
+    return unless backgroundColor = displayedAsset?.backgroundColor?()
+    backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
 
-      @_previousDisplayedAsset = assetData.asset
-      @_previousClipboardSpriteScale = clipboardSpriteScale
+  cursor: => @drawingActive()
+  canvasSize: => @spriteData()?.bounds
+  drawComponents: =>
+    components = [
+      @sprite()
+    ]
 
+    # Add any custom components that are visible all the time.
+    displayedAsset = @displayedAsset()
+
+    if assetComponents = displayedAsset?.drawComponents?()
+      components.push assetComponents...
+      
+    # Add components visible only in the editor.
+    if @active()
+      if assetComponents = displayedAsset?.editorDrawComponents?()
+        components.push assetComponents...
+
+    # Set extra info to components
+    backgroundColor = displayedAsset?.backgroundColor?()
+    backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
+
+    for component in components
+      component.options.backgroundColor = backgroundColor
+
+    components
+
+@palette new @constructor.Palette
+  paletteId: @paletteId
+  paletteData: @paletteData
+  theme: @
+
+@references new @constructor.References
+  assetId: @spriteId
+  documentClass: LOI.Assets.Sprite
+  editorActive: => @active()
+  assetOptions: =>
+    @displayedAsset()?.editorOptions?()?.references
+
+@pico8 new @constructor.Pico8
+  asset: @activeAsset
+
+# Automatically enter focused mode when PICO-8 is active.
+@autorun (computation) =>
+  @focusedMode @pico8().active()
+
+# Automatically deactivate PICO-8 when exiting focused mode.
+@autorun (computation) =>
+  @pico8().active false unless @focusedMode()
+  
+# Create tools.
+@toolClasses =
+  "#{PAA.Practice.Software.Tools.ToolKeys.Pencil}": LOI.Assets.Components.Tools.Pencil
+  "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.Components.Tools.Eraser
+  "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.Components.Tools.ColorFill
+  "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.Components.Tools.ColorPicker
+  "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
+  "#{PAA.Practice.Software.Tools.ToolKeys.Undo}": LOI.Assets.Components.Tools.Undo
+  "#{PAA.Practice.Software.Tools.ToolKeys.Redo}": LOI.Assets.Components.Tools.Redo
+
+@toolInstances = {}
+
+for toolKey, toolClass of @toolClasses
+  @toolInstances[toolKey] = new toolClass
+    editor: => @
+
+# Allow the asset to control which tools are available.
+@autorun (computation) =>
+  activeAsset = @activeAsset()
+
+  if availableToolKeys = activeAsset?.availableToolKeys?()
+    tools = _.at @toolInstances, availableToolKeys
+    @tools _.without tools, undefined
+
+  else
+    @tools _.values @toolInstances
+
+
+
+# Deactivate active tool when closing the editor.
+@autorun (computation) =>
+  if @active()
+    unless @activeTool()
+      # Make sure the last active tool is still allowed.
+      if @_lastActiveTool in @tools()
+        @toolbox().activateTool @_lastActiveTool
+
+  else
+    if activeTool = @activeTool()
+      @_lastActiveTool = activeTool
+      @toolbox().deactivateTool()
+
+# Keep pixel canvas centered on the sprite.
+@autorun (computation) =>
+  return unless spriteData = @spriteData()
+
+  @pixelCanvas().camera().origin
+    x: spriteData.bounds.width / 2
+    y: spriteData.bounds.height / 2
+
+###
+  
   onRendered: ->
     super arguments...
 
@@ -240,6 +286,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
 
+        ###
     $(document).on 'keydown.pixelartacademy-pixelboy-apps-drawing-editor-desktop', (event) =>
       return unless @active()
       
@@ -250,165 +297,152 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
         else
           return
+  
+###
 
   onDestroyed: ->
     super arguments...
 
+    ###
     $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-desktop')
     
     @pico8().device?.stop()
+  
+###
 
+  ###
   onBackButton: ->
     # Turn off focused mode on back button.
     return super(arguments...) unless @focusedMode()
+    
+    
     @focusedMode false
 
     # Inform that we've handled the back button.
     true
-
+  ###
+  
+  defaultInterfaceData: ->
+    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
+  
+    components =
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Tools.Pencil.id()}":
+        fractionalPerfectLines: true
+        drawPreview: true
+    
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
+        
+      "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
+        fixedCanvasSize: true
+        components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
+        
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.ZoomLevels.id()}":
+        [50, 100, 200, 300, 400, 600, 800, 1200, 1600]
+      
+    views = [
+      type: FM.Toolbox.id()
+      tools: []
+    ,
+      type: FM.EditorView.id()
+      files: @_dummyEditorViewFiles
+      editor:
+        contentComponentId: PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()
+    ]
+    
+    layouts =
+      currentLayoutId: 'main'
+      main:
+        name: 'Main'
+        applicationArea:
+          type: FM.MultiView.id()
+          views: views
+          
+    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
+  
+    shortcuts =
+      currentMappingId: 'default'
+      default:
+        name: "Default"
+        mapping:
+          "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
+          "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
+          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
+          
+          "#{LOI.Assets.Editor.Actions.Undo.id()}": [{commandOrControl: true, key: AC.Keys.z}, {key: AC.Keys.z}]
+          "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then [{command: true, shift: true, key: AC.Keys.z}, {key: AC.Keys.x}] else control: true, key: AC.Keys.y
+          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
+          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
+          
+      
+    # Return combined interface data.
+    {activeToolId, components, layouts, shortcuts}
+    
   drawingActiveClass: ->
     'drawing-active' if @drawingActive()
-
+    
   focusedModeClass: ->
     'focused-mode' if @focusedMode()
-
-  toolClass: ->
-    return unless tool = @activeTool()
-
-    toolClass = _.kebabCase tool.name
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
-
+  
   draggingClass: ->
+    ###
     'dragging' if _.some [
       @toolInstances[PAA.Practice.Software.Tools.ToolKeys.MoveCanvas].moving()
       @references().dragging()
       @pico8().dragging()
     ]
+  
+###
 
   resizingDirectionClass: ->
+    ###
     @references().resizingReference()?.resizingDirectionClass()
+  
+###
 
   spriteClipboardComponent: ->
+    ###
     return unless clipboardComponent = @displayedAsset()?.clipboardComponent
     return unless clipboardComponent.isCreated()
     clipboardComponent
-    
-  spriteVisible: ->
-    # Don't show the sprite when clipboard is on the second page.
-    not @spriteClipboardComponent()?.secondPageActive?()
-
-  spriteStyle: ->
-    # Allow to be updated externally.
-    @spriteStyleChangeDependency.depend()
-
-    # If nothing else, we should move the sprite off screen.
-    offScreenStyle = top: '-150rem'
-
-    # Wait for clipboard to be rendered.
-    return offScreenStyle unless @drawing.clipboard().isRendered()
-
-    # If we don't have size data, don't return anything so transition will start form first value.
-    return offScreenStyle unless spriteData = @spriteData()
-    return offScreenStyle unless scale = @pixelCanvas()?.camera()?.scale()
-    return offScreenStyle unless clipboardSpriteSize = @spriteClipboardComponent()?.spriteSize()
-
-    width = spriteData.bounds.width * scale
-    height = spriteData.bounds.height * scale
-
-    displayScale = LOI.adventure.interface.display.scale()
-
-    if @drawingActive()
-      # Add one pixel to the size for outer grid line.
-      pixelInRem = 1 / displayScale
-
-      width += pixelInRem
-      height += pixelInRem
-
-    # Resize the border proportionally to its clipboard size
-    borderWidth = clipboardSpriteSize.borderWidth / clipboardSpriteSize.scale * scale
-
-    if @active()
-      # We need to be in the middle of the table, but allowing for custom offset with dragging.
-      offset = @spritePositionOffset()
-
-      # Update offset when scale changes, so that the same pixel will appear in the center.
-      if @_previousScale and @_previousScale isnt scale
-        offset =
-          x: offset.x / @_previousScale * scale
-          y: offset.y / @_previousScale * scale
-
-        Tracker.nonreactive => @spritePositionOffset offset
-
-      @_previousScale = scale
-
-      left = "calc(50% - #{width / 2 + borderWidth - offset.x}rem)"
-      top = "calc(50% - #{height / 2 + borderWidth - offset.y}rem)"
-
-    else
-      $spritePlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .sprite-placeholder')
-      return {} unless $spritePlaceholder.length
-      spriteOffset = $spritePlaceholder.offset()
-
-      $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
-      positionOrigin = $clipboard.offset()
-
-      # Make these measurements relative to clipboard center.
-      positionOrigin.left += $clipboard.width() / 2
-      left = spriteOffset.left - positionOrigin.left
-      left = "calc(50% + #{left}px)"
-
-      # Top is relative to center only when we have an active asset.
-      activeAsset = @activeAsset()
-
-      positionOrigin.top += $clipboard.height() / 2 if activeAsset
-      top = spriteOffset.top - positionOrigin.top
-
-      if activeAsset
-        top = "calc(50% + #{top}px)"
-
-      else
-        # Clipboard is hidden up, so move the sprite up and relative to top.
-        top -= 265 * displayScale
-
-    style =
-      width: "#{width}rem"
-      height: "#{height}rem"
-      left: left
-      top: top
-      borderWidth: "#{borderWidth}rem"
-
-    if backgroundColor = @displayedAsset()?.backgroundColor?()
-      style.backgroundColor = "##{backgroundColor.getHexString()}"
-      style.borderColor = style.backgroundColor
-
-    style
+  
+###
 
   testPaperEnabled: ->
+    ###
     @pencilEnabled() or @eraserEnabled()
+  
+###
 
   pencilEnabled: ->
+    ###
     @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Pencil] in @tools()
+  
+###
 
   eraserEnabled: ->
+    ###
     @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Eraser] in @tools()
+  
+###
 
   eraserEnabledClass: ->
     'eraser-enabled' if @eraserEnabled()
 
   colorFillEnabled: ->
+    ###
     @toolInstances[PAA.Practice.Software.Tools.ToolKeys.ColorFill] in @tools()
+  
+###
 
-  paletteEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+  paletteEnabled: ->
 
-  navigatorEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
+  navigatorEnabled: ->
 
-  referencesEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.References
+  referencesEnabled: -> @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.References
 
-  _toolIsAvailable: (toolKey) ->
-    return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
-    toolKey in availableKeys
 
   pico8Enabled: ->
     @displayedAsset()?.project?.pico8Cartridge?

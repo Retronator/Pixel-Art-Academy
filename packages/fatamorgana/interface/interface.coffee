@@ -106,6 +106,12 @@ class FM.Interface extends AM.Component
 
   getFileData: (fileId) ->
     @filesData.child fileId
+  
+  getActiveFileData: ->
+    fileId = @activeFileId()
+    return unless fileId?
+  
+    @getFileData fileId
 
   getComponentDataForFile: (componentClassOrId, fileId) ->
     componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
@@ -113,7 +119,8 @@ class FM.Interface extends AM.Component
     @componentsForFilesData.child "#{fileId}.#{componentId}"
 
   getComponentDataForActiveFile: (componentClassOrId) ->
-    return unless fileId = @activeFileId()
+    fileId = @activeFileId()
+    return unless fileId?
 
     @getComponentDataForFile componentClassOrId, fileId
 
@@ -163,7 +170,9 @@ class FM.Interface extends AM.Component
     @_helperForFileInstances[fileId][helperId]
 
   getHelperForActiveFile: (helperClassOrId) ->
-    return unless fileId = @activeFileId()
+    fileId = @activeFileId()
+    return unless fileId?
+
     @getHelperForFile helperClassOrId, fileId
 
   getLoaderForFile: (fileId) ->

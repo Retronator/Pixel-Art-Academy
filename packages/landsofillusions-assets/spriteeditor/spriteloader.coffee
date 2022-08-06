@@ -17,13 +17,6 @@ class LOI.Assets.SpriteEditor.SpriteLoader extends FM.Loader
       return unless spriteData = @spriteData()
       spriteData.name or spriteData._id
 
-    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
-
-    # Create the engine sprite.
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-      visualizeNormals: @paintNormalsData.value
-
     # Subscribe to the referenced palette as well.
     @paletteId = new ComputedField =>
       @spriteData()?.palette?._id

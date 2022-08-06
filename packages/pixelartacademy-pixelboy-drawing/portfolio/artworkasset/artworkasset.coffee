@@ -18,7 +18,10 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelBoy.Apps
       url = new URL Meteor.absoluteUrl documentRepresentation.url
       id = url.searchParams.get 'id'
   
-      LOI.Assets.Sprite.documents.findOne id if _.startsWith documentRepresentation.url, LOI.Assets.Sprite.documentUrl
+      for documentClassName in ['Sprite', 'Bitmap'] when _.startsWith documentRepresentation.url, LOI.Assets[documentClassName].documentUrl()
+        return LOI.Assets[documentClassName].getDocumentForId id
+        
+      null
   
     @portfolioComponent = new @constructor.PortfolioComponent @
     @clipboardComponent = new @constructor.ClipboardComponent @
@@ -46,8 +49,3 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelBoy.Apps
   freeform: ->
     return unless document = @document()
     not document.bounds?.fixed
-    
-  spriteId: ->
-    return unless document = @document()
-    return unless document instanceof LOI.Assets.Sprite
-    document._id

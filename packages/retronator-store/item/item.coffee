@@ -25,7 +25,7 @@ class RS.Item extends AM.Document
       items: [Document.ReferenceField 'self', ['catalogKey']]
 
   @type: @id()
-  @register @type, @
+  @registerType @type, @
 
   @all: @subscription "all"
 

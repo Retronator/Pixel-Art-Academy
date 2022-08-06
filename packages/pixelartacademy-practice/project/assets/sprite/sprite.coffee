@@ -40,7 +40,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   @initialize: ->
     super arguments...
 
-    # On the server, create this assets's translated names.
+    # On the server, create this asset's translated names.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty
@@ -67,6 +67,9 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
       LOI.Assets.Sprite.documents.findOne spriteId
     ,
       true
+    
+    # Alias for the drawing app.
+    @document = @sprite
 
     briefComponentClass = @constructor.briefComponentClass()
     @briefComponent = new briefComponentClass @

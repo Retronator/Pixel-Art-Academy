@@ -35,12 +35,19 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
       shape: @brushHelper.shape()
 
   drawToContext: (context) ->
+    # Don't draw the cursor when the canvas is locked.
+    return if @pixelCanvas.locked()
+    
     scale = @pixelCanvas.camera().scale()
     effectiveScale = @pixelCanvas.camera().effectiveScale()
     cursorArea = @cursorArea()
     return unless cursorArea.position
-
-    context.lineWidth = 1 / effectiveScale
+  
+    pixelSize = 1 / effectiveScale
+    halfPixelSize = pixelSize / 2
+  
+    context.lineWidth = pixelSize
+    context.translate halfPixelSize, halfPixelSize
 
     if scale > 4
       context.strokeStyle = 'rgb(50,50,50)'
@@ -71,7 +78,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     context.stroke()
 
     # TODO: symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin?()
-
-    if symmetryXOrigin?
-      mirroredX = -cursorArea.position.x + 2 * symmetryXOrigin
-      context.strokeRect mirroredX, cursorArea.position.y, 1, 1
+    #
+    # if symmetryXOrigin?
+    #   mirroredX = -cursorArea.position.x + 2 * symmetryXOrigin
+    #   context.strokeRect mirroredX, cursorArea.position.y, 1, 1
+  
+    context.translate -halfPixelSize, -halfPixelSize

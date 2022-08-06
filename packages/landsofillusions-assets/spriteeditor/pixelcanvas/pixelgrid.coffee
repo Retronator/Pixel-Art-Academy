@@ -3,9 +3,23 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
   constructor: (@pixelCanvas) ->
-    
+    @pixelGridData = new ComputedField =>
+      @pixelCanvas.interface.getActiveFileData()?.child 'pixelGrid'
+      
+    @enabledData = new ComputedField =>
+      @pixelGridData()?.child 'enabled'
+  
+    @enabled = new ComputedField =>
+      @enabledData()?.value()
+  
+    @invertColorData = new ComputedField =>
+      @pixelGridData()?.child 'invertColor'
+  
+    @invertColor = new ComputedField =>
+      @invertColorData()?.value()
+      
   drawToContext: (context) ->
-    return unless @pixelCanvas.pixelGridEnabled()
+    return unless @enabled()
 
     camera = @pixelCanvas.camera()
 
@@ -18,9 +32,18 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
     gridOpacity = THREE.Math.clamp gridOpacity, 0, 0.3
 
     return unless gridOpacity > 0
-
-    context.strokeStyle = "rgba(25,25,25,#{gridOpacity * 2})"
-    context.lineWidth = 1 / effectiveScale
+  
+    if @invertColor()
+      context.strokeStyle = "rgba(230,230,230,#{gridOpacity * 3})"
+  
+    else
+      context.strokeStyle = "rgba(25,25,25,#{gridOpacity * 2})"
+  
+    pixelSize = 1 / effectiveScale
+    halfPixelSize = pixelSize / 2
+    
+    context.lineWidth = pixelSize
+    context.translate halfPixelSize, halfPixelSize
     context.beginPath()
 
     gridBounds =
@@ -38,5 +61,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
       pixelPerfectCoordinate = camera.roundCanvasToWindowPixel x: x, y: 0
       context.moveTo pixelPerfectCoordinate.x, gridBounds.top
       context.lineTo pixelPerfectCoordinate.x, gridBounds.bottom
-
+  
     context.stroke()
+    context.translate -halfPixelSize, -halfPixelSize

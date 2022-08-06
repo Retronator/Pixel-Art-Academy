@@ -49,7 +49,7 @@ class AM.DatabaseContent
     for getter in @exportGetters
       exportingDocuments = getter()
 
-      for document in exportingDocuments when document?.exportDatabaseContent
+      for document in exportingDocuments when document?.getDatabaseContent
         # Get document name.
         if document.name instanceof Artificial.Babel.Translation
           documentName = document.name.translate().text
@@ -75,7 +75,7 @@ class AM.DatabaseContent
         else
           console.log "Exporting", document.constructor.name, documentName
 
-          {arrayBuffer, path, lastEditTime} = document.exportDatabaseContent()
+          {arrayBuffer, path, lastEditTime} = document.getDatabaseContent()
 
           console.log "Writing #{Math.round arrayBuffer.length / 1024, 2} kB to #{path}"
 
@@ -144,7 +144,7 @@ class AM.DatabaseContent
 
                 # Retrieve document from the data.
                 console.log "Importing", documentInformation.path
-                importedDocument = documentClass.importDatabaseContent body, documentInformation
+                importedDocument = documentClass.deserializeDatabaseContent body, documentInformation
 
                 unless importedDocument
                   console.error "Couldn't extract document from file at url", url

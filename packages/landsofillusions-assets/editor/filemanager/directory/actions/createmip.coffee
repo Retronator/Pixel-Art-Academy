@@ -7,7 +7,7 @@ class LOI.Assets.Editor.FileManager.Directory.CreateMip extends FM.Action
   @displayName: -> "Create Mip"
 
   @initialize()
-    
+  
   execute: (dropdown) ->
     directory = dropdown.data().value().directory
     selectedItems = directory.selectedItems()
@@ -45,7 +45,7 @@ class LOI.Assets.Editor.FileManager.Directory.CreateMip extends FM.Action
 
     for sprite in sprites
       # Ask for sprite bounds.
-      LOI.Assets.Asset.getData LOI.Assets.Sprite.className, sprite._id, {bounds: 1}, (error, sprite) =>
+      LOI.Assets.Asset.load LOI.Assets.Sprite.className, sprite._id, {bounds: 1}, (error, sprite) =>
         if error
           console.error error
           return

@@ -7,20 +7,31 @@ LOI = LandsOfIllusions
 class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
   # components: array of helper IDs that should be drawn to context
+  # locked: boolean whether to not allow any editing to be performed
+  # fixedCanvasSize: boolean whether to automatically match the canvas size to the size of the asset
   #
   # EDITOR FILE DATA
   # camera:
   #   scale: canvas magnification
-  #   origin: the point on the sprite that should appear in the center of the canvas
+  #   origin: the point on the asset that should appear in the center of the canvas
   #     x
   #     y
-  # pixelGridEnabled: boolean whether to draw the pixel grid
+  #   scrollingEnabled: boolean whether you can scroll to pan and zoom
+  # pixelGrid:
+  #   enabled: boolean whether to draw the pixel grid
+  #   invertColor: boolean whether to draw the pixel grid with a light color (good for dark backgrounds)
   # landmarksEnabled: boolean whether to draw the landmarks
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.PixelCanvas'
   @register @id()
+  
+  @componentDataFields: -> [
+    'initialCameraScale'
+    'components'
+    'locked'
+    'fixedCanvasSize'
+  ]
 
   @editorFileDataFieldsWithDefaults: ->
-    pixelGridEnabled: true
     landmarksEnabled: true
 
   constructor: (@options) ->
@@ -44,40 +55,39 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     @display = @callAncestorWith 'display'
     
-    if @options?.sprite
-      # We have the engine sprite provided directly.
-      @sprite = new ComputedField =>
-        @options.sprite()
+    if @options?.asset
+      # We have the asset provided directly.
+      @asset = new ComputedField =>
+        @options.asset()
 
-      @spriteData = new ComputedField =>
-        @sprite()?.options.spriteData()
+      @assetData = new ComputedField =>
+        @asset()?.options.assetData()
 
-      @spriteId = new ComputedField =>
-        @spriteData()?._id
+      @assetId = new ComputedField =>
+        @assetData()?._id
 
-    else if @options?.spriteData
-      @spriteData = @options?.spriteData
+    else if @options?.assetData
+      @assetData = @options?.assetData
 
     else
-      # We need to get the engine sprite from the loader.
-      @spriteLoader = new ComputedField =>
-        activeFileData = @editorView.activeFileData()
-        fileId = activeFileData.get 'id'
-        @interface.getLoaderForFile fileId
+      # We need to get the asset from the loader.
+      @loader = new ComputedField =>
+        activeFileId = @editorView.activeFileId()
+        @interface.getLoaderForFile activeFileId
 
-      @spriteData = new ComputedField =>
-        @spriteLoader()?.spriteData()
+      @assetData = new ComputedField =>
+        @loader()?.asset()
 
-      @spriteId = new ComputedField =>
-        return unless spriteData = @spriteData()
-        spriteData._id
-
-      @sprite = new ComputedField =>
-        @spriteLoader()?.sprite
-
-    @componentFileData = new ComputedField =>
-      return unless spriteId = @spriteId?()
-      @interface.getComponentDataForFile @, spriteId
+      @assetId = new ComputedField =>
+        return unless assetData = @assetData()
+        assetData._id
+  
+    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
+  
+    # Create the engine sprite.
+    @sprite = new LOI.Assets.Engine.Sprite
+      spriteData: @assetData
+      visualizeNormals: @paintNormalsData.value
 
     # Initialize components.
     @camera new @constructor.Camera @, $parent: @$pixelCanvas
@@ -113,39 +123,41 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         drawComponents = _.clone @options.drawComponents()
 
       else
-        drawComponents = [@sprite(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
+        drawComponents = [@sprite, @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
         
-      if componentIds = @componentData.get 'components'
+      if componentIds = @components()
         for componentId in componentIds
           drawComponents.push @interface.getHelperForFile componentId, @fileIdForHelpers()
 
       drawComponents
 
-    # Redraw canvas routine.
-    @autorun =>
-      return unless context = @context()
-
-      canvasPixelSize = @canvasPixelSize()
-
-      context.setTransform 1, 0, 0, 1, 0, 0
-      context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
-
-      camera = @camera()
-      camera.applyTransformToCanvas()
-
-      lightDirection = @lightDirectionHelper()
-      shadingEnabled = @shadingEnabled()
-
-      for component in @drawComponents()
-        continue unless component
-
-        context.save()
-        component.drawToContext context,
-          lightDirection: if shadingEnabled then lightDirection() else null
-          camera: camera
-          editor: @
-
-        context.restore()
+    # Reactively redraw the canvas.
+    @autorun => @_redraw()
+    
+  _redraw: ->
+    return unless context = @context()
+  
+    canvasPixelSize = @canvasPixelSize()
+  
+    context.setTransform 1, 0, 0, 1, 0, 0
+    context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
+  
+    camera = @camera()
+    camera.applyTransformToCanvas()
+  
+    lightDirection = @lightDirectionHelper()
+    shadingEnabled = @shadingEnabled()
+  
+    for component in @drawComponents()
+      continue unless component
+    
+      context.save()
+      component.drawToContext context,
+        lightDirection: if shadingEnabled then lightDirection() else null
+        camera: camera
+        editor: @
+    
+      context.restore()
 
   onRendered: ->
     super arguments...
@@ -158,38 +170,59 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @canvas canvas
     @context canvas.getContext '2d'
 
-    # Resize canvas on editor changes.
+    # React to canvas element resizing.
+    @_resizeObserver = new ResizeObserver (entries) =>
+      for entry in entries when entry.borderBoxSize?.length
+        @_resizeCanvas
+          width: Math.floor entry.borderBoxSize[0].inlineSize
+          height: Math.floor entry.borderBoxSize[0].blockSize
+          
+    # Reactively resize to react to fixed size.
     @autorun (computation) =>
-      # Depend on editor view size.
-      AM.Window.clientBounds()
-
-      # Depend on application area changes.
-      @interface.currentApplicationAreaData().value()
-
-      # Depend on editor view tab changes.
-      @editorView.tabDataChanged.depend()
-
-      # After update, measure the size.
-      Tracker.afterFlush =>
-        newSize =
-          width: $pixelCanvas.width()
-          height: $pixelCanvas.height()
-
-        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-        for key, value of newSize
-          canvas[key] = value unless canvas[key] is value
-
-        @canvasPixelSize newSize
-
+      @_resizeCanvas
+        width: $pixelCanvas.width()
+        height: $pixelCanvas.height()
+  
+    @_resizeObserver.observe canvas
+  
     if @toolsActive
       $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event
       $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event
       $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event
       $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event
+      
+  _resizeCanvas: (newSize) ->
+    # Override size if we're using fixed canvas size.
+    if @fixedCanvasSize()
+      effectiveScale = @camera().effectiveScale()
+      bounds = @assetData()?.bounds
+  
+      newSize.width = (bounds?.width or 0) * effectiveScale
+      newSize.height = (bounds?.height or 0) * effectiveScale
+      
+      if @pixelGrid().enabled()
+        # Add 1px extra for outer grid.
+        newSize.width++
+        newSize.height++
+    
+    changedCanvasSize = false
+    
+    # Resize the back buffer to canvas element size, if it changed.
+    canvas = @canvas()
+    
+    for key, value of newSize when canvas[key] isnt value
+      canvas[key] = value
+      changedCanvasSize = true
+  
+    @canvasPixelSize newSize
+  
+    # Redraw the image to prevent flickering since the reactive routine won't kick in until the next frame.
+    @_redraw() if changedCanvasSize
 
   onDestroyed: ->
     super arguments...
+  
+    @_resizeObserver?.disconnect()
 
     $(document).off '.landsofillusions-assets-spriteeditor-pixelcanvas'
 

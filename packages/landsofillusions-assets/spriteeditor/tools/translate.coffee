@@ -15,12 +15,12 @@ class LOI.Assets.SpriteEditor.Tools.Translate extends LOI.Assets.SpriteEditor.To
       # Only activate when we're moving on the canvas.
       return unless $target.closest('.landsofillusions-assets-spriteeditor-pixelcanvas').length
 
-      spriteData = @editor().spriteData()
+      assetData = @editor().assetData()
       paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
       layerIndex = paintHelper.layerIndex()
       camera = @editor().camera()
 
-      return unless layer = spriteData.layers[layerIndex]
+      return unless layer = assetData.layers[layerIndex]
 
       @_mousePosition =
         x: event.clientX
@@ -39,14 +39,14 @@ class LOI.Assets.SpriteEditor.Tools.Translate extends LOI.Assets.SpriteEditor.To
 
         return unless dragDelta.x or dragDelta.y
 
-        currentSpriteData = @editor().spriteData()
+        currentSpriteData = @editor().assetData()
         currentLayer = currentSpriteData.layers[layerIndex]
         currentLayerOrigin =
           x: currentLayer.origin?.x or 0
           y: currentLayer.origin?.y or 0
 
         # Apply delta to the layer origin.
-        LOI.Assets.Sprite.updateLayer spriteData._id, layerIndex,
+        LOI.Assets.Sprite.updateLayer assetData._id, layerIndex,
           origin:
             x: currentLayerOrigin.x + dragDelta.x
             y: currentLayerOrigin.y + dragDelta.y

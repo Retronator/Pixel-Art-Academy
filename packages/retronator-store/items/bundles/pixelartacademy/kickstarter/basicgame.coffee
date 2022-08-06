@@ -4,7 +4,7 @@ CatalogKeys = RS.Items.CatalogKeys
 
 class RS.Items.Bundles.PixelArtAcademyKickstarterBasicGame extends RS.Items.Bundles.PixelArtAcademyKickstarterTier
   @type: 'Retronator.Store.Items.Bundles.PixelArtAcademyKickstarterBasicGame'
-  @register @type, @
+  @registerType @type, @
 
   @price: 10
 

@@ -17,41 +17,20 @@ class PAA.Practice.Project.Asset.Sprite.ClipboardComponent extends AM.Component
     
     @drawing = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing
 
-    # Calculate sprite size.
-    @spriteSize = new ComputedField =>
-      return unless spriteData = @drawing.editor().spriteData()
-      return unless assetData = @drawing.portfolio().displayedAsset()
-
-      # Asset in the clipboard should be bigger than in the portfolio.
-      assetScale = assetData.scale()
-
-      if assetScale < 1
-        # Scale up to 0.5 to show pixel perfect at least on retina screens.
-        scale = 0.5
-
-      else
-        # 1 -> 2
-        # 2 -> 3
-        # 3 -> 4
-        # 4 -> 5
-        # 5 -> 6
-        # 6 -> 8
-        # 7 -> 9
-        scale = Math.ceil assetScale * 1.2
+    # Calculate asset size.
+    @assetSize = new ComputedField =>
+      return unless spriteData = @asset.sprite()
+  
+      scaleLimits = {}
 
       # Check if the asset provides a minimum or maximum scale.
-      if minScale = assetData.asset.minClipboardScale?()
-        scale = Math.max scale, minScale
-
-      if maxScale = assetData.asset.maxClipboardScale?()
-        scale = Math.min scale, maxScale
-
-      contentWidth = spriteData.bounds.width * scale
-      contentHeight = spriteData.bounds.height * scale
-
-      borderWidth = 7
-
-      {contentWidth, contentHeight, borderWidth, scale}
+      if minScale = @asset.minClipboardScale?()
+        scaleLimits.min = minScale
+  
+      if maxScale = @asset.maxClipboardScale?()
+        scaleLimits.max = maxScale
+      
+      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize spriteData.bounds, scaleLimits
       
   onBackButton: ->
     if @secondPageActive()
@@ -75,11 +54,11 @@ class PAA.Practice.Project.Asset.Sprite.ClipboardComponent extends AM.Component
   closeSecondPage: ->
     @secondPageActive false
 
-  spritePlaceholderStyle: ->
-    return unless spriteSize = @spriteSize()
+  assetPlaceholderStyle: ->
+    return unless assetSize = @assetSize()
 
-    width: "#{spriteSize.contentWidth + 2 * spriteSize.borderWidth}rem"
-    height: "#{spriteSize.contentHeight + 2 * spriteSize.borderWidth}rem"
+    width: "#{assetSize.contentWidth + 2 * assetSize.borderWidth}rem"
+    height: "#{assetSize.contentHeight + 2 * assetSize.borderWidth}rem"
     
   events: ->
     super(arguments...).concat
