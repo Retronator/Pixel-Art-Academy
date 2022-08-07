@@ -387,14 +387,14 @@ for toolKey, toolClass of @toolClasses
     'focused-mode' if @focusedMode()
   
   draggingClass: ->
-    ###
+    return unless @interface.isCreated()
+    moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+
     'dragging' if _.some [
-      @toolInstances[PAA.Practice.Software.Tools.ToolKeys.MoveCanvas].moving()
-      @references().dragging()
-      @pico8().dragging()
+      moveTool.moving()
+      #@references().dragging()
+      #@pico8().dragging()
     ]
-  
-###
 
   resizingDirectionClass: ->
     ###
