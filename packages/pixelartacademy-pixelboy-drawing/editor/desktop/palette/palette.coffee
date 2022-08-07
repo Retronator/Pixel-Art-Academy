@@ -20,17 +20,18 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     @paletteId = new ComputedField =>
       @asset()?.palette?._id
 
-  palette: ->
-    return unless palette = super arguments...
+    paletteField = @palette
+    @palette = new ComputedField =>
+      return unless palette = paletteField()
 
-    # Go over all shades of all ramps.
-    for ramp in palette.ramps
-      ramp.blendOffset = Math.random()
+      # Go over all shades of all ramps.
+      for ramp in palette.ramps
+        ramp.blendOffset = Math.random()
 
-      for shade in ramp.shades
-        shade.offset = _.random 0, 2
+        for shade in ramp.shades
+          shade.offset = _.random 0, 2
 
-    palette
+      palette
 
   trayClass: ->
     'tray' if @customPalette()
@@ -46,6 +47,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
   colorsStyle: ->
     # We only need to style the custom palette tray.
     return unless @customPalette()
+    return unless palette = @palette()
 
     # Calculate the width of the palette.
     height = 120
@@ -57,7 +59,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     width = rampWidth
     columnHeight = 0
 
-    for ramp in @palette().ramps
+    for ramp in palette.ramps
       rampHeight = ramp.shades.length * shadeSize
       columnHeight += rampHeight + rampBottomMargin
 

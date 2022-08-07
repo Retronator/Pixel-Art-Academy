@@ -11,8 +11,8 @@ class PAA.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
     width = bounds?.width or 1
     height = bounds?.height or 1
 
-    # Scale the sprite as much as possible while remaining under 150px.
-    maxSize = 150
+    # Scale the sprite as much as possible while remaining under 100px.
+    maxSize = 100
     maxScale = scaleLimits?.max or 8
 
     size = Math.max width, height

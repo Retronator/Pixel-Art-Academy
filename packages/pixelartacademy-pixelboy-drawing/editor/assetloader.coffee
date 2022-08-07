@@ -23,6 +23,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.AssetLoader extends FM.Loader
     @_paletteSubscription = Tracker.autorun (computation) =>
       return unless paletteId = @paletteId()
       LOI.Assets.Palette.forId.subscribe paletteId
+
+    # We extract the custom palette separately to minimize reactivity.
+    @customPalette = new ComputedField =>
+      @asset()?.customPalette
+    ,
+      EJSON.equals
   
     @palette = new ComputedField =>
       if paletteId = @paletteId()
@@ -30,7 +36,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.AssetLoader extends FM.Loader
     
       else
         # See if we have an embedded custom palette.
-        @asset()?.customPalette
+        @customPalette()
         
   destroy: ->
     @asset.stop()

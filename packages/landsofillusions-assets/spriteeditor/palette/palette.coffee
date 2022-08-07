@@ -12,24 +12,24 @@ class LOI.Assets.SpriteEditor.Palette extends FM.View
     @paletteData = new ComputedField =>
       @interface.getLoaderForActiveFile()?.palette()
 
+    @palette = new ComputedField =>
+      return unless paletteData = @paletteData()
+
+      # Go over all shades of all ramps.
+      ramps = for ramp, rampIndex in paletteData.ramps
+        shades = for shade, shadeIndex in ramp.shades
+          ramp: rampIndex
+          shade: shadeIndex
+          color: THREE.Color.fromObject shade
+
+        {shades}
+      {ramps}
+
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
     @currentColor = new ComputedField =>
       return unless paletteColor = @paintHelper.paletteColor()
       @paletteData()?.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
-      
-  palette: ->
-    return unless paletteData = @paletteData()
-
-    # Go over all shades of all ramps.
-    ramps = for ramp, rampIndex in paletteData.ramps
-      shades = for shade, shadeIndex in ramp.shades
-        ramp: rampIndex
-        shade: shadeIndex
-        color: THREE.Color.fromObject shade
-
-      {shades}
-    {ramps}
 
   colorStyle: ->
     color = @currentData().color

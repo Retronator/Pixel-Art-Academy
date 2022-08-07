@@ -56,7 +56,7 @@ class LOI.Engine.Textures.Mip
     # Create data textures.
     sprite = _.first mipmaps
 
-    spriteData = LOI.Engine.Textures.Sprite.load spriteId: sprite._id
+    spriteData = LOI.Engine.Textures.Sprite.getData spriteId: sprite._id
     spriteData.depend()
 
     mipmapSpriteData = [spriteData]
