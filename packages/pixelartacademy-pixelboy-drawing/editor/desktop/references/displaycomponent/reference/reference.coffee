@@ -4,8 +4,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.Assets.Components.References.Reference
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference'
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference extends LOI.Assets.Components.References.Reference
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference'
   @register @id()
 
   constructor: ->
@@ -30,6 +30,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
 
     # Automatically scale and position the image when not displayed.
     @autorun (computation) =>
+      return unless @references.assetId()
       return unless imageSize = @imageSize()
       return unless displaySize = @displaySize()
       return if @currentDisplayed()

@@ -23,32 +23,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     
     @focusedMode = new ReactiveField false
     @canvasPositionOffset = new ReactiveField x: 0, y: 0
-
-  ###
-  @navigator = new ReactiveField null
-  @palette = new ReactiveField null
-  @tools = new ReactiveField null
-  @actions = new ReactiveField null
-  @references = new ReactiveField null
-  @pico8 = new ReactiveField null
-
-  @paletteId = new ComputedField =>
-    # Minimize reactivity to only palette changes.
-    LOI.Assets.Sprite.documents.findOne(@spriteId(),
-      fields:
-        palette: 1
-    )?.palette?._id
-    
-  @paletteData = new ComputedField =>
-    # Minimize reactivity to only custom palette changes.
-    LOI.Assets.Sprite.documents.findOne(@spriteId(),
-      fields:
-        customPalette: 1
-    )?.customPalette
-
-  @activeTool = new ReactiveField null
-
-  ###
   
   onCreated: ->
     super arguments...
@@ -59,7 +33,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.TestPaper.id()}": [PAA.Practice.Software.Tools.ToolKeys.Pencil, PAA.Practice.Software.Tools.ToolKeys.Eraser, PAA.Practice.Software.Tools.ToolKeys.Undo, PAA.Practice.Software.Tools.ToolKeys.Redo]
-    
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.id()}": PAA.Practice.Software.Tools.ToolKeys.References
+
     for viewId, toolKeys of viewsToolRequirements
       do (viewId, toolKeys) =>
         toolKeys = [toolKeys] unless _.isArray toolKeys
@@ -389,10 +364,11 @@ for toolKey, toolClass of @toolClasses
   draggingClass: ->
     return unless @interface.isCreated()
     moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+    references = @interface.allChildComponentsOfType(PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References)[0]
 
     'dragging' if _.some [
       moveTool.moving()
-      #@references().dragging()
+      references?.displayComponent.dragging()
       #@pico8().dragging()
     ]
 
@@ -401,48 +377,6 @@ for toolKey, toolClass of @toolClasses
     @references().resizingReference()?.resizingDirectionClass()
   
 ###
-
-  spriteClipboardComponent: ->
-    ###
-    return unless clipboardComponent = @displayedAsset()?.clipboardComponent
-    return unless clipboardComponent.isCreated()
-    clipboardComponent
-  
-###
-
-  testPaperEnabled: ->
-    ###
-    @pencilEnabled() or @eraserEnabled()
-  
-###
-
-  pencilEnabled: ->
-    ###
-    @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Pencil] in @tools()
-  
-###
-
-  eraserEnabled: ->
-    ###
-    @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Eraser] in @tools()
-  
-###
-
-  eraserEnabledClass: ->
-    'eraser-enabled' if @eraserEnabled()
-
-  colorFillEnabled: ->
-    ###
-    @toolInstances[PAA.Practice.Software.Tools.ToolKeys.ColorFill] in @tools()
-  
-###
-
-  paletteEnabled: ->
-
-  navigatorEnabled: ->
-
-  referencesEnabled: -> @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.References
-
 
   pico8Enabled: ->
     @displayedAsset()?.project?.pico8Cartridge?

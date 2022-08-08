@@ -52,8 +52,9 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/zoom..');
   api.addComponent('editor/desktop/pico8..');
 
-  api.addComponent('editor/desktop/references..');
-  api.addComponent('editor/desktop/references/reference..');
+  api.addUnstyledComponent('editor/desktop/references..');
+  api.addComponent('editor/desktop/references/displaycomponent..');
+  api.addComponent('editor/desktop/references/displaycomponent/reference..');
 
   api.addFile('editor/desktop/tools..');
   api.addFile('editor/desktop/tools/movecanvas');
