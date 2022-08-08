@@ -18,12 +18,10 @@ class LOI.Assets.Editor.Actions.ShowAction extends LOI.Assets.Editor.Actions.Ass
 
     else
       # We read the value directly from data.
-      fileData = @editorView().activeFileData()
+      fileData = @interface.getActiveFileData()
       fileData.get property
 
   execute: ->
-    return unless editorView = @editorView()
-
     property = @constructor.fileDataProperty()
-    fileData = editorView.activeFileData()
+    fileData = @interface.getActiveFileData()
     fileData.set property, not @active()

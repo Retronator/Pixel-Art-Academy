@@ -30,6 +30,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
+        scrollingEnabled: true
         components: [
           LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
         ]

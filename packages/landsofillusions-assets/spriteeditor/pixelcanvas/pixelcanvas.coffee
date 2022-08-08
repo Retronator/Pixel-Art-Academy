@@ -6,6 +6,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
+  # scrollingEnabled: boolean whether you can scroll to pan and zoom
   # components: array of helper IDs that should be drawn to context
   # locked: boolean whether to not allow any editing to be performed
   # fixedCanvasSize: boolean whether to automatically match the canvas size to the size of the asset
@@ -16,7 +17,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   #   origin: the point on the asset that should appear in the center of the canvas
   #     x
   #     y
-  #   scrollingEnabled: boolean whether you can scroll to pan and zoom
   # pixelGrid:
   #   enabled: boolean whether to draw the pixel grid
   #   invertColor: boolean whether to draw the pixel grid with a light color (good for dark backgrounds)
@@ -26,6 +26,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   
   @componentDataFields: -> [
     'initialCameraScale'
+    'scrollingEnabled'
     'components'
     'locked'
     'fixedCanvasSize'
@@ -127,7 +128,25 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         
       if componentIds = @components()
         for componentId in componentIds
-          drawComponents.push @interface.getHelperForFile componentId, @fileIdForHelpers()
+          helper = @interface.getHelperForFile componentId, @fileIdForHelpers()
+
+          # If the helper provides components, we add each of them in turn.
+          if helper.components
+            for componentInfo in helper.components()
+              # See if we have the component specified with extra requirements.
+              if componentInfo.component
+                # Handle the 'before' requirement.
+                if componentInfo.before
+                  targetIndex = _.findIndex drawComponents, (drawComponent) => drawComponent instanceof componentInfo.before
+                  drawComponents.splice targetIndex, 0, componentInfo.component
+
+              else
+                # The component was directly sent. Add it to the end.
+                drawComponents.push componentInfo
+
+          else
+            # Otherwise the helper will be directly drawn to context.
+            drawComponents.push helper
 
       drawComponents
 

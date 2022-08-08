@@ -228,7 +228,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
     b: Math.round color.b * 255
 
   editorDrawComponents: -> [
-    @engineComponent
+    component: @engineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
   ]
 
   styleClasses: ->

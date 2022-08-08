@@ -8,7 +8,7 @@ class LOI.Assets.SpriteEditor.Helpers.SafeArea extends FM.Helper
   @initialize()
   
   drawToContext: (context, options) ->
-    return unless options.editor.editorFileData()?.get 'safeAreaEnabled'
+    return unless @interface.getActiveFileData()?.get 'safeAreaEnabled'
 
     camera = options.editor.camera()
 

@@ -61,7 +61,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
               views.splice existingViewIndex, 1
               Tracker.nonreactive => applicationAreaData.set 'views', views
     
-
     # Reactively add tools and actions.
     toolRequirements =
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
@@ -98,7 +97,22 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       actions = (actionId for actionId, toolKey of historyActionRequirements when @toolIsAvailable toolKey)
   
       Tracker.nonreactive => applicationAreaData.set "views.#{testPaperViewIndex}.actions", actions
-      
+
+    zoomActionRequirements =
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      applicationAreaData = @interface.currentApplicationAreaData()
+      views = applicationAreaData.get 'views'
+      zoomViewIndex = _.findIndex views, (view) => view.type is PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Zoom.id()
+      return unless zoomViewIndex > -1
+
+      actions = (actionId for actionId, toolKey of zoomActionRequirements when @toolIsAvailable toolKey)
+
+      Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
+
     # Reset canvas offset when entering the editor
     @autorun (computation) =>
       return unless @active()
@@ -117,12 +131,23 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       
       Tracker.nonreactive => fileData.child('pixelGrid').set 'invertColor', invert
   
-    # Select the first color if no color is set.
+    # Select the first color if no color is set or the color is not available.
     @autorun (computation) =>
       return unless @interface.isCreated()
       @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
-  
-      unless @paintHelper.paletteColor()
+
+      if paletteColor = @paintHelper.paletteColor()
+        # We have a palette color. Wait until information about the palette is available.
+        return unless palette = @interface.getLoaderForActiveFile()?.palette()
+
+        # Only reset the color if the palette does not contain the current one.
+        setFirst = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
+
+      else
+        # Palette color has not been set yet so we set it automatically.
+        setFirst = true
+
+      if setFirst
         Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
   
   toolIsAvailable: (toolKey) ->
@@ -346,12 +371,11 @@ for toolKey, toolClass of @toolClasses
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
           
-          "#{LOI.Assets.Editor.Actions.Undo.id()}": [{commandOrControl: true, key: AC.Keys.z}, {key: AC.Keys.z}]
-          "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then [{command: true, shift: true, key: AC.Keys.z}, {key: AC.Keys.x}] else control: true, key: AC.Keys.y
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
-          
-      
+          "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
+          "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
+          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
+          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
+
     # Return combined interface data.
     {activeToolId, components, layouts, shortcuts}
     

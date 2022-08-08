@@ -20,17 +20,19 @@ class PAA.Practice.Project.Asset.Sprite.ClipboardComponent extends AM.Component
     # Calculate asset size.
     @assetSize = new ComputedField =>
       return unless spriteData = @asset.sprite()
-  
-      scaleLimits = {}
+      return unless assetData = @drawing.portfolio().displayedAsset()
+
+      options =
+        scaleLimits: {}
 
       # Check if the asset provides a minimum or maximum scale.
       if minScale = @asset.minClipboardScale?()
-        scaleLimits.min = minScale
+        options.scaleLimits.min = minScale
   
       if maxScale = @asset.maxClipboardScale?()
-        scaleLimits.max = maxScale
+        options.scaleLimits.max = maxScale
       
-      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize spriteData.bounds, scaleLimits
+      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), spriteData.bounds, options
       
   onBackButton: ->
     if @secondPageActive()

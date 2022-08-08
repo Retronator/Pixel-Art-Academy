@@ -7,31 +7,27 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard'
   
-  @calculateAssetSize: (bounds, scaleLimits) ->
+  @calculateAssetSize: (portfolioScale, bounds, options) ->
     width = bounds?.width or 1
     height = bounds?.height or 1
 
-    # Scale the sprite as much as possible while remaining under 100px.
-    maxSize = 100
-    maxScale = scaleLimits?.max or 8
+    # Asset in the clipboard should be bigger than in the portfolio.
+    if portfolioScale < 1
+      # Scale up to 0.5 to show pixel perfect at least on retina screens.
+      scale = 0.5
 
-    size = Math.max width, height
-    return 1 if _.isNaN size
-    
-    scale = 1
-  
-    if size > maxSize
-      # Scale downwards until we're under max size (using scale as the denominator).
-      scale++ while size / scale > maxSize
-      return 1 / scale
-  
     else
-      # Scale upwards until you hit max scale or max size.
-      scale++ while scale < maxScale and (scale + 1) * size < maxSize
+      # 1 -> 2
+      # 2 -> 3
+      # 3 -> 4
+      # 4 -> 5
+      # 5 -> 6
+      # 6 -> 8
+      scale = Math.ceil portfolioScale * 1.2
   
     # Apply minimum and maximum scale if provided (it could be a non-integer).
-    scale = Math.max scale, scaleLimits.min if scaleLimits?.min
-    scale = Math.min scale, scaleLimits.max if scaleLimits?.max
+    scale = Math.max scale, options.scaleLimits.min if options?.scaleLimits?.min
+    scale = Math.min scale, options.scaleLimits.max if options?.scaleLimits?.max
 
     contentWidth = width * scale
     contentHeight = height * scale

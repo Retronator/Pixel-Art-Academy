@@ -24,8 +24,9 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     # Calculate asset size.
     @assetSize = new ComputedField =>
       return unless document = @artworkAsset.document()
+      return unless assetData = @drawing.portfolio().displayedAsset()
   
-      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize document.bounds
+      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), document.bounds
     ,
       EJSON.equals
 

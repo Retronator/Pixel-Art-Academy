@@ -18,6 +18,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
       spriteData = new LOI.Assets.Sprite
         layers: [{pixels, _pixelMap}]
 
+      spriteData.recomputeBounds()
+
+      # Transfer color properties from the asset.
+      for propertyName in ['palette', 'customPalette', 'materials']
+        spriteData[propertyName] = assetData[propertyName]
+
       spriteData
 
     # Create the engine sprite.
@@ -28,4 +34,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
       visualizeNormals: @paintNormalsData.value
 
   drawToContext: ->
+    # Don't draw the preview when the canvas is locked.
+    return if @pixelCanvas.locked()
+
     @sprite.drawToContext arguments...

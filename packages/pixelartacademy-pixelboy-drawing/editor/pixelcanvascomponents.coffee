@@ -33,13 +33,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
       backgroundColor = displayedAsset?.backgroundColor?()
       backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
     
-      for component in components
+      for componentInfo in components
+        component = componentInfo.component or componentInfo
+
         component.options.backgroundColor = backgroundColor
     
       components
       
   destroy: ->
     @components.stop()
-    
-  drawToContext: ->
-    component.drawToContext arguments... for component in @components()

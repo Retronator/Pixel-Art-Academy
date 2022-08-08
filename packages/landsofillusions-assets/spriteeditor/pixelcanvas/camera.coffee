@@ -20,12 +20,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     @effectiveScale = new ComputedField =>
       displayScale = @pixelCanvas.display.scale()
       @scale() * displayScale
-  
-    @scrollingEnabledData = new ComputedField =>
-      @cameraData()?.child 'scrollingEnabled'
-  
+
     @scrollingEnabled = new ComputedField =>
-      @scrollingEnabledData()?.value()
+      @pixelCanvas.scrollingEnabled()
       
     @originData = new ComputedField =>
       @cameraData()?.child 'origin'
@@ -68,8 +65,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     @pixelCanvas.autorun (computation) =>
       $parent = options.$parent()
       return unless $parent
-      computation.stop()
-      
+
       scrollingEnabled = @scrollingEnabled()
       
       if scrollingEnabled and not @_scrollingFunction

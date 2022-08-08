@@ -3,7 +3,7 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class Zoom extends FM.Action
-  enabled: -> @interface.activeFileId() and @newZoomLevel()
+  enabled: -> @interface.activeFileId()? and @newZoomLevel()
 
   constructor: ->
     super arguments...
