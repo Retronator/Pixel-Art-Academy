@@ -10,10 +10,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
 
       true
 
-    # Hints are 5x smaller dots in the middle of a pixel.
-    @pixelToHintRatio = 5
-    @hintOffset = Math.floor @pixelToHintRatio / 2
-
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()
 
@@ -28,12 +24,20 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
     spriteData = @options.spriteData()
     palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
+    # Hints are ideally 5x smaller dots in the middle of a pixel.
+    pixelSize = renderOptions.camera.effectiveScale()
+    hintSize = pixelSize / 5
+
+    # Hint size should be at least one pixel big so it's always visible.
+    hintSize = Math.max 1, hintSize
+    pixelToHintRatio = Math.round pixelSize / hintSize
+
     # Build a new canvas if needed.
     @_canvas ?= $('<canvas>')[0]
 
     # Resize the canvas if needed.
-    @_canvas.width = spriteData.bounds.width * @pixelToHintRatio unless @_canvas.width is spriteData.bounds.width * @pixelToHintRatio
-    @_canvas.height = spriteData.bounds.height * @pixelToHintRatio unless @_canvas.height is spriteData.bounds.height * @pixelToHintRatio
+    @_canvas.width = spriteData.bounds.width * pixelToHintRatio unless @_canvas.width is spriteData.bounds.width * pixelToHintRatio
+    @_canvas.height = spriteData.bounds.height * pixelToHintRatio unless @_canvas.height is spriteData.bounds.height * pixelToHintRatio
 
     @_context = @_canvas.getContext '2d'
     @_imageData = @_context.getImageData 0, 0, @_canvas.width, @_canvas.height
@@ -42,10 +46,13 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
     # Clear the image buffer to transparent.
     @_imageData.data.fill 0
 
+    # If hints would completely cover the pixels, it's better to not draw them.
+    return if pixelToHintRatio is 1
+
     # Draw background dots to all pixels.
     for x in [0...spriteData.bounds.width]
       for y in [0...spriteData.bounds.height]
-        @_paintPixel spriteData, x, y, @options.backgroundColor
+        @_paintPixel spriteData, x, y, @options.backgroundColor, pixelToHintRatio
 
     for layer in spriteData.layers
       continue unless layer.pixels
@@ -59,16 +66,17 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
         else if pixel.directColor
           color = pixel.directColor
 
-        @_paintPixel spriteData, pixel.x, pixel.y, color
+        @_paintPixel spriteData, pixel.x, pixel.y, color, pixelToHintRatio
 
     @_context.putImageData @_imageData, 0, 0
 
-  _paintPixel: (spriteData, pixelX, pixelY, color) =>
+  _paintPixel: (spriteData, pixelX, pixelY, color, pixelToHintRatio) =>
     spritePixelX = pixelX - spriteData.bounds.x
     spritePixelY = pixelY - spriteData.bounds.y
 
-    x = spritePixelX * @pixelToHintRatio + @hintOffset
-    y = spritePixelY * @pixelToHintRatio + @hintOffset
+    hintOffset = Math.floor pixelToHintRatio / 2
+    x = spritePixelX * pixelToHintRatio + hintOffset
+    y = spritePixelY * pixelToHintRatio + hintOffset
 
     pixelIndex = (x + y * @_canvas.width) * 4
 
