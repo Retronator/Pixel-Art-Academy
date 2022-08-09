@@ -16,9 +16,9 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
     # Put the sprite into upload mode.
     @sprite.uploadMode true
 
-    # Clone current sprite data so we can manipulate it drectly.
+    # Clone current sprite data so we can manipulate it directly.
     editor = @parent.drawing.editor()
-    spriteData = _.cloneDeep editor.spriteData()
+    spriteData = _.cloneDeep @sprite.sprite()
     editor.manualSpriteData spriteData
     @sprite.manualUserSpriteData spriteData
     @sprite.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
@@ -31,7 +31,7 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
 
       viewport = LOI.adventure.interface.display.viewport()
 
-      clipboardSpriteSize = @parent.spriteSize()
+      clipboardSpriteSize = @parent.assetSize()
       borderWidth = clipboardSpriteSize.borderWidth / clipboardSpriteSize.scale
 
       maxWidth = viewport.viewportBounds.width() * 0.9
@@ -46,7 +46,8 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
       maxScale = Math.min widthScale, heightScale
       scale = Math.floor maxScale
 
-      editor.pixelCanvas().camera().setScale scale
+      pixelCanvas = editor.interface.getEditorForActiveFile()
+      pixelCanvas.camera().setScale scale
 
     # Draw all pixels in 3 seconds.
     pixelDrawDelay = 3000 / (imageData.width * imageData.height)

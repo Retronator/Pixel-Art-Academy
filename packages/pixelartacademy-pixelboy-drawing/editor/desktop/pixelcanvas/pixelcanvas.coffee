@@ -110,7 +110,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
 
     else
       $assetPlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .asset-placeholder')
-      return {} unless $assetPlaceholder.length
+      unless $assetPlaceholder.length
+        # Force re-measure after the asset placeholder is visible again.
+        Meteor.setTimeout => @assetStyleChangeDependency.changed()
+        return {}
+
       assetOffset = $assetPlaceholder.offset()
 
       $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')

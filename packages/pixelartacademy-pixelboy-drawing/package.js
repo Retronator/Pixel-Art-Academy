@@ -36,6 +36,8 @@ Package.onUse(function(api) {
   api.addComponent('portfolio/newartwork/clipboardcomponent..');
 
   api.addFile('portfolio/importartwork..');
+  api.addComponent('portfolio/importartwork/portfoliocomponent..');
+  api.addComponent('portfolio/importartwork/clipboardcomponent..');
 
   api.addComponent('clipboard..');
 

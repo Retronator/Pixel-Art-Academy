@@ -65,9 +65,7 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
       reader.onload = (event) =>
         image = new Image
         image.onload = =>
-          sprite = @parent.asset()
-
-          if fixedDimensions = sprite.fixedDimensions()
+          if fixedDimensions = @sprite.fixedDimensions()
             # Make sure the dimensions match.
             unless image.width is fixedDimensions.width and image.height is fixedDimensions.height
               # Report the mismatch to the player.
@@ -97,8 +95,7 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
 
   processUploadData: (imageData) ->
     # Prepare for palette mapping.
-    editor = @parent.drawing.editor()
-    spriteData = editor.spriteData()
+    spriteData = @sprite.sprite()
     palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
     # See if we have a background color defined.

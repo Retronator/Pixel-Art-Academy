@@ -16,3 +16,11 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ImportArtwork extends PixelArtAcademy.
     """
   
   @initialize()
+
+  constructor: ->
+    super arguments...
+
+    @portfolioComponent = new @constructor.PortfolioComponent @
+    @clipboardComponent = new @constructor.ClipboardComponent @
+
+  urlParameter: -> 'import'

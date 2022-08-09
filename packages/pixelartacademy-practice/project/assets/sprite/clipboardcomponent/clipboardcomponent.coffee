@@ -44,9 +44,6 @@ class PAA.Practice.Project.Asset.Sprite.ClipboardComponent extends AM.Component
   editorActive: ->
     @drawing.editor().active()
 
-  asset: ->
-    @drawing.portfolio().displayedAsset()?.asset
-
   editAsset: ->
     AB.Router.setParameter 'parameter4', 'edit'
     

@@ -171,6 +171,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         lightDirection: if shadingEnabled then lightDirection() else null
         camera: camera
         editor: @
+        smoothShading: false
     
       context.restore()
 
