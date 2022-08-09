@@ -35,8 +35,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
       shape: @brushHelper.shape()
 
   drawToContext: (context) ->
-    # Don't draw the cursor when the canvas is locked.
-    return if @pixelCanvas.locked()
+    # Don't draw the cursor when the interface is inactive.
+    return unless @pixelCanvas.interface.active()
     
     scale = @pixelCanvas.camera().scale()
     effectiveScale = @pixelCanvas.camera().effectiveScale()

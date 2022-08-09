@@ -34,7 +34,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
       visualizeNormals: @paintNormalsData.value
 
   drawToContext: ->
-    # Don't draw the preview when the canvas is locked.
-    return if @pixelCanvas.locked()
+    # Don't draw the preview when the interface is inactive.
+    return unless @pixelCanvas.interface.active()
 
     @sprite.drawToContext arguments...

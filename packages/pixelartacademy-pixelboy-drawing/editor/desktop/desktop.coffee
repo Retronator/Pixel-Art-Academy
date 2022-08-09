@@ -119,7 +119,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
   
       @canvasPositionOffset x: 0, y: 0
   
-    # Invert grid color for assets with dark backgrounds.
+    # Invert UI colors for assets with dark backgrounds.
     @autorun (computation) =>
       return unless @interface.isCreated()
       return unless fileData = @interface.getActiveFileData()
@@ -129,7 +129,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       if backgroundColor = @displayedAsset()?.backgroundColor?()
         invert = backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
       
-      Tracker.nonreactive => fileData.child('pixelGrid').set 'invertColor', invert
+      Tracker.nonreactive => fileData.set 'invertUIColors', invert
   
     # Select the first color if no color is set or the color is not available.
     @autorun (computation) =>
@@ -326,13 +326,6 @@ for toolKey, toolClass of @toolClasses
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
   
     components =
-      "#{_.snakeCase LOI.Assets.SpriteEditor.Tools.Pencil.id()}":
-        fractionalPerfectLines: true
-        drawPreview: true
-    
-      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
-        round: true
-        
       "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         fixedCanvasSize: true
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]

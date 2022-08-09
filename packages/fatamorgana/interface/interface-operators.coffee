@@ -95,6 +95,8 @@ class FM.Interface extends FM.Interface
     not @inputFocused()
 
   onKeyDown: (event) ->
+    return unless @active()
+
     @activeTool()?.onKeyDown? event
     
     return unless @shortcutsActive()
@@ -135,6 +137,8 @@ class FM.Interface extends FM.Interface
     @_activeKey = key
 
   onKeyUp: (event) ->
+    return unless @active()
+
     @activeTool()?.onKeyUp? event
 
     return unless @shortcutsActive()

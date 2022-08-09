@@ -8,7 +8,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
   # scrollingEnabled: boolean whether you can scroll to pan and zoom
   # components: array of helper IDs that should be drawn to context
-  # locked: boolean whether to not allow any editing to be performed
   # fixedCanvasSize: boolean whether to automatically match the canvas size to the size of the asset
   #
   # EDITOR FILE DATA
@@ -19,7 +18,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   #     y
   # pixelGrid:
   #   enabled: boolean whether to draw the pixel grid
-  #   invertColor: boolean whether to draw the pixel grid with a light color (good for dark backgrounds)
+  # invertUIColors: boolean whether to draw UI elements with a light color (good for dark backgrounds)
   # landmarksEnabled: boolean whether to draw the landmarks
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.PixelCanvas'
   @register @id()
@@ -28,7 +27,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     'initialCameraScale'
     'scrollingEnabled'
     'components'
-    'locked'
     'fixedCanvasSize'
   ]
 
@@ -98,8 +96,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @pixelGrid new @constructor.PixelGrid @
     @operationPreview new @constructor.OperationPreview @
     @toolInfo new @constructor.ToolInfo @
-
-    @toolsActive = @componentData.get('toolsActive') ? true
 
     # Prepare helpers.
     @fileIdForHelpers = new ComputedField =>
@@ -203,12 +199,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         height: $pixelCanvas.height()
   
     @_resizeObserver.observe canvas
-  
-    if @toolsActive
-      $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event
-      $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event
-      $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event
-      $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event
+
+    # React to keys and global mouse events.
+    $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event if @interface.active()
+    $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event if @interface.active()
+    $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event if @interface.active()
+    $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event if @interface.active()
       
   _resizeCanvas: (newSize) ->
     # Override size if we're using fixed canvas size.
@@ -248,29 +244,24 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # Events
 
   events: ->
-    events = super arguments...
-
-    if @toolsActive
-      events = events.concat
-        'mousedown .canvas': @onMouseDownCanvas
-        'mousemove .canvas': @onMouseMoveCanvas
-        'mouseenter .canvas': @onMouseEnterCanvas
-        'mouseleave .canvas': @onMouseLeaveCanvas
-        'dragstart .canvas': @onDragStartCanvas
-
-    events
+    super(arguments...).concat
+      'mousedown .canvas': @onMouseDownCanvas
+      'mousemove .canvas': @onMouseMoveCanvas
+      'mouseenter .canvas': @onMouseEnterCanvas
+      'mouseleave .canvas': @onMouseLeaveCanvas
+      'dragstart .canvas': @onDragStartCanvas
 
   onMouseDownCanvas: (event) ->
-    @interface.activeTool()?.onMouseDown? event
+    @interface.activeTool()?.onMouseDown? event if @interface.active()
 
   onMouseMoveCanvas: (event) ->
-    @interface.activeTool()?.onMouseMove? event
+    @interface.activeTool()?.onMouseMove? event if @interface.active()
 
   onMouseEnterCanvas: (event) ->
-    @interface.activeTool()?.onMouseEnter? event
+    @interface.activeTool()?.onMouseEnter? event if @interface.active()
 
   onMouseLeaveCanvas: (event) ->
-    @interface.activeTool()?.onMouseLeave? event
+    @interface.activeTool()?.onMouseLeave? event if @interface.active()
 
   onDragStartCanvas: (event) ->
-    @interface.activeTool()?.onDragStart? event
+    @interface.activeTool()?.onDragStart? event if @interface.active()

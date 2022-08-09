@@ -13,7 +13,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
       @enabledData()?.value()
   
     @invertColorData = new ComputedField =>
-      @pixelGridData()?.child 'invertColor'
+      @pixelCanvas.interface.getActiveFileData()?.child 'invertUIColors'
   
     @invertColor = new ComputedField =>
       @invertColorData()?.value()

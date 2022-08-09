@@ -56,18 +56,17 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
         
       loaders:
         "#{LOI.Assets.Asset.id()}": PAA.PixelBoy.Apps.Drawing.Editor.AssetLoader
-        
+
+    # Handle changes when drawing is active.
     @autorun (computation) =>
       return unless @interface.isCreated()
-      return unless editorView = @interface.getEditorViewForActiveFile()
-      return unless editor = editorView.getActiveEditor()
       return unless fileData = @interface.getActiveFileData()
       
       drawingActive = @drawingActive()
       
       Tracker.nonreactive =>
-        # Lock the canvas when drawing is not active to prevent actions being performed in the clipboard.
-        editor.locked not drawingActive
+        # Activate the interface only when drawing is active.
+        @interface.active drawingActive
         
         # Enable the pixel grid when in the editor.
         fileData.child('pixelGrid').set 'enabled', drawingActive
