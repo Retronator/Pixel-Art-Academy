@@ -149,6 +149,22 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
       if setFirst
         Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
+
+    # Set zoom levels based on display scale.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+
+      zoomLevels = [100, 200, 300, 400, 600, 800, 1200, 1600]
+      displayScale = LOI.adventure.interface.display.scale()
+
+      if displayScale % 3 is 0
+        zoomLevels = [100 / 3, 200 / 3, zoomLevels...]
+
+      else
+        zoomLevels = [50, zoomLevels...]
+
+      zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
+      Tracker.nonreactive => zoomLevelsHelper zoomLevels
   
   toolIsAvailable: (toolKey) ->
     return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
@@ -329,9 +345,6 @@ for toolKey, toolClass of @toolClasses
       "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         fixedCanvasSize: true
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
-        
-      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.ZoomLevels.id()}":
-        [50, 100, 200, 300, 400, 600, 800, 1200, 1600]
       
     views = [
       type: FM.Toolbox.id()

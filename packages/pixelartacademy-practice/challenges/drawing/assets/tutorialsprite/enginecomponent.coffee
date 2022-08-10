@@ -13,46 +13,31 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()
 
-    @_render renderOptions
+    @_prepareSize renderOptions
+    @_render context
 
-    bounds = @options.spriteData().bounds
-
-    context.imageSmoothingEnabled = false
-    context.drawImage @_canvas, bounds.x, bounds.y, bounds.width, bounds.height
-
-  _render: (renderOptions) ->
-    spriteData = @options.spriteData()
-    palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
-
+  _prepareSize: (renderOptions) ->
     # Hints are ideally 5x smaller dots in the middle of a pixel.
     pixelSize = renderOptions.camera.effectiveScale()
-    hintSize = pixelSize / 5
+    hintSize = Math.ceil pixelSize / 5
+    offset = Math.floor (pixelSize - hintSize) / 2
 
-    # Hint size should be at least one pixel big so it's always visible.
-    hintSize = Math.max 1, hintSize
-    pixelToHintRatio = Math.round pixelSize / hintSize
+    # We need to store sizes relative to the pixel.
+    @_hintSize = hintSize / pixelSize
+    @_offset = offset / pixelSize
 
-    # Build a new canvas if needed.
-    @_canvas ?= $('<canvas>')[0]
+    # If pixel is less than 2 big, we should lower the opacity of the hint to mimic less coverage.
+    @_opacity = if pixelSize < 2 then pixelSize / 5 else 1
 
-    # Resize the canvas if needed.
-    @_canvas.width = spriteData.bounds.width * pixelToHintRatio unless @_canvas.width is spriteData.bounds.width * pixelToHintRatio
-    @_canvas.height = spriteData.bounds.height * pixelToHintRatio unless @_canvas.height is spriteData.bounds.height * pixelToHintRatio
+  _render: (context) ->
+    spriteData = @options.spriteData()
+    spriteData.requirePixelMaps()
+    palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
-    @_context = @_canvas.getContext '2d'
-    @_imageData = @_context.getImageData 0, 0, @_canvas.width, @_canvas.height
-    @_canvasPixelsCount = @_canvas.width * @_canvas.height
-
-    # Clear the image buffer to transparent.
-    @_imageData.data.fill 0
-
-    # If hints would completely cover the pixels, it's better to not draw them.
-    return if pixelToHintRatio is 1
-
-    # Draw background dots to all pixels.
+    # Draw background dots to empty pixels.
     for x in [0...spriteData.bounds.width]
       for y in [0...spriteData.bounds.height]
-        @_paintPixel spriteData, x, y, @options.backgroundColor, pixelToHintRatio
+        @_drawHint context, x, y, @options.backgroundColor unless spriteData.findPixelAtAbsoluteCoordinates x, y
 
     for layer in spriteData.layers
       continue unless layer.pixels
@@ -66,21 +51,8 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
         else if pixel.directColor
           color = pixel.directColor
 
-        @_paintPixel spriteData, pixel.x, pixel.y, color, pixelToHintRatio
+        @_drawHint context, pixel.x, pixel.y, color
 
-    @_context.putImageData @_imageData, 0, 0
-
-  _paintPixel: (spriteData, pixelX, pixelY, color, pixelToHintRatio) =>
-    spritePixelX = pixelX - spriteData.bounds.x
-    spritePixelY = pixelY - spriteData.bounds.y
-
-    hintOffset = Math.floor pixelToHintRatio / 2
-    x = spritePixelX * pixelToHintRatio + hintOffset
-    y = spritePixelY * pixelToHintRatio + hintOffset
-
-    pixelIndex = (x + y * @_canvas.width) * 4
-
-    @_imageData.data[pixelIndex] = color.r * 255
-    @_imageData.data[pixelIndex + 1] = color.g * 255
-    @_imageData.data[pixelIndex + 2] = color.b * 255
-    @_imageData.data[pixelIndex + 3] = 255
+  _drawHint: (context, pixelX, pixelY, color) ->
+    context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_opacity})"
+    context.fillRect pixelX + @_offset, pixelY + @_offset, @_hintSize, @_hintSize

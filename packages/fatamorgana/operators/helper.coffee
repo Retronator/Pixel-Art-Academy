@@ -21,4 +21,4 @@ class FM.Helper extends FM.Operator
 
   value: ->
     # Override to provide a getter/setter for this helper.
-    @data.value()
+    @data.value arguments...
