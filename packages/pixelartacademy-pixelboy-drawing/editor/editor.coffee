@@ -10,8 +10,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
   constructor: (@drawing) ->
     super arguments...
-
-    @theme = new ReactiveField null
   
     # Drawing becomes active when theme transition completes.
     # The theme should set this to true or false based on its needs.
@@ -75,9 +73,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'
-
-  focusedMode: ->
-    @theme()?.focusedMode?()
 
   onBackButton: ->
     return unless @manuallyActivated()

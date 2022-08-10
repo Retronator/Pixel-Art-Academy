@@ -60,4 +60,7 @@ Package.onUse(function(api) {
 
   api.addFile('editor/desktop/tools..');
   api.addFile('editor/desktop/tools/movecanvas');
+
+  api.addFile('editor/desktop/actions..');
+  api.addFile('editor/desktop/actions/focus');
 });

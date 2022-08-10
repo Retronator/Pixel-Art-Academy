@@ -44,7 +44,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
           for sectionThing, index in sectionThings
             do (sectionThing, index) =>
               assets = new ComputedField =>
-                for asset, assetIndex in sectionThing.assets()
+                for asset, assetIndex in sectionThing.assets() when asset.urlParameter()
                   do (asset, assetIndex) =>
                     _id: asset.urlParameter()
                     index: assetIndex

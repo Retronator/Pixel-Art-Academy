@@ -28,6 +28,26 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     super arguments...
     
     # Reactively add views.
+    handleView = (viewId, enabled) =>
+      return unless @interface.isCreated()
+      applicationAreaData = @interface.currentApplicationAreaData()
+      views = applicationAreaData.get 'views'
+      existingViewIndex = _.findIndex views, (view) => view.type is viewId
+
+      if enabled
+        # Add the view if it's not yet added.
+        if existingViewIndex is -1
+          view = type: viewId
+
+          views.push view
+          Tracker.nonreactive => applicationAreaData.set 'views', views
+
+      else
+        # Remove the view if it's there.
+        if existingViewIndex > -1
+          views.splice existingViewIndex, 1
+          Tracker.nonreactive => applicationAreaData.set 'views', views
+
     viewsToolRequirements =
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Zoom.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
@@ -40,27 +60,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         toolKeys = [toolKeys] unless _.isArray toolKeys
 
         @autorun (computation) =>
-          return unless @interface.isCreated()
-          applicationAreaData = @interface.currentApplicationAreaData()
-          views = applicationAreaData.get 'views'
-          existingViewIndex = _.findIndex views, (view) => view.type is viewId
-          
           anyToolIsAvailable = _.some toolKeys, (toolKey) => @toolIsAvailable toolKey
-          
-          if anyToolIsAvailable
-            # Add the view if it's not yet added.
-            if existingViewIndex is -1
-              view = type: viewId
- 
-              views.push view
-              Tracker.nonreactive => applicationAreaData.set 'views', views
-            
-          else
-            # Remove the view if it's there.
-            if existingViewIndex > -1
-              views.splice existingViewIndex, 1
-              Tracker.nonreactive => applicationAreaData.set 'views', views
-    
+
+          handleView viewId, anyToolIsAvailable
+
+    @autorun (computation) =>
+      pico8Cartridge = @displayedAsset()?.project?.pico8Cartridge?
+      handleView PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
+
     # Reactively add tools and actions.
     toolRequirements =
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
@@ -165,127 +172,37 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
       zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
       Tracker.nonreactive => zoomLevelsHelper zoomLevels
-  
-  toolIsAvailable: (toolKey) ->
-    return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
-    toolKey in availableKeys
 
-  ###
-# Initialize components.
-@sprite new LOI.Assets.Engine.Sprite
-  spriteData: @spriteData
+    # Automatically enter focused mode when PICO-8 is active.
+    @autorun (computation) =>
+      return unless pico8 = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8
 
-@pixelCanvas new LOI.Assets.Components.PixelCanvas
-  initialCameraScale: 0
-  activeTool: @activeTool
-  cameraInput: false
-  grid: => @drawingActive()
-  gridInvertColor: =>
-    displayedAsset = @displayedAsset()
-    return unless backgroundColor = displayedAsset?.backgroundColor?()
-    backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
+      @focusedMode pico8.active()
 
-  cursor: => @drawingActive()
-  canvasSize: => @spriteData()?.bounds
-  drawComponents: =>
-    components = [
-      @sprite()
-    ]
+    # Automatically deactivate PICO-8 when exiting focused mode.
+    @autorun (computation) =>
+      return unless pico8 = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8
 
-    # Add any custom components that are visible all the time.
-    displayedAsset = @displayedAsset()
+      pico8.active false unless @focusedMode()
 
-    if assetComponents = displayedAsset?.drawComponents?()
-      components.push assetComponents...
-      
-    # Add components visible only in the editor.
-    if @active()
-      if assetComponents = displayedAsset?.editorDrawComponents?()
-        components.push assetComponents...
+    # Deactivate active tool when closing the editor and reactivate it when opening if it's still available.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
 
-    # Set extra info to components
-    backgroundColor = displayedAsset?.backgroundColor?()
-    backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
+      if @active()
+        # The editor is opened.
+        unless @interface.activeTool()
+          # Make sure the last active tool is still allowed.
+          if @_lastActiveTool in @interface.tools()
+            # Reactivate the last tool.
+            Tracker.nonreactive => @interface.activateTool @_lastActiveTool
 
-    for component in components
-      component.options.backgroundColor = backgroundColor
-
-    components
-
-@palette new @constructor.Palette
-  paletteId: @paletteId
-  paletteData: @paletteData
-  theme: @
-
-@references new @constructor.References
-  assetId: @spriteId
-  documentClass: LOI.Assets.Sprite
-  editorActive: => @active()
-  assetOptions: =>
-    @displayedAsset()?.editorOptions?()?.references
-
-@pico8 new @constructor.Pico8
-  asset: @activeAsset
-
-# Automatically enter focused mode when PICO-8 is active.
-@autorun (computation) =>
-  @focusedMode @pico8().active()
-
-# Automatically deactivate PICO-8 when exiting focused mode.
-@autorun (computation) =>
-  @pico8().active false unless @focusedMode()
-  
-# Create tools.
-@toolClasses =
-  "#{PAA.Practice.Software.Tools.ToolKeys.Pencil}": LOI.Assets.Components.Tools.Pencil
-  "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.Components.Tools.Eraser
-  "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.Components.Tools.ColorFill
-  "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.Components.Tools.ColorPicker
-  "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
-  "#{PAA.Practice.Software.Tools.ToolKeys.Undo}": LOI.Assets.Components.Tools.Undo
-  "#{PAA.Practice.Software.Tools.ToolKeys.Redo}": LOI.Assets.Components.Tools.Redo
-
-@toolInstances = {}
-
-for toolKey, toolClass of @toolClasses
-  @toolInstances[toolKey] = new toolClass
-    editor: => @
-
-# Allow the asset to control which tools are available.
-@autorun (computation) =>
-  activeAsset = @activeAsset()
-
-  if availableToolKeys = activeAsset?.availableToolKeys?()
-    tools = _.at @toolInstances, availableToolKeys
-    @tools _.without tools, undefined
-
-  else
-    @tools _.values @toolInstances
-
-
-
-# Deactivate active tool when closing the editor.
-@autorun (computation) =>
-  if @active()
-    unless @activeTool()
-      # Make sure the last active tool is still allowed.
-      if @_lastActiveTool in @tools()
-        @toolbox().activateTool @_lastActiveTool
-
-  else
-    if activeTool = @activeTool()
-      @_lastActiveTool = activeTool
-      @toolbox().deactivateTool()
-
-# Keep pixel canvas centered on the sprite.
-@autorun (computation) =>
-  return unless spriteData = @spriteData()
-
-  @pixelCanvas().camera().origin
-    x: spriteData.bounds.width / 2
-    y: spriteData.bounds.height / 2
-
-###
+      else
+        # The editor is being closed.
+        if activeTool = @interface.activeTool()
+          # Remember which tool was used and deactivate it.
+          @_lastActiveTool = activeTool
+          Tracker.nonreactive => @interface.deactivateTool()
   
   onRendered: ->
     super arguments...
@@ -302,42 +219,15 @@ for toolKey, toolClass of @toolClasses
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
 
-        ###
-    $(document).on 'keydown.pixelartacademy-pixelboy-apps-drawing-editor-desktop', (event) =>
-      return unless @active()
-      
-      switch event.which
-        when AC.Keys.f
-          # Toggle focused mode.
-          @focusedMode not @focusedMode()
-
-        else
-          return
-  
-###
-
-  onDestroyed: ->
-    super arguments...
-
-    ###
-    $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-desktop')
-    
-    @pico8().device?.stop()
-  
-###
-
-  ###
   onBackButton: ->
     # Turn off focused mode on back button.
     return super(arguments...) unless @focusedMode()
-    
     
     @focusedMode false
 
     # Inform that we've handled the back button.
     true
-  ###
-  
+
   defaultInterfaceData: ->
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
   
@@ -347,6 +237,11 @@ for toolKey, toolClass of @toolClasses
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
       
     views = [
+      type: FM.Menu.id()
+      items: [
+        PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Actions.Focus.id()
+      ]
+    ,
       type: FM.Toolbox.id()
       tools: []
     ,
@@ -355,7 +250,7 @@ for toolKey, toolClass of @toolClasses
       editor:
         contentComponentId: PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()
     ]
-    
+
     layouts =
       currentLayoutId: 'main'
       main:
@@ -381,6 +276,7 @@ for toolKey, toolClass of @toolClasses
           "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
           "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
           "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
 
     # Return combined interface data.
     {activeToolId, components, layouts, shortcuts}
@@ -394,19 +290,26 @@ for toolKey, toolClass of @toolClasses
   draggingClass: ->
     return unless @interface.isCreated()
     moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
-    references = @interface.allChildComponentsOfType(PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References)[0]
+
+    references = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References
+    pico8 = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8
 
     'dragging' if _.some [
       moveTool.moving()
       references?.displayComponent.dragging()
-      #@pico8().dragging()
+      pico8?.dragging()
     ]
 
   resizingDirectionClass: ->
-    ###
-    @references().resizingReference()?.resizingDirectionClass()
-  
-###
+    return unless references = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References
 
-  pico8Enabled: ->
-    @displayedAsset()?.project?.pico8Cartridge?
+    references.displayComponent.resizingReference()?.resizingDirectionClass()
+
+  toolIsAvailable: (toolKey) ->
+    return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
+    toolKey in availableKeys
+
+  _getView: (viewClass) ->
+    return unless @interface.isCreated()
+
+    @interface.allChildComponentsOfType(viewClass)[0]
