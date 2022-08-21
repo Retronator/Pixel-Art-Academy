@@ -22,7 +22,7 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
     
   _handleLoaders: ->
     @documentClass.documents.find({}).observe
-      added: (document) ->
+      added: (document) =>
         # Only load versioned documents.
         return unless document.versioned
         
@@ -30,7 +30,7 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
         
         @_loadersUpdatedDependency.changed()
       
-      removed: (document) ->
+      removed: (document) =>
         @_loaders[document._id].destroy()
         delete @_loaders[document._id]
         

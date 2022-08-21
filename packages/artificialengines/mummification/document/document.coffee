@@ -79,7 +79,7 @@ class AM.Document extends Document
     _.keys @_documentClassesByType
     
   @enableVersioning: ->
-    @versionedDocuments = new AM.Document.Versioning.VersionedCollection @
+    AM.Document.Versioning.initializeDocumentClass @
   
   @getDocumentForId: (id) ->
     return unless document = @documents.findOne id

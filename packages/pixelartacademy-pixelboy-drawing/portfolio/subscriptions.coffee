@@ -13,7 +13,8 @@ PAA.PixelBoy.Apps.Drawing.Portfolio.artworksWithAssets.publish (characterId, art
   
   # Get all asset IDs.
   spriteIds = []
-  
+  bitmapIds = []
+
   for artwork in artworks
     # See if the artwork has a document representation.
     continue unless documentRepresentation = _.find artwork.representations, (representation) -> representation.type is PADB.Artwork.RepresentationTypes.Document
@@ -23,8 +24,13 @@ PAA.PixelBoy.Apps.Drawing.Portfolio.artworksWithAssets.publish (characterId, art
     id = url.searchParams.get 'id'
 
     spriteIds.push id if _.startsWith documentRepresentation.url, LOI.Assets.Sprite.documentUrl()
+    bitmapIds.push id if _.startsWith documentRepresentation.url, LOI.Assets.Bitmap.documentUrl()
 
-  # Get all assets.
+  # Get all the assets.
   spritesCursor = LOI.Assets.Sprite.documents.find _id: $in: spriteIds
+
+  bitmapsCursor = LOI.Assets.Bitmap.documents.find _id: $in: bitmapIds,
+    fields:
+      versioned: true
   
-  [artworksCursor, spritesCursor]
+  [artworksCursor, spritesCursor, bitmapsCursor]

@@ -2,14 +2,6 @@ AE = Artificial.Everywhere
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
-LOI.Assets.Asset.load.method (assetClassName, assetId, fields) ->
-  check assetClassName, String
-  check assetId, Match.DocumentId
-  check fields, Match.OptionalOrNull Object
-  
-  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
-  assetClass.documents.findOne assetId, {fields}
-
 LOI.Assets.Asset.insert.method (assetClassName) ->
   check assetClassName, String
 
@@ -74,3 +66,11 @@ LOI.Assets.Asset.exists.method (assetClassName, assetId) ->
 
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
   assetClass.documents.findOne(assetId)?
+
+LOI.Assets.Asset.getData.method (assetClassName, assetId, fields) ->
+  check assetClassName, String
+  check assetId, Match.DocumentId
+  check fields, Match.OptionalOrNull Object
+
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+  assetClass.documents.findOne assetId, {fields}

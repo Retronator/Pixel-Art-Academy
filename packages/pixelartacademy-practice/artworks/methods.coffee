@@ -10,6 +10,7 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
     assetClassName: Match.Where (name) ->
       name in [
         'Sprite'
+        'Bitmap'
       ]
     title: String
     size: Match.Optional
@@ -23,6 +24,9 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
   assetData =
     authors: [_id: characterId]
     creationTime: new Date()
+
+  # Bitmap asset type needs to be versioned.
+  assetData.versioned = true if artworkInfo.assetClassName is 'Bitmap'
     
   if artworkInfo.size
     maxSize = PAA.Practice.Artworks.maxSizes[artworkInfo.assetClassName]

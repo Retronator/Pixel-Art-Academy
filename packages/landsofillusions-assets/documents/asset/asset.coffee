@@ -28,8 +28,6 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   
   # Methods
   
-  @load: @method 'load'
-
   @insert: @method 'insert'
   @insertVersioned: @method 'insertVersioned'
   @update: @method 'update'
@@ -42,6 +40,8 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   @redo: @method 'redo'
   @clearHistory: @method 'clearHistory'
 
+  @getData: @method 'getData'
+
   # Subscriptions
 
   @forId: @subscription 'forId'
@@ -49,9 +49,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   @forName: @subscription 'forName'
   @forPath: @subscription 'forPath'
   @all: @subscription 'all'
-  
-  @latestHistoryForId: @subscription 'latestHistoryForId'
-  
+
   @executePartialAction: (assetClassName, assetId, action) ->
     assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
     asset = LOI.Assets.Asset._requireAsset assetId, assetClass

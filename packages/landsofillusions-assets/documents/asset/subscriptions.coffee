@@ -54,11 +54,3 @@ LOI.Assets.Asset.all.publish (assetClassName) ->
   assetClass.documents.find {},
     fields:
       name: 1
-
-LOI.Assets.Asset.latestHistoryForId.publish (assetClassName, id) ->
-  check assetClassName, String
-  check id, Match.DocumentId
-  
-  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
-
-  AM.Document.Versioning.latestHistoryForId @, assetClass, id

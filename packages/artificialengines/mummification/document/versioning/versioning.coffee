@@ -26,7 +26,29 @@ class AM.Document.Versioning
     toolId: String
     forward: [@operationPattern]
     backward: [@operationPattern]
-    
+
+  @initializeDocumentClass: (documentClass) ->
+    documentClass.versionedDocuments = new AM.Document.Versioning.VersionedCollection documentClass
+
+    documentClass.load = documentClass.method 'load'
+    documentClass.latestHistoryForId = documentClass.subscription 'latestHistoryForId'
+
+    return unless Meteor.isServer
+
+    documentClass.load.method (assetId, fields) ->
+      check assetId, Match.DocumentId
+      check fields, Match.OptionalOrNull Object
+
+      documentClass.documents.findOne assetId, {fields}
+
+    documentClass.latestHistoryForId.publish (assetId) ->
+      check assetId, Match.DocumentId
+
+      AM.Document.Versioning.latestHistoryForId @, documentClass, assetId
+
+      # Explicitly return nothing since we're handling the publishing ourselves.
+      return
+
   @executeAction: (versionedDocument, action) ->
     # Execute the action on the document, unless it was already executed with partial actions.
     if versionedDocument.partialAction
@@ -165,10 +187,11 @@ class AM.Document.Versioning
         history: 1
     ).observe
       added: (document) =>
-        publishHandler.added collectionName, @_createLocalizedHistory document
+        publishHandler.added collectionName, document._id, @_createLocalizedHistory document
+        publishHandler.ready()
         
       changed: (document) =>
-        publishHandler.changed collectionName, @_createLocalizedHistory document
+        publishHandler.changed collectionName, document._id, @_createLocalizedHistory document
         
       removed: (document) =>
         publishHandler.removed collectionName, document._id

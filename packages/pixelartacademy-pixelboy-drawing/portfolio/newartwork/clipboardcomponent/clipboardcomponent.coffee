@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   
   @ArtworkTypes =
     Sprite: 'Sprite'
-    Canvas: 'Canvas'
+    Bitmap: 'Bitmap'
   
   @SizeTypes =
     Freeform: 'Freeform'
