@@ -193,11 +193,15 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     # Register that the stroke has just started.
     @_strokeStarted = true
 
+    @_strokeActive = true
+
     # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @processStroke()
 
   onMouseUp: (event) ->
     super arguments...
+
+    return unless @_strokeActive
 
     # End stroke.
     @lastStrokeCoordinates null
@@ -206,6 +210,11 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @drawStraight false
 
     @updatePixels()
+
+    assetData = @editor().assetData()
+    @endStroke assetData
+
+    @_strokeActive = false
 
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
@@ -352,4 +361,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @_strokeStarted = false
 
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
-    # Override to call a method that will send the operation on the server.
+    # Override to process new pixels being added to the stroke.
+
+  endStroke: (assetData) ->
+    # Override to process the end of the stroke.

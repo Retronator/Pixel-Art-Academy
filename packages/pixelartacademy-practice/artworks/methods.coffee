@@ -24,6 +24,7 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
   assetData =
     authors: [_id: characterId]
     creationTime: new Date()
+    pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor'
 
   # Bitmap asset type needs to be versioned.
   assetData.versioned = true if artworkInfo.assetClassName is 'Bitmap'

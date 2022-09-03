@@ -23,8 +23,11 @@ class AM.Document.Versioning.VersionedDocumentLoader
   _loadInitialState: ->
     @versionedCollection.documentClass.load @id, (error, result) =>
       return console.error error if error
-      
-      @_document = result
+
+      # Create the document and initialize it if it requires it.
+      @_document = new @versionedCollection.documentClass result
+      @_document.initialize?()
+
       @_documentLoadedDependency.changed()
       
       # If we already got some history changes, handle them.
@@ -37,6 +40,9 @@ class AM.Document.Versioning.VersionedDocumentLoader
     # We must make sure our local document state reflects what it is on the server.
     # See how many actions (up to history position) are matching.
     matchingActionsCount = 0
+
+    console.log "handling history changes"
+    return
     
     for historyPosition in [@_latestHistory.historyStart...@_latestHistory.historyPosition]
       documentActionIndex = historyPosition - @_document.historyStart
@@ -44,8 +50,9 @@ class AM.Document.Versioning.VersionedDocumentLoader
       
       documentAction = @_document.history[documentActionIndex]
       latestHistoryAction = @_latestHistory.history[latestHistoryActionIndex]
-      
-      if EJSON.equals documentAction, latestHistoryAction
+
+      # For efficiency we only compare hash codes.
+      if documentAction.hashCode is latestHistoryAction.hashCode
         matchingActionsCount++
         
       else

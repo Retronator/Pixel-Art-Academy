@@ -1,11 +1,12 @@
 AE = Artificial.Everywhere
-AM = Artificial.Mirage
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 LOI.Assets.Asset.executeAction.method (assetClassName, assetId, action) ->
+  console.log "executeAction", assetClassName, assetId, action
   check assetId, Match.DocumentId
   check assetClassName, String
-  check action, AM.Document.Versioning.actionPattern
+  check action, AM.Document.Versioning.Action.pattern
   
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
   asset = LOI.Assets.Asset._requireAsset assetId, assetClass

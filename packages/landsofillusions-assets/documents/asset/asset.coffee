@@ -66,10 +66,13 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
 
   @_requireAsset = (assetId, assetClass) ->
     if Meteor.isClient and assetClass.versionedDocuments
+      # Get the asset from the versioned cache on the client. The asset should already be initialized.
       asset = assetClass.versionedDocuments.getDocumentForId assetId
       
     else
+      # Get the asset from minimongo. We need to initialize it if the asset supports it.
       asset = assetClass.documents.findOne assetId
+      asset.initialize?()
 
     throw new AE.ArgumentException "Asset does not exist." unless asset
 

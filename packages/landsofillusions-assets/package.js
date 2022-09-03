@@ -82,6 +82,29 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/resize');
 
   api.addFile('documents/bitmap..');
+  api.addFile('documents/bitmap/area');
+  api.addFile('documents/bitmap/layer');
+  api.addFile('documents/bitmap/layergroup');
+  api.addFile('documents/bitmap/pixelformat');
+
+  api.addFile('documents/bitmap/attribute..');
+  api.addFile('documents/bitmap/attribute/alpha');
+  api.addFile('documents/bitmap/attribute/clusterid');
+  api.addFile('documents/bitmap/attribute/directcolor');
+  api.addFile('documents/bitmap/attribute/flags');
+  api.addFile('documents/bitmap/attribute/materialindex');
+  api.addFile('documents/bitmap/attribute/normal');
+  api.addFile('documents/bitmap/attribute/operationmask');
+  api.addFile('documents/bitmap/attribute/palettecolor');
+
+  api.addFile('documents/bitmap/actions..');
+  api.addFile('documents/bitmap/actions/addlayer');
+  api.addFile('documents/bitmap/actions/stroke');
+
+  api.addFile('documents/bitmap/operations..');
+  api.addFile('documents/bitmap/operations/addlayer');
+  api.addFile('documents/bitmap/operations/removelayer');
+  api.addFile('documents/bitmap/operations/changepixels');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/methods');

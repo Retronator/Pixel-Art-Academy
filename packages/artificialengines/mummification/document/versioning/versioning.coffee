@@ -8,24 +8,17 @@ class AM.Document.Versioning
   # historyPosition: how many actions brings you to the current state of the asset
   # historyStart: at which history position does the history array start (the rest of the actions are in the archive)
   # history: array of actions that produce this asset
-  #   toolId: which tool generated this action (used for undo/redo description)
+  #   operatorId: which tool generated this action (used for undo/redo description)
+  #   hashCode: the hash code of the action for quick equality comparison
   #   forward: array of operations that creates the result of this action
-  #     operationId: the operation type
+  #     id: the operation type
+  #     hashCode: the hash code of the operation for quick equality comparison
   #     data: any data that defines this operation
-  #   backward: update delta that undoes the operation from the resulting state
+  #   backward: array of operations that undoes the action from the resulting state
   # historyArchive: array of action archives that hold actions not included in history to reduce size
   #   url: the URL address where the array of actions is stored (in JSON format)
   #   actionsCount: how many actions are in this archive
   # partialAction: a field on the client that holds an action that is progressively being constructed
-  
-  @operationPattern =
-    operationId: String
-    data: Match.Optional Object
-  
-  @actionPattern =
-    toolId: String
-    forward: [@operationPattern]
-    backward: [@operationPattern]
 
   @initializeDocumentClass: (documentClass) ->
     documentClass.versionedDocuments = new AM.Document.Versioning.VersionedCollection documentClass
@@ -50,6 +43,8 @@ class AM.Document.Versioning
       return
 
   @executeAction: (versionedDocument, action) ->
+    console.log "executeAction", versionedDocument, action
+
     # Execute the action on the document, unless it was already executed with partial actions.
     if versionedDocument.partialAction
       # We assume all operations of action have already been applied through partial
@@ -58,6 +53,8 @@ class AM.Document.Versioning
       
     else
       changedFields = @executeOperations versionedDocument, action.forward
+
+    console.log "operation executed", changedFields, versionedDocument
   
     # Change history.
     currentHistoryPosition = versionedDocument.historyPosition or 0
@@ -76,7 +73,7 @@ class AM.Document.Versioning
       # On the server we apply changes to the database.
       modifier =
         $set:
-          historyPosition = newHistoryPosition
+          historyPosition: newHistoryPosition
         $push:
           history:
             $position: currentHistoryPosition
@@ -87,20 +84,28 @@ class AM.Document.Versioning
       @_addChangedFieldsToModifier versionedDocument, changedFields, modifier
       
       # Update the database document.
+      console.log "Sending update to DB", modifier
+
       versionedDocument.constructor.documents.update versionedDocument._id, modifier
       
   @_addChangedFieldsToModifier: (versionedDocument, changedFields, modifier) ->
     traverseChangedFields = (path, node) =>
-      # See if we've reached a node that needs to be set.
-      if node is true
+      console.log "traversing", path, node
+      # See if we've reached a leaf node.
+      if _.isObject node
+        # Traverse all node children.
+        for name, child of node
+          newPath = [path..., name]
+          traverseChangedFields newPath, child
+
+      else
         address = path.join '.'
         value = _.nestedProperty versionedDocument, address
-        modifier.$set[address] = value
-        
-      else
-        # Traverse all node children.
-        traverseChangedFields [path..., name], child for name, child of node
-        
+        console.log "true", address, value?.toPlainObject() ? value
+        # Node holds the type of mongo operation we need to perform on this field.
+        modifier[node] ?= {}
+        modifier[node][address] = if node is $unset then true else value?.toPlainObject() ? value
+
     traverseChangedFields [], changedFields
   
   @executePartialAction: (versionedDocument, action) ->
@@ -109,17 +114,20 @@ class AM.Document.Versioning
     if versionedDocument.partialAction
       # This is a continuation of a partial action so merge it to the previous one.
       versionedDocument.partialAction.forward.push action.forward...
-      versionedDocument.partialAction.backward.push action.backward...
+      versionedDocument.partialAction.backward.unshift action.backward...
       
     else
       # This is the start of a partial action.
       versionedDocument.partialAction = action
   
   @executeOperations: (versionedDocument, operations) ->
+    console.log "Executing operations", operations
     # Execute the operations and track which fields were changed.
     allChangedFields = for operation in operations
+      console.log "operation", operation
       changedFields = operation.execute versionedDocument
-  
+      console.log "done", changedFields, versionedDocument
+
       # On the client, raise an event that changes were made.
       versionedDocument.constructor.versionedDocuments.operationExecuted versionedDocument, operation, changedFields if Meteor.isClient
   

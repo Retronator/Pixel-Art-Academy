@@ -212,6 +212,8 @@ Package.onUse(function(api) {
   api.addFile('mummification/document/versioning/versionedcollection');
   api.addClientFile('mummification/document/versioning/versionedcollection-client');
   api.addClientFile('mummification/document/versioning/versioneddocumentloader-client');
+  api.addFile('mummification/document/versioning/operation');
+  api.addFile('mummification/document/versioning/action');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');
@@ -282,6 +284,8 @@ Package.onUse(function(api) {
   api.addFile('babel/components/regionselection..');
 
   // Artificial Program
+
+  api.addFile('program/hashfunctions');
 
   api.addFile('program/search..');
 
