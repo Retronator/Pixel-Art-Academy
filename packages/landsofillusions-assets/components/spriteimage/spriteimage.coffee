@@ -24,8 +24,8 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
 
       spriteData
 
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
+    @sprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @spriteData
       
     if @options.loadPalette
       @autorun (computation) =>

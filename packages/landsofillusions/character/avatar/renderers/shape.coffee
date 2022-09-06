@@ -96,9 +96,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
         ,
           true
 
-        @sprite[side] = new LOI.Assets.Engine.Sprite
+        @sprite[side] = new LOI.Assets.Engine.PixelImage.Sprite
           side: sourceSide
-          spriteData: @spriteData[side]
+          asset: @spriteData[side]
           materialsData: @options.materialsData
           flippedHorizontal: new ComputedField =>
             if @spriteDataInfo[side]()?.flipped

@@ -1,5 +1,5 @@
 LOI = LandsOfIllusions
-  
+
 # A 2D raster image asset.
 class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
   # Bitmap also needs to inherit layer group methods, but this will be done after LayerGroup is defined.
@@ -8,7 +8,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
   #   name: name of the layer
   #   visible: boolean if this layer should be drawn
   #   blendMode: name of one of the blend modes
-  #   bounds: location of this layer's origin (0,0) in the sprite.
+  #   bounds: location of this layer's bounds in the sprite.
   #     x, y: absolute pixel coordinates of the top-left pixel of this layer
   #     width, height: the size of the layer in pixels
   #   pixelsData: ArrayBuffer with all attributes following each other as defined in the pixel format, not sent to the server
@@ -53,8 +53,6 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
 
     @_initialized = true
 
-    console.log "made bitmap", @
-
   toPlainObject: ->
     plainObject = _.assign {}, @
     plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in @layerGroups)
@@ -71,7 +69,13 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     @layers.splice index, 1
 
   getAddress: -> []
-
+  
+  prepareOperationChangedFields: (changedFields) ->
+    @constructor.LayerGroup.prepareOperationChangedFields changedFields, @getAddress()
+  
+  getOperationChangedFields: (layerGroupChangedFields) ->
+    @constructor.LayerGroup.getOperationChangedFields layerGroupChangedFields, @getAddress()
+    
   getLayerGroup: (layerGroupAddress) ->
     group = @
 
@@ -94,23 +98,33 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
 
   # Pixel retrieval
 
-  getPixelForLayerAtCoordinates: (layerIndex, x, y) ->
-    return unless layer = @getLayer layerIndex
-    layer.getPixel x, y
+  getPixelForLayerAtCoordinates: (layerAddress, x, y) ->
+    return unless layer = @getLayer layerAddress
+    pixel = layer.getPixel x, y
+  
+    # If any of the flags are set, the pixel exists.
+    if pixel.flags then pixel else null
 
-  getPixelForLayerAtAbsoluteCoordinates: (layerIndex, absoluteX, absoluteY) ->
-    return unless layer = @getLayer layerIndex
+  getPixelForLayerAtAbsoluteCoordinates: (layerAddress, absoluteX, absoluteY) ->
+    return unless layer = @getLayer layerAddress
     x = absoluteX - (layer.bounds?.x or 0)
     y = absoluteY - (layer.bounds?.y or 0)
 
     @getPixelForLayerAtCoordinates layerIndex, x, y
 
-  findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY) ->
-    for layer, layerIndex in @layers when layer?.pixels
+  findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY, layerGroup = @) ->
+    # Go over all layers in the group.
+    for layer in layerGroup.layers
       x = absoluteX - (layer.bounds?.x or 0)
       y = absoluteY - (layer.bounds?.y or 0)
+      pixel = layer.getPixel x, y
+      
+      # If any of the flags are set, the pixel exists.
+      return pixel if pixel.flags
 
-      pixel = @getPixelForLayerAtCoordinates layerIndex, x, y
+    # Go over all sub groups.
+    for layerGroup in layerGroup.layerGroups
+      pixel = @findPixelAtAbsoluteCoordinates absoluteX, absoluteY, layerGroup
       return pixel if pixel
 
     null

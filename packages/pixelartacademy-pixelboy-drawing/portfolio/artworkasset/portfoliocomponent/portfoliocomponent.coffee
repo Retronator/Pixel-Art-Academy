@@ -25,3 +25,8 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extend
       new LOI.Assets.Components.SpriteImage
         spriteId: => document._id
         loadPalette: true
+  
+    else if document instanceof LOI.Assets.Bitmap
+      new LOI.Assets.Components.BitmapImage
+        bitmapId: => document._id
+        loadPalette: true

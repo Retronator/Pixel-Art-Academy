@@ -9,20 +9,7 @@ class LOI.Assets.Bitmap.Operations.AddLayer extends AM.Document.Versioning.Opera
 
   execute: (document) ->
     layerGroup = document.getLayerGroup @layerGroupAddress
-    newLayerIndex = layerGroup.layers.length
     layerGroup.addLayer()
 
-    # Return which fields were changed.
-    changedFields = {}
-    currentLayerGroupFields = changedFields
-
-    # Build all the layer groups.
-    for layerGroupIndex in @layerGroupAddress
-      changedFields.layerGroups = {}
-      changedFields.layerGroups[layerGroupIndex] = {}
-      currentLayerGroupFields = changedFields.layerGroups[layerGroupIndex]
-
-    # Indicate that the layer was pushed to the layers of the final group.
-    currentLayerGroupFields.layers = $push
-
-    changedFields
+    # Return that the layers of the group were changed.
+    layerGroup.getOperationChangedFields layers: true

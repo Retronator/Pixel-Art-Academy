@@ -6,7 +6,28 @@ class LOI.Assets.Bitmap.LayerGroup
   # blendMode: name of one of the blend modes
   # layerGroups: array of children groups
   # layers: array of children layers
-
+  
+  # This method prepares the provided empty object with nested objects that correspond to layer groups at the specified
+  # address and returns the final object that corresponds to the addressed layer group. You can then set which fields
+  # have changed on that layer group.
+  @prepareOperationChangedFields: (changedFields, layerGroupAddress) ->
+    currentLayerGroupChangedFields = changedFields
+    
+    # Build up the layer group fields.
+    for layerGroupIndex in layerGroupAddress
+      changedFields.layerGroups = "#{layerGroupIndex}": {}
+      currentLayerGroupChangedFields = changedFields.layerGroups[layerGroupIndex]
+    
+    # Return the fields of the final layer group.
+    currentLayerGroupChangedFields
+    
+  # Returns the changed fields object with the provided layer group changed fields inserted at the specified address.
+  @getOperationChangedFields: (layerGroupChangedFields, layerGroupAddress) ->
+    changedFields = {}
+    layerGroupChangedFieldsTarget = @prepareOperationChangedFields changedFields, layerGroupAddress
+    _.assign layerGroupChangedFieldsTarget, layerGroupChangedFields
+    changedFields
+    
   @initializeLayerGroup: (layerGroup, bitmap) ->
     # Make rich layer objects.
     layerGroup.layers ?= []
@@ -32,6 +53,12 @@ class LOI.Assets.Bitmap.LayerGroup
 
   getAddress: ->
     [@parent.getAddress()..., @parent.layerGroups.indexOf @]
+  
+  prepareOperationChangedFields: (changedFields) ->
+    @constructor.prepareOperationChangedFields changedFields, @getAddress()
+  
+  getOperationChangedFields: (layerGroupChangedFields) ->
+    @constructor.getOperationChangedFields layerGroupChangedFields, @getAddress()
 
   addLayer: ->
     @layers.push new LOI.Assets.Bitmap.Layer @bitmap, @, {}

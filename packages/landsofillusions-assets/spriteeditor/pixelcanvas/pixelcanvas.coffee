@@ -84,9 +84,31 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
   
     # Create the engine sprite.
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @assetData
-      visualizeNormals: @paintNormalsData.value
+    @assetDataClass = new ComputedField =>
+      return unless assetData = @assetData()
+      assetData.constructor
+    ,
+      (a, b) => a is b
+    
+    @pixelImage = new ComputedField =>
+      @_pixelImage?.destroy?()
+      
+      return unless assetDataClass = @assetDataClass()
+      
+      if assetDataClass is LOI.Assets.Bitmap
+        pixelImageClass = LOI.Assets.Engine.PixelImage.Bitmap
+        
+      else if assetDataClass is LOI.Assets.Sprite
+        pixelImageClass = LOI.Assets.Engine.PixelImage.Sprite
+        
+      else
+        throw new AE.ArgumentException "Unsupported asset data class.", assetDataClass
+  
+      @_pixelImage = new pixelImageClass
+        asset: @assetData
+        visualizeNormals: @paintNormalsData.value
+  
+      @_pixelImage
 
     # Initialize components.
     @camera new @constructor.Camera @, $parent: @$pixelCanvas
@@ -120,7 +142,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         drawComponents = _.clone @options.drawComponents()
 
       else
-        drawComponents = [@sprite, @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
+        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
         
       if componentIds = @components()
         for componentId in componentIds
@@ -206,7 +228,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event if @interface.active()
     $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event if @interface.active()
     $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event if @interface.active()
-      
+    
   _resizeCanvas: (newSize) ->
     # Override size if we're using fixed canvas size.
     if @fixedCanvasSize()

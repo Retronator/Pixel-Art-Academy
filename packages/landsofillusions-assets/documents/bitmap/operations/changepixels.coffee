@@ -17,11 +17,8 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
 
   execute: (document) ->
     pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, document.pixelFormat...
-    console.log "pixelFormat", pixelFormat
     changeArea = new LOI.Assets.Bitmap.Area @bounds.width, @bounds.height, pixelFormat, @compressedPixelsData, true
-    console.log "changeArea", changeArea
     layer = document.getLayer @layerAddress
-    console.log "layer", layer
 
     # Go over each of the changed pixels and overwrite them in the layer.
     changeAreaOperationMaskAttribute = changeArea.attributes[LOI.Assets.Bitmap.Attribute.OperationMask.id]
@@ -49,25 +46,5 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
             newValue = changeAreaAttribute.array[changeAreaPixelIndex + offset]
             layerAttribute.array[layerPixelIndex + offset] = newValue
 
-    # Return which fields were changed.
-    changedFields = {}
-    currentLayerGroupFields = changedFields
-
-    # Build all the layer groups.
-    if @layerAddress.length > 1
-      [layerGroupAddress, layerIndex] = @layerAddress
-
-      for layerGroupIndex in layerGroupAddress
-        changedFields.layerGroups = {}
-        changedFields.layerGroups[layerGroupIndex] = {}
-        currentLayerGroupFields = changedFields.layerGroups[layerGroupIndex]
-
-    else
-      layerIndex = @layerAddress[0]
-
-    # Indicate that the pixels of the layer were changed.
-    currentLayerGroupFields.layers =
-      "#{layerIndex}":
-        compressedPixelsData: $set
-
-    changedFields
+    # Return that the pixels of the layer were changed.
+    layer.getOperationChangedFields compressedPixelsData: true

@@ -20,8 +20,8 @@ class LOI.Assets.Editor.FileManager.Previews.Sprite extends AM.Component
 
     @spriteData = new ComputedField => @_getSpriteData()
 
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
+    @sprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @spriteData
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
 

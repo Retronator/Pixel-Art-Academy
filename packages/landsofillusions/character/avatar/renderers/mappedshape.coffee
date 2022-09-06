@@ -84,8 +84,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
           @_mapSprite side, spriteData, sourceLandmarks, targetLandmarks, spriteDataInfo.flipped
 
-        @sprite[side] = new LOI.Assets.Engine.Sprite
-          spriteData: @mappedSpriteData[side]
+        @sprite[side] = new LOI.Assets.Engine.PixelImage.Sprite
+          asset: @mappedSpriteData[side]
           materialsData: @options.materialsData
           flippedHorizontal: new ComputedField =>
             @spriteDataInfo[side]()?.flipped

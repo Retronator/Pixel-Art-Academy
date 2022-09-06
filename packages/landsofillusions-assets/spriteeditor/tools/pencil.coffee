@@ -27,7 +27,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
       for property in ['normal', 'materialIndex', 'paletteColor', 'directColor']
         pixel[property] = paint[property] if paint[property]?
-                
+        
       pixel
 
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
@@ -59,7 +59,6 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       @startOfStrokeProcessed()
 
     else if assetData instanceof LOI.Assets.Bitmap
-      console.log "action", assetData, layerIndex, changedPixels, strokeStarted
       layerAddress = [layerIndex]
 
       # When the stroke starts, we need to prepare the final action, since it will be executed partially.

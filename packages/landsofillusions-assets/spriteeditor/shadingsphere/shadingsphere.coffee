@@ -186,12 +186,12 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
       spriteData
 
-    sphereSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @sphereSpriteData
+    sphereSprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @sphereSpriteData
       visualizeNormals: @visualizeNormals
 
-    circleSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @circleSpriteData
+    circleSprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @circleSpriteData
 
     normalPicker = new @constructor.NormalPicker
       editor: => @

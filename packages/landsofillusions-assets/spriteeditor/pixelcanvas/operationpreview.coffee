@@ -29,8 +29,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
     # Create the engine sprite.
     @paintNormalsData = @pixelCanvas.interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
+    @sprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @spriteData
       visualizeNormals: @paintNormalsData.value
 
   drawToContext: ->

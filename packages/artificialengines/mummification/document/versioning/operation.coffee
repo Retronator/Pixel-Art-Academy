@@ -19,13 +19,11 @@ class AM.Document.Versioning.Operation
     @_operationClassesById[@id()] = @
 
     EJSON.addType @typeName(), (json) =>
-      console.log "Creating operation from json", json
       operationClass = @getClassForId json.id
       operation = new operationClass EJSON.fromJSONValue json.data
 
       # We store the operation's hash code at serialization time to do equality comparisons faster.
       operation._hashCode = json.hashCode
-      console.log "made", operation
       operation
 
   @getClassForId: (id) ->
@@ -49,27 +47,20 @@ class AM.Document.Versioning.Operation
   typeName: -> @constructor.typeName()
 
   toJSONValue: ->
-    jv =
-      id: @id()
-      hashCode: @getHashCode()
-      data: _.assignWith {}, @_getPublicFields(), (currentValue, newValue) => EJSON.toJSONValue newValue
-
-    console.log "created jv", jv
-
-    jv
+    id: @id()
+    hashCode: @getHashCode()
+    data: _.assignWith {}, @_getPublicFields(), (currentValue, newValue) => EJSON.toJSONValue newValue
 
   _getPublicFields: ->
     # Get all fields that don't start with an underscore.
     _.pickBy @, (value, key) => key[0] isnt '_'
 
   clone: ->
-    console.log "clone called", @_getPublicFields()
     clone = new @constructor EJSON.clone @_getPublicFields()
     clone._hashCode = @_hashCode
     clone
 
   @equals: (a, b) ->
-    console.log "equals called", a, b
     return false unless a and b
     return false unless a instanceof @ and b instanceof @
 
@@ -88,7 +79,6 @@ class AM.Document.Versioning.Operation
     return @_hashCode if @_hashCode
 
     # Turn the operation into a string and hash it.
-    console.log "calc hash code", @_getPublicFields()
     string = EJSON.stringify @_getPublicFields()
 
     @_hashCode = 0

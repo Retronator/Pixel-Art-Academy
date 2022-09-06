@@ -17,18 +17,6 @@ class LOI.Assets.Bitmap.Operations.RemoveLayer extends AM.Document.Versioning.Op
 
     layerGroup = document.getLayerGroup layerGroupAddress
     layerGroup.removeLayer layerIndex
-
-    # Return which fields were changed.
-    changedFields = {}
-    currentLayerGroupFields = changedFields
-
-    # Build all the layer groups.
-    for layerGroupIndex in layerGroupAddress
-      changedFields.layerGroups = {}
-      changedFields.layerGroups[layerGroupIndex] = {}
-      currentLayerGroupFields = changedFields.layerGroups[layerGroupIndex]
-
-    # Indicate that the layers in the final group were changed.
-    currentLayerGroupFields.layers = "#{layerIndex}": $unset
-
-    changedFields
+  
+    # Return that the layers of the group were changed.
+    layerGroup.getOperationChangedFields layers: true

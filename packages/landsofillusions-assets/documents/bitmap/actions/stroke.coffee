@@ -58,7 +58,7 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
       if attributeClass in @_colorAttributeClasses
         colorAttributeClasses.push attributeClass
 
-      else
+      else if attributeClass isnt LOI.Assets.Bitmap.Attribute.Flags
         nonColorAttributeClasses.push attributeClass
 
     # Get the current state of the layer.
@@ -81,17 +81,17 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
       changedColorAttributeClass = null
 
       for colorAttributeClass in colorAttributeClasses
-        if changedPixels[colorAttributeClass.id]?
+        if pixel[colorAttributeClass.id]?
           changedColorAttributeClass = colorAttributeClass
 
       # We only need to provide new values if the color was changed to a new value.
       # Otherwise the pixel was removed and all values should go to zero.
       if changedColorAttributeClass
-        # The color was changed to a new value. Switch the flag to the new attribute.
-        oldFlags = layerFlags.getPixel layerX, layerY
+        # The color was changed to a new value. Switch the color flags to the new attribute.
+        existingFlags = layerFlags.getPixel layerX, layerY
 
         flagPixelIndex = forwardAreaFlags.getPixelIndex changeAreaX, changeAreaY
-        forwardAreaFlags.array[flagPixelIndex] = oldFlags
+        forwardAreaFlags.array[flagPixelIndex] = existingFlags
 
         newColorFlag = colorAttributeClass.flagValue
         otherColorFlags = LOI.Assets.Bitmap.Attribute.allColorFlagsMask & ~newColorFlag
@@ -104,7 +104,7 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
 
         # Transfer all the other attributes not related to the colors.
         for attributeClass in nonColorAttributeClasses
-          value = layer.attributes[attributeId].getPixel layerX, layerY
+          value = layer.attributes[attributeClass.id].getPixel layerX, layerY
           forwardArea.attributes[attributeClass.id].setPixel changeAreaX, changeAreaY, value
 
       # When going backward, we simply write back the old values.
@@ -115,7 +115,6 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
     # Store compressed pixels data to the operations.
     forwardOperation.compressedPixelsData = forwardArea.getCompressedPixelsData()
     backwardOperation.compressedPixelsData = backwardArea.getCompressedPixelsData()
-    console.log "binary?", EJSON.isBinary forwardOperation.compressedPixelsData
 
     # Update operation arrays and the hash code of the action.
     @forward.push forwardOperation

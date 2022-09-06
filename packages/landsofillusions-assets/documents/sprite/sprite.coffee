@@ -232,8 +232,8 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     saveData
 
   getPreviewImage: ->
-    engineSprite = new LOI.Assets.Engine.Sprite
-      spriteData: => @
+    engineSprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: => @
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1

@@ -20,13 +20,9 @@ class LOI.Assets.Bitmap.Area
     pixelsCount = @width * @height
     bytesPerPixel = @pixelFormat.getBytesPerPixel()
 
-    console.log "area start", pixelsCount, bytesPerPixel
-
     # Decompress pixels data if necessary.
     if @pixelsData and compressed
-      console.log "decompressing", @pixelsData, compressionOptions
       @pixelsData = Pako.inflateRaw(@pixelsData, compressionOptions).buffer
-      console.log "got", @pixelsData
 
     # Create pixels data if it was not provided.
     @pixelsData ?= new ArrayBuffer pixelsCount * bytesPerPixel
@@ -35,7 +31,6 @@ class LOI.Assets.Bitmap.Area
     @attributes = {}
 
     for attributeId in @pixelFormat
-      console.log "creating attribute", attributeId
       attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
       @attributes[attributeId] = new attributeClass @
 
@@ -52,3 +47,29 @@ class LOI.Assets.Bitmap.Area
       pixel[attributeId] = @attributes[attributeId].getPixel x, y
 
     pixel
+    
+  debugOutput: ->
+    console.log "AREA #{@width}x#{@height}"
+    
+    for attributeId in @pixelFormat
+      console.log attributeId
+      attribute = @attributes[attributeId]
+      elementsPerPixel = attribute.constructor.elementsPerPixel
+      
+      for y in [0...@height]
+        row = ''
+        
+        for x in [0...@width]
+          pixelIndex = attribute.getPixelIndex x, y
+          
+          for i in [0...elementsPerPixel]
+            value = attribute.array[pixelIndex + i]
+            
+            row += switch
+              when value < 0 then '-'
+              when value > 9 then '+'
+              else value
+              
+          row += ' ' if elementsPerPixel > 1
+        
+        console.log row

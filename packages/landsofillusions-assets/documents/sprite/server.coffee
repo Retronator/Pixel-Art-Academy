@@ -19,8 +19,8 @@ WebApp.connectHandlers.use LOI.Assets.Sprite.imageUrl(), (request, response, nex
   sprite = LOI.Assets.Sprite.documents.findOne query.id
   throw new AE.ArgumentException "Sprite not found." unless sprite
 
-  engineSprite = new LOI.Assets.Engine.Sprite
-    spriteData: -> sprite
+  engineSprite = new LOI.Assets.Engine.PixelImage.Sprite
+    asset: -> sprite
 
   unless spriteImageData = engineSprite.getImageData()
     # There are no pixels in the sprite yet, so just return an empty 1px image.

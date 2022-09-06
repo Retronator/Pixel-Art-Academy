@@ -171,6 +171,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/navigator..');
   api.addUnstyledComponent('components/palette..');
   api.addUnstyledComponent('components/spriteimage..');
+  api.addUnstyledComponent('components/bitmapimage..');
   api.addUnstyledComponent('components/toolbox..');
 
   api.addUnstyledComponent('components/references..');
@@ -195,7 +196,9 @@ Package.onUse(function(api) {
 
   api.addFile('engine..');
 
-  api.addFile('engine/sprite..');
+  api.addFile('engine/pixelimage..');
+  api.addFile('engine/pixelimage/sprite');
+  api.addFile('engine/pixelimage/bitmap');
 
   api.addFile('engine/mesh..');
   api.addFile('engine/mesh/object');

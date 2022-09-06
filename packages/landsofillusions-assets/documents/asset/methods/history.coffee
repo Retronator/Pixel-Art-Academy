@@ -3,7 +3,6 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 LOI.Assets.Asset.executeAction.method (assetClassName, assetId, action) ->
-  console.log "executeAction", assetClassName, assetId, action
   check assetId, Match.DocumentId
   check assetClassName, String
   check action, AM.Document.Versioning.Action.pattern

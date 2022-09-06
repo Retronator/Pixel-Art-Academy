@@ -43,8 +43,6 @@ class AM.Document.Versioning
       return
 
   @executeAction: (versionedDocument, action) ->
-    console.log "executeAction", versionedDocument, action
-
     # Execute the action on the document, unless it was already executed with partial actions.
     if versionedDocument.partialAction
       # We assume all operations of action have already been applied through partial
@@ -53,8 +51,6 @@ class AM.Document.Versioning
       
     else
       changedFields = @executeOperations versionedDocument, action.forward
-
-    console.log "operation executed", changedFields, versionedDocument
   
     # Change history.
     currentHistoryPosition = versionedDocument.historyPosition or 0
@@ -66,8 +62,6 @@ class AM.Document.Versioning
       versionedDocument.history ?= []
       versionedDocument.history.splice currentHistoryPosition if versionedDocument.history.length > currentHistoryPosition
       versionedDocument.history.push action
-      
-      versionedDocument.constructor.versionedDocuments.operationExecuted versionedDocument
       
     else
       # On the server we apply changes to the database.
@@ -84,13 +78,10 @@ class AM.Document.Versioning
       @_addChangedFieldsToModifier versionedDocument, changedFields, modifier
       
       # Update the database document.
-      console.log "Sending update to DB", modifier
-
       versionedDocument.constructor.documents.update versionedDocument._id, modifier
       
   @_addChangedFieldsToModifier: (versionedDocument, changedFields, modifier) ->
     traverseChangedFields = (path, node) =>
-      console.log "traversing", path, node
       # See if we've reached a leaf node.
       if _.isObject node
         # Traverse all node children.
@@ -101,10 +92,37 @@ class AM.Document.Versioning
       else
         address = path.join '.'
         value = _.nestedProperty versionedDocument, address
-        console.log "true", address, value?.toPlainObject() ? value
-        # Node holds the type of mongo operation we need to perform on this field.
-        modifier[node] ?= {}
-        modifier[node][address] = if node is $unset then true else value?.toPlainObject() ? value
+        
+        # Convert all rich objects to plain objects.
+        toPlainObject = (value) ->
+          return value unless _.isObject value
+          
+          # EJSON types are left as-is since they will be converted automatically.
+          return value if value.toJSONValue or EJSON.isBinary value
+          
+          # See if the object provides its own plain object conversion.
+          object = value
+          return object.toPlainObject() if object.toPlainObject
+  
+          # Arrays require special iteration.
+          return (toPlainObject element for element in value) if _.isArray value
+          
+          # Convert all properties of the object to plain objects.
+          plainObject = {}
+          
+          for key, value of object
+            plainObject[key] = toPlainObject value
+  
+          plainObject
+  
+        value = toPlainObject value
+        
+        if value is undefined
+          modifier.$unset ?= {}
+          modifier.$unset[address] = true
+          
+        else
+          modifier.$set[address] = value
 
     traverseChangedFields [], changedFields
   
@@ -121,12 +139,9 @@ class AM.Document.Versioning
       versionedDocument.partialAction = action
   
   @executeOperations: (versionedDocument, operations) ->
-    console.log "Executing operations", operations
     # Execute the operations and track which fields were changed.
     allChangedFields = for operation in operations
-      console.log "operation", operation
       changedFields = operation.execute versionedDocument
-      console.log "done", changedFields, versionedDocument
 
       # On the client, raise an event that changes were made.
       versionedDocument.constructor.versionedDocuments.operationExecuted versionedDocument, operation, changedFields if Meteor.isClient
@@ -182,11 +197,11 @@ class AM.Document.Versioning
       # Update the database document.
       versionedDocument.constructor.documents.update versionedDocument._id, modifier
 
-  @latestHistoryForId: (publishHandler, assetClass, id) ->
-    collectionName = assetClass.versionedDocuments.latestHistoryCollectionName
+  @latestHistoryForId: (publishHandler, documentClass, id) ->
+    collectionName = documentClass.versionedDocuments.latestHistoryCollectionName
     
     # Retrieve the latest version of the document with provided id.
-    assetClass.documents.find(
+    documentClass.documents.find(
       id
     ,
       fields:

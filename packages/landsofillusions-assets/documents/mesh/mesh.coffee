@@ -301,8 +301,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
       LOI.Assets.Mesh.documents.findOne @_id
 
   getPreviewImage: ->
-    engineSprite = new LOI.Assets.Engine.Sprite
-      spriteData: => @getPreviewSprite()
+    engineSprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: => @getPreviewSprite()
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1

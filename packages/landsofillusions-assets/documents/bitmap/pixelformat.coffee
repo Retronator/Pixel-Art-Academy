@@ -23,7 +23,6 @@ class LOI.Assets.Bitmap.PixelFormat extends Array
   toJSONValue: -> [@...]
 
   @equals: (a, b) ->
-    console.log "equals called", a, b
     return false unless a and b
     return false unless a.length is b.length
     for index in [0...a.length]
