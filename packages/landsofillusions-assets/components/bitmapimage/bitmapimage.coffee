@@ -55,11 +55,6 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
         lightDirection: @options.lightDirection?()
 
       context.restore()
-      
-  onDestroyed: ->
-    super arguments...
-  
-    @bitmap.destroy()
 
   canvasStyle: ->
     return unless bounds = @bitmapData()?.bounds

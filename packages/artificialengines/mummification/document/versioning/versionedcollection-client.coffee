@@ -7,19 +7,23 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
     super arguments...
     
     @operationExecuted = new AB.Event
-    
+    @operationExecuted.addHandler @, @onOperationExecuted
+  
     @_loaders = {}
     @_loadersUpdatedDependency = new Tracker.Dependency
     
     @_handleLoaders()
     
-  getDocumentForId: (id) ->
+  getDocumentForId: (id, reactive = true) ->
     if @_loaders[id]
-      @_loaders[id].getDocument()
+      @_loaders[id].getDocument reactive
     
     else
       @_loadersUpdatedDependency.depend()
-    
+
+  reportExecuteActionError: (id) ->
+    @_loaders[id].reportExecuteActionError()
+
   _handleLoaders: ->
     @documentClass.documents.find({}).observe
       added: (document) =>
@@ -35,3 +39,8 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
         delete @_loaders[document._id]
         
         @_loadersUpdatedDependency.changed()
+
+  onOperationExecuted: (document, operation, changedFields) ->
+    # Tell the loader that the document was externally updated.
+    loader = @_loaders[document._id]
+    loader.updated()

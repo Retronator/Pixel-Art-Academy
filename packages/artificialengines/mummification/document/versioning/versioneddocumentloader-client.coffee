@@ -5,24 +5,45 @@ AM = Artificial.Mummification
 class AM.Document.Versioning.VersionedDocumentLoader
   constructor: (@versionedCollection, @id) ->
     @_documentLoadedDependency = new Tracker.Dependency
+    @_documentUpdatedDependency = new Tracker.Dependency
+    
     @_loadInitialState()
     
     @_latestHistorySubscriptionHandle = @versionedCollection.documentClass.latestHistoryForId.subscribe @id
 
     @versionedCollection.latestHistoryDocuments.find(@id).observe
-      added: (@_latestHistory) =>
-      changed: (@_latestHistory) =>
+      added: (@_latestHistory) => @_handleHistoryChanges()
+      changed: (@_latestHistory) => @_handleHistoryChanges()
     
   destroy: ->
     @_latestHistorySubscriptionHandle.stop()
   
-  getDocument: ->
+  getDocument: (reactive) ->
     @_documentLoadedDependency.depend()
+    @_documentUpdatedDependency.depend() if reactive
     @_document
     
+  updated: ->
+    @_documentUpdatedDependency.changed()
+
+  reportExecuteActionError: ->
+    # Executing an action on the document resulted in an error so we need to reload it freshly from the server.
+    @_loadInitialState()
+    
   _loadInitialState: ->
+    @_document = null
+    
     @versionedCollection.documentClass.load @id, (error, result) =>
       return console.error error if error
+  
+      # Apply defaults.
+      _.defaults result,
+        historyStart: 0
+        historyPosition: 0
+        history: []
+        historyArchive: []
+      
+      console.log "Reloaded", result
 
       # Create the document and initialize it if it requires it.
       @_document = new @versionedCollection.documentClass result
@@ -37,18 +58,21 @@ class AM.Document.Versioning.VersionedDocumentLoader
     # Nothing to do if we didn't get the initial document or history state yet.
     return unless @_document and @_latestHistory
     
+    # We only handle changes that are ahead of the client. If they are behind, we assume they are the client's
+    # and rely on getting an exception when applying an action on an invalid version of the document.
+    return if @_latestHistory.lastEditTime < @_document.lastEditTime
+    
     # We must make sure our local document state reflects what it is on the server.
     # See how many actions (up to history position) are matching.
     matchingActionsCount = 0
 
-    console.log "handling history changes"
-    return
+    console.log "handling history changes", @_document.historyPosition, @_latestHistory.historyPosition
     
     for historyPosition in [@_latestHistory.historyStart...@_latestHistory.historyPosition]
       documentActionIndex = historyPosition - @_document.historyStart
       latestHistoryActionIndex = historyPosition - @_latestHistory.historyStart
       
-      documentAction = @_document.history[documentActionIndex]
+      break unless documentAction = @_document.history[documentActionIndex]
       latestHistoryAction = @_latestHistory.history[latestHistoryActionIndex]
 
       # For efficiency we only compare hash codes.
@@ -62,7 +86,8 @@ class AM.Document.Versioning.VersionedDocumentLoader
     return if @_latestHistory.historyPosition is @_document.historyPosition and matchingActionsCount is @_latestHistory.historyPosition - @_latestHistory.historyStart
     
     # If we don't have any matching actions, we can't roll back far enough to get to a synced state, so we have to reload the document from the server.
-    unless matchingActionsCount
+    # The exception is when we're actually trying to roll back to the start of history.
+    unless matchingActionsCount or @_latestHistory.historyPosition is 0
       @_loadInitialState()
       return
     
@@ -89,6 +114,7 @@ class AM.Document.Versioning.VersionedDocumentLoader
     AM.Document.Versioning.executeOperations @_document, @_document.partialAction.forward if @_document.partialAction
 
     # Sync history fields.
+    @_document.lastEditTime = @_latestHistory.lastEditTime
     @_document.historyPosition = @_latestHistory.historyPosition
   
     lastMatchingDocumentActionIndex = lastMatchingHistoryPosition - @_document.historyStart - 1
@@ -97,3 +123,6 @@ class AM.Document.Versioning.VersionedDocumentLoader
     newActions = @_latestHistory.history[lastMatchingLatestHistoryActionIndex + 1..]
     
     @_document.history.splice lastMatchingDocumentActionIndex + 1, @_document.history.length, newActions...
+
+    # Report history changes.
+    @updated()

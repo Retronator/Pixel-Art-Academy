@@ -10,27 +10,9 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
       return unless bitmapData.customPalette or LOI.Assets.Palette.documents.findOne(bitmapData.palette?._id) or @options.visualizeNormals?()
 
       true
-  
-    # Listen to bitmap changes.
-    @_bitmapUpdatedDependency = new Tracker.Dependency
-    
-    LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, @onBitmapUpdated
-    
-  destroy: ->
-    LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandler @, @onBitmapUpdated
-    
-  onBitmapUpdated: (bitmap, operation, changedFields) ->
-    return unless bitmapData = @options.asset()
-    return unless bitmap._id is bitmapData._id
-  
-    # Our bitmap changed, trigger a redraw.
-    @_bitmapUpdatedDependency.changed()
     
   _render: (renderOptions) ->
-    bitmapData = @options.asset()
-    
-    # React to bitmap changes.
-    @_bitmapUpdatedDependency.depend()
+    return unless bitmapData = @options.asset()
 
     @_startRender bitmapData, renderOptions
     @_renderLayerGroup bitmapData, bitmapData, renderOptions

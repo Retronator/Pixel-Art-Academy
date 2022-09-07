@@ -18,7 +18,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extend
   
     style
 
-  spriteImage: ->
+  pixelImage: ->
     return unless document = @artworkAsset.document()
 
     if document instanceof LOI.Assets.Sprite

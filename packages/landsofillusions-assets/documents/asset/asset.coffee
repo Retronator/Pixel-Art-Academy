@@ -7,7 +7,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   @id: -> 'LandsOfIllusions.Assets.Asset'
   # name: text identifier for the asset including the path
   # creationTime: time when the document was created
-  # lastEditTime: time when last history item was added
+  # lastEditTime: time when last history item was added or history position changed
   # authors: array of characters that are allowed to edit this asset or null if this is a system asset
   #   _id
   #   avatar

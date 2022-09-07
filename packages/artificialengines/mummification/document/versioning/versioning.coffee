@@ -42,7 +42,9 @@ class AM.Document.Versioning
       # Explicitly return nothing since we're handling the publishing ourselves.
       return
 
-  @executeAction: (versionedDocument, action) ->
+  @executeAction: (versionedDocument, lastEditTime, action, actionTime) ->
+    @_validateActionOrder versionedDocument, lastEditTime, actionTime
+    
     # Execute the action on the document, unless it was already executed with partial actions.
     if versionedDocument.partialAction
       # We assume all operations of action have already been applied through partial
@@ -58,6 +60,7 @@ class AM.Document.Versioning
 
     if Meteor.isClient
       # On the client we simply modify the fields of the versioned document.
+      versionedDocument.lastEditTime = actionTime
       versionedDocument.historyPosition = newHistoryPosition
       versionedDocument.history ?= []
       versionedDocument.history.splice currentHistoryPosition if versionedDocument.history.length > currentHistoryPosition
@@ -68,6 +71,7 @@ class AM.Document.Versioning
       modifier =
         $set:
           historyPosition: newHistoryPosition
+          lastEditTime: actionTime
         $push:
           history:
             $position: currentHistoryPosition
@@ -80,6 +84,16 @@ class AM.Document.Versioning
       # Update the database document.
       versionedDocument.constructor.documents.update versionedDocument._id, modifier
       
+  @_validateActionOrder: (versionedDocument, lastEditTime, newLastEditTime) ->
+    # If we have no last edit time we use the creation time.
+    documentLastEditTime = versionedDocument.lastEditTime or versionedDocument.creationTime
+    
+    # Make sure the action is trying to be applied on the correct version of the document.
+    throw new AE.InvalidOrderException "The current version of the document is ahead of the client." if documentLastEditTime > lastEditTime
+    throw new AE.InvalidOrderException "The action is being applied on a version of the document that is behind the client." if documentLastEditTime < lastEditTime
+    throw new AE.InvalidOrderException "The action must be applied at a later time than the document last edit time." unless newLastEditTime > documentLastEditTime
+    throw new AE.InvalidOrderException "The time on the client is more than 10s different than the time on the server." if Math.abs(newLastEditTime.getTime() - Date.now()) > 10000
+
   @_addChangedFieldsToModifier: (versionedDocument, changedFields, modifier) ->
     traverseChangedFields = (path, node) =>
       # See if we've reached a leaf node.
@@ -156,7 +170,12 @@ class AM.Document.Versioning
       # Do a normal merge of sub-fields.
       undefined
       
-  @undo: (versionedDocument) ->
+  @reportExecuteActionError: (versionedDocument) ->
+    versionedDocument.constructor.versionedDocuments.reportExecuteActionError versionedDocument._id
+    
+  @undo: (versionedDocument, lastEditTime, undoTime) ->
+    @_validateActionOrder versionedDocument, lastEditTime, undoTime
+
     # Find history entry.
     currentHistoryPosition = versionedDocument.historyPosition
     throw new AE.InvalidOperationException "There is nothing to undo." unless currentHistoryPosition
@@ -165,24 +184,27 @@ class AM.Document.Versioning
     actionToBeUndone = versionedDocument.history[newHistoryPosition]
   
     # Undo the action.
-    @_moveInHistory versionedDocument, actionToBeUndone.backward, newHistoryPosition
+    @_moveInHistory versionedDocument, actionToBeUndone.backward, newHistoryPosition, undoTime
     
-  @redo: (versionedDocument) ->
+  @redo: (versionedDocument, lastEditTime, redoTime) ->
+    @_validateActionOrder versionedDocument, lastEditTime, redoTime
+
     # Find history entry.
     currentHistoryPosition = versionedDocument.historyPosition
     throw new AE.InvalidOperationException "There is nothing to redo." unless currentHistoryPosition < versionedDocument.history.length
   
     newHistoryPosition = currentHistoryPosition + 1
-    actionToBeRedone = versionedDocument.history[newHistoryPosition]
+    actionToBeRedone = versionedDocument.history[currentHistoryPosition]
   
     # Redo the action.
-    @_moveInHistory versionedDocument, actionToBeRedone.forward, newHistoryPosition
+    @_moveInHistory versionedDocument, actionToBeRedone.forward, newHistoryPosition, redoTime
     
-  @_moveInHistory: (versionedDocument, operations, newHistoryPosition) ->
+  @_moveInHistory: (versionedDocument, operations, newHistoryPosition, newLastEditTime) ->
     changedFields = @executeOperations versionedDocument, operations
   
     # Update history.
     if Meteor.isClient
+      versionedDocument.lastEditTime = newLastEditTime
       versionedDocument.historyPosition = newHistoryPosition
   
     else
@@ -190,6 +212,7 @@ class AM.Document.Versioning
       modifier =
         $set:
           historyPosition: newHistoryPosition
+          lastEditTime: newLastEditTime
     
       # We also need to send the actual changes to the fields to the database.
       @_addChangedFieldsToModifier versionedDocument, changedFields, modifier
@@ -205,6 +228,7 @@ class AM.Document.Versioning
       id
     ,
       fields:
+        lastEditTime: 1
         historyPosition: 1
         historyStart: 1
         history: 1
@@ -221,4 +245,6 @@ class AM.Document.Versioning
       
   @_createLocalizedHistory: (document) ->
     # TODO: Generate a localized history.
-    _.pick document, ['historyPosition', 'historyStart', 'history']
+    latestHistory = _.pick document, ['lastEditTime', 'historyPosition', 'historyStart', 'history']
+    latestHistory.historyStart ?= 0
+    latestHistory

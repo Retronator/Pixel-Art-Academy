@@ -27,7 +27,7 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
     super arguments...
     
   _render: (renderOptions) ->
-    spriteData = @options.asset()
+    return unless spriteData = @options.asset()
 
     # On the server we need to manually request pixel maps.
     spriteData.requirePixelMaps() if Meteor.isServer

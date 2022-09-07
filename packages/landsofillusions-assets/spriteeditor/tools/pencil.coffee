@@ -83,6 +83,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       # Optimize the partial stroke operations.
       @_action.optimizeOperations()
 
-      LOI.Assets.Bitmap.executeAction LOI.Assets.Bitmap.className, assetData._id, @_action
+      LOI.Assets.Bitmap.executeAction LOI.Assets.Bitmap.className, assetData._id, assetData.lastEditTime or asset.creationTime, @_action, new Date, (error, result) ->
+        AM.Document.Versioning.reportExecuteActionError assetData if error
 
       @_action = null
