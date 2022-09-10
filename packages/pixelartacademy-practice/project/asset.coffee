@@ -73,6 +73,8 @@ class PAA.Practice.Project.Asset
   
   urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to used in the URL to identify this asset."
 
+  ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."
+
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
 

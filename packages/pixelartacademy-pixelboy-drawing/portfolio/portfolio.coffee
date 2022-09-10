@@ -87,17 +87,31 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   _assetScale: (asset) ->
     # Scale the sprite as much as possible (up to 6) while remaining under 84px.
-    maxSize = Math.max asset.width(), asset.height()
-    return 1 if _.isNaN maxSize
+    size = Math.max asset.width(), asset.height()
+    return 1 if _.isNaN size
     
     scale = 1
+    maxSize = 84
 
-    if maxSize > 84
-      # Scale downwards while interpreting scale as the denominator.
-      scale++ while maxSize / scale > 84
-      return 1 / scale
+    if size > maxSize
+      # The asset is bigger than our maximum size, so we will need to scale downwards. We start
+      # operating in effective scale to still have integer magnification compared to window pixels.
+      displayScale = LOI.adventure.interface.display.scale()
+      maxEffectiveSize = maxSize * displayScale
+      
+      effectiveScale = displayScale
+      effectiveScale-- while size * effectiveScale > maxEffectiveSize
+    
+      return effectiveScale / displayScale if effectiveScale > 0
+      
+      # We need to reduce scale below 1 effective pixel so we start dividing by integer amounts below 1.
+      divisor = 1
+      divisor++ while size / divisor > maxEffectiveSize
+      
+      effectiveScale = 1 / divisor
+      return effectiveScale / displayScale
 
-    scale++ while scale < 6 and (scale + 1) * maxSize < 84
+    scale++ while scale < 6 and (scale + 1) * size < 84
 
     scale
 

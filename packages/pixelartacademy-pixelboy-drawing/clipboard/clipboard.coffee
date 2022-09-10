@@ -13,8 +13,10 @@ class PAA.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
 
     # Asset in the clipboard should be bigger than in the portfolio.
     if portfolioScale < 1
-      # Scale up to 0.5 to show pixel perfect at least on retina screens.
-      scale = 0.5
+      # The asset was scaled down in the portfolio, but we should remain at least pixel perfect in the clipboard.
+      displayScale = LOI.adventure.interface.display.scale()
+      minimumScale = 1 / displayScale
+      scale = Math.max portfolioScale, minimumScale
 
     else
       # 1 -> 2

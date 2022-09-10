@@ -82,6 +82,10 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
 
   urlParameter: -> @spriteId()
   
+  ready: ->
+    # We're ready when the sprite has been loaded.
+    @sprite()
+  
   width: -> @sprite()?.bounds.width
   height: -> @sprite()?.bounds.height
 

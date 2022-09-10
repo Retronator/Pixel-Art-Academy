@@ -18,3 +18,5 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.Asset
   portfolioComponent: -> throw new AE.NotImplementedException "You must provide a component to render the asset in the portfolio."
   
   urlParameter: -> throw new AE.NotImplementedException "You must provide the URL parameter to identify this asset."
+
+  ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."

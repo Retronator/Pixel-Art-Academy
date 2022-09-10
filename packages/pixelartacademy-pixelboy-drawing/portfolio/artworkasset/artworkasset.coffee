@@ -46,6 +46,10 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelBoy.Apps
   
   urlParameter: -> @artworkId
   
+  ready: ->
+    # Asset is ready when the artwork document has been loaded.
+    @document()
+  
   freeform: ->
     return unless document = @document()
     not document.bounds?.fixed

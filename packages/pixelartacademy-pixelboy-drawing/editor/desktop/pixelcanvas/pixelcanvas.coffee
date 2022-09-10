@@ -19,7 +19,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
   
     # Do updates when asset changes.
     @autorun (computation) =>
-      @drawing.portfolio().displayedAsset()
+      return unless portfolioAsset = @drawing.portfolio().displayedAsset()
+      
+      # Wait until the asset is ready.
+      portfolioAsset.asset.ready()
     
       # Trigger asset style change after delay. We need this delay to allow for asset data in the
       # clipboard to update, which will change the position of the asset when attached to the clipboard.
