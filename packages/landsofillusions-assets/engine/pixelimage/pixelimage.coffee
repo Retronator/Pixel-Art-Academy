@@ -258,7 +258,7 @@ class LOI.Assets.Engine.PixelImage
 
           for offsetX in [-smoothFactor..smoothFactor]
             for offsetY in [-smoothFactor..smoothFactor]
-              if sampleNormal = layer._pixelMap[properties.x + offsetX]?[properties.y + offsetY]?.normal
+              if sampleNormal = asset.findPixelAtAbsoluteCoordinates(x + offsetX, y + offsetY)?.normal
                 _averageNormal.add sampleNormal
 
           _averageNormal.normalize()

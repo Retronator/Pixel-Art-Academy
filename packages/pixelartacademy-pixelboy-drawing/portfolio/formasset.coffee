@@ -43,3 +43,5 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.FormAsset extends PAA.PixelBoy.Apps.Dr
 
   width: -> 48
   height: -> 64
+  
+  ready: -> true

@@ -5,9 +5,9 @@ AM = Artificial.Mummification
 class AM.Document.Versioning
   # Enabling versioning on a document works with the following fields on the document:
   # versioned: boolean set to true for documents that have versioning enabled (used to include in a subscription to enable versioning on the client)
-  # historyPosition: how many actions brings you to the current state of the asset
+  # historyPosition: how many actions brings you to the current state of the document
   # historyStart: at which history position does the history array start (the rest of the actions are in the archive)
-  # history: array of actions that produce this asset
+  # history: array of actions that produce this document
   #   operatorId: which tool generated this action (used for undo/redo description)
   #   hashCode: the hash code of the action for quick equality comparison
   #   forward: array of operations that creates the result of this action
@@ -28,16 +28,16 @@ class AM.Document.Versioning
 
     return unless Meteor.isServer
 
-    documentClass.load.method (assetId, fields) ->
-      check assetId, Match.DocumentId
+    documentClass.load.method (id, fields) ->
+      check id, Match.DocumentId
       check fields, Match.OptionalOrNull Object
 
-      documentClass.documents.findOne assetId, {fields}
+      documentClass.documents.findOne id, {fields}
 
-    documentClass.latestHistoryForId.publish (assetId) ->
-      check assetId, Match.DocumentId
+    documentClass.latestHistoryForId.publish (id) ->
+      check id, Match.DocumentId
 
-      AM.Document.Versioning.latestHistoryForId @, documentClass, assetId
+      AM.Document.Versioning.latestHistoryForId @, documentClass, id
 
       # Explicitly return nothing since we're handling the publishing ourselves.
       return
@@ -246,5 +246,10 @@ class AM.Document.Versioning
   @_createLocalizedHistory: (document) ->
     # TODO: Generate a localized history.
     latestHistory = _.pick document, ['lastEditTime', 'historyPosition', 'historyStart', 'history']
-    latestHistory.historyStart ?= 0
+    
+    _.defaults latestHistory,
+      history: []
+      historyStart: 0
+      historyPosition: 0
+    
     latestHistory

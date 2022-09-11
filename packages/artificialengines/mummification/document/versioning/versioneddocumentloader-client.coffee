@@ -96,15 +96,16 @@ class AM.Document.Versioning.VersionedDocumentLoader
     
     # Roll back all non-matching local actions.
     lastMatchingHistoryPosition = @_latestHistory.historyStart + matchingActionsCount
+    rollbackPosition = Math.min @_document.historyPosition, lastMatchingHistoryPosition
     
-    for historyPosition in [@_document.historyPosition...lastMatchingHistoryPosition]
+    for historyPosition in [@_document.historyPosition...rollbackPosition]
       documentActionIndex = historyPosition - @_document.historyStart - 1
       documentAction = @_document.history[documentActionIndex]
       
       AM.Document.Versioning.executeOperations @_document, documentAction.backward
 
     # Apply all non-matching latest actions.
-    for historyPosition in [lastMatchingHistoryPosition...@_latestHistory.historyPosition]
+    for historyPosition in [rollbackPosition...@_latestHistory.historyPosition]
       latestHistoryActionIndex = historyPosition - @_latestHistory.historyStart
       latestHistoryAction = @_latestHistory.history[latestHistoryActionIndex]
   
