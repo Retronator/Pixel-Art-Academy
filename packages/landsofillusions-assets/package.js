@@ -66,7 +66,6 @@ Package.onUse(function(api) {
   api.addServerFile('documents/visualasset/subscriptions');
 
   api.addFile('documents/sprite..');
-  api.addClientFile('documents/sprite/sprite-executeaction-client');
   api.addFile('documents/sprite/rot8');
   api.addFile('documents/sprite/mip');
   api.addServerFile('documents/sprite/subscriptions');
@@ -100,6 +99,7 @@ Package.onUse(function(api) {
   api.addFile('documents/bitmap/actions..');
   api.addFile('documents/bitmap/actions/addlayer');
   api.addFile('documents/bitmap/actions/stroke');
+  api.addFile('documents/bitmap/actions/colorfill');
 
   api.addFile('documents/bitmap/operations..');
   api.addFile('documents/bitmap/operations/addlayer');

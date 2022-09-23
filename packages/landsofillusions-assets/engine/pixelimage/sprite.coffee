@@ -46,6 +46,6 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
         y = pixel.y + layerOrigin.y - spriteData.bounds.y
         z = layerOrigin.z + (pixel.z or 0)
         
-        @_renderPixel x, y, z, pixel, spriteData, renderOptions
+        @_renderPixel x, y, z, pixel.x, pixel.y, pixel.paletteColor, pixel.directColor, pixel.materialIndex, pixel.normal, spriteData, renderOptions
 
     @_endRender()

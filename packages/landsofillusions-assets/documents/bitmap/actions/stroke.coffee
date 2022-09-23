@@ -43,23 +43,8 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
     forwardAreaFlags = forwardArea.attributes[LOI.Assets.Bitmap.Attribute.Ids.Flags]
 
     # Determine attribute categories.
-    @_colorAttributeClasses ?= [
-      LOI.Assets.Bitmap.Attribute.PaletteColor
-      LOI.Assets.Bitmap.Attribute.DirectColor
-      LOI.Assets.Bitmap.Attribute.MaterialIndex
-    ]
-
-    colorAttributeClasses = []
-    nonColorAttributeClasses = []
-
-    for attributeId in bitmap.pixelFormat
-      attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
-
-      if attributeClass in @_colorAttributeClasses
-        colorAttributeClasses.push attributeClass
-
-      else if attributeClass isnt LOI.Assets.Bitmap.Attribute.Flags
-        nonColorAttributeClasses.push attributeClass
+    colorAttributeClasses = bitmap.pixelFormat.getColorAttributeClasses()
+    otherAttributeClasses = bitmap.pixelFormat.getNonColorNonFlagAttributeClasses()
 
     # Get the current state of the layer.
     layer = bitmap.getLayer layerAddress
@@ -87,23 +72,19 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
       # We only need to provide new values if the color was changed to a new value.
       # Otherwise the pixel was removed and all values should go to zero.
       if changedColorAttributeClass
-        # The color was changed to a new value. Switch the color flags to the new attribute.
+        # The color was changed to a new value. Switch the color flag to the new attribute.
         existingFlags = layerFlags.getPixel layerX, layerY
-
+    
         flagPixelIndex = forwardAreaFlags.getPixelIndex changeAreaX, changeAreaY
         forwardAreaFlags.array[flagPixelIndex] = existingFlags
-
-        newColorFlag = colorAttributeClass.flagValue
-        otherColorFlags = LOI.Assets.Bitmap.Attribute.allColorFlagsMask & ~newColorFlag
-
-        forwardAreaFlags.setPixelFlagAtIndex flagPixelIndex, newColorFlag
-        forwardAreaFlags.clearPixelFlagAtIndex flagPixelIndex, otherColorFlags
+    
+        forwardAreaFlags.switchColorFlagAtIndex flagPixelIndex, colorAttributeClass.flagValue
 
         # Set the new color attribute value.
         forwardArea.attributes[changedColorAttributeClass.id].setPixel changeAreaX, changeAreaY, pixel[changedColorAttributeClass.id]
 
         # Transfer all the other attributes not related to the colors.
-        for attributeClass in nonColorAttributeClasses
+        for attributeClass in otherAttributeClasses
           value = layer.attributes[attributeClass.id].getPixel layerX, layerY
           forwardArea.attributes[attributeClass.id].setPixel changeAreaX, changeAreaY, value
 
@@ -112,9 +93,9 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
         oldValue = layer.attributes[attributeId].getPixel layerX, layerY
         backwardArea.attributes[attributeId].setPixel changeAreaX, changeAreaY, oldValue
 
-    # Store compressed pixels data to the operations.
-    forwardOperation.compressedPixelsData = forwardArea.getCompressedPixelsData()
-    backwardOperation.compressedPixelsData = backwardArea.getCompressedPixelsData()
+    # Store pixels data to the operations.
+    forwardOperation.setPixelsData forwardArea.pixelsData
+    backwardOperation.setPixelsData backwardArea.pixelsData
 
     # Update operation arrays and the hash code of the action.
     @forward.push forwardOperation

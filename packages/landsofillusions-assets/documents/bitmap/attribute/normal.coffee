@@ -6,11 +6,20 @@ class LOI.Assets.Bitmap.Attribute.Normal extends LOI.Assets.Bitmap.Attribute
   @elementsPerPixel = 3
 
   getPixel: (x, y) ->
-    index = @getPixelIndex x, y
+    @getPixelAtIndex @getPixelIndex x, y
 
-    x: @signedData[index] / 127
-    y: @signedData[index + 1] / 127
-    z: @signedData[index + 2] / 127
+  getPixelAtIndex: (index) ->
+    result = {}
+    @getPixelAtIndexToVector index, result
+    result
+    
+  getPixelToVector: (x, y, vector) ->
+    @getPixelAtIndexToVector @getPixelIndex(x, y), vector
+
+  getPixelAtIndexToVector: (index, vector) ->
+    vector.x = @signedData[index] / 127
+    vector.y = @signedData[index + 1] / 127
+    vector.z = @signedData[index + 2] / 127
 
   setPixel: (x, y, value) ->
     index = @getPixelIndex x, y

@@ -6,6 +6,8 @@ _normal = new THREE.Vector3
 _backward = new THREE.Vector3 0, 0, 1
 _color = new THREE.Color
 _lightColor = new THREE.Color
+_sourceColor = new THREE.Color
+_shadedColor = new THREE.Color
 _averageNormal = new THREE.Vector3
 
 class LOI.Assets.Engine.PixelImage
@@ -75,13 +77,13 @@ class LOI.Assets.Engine.PixelImage
       @_smoothShadingQuantizationFactor = (smoothShadingQuantizationLevels or 1) - 1
       
   # Call for each pixel and specify the coordinates within asset bounds.
-  _renderPixel: (x, y, z, properties, asset, renderOptions) ->
+  _renderPixel: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->
     # Find pixel index in the image buffer.
     depthPixelIndex = x + y * @_canvas.width
     pixelIndex = depthPixelIndex * 4
 
     # Allow a special material called 'erase' to delete pixels.
-    erase = asset.materials?[properties.materialIndex]?.name is 'erase'
+    erase = asset.materials?[materialIndex]?.name is 'erase'
 
     if erase
       z = Number.NEGATIVE_INFINITY
@@ -97,8 +99,8 @@ class LOI.Assets.Engine.PixelImage
     # Determine the color.
     if @_visualizeNormals
       # Visualized normals mode.
-      if properties.normal
-        _normal.copy properties.normal
+      if normal
+        _normal.copy normal
         _normal.x *= -1 if @_flippedHorizontal
 
         horizontalAngle = Math.atan2(_normal.y, _normal.x) + Math.PI
@@ -121,13 +123,13 @@ class LOI.Assets.Engine.PixelImage
 
     else if renderOptions.renderNormalData
       # Rendering of raw normal data for use in shaders.
-      if properties.normal
+      if normal
         destinationColor =
-          r: properties.normal.x * 0.5 + 0.5
-          g: properties.normal.y * 0.5 + 0.5
-          b: properties.normal.z * 0.5 + 0.5
+          r: normal.x * 0.5 + 0.5
+          g: normal.y * 0.5 + 0.5
+          b: normal.z * 0.5 + 0.5
 
-        destinationColor.r = -properties.normal.x * 0.5 + 0.5 if @_flippedHorizontal
+        destinationColor.r = -normal.x * 0.5 + 0.5 if @_flippedHorizontal
 
       else
         destinationColor = r: 0, g: 0, b: 0
@@ -137,8 +139,8 @@ class LOI.Assets.Engine.PixelImage
       paletteColor = null
 
       # Normal color mode.
-      if properties.materialIndex?
-        material = asset.materials[properties.materialIndex]
+      if materialIndex?
+        material = asset.materials[materialIndex]
 
         paletteColor = _.clone material
 
@@ -146,9 +148,6 @@ class LOI.Assets.Engine.PixelImage
         if materialData = @_materialsData?[material.name]
           for key, value of materialData
             paletteColor[key] = value if value?
-
-      else if properties.paletteColor
-        paletteColor = properties.paletteColor
 
       paletteColor ?=
         ramp: 0
@@ -183,11 +182,9 @@ class LOI.Assets.Engine.PixelImage
       destinationColor = shades[shadeIndex]
 
     else
-      paletteColor = null
-
       # Normal color mode.
-      if properties.materialIndex?
-        return unless material = asset.materials?[properties.materialIndex]
+      if materialIndex?
+        return unless material = asset.materials?[materialIndex]
 
         paletteColor = _.clone material
 
@@ -196,22 +193,16 @@ class LOI.Assets.Engine.PixelImage
           for key, value of materialData
             paletteColor[key] = value if value?
 
-      else if properties.paletteColor
-        paletteColor = properties.paletteColor
-
-      else if properties.directColor
-        directColor = properties.directColor
-
       if paletteColor
         return unless shades = @_palette.ramps[paletteColor.ramp]?.shades
         shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
         directColor = shades[shadeIndex]
 
       unless directColor
-        console.warn "Missing color information in pixel", properties
+        console.warn "Missing color information in pixel", x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions
         return
-
-      sourceColor = THREE.Color.fromObject directColor
+    
+      _sourceColor.copy directColor
 
       if @_inverseLightDirection
         # Shade color based on the normal.
@@ -225,8 +216,8 @@ class LOI.Assets.Engine.PixelImage
           shadeFactor += sceneAmbientCoefficient * materialAmbientCoefficient
 
         # Calculate diffuse lighting.
-        if properties.normal
-          _normal.copy properties.normal
+        if normal
+          _normal.copy normal
           _normal.x *= -1 if @_flippedHorizontal
 
         else
@@ -239,8 +230,8 @@ class LOI.Assets.Engine.PixelImage
 
         if lightDiffuseCoefficient and materialDiffuseCoefficient
           shadeFactor += normalLightProduct * lightDiffuseCoefficient * materialDiffuseCoefficient
-
-        shadedColor = sourceColor.clone().multiplyScalar shadeFactor
+      
+        _shadedColor.copy(_sourceColor).multiplyScalar shadeFactor
 
         # Calculate specular lighting.
         lightSpecularCoefficient = 1
@@ -275,22 +266,22 @@ class LOI.Assets.Engine.PixelImage
 
           lightFactor = Math.pow(reflectionViewProduct, shininess) * lightSpecularCoefficient * materialSpecularCoefficient
           _lightColor.set(0xffffff).multiplyScalar lightFactor
-
-          shadedColor.add _lightColor
+  
+          _shadedColor.add _lightColor
 
         if @_palette and paletteColor
           if @_smoothShadingQuantizationFactor
-            shadedColor.r = Math.round(shadedColor.r * @_smoothShadingQuantizationFactor) / @_smoothShadingQuantizationFactor
-            shadedColor.g = Math.round(shadedColor.g * @_smoothShadingQuantizationFactor) / @_smoothShadingQuantizationFactor
-            shadedColor.b = Math.round(shadedColor.b * @_smoothShadingQuantizationFactor) / @_smoothShadingQuantizationFactor
+            _shadedColor.r = Math.round(_shadedColor.r * @_smoothShadingQuantizationFactor) / @_smoothShadingQuantizationFactor
+            _shadedColor.g = Math.round(_shadedColor.g * @_smoothShadingQuantizationFactor) / @_smoothShadingQuantizationFactor
+            _shadedColor.b = Math.round(_shadedColor.b * @_smoothShadingQuantizationFactor) / @_smoothShadingQuantizationFactor
 
-          destinationColor = @_boundColorToPaletteRamp properties, shadedColor, @_palette.ramps[paletteColor.ramp], paletteColor.dither
+          destinationColor = @_boundColorToPaletteRamp absoluteX, absoluteY, _shadedColor, @_palette.ramps[paletteColor.ramp], paletteColor.dither
 
         else
-          destinationColor = shadedColor
+          destinationColor = _shadedColor
 
       else
-        destinationColor = sourceColor
+        destinationColor = _sourceColor
 
     if erase
       @_imageData.data[pixelIndex + 3] = 0
@@ -304,7 +295,7 @@ class LOI.Assets.Engine.PixelImage
   _endRender: ->
     @_canvas.putFullImageData @_imageData
 
-  _boundColorToPaletteRamp: (pixel, color, ramp, dither) ->
+  _boundColorToPaletteRamp: (absoluteX, absoluteY, color, ramp, dither) ->
     # Find the nearest color from the palette to represent the shaded color.
     bestColor = null
     bestColorDistance = Number.POSITIVE_INFINITY
@@ -357,7 +348,7 @@ class LOI.Assets.Engine.PixelImage
 
     # Apply dithering.
     if Math.abs(0.5 - blendFactor) < dither / 2.0
-      if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
+      if Math.abs(absoluteX % 2) + Math.abs(absoluteY % 2) is 1
         boundColor = laterColor
 
       else

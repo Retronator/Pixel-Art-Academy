@@ -2,9 +2,6 @@ LOI = LandsOfIllusions
 
 Pako = require 'pako'
 
-compressionOptions =
-  level: Pako.Z_BEST_COMPRESSION
-
 # An area of a 2D raster image
 class LOI.Assets.Bitmap.Area
   # width: width of the area in pixels
@@ -12,8 +9,15 @@ class LOI.Assets.Bitmap.Area
   # pixelFormat: array of attribute Ids, describing the content and order of data in pixelsData
   # pixelsData: ArrayBuffer with all attributes following each other as defined in the document's pixel format
   # attributes: map of attributes with typed arrays isolating the sections of pixels data
+  @compressionOptions =
+    level: Pako.Z_BEST_COMPRESSION
+  
+  constructor: (width, height, pixelFormat, pixelsData, compressed) ->
+    @initialize width, height, pixelFormat, pixelsData, compressed
 
-  constructor: (@width, @height, @pixelFormat, @pixelsData, compressed) ->
+  initialize: (@width, @height, @pixelFormat, @pixelsData, compressed) ->
+    @attributes = {}
+
     # There's nothing to do if there are no pixels.
     return unless @width and @height
 
@@ -22,20 +26,18 @@ class LOI.Assets.Bitmap.Area
 
     # Decompress pixels data if necessary.
     if @pixelsData and compressed
-      @pixelsData = Pako.inflateRaw(@pixelsData, compressionOptions).buffer
+      @pixelsData = Pako.inflateRaw(@pixelsData, @constructor.compressionOptions).buffer
 
     # Create pixels data if it was not provided.
     @pixelsData ?= new ArrayBuffer pixelsCount * bytesPerPixel
 
     # Create typed arrays for each attribute.
-    @attributes = {}
-
     for attributeId in @pixelFormat
       attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
       @attributes[attributeId] = new attributeClass @
 
   getCompressedPixelsData: ->
-    Pako.deflateRaw @pixelsData, compressionOptions
+    Pako.deflateRaw @pixelsData, @constructor.compressionOptions
 
   getPixel: (x, y) ->
     # Make sure the pixel is in bounds.

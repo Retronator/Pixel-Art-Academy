@@ -29,6 +29,9 @@ class AM.Document.Versioning.Operation
   @getClassForId: (id) ->
     @_operationClassesById[id]
 
+  @createHashCode: (object) ->
+    AP.HashFunctions.getObjectHash object, AP.HashFunctions.circularShift5
+    
   constructor: (properties) ->
     _.assign @, properties
 
@@ -77,13 +80,7 @@ class AM.Document.Versioning.Operation
   getHashCode: ->
     # Return the cached hash code if we have one. We assume operation will be fully initialized before it will be used.
     return @_hashCode if @_hashCode
-
-    # Turn the operation into a string and hash it.
-    string = EJSON.stringify @_getPublicFields()
-
-    @_hashCode = 0
-
-    for characterIndex in [0...string.length]
-      @_hashCode = AP.HashFunctions.circularShift5 @_hashCode, string.charCodeAt characterIndex
-
+  
+    @_hashCode = @constructor.createHashCode @_getPublicFields()
+    
     @_hashCode

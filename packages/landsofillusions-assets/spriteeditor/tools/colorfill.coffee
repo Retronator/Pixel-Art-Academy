@@ -1,4 +1,5 @@
 AC = Artificial.Control
+AM = Artificial.Mummification
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -43,6 +44,17 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       y: layer?.origin?.y or 0
 
     ignoreNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get('ignoreNormals') or false
+    
+    if assetData instanceof LOI.Assets.Bitmap
+      # Prepare the action.
+      layerAddress = [layerIndex]
+      
+      action = new AM.Document.Versioning.Action @constructor.id()
+      
+      # If the image has no layer, we first have to add it as a partial action.
+      unless assetData.getLayer layerAddress
+        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer null, assetData, []
+        action.append addLayerAction
 
     for xCoordinate in xCoordinates
       # Make sure we're filling inside of bounds.
@@ -56,5 +68,18 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
         pixel[property] = paint[property] if paint[property]?
 
       pixel.normal = paint.normal if paint.normal and not ignoreNormals
+    
+      if assetData instanceof LOI.Assets.Sprite
+        LOI.Assets.Sprite.colorFill assetData._id, layerIndex, pixel, ignoreNormals
+      
+      else if assetData instanceof LOI.Assets.Bitmap
+        # Add the fill action.
+        colorFillAction = new LOI.Assets.Bitmap.Actions.ColorFill null, assetData, layerAddress, pixel
+        action.append colorFillAction
 
-      LOI.Assets.Sprite.colorFill assetData._id, layerIndex, pixel, ignoreNormals
+    if assetData instanceof LOI.Assets.Bitmap
+      # Optimize the operations (for the symmetry case) and execute the action.
+      action.optimizeOperations assetData
+      
+      LOI.Assets.Bitmap.executeAction LOI.Assets.Bitmap.className, assetData._id, assetData.lastEditTime or assetData.creationTime, action, new Date, (error, result) ->
+        AM.Document.Versioning.reportExecuteActionError assetData if error

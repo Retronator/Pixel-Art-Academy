@@ -24,7 +24,7 @@ class AM.Document.Versioning.Action
     @backward.unshift action.backward...
     @_updateHashCode()
 
-  optimizeOperations: ->
+  optimizeOperations: (document) ->
     for operationsArray in [@forward, @backward]
       # Combine consecutive operations that are combinable.
       operationIndex = 0
@@ -34,8 +34,13 @@ class AM.Document.Versioning.Action
         nextOperation = operationsArray[operationIndex + 1]
 
         if operation.constructor.combinable and operation.id() is nextOperation.id()
-          operation.combine nextOperation
-          operationsArray.splice operationIndex + 1, 1
+          wasCombined = operation.combine document, nextOperation
+          
+          if wasCombined
+            operationsArray.splice operationIndex + 1, 1
+            
+          else
+            operationIndex++
 
         else
           operationIndex++

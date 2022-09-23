@@ -110,7 +110,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     x = absoluteX - (layer.bounds?.x or 0)
     y = absoluteY - (layer.bounds?.y or 0)
 
-    @getPixelForLayerAtCoordinates layerIndex, x, y
+    @getPixelForLayerAtCoordinates layerAddress, x, y
 
   findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY, layerGroup = @) ->
     # Go over all layers in the group.

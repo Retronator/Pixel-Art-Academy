@@ -14,7 +14,19 @@ class LOI.Assets.Bitmap.PixelFormat extends Array
 
       attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId formatAttributeId
       offset += pixelsCount * attributeClass.elementsPerPixel * attributeClass.arrayClass.BYTES_PER_ELEMENT
+      
+  getColorAttributeClasses: ->
+    for attributeId in @ when attributeId in LOI.Assets.Bitmap.Attribute.colorAttributeIds
+      LOI.Assets.Bitmap.Attribute.getClassForId attributeId
+    
+  getNonColorAttributeClasses: ->
+    for attributeId in @ when attributeId not in LOI.Assets.Bitmap.Attribute.colorAttributeIds
+      LOI.Assets.Bitmap.Attribute.getClassForId attributeId
 
+  getNonColorNonFlagAttributeClasses: ->
+    for attributeId in @ when attributeId not in LOI.Assets.Bitmap.Attribute.colorAttributeIds and attributeId isnt LOI.Assets.Bitmap.Attribute.Flags.id
+      LOI.Assets.Bitmap.Attribute.getClassForId attributeId
+      
   # Utility
 
   @typeName: -> "LandsOfIllusions.Assets.Bitmap.PixelFormat"

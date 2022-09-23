@@ -15,6 +15,8 @@ class LOI.Assets.Bitmap.Attribute
 
   # Flags mask that covers all the color flag values.
   @allColorFlagsMask = 1 | 2 | 4
+  
+  @colorAttributeIds = [@Ids.MaterialIndex, @Ids.PaletteColor, @Ids.DirectColor]
 
   # Override to provide information for the specific attribute.
   @id = null
