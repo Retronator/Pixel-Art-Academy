@@ -138,5 +138,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
   _compressPixelsData: ->
     @compressedPixelsData ?= Pako.deflateRaw @_pixelsData, LOI.Assets.Bitmap.Area.compressionOptions if @_pixelsData
     
+    console.log "Change pixels operation compression ratio: #{(@compressedPixelsData.byteLength / @_pixelsData.byteLength * 100).toFixed(2)}%" if LOI.Assets.debug
+    
   _decompressPixelsData: ->
     @_pixelsData ?= Pako.inflateRaw @compressedPixelsData, LOI.Assets.Bitmap.Area.compressionOptions if @compressedPixelsData

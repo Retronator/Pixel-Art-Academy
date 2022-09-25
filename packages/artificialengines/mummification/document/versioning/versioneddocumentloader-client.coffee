@@ -43,7 +43,7 @@ class AM.Document.Versioning.VersionedDocumentLoader
         history: []
         historyArchive: []
       
-      console.log "Reloaded", result
+      console.log "Reloaded versioned document", result if Artificial.debug
 
       # Create the document and initialize it if it requires it.
       @_document = new @versionedCollection.documentClass result
@@ -66,7 +66,7 @@ class AM.Document.Versioning.VersionedDocumentLoader
     # See how many actions (up to history position) are matching.
     matchingActionsCount = 0
 
-    console.log "handling history changes", @_document.historyPosition, @_latestHistory.historyPosition
+    console.log "Handling history changes", @_document.historyPosition, @_latestHistory.historyPosition if Artificial.debug
     
     for historyPosition in [@_latestHistory.historyStart...@_latestHistory.historyPosition]
       documentActionIndex = historyPosition - @_document.historyStart
