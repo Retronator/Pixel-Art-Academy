@@ -21,8 +21,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
       return unless $pixelCanvas
       computation.stop()
 
-      @$canvas = $pixelCanvas.find('.canvas')
-
       $pixelCanvas.mousemove (event) =>
         @_lastPageX = event.pageX
         @_lastPageY = event.pageY
@@ -47,13 +45,13 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
         @pixelCoordinate null
 
   updateCoordinates: ->
-    origin = @$canvas.offset()
+    pixelCanvasPosition = $pixelCanvas.offset()
     displayScale = @pixelCanvas.display.scale()
     camera = @pixelCanvas.camera()
 
     windowCoordinate =
-      x: @_lastPageX - origin.left
-      y: @_lastPageY - origin.top
+      x: @_lastPageX - pixelCanvasPosition.left
+      y: @_lastPageY - pixelCanvasPosition.top
 
     @windowCoordinate windowCoordinate
 

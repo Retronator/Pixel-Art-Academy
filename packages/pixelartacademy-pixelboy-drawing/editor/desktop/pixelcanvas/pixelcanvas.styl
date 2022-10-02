@@ -1,11 +1,7 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-pixelboy-apps-drawing-editor-desktop-pixelcanvas
-  &.landsofillusions-assets-spriteeditor-pixelcanvas
-    position initial
-    background initial
-
-  .canvas-area
+  .drawing-area
     position absolute
     z-index 1
     background atariGray(6)
@@ -36,16 +32,16 @@
     .pixelartacademy-pixelboy-apps-drawing-editor-desktop.dragging
       .fatamorgana-interface.move-canvas
         .pixelartacademy-pixelboy-apps-drawing-editor-desktop-pixelcanvas
-          .canvas-area
+          .drawing-area
             transition none !important
 
   &.active-asset:not(.editor-active)
     .pixelartacademy-pixelboy-apps-drawing-editor-desktop
       .pixelartacademy-pixelboy-apps-drawing-editor-desktop-pixelcanvas
-        .canvas-area
+        .drawing-area
           transition top 0.6s 0.2s, left 0.6s 0.2s, width 0.2s, height 0.2s
 
   .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active
     .pixelartacademy-pixelboy-apps-drawing-editor-desktop-pixelcanvas
-      .canvas-area
+      .drawing-area
         transition all 0.2s

@@ -53,7 +53,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
     # Don't show the asset when clipboard is on the second page.
     'hidden' if @clipboardComponent()?.secondPageActive?()
     
-  canvasAreaStyle: ->
+  drawingAreaStyle: ->
     # Allow to be updated externally.
     @assetStyleChangeDependency.depend()
 

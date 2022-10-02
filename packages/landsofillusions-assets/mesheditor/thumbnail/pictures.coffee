@@ -12,10 +12,10 @@ class LOI.Assets.MeshEditor.Thumbnail.Pictures
     for picture in @pictures
       continue unless pictureBounds = picture.bounds()
 
-      pictureBoundsRectangle = AE.Rectangle.fromDimensions pictureBounds
+      pictureBoundsRectangle = new AE.Rectangle pictureBounds
 
       if bounds
-        bounds = bounds.union pictureBoundsRectangle
+        bounds = AE.Rectangle.union bounds, pictureBoundsRectangle
 
       else
         bounds = pictureBoundsRectangle

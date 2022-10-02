@@ -28,36 +28,72 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       @cameraData()?.child 'origin'
 
     @origin = new ComputedField =>
-      if @scrollingEnabled()
-        origin = @originData()?.value()
-        
-      else
-        # When we can't scroll, we should show the center of the image.
-        if bounds = @pixelCanvas.assetData()?.bounds
-          origin =
-            x: bounds.left + bounds.width / 2
-            y: bounds.top + bounds.height / 2
-  
-      origin or @pixelCanvas.componentData.get('initialCameraOrigin') or x: 0, y: 0
+      @originData()?.value() or x: 0, y: 0
     ,
       EJSON.equals
 
-    # Calculate viewport in canvas coordinates.
+    # Calculate various bounds.
+    @assetBounds = new AE.Rectangle()
+    @drawingAreaBounds = new AE.Rectangle()
+    @pixelCanvasBounds = new AE.Rectangle()
     @viewportBounds = new AE.Rectangle()
+    @canvasWindowBounds = new AE.Rectangle()
 
     @pixelCanvas.autorun =>
-      canvasPixelSize = @pixelCanvas.canvasPixelSize()
+      # Asset bounds are directly copied from the asset.
+      return unless assetData = @pixelCanvas.assetData()
+      @assetBounds.copy assetData.bounds
+     
+      # Calculate drawing area bounds in canvas coordinates.
+      displayMode = @pixelCanvas.displayMode()
+      
+      if assetData.bounds.fixed
+        # When the asset bounds are fixed, the drawing area matches it directly.
+        @drawingAreaBounds.copy assetData.bounds
+      
+      else if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed
+        # When the asset bounds are freeform and we need to frame the drawing, we make the drawing area 50% bigger than the existing asset bounds.
+        verticalFreeformBorder = (assetData.bounds?.width or 128) * 0.25
+        horizontalFreeformBorder = (assetData.bounds?.height or 128) * 0.25
+        
+        @drawingAreaBounds.copy(assetData.bounds).extrude verticalFreeformBorder, horizontalFreeformBorder
+        
+      else
+        # Without the frame, the drawing area extends into infinity.
+        @drawingAreaBounds.left Number.NEGATIVE_INFINITY
+        @drawingAreaBounds.top Number.NEGATIVE_INFINITY
+        @drawingAreaBounds.right Number.POSITIVE_INFINITY
+        @drawingAreaBounds.bottom Number.POSITIVE_INFINITY
+      
+      # Calculate the size of the parent pixel canvas in canvas coordinates.
+      pixelCanvasWindowSize = @pixelCanvas.windowSize()
       effectiveScale = @effectiveScale()
+      width = pixelCanvasWindowSize.width / effectiveScale
+      height = pixelCanvasWindowSize.height / effectiveScale
       origin = @origin()
-
-      # Calculate which part of the canvas is visible.
-      width = canvasPixelSize.width / effectiveScale
-      height = canvasPixelSize.height / effectiveScale
-
-      @viewportBounds.width width
-      @viewportBounds.height height
-      @viewportBounds.x origin.x - width / 2
-      @viewportBounds.y origin.y - height / 2
+  
+      @pixelCanvasBounds.width width
+      @pixelCanvasBounds.height height
+      @pixelCanvasBounds.x origin.x - width / 2
+      @pixelCanvasBounds.y origin.y - height / 2
+      
+      # Viewport bounds are the intersection of the pixel canvas bounds and the drawing area bounds.
+      @viewportBounds.copy(@pixelCanvasBounds).intersect @drawingAreaBounds
+      
+      # Calculate the bounds of the canvas in window coordinates.
+      canvasTopLeft = transformCanvasToWindow x: @viewportBounds.left(), y: @viewportBounds.top()
+      canvasBottomRight = transformCanvasToWindow x: @viewportBounds.right(), y: @viewportBounds.bottom()
+      @canvasWindowBounds.left canvasTopLeft.x
+      @canvasWindowBounds.top canvasTopLeft.y
+      @canvasWindowBounds.right canvasBottomRight.x
+      @canvasWindowBounds.bottom canvasBottomRight.y
+  
+      console.log "Updated bounds"
+      console.log "  assetBounds:", @assetBounds.toString()
+      console.log "  drawingAreaBounds:", @drawingAreaBounds.toString()
+      console.log "  pixelCanvasBounds:", @pixelCanvasBounds.toString()
+      console.log "  viewportBounds:", @viewportBounds.toString()
+      console.log "  canvasWindowBounds:", @canvasWindowBounds.toString()
 
     # Enable panning with scrolling.
 
@@ -135,7 +171,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
 
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()
-    canvasPixelSize = @pixelCanvas.canvasPixelSize()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
@@ -143,8 +178,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     context.setTransform 1, 0, 0, 1, 0, 0
 
     # Move to center of screen.
-    width = canvasPixelSize.width
-    height = canvasPixelSize.height
+    width = @canvasWindowBounds.width()
+    height = @canvasWindowBounds.height()
     context.translate Math.floor(width / 2), Math.floor(height / 2)
 
     # Scale the canvas around the origin.
@@ -156,14 +191,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     context.translate -translateX, -translateY
 
   transformCanvasToWindow: (canvasCoordinate) ->
-    canvasPixelSize = @pixelCanvas.canvasPixelSize()
+    pixelCanvasWindowSize = @pixelCanvas.windowSize()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
     x = canvasCoordinate.x
     y = canvasCoordinate.y
-    width = canvasPixelSize.width
-    height = canvasPixelSize.height
+    width = pixelCanvasWindowSize.width
+    height = pixelCanvasWindowSize.height
 
     x: (x - origin.x) * effectiveScale + width / 2
     y: (y - origin.y) * effectiveScale + height / 2
@@ -176,14 +211,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     y: windowCoordinate.y / displayScale
 
   transformWindowToCanvas: (windowCoordinate) ->
-    canvasPixelSize = @pixelCanvas.canvasPixelSize()
+    pixelCanvasWindowSize = @pixelCanvas.windowSize()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
     x = windowCoordinate.x
     y = windowCoordinate.y
-    width = canvasPixelSize.width
-    height = canvasPixelSize.height
+    width = pixelCanvasWindowSize.width
+    height = pixelCanvasWindowSize.height
 
     x: (x - width / 2) / effectiveScale + origin.x
     y: (y - height / 2) / effectiveScale + origin.y

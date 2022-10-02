@@ -15,7 +15,7 @@ LOI.Assets.Audio::getPreviewImage = ->
     nodeBounds = new AE.Rectangle node.position.x * scale, node.position.y * scale, nodeSize, nodeSize
 
     if bounds
-      bounds = bounds.union nodeBounds
+      bounds.union nodeBounds
 
     else
       bounds = nodeBounds

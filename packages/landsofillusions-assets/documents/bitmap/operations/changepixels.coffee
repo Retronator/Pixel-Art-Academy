@@ -106,10 +106,10 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
     @_copyPixels source, {area: layer, bounds: layer.bounds}, layer.pixelFormat
   
   _unionBounds: (a, b) ->
-    rectangleA = AE.Rectangle.fromDimensions a
-    rectangleB = AE.Rectangle.fromDimensions b
+    rectangleA = new AE.Rectangle a
+    rectangleB = new AE.Rectangle b
     
-    AE.Rectangle.union(rectangleA, rectangleB).toJSONValue()
+    rectangleA.union(rectangleB).toJSONValue()
 
   toJSONValue: ->
     @_compressPixelsData()

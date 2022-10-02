@@ -233,7 +233,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
   
     components =
       "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
-        fixedCanvasSize: true
+        displayMode: LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
       
     views = [

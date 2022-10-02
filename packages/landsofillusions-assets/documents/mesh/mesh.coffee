@@ -256,10 +256,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
       continue unless bounds
 
-      boundsRectangle = AE.Rectangle.fromDimensions bounds
+      boundsRectangle = new AE.Rectangle bounds
 
       if spriteBounds
-        spriteBounds = spriteBounds.union boundsRectangle
+        spriteBounds = AE.Rectangle.union spriteBounds, boundsRectangle
 
       else
         spriteBounds = boundsRectangle

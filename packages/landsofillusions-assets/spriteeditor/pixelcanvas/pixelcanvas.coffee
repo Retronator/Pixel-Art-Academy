@@ -23,11 +23,15 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.PixelCanvas'
   @register @id()
   
+  @DisplayModes =
+    Framed: 'Framed'
+    Filled: 'Filled'
+    
   @componentDataFields: -> [
     'initialCameraScale'
     'scrollingEnabled'
     'components'
-    'fixedCanvasSize'
+    'displayMode'
   ]
 
   @editorFileDataFieldsWithDefaults: ->
@@ -45,8 +49,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @toolInfo = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
+    @windowSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
+    
     @canvas = new ReactiveField null
-    @canvasPixelSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
     @context = new ReactiveField null
 
   onCreated: ->
@@ -174,12 +179,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   _redraw: ->
     return unless context = @context()
   
-    canvasPixelSize = @canvasPixelSize()
+    camera = @camera()
   
     context.setTransform 1, 0, 0, 1, 0, 0
-    context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
+    context.clearRect 0, 0, camera.canvasWindowBounds.width(), camera.canvasWindowBounds.height()
   
-    camera = @camera()
     camera.applyTransformToCanvas()
   
     lightDirection = @lightDirectionHelper()
@@ -208,20 +212,18 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @canvas canvas
     @context canvas.getContext '2d'
 
-    # React to canvas element resizing.
+    # React to pixel canvas element resizing.
     @_resizeObserver = new ResizeObserver (entries) =>
       for entry in entries when entry.borderBoxSize?.length
-        @_resizeCanvas
+        @windowSize
           width: Math.floor entry.borderBoxSize[0].inlineSize
           height: Math.floor entry.borderBoxSize[0].blockSize
           
-    # Reactively resize to react to fixed size.
+    # Reactively resize the canvas.
     @autorun (computation) =>
-      @_resizeCanvas
-        width: $pixelCanvas.width()
-        height: $pixelCanvas.height()
+      @_resizeCanvas()
   
-    @_resizeObserver.observe canvas
+    @_resizeObserver.observe $pixelCanvas[0]
 
     # React to keys and global mouse events.
     $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event if @interface.active()
@@ -229,19 +231,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event if @interface.active()
     $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event if @interface.active()
     
-  _resizeCanvas: (newSize) ->
-    # Override size if we're using fixed canvas size.
-    if @fixedCanvasSize()
-      effectiveScale = @camera().effectiveScale()
-      bounds = @assetData()?.bounds
-  
-      newSize.width = (bounds?.width or 0) * effectiveScale
-      newSize.height = (bounds?.height or 0) * effectiveScale
-      
-      if @pixelGrid().enabled()
-        # Add 1px extra for outer grid.
-        newSize.width++
-        newSize.height++
+  _resizeCanvas: ->
+    camera = @camera()
+    newSize =
+      width: camera.canvasWindowBounds.width()
+      height:  camera.canvasWindowBounds.height()
     
     changedCanvasSize = false
     
@@ -251,8 +245,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     for key, value of newSize when canvas[key] isnt value
       canvas[key] = value
       changedCanvasSize = true
-  
-    @canvasPixelSize newSize
   
     # Redraw the image to prevent flickering since the reactive routine won't kick in until the next frame.
     @_redraw() if changedCanvasSize
