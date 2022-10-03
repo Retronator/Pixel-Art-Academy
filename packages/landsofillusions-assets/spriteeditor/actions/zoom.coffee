@@ -28,7 +28,7 @@ class LOI.Assets.SpriteEditor.Actions.ZoomIn extends Zoom
     percentage = @zoomPercentage()
 
     for zoomLevel in @zoomLevels()
-      if zoomLevel > percentage
+      if Math.round(zoomLevel) > Math.round(percentage)
         return zoomLevel
 
     null
@@ -43,7 +43,7 @@ class LOI.Assets.SpriteEditor.Actions.ZoomOut extends Zoom
     percentage = @zoomPercentage()
 
     for zoomLevel in @zoomLevels() by -1
-      if zoomLevel < percentage
+      if Math.round(zoomLevel) < Math.round(percentage)
         return zoomLevel
 
     null

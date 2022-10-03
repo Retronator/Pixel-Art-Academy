@@ -22,7 +22,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     super arguments...
     
     @focusedMode = new ReactiveField false
-    @canvasPositionOffset = new ReactiveField x: 0, y: 0
   
   onCreated: ->
     super arguments...
@@ -119,12 +118,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       actions = (actionId for actionId, toolKey of zoomActionRequirements when @toolIsAvailable toolKey)
 
       Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
-
-    # Reset canvas offset when entering the editor
-    @autorun (computation) =>
-      return unless @active()
-  
-      @canvasPositionOffset x: 0, y: 0
   
     # Invert UI colors for assets with dark backgrounds.
     @autorun (computation) =>
@@ -170,6 +163,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       else
         zoomLevels = [50, zoomLevels...]
 
+      # Extend zoom levels down to clipboard scale if necessary.
+      if displayedAsset = @displayedAsset()
+        if displayedAsset.clipboardComponent.isCreated()
+          if clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
+            minimumScale = clipboardAssetSize.scale * 100
+            while Math.round(minimumScale) < Math.round(zoomLevels[0])
+              zoomLevels.unshift zoomLevels[0] / 2
+        
       zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
       Tracker.nonreactive => zoomLevelsHelper zoomLevels
 
@@ -233,7 +234,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
   
     components =
       "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
-        displayMode: LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
       
     views = [

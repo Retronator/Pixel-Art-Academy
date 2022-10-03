@@ -17,6 +17,7 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
     
   _render: (renderOptions) ->
     return unless bitmapData = @options.asset()
+    return unless bitmapData instanceof LOI.Assets.Bitmap
 
     @_startRender bitmapData, renderOptions
     @_renderLayerGroup bitmapData, bitmapData, renderOptions

@@ -45,6 +45,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
         @pixelCoordinate null
 
   updateCoordinates: ->
+    $pixelCanvas = @pixelCanvas.$pixelCanvas()
     pixelCanvasPosition = $pixelCanvas.offset()
     displayScale = @pixelCanvas.display.scale()
     camera = @pixelCanvas.camera()

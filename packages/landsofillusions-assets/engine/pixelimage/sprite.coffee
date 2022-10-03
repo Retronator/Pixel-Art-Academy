@@ -28,6 +28,7 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
     
   _render: (renderOptions) ->
     return unless spriteData = @options.asset()
+    return unless spriteData instanceof LOI.Assets.Sprite
 
     # On the server we need to manually request pixel maps.
     spriteData.requirePixelMaps() if Meteor.isServer

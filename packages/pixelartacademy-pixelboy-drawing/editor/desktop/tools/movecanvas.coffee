@@ -22,7 +22,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
       $target = $(event.target)
 
       # Only activate when we're moving from the background or the canvas.
-      return unless $target.hasClass('background') or $target.closest('.canvas-area').length
+      return unless $target.hasClass('background') or $target.closest('.drawing-area').length
 
       @moving true
 
@@ -36,17 +36,20 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
         @moving false
 
       $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
-        scale = @display.scale()
-
         dragDelta =
-          x: (event.clientX - @_mousePosition.x) / scale
-          y: (event.clientY - @_mousePosition.y) / scale
+          x: event.clientX - @_mousePosition.x
+          y: event.clientY - @_mousePosition.y
 
         editor = @interface.getEditorForActiveFile()
-        offset = editor.desktop.canvasPositionOffset()
-        editor.desktop.canvasPositionOffset
-          x: offset.x + dragDelta.x
-          y: offset.y + dragDelta.y
+  
+        originDataField = editor.camera().originData()
+        origin = originDataField.value()
+  
+        scale = editor.camera().effectiveScale()
+
+        originDataField.value
+          x: origin.x - dragDelta.x / scale
+          y: origin.y - dragDelta.y / scale
 
         @_mousePosition =
           x: event.clientX

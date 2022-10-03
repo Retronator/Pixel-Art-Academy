@@ -38,7 +38,7 @@ class AE.Rectangle
     @x()
 
   right: (value) ->
-    @x value - @width if value?
+    @x value - @width() if value?
 
     @x() + @width()
 
@@ -109,11 +109,15 @@ class AE.Rectangle
     a.clone().union b
 
   union: (other) ->
-    @left Math.min @left(), other.left()
-    @right Math.max @right(), other.right()
-    @top Math.min @top(), other.top()
-    @bottom Math.max @bottom(), other.bottom()
-  
+    other = other.toObject()
+    
+    Tracker.nonreactive =>
+      @copy
+        left: Math.min @left(), other.left
+        top: Math.min @top(), other.top
+        right: Math.max @right(), other.right
+        bottom: Math.max @bottom(), other.bottom
+        
     # Return self to allow chaining.
     @
 
@@ -122,10 +126,14 @@ class AE.Rectangle
     a.clone().intersect b
   
   intersect: (other) ->
-    @left Math.max @left(), other.left()
-    @right Math.min @right(), other.right()
-    @top Math.max @top(), other.top()
-    @bottom Math.min @bottom(), other.bottom()
+    other = other.toObject()
+    
+    Tracker.nonreactive =>
+      @copy
+        left: Math.max @left(), other.left
+        top: Math.max @top(), other.top
+        right: Math.min @right(), other.right
+        bottom: Math.min @bottom(), other.bottom
     
     # Return self to allow chaining.
     @
@@ -139,11 +147,13 @@ class AE.Rectangle
     right ?= top
     bottom ?= top
     left ?= right
-
-    @left @left() - left
-    @right @right() + right
-    @top @top() - top
-    @bottom @bottom() + bottom
+  
+    Tracker.nonreactive =>
+      @copy
+        left: @left() - left
+        right: @right() + right
+        top: @top() - top
+        bottom: @bottom() + bottom
   
     # Return self to allow chaining.
     @

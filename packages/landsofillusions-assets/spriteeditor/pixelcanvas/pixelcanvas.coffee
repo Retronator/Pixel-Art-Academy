@@ -8,7 +8,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
   # scrollingEnabled: boolean whether you can scroll to pan and zoom
   # components: array of helper IDs that should be drawn to context
-  # fixedCanvasSize: boolean whether to automatically match the canvas size to the size of the asset
+  # displayMode: how to display the canvas relative to the pixel canvas
   #
   # EDITOR FILE DATA
   # camera:
@@ -26,6 +26,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   @DisplayModes =
     Framed: 'Framed'
     Filled: 'Filled'
+    Full: 'Full'
     
   @componentDataFields: -> [
     'initialCameraScale'
@@ -255,6 +256,27 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @_resizeObserver?.disconnect()
 
     $(document).off '.landsofillusions-assets-spriteeditor-pixelcanvas'
+  
+  drawingAreaStyle: ->
+    style = @camera().drawingAreaWindowBounds.toDimensions()
+    
+    # Position relative to the center for transitions to operate smoothly.
+    style.left = "calc(50% + #{style.left}px)"
+    style.top = "calc(50% + #{style.top}px)"
+    
+    style
+  
+  canvasStyle: ->
+    drawingAreaWindowBounds = @camera().drawingAreaWindowBounds.toDimensions()
+    canvasWindowBounds = @camera().canvasWindowBounds.toDimensions()
+    
+    # Express canvas position relative to the parent size for zooming transitions.
+    canvasWindowBounds.left = "#{canvasWindowBounds.left / drawingAreaWindowBounds.width * 100}%"
+    canvasWindowBounds.top = "#{canvasWindowBounds.top / drawingAreaWindowBounds.height * 100}%"
+    canvasWindowBounds.width = "#{canvasWindowBounds.width / drawingAreaWindowBounds.width * 100}%"
+    canvasWindowBounds.height = "#{canvasWindowBounds.height / drawingAreaWindowBounds.height * 100}%"
+    
+    canvasWindowBounds
 
   # Events
 

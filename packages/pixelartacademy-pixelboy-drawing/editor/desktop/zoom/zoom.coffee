@@ -27,7 +27,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Zoom extends FM.View
 
   zoomPercentageValue: ->
     return unless zoomPercentage = @zoomPercentage()
-    Math.round(zoomPercentage * 10) / 10
+    Math.round zoomPercentage
 
   zoomInPressedClass: ->
     'pressed' if @zoomInPressed()
