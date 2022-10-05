@@ -44,10 +44,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     return unless cursorArea.position
   
     pixelSize = 1 / effectiveScale
-    halfPixelSize = pixelSize / 2
-  
     context.lineWidth = pixelSize
-    context.translate halfPixelSize, halfPixelSize
 
     if scale > 4
       context.strokeStyle = 'rgb(50,50,50)'
@@ -82,5 +79,3 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     # if symmetryXOrigin?
     #   mirroredX = -cursorArea.position.x + 2 * symmetryXOrigin
     #   context.strokeRect mirroredX, cursorArea.position.y, 1, 1
-  
-    context.translate -halfPixelSize, -halfPixelSize

@@ -271,8 +271,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     canvasWindowBounds = @camera().canvasWindowBounds.toDimensions()
     
     # Express canvas position relative to the parent size for zooming transitions.
-    canvasWindowBounds.left = "#{canvasWindowBounds.left / drawingAreaWindowBounds.width * 100}%"
-    canvasWindowBounds.top = "#{canvasWindowBounds.top / drawingAreaWindowBounds.height * 100}%"
+    canvasWindowBounds.left = "#{(canvasWindowBounds.left - drawingAreaWindowBounds.left) / drawingAreaWindowBounds.width * 100}%"
+    canvasWindowBounds.top = "#{(canvasWindowBounds.top - drawingAreaWindowBounds.top) / drawingAreaWindowBounds.height * 100}%"
     canvasWindowBounds.width = "#{canvasWindowBounds.width / drawingAreaWindowBounds.width * 100}%"
     canvasWindowBounds.height = "#{canvasWindowBounds.height / drawingAreaWindowBounds.height * 100}%"
     

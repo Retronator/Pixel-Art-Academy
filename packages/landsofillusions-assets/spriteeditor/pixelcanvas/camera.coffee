@@ -32,12 +32,13 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     ,
       EJSON.equals
 
-    # Calculate various bounds.
-    @assetBounds = new AE.Rectangle()
-    @drawingAreaBounds = new AE.Rectangle()
-    @pixelCanvasBounds = new AE.Rectangle()
-    @renderableBounds = new AE.Rectangle()
-    @viewportBounds = new AE.Rectangle()
+    # Calculate various bounds. Canvas bounds are relative to the asset origin.
+    @assetCanvasBounds = new AE.Rectangle()
+    @drawingAreaCanvasBounds = new AE.Rectangle()
+    @renderableAreaCanvasBounds = new AE.Rectangle()
+    @viewportCanvasBounds = new AE.Rectangle()
+    
+    # Window bounds are relative to the center of the pixel canvas.
     @drawingAreaWindowBounds = new AE.Rectangle()
     @canvasWindowBounds = new AE.Rectangle()
 
@@ -45,53 +46,48 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       # Asset bounds are directly copied from the asset.
       return unless assetData = @pixelCanvas.assetData()
       
-      @assetBounds.copy assetData.bounds
+      @assetCanvasBounds.copy assetData.bounds
      
       # Calculate drawing area bounds in canvas coordinates.
       displayMode = @pixelCanvas.displayMode()
       
       if assetData.bounds.fixed or displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         # When the asset bounds are fixed, or if we're drawing the full canvas, the drawing area matches it directly.
-        @drawingAreaBounds.copy assetData.bounds
+        @drawingAreaCanvasBounds.copy assetData.bounds
       
       else if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed
         # When the asset bounds are freeform and we need to frame the drawing, we make the drawing area 50% bigger than the existing asset bounds.
         verticalFreeformBorder = (assetData.bounds?.width or 128) * 0.25
         horizontalFreeformBorder = (assetData.bounds?.height or 128) * 0.25
         
-        @drawingAreaBounds.copy(assetData.bounds).extrude verticalFreeformBorder, horizontalFreeformBorder
+        @drawingAreaCanvasBounds.copy(assetData.bounds).extrude verticalFreeformBorder, horizontalFreeformBorder
         
       else
         # Without the frame, the drawing area extends into infinity.
-        @drawingAreaBounds.left Number.NEGATIVE_INFINITY
-        @drawingAreaBounds.top Number.NEGATIVE_INFINITY
-        @drawingAreaBounds.right Number.POSITIVE_INFINITY
-        @drawingAreaBounds.bottom Number.POSITIVE_INFINITY
+        @drawingAreaCanvasBounds.left Number.NEGATIVE_INFINITY
+        @drawingAreaCanvasBounds.top Number.NEGATIVE_INFINITY
+        @drawingAreaCanvasBounds.right Number.POSITIVE_INFINITY
+        @drawingAreaCanvasBounds.bottom Number.POSITIVE_INFINITY
         
       if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         # When the full canvas is rendered, pixel canvas is assumed to fully cover it.
-        @pixelCanvasBounds.copy assetData.bounds
-        @renderableBounds.copy assetData.bounds
+        @renderableAreaCanvasBounds.copy assetData.bounds
       
       else
-        # Calculate the size of the parent pixel canvas in canvas coordinates.
+        # Renderable area is twice the pixel canvas to prevent the canvas being cut-off during transitions.
         pixelCanvasWindowSize = @pixelCanvas.windowSize()
         effectiveScale = @effectiveScale()
         width = pixelCanvasWindowSize.width / effectiveScale
         height = pixelCanvasWindowSize.height / effectiveScale
         origin = @origin()
-      
-        @pixelCanvasBounds.width width
-        @pixelCanvasBounds.height height
-        @pixelCanvasBounds.x origin.x - width / 2
-        @pixelCanvasBounds.y origin.y - height / 2
     
-        # Renderable bounds need to overextend the pixel canvas area to prevent the canvas being cut-off during transitions.
-        extrudeScale = 0.5
-        @renderableBounds.copy(@pixelCanvasBounds).extrude width * extrudeScale, height * extrudeScale
+        @renderableAreaCanvasBounds.width width * 2
+        @renderableAreaCanvasBounds.height height * 2
+        @renderableAreaCanvasBounds.x origin.x - width
+        @renderableAreaCanvasBounds.y origin.y - height
 
       # Viewport bounds are the intersection of the pixel canvas bounds and the drawing area bounds.
-      @viewportBounds.copy(@renderableBounds).intersect @drawingAreaBounds
+      @viewportCanvasBounds.copy(@renderableAreaCanvasBounds).intersect @drawingAreaCanvasBounds
     
       if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         effectiveScale = @effectiveScale()
@@ -104,8 +100,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         
       else
         # Calculate the bounds of the drawing area in window coordinates relative to the pixel canvas center.
-        drawingAreaTopLeft = @transformCanvasToWindowCenter x: @drawingAreaBounds.left(), y: @drawingAreaBounds.top()
-        drawingAreaBottomRight = @transformCanvasToWindowCenter x: @drawingAreaBounds.right(), y: @drawingAreaBounds.bottom()
+        drawingAreaTopLeft = @transformCanvasToWindowCenter x: @drawingAreaCanvasBounds.left(), y: @drawingAreaCanvasBounds.top()
+        drawingAreaBottomRight = @transformCanvasToWindowCenter x: @drawingAreaCanvasBounds.right(), y: @drawingAreaCanvasBounds.bottom()
         
         @drawingAreaWindowBounds.copy
           left: drawingAreaTopLeft.x
@@ -114,15 +110,15 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
           bottom: drawingAreaBottomRight.y
     
         # Calculate the bounds of the canvas in window coordinates relative to the drawing area top left corner.
-        canvasTopLeft = @transformCanvasToWindowCenter x: @viewportBounds.left(), y: @viewportBounds.top()
-        canvasBottomRight = @transformCanvasToWindowCenter x: @viewportBounds.right(), y: @viewportBounds.bottom()
+        canvasTopLeft = @transformCanvasToWindowCenter x: @viewportCanvasBounds.left(), y: @viewportCanvasBounds.top()
+        canvasBottomRight = @transformCanvasToWindowCenter x: @viewportCanvasBounds.right(), y: @viewportCanvasBounds.bottom()
 
         # Fit the transformed coordinates and add extra padding to the size for the outer grid line.
         @canvasWindowBounds.copy
-          left: canvasTopLeft.x - drawingAreaTopLeft.x
-          top: canvasTopLeft.y - drawingAreaTopLeft.y
-          right: canvasBottomRight.x - drawingAreaTopLeft.x + 2
-          bottom: canvasBottomRight.y - drawingAreaTopLeft.y + 2
+          left: canvasTopLeft.x
+          top: canvasTopLeft.y
+          width: Math.floor(canvasBottomRight.x) - Math.floor(canvasTopLeft.x) + 1
+          height: Math.floor(canvasBottomRight.y) - Math.floor(canvasTopLeft.y) + 1
           
     # Enable panning with scrolling.
     @pixelCanvas.autorun (computation) =>
@@ -208,10 +204,20 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     context.scale effectiveScale, effectiveScale
 
     # Move to viewport corner.
-    translateX = Math.floor(@viewportBounds.x() * effectiveScale) / effectiveScale
-    translateY = Math.floor(@viewportBounds.y() * effectiveScale) / effectiveScale
+    translateX = @viewportCanvasBounds.x()
+    translateY = @viewportCanvasBounds.y()
     context.translate -translateX, -translateY
 
+  transformCanvasToWindowCenter: (canvasCoordinate) ->
+    effectiveScale = @effectiveScale()
+    origin = @origin()
+  
+    x = canvasCoordinate.x
+    y = canvasCoordinate.y
+  
+    x: (x - origin.x) * effectiveScale
+    y: (y - origin.y) * effectiveScale
+    
   transformCanvasToWindow: (canvasCoordinate) ->
     windowCoordinateCenter = @transformCanvasToWindowCenter canvasCoordinate
   
@@ -223,16 +229,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     windowCoordinateCenter.y += height / 2
   
     windowCoordinateCenter
-  
-  transformCanvasToWindowCenter: (canvasCoordinate) ->
-    effectiveScale = @effectiveScale()
-    origin = @origin()
-  
-    x = canvasCoordinate.x
-    y = canvasCoordinate.y
-  
-    x: (x - origin.x) * effectiveScale
-    y: (y - origin.y) * effectiveScale
 
   transformCanvasToDisplay: (canvasCoordinate) ->
     windowCoordinate = @transformCanvasToWindow canvasCoordinate
@@ -243,16 +239,21 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
 
   transformWindowToCanvas: (windowCoordinate) ->
     pixelCanvasWindowSize = @pixelCanvas.windowSize()
+
+    x = windowCoordinate.x - pixelCanvasWindowSize.width / 2
+    y = windowCoordinate.y - pixelCanvasWindowSize.height / 2
+    
+    @transformWindowCenterToCanvas {x, y}
+  
+  transformWindowCenterToCanvas: (windowCoordinate) ->
     effectiveScale = @effectiveScale()
     origin = @origin()
-
+    
     x = windowCoordinate.x
     y = windowCoordinate.y
-    width = pixelCanvasWindowSize.width
-    height = pixelCanvasWindowSize.height
-
-    x: (x - width / 2) / effectiveScale + origin.x
-    y: (y - height / 2) / effectiveScale + origin.y
+    
+    x: x / effectiveScale + origin.x
+    y: y / effectiveScale + origin.y
 
   transformDisplayToCanvas: (displayCoordinate) ->
     displayScale = @pixelCanvas.display.scale()
@@ -264,9 +265,20 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     @transformWindowToCanvas windowCoordinate
 
   roundCanvasToWindowPixel: (canvasCoordinate) ->
-    windowCoordinate = @transformCanvasToWindow canvasCoordinate
-    pixelPerfectWindowCoordinate =
-      x: Math.floor(windowCoordinate.x) + 0.5
-      y: Math.floor(windowCoordinate.y) + 0.5
+    windowCoordinate = @transformCanvasToWindowCenter canvasCoordinate
+    
+    # Transform to corner of the canvas.
+    canvasX = @canvasWindowBounds.x()
+    canvasY = @canvasWindowBounds.y()
+    windowCoordinate.x -= canvasX
+    windowCoordinate.y -= canvasY
+    
+    # Move to the center of the pixel.
+    windowCoordinate.x = Math.floor(windowCoordinate.x) + 0.5
+    windowCoordinate.y = Math.floor(windowCoordinate.y) + 0.5
+    
+    # Transform back to window center.
+    windowCoordinate.x += canvasX
+    windowCoordinate.y += canvasY
 
-    @transformWindowToCanvas pixelPerfectWindowCoordinate
+    @transformWindowCenterToCanvas windowCoordinate

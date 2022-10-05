@@ -25,7 +25,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
 
     scale = camera.scale()
     effectiveScale = camera.effectiveScale()
-    viewportBounds = camera.viewportBounds
+    viewportBounds = camera.viewportCanvasBounds
 
     # Determine grid opacity (scale < 2: 0, scale > 32: 0.3)
     gridOpacity = (scale - 2) / 100
@@ -40,10 +40,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
       context.strokeStyle = "rgba(25,25,25,#{gridOpacity * 2})"
   
     pixelSize = 1 / effectiveScale
-    halfPixelSize = pixelSize / 2
-    
     context.lineWidth = pixelSize
-    context.translate halfPixelSize, halfPixelSize
     context.beginPath()
 
     gridBounds =
@@ -63,4 +60,3 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
       context.lineTo pixelPerfectCoordinate.x, gridBounds.bottom
   
     context.stroke()
-    context.translate -halfPixelSize, -halfPixelSize
