@@ -74,7 +74,7 @@ class AM.Document extends Document
     # Retrieve the document class from the map.
     @_documentClassesByType[typeName]
 
-    # Returns all registered type names.
+  # Returns all registered type names.
   @getTypes: ->
     _.keys @_documentClassesByType
     

@@ -119,15 +119,17 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
               scale: => @_assetScale asset
   
         # New artworks can be created if the player can edit art with built-in editors.
-        if PAA.PixelBoy.Apps.Drawing.canEdit()
+        # TODO: Enable ability to create artworks.
+        if false # PAA.PixelBoy.Apps.Drawing.canEdit()
           assets.push
             _id: @_newArtworkAsset.urlParameter()
             index: assets.length
             asset: @_newArtworkAsset
             scale: => 1
   
-        # Artworks can be imported if the player can upload art made with external software.
-        if PAA.PixelBoy.Apps.Drawing.canUpload()
+        # Artworks can be imported if the player can edit or upload art made with external software.
+        # TODO: Enable ability to import artworks.
+        if false # PAA.PixelBoy.Apps.Drawing.canEdit() or PAA.PixelBoy.Apps.Drawing.canUpload()
           assets.push
             _id: @_importArtworkAsset.urlParameter()
             index: assets.length

@@ -21,13 +21,13 @@ class LOI.Memory.Action extends AM.Document
   # isMemorable: boolean weather this action is being memorized even without a memory
   # content: extra information defining what was done in this action, specified in inherited actions
 
-  # Override register to do action initialization as well.
-  @register: ->
+  # Override register type to do action initialization as well.
+  @registerType: ->
     super arguments...
 
     translationNamespace = @type
 
-    # On the server, create this avatar's translated names.
+    # On the server, create this action's translations.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty
