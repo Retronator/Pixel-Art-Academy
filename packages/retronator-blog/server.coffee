@@ -75,9 +75,12 @@ Document.startup ->
     minute: 20
 
   # Update featured website previews once per day.
+  # TODO: Re-enable when website rendering works on the new linux server.
+  ###
   new Cron =>
     console.log "Updating featured website previews."
     Retronator.Blog.updateFeaturedWebsitePreviews()
   ,
     hour: 2
     minute: 0
+  ###
