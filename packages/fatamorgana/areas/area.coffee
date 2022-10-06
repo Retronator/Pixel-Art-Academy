@@ -2,9 +2,12 @@ AM = Artificial.Mirage
 FM = FataMorgana
 
 class FM.Area extends AM.Component
+  @id: -> 'FataMorgana.Area'
+  @register @id()
+  
   @dimensionProperties: ['left', 'right', 'top', 'bottom', 'width', 'height', 'minWidth', 'minHeight']
 
-  template: -> 'FataMorgana.Area'
+  template: -> @constructor.id()
 
   onCreated: ->
     super arguments...
@@ -17,7 +20,7 @@ class FM.Area extends AM.Component
     @contentComponentData = new ComputedField => @data().get 'contentComponentData'
 
   areaClass: -> # Override to set a styling class for this area.
-    
+  
   childComponentOverridesSize: ->
     return unless childComponent = @childComponents()[0]
     childComponent?.overrideAreaSize?()

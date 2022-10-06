@@ -9,7 +9,7 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
   #   say: character says something
   #     text: the text being said
   @type: 'LandsOfIllusions.Memory.Actions.Say'
-  @register @type, @
+  @registerType @type, @
 
   @registerContentPattern @type,
     say:

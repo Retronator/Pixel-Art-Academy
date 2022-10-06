@@ -87,7 +87,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     $ui.css uiSize.toDimensions()
 
     # Background adds an extra line border around the UI
-    uiBackgroundSize = uiSize.extrude lineHeight
+    uiBackgroundSize = AE.Rectangle.extrude uiSize, lineHeight
     $uiBackground.css(uiBackgroundSize.toDimensions())
 
     $ui.find('.text-display').css(textDisplaySize.toDimensions()).height('100%')

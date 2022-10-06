@@ -15,7 +15,7 @@ class FM.Tool extends FM.Operator
       rightButton: false
       
   isActive: ->
-    @interface.activeToolId() is @id()
+    @interface.active() and @interface.activeToolId() is @id()
 
   onKeyDown: (event) ->
     # Override to handle key presses.

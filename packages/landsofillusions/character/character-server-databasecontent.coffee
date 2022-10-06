@@ -10,14 +10,14 @@ class LOI.Character extends LOI.Character
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer) ->
+  @deserializeDatabaseContent: (arrayBuffer) ->
     imageData = PNG.decode arrayBuffer
     AM.EmbeddedImageData.extract imageData
 
   databaseContentPath: ->
     "landsofillusions/character/#{@debugName}"
 
-  exportDatabaseContent: ->
+  getDatabaseContent: ->
     # Add last edit time if needed so that documents don't need unnecessary imports.
     @lastEditTime ?= new Date()
 

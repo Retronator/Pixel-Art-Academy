@@ -193,11 +193,15 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     # Register that the stroke has just started.
     @_strokeStarted = true
 
+    @_strokeActive = true
+
     # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @processStroke()
 
   onMouseUp: (event) ->
     super arguments...
+
+    return unless @_strokeActive
 
     # End stroke.
     @lastStrokeCoordinates null
@@ -206,6 +210,11 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @drawStraight false
 
     @updatePixels()
+
+    assetData = @editor().assetData()
+    @endStroke assetData
+
+    @_strokeActive = false
 
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
@@ -314,10 +323,10 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   applyTool: ->
     return unless @mouseState.leftButton
 
-    spriteData = @editor().spriteData()
+    assetData = @editor().assetData()
 
     layerIndex = @paintHelper.layerIndex()
-    layer = spriteData.layers?[layerIndex]
+    layer = assetData.layers?[layerIndex]
 
     layerOrigin =
       x: layer?.origin?.x or 0
@@ -328,8 +337,8 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     for absolutePixel in absolutePixels
       # If we have fixed bounds, make sure we're inside.
-      if spriteData.bounds?.fixed
-        continue unless spriteData.bounds.left <= absolutePixel.x <= spriteData.bounds.right and spriteData.bounds.top <= absolutePixel.y <= spriteData.bounds.bottom
+      if assetData.bounds?.fixed
+        continue unless assetData.bounds.left <= absolutePixel.x <= assetData.bounds.right and assetData.bounds.top <= absolutePixel.y <= assetData.bounds.bottom
 
       # Pixel must be in relative coordinates.
       relativePixel = _.clone absolutePixel
@@ -338,7 +347,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         
       relativePixels.push relativePixel
 
-    @applyPixels spriteData, layerIndex, relativePixels, @_strokeStarted
+    @applyPixels assetData, layerIndex, relativePixels, @_strokeStarted
 
     # Save start of current stroke segment to allow smoothing.
     @secondToLastStrokeCoordinates @lastStrokeCoordinates()
@@ -351,5 +360,8 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   startOfStrokeProcessed: ->
     @_strokeStarted = false
 
-  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
-    # Override to call a method that will send the operation on the server.
+  applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
+    # Override to process new pixels being added to the stroke.
+
+  endStroke: (assetData) ->
+    # Override to process the end of the stroke.

@@ -20,7 +20,7 @@ class FM.Operator
     @_operatorClassesById[id]
 
   @initialize: ->
-    # Store action class by ID.
+    # Store operator class by ID.
     @_operatorClassesById[@id()] = @
     
   constructor: (@interface, @fileId) ->

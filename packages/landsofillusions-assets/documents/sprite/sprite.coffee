@@ -111,7 +111,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       layer._pixelMap[pixel.x][pixel.y] = pixel
 
   # Pixel retrieval
-        
+  
   getPixelForLayerAtCoordinates: (layerIndex, x, y) ->
     @layers?[layerIndex]?._pixelMap?[x]?[y]
   
@@ -177,7 +177,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     true
     
   # History operations
-    
+  
   _applyOperation: (forward, backward) ->
     @_modifyBoundsBeforeApply arguments...
     super arguments...
@@ -232,8 +232,8 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     saveData
 
   getPreviewImage: ->
-    engineSprite = new LOI.Assets.Engine.Sprite
-      spriteData: => @
+    engineSprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: => @
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1

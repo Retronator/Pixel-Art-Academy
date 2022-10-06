@@ -13,20 +13,18 @@ class AE.Rectangle
         height = object.height()
 
       else
-        {x, y, width, height} = @constructor._fromDimensions object
+        {x, y, width, height} = @constructor._normalizeDimensions object
 
     @x = new ReactiveField x or 0
     @y = new ReactiveField y or 0
     @width = new ReactiveField width or 0
     @height = new ReactiveField height or 0
 
-  # Construct a Rectangle object with a pair of any two of [left, right, width] and any two of [top, bottom, height].
-  @fromDimensions: (dimensions) ->
-    new AE.Rectangle @_fromDimensions dimensions
-
-  @_fromDimensions: (dimensions) ->
+  # Calculates x, y, width, height with a pair of any two of [left, right, width] and any two of [top, bottom, height].
+  @_normalizeDimensions: (dimensions) ->
     left = dimensions.x ? dimensions.left
     top = dimensions.y ? dimensions.top
+    
     x: left ? dimensions.right - dimensions.width
     y: top ? dimensions.bottom - dimensions.height
     width: dimensions.width ? dimensions.right - dimensions.left
@@ -40,7 +38,7 @@ class AE.Rectangle
     @x()
 
   right: (value) ->
-    @x value - @width if value?
+    @x value - @width() if value?
 
     @x() + @width()
 
@@ -76,32 +74,89 @@ class AE.Rectangle
     top: @top()
     width: @width()
     height: @height()
+  
+  set: (x, y, width, height) ->
+    @x x
+    @y y
+    @width width
+    @height height
+  
+    # Return self to allow chaining.
+    @
+    
+  copy: (object) ->
+    if object instanceof AE.Rectangle
+      x = object.x()
+      y = object.y()
+      width = object.width()
+      height = object.height()
+      
+    else if object.x? and object.y? and object.width? and object.height?
+      {x, y, width, height} = object
+      
+    else
+      {x, y, width, height} = @constructor._normalizeDimensions object
+
+    @set x, y, width, height
+  
+    # Return self to allow chaining.
+    @
 
   ### Operations ###
 
-  # Returns the minimum rectangle that contains both rectangles
+  # Returns the minimum rectangle that contains both rectangles.
   @union: (a, b) ->
-    AE.Rectangle.fromDimensions
-      left: Math.min a.left(), b.left()
-      right: Math.max a.right(), b.right()
-      top: Math.min a.top(), b.top()
-      bottom: Math.max a.bottom(), b.bottom()
+    a.clone().union b
 
   union: (other) ->
-    @constructor.union @, other
+    other = other.toObject()
+    
+    Tracker.nonreactive =>
+      @copy
+        left: Math.min @left(), other.left
+        top: Math.min @top(), other.top
+        right: Math.max @right(), other.right
+        bottom: Math.max @bottom(), other.bottom
+        
+    # Return self to allow chaining.
+    @
 
+  # Returns the maximum rectangle that is contained within both rectangles.
+  @intersect: (a, b) ->
+    a.clone().intersect b
+  
+  intersect: (other) ->
+    other = other.toObject()
+    
+    Tracker.nonreactive =>
+      @copy
+        left: Math.max @left(), other.left
+        top: Math.max @top(), other.top
+        right: Math.min @right(), other.right
+        bottom: Math.min @bottom(), other.bottom
+    
+    # Return self to allow chaining.
+    @
+    
   # Returns a rectangle with given offsets added to the sides of this rectangle.
   # 1 to 4 parameters can be used in the same manner as providing margins in CSS.
+  @extrude: (rectangle, top, right, bottom, left) ->
+    rectangle.clone().extrude top, right, bottom, left
+    
   extrude: (top, right, bottom, left) ->
     right ?= top
     bottom ?= top
     left ?= right
-
-    AE.Rectangle.fromDimensions
-      left: @left() - left
-      right: @right() + right
-      top: @top() - top
-      bottom: @bottom() + bottom
+  
+    Tracker.nonreactive =>
+      @copy
+        left: @left() - left
+        right: @right() + right
+        top: @top() - top
+        bottom: @bottom() + bottom
+  
+    # Return self to allow chaining.
+    @
 
   # Utility
 

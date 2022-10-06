@@ -12,6 +12,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   @defaultInterfaceData: ->
     # Operators
 
+    active = true
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
 
     # Content Components
@@ -30,6 +31,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
+        scrollingEnabled: true
         components: [
           LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
         ]
@@ -182,7 +184,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         mapping: @defaultShortcutsMapping()
 
     # Return combined interface data.
-    {activeToolId, components, layouts, shortcuts}
+    {active, activeToolId, components, layouts, shortcuts}
 
   @defaultShortcutsMapping: ->
     _.extend super(arguments...),

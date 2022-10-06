@@ -101,6 +101,7 @@ peerlibrary:directcollection@0.9.0
 peerlibrary:extend-publish@0.6.0
 peerlibrary:fiber-utils@0.10.0
 peerlibrary:peerdb@0.27.0
+peerlibrary:peerdb-migrations@1.1.1
 peerlibrary:reactive-field@0.6.0
 peerlibrary:reactive-mongo@0.4.0
 peerlibrary:reactive-publish@0.10.0
@@ -127,7 +128,6 @@ retronator:landsofillusions-assets@0.0.1
 retronator:landsofillusions-construct@0.0.1
 retronator:landsofillusions-items@0.1.0
 retronator:landsofillusions-world@0.1.0
-retronator:peerdb-migrations@1.1.0
 retronator:pixelartacademy@0.2.0
 retronator:pixelartacademy-actors@0.1.0
 retronator:pixelartacademy-items@0.1.0

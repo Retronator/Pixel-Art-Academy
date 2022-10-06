@@ -79,6 +79,8 @@ Package.onUse(function(api) {
   api.addFile('project/asset');
 
   api.addFile('project/assets/sprite..');
+  api.addComponent('project/assets/sprite/portfoliocomponent..');
+  api.addComponent('project/assets/sprite/clipboardcomponent..');
   api.addUnstyledComponent('project/assets/sprite/briefcomponent..');
 
   // Challenges
@@ -97,4 +99,8 @@ Package.onUse(function(api) {
   // Software
   api.addFile('software..');
   api.addFile('software/tools');
+
+  // Artworks
+  api.addFile('artworks..');
+  api.addFile('artworks/methods');
 });

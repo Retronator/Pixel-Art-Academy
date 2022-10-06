@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 
-class AM.Render extends BlazeComponent
+class AM.Render extends AM.Component
   @register 'Render'
 
   renderContext: ->
@@ -12,15 +12,7 @@ class AM.Render extends BlazeComponent
     # an error of its own). However, we make sure that we're actually trying to include it in the same parent component.
     # This way we can avoid problems when components are rendered inside #foreach calls.
     if component._blazeTemplate and not component.isDestroyed()
-      if component.isRendered() and (component.parentComponent() isnt @)
-        console.error "Render component error for", component, "and it is created", component.isCreated(), "rendered", component.isRendered(), "destroyed", component.isDestroyed()
-        console.error "The parent chain is:"
-        console.error component while component = component.parentComponent()
-        console.error "New parent chain tries to be:"
-        newComponent = @
-        console.error newComponent while newComponent = newComponent.parentComponent()
-
-        throw new AE.InvalidOperationException "We're trying to include a rendered component that we're not a parent of."
+      return null if component.isRendered() and (component.parentComponent() isnt @)
 
       return component._blazeTemplate
 

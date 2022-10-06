@@ -16,17 +16,27 @@
                   <ul class="briefs">
                     {{#each assets}}
                       <li class="brief {{assetHoveredClass}} {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
-                        <div class="asset-name">{{> t10e asset.displayNameTranslation}}</div>
-                        <div class="description">{{> t10e asset.descriptionTranslation}}</div>
+                        <div class="asset-name">
+                          {{#if asset.displayNameTranslation}}
+                            {{> t10e asset.displayNameTranslation}}
+                          {{else}}
+                            {{asset.displayName}}
+                          {{/if}}
+                        </div>
+                        <div class="description">
+                          {{#if asset.descriptionTranslation}}
+                            {{> t10e asset.descriptionTranslation}}
+                          {{else}}
+                            {{asset.description}}
+                          {{/if}}
+                        </div>
                       </li>
                     {{/each}}
                   </ul>
                   <ul class="assets">
                     {{#each assets}}
                       <li class="asset {{assetActiveClass}} {{asset.styleClasses}}" {{style assetStyle}}>
-                        <div class="sprite" {{style spriteStyle}}>
-                          {{> Render spriteImage}}
-                        </div>
+                        {{> Render asset.portfolioComponent}}
                       </li>
                     {{/each}}
                   </ul>

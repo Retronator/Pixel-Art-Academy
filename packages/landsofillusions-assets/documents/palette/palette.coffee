@@ -15,6 +15,7 @@ class LOI.Assets.Palette extends AM.Document
     name: @id()
 
   @all: @subscription 'all'
+  @allLospec: @subscription 'allLospec'
   @forId: @subscription 'forId'
   @forName: @subscription 'forName'
   

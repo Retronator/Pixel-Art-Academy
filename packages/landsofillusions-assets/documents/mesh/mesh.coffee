@@ -256,10 +256,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
       continue unless bounds
 
-      boundsRectangle = AE.Rectangle.fromDimensions bounds
+      boundsRectangle = new AE.Rectangle bounds
 
       if spriteBounds
-        spriteBounds = spriteBounds.union boundsRectangle
+        spriteBounds = AE.Rectangle.union spriteBounds, boundsRectangle
 
       else
         spriteBounds = boundsRectangle
@@ -301,8 +301,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
       LOI.Assets.Mesh.documents.findOne @_id
 
   getPreviewImage: ->
-    engineSprite = new LOI.Assets.Engine.Sprite
-      spriteData: => @getPreviewSprite()
+    engineSprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: => @getPreviewSprite()
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1

@@ -11,7 +11,7 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer, documentInformation) ->
+  @deserializeDatabaseContent: (arrayBuffer, documentInformation) ->
     if _.endsWith documentInformation.path, 'png'
       imageData = PNG.decode arrayBuffer
       AM.EmbeddedImageData.extract imageData
@@ -41,7 +41,7 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
 
     "landsofillusions/character/part/template/#{path}/#{name}"
 
-  exportDatabaseContent: ->
+  getDatabaseContent: ->
     # Add last edit time if needed so that documents don't need unnecessary imports.
     @lastEditTime ?= new Date()
 

@@ -1,0 +1,52 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-desktop-zoom
+  position absolute
+  bottom -62rem
+  left -78rem
+  width 85rem
+  height 62rem
+  z-index 3
+  background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/calculator.png')
+  box-shadow 1rem 3rem 0 transparentify(atariOrange(4), atariOrange(5))
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    bottom 0
+    left -29rem
+
+  .zoom-display
+    retrotype()
+    position absolute
+    right 15rem
+    top 12rem
+    color atariAqua(0)
+
+    .zoom-percentage-input
+      width 50rem
+      text-align right
+      padding 0
+      border none
+      background transparent
+
+  .zoom-button
+    position absolute
+    top 43rem
+    width 17rem
+    height 11rem
+    border none
+    background image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/calculator-button.png') center center / 13rem 9rem no-repeat
+    acme-5()
+    padding 0 0 1rem 1rem
+    line-height 9rem
+    color atariGray(5)
+
+    &:active
+    &.pressed
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/calculator-button-pressed.png')
+      color atariGray(4)
+
+    &.zoom-in-button
+      right 7rem
+
+    &.zoom-out-button
+      right 25rem

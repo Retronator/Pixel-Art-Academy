@@ -3,25 +3,26 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LOI.Assets.Components.Tools.Tool
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas'
+  @displayName: -> "Move canvas"
+  
+  @initialize()
+  
   constructor: ->
     super arguments...
 
-    @name = "Move canvas"
-    @shortcut = AC.Keys.h
-    @holdShortcut = AC.Keys.space
-
     @moving = new ReactiveField false
 
-    @display = @options.editor().callAncestorWith 'display'
+    @display = @interface.callAncestorWith 'display'
 
   onActivated: ->
     # Listen for mouse down.
     $(document).on "mousedown.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move", (event) =>
       $target = $(event.target)
 
-      # Only activate when we're moving from the sprite or the background.
-      return unless $target.hasClass('background') or $target.closest('.sprite').length
+      # Only activate when we're moving from the background or the canvas.
+      return unless $target.hasClass('background') or $target.closest('.drawing-area').length
 
       @moving true
 
@@ -35,17 +36,20 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LOI.Asse
         @moving false
 
       $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
-        scale = @display.scale()
-
         dragDelta =
-          x: (event.clientX - @_mousePosition.x) / scale
-          y: (event.clientY - @_mousePosition.y) / scale
+          x: event.clientX - @_mousePosition.x
+          y: event.clientY - @_mousePosition.y
 
-        editor = @options.editor()
-        offset = editor.spritePositionOffset()
-        editor.spritePositionOffset
-          x: offset.x + dragDelta.x
-          y: offset.y + dragDelta.y
+        editor = @interface.getEditorForActiveFile()
+  
+        originDataField = editor.camera().originData()
+        origin = originDataField.value()
+  
+        scale = editor.camera().effectiveScale()
+
+        originDataField.value
+          x: origin.x - dragDelta.x / scale
+          y: origin.y - dragDelta.y / scale
 
         @_mousePosition =
           x: event.clientX

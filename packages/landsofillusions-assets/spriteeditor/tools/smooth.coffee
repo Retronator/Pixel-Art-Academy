@@ -13,9 +13,9 @@ class LOI.Assets.SpriteEditor.Tools.Smooth extends LOI.Assets.SpriteEditor.Tools
       pixel = _.clone coordinate
       pixel
 
-  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
+  applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
     smoothAmount = 0.2
-    LOI.Assets.Sprite.smoothPixels spriteData._id, layerIndex, relativePixels, smoothAmount, not strokeStarted
+    LOI.Assets.Sprite.smoothPixels assetData._id, layerIndex, relativePixels, smoothAmount, not strokeStarted
 
     # Register that we've processed the start of the stroke.
     @startOfStrokeProcessed()

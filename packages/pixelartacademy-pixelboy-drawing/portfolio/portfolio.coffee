@@ -4,7 +4,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
+class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio'
   
   @Sections:
@@ -13,6 +13,9 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     Artworks: 'Artworks'
     Settings: 'Settings'
 
+  # Subscriptions
+  @artworksWithAssets = new AB.Subscription name: "#{@id()}.artworks"
+  
   constructor: (@drawing) ->
     super arguments...
 
@@ -80,43 +83,37 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     zIndex = group.assets().length - assetData.index
 
     zIndex: zIndex
-    width: "#{assetData.asset.width() *  assetData.scale() + 12}rem"
-
-  spriteStyle: ->
-    assetData = @currentData()
-    scale = assetData.scale()
-
-    style =
-      width: "#{assetData.asset.width() * scale}rem"
-      height: "#{assetData.asset.height() * scale}rem"
-
-    if backgroundColor = assetData.asset.backgroundColor()
-      style.backgroundColor = "##{backgroundColor.getHexString()}"
-      style.borderColor = style.backgroundColor
-
-    style
+    width: "#{assetData.asset.width() * assetData.scale() + 12}rem"
 
   _assetScale: (asset) ->
-    # Scale the sprite as much as possible (up to 7) while remaining under 84px.
+    # Scale the sprite as much as possible (up to 6) while remaining under 84px.
+    size = Math.max asset.width(), asset.height()
+    return 1 if _.isNaN size
+    
     scale = 1
-    maxSize = Math.max asset.width(), asset.height()
+    maxSize = 84
 
-    if maxSize > 84
-      # Scale downwards while interpreting scale as the denominator.
-      scale++ while maxSize / scale > 84
-      return 1 / scale
+    if size > maxSize
+      # The asset is bigger than our maximum size, so we will need to scale downwards. We start
+      # operating in effective scale to still have integer magnification compared to window pixels.
+      displayScale = LOI.adventure.interface.display.scale()
+      maxEffectiveSize = maxSize * displayScale
+      
+      effectiveScale = displayScale
+      effectiveScale-- while size * effectiveScale > maxEffectiveSize
+    
+      return effectiveScale / displayScale if effectiveScale > 0
+      
+      # We need to reduce scale below 1 effective pixel so we start dividing by integer amounts below 1.
+      divisor = 1
+      divisor++ while size / divisor > maxEffectiveSize
+      
+      effectiveScale = 1 / divisor
+      return effectiveScale / displayScale
 
-    scale++ while scale < 6 and (scale + 1) * maxSize < 84
+    scale++ while scale < 6 and (scale + 1) * size < 84
 
     scale
-
-  spriteImage: ->
-    assetData = @currentData()
-    return unless spriteId = assetData.asset.spriteId()
-
-    new LOI.Assets.Components.SpriteImage
-      spriteId: => spriteId
-      loadPalette: true
 
   coverStyle: ->
     sections = @sections()
@@ -232,7 +229,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     assetData = @currentData()
 
     # Set active sprite ID.
-    AB.Router.setParameter 'parameter3', assetData.asset.spriteId()
+    AB.Router.setParameter 'parameter3', assetData.asset.urlParameter()
 
   onClickPixelBoyEditor: (event) ->
     editor = @currentData()

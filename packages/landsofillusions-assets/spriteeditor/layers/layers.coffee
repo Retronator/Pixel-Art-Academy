@@ -9,12 +9,12 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
   onCreated: ->
     super arguments...
 
-    @sprite = new ComputedField =>
-      @interface.getEditorForActiveFile()?.spriteData()
+    @asset = new ComputedField =>
+      @interface.getEditorForActiveFile()?.assetData()
     
     @layers = new ComputedField =>
-      return unless sprite = @sprite()
-      layers = _.clone sprite.layers or []
+      return unless asset = @asset()
+      layers = _.clone asset.layers or []
 
       # Attach layer index to layer.
       for layer, index in layers when layer
@@ -45,25 +45,25 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
 
   layerThumbnail: ->
     layer = @currentData()
-    return unless sprite = _.clone @sprite()
-    return unless sprite.layers?[layer.index]
+    return unless asset = _.clone @asset()
+    return unless asset.layers?[layer.index]
 
     # Show only the single layer.
-    sprite.layers = [sprite.layers[layer.index]]
+    asset.layers = [asset.layers[layer.index]]
 
     # Keep the layer visible.
-    sprite.layers[0] = _.clone sprite.layers[0]
-    sprite.layers[0].visible = true
+    asset.layers[0] = _.clone asset.layers[0]
+    asset.layers[0].visible = true
 
-    sprite
+    asset
 
   showAddButton: ->
-    # We can add a layer if we have a sprite set for the camera angle.
-    @sprite()
+    # We can add a layer if we have a asset set for the camera angle.
+    @asset()
 
   showRemoveButton: ->
     # We can remove a layer if the currently selected layer exists.
-    @sprite()?.layers?[@paintHelper.layerIndex()]
+    @asset()?.layers?[@paintHelper.layerIndex()]
 
   # Events
 
@@ -86,15 +86,15 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     # HACK: Replace the number back since it won't update by itself (probably since it's the edited input).
     $(event.target).val depth
 
-    sprite = @sprite()
+    asset = @asset()
 
     if _.isNaN depth
       # Remove the layer.
-      LOI.Assets.Sprite.removeLayer sprite._id, layer.index
+      LOI.Assets.Sprite.removeLayer asset._id, layer.index
 
     else
       # Change the depth of the layer.
-      LOI.Assets.Sprite.updateLayer sprite._id, layer.index, origin: z: depth
+      LOI.Assets.Sprite.updateLayer asset._id, layer.index, origin: z: depth
 
   onChangeLayer: (event) ->
     layer = @currentData()
@@ -104,25 +104,25 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
       name: $layer.find('.name-input').val()
       visible: $layer.find('.visible-checkbox').is(':checked')
       
-    sprite = @sprite()
-    LOI.Assets.Sprite.updateLayer sprite._id, layer.index, newData
+    asset = @asset()
+    LOI.Assets.Sprite.updateLayer asset._id, layer.index, newData
 
   onClickAddButton: (event) ->
-    sprite = @sprite()
+    asset = @asset()
 
-    index = sprite.layers?.length or 0
+    index = asset.layers?.length or 0
 
-    if sprite?.layers?.length
-      depth = 1 + (_.max(layer.origin.z for layer in sprite.layers when layer?.origin?.z?) or 0)
+    if asset?.layers?.length
+      depth = 1 + (_.max(layer.origin.z for layer in asset.layers when layer?.origin?.z?) or 0)
 
     else
       depth = 0
 
-    LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: depth
+    LOI.Assets.Sprite.updateLayer asset._id, index, origin: z: depth
 
     @paintHelper.setLayerIndex index
 
   onClickRemoveButton: (event) ->
-    sprite = @sprite()
+    asset = @asset()
 
-    LOI.Assets.Sprite.removeLayer sprite._id, @paintHelper.layerIndex()
+    LOI.Assets.Sprite.removeLayer asset._id, @paintHelper.layerIndex()

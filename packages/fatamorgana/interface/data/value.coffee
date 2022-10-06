@@ -23,7 +23,7 @@ class FM.Interface.Data.Value
 
         options.save options.address, value if valueChanged
   
-        return
+        return value
 
       field()
 

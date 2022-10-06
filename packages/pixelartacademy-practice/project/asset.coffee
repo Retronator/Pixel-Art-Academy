@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 
 class PAA.Practice.Project.Asset
   @Types:
+    None: 'None'
     Sprite: 'Sprite'
     Photo: 'Photo'
 
@@ -28,7 +29,13 @@ class PAA.Practice.Project.Asset
 
   # String with more information about what this asset represents.
   @description: -> throw new AE.NotImplementedException "You must specify the asset's description."
-
+  
+  # Component to represent the asset in the portfolio.
+  @portfolioComponentClass: -> throw new AE.NotImplementedException "You must specify the portfolio component class."
+  
+  # Component to show for the asset on the clipboard.
+  @clipboardComponentClass: -> throw new AE.NotImplementedException "You must specify the clipboard component class."
+  
   @initialize: ->
     # Store asset class by ID.
     @_assetClassesById[@id()] = @
@@ -42,7 +49,7 @@ class PAA.Practice.Project.Asset
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'description']
 
   constructor: (@project) ->
-    # Subscribe to this goal's translations.
+    # Subscribe to this asset's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
@@ -51,12 +58,22 @@ class PAA.Practice.Project.Asset
       _.find assets, (asset) => asset.id is @id()
     ,
       true
-
+  
+    portfolioComponentClass = @constructor.portfolioComponentClass()
+    @portfolioComponent = new portfolioComponentClass @
+    
+    clipboardComponentClass = @constructor.clipboardComponentClass()
+    @clipboardComponent = new clipboardComponentClass @
+    
   destroy: ->
     @_translationSubscription.stop()
     @data.stop()
 
   id: -> @constructor.id()
+  
+  urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to used in the URL to identify this asset."
+
+  ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'

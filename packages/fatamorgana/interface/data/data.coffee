@@ -12,6 +12,8 @@ class FM.Interface.Data
     child.destroy() for name, child of @_children
 
   child: (field) ->
+    field = field.toString()
+    
     unless @_children[field]
       childAddress = if @options.address.length then "#{@options.address}.#{field}" else field
 

@@ -13,7 +13,7 @@ class LOI.Assets.Editor.Actions.Export extends LOI.Assets.Editor.Actions.AssetAc
     # Serialize asset to binary.
     asset = @asset()
 
-    pngData = asset.exportDatabaseContent().arrayBuffer
+    pngData = asset.getDatabaseContent().arrayBuffer
     pngBlob = new Blob [pngData], type: "image/png"
     pngUrl = URL.createObjectURL pngBlob
 

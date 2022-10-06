@@ -36,7 +36,7 @@ Package.onUse(function(api) {
   api.addComponent('layout/layout');
 
   // Documents
-  
+
   api.addFile('documents/image..');
   api.addFile('documents/image/methods');
 
@@ -79,6 +79,32 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/transformpixels');
   api.addFile('documents/sprite/methods/layers');
   api.addFile('documents/sprite/methods/resize');
+
+  api.addFile('documents/bitmap..');
+  api.addFile('documents/bitmap/area');
+  api.addFile('documents/bitmap/layer');
+  api.addFile('documents/bitmap/layergroup');
+  api.addFile('documents/bitmap/pixelformat');
+
+  api.addFile('documents/bitmap/attribute..');
+  api.addFile('documents/bitmap/attribute/alpha');
+  api.addFile('documents/bitmap/attribute/clusterid');
+  api.addFile('documents/bitmap/attribute/directcolor');
+  api.addFile('documents/bitmap/attribute/flags');
+  api.addFile('documents/bitmap/attribute/materialindex');
+  api.addFile('documents/bitmap/attribute/normal');
+  api.addFile('documents/bitmap/attribute/operationmask');
+  api.addFile('documents/bitmap/attribute/palettecolor');
+
+  api.addFile('documents/bitmap/actions..');
+  api.addFile('documents/bitmap/actions/addlayer');
+  api.addFile('documents/bitmap/actions/stroke');
+  api.addFile('documents/bitmap/actions/colorfill');
+
+  api.addFile('documents/bitmap/operations..');
+  api.addFile('documents/bitmap/operations/addlayer');
+  api.addFile('documents/bitmap/operations/removelayer');
+  api.addFile('documents/bitmap/operations/changepixels');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/methods');
@@ -145,6 +171,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/navigator..');
   api.addUnstyledComponent('components/palette..');
   api.addUnstyledComponent('components/spriteimage..');
+  api.addUnstyledComponent('components/bitmapimage..');
   api.addUnstyledComponent('components/toolbox..');
 
   api.addUnstyledComponent('components/references..');
@@ -169,7 +196,9 @@ Package.onUse(function(api) {
 
   api.addFile('engine..');
 
-  api.addFile('engine/sprite..');
+  api.addFile('engine/pixelimage..');
+  api.addFile('engine/pixelimage/sprite');
+  api.addFile('engine/pixelimage/bitmap');
 
   api.addFile('engine/mesh..');
   api.addFile('engine/mesh/object');
@@ -196,9 +225,9 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
   api.addFile('engine/audio/nodes/adsr');
-  
+
   // Editors
-  
+
   api.addComponent('editor..');
   api.addStyle('editor/editor-cursors');
   api.addStyle('editor/editor-fatamorgana');
@@ -274,7 +303,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/translate');
-  
+
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
   api.addFile('spriteeditor/actions/ignorenormals');

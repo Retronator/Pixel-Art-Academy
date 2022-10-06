@@ -117,8 +117,8 @@ class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
 
     save: ->
       super arguments...
-
-      @parentComponent.$('select').blur()
+  
+      @dataProviderComponent.$('select').blur()
 
   class @SurfaceImageUrl extends @DataInputComponent
     @register 'Artificial.Reality.Pages.Chemistry.Materials.Scattering.SurfaceImageUrl'

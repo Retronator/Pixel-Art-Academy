@@ -11,7 +11,7 @@ class AB.Translation extends AB.Translation
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer) ->
+  @deserializeDatabaseContent: (arrayBuffer) ->
     decoder = new util.TextDecoder
     content = decoder.decode arrayBuffer
 
@@ -19,7 +19,7 @@ class AB.Translation extends AB.Translation
     lines = content.split '\n'
     EJSON.parse _.last lines
 
-  exportDatabaseContent: ->
+  getDatabaseContent: ->
     # See if we have a custom path on the object itself (it would be set manually before exporting).
     if @_databaseContentPath
       path = @_databaseContentPath

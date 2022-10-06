@@ -5,7 +5,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.Practice.Journal.Entry.Action extends PAA.Practice.Journal.Entry.Action
   # Override the constructor for this type.
-  @register @type, @
+  @registerType @type, @
 
   constructor: ->
     super arguments...

@@ -29,3 +29,6 @@ class AE.UnauthorizedException extends Meteor.Error
 
 class AE.ExternalException extends Meteor.Error
   constructor: (reason, details) -> super 'external-exception', reason, details
+
+class AE.InvalidOrderException extends Meteor.Error
+  constructor: (reason, details) -> super 'invalid-order-exception', reason, details

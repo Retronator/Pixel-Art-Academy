@@ -7,7 +7,7 @@ class LOI.Memory.Actions.Talk extends LOI.Memory.Action
   # content:
   #   person: thing or character ID the character is talking to
   @type: 'LandsOfIllusions.Memory.Actions.Talk'
-  @register @type, @
+  @registerType @type, @
 
   @registerContentPattern @type, person: String
 

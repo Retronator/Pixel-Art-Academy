@@ -19,7 +19,7 @@ class AEt.Item
           class: partClass
           part: part
 
-      partClass = partClass.__proto__
+      partClass = Object.getPrototypeOf partClass
 
   # Remove a part from this item.
   remove: (part) ->

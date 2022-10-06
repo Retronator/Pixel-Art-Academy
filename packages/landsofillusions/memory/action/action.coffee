@@ -21,13 +21,13 @@ class LOI.Memory.Action extends AM.Document
   # isMemorable: boolean weather this action is being memorized even without a memory
   # content: extra information defining what was done in this action, specified in inherited actions
 
-  # Override register to do action initialization as well.
-  @register: ->
+  # Override register type to do action initialization as well.
+  @registerType: ->
     super arguments...
 
     translationNamespace = @type
 
-    # On the server, create this avatar's translated names.
+    # On the server, create this action's translations.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty
@@ -50,7 +50,7 @@ class LOI.Memory.Action extends AM.Document
       character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   @type: @id()
-  @register @type, @
+  @registerType @type, @
 
   # A place for actions to add their content patterns.
   @contentPatterns = {}
@@ -116,7 +116,7 @@ class LOI.Memory.Action extends AM.Document
       script = createScriptFunction.call @, person
       LOI.adventure.director.startRealtimeNode script if script
 
-  # Override to provide what happens when an action is started or ends. 
+  # Override to provide what happens when an action is started or ends.
   # By default, start and end actions output the description to the narrative.
   createStartScript: (person, nextNode, nodeOptions) ->
     @_createDescriptionScript person, @startDescription(), nextNode, nodeOptions

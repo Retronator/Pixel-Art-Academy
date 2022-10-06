@@ -33,6 +33,10 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
         assets.push @undoRedo
 
       if @_assetsCompleted @undoRedo
+        @lines ?= Tracker.nonreactive => new @constructor.Lines @
+        assets.push @lines
+
+      if @_assetsCompleted @lines
         @references ?= Tracker.nonreactive => new @constructor.References @
         assets.push @references
 

@@ -4,77 +4,48 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
+class PAA.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard'
+  
+  @calculateAssetSize: (portfolioScale, bounds, options) ->
+    width = bounds?.width or 1
+    height = bounds?.height or 1
+
+    # Asset in the clipboard should be bigger than in the portfolio.
+    if portfolioScale < 1
+      # The asset was scaled down in the portfolio, but we should remain at least pixel perfect in the clipboard.
+      displayScale = LOI.adventure.interface.display.scale()
+      minimumScale = 1 / displayScale
+      scale = Math.max portfolioScale, minimumScale
+
+    else
+      # 1 -> 2
+      # 2 -> 3
+      # 3 -> 4
+      # 4 -> 5
+      # 5 -> 6
+      # 6 -> 8
+      scale = Math.ceil portfolioScale * 1.2
+  
+    # Apply minimum and maximum scale if provided (it could be a non-integer).
+    scale = Math.max scale, options.scaleLimits.min if options?.scaleLimits?.min
+    scale = Math.min scale, options.scaleLimits.max if options?.scaleLimits?.max
+
+    contentWidth = width * scale
+    contentHeight = height * scale
+
+    borderWidth = 7
+
+    {contentWidth, contentHeight, borderWidth, scale}
   
   constructor: (@drawing) ->
     super arguments...
 
-    @secondPageActive = new ReactiveField false
-
-  onCreated: ->
-    super arguments...
-
-    # Calculate sprite size.
-    @spriteSize = new ComputedField =>
-      return unless spriteData = @drawing.editor().spriteData()
-      return unless assetData = @drawing.portfolio().displayedAsset()
-
-      # Asset in the clipboard should be bigger than in the portfolio.
-      assetScale = assetData.scale()
-
-      if assetScale < 1
-        # Scale up to 0.5 to show pixel perfect at least on retina screens.
-        scale = 0.5
-
-      else
-        # 1 -> 2
-        # 2 -> 3
-        # 3 -> 4
-        # 4 -> 5
-        # 5 -> 6
-        # 6 -> 8
-        # 7 -> 9
-        scale = Math.ceil assetScale * 1.2
-
-      # Check if the asset provides a minimum or maximum scale.
-      if minScale = assetData.asset.minClipboardScale?()
-        scale = Math.max scale, minScale
-
-      if maxScale = assetData.asset.maxClipboardScale?()
-        scale = Math.min scale, maxScale
-
-      contentWidth = spriteData.bounds.width * scale
-      contentHeight = spriteData.bounds.height * scale
-
-      borderWidth = 7
-
-      {contentWidth, contentHeight, borderWidth, scale}
-
-  editorActive: ->
-    @drawing.editor().active()
-
   asset: ->
     @drawing.portfolio().displayedAsset()?.asset
 
-  editAsset: ->
-    AB.Router.setParameter 'parameter4', 'edit'
-    
-  showSecondPage: ->
-    @secondPageActive true
-
-  closeSecondPage: ->
-    @secondPageActive false
-
-  spritePlaceholderStyle: ->
-    return unless spriteSize = @spriteSize()
-
-    width: "#{spriteSize.contentWidth + 2 * spriteSize.borderWidth}rem"
-    height: "#{spriteSize.contentHeight + 2 * spriteSize.borderWidth}rem"
-
-  events: ->
-    super(arguments...).concat
-      'click .back-button': @onClickBackButton
-
-  onClickBackButton: (event) ->
-    @closeSecondPage()
+  onBackButton: ->
+    # Relay to asset clipboard component.
+    clipboardComponent = @drawing.portfolio().displayedAsset()?.asset.clipboardComponent
+    result = clipboardComponent?.onBackButton?()
+    return result if result?

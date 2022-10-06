@@ -3,7 +3,7 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class Exposure extends FM.Action
-  enabled: -> @interface.activeFileId()
+  enabled: -> @interface.activeFileId()?
 
   execute: ->
     exposureValue = @interface.getHelperForActiveFile LOI.Assets.Editor.Helpers.ExposureValue

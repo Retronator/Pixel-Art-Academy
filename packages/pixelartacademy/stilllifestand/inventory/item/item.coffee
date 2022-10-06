@@ -40,8 +40,8 @@ class PAA.StillLifeStand.Inventory.Item extends AM.Component
       iconSpriteName = "#{item.constructor.assetsPath()}/icon"
       LOI.Assets.Sprite.findInCache name: iconSpriteName
 
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
+    @sprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @spriteData
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
 

@@ -22,10 +22,6 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   # landmarks: array of named locations
   #   name: name of the landmark
   #   x, y, z: floating point location of the landmark
-  # authors: array of characters that are allowed to edit this asset or null if this is a system asset
-  #   _id
-  #   avatar
-  #     fullName
   # references: array of images used as references
   #   image: image document
   #     _id
@@ -45,7 +41,6 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
     abstract: true
     fields: =>
       palette: Document.ReferenceField LOI.Assets.Palette, ['name'], false
-      authors: [Document.ReferenceField LOI.Character, ['avatar.fullName']]
       references: [
         image: Document.ReferenceField LOI.Assets.Image, ['url']
       ]

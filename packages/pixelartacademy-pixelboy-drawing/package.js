@@ -23,17 +23,44 @@ Package.onUse(function(api) {
 
   api.addComponent('portfolio..');
   api.addFile('portfolio/portfolio-initialize');
+  api.addFile('portfolio/asset');
+  api.addFile('portfolio/formasset');
+  api.addServerFile('portfolio/subscriptions');
+
+  api.addFile('portfolio/artworkasset..');
+  api.addComponent('portfolio/artworkasset/portfoliocomponent..');
+  api.addComponent('portfolio/artworkasset/clipboardcomponent..');
+
+  api.addFile('portfolio/newartwork..');
+  api.addComponent('portfolio/newartwork/portfoliocomponent..');
+  api.addComponent('portfolio/newartwork/clipboardcomponent..');
+
+  api.addFile('portfolio/importartwork..');
+  api.addComponent('portfolio/importartwork/portfoliocomponent..');
+  api.addComponent('portfolio/importartwork/clipboardcomponent..');
 
   api.addComponent('clipboard..');
 
   api.addFile('editor..');
   api.addFile('editor/editors');
+  api.addFile('editor/assetloader');
+  api.addFile('editor/pixelcanvascomponents');
+
   api.addComponent('editor/desktop..');
+  api.addComponent('editor/desktop/pixelcanvas..');
+  api.addComponent('editor/desktop/testpaper..');
   api.addComponent('editor/desktop/colorfill..');
   api.addComponent('editor/desktop/palette..');
-  api.addComponent('editor/desktop/references..');
-  api.addComponent('editor/desktop/references/reference..');
+  api.addComponent('editor/desktop/zoom..');
   api.addComponent('editor/desktop/pico8..');
+
+  api.addUnstyledComponent('editor/desktop/references..');
+  api.addComponent('editor/desktop/references/displaycomponent..');
+  api.addComponent('editor/desktop/references/displaycomponent/reference..');
+
   api.addFile('editor/desktop/tools..');
   api.addFile('editor/desktop/tools/movecanvas');
+
+  api.addFile('editor/desktop/actions..');
+  api.addFile('editor/desktop/actions/focus');
 });

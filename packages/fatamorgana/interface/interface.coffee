@@ -4,6 +4,7 @@ AM = Artificial.Mirage
 FM = FataMorgana
 
 class FM.Interface extends AM.Component
+  # active: boolean whether the interface should react to user input
   # activeToolId: the tool that the user is currently using to perform operations
   # activeFileId: identifying data for the file that is currently the target of operations
   # components: map of all terminal singleton components
@@ -49,6 +50,7 @@ class FM.Interface extends AM.Component
 
     @data = new @constructor.Data @options
 
+    @active = @data.child('active').value
     @activeToolId = @data.child('activeToolId').value
     @activeFileId = @data.child('activeFileId').value
 
@@ -106,6 +108,12 @@ class FM.Interface extends AM.Component
 
   getFileData: (fileId) ->
     @filesData.child fileId
+  
+  getActiveFileData: ->
+    fileId = @activeFileId()
+    return unless fileId?
+  
+    @getFileData fileId
 
   getComponentDataForFile: (componentClassOrId, fileId) ->
     componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
@@ -113,7 +121,8 @@ class FM.Interface extends AM.Component
     @componentsForFilesData.child "#{fileId}.#{componentId}"
 
   getComponentDataForActiveFile: (componentClassOrId) ->
-    return unless fileId = @activeFileId()
+    fileId = @activeFileId()
+    return unless fileId?
 
     @getComponentDataForFile componentClassOrId, fileId
 
@@ -163,7 +172,9 @@ class FM.Interface extends AM.Component
     @_helperForFileInstances[fileId][helperId]
 
   getHelperForActiveFile: (helperClassOrId) ->
-    return unless fileId = @activeFileId()
+    fileId = @activeFileId()
+    return unless fileId?
+
     @getHelperForFile helperClassOrId, fileId
 
   getLoaderForFile: (fileId) ->

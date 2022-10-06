@@ -28,11 +28,28 @@ class LOI.Assets.Components.References extends AM.Component
 
     @display = @callAncestorWith 'display'
 
-    @assetData = new ComputedField =>
-      assetId = @options.assetId()
-      @options.documentClass.documents.findOne assetId,
-        fields:
-          references: 1
+    if @options.assetData
+      @assetData = new ComputedField =>
+        # Strip data to references and ID to minimize reactivity, but keep the class reference.
+        return unless assetData = @options.assetData()
+        strippedAssetData = _.pick assetData, ['references', '_id']
+        Object.setPrototypeOf strippedAssetData, assetData.constructor.prototype
+        strippedAssetData
+      ,
+        EJSON.equals
+
+    else
+      @assetData = new ComputedField =>
+        assetId = @options.assetId()
+        @options.documentClass.documents.findOne assetId,
+          fields:
+            references: 1
+
+    @assetId = new ComputedField =>
+      @options.assetId?() or @assetData()?._id
+
+    @assetClassName = new ComputedField =>
+      @options.documentClass?.className or @assetData()?.constructor.className
           
     @assetOptions = new ComputedField =>
       _.defaultsDeep {}, @options.assetOptions?(),

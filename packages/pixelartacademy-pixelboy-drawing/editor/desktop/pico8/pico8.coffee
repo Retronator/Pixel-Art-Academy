@@ -1,11 +1,15 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+FM = FataMorgana
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
-  @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8'
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends FM.View
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8'
+  @register @id()
 
-  constructor: (@options) ->
+  @template: -> @constructor.id()
+
+  constructor: ->
     super arguments...
 
     @active = new ReactiveField false
@@ -16,11 +20,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
   onCreated: ->
     super arguments...
 
+    @desktop = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing.Editor.Desktop
     @display = @callAncestorWith 'display'
 
     @cartridge = new ComputedField =>
-      return unless asset = @options.asset()
-      asset.project.pico8Cartridge
+      return unless asset = @desktop.activeAsset()
+      asset.project?.pico8Cartridge
 
     @device = new PAA.Pico8.Device.Handheld
       # Relay input/output calls to the cartridge.
@@ -31,7 +36,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
       return unless cartridge = @cartridge()
       return unless game = cartridge.game()
 
-      @device.loadGame game, @options.asset().project.projectId
+      @device.loadGame game, @desktop.activeAsset().project.projectId
+
+  onDestroyed: ->
+    super arguments...
+
+    @device.stop()
 
   activeClass: ->
     'active' if @active()

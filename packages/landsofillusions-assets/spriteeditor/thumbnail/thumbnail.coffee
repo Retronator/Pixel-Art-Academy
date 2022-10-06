@@ -12,8 +12,8 @@ class LOI.Assets.SpriteEditor.Thumbnail extends AM.Component
     @$canvas = @$('.canvas')
     @canvas = @$canvas[0]
     @context = @canvas.getContext '2d'
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: => @data()
+    @sprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: => @data()
 
     @lightDirectionHelper = new ComputedField =>
       return unless interfaceComponent = @ancestorComponentWith('interface').interface

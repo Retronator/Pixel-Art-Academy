@@ -7,6 +7,8 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   # editorId: which editor component to use for editing sprites in the app
   # externalSoftware: which external software the player is using to edit sprites
+  # artworks: array of manually created artworks
+  #   artworkId: the ID of the artwork document
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing'
   @url: -> 'drawing'
 
@@ -22,6 +24,20 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     "
     
   @initialize()
+  
+  @canEdit: ->
+    # Editor needs to be selected.
+    return unless @state('editorId')
+
+    # Player must have completed the reference copy challenge with a built-in editor.
+    PAA.Practice.Project.Asset.Sprite.state 'canEdit'
+
+  @canUpload: ->
+    # External software needs to be selected.
+    return unless @state('externalSoftware')
+  
+    # Player must have completed the reference copy challenge by uploading the result.
+    PAA.Practice.Project.Asset.Sprite.state 'canUpload'
 
   constructor: ->
     super arguments...
@@ -58,18 +74,14 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   onBackButton: ->
     # Relay to editor.
     editor = @editor()
-    editorResult = editor.onBackButton?()
-    return editorResult if editorResult?
+    result = editor.onBackButton?()
+    return result if result?
 
-    # Close second page of the clipboard
+    # Relay to clipboard.
     clipboard = @clipboard()
-
-    if clipboard.secondPageActive()
-      clipboard.closeSecondPage()
-
-      # Inform that we've handled the back button.
-      return true
-
+    result = clipboard.onBackButton?()
+    return result if result?
+    
     portfolio = @portfolio()
 
     # We only need to handle closing groups when not on an asset.

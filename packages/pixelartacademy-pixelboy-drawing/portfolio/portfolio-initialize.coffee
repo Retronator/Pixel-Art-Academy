@@ -25,6 +25,8 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
   onCreated: ->
     super arguments...
 
+    characterId = LOI.characterId()
+
     sectionLocations =
       challenge: new PAA.Practice.Challenges.Drawing
       project: new PAA.Practice.Project.Workbench
@@ -42,8 +44,9 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
           for sectionThing, index in sectionThings
             do (sectionThing, index) =>
               assets = new ComputedField =>
-                for asset, assetIndex in sectionThing.assets()
+                for asset, assetIndex in sectionThing.assets() when asset.urlParameter()
                   do (asset, assetIndex) =>
+                    _id: asset.urlParameter()
                     index: assetIndex
                     asset: asset
                     scale: => @_assetScale asset
@@ -58,11 +61,95 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
           groups: groups
 
         @["#{sectionThingName}sSection"] = section
+  
+    # Create artwork assets.
+    @autorun (computation) =>
+      @constructor.artworksWithAssets.subscribe @, characterId, @_artworkIds()
+    
+    @_artworkAssets = {}
+    @_artworkAssetsDependency = new Tracker.Dependency
+    
+    @_artworksDictionary = new AE.ReactiveDictionary =>
+      artworkIds = @_artworkIds()
+      dictionary = {}
+      
+      PADB.Artwork.documents.find(_id: $in: artworkIds).forEach (artwork) =>
+        dictionary[artwork._id] = dictionary
+  
+      dictionary
+    ,
+      added: (id) =>
+        @_artworkAssets[id] = new PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset id
+        @_artworkAssetsDependency.changed()
+  
+      removed: (id) =>
+        delete @_artworkAssets[id]
+        @_artworkAssetsDependency.changed()
+    
+    # Create WIP artworks group.
+    @_newArtworkAsset = new PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork
+    @_importArtworkAsset = new PAA.PixelBoy.Apps.Drawing.Portfolio.ImportArtwork
 
+    @_wipArtworksGroup =
+      index: 0
+      name: => "WIP"
+      assets: new ComputedField =>
+        assets = []
+        
+        # Get all WIP artworks.
+        @_artworkAssetsDependency.depend()
+        
+        artworkIds = @_artworkIds()
+        
+        wipArtworks = PADB.Artwork.documents.fetch
+          _id: $in: artworkIds
+          wip: true
+        ,
+          sort:
+            startDate: 1
+          
+        for artwork, assetIndex in wipArtworks
+          do (artwork, assetIndex) =>
+            return unless asset = @_artworkAssets[artwork._id]
+          
+            assets.push
+              _id: asset.urlParameter()
+              index: assetIndex
+              asset: asset
+              scale: => @_assetScale asset
+  
+        # New artworks can be created if the player can edit art with built-in editors.
+        # TODO: Enable ability to create artworks.
+        if false # PAA.PixelBoy.Apps.Drawing.canEdit()
+          assets.push
+            _id: @_newArtworkAsset.urlParameter()
+            index: assets.length
+            asset: @_newArtworkAsset
+            scale: => 1
+  
+        # Artworks can be imported if the player can edit or upload art made with external software.
+        # TODO: Enable ability to import artworks.
+        if false # PAA.PixelBoy.Apps.Drawing.canEdit() or PAA.PixelBoy.Apps.Drawing.canUpload()
+          assets.push
+            _id: @_importArtworkAsset.urlParameter()
+            index: assets.length
+            asset: @_importArtworkAsset
+            scale: => 1
+  
+        assets
+        
     @artworksSection =
       nameKey: @constructor.Sections.Artworks
-      groups: => []
-        
+      groups: =>
+        groups = []
+  
+        if @_wipArtworksGroup.assets().length
+          groups.push @_wipArtworksGroup
+          
+        # TODO: Fetch all artworks.
+    
+        groups
+  
     @sections = new ComputedField =>
       sections = []
 
@@ -112,13 +199,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>
-      return unless spriteId = AB.Router.getParameter 'parameter3'
+      return unless parameter = AB.Router.getParameter 'parameter3'
 
-      # Find the asset that uses this sprite.
+      # Find the asset that uses this parameter.
       for section in @sections()
         for group in section.groups()
           for assetData in group.assets()
-            if assetData.asset.spriteId() is spriteId
+            if assetData.asset.urlParameter() is parameter
               @activeSection section
               @activeGroup group
               return assetData
@@ -131,7 +218,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
       @displayedAsset activeAsset
 
     # Subscribe to character's projects.
-    PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
+    PAA.Practice.Project.forCharacterId.subscribe @, characterId
 
     # Prepare settings.
     editors = new PAA.PixelBoy.Apps.Drawing.Editors
@@ -171,3 +258,11 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
     super arguments...
     
     editor.destroy?() for editor in @_editors
+  
+    @_artworksDictionary.stop()
+    @_newArtworkAsset.destroy()
+    @_importArtworkAsset.destroy()
+
+  _artworkIds: ->
+    return [] unless artworks = PAA.PixelBoy.Apps.Drawing.state 'artworks'
+    artwork.artworkId for artwork in artworks

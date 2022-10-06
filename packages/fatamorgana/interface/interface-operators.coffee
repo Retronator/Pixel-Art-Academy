@@ -95,6 +95,8 @@ class FM.Interface extends FM.Interface
     not @inputFocused()
 
   onKeyDown: (event) ->
+    return unless @active()
+
     @activeTool()?.onKeyDown? event
     
     return unless @shortcutsActive()
@@ -115,7 +117,7 @@ class FM.Interface extends FM.Interface
       targetToolShortcut = @getShortcutForOperator targetTool
 
       if _.isArray targetToolShortcut
-        storePreviousTool = _.find targetToolShortcut, (shortcut) => shortcut.holdKey
+        storePreviousTool = _.find targetToolShortcut, (shortcut) => key is shortcut.holdKey
 
       else
         storePreviousTool = key is targetToolShortcut.holdKey
@@ -135,6 +137,8 @@ class FM.Interface extends FM.Interface
     @_activeKey = key
 
   onKeyUp: (event) ->
+    return unless @active()
+
     @activeTool()?.onKeyUp? event
 
     return unless @shortcutsActive()

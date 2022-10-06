@@ -11,7 +11,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
     # The floating point value where the mouse is in canvas' coordinate system.
     @canvasCoordinate = new ReactiveField null, EJSON.equals
 
-    # The integer value of sprite's pixel the mouse is hovering over.
+    # The integer value of asset's pixel the mouse is hovering over.
     @pixelCoordinate = new ReactiveField null, EJSON.equals
 
     # Wire up mouse move event once the sprite editor is rendered.
@@ -21,9 +21,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
       return unless $pixelCanvas
       computation.stop()
 
-      @$canvas = $pixelCanvas.find('.canvas')
-
       $pixelCanvas.mousemove (event) =>
+        @_lastPageX = event.pageX
+        @_lastPageY = event.pageY
+        @updateCoordinates()
+  
+      $pixelCanvas.on 'pointermove', (event) =>
         @_lastPageX = event.pageX
         @_lastPageY = event.pageY
         @updateCoordinates()
@@ -42,13 +45,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
         @pixelCoordinate null
 
   updateCoordinates: ->
-    origin = @$canvas.offset()
+    $pixelCanvas = @pixelCanvas.$pixelCanvas()
+    pixelCanvasPosition = $pixelCanvas.offset()
     displayScale = @pixelCanvas.display.scale()
     camera = @pixelCanvas.camera()
 
     windowCoordinate =
-      x: @_lastPageX - origin.left
-      y: @_lastPageY - origin.top
+      x: @_lastPageX - pixelCanvasPosition.left
+      y: @_lastPageY - pixelCanvasPosition.top
 
     @windowCoordinate windowCoordinate
 

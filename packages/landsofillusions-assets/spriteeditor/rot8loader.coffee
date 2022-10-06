@@ -20,8 +20,8 @@ class LOI.Assets.SpriteEditor.Rot8Loader extends FM.Loader
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
     # Create the engine sprite.
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
+    @sprite = new LOI.Assets.Engine.PixelImage.Sprite
+      asset: @spriteData
       visualizeNormals: @paintNormalsData.value
 
     # Subscribe to the referenced palette as well.

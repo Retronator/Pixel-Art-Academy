@@ -276,34 +276,6 @@
                 top -240rem
                 transition all 0.2s, top 0.5s
 
-              &.completed
-                .sprite
-                  &::before
-                    content '✔︎'
-                    position absolute
-                    z-index 1
-                    top -4rem
-                    right -4rem
-                    color atariGreen(3)
-                    adventure()
-
-              .sprite
-                position absolute
-                bottom 0
-                right 0
-                border 6rem solid atariGray(6)
-                box-sizing content-box
-                background atariGray(6)
-                box-shadow 0 0 5rem rgba(atariGray(0), 0.2)
-                pointer-events initial
-
-                .landsofillusions-assets-components-spriteimage
-                  absolute-cover()
-
-                  .canvas
-                    width 100% !important
-                    height 100% !important
-
           .no-assets-instructions
             width 120rem
             height 150rem

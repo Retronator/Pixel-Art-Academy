@@ -1,0 +1,28 @@
+<template name="PixelArtAcademy.Practice.Project.Asset.Sprite.ClipboardComponent">
+  <div class="pixelartacademy-practice-project-asset-sprite-clipboardcomponent {{activeAssetClass}} {{editorActiveClass}}">
+    <div class="bottom">
+      {{> Render asset.clipboardPageComponent}}
+    </div>
+    {{#if secondPageActive}}
+      <button class="turned-page back-button"></button>
+    {{else}}
+      <div class="brief">
+        <div class="content">
+          {{#with asset}}
+            <div class="asset {{styleClasses}}">
+              <div class="asset-name">{{> t10e displayNameTranslation}}</div>
+              <div class="description">
+                {{#Markdown}}{{description}}{{/Markdown}}
+              </div>
+              {{> Render briefComponent}}
+            </div>
+          {{/with}}
+          <div class="asset-placeholder" {{style assetPlaceholderStyle}}></div>
+          {{#if asset.spriteInfo}}
+            <div class="sprite-info">{{#Markdown}}{{asset.spriteInfo}}{{/Markdown}}</div>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</template>

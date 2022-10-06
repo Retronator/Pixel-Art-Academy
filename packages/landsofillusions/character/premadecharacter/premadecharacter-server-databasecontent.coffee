@@ -10,7 +10,7 @@ class LOI.Character.PreMadeCharacter extends LOI.Character.PreMadeCharacter
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer) ->
+  @deserializeDatabaseContent: (arrayBuffer) ->
     imageData = PNG.decode arrayBuffer
     AM.EmbeddedImageData.extract imageData
 
@@ -19,7 +19,7 @@ class LOI.Character.PreMadeCharacter extends LOI.Character.PreMadeCharacter
 
     "landsofillusions/character/premadecharacter/#{name}"
 
-  exportDatabaseContent: ->
+  getDatabaseContent: ->
     # Add last edit time if needed so that documents don't need unnecessary imports.
     @lastEditTime ?= new Date()
 

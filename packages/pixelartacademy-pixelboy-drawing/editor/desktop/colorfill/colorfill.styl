@@ -1,9 +1,18 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-pixelboy-apps-drawing-editor-desktop-color-fill
+.pixelartacademy-pixelboy-apps-drawing-editor-desktop-colorfill
   position absolute
+  top -102rem
+  right -86rem
   width 72rem
   height 72rem
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    top -22rem
+    right -6rem
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-desktop.hidden-tools &
+    visibility hidden
 
   &::before
     content ''

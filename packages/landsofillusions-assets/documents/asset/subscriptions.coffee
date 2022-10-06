@@ -22,6 +22,16 @@ LOI.Assets.Asset.forId.publish (assetClassName, id) ->
 
   assetClass.documents.find id
 
+LOI.Assets.Asset.forIdVersioned.publish (assetClassName, id) ->
+  check assetClassName, String
+  check id, Match.DocumentId
+  
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+  
+  assetClass.documents.find id,
+    fields:
+      versioned: 1
+
 LOI.Assets.Asset.forPath.publish (assetClassName, path) ->
   check assetClassName, String
   check path, String

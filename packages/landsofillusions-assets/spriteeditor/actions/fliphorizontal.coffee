@@ -9,11 +9,11 @@ class LOI.Assets.SpriteEditor.Actions.FlipHorizontal extends LOI.Assets.Editor.A
   @initialize()
 
   execute: ->
-    sprite = @asset()
-    LOI.Assets.Sprite.flipHorizontal sprite._id, 0
+    asset = @asset()
+    LOI.Assets.Sprite.flipHorizontal asset._id, 0
 
     # Note: landmark operations are currently not added to history while the pixel changes are.
-    if sprite.landmarks
-      for landmark, index in sprite.landmarks when landmark.x
-        LOI.Assets.VisualAsset.updateLandmark sprite.constructor.className, sprite._id, index,
+    if asset.landmarks
+      for landmark, index in asset.landmarks when landmark.x
+        LOI.Assets.VisualAsset.updateLandmark asset.constructor.className, asset._id, index,
           x: -landmark.x

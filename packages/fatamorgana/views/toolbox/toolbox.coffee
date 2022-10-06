@@ -15,7 +15,7 @@ class FM.Toolbox extends FM.View
   toolClass: ->
     tool = @currentData()
 
-    toolClass = _.kebabCase tool.name
+    toolClass = _.kebabCase tool.displayName()
     extraToolClass = tool.toolClass?()
 
     [toolClass, extraToolClass].join ' '

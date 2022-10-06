@@ -175,7 +175,7 @@ class AR.Pages.Chemistry.Gases extends AM.Component
       changeProperty = yAxisProperty
       
     @recalculateProperty changeProperty
-      
+    
   recalculateProperty: (property) ->
     gasClass = @gasClass()
 
@@ -238,7 +238,7 @@ class AR.Pages.Chemistry.Gases extends AM.Component
       super(arguments...) / @multiplier
 
     save: (value) ->
-      @parentComponent.setProperty @property, value * @multiplier
+      @dataProviderComponent.setProperty @property, value * @multiplier
 
   class @Pressure extends @PropertyValue
     @register 'Artificial.Reality.Pages.Chemistry.Gases.Pressure'

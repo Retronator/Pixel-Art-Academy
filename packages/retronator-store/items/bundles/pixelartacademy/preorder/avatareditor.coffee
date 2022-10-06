@@ -4,7 +4,7 @@ CatalogKeys = RS.Items.CatalogKeys
 
 class RS.Items.Bundles.PixelArtAcademyPreOrderAvatarEditorUpgrade extends RS.Items.Bundles.PixelArtAcademyPreorderUpgrade
   @type: 'Retronator.Store.Items.Bundles.PixelArtAcademyPreOrderAvatarEditorUpgrade'
-  @register @type, @
+  @registerType @type, @
 
   @eligiblePrerequisiteItems: [
     CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.BasicGame

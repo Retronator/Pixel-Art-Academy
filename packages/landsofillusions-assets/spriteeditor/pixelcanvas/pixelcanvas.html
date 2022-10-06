@@ -1,5 +1,7 @@
 <template name="LandsOfIllusions.Assets.SpriteEditor.PixelCanvas">
   <div class="landsofillusions-assets-spriteeditor-pixelcanvas">
-    <canvas class="canvas"></canvas>
+    <div class="drawing-area" {{style drawingAreaStyle}}>
+      <canvas class="canvas" {{style canvasStyle}}></canvas>
+    </div>
   </div>
 </template>

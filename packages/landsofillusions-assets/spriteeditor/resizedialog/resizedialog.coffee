@@ -20,10 +20,10 @@ class LOI.Assets.SpriteEditor.ResizeDialog extends FM.Dialog
 
     # Prefill width and height.
     @autorun (computation) =>
-      sprite = @interface.getEditorForActiveFile()?.spriteData()
+      asset = @interface.getEditorForActiveFile()?.assetData()
 
-      width = sprite.bounds?.width
-      height = sprite.bounds?.height
+      width = asset.bounds?.width
+      height = asset.bounds?.height
 
       @width width
       @height height
@@ -44,8 +44,8 @@ class LOI.Assets.SpriteEditor.ResizeDialog extends FM.Dialog
     @closeDialog()
 
   onClickResizeButton: (event) ->
-    sprite = @interface.getEditorForActiveFile()?.spriteData()
-    LOI.Assets.Sprite.resize sprite._id, @width(), @height()
+    asset = @interface.getEditorForActiveFile()?.assetData()
+    LOI.Assets.Sprite.resize asset._id, @width(), @height()
     @closeDialog()
 
   onChangeWidthInput: (event) ->

@@ -7,7 +7,7 @@ class PAA.Learning.Task.Entry.Action extends LOI.Memory.Action
   #     _id
   #     taskId
   @type: 'PixelArtAcademy.Learning.Task.Entry.Action'
-  @register @type, @
+  @registerType @type, @
 
   @isMemorable: -> true
 

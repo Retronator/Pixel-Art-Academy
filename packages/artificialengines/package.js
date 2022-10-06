@@ -41,7 +41,7 @@ Package.onUse(function(api) {
     // 3rd party
     'peerlibrary:assert',
     'peerlibrary:peerdb',
-    'retronator:peerdb-migrations',
+    'peerlibrary:peerdb-migrations',
     'peerlibrary:reactive-publish',
     'peerlibrary:blaze-components',
     'peerlibrary:blaze-common-component',
@@ -73,7 +73,7 @@ Package.onUse(function(api) {
 	api.addFile('artificial');
 
 	// Global initialization
-  
+
 	api.addFile('everywhere/lodash/lodash');
 
 	// Define all namespaces so that we can use shortcuts.
@@ -183,12 +183,13 @@ Package.onUse(function(api) {
   api.addFile('mirage/mixins/persistentinput');
 
   // Artificial Base
-  
+
   // Depends on Artificial Mirage.
   api.addUnstyledComponent('base/app');
 
   api.addFile('base/method');
   api.addFile('base/subscription');
+  api.addFile('base/event');
 
   api.addFile('base/router/router');
   api.addServerFile('base/router/router-server');
@@ -200,11 +201,19 @@ Package.onUse(function(api) {
   // Artificial Mummification
 
   api.addFile('mummification/mongohelper');
-  api.addFile('mummification/document');
   api.addFile('mummification/persistentstorage');
   api.addFile('mummification/collectionwrapper');
   api.addServerFile('mummification/directcollection');
   api.addFile('mummification/embeddedimagedata');
+
+  api.addFile('mummification/document..');
+
+  api.addFile('mummification/document/versioning..');
+  api.addFile('mummification/document/versioning/versionedcollection');
+  api.addClientFile('mummification/document/versioning/versionedcollection-client');
+  api.addClientFile('mummification/document/versioning/versioneddocumentloader-client');
+  api.addFile('mummification/document/versioning/operation');
+  api.addFile('mummification/document/versioning/action');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');
@@ -224,7 +233,7 @@ Package.onUse(function(api) {
   api.addComponent('mummification/admin/components/adminpage..');
   api.addComponent('mummification/admin/components/index..');
   api.addFile('mummification/admin/components/document..');
-  
+
   // Artificial Telepathy
 
   api.addFile('telepathy/emailcomposer');
@@ -275,6 +284,8 @@ Package.onUse(function(api) {
   api.addFile('babel/components/regionselection..');
 
   // Artificial Program
+
+  api.addFile('program/hashfunctions');
 
   api.addFile('program/search..');
 
