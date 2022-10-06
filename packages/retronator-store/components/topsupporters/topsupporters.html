@@ -4,7 +4,7 @@
       <li class="supporter {{supporterClass}}" {{valueAttribute}}>
         <div class="name-amount-area">
           <div class="name">{{name}}</div>
-          <div class="amount">${{amount}}</div>
+          <div class="amount">${{roundNumber amount}}</div>
         </div>
         {{#if message}}<div class="message">{{message}}</div>{{/if}}
       </li>

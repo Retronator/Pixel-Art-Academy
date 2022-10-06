@@ -116,18 +116,20 @@ class TopRecentTransactions
 
 Meteor.publish RS.Transaction.topRecent, (count = 10) ->
   # We are returning the list of top recent transactions with supporters' names, amounts and messages. We do this by
-  # looking at last 50 transactions and only returning the top ones sorted by value. We return these using a special
-  # collection TopRecentTransactions that only holds these results.
+  # looking at 2x the desired amount of transactions and only returning the top ones sorted by value. We return these
+  # using a special collection TopRecentTransactions that only holds these results.
   topRecentTransactions = new TopRecentTransactions @, count
 
-  # Listen to last transactions (4 times as much as we'll send to the client) that have some value.
+  # Listen to last transactions that have some value and do not include work for hire.
   RS.Transaction.documents.find(
     totalValue:
       $gt: 0
+    'items.item.catalogKey':
+      $not: /Retronator.Work/
   ,
     sort:
       time: -1
-    limit: count * 4
+    limit: count * 2
   ).observe
     added: (document) => topRecentTransactions.added document
     changed: (document, oldDocument) => topRecentTransactions.changed document, oldDocument
