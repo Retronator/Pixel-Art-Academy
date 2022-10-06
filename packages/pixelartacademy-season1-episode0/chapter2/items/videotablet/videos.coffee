@@ -70,15 +70,6 @@ C2.Items.VideoTablet.Videos = [
       art: 1
       relax: 1
   ,
-    title: "Video game planets"
-    author: "Tim Hijlkema"
-    id: 'PWofgnLXTtk'
-    time: 2 * 60 + 47
-    weights:
-      gaming: 1
-      art: 1
-      relax: 1
-  ,
     title: "Minecraft isn't just a game. It's an art form."
     author: "Vox"
     id: '-Of_yz-4iXs'
@@ -123,14 +114,6 @@ C2.Items.VideoTablet.Videos = [
     author: "Tales Of Mere Existence"
     id: 'hqZAxLqJkzA'
     time: 2 * 60 + 42
-    weights:
-      art: 1
-      think: 1
-  ,
-    title: "Ghost In The Shell: Identity in Space"
-    author: "The Nerdwriter"
-    id: 'gXTnl1FVFBw'
-    time: 8 * 60 + 11
     weights:
       art: 1
       think: 1
