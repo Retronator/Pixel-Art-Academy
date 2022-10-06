@@ -63,7 +63,6 @@ launch-screen@1.3.0
 less@3.0.2
 localstorage@1.2.0
 logging@1.3.0
-markdown@1.0.14
 meteor@1.10.0
 meteor-base@1.5.1
 meteorhacks:inject-initial@1.0.5
@@ -102,7 +101,7 @@ peerlibrary:directcollection@0.9.0
 peerlibrary:extend-publish@0.6.0
 peerlibrary:fiber-utils@0.10.0
 peerlibrary:peerdb@0.27.0
-peerlibrary:peerdb-migrations@1.1.0
+peerlibrary:peerdb-migrations@1.1.1
 peerlibrary:reactive-field@0.6.0
 peerlibrary:reactive-mongo@0.4.0
 peerlibrary:reactive-publish@0.10.0
@@ -119,7 +118,7 @@ reload@1.3.1
 retronator:accounts-emails-field@1.2.0
 retronator:accounts-meld@1.3.1
 retronator:api@1.0.0
-retronator:app@0.61.0
+retronator:app@0.61.5
 retronator:artificialengines@1.0.0
 retronator:artificialengines-pages@1.0.0
 retronator:fatamorgana@0.1.0
