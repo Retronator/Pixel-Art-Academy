@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.61.5',
+  version: '0.62.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -20,7 +20,7 @@ Package.onUse(function(api) {
 
   // Routing portion, fork from force-ssl.
   api.use('webapp', 'server');
-  
+
   // Make sure we come after livedata, so we load after the sockjs server has been instantiated.
   api.use('ddp', 'server');
 
