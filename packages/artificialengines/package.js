@@ -16,7 +16,8 @@ Npm.depends({
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0',
   'quill': '1.3.7',
-  "velocity-animate": "1.5.2"
+  "velocity-animate": "1.5.2",
+  'showdown': '1.9.1'
 });
 
 Package.onUse(function(api) {
@@ -32,7 +33,6 @@ Package.onUse(function(api) {
     'reactive-dict',
     'check',
     'ejson',
-    'markdown',
     'http',
     'oauth',
     'modules',

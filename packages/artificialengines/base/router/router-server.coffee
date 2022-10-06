@@ -19,10 +19,15 @@ class AB.Router extends AB.Router
         OAuth._requestHandlers[name] = (service, query, response) ->
           _requestHost = response._requestHost
 
-          # Call the original handler. We expect it will call absolute URL at some point.
-          handler arguments...
+          try
+            # Call the original handler. We expect it will call absolute URL at some point.
+            handler arguments...
 
-          _requestHost = null
+          catch exception
+            console.error "Exception in OAuth flow", exception
+
+          finally
+            _requestHost = null
 
     # HACK: Override absolute URL function to use the request host as the root url.
     _absoluteUrl = Meteor.absoluteUrl
@@ -34,7 +39,12 @@ class AB.Router extends AB.Router
         # We reuse the protocol from the root url.
         rootUrl = _absoluteUrl()
         protocol = rootUrl.match(/(.*:\/\/).*/)[1]
-        rootUrl = "#{protocol}#{_requestHost}"
+
+        # We strip the localhost part and port since that would be added by the proxy in production to address
+        # the node server behind the proxy, but we need the redirect URI's to point to the proxy.
+        requestHost = _requestHost.match(/(?:localhost\.)?([^:]*)(?::.*)?/)[1]
+
+        rootUrl = "#{protocol}#{requestHost}"
 
         options ?= {}
         options.rootUrl = rootUrl
@@ -55,7 +65,7 @@ class AB.Router extends AB.Router
           # Kill connection if the body becomes too big
           if body.length > 1e6
             body = null
-            response.writeHead(413, 'Content-Type': 'text/plain')
+            response.writeHead 413, 'Content-Type': 'text/plain'
             response.end()
             request.connection.destroy()
 
@@ -79,6 +89,10 @@ class AB.Router extends AB.Router
           if postData?.loginToken
             script = "<script>window._meteorLoginToken = '#{postData.loginToken}';</script>"
             Inject.rawHead 'Artificial.Base.Router', script, response
+
+          # HACK: Someone down the line doesn't want to respond to post requests
+          # (returns 405 error), so we pretend this was a get request from here on.
+          request.method = "GET"
 
           next()
 
