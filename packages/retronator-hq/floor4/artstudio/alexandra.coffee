@@ -253,8 +253,8 @@ class HQ.ArtStudio.Alexandra extends HQ.Actors.Alexandra
       form: [Vocabulary.Keys.Verbs.TalkTo, alexandra]
       action: =>
         # We need to know if the player has the drawing app.
-        pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-        hasDrawingApp = PAA.PixelBoy.Apps.Drawing in pixelBoy.os.currentAppsSituation().things()
+        pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+        hasDrawingApp = PAA.PixelPad.Apps.Drawing in pixelPad.os.currentAppsSituation().things()
         Tracker.nonreactive => @script.ephemeralState 'hasDrawingApp', hasDrawingApp
         
         @startScript()

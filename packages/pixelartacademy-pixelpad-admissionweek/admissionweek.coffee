@@ -9,7 +9,7 @@ class PAA.PixelPad.Apps.AdmissionWeek extends PAA.PixelPad.App
   @id: -> 'PixelArtAcademy.PixelPad.Apps.AdmissionWeek'
   @url: -> 'admissionweek'
 
-  @version: -> '0.0.3'
+  @version: -> '0.1.0'
 
   @register @id()
   template: -> @constructor.id()
