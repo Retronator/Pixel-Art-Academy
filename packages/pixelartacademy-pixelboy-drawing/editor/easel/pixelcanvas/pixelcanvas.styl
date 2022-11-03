@@ -1,0 +1,50 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+  &.landsofillusions-assets-spriteeditor-pixelcanvas
+    background initial
+
+  .drawing-area
+    position absolute
+    z-index 1
+    background atariGray(6)
+    box-sizing content-box
+    border solid atariGray(6)
+    box-shadow -1rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
+    transition all 0.6s
+
+    &.hidden
+      display none
+
+    &.completed
+      &::before
+        content '︎'
+        position absolute
+        z-index 1
+        top -2rem
+        right -2rem
+        width 10rem
+        height 8rem
+        background-image image('/pixelartacademy/practice/project/asset/sprite/clipboardcomponent/completedcheckmark.png')
+
+    canvas
+      absolute-cover-size()
+
+.pixelartacademy-pixelboy-apps-drawing.editor-easel
+  &.editor-active
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel.dragging
+      .fatamorgana-interface.move-canvas
+        .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+          .drawing-area
+            transition none !important
+
+  &.active-asset:not(.editor-active)
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel
+      .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+        .drawing-area
+          transition top 0.6s 0.2s, left 0.6s 0.2s, width 0.2s, height 0.2s
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-easel.drawing-active
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+      .drawing-area
+        transition all 0.2s

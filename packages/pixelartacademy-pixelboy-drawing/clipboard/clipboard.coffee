@@ -15,7 +15,7 @@ class PAA.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
     if portfolioScale < 1
       # The asset was scaled down in the portfolio, but we should remain at least pixel perfect in the clipboard.
       displayScale = LOI.adventure.interface.display.scale()
-      minimumScale = 1 / displayScale
+      minimumScale = 1 / displayScale / window.devicePixelRatio
       scale = Math.max portfolioScale, minimumScale
 
     else

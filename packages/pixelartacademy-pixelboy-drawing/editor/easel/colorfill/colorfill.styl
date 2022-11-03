@@ -1,0 +1,35 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-easel-colorfill
+  position absolute
+  top 10rem
+  right 78rem
+  width 23rem
+  height 39rem
+
+  &::before
+  &::after
+    content ''
+    absolute-cover()
+
+  &::before
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/jar-back.png')
+
+  &::after
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/jar-front.png')
+
+  .color
+    position absolute
+    transition all 0.2s
+
+    &.top
+      left 5rem
+      top 9rem
+      width 13rem
+      height 1rem
+
+    &.bottom
+      left 1rem
+      top 10rem
+      width 21rem
+      height 27rem

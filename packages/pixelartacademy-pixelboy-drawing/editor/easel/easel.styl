@@ -1,0 +1,70 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing.editor-easel
+  &.active-asset
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel
+      transition all 0.5s 1s
+      pointer-events initial
+
+  &.editor-active
+    .pixelartacademy-pixelboy-apps-drawing-clipboard
+      top calc(50% - 130rem)
+      left -200rem
+
+    .pixelartacademy-pixelboy-apps-drawing-portfolio
+      visibility hidden
+      opacity 0
+      transition all 0s
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-easel
+    absolute-cover()
+    pointer-events none
+    user-select none
+
+    .fatamorgana-interface
+      .fatamorgana-area.application
+        position initial
+
+    .fatamorgana-menu
+      display none
+
+    .fatamorgana-toolbox
+      .tools
+        list-style none
+        padding 0
+        margin 0
+
+        .tool
+          position absolute
+          cursor pointer
+
+          .tool-button
+            absolute-cover-size()
+            opacity 0
+            z-index 4
+
+        .color-picker
+          width 31rem
+          height 12rem
+
+          &:hover
+            &::after
+              top -2rem
+
+          &.active
+            display none
+
+          &::after
+          &::before
+            content ''
+            absolute-cover-size()
+
+          &::after
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/eyedropper.png')
+            transition all ease-out 0.1s
+
+          &::before
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/eyedropper-shadow.png')
+
+  .pixelartacademy-pixelboy-apps-drawing-portfolio
+    transition all 0s 1s

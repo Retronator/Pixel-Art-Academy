@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
@@ -70,6 +71,23 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
         fileData.child('pixelGrid').set 'enabled', drawingActive
       
   defaultInterfaceData: -> throw new AE.NotImplementedException "Editor must provide default interface data."
+  
+  getShortcuts: ->
+    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
+  
+    currentMappingId: 'default'
+    default:
+      name: "Default"
+      mapping:
+        "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
+        "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
+        "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+        "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+      
+        "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
+        "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
+        "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
+        "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
 
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'

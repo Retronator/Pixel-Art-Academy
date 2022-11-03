@@ -18,8 +18,11 @@ html.landsofillusions-style-adventure
       cursor pointer
 
 .pixelartacademy-pixelboy-os-root
-  background atariCyan(0) image('/pixelartacademy/pixelboy/background.png') center bottom repeat-x
-  background-size 21rem 21rem !important
+  &::before
+    content ''
+    absolute-cover()
+    background atariCyan(0) image('/pixelartacademy/pixelboy/background.png') center bottom repeat-x
+    background-size 21rem 21rem !important
 
 .pixelartacademy-pixelboy-os
   position relative

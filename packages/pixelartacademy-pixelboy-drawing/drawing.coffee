@@ -52,7 +52,12 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     # Initialize components.
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
-    @editor new @constructor.Editor.Desktop @
+  
+    @autorun (computation) =>
+      return unless editorId = @state('editorId')
+      
+      editorClass = LOI.Adventure.Thing.getClassForId editorId
+      @editor new editorClass @
 
     @autorun (computation) =>
       portfolio = @portfolio()

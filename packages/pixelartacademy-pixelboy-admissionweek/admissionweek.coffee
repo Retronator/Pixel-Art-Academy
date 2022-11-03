@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.AdmissionWeek extends PAA.PixelBoy.App
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.AdmissionWeek'
   @url: -> 'admissionweek'
 
-  @version: -> '0.0.3'
+  @version: -> '0.1.0'
 
   @register @id()
   template: -> @constructor.id()

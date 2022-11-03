@@ -30,7 +30,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     ,
       EJSON.equals
 
-  canEdit: -> PAA.PixelBoy.Apps.Drawing.canEdit()
+  canEdit: -> true # PAA.PixelBoy.Apps.Drawing.canEdit()
   canUpload: -> PAA.PixelBoy.Apps.Drawing.canUpload()
   
   assetPlaceholderStyle: ->

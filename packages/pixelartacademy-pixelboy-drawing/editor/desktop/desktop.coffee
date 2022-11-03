@@ -258,25 +258,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         applicationArea:
           type: FM.MultiView.id()
           views: views
-          
-    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
   
-    shortcuts =
-      currentMappingId: 'default'
+    shortcuts = _.defaults
       default:
-        name: "Default"
         mapping:
-          "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
-          "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
-          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
-          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
           
-          "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-          "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+    ,
+      @getShortcuts()
 
     # Return combined interface data.
     {activeToolId, components, layouts, shortcuts}

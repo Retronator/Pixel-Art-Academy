@@ -42,6 +42,7 @@ Package.onUse(function(api) {
   api.addComponent('clipboard..');
 
   api.addFile('editor..');
+  api.addStyle('editor..');
   api.addFile('editor/editors');
   api.addFile('editor/assetloader');
   api.addFile('editor/pixelcanvascomponents');
@@ -63,4 +64,14 @@ Package.onUse(function(api) {
 
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');
+
+  api.addComponent('editor/easel..');
+  api.addComponent('editor/easel/frame..');
+  api.addComponent('editor/easel/pixelcanvas..');
+  api.addComponent('editor/easel/colorfill..');
+
+  api.addFile('editor/easel/tools..');
+
+  api.addFile('editor/easel/actions..');
+  api.addFile('editor/easel/actions/displaymode');
 });

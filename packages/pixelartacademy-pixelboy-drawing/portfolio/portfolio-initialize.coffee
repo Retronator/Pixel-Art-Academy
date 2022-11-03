@@ -120,7 +120,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
   
         # New artworks can be created if the player can edit art with built-in editors.
         # TODO: Enable ability to create artworks.
-        if false # PAA.PixelBoy.Apps.Drawing.canEdit()
+        if true # PAA.PixelBoy.Apps.Drawing.canEdit()
           assets.push
             _id: @_newArtworkAsset.urlParameter()
             index: assets.length
