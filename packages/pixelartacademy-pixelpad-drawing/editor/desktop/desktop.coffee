@@ -400,9 +400,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           type: FM.MultiView.id()
           views: views
   
-    shortcuts = _.defaults
+    shortcuts = _.defaultsDeep
       default:
         mapping:
+          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
           
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
