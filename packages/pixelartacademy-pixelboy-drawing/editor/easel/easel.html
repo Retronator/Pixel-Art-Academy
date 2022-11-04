@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel">
-  <div class="pixelartacademy-pixelboy-apps-drawing-editor-easel {{drawingActiveClass}} {{focusedModeClass}} {{displayedAsset.editorStyleClasses}} {{draggingClass}} {{resizingDirectionClass}}">
+  <div class="pixelartacademy-pixelboy-apps-drawing-editor-easel pixelartacademy-pixelboy-apps-drawing-editor {{drawingActiveClass}} {{focusedModeClass}} {{displayedAsset.editorStyleClasses}} {{draggingClass}} {{resizingDirectionClass}}">
     {{> Render interface}}
 
     {{#if active}}
@@ -15,6 +15,15 @@
         .pixelartacademy-pixelboy-os-root::before {
           opacity: 1;
           transition: opacity 0.2s 1s;
+        }
+      </style>
+    {{/if}}
+
+    {{#if drawingActive}}
+      <style>
+        html.adventure .build-version {
+          opacity: 0 !important;
+          pointer-events: none;
         }
       </style>
     {{/if}}

@@ -99,13 +99,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     return offScreenStyle unless assetData = displayedAsset.document()
     
     editorActive = @easel.active()
+    
+    activeZoomedIn = editorActive and @easel.displayMode() isnt PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
   
-    if editorActive
-      # When the editor is open, the size depends on the internal pixel canvas camera scale.
+    if activeZoomedIn
+      # When the editor is open and zoomed in, the size depends on the internal pixel canvas camera scale.
       return offScreenStyle unless scale = @camera().scale()
       
     else
-      # When we're on the clipboard, the size depends on the size provided by the asset's clipboard component.
+      # When we're on the clipboard or in normal display mode, the size depends on the size provided by the asset's clipboard component.
       scale = clipboardAssetSize.scale
 
     width = assetData.bounds.width * scale
@@ -116,7 +118,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     # Resize the border proportionally to its clipboard size
     borderWidth = clipboardAssetSize.borderWidth / clipboardAssetSize.scale * scale
 
-    if editorActive
+    if activeZoomedIn
       # Let the parent implementation handle positioning.
       style = super arguments...
       
@@ -125,35 +127,54 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       style.top = "#{style.top.substring(0, style.top.length - 1)} - #{borderWidth}rem)"
 
     else
-      $assetPlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .asset-placeholder')
+      if editorActive
+        $origin = $('.pixelartacademy-pixelboy-apps-drawing-editor-easel-layout .frame')
+        
+      else
+        $origin = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
+        
+      $assetPlaceholder = $origin.find('.asset-placeholder')
+
       unless $assetPlaceholder.length
         # Force re-measure after the asset placeholder is visible again.
         Meteor.setTimeout => @assetStyleChangeDependency.changed()
         return {}
 
       assetOffset = $assetPlaceholder.offset()
+      originOffset = $origin.offset()
 
-      $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
-      positionOrigin = $clipboard.offset()
-
-      # Make these measurements relative to clipboard center.
-      positionOrigin.left += $clipboard.width() / 2
-      left = assetOffset.left - positionOrigin.left
+      # Make these measurements relative to origin center.
+      originOffset.left += $origin.width() / 2
+      left = assetOffset.left - originOffset.left
+      
+      # In the editor, the frame origin is 87 rem to the right of the center.
+      left += 87 * displayScale if editorActive
+      
       left = "calc(50% + #{left}px)"
-
-      # Top is relative to center only when we have an active asset.
-      activeAsset = @easel.activeAsset()
-
-      positionOrigin.top += $clipboard.height() / 2 if activeAsset
-      top = assetOffset.top - positionOrigin.top
-
-      if activeAsset
-        top = "calc(50% + #{top}px)"
-
+    
+      if editorActive
+        # Editor is open, we need to be positioned as dictated by the layout.
+        frameOffset = @easel.getLayoutView().frameOffset()
+        top = "#{frameOffset.assetTop}rem"
+    
       else
-        # Clipboard is hidden up, so move the asset up and relative to top.
-        top -= 265 * displayScale
+        # Top is relative to center only when we have an active asset.
+        activeAsset = @easel.activeAsset()
   
+        originOffset.top += $origin.height() / 2 if activeAsset
+        top = assetOffset.top - originOffset.top
+        
+        if editorActive
+          # Editor is open, we need to be centered vertically.
+          top = "calc(50% - #{})"
+  
+        if activeAsset
+          top = "calc(50% + #{top}px)"
+  
+        else
+          # Clipboard is hidden up, so move the asset up and relative to top.
+          top -= 265 * displayScale
+    
       style =
         width: "#{width}rem"
         height: "#{height}rem"

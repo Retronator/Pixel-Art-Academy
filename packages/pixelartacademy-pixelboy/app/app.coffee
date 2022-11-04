@@ -62,7 +62,7 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
   setMinimumPixelBoySize: ->
     @setFixedPixelBoySize 310, 230
 
-  setMaximumPixelBoySize: (options = {}) ->
+  getMaximumPixelBoySize: (options = {}) ->
     display = LOI.adventure.interface.display
 
     viewport = display.viewport()
@@ -77,8 +77,12 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
       # Add gaps for the back button and top border
       width -= 100
       height -= 20
-
-    @setFixedPixelBoySize width, height
+      
+    {width, height}
+    
+  setMaximumPixelBoySize: (options = {}) ->
+    size = @getMaximumPixelBoySize options
+    @setFixedPixelBoySize size.width, size.height
 
   maximize: ->
     @os.pixelBoy.size

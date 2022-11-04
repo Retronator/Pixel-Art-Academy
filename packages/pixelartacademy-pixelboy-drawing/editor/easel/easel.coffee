@@ -52,8 +52,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
           views.splice existingViewIndex, 1
           Tracker.nonreactive => applicationAreaData.set 'views', views
 
-    viewsToolRequirements =
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
+    viewsToolRequirements = {}
 
     for viewId, toolKeys of viewsToolRequirements
       do (viewId, toolKeys) =>
@@ -63,9 +62,36 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
           anyToolIsAvailable = _.some toolKeys, (toolKey) => @toolIsAvailable toolKey
 
           handleView viewId, anyToolIsAvailable
-
-    
   
+    # Reactively add tools and actions.
+    toolRequirements =
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
+      "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+  
+    actionRequirements =
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.ClearPaint.id()}": PAA.Practice.Software.Tools.ToolKeys.ClearColor
+  
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      applicationAreaData = @interface.currentApplicationAreaData()
+      views = applicationAreaData.get 'views'
+      layoutViewIndex = _.findIndex views, (view) => view.type is PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout.id()
+      
+      tools = [
+        LOI.Assets.Editor.Tools.Arrow.id()
+      ]
+      
+      tools.push toolId for toolId, toolKey of toolRequirements when @toolIsAvailable toolKey
+      actions = (actionId for actionId, toolKey of actionRequirements when @toolIsAvailable toolKey)
+  
+      Tracker.nonreactive =>
+        applicationAreaData.set "views.#{layoutViewIndex}.toolbox.tools", tools
+        applicationAreaData.set "views.#{layoutViewIndex}.actions", actions
+        
     # Set zoom levels based on display scale.
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -123,6 +149,22 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
       else
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
+    
+  getLayoutView: ->
+    @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout
+    
+  cycleDisplayMode: ->
+    displayMode = @displayMode()
+  
+    switch displayMode
+      when @constructor.DisplayModes.Normal
+        @displayMode @constructor.DisplayModes.Zoomed
+        
+      when @constructor.DisplayModes.Zoomed
+        @displayMode @constructor.DisplayModes.Focused
+      
+      when @constructor.DisplayModes.Focused
+        @displayMode @constructor.DisplayModes.Normal
 
   onBackButton: ->
     # Cycle back display modes on back button.
@@ -144,13 +186,16 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     views = [
       type: FM.Menu.id()
       items: [
-        PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
       ]
     ,
-      type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.Frame.id()
+      type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout.id()
       toolbox:
         type: FM.Toolbox.id()
         tools: []
+      colorFill:
+        type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill.id()
     ,
       type: FM.EditorView.id()
       files: @_dummyEditorViewFiles
@@ -165,8 +210,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         applicationArea:
           type: FM.MultiView.id()
           views: views
-          
-    shortcuts = @getShortcuts()
+  
+    shortcuts = _.defaultsDeep
+      default:
+        mapping:
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": key: AC.Keys.b
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": key: AC.Keys.b
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
+    ,
+      @getShortcuts()
 
     # Return combined interface data.
     {activeToolId, components, layouts, shortcuts}

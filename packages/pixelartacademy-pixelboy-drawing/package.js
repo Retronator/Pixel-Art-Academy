@@ -66,12 +66,17 @@ Package.onUse(function(api) {
   api.addFile('editor/desktop/actions/focus');
 
   api.addComponent('editor/easel..');
-  api.addComponent('editor/easel/frame..');
+  api.addComponent('editor/easel/layout..');
   api.addComponent('editor/easel/pixelcanvas..');
   api.addComponent('editor/easel/colorfill..');
 
   api.addFile('editor/easel/tools..');
+  api.addFile('editor/easel/tools/brush..');
+  api.addFile('editor/easel/tools/brush/square');
+  api.addFile('editor/easel/tools/brush/pixel');
+  api.addFile('editor/easel/tools/brush/round');
 
   api.addFile('editor/easel/actions..');
   api.addFile('editor/easel/actions/displaymode');
+  api.addFile('editor/easel/actions/clearpaint');
 });
