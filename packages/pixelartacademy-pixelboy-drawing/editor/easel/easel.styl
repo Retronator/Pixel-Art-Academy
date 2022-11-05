@@ -42,12 +42,12 @@
               display none
 
           &::after
-            z-index 2
+            z-index 4
 
           .tool-button
             absolute-cover-size()
             opacity 0
-            z-index 5
+            z-index 7
             cursor pointer
 
         .color-picker
@@ -135,7 +135,7 @@
             top 27rem
             width 10rem
             height 3rem
-            z-index 4
+            z-index 6
             background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brushshadow-round.png')
 
         .color-fill
@@ -158,13 +158,13 @@
         .action-button
           absolute-cover-size()
           opacity 0
-          z-index 5
+          z-index 7
 
         &::after
         &::before
           content ''
           absolute-cover-size()
-          z-index 4
+          z-index 6
           transition all ease-out 0.1s
 
       .cycle-display-mode

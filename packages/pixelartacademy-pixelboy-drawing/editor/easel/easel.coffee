@@ -20,13 +20,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
   
   @DisplayModes =
     Normal: 'Normal'
-    Zoomed: 'Zoomed'
+    ZoomedIn: 'ZoomedIn'
     Focused: 'Focused'
 
   constructor: ->
     super arguments...
     
     @displayMode = new ReactiveField @constructor.DisplayModes.Normal
+    
+    @_lastZoomedInScale = 1
   
   onCreated: ->
     super arguments...
@@ -158,20 +160,44 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
   
     switch displayMode
       when @constructor.DisplayModes.Normal
-        @displayMode @constructor.DisplayModes.Zoomed
+        @enterZoomedDisplayMode()
         
-      when @constructor.DisplayModes.Zoomed
-        @displayMode @constructor.DisplayModes.Focused
+      when @constructor.DisplayModes.ZoomedIn
+        @enterFocusedDisplayMode()
       
       when @constructor.DisplayModes.Focused
-        @displayMode @constructor.DisplayModes.Normal
+        @enterNormalDisplayMode()
+        
+  enterNormalDisplayMode: ->
+    @_saveLastZoomedInScale()
+    @displayMode @constructor.DisplayModes.Normal
+    
+  enterZoomedDisplayMode: ->
+    @_applyLastZoomedInScale() if @displayMode() is @constructor.DisplayModes.Normal
+    @displayMode @constructor.DisplayModes.ZoomedIn
+    
+  enterFocusedDisplayMode: ->
+    @_applyLastZoomedInScale() if @displayMode() is @constructor.DisplayModes.Normal
+    @displayMode @constructor.DisplayModes.Focused
+    
+  _applyLastZoomedInScale: ->
+    pixelCanvas = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
+    pixelCanvas.camera().setScale @_lastZoomedInScale
+
+  _saveLastZoomedInScale: ->
+    pixelCanvas = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
+    @_lastZoomedInScale = pixelCanvas.camera().scale()
 
   onBackButton: ->
     # Cycle back display modes on back button.
     displayMode = @displayMode()
     return super(arguments...) if displayMode is @constructor.DisplayModes.Normal
   
-    @displayMode if displayMode is @constructor.DisplayModes.Zoomed then @constructor.DisplayModes.Normal else @constructor.DisplayModes.Zoomed
+    if displayMode is @constructor.DisplayModes.ZoomedIn
+      @enterNormalDisplayMode()
+      
+    else
+      @enterZoomedDisplayMode()
 
     # Inform that we've handled the back button.
     true
@@ -217,6 +243,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": key: AC.Keys.b
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": key: AC.Keys.b
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
+  
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": key: AC.Keys.f
     ,
       @getShortcuts()
 

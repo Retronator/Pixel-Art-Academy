@@ -1,14 +1,9 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-pixelboy-apps-drawing.editor-easel
-  &.editor-active
-    .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
-      .frame
-        left 87rem
-
 .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
   position absolute
   left 50%
+  transition all 0.6s
 
   .frame
     position absolute
@@ -16,13 +11,13 @@
     left calc(50vw + 71rem)
     transition all 1s
 
-    .frame-bottom
+    .frame-back
       position absolute
-      top 0
-      left -57rem
-      width 114rem
-      height 94rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/frame-bottom.png')
+      top -189rem
+      left -63rem
+      width 126rem
+      height 283rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/frame.png')
 
     .tray
       position absolute
@@ -30,28 +25,25 @@
       left -71rem
       width 142rem
       height 68rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/tray-back.png')
+
+      .tray-back
+        absolute-cover()
+        z-index 2
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/tray-back.png')
 
       .tray-front
         position absolute
-        z-index 3
+        z-index 5
         top 43rem
         left 0
         width 142rem
         height 13rem
         background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/tray-front.png')
 
-    .frame-top-back
-      position absolute
-      bottom 0
-      left -63rem
-      width 126rem
-      height 189rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/frame-top.png')
-
     .movable-stand
       position absolute
-      transition all 1s
+      z-index 3
+      transition bottom 1s
 
       .movable-stand-bottom
         position absolute
@@ -67,8 +59,29 @@
         width 32rem
         height 43rem
         background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/movablestand-top.png')
-        transition all 1s
+        transition bottom 1s
 
       .asset-placeholder
         position absolute
         bottom 0
+
+.pixelartacademy-pixelboy-apps-drawing.editor-easel
+  &.editor-active
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
+      .frame
+        left 87rem
+
+.pixelartacademy-pixelboy-apps-drawing-editor-easel
+  &.zoomed-in-mode
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
+      bottom 0 !important
+
+  &.focused-mode
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
+      bottom -55rem !important
+
+  &.zoomed-in-mode
+  &.focused-mode
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
+      .movable-stand
+        visibility hidden

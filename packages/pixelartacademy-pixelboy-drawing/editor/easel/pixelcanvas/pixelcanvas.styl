@@ -10,7 +10,7 @@
     background atariGray(6)
     box-sizing content-box
     border solid atariGray(6)
-    transition all 0.6s
+    transition top 0.6s, left 0.6s
 
     &.hidden
       display none
@@ -29,6 +29,13 @@
     canvas
       absolute-cover-size()
 
+.pixelartacademy-pixelboy-apps-drawing-editor-easel
+  &.zoomed-in-mode
+  &.focused-mode
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+      .drawing-area
+        z-index 1
+
 .pixelartacademy-pixelboy-apps-drawing.editor-easel
   &.editor-active
     .pixelartacademy-pixelboy-apps-drawing-editor-easel.dragging
@@ -46,4 +53,4 @@
   .pixelartacademy-pixelboy-apps-drawing-editor-easel.drawing-active
     .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
       .drawing-area
-        transition all 0.2s
+        transition top 0.2s, left 0.2s

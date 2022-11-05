@@ -132,17 +132,21 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
   movableStandStyle: ->
     return unless frameOffset = @frameOffset()
   
-    bottom = if @easel.active() then frameOffset.movableStandBottom else @movableStandMinimumBottom
+    bottom = if @_canvasHeld() then frameOffset.movableStandBottom else @movableStandMinimumBottom
     
     bottom: "#{bottom}rem"
   
   movableStandTopStyle: ->
     return unless assetSize = @assetSize()
     
-    bottom = if @easel.active() then assetSize.height - 3 else 190
+    bottom = if @_canvasHeld() then assetSize.height - 3 else 190
     
     bottom: "#{bottom}rem"
     
+  _canvasHeld: ->
+    normalDisplayMode = @easel.displayMode() is PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
+    @easel.active() and normalDisplayMode
+
   events: ->
     super(arguments...).concat
       'click .action-button': @onClickActionButton

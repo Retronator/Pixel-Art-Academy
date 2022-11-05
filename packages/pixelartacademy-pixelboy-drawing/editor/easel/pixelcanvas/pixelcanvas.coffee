@@ -40,10 +40,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       return unless displayedAsset.clipboardComponent.isCreated()
       return unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
     
-      # Dictate camera scale when asset is on clipboard and when setting for the first time.
+      # Dictate camera scale when asset is on clipboard and normal display mode.
       clipboardAssetScale = clipboardAssetSize.scale
+      normalDisplayMode = @easel.displayMode() is PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
     
-      unless @easel.active() and displayedAsset is @_previousDisplayedAsset and clipboardAssetScale is @_previousClipboardSpriteScale
+      if not @easel.active() or normalDisplayMode or displayedAsset isnt @_previousDisplayedAsset or clipboardAssetScale isnt @_previousClipboardSpriteScale
         Tracker.nonreactive => camera.setScale clipboardAssetScale
     
       @_previousDisplayedAsset = displayedAsset
