@@ -10,7 +10,14 @@ class FM.Tool extends FM.Operator
     leftButton: false
     middleButton: false
     rightButton: false
+  
+  extraToolClasses: -> '' # Override to provide extra style classes to be used besides its display name.
+  
+  toolClasses: ->
+    toolClass = _.kebabCase @displayName()
     
+    "#{toolClass} #{@extraToolClasses()}"
+  
   isActive: ->
     @interface.active() and @interface.activeToolId() is @id()
 
