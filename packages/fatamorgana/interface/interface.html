@@ -1,5 +1,5 @@
 <template name="FataMorgana.Interface">
-  <div class="fatamorgana-interface {{toolClass}}">
+  <div class="fatamorgana-interface {{activeTool.toolClasses}}">
     {{> FataMorgana.ApplicationArea currentApplicationAreaData}}
     {{#each windows}}
       {{> FataMorgana.FloatingArea}}

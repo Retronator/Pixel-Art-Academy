@@ -4,6 +4,13 @@ class FM.Tool extends FM.Operator
   @icon: -> # Override to provide a URL to this tool's icon.
   icon: -> @constructor.icon()
 
+  extraToolClasses: -> '' # Override to provide extra style classes to be used besides its display name.
+  
+  toolClasses: ->
+    toolClass = _.kebabCase @displayName()
+    
+    "#{toolClass} #{@extraToolClasses()}"
+  
   constructor: ->
     super arguments...
     
