@@ -22,13 +22,9 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
     $(document).off '.landsofillusions-assets-components-toolbox'
 
-  toolClass: ->
+  toolClasses: ->
     tool = @currentData()
-
-    toolClass = _.kebabCase tool.name
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
+    tool.toolClasses()
 
   activeToolClass: ->
     tool = @currentData()
