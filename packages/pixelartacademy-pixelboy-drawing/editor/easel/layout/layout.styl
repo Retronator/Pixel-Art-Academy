@@ -13,11 +13,11 @@
 
     .frame-back
       position absolute
-      top -189rem
-      left -63rem
-      width 126rem
-      height 283rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/frame.png')
+      top 0
+      left -57rem
+      width 114rem
+      height 94rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/frame-bottom.png')
 
     .tray
       position absolute
@@ -39,6 +39,14 @@
         width 142rem
         height 13rem
         background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/tray-front.png')
+
+    .frame-top-back
+      position absolute
+      bottom 0
+      left -63rem
+      width 126rem
+      height 189rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/frame-top.png')
 
     .movable-stand
       position absolute
@@ -83,5 +91,6 @@
   &.zoomed-in-mode
   &.focused-mode
     .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
+      .frame-top-back
       .movable-stand
         visibility hidden
