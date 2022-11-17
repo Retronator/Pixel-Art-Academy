@@ -14,13 +14,21 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
 
     @easel = @interface.ancestorComponentOfType PAA.PixelBoy.Apps.Drawing.Editor.Easel
     
+    frameLeft = 87 # rem
     frameBottom = 49 # rem
     @movableStandMinimumBottom = 16 # rem
+    movableStandMaximumBottom = 130 # rem
     movableStandMinimumOffset = frameBottom + @movableStandMinimumBottom
     layoutMaximumOffset = 45 # rem
     
+    @camera = new ComputedField =>
+      @easel.getPixelCanvas()?.camera()
+  
+    @pixelBoySize = new ComputedField =>
+      @easel.drawing.getMaximumPixelBoySize fullscreen: true
+    
     @pixelBoyHeight = new ComputedField =>
-      @easel.drawing.getMaximumPixelBoySize(fullscreen: true).height
+      @pixelBoySize().height
       
     @layoutAdjustedMaximumOffset = new ComputedField =>
       # Proportionally adjust how much we offset the layout based on how much over safe area height we are.
@@ -34,17 +42,19 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
       return unless displayedAsset = @easel.displayedAsset()
       return unless displayedAsset.clipboardComponent.isCreated()
       return unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
-    
-      width = clipboardAssetSize.contentWidth + 2 * clipboardAssetSize.borderWidth
-      height = clipboardAssetSize.contentHeight + 2 * clipboardAssetSize.borderWidth
-      
-      { width, height }
-      
-    @frameOffset = new ComputedField =>
-      return unless assetSize = @assetSize()
-      pixelBoyHeight = @pixelBoyHeight()
+      return unless camera = @camera()
   
-      totalOffset = (pixelBoyHeight - assetSize.height) / 2
+      width = camera.drawingAreaCanvasBounds.width() * clipboardAssetSize.scale + 2 * clipboardAssetSize.borderWidth
+      height = camera.drawingAreaCanvasBounds.height() * clipboardAssetSize.scale + 2 * clipboardAssetSize.borderWidth
+      
+      { width, height, clipboardAssetSize }
+      
+    @defaultDrawingArea = new ComputedField =>
+      return unless assetSize = @assetSize()
+      
+      pixelBoySize = @pixelBoySize()
+  
+      totalOffset = (pixelBoySize.height - assetSize.height) / 2
   
       layoutBottom = 0
       movableStandBottom = @movableStandMinimumBottom
@@ -71,9 +81,90 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
           # Raise movable stand to achieve total offset.
           movableStandBottom += remainingOffset
           
-      assetTop = pixelBoyHeight - assetBottom - assetSize.height
+      assetTop = pixelBoySize.height - assetBottom - assetSize.height
+      
+      frameCenter = pixelBoySize.width / 2 + frameLeft
+      
+      borderWidth = assetSize.clipboardAssetSize.borderWidth
+      
+      bottom: assetBottom - borderWidth
+      top: assetTop + borderWidth
+      left: frameCenter - assetSize.width / 2 + borderWidth
+      right: frameCenter + assetSize.width / 2 - borderWidth
   
-      { layoutBottom, movableStandBottom, assetTop }
+    @defaultCameraOrigin = new ComputedField =>
+      return unless defaultDrawingArea = @defaultDrawingArea()
+      return unless camera = @camera()
+      return unless assetSize = @assetSize()
+  
+      drawingAreaCanvasBounds = camera.drawingAreaCanvasBounds.toDimensions()
+      scale = assetSize.clipboardAssetSize.scale
+      
+      defaultAssetOrigin =
+        x: defaultDrawingArea.left - drawingAreaCanvasBounds.left * scale
+        y: defaultDrawingArea.top - drawingAreaCanvasBounds.top * scale
+  
+      pixelBoySize = @pixelBoySize()
+      
+      origin =
+        x: (pixelBoySize.width / 2 - defaultAssetOrigin.x) / scale
+        y: (pixelBoySize.height / 2 - defaultAssetOrigin.y) / scale
+      
+      origin
+      
+    @frameOffset = new ComputedField =>
+      return unless assetSize = @assetSize()
+      return unless camera = @camera()
+  
+      # Calculate drawing area canvas bottom in pixel canvas display coordinates.
+      drawingAreaBottomCanvas = camera.drawingAreaCanvasBounds.bottom()
+
+      scale = camera.scale()
+      centerRelativeToCameraOrigin = camera.origin()
+      drawingAreaBottomRelativeToCenter = (drawingAreaBottomCanvas - centerRelativeToCameraOrigin.y) * scale
+  
+      pixelBoySize = @pixelBoySize()
+      drawingAreaBottom = drawingAreaBottomRelativeToCenter + pixelBoySize.height / 2
+      
+      # Calculate the offset of the asset from the bottom of the PixelBoy.
+      totalOffset = pixelBoySize.height - (drawingAreaBottom + assetSize.clipboardAssetSize.borderWidth)
+  
+      # Determine how much each movable part needs to be offset.
+      layoutBottom = 0
+      movableStandBottom = @movableStandMinimumBottom
+      outOfBounds = false
+      
+      if totalOffset < movableStandMinimumOffset
+        assetBottom = movableStandMinimumOffset
+        outOfBounds = true
+        
+      else
+        assetBottom = totalOffset
+        
+        # Raise layout to the max.
+        remainingOffset = totalOffset - movableStandMinimumOffset
+  
+        layoutAdjustedMaximumOffset = @layoutAdjustedMaximumOffset()
+        
+        if remainingOffset <= layoutAdjustedMaximumOffset
+          layoutBottom = remainingOffset
+          assetBottom = totalOffset
+          
+        else
+          layoutBottom = layoutAdjustedMaximumOffset
+          remainingOffset -= layoutAdjustedMaximumOffset
+          
+          # Raise movable stand to achieve total offset, up to the maximum.
+          movableStandBottom += remainingOffset
+          
+          if movableStandBottom > movableStandMaximumBottom
+            movableStandBottom = movableStandMaximumBottom
+            
+            outOfBounds = true
+          
+      assetTop = pixelBoySize.height - assetBottom - assetSize.height
+  
+      { layoutBottom, movableStandBottom, assetTop, outOfBounds }
       
   displayMode: ->
     @easel.displayMode()

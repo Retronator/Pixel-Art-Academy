@@ -3,8 +3,8 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas'
+class PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas'
   @displayName: -> "Move canvas"
   
   @initialize()
@@ -42,12 +42,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
 
         editor = @interface.getEditorForActiveFile()
   
-        originDataField = editor.camera().originData()
-        origin = originDataField.value()
+        # Note: Read the starting origin directly from the origin computed field (and
+        # not origin data) so that the default is applied if the origin data is not set.
+        camera = editor.camera()
+        origin = camera.origin()
   
-        scale = editor.camera().effectiveScale()
-
-        originDataField.value
+        scale = camera.effectiveScale()
+  
+        camera.originData().value
           x: origin.x - dragDelta.x / scale
           y: origin.y - dragDelta.y / scale
 

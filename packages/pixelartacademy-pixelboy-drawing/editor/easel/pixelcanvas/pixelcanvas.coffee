@@ -57,28 +57,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       Tracker.nonreactive =>
         newDisplayMode = if easelActive then LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed else LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         @displayMode newDisplayMode
-      
-    # Reset camera origin when entering the editor. We should wait until asset data exists in
-    # case it's still being loaded (such as when entering directly into the editor via URL).
-    @_assetDataExists = new ComputedField => @assetData()?
-  
-    @autorun (computation) =>
-      return unless @easel.active()
-      return unless @_assetDataExists()
-    
-      Tracker.nonreactive =>
-        assetData = @assetData()
-        originDataField = @camera().originData()
         
-        if assetData.bounds
-          # The center of the image should be in the origin.
-          originDataField.value
-            x: (assetData.bounds.left + assetData.bounds.right) / 2
-            y: (assetData.bounds.top + assetData.bounds.bottom) / 2
-          
-        else
-          originDataField.value x: 0, y: 0
-
   hiddenClass: ->
     # Don't show the asset when clipboard is on the second page.
     'hidden' if @clipboardComponent()?.secondPageActive?()
@@ -119,7 +98,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     # Resize the border proportionally to its clipboard size
     borderWidth = clipboardAssetSize.borderWidth / clipboardAssetSize.scale * scale
 
-    if activeZoomedIn
+    if editorActive
       # Let the parent implementation handle positioning.
       style = super arguments...
       
@@ -128,54 +107,35 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       style.top = "#{style.top.substring(0, style.top.length - 1)} - #{borderWidth}rem)"
 
     else
-      if editorActive
-        $origin = $('.pixelartacademy-pixelboy-apps-drawing-editor-easel-layout .frame')
-        
-      else
-        $origin = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
-        
-      $assetPlaceholder = $origin.find('.asset-placeholder')
-
+      $assetPlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .asset-placeholder')
       unless $assetPlaceholder.length
         # Force re-measure after the asset placeholder is visible again.
         Meteor.setTimeout => @assetStyleChangeDependency.changed()
         return {}
 
       assetOffset = $assetPlaceholder.offset()
-      originOffset = $origin.offset()
 
-      # Make these measurements relative to origin center.
-      originOffset.left += $origin.width() / 2
-      left = assetOffset.left - originOffset.left
-      
-      # In the editor, the frame origin is 87 rem to the right of the center.
-      left += 87 * displayScale if editorActive
-      
+      $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
+      positionOrigin = $clipboard.offset()
+
+      # Make these measurements relative to clipboard center.
+      positionOrigin.left += $clipboard.width() / 2
+      left = assetOffset.left - positionOrigin.left
       left = "calc(50% + #{left}px)"
-    
-      if editorActive
-        # Editor is open, we need to be positioned as dictated by the layout.
-        frameOffset = @easel.getLayoutView().frameOffset()
-        top = "#{frameOffset.assetTop}rem"
-    
+
+      # Top is relative to center only when we have an active asset.
+      activeAsset = @easel.activeAsset()
+
+      positionOrigin.top += $clipboard.height() / 2 if activeAsset
+      top = assetOffset.top - positionOrigin.top
+
+      if activeAsset
+        top = "calc(50% + #{top}px)"
+
       else
-        # Top is relative to center only when we have an active asset.
-        activeAsset = @easel.activeAsset()
+        # Clipboard is hidden up, so move the asset up and relative to top.
+        top -= 265 * displayScale
   
-        originOffset.top += $origin.height() / 2 if activeAsset
-        top = assetOffset.top - originOffset.top
-        
-        if editorActive
-          # Editor is open, we need to be centered vertically.
-          top = "calc(50% - #{})"
-  
-        if activeAsset
-          top = "calc(50% + #{top}px)"
-  
-        else
-          # Clipboard is hidden up, so move the asset up and relative to top.
-          top -= 265 * displayScale
-    
       style =
         width: "#{width}rem"
         height: "#{height}rem"

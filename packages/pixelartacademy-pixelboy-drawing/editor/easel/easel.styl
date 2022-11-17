@@ -16,10 +16,18 @@
       opacity 0
       transition all 0s
 
+    .fatamorgana-interface
+      &.move-canvas
+        cursor grab
+
   .pixelartacademy-pixelboy-apps-drawing-editor-easel
     absolute-cover()
     pointer-events none
     user-select none
+
+    &.dragging
+    &.dragging *
+      cursor grabbing
 
     .fatamorgana-interface
       .fatamorgana-area.application
@@ -42,6 +50,7 @@
               display none
 
           &::after
+          &::before
             z-index 4
 
           .tool-button

@@ -81,6 +81,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
       mapping:
         "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
         "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
+        "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
         "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y

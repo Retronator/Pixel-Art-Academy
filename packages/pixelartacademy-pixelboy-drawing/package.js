@@ -47,6 +47,9 @@ Package.onUse(function(api) {
   api.addFile('editor/assetloader');
   api.addFile('editor/pixelcanvascomponents');
 
+  api.addFile('editor/tools..');
+  api.addFile('editor/tools/movecanvas');
+
   api.addComponent('editor/desktop..');
   api.addComponent('editor/desktop/pixelcanvas..');
   api.addComponent('editor/desktop/testpaper..');
@@ -58,9 +61,6 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');
   api.addComponent('editor/desktop/references/displaycomponent/reference..');
-
-  api.addFile('editor/desktop/tools..');
-  api.addFile('editor/desktop/tools/movecanvas');
 
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');

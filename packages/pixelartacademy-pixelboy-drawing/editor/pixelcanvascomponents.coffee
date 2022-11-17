@@ -15,7 +15,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
     @drawing = @interface.ancestorComponentOfType PAA.PixelBoy.Apps.Drawing
   
     @components = new ComputedField =>
-      editor = @drawing.editor()
+      return unless editor = @drawing.editor()
+      return unless editor.isCreated()
       displayedAsset = editor.displayedAsset()
       
       components = []

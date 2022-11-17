@@ -29,6 +29,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     @displayMode = new ReactiveField @constructor.DisplayModes.Normal
     
     @_lastZoomedInScale = 1
+    @_lastZoomedInOrigin = x: 0, y: 0
   
   onCreated: ->
     super arguments...
@@ -72,6 +73,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   
     actionRequirements =
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
@@ -137,6 +139,57 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
           @_lastActiveTool = activeTool
           Tracker.nonreactive => @interface.deactivateTool()
   
+    # Reset camera when entering the editor. Make sure the default camera info is available.
+    @_defaultCameraInfoAvailable = new ComputedField =>
+      # Wait until the clipboard is created so that we have the correct scale.
+      return false unless @activeAsset()?.clipboardComponent.assetSize?()?
+    
+      # Wait until the default camera origin is available.
+      layoutView = @getLayoutView()
+      return false unless layoutView.defaultCameraOrigin()
+    
+      true
+  
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      return unless @active()
+      return unless @_defaultCameraInfoAvailable()
+    
+      Tracker.nonreactive => @_applyDefaultCamera()
+      
+    # Automatically enter zoomed-in mode when moving the canvas
+    # in normal mode and the layout can't compensate for its position.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      return unless @displayMode() is @constructor.DisplayModes.Normal
+    
+      moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()
+      return unless moveTool.moving()
+    
+      layoutView = @getLayoutView()
+      return unless layoutView.frameOffset().outOfBounds
+  
+      # Enter zoomed-in mode while preserving current scale.
+      @enterZoomedInDisplayMode false
+  
+    # Automatically enter zoomed-in mode if camera scale doesn't match the default scale.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      return unless @displayMode() is @constructor.DisplayModes.Normal
+      return unless clipboardAssetSize = @displayedAsset()?.clipboardComponent.assetSize?()
+  
+      # Depend on camera scale changes.
+      pixelCanvas = @getPixelCanvas()
+      pixelCanvas.camera().scale()
+  
+      # Give the camera scale a chance to update when display modes are being changed.
+      Tracker.afterFlush =>
+        scale = pixelCanvas.camera().scale()
+        return if scale is clipboardAssetSize.scale
+      
+        # Enter zoomed-in mode while preserving current scale.
+        @enterZoomedInDisplayMode false
+
   onRendered: ->
     super arguments...
 
@@ -155,12 +208,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
   getLayoutView: ->
     @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout
     
+  getPixelCanvas: ->
+    @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
+    
   cycleDisplayMode: ->
     displayMode = @displayMode()
   
     switch displayMode
       when @constructor.DisplayModes.Normal
-        @enterZoomedDisplayMode()
+        @enterZoomedInDisplayMode()
         
       when @constructor.DisplayModes.ZoomedIn
         @enterFocusedDisplayMode()
@@ -169,24 +225,46 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         @enterNormalDisplayMode()
         
   enterNormalDisplayMode: ->
-    @_saveLastZoomedInScale()
+    @_saveLastZoomedInCamera()
+    @_applyDefaultCamera()
     @displayMode @constructor.DisplayModes.Normal
     
-  enterZoomedDisplayMode: ->
-    @_applyLastZoomedInScale() if @displayMode() is @constructor.DisplayModes.Normal
+  enterZoomedInDisplayMode: (restoreLastCamera = true) ->
+    @_applyLastZoomedInCamera() if @displayMode() is @constructor.DisplayModes.Normal and restoreLastCamera
     @displayMode @constructor.DisplayModes.ZoomedIn
     
   enterFocusedDisplayMode: ->
-    @_applyLastZoomedInScale() if @displayMode() is @constructor.DisplayModes.Normal
+    @_applyLastZoomedInCamera() if @displayMode() is @constructor.DisplayModes.Normal
     @displayMode @constructor.DisplayModes.Focused
     
-  _applyLastZoomedInScale: ->
-    pixelCanvas = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
-    pixelCanvas.camera().setScale @_lastZoomedInScale
+  _applyLastZoomedInCamera: ->
+    pixelCanvas = @getPixelCanvas()
+    camera = pixelCanvas.camera()
+    camera.setScale @_lastZoomedInScale
+    camera.setOrigin @_lastZoomedInOrigin
 
-  _saveLastZoomedInScale: ->
-    pixelCanvas = @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
-    @_lastZoomedInScale = pixelCanvas.camera().scale()
+  _saveLastZoomedInCamera: ->
+    pixelCanvas = @getPixelCanvas()
+    camera = pixelCanvas.camera()
+    @_lastZoomedInScale = camera.scale()
+    @_lastZoomedInOrigin = camera.origin()
+    
+  _applyDefaultCamera: ->
+    clipboardAssetSize = @activeAsset().clipboardComponent.assetSize()
+    
+    # Set the scale to clipboard's calculated scale.
+    defaultCameraScale = clipboardAssetSize.scale
+    
+    # Set the origin to layout's calculated default.
+    layoutView = @getLayoutView()
+    defaultCameraOrigin = layoutView.defaultCameraOrigin()
+  
+    # Set the camera properties.
+    pixelCanvas = @getPixelCanvas()
+    camera = pixelCanvas.camera()
+
+    camera.setOrigin defaultCameraOrigin
+    camera.setScale defaultCameraScale
 
   onBackButton: ->
     # Cycle back display modes on back button.
@@ -197,7 +275,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
       @enterNormalDisplayMode()
       
     else
-      @enterZoomedDisplayMode()
+      @enterZoomedInDisplayMode()
 
     # Inform that we've handled the back button.
     true
@@ -209,11 +287,16 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
       "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas.id()}":
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
       
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
+        
     views = [
       type: FM.Menu.id()
       items: [
         LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
         LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
+        LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
+        LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
       ]
     ,
       type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout.id()
@@ -245,6 +328,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
   
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": key: AC.Keys.f
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
     ,
       @getShortcuts()
 
@@ -256,6 +341,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     
   displayModeClass: ->
     "#{_.kebabCase @displayMode()}-mode"
+  
+  draggingClass: ->
+    return unless @interface.isCreated()
+    moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()
+  
+    'dragging' if _.some [
+      moveTool.moving()
+    ]
 
   toolIsAvailable: (toolKey) ->
     return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
