@@ -15,7 +15,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
     @drawing = @interface.ancestorComponentOfType PAA.PixelPad.Apps.Drawing
   
     @components = new ComputedField =>
-      editor = @drawing.editor()
+      return unless editor = @drawing.editor()
+      return unless editor.isCreated()
       displayedAsset = editor.displayedAsset()
       
       components = []

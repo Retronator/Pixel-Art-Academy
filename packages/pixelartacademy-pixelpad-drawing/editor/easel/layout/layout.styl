@@ -42,7 +42,7 @@
 
     .frame-top-back
     .movable-stand
-      transition opacity 0.2s
+      transition opacity 0.2s, visibility 0.2s
 
     .frame-top-back
       position absolute
@@ -98,3 +98,11 @@
       .frame-top-back
       .movable-stand
         opacity 0
+        visibility hidden
+
+  &.dragging
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel-layout
+    .frame
+    .movable-stand
+    .movable-stand-top
+      transition none !important
