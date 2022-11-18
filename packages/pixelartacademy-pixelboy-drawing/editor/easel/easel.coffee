@@ -288,6 +288,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
       
       "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        diameter: 5
         round: true
         
     views = [

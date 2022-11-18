@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Stroke
+class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.AliasedStroke
   # paintNormals: boolean whether only normals are being painted
   # ignoreNormals: boolean whether normals are not painted
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'

@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 Bresenham = require('bresenham-zingl')
 
-class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools.Tool
+class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEditor.Tools.Tool
   # cleanLine: boolean whether to maintain a clean line with consistent width
   # drawPreview: boolean whether to always draw preview of the pixels to be applied
   # fractionalPerfectLines: boolean whether to allow 3:2 and 5:2 lines
@@ -34,7 +34,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     @_cursorChangesAutorun = @autorun (computation) =>
       # React to cursor changes.
-      return unless @editor()?.cursor().cursorArea()
+      return unless @editor()?.cursor().cursorArea().aliasedShape
       Tracker.nonreactive => @processStroke()
 
     @_updatePreviewAutorun = @autorun (computation) =>
@@ -53,15 +53,13 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
       @_previewActive = preview
 
-  createPixelsFromCoordinates: (coordinates) ->
-    # Override to create full pixel data out of stroke coordinates.
-    coordinates
-
   onDeactivated: ->
     @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels []
 
+  cursorType: -> LOI.Assets.SpriteEditor.PixelCanvas.Cursor.Types.AliasedBrush
+  
   infoText: ->
     return unless @drawLine()
     return unless ratio = @perfectLineRatio()
@@ -297,7 +295,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     brushCoordinates = {}
 
     for pixel in pixelCoordinates
-      for column, x in cursorArea.shape
+      for column, x in cursorArea.aliasedShape
         for value, y in column when value
           brushX = pixel.x - offset + x
           brushY = pixel.y - offset + y
@@ -344,7 +342,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
       relativePixel = _.clone absolutePixel
       relativePixel.x -= layerOrigin.x
       relativePixel.y -= layerOrigin.y
-        
+      
       relativePixels.push relativePixel
 
     @applyPixels assetData, layerIndex, relativePixels, @_strokeStarted
@@ -360,6 +358,10 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   startOfStrokeProcessed: ->
     @_strokeStarted = false
 
+  createPixelsFromCoordinates: (coordinates) ->
+    # Override to create full pixel data out of stroke coordinates.
+    coordinates
+    
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
     # Override to process new pixels being added to the stroke.
 

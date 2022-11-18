@@ -1,7 +1,7 @@
 AC = Artificial.Control
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.Tools.Eraser extends LandsOfIllusions.Assets.Components.Tools.Tool
+class LOI.Assets.Components.Tools.HardEraser extends LandsOfIllusions.Assets.Components.Tools.Tool
   constructor: ->
     super arguments...
 

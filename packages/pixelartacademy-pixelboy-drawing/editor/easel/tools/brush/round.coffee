@@ -8,3 +8,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round extends PAA.Pixel
   @displayName: -> "Round brush"
   
   @initialize()
+  
+  onActivated: ->
+    super arguments...
+    
+    @brushHelper.setRound true

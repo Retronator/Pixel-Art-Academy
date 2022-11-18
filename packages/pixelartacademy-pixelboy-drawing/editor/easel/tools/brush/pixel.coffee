@@ -10,3 +10,19 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel extends LOI.Asset
   extraToolClasses: -> 'brush'
   
   @initialize()
+  
+  onActivated: ->
+    super arguments...
+  
+    @brushHelper.setRound true
+  
+    # Have our separate size for the pixel brush.
+    @_previousToolBrushDiameter = @brushHelper.diameter()
+    @brushHelper.setDiameter @_lastBrushDiameter or 1
+
+  onDeactivated: ->
+    super arguments...
+    
+    # Restore the previous brush size for other tools.
+    @_lastBrushDiameter = @brushHelper.diameter()
+    @brushHelper.setDiameter @_previousToolBrushDiameter

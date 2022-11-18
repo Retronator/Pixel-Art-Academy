@@ -70,7 +70,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     # Reactively add tools and actions.
     toolRequirements =
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
-      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
+      "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
       "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
@@ -262,7 +262,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     shortcuts = _.defaultsDeep
       default:
         mapping:
-          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+          "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           
           "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f

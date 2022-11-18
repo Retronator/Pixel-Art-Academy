@@ -8,3 +8,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square extends PAA.Pixe
   @displayName: -> "Square brush"
   
   @initialize()
+
+  onActivated: ->
+    super arguments...
+    
+    @brushHelper.setRound false

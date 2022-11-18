@@ -3,8 +3,8 @@ AM = Artificial.Mummification
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools.Stroke
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Eraser'
+class LOI.Assets.SpriteEditor.Tools.HardEraser extends LOI.Assets.SpriteEditor.Tools.AliasedStroke
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.HardEraser'
   @displayName: -> "Eraser"
 
   @initialize()
