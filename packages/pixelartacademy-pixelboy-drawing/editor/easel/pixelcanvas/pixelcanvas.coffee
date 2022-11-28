@@ -34,6 +34,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       clipboardComponent
   
     # Update camera scale.
+    @clipboardCameraScaleSet = new ReactiveField false
+    
     @autorun (computation) =>
       return unless camera = @camera()
       return unless displayedAsset = @easel.displayedAsset()
@@ -45,7 +47,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       normalDisplayMode = @easel.displayMode() is PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
     
       if not @easel.active() or normalDisplayMode or displayedAsset isnt @_previousDisplayedAsset or clipboardAssetScale isnt @_previousClipboardSpriteScale
-        Tracker.nonreactive => camera.setScale clipboardAssetScale
+        Tracker.nonreactive =>
+          camera.setScale clipboardAssetScale
+          @clipboardCameraScaleSet true
     
       @_previousDisplayedAsset = displayedAsset
       @_previousClipboardSpriteScale = clipboardAssetScale

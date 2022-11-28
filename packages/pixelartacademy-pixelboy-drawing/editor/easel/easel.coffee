@@ -143,6 +143,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     @_defaultCameraInfoAvailable = new ComputedField =>
       # Wait until the clipboard is created so that we have the correct scale.
       return false unless @activeAsset()?.clipboardComponent.assetSize?()?
+      
+      # Wait until the pixel canvas set the clipboard scale.
+      pixelCanvas = @getPixelCanvas()
+      return false unless pixelCanvas.clipboardCameraScaleSet()
     
       # Wait until the default camera origin is available.
       layoutView = @getLayoutView()
