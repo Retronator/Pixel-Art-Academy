@@ -282,3 +282,16 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     windowCoordinate.y += canvasY
 
     @transformWindowCenterToCanvas windowCoordinate
+
+  debugOutput: ->
+    console.log "PIXEL CANVAS CAMERA"
+    console.log "scale:", @scale()
+    console.log "origin:", @origin()
+    
+    console.log "asset canvas bounds", @assetCanvasBounds.toDimensions()
+    console.log "drawing area canvas bounds", @drawingAreaCanvasBounds.toDimensions()
+    console.log "renderable area canvas bounds", @renderableAreaCanvasBounds.toDimensions()
+    console.log "viewport canvas bounds", @viewportCanvasBounds.toDimensions()
+    
+    console.log "drawing area window bounds", @drawingAreaWindowBounds.toDimensions()
+    console.log "canvas window bounds", @canvasWindowBounds.toDimensions()

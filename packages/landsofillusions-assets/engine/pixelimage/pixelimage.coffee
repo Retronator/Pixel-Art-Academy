@@ -49,10 +49,8 @@ class LOI.Assets.Engine.PixelImage
     # Build a new canvas if needed.
     unless @_canvas?.width is asset.bounds.width and @_canvas?.height is asset.bounds.height
       @_canvas = new AM.Canvas asset.bounds.width, asset.bounds.height
-
-    # Resize the canvas if needed.
-    @_imageData = @_canvas.getFullImageData()
-    @_canvasPixelsCount = @_canvas.width * @_canvas.height
+      @_imageData = @_canvas.getFullImageData()
+      @_canvasPixelsCount = @_canvas.width * @_canvas.height
 
     # Clear the image buffer to transparent.
     @_imageData.data.fill 0

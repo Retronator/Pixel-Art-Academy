@@ -190,6 +190,25 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         # Enter zoomed-in mode while preserving current scale.
         @enterZoomedInDisplayMode false
 
+    # Select the first color if no color is set or the color is not available.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+
+      if paletteColor = @paintHelper.paletteColor()
+        # We have a palette color. Wait until information about the palette is available.
+        return unless palette = @interface.getLoaderForActiveFile()?.palette()
+
+        # Only reset the color if the palette does not contain the current one.
+        setFirst = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
+
+      else
+        # Palette color has not been set yet so we set it automatically.
+        setFirst = true
+
+      if setFirst
+        Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
+        
   onRendered: ->
     super arguments...
 
@@ -294,6 +313,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     views = [
       type: FM.Menu.id()
       items: [
+        LOI.Assets.Editor.Actions.Undo.id()
+        LOI.Assets.Editor.Actions.Redo.id()
         LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
         LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
         LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
