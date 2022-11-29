@@ -90,6 +90,17 @@ errorUnderline()
   input[type=text]
     padding-left 4rem
 
+  input[type='checkbox']
+    display none
+
+    & + .checkmark
+      cursor pointer
+
+    &:checked + .checkmark::before
+      daily()
+      font-weight bold
+      content '✔'
+
   .option
     padding 0 0 2rem 4rem
     cursor pointer
@@ -250,12 +261,15 @@ errorUnderline()
           border-bottom 1rem dotted printColor
 
       .name
+        width 60%
         border-right 1rem solid printColor
 
         &::before
           right 2rem
 
       .value
+        padding-left 2rem
+
         &::before
           left 2rem
 

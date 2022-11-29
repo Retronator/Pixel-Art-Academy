@@ -38,6 +38,45 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @widthError = new ReactiveField false
     @heightError = new ReactiveField false
     @sizeOutOfRangeError = new ReactiveField false
+    
+    @properties = new ReactiveField []
+    
+    @extras = new ComputedField =>
+      properties = @properties()
+      
+      extras = for property, index in properties
+        _id: Random.id()
+        index: index
+        type: property.type
+        value: property.value
+  
+      # Add an extra for the new property.
+      extras.push index: extras.length
+      
+      extras
+      
+    @blankExtras = new ComputedField =>
+      properties = @properties()
+      return if properties.length > 4
+      
+      [properties.length...5]
+  
+  updatePropertyAtIndex: (index, type, value) ->
+    properties = @properties()
+    property = {type, value}
+    
+    if properties[index]
+      properties[index] = property
+
+    else
+      properties.push property
+    
+    @properties properties
+  
+  removePropertyAtIndex: (index) ->
+    properties = @properties()
+    properties.splice index, 1
+    @properties properties
   
   validateWidth: (value) -> @widthError @validateDimension value
   validateHeight: (value) -> @heightError @validateDimension value
@@ -53,9 +92,6 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       
     errorClasses.join ' '
   
-  palettes: ->
-    LOI.Assets.Palette.documents.find(name: $in: @paletteNames).fetch()
-
   events: ->
     super(arguments...).concat
       'change .property.type input': @onChangeType
@@ -154,3 +190,126 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     
     options: ->
       {name, value} for name, value of PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeTypes
+      
+  class @Extra extends AM.Component
+    @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra'
+  
+    @Types =
+      RestrictedColors: 'RestrictedColors'
+      ColorPalette: 'ColorPalette'
+      PixelArtScaling: 'PixelArtScaling'
+    
+    @TypeNames =
+      RestrictedColors: 'Restricted colors'
+      ColorPalette: 'Color palette'
+      PixelArtScaling: 'Pixel art scaling'
+      
+    @MultiselectionTypes = [
+      @Types.ColorPalette
+    ]
+    
+    onCreated: ->
+      super arguments...
+      
+      @clipboardComponent = @parentComponent()
+      
+    updateType: (newType) ->
+      index = @data().index
+      lastType = @data().type
+      
+      # Remove property when deselected.
+      if not newType
+        @clipboardComponent.removePropertyAtIndex index
+      
+      # Select defaults when changing the type.
+      else if newType isnt lastType
+        switch newType
+          when @constructor.Types.PixelArtScaling then value = true
+          when @constructor.Types.ColorPalette, @constructor.Types.RestrictedColors then value = @clipboardComponent.paletteNames[0]
+  
+        @clipboardComponent.updatePropertyAtIndex index, newType, value
+      
+    updateValue: (newValue) ->
+      index = @data().index
+      type = @data().type
+      
+      if newValue
+        @clipboardComponent.updatePropertyAtIndex index, type, newValue
+        
+      else
+        # Remove the property.
+        @clipboardComponent.removePropertyAtIndex index
+  
+    class @Type extends AM.DataInputComponent
+      @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Type'
+      
+      constructor: ->
+        super arguments...
+        
+        @type = AM.DataInputComponent.Types.Select
+        @extraComponent = @ancestorComponentOfType @constructor
+  
+      onCreated: ->
+        super arguments...
+  
+        @extraComponent = @parentComponent()
+      
+      options: ->
+        options = [name: '', value: null]
+        
+        Extra = PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra
+        
+        for value, name of Extra.TypeNames
+          # Add the option if it's the currently active one, if it's a multi-selection one, or if it's not yet selected.
+          active = @data().type is value
+          
+          multiSelection = value in Extra.MultiselectionTypes
+          
+          properties = @extraComponent.clipboardComponent.properties()
+          existingProperty = _.find properties, (property) -> property.type is value
+    
+          options.push name: name, value: value if active or multiSelection or not existingProperty
+    
+        options
+        
+      load: ->
+        @data().type
+        
+      save: (value) ->
+        @extraComponent.updateType value
+  
+    class @Value extends AM.DataInputComponent
+      onCreated: ->
+        super arguments...
+  
+        @extraComponent = @parentComponent()
+        
+      load: ->
+        @data().value
+
+      save: (value) ->
+        @extraComponent.updateValue value
+        
+    class @PixelArtScaling extends @Value
+      @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling'
+      
+      constructor: ->
+        super arguments...
+        
+        @type = AM.DataInputComponent.Types.Checkbox
+    
+    class @Palette extends @Value
+      @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette'
+      
+      constructor: ->
+        super arguments...
+        
+        @type = AM.DataInputComponent.Types.Select
+        
+      options: ->
+        options = [name: '', value: null]
+
+        for paletteName in @extraComponent.clipboardComponent.paletteNames
+          options.push {name: paletteName, value: paletteName}
+          
+        options

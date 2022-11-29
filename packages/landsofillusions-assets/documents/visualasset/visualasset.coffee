@@ -37,6 +37,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #     _id
   #     url
   #   active: boolean if the environment is the one to be used to light the asset
+  # properties: extra properties the player can define for the asset
+  #   pixelArtScaling: boolean whether the asset is pixel art and should be scaled up with nearest neighbor
+  #   normals: boolean whether the asset has normal painting turned on
+  #   paletteIds: array of palettes that should be available to the player (but not restrict the colors)
   @Meta
     abstract: true
     fields: =>
