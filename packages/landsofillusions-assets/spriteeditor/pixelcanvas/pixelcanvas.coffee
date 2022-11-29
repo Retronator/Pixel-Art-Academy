@@ -174,8 +174,15 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
       drawComponents
 
-    # Reactively redraw the canvas.
-    @autorun => @_redraw()
+    # Reactively redraw the canvas when the active tool is not requesting realtime updating.
+    @autorun =>
+      return if @interface.activeTool()?.realtimeUpdating?()
+
+      @_redraw()
+  
+    # Register with the app to support updates.
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
     
   _redraw: ->
     return unless context = @context()
@@ -232,6 +239,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event if @interface.active()
     $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event if @interface.active()
     
+  onDestroyed: ->
+    super arguments...
+  
+    @app.removeComponent @
+    
   _resizeCanvas: ->
     camera = @camera()
     newSize =
@@ -277,6 +289,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     canvasWindowBounds.height = "#{canvasWindowBounds.height / drawingAreaWindowBounds.height * 100}%"
     
     canvasWindowBounds
+
+  draw: (appTime) ->
+    # Render the canvas each frame when the tool requests realtime updating.
+    return unless @interface.activeTool()?.realtimeUpdating?()
+    
+    @_redraw()
 
   # Events
 

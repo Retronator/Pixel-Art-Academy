@@ -132,6 +132,10 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         top += @settingsHeight
 
     top: "#{top}rem"
+  
+  sectionsVisible: ->
+    # Only show sections when not in the editor to prevent updates while editing.
+    not @drawing.editor().active()
 
   assetHoveredClass: ->
     assetData = @currentData()

@@ -26,6 +26,9 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @brushHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Brush
 
     @pixels = new ReactiveField null
+    
+    # Request realtime updates when actively changing pixels.
+    @realtimeUpdating = new ReactiveField false
 
   onActivated: ->
     @processStroke()
@@ -167,6 +170,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
         unless keyboardState.isCommandOrControlDown() or keyboardState.isKeyDown AC.Keys.alt
           @drawLine true
+          @realtimeUpdating true
           @updatePixels()
 
     else if @drawLine()
@@ -179,6 +183,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     if event.which is AC.Keys.shift
       @drawStraight false
       @drawLine false
+      @realtimeUpdating false
       @updatePixels()
 
     else if @drawLine()
@@ -192,6 +197,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @_strokeStarted = true
 
     @_strokeActive = true
+    @realtimeUpdating true
 
     # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @processStroke()
@@ -213,6 +219,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @endStroke assetData
 
     @_strokeActive = false
+    @realtimeUpdating false
 
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
