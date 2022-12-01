@@ -95,49 +95,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
       Tracker.nonreactive =>
         applicationAreaData.set "views.#{layoutViewIndex}.toolbox.tools", tools
         applicationAreaData.set "views.#{layoutViewIndex}.actions", actions
-        
-    # Set zoom levels based on display scale.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-
-      zoomLevels = [100, 200, 300, 400, 600, 800, 1200, 1600]
-      displayScale = LOI.adventure.interface.display.scale()
-
-      if displayScale % 3 is 0
-        zoomLevels = [100 / 3, 200 / 3, zoomLevels...]
-
-      else
-        zoomLevels = [50, zoomLevels...]
-
-      # Extend zoom levels down to clipboard scale if necessary.
-      if displayedAsset = @displayedAsset()
-        if displayedAsset.clipboardComponent.isCreated()
-          if clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
-            minimumScale = clipboardAssetSize.scale * 100
-            while Math.round(minimumScale) < Math.round(zoomLevels[0])
-              zoomLevels.unshift zoomLevels[0] / 2
-        
-      zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
-      Tracker.nonreactive => zoomLevelsHelper zoomLevels
-
-    # Deactivate active tool when closing the editor and reactivate it when opening if it's still available.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-
-      if @active()
-        # The editor is opened.
-        unless @interface.activeTool()
-          # Make sure the last active tool is still allowed.
-          if @_lastActiveTool in @interface.tools()
-            # Reactivate the last tool.
-            Tracker.nonreactive => @interface.activateTool @_lastActiveTool
-
-      else
-        # The editor is being closed.
-        if activeTool = @interface.activeTool()
-          # Remember which tool was used and deactivate it.
-          @_lastActiveTool = activeTool
-          Tracker.nonreactive => @interface.deactivateTool()
   
     # Reset camera when entering the editor. Make sure the default camera info is available.
     @_defaultCameraInfoAvailable = new ComputedField =>
@@ -180,7 +137,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     @autorun (computation) =>
       return unless @interface.isCreated()
       return unless @displayMode() is @constructor.DisplayModes.Normal
-      return unless clipboardAssetSize = @displayedAsset()?.clipboardComponent.assetSize?()
+      return unless displayedAsset = @displayedAsset()
+      return unless displayedAsset.clipboardComponent.isCreated()
+      return unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize?()
   
       # Depend on camera scale changes.
       pixelCanvas = @getPixelCanvas()
@@ -194,25 +153,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         # Enter zoomed-in mode while preserving current scale.
         @enterZoomedInDisplayMode false
 
-    # Select the first color if no color is set or the color is not available.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-      @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
-
-      if paletteColor = @paintHelper.paletteColor()
-        # We have a palette color. Wait until information about the palette is available.
-        return unless palette = @interface.getLoaderForActiveFile()?.palette()
-
-        # Only reset the color if the palette does not contain the current one.
-        setFirst = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
-
-      else
-        # Palette color has not been set yet so we set it automatically.
-        setFirst = true
-
-      if setFirst
-        Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
-        
   onRendered: ->
     super arguments...
 

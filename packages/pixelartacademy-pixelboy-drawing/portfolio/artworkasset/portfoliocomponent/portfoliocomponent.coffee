@@ -7,6 +7,11 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extend
 
   constructor: (@artworkAsset) ->
     super arguments...
+  
+  documentClassNameClass: ->
+    return unless document = @artworkAsset.document()
+    
+    _.kebabCase document.constructor.className
 
   canvasStyle: ->
     assetData = @parentDataWith 'scale'

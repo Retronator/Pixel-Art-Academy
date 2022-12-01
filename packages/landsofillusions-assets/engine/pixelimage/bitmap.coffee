@@ -11,7 +11,7 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
     @ready = new ComputedField =>
       return unless bitmapData = @options.asset()
       return unless (bitmapData.layers?.length or bitmapData.layerGroups?.length) and bitmapData.bounds
-      return unless bitmapData.customPalette or LOI.Assets.Palette.documents.findOne(bitmapData.palette?._id) or @options.visualizeNormals?()
+      return unless bitmapData.customPalette or bitmapData.allPalettesAvailable() or @options.visualizeNormals?()
 
       true
     
@@ -42,37 +42,55 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
           
           assetX = absoluteX - bitmapData.bounds.x
           assetY = absoluteY - bitmapData.bounds.y
-          
-          if layer.attributes.paletteColor
-            paletteColorIndex = flagIndex * 2
-            _paletteColor.ramp = layer.attributes.paletteColor.array[paletteColorIndex]
-            _paletteColor.shade = layer.attributes.paletteColor.array[paletteColorIndex + 1]
-            paletteColor = _paletteColor
+  
+          if renderOptions.shaded
+            if layer.attributes.paletteColor
+              paletteColorIndex = flagIndex * 2
+              _paletteColor.ramp = layer.attributes.paletteColor.array[paletteColorIndex]
+              _paletteColor.shade = layer.attributes.paletteColor.array[paletteColorIndex + 1]
+              paletteColor = _paletteColor
+              
+            else
+              paletteColor = null
+              
+            if layer.attributes.directColor
+              directColorIndex = flagIndex * 3
+              _directColor.r = layer.attributes.directColor.array[directColorIndex] / 255
+              _directColor.g = layer.attributes.directColor.array[directColorIndex + 1] / 255
+              _directColor.b = layer.attributes.directColor.array[directColorIndex + 2] / 255
+              directColor = _directColor
+              
+            else
+              directColor = null
+              
+            materialIndex = layer.attributes.materialIndex?.array[flagIndex]
+            
+            if layer.attributes.normal
+              normalIndex = flagIndex * 3
+              layer.attributes.normal.getPixelAtIndexToVector normalIndex, _normal
+              normal = _normal
+              
+            else
+              normal = null
+              
+            @_renderPixelShaded assetX, assetY, 0, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, bitmapData, renderOptions
             
           else
-            paletteColor = null
-            
-          if layer.attributes.directColor
-            directColorIndex = flagIndex * 3
-            _directColor.r = layer.attributes.directColor.array[directColorIndex] / 255
-            _directColor.g = layer.attributes.directColor.array[directColorIndex + 1] / 255
-            _directColor.b = layer.attributes.directColor.array[directColorIndex + 2] / 255
-            directColor = _directColor
-            
-          else
-            directColor = null
-            
-          materialIndex = layer.attributes.materialIndex?.array[flagIndex]
-          
-          if layer.attributes.normal
-            normalIndex = flagIndex * 3
-            layer.attributes.normal.getPixelAtIndexToVector normalIndex, _normal
-            normal = _normal
-            
-          else
-            normal = null
-            
-          @_renderPixel assetX, assetY, 0, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, bitmapData, renderOptions
+            if layer.attributes.paletteColor
+              paletteColorIndex = flagIndex * 2
+              paletteColorRamp = layer.attributes.paletteColor.array[paletteColorIndex]
+              paletteColorShade = layer.attributes.paletteColor.array[paletteColorIndex + 1]
+              
+            if layer.attributes.directColor
+              directColorIndex = flagIndex * 3
+              directColorR = layer.attributes.directColor.array[directColorIndex]
+              directColorG = layer.attributes.directColor.array[directColorIndex + 1]
+              directColorB = layer.attributes.directColor.array[directColorIndex + 2]
+              
+            if layer.attributes.alpha
+              alpha = layer.attributes.alpha.array[flagIndex]
+              
+            @_renderPixel assetX, assetY, paletteColorRamp, paletteColorShade, directColorR, directColorG, directColorB, alpha
           
     # Optimization: Explicit return to not collect results of for loops.
     return

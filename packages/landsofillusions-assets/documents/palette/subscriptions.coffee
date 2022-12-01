@@ -18,6 +18,11 @@ LOI.Assets.Palette.forId.publish (id) ->
   check id, Match.DocumentId
 
   LOI.Assets.Palette.documents.find id
+  
+LOI.Assets.Palette.forIds.publish (ids) ->
+  check ids, [Match.DocumentId]
+  
+  LOI.Assets.Palette.documents.find _id: $in: ids
 
 LOI.Assets.Palette.forName.publish (name) ->
   check name, String

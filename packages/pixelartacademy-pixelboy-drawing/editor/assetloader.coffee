@@ -15,31 +15,20 @@ class PAA.PixelBoy.Apps.Drawing.Editor.AssetLoader extends FM.Loader
   
     @asset = new ComputedField =>
       @editor.manualSpriteData() or @portfolio.displayedAsset()?.asset.document?()
-  
-    # Subscribe to the referenced palette as well.
-    @paletteId = new ComputedField =>
-      @asset()?.palette?._id
-  
-    @_paletteSubscription = Tracker.autorun (computation) =>
-      return unless paletteId = @paletteId()
-      LOI.Assets.Palette.forId.subscribe paletteId
-
-    # We extract the custom palette separately to minimize reactivity.
-    @customPalette = new ComputedField =>
-      @asset()?.customPalette
     ,
-      EJSON.equals
+      true
   
-    @palette = new ComputedField =>
-      if paletteId = @paletteId()
-        LOI.Assets.Palette.documents.findOne paletteId
-    
-      else
-        # See if we have an embedded custom palette.
-        @customPalette()
-        
+    # Subscribe to the referenced palettes as well.
+    @paletteIds = new ComputedField =>
+      @asset()?.getAllPaletteIds()
+    ,
+      true
+  
+    @_palettesSubscription = Tracker.autorun (computation) =>
+      return unless paletteIds = @paletteIds()
+      LOI.Assets.Palette.forIds.subscribe paletteIds
+
   destroy: ->
     @asset.stop()
-    @paletteId.stop()
-    @_paletteSubscription.stop()
-    @palette.stop()
+    @paletteIds.stop()
+    @_palettesSubscription.stop()

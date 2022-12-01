@@ -105,7 +105,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
         halfDiameter = cursorArea.diameter / 2
         context.rect cursorArea.position.centerCoordinates.x - halfDiameter, cursorArea.position.centerCoordinates.y - halfDiameter, cursorArea.diameter, cursorArea.diameter
       
-    else if type is @constructor.Types.AliasedBrush
+    else if type is @constructor.Types.AliasedBrush and cursorArea.aliasedShape
       aliasedSize = cursorArea.aliasedShape.length
       position = cursorArea.position.pixelPerfectTopLeftCoordinates
   
@@ -127,6 +127,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
       context.rect cursorArea.position.pixelPerfectTopLeftCoordinates.x, cursorArea.position.pixelPerfectTopLeftCoordinates.y, 1, 1
     
     context.stroke()
+    context.setLineDash []
 
     # TODO: symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin?()
     #

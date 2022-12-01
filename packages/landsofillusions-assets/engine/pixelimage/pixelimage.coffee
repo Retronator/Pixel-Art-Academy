@@ -22,7 +22,7 @@ class LOI.Assets.Engine.PixelImage
     asset = @options.asset()
     bounds = asset.bounds
 
-    context.imageSmoothingEnabled = false
+    context.imageSmoothingEnabled = not asset.properties?.pixelArtScaling
     context.drawImage @_canvas, bounds.x, bounds.y
 
   getImageData: (renderOptions = {}) ->
@@ -73,9 +73,24 @@ class LOI.Assets.Engine.PixelImage
     if @_smoothShading
       smoothShadingQuantizationLevels = renderOptions.smoothShadingQuantizationLevels ? LOI.settings.graphics.smoothShadingQuantizationLevels.value()
       @_smoothShadingQuantizationFactor = (smoothShadingQuantizationLevels or 1) - 1
-      
+  
+  _renderPixel: (x, y, paletteColorRamp, paletteColorShade, directColorR, directColorG, directColorB, alpha) ->
+    pixelIndex = (x + y * @_canvas.width) * 4
+  
+    if paletteColorRamp?
+      return unless shades = @_palette.ramps[paletteColorRamp]?.shades
+      directColor = shades[paletteColorShade]
+      directColorR = directColor.r * 255
+      directColorG = directColor.g * 255
+      directColorB = directColor.b * 255
+    
+    @_imageData.data[pixelIndex] = directColorR
+    @_imageData.data[pixelIndex + 1] = directColorG
+    @_imageData.data[pixelIndex + 2] = directColorB
+    @_imageData.data[pixelIndex + 3] = alpha ? 255
+    
   # Call for each pixel and specify the coordinates within asset bounds.
-  _renderPixel: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->
+  _renderPixelShaded: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->
     # Find pixel index in the image buffer.
     depthPixelIndex = x + y * @_canvas.width
     pixelIndex = depthPixelIndex * 4
@@ -288,7 +303,7 @@ class LOI.Assets.Engine.PixelImage
       @_imageData.data[pixelIndex] = destinationColor.r * 255
       @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
       @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
-      @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
+      @_imageData.data[pixelIndex + 3] = (destinationColor.a ? 1) * 255
 
   _endRender: ->
     @_canvas.putFullImageData @_imageData

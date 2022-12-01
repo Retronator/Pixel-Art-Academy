@@ -12,21 +12,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill extends FM.View
   onCreated: ->
     super arguments...
   
-    @paletteData = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.palette()
-  
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
   
-    @currentColor = new ComputedField =>
-      return unless paletteColor = @paintHelper.paletteColor()
-      @paletteData()?.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
-      
+    @currentColor = new ComputedField => @paintHelper.getColor()
+    
   colorStyle: ->
     # Get the color from the palette.
-    colorData = @currentColor()
-    return unless colorData
+    color = @currentColor()
+    return unless color
 
-    color = THREE.Color.fromObject colorData
     active = @interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorFill.id()
 
     backgroundColor: "##{color.getHexString()}"

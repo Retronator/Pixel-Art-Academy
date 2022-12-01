@@ -210,8 +210,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
     #if symmetryXOrigin?
     #  mirroredX = -@mouseState.x + 2 * symmetryXOrigin
     #  xCoordinates.push [mirroredX, -1]
-
-    @pixels @createPixelsFromCoordinates pixelCoordinates
+  
+    assetData = @editor().assetData()
+    
+    @pixels @createPixelsFromCoordinates assetData, pixelCoordinates
     @applyTool()
 
   applyTool: ->

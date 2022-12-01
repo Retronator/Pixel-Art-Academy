@@ -13,7 +13,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill extends FM.View
     super arguments...
   
     @paletteData = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.palette()
+      @interface.getLoaderForActiveFile()?.asset()?.getRestrictedPalette()
   
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
   

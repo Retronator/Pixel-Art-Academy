@@ -40,6 +40,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @sizeOutOfRangeError = new ReactiveField false
     
     @properties = new ReactiveField []
+    @_changedProperties = false
     
     @extras = new ComputedField =>
       properties = @properties()
@@ -51,7 +52,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         value: property.value
   
       # Add an extra for the new property.
-      extras.push index: extras.length
+      extras.push _id: Random.id(), index: extras.length
       
       extras
       
@@ -60,6 +61,24 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       return if properties.length > 4
       
       [properties.length...5]
+      
+  updateType: (value) ->
+    @type value
+    
+    # If you haven't changed any properties, load defaults.
+    return if @_changedProperties
+    
+    if value is @constructor.ArtworkTypes.Sprite
+      @properties [
+        type: @constructor.Extra.Types.PixelArtScaling, value: true
+      ,
+        type: @constructor.Extra.Types.RestrictedColors, value: @paletteNames[0]
+      ]
+      
+    else if value is @constructor.ArtworkTypes.Bitmap
+      @properties [
+        type: @constructor.Extra.Types.ColorPalette, value: @paletteNames[0]
+      ]
   
   updatePropertyAtIndex: (index, type, value) ->
     properties = @properties()
@@ -70,13 +89,26 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
 
     else
       properties.push property
+      
+    # Enforce mutually exclusive properties.
+    if type is @constructor.Extra.Types.RestrictedColors
+      _.remove properties, (property) =>
+        property.type is @constructor.Extra.Types.ColorPalette
+      
+    else if type is @constructor.Extra.Types.ColorPalette
+      _.remove properties, (property) =>
+        property.type is @constructor.Extra.Types.RestrictedColors
     
     @properties properties
+  
+    @_changedProperties = true
   
   removePropertyAtIndex: (index) ->
     properties = @properties()
     properties.splice index, 1
     @properties properties
+  
+    @_changedProperties = true
   
   validateWidth: (value) -> @widthError @validateDimension value
   validateHeight: (value) -> @heightError @validateDimension value
@@ -104,7 +136,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   
   onChangeType: (event) ->
     @typeError false
-    @type @$('.newartwork-form')[0].type.value
+    @updateType @$('.newartwork-form')[0].type.value
 
   onInputWidth: (event) ->
     @widthError false
@@ -149,7 +181,6 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     artworkInfo =
       assetClassName: data.get 'type'
       title: data.get 'title'
-      paletteId: data.get 'palette'
       
     @typeError true unless artworkInfo.assetClassName
     
@@ -160,8 +191,29 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   
       @validateWidth artworkInfo.size.width
       @validateHeight artworkInfo.size.height
-      
+
     return if @errorClasses()
+
+    # Add properties.
+    paletteColors = []
+    paletteId = null
+    properties = {}
+    
+    getPaletteId = (name) -> LOI.Assets.Palette.documents.findOne({name})._id
+    
+    for property in @properties()
+      if property.type is @constructor.Extra.Types.ColorPalette
+        paletteColors.push getPaletteId property.value
+        
+      else if property.type is @constructor.Extra.Types.RestrictedColors
+        paletteId = getPaletteId property.value
+        
+      else
+        properties[_.camelCase property.type] = property.value
+        
+    properties.paletteIds = paletteColors if paletteColors.length > 0
+    artworkInfo.properties = properties if _.keys(properties).length > 0
+    artworkInfo.paletteId = paletteId if paletteId?
     
     PAA.Practice.Artworks.insert LOI.characterId(), artworkInfo, (error, artworkId) =>
       return console.error error if error

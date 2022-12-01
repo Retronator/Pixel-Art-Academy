@@ -22,16 +22,18 @@
                   {{/with}}
                   {{#if artworkAsset.freeform}}freeform{{/if}}
               </li>
-              <li class="property palette">
-                <span class="property-name">Palette</span>:
-                {{#if palette}}
-                  {{#if palette.lospecSlug}}
-                    <a href="https://lospec.com/palette-list/{{palette.lospecSlug}}" target="_blank">{{palette.name}}</a>
-                  {{else}}
-                    {{palette.name}}
+              {{#if palette}}
+                <li class="property palette">
+                  <span class="property-name">Palette</span>:
+                  {{#if palette}}
+                    {{#if palette.lospecSlug}}
+                      <a href="https://lospec.com/palette-list/{{palette.lospecSlug}}" target="_blank">{{palette.name}}</a>
+                    {{else}}
+                      {{palette.name}}
+                    {{/if}}
                   {{/if}}
-                {{/if}}
-              </li>
+                </li>
+              {{/if}}
             </ul>
             <ul class="actions">
               {{#if canEdit}}

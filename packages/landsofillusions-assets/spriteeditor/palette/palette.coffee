@@ -9,8 +9,11 @@ class LOI.Assets.SpriteEditor.Palette extends FM.View
   onCreated: ->
     super arguments...
 
+    # Minimize reactivity of augmenting palette colors (derived classes rely on this).
     @paletteData = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.palette()
+      @interface.getLoaderForActiveFile()?.asset()?.getRestrictedPalette()
+    ,
+      EJSON.equals
 
     @palette = new ComputedField =>
       return unless paletteData = @paletteData()

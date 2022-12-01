@@ -3,7 +3,7 @@
     <div class="colors" {{style colorsStyle}}>
       {{#each palette.ramps}}
         <div class="ramp">
-          {{#if trayClass}}
+          {{#if customPalette}}
             {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Palette.TrayRamp}}
           {{/if}}
           {{#each shades}}

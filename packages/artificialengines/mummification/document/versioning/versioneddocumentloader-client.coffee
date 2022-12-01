@@ -35,6 +35,11 @@ class AM.Document.Versioning.VersionedDocumentLoader
     
     @versionedCollection.documentClass.load @id, (error, result) =>
       return console.error error if error
+      
+      # Make sure the document was found on the server. If the document was inserted on the client as part of method
+      # simulation, it will not be available and there's nothing to do since the document will be removed during
+      # rollback (no need to schedule another load).
+      return unless result
   
       # Apply defaults.
       _.defaults result,

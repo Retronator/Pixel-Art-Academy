@@ -25,8 +25,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     @assetSize = new ComputedField =>
       return unless document = @artworkAsset.document()
       return unless assetData = @drawing.portfolio().displayedAsset()
+
+      # Add border to sprites.
+      options =
+        border: document instanceof LOI.Assets.Sprite
+        pixelArtScaling: document.properties?.pixelArtScaling
   
-      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), document.bounds
+      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), document.bounds, options
     ,
       EJSON.equals
 
