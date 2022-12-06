@@ -30,12 +30,17 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
     
     # Render all the layers.
     for layer in layerGroup.layers when layer.visible isnt false
+      paletteColorArray = layer.attributes.paletteColor?.array
+      directColorArray = layer.attributes.directColor?.array
+      alphaArray = layer.attributes.alpha?.array
+      flags = layer.attributes.flags
+      
       for layerX in [0...layer.bounds.width]
         for layerY in [0...layer.bounds.height]
-          flagIndex = layer.attributes.flags.getPixelIndex layerX, layerY
+          flagIndex = flags.getPixelIndex layerX, layerY
           
           # See if the pixel exists at these coordinates.
-          continue unless layer.attributes.flags.pixelExistsAtIndex flagIndex
+          continue unless flags.pixelExistsAtIndex flagIndex
           
           absoluteX = layer.bounds.x + layerX
           absoluteY = layer.bounds.y + layerY
@@ -76,19 +81,19 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
             @_renderPixelShaded assetX, assetY, 0, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, bitmapData, renderOptions
             
           else
-            if layer.attributes.paletteColor
+            if paletteColorArray
               paletteColorIndex = flagIndex * 2
-              paletteColorRamp = layer.attributes.paletteColor.array[paletteColorIndex]
-              paletteColorShade = layer.attributes.paletteColor.array[paletteColorIndex + 1]
+              paletteColorRamp = paletteColorArray[paletteColorIndex]
+              paletteColorShade = paletteColorArray[paletteColorIndex + 1]
               
-            if layer.attributes.directColor
+            if directColorArray
               directColorIndex = flagIndex * 3
-              directColorR = layer.attributes.directColor.array[directColorIndex]
-              directColorG = layer.attributes.directColor.array[directColorIndex + 1]
-              directColorB = layer.attributes.directColor.array[directColorIndex + 2]
+              directColorR = directColorArray[directColorIndex]
+              directColorG = directColorArray[directColorIndex + 1]
+              directColorB = directColorArray[directColorIndex + 2]
               
-            if layer.attributes.alpha
-              alpha = layer.attributes.alpha.array[flagIndex]
+            if alphaArray
+              alpha = alphaArray[flagIndex]
               
             @_renderPixel assetX, assetY, paletteColorRamp, paletteColorShade, directColorR, directColorG, directColorB, alpha
           
