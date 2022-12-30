@@ -99,18 +99,24 @@ class RS.Pages.Admin.Vat extends AM.Component
   transactionClass: ->
     transaction = @currentData()
 
+    # All transactions in Slovenia are bundled together as they get
+    # accounted directly, regardless if they are consumers of business.
     if transaction.taxInfo.country.billing is 'si'
       'si'
 
-    else if transaction.taxInfo.vatRate
-      if transaction.taxInfo.business
-        'vat-business'
+    # When not a Slovenian transaction, as long as we have a vat ID, it must have been an European business (at the time
+    # of the transaction). Note that we can't just check for the vat rate to be set since it will be zero due to the
+    # reverse charge.
+    else if transaction.taxInfo.business?.vatId
+      'eu-business'
 
-      else
-        'vat-consumer'
+    # If there was a vat rate specified and since it's not a Slovenian transaction,
+    # it must have been sold to an EU consumer (at the time of the transaction).
+    else if transaction.taxInfo.vatRate
+      'eu-consumer'
 
     else
-      'non-vat'
+      'non-eu'
 
   formatDate: (date) ->
     date.toLocaleString 'en',
@@ -122,17 +128,17 @@ class RS.Pages.Admin.Vat extends AM.Component
   dobaveBlagaInStoritev: ->
     Math.round _.sum (transaction.taxInfo.amountEur.net for transaction in @transactions().fetch() when transaction.taxInfo.country.billing is 'si')
 
-  vatBusinessesTransactions: ->
-    transaction for transaction in @transactions().fetch() when transaction.taxInfo.business and transaction.taxInfo.vatRate and transaction.taxInfo.country.billing isnt 'si'
+  euBusinessesTransactions: ->
+    transaction for transaction in @transactions().fetch() when transaction.taxInfo.business?.vatId and transaction.taxInfo.country.billing isnt 'si'
 
   dobaveBlagaInStoritevVDrugeDrzaveClaniceEU: ->
-    Math.round _.sum (transaction.taxInfo.amountEur.net for transaction in @vatBusinessesTransactions())
+    Math.round _.sum (transaction.taxInfo.amountEur.net for transaction in @euBusinessesTransactions())
 
   poStopnji22: ->
     Math.round _.sum (transaction.taxInfo.amountEur.vat for transaction in @transactions().fetch() when transaction.taxInfo.country.billing is 'si')
 
-  vatBusinesses: ->
-    transactions = @vatBusinessesTransactions()
+  euBusinesses: ->
+    transactions = @euBusinessesTransactions()
 
     vatIds = _.uniq (transaction.taxInfo.business.vatId for transaction in transactions)
 
@@ -141,10 +147,10 @@ class RS.Pages.Admin.Vat extends AM.Component
       vatIdNumber: vatId[2..]
       totalAmount: _.sum (transaction.taxInfo.amountEur.net for transaction in _.filter transactions, (transaction) => transaction.taxInfo.business.vatId is vatId)
 
-  totalVatBusinessAmount: ->
-    _.sum (transaction.taxInfo.amountEur.net for transaction in @vatBusinessesTransactions())
+  totalEuBusinessAmount: ->
+    _.sum (transaction.taxInfo.amountEur.net for transaction in @euBusinessesTransactions())
 
-  vatCountries: ->
+  euConsumerCountries: ->
     transactions = (transaction for transaction in @transactions().fetch() when not transaction.taxInfo.business and transaction.taxInfo.vatRate and transaction.taxInfo.country.billing isnt 'si')
 
     countries = _.uniq (transaction.taxInfo.country.billing for transaction in transactions)

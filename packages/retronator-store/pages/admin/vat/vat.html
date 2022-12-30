@@ -46,18 +46,18 @@
     <table>
       <tr><th colspan="3">Dobave blaga in storitev (vrednosti so brez DDV)</th></tr>
       <tr class="si"><td>Dobave blaga in storitev</td><td>11</td><td>{{dobaveBlagaInStoritev}}</td></tr>
-      <tr class="vat-business"><td>Dobave blaga in storitev v druge države članice EU</td><td>12</td><td>{{dobaveBlagaInStoritevVDrugeDrzaveClaniceEU}}</td></tr>
+      <tr class="eu-business"><td>Dobave blaga in storitev v druge države članice EU</td><td>12</td><td>{{dobaveBlagaInStoritevVDrugeDrzaveClaniceEU}}</td></tr>
       <tr><th colspan="3">Obračunani DDV</th></tr>
       <tr class="si"><td>po stopnji 22%</td><td>21</td><td>{{poStopnji22}}</td></tr>
     </table>
     <h2>Rekapitulacijsko poročilo</h2>
-    <table class="vat-business">
+    <table class="eu-business">
       <tr>
         <th>Koda države</th>
         <th>Številka za DDV</th>
         <th>Skupna vrednost dobavljenih storitev</th>
       </tr>
-      {{#each vatBusinesses}}
+      {{#each euBusinesses}}
         <tr>
           <td>{{vatIdCountry}}</td>
           <td>{{vatIdNumber}}</td>
@@ -66,18 +66,18 @@
       {{/each}}
       <tr>
         <td colspan="2">Skupna vrednost</td>
-        <td>{{fixedDecimals totalVatBusinessAmount 2}}</td>
+        <td>{{fixedDecimals totalEuBusinessAmount 2}}</td>
       </tr>
     </table>
     <h3>VAT MOSS</h3>
-    <table class="vat-consumer">
+    <table class="eu-consumer">
       <tr>
         <th>Country</th>
         <th>Taxable amount</th>
         <th>VAT rate</th>
         <th>VAT amount</th>
       </tr>
-      {{#each vatCountries}}
+      {{#each euConsumerCountries}}
         <tr>
           <td>{{country}}</td>
           <td>{{fixedDecimals taxableAmount 2}}</td>
