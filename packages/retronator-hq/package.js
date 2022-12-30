@@ -56,7 +56,7 @@ Package.onUse(function(api) {
   api.addFile('items/shoppingcart/shoppingcart-character');
   api.addComponent('items/prospectus/prospectus');
   api.addComponent('items/receipt/receipt');
-  
+
   api.addFile('items/account/account');
   api.addFile('items/keycard/keycard');
 
@@ -69,9 +69,9 @@ Package.onUse(function(api) {
   api.addFile('items/daily/theme-stream');
 
   // Scenes
-  
+
   api.addFile('scenes/scenes');
-  
+
   api.addThing('scenes/intercom');
   api.addThing('scenes/shelley');
   api.addFile('scenes/inventory');
@@ -105,6 +105,7 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addFile('floor2/store/shelf/shelf-pixel');
   api.addFile('floor2/store/shelf/shelf-pico8');
+  api.addFile('floor2/store/shelf/shelf-patreon');
   api.addThing('floor2/store/shelf/shelves');
 
   api.addFile('floor2/store/table..');
@@ -152,6 +153,6 @@ Package.onUse(function(api) {
   api.addComponent('floor4/artstudio/pencils..');
 
   // Pages
-  
+
   api.addFile('pages..');
 });

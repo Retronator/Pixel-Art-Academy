@@ -19,7 +19,7 @@ retro: How can I help you today?
 ### AnalyzeUser
 
 * I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
-* I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
+* I would like to redeem these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
 * I'm one of the Kickstarter backers. -> [Kickstarter] `not _noRewardBacker`
 * How do I play the game? -> [PlayGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
@@ -324,8 +324,10 @@ retro: Well then, in that case I thank you immensely for your support!
 `_helped = true`
 
 retro: 
-    All the game bundles and upgrade options are on the shelves over there.
-    Simply ![look at shelves](look at shelves) and add the bundle you want to the shopping cart.
+    If you didn't pre-order the game yet, currently you can only get access to it with a pledge on Patreon.
+    Take a ![look at the shelf](look at shelf) over there, it has the link to the Patreon page as well as
+    bundles you can redeem after you've supported the game enough. That way you can keep playing even if
+    you cancel your Patreon membership.
     
 -> [MainQuestion]
 
@@ -438,9 +440,10 @@ retro:
 ## Development
 
 retro:
-    I'm currently finishing Chapter 1 of Episode 1. It's in open alpha so all players have access to it.
+    Chapter 1 of Episode 1 is feature complete and is in open alpha so all players have access to it.
     You can play it from start to finish, but most locations aren't illustrated yet.
-    I'm currently working on the art and fixing bugs players come across.
+    Currently, I'm focusing on giving direct access to all the learning parts of the game for those who want to jump right in.
+    I'll be able to package this into an offline, single-player version of the game with a PC and tablet release.
 
 -> [PixelArtAcademyQuestions]
 
@@ -500,8 +503,8 @@ retro: I hope it was informative.
 
 retro:
     I know, it's a bit funny for a game about drawing to be just text.
-    I'm working on illustrations right now, at least for the key places in the game.
-    Things change a lot during development so I don't want to waste my time drawing locations that might get cut.
+    Things change a lot during development, so I don't want to waste my time drawing locations that might get cut.
+    Once the story and gameplay stabilizes, I'll work on adding illustrations to locations.
 
 -> [PixelArtAcademyQuestions]
 

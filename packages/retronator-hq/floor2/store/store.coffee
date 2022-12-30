@@ -63,9 +63,7 @@ class HQ.Store extends LOI.Adventure.Location
       newestTableItem
       newestTableItem?.interactions
       HQ.Store.Display
-      HQ.Store.Shelf.Game
-      HQ.Store.Shelf.Upgrades
-      HQ.Store.Shelves
+      HQ.Store.Shelf.Patreon
       inventoryScene?.cart() unless HQ.Items.ShoppingCart.state 'inInventory'
       @elevatorButton
     ]
@@ -304,7 +302,7 @@ class HQ.Store extends LOI.Adventure.Location
 
               if listener.onStoreCartCheck
                 listener.onStoreCartCheck new HQ.Store.StoreCartCheckResponse => processListeners()
-                  
+                
               else
                 processListeners()
 

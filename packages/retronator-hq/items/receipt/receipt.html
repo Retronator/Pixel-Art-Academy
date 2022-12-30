@@ -219,15 +219,17 @@
                 <div class="instructions">
                   {{#if currentUser}}
                     {{#if paymentAmount}}
-                      <p>Choose a one-time payment or one of your saved payment methods.</p>
+                      <p>Unfortunately you do not have enough store credit to cover this purchase.
+                        You can pledge on Patreon to get more store credit.</p>
                     {{else}}
                       <p>You have a store balance of ${{storeCredit}}. ${{creditApplied}} will be used to cover
                         this purchase. Simply confirm the payment by clicking on the payment slip on the right.</p>
                     {{/if}}
                   {{else}}
-                    <p>Choose a payment type.</p>
+                    <p>Currently you can only redeem items with store credit. Please sign-in with Burra in the café
+                      downstairs to get access to your store balance.</p>
                   {{/if}}
-                  {{#if paymentAmount}}
+                  {{!-- #if paymentAmount}}
                     {{#if currentUser}}
                       <h2>One-time payment</h2>
                     {{/if}}
@@ -260,9 +262,9 @@
                         {{/if}}
                       </div>
                     {{/if}}
-                  {{/if}}
+                  {{/if--}}
                 </div>
-                {{#if showNewPaymentMethod}}
+                {{!-- #if showNewPaymentMethod}}
                   <div class="new-payment-method">
                     <h2 class="title">Save payment method</h2>
                     <div class="payment-method-types">
@@ -275,7 +277,7 @@
                       Stripe.
                     </p>
                   </div>
-                {{/if}}
+                {{/if--}}
                 <div class="selected-payment-method">
                   <div class="payment-type">
                     {{#if paymentAmount}}
