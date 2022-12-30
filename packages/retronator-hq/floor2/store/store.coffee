@@ -63,7 +63,7 @@ class HQ.Store extends LOI.Adventure.Location
       newestTableItem
       newestTableItem?.interactions
       HQ.Store.Display
-      HQ.Store.Shelf.Patreon
+      if LOI.characterId() then HQ.Store.Shelves else HQ.Store.Shelf.Patreon
       inventoryScene?.cart() unless HQ.Items.ShoppingCart.state 'inInventory'
       @elevatorButton
     ]
