@@ -13,8 +13,10 @@ class HQ.Store.Shelf.Patreon extends HQ.Store.Shelf
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Patreon store ![shelf](look at shelf)"
+  @fullName: -> "Patreon store shelf"
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+
+  @descriptiveName: -> "Patreon store ![shelf](look at shelf)."
 
   @description: ->
     "
