@@ -11,7 +11,7 @@ Package.onUse(function(api) {
   api.use('accounts-ui-unstyled');
   api.use('accounts-facebook');
   api.use('accounts-twitter');
-  api.use('accounts-google');
+  //api.use('accounts-google');
   api.use('service-configuration');
   api.use('oauth2');
   api.use('oauth-encryption');
@@ -45,7 +45,7 @@ Package.onUse(function(api) {
   api.addServerFile('initialize-server/emails');
 
   // User
-  
+
   api.addFile('user/user');
   api.addFile('user/methods');
   api.addServerFile('user/methods-server');

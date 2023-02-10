@@ -16,8 +16,16 @@ class Artificial.Babel extends Artificial.Babel
   # Load cache.
   @_cache = new ReactiveField null
 
-  HTTP.get @cacheUrl, (error, response) ->
-    Artificial.Babel._cache JSON.parse response.content
+  HTTP.get Meteor.absoluteUrl(@cacheUrl), (error, response) ->
+    if error
+      console.error error
+      return
+      
+    try
+      Artificial.Babel._cache JSON.parse response.content
+      
+    catch exception
+      console.error exception
 
   # Handle for keeping tracks of individual translation subscriptions.
   class @SubscriptionHandle

@@ -43,8 +43,8 @@ Package.onUse(function(api) {
     'peerlibrary:peerdb',
     'peerlibrary:peerdb-migrations',
     'peerlibrary:reactive-publish',
-    'peerlibrary:blaze-components',
-    'peerlibrary:blaze-common-component',
+    'retronator:blaze-components',
+    'retronator:blaze-common-component',
     'peerlibrary:reactive-field',
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
@@ -70,13 +70,13 @@ Package.onUse(function(api) {
   api.export('THREE');
   api.export('Ammo');
 
-	api.addFile('artificial');
+  api.addFile('artificial');
 
-	// Global initialization
+  // Global initialization
 
-	api.addFile('everywhere/lodash/lodash');
+  api.addFile('everywhere/lodash/lodash');
 
-	// Define all namespaces so that we can use shortcuts.
+  // Define all namespaces so that we can use shortcuts.
 
   api.addFile('everywhere..');
   api.addFile('control..');
@@ -141,8 +141,8 @@ Package.onUse(function(api) {
 
   api.addClientFile('mirage/browser-client');
   api.addFile('mirage/canvas');
-	api.addFile('mirage/component');
-	api.addFile('mirage/csshelper');
+  api.addFile('mirage/component');
+  api.addFile('mirage/csshelper');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
   api.addFile('mirage/shortcuthelper');

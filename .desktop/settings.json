@@ -1,0 +1,95 @@
+{
+    "name": "Pixel Art Academy: Learn Mode",
+    "version": "0.0.1",
+    "projectName": "PixelArtAcademyLearnMode",
+    "devTools": true,
+    "devtron": true,
+    "desktopHCP": true,
+    "desktopHCPIgnoreCompatibilityVersion": false,
+    "webAppStartupTimeout": 60000,
+    "exposeLocalFilesystem": false,
+    "allowOriginLocalServer": false,
+    "window": {
+        "icon": "@assets/meteor.png",
+        "_windows": {
+            "icon": "@assets/meteor.ico"
+        }
+    },
+    "windowDev": {
+    },
+    "uglify": true,
+    "plugins": {
+        "meteor-desktop-splash-screen": {
+            "version": "0.5.0",
+            "windowSettings": {
+                "width": 800,
+                "height": 600
+            },
+            "updateScreen": true,
+            "updateScreenSettings": {
+                "imagePath": "updating.gif",
+                "windowSettings": {
+                    "width": 400,
+                    "height": 300
+                },
+                "clickThrough": false,
+                "style": {
+                    "background-size": "auto"
+                }
+            }
+        }
+    },
+    "dependencies": {
+        "electron": "6.1.7"
+    },
+    "packageJsonFields": {
+        "description": "Pixel Art Academy: Learn Mode",
+        "author": "Retronator",
+        "private": true
+    },
+    "builderOptions": {
+        "icon": ".desktop/assets/meteor.ico",
+        "appId": "meteor.app",
+        "productName": "Pixel Art Academy: Learn Mode",
+        "compression": "maximum",
+        "win": {
+            "target": "nsis"
+        },
+        "publish": [
+            {
+                "provider": "generic",
+                "url": "http://127.0.0.1:8080/"
+            }
+        ],
+        "mac": {
+            "icon": ".desktop/assets/meteor.icns"
+        },
+        "dmg": {
+            "icon": ".desktop/assets/meteor.icns",
+            "background": ".desktop/assets/dmgBackground.png",
+            "iconSize": 54,
+            "contents": [
+                { "x": 377, "y": 190, "type": "link", "path": "/Applications" },
+                { "x": 63, "y": 190, "type": "file" }
+            ],
+            "window": {
+                "width": 480,
+                "height": 300
+            }
+        }
+    },
+    "packagerOptions": {
+        "icon": ".desktop/assets/meteor.ico",
+        "_osx": {
+            "icon": ".desktop/assets/meteor.icns"
+        },
+        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Retronator.",
+        "win32metadata": {
+            "CompanyName": "Retronator",
+            "FileDescription": "Pixel Art Academy: Learn Mode",
+            "OriginalFilename": "Pixel Art Academy Learn Mode.exe",
+            "ProductName": "Pixel Art Academy: Learn Mode",
+            "InternalName": "Pixel Art Academy Learn Mode.exe"
+        }
+    }
+}

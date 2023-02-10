@@ -1,0 +1,21 @@
+<head>
+  <link rel="icon" href="/favicon.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@PixelArtAcademy" />
+  <meta name="twitter:creator" content="@retronator" />
+</head>
+
+<body>
+  {{> PixelArtAcademy.LearnMode.App}}
+</body>
+
+<template name="PixelArtAcademy.LearnMode.App">
+  <div class="pixelartacademy-learnmode-app">
+    <div>LEARN MODE 27</div>
+    <div>{{t7e "TEST"}}</div>
+    <button class="translation-mode-button">TRANSLATION MODE {{inTranslationMode}}</button>
+    <div>Number of translations: {{translations.length}}</div>
+    <button class="rename-button">RENAME</button>
+    {{> appRoot}}
+  </div>
+</template>

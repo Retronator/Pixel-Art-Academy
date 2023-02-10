@@ -1,0 +1,2 @@
+unless PixelArtAcademy
+  class PixelArtAcademy

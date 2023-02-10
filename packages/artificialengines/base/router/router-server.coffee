@@ -8,6 +8,7 @@ class AB.Router extends AB.Router
 
   @initialize: ->
     WebApp.rawConnectHandlers.use (request, response, next) =>
+      console.log "REQUEST: ", request.headers
       # HACK: Use response as the carrier for host, so we can extract it later in OAuth flow.
       response._requestHost = request.headers.host
 
@@ -55,6 +56,8 @@ class AB.Router extends AB.Router
     Meteor.absoluteUrl[key] = value for own key, value of _absoluteUrl
 
     WebApp.connectHandlers.use (request, response, next) =>
+      console.log "REQUEST 2: ", request.headers
+  
       if request.method is 'POST'
         body = ''
 
