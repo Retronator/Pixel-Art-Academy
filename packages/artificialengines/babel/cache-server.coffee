@@ -3,9 +3,7 @@ AB = Artificial.Babel
 cache = null
 
 Meteor.startup ->
-  console.log "STARTING CACHE"
   Tracker.autorun ->
-    console.log "INVALIDATING CACHE"
     # Invalidate cache on translation changes.
     AB.Translation.documents.find(
       namespace: $exists: true
@@ -15,10 +13,7 @@ Meteor.startup ->
       changed: -> cache = null
       removed: -> cache = null
 
-console.log "WIRING HANDLERS"
-
 WebApp.connectHandlers.use AB.cacheUrl, (request, response, next) ->
-  console.log "SERVING", AB.cacheUrl, request.headers
   unless cache
     console.log "Recomputing Artificial Babel Translations cache." if Artificial.debug
     # Get all translations with a namespace and a key.

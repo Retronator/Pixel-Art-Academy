@@ -1,0 +1,26 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+html.pixelartacademy-learnmode
+  margin 0
+  padding 0
+  background atariGray(0)
+  color atariGray(7)
+  pixel-image-rendering()
+
+  *
+  *::before
+  *::after
+    background-size 100% 100%
+
+.pixelartacademy-learnmode-app
+  daily()
+  text-align center
+
+  .logo
+    position absolute
+    left calc(50% - 34rem)
+    top calc(50% - 15rem)
+    width 68rem
+    height 30rem
+    margin 0 auto
+    background-image image('/pixelartacademy/pixelboy/logo.png')

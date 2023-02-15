@@ -198,7 +198,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/template-server-databasecontent');
   api.addServerFile('character/part/methods-server');
   api.addServerFile('character/part/subscriptions');
-  
+
   api.addServerFile('character/part/migrations/0000-embeddedtranslations');
   api.addServerFile('character/part/migrations/0001-spriteids');
   api.addServerFile('character/part/migrations/0002-articlepartstoarticlepartshapes');
@@ -257,7 +257,7 @@ Package.onUse(function(api) {
   // Behavior parts
 
   api.addFile('character/behavior..');
-  
+
   api.addFile('character/behavior/parts..');
   api.addFile('character/behavior/parts/personality..');
   api.addFile('character/behavior/parts/personality/factor');
@@ -367,7 +367,7 @@ Package.onUse(function(api) {
   // Listener
 
   api.addFile('adventure/listener..');
-  
+
   // Thing
 
   api.addUnstyledComponent('adventure/thing/thing');
@@ -433,7 +433,7 @@ Package.onUse(function(api) {
   api.addFile('adventure/group..');
 
   // Events
-  
+
   api.addFile('adventure/event..');
   api.addFile('adventure/event/stopevent');
 
@@ -607,7 +607,7 @@ Package.onUse(function(api) {
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
-  
+
   api.addUnstyledComponent('components/sprite..');
   api.addUnstyledComponent('components/computer..');
 
@@ -615,24 +615,11 @@ Package.onUse(function(api) {
   api.addFile('components/embeddedwebpage/display');
   api.addFile('components/embeddedwebpage/router');
 
-  // Typography
-
-  api.addCss('typography..');
-  api.addStyleImport('typography..');
-
-  // Styles
-
-  api.addStyleImport('style..');
-  api.addStyleImport('style/atari2600');
-  api.addStyleImport('style/cursors');
-  api.addStyle('style/cursors');
-  api.addStyle('style/defaults');
-
   // Helpers
 
   api.addFile('helpers/spacebars');
   api.addFile('helpers/lodash');
-  
+
   // Emails
 
   api.addFile('emails..');

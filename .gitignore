@@ -5,5 +5,3 @@ node_modules
 /build
 /deploy
 .DS_Store
-
-version.desktop

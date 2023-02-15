@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:pixelartacademy',
+  name: 'retronator:retronator-identity',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -13,10 +13,16 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
 
-  api.use('retronator:retronator-identity');
-  api.imply('retronator:retronator-identity');
+  // Typography
 
-  api.export('PixelArtAcademy');
+  api.addCss('typography..');
+  api.addStyleImport('typography..');
 
-  api.addFile('pixelartacademy');
+  // Styles
+
+  api.addStyleImport('style..');
+  api.addStyleImport('style/atari2600');
+  api.addStyleImport('style/cursors');
+  api.addStyle('style/cursors');
+  api.addStyle('style/defaults');
 });

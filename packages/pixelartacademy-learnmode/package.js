@@ -12,14 +12,10 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
+  api.use('retronator:pixelartacademy');
 
   api.export('PixelArtAcademy');
 
-  api.addFile('pixelartacademy');
   api.addFile('learnmode');
 
-  api.addComponent('app');
-
-  api.addFile('layouts/layouts');
-  api.addUnstyledComponent('layouts/publicaccess/publicaccess');
 });

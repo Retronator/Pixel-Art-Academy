@@ -10,12 +10,14 @@
 </body>
 
 <template name="PixelArtAcademy.LearnMode.App">
+  <style>
+    html {
+      font-size: {{display.scale}}px;
+    }
+  </style>
+  {{> Render display}}
   <div class="pixelartacademy-learnmode-app">
-    <div>LEARN MODE 27</div>
-    <div>{{t7e "TEST"}}</div>
-    <button class="translation-mode-button">TRANSLATION MODE {{inTranslationMode}}</button>
-    <div>Number of translations: {{translations.length}}</div>
-    <button class="rename-button">RENAME</button>
+    <div class="logo"></div>
     {{> appRoot}}
   </div>
 </template>
