@@ -1,5 +1,5 @@
 {
-    "name": "Pixel Art Academy: Learn Mode",
+    "name": "Pixel Art Academy Learn Mode",
     "version": "0.1.0",
     "projectName": "pixelartacademy-learnmode",
     "devTools": false,
@@ -12,6 +12,7 @@
         "minWidth": 320,
         "minHeight": 240,
         "fullscreen": true,
+        "autoHideMenuBar": true,
         "icon": "@assets/icons/coatofarms.png",
         "backgroundColor": "black",
         "_windows": {
@@ -49,8 +50,6 @@
         "electron": "6.1.7"
     },
     "packageJsonFields": {
-        "productName": "Pixel Art Academy: Learn Mode",
-        "description": "Pixel Art Academy: Learn Mode",
         "author": "Retronator",
         "private": true,
         "devDependencies": {
@@ -60,7 +59,6 @@
     "builderOptions": {
         "icon": ".desktop/assets/meteor.ico",
         "appId": "meteor.app",
-        "productName": "Pixel Art Academy: Learn Mode",
         "compression": "maximum",
         "win": {
             "target": "nsis"
@@ -89,16 +87,13 @@
         }
     },
     "packagerOptions": {
-        "name": "Pixel Art Academy Learn Mode",
         "icon": ".desktop/assets/icons/coatofarms.ico",
         "_osx": {
             "icon": ".desktop/assets/icons/coatofarms.icns"
         },
         "appCategoryType": "public.app-category.education",
         "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Retronator",
-        "win32metadata": {
-            "OriginalFilename": "Pixel Art Academy Learn Mode.exe"
-        },
-        "overwrite": true
+        "overwrite": true,
+        "electronVersion": "6.1.7"
     }
 }
