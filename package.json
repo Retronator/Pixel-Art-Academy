@@ -17,7 +17,7 @@
     "app-builder-lib": "^24.0.0-alpha.11",
     "electron": "6.1.7",
     "electron-builder": "21.2.0",
-    "electron-packager": "^17.1.1"
+    "electron-packager": "14.0.4"
   },
   "scripts": {
     "desktop": "meteor-desktop"
