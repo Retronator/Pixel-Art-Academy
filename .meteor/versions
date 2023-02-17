@@ -30,7 +30,7 @@ ecmascript-runtime-server@0.11.0
 ejson@1.1.3
 es5-shim@4.8.0
 fetch@0.1.3
-froatsnook:request@2.74.0
+froatsnook:request@2.40.5
 geojson-utils@1.0.11
 hot-code-push@1.0.4
 html-tools@1.1.3
@@ -89,7 +89,7 @@ retronator:blaze-components@0.23.0
 retronator:peerdb@0.27.0
 retronator:peerdb-migrations@1.1.1
 retronator:pixelartacademy@0.1.0
-retronator:pixelartacademy-learnmode@0.0.1
+retronator:pixelartacademy-learnmode@0.1.0
 retronator:pixelartacademy-learnmode-app@0.0.1
 retronator:retronator-identity@0.1.0
 retry@1.1.0
