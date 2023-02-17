@@ -1,7 +1,6 @@
 {
     "name": "Pixel Art Academy Learn Mode",
     "version": "0.1.0",
-    "projectName": "pixelartacademy-learnmode",
     "devTools": false,
     "devtron": true,
     "desktopHCP": true,
