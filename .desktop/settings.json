@@ -92,7 +92,7 @@
             "icon": ".desktop/assets/icons/coatofarms.icns"
         },
         "appCategoryType": "public.app-category.education",
-        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Retronator",
+        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Matej Jan, Retronator",
         "overwrite": true,
         "electronVersion": "6.1.7"
     }
