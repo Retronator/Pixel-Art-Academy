@@ -5,6 +5,9 @@ node_modules
 /build
 /deploy
 /package
+/sign
+/notarize
+/notarize-log.json
 .DS_Store
 version.desktop
 .desktop-installer

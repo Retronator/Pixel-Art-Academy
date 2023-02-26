@@ -50,7 +50,9 @@ export default class ApplicationMenu {
         label: 'Window',
         submenu: [
           { role: 'minimize' },
-          { role: 'zoom' },
+          ...(isMac ? [
+            { role: 'zoom' },
+          ] : []),
           { type: 'separator' },
           { role: 'togglefullscreen' }
         ]
@@ -80,11 +82,7 @@ export default class ApplicationMenu {
               const { shell } = require('electron')
               await shell.openExternal('https://discord.gg/9w4zNrNqUz')
             }
-          },
-          ...(!isMac ? [
-            { type: 'separator' },
-            { role: 'about' },
-          ] : [])
+          }
         ]
       }
     ];
