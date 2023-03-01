@@ -21,18 +21,17 @@ export default class Desktop {
     constructor({
         log, skeletonApp, appSettings, eventsBus, modules, Module
     }) {
-        /**
-         * You can delete unused var from the param destructuring.
-         * Left them here just to emphasize what is passed. Delete the eslint rule at the top
-         * when done.
-         * You can also just have a one `config` param and do `Object.assign(this, config);`
-         */
-        const desktop = new Module('desktop');
-        // Get the automatically predefined logger instance.
         this.log = log;
+
+        const desktop = new Module('desktop');
 
         // From Meteor use this by invoking Desktop.send('desktop', 'closeApp');
         desktop.on('closeApp', () => app.quit());
+
+        desktop.on('getProcessPlatform', (event, fetchId) => {
+            this.log.verbose('getPlatform received');
+            desktop.respond('getProcessPlatform', fetchId, process.platform);
+        });
 
         // We need to handle gracefully potential problems.
         // Let's remove the default handler and replace it with ours.

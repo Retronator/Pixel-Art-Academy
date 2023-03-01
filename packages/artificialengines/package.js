@@ -182,6 +182,10 @@ Package.onUse(function(api) {
   api.addFile('base/subscription');
   api.addFile('base/event');
 
+  api.addFile('base/versionproperty..');
+  api.addFile('base/versionproperty/operatingsystem');
+  api.addFile('base/versionproperty/distributionplatform');
+
   api.addFile('base/router/router');
   api.addServerFile('base/router/router-server');
   api.addClientFile('base/router/router-client');
@@ -211,6 +215,8 @@ Package.onUse(function(api) {
   api.addFile('mummification/hierarchy/field');
   api.addFile('mummification/hierarchy/template');
   api.addFile('mummification/hierarchy/location');
+
+  api.addFile('mummification/content..');
 
   // Game content
 
