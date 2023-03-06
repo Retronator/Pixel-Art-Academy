@@ -67,7 +67,7 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
       End: (complete) =>
         # Simply complete if this route can handle database states.
-        if LOI.adventure.usesDatabaseState()
+        if LOI.adventure.usesServerState()
           complete()
           return
 

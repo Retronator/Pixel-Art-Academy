@@ -18,7 +18,7 @@ class AB.App extends AM.Component
 
     if Meteor.isClient
       AM.Window.initialize()
-      #AC.Keyboard.initialize()
+      AC.Keyboard.initialize()
 
   onCreated: ->
     super arguments...
@@ -86,12 +86,20 @@ class AB.App extends AM.Component
       @tick timestamp
 
   update: (appTime) ->
+    for name, component of @components
+      component.update? appTime
 
   beginDraw: ->
     true
 
   draw: (appTime) ->
+    for name, component of @components
+      component.draw? appTime
 
   endDraw: ->
 
   endRun: ->
+    sortedComponents = _.sortBy @components, (component) => component.endRunOrder or 0
+    
+    for name, component of sortedComponents
+      component.endRun? appTime

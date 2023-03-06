@@ -15,7 +15,7 @@ class HQ.Adventure extends LOI.Adventure
   template: -> 'LandsOfIllusions.Adventure'
 
   # We don't allow the user to play the whole game from retronator.com since the URL scheme doesn't allow it.
-  usesDatabaseState: -> false
+  usesServerState: -> false
 
   # Instead we use just the local state.
   usesLocalState: -> true

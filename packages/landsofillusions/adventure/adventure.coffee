@@ -13,6 +13,12 @@ class LOI.Adventure extends AM.Component
   @image: ->
     Meteor.absoluteUrl "pixelartacademy/title.png"
     
+  @rootUrl: -> '/' # Override to provide a root URL where the adventure should start.
+  
+  @menuItemsClass: -> LOI.Components.Menu.Items # Override to provide alternative menu items.
+
+  @interfaceClass: -> LOI.Interface.Text # Override to provide an alternative interface.
+
   titleSuffix: -> ' // Lands of Illusions'
 
   title: ->
@@ -28,7 +34,7 @@ class LOI.Adventure extends AM.Component
     # Override to true to allow logged out users to play (they will store the state in local storage).
     false
 
-  usesDatabaseState: ->
+  usesServerState: ->
     # Override to false to force logged in users to use the main adventure route.
     true
 
@@ -43,7 +49,7 @@ class LOI.Adventure extends AM.Component
     currentRegion = @currentRegion()
 
     conditions = [
-      @parser.ready()
+      if @parser? then @parser.ready() else true
       @interface.ready()
       currentTimelineId
       if currentContext? then currentContext.ready() else true
@@ -59,41 +65,11 @@ class LOI.Adventure extends AM.Component
 
   showLoading: ->
     # Show the loading screen when we're logging out.
-    return true if @loggingOut() or @quitting()
+    return true if @quitting()
 
     # Show the loading screen when we're not ready, except when other dialogs are already present
     # (for example, the storyline title) and we want to prevent the black blink in that case.
     not @ready() and not @modalDialogs().length
-
-  logout: (options = {}) ->
-    # Indicate logout procedure.
-    @loggingOut true
-
-    # Notify game state that it should flush any cached updates.
-    if @gameState
-      @gameState.updated
-        flush: true
-        callback: =>
-          @_endLogout options
-
-    else
-      @_endLogout options
-
-  _endLogout: (options) ->
-    # Log out the user.
-    Meteor.logout()
-
-    # Now that there is no more user, wait until game state has returned to local storage.
-    Tracker.autorun (computation) =>
-      return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorageUser
-      computation.stop()
-
-      Tracker.nonreactive =>
-        # Inform the caller that the log out procedure has completed.
-        options.callback?()
-
-        # Notify that we're done with logout procedure.
-        @loggingOut false
 
   showDescription: (thing) ->
     @interface.showDescription thing

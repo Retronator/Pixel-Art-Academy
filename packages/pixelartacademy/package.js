@@ -19,4 +19,6 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('pixelartacademy');
+
+  api.addFile('adventure/chapter..');
 });

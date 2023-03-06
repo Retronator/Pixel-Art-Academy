@@ -30,7 +30,7 @@ class LOI.Adventure extends LOI.Adventure
       speedFactor = gameState.gameTimeSpeedFactor or 1
       newGameTime = lastGameTime + speedFactor / (60 * 60 * 24)
 
-      # Update time in game state, but don't trigger reactivity (no need to update the database just for time increase)/.
+      # Update time in game state, but don't trigger reactivity (no need to update the database just for time increase).
       gameState.time = newTime
       gameState.gameTime = newGameTime
 

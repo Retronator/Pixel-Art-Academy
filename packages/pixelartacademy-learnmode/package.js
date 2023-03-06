@@ -17,4 +17,6 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('learnmode');
+
+  api.addFile('learnmode/adventure..');
 });

@@ -27,18 +27,13 @@ class LOI.GameState extends AM.Document
   #   gameTime: fractional number of days when the event happens in game time
   #   ... any custom data of the event
   # nextSimulateTime: auto-generated real life time when the next simulation should happen on the server
-  # user: the user this state belongs to or null if it's a character state
-  #   _id
-  #   displayName
-  # character: the character this state belongs to or null if it's a user state
-  #   _id
-  #   debugName
+  # profileId: the user or character ID this state belongs to
   @Meta
     name: @id()
     fields: =>
       user: Document.ReferenceField RA.User, ['displayName']
       character: Document.ReferenceField LOI.Character, ['debugName']
-      # Events and state both influence next simulation time (we need earliest event, 
+      # Events and state both influence next simulation time (we need earliest event,
       # and latest game time, as well as when that game time was written (last updated at)).
       nextSimulateTime: Document.GeneratedField 'self', ['events', 'state', 'stateLastUpdatedAt'], (fields) ->
         return [fields._id, null] unless fields.events?.length
@@ -59,22 +54,18 @@ class LOI.GameState extends AM.Document
         if new Date() > newDocument.nextSimulateTime
           # We need to fetch the full document since newDocument just gives us the nextSimulateTime field.
           LOI.Simulation.Server.simulateGameState LOI.GameState.documents.findOne newDocument._id
+          
+  @enablePersistence()
 
   # We define these privately because we have custom public methods
   # that transform the state locally before passing it on to the server.
-  @_insertForCurrentUser: @method 'insertForCurrentUser'
-  @_clearForCurrentUser: @method 'clearForCurrentUser'
-  @_replaceForCurrentUser: @method 'replaceForCurrentUser'
-
-  @_insertForCharacter: @method 'insertForCharacter'
-  @_clearForCharacter: @method 'clearForCharacter'
-  @_replaceForCharacter: @method 'replaceForCharacter'
-
+  @_insert: @method 'insert'
+  @_clear: @method 'clear'
+  @_replace: @method 'replace'
   @_update: @method 'update'
   @_resetNamespaces: @method 'resetNamespaces'
-      
-  @forCurrentUser: @subscription 'forCurrentUser'
-  @forCharacter: @subscription 'forCharacter'
+  
+  @forProfile: @subscription 'forProfile'
 
   @Type:
     Editable: 'gameState'
@@ -86,23 +77,14 @@ class LOI.GameState extends AM.Document
     # On the client also transform state from underscores to dots.
     @state = @constructor._transformStateFromDatabase @state if Meteor.isClient
 
-  @insertForCurrentUser: (state, callback) ->
-    LOI.GameState._insertForCurrentUser @_prepareStateForDatabase(state), callback
+  @insert: (profileId, callback) ->
+    LOI.GameState._insert profileId, callback
 
-  @clearForCurrentUser: (callback) ->
-    LOI.GameState._clearForCurrentUser callback
+  @clear: (profileId, callback) ->
+    LOI.GameState._clear profileId, callback
 
-  @replaceForCurrentUser: (state, callback) ->
-    LOI.GameState._replaceForCurrentUser @_prepareStateForDatabase(state), callback
-
-  @insertForCharacter: (characterId, callback) ->
-    LOI.GameState._insertForCharacter characterId, callback
-
-  @clearForCharacter: (characterId, callback) ->
-    LOI.GameState._clearForCharacter characterId, callback
-
-  @replaceForCharacter: (characterId, state, callback) ->
-    LOI.GameState._replaceForCharacter characterId, @_prepareStateForDatabase(state), callback
+  @replace: (profileId, state, callback) ->
+    LOI.GameState._replace profileId, @_prepareStateForDatabase(state), callback
 
   @_prepareStateForDatabase: (state) ->
     @_renameKeys state, /\./g, '_'

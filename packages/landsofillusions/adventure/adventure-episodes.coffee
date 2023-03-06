@@ -1,30 +1,21 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  episodeClasses: ->
+    # Override to provide classes for adding chapters, sections, and scenes.
+    []
+    
+  globalClasses: ->
+    # Override to provide classes that return scenes which should be available everywhere.
+    []
+  
   _initializeEpisodes: ->
-    PAA = PixelArtAcademy
-
     # Global classes.
-    @globalClasses = [
-      LOI.Character.Agents
-      LOI.Memory.Flashback
-      PAA.Items
-      PAA.StudyGuide.Global
-    ]
-
-    @globals = for globalClass in @globalClasses
-      new globalClass
+    @globals = new AE.ReactiveInstances => @globalClasses()
 
     # Create episodes.
-    @userEpisodeClasses = [
-      PAA.Season1.Episode0
-    ]
-
-    @characterEpisodeClasses = [
-      PAA.Season1.Episode1
-    ]
-    
     @_resetEpisodesDependency = new Tracker.Dependency
     
     @episodes = new ComputedField =>
@@ -33,21 +24,13 @@ class LOI.Adventure extends LOI.Adventure
       # Allow resetting of episodes.
       @_resetEpisodesDependency.depend()
 
-      # Depend on character ID.
-      characterId = LOI.characterId()
-      
       # Destroy previous episodes.
       episode.destroy() for episode in @_episodes if @_episodes
   
       # Create new ones.
       Tracker.nonreactive =>
-        if characterId
-          @_episodes = for episodeClass in @characterEpisodeClasses
-            new episodeClass
-
-        else
-          @_episodes = for episodeClass in @userEpisodeClasses
-            new episodeClass
+        @_episodes = for episodeClass in @episodeClasses()
+          new episodeClass
 
       @_episodes
     ,
@@ -126,8 +109,3 @@ class LOI.Adventure extends LOI.Adventure
   resetEpisodes: ->
     console.log "Resetting episodes." if LOI.debug
     @_resetEpisodesDependency.changed()
-
-  episodesReady: ->
-    return false unless LOI.adventureInitialized()
-
-    _.every (episode.ready() for episode in @episodes())

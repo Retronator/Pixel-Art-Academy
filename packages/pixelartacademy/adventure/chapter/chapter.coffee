@@ -1,4 +1,3 @@
-AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 

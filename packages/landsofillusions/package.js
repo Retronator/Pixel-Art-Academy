@@ -314,11 +314,6 @@ Package.onUse(function(api) {
 
   api.addServerFile('character/premadecharacter/migrations/0000-renamecollection');
 
-  // User
-
-  api.addFile('user/user');
-  api.addServerFile('user/subscriptions');
-
   // Parser
 
   api.addFile('parser..');
@@ -353,7 +348,6 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-listeners');
   api.addFile('adventure/adventure-time');
   api.addFile('adventure/adventure-dialogs');
-  api.addFile('adventure/adventure-assets');
   api.addFile('adventure/adventure-groups');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
@@ -586,6 +580,8 @@ Package.onUse(function(api) {
   api.addComponent('components/overlay..');
   api.addComponent('components/backbutton..');
   api.addComponent('components/signin..');
+  api.addComponent('components/savegame..');
+  api.addComponent('components/loadgame..');
   api.addComponent('components/storylinetitle..');
   api.addComponent('components/hand..');
   api.addComponent('components/translationinput..');

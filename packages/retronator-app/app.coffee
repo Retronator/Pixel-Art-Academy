@@ -58,28 +58,6 @@ class Retronator.App extends Artificial.Base.App
 
     AB.Router.initialize()
 
-    @components = {}
-
-  addComponent: (component) ->
-    @components[component.componentName()] = component
-
-  removeComponent: (component) ->
-    delete @components[component.componentName()]
-
-  update: (appTime) ->
-    for name, component of @components
-      component.update? appTime
-
-  draw: (appTime) ->
-    for name, component of @components
-      component.draw? appTime
-
-  endRun: (appTime) ->
-    sortedComponents = _.sortBy @components, (component) => component.endRunOrder or 0
-
-    for name, component of sortedComponents
-      component.endRun? appTime
-
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer
   Meteor.startup ->

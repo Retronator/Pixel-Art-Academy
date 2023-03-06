@@ -5,6 +5,7 @@ AM = Artificial.Mummification
 class AM.Document.Versioning
   # Enabling versioning on a document works with the following fields on the document:
   # versioned: boolean set to true for documents that have versioning enabled (used to include in a subscription to enable versioning on the client)
+  # lastEditTime: the time the last operation was applied (either through execute action or undo/redo)
   # historyPosition: how many actions brings you to the current state of the document
   # historyStart: at which history position does the history array start (the rest of the actions are in the archive)
   # history: array of actions that produce this document

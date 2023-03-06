@@ -7,36 +7,25 @@ ignoreFields =
   lastUpdated: false
   nextSimulateTime: false
 
-LOI.GameState.forCurrentUser.publish ->
+LOI.GameState.forProfile.publish (profileId) ->
+  check profileId, Match.DocumentId
   return unless @userId
 
-  # Before we send the document, simulate it to current time.
-  gameState = LOI.GameState.documents.findOne 'user._id': @userId
-  LOI.Simulation.Server.simulateGameState gameState if gameState
+  # Make sure the profile belongs to the user or a user's character.
+  character = LOI.Character.documents.findOne profileId
   
-  LOI.GameState.documents.find
-    'user._id': @userId
-  ,
-    fields: ignoreFields
-
-LOI.GameState.forCharacter.publish (characterId) ->
-  check characterId, Match.DocumentId
-  return unless @userId
-
-  # Make sure the character belongs to the user.
-  character = LOI.Character.documents.findOne characterId
-
-  unless character?.user._id is @userId
-    throw new AE.UnauthorizedException "The character does not belong to the logged in user."
+  userId = character?.user._id or profileId
+  
+  unless userId is @userId
+    throw new AE.UnauthorizedException "The profile does not belong to the logged in user."
 
   # Before we send the document, simulate it to current time.
-  gameState = LOI.GameState.documents.findOne 'character._id': characterId
-  throw new AE.InvalidOperationException "Character does not have a game state." unless gameState
+  gameState = LOI.GameState.documents.findOne 'profileId': profileId
+  throw new AE.InvalidOperationException "Profile does not have a game state." unless gameState
 
   LOI.Simulation.Server.simulateGameState gameState
 
   LOI.GameState.documents.find
-    'character._id': characterId
+    'profileId': profileId
   ,
     fields: ignoreFields
-

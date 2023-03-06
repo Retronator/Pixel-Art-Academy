@@ -18,7 +18,9 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFile('pixelartacademy');
+  api.addFile('adventuremode');
+
+  api.addClientFile('initialize-client');
 
   api.addFile('components..');
   api.addFile('components/autoscaledimagemixin..');
@@ -28,10 +30,12 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-things');
 
   api.addFile('adventure..');
-  api.addFile('adventure/chapter..');
 
   api.addFile('layouts..');
   api.addFile('layouts/adminaccess..');
+
+  api.addFile('user/user');
+  api.addServerFile('user/subscriptions');
 
   api.addFile('character/person');
   api.addFile('character/agent');

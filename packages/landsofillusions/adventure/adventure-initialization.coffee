@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
@@ -17,8 +18,8 @@ class LOI.Adventure extends LOI.Adventure
     @scriptHelpers = new LOI.Adventure.Script.Helpers @
 
     @menu = new LOI.Components.Menu
+      itemsClass: @constructor.menuItemsClass()
     
-    @loggingOut = new ReactiveField false
     @quitting = new ReactiveField false
 
     @_modalDialogs = []
@@ -32,15 +33,13 @@ class LOI.Adventure extends LOI.Adventure
 
     console.log "Adventure created." if LOI.debug
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponent AB.App
     @app.addComponent @
 
     $('html').addClass('adventure')
 
-    @interface = new LOI.Interface.Text
-    @parser = new LOI.Parser
+    @interface = new @constructor.interfaceClass()
     @director = new LOI.Director
-    @world = new LOI.Engine.World adventure: @
     
     @_initializeState()
 
@@ -59,11 +58,7 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeThings()
     @_initializeListeners()
     @_initializeTime()
-    @_initializeAssets()
     @_initializeGroups()
-
-    # Subscribe to user's characters.
-    LOI.Character.forCurrentUser.subscribe()
 
     LOI.adventureInitialized true
 
@@ -72,7 +67,7 @@ class LOI.Adventure extends LOI.Adventure
 
     console.log "Adventure rendered." if LOI.debug
 
-    # Only initialize routing after we've rendered adventure so that the persistent components 
+    # Only initialize routing after we've rendered adventure so that the persistent components
     # (such as the menu) got rendered and had the chance to register their URL handlers.
     @_initializeRouting()
 
@@ -96,12 +91,5 @@ class LOI.Adventure extends LOI.Adventure
     $('html').removeClass('adventure')
 
   endRun: ->
-    # Flush the state updates to the database when the page is about to unload.
-    @gameState?.updated? flush: true
-    @userGameState?.updated? flush: true
-
-    # If we're signed in, but aren't saving login information, quit game to remove all local data.
-    if Meteor.userId() and not LOI.settings.persistLogin.allowed()
-      @clearLocalGameState()
-      @clearLocalStorageGameStateParts()
-      @clearLoginInformation()
+    # Flush persistent document updates when the page is about to unload.
+    Persistence.flushUpdates()

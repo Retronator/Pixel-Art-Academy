@@ -47,6 +47,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     super arguments...
 
     chapter.destroy() for chapter in @chapters
+    scene.destroy() for scene in @_scenes
 
     @startSection.destroy()
 
@@ -78,7 +79,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
       
     # Show to be continued screen if the player doesn't have access yet (assuming in the future it will be available).
     options.toBeContinued = true unless @meetsAccessRequirement()
-      
+    
     # Create new storyline title.
     episodeTitle = new LOI.Components.StorylineTitle options
 

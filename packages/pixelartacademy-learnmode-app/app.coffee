@@ -13,6 +13,11 @@ class LM.App extends Artificial.Base.App
   @addPublicPage: (url, pageClass) ->
     AB.Router.addRoute url, @Layouts.PublicAccess, pageClass
   
+  constructor: ->
+    super arguments...
+    
+    # Instantiate all app packages, which register router URLs.
+  
   # Component handlers
   
   onCreated: ->

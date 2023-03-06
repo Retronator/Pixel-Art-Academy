@@ -119,6 +119,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/match');
   api.addFile('everywhere/reactivearray');
   api.addFile('everywhere/reactivedictionary');
+  api.addFile('everywhere/reactiveinstances');
   api.addFile('everywhere/reactivewrapper');
   api.addFile('everywhere/rectangle');
 
@@ -201,6 +202,10 @@ Package.onUse(function(api) {
   api.addFile('mummification/embeddedimagedata');
 
   api.addFile('mummification/document..');
+
+  api.addFile('mummification/document/persistence..');
+  api.addFile('mummification/document/persistence/persistentcollection');
+  api.addFile('mummification/document/persistence/syncedstorage');
 
   api.addFile('mummification/document/versioning..');
   api.addFile('mummification/document/versioning/versionedcollection');

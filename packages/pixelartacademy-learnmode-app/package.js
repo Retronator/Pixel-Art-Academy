@@ -20,4 +20,7 @@ Package.onUse(function(api) {
 
   api.addFile('layouts/layouts');
   api.addUnstyledComponent('layouts/publicaccess/publicaccess');
+
+  api.addFile('learnmode/adventure..');
+
 });

@@ -51,10 +51,3 @@ class LOI.Components.SignIn extends AM.Component
       finishedDeactivatingCallback()
     ,
       500
-
-  events: ->
-    super(arguments...).concat
-      'click #login-buttons-logout': @onClickLogoutButton
-
-  onClickLogoutButton: (event) ->
-    LOI.adventure.logout()

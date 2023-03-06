@@ -1,6 +1,7 @@
 AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+Persistence = Artificial.Mummification.Document.Persistence
 
 # The adventure component that is served from pixelart.academy.
 class PAA.Adventure extends LOI.Adventure
@@ -13,6 +14,14 @@ class PAA.Adventure extends LOI.Adventure
   @description: ->
     "Become an artist in the text/point-and-click adventure game by Retronator."
 
+  @userEpisodeClasses = [
+    PAA.Season1.Episode0
+  ]
+
+  @characterEpisodeClasses = [
+    PAA.Season1.Episode1
+  ]
+  
   titleSuffix: -> ' // Pixel Art Academy'
 
   title: ->
@@ -27,4 +36,23 @@ class PAA.Adventure extends LOI.Adventure
     locationId: Retropolis.Spaceport.AirportTerminal.Terrace.id()
     timelineId: PAA.TimelineIds.DareToDream
 
-  usesLocalState: -> true
+  getLocalSyncedStorage: -> new Persistence.SyncedStorages.LocalStorage
+  
+  globalClasses: -> [
+    LOI.Character.Agents
+    LOI.Memory.Flashback
+    PAA.Items
+    PAA.StudyGuide.Global
+  ]
+  
+  episodeClasses: ->
+    # Depend on character ID.
+    characterId = LOI.characterId()
+    
+    if characterId then @constructor.characterEpisodeClasses else @constructor.userEpisodeClasses
+
+  onCreated: ->
+    super arguments...
+  
+    # Subscribe to user's characters.
+    LOI.Character.forCurrentUser.subscribe()

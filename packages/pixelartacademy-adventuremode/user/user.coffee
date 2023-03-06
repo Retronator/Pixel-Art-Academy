@@ -1,6 +1,6 @@
 RA = Retronator.Accounts
 
-# Override the user class with extra Lands of Illusions functionality.
+# Override the user class with extra Adventure Mode functionality.
 class RA.User extends RA.User
   @Meta
     name: @id()

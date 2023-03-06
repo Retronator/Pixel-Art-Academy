@@ -7,15 +7,18 @@ class LOI.Components.Menu extends AM.Component
   @register 'LandsOfIllusions.Components.Menu'
   @url: -> 'menu'
 
-  constructor: (@options) ->
+  constructor: (@options = {}) ->
     super arguments...
 
     @menuVisible = new ReactiveField false
 
-    @menuItems = new @constructor.Items
+    @menuItems = new (@options.menuItemsClass or @constructor.Items)
 
     @signIn = new LOI.Components.SignIn
-
+  
+    @saveGame = new LOI.Components.SaveGame
+    @loadGame = new LOI.Components.LoadGame
+  
     @account = new LOI.Components.Account
 
     @_transitionDuration = 200

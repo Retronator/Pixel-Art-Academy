@@ -78,7 +78,11 @@ class AM.Document extends Document
   @getTypes: ->
     _.keys @_documentClassesByType
     
+  @enablePersistence: ->
+    AM.Document.Persistence.initializeDocumentClass @
+  
   @enableVersioning: ->
+    @enablePersistence @
     AM.Document.Versioning.initializeDocumentClass @
   
   @getDocumentForId: (id) ->
