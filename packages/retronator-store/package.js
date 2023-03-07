@@ -17,6 +17,7 @@ Npm.depends({
 Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:artificialengines');
+  api.use('retronator:artificialengines-patreon');
   api.use('retronator:retronator-accounts');
 
   api.use('webapp', 'server');

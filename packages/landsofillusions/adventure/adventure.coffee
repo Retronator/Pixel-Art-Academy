@@ -49,7 +49,6 @@ class LOI.Adventure extends AM.Component
     currentRegion = @currentRegion()
 
     conditions = [
-      if @parser? then @parser.ready() else true
       @interface.ready()
       currentTimelineId
       if currentContext? then currentContext.ready() else true

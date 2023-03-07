@@ -11,12 +11,17 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
+  api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
 
   api.export('PixelArtAcademy');
 
   api.addFile('learnmode');
+  api.addFile('region');
 
-  api.addFile('learnmode/adventure..');
+  api.addFile('adventure..');
+
+  api.addComponent('interface..');
+
+  api.addFile('mainmenu..');
 });

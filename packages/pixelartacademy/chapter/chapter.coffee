@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Adventure.Chapter extends LOI.Adventure.Chapter
+class PAA.Chapter extends LOI.Adventure.Chapter
   @goals: -> [] # Override to provide any learning goals that the chapter oversees.
 
   constructor: ->

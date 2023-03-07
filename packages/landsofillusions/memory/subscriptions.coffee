@@ -34,8 +34,8 @@ LOI.Memory.forIds.publish (memoryIds) ->
 
   LOI.Memory.documents.find _id: $in: memoryIds
 
-LOI.Memory.forCharacter.publish (characterId, limit) ->
-  check characterId, Match.DocumentId
+LOI.Memory.forProfile.publish (profileId, limit) ->
+  check profileId, Match.DocumentId
   check limit, Match.Integer
 
-  LOI.Memory.forCharacter.query characterId, limit
+  LOI.Memory.forProfile.query profileId, limit

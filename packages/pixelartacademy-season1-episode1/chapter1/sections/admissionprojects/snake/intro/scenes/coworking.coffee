@@ -25,8 +25,8 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
     @setCallbacks
       ReceiveProject: (complete) =>
         @ephemeralState 'startError', null
-
-        C1.Projects.Snake.start LOI.characterId(), (error) =>
+  
+        PAA.Pico8.Cartridges.Snake.Project.start LOI.characterId(), (error) =>
           if error
             console.error error
             @ephemeralState 'startError', error

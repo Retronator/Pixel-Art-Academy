@@ -3,48 +3,15 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
   _initializeTimeline: ->
-    # We store player's current timeline locally so that multiple people
-    # can use the same user account and walk around independently.
-    @playerTimelineId = new ReactiveField null
-
-    Artificial.Mummification.PersistentStorage.persist
-      storageKey: 'LandsOfIllusions.Adventure.currentTimelineId'
-      field: @playerTimelineId
-      tracker: @
-      consentField: LOI.settings.persistGameState.allowed
-
     @currentTimelineId = new ComputedField =>
       console.log "Recomputing current timeline." if LOI.debug
 
       # Memory overrides other timelines.
-      return LOI.TimelineIds.Memory if @currentMemory()
-
-      if LOI.characterId() or not LOI.settings.persistGameState.allowed()
-        # Character's timeline is always read from the state. Also use when storing game state is not allowed.
-        return unless gameState = @gameState()
-
-        # For characters, start in the present.
-        unless gameState.currentTimelineId
-          gameState.currentTimelineId = if LOI.characterId() then LOI.TimelineIds.Present else @startingPoint()?.timelineId
-
-          # Only signal the change if we actually changed it (starting point might not provide a timeline).
-          @gameState.updated() if gameState.currentTimelineId
-
-        timelineId = gameState.currentTimelineId
-
+      if @currentMemory()
+        timelineId = LOI.TimelineIds.Memory
+        
       else
-        # Player's timeline is stored in local storage.
-        timelineId = @playerTimelineId()
-
-        # If the timeline is not found, see if we have one stored in the state.
-        unless timelineId
-          timelineId = @gameState()?.currentTimelineId
-
-          # If we still don't have the timeline start at the default player timeline.
-          unless timelineId
-            timelineId = @startingPoint()?.timelineId
-
-          @playerTimelineId timelineId
+        timelineId = @gameState()?.currentTimelineId or @startingPoint()?.timelineId
 
       console.log "Current timeline ID is", timelineId if LOI.debug or LOI.Adventure.debugLocation
 
@@ -54,9 +21,6 @@ class LOI.Adventure extends LOI.Adventure
 
   setTimelineId: (timelineEntity) ->
     timelineId = _.thingId timelineEntity
-
-    # Set the player timeline if we're not playing as a character.
-    @playerTimelineId timelineId unless LOI.characterId()
 
     # Save current timeline to state.
     if state = @gameState()

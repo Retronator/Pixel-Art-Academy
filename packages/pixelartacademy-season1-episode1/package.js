@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-actors');
+  api.use('retronator:pixelartacademy-pico8-snake');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-landsofillusions');
@@ -86,10 +87,6 @@ Package.onUse(function(api) {
   api.addThing('chapter1/groups/admissionsstudygroup/groupmateconversation');
   api.addThing('chapter1/groups/admissionsstudygroup/coordinatorconversation');
   api.addServerFile('chapter1/groups/admissionsstudygroup/subscriptions');
-
-  api.addFile('chapter1/projects..');
-  api.addFile('chapter1/projects/snake');
-  api.addServerFile('chapter1/projects/snake-methods-server');
 
   api.addFile('chapter1/challenges..');
   api.addFile('chapter1/challenges/drawing..');
@@ -174,7 +171,7 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/sections/mixer..');
   api.addFile('chapter1/sections/mixer/context');
-  
+
   api.addThing('chapter1/sections/mixer/scenes/intercom');
   api.addFile('chapter1/sections/mixer/scenes/store');
   api.addFile('chapter1/sections/mixer/scenes/coworking');

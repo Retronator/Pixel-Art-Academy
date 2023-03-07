@@ -22,15 +22,15 @@ class LOI.Adventure extends LOI.Adventure
     @availableProfiles = new ComputedField =>
       Persistence.availableProfiles()
       
-    @currentProfileId = new ReactiveField null
+    @profileId = new ReactiveField null
     
     # Provide game state fields.
     @gameState = new ComputedField =>
-      return unless profileId = @currentProfileId()
+      return unless profileId = @profileId()
       LOI.GameState.documents.findOne({profileId})?.state
   
     @readOnlyGameState = new ComputedField =>
-      return unless profileId = @currentProfileId()
+      return unless profileId = @profileId()
       LOI.GameState.documents.findOne({profileId})?.readOnlyState
       
   startNewGame: ->
@@ -61,7 +61,7 @@ class LOI.Adventure extends LOI.Adventure
     @director.stopAllScripts()
 
     # Activate the new profile.
-    @currentProfileId profileId
+    @profileId profileId
   
   saveGame: (options) ->
     # Start syncing the profile to desired storages.

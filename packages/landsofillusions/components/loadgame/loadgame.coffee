@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AC = Artificial.Control
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Components.LoadGame extends AM.Component

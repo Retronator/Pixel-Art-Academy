@@ -3,8 +3,6 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
-
 class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
   # goals: object of goals placed in the study plan
   #   {id}:
@@ -63,22 +61,8 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     # Maximize on run.
     @maximize()
 
-    # Add Study Plan task on first run.
-    @autorun (computation) =>
-      return unless LOI.adventure.gameState()
-      computation.stop()
-
-      return if @state 'goals'
-
-      @state 'goals',
-        "#{C1.Goals.StudyPlan.id()}":
-          position:
-            x: -100
-            y: -20
-          expanded: true
-
   hasGoal: (goalId) -> @constructor.hasGoal goalId
-    
+  
   addGoal: (options) ->
     goals = @state('goals') or {}
     goalId = options.goal.id()

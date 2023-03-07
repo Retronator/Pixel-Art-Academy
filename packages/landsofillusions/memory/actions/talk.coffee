@@ -5,7 +5,7 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Memory.Actions.Talk extends LOI.Memory.Action
   # content:
-  #   person: thing or character ID the character is talking to
+  #   person: thing or profile ID the profile is talking to
   @type: 'LandsOfIllusions.Memory.Actions.Talk'
   @registerType @type, @
 
@@ -26,7 +26,7 @@ class LOI.Memory.Actions.Talk extends LOI.Memory.Action
     return unless targetPerson = @_getTargetPerson()
 
     description = @_translateIfAvailable translationKey
-    LOI.Character.formatText description, 'targetPerson', targetPerson, true
+    LOI.Profile.formatText description, 'targetPerson', targetPerson, true
 
   createStartScript: (person, nextNode, nodeOptions) ->
     return unless targetPerson = @_getTargetPerson()
@@ -34,11 +34,11 @@ class LOI.Memory.Actions.Talk extends LOI.Memory.Action
     animationNode = new Nodes.Animation _.extend {}, nodeOptions,
       next: nextNode
       callback: (complete) =>
-        # The character should approach the target character.
+        # The profile should approach the target profile.
         person.avatar.walkTo
           target: targetPerson
           onCompleted: =>
-            # The characters should turn towards each other.
+            # The profiles should turn towards each other.
             person.avatar.lookAt targetPerson
             targetPerson.avatar.lookAt person
 
@@ -48,8 +48,8 @@ class LOI.Memory.Actions.Talk extends LOI.Memory.Action
             # Script was interrupted, so just complete.
             complete()
 
-    # Don't output the description if this is your character.
-    return animationNode if person._id is LOI.characterId()
+    # Don't output the description if this is your profile.
+    return animationNode if person._id is LOI.profileId()
 
     @_createDescriptionScript person, @startDescription(), animationNode, nodeOptions
 

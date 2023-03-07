@@ -4,10 +4,12 @@ AM = Artificial.Mummification
 Persistence = AM.Document.Persistence
 
 class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
+  @id: -> 'LocalStorage'
+  
   constructor: (@options) ->
     super arguments...
     
-    throw new AE.ArgumentNullException 'Storage key must be provided.' unless @options.storageKey?
+    throw new AE.ArgumentNullException 'Storage key must be provided.' unless @options?.storageKey?
     
     directoryJson = localStorage.getItem @options.storageKey
     @directory = if directoryJson and directoryJson isnt 'undefined' then EJSON.parse directoryJson else {}

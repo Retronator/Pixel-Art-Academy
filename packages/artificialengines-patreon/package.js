@@ -14,5 +14,5 @@ Package.onUse(function(api) {
 
   // Artificial Telepathy
 
-  api.addServerFile('telepathy/twitter-server');
+  api.addServerFile('telepathy/patreon-server');
 });

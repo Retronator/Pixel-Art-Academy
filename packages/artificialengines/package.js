@@ -43,7 +43,7 @@ Package.onUse(function(api) {
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
-    'peerlibrary:directcollection',
+    'retronator:directcollection',
     'meteorhacks:inject-initial',
 
     // Custom API extensions
@@ -207,6 +207,9 @@ Package.onUse(function(api) {
   api.addFile('mummification/document/persistence/persistentcollection');
   api.addFile('mummification/document/persistence/syncedstorage');
 
+  api.addFile('mummification/document/persistence/syncedstorages..');
+  api.addFile('mummification/document/persistence/syncedstorages/localstorage');
+
   api.addFile('mummification/document/versioning..');
   api.addFile('mummification/document/versioning/versionedcollection');
   api.addClientFile('mummification/document/versioning/versionedcollection-client');
@@ -258,7 +261,7 @@ Package.onUse(function(api) {
   api.addServerFile('babel/translation/translation-server-databasecontent');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
-  //api.addServerFile('babel/translation/migrations/0000-renamecollection');
+  api.addServerFile('babel/translation/migrations/0000-renamecollection');
 
   api.addFile('babel/language/language');
   api.addServerFile('babel/language/subscriptions');

@@ -11,9 +11,6 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:landsofillusions');
-  api.imply('retronator:landsofillusions');
-
   api.use('retronator:pixelartacademy');
 
   api.export('PixelArtAcademy');
@@ -24,10 +21,6 @@ Package.onUse(function(api) {
 
   api.addFile('components..');
   api.addFile('components/autoscaledimagemixin..');
-
-  // We need to add adventure-things first because it extends LOI.Adventure
-  // and we need it to be modified before PAA.Adventure extends LOI.Adventure.
-  api.addFile('adventure/adventure-things');
 
   api.addFile('adventure..');
 

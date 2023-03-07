@@ -6,7 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Memory.Actions.Say extends LOI.Memory.Action
   # content:
-  #   say: character says something
+  #   say: profile says something
   #     text: the text being said
   @type: 'LandsOfIllusions.Memory.Actions.Say'
   @registerType @type, @
@@ -22,7 +22,7 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
     text = @content.say.text
 
     if nodeOptions.background and text.length > 100
-      # Shorten the text under 100 characters.
+      # Shorten the text under 100 profiles.
       text = text[..100]
       lastSpace = text.lastIndexOf ' '
       text = "#{text[..lastSpace]}…"

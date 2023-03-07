@@ -17,7 +17,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('learning');
-  
+
   api.addFile('goal..');
   api.addFile('task..');
 

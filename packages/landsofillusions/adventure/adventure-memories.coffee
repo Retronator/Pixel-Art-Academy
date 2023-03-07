@@ -8,18 +8,17 @@ class LOI.Adventure extends LOI.Adventure
     @currentMemory = new ComputedField =>
       return unless memoryId = @currentMemoryId()
       
-      # Only characters can participate in memories.
-      return unless LOI.characterId()
+      return unless LOI.adventure.profileId()
 
       # Subscribe and retrieve the memory.
       LOI.Memory.forId.subscribe memoryId
       LOI.Memory.documents.findOne memoryId
 
-    # Subscribe to character's memory progress.
+    # Subscribe to profile's memory progress.
     @autorun (computation) =>
-      return unless characterId = LOI.characterId()
+      return unless profileId = LOI.adventure.profileId()
 
-      LOI.Memory.Progress.forCharacter.subscribe characterId
+      LOI.Memory.Progress.forProfile.subscribe profileId
 
   enterMemory: (memoryOrMemoryId) ->
     memoryId = memoryOrMemoryId._id or memoryOrMemoryId

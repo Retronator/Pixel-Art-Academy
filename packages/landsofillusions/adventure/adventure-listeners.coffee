@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
     # Returns all active listeners.
     @currentListeners = new ComputedField =>
       _.flattenDeep [
-        LOI.adventure.parser.listeners
+        LOI.adventure.interface.listeners()
         thing.listeners for thing in @currentThings()
       ]
       

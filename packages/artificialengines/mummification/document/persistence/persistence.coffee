@@ -23,7 +23,7 @@ class AM.Document.Persistence
     documentClass.documents = new AM.Document.Persistence.PersistentCollection documentClass
     
   @registerSyncedStorage: (syncedStorage) ->
-    @syncedStorages[syncedStorage.id()] = syncedStorage
+    @_syncedStoragesById[syncedStorage.id()] = syncedStorage
 
   @availableProfiles: ->
     # TODO: Query all registered storages for profiles and merge them together into available profiles.
@@ -32,7 +32,8 @@ class AM.Document.Persistence
   
   
   @loadProfile: (profileId) ->
-    @profiles[profileId] = {syncedStorageIds}
+    @_activeProfile =
+      id: profileId
 
   @flushUpdates: ->
     # Flush any throttled updates.

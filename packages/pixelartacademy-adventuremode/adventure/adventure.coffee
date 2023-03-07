@@ -53,6 +53,21 @@ class PAA.Adventure extends LOI.Adventure
 
   onCreated: ->
     super arguments...
+    
+    @_initializeGroups()
   
     # Subscribe to user's characters.
     LOI.Character.forCurrentUser.subscribe()
+  
+  _initializeGroups: ->
+    # Subscribe to character's groups.
+    @autorun (computation) =>
+      return unless characterId = LOI.characterId()
+    
+      LOI.Character.Group.forCharacterId.subscribe characterId
+
+  _initializeThings: ->
+    super arguments...
+  
+    @currentStudents = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing.is PAA.Student

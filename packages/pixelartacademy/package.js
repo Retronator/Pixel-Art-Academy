@@ -11,14 +11,12 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
-
-  api.use('retronator:retronator-identity');
-  api.imply('retronator:retronator-identity');
+  api.use('retronator:landsofillusions');
+  api.imply('retronator:landsofillusions');
 
   api.export('PixelArtAcademy');
 
   api.addFile('pixelartacademy');
 
-  api.addFile('adventure/chapter..');
+  api.addFile('chapter..');
 });

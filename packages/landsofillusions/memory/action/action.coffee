@@ -11,11 +11,7 @@ class LOI.Memory.Action extends AM.Document
   # timelineId: timeline when the action was done
   # locationId: location where the action was done
   # contextId: optional context in which the action was done
-  # character: character who did this action
-  #   _id
-  #   avatar
-  #     fullName
-  #     color
+  # profileId: profile who did this action
   # memory: optional memory this action belongs to
   #   _id
   # isMemorable: boolean weather this action is being memorized even without a memory
@@ -46,8 +42,7 @@ class LOI.Memory.Action extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      memory: Document.ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
-      character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
+      memory: Document.ReferenceField LOI.Memory, [], false, 'actions', ['time', 'profile', 'type', 'content', 'memory']
 
   @type: @id()
   @registerType @type, @
@@ -73,8 +68,8 @@ class LOI.Memory.Action extends AM.Document
   @forMemory: @subscription 'forMemory'
   @forMemories: @subscription 'forMemories'
   @recentForTimelineLocation: @subscription 'recentForTimelineLocation'
-  @recentForCharacter: @subscription 'recentForCharacter'
-  @recentForCharacters: @subscription 'recentForCharacters'
+  @recentForProfile: @subscription 'recentForProfile'
+  @recentForProfiles: @subscription 'recentForProfiles'
 
   @translationKeys:
     startDescription: 'startDescription'
@@ -128,7 +123,7 @@ class LOI.Memory.Action extends AM.Document
     return unless description
 
     # Format person into the description.
-    description = LOI.Character.formatText description, 'person', person
+    description = LOI.Profile.formatText description, 'person', person
     
     options = _.extend {}, nodeOptions,
       line: description

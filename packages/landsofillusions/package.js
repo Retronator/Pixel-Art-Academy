@@ -21,9 +21,6 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
-  api.use('retronator:retronator-accounts');
-
   api.use('chfritz:easycron');
   api.use('jparker:crypto-aes');
   api.use('froatsnook:request');
@@ -31,8 +28,14 @@ Package.onUse(function(api) {
   api.use('promise');
   api.use('webapp');
 
+  api.use('retronator:artificialengines');
   api.imply('retronator:artificialengines');
+
+  api.use('retronator:retronator-accounts');
   api.imply('retronator:retronator-accounts');
+
+  api.use('retronator:retronator-identity');
+  api.imply('retronator:retronator-identity');
 
   api.export('LandsOfIllusions');
 
@@ -57,13 +60,11 @@ Package.onUse(function(api) {
 
   api.addFile('state/gamestate');
   api.addServerFile('state/gamestate-events-server');
-  api.addFile('state/localgamestate');
   api.addFile('state/methods');
   api.addServerFile('state/subscriptions');
   api.addFile('state/stateobject');
   api.addFile('state/statefield');
   api.addFile('state/stateaddress');
-  api.addFile('state/stateinstances');
   api.addFile('state/ephemeralstateobject');
   api.addFile('state/localsavegames');
 
@@ -348,7 +349,6 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-listeners');
   api.addFile('adventure/adventure-time');
   api.addFile('adventure/adventure-dialogs');
-  api.addFile('adventure/adventure-groups');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFile('adventure/adventure-initialization');

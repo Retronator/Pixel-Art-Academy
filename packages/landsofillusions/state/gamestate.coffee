@@ -57,16 +57,6 @@ class LOI.GameState extends AM.Document
           
   @enablePersistence()
 
-  # We define these privately because we have custom public methods
-  # that transform the state locally before passing it on to the server.
-  @_insert: @method 'insert'
-  @_clear: @method 'clear'
-  @_replace: @method 'replace'
-  @_update: @method 'update'
-  @_resetNamespaces: @method 'resetNamespaces'
-  
-  @forProfile: @subscription 'forProfile'
-
   @Type:
     Editable: 'gameState'
     ReadOnly: 'readOnlyGameState'
@@ -76,15 +66,6 @@ class LOI.GameState extends AM.Document
 
     # On the client also transform state from underscores to dots.
     @state = @constructor._transformStateFromDatabase @state if Meteor.isClient
-
-  @insert: (profileId, callback) ->
-    LOI.GameState._insert profileId, callback
-
-  @clear: (profileId, callback) ->
-    LOI.GameState._clear profileId, callback
-
-  @replace: (profileId, state, callback) ->
-    LOI.GameState._replace profileId, @_prepareStateForDatabase(state), callback
 
   @_prepareStateForDatabase: (state) ->
     @_renameKeys state, /\./g, '_'
@@ -109,33 +90,3 @@ class LOI.GameState extends AM.Document
       clone = entity
 
     clone
-
-  updated: (options = {}) ->
-    # Prepare the helper function that sends updates to the server only every 10 seconds.
-    unless @_throttledUpdate
-      @_throttledUpdate = _.throttle (options) =>
-        @_update options
-      ,
-        10000
-      ,
-        leading: false
-
-    # Call the throttled update.
-    @_throttledUpdate options
-
-    if options.flush
-      # Flush to force immediate execution.
-      @_throttledUpdate.flush()
-
-  _update: (options) ->
-    # Update the whole state on the server.
-    # TODO: Probably we could update only changed objects.
-    @constructor._update @_id, @constructor._prepareStateForDatabase(@state), (error, result) =>
-      options.callback? error, result
-
-  resetNamespaces: (namespaces) ->
-    # First flush current changes.
-    @updated flush: true
-    
-    # Now clean up the state.
-    @constructor._resetNamespaces @_id, namespaces

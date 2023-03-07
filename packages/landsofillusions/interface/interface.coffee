@@ -91,6 +91,10 @@ class LOI.Interface extends AM.Component
   onLocationChanged: (location) ->
     # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
     
+  listeners: ->
+    # Override to provide global listeners of the interface.
+    []
+    
   ready: -> true
 
   _handleNode: (node, options = {}) ->

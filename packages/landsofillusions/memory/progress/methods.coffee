@@ -1,24 +1,24 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Memory.Progress.updateProgress.method (characterId, memoryId, time) ->
-  check characterId, Match.DocumentId
+LOI.Memory.Progress.updateProgress.method (profileId, memoryId, time) ->
+  check profileId, Match.DocumentId
   check memoryId, Match.DocumentId
   check time, Date
 
-  updateProgress characterId, memoryId, time
+  updateProgress profileId, memoryId, time
 
-LOI.Memory.Progress.discoverMemory.method (characterId, memoryId) ->
-  check characterId, Match.DocumentId
+LOI.Memory.Progress.discoverMemory.method (profileId, memoryId) ->
+  check profileId, Match.DocumentId
   check memoryId, Match.DocumentId
 
-  updateProgress characterId, memoryId
+  updateProgress profileId, memoryId
 
-updateProgress = (characterId, memoryId, time) ->
-  LOI.Authorize.characterAction characterId
+updateProgress = (profileId, memoryId, time) ->
+  LOI.Authorize.profileAction profileId
 
-  progress = LOI.Memory.Progress.documents.findOne 'character._id': characterId
-  throw new AE.ArgumentException "Missing progress document for character." unless progress
+  progress = LOI.Memory.Progress.documents.findOne 'profileId': profileId
+  throw new AE.ArgumentException "Missing progress document for profile." unless progress
 
   memory = LOI.Memory.documents.findOne memoryId
   throw new AE.ArgumentException "Memory not found." unless memory

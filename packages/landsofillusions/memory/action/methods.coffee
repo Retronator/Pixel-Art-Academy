@@ -1,22 +1,21 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
+LOI.Memory.Action.do.method (type, profileId, situation, content, memoryId) ->
   check type, typePattern
-  check characterId, Match.DocumentId
+  check profileId, Match.DocumentId
   check situation, situationPattern
   check content, LOI.Memory.Action.contentPatterns[type] if LOI.Memory.Action.contentPatterns[type]
   check memoryId, Match.Optional Match.DocumentId
 
-  LOI.Authorize.characterAction characterId
+  LOI.Authorize.profileAction profileId
 
   action =
     type: type
     time: new Date()
     timelineId: situation.timelineId
     locationId: situation.locationId
-    character:
-      _id: characterId
+    profileId: profileId
 
   action.contextId = situation.contextId if situation.contextId
   action.content = content if content
@@ -40,8 +39,8 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
 
     LOI.Memory.Action.documents.insert action
     
-    # Also automatically progress this memory to the end for this character.
-    LOI.Memory.Progress.updateProgress characterId, memoryId, action.time
+    # Also automatically progress this memory to the end for this profile.
+    LOI.Memory.Progress.updateProgress profileId, memoryId, action.time
 
   else
     action.memory = null
@@ -49,7 +48,7 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
     unless action.isMemorable
       # Clean up previous unmemorable actions.
       removeSelector =
-        'character._id': characterId
+        'profileId': profileId
         memory: null
         isMemorable: $ne: true
         type: type
@@ -98,8 +97,8 @@ authorizeMemoryAction = (actionId) ->
   action = LOI.Memory.Action.documents.findOne actionId
   throw new AE.ArgumentException "Action not found." unless action
 
-  # Make sure the user controls the character of this line.
-  LOI.Authorize.characterAction action.character._id
+  # Make sure the user controls the profile of this line.
+  LOI.Authorize.profileAction action.profileId
   
 typePattern = Match.Where (value) ->
   check value, String

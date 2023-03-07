@@ -33,12 +33,14 @@ class LOI.Adventure extends LOI.Adventure
 
     console.log "Adventure created." if LOI.debug
 
-    @app = @ancestorComponent AB.App
+    @app = @ancestorComponentOfType AB.App
     @app.addComponent @
 
     $('html').addClass('adventure')
 
-    @interface = new @constructor.interfaceClass()
+    interfaceClass = @constructor.interfaceClass()
+    console.log "got", interfaceClass
+    @interface = new interfaceClass
     @director = new LOI.Director
     
     @_initializeState()
@@ -58,7 +60,6 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeThings()
     @_initializeListeners()
     @_initializeTime()
-    @_initializeGroups()
 
     LOI.adventureInitialized true
 

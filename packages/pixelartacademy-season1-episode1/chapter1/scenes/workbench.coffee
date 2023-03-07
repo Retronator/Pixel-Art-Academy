@@ -19,9 +19,9 @@ class C1.Workbench extends LOI.Adventure.Scene
   things: ->
     things = []
 
-    if projectId = C1.Projects.Snake.readOnlyState 'activeProjectId'
+    if projectId = PAA.Pico8.Cartridges.Snake.Project.readOnlyState 'activeProjectId'
       @_snake?.destroy()
-      @_snake = new C1.Projects.Snake projectId
+      @_snake = new PAA.Pico8.Cartridges.Snake.Project projectId
 
       things.push @_snake
 

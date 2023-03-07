@@ -5,19 +5,6 @@ class LOI.Adventure extends LOI.Adventure
   @debugLocation = false
   
   _initializeLocation: ->
-    # We store player's current location locally so that multiple people
-    # can use the same user account and walk around independently.
-    @playerLocationId = new ReactiveField null
-    Artificial.Mummification.PersistentStorage.persist
-      storageKey: 'LandsOfIllusions.Adventure.currentLocationId'
-      field: @playerLocationId
-      tracker: @
-      consentField: LOI.settings.persistGameState.allowed
-
-    # Start at the default player location.
-    unless @playerLocationId()
-      @playerLocationId @startingPoint()?.locationId
-
     @currentLocationId = new ComputedField =>
       console.log "Recomputing current location." if LOI.debug or LOI.Adventure.debugLocation
 
@@ -26,13 +13,7 @@ class LOI.Adventure extends LOI.Adventure
         locationId = memory.locationId
         
       else
-        if LOI.characterId() or not LOI.settings.persistGameState.allowed()
-          # Character's location is always read from the state. Also used when saving game state is not allowed.
-          locationId = @gameState()?.currentLocationId
-  
-        else
-          # Local storage is allowed so load player's location from there.
-          locationId = @playerLocationId()
+        locationId = @gameState()?.currentLocationId or @startingPoint()?.locationId
 
       console.log "Current location ID is", locationId if LOI.debug or LOI.Adventure.debugLocation
 
@@ -68,25 +49,15 @@ class LOI.Adventure extends LOI.Adventure
           unless currentLocationClass
             console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
   
-            switch currentTimelineId
-              when PixelArtAcademy.TimelineIds.DareToDream
-                currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
-  
-              when LOI.TimelineIds.RealLife
-                currentLocationClass = Retronator.HQ.Cafe
-  
-              when LOI.TimelineIds.Construct
-                currentLocationClass = LandsOfIllusions.Construct.Loading
-  
-              when LOI.TimelineIds.Present
-                currentLocationClass = SanFrancisco.Apartment.Studio
-                
-              when LOI.TimelineIds.Memory
-                # This is a stale memory (one where the location where it was made is not 
-                # available anymore). Cancel the memory so the normal location returns.
-                # TODO: We would probably want to give some indication to the player the memory didn't work.
-                @exitMemory()
-                return
+            if currentTimelineId is LOI.TimelineIds.Memory
+              # This is a stale memory (one where the location where it was made is not
+              # available anymore). Cancel the memory so the normal location returns.
+              # TODO: We would probably want to give some indication to the player the memory didn't work.
+              @exitMemory()
+              return
+              
+            else
+              currentLocationClass = LOI.Adventure.Location.getClassForId @startingPoint()?.locationId
 
           # Set the new location
           @setLocationId currentLocationClass.id()
@@ -108,7 +79,7 @@ class LOI.Adventure extends LOI.Adventure
 
     @currentRegion = new ComputedField =>
       # Make sure the location actually matches the location ID (otherwise we might be in the middle of a change).
-      # This function could hit first if player permissions are changing due to user/character change.
+      # This function could hit first if player permissions are changing due to a profile change.
       return unless @currentLocation()?.id() is @currentLocationId()
 
       return unless currentRegionClass = LOI.Adventure.Region.getClassForId @currentRegionId()
@@ -182,48 +153,18 @@ class LOI.Adventure extends LOI.Adventure
 
             @locationOnEnterResponseResults responseResults
 
-    # We also need to store the location the user logged into Construct from, so we can take them back there.
-    @_immersionExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
-    Artificial.Mummification.PersistentStorage.persist
-      storageKey: 'LandsOfIllusions.Adventure.immersionExitLocationId'
-      field: @_immersionExitLocationId
-      tracker: @
-      consentField: LOI.settings.persistGameState.allowed
-
-    @immersionExitLocationId = new ComputedField =>
-      if LOI.settings.persistGameState.allowed()
-        @_immersionExitLocationId()
-        
-      else
-        @gameState()?.immersionExitLocationId
-        
-  saveImmersionExitLocation: ->
-    # Save current location to local storage.
-    currentLocationId = @currentLocationId()
-    @_immersionExitLocationId currentLocationId
-
-    # Save immersion location to state.
-    if state = @gameState()
-      state.immersionExitLocationId = currentLocationId
-      @gameState.updated()
-
   setLocationId: (locationClassOrId) ->
     locationId =  _.thingId locationClassOrId
-    characterId = LOI.characterId()
 
     console.log "Setting location ID to", locationId if LOI.debug
-
-    # Update locally stored player location if we're not synced to a character.
-    @playerLocationId locationId unless characterId
 
     # Save current location to state.
     if state = @gameState()
       state.currentLocationId = locationId
       @gameState.updated()
       
-    # Create a move action for characters.
-    if characterId
-      LOI.Memory.Action.do LOI.Memory.Actions.Move.type, characterId,
+    if profileId = LOI.adventure.profileId()
+      LOI.Memory.Action.do LOI.Memory.Actions.Move.type, profileId,
         timelineId: @currentTimelineId()
         locationId: locationId
       

@@ -18,7 +18,7 @@ class LOI.Interface.Text extends LOI.Interface
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
     backExit = LOI.adventure.currentSituation()?.exits()[Back]
 
-    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.thingClass.id() is backExit?.id()
+    return @parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.thingClass.id() is backExit?.id()
 
     exitAvatar.shortName()
 
@@ -163,11 +163,15 @@ class LOI.Interface.Text extends LOI.Interface
         @scroll
           position: @maxScrollTop()
           animate: true
+          
+  listeners: ->
+    @parser.listeners
 
   ready: ->
     return unless exitAvatars = @exitAvatars()
     
     conditions = _.flattenDeep [
+      @parser.ready()
       avatar.ready() for avatar in exitAvatars
       subscription.ready() for subscription in @_actionTranslationSubscriptions
     ]

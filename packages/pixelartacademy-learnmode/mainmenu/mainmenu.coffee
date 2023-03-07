@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 class PAA.LearnMode.MainMenu extends LOI.Adventure.Location
   @id: -> 'PixelArtAcademy.LearnMode.MainMenu'
   @url: -> ''
-  @region: -> PAA.LearnMode
+  @region: -> PAA.LearnMode.Region
 
   @version: -> '0.0.1'
 

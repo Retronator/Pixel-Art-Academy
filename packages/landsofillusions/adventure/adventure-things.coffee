@@ -57,13 +57,13 @@ class LOI.Adventure extends LOI.Adventure
       _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
 
     @currentOtherPeople = new ComputedField =>
-      _.without @currentPeople(), LOI.agent()
+      _.without @currentPeople(), LOI.agent?()
 
     @currentAgents = new ComputedField =>
       _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
 
     @currentOtherAgents = new ComputedField =>
-      _.without @currentAgents(), LOI.agent()
+      _.without @currentAgents(), LOI.agent?()
 
     @currentActors = new ComputedField =>
       _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Actor

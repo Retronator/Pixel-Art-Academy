@@ -2,20 +2,19 @@ AE = Artificial.Everywhere
 AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
-Snake = C1.Projects.Snake
+SnakeProject = PAA.Pico8.Cartridges.Snake.Project
 
-Snake.start.method (characterId) ->
-  check characterId, Match.DocumentId
+SnakeProject.start.method (profileId) ->
+  check profileId, Match.DocumentId
 
-  LOI.Authorize.characterAction characterId
+  LOI.Authorize.profileAction profileId
 
   # Make sure the player doesn't have an already active project.
-  gameState = LOI.GameState.documents.findOne 'character._id': characterId
+  gameState = LOI.GameState.documents.findOne 'profileId': profileId
   throw new AE.InvalidOperationException "Game state was not found." unless gameState
 
-  projectReadOnlyState = _.nestedProperty gameState.readOnlyState, "things.#{Snake.id()}"
-  throw new AE.InvalidOperationException "Character already has an active Snake project." if projectReadOnlyState?.activeProjectId
+  projectReadOnlyState = _.nestedProperty gameState.readOnlyState, "things.#{SnakeProject.id()}"
+  throw new AE.InvalidOperationException "Profile already has an active Snake project." if projectReadOnlyState?.activeProjectId
 
   pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.pico8
 
@@ -31,7 +30,7 @@ Snake.start.method (characterId) ->
       bottom: 7
       fixed: true
     authors: [
-      _id: characterId
+      _id: profileId
     ]
 
   # Create green snake body.
@@ -46,7 +45,7 @@ Snake.start.method (characterId) ->
           shade: 0
 
   bodySpriteData = _.extend createCommonSpriteData(),
-    name: Snake.Body.displayName()
+    name: SnakeProject.Body.displayName()
     layers: [
       pixels: snakePixels
     ]
@@ -65,7 +64,7 @@ Snake.start.method (characterId) ->
           shade: 0
 
   foodSpriteData = _.extend createCommonSpriteData(),
-    name: Snake.Food.displayName()
+    name: SnakeProject.Food.displayName()
     layers: [
       pixels: foodPixels
     ]
@@ -75,46 +74,46 @@ Snake.start.method (characterId) ->
   # Create the project.
   projectId = PAA.Practice.Project.documents.insert
     startTime: new Date()
-    type: Snake.id()
-    characters: [
-      _id: characterId
+    type: SnakeProject.id()
+    profiles: [
+      _id: profileId
     ]
     assets: [
-      id: Snake.Body.id()
-      type: Snake.Body.type()
+      id: SnakeProject.Body.id()
+      type: SnakeProject.Body.type()
       sprite:
         _id: bodySpriteId
     ,
-      id: Snake.Food.id()
-      type: Snake.Food.type()
+      id: SnakeProject.Food.id()
+      type: SnakeProject.Food.type()
       sprite:
         _id: foodSpriteId
     ]
 
-  # Write the project ID into character's read-only state.
+  # Write the project ID into profile's read-only state.
   LOI.GameState.documents.update gameState._id,
     $set:
-      "readOnlyState.things.#{Snake.id()}.activeProjectId": projectId
+      "readOnlyState.things.#{SnakeProject.id()}.activeProjectId": projectId
 
-Snake.end.method (characterId) ->
-  check characterId, Match.DocumentId
+SnakeProject.end.method (profileId) ->
+  check profileId, Match.DocumentId
 
-  LOI.Authorize.characterAction characterId
+  LOI.Authorize.profileAction profileId
 
   # Make sure the player has an active project.
-  gameState = LOI.GameState.documents.findOne 'character._id': characterId
+  gameState = LOI.GameState.documents.findOne 'profileId': profileId
   throw new AE.InvalidOperationException "Game state was not found." unless gameState
 
-  projectReadOnlyState = _.nestedProperty gameState.readOnlyState, "things.#{Snake.id()}"
+  projectReadOnlyState = _.nestedProperty gameState.readOnlyState, "things.#{SnakeProject.id()}"
   projectId = projectReadOnlyState?.activeProjectId
-  throw new AE.InvalidOperationException "Character does not have an active Snake project." unless projectId
+  throw new AE.InvalidOperationException "Profile does not have an active Snake project." unless projectId
 
   # End the project.
   projectId = PAA.Practice.Project.documents.update projectId,
     $set:
       endTime: new Date()
 
-  # Remove project ID from character's read-only state.
+  # Remove project ID from profile's read-only state.
   LOI.GameState.documents.update gameState._id,
     $unset:
-      "readOnlyState.things.#{Snake.id()}.activeProjectId": true
+      "readOnlyState.things.#{SnakeProject.id()}.activeProjectId": true

@@ -4,7 +4,10 @@ AM = Artificial.Mummification
 Persistence = AM.Document.Persistence
 
 class Persistence.SyncedStorage
-  constructor: (@options) ->
+  @id: -> throw new AE.NotImplementedException "A synced storage must provide an ID for the kind of storage it is."
+  id: -> @constructor.id()
+  
+  constructor: (@options = {}) ->
     @_save = (document) =>
       document = _.objectDifference @_documentsCache[document._id], document if @options.differentialSave
       @saveInternal document

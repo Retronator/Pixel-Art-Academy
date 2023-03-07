@@ -9,6 +9,23 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
   @chapter: -> C1
 
   Goal = @
+  
+  constructor: ->
+    super arguments...
+  
+    # Add Study Plan goal to the Study Plan app.
+    Tracker.autorun (computation) =>
+      return unless LOI.adventure.gameState()
+      computation.stop()
+    
+      return if PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+  
+      PAA.PixelBoy.Apps.StudyPlan.state 'goals',
+        "#{@id()}":
+          position:
+            x: -100
+            y: -20
+          expanded: true
 
   class @AddAdmissionGoal extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.AddAdmissionGoal'

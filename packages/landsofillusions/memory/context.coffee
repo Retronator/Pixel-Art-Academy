@@ -72,7 +72,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     return unless description
 
     # Format people into the description.
-    description = LOI.Character.Agents.formatText description, 'people', people
+    description = LOI.Profile.Agents.formatText description, 'people', people
 
     options = _.extend {}, nodeOptions,
       line: description
@@ -81,10 +81,10 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     new Nodes.NarrativeLine options
     
   @getPeopleForMemory: (memory) ->
-    # Add all characters that have actions in the memory.
-    characterIds = _.uniq _.map memory.actions, (action) => action.character._id
+    # Add all profiles that have actions in the memory.
+    profileIds = _.uniq _.map memory.actions, (action) => action.profileId
 
-    LOI.Character.getAgent characterId for characterId in characterIds
+    LOI.Profile.getAgent profileId for profileId in profileIds
 
   constructor: ->
     super arguments...
@@ -124,30 +124,30 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
       # Get only the latest memory per person.
       memories = _.reverse _.sortBy memories, (memory) => memory.endTime
-      memories = _.uniqBy memories, (memory) => memory.actions?[0]?.character._id
+      memories = _.uniqBy memories, (memory) => memory.actions?[0]?.profileId
       _.pull memories, undefined
 
       # Go over all memories but make sure actions are present
       # since they will be updated with delay as a recursive field.
       people = for memory in memories when memory.actions?[0]
         action = memory.actions[0].cast()
-        characterId = action.character._id
+        profileId = action.profileId
 
-        # Convert the character into a person, performing the starting action.
-        person = new LOI.Character.Agent characterId
+        # Convert the profile into a person, performing the starting action.
+        person = new LOI.Profile.Agent profileId
         person.setAction action
 
         person
 
       if memory = @memory()
-        # Add all characters that have actions in the currently focused memory.
-        characterIds = _.uniq _.map memory.actions, (action) => action.character._id
+        # Add all profiles that have actions in the currently focused memory.
+        profileIds = _.uniq _.map memory.actions, (action) => action.profileId
 
-        for characterId in characterIds
-          characterPresent = _.find people, (person) => person._id is characterId
+        for profileId in profileIds
+          profilePresent = _.find people, (person) => person._id is profileId
 
           # Create a person without an action set.
-          people.push new LOI.Character.Agent characterId unless characterPresent
+          people.push new LOI.Profile.Agent profileId unless profilePresent
 
       people
     ,
@@ -160,7 +160,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       return unless memory = @memory()
       return unless people = @people()
       return unless _.every _.map people, (person) => person?.ready()
-      return unless progress = LOI.Memory.Progress.documents.findOne 'character._id': LOI.characterId()
+      return unless progress = LOI.Memory.Progress.documents.findOne 'profileId': LOI.profileId()
 
       actions = memory.actions
 
@@ -196,7 +196,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
         # Outside of memories, dialogue always write it immediately in full.
         immediate = if LOI.adventure.currentMemory() then observed else true
 
-        person = _.find people, (person) => person._id is action.character._id
+        person = _.find people, (person) => person._id is action.profileId
 
         # After we've seen the line, report it to the server with a callback node.
         unless observed
@@ -206,7 +206,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
               callback: (complete) =>
                 complete()
 
-                LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, actionTime
+                LOI.Memory.Progress.updateProgress LOI.profileId(), memory._id, actionTime
 
         # Start and end the action (in reverse order).
         actionEndScript = action.createEndScript person, lastNode, immediate: immediate

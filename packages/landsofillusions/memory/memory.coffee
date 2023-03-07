@@ -6,7 +6,7 @@ class LOI.Memory extends AM.Document
   # actions: list of actions in this memory, reverse of action.memory (note: they are not automatically sorted by time)
   #   _id
   #   time
-  #   character
+  #   profile
   #     _id
   #     avatar
   #       fullName
@@ -25,7 +25,7 @@ class LOI.Memory extends AM.Document
   #   _id
   #   journal
   #     _id
-  #     character
+  #     profile
   #       _id
   #       avatar
   #         fullName
@@ -59,13 +59,13 @@ class LOI.Memory extends AM.Document
   @forId: @subscription 'forId'
   @forIds: @subscription 'forIds'
   
-  @forCharacter: @subscription 'forCharacter',
-    query: (characterId, limit, skip) =>
+  @forProfile: @subscription 'forProfile',
+    query: (profileId, limit, skip) =>
       LOI.Memory.documents.find
         $or: [
-          'actions.character._id': characterId
+          'actions.profileId': profileId
         ,
-          'journalEntry.journal.character._id': characterId
+          'journalEntry.journal.profileId': profileId
         ]
       ,
         limit: limit

@@ -20,7 +20,7 @@ Package.onUse(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:assert@0.3.0',
-    'peerlibrary:directcollection@0.9.0',
+    'retronator:directcollection@0.9.0',
     'retronator:peerdb@0.27.0'
   ], 'server');
 
@@ -53,7 +53,7 @@ Package.onTest(function (api) {
   // 3rd party dependencies.
   api.use([
     'peerlibrary:assert@0.3.0',
-    'peerlibrary:directcollection@0.9.0',
+    'retronator:directcollection@0.9.0',
     'retronator:peerdb@0.27.0'
   ]);
 

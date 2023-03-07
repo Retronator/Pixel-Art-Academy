@@ -6,8 +6,12 @@ RA = Retronator.Accounts
 
 # This is the web app that runs all Retronator websites.
 class Retronator.App extends Artificial.Base.App
-  @register 'Retronator.App'
-  template: -> 'Retronator.App'
+  @id: -> 'Retronator.App'
+  @register @id()
+  
+  @version: -> '0.63.2'
+  
+  buildName: -> 'server build'
 
   # Routing helpers for default layouts
 

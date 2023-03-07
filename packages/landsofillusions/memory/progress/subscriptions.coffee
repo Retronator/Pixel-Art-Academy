@@ -1,18 +1,17 @@
 LOI = LandsOfIllusions
 
-LOI.Memory.Progress.forCharacter.publish (characterId) ->
-  check characterId, Match.DocumentId
+LOI.Memory.Progress.forProfile.publish (profileId) ->
+  check profileId, Match.DocumentId
 
-  # Only allow to subscribe to your own character.
-  LOI.Authorize.characterAction characterId
+  # Only allow to subscribe to your own profile.
+  LOI.Authorize.profileAction profileId
   
   # Create the progress document if it doesn't exist yet.
-  progress = LOI.Memory.Progress.documents.findOne 'character._id': characterId
+  progress = LOI.Memory.Progress.documents.findOne 'profileId': profileId
   
   unless progress
     LOI.Memory.Progress.documents.insert
-      character:
-        _id: characterId
+      profileId: profileId
       observedMemories: []
   
-  LOI.Memory.Progress.documents.find 'character._id': characterId
+  LOI.Memory.Progress.documents.find 'profileId': profileId

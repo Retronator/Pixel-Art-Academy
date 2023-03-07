@@ -34,20 +34,20 @@ LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, ear
     locationId: locationId
     time: $gt: earliestTime
 
-# Returns actions for a character within the duration.
-LOI.Memory.Action.recentForCharacter.publish (characterId, earliestTime) ->
-  check characterId, Match.DocumentId
+# Returns actions for a profile within the duration.
+LOI.Memory.Action.recentForProfile.publish (profileId, earliestTime) ->
+  check profileId, Match.DocumentId
   check earliestTime, Date
 
   LOI.Memory.Action.documents.find
-    'character._id': characterId
+    'profileId': profileId
     time: $gt: earliestTime
 
-# Returns actions for characters within the duration.
-LOI.Memory.Action.recentForCharacters.publish (characterIds, earliestTime) ->
-  check characterIds, [Match.DocumentId]
+# Returns actions for profiles within the duration.
+LOI.Memory.Action.recentForProfiles.publish (profileIds, earliestTime) ->
+  check profileIds, [Match.DocumentId]
   check earliestTime, Date
 
   LOI.Memory.Action.documents.find
-    'character._id': $in: characterIds
+    'profileId': $in: profileIds
     time: $gt: earliestTime

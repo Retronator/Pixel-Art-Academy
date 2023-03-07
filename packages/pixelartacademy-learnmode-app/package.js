@@ -11,16 +11,35 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
+  api.use('retronator:retronator-accounts');
+  api.use('retronator:retronator-store');
+
+  api.use('retronator:landsofillusions');
+  api.use('retronator:landsofillusions-assets');
+
+  api.use('retronator:pixelartdatabase');
+
+  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartacademy-learning');
+  api.use('retronator:pixelartacademy-studyguide');
+  api.use('retronator:pixelartacademy-pico8');
+  api.use('retronator:pixelartacademy-pico8-snake');
+
+  api.use('retronator:pixelartacademy-pixelboy');
+  api.use('retronator:pixelartacademy-pixelboy-pico8');
+  api.use('retronator:pixelartacademy-pixelboy-drawing');
+  api.use('retronator:pixelartacademy-pixelboy-studyplan');
+
   api.use('retronator:pixelartacademy-learnmode');
 
   api.export('PixelArtAcademy');
 
   api.addComponent('app');
 
-  api.addFile('layouts/layouts');
-  api.addUnstyledComponent('layouts/publicaccess/publicaccess');
+  api.addFile('layouts..');
+  api.addUnstyledComponent('layouts/publicaccess..');
 
-  api.addFile('learnmode/adventure..');
+  api.addFile('adventure..');
 
 });

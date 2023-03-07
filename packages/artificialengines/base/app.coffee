@@ -19,6 +19,8 @@ class AB.App extends AM.Component
     if Meteor.isClient
       AM.Window.initialize()
       AC.Keyboard.initialize()
+      
+    @components = {}
 
   onCreated: ->
     super arguments...
@@ -30,6 +32,12 @@ class AB.App extends AM.Component
 
     @endRun()
 
+  addComponent: (component) ->
+    @components[component.componentName()] = component
+
+  removeComponent: (component) ->
+    delete @components[component.componentName()]
+    
   appRoot: ->
     AB.Router.renderPageComponent @
 
@@ -73,10 +81,7 @@ class AB.App extends AM.Component
       totalAppTime: @appTime().totalAppTime + elapsedTime
 
     @update appTime
-
-    if @beginDraw()
-      @draw appTime
-      @endDraw()
+    @draw appTime
 
     # Update app time reactive field last to trigger any autoruns that need to be run on app time change.
     @appTime appTime
@@ -89,17 +94,12 @@ class AB.App extends AM.Component
     for name, component of @components
       component.update? appTime
 
-  beginDraw: ->
-    true
-
   draw: (appTime) ->
     for name, component of @components
       component.draw? appTime
 
-  endDraw: ->
-
-  endRun: ->
+  endRun: (appTime) ->
     sortedComponents = _.sortBy @components, (component) => component.endRunOrder or 0
     
     for name, component of sortedComponents
-      component.endRun? appTime
+      component.endRun?()

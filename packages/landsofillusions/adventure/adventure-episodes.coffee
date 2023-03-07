@@ -54,7 +54,7 @@ class LOI.Adventure extends LOI.Adventure
     @currentScenes = new ComputedField =>
       # Add scenes in decreasing order of priority (most general things first, specific overrides later)
       scenes = _.flattenDeep [
-        global.scenes() for global in @globals
+        global.scenes() for global in @globals()
         @currentRegion()?.scenes()
         episode.scenes() for episode in @episodes()
         chapter.scenes() for chapter in @currentChapters()

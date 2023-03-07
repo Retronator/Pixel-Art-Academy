@@ -3,17 +3,15 @@ AM = Artificial.Mummification
 
 class LOI.Memory.Progress extends AM.Document
   @id: -> 'LandsOfIllusions.Memory.Progress'
-  # character: character whose memory progress we're tracking
-  #   _id
+  # profileId: profile whose memory progress we're tracking
   # observedMemories: array of memories that have been observed already
   #   memory: the memory being tracked
   #     _id
-  #   time: the time of the last action already observed by the character
+  #   time: the time of the last action already observed by the profile
   #   discovered: boolean indicating if the game already advertised this memory to the player
   @Meta
     name: @id()
     fields: =>
-      character: Document.ReferenceField LOI.Character
       observedMemories: [
         memory: Document.ReferenceField LOI.Memory
       ]
@@ -25,7 +23,7 @@ class LOI.Memory.Progress extends AM.Document
 
   # Subscriptions
 
-  @forCharacter: @subscription 'forCharacter'
+  @forProfile: @subscription 'forProfile'
 
   getTimeForMemoryId: (memoryId) ->
     observedMemory = _.find @observedMemories, (observedMemory) -> observedMemory.memory._id is memoryId

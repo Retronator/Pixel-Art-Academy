@@ -18,4 +18,4 @@ class C1.AdmissionProjects.Snake.Intro extends LOI.Adventure.Section
 
   @finished: ->
     # Intro section ends when the player has an active Snake project.
-    C1.Projects.Snake.readOnlyState('activeProjectId')?
+    PAA.Pico8.Cartridges.Snake.Project.readOnlyState('activeProjectId')?

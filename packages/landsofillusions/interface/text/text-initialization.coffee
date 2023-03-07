@@ -71,13 +71,15 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Allow to hide specific things from running scripts.
     @hiddenThings = new ReactiveField []
-        
+    
     # Subscribe to all action translations.
     actionTypes = LOI.Memory.Action.getTypes()
     
     @_actionTranslationSubscriptions = for actionType in actionTypes
       AB.subscribeNamespace actionType
-
+  
+    @parser = new LOI.Parser
+  
     # Node handling must get initialized before handlers, since the latter depends on it.
     @initializeNodeHandling()
     @initializeHandlers()

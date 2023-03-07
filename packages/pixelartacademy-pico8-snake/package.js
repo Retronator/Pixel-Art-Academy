@@ -13,12 +13,14 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-pico8');
-  api.use('retronator:pixelartacademy-season1-episode1');
 
   api.export('PixelArtAcademy');
 
   api.addFile('snake');
   api.addServerFile('server');
+
+  api.addFile('project');
+  api.addServerFile('project-methods-server');
 
   api.addAssets('snake.p8.png', 'client');
 });

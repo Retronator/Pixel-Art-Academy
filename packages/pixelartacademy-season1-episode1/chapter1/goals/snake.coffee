@@ -74,7 +74,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @initialize()
     
     @completedConditions: ->
-      return unless projectId = C1.Projects.Snake.readOnlyState 'activeProjectId'
+      return unless projectId = PAA.Pico8.Cartridges.Snake.Project.readOnlyState 'activeProjectId'
 
       PAA.Practice.Project.forId.subscribe projectId
       return unless project = PAA.Practice.Project.documents.findOne projectId

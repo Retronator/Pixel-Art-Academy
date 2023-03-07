@@ -61,7 +61,7 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
               # Cast into correct type.
               action = action.cast()
 
-              person = _.find people, (person) => person._id is action.character._id
+              person = _.find people, (person) => person._id is action.profileId
 
               # Start and end the action (in reverse order).
               actionEndScript = action.createEndScript person, lastNode, background: true
@@ -85,14 +85,14 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
             actionStartScript = contextClass.createIntroDescriptionScript memory, people, lastNode, background: true
             lastNode = actionStartScript if actionStartScript
 
-            if characterId = LOI.characterId()
+            if profileId = LOI.profileId()
               # Mark this memory as discovered so we don't flashback to it again.
               lastNode = new Nodes.Callback
                 next: lastNode
                 callback: (complete) =>
                   complete()
   
-                  LOI.Memory.Progress.discoverMemory characterId, memory._id
+                  LOI.Memory.Progress.discoverMemory profileId, memory._id
 
             # Mark that we've played this memory.
             @memoryPlayed true
@@ -166,7 +166,7 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
         earliestTime = new Date Date.now() - 30 * 24 * 60 * 60 * 1000 # 30 days
 
         # Query the server for the last undiscovered memory at this location.
-        LOI.Memory.getLastUndiscovered LOI.characterId(), timelineId, locationId, earliestTime, (error, memoryId) =>
+        LOI.Memory.getLastUndiscovered LOI.profileId(), timelineId, locationId, earliestTime, (error, memoryId) =>
           console.error error if error
           @memoryId memoryId
 

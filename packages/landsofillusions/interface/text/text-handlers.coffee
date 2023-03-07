@@ -134,7 +134,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     command += '"' if numberOfQuotes % 2
 
     @narrative.addText "> #{command.toUpperCase()}"
-    LOI.adventure.parser.parse command
+    @parser.parse command
     @commandInput.confirm command
 
   onCommandInputChanged: ->
