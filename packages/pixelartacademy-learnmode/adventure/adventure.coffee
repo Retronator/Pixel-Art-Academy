@@ -17,11 +17,9 @@ class LM.Adventure extends LOI.Adventure
   
   @rootUrl: -> '/learn-mode'
 
-  @menuItemsClass: -> LOI.Components.Menu.Items
+  @menuItemsClass: -> LM.Menu.Items
   
-  @interfaceClass: ->
-    console.log "asking for interface", PAA.LearnMode.Interface
-    PAA.LearnMode.Interface
+  @interfaceClass: -> LM.Interface
 
   @episodeClasses = []
 
@@ -39,6 +37,8 @@ class LM.Adventure extends LOI.Adventure
     locationId: PAA.LearnMode.MainMenu.id()
     timelineId: LOI.TimelineIds.RealLife
 
+  usesLocalState: -> true
+  
   getLocalSyncedStorage: -> new Persistence.SyncedStorages.LocalStorage storageKey: "Retronator"
   
   globalClasses: -> []

@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class PixelArtAcademy.LearnMode
-  @debug = true
+  @debug = false
 
   constructor: ->
     # Create the learn-mode url capture.

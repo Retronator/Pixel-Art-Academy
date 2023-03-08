@@ -23,14 +23,15 @@ export default class Desktop {
     }) {
         this.log = log;
 
-        const desktop = new Module('desktop');
+        const desktopModule = new Module('desktop');
+        const windowModule = new Module('window');
 
         // From Meteor use this by invoking Desktop.send('desktop', 'closeApp');
-        desktop.on('closeApp', () => app.quit());
+        desktopModule.on('closeApp', () => app.quit());
 
-        desktop.on('getProcessPlatform', (event, fetchId) => {
+        desktopModule.on('getProcessPlatform', (event, fetchId) => {
             this.log.verbose('getPlatform received');
-            desktop.respond('getProcessPlatform', fetchId, process.platform);
+            desktopModule.respond('getProcessPlatform', fetchId, process.platform);
         });
 
         // We need to handle gracefully potential problems.
@@ -45,6 +46,24 @@ export default class Desktop {
         eventsBus.on('windowCreated', (window) => {
             window.webContents.on('render-process-gone', Desktop.windowRenderProcessGoneHandler);
             window.on('unresponsive', Desktop.windowUnresponsiveHandler);
+
+            window.on('enter-full-screen', () => {
+                windowModule.send('isFullscreen', window.isFullScreen());
+            });
+
+            window.on('leave-full-screen', () => {
+                windowModule.send('isFullscreen', window.isFullScreen());
+            });
+
+            windowModule.on('isFullscreen', () => {
+                this.log.verbose('isFullscreen received');
+                windowModule.send('isFullscreen', window.isFullScreen());
+            });
+
+            windowModule.on('setFullscreen', (event, fullscreen) => {
+                this.log.verbose('setFullscreen received');
+                window.setFullScreen(fullscreen);
+            });
         });
 
         // Consider setting a crash reporter ->

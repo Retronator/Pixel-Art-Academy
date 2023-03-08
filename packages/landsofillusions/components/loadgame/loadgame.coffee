@@ -15,115 +15,53 @@ class LOI.Components.LoadGame extends AM.Component
     super arguments...
     
     @activatable = new LOI.Components.Mixins.Activatable()
+    
+    @profiles = new ComputedField => []
+    
+  mixins: -> [@activatable]
   
   onCreated: ->
     super arguments...
+  
+    # Which profile is shown left-most. Allows to scroll through options.
+    @firstProfileOffset = new ReactiveField 0
+    
+  show: ->
+    LOI.adventure.showActivatableModalDialog
+      dialog: @
+      dontRender: true
 
-  linksStyle: ->
-    offset = @firstCharacterOffset()
+  profilesStyle: ->
+    offset = @firstProfileOffset()
 
     left: "-#{offset * 75}rem"
 
-  characterActiveClass: ->
-    characterInstance = @currentData()
+  profileActiveClass: ->
+    profile = @currentData()
 
-    'active' if LOI.characterId() is characterInstance._id
-
-  avatarPreviewOptions: ->
-    characterInstance = Template.parentData()
-    character = characterInstance.document()
-
-    previewOptions =
-      rendererOptions:
-        renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
-
-    # Draw characters with revoked design in silhouette.
-    unless character?.designApproved
-      previewOptions.silhouette =
-        ramp: LOI.Assets.Palette.Atari2600.hues.cyan
-        shade: 2
-
-    previewOptions
-
-  landsOfIllusionsActiveClass: ->
-    'active' if LOI.adventure.currentTimelineId() is LOI.TimelineIds.Construct
+    'active' if profile?._id is LOI.adventure.profileId()
 
   nextButtonVisibleClass: ->
-    # We need to accommodate Lands of Illusions and Disconnect links.
-    extraOptionsCount = if @showDisconnect() then 1 else 2
-    'visible' if @firstCharacterOffset() < @activatedCharacters().length - 1 - extraOptionsCount
+    'visible' if @firstProfileOffset() < @profiles().length - 1
 
   previousButtonVisibleClass: ->
-    'visible' if @firstCharacterOffset() > 0
-
-  showDisconnect: ->
-    LOI.characterId() or LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
+    'visible' if @firstProfileOffset() > 0
 
   events: ->
     super(arguments...).concat
-      'click .character': @onClickCharacter
-      'click .lands-of-illusions': @onClickLandsOfIllusions
-      'click .disconnect': @onClickDisconnect
+      'click .profile': @onClickProfile
       'click .previous-button': @onClickPreviousButton
       'click .next-button': @onClickNextButton
 
-  onClickCharacter: (event) ->
-    characterInstance = @currentData()
-    character = characterInstance.document()
-
-    unless character.designApproved
-      LOI.adventure.showActivatableModalDialog
-        dialog: new LOI.Components.Dialog
-          message: "Character unavailable"
-          moreInfo: "#{AB.Rules.English.createPossessive characterInstance.name()} design has been revoked. Please visit Cyborg Construction Center to redesign the character."
-          buttons: [
-            text: "OK"
-          ]
-
-      return
-
-    @sync.fadeToWhite()
-
-    Meteor.setTimeout =>
-      LOI.adventure.loadCharacter characterInstance._id
-
-      @sync.close()
-    ,
-      1000
+  onClickProfile: (event) ->
+    profile = @currentData()
     
-  onClickLandsOfIllusions: (event) ->
-    # Don't go into construct if already there.
-    return if @landsOfIllusionsActiveClass()
-    
-    @sync.fadeToWhite()
-
-    Meteor.setTimeout =>
-      LOI.adventure.loadConstruct()
-
-      @sync.close()
-    ,
-      1000
-
-  onClickDisconnect: (event) ->
-    @sync.fadeToWhite()
-
-    Meteor.setTimeout =>
-      if LOI.characterId()
-        LOI.adventure.unloadCharacter()
-
-      else
-        LOI.adventure.unloadConstruct()
-
-      @sync.close()
-    ,
-      1000
-
   onClickPreviousButton: (event) ->
-    newIndex = Math.max 0, @firstCharacterOffset() - 1
+    newIndex = Math.max 0, @firstProfileOffset() - 1
 
-    @firstCharacterOffset newIndex
+    @firstProfileOffset newIndex
 
   onClickNextButton: (event) ->
-    newIndex = Math.min @activatedCharacters().length - 2, @firstCharacterOffset() + 1
+    newIndex = Math.min @profiles().length - 2, @firstProfileOffset() + 1
 
-    @firstCharacterOffset newIndex
+    @firstProfileOffset newIndex

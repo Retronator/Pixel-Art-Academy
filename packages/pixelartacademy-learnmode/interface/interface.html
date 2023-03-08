@@ -4,7 +4,10 @@
       font-size: {{display.scale}}px;
     }
   </style>
+  {{> Render display}}
   <div class="pixelartacademy-learnmode-interface">
-    Welcome to Learn Mode!
+    <div class="location">
+      {{> Render location}}
+    </div>
   </div>
 </template>

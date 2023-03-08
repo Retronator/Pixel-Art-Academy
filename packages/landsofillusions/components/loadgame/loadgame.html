@@ -3,9 +3,9 @@
     <div class="landsofillusions-components-loadgame">
       {{> LandsOfIllusions.Components.BackButton}}
       {{#LandsOfIllusions.Components.Overlay}}
-        <ul class="links" {{style linksStyle}}>
-          {{#each activatedCharacters}}
-            <li class="link character {{characterActiveClass}}">
+        <ul class="profiles" {{style profilesStyle}}>
+          {{#each profiles}}
+            <li class="profile character {{profileActiveClass}}">
               <div class="avatar">
                 {{#with avatar}}
                   {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarPreviewOptions}}
@@ -16,13 +16,13 @@
               </div>
             </li>
           {{/each}}
-          <li class="link lands-of-illusions {{landsOfIllusionsActiveClass}}">
+          <li class="profile lands-of-illusions {{landsOfIllusionsActiveClass}}">
             <div class="name">
               Loader
             </div>
           </li>
           {{#if showDisconnect}}
-            <li class="link disconnect">
+            <li class="profile disconnect">
               <div class="name">
                 Disconnect
               </div>

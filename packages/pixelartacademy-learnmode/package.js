@@ -23,5 +23,8 @@ Package.onUse(function(api) {
 
   api.addComponent('interface..');
 
-  api.addFile('mainmenu..');
+  api.addFile('menu..');
+  api.addComponent('menu/items..');
+
+  api.addComponent('mainmenu..');
 });

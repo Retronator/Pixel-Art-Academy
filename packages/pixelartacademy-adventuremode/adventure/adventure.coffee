@@ -35,6 +35,8 @@ class PAA.Adventure extends LOI.Adventure
   startingPoint: ->
     locationId: Retropolis.Spaceport.AirportTerminal.Terrace.id()
     timelineId: PAA.TimelineIds.DareToDream
+  
+  usesLocalState: -> true
 
   getLocalSyncedStorage: -> new Persistence.SyncedStorages.LocalStorage
   

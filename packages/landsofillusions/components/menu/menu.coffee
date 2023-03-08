@@ -81,8 +81,11 @@ class LOI.Components.Menu extends AM.Component
   toolbarVisible: ->
     'visible' if @customShowMenu() or not @menuVisible()
 
+  audioAvailable: ->
+    LOI.adventure.interface.audioManager
+    
   audioEnabledClass: ->
-    'audio-enabled' if LOI.adventure.world.audioManager().enabled()
+    'audio-enabled' if LOI.adventure.interface.audioManager.enabled()
 
   events: ->
     super(arguments...).concat

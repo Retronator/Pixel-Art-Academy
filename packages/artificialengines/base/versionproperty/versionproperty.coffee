@@ -7,5 +7,10 @@ class AB.VersionProperty
   @setType: (type) ->
     @type = type
     
-    for type in @Types
-      @["is#{type}"] = @type is type
+    for type of @Types
+      propertyName = "is#{type}"
+      @[propertyName] = @type is type
+  
+      do (propertyName) =>
+        Template.registerHelper propertyName, =>
+          @[propertyName]

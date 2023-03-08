@@ -38,9 +38,7 @@ class LOI.Adventure extends LOI.Adventure
 
     $('html').addClass('adventure')
 
-    interfaceClass = @constructor.interfaceClass()
-    console.log "got", interfaceClass
-    @interface = new interfaceClass
+    @interface = new (@constructor.interfaceClass())
     @director = new LOI.Director
     
     @_initializeState()
@@ -74,8 +72,7 @@ class LOI.Adventure extends LOI.Adventure
 
     # Require the user to be signed in if local state is not allowed.
     unless @usesLocalState()
-      # Because direct URL routing might have changed the active item, we need to preserve it during this initial load.
-      @loadGame preserveActiveItem: true
+      @menu.loadGame.show()
 
   onDestroyed: ->
     super arguments...

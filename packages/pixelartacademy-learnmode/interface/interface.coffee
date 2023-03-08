@@ -18,9 +18,7 @@ class LM.Interface extends LOI.Interface
       safeAreaWidth: 320
       safeAreaHeight: 240
       maxDisplayWidth: 480
-      maxDisplayHeight: 640
+      maxDisplayHeight: 360
       minScale: LOI.settings.graphics.minimumScale.value
       maxScale: LOI.settings.graphics.maximumScale.value
-      minAspectRatio: 1 / 2
-      maxAspectRatio: 2
       debug: false

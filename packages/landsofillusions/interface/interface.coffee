@@ -95,7 +95,13 @@ class LOI.Interface extends AM.Component
     # Override to provide global listeners of the interface.
     []
     
-  ready: -> true
+  active: ->
+    # Override to notify when the interface is ready to accept input.
+    true
+    
+  ready: ->
+    # Override to notify when the interface has finished preparing its resources.
+    true
 
   _handleNode: (node, options = {}) ->
     return if node.handled unless options.force

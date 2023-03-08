@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Components.Menu.Items extends AM.Component
   @register 'LandsOfIllusions.Components.Menu.Items'
 
-  @Screens:
+  @Screens =
     MainMenu: 'MainMenu'
     Settings: 'Settings'
     Permissions: 'Permissions'
@@ -161,21 +161,7 @@ class LOI.Components.Menu.Items extends AM.Component
       AM.Window.exitFullscreen()
 
     else
-      AM.Window.enterFullscreen()
-
-      # HACK: If audio is not yet playing, require another interaction (after
-      # this click is handled), since Safari needs it after going fullscreen.
-      audioManager = LOI.adventure.world.audioManager()
-
-      unless audioManager.enabled()
-        Meteor.setTimeout =>
-          audioManager.waitForInteraction()
-
-    # Do a late UI resize to accommodate any fullscreen transitions.
-    Meteor.setTimeout =>
-      LOI.adventure.interface.resize()
-    ,
-      1000
+      super arguments...
 
   onClickSettings: (event) ->
     @currentScreen @constructor.Screens.Settings

@@ -24,7 +24,7 @@ class AM.Window
 
     @isFullscreen false
 
-    $(document).on 'fullscreenchange webkitfullscreenchange mozfullscreenchange msfullscreenchange', =>
+    $(document).on 'fullscreenchange webkitfullscreenchange', =>
       @_onFullscreenChange()
 
     @_onFullscreenChange()
@@ -33,21 +33,17 @@ class AM.Window
     documentElement = document.documentElement
     documentElement.requestFullscreen?()
     documentElement.webkitRequestFullscreen?()
-    documentElement.mozRequestFullScreen?()
-    documentElement.msRequestFullscreen?()
 
   @exitFullscreen: ->
     document.exitFullscreen?()
     document.webkitExitFullscreen?()
-    document.mozCancelFullScreen?()
-    document.msExitFullscreen?()
 
   @_onResize: ->
     @clientBounds new AE.Rectangle 0, 0, @$window.width(), @$window.height()
 
   @_onFullscreenChange: ->
-    isFullscreen = document.fullscreen or document.webkitIsFullScreen or document.mozFullScreen
-    fullscreenElement = document.fullscreenElement or document.webkitFullscreenElement or document.mozFullScreenElement or document.msFullscreenElement
+    isFullscreen = document.fullscreen or document.webkitIsFullScreen
+    fullscreenElement = document.fullscreenElement or document.webkitFullscreenElement
 
     @isFullscreen isFullscreen
     @fullscreenElement if isFullscreen then fullscreenElement else null

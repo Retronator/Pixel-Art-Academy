@@ -32,8 +32,12 @@ class AM.Document.Persistence
   
   
   @loadProfile: (profileId) ->
-    @_activeProfile =
-      id: profileId
+    # Fetch all profile documents from all storages and resolve conflicts.
+    new Promise (resolve, reject) =>
+      @_activeProfile =
+        id: profileId
+        
+      resolve()
 
   @flushUpdates: ->
     # Flush any throttled updates.

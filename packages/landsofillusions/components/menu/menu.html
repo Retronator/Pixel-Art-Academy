@@ -6,7 +6,9 @@
       {{/if}}
     </div>
     <div class="toolbar {{toolbarVisible}}">
-      <button class="toggle-audio-button {{audioEnabledClass}}"></button>
+      {{#if audioAvailable}}
+        <button class="toggle-audio-button {{audioEnabledClass}}"></button>
+      {{/if}}
       {{#unless customShowMenu}}
         <button class="menu-button">Menu</button>
       {{/unless}}

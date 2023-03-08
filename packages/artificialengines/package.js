@@ -33,6 +33,7 @@ Package.onUse(function(api) {
     'oauth',
     'modules',
     'stylus',
+    'logging',
 
     // 3rd party
     'retronator:peerdb',
@@ -60,6 +61,8 @@ Package.onUse(function(api) {
   api.export('_');
   api.export('THREE');
   api.export('Ammo');
+
+  api.addClientJavascript('everywhere/consolefix');
 
   api.addFile('artificial');
 
@@ -186,6 +189,7 @@ Package.onUse(function(api) {
   api.addFile('base/versionproperty..');
   api.addFile('base/versionproperty/operatingsystem');
   api.addFile('base/versionproperty/distributionplatform');
+  api.addFile('base/versionproperty/applicationenvironment');
 
   api.addFile('base/router/router');
   api.addServerFile('base/router/router-server');

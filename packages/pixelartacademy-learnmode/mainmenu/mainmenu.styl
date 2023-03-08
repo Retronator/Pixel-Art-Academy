@@ -1,0 +1,90 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-learnmode-mainmenu
+  fixed-cover()
+  background atariGray(5)
+  color atariGray(0)
+
+  .content-area
+    position absolute
+    z-index 0
+
+    .header-area
+      position absolute
+      z-index 1
+      left 0
+      right 0
+      top 0
+
+      .header
+        display inline-block
+        position relative
+        vertical-align middle
+        width 100%
+
+        .title
+          margin 0
+          line-height initial
+
+          .retronator
+            display block
+            retrotype()
+
+          .pixel-art-academy
+            display block
+            position relative
+            margin-top -2rem
+            font-weight bold
+            acme-9()
+
+        .by
+          adventure()
+          line-height initial
+
+        .retro
+          position absolute
+          top -2rem
+          right 48rem
+          width 25rem
+          z-index 2
+
+        .divider
+          position absolute
+          left 20rem
+          right 20rem
+          top 26rem
+          z-index 1
+
+          &::before
+          &::after
+            content ''
+            position absolute
+            border-bottom 1rem solid atariGray(0)
+
+          &::before
+            left 0
+            right 86rem
+
+          &::after
+            left 203rem
+            right 0
+
+    .menu-area
+      position absolute
+      left 0
+      right 0
+
+      .landsofillusions-components-menu-items
+        display inline-block
+        vertical-align middle
+
+        .actionable
+          display inline-block
+          width 100%
+          padding 0 10rem
+
+        .actionable
+        button
+          &:hover
+            background atariGray(0)
+            color atariGray(7)

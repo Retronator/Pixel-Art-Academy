@@ -3,36 +3,19 @@
     <div class="landsofillusions-components-savegame">
       {{> LandsOfIllusions.Components.BackButton}}
       {{#LandsOfIllusions.Components.Overlay}}
-        <ul class="links" {{style linksStyle}}>
-          {{#each activatedCharacters}}
-            <li class="link character {{characterActiveClass}}">
-              <div class="avatar">
-                {{#with avatar}}
-                  {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarPreviewOptions}}
-                {{/with}}
-              </div>
-              <div class="name">
-                {{avatar.fullName}}
-              </div>
-            </li>
-          {{/each}}
-          <li class="link lands-of-illusions {{landsOfIllusionsActiveClass}}">
+        <ul class="profiles">
+          <li class="profile character">
+            <div class="avatar">
+            </div>
             <div class="name">
-              Loader
             </div>
           </li>
-          {{#if showDisconnect}}
-            <li class="link disconnect">
-              <div class="name">
-                Disconnect
-              </div>
-            </li>
-          {{/if}}
+          <li class="profile disconnect">
+            <div class="name">
+              Disconnect
+            </div>
+          </li>
         </ul>
-        <div class="controls">
-          <button class="previous-button action-button {{previousButtonVisibleClass}}">←</button>
-          <button class="next-button action-button {{nextButtonVisibleClass}}">→</button>
-        </div>
       {{/LandsOfIllusions.Components.Overlay}}
     </div>
   {{/unless}}

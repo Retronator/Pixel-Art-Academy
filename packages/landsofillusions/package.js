@@ -499,6 +499,7 @@ Package.onUse(function(api) {
   api.addFiles('interface/components/narrative.coffee');
   api.addFiles('interface/components/commandinput.coffee');
   api.addFiles('interface/components/dialogueselection.coffee');
+  api.addFiles('interface/components/audiomanager.coffee');
 
   api.addFiles('interface/text/text.coffee');
   api.addFiles('interface/text/text.html');

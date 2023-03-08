@@ -1,0 +1,81 @@
+<template name="PixelArtAcademy.LearnMode.Menu.Items">
+  <ul class="pixelartacademy-learnmode-menu-items landsofillusions-components-menu-items">
+    {{#if inMainMenu}}
+      {{#if continueVisible}}
+        <li class="menu-item"><span class="continue actionable">Continue</span></li>
+      {{/if}}
+      {{#if newVisible}}
+        <li class="menu-item"><span class="new actionable">Start new game</span></li>
+      {{/if}}
+      {{#if loadVisible}}
+        <li class="menu-item"><span class="load actionable">Load game</span></li>
+      {{/if}}
+      {{#if saveVisible}}
+        <li class="menu-item"><span class="save actionable">Save game</span></li>
+      {{/if}}
+      {{#if isBrowser}}
+        <li class="menu-item"><span class="fullscreen actionable">
+          Fullscreen:
+          {{#if isFullscreen}}
+            on
+          {{else}}
+            off
+          {{/if}}
+        </span></li>
+      {{/if}}
+      <li class="menu-item"><span class="settings actionable">Settings</span></li>
+      <li class="menu-item"><span class="credits actionable">Credits</span></li>
+      {{#if quitVisible}}
+        <li class="menu-item"><span class="quit-to-menu actionable">Quit to menu</span></li>
+      {{else}}
+        <li class="menu-item"><span class="quit actionable">Quit</span></li>
+      {{/if}}
+    {{/if}}
+    {{#if inSettings}}
+      <li class="language menu-item">
+        Language: English
+      </li>
+      {{#unless isBrowser}}
+        <li class="menu-item"><span class="fullscreen actionable">
+          Fullscreen:
+          {{#if isFullscreen}}
+            on
+          {{else}}
+            off
+          {{/if}}
+        </span></li>
+      {{/unless}}
+      <li class="graphics-scale menu-item">
+        Pixel scale:
+        {{#if graphicsMaximumScale}}
+          <button class="previous-button">◀</button>
+        {{/if}}
+        {{#if graphicsMaximumScale}}
+          {{graphicsMaximumScale}}x
+        {{else}}
+          Auto
+        {{/if}}
+        <button class="next-button">▶</button>
+      </li>
+      {{#if audioAvailable}}
+        <li class="menu-item"><span class="audio actionable">
+          Audio:
+          {{#if $is audioEnabled 'On'}}on{{/if}}
+          {{#if isBrowser}}
+            {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
+          {{/if}}
+          {{#if $is audioEnabled 'Off'}}off{{/if}}
+        </span></li>
+        <li class="sounds menu-item">
+          Sounds: <input type="range" min="0" max="100" step="10" value="{{soundLevel}}"/>
+        </li>
+        <li class="music menu-item">
+          Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
+        </li>
+      {{/if}}
+      <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
+      <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
+    {{/if}}
+    {{> LandsOfIllusions.Components.Menu.Items.Permissions}}
+  </ul>
+</template>
