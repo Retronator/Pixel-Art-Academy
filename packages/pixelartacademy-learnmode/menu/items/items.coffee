@@ -10,13 +10,14 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
   template: -> 'PixelArtAcademy.LearnMode.Menu.Items'
 
   onCreated: ->
+    super arguments...
+    
     # On desktop we have to ask the window for its full-screen status.
     if Meteor.isDesktop
       @_isFullscreen = new ReactiveField false
 
       # Listen to fullscreen changes.
       Desktop.on 'window', 'isFullscreen', (event, isFullscreen) =>
-        console.log "GOT IT", isFullscreen
         @_isFullscreen isFullscreen
       
       # Request initial value.
@@ -28,6 +29,49 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     
     else
       super arguments...
+      
+  showQuitToMenu: ->
+    # We quit to menu when we're not on the landing page
+    not @options.landingPage
+    
+  events: ->
+    super(arguments...).concat
+      # Main menu
+      'click .quit-to-menu': @onClickQuitToMenu
+
+  onClickContinue: (event) ->
+    LOI.adventure.menu.hideMenu()
+  
+  onClickNew: (event) ->
+    LOI.adventure.startNewGame().then =>
+      LOI.adventure.goToLocation LM.Locations.Play
+  
+  onClickQuitToMenu: (event) ->
+    # Check if the profile is being synced.
+    profile = LOI.adventure.profile()
+    
+    if _.keys(profile.syncedStorages).length > 0
+      @_quitGame()
+  
+    else
+      # Notify the player that they will lose the current game state.
+      dialog = new LOI.Components.Dialog
+        message: "You will lose your current game progress if you quit without saving."
+        buttons: [
+          text: "Quit"
+          value: true
+        ,
+          text: "Cancel"
+        ]
+    
+      LOI.adventure.showActivatableModalDialog
+        dialog: dialog
+        callback: =>
+          @_quitGame() if dialog.result
+          
+  _quitGame: ->
+    LOI.adventure.menu.hideMenu()
+    LOI.adventure.quitGame()
 
   onClickQuit: (event) ->
     if Meteor.isDesktop

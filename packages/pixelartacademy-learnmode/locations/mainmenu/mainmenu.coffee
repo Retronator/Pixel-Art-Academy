@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-class LM.MainMenu extends LOI.Adventure.Location
-  @id: -> 'PixelArtAcademy.LearnMode.MainMenu'
+class LM.Locations.MainMenu extends LOI.Adventure.Location
+  @id: -> 'PixelArtAcademy.LearnMode.Locations.MainMenu'
   @url: -> ''
   @region: -> PAA.LearnMode.Region
   
@@ -12,7 +12,7 @@ class LM.MainMenu extends LOI.Adventure.Location
   
   @version: -> '0.0.1'
 
-  @fullName: -> "Main Menu"
+  @fullName: -> "main menu"
   
   @initialize()
   
@@ -53,7 +53,7 @@ class LM.MainMenu extends LOI.Adventure.Location
     contentAreaSize.left += viewport.safeArea.x()
     contentAreaSize.width = viewport.safeArea.width()
 
-    @$('.pixelartacademy-learnmode-mainmenu > .content-area').css contentAreaSize
+    @$('.pixelartacademy-learnmode-locations-mainmenu > .content-area').css contentAreaSize
   
     # Place menu in the center. We use a constant height that will accommodate the main menu and sub-menus.
     menuAreaHeight = 100

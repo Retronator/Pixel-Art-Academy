@@ -1,8 +1,6 @@
-AB = Artificial.Babel
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Interface extends LOI.Interface
@@ -11,7 +9,7 @@ class LM.Interface extends LOI.Interface
   onCreated: ->
     super arguments...
     
-    console.log "Text interface is being created." if PAA.LearnMode.debug
+    console.log "Text interface is being created." if LM.debug
     
     # Create pixel scaling display.
     @display = new AM.Display
@@ -22,3 +20,15 @@ class LM.Interface extends LOI.Interface
       minScale: LOI.settings.graphics.minimumScale.value
       maxScale: LOI.settings.graphics.maximumScale.value
       debug: false
+
+    @studio = new @constructor.Studio
+
+    # Automatically switch between the main menu and play focus
+    @autorun (computation) =>
+      return unless @studio.isRendered()
+      
+      locationId = LOI.adventure.currentLocationId()
+      focusPoints = @constructor.Studio.FocusPoints
+  
+      focusPoint = if locationId is LM.Locations.MainMenu.id() then focusPoints.MainMenu else focusPoints.Play
+      @studio.moveFocus focusPoint

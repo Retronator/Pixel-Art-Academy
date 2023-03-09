@@ -24,10 +24,18 @@ class LOI.Adventure extends LOI.Adventure
       
     @profileId = new ReactiveField null
     
+    @profile = new ComputedField =>
+      Persistence.Profile.documents.findOne @profileId()
+    
     # Provide game state fields.
+    
     @gameState = new ComputedField =>
       return unless profileId = @profileId()
-      LOI.GameState.documents.findOne({profileId})?.state
+      LOI.GameState.documents.findOne({profileId})?.state or {}
+  
+    @gameState.updated = =>
+      gameState = @gameState()
+      LOI.GameState.documents.update gameState._id, gameState
   
     @readOnlyGameState = new ComputedField =>
       return unless profileId = @profileId()
@@ -35,7 +43,10 @@ class LOI.Adventure extends LOI.Adventure
       
   startNewGame: ->
     # Create a fresh profile and reset the game.
-    Persistence.createNewProfile().then (profileId) ->
+    Persistence.createProfile().then (profileId) =>
+      # Create a new game state.
+      LOI.GameState.documents.insert {profileId}
+      
       @_changeProfileId profileId
   
   loadGame: (profileId) ->
@@ -52,7 +63,7 @@ class LOI.Adventure extends LOI.Adventure
     @interface.reset()
 
     # Clear active item.
-    @activeItemId null unless options.preserveActiveItem
+    @activeItemId null
 
     # Cleanup storyline classes.
     @resetEpisodes()
@@ -72,11 +83,12 @@ class LOI.Adventure extends LOI.Adventure
       Persistence.addSyncingToProfile @serverSyncedStorage.id()
 
   quitGame: (options = {}) ->
-    @quitting true
+    @profileId null
   
     Persistence.unloadProfile().then =>
       # Execute the callback if present and end if it has handled the redirect.
       return if options.callback?()
   
-      # Do a hard reload of the root URL.
-      window.location = @constructor.rootUrl()
+      if options.hardReload
+        # Do a hard reload of the root URL.
+        window.location = @constructor.rootUrl()

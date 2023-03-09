@@ -159,15 +159,18 @@ class LOI.Adventure extends LOI.Adventure
     console.log "Setting location ID to", locationId if LOI.debug
 
     # Save current location to state.
-    if state = @gameState()
-      state.currentLocationId = locationId
-      @gameState.updated()
-      
+    state = @gameState()
+    state.currentLocationId = locationId
+    @gameState.updated()
+    
+    ###
+    TODO: Handle memory actions
     if profileId = LOI.adventure.profileId()
       LOI.Memory.Action.do LOI.Memory.Actions.Move.type, profileId,
         timelineId: @currentTimelineId()
         locationId: locationId
-      
+     ###
+   
   goToLocation: (locationClassOrId) ->
     # Don't allow location changes when in a memory (since it's defined by the memory document).
     return if @currentMemory()

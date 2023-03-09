@@ -78,30 +78,23 @@ class LOI.Interface extends AM.Component
 
     true
 
-  location: ->
-    LOI.adventure.currentLocation()
+  location: -> LOI.adventure.currentLocation()
 
-  context: ->
-    LOI.adventure.currentContext()
+  context: -> LOI.adventure.currentContext()
 
-  prepareForLocationChange: (newLocation, handler) =>
-    # Override to prepare for location change. Call handler when done with preparations.
-    handler()
+  prepareForLocationChange: (newLocation, handler) => handler() # Override to prepare for location change. Call handler when done with preparations.
 
-  onLocationChanged: (location) ->
-    # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
-    
-  listeners: ->
-    # Override to provide global listeners of the interface.
-    []
-    
-  active: ->
-    # Override to notify when the interface is ready to accept input.
-    true
-    
-  ready: ->
-    # Override to notify when the interface has finished preparing its resources.
-    true
+  onLocationChanged: (location) -> # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
+  
+  listeners: -> [] # Override to provide global listeners of the interface.
+  
+  active: -> true # Override to notify when the interface is ready to accept input.
+  
+  ready: -> true # Override to notify when the interface has finished preparing its resources.
+  
+  resize: -> # Override to perform any adjustments when the UI is being resized.
+  
+  reset: -> # Override to get the interface to its default state.
 
   _handleNode: (node, options = {}) ->
     return if node.handled unless options.force

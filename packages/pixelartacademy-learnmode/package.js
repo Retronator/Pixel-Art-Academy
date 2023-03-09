@@ -22,9 +22,12 @@ Package.onUse(function(api) {
   api.addFile('adventure..');
 
   api.addComponent('interface..');
+  api.addComponent('interface/studio..');
 
   api.addFile('menu..');
   api.addComponent('menu/items..');
 
-  api.addComponent('mainmenu..');
+  api.addFile('locations..');
+  api.addComponent('locations/mainmenu..');
+  api.addFile('locations/play..');
 });

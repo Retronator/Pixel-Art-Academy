@@ -1,8 +1,8 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Authorize.characterAction = (characterId) ->
-  # You need to be logged-in to perform actions with the character.
+LOI.Authorize.profileAction = (profileId) ->
+  # You need to be logged-in to perform actions with a profile.
   user = Retronator.requireUser()
 
   # Character must exist.

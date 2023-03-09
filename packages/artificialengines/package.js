@@ -214,6 +214,9 @@ Package.onUse(function(api) {
   api.addFile('mummification/document/persistence/syncedstorages..');
   api.addFile('mummification/document/persistence/syncedstorages/localstorage');
 
+  // We add profile last since it also is a persistent document.
+  api.addFile('mummification/document/persistence/profile');
+
   api.addFile('mummification/document/versioning..');
   api.addFile('mummification/document/versioning/versionedcollection');
   api.addClientFile('mummification/document/versioning/versionedcollection-client');

@@ -25,10 +25,12 @@
       {{/if}}
       <li class="menu-item"><span class="settings actionable">Settings</span></li>
       <li class="menu-item"><span class="credits actionable">Credits</span></li>
-      {{#if quitVisible}}
+      {{#if showQuitToMenu}}
         <li class="menu-item"><span class="quit-to-menu actionable">Quit to menu</span></li>
       {{else}}
-        <li class="menu-item"><span class="quit actionable">Quit</span></li>
+        {{#if isElectron}}
+          <li class="menu-item"><span class="quit actionable">Quit</span></li>
+        {{/if}}
       {{/if}}
     {{/if}}
     {{#if inSettings}}

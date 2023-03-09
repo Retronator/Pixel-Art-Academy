@@ -4,6 +4,7 @@ RA = Retronator.Accounts
 
 class LOI.GameState extends AM.Document
   @id: -> 'LandsOfIllusions.GameState'
+  # profileId: the user or character ID this state belongs to
   # state: object that holds editable game information
   #   things: a map of all things
   #     {thingId}: state of the thing
@@ -27,7 +28,6 @@ class LOI.GameState extends AM.Document
   #   gameTime: fractional number of days when the event happens in game time
   #   ... any custom data of the event
   # nextSimulateTime: auto-generated real life time when the next simulation should happen on the server
-  # profileId: the user or character ID this state belongs to
   @Meta
     name: @id()
     fields: =>

@@ -34,7 +34,7 @@ class LM.Adventure extends LOI.Adventure
   template: -> 'LandsOfIllusions.Adventure'
 
   startingPoint: ->
-    locationId: PAA.LearnMode.MainMenu.id()
+    locationId: LM.Locations.MainMenu.id()
     timelineId: LOI.TimelineIds.RealLife
 
   usesLocalState: -> true

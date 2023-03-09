@@ -13,38 +13,60 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
     
     directoryJson = localStorage.getItem @options.storageKey
     @directory = if directoryJson and directoryJson isnt 'undefined' then EJSON.parse directoryJson else {}
-
-  loadDocumentForId: (documentClass, documentId) ->
-    new Promise (resolve) =>
-      documentJson = localStorage.getItem "#{@options.storageKey}.#{documentId}"
-      document = EJSON.parse documentJson if documentJson and documentJson isnt 'undefined'
-      resolve document
   
-  loadDocumentsForProfileId: (documentClass, profileId) ->
+  loadDocumentsForProfileId: (profileId) ->
+    syncedStorageId = @constructor.id()
+    
     new Promise (resolve) =>
-      documents = []
-      
-      for documentId, entry of @directory when entry.profileId is profileId
-        documentJson = localStorage.getItem "#{@options.storageKey}.#{documentId}"
-        documents.push EJSON.parse documentJson if documentJson and documentJson isnt 'undefined'
+      documents = {}
+  
+      for documentClassId, directoryArea of @directory
+        documents[documentClassId] = {}
         
+        for documentId, entry of @directory when entry.profileId is profileId
+          documentJson = localStorage.getItem @_getDocumentStorageKey documentClassId, documentId
+          
+          if documentJson and documentJson isnt 'undefined'
+            documents[documentClassId][documentId] = "#{syncedStorageId}": EJSON.parse documentJson
+      
       resolve documents
   
-  saveInternal: (document) ->
-    new Promise (resolve) =>
-      documentJson = EJSON.stringify document
-      localStorage.setItem "#{@options.storageKey}.#{document._id}", documentJson
+  addedInternal: (document) -> @_save document
+  changedInternal: (document) -> @_save document
+  removedInternal: (document) -> @_delete document
   
-      @directory[document._id] = _.pick document, 'profileId'
+  _save: (document) ->
+    new Promise (resolve) =>
+      documentJson = EJSON.stringify document.getSourceData()
+      localStorage.setItem @_getDocumentStorageKey(document), documentJson
+  
+      @_getDirectoryAreaForDocument(document)[document._id] = _.pick document, 'profileId'
       @_saveDirectory()
       
       resolve()
       
-  deleteInternal: (document) ->
+  _getDocumentStorageKey: (documentOrDocumentClassId, documentId) ->
+    if _.isObject documentOrDocumentClassId
+      document = documentOrDocumentClassId
+      documentClassId = document.constructor.id()
+      documentId = document._id
+    
+    else
+      documentClassId = documentOrDocumentClassId
+      
+    "#{@options.storageKey}.#{documentClassId}.#{documentId}"
+    
+  _getDirectoryAreaForDocument: (document) ->
+    documentClassId = document.constructor.id()
+    @directory[documentClassId] ?= {}
+    @directory[documentClassId]
+    
+  _delete: (document) ->
     new Promise (resolve) =>
+      documentClassId = document.constructor.id()
       localStorage.removeItem "#{@options.storageKey}.#{document._id}"
   
-      delete @directory[document._id]
+      delete @_getDirectoryAreaForDocument()[document._id]
       @_saveDirectory()
 
       resolve()

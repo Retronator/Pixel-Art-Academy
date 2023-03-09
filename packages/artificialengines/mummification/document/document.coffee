@@ -173,3 +173,5 @@ class AM.Document extends Document
 
   is: (other) ->
     @_id is other._id
+
+  getSourceData: -> @ # Override if you need to strip any runtime data from the document.

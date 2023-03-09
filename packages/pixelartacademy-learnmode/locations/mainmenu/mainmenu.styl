@@ -1,8 +1,7 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-.pixelartacademy-learnmode-mainmenu
+.pixelartacademy-learnmode-locations-mainmenu
   fixed-cover()
-  background atariGray(5)
   color atariGray(0)
 
   .content-area
@@ -26,24 +25,24 @@
           margin 0
           line-height initial
 
-          .retronator
-            display block
-            retrotype()
-
           .pixel-art-academy
+          .learn-mode
             display block
             position relative
-            margin-top -2rem
             font-weight bold
             acme-9()
 
+          .learn-mode
+            margin-top -5rem
+
         .by
+          margin-top 1rem
           adventure()
           line-height initial
 
         .retro
           position absolute
-          top -2rem
+          top -1rem
           right 48rem
           width 25rem
           z-index 2
@@ -52,22 +51,9 @@
           position absolute
           left 20rem
           right 20rem
-          top 26rem
+          top 27rem
           z-index 1
-
-          &::before
-          &::after
-            content ''
-            position absolute
-            border-bottom 1rem solid atariGray(0)
-
-          &::before
-            left 0
-            right 86rem
-
-          &::after
-            left 203rem
-            right 0
+          border-bottom 1rem solid atariGray(0)
 
     .menu-area
       position absolute

@@ -12,7 +12,7 @@ class LOI.Components.Menu extends AM.Component
 
     @menuVisible = new ReactiveField false
 
-    @menuItems = new (@options.menuItemsClass or @constructor.Items)
+    @menuItems = new (@options.itemsClass or @constructor.Items)
 
     @signIn = new LOI.Components.SignIn
   

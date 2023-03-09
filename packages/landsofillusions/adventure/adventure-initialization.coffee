@@ -19,8 +19,6 @@ class LOI.Adventure extends LOI.Adventure
 
     @menu = new LOI.Components.Menu
       itemsClass: @constructor.menuItemsClass()
-    
-    @quitting = new ReactiveField false
 
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency
