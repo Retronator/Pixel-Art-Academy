@@ -4,7 +4,7 @@ class LOI.Adventure.Situation
   constructor: (@options) ->
     {location, timelineId, context} = @options
 
-    console.log "%cCreating situation for", 'background: plum', location.id(), timelineId if LOI.debug
+    console.log "Creating situation for", location.id(), timelineId if LOI.debug
 
     CircumstanceTypes = @constructor.Circumstance.Types
 
@@ -55,7 +55,7 @@ class LOI.Adventure.Situation
       exitsById
 
   _applyScene: (scene) ->
-    console.log "%cApplying scene", 'background: thistle', scene.id() if LOI.debug
+    console.log "Applying scene", scene.id() if LOI.debug
     
     for circumstanceName of @circumstanceNames
       circumstance = @[circumstanceName]

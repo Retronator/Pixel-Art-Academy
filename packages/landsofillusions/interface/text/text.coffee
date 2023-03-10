@@ -70,25 +70,6 @@ class LOI.Interface.Text extends LOI.Interface
   showInventory: ->
     not @inIntro() and @inventoryItems().length
 
-  activeItems: ->
-    # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
-    items = _.filter LOI.adventure.currentPhysicalThings(), (thing) => thing instanceof LOI.Adventure.Item
-
-    activeItems = _.filter items, (item) => not item.deactivated()
-
-    console.log "Text interface is displaying active items", activeItems if LOI.debug
-
-    activeItems
-
-  inventoryItems: ->
-    return [] unless items = LOI.adventure.currentInventoryThings()
-
-    items = (item for item in items when item.displayInInventory())
-
-    console.log "Text interface is displaying inventory items", items if LOI.debug
-
-    items
-
   showDescription: (thing) ->
     @narrative.addText thing.description()
 
@@ -97,18 +78,7 @@ class LOI.Interface.Text extends LOI.Interface
 
   waitingKeypress: ->
     @_pausedNode() or @inIntro()
-
-  # Query this to see if the interface is listening to user commands.
-  active: ->
-    # The text interface is inactive when adventure is paused.
-    return if LOI.adventure.paused()
-
-    # It's inactive when there is an item active.
-    return if LOI.adventure.activeItem()
-
-    true
     
-  # Query this to see if the user is doing something with the interface.
   busy: ->
     busyConditions = [
       not LOI.adventure.interface.active()

@@ -33,6 +33,7 @@ Package.onUse(function(api) {
 
   api.addFile('episode1');
   api.addFile('scenes/inventory');
+  api.addFile('scenes/apps');
   api.addFile('scenes/chinabasinpark');
   api.addFile('scenes/store');
 

@@ -10,7 +10,7 @@ class LOI.Components.Hand extends AM.Component
 
   showHand: ->
     # Only show hand for characters since we don't want to assume skin color.
-    LOI.characterId()
+    LOI.characterId?()
 
   handStyle: ->
     data = @data()

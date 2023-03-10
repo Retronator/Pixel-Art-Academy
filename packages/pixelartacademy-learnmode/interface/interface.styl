@@ -10,7 +10,22 @@
     background atariGray(0)
     opacity 1
     transition 2s
+    cursor wait
 
     &.complete
       opacity 0
       visibility hidden
+
+  .waiting-overlay
+    fixed-cover()
+    z-index 1
+    cursor wait
+    visibility hidden
+
+    &.visible
+      visibility visible
+
+  .pixelartacademy-pixelboy
+    .landsofillusions-components-overlay
+      > .background
+        background rgba(atariGray(0), 0.5)

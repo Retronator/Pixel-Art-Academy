@@ -1,6 +1,8 @@
 <template name="PixelArtAcademy.PixelBoy">
   <div class="pixelartacademy-pixelboy {{visibleClass}} {{fullscreenClass}}">
-    {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+    <div class="back-button-area {{backButtonVisibleClass}}">
+      {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+    </div>
     {{#LandsOfIllusions.Components.Overlay}}
     {{else}}
       <div class="viewport-area">

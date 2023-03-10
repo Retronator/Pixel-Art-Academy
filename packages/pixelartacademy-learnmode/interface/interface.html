@@ -10,6 +10,12 @@
     <div class="location">
       {{> Render location}}
     </div>
+    <div class="items">
+      {{#each activeItems}}
+        {{> Render this}}
+      {{/each}}
+    </div>
     <div class="intro-fade {{introFadeCompleteClass}}"></div>
+    <div class="waiting-overlay {{waitingOverlayVisibleClass}}"></div>
   </div>
 </template>

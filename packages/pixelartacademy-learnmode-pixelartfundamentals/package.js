@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-learnmode',
+  name: 'retronator:pixelartacademy-learnmode-pixelartfundamentals',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -12,24 +12,15 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
-  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-learnmode');
 
   api.export('PixelArtAcademy');
 
-  api.addFile('learnmode');
-  api.addFile('region');
+  api.addFile('pixelartfundamentals');
+  api.addFile('scenes/pixelboy');
 
-  api.addFile('adventure..');
+  // Start
 
-  api.addComponent('interface..');
-  api.addComponent('interface/studio..');
+  api.addFile('start..');
 
-  api.addFile('menu..');
-  api.addComponent('menu/items..');
-
-  api.addFile('locations..');
-  api.addComponent('locations/mainmenu..');
-  api.addFile('locations/play..');
-
-  api.addFile('pixelboy..');
 });

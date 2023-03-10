@@ -43,6 +43,8 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     LOI.adventure.menu.hideMenu()
   
   onClickNew: (event) ->
+    LOI.adventure.interface.waiting true
+
     LOI.adventure.startNewGame().then =>
       LOI.adventure.interface.goToPlay()
   
@@ -70,12 +72,19 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
           @_quitGame() if dialog.result
           
   _quitGame: ->
+    LOI.adventure.interface.waiting true
+
     LOI.adventure.menu.hideMenu()
-    LOI.adventure.quitGame callback: =>
-      LOI.adventure.interface.goToMainMenu()
-      
-      # Notify that we've handled the quitting sequence.
-      true
+    LOI.adventure.deactivateActiveItem()
+    
+    Meteor.setTimeout =>
+      LOI.adventure.quitGame callback: =>
+        LOI.adventure.interface.goToMainMenu()
+        
+        # Notify that we've handled the quitting sequence.
+        true
+    ,
+      500
 
   onClickQuit: (event) ->
     if Meteor.isDesktop

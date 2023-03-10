@@ -24,20 +24,9 @@ class LM.Interface extends LOI.Interface
     @studio = new @constructor.Studio
 
     @introFadeComplete = new ReactiveField false
-
-    # Automatically open the PixelPad when at the play location.
-    @autorun (computation) =>
-      return unless @studio.isRendered()
     
-      locationId = LOI.adventure.currentLocationId()
-      return unless locationId is LM.Locations.Play.id()
-      
-      activeItemId = LOI.adventure.activeItemId()
-      return if activeItemId is PAA.PixelBoy.id()
-      
-      pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-      pixelBoy.open()
-      
+    @waiting = new ReactiveField false
+    
   onRendered: ->
     super arguments...
   
@@ -64,6 +53,15 @@ class LM.Interface extends LOI.Interface
         speedFactor: 1.5
         completeCallback: =>
           LOI.adventure.goToLocation LM.Locations.Play
+        
+          # Open the PixelPad when it becomes available.
+          @autorun (computation) =>
+            return unless pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
+            computation.stop()
+            
+            pixelBoy.open()
+  
+            LOI.adventure.interface.waiting false
     ,
       750
   
@@ -74,6 +72,11 @@ class LM.Interface extends LOI.Interface
       completeCallback: =>
         mainMenu = LOI.adventure.currentLocation()
         mainMenu.fadeIn()
+  
+        LOI.adventure.interface.waiting false
         
   introFadeCompleteClass: ->
     'complete' if @introFadeComplete()
+  
+  waitingOverlayVisibleClass: ->
+    'visible' if @waiting()

@@ -21,7 +21,9 @@ class LM.Adventure extends LOI.Adventure
   
   @interfaceClass: -> LM.Interface
 
-  @episodeClasses = []
+  @episodeClasses: -> [
+    LM.PixelArtFundamentals
+  ]
 
   titleSuffix: -> ' // Pixel Art Academy: Learn Mode'
 
@@ -43,4 +45,4 @@ class LM.Adventure extends LOI.Adventure
   
   globalClasses: -> []
   
-  episodeClasses: -> @constructor.episodeClasses
+  episodeClasses: -> @constructor.episodeClasses()

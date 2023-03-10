@@ -81,14 +81,43 @@ class LOI.Interface extends AM.Component
   location: -> LOI.adventure.currentLocation()
 
   context: -> LOI.adventure.currentContext()
+  
+  activeItems: ->
+    # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
+    items = _.filter LOI.adventure.currentPhysicalThings(), (thing) => thing instanceof LOI.Adventure.Item
 
+    activeItems = _.filter items, (item) => not item.deactivated()
+
+    console.log "Interface is displaying active items", activeItems if LOI.debug
+
+    activeItems
+
+  inventoryItems: ->
+    return [] unless items = LOI.adventure.currentInventoryThings()
+
+    items = (item for item in items when item.displayInInventory())
+
+    console.log "Interface is displaying inventory items", items if LOI.debug
+
+    items
+
+  # Query this to see if the interface is listening to user commands.
+  active: ->
+    # The text interface is inactive when adventure is paused.
+    return if LOI.adventure.paused()
+    
+    # It's inactive when there is an item active.
+    return if LOI.adventure.activeItem()
+    
+    true
+    
   prepareForLocationChange: (newLocation, handler) => handler() # Override to prepare for location change. Call handler when done with preparations.
 
   onLocationChanged: (location) -> # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
   
   listeners: -> [] # Override to provide global listeners of the interface.
   
-  active: -> true # Override to notify when the interface is ready to accept input.
+  busy: -> false # Override this to notify if the user is doing something with the interface.
   
   ready: -> true # Override to notify when the interface has finished preparing its resources.
   

@@ -7,27 +7,27 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.PixelBoy extends LOI.Adventure.Item
   @id: -> 'PixelArtAcademy.PixelBoy'
-  @url: -> 'pixelboy'
+  @url: -> 'pixelpad'
 
   @version: -> '0.2.0'
 
   @register @id()
   template: -> @constructor.id()
 
-  @fullName: -> "PixelBoy 2000"
-  @shortName: -> "PixelBoy"
+  @fullName: -> "PixelPad 2000"
+  @shortName: -> "PixelPad"
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
-      It's your morphing handheld computer, the latest PixelBoy!
+      It's your morphing handheld computer, the latest PixelPad!
     "
 
   @storeDescription: -> "
     The brains behind the Retropolis company Pixel have done it again.
     The latest in their PixelBoy handheld series is a marvel of engineering with a flexible display surface
     that resizes to your needs. Change it from a tablet to a smartphone, or wear it like a
-    watch, PixelBoy 2000 is your new best friend in your digital lifestyle.
+    watch, PixelPad 2000 is your new best friend in your digital lifestyle.
   "
 
   @initialize()
@@ -194,7 +194,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
     $(document).off('.pixelartacademy-pixelboy')
     $('body').removeClass('pixelartacademy-pixelboy-resizing')
-    
+
+  backButtonVisible: -> true # Override to control when the back button is available.
+  
   url: -> @os.url()
 
   open: ->
@@ -240,6 +242,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   visibleClass: ->
     # We need to show the content together with the fullscreen overlay.
     'visible' if @fullscreenOverlay()
+
+  backButtonVisibleClass: ->
+    'visible' if @backButtonVisible()
 
   osStyle: ->
     'pointer-events': if @resizing() then 'none' else 'initial'

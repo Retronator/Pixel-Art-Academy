@@ -91,7 +91,7 @@ class LOI.Components.Overlay extends AM.Component
 
   onDeactivated: ->
     # Hide transition cover.
-    @$('.transition-cover').removeClass('visible')
+    @$('.transition-cover')?.removeClass('visible')
 
   onResize: (options) ->
     # Don't resize during animations. The function will re-run when active changes at the end.

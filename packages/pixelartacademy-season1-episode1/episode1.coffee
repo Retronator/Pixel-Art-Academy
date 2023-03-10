@@ -13,11 +13,12 @@ class PAA.Season1.Episode1 extends LOI.Adventure.Episode
 
   @scenes: -> [
     @Inventory
+    @Apps
     @ChinaBasinPark
     @Store
     PAA.Student.Conversation
   ]
-    
+  
   @startSection: -> @Start
 
   # Whole Episode 1 happens in the present.

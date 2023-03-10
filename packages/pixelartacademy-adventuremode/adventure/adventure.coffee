@@ -14,11 +14,11 @@ class PAA.Adventure extends LOI.Adventure
   @description: ->
     "Become an artist in the text/point-and-click adventure game by Retronator."
 
-  @userEpisodeClasses = [
+  @userEpisodeClasses: -> [
     PAA.Season1.Episode0
   ]
 
-  @characterEpisodeClasses = [
+  @characterEpisodeClasses: -> [
     PAA.Season1.Episode1
   ]
   
@@ -51,7 +51,7 @@ class PAA.Adventure extends LOI.Adventure
     # Depend on character ID.
     characterId = LOI.characterId()
     
-    if characterId then @constructor.characterEpisodeClasses else @constructor.userEpisodeClasses
+    if characterId then @constructor.characterEpisodeClasses() else @constructor.userEpisodeClasses()
 
   onCreated: ->
     super arguments...
