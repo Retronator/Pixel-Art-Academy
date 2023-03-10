@@ -92,7 +92,7 @@ class LM.Interface.Studio extends AM.Component
           x: @_startingFocusPoint.x + @_moveFocusDelta.x * tweenValue
           y: @_startingFocusPoint.y + @_moveFocusDelta.y * tweenValue
 
-        @_updateSceneStyle()
+        @_updateSceneStyle true
       complete: completeCallback
 
     @$animate.dequeue('moveFocus')
@@ -107,11 +107,11 @@ class LM.Interface.Studio extends AM.Component
     x: _.clamp focusPoint.x, halfWidth / @sceneSize.width, (@sceneSize.width - halfWidth) / @sceneSize.width
     y: _.clamp focusPoint.y, halfHeight / @sceneSize.height, (@sceneSize.height - halfHeight) / @sceneSize.height
 
-  _updateSceneStyle: ->
+  _updateSceneStyle: (parallaxOnly) ->
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
   
-    @$('.pixelartacademy-learnmode-interface-studio').css viewport.viewportBounds.toDimensions()
+    @$('.pixelartacademy-learnmode-interface-studio').css viewport.viewportBounds.toDimensions() unless parallaxOnly
 
     scrollableWidth = @sceneSize.width * scale - viewport.viewportBounds.width()
     scrollableHeight = @sceneSize.height * scale - viewport.viewportBounds.height()
