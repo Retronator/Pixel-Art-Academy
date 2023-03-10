@@ -39,15 +39,12 @@ class LOI.Components.Menu.Items extends AM.Component
     not @options.landingPage
 
   loadVisible: ->
-    # Load game is visible when user is not logged in.
-    not Retronator.user()
+    # Load game is visible if the profile hasn't been saved yet.
+    not LOI.adventure.profile()?.hasSyncing()
 
   saveVisible: ->
-    # Always hidden.
-    return false
-
-    # Legacy: Save game is visible when a guest isn't on the landing page.
-    return if Retronator.user()
+    # Save game is visible when an unsaved profile isn't on the landing page.
+    return if LOI.adventure.profile()?.hasSyncing()
 
     not @options.landingPage
 
@@ -132,7 +129,7 @@ class LOI.Components.Menu.Items extends AM.Component
   onClickLoad: (event) ->
     if @options.landingPage
       # On the landing page we can directly load.
-      LOI.adventure.loadGame()
+      @_loadGame()
   
     else
       # Warn user they will lose progress.
@@ -148,10 +145,15 @@ class LOI.Components.Menu.Items extends AM.Component
       LOI.adventure.showActivatableModalDialog
         dialog: dialog
         callback: =>
-          LOI.adventure.loadGame() if dialog.result
+          @_loadGame() if dialog.result
+          
+  _loadGame: ->
+    return unless profile = LOI.adventure.availableProfiles()[0]
+
+    LOI.adventure.loadGame profile._id
 
   onClickSave: (event) ->
-    LOI.adventure.saveGame()
+    LOI.adventure.saveGame local: true
 
   onClickAccount: (event) ->
     LOI.adventure.menu.account.show()

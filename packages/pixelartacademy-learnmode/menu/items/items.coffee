@@ -6,7 +6,6 @@ LM = PixelArtAcademy.LearnMode
 
 class LM.Menu.Items extends LOI.Components.Menu.Items
   @register 'PixelArtAcademy.LearnMode.Menu.Items'
-
   template: -> 'PixelArtAcademy.LearnMode.Menu.Items'
 
   onCreated: ->
@@ -22,6 +21,10 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
+
+  loadVisible: ->
+    # Load game in Learn Mode is visible only on the landing page.
+    @options.landingPage
     
   isFullscreen: ->
     if Meteor.isDesktop
@@ -29,8 +32,12 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     
     else
       super arguments...
-      
-  showQuitToMenu: ->
+
+  creditsVisible: ->
+    # Credits are visible only on the landing page.
+    @options.landingPage
+
+  quitToMenuVisible: ->
     # We quit to menu when we're not on the landing page
     not @options.landingPage
     
@@ -50,9 +57,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
   
   onClickQuitToMenu: (event) ->
     # Check if the profile is being synced.
-    profile = LOI.adventure.profile()
-    
-    if _.keys(profile.syncedStorages).length > 0
+    if LOI.adventure.profile().hasSyncing()
       @_quitGame()
   
     else

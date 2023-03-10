@@ -18,6 +18,7 @@ Package.onUse(function(api) {
 
   api.addFile('pixelartfundamentals');
   api.addFile('scenes/pixelboy');
+  api.addFile('scenes/apps');
 
   // Start
 

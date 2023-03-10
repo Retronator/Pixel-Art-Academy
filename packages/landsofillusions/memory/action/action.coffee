@@ -6,12 +6,12 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Memory.Action extends AM.Document
   @id: -> 'LandsOfIllusions.Memory.Action'
+  # profileId: profile who did this action
   # type: constructor type for inheritance
   # time: when this action was done
   # timelineId: timeline when the action was done
   # locationId: location where the action was done
   # contextId: optional context in which the action was done
-  # profileId: profile who did this action
   # memory: optional memory this action belongs to
   #   _id
   # isMemorable: boolean weather this action is being memorized even without a memory
@@ -46,7 +46,9 @@ class LOI.Memory.Action extends AM.Document
 
   @type: @id()
   @registerType @type, @
-
+  
+  @enablePersistence()
+  
   # A place for actions to add their content patterns.
   @contentPatterns = {}
 

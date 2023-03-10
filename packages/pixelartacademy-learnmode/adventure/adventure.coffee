@@ -43,6 +43,8 @@ class LM.Adventure extends LOI.Adventure
   
   getLocalSyncedStorage: -> new Persistence.SyncedStorages.LocalStorage storageKey: "Retronator"
   
-  globalClasses: -> []
+  globalClasses: -> [
+  
+  ]
   
   episodeClasses: -> @constructor.episodeClasses()

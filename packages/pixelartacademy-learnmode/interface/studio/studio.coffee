@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
@@ -25,7 +26,7 @@ class LM.Interface.Studio extends AM.Component
     @verticalParallaxFactor = 0.25
   
     @targetFocusPoint = new ReactiveField @constructor.FocusPoints.MainMenu
-    @_focusPoint = @targetFocusPoint()
+    @_focusPoint = _.clone @targetFocusPoint()
   
     @sceneSize =
       width: 480
@@ -33,6 +34,9 @@ class LM.Interface.Studio extends AM.Component
 
   onRendered: ->
     super arguments...
+  
+    @app = @ancestorComponentOfType AB.App
+    @app.addComponent @
 
     @$scene = @$('.scene')
 
@@ -44,20 +48,27 @@ class LM.Interface.Studio extends AM.Component
       origin:
         x: $element.data('originX')
         y: $element.data('originY')
-
-    # Dummy DOM element to run velocity on.
-    @$animate = $('<div>')
-
+  
+    @_moveFocusEnabled = false
+    @_moveFocusDuration = 0
+    @_moveFocusTime = 0
+    @_moveFocusCompleteCallback = null
+    
     # Update scene style when viewport changes.
     @autorun (computation) =>
       @_updateSceneStyle()
+    
+  onDestroyed: ->
+    super arguments...
+  
+    @app.removeComponent @
 
   setFocus: (targetFocusPoint) ->
-    @_focusPoint = targetFocusPoint
+    @_focusPoint = _.clone targetFocusPoint
     @targetFocusPoint targetFocusPoint
     return unless @isRendered()
-
-    @$animate.velocity('stop', 'moveFocus')
+  
+    @_moveFocusEnabled = false
     @_updateSceneStyle()
 
   moveFocus: (targetFocusPointOrOptions) ->
@@ -79,23 +90,12 @@ class LM.Interface.Studio extends AM.Component
       x: targetFocusPoint.x - @_startingFocusPoint.x
       y: targetFocusPoint.y - @_startingFocusPoint.y
 
-    duration = 30 / speedFactor * Math.sqrt(Math.pow(@_moveFocusDelta.x * @sceneSize.width, 2) + Math.pow(@_moveFocusDelta.y * @sceneSize.height, 2))
-
-    @$animate.velocity('stop', 'moveFocus').velocity
-      tween: [1, 0]
-    ,
-      duration: duration
-      easing: 'ease-in-out'
-      queue: 'moveFocus'
-      progress: (elements, complete, remaining, current, tweenValue) =>
-        @_focusPoint =
-          x: @_startingFocusPoint.x + @_moveFocusDelta.x * tweenValue
-          y: @_startingFocusPoint.y + @_moveFocusDelta.y * tweenValue
-
-        @_updateSceneStyle true
-      complete: completeCallback
-
-    @$animate.dequeue('moveFocus')
+    duration = 0.03 / speedFactor * Math.sqrt(Math.pow(@_moveFocusDelta.x * @sceneSize.width, 2) + Math.pow(@_moveFocusDelta.y * @sceneSize.height, 2))
+  
+    @_moveFocusEnabled = true
+    @_moveFocusDuration = duration
+    @_moveFocusTime = 0
+    @_moveFocusCompleteCallback = completeCallback
 
   _clampFocusPoint: (focusPoint) ->
     viewport = LOI.adventure.interface.display.viewport()
@@ -116,23 +116,22 @@ class LM.Interface.Studio extends AM.Component
     scrollableWidth = @sceneSize.width * scale - viewport.viewportBounds.width()
     scrollableHeight = @sceneSize.height * scale - viewport.viewportBounds.height()
 
-    focusFactor =
-      x: _.clamp (@_focusPoint.x * @sceneSize.width * scale - viewport.viewportBounds.width() / 2) / scrollableWidth, 0, 1
-      y: _.clamp (@_focusPoint.y * @sceneSize.height * scale - viewport.viewportBounds.height() / 2) / scrollableHeight, 0, 1
+    focusFactorX = _.clamp (@_focusPoint.x * @sceneSize.width * scale - viewport.viewportBounds.width() / 2) / scrollableWidth, 0, 1
+    focusFactorY = _.clamp (@_focusPoint.y * @sceneSize.height * scale - viewport.viewportBounds.height() / 2) / scrollableHeight, 0, 1
+  
+    focusFactorX = @_focusPoint.x if _.isNaN focusFactorX
+    focusFactorY = @_focusPoint.y if _.isNaN focusFactorY
 
-    focusFactor.x = @_focusPoint.x if _.isNaN focusFactor.x
-    focusFactor.y = @_focusPoint.y if _.isNaN focusFactor.y
-
-    left = -scrollableWidth * focusFactor.x
-    top = -scrollableHeight * focusFactor.y
-
-    @$scene.css transform: "translate3d(#{left}px, #{top}px, 0)"
+    left = -scrollableWidth * focusFactorX
+    top = -scrollableHeight * focusFactorY
+  
+    @$scene.css "transform", "translate3d(#{left}px, #{top}px, 0)"
 
     for parallaxItem in @_parallaxItems
-      left = (parallaxItem.origin.x - focusFactor.x) * parallaxItem.depth * scrollableWidth * @horizontalParallaxFactor
-      top = (parallaxItem.origin.y - focusFactor.y) * parallaxItem.depth * scrollableHeight * @verticalParallaxFactor
-
-      parallaxItem.$element.css transform: "translate3d(#{left}px, #{top}px, 0)"
+      left = (parallaxItem.origin.x - focusFactorX) * parallaxItem.depth * scrollableWidth * @horizontalParallaxFactor
+      top = (parallaxItem.origin.y - focusFactorY) * parallaxItem.depth * scrollableHeight * @verticalParallaxFactor
+  
+      parallaxItem.$element.css "transform", "translate3d(#{left}px, #{top}px, 0)"
 
   artworkClasses: (artworkField) ->
     classes = [
@@ -141,3 +140,19 @@ class LM.Interface.Studio extends AM.Component
     ]
 
     classes.join ' '
+    
+  draw: (appTime) ->
+    return unless @_moveFocusEnabled
+  
+    @_moveFocusTime += appTime.elapsedAppTime
+    progress = Math.min 1, @_moveFocusTime / @_moveFocusDuration
+    progress = if progress < 0.5 then 2 * progress * progress else 1 - Math.pow(-2 * progress + 2, 2) / 2
+    
+    @_focusPoint.x = @_startingFocusPoint.x + @_moveFocusDelta.x * progress
+    @_focusPoint.y = @_startingFocusPoint.y + @_moveFocusDelta.y * progress
+
+    @_updateSceneStyle true
+  
+    if progress is 1
+      @_moveFocusEnabled = false
+      @_moveFocusCompleteCallback?()

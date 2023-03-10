@@ -24,8 +24,10 @@
         </span></li>
       {{/if}}
       <li class="menu-item"><span class="settings actionable">Settings</span></li>
-      <li class="menu-item"><span class="credits actionable">Credits</span></li>
-      {{#if showQuitToMenu}}
+      {{#if creditsVisible}}
+        <li class="menu-item"><span class="credits actionable">Credits</span></li>
+      {{/if}}
+      {{#if quitToMenuVisible}}
         <li class="menu-item"><span class="quit-to-menu actionable">Quit to menu</span></li>
       {{else}}
         {{#if isElectron}}

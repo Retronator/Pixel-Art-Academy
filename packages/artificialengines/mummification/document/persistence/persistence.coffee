@@ -14,7 +14,14 @@ class AM.Document.Persistence
   
   @_persistentDocumentClassesById = {}
   @_syncedStoragesById = {}
-  @_activeProfile = null
+
+  @_activeProfileId = new ReactiveField null
+  
+  Meteor.startup =>
+    @_activeProfile = new ComputedField =>
+      @Profile.documents.findOne @_activeProfileId()
+    ,
+      true
 
   @initializeDocumentClass: (documentClass) ->
     return if Meteor.isServer
@@ -36,7 +43,7 @@ class AM.Document.Persistence
   @registerSyncedStorage: (syncedStorage) ->
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
 
-  @availableProfiles: ->
+  @getProfiles: ->
     # TODO: Query all registered storages for profiles and merge them together into available profiles.
     
   @createProfile: ->
@@ -45,21 +52,24 @@ class AM.Document.Persistence
       
       Persistence.Profile.documents.insert
         _id: profileId
+        profileId: profileId
         syncedStorages: {}
       
       @loadProfile(profileId).then =>
         resolve profileId
   
   @loadProfile: (profileId) ->
-    throw new AE.InvalidOperationException "A profile is already loaded. Unload it first before proceeding." if @_activeProfile
+    throw new AE.InvalidOperationException "A profile is already loaded. Unload it first before proceeding." if @_activeProfileId()
   
-    @_activeProfile = Persistence.Profile.documents.findOne profileId
+    profile = Persistence.Profile.documents.findOne profileId
   
-    throw new AE.ArgumentException "A profile with the given ID was not found", profileId unless @_activeProfile
+    throw new AE.ArgumentException "A profile with the given ID was not found", profileId unless profile
+    
+    @_activeProfileId profileId
     
     # Fetch all profile documents from all storages and resolve conflicts.
     new Promise (resolve, reject) =>
-      loadPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById when @_activeProfile.syncedStorages[syncedStorageId]
+      loadPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
         syncedStorage.loadDocumentsForProfileId profileId
     
       Promise.all(loadPromises).then (loadDocumentsResults) =>
@@ -130,15 +140,15 @@ class AM.Document.Persistence
         documentClass.documents.insert document
 
   @unloadProfile: ->
-    throw new AE.InvalidOperationException "There is no loaded profile to unload." unless @_activeProfile
+    profileId = @_activeProfileId()
+    throw new AE.InvalidOperationException "There is no loaded profile to unload." unless profileId
 
     @flushChanges().then =>
       # Deactivate the profile first so that removals will not be seen as active actions.
-      profileId = @_activeProfile._id
-      @_activeProfile = null
+      @_activeProfileId null
 
       # Remove all documents belonging to the active profile.
-      for documentId, documentClass of @_persistentDocumentClassesById
+      for documentClassId, documentClass of @_persistentDocumentClassesById
         documentClass.documents.remove {profileId}
 
   @flushChanges: ->
@@ -147,6 +157,22 @@ class AM.Document.Persistence
       syncedStorage.flushChanges()
   
     Promise.all flushUpdatesPromises
+    
+  @addSyncingToProfile: (syncedStorageId) ->
+    profile = @_activeProfile()
+    throw new AE.InvalidOperationException "There is no loaded profile to add syncing to." unless profile
+  
+    throw new AE.ArgumentException "The profile is already syncing with this synced storage." if profile.syncedStorages.syncedStorageId
+
+    Persistence.Profile.documents.update profile._id,
+      $set:
+        "syncedStorages.#{syncedStorageId}": {}
+        
+    # Add all documents to the new synced storage.
+    syncedStorage = @_syncedStoragesById[syncedStorageId]
+  
+    for documentClassId, documentClass of @_persistentDocumentClassesById
+      documentClass.documents.find(profileId: profile._id).forEach (document) => syncedStorage.added document
     
   # Methods for internal use by synced storages
   
@@ -157,9 +183,9 @@ class AM.Document.Persistence
   @_informStorages: (document, methodName) ->
     console.log "Document", methodName, document if @debug
     
-    return unless @_activeProfile
+    return unless activeProfile = @_activeProfile()
     
-    promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when @_activeProfile.syncedStorages[syncedStorageId]
+    promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when activeProfile.syncedStorages[syncedStorageId]
       syncedStorage[methodName] document
   
     Promise.all promises

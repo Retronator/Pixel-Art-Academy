@@ -7,16 +7,10 @@ PAA = PixelArtAcademy
 # Note that these are public documents and should contain no sensitive information.
 class PAA.Learning.Task.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Learning.Task.Entry'
+  # profileId: the profile that completed the task
   # taskId: task ID of the task this is an entry for
   # time: the time when task was completed
-  # user: user that completed the task, or null if a character did it
-  #   _id
-  #   publicName
-  # character: character that completed the task, or null if a user did it
-  #   _id
-  #   avatar
-  #     fullName
-  # action: the action representing completion of this task, or null if a user did it
+  # action: the action representing completion of this task
   #   _id
   #
   # upload: data for an upload entry
@@ -31,6 +25,8 @@ class PAA.Learning.Task.Entry extends AM.Document
       user: Document.ReferenceField RA.User, ['publicName'], true
       character: Document.ReferenceField LOI.Character, ['avatar.fullName'], true
       action: Document.ReferenceField LOI.Memory.Action, [], true, 'content.taskEntry', ['taskId']
+      
+  @enablePersistence()
 
   # Methods
   @insert: @method 'insert'

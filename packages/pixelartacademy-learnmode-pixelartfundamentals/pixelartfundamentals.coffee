@@ -10,6 +10,7 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
 
   @scenes: -> [
     @PixelBoy
+    @Apps
   ]
   
   @startSection: -> @Start

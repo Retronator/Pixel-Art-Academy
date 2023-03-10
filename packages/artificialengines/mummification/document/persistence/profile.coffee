@@ -13,3 +13,6 @@ class Persistence.Profile extends AM.Document
     name: @id()
     
   @enablePersistence()
+  
+  hasSyncing: ->
+    _.keys(@syncedStorages).length > 0
