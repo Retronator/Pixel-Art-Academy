@@ -3,3 +3,14 @@
 .pixelartacademy-learnmode-interface
   fixed-cover()
   background atariGray(5)
+
+  .intro-fade
+    fixed-cover()
+    z-index 1
+    background atariGray(0)
+    opacity 1
+    transition 2s
+
+    &.complete
+      opacity 0
+      visibility hidden

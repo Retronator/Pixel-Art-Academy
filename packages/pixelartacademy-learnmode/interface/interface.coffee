@@ -23,12 +23,57 @@ class LM.Interface extends LOI.Interface
 
     @studio = new @constructor.Studio
 
-    # Automatically switch between the main menu and play focus
+    @introFadeComplete = new ReactiveField false
+
+    # Automatically open the PixelPad when at the play location.
     @autorun (computation) =>
       return unless @studio.isRendered()
-      
+    
       locationId = LOI.adventure.currentLocationId()
-      focusPoints = @constructor.Studio.FocusPoints
+      return unless locationId is LM.Locations.Play.id()
+      
+      activeItemId = LOI.adventure.activeItemId()
+      return if activeItemId is PAA.PixelBoy.id()
+      
+      pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
+      pixelBoy.open()
+      
+  onRendered: ->
+    super arguments...
   
-      focusPoint = if locationId is LM.Locations.MainMenu.id() then focusPoints.MainMenu else focusPoints.Play
-      @studio.moveFocus focusPoint
+    # Wait until adventure is ready.
+    @autorun (computation) =>
+      return unless LOI.adventure.ready()
+      computation.stop()
+    
+      @introFadeComplete true
+  
+      Meteor.setTimeout =>
+        mainMenu = LOI.adventure.currentLocation()
+        mainMenu.fadeIn()
+      ,
+        1000
+    
+  goToPlay: ->
+    mainMenu = LOI.adventure.currentLocation()
+    mainMenu.fadeOut()
+    
+    Meteor.setTimeout =>
+      @studio.moveFocus
+        focusPoint: @constructor.Studio.FocusPoints.Play
+        speedFactor: 1.5
+        completeCallback: =>
+          LOI.adventure.goToLocation LM.Locations.Play
+    ,
+      750
+  
+  goToMainMenu: ->
+    @studio.moveFocus
+      focusPoint: @constructor.Studio.FocusPoints.MainMenu
+      speedFactor: 1.5
+      completeCallback: =>
+        mainMenu = LOI.adventure.currentLocation()
+        mainMenu.fadeIn()
+        
+  introFadeCompleteClass: ->
+    'complete' if @introFadeComplete()

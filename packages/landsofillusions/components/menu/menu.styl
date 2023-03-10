@@ -29,12 +29,13 @@
       &.menu-button
         padding 4rem 2rem
         background none
-        color atariGray(1)
+        color blend(rgba(atariGray(1), 0.5) atariGray(2))
         adventure()
         text-transform uppercase
+        transition color, 0.2s
 
         &:hover
-          color atariGray(2)
+          color blend(rgba(atariGray(2), 0.5) atariGray(3))
 
       &.toggle-audio-button
         width 17rem

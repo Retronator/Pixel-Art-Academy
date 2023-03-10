@@ -7,6 +7,8 @@ class AM.Document.Persistence
   # profileId: an identifier that ties all persistent documents together to a single profile, owned by a user
   # lastEditTime: the time the document was last edited
   
+  @debug = false
+  
   @ConflictResolutionStrategies =
     Latest: 'Latest'
   
@@ -153,6 +155,8 @@ class AM.Document.Persistence
   @removed: (document) -> @_informStorages document, 'removed'
   
   @_informStorages: (document, methodName) ->
+    console.log "Document", methodName, document if @debug
+    
     return unless @_activeProfile
     
     promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when @_activeProfile.syncedStorages[syncedStorageId]

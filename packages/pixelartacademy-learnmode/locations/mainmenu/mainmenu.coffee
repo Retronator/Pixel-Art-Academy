@@ -31,6 +31,8 @@ class LM.Locations.MainMenu extends LOI.Adventure.Location
   
     # Prevent default menu handling on escape.
     LOI.adventure.menu.customShowMenu => # Nothing needs to happen as the menu is always displayed.
+    
+    @visible = new ReactiveField false
   
   onRendered: ->
     super arguments...
@@ -43,6 +45,15 @@ class LM.Locations.MainMenu extends LOI.Adventure.Location
   
     LOI.adventure.menu.customShowMenu null
 
+  fadeOut: ->
+    @visible false
+    
+  fadeIn: ->
+    @visible true
+    
+  visibleClass: ->
+    'visible' if @visible()
+    
   onResize: (options) ->
     display = LOI.adventure.interface.display
     scale = display.scale()

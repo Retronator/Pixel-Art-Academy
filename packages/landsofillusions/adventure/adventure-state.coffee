@@ -28,19 +28,27 @@ class LOI.Adventure extends LOI.Adventure
       Persistence.Profile.documents.findOne @profileId()
     
     # Provide game state fields.
-    
     @gameState = new ComputedField =>
       return unless profileId = @profileId()
-      LOI.GameState.documents.findOne({profileId})?.state or {}
+      
+      gameState = LOI.GameState.documents.findOne({profileId}, fields: state: 1)?.state or {}
+      console.log "Retrieved new game state", gameState if LOI.debug or LOI.Adventure.debugState
+      gameState
   
     @gameState.updated = =>
+      return unless profileId = @profileId()
+      
       gameState = @gameState()
-      LOI.GameState.documents.update gameState._id, gameState
+      console.log "Game state updated, sending to documents ...", gameState if LOI.debug or LOI.Adventure.debugState
+      LOI.GameState.documents.update {profileId}, $set: state: gameState
   
     @readOnlyGameState = new ComputedField =>
       return unless profileId = @profileId()
-      LOI.GameState.documents.findOne({profileId})?.readOnlyState
       
+      readOnlyGameState = LOI.GameState.documents.findOne({profileId}, fields: readOnlyState: 1)?.readOnlyState or {}
+      console.log "Retrieved new read only game state", readOnlyGameState if LOI.debug or LOI.Adventure.debugState
+      readOnlyGameState
+
   startNewGame: ->
     # Create a fresh profile and reset the game.
     Persistence.createProfile().then (profileId) =>
@@ -89,6 +97,5 @@ class LOI.Adventure extends LOI.Adventure
       # Execute the callback if present and end if it has handled the redirect.
       return if options.callback?()
   
-      if options.hardReload
-        # Do a hard reload of the root URL.
-        window.location = @constructor.rootUrl()
+      # Do a hard reload of the root URL.
+      window.location = @constructor.rootUrl()

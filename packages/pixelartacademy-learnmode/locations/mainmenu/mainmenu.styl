@@ -3,6 +3,12 @@
 .pixelartacademy-learnmode-locations-mainmenu
   fixed-cover()
   color atariGray(0)
+  background-color rgba(atariGray(7), 0.75)
+  opacity 0
+  transition opacity, 1s
+
+  &.visible
+    opacity 1
 
   .content-area
     position absolute

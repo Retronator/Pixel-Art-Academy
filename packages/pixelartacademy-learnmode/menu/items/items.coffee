@@ -44,7 +44,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
   
   onClickNew: (event) ->
     LOI.adventure.startNewGame().then =>
-      LOI.adventure.goToLocation LM.Locations.Play
+      LOI.adventure.interface.goToPlay()
   
   onClickQuitToMenu: (event) ->
     # Check if the profile is being synced.
@@ -71,7 +71,11 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
           
   _quitGame: ->
     LOI.adventure.menu.hideMenu()
-    LOI.adventure.quitGame()
+    LOI.adventure.quitGame callback: =>
+      LOI.adventure.interface.goToMainMenu()
+      
+      # Notify that we've handled the quitting sequence.
+      true
 
   onClickQuit: (event) ->
     if Meteor.isDesktop
