@@ -25,7 +25,7 @@ class LM.Interface extends LOI.Interface
 
     @introFadeComplete = new ReactiveField false
     
-    @waiting = new ReactiveField false
+    @waiting = new ReactiveField true
     
   onRendered: ->
     super arguments...
@@ -36,12 +36,20 @@ class LM.Interface extends LOI.Interface
       computation.stop()
     
       @introFadeComplete true
-  
-      Meteor.setTimeout =>
-        mainMenu = LOI.adventure.currentLocation()
-        mainMenu.fadeIn()
-      ,
-        1000
+
+      if LOI.adventure.currentLocationId() is LM.Locations.MainMenu.id()
+        # We're starting in the menu (such as when no profile has been stored as active yet), so simply fade it in.
+        Meteor.setTimeout =>
+          mainMenu = LOI.adventure.currentLocation()
+          mainMenu.fadeIn()
+          @waiting false
+        ,
+          1000
+        
+      else if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
+        # We're starting directly in play so we have to make the studio focus on the top and open the PixelBoy.
+        @studio.setFocus @constructor.Studio.FocusPoints.Play
+        @_openPixelBoy()
     
   goToPlay: ->
     mainMenu = LOI.adventure.currentLocation()
@@ -53,17 +61,19 @@ class LM.Interface extends LOI.Interface
         speedFactor: 1.5
         completeCallback: =>
           LOI.adventure.goToLocation LM.Locations.Play
-        
-          # Open the PixelPad when it becomes available.
-          @autorun (computation) =>
-            return unless pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-            computation.stop()
-            
-            pixelBoy.open()
-  
-            LOI.adventure.interface.waiting false
+          @_openPixelBoy()
     ,
       750
+    
+  _openPixelBoy: ->
+    # Open the PixelPad when it becomes available.
+    @autorun (computation) =>
+      return unless pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
+      computation.stop()
+    
+      pixelBoy.open()
+    
+      @waiting false
   
   goToMainMenu: ->
     @studio.moveFocus
@@ -73,7 +83,7 @@ class LM.Interface extends LOI.Interface
         mainMenu = LOI.adventure.currentLocation()
         mainMenu.fadeIn()
   
-        LOI.adventure.interface.waiting false
+        @waiting false
         
   introFadeCompleteClass: ->
     'complete' if @introFadeComplete()

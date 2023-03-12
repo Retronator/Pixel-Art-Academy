@@ -13,6 +13,18 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
     
     directoryJson = localStorage.getItem @options.storageKey
     @directory = if directoryJson and directoryJson isnt 'undefined' then EJSON.parse directoryJson else {}
+    
+    # Send all profiles to persistence.
+    profiles = []
+    
+    profileClassId = Persistence.Profile.id()
+    for documentId of @directory[profileClassId]
+      documentJson = localStorage.getItem @_getDocumentStorageKey profileClassId, documentId
+  
+      if documentJson and documentJson isnt 'undefined'
+        profiles.push EJSON.parse documentJson
+      
+    Persistence.addProfiles @constructor.id(), profiles
   
   loadDocumentsForProfileId: (profileId) ->
     syncedStorageId = @constructor.id()
@@ -20,10 +32,10 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
     new Promise (resolve) =>
       documents = {}
   
-      for documentClassId, directoryArea of @directory
+      for documentClassId, documentClassArea of @directory when documentClassId isnt Persistence.Profile.id()
         documents[documentClassId] = {}
         
-        for documentId, entry of @directory when entry.profileId is profileId
+        for documentId, entry of documentClassArea when entry.profileId is profileId
           documentJson = localStorage.getItem @_getDocumentStorageKey documentClassId, documentId
           
           if documentJson and documentJson isnt 'undefined'

@@ -13,3 +13,13 @@ class Persistence.PersistentCollection extends Mongo.Collection
       added: (document) => Persistence.added document
       changed: (document) => Persistence.changed document
       removed: (document) => Persistence.removed document
+
+  insert: (document) ->
+    throw new AE.ArgumentException "A persistent collection insert must insert the last edit time." unless document.lastEditTime
+  
+    super arguments...
+
+  update: (selector, modifier) ->
+    throw new AE.ArgumentException "A persistent collection update must set the last edit time." unless modifier.$set?.lastEditTime
+    
+    super arguments...

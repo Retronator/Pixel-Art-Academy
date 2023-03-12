@@ -12,7 +12,24 @@ class Persistence.Profile extends AM.Document
   @Meta
     name: @id()
     
+  @conflictResolutionStrategy = Persistence.ConflictResolutionStrategies.ManualDocument
+  
   @enablePersistence()
   
+  @onConflict: -> (documentClones) ->
+    # We want to take the latest documents, except for synced storages where each provider has their own priority.
+    resolvedDocument = _.cloneDeep _.maxBy _.values(documentClones), (document) => document.lastEditTime
+  
+    # Note that for profiles we're always resolving a conflict against a version already in memory so the synced
+    # storage ID in that case will be the document ID itself (meaning we will not have an entry in synced storages
+    # for it.
+    profileClassId = @id()
+    resolvedDocument.syncedStorages = _.clone documentClones[profileClassId].syncedStorages
+    
+    for syncedStorageId, documentClone of documentClones when syncedStorageId isnt profileClassId
+      resolvedDocument.syncedStorages[syncedStorageId] = documentClone.syncedStorages[syncedStorageId]
+
+    resolvedDocument
+
   hasSyncing: ->
     _.keys(@syncedStorages).length > 0

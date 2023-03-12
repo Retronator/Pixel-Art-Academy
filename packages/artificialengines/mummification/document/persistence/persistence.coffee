@@ -7,10 +7,12 @@ class AM.Document.Persistence
   # profileId: an identifier that ties all persistent documents together to a single profile, owned by a user
   # lastEditTime: the time the document was last edited
   
-  @debug = false
+  @debug = true
   
   @ConflictResolutionStrategies =
     Latest: 'Latest'
+    ManualUser: 'ManualUser'
+    ManualDocument: 'ManualDocument'
   
   @_persistentDocumentClassesById = {}
   @_syncedStoragesById = {}
@@ -42,9 +44,6 @@ class AM.Document.Persistence
     
   @registerSyncedStorage: (syncedStorage) ->
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
-
-  @getProfiles: ->
-    # TODO: Query all registered storages for profiles and merge them together into available profiles.
     
   @createProfile: ->
     new Promise (resolve, reject) =>
@@ -53,6 +52,7 @@ class AM.Document.Persistence
       Persistence.Profile.documents.insert
         _id: profileId
         profileId: profileId
+        lastEditTime: new Date
         syncedStorages: {}
       
       @loadProfile(profileId).then =>
@@ -74,7 +74,7 @@ class AM.Document.Persistence
     
       Promise.all(loadPromises).then (loadDocumentsResults) =>
         documentClonesByClassIdAndId = {}
-        _.merge documentClonesByClassIdAndId, loadDocumentsResults
+        _.merge documentClonesByClassIdAndId, loadDocumentsResults...
   
         documentsByClassIdAndId = {}
         conflictingDocumentClonesByClassIdAndId = {}
@@ -107,24 +107,28 @@ class AM.Document.Persistence
                   resolvedDocument = _.maxBy _.values(documentClones), (document) => document.lastEditTime
                   conflict = false
                   
+                when @ConflictResolutoinStrategies.ManualDocument
+                  # Ask the document class to resolve the conflict.
+                  resolvedDocument = documentClass.onConflict documentClones
+                  
             else
-              resolvedDocument = documentClones[0]
+              resolvedDocument = _.values(documentClones)[0]
           
             if conflict
-              conflictingDocumentClonesById[document.id] = documentClones
+              conflictingDocumentClonesById[documentId] = documentClones
               conflicts = true
               
             else
-              documentsById[document.id] = resolvedDocument
+              documentsById[documentId] = resolvedDocument
           
         if conflicts
           reject
             conflictingDocumentClonesByClassIdAndId: conflictingDocumentClonesByClassIdAndId
             resolutionCallback: (resolutionPromise) =>
               # We expect the caller of the method to return a promise for resolving the conflict.
-              resolutionPromise.then (documentsByClassIdAndId) =>
+              resolutionPromise.then (resolvedDocumentsByClassIdAndId) =>
                 # The conflict was resolved and we received the chosen documents.
-                # TODO: Probably what we want is to receive a resolution strategy and we perform the resolution here.
+                _.merge documentsByClassIdAndId, resolvedDocumentsByClassIdAndId
                 @_endLoad documentsByClassIdAndId
               
         else
@@ -167,6 +171,7 @@ class AM.Document.Persistence
     Persistence.Profile.documents.update profile._id,
       $set:
         "syncedStorages.#{syncedStorageId}": {}
+        lastEditTime: new Date
         
     # Add all documents to the new synced storage.
     syncedStorage = @_syncedStoragesById[syncedStorageId]
@@ -175,6 +180,24 @@ class AM.Document.Persistence
       documentClass.documents.find(profileId: profile._id).forEach (document) => syncedStorage.added document
     
   # Methods for internal use by synced storages
+  
+  @addProfiles: (syncedStorageId, profiles) ->
+    console.log "Adding profiles", syncedStorageId, profiles if @debug
+  
+    for profile in profiles
+      if existingProfile = Persistence.Profile.documents.findOne profile._id
+      
+        unless existingProfile.lastEditTime is profile.lastEditTime
+          resolvedProfile = Persistence.Profile.onConflict
+            "#{Persistence.Profile.id()}": existingProfile
+            "#{syncedStorageId}": profile
+  
+          Persistence.Profile.documents.update resolvedProfile._id, resolvedProfile
+
+      else
+        Persistence.Profile.documents.insert profile
+
+  # Methods for internal use by persistent collections
   
   @added: (document) -> @_informStorages document, 'added'
   @changed: (document) -> @_informStorages document, 'changed'

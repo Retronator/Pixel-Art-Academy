@@ -38,7 +38,10 @@ class LOI.Adventure extends LOI.Adventure
       
       gameState = @gameState()
       console.log "Game state updated, sending to documents ...", gameState if LOI.debug or LOI.Adventure.debugState
-      LOI.GameState.documents.update {profileId}, $set: state: gameState
+      LOI.GameState.documents.update {profileId},
+        $set:
+          state: gameState
+          lastEditTime: new Date
   
     @readOnlyGameState = new ComputedField =>
       return unless profileId = @profileId()
@@ -48,26 +51,36 @@ class LOI.Adventure extends LOI.Adventure
       readOnlyGameState
       
     # See if we have a profile ID stored locally.
-    # if profileId = @_loadStoredProfileId()
-    #   @loadGame profileId
+    if storedProfileId = @_loadStoredProfileId()
+      # Wait until the profile becomes available (or another profile gets loaded).
+      @autorun (computation) =>
+        if @profileId()
+          computation.stop()
+          return
+          
+        if Persistence.Profile.documents.findOne storedProfileId
+          computation.stop()
+          
+          # The profile has been added from synced storage(s), so we can now load it.
+          @loadGame storedProfileId
 
   startNewGame: ->
     # Create a fresh profile and reset the game.
     Persistence.createProfile().then (profileId) =>
       # Create a new game state.
-      LOI.GameState.documents.insert {profileId}
+      LOI.GameState.documents.insert
+        profileId: profileId
+        lastEditTime: new Date
       
       @_changeProfileId profileId
   
   loadGame: (profileId) ->
     # Load the game profile from persistence and activate it.
     Persistence.loadProfile(profileId).then =>
-      console.log "Profile successfully loaded"
       @_changeProfileId profileId
       
-    , (conflictResolution) =>
-      console.log "Resolve conflict", conflictResolution
-      
+    , (conflictResolution) => # TODO
+    
   _changeProfileId: (profileId) ->
     # Reset the interface.
     @interface.reset()
