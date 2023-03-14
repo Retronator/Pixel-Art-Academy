@@ -61,16 +61,10 @@ class LOI.GameState extends AM.Document
     Editable: 'gameState'
     ReadOnly: 'readOnlyGameState'
 
-  constructor: ->
-    super arguments...
-
-    # On the client also transform state from underscores to dots.
-    @state = @constructor._transformStateFromDatabase @state if Meteor.isClient
-
-  @_prepareStateForDatabase: (state) ->
+  @prepareStateForDatabase: (state) ->
     @_renameKeys state, /\./g, '_'
 
-  @_transformStateFromDatabase: (state) ->
+  @transformStateFromDatabase: (state) ->
     @_renameKeys state, /_/g, '.'
 
   @_renameKeys: (entity, from, to) ->

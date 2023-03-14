@@ -32,7 +32,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pixelboy-studyplan');
 
   api.use('retronator:pixelartacademy-learnmode');
-  api.use('retronator:pixelartacademy-learnmode-pixelartfundamentals');
+  api.use('retronator:pixelartacademy-learnmode-intro');
 
   api.export('PixelArtAcademy');
 

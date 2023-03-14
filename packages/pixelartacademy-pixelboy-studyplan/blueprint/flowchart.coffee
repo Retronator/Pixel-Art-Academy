@@ -6,7 +6,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Flowchart
   constructor: (@blueprint) ->
     @$canvas = $('<canvas>')
     @canvas = @$canvas[0]
-    @context = @canvas.getContext '2d'
+    @context = @canvas.getContext '2d', willReadFrequently: true
 
   drawToContext: (context) ->
     # Render the connections to our canvas.

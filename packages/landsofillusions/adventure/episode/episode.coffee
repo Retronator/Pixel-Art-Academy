@@ -58,7 +58,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     # No chapters are active when the whole episode is not accessible.
     return [] unless @meetsAccessRequirement()
 
-    chapter for chapter in @chapters when @chapter.meetsAccessRequirement() chapter.active()
+    chapter for chapter in @chapters when chapter.meetsAccessRequirement() and chapter.active()
 
   ready: ->
     # Episode is ready when its current chapters are ready.

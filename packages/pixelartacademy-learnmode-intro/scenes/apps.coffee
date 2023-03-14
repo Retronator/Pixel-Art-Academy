@@ -1,10 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
-PAF = LM.PixelArtFundamentals
 
-class PAF.Apps extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Apps'
+class LM.Intro.Apps extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Apps'
 
   @location: -> PAA.PixelBoy.Apps
 

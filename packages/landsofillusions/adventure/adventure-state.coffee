@@ -29,7 +29,7 @@ class LOI.Adventure extends LOI.Adventure
     @gameState = new ComputedField =>
       return unless profileId = @profileId()
       
-      gameState = LOI.GameState.documents.findOne({profileId}, fields: state: 1)?.state or {}
+      gameState = LOI.GameState.transformStateFromDatabase LOI.GameState.documents.findOne({profileId}, fields: state: 1)?.state or {}
       console.log "Retrieved new game state", gameState if LOI.debug or LOI.Adventure.debugState
       gameState
   
@@ -40,13 +40,13 @@ class LOI.Adventure extends LOI.Adventure
       console.log "Game state updated, sending to documents ...", gameState if LOI.debug or LOI.Adventure.debugState
       LOI.GameState.documents.update {profileId},
         $set:
-          state: gameState
+          state: LOI.GameState.prepareStateForDatabase gameState
           lastEditTime: new Date
   
     @readOnlyGameState = new ComputedField =>
       return unless profileId = @profileId()
       
-      readOnlyGameState = LOI.GameState.documents.findOne({profileId}, fields: readOnlyState: 1)?.readOnlyState or {}
+      readOnlyGameState = LOI.GameState.transformStateFromDatabase LOI.GameState.documents.findOne({profileId}, fields: readOnlyState: 1)?.readOnlyState or {}
       console.log "Retrieved new read only game state", readOnlyGameState if LOI.debug or LOI.Adventure.debugState
       readOnlyGameState
       

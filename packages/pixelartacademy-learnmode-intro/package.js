@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-learnmode-pixelartfundamentals',
+  name: 'retronator:pixelartacademy-learnmode-intro',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -16,7 +16,7 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFile('pixelartfundamentals');
+  api.addFile('intro');
   api.addFile('scenes/pixelboy');
   api.addFile('scenes/apps');
 
@@ -24,4 +24,13 @@ Package.onUse(function(api) {
 
   api.addFile('start..');
 
+  // Tutorial
+
+  api.addFile('tutorial..');
+
+  api.addFile('tutorial/goals..');
+  api.addFile('tutorial/goals/tutorial');
+  api.addFile('tutorial/goals/pixelartsoftware');
+  api.addFile('tutorial/goals/studyplan');
+  api.addFile('tutorial/goals/snake');
 });

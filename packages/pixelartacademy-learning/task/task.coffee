@@ -91,8 +91,8 @@ class PAA.Learning.Task
   constructor: (@options = {}) ->
     @goal = @options.goal
 
-    # By default the task is related to the current character.
-    @options.characterId ?= => LOI.characterId()
+    # By default the task is related to the current profile.
+    @options.profileId ?= => LOI.adventure.profileId()
 
     # Subscribe to this goal's translations.
     translationNamespace = @id()
@@ -116,33 +116,18 @@ class PAA.Learning.Task
   groupNumber: -> @constructor.groupNumber()
 
   entry: ->
-    selector =
+    PAA.Learning.Task.Entry.documents.findOne
       taskId: @id()
-
-    # See if we have a character selected.
-    if characterId = @options.characterId()
-      # Look for character's entries.
-      selector['character._id'] = characterId
-
-    unless characterId
-      if userId = Meteor.userId()
-        # Look for user's entries.
-        selector['user._id'] = userId
-
-    return unless characterId or userId
-
-    # TODO: Add support for resetting goals/tasks
-    
-    PAA.Learning.Task.Entry.documents.findOne selector
+      profileId: @options.profileId()
 
   completed: ->
-    # We need an entry made by this character.
+    # We need an entry made by this profile.
     @entry()
 
   active: ->
-    # We should only be determining active state for the current character or user.
-    unless @options.characterId() is LOI.characterId()
-      console.warn "Active task determination requested for another character."
+    # We should only be determining active state for the current profile.
+    unless @options.profileId() is LOI.adventure.profileId()
+      console.warn "Active task determination requested for another profile."
       return
 
     # Task is not active after it's completed.
@@ -167,7 +152,7 @@ class PAA.Learning.Task
         when @constructor.PredecessorsCompleteType.Any
           return false if predecessorsCompletedCount is 0
 
-    # TODO: Check that the character has all required interests.
+    # TODO: Check that the profile has all required interests.
 
     # All requirements to be active have been met.
     true

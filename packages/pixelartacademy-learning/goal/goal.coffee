@@ -25,7 +25,7 @@ class PAA.Learning.Goal
   # String to represent the goal in the UI. Note that we can't use
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the goal name."
-    
+  
   # Chapter class that should oversee this goal.
   @chapter: -> throw new AE.NotImplementedException "You must provide the chapter class that activates this goal."
 
@@ -152,8 +152,8 @@ class PAA.Learning.Goal
     paths
 
   constructor: (@options = {}) ->
-    # By default the task is related to the current character.
-    @options.characterId ?= => LOI.characterId()
+    # By default the task is related to the current profile.
+    @options.profileId ?= => LOI.adventure.profileId()
     @options.goal = @
 
     @_tasks = []
@@ -179,7 +179,7 @@ class PAA.Learning.Goal
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
-    
+  
   tasks: -> @_tasks
   finalTasks: -> @_finalTasks
 

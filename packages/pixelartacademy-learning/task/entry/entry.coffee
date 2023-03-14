@@ -8,8 +8,8 @@ PAA = PixelArtAcademy
 class PAA.Learning.Task.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Learning.Task.Entry'
   # profileId: the profile that completed the task
+  # lastEditTime: the time when task was completed
   # taskId: task ID of the task this is an entry for
-  # time: the time when task was completed
   # action: the action representing completion of this task
   #   _id
   #
@@ -42,3 +42,28 @@ class PAA.Learning.Task.Entry extends AM.Document
   @forCharacterTaskIds: @subscription 'forCharacterTaskIds'
   @forCharactersTaskId: @subscription 'forCharactersTaskId'
   @forTaskId: @subscription 'forTaskId'
+  
+  @create: (profileId, situation, taskId, data) ->
+    # Make sure we don't already have an entry for this task. This should not
+    # raise an exception since the client might not have received the entry yet.
+    existing = PAA.Learning.Task.Entry.documents.findOne
+      profileId: profileId
+      taskId: taskId
+    
+    return if existing
+    
+    entry = _.extend
+      profileId: profileId
+      lastEditTime: new Date()
+      taskId: taskId
+    ,
+      data
+    
+    ###
+    actionId = LOI.Memory.Action.do PAA.Learning.Task.Entry.Action.type, characterId, situation, {}
+    
+    entry.action =
+      _id: actionId
+    ###
+  
+    PAA.Learning.Task.Entry.documents.insert entry

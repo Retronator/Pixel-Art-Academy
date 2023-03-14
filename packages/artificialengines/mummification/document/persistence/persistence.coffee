@@ -7,7 +7,7 @@ class AM.Document.Persistence
   # profileId: an identifier that ties all persistent documents together to a single profile, owned by a user
   # lastEditTime: the time the document was last edited
   
-  @debug = true
+  @debug = false
   
   @ConflictResolutionStrategies =
     Latest: 'Latest'
@@ -18,6 +18,8 @@ class AM.Document.Persistence
   @_syncedStoragesById = {}
 
   @_activeProfileId = new ReactiveField null
+  
+  @profileReady = new ReactiveField false
   
   Meteor.startup =>
     @_activeProfile = new ComputedField =>
@@ -142,11 +144,15 @@ class AM.Document.Persistence
     
       for documentId, document of documentsById
         documentClass.documents.insert document
+  
+    @profileReady true
 
   @unloadProfile: ->
     profileId = @_activeProfileId()
     throw new AE.InvalidOperationException "There is no loaded profile to unload." unless profileId
-
+  
+    @profileReady false
+  
     @flushChanges().then =>
       # Deactivate the profile first so that removals will not be seen as active actions.
       @_activeProfileId null

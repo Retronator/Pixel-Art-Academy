@@ -280,6 +280,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
       # Expand goal if desired.
       @_goalComponentsById[options.goalId].expanded true if options.expandOnEnd
+      
+      # Update the state to write lazy updates of fields.
+      LOI.adventure.gameState.updated()
 
       # Delete goal if we're over trash.
       @studyPlan.removeGoal options.goalId if @mouseOverTrash()
