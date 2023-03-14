@@ -21,8 +21,13 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
+  
+  saveVisible: ->
+    return false # TODO
 
   loadVisible: ->
+    return false # TODO
+    
     # Load game in Learn Mode is visible only on the landing page.
     @options.landingPage
     
@@ -34,6 +39,8 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       super arguments...
 
   creditsVisible: ->
+    return false # TODO
+    
     # Credits are visible only on the landing page.
     @options.landingPage
 
@@ -56,6 +63,8 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       LOI.adventure.interface.goToPlay()
   
   onClickQuitToMenu: (event) ->
+    return @_quitGame() # TODO: Remove when saving is enabled.
+    
     # Check if the profile is being synced.
     if LOI.adventure.profile().hasSyncing()
       @_quitGame()
@@ -121,3 +130,6 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       LOI.adventure.interface.resize()
     ,
       1000
+
+  onClickBackToMenu: (event) ->
+    @currentScreen @constructor.Screens.MainMenu

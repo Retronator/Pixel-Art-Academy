@@ -18,7 +18,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Play the game"
 
     @instructions: -> """
-      Get PICO-8 and try out the game Snake. Notice the art assets included (green snake and brown food).
+      In the PICO-8 app, try out the game Snake. Notice the art assets included (green snake and brown food).
       Score at least 5 points to continue.
     """
 
@@ -44,7 +44,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Draw Snake sprites"
 
     @instructions: -> """
-      Talk to Reuben about drawing the game sprites. After you get familiar with pixel art software, draw new sprites
+      After you get familiar with pixel art software, draw new sprites
       for the snake body and food piece in the Projects section of the Drawing app.
     """
 
@@ -80,8 +80,8 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "See sprites in action"
 
     @instructions: -> """
-      With the game sprites replaced, run Pico-8 again and see how your art looks in the game. Do any updates until
-      you're happy. Score at least 10 points and talk to Reuben to complete the project.
+      With the game sprites replaced, run PICO-8 again and see how your art looks in the game. Do any updates until
+      you're happy. Score at least 10 points to complete the project.
     """
 
     @interests: -> ['learn mode tutorial project']

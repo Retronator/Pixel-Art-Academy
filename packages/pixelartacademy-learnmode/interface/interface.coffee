@@ -24,6 +24,7 @@ class LM.Interface extends LOI.Interface
     @studio = new @constructor.Studio
 
     @introFadeComplete = new ReactiveField false
+    @introFadeFast = new ReactiveField false
     
     @waiting = new ReactiveField true
     
@@ -35,8 +36,6 @@ class LM.Interface extends LOI.Interface
       return unless LOI.adventure.ready()
       computation.stop()
     
-      @introFadeComplete true
-
       if LOI.adventure.currentLocationId() is LM.Locations.MainMenu.id()
         # We're starting in the menu (such as when no profile has been stored as active yet), so simply fade it in.
         Meteor.setTimeout =>
@@ -50,7 +49,12 @@ class LM.Interface extends LOI.Interface
         # We're starting directly in play so we have to make the studio focus on the top and open the PixelBoy.
         @studio.setFocus @constructor.Studio.FocusPoints.Play
         @_openPixelBoy()
-    
+        
+        # We want a fast transition since there is no waiting for the menu fade.
+        @introFadeFast true
+  
+      @introFadeComplete true
+
   goToPlay: ->
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeOut()
@@ -87,6 +91,9 @@ class LM.Interface extends LOI.Interface
         
   introFadeCompleteClass: ->
     'complete' if @introFadeComplete()
+  
+  introFadeFastClass: ->
+    'fast' if @introFadeFast()
   
   waitingOverlayVisibleClass: ->
     'visible' if @waiting()
