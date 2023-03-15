@@ -211,6 +211,11 @@ class AM.Document.Persistence
   
   @_informStorages: (document, methodName) ->
     console.log "Document", methodName, document if @debug
+
+    # Only sync documents belonging to the active profile. Note: We want to check _activeProfileId directly because
+    # _activeProfile only gets created after startup, but assets (without profile ID) can already start being added
+    # before that happens.
+    return unless document.profileId and document.profileId is @_activeProfileId()
     
     return unless activeProfile = @_activeProfile()
     

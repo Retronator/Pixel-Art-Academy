@@ -11,6 +11,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:artificialengines');
+  api.use('retronator:artificialengines-pages');
+
   api.use('retronator:retronator-accounts');
   api.use('retronator:retronator-store');
 

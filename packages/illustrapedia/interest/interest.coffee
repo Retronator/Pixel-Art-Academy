@@ -29,7 +29,9 @@ class IL.Interest extends AM.Document
         
         [interest._id, searchTerms]
       ]
-      
+
+  @cacheUrl = '/illustrapedia/interest/cache.json'
+  
   # Methods
 
   @insert: @method 'insert'

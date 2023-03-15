@@ -15,12 +15,14 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-accounts');
 
   api.export('Illustrapedia');
-  
+
   api.addFile('illustrapedia');
 
   api.addFile('interest..');
+  api.addClientFile('interest/interest-client');
   api.addServerFile('interest/interest-server');
   api.addServerFile('interest/methods-server');
+  api.addServerFile('interest/cache-server');
   api.addServerFile('interest/subscriptions');
 
   // Pages

@@ -23,6 +23,7 @@ Package.onUse(function(api) {
 
   api.addFile('layouts..');
   api.addComponent('layouts/publicaccess..');
+  api.addUnstyledComponent('layouts/adminaccess..');
 
   api.addFile('babel/pages');
   api.addUnstyledComponent('babel/admin..');
@@ -31,8 +32,12 @@ Package.onUse(function(api) {
 
   api.addFile('mummification/pages');
   api.addUnstyledComponent('mummification/admin..');
+
   api.addUnstyledComponent('mummification/admin/databasecontent..');
   api.addServerFile('mummification/admin/databasecontent/server');
+
+  api.addUnstyledComponent('mummification/admin/documentcaches..');
+  api.addServerFile('mummification/admin/documentcaches/server');
 
   api.addFile('pyramid/pages');
   api.addComponent('pyramid/interpolation..');

@@ -1,13 +1,12 @@
 AM = Artificial.Mummification
 
-Request = request
-requestGet = Meteor.wrapAsync Request.get, Request
-
 class AM.DatabaseContent
   @exportGetters = []
   @importTransforms = {}
   @documentImportPriority = {}
   @startupHandlers = []
+  
+  @setAssets: (@assets) ->
 
   @addToExport: (getter) ->
     @exportGetters.push getter
@@ -24,8 +23,8 @@ class AM.DatabaseContent
   @export: (archive) ->
     console.log "Starting database content export ..."
 
-    if directoryResponseContent = HTTP.get(@directoryUrl)?.content
-      currentDirectory = EJSON.parse directoryResponseContent
+    if directoryJson = AM.DatabaseContent.assets.getText AM.DatabaseContent.directoryUrl
+      currentDirectory = EJSON.parse directoryJson
       console.log "Retrieved current directory."
 
       # Create a map of documents.
@@ -134,17 +133,17 @@ class AM.DatabaseContent
           # The database document is older so we need to update it.
           do (documentInformation, exportedLastEditTime, documentClass) =>
             updatePromises.push new Promise (resolve, reject) =>
-              url = Meteor.absoluteUrl "databasecontent/#{documentInformation.path}"
-
-              requestGet url, encoding: null, (error, response, body) =>
+              url = "databasecontent/#{documentInformation.path}"
+  
+              AM.DatabaseContent.assets.getBinary url, (error, arrayBuffer) =>
                 if error
                   console.error "Error retrieving database content file at url", url
                   resolve()
                   return
-
+                  
                 # Retrieve document from the data.
                 console.log "Importing", documentInformation.path
-                importedDocument = documentClass.deserializeDatabaseContent body, documentInformation
+                importedDocument = documentClass.deserializeDatabaseContent arrayBuffer, documentInformation
 
                 unless importedDocument
                   console.error "Couldn't extract document from file at url", url

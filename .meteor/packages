@@ -36,4 +36,6 @@ retronator:peerdb-migrations
 retronator:blaze-components
 retronator:blaze-common-component
 
+retronator:artificialengines
+
 retronator:pixelartacademy-learnmode-app

@@ -8,7 +8,7 @@ LOI.Authorize.profileAction = (profileId) ->
   user = Retronator.requireUser()
   
   # Profile must exist.
-  profile = Persistence.Profile.findOne characterId
+  profile = Persistence.Profile.documents.findOne profileId
   throw new AE.ArgumentException "Profile not found." unless profile
 
   # The profile must belong to the logged-in user, or it is an admin performing the action.

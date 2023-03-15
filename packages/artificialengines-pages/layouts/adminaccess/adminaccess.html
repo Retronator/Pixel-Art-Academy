@@ -1,0 +1,15 @@
+<template name="Artificial.Pages.Layouts.AdminAccess">
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser}}
+      {{#if hasItem 'Retronator.Admin'}}
+        {{> Render page}}
+      {{else}}
+        <p>You need to have admin access to view this page.</p>
+      {{/if}}
+    {{else}}
+      {{> Retronator.Accounts.Components.SignIn}}
+    {{/if}}
+  {{/if}}
+</template>

@@ -46,6 +46,7 @@ Package.onUse(function(api) {
   api.addFile('authorize/authorize');
   api.addFile('authorize/user');
   api.addFile('authorize/character');
+  api.addFile('authorize/profile');
 
   // Settings
 

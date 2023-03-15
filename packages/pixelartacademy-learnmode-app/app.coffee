@@ -1,5 +1,5 @@
 AE = Artificial.Everywhere
-AM = Artificial.Mirage
+AM = Artificial.Mummification
 AB = Artificial.Base
 LM = PixelArtAcademy.LearnMode
 
@@ -21,7 +21,10 @@ class LM.App extends Artificial.Base.App
   
   constructor: ->
     super arguments...
-    
+  
+    # Instantiate all app packages, which register router URLs.
+    new Artificial.Pages
+  
     # We manually add the Learn Mode route without a domain to point to Learn Mode
     # so we can access it without etc.hosts modifications on standalone clients.
     LM.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', LM.Adventure

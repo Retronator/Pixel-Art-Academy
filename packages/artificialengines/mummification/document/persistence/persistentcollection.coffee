@@ -4,7 +4,7 @@ AM = Artificial.Mummification
 Persistence = AM.Document.Persistence
 
 class Persistence.PersistentCollection extends Mongo.Collection
-  constructor: (documentClass, options) ->
+  constructor: (documentClass) ->
     super null, transform: (document) => new documentClass document
     
     @documentClass = documentClass
@@ -15,7 +15,7 @@ class Persistence.PersistentCollection extends Mongo.Collection
       removed: (document) => Persistence.removed document
 
   insert: (document) ->
-    throw new AE.ArgumentException "A persistent collection insert must insert the last edit time." unless document.lastEditTime
+    throw new AE.ArgumentException "A persistent collection insert of a profiled document must have the last edit time." if document.profileId and not document.lastEditTime
   
     super arguments...
 

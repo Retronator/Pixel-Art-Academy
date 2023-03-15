@@ -214,7 +214,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/document/persistence/syncedstorages..');
   api.addFile('mummification/document/persistence/syncedstorages/localstorage');
 
-  // We add profile last since it also is a persistent document.
+  // We add profile last since it's a persistent document itself.
   api.addFile('mummification/document/persistence/profile');
 
   api.addFile('mummification/document/versioning..');
@@ -231,9 +231,11 @@ Package.onUse(function(api) {
   api.addFile('mummification/hierarchy/template');
   api.addFile('mummification/hierarchy/location');
 
-  api.addFile('mummification/content..');
-
   // Game content
+
+  api.addServerFile('mummification/content..');
+
+  api.addServerFile('mummification/documentcaches-server/documentcaches');
 
   api.addServerFile('mummification/databasecontent-server/databasecontent');
   api.addServerFile('mummification/databasecontent-server/initialize');
