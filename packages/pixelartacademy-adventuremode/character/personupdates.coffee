@@ -6,7 +6,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
   @id: -> "PixelArtAcademy.PersonUpdates"
 
   @scriptUrls: -> [
-    'retronator_pixelartacademy/character/personupdates.script'
+    'retronator_pixelartacademy-adventuremode/character/personupdates.script'
   ]
   
   class @Script extends LOI.Adventure.Script

@@ -26,7 +26,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
   
     # We can only deal with assets that can return pixels.
     filterAsset = (asset) =>
-      if asset instanceof PAA.Practice.Project.Asset.Sprite or asset instanceof PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset then asset else null
+      if asset instanceof PAA.Practice.Project.Asset.Bitmap or asset instanceof PAA.PixelBoy.Apps.Drawing.Portfolio.ArtworkAsset then asset else null
   
     @activeAsset = new ComputedField => filterAsset @drawing.portfolio().activeAsset()?.asset
     @displayedAsset = new ComputedField => filterAsset @drawing.portfolio().displayedAsset()?.asset

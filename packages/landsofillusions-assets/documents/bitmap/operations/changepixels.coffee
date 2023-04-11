@@ -23,7 +23,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
     @_hashCode = null
   
   execute: (document) ->
-    pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, document.pixelFormat...
+    pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, document.pixelFormat.attributeIds...
     changeArea = new LOI.Assets.Bitmap.Area @bounds.width, @bounds.height, pixelFormat, @_pixelsData or @compressedPixelsData, not @_pixelsData
     layer = document.getLayer @layerAddress
     
@@ -37,7 +37,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
     layer.getOperationChangedFields compressedPixelsData: true
     
   combine: (document, other) ->
-    pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, document.pixelFormat...
+    pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, document.pixelFormat.attributeIds...
   
     changeArea = new LOI.Assets.Bitmap.Area @bounds.width, @bounds.height, pixelFormat, @_pixelsData or @compressedPixelsData, not @_pixelsData
     otherChangeArea = new LOI.Assets.Bitmap.Area other.bounds.width, other.bounds.height, pixelFormat, other._pixelsData or other.compressedPixelsData, not other._pixelsData
@@ -72,7 +72,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
         continue if sourceAreaOperationMaskAttribute and not sourceAreaOperationMaskAttribute.pixelWasChanged sourceX, sourceY
 
         # It was, copy all the attributes from the source to the destination.
-        for attributeId in pixelFormat
+        for attributeId in pixelFormat.attributeIds
           sourceAreaAttribute = source.area.attributes[attributeId]
           destinationAreaAttribute = destination.area.attributes[attributeId]
 

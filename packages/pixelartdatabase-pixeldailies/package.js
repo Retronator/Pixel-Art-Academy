@@ -11,6 +11,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:artificialengines-twitter');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartdatabase');
   api.use('chfritz:easycron');

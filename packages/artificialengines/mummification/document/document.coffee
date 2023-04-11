@@ -55,9 +55,9 @@ class AM.Document extends Document
       name: "#{@type or @id()}.#{name}"
   
   @subscription: (name, options) ->
-    return new AB.Subscription _.extend {}, options,
+    return new AM.DatabaseContent.Subscription _.extend {}, options,
       name: "#{@type or @id()}.#{name}"
-      
+
   @getClassForId: (id) ->
     @_documentClassesById[id]
   
@@ -84,6 +84,9 @@ class AM.Document extends Document
   @enableVersioning: ->
     @enablePersistence @
     AM.Document.Versioning.initializeDocumentClass @
+    
+  @enableDatabaseContent: ->
+    AM.DatabaseContent.initializeDocumentClass @ if Meteor.isClient
   
   @getDocumentForId: (id) ->
     return unless document = @documents.findOne id
@@ -118,6 +121,15 @@ class AM.Document extends Document
         multi: true
 
       console.log "Substituted", referrer.sourceDocument.id(), referrer.sourcePath, sourceId, "with", updatePath, targetId, count, "times"
+      
+  @getPublishingDocuments: ->
+    if Meteor.isServer
+      # On the server, publishing happens from the database documents.
+      @documents
+      
+    else
+      # On the client, publishing happens from the content documents.
+      @contentDocuments
 
   # Casting functionality based on implementation by @mitar.
   cast: (typeFieldName = 'type') ->
@@ -163,7 +175,7 @@ class AM.Document extends Document
 
     for key, value of document when key in documentFields
       # Make sure the constructed object did not replace a field with a method.
-      assert not _.isFunction value
+      throw new AE.InvalidOperationException "Field #{key} has been overwritten with a method during refresh.", document if _.isFunction value
 
       # Transfer the value to ourselves.
       @[key] = value

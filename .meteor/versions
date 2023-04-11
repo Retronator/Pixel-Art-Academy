@@ -1,7 +1,7 @@
-accounts-base@2.2.6
+accounts-base@2.2.7
 accounts-facebook@1.3.3
 accounts-oauth@1.4.2
-accounts-password@2.3.3
+accounts-password@2.3.4
 accounts-twitter@1.5.0
 accounts-ui-unstyled@1.7.0
 allow-deny@1.1.1
@@ -74,13 +74,13 @@ modern-browsers@0.1.9
 modules@0.19.0
 modules-runtime@0.13.1
 momentjs:moment@2.29.3
-mongo@1.16.4
+mongo@1.16.5
 mongo-decimal@0.1.3
 mongo-dev-server@1.1.0
 mongo-id@1.0.8
 mongo-livedata@1.0.12
-npm-mongo@4.12.1
-oauth@2.1.3
+npm-mongo@4.14.0
+oauth@2.2.0
 oauth-encryption@1.3.2
 oauth1@1.5.1
 oauth2@1.3.2
@@ -121,6 +121,7 @@ retronator:landsofillusions-assets@0.0.1
 retronator:peerdb@0.27.0
 retronator:peerdb-migrations@1.1.1
 retronator:pixelartacademy@0.1.0
+retronator:pixelartacademy-challenges@0.1.0
 retronator:pixelartacademy-learning@0.0.1
 retronator:pixelartacademy-learnmode@0.1.0
 retronator:pixelartacademy-learnmode-app@0.0.1
@@ -147,7 +148,7 @@ shell-server@0.5.0
 socket-stream-client@0.5.0
 spacebars@1.3.0
 spacebars-compiler@1.3.1
-standard-minifier-css@1.8.3
+standard-minifier-css@1.9.0
 standard-minifier-js@2.8.1
 stylus@2.513.13
 templating@1.4.2

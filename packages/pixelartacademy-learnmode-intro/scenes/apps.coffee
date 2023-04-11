@@ -11,4 +11,5 @@ class LM.Intro.Apps extends LOI.Adventure.Scene
 
   things: -> [
     PAA.PixelBoy.Apps.StudyPlan
+    PAA.PixelBoy.Apps.Drawing if PAA.PixelBoy.Apps.StudyPlan.hasGoal LM.Intro.Tutorial.Goals.PixelArtSoftware
   ]

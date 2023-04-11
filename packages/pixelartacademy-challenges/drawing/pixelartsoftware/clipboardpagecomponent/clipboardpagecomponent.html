@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent">
+  <div class="pixelartacademy-season1-episode0-chapter1-challenges-drawing-pixelartsoftware-copyreference-clipboardpagecomponent">
+    <div class="content">
+      <div class="template-area">
+        <h2>Template</h2>
+        <a class="template asset" href="{{copyReference.templateUrl}}" download="template.png" {{style templateStyle}}>
+          <img class="image" src="{{copyReference.templateUrl}}"/>
+        </a>
+        <p>The template matches the size of the bitmap and includes all the required colors.</p>
+      </div>
+      <div class="reference-area">
+        <h2>Reference</h2>
+        <a class="reference asset" href="{{copyReference.referenceUrl}}" download="reference.png">
+          <img class="image" src="{{copyReference.referenceUrl}}"/>
+        </a>
+        <p>Reference card of the bitmap to be drawn.</p>
+      </div>
+    </div>
+  </div>
+</template>

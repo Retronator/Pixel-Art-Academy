@@ -89,40 +89,6 @@ Package.onUse(function(api) {
   api.addThing('chapter1/groups/admissionsstudygroup/coordinatorconversation');
   api.addServerFile('chapter1/groups/admissionsstudygroup/subscriptions');
 
-  api.addFile('chapter1/challenges..');
-  api.addFile('chapter1/challenges/drawing..');
-
-  api.addFile('chapter1/challenges/drawing/pixelartsoftware..');
-  api.addFile('chapter1/challenges/drawing/pixelartsoftware/copyreference');
-  api.addFile('chapter1/challenges/drawing/pixelartsoftware/errorenginecomponent');
-  api.addFile('chapter1/challenges/drawing/pixelartsoftware/assets');
-  api.addUnstyledComponent('chapter1/challenges/drawing/pixelartsoftware/briefcomponent..');
-  api.addComponent('chapter1/challenges/drawing/pixelartsoftware/clipboardpagecomponent..');
-
-  api.addFile('chapter1/challenges/drawing/tutorial..');
-
-  api.addFile('chapter1/challenges/drawing/tutorial/basics..');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/pencil');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/eraser');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill2');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill3');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/basictools');
-  api.addFile('chapter1/challenges/drawing/tutorial/basics/shortcuts');
-
-  api.addFile('chapter1/challenges/drawing/tutorial/colors..');
-  api.addFile('chapter1/challenges/drawing/tutorial/colors/colorswatches');
-  api.addFile('chapter1/challenges/drawing/tutorial/colors/colorpicking');
-  api.addFile('chapter1/challenges/drawing/tutorial/colors/quickcolorpicking');
-  api.addServerFile('chapter1/challenges/drawing/tutorial/colors/palette-server');
-
-  api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
-  api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');
-  api.addFile('chapter1/challenges/drawing/tutorial/helpers/movecanvas');
-  api.addFile('chapter1/challenges/drawing/tutorial/helpers/undoredo');
-  api.addFile('chapter1/challenges/drawing/tutorial/helpers/lines');
-  api.addFile('chapter1/challenges/drawing/tutorial/helpers/references');
-
   // Intro
 
   api.addFile('chapter1/sections/intro..');

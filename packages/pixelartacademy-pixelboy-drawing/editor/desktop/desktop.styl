@@ -71,9 +71,10 @@
         .landsofillusions-assets-components-navigator
           transition-delay 0.5s
 
-      .background
-        opacity 1
-        transition all 0s
+      .pixelartacademy-pixelboy-apps-drawing-editor-desktop-pixelcanvas
+        &::after
+          opacity 1
+          transition all 0s
 
   .pixelartacademy-pixelboy-apps-drawing-editor-desktop
     absolute-cover()
@@ -124,12 +125,14 @@
       .fatamorgana-area.application
         position initial
 
-    .background
-      absolute-cover()
-      z-index 0
-      background image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem
-      opacity 0
-      transition all 0.2s 1s
+    .pixelartacademy-pixelboy-apps-drawing-editor-desktop-pixelcanvas
+      &::after
+        content ''
+        absolute-cover()
+        z-index 0
+        background image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem
+        opacity 0
+        transition all 0.2s 1s
 
     .table-item
     .fatamorgana-toolbox .tools .tool

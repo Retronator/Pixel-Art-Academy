@@ -28,8 +28,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @Meta
     name: @id()
 
-  @className: 'Sprite'
+  @enablePersistence()
 
+  @className: 'Sprite'
+  
   # Subscriptions
   
   @allGeneric: @subscription 'allGeneric'

@@ -2,8 +2,6 @@ LOI = LandsOfIllusions
 
 class PixelArtAcademy.AdventureMode
   constructor: ->
-    super arguments...
-    
     # Create the main adventure engine url capture.
     Retronator.App.addPublicPage 'pixelart.academy/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', @constructor.Adventure
 

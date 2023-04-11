@@ -189,3 +189,7 @@ class AB.Translation extends AM.Document
             best.languageRegion = languageNode.best.languageRegion
 
     node.best = best
+    
+if Meteor.isServer
+  # Add highest priority for importing translations since they're always used from other documents.
+  AM.DatabaseContent.setDocumentImportPriority Artificial.Babel.Translation.id(), 100

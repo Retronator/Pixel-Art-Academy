@@ -22,12 +22,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
   
-  saveVisible: ->
-    return false # TODO
-
   loadVisible: ->
-    return false # TODO
-    
     # Load game in Learn Mode is visible only on the landing page.
     @options.landingPage
     

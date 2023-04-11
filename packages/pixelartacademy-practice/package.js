@@ -11,8 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '4.2.2',
-  'pngjs': '2.3.0'
+  'quill-delta': '4.2.2'
 });
 
 Package.onUse(function(api) {
@@ -78,23 +77,21 @@ Package.onUse(function(api) {
   api.addFile('project/workbench');
   api.addFile('project/asset');
 
-  api.addFile('project/assets/sprite..');
-  api.addComponent('project/assets/sprite/portfoliocomponent..');
-  api.addComponent('project/assets/sprite/clipboardcomponent..');
-  api.addUnstyledComponent('project/assets/sprite/briefcomponent..');
+  api.addFile('project/assets/bitmap..');
+  api.addComponent('project/assets/bitmap/portfoliocomponent..');
+  api.addComponent('project/assets/bitmap/clipboardcomponent..');
+  api.addUnstyledComponent('project/assets/bitmap/briefcomponent..');
 
   // Challenges
 
   api.addFile('challenges..');
   api.addFile('challenges/drawing..');
 
-  api.addFile('challenges/drawing/assets/tutorialsprite..');
-  api.addClientFile('challenges/drawing/assets/tutorialsprite/tutorialsprite-client');
-  api.addServerFile('challenges/drawing/assets/tutorialsprite/tutorialsprite-server');
-  api.addClientFile('challenges/drawing/assets/tutorialsprite/methods-client');
-  api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
-  api.addFile('challenges/drawing/assets/tutorialsprite/enginecomponent');
-  api.addUnstyledComponent('challenges/drawing/assets/tutorialsprite/briefcomponent..');
+  api.addFile('challenges/drawing/assets/tutorialbitmap..');
+  api.addFile('challenges/drawing/assets/tutorialbitmap/tutorialbitmap-create');
+  api.addFile('challenges/drawing/assets/tutorialbitmap/tutorialbitmap-reset');
+  api.addFile('challenges/drawing/assets/tutorialbitmap/enginecomponent');
+  api.addUnstyledComponent('challenges/drawing/assets/tutorialbitmap/briefcomponent..');
 
   // Software
   api.addFile('software..');

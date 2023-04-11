@@ -20,6 +20,7 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
     
     else
       @_loadersUpdatedDependency.depend()
+      null
 
   reportExecuteActionError: (id) ->
     @_loaders[id].reportExecuteActionError()

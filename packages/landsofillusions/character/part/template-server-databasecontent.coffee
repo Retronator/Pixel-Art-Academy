@@ -65,7 +65,8 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
       else
         console.warn "Template did not generate a preview image or text."
         return
-
+  
+    plainData: @
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.template.#{extension}"
     lastEditTime: @lastEditTime

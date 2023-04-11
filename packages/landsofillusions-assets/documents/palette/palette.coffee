@@ -13,13 +13,19 @@ class LOI.Assets.Palette extends AM.Document
   # lospecSlug: the URL slug used on Lospec for this palette
   @Meta
     name: @id()
-
-  @all: @subscription 'all'
-  @allLospec: @subscription 'allLospec'
-  @forId: @subscription 'forId'
-  @forName: @subscription 'forName'
   
-  @insert: @method 'insert'
+  @enableDatabaseContent()
+  
+  @databaseContentInformationFields =
+    name: 1
+    lospecSlug: 1
+
+  @all = @subscription 'all'
+  @allLospec = @subscription 'allLospec'
+  @forId = @subscription 'forId'
+  @forName = @subscription 'forName'
+  
+  @insert = @method 'insert'
 
   # Enumeration of palette names provided by the system.
   @SystemPaletteNames:
@@ -30,6 +36,8 @@ class LOI.Assets.Palette extends AM.Document
 
   # Default palette is the modified Atari 2600.
   @defaultPaletteName = @SystemPaletteNames.pixelArtAcademy
+
+  @imageUrl = "/landsofillusions/assets/palette.png"
 
   @defaultPalette: ->
     @documents.findOne name: @defaultPaletteName

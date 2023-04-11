@@ -29,11 +29,18 @@ class AM.Component extends CommonComponent
     super arguments...
 
     AB.subscribeComponent @ if Meteor.isClient
+  
+    @_contentSubscriptionHandles = []
 
   onDestroyed: ->
     super arguments...
 
     AB.unsubscribeComponent @ if Meteor.isClient
+    
+    handle.stop() for handle in @_contentSubscriptionHandles
+    
+  subscribeContent: ->
+    @_contentSubscriptionHandles.push Artificial.Mummification.DatabaseContent.subscribe arguments
 
   # Modified firstNode and lastNode helpers that skip over text nodes. Useful if the component doesn't have
   # persistent first and last nodes, since the original helpers will point to surrounding text elements.
@@ -176,7 +183,7 @@ class AM.Component extends CommonComponent
 
   @wipSuffix = 'wip'
 
-  # The semantic version of this component, so we can know when we need to fetch assets (images, scripts) again. 
+  # The semantic version of this component, so we can know when we need to fetch assets (images, scripts) again.
   # Null means this component is not versioned and the version resolution should be checked in an ancestor component
   # instead. You can also use the -wip suffix to force constant reloads and recompiles.
   @version: -> null

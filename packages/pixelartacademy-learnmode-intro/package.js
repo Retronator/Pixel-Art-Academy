@@ -19,6 +19,8 @@ Package.onUse(function(api) {
   api.addFile('intro');
   api.addFile('scenes/pixelboy');
   api.addFile('scenes/apps');
+  api.addFile('scenes/editors');
+  api.addFile('scenes/drawingchallenges');
 
   // Start
 

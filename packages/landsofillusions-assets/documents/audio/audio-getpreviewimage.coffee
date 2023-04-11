@@ -24,7 +24,7 @@ LOI.Assets.Audio::getPreviewImage = ->
   bounds.width++
   bounds.height++
 
-  canvas = new AM.Canvas bounds.width, bounds.height
+  canvas = new AM.ReadableCanvas bounds.width, bounds.height
 
   # Draw connections to canvas.
   canvas.context.strokeStyle = '#929292'

@@ -23,7 +23,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
         # Create surface data.
         surfaceSourceWidth = 100
         surfaceSourceHeight = 100
-        surfaceCanvas = new AM.Canvas surfaceSourceWidth, surfaceSourceHeight
+        surfaceCanvas = new AM.ReadableCanvas surfaceSourceWidth, surfaceSourceHeight
         surfaceImageData = surfaceCanvas.getFullImageData()
 
         for x in [0...surfaceSourceWidth]

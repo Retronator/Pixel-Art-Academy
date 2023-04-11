@@ -4,27 +4,25 @@ LOI = LandsOfIllusions
 
 class PAA.Practice.Project extends AM.Document
   @id: -> 'PixelArtAcademy.Practice.Project'
+  # profileId: profile that created the project
+  # lastEditTime: the time the document was last edited
   # startTime: when the project was started
   # endTime: when the project was ended
   # type: project identifier that matches the project's thing ID
-  # characters: array of characters who work on this project
-  #   _id
-  #   avatar
-  #     fullName
   # assets: array of assets that are part of this project
   #   id: unique asset identifier
   #   type: what kind of asset this is
   #
-  #   SPRITE
-  #   sprite: reference to a sprite
-  #     _id
+  #   BITMAP
+  #   bitmapId: reference to a bitmap
   @Meta
     name: @id()
     fields: =>
-      characters: [Document.ReferenceField LOI.Character, ['avatar.fullName']]
       assets: [
-        sprite: Document.ReferenceField LOI.Assets.Sprite
+        bitmap: Document.ReferenceField LOI.Assets.Bitmap
       ]
+      
+  @enablePersistence()
 
   # Subscriptions
 

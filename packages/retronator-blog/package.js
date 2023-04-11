@@ -16,6 +16,7 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:artificialengines-tumblr')
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartdatabase');
   api.use('chfritz:easycron');
@@ -30,7 +31,7 @@ Package.onUse(function(api) {
   api.addServerFile('server');
   api.addServerFile('server-processpost');
   api.addServerFile('server-renderwebsitepreview');
-  
+
   // Post
 
   api.addFile('post/post');
@@ -38,7 +39,7 @@ Package.onUse(function(api) {
   api.addServerFile('post/methods-server');
 
   api.addServerFile('methods-server');
-  
+
   // Website
 
   api.addFile('website/website');

@@ -65,7 +65,7 @@ class AM.EmbeddedImageData
     magnification++ while maxSize * magnification < options.minimumSize and magnification < options.maximumMagnification
 
     # Create the canvas and fill it with background color.
-    canvas = new Artificial.Mirage.Canvas width * magnification, height * magnification
+    canvas = new Artificial.Mirage.ReadableCanvas width * magnification, height * magnification
 
     context = canvas.context
     context.fillStyle = options.backgroundColor

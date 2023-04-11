@@ -29,7 +29,8 @@ class LOI.Character.PreMadeCharacter extends LOI.Character.PreMadeCharacter
 
     # Encode the PNG.
     arrayBuffer = PNG.encode imageData
-
+  
+    plainData: @
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.premadecharacter.png"
     lastEditTime: @lastEditTime

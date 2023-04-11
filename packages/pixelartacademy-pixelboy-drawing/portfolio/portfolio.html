@@ -75,14 +75,16 @@
                   </div>
                 {{/if}}
               </div>
-              <div class="settings-section">
-                <div class="title">External software</div>
-                  <ul class="external editors">
-                    {{#each externalSoftware}}
-                      <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
-                    {{/each}}
-                  </ul>
-              </div>
+              {{#unless isLearnMode}}
+                <div class="settings-section">
+                  <div class="title">External software</div>
+                    <ul class="external editors">
+                      {{#each externalSoftware}}
+                        <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
+                      {{/each}}
+                    </ul>
+                </div>
+              {{/unless}}
             </div>
           </div>
         </li>

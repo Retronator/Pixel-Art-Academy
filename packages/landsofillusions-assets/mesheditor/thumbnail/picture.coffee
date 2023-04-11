@@ -40,7 +40,7 @@ class LOI.Assets.MeshEditor.Thumbnail.Picture
 
     # Build a new canvas if needed.
     unless @_canvas?.width is bounds.width and @_canvas?.height is bounds.height
-      @_canvas = new AM.Canvas bounds.width, bounds.height
+      @_canvas = new AM.ReadableCanvas bounds.width, bounds.height
 
     @_imageData = @_canvas.getFullImageData()
 

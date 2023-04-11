@@ -41,9 +41,11 @@ Package.onUse(function(api) {
   api.addFile('documents/image/methods');
 
   api.addFile('documents/palette..');
+  api.addServerFile('documents/palette/palette-server-databasecontent');
+  api.addServerFile('documents/palette/server');
   api.addFile('documents/palette/methods');
   api.addFile('documents/palette/atari2600');
-  api.addServerFile('documents/palette/subscriptions');
+  api.addFile('documents/palette/subscriptions');
   api.addServerFile('documents/palette/migrations/0000-renameatari2600topixelartacademy');
 
   api.addServerFile('documents/palette/palettes-server/pixelartacademy');
@@ -154,6 +156,8 @@ Package.onUse(function(api) {
   api.addFile('documents/audio/methods/updatenode');
   api.addFile('documents/audio/methods/updatenodeparameters');
   api.addFile('documents/audio/methods/updateconnections');
+
+  api.addServerFile('documents/asset/migrations/0000-moveauthorstoprofileid');
 
   // Upload
 

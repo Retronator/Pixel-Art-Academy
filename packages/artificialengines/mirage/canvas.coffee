@@ -6,7 +6,17 @@ if Meteor.isServer
 
 # A canvas that works on client and server.
 class AM.Canvas
-  constructor: (width, height) ->
+  constructor: (widthOrImage, heightOrContextAttributes, contextAttributes) ->
+    if Meteor.isClient and widthOrImage instanceof Image
+      image = widthOrImage
+      width = image.width
+      height = image.height
+      contextAttributes = heightOrContextAttributes
+      
+    else
+      width = widthOrImage
+      height = heightOrContextAttributes
+    
     if Meteor.isServer
       canvas = createCanvas width, height
 
@@ -15,17 +25,40 @@ class AM.Canvas
       canvas.width = width
       canvas.height = height
 
-    canvas.context = canvas.getContext '2d'
-
-    canvas.getFullImageData = ->
-      canvas.context.getImageData 0, 0, canvas.width, canvas.height
-
-    canvas.putFullImageData = (imageData) ->
-      canvas.context.putImageData imageData, 0, 0
+    canvas.drawImage image, 0, 0 if image
+  
+    canvas.context = canvas.getContext '2d', contextAttributes
 
     canvas.getImage = ->
       image = new Image
       image.src = canvas.toDataURL()
       image
 
+    return canvas
+
+class AM.ReadableCanvas
+  constructor: (widthOrImage, heightOrContextAttributes, contextAttributes) ->
+    if Meteor.isClient and widthOrImage instanceof Image
+      image = widthOrImage
+      contextAttributes = heightOrContextAttributes
+  
+    else
+      width = widthOrImage
+      height = heightOrContextAttributes
+  
+    contextAttributes ?= {}
+    contextAttributes.willReadFrequently = true
+
+    if image
+      canvas = new AM.Canvas image, contextAttributes
+      
+    else
+      canvas = new AM.Canvas width, height, contextAttributes
+  
+    canvas.getFullImageData = ->
+      canvas.context.getImageData 0, 0, canvas.width, canvas.height
+  
+    canvas.putFullImageData = (imageData) ->
+      canvas.context.putImageData imageData, 0, 0
+      
     return canvas

@@ -13,7 +13,7 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
 
   @initialize()
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy/student/conversation/conversation.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-adventuremode/student/conversation/conversation.script'
   @returnLabel: -> 'MainQuestions'
 
   constructor: ->

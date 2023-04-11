@@ -46,7 +46,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
     
     @completedConditions: ->
-      LM.Intro.Tutorial.Challenges.Drawing.Tutorial.Basics.completed()
+      PAA.Challenges.Drawing.Tutorial.Basics.completed()
 
   class @Helpers extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.Helpers'
@@ -67,7 +67,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      LM.Intro.Tutorial.Challenges.Drawing.Tutorial.Helpers.completed()
+      PAA.Challenges.Drawing.Tutorial.Helpers.completed()
 
   class @ColorTools extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.ColorTools'
@@ -88,7 +88,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      LM.Intro.Tutorial.Challenges.Drawing.Tutorial.Colors.completed()
+      PAA.Challenges.Drawing.Tutorial.Colors.completed()
 
   class @CopyReference extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.CopyReference'
@@ -111,7 +111,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      assets = LM.Intro.Tutorial.Challenges.Drawing.PixelArtSoftware.state 'assets'
+      assets = PAA.Challenges.Drawing.PixelArtSoftware.state 'assets'
       _.find assets, (asset) => asset.completed
 
   @tasks: -> [

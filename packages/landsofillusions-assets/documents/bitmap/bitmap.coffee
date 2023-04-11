@@ -13,7 +13,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
   #     width, height: the size of the layer in pixels
   #   pixelsData: ArrayBuffer with all attributes following each other as defined in the pixel format, not sent to the server
   #   compressedPixelsData: binary object with compressed version of vertices, sent to the server
-  #   attributeArrays: map of typed arrays isolating the sections of pixels data, not sent to the server
+  #   attributes: map of attributes with typed arrays isolating the sections of pixels data, not sent to the server
   # layerGroups: array of groups that hold layers and other groups
   #   name: name of the layer group
   #   visible: boolean if the children of this group should be drawn
@@ -55,9 +55,10 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
 
   toPlainObject: ->
     plainObject = _.assign {}, @
-    plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in @layerGroups)
-    plainObject.layers = (layer.toPlainObject() for layer in @layers)
+    plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in @layerGroups) if @layourGroups
+    plainObject.layers = (layer.toPlainObject() for layer in @layers) if @layers
     plainObject.bounds = _.pick @bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if @bounds
+    plainObject.palette = _.pick @palette, ['_id', 'name'] if @palette
     plainObject
 
   # Layers
@@ -100,10 +101,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
 
   getPixelForLayerAtCoordinates: (layerAddress, x, y) ->
     return unless layer = @getLayer layerAddress
-    pixel = layer.getPixel x, y
-  
-    # If any of the flags are set, the pixel exists.
-    if pixel.flags then pixel else null
+    layer.getPixel x, y
 
   getPixelForLayerAtAbsoluteCoordinates: (layerAddress, absoluteX, absoluteY) ->
     return unless layer = @getLayer layerAddress
@@ -118,9 +116,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
       x = absoluteX - (layer.bounds?.x or 0)
       y = absoluteY - (layer.bounds?.y or 0)
       pixel = layer.getPixel x, y
-      
-      # If any of the flags are set, the pixel exists.
-      return pixel if pixel.flags
+      return pixel if pixel
 
     # Go over all sub groups.
     for layerGroup in layerGroup.layerGroups

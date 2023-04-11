@@ -26,6 +26,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-studyguide');
+  api.use('retronator:pixelartacademy-challenges');
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
 
@@ -33,6 +34,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pixelboy-pico8');
   api.use('retronator:pixelartacademy-pixelboy-drawing');
   api.use('retronator:pixelartacademy-pixelboy-studyplan');
+
 
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-learnmode-intro');

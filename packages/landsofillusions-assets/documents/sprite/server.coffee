@@ -24,7 +24,7 @@ WebApp.connectHandlers.use LOI.Assets.Sprite.imageUrl(), (request, response, nex
 
   unless spriteImageData = engineSprite.getImageData()
     # There are no pixels in the sprite yet, so just return an empty 1px image.
-    spriteImageData = new AM.Canvas(1, 1).getFullImageData()
+    spriteImageData = new AM.ReadableCanvas(1, 1).getFullImageData()
 
   # Create the PNG.
   png = new PNG

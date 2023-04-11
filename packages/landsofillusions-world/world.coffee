@@ -1,5 +1,6 @@
 AM = Artificial.Mirage
 AB = Artificial.Base
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class LOI.World

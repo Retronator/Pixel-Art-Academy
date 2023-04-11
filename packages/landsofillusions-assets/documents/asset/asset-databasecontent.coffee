@@ -24,7 +24,8 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
 
     # Encode the PNG.
     arrayBuffer = PNG.encode imageData
-
+  
+    plainData: saveData
     arrayBuffer: arrayBuffer
     path: "#{@name or @_id}.#{_.toLower @constructor.className}.png"
     lastEditTime: @lastEditTime

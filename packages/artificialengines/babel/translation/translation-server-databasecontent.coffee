@@ -48,7 +48,8 @@ class AB.Translation extends AB.Translation
 
     encoder = new util.TextEncoder
     arrayBuffer = encoder.encode content
-
+  
+    plainData: @
     arrayBuffer: arrayBuffer
     path: "#{path}.translation.txt"
     lastEditTime: @lastEditTime

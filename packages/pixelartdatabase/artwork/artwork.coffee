@@ -4,6 +4,8 @@ PADB = PixelArtDatabase
 
 class PADB.Artwork extends AM.Document
   @id: -> 'PixelArtDatabase.Artwork'
+  # profileId: the profile who created this artwork, for user-generated artworks
+  # lastEditTime: the time the document was last edited
   # type: type of this artwork
   # title: the (working) title of the artwork
   # completionDate: completion date of this artwork or object when exact date is not known
@@ -28,6 +30,8 @@ class PADB.Artwork extends AM.Document
     name: @id()
     fields: =>
       authors: [Document.ReferenceField PADB.Artist, ['displayName'], true, 'artworks', ['title']]
+      
+  @enablePersistence()
 
   @Types =
     # Static image

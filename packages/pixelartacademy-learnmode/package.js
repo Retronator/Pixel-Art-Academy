@@ -18,6 +18,7 @@ Package.onUse(function(api) {
 
   api.addFile('learnmode');
   api.addFile('region');
+  api.addClientFile('spacebars');
 
   api.addFile('adventure..');
 

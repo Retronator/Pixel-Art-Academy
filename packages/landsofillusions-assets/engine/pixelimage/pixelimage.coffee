@@ -48,7 +48,7 @@ class LOI.Assets.Engine.PixelImage
 
     # Build a new canvas if needed.
     unless @_canvas?.width is asset.bounds.width and @_canvas?.height is asset.bounds.height
-      @_canvas = new AM.Canvas asset.bounds.width, asset.bounds.height
+      @_canvas = new AM.ReadableCanvas asset.bounds.width, asset.bounds.height
 
     # Resize the canvas if needed.
     @_imageData = @_canvas.getFullImageData()

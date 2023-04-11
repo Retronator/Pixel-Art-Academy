@@ -6,7 +6,7 @@ LOI = LandsOfIllusions
 class PAA.Practice.Project.Asset
   @Types:
     None: 'None'
-    Sprite: 'Sprite'
+    Bitmap: 'Bitmap'
     Photo: 'Photo'
 
   @_assetClassesById = {}
@@ -40,7 +40,7 @@ class PAA.Practice.Project.Asset
     # Store asset class by ID.
     @_assetClassesById[@id()] = @
 
-    # On the server, create this assets's translated names.
+    # On the server, create this assets' translated names.
     if Meteor.isServer
       Document.startup =>
         return if Meteor.settings.startEmpty

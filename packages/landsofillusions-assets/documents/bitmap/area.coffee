@@ -32,7 +32,7 @@ class LOI.Assets.Bitmap.Area
     @pixelsData ?= new ArrayBuffer pixelsCount * bytesPerPixel
 
     # Create typed arrays for each attribute.
-    for attributeId in @pixelFormat
+    for attributeId in @pixelFormat.attributeIds
       attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
       @attributes[attributeId] = new attributeClass @
 
@@ -42,18 +42,39 @@ class LOI.Assets.Bitmap.Area
   getPixel: (x, y) ->
     # Make sure the pixel is in bounds.
     return unless 0 <= x < @width and 0 <= y < @height
+
+    # If there are no flags, we simply return the values of all attributes.
+    return @getPixelValues x, y unless @attributes.flags
+    
+    # See if the pixel exists.
+    return unless flags = @attributes.flags.getPixel x, y
     
     pixel = {}
 
-    for attributeId in @pixelFormat
+    for attributeId in @pixelFormat.attributeIds
+      # If the attribute has a flag value, make sure the flag is present for this pixel.
+      attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
+      continue if attributeClass.flagValue and not flags & attributeClass.flagValue
+      
       pixel[attributeId] = @attributes[attributeId].getPixel x, y
 
+    pixel
+
+  getPixelValues: (x, y) ->
+    # Make sure the pixel is in bounds.
+    return unless 0 <= x < @width and 0 <= y < @height
+  
+    pixel = {}
+  
+    for attributeId in @pixelFormat.attributeIds
+      pixel[attributeId] = @attributes[attributeId].getPixel x, y
+  
     pixel
     
   debugOutput: ->
     console.log "AREA #{@width}x#{@height}"
     
-    for attributeId in @pixelFormat
+    for attributeId in @pixelFormat.attributeIds
       console.log attributeId
       attribute = @attributes[attributeId]
       elementsPerPixel = attribute.constructor.elementsPerPixel

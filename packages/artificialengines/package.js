@@ -30,6 +30,7 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'http',
+    'fetch',
     'oauth',
     'modules',
     'stylus',
@@ -218,6 +219,9 @@ Package.onUse(function(api) {
   api.addFile('mummification/document/persistence/profile');
 
   api.addFile('mummification/document/versioning..');
+  api.addFile('mummification/document/versioning/versioning-execute');
+  api.addFile('mummification/document/versioning/versioning-history');
+  api.addFile('mummification/document/versioning/versioning-history-sync');
   api.addFile('mummification/document/versioning/versionedcollection');
   api.addClientFile('mummification/document/versioning/versionedcollection-client');
   api.addClientFile('mummification/document/versioning/versioneddocumentloader-client');
@@ -233,12 +237,15 @@ Package.onUse(function(api) {
 
   // Game content
 
-  api.addServerFile('mummification/content..');
-
   api.addServerFile('mummification/documentcaches-server/documentcaches');
 
-  api.addServerFile('mummification/databasecontent-server/databasecontent');
-  api.addServerFile('mummification/databasecontent-server/initialize');
+  api.addFile('mummification/databasecontent..');
+  api.addServerFile('mummification/databasecontent/databasecontent-server');
+  api.addClientFile('mummification/databasecontent/databasecontent-client');
+  api.addClientFile('mummification/databasecontent/contentcollection-client');
+  api.addFile('mummification/databasecontent/subscription');
+  api.addServerFile('mummification/databasecontent/initialize-server');
+  api.addClientFile('mummification/databasecontent/initialize-client');
 
   // Depends on Artificial Base.
   api.addFile('mummification/admin..');

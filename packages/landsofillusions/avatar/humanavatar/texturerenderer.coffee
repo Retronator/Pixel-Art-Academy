@@ -27,7 +27,6 @@ class LOI.HumanAvatar.TextureRenderer
     @normalsCanvas = new AM.Canvas @constructor.textureWidth, @constructor.textureHeight
     @normalsContext = @normalsCanvas.context
 
-
   render: ->
     return unless @options.humanAvatar.dataReady()
     return unless @options.humanAvatarRenderer.ready()

@@ -110,7 +110,7 @@ class LOI.Assets.Bitmap.Actions.ColorFill extends AM.Document.Versioning.Action
     backwardOperation.bounds = changeAreaBounds
 
     # Prepare the areas for the forward and backward operations.
-    pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, bitmap.pixelFormat...
+    pixelFormat = new LOI.Assets.Bitmap.PixelFormat LOI.Assets.Bitmap.Attribute.OperationMask.id, bitmap.pixelFormat.attributeIds...
 
     forwardArea = new LOI.Assets.Bitmap.Area changeAreaBounds.width, changeAreaBounds.height, pixelFormat
     backwardArea = new LOI.Assets.Bitmap.Area changeAreaBounds.width, changeAreaBounds.height, pixelFormat
@@ -163,7 +163,7 @@ class LOI.Assets.Bitmap.Actions.ColorFill extends AM.Document.Versioning.Action
             forwardArea.attributes[attributeClass.id].setPixel changeAreaX, changeAreaY, value
   
         # When going backward, we simply write back the old values.
-        for attributeId in bitmap.pixelFormat
+        for attributeId in bitmap.pixelFormat.attributeIds
           oldValue = layer.attributes[attributeId].getPixel layerX, layerY
           backwardArea.attributes[attributeId].setPixel changeAreaX, changeAreaY, oldValue
 

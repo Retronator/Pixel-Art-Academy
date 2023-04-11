@@ -22,7 +22,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.AssetLoader extends FM.Loader
   
     @_paletteSubscription = Tracker.autorun (computation) =>
       return unless paletteId = @paletteId()
-      LOI.Assets.Palette.forId.subscribe paletteId
+      LOI.Assets.Palette.forId.subscribeContent paletteId
 
     # We extract the custom palette separately to minimize reactivity.
     @customPalette = new ComputedField =>

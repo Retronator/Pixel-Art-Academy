@@ -5,18 +5,13 @@ RA = Retronator.Accounts
 
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @id: -> 'LandsOfIllusions.Assets.Asset'
+  # profileId: profile that created the asset or null if this is a system asset
   # name: text identifier for the asset including the path
   # creationTime: time when the document was created
   # lastEditTime: time when last history item was added or history position changed
-  # authors: array of characters that are allowed to edit this asset or null if this is a system asset
-  #   _id
-  #   avatar
-  #     fullName
   # editor: custom object with settings that do not get sent to normal users
   @Meta
     abstract: true
-    fields: =>
-      authors: [Document.ReferenceField LOI.Character, ['avatar.fullName']]
 
   # Set the class name of the asset by which we can reach the class by querying LOI.Assets. We can't simply use the
   # name parameter, because in production the name field has a minimized value. Must be set in child class.

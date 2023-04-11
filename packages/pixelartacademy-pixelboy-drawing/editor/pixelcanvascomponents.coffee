@@ -31,7 +31,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
     
       # Set extra info to components
       backgroundColor = displayedAsset?.backgroundColor?()
-      backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 7
+      backgroundColor ?= LOI.Assets.Palette.defaultPalette()?.color LOI.Assets.Palette.Atari2600.hues.gray, 7
     
       for componentInfo in components
         component = componentInfo.component or componentInfo
@@ -39,6 +39,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
         component.options.backgroundColor = backgroundColor
     
       components
-      
+    ,
+      true
+    
   destroy: ->
     @components.stop()

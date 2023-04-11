@@ -2,7 +2,7 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Bitmap.Actions.AddLayer extends AM.Document.Versioning.Action
-  constructor: (operatorId, bitmap, layerGroupAddress) ->
+  constructor: (operatorId, bitmap, layerGroupAddress = []) ->
     super arguments...
 
     # Forward operation simply adds the layer to the desired layer group.

@@ -25,7 +25,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
   onCreated: ->
     super arguments...
 
-    characterId = LOI.characterId()
+    profileId = LOI.adventure.profileId()
 
     sectionLocations =
       challenge: new PAA.Practice.Challenges.Drawing
@@ -63,12 +63,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
         @["#{sectionThingName}sSection"] = section
   
     # Create artwork assets.
-    @autorun (computation) =>
-      @constructor.artworksWithAssets.subscribe @, characterId, @_artworkIds()
-    
     @_artworkAssets = {}
     @_artworkAssetsDependency = new Tracker.Dependency
-    
+  
+    @_artworkIds = new ComputedField =>
+      return [] unless artworks = PAA.PixelBoy.Apps.Drawing.state 'artworks'
+      artwork.artworkId for artwork in artworks
+  
     @_artworksDictionary = new AE.ReactiveDictionary =>
       artworkIds = @_artworkIds()
       dictionary = {}
@@ -217,9 +218,6 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
       return unless activeAsset = @activeAsset()
       @displayedAsset activeAsset
 
-    # Subscribe to character's projects.
-    PAA.Practice.Project.forCharacterId.subscribe @, characterId
-
     # Prepare settings.
     editors = new PAA.PixelBoy.Apps.Drawing.Editors
     
@@ -262,7 +260,3 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
     @_artworksDictionary.stop()
     @_newArtworkAsset.destroy()
     @_importArtworkAsset.destroy()
-
-  _artworkIds: ->
-    return [] unless artworks = PAA.PixelBoy.Apps.Drawing.state 'artworks'
-    artwork.artworkId for artwork in artworks

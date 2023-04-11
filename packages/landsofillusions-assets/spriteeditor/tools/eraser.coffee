@@ -50,7 +50,6 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
   endStroke: (assetData) ->
     # When the stroke ends, we need to execute the whole action as well.
     if assetData instanceof LOI.Assets.Bitmap
-      LOI.Assets.Bitmap.executeAction LOI.Assets.Bitmap.className, assetData._id, assetData.lastEditTime or assetData.creationTime, @_action, new Date, (error, result) ->
-        AM.Document.Versioning.reportExecuteActionError assetData if error
+      AM.Document.Versioning.executeAction assetData, assetData.lastEditTime or assetData.creationTime, @_action, new Date
     
       @_action = null

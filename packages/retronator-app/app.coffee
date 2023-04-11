@@ -9,6 +9,8 @@ class Retronator.App extends Artificial.Base.App
   @id: -> 'Retronator.App'
   @register @id()
   
+  template: -> @constructor.id()
+  
   @version: -> '0.63.2'
   
   buildName: -> 'server build'

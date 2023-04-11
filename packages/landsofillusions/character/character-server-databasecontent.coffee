@@ -26,7 +26,8 @@ class LOI.Character extends LOI.Character
 
     # Encode the PNG.
     arrayBuffer = PNG.encode imageData
-
+  
+    plainData: @
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.character.png"
     lastEditTime: @lastEditTime

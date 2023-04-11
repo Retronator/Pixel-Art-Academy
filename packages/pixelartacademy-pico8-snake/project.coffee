@@ -2,7 +2,6 @@ AB = Artificial.Base
 PAA = PixelArtAcademy
 
 class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
-  # READONLY
   # activeProjectId: ID of the project that is currently active
   @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake'
   
