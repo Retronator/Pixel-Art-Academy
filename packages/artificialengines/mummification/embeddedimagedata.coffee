@@ -24,7 +24,8 @@ class AM.EmbeddedImageData
       emptyImageSize: 10
       minimumSize: 200
       maximumMagnification: 8
-      backgroundColor: 'gray'
+      backgroundColor: 'gray',
+      scaleDown: false
 
     # Compress the save data of this asset.
     encoder = new TextEncoder
@@ -63,9 +64,15 @@ class AM.EmbeddedImageData
 
     # Make the longest size at least minimum size, but don't use more than maximum magnification.
     magnification++ while maxSize * magnification < options.minimumSize and magnification < options.maximumMagnification
+    
+    # Scale down to minimum size if desired.
+    if options.scaleDown
+      minimumMagnificationPixelSize = Math.sqrt minimumPixelCount / (width * height)
+      minimumMagnificationSize = options.minimumSize / maxSize
+      magnification = Math.max minimumMagnificationPixelSize, minimumMagnificationSize
 
     # Create the canvas and fill it with background color.
-    canvas = new Artificial.Mirage.ReadableCanvas width * magnification, height * magnification
+    canvas = new Artificial.Mirage.ReadableCanvas Math.floor(width * magnification), Math.floor(height * magnification)
 
     context = canvas.context
     context.fillStyle = options.backgroundColor
@@ -73,7 +80,7 @@ class AM.EmbeddedImageData
 
     # Draw the image base to canvas.
     unless baseImage.empty
-      context.imageSmoothingEnabled = false
+      context.imageSmoothingEnabled = false if magnification >= 1
       borderOffset = borderWidth * magnification
       context.drawImage baseImage, borderOffset, borderOffset, baseImage.width * magnification, baseImage.height * magnification
 

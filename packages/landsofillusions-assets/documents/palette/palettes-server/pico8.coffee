@@ -45,5 +45,5 @@ Document.startup ->
     pico8Palette.ramps.push
       name: colorAttributes[1].replace '_', ' '
       shades: [new THREE.Color("##{colorAttributes[0]}").toObject()]
-
-  LOI.Assets.Palette.documents.upsert name: pico8Palette.name, pico8Palette
+  
+  LOI.Assets.Palette.addIfNeeded pico8Palette

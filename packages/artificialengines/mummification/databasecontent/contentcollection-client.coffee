@@ -131,7 +131,7 @@ class AM.DatabaseContent.ContentCollection extends Mongo.Collection
 
     @_documentLoaders[informationDocument._id] = loader
   
-    url = "/databasecontent/#{informationDocument.path.substring 0, informationDocument.path.lastIndexOf '.'}.gzip"
+    url = "/databasecontent/#{informationDocument.path}"
   
     fetch(url).then((response) => response.arrayBuffer()).then (compressedBinaryData) =>
       # Make sure we still need the document.

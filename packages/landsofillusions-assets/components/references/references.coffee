@@ -14,7 +14,7 @@ class LOI.Assets.Components.References extends AM.Component
     
   constructor: (@options) ->
     super arguments...
-        
+    
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
 
@@ -32,7 +32,9 @@ class LOI.Assets.Components.References extends AM.Component
       @assetData = new ComputedField =>
         # Strip data to references and ID to minimize reactivity, but keep the class reference.
         return unless assetData = @options.assetData()
-        strippedAssetData = _.pick assetData, ['references', '_id']
+        # Note: We need to clone the references so we're not pointing to the internal bitmap array.
+        # If we do that, the old and the new value of the computed field will point to the same data.
+        strippedAssetData = _.cloneDeep _.pick assetData, ['references', '_id']
         Object.setPrototypeOf strippedAssetData, assetData.constructor.prototype
         strippedAssetData
       ,
@@ -48,9 +50,12 @@ class LOI.Assets.Components.References extends AM.Component
     @assetId = new ComputedField =>
       @options.assetId?() or @assetData()?._id
 
+    @assetClass = new ComputedField =>
+      @options.documentClass or @assetData()?.constructor
+  
     @assetClassName = new ComputedField =>
-      @options.documentClass?.className or @assetData()?.constructor.className
-          
+      @assetClass()?.className
+      
     @assetOptions = new ComputedField =>
       _.defaultsDeep {}, @options.assetOptions?(),
         upload:

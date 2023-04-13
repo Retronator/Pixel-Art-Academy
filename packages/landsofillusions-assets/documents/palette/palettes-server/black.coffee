@@ -16,5 +16,5 @@ Document.startup ->
       name: 'black'
       shades: [r: 0, g: 0, b: 0]
     ]
-
-  LOI.Assets.Palette.documents.upsert name: palette.name, palette
+  
+  LOI.Assets.Palette.addIfNeeded palette

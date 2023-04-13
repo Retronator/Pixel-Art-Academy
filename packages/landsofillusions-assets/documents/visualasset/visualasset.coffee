@@ -104,7 +104,14 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   clear: ->
     @constructor.clear @_id
 
-  getSaveData: ->
-    saveData = super arguments...
+  toPlainObject: ->
+    plainObject = super arguments...
 
-    _.extend saveData, _.pick @, ['palette', 'customPalette', 'materials', 'landmarks', 'authors', 'references']
+    _.assign plainObject, _.pick @, ['customPalette', 'materials', 'landmarks', 'authors', 'references']
+    plainObject.palette = _.pick @palette, ['_id', 'name'] if @palette
+  
+    if plainObject.references
+      plainObject.references = _.cloneDeep plainObject.references
+      reference.image = _.pick reference.image, ['_id', 'url'] for reference in plainObject.references
+    
+    plainObject

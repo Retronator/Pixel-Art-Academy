@@ -6,76 +6,70 @@ LOI = LandsOfIllusions
 
 class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Challenges.Drawing.TutorialBitmap
   @create: (profileId, tutorial, assetId) ->
-    # Create the bitmap.
-    @_createBitmap(profileId).then (bitmapId) =>
-      @reset assetId, bitmapId
-  
-      assets = tutorial.assetsData()
+    @_createBitmapData(profileId)
+      .then((bitmapData) => @_setBitmapDataReferences bitmapData)
+      .then((bitmapData) => @_setBitmapDataPalette bitmapData)
+      .then((bitmapData) => @_insertBitmap bitmapData)
+      .then((bitmapId) => @_resetAndAddToTutorial tutorial, assetId, bitmapId)
+      .catch (error) =>
+        console.error error
+        throw new AE.InvalidOperationException "Could not create tutorial bitmap."
     
-      # Add the asset.
-      assets.push
-        id: @id()
-        type: @type()
-        bitmapId: bitmapId
+  @_createBitmapData: (profileId) ->
+    new Promise (resolve, reject) =>
+      size = @fixedDimensions()
+      creationTime = new Date()
     
-      # Update tutorial assets in the read-only state.
-      tutorial.state 'assets', assets
+      resolve
+        versioned: true
+        profileId: profileId
+        creationTime: creationTime
+        lastEditTime: creationTime
+        bounds:
+          left: 0
+          right: size.width - 1
+          top: 0
+          bottom: size.height - 1
+          fixed: true
+        name: @displayName()
+        pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor', 'directColor'
+        layers: []
+      
+  @_setBitmapDataReferences: (bitmapData) ->
+    new Promise (resolve, reject) =>
+      unless references = @references?()
+        resolve bitmapData
+        return
+        
+      imagePromises = []
     
-  @_createBitmap: (profileId) ->
-    size = @fixedDimensions()
-    
-    creationTime = new Date()
-    
-    bitmapData =
-      versioned: true
-      profileId: profileId
-      creationTime: creationTime
-      lastEditTime: creationTime
-      bounds:
-        left: 0
-        right: size.width - 1
-        top: 0
-        bottom: size.height - 1
-        fixed: true
-      name: @displayName()
-      pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor', 'directColor'
-      layers: []
-
-    if references = @references?()
-      bitmapData.references = []
-  
       for reference in references
         # Allow sending in just the reference URL.
-        if _.isString reference
-          reference =
-            image:
-              url: reference
-    
-        imageUrl = reference.image.url
-    
-        # Ensure we have an image with this URL.
-        imageId = LOI.Assets.Image.documents.findOne(url: imageUrl)?._id
-        imageId ?= LOI.Assets.Image.documents.insert
-          url: imageUrl
-          profileId: profileId
-          lastEditTime: creationTime
-    
-        reference.image._id = imageId
-    
-        bitmapData.references.push reference
+        imageUrl = if _.isString reference then reference else reference.image.url
       
-    @_setBitmapDataPalette(bitmapData).then =>
-      bitmapId = LOI.Assets.Bitmap.documents.insert bitmapData
-
-      new Promise (resolve, reject) =>
-        Tracker.autorun (computation) =>
-          return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-          computation.stop()
+        # Find the ID of the image with this URL.
+        imagePromises.push new Promise (resolve, reject) =>
+          Tracker.autorun (computation) ->
+            LOI.Assets.Image.forUrl.subscribeContent imageUrl
+            return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
+            computation.stop()
+            
+            resolve image
           
-          addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @id(), bitmap
-          AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, addLayerAction, new Date()
-      
-          resolve bitmapId
+      Promise.all(imagePromises).then (imageResults) =>
+        bitmapData.references = []
+        
+        # Merge images into references
+        for reference, index in references
+          # Allow sending in just the reference URL.
+          reference = {} if _.isString reference
+          
+          bitmapData.references.push _.extend
+            image: imageResults[index]
+          ,
+            reference
+  
+        resolve bitmapData
 
   @_setBitmapDataPalette: (bitmapData) ->
     new Promise (resolve, reject) =>
@@ -86,7 +80,7 @@ class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Challe
           computation.stop()
           
           bitmapData.palette = _.pick palette, '_id'
-          resolve()
+          resolve bitmapData
   
       else if paletteImageUrl = @customPaletteImageUrl()
         paletteImage = new Image
@@ -136,10 +130,37 @@ class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Challe
           bitmapData.customPalette =
             ramps: ramps
             
-          resolve()
+          resolve bitmapData
     
         paletteImage.src = Meteor.absoluteUrl paletteImageUrl
         
       else if customPalette = @customPalette()
         bitmapData.customPalette = customPalette
-        resolve()
+        resolve bitmapData
+
+  @_insertBitmap: (bitmapData) ->
+    new Promise (resolve, reject) =>
+      bitmapId = LOI.Assets.Bitmap.documents.insert bitmapData
+
+      Tracker.autorun (computation) =>
+        return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+        computation.stop()
+        
+        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @id(), bitmap
+        AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, addLayerAction, new Date()
+        
+        resolve bitmapId
+
+  @_resetAndAddToTutorial: (tutorial, assetId, bitmapId) ->
+    @reset assetId, bitmapId
+  
+    assets = tutorial.assetsData()
+  
+    # Add the asset.
+    assets.push
+      id: @id()
+      type: @type()
+      bitmapId: bitmapId
+  
+    # Update tutorial assets in the read-only state.
+    tutorial.state 'assets', assets

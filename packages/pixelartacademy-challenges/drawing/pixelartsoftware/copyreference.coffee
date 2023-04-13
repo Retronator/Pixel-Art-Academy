@@ -31,8 +31,6 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
     # Note: We need to fully qualify the name instead of using @constructor
     # since we're overriding with a class with the same name.
     PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
-
-  @initialize()
   
   constructor: ->
     super arguments...

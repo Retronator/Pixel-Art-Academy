@@ -5,7 +5,8 @@ Package.describe({
 
 Npm.depends({
   'archiver': '4.0.1',
-  'bitmap-sdf': '1.0.3'
+  'bitmap-sdf': '1.0.3',
+  'pngjs': '2.3.0'
 });
 
 Package.onUse(function(api) {

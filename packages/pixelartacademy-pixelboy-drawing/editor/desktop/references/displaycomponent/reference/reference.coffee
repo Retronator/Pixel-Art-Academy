@@ -52,7 +52,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         x: _.clamp position.x, -maxX, maxX
         y: _.clamp position.y, -maxY, maxY
 
-      @setPosition position
+      Tracker.nonreactive => @setPosition position
 
     @autorun (computation) =>
       return unless draggingPosition = @draggingPosition()

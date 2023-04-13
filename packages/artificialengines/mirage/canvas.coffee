@@ -2,12 +2,12 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 
 if Meteor.isServer
-  {createCanvas} = require 'canvas'
+  {createCanvas, Image} = require 'canvas'
 
 # A canvas that works on client and server.
 class AM.Canvas
   constructor: (widthOrImage, heightOrContextAttributes, contextAttributes) ->
-    if Meteor.isClient and widthOrImage instanceof Image
+    if widthOrImage.width
       image = widthOrImage
       width = image.width
       height = image.height
@@ -24,10 +24,9 @@ class AM.Canvas
       canvas = $('<canvas>')[0]
       canvas.width = width
       canvas.height = height
-
-    canvas.drawImage image, 0, 0 if image
   
     canvas.context = canvas.getContext '2d', contextAttributes
+    canvas.context.drawImage image, 0, 0 if image
 
     canvas.getImage = ->
       image = new Image
@@ -38,7 +37,7 @@ class AM.Canvas
 
 class AM.ReadableCanvas
   constructor: (widthOrImage, heightOrContextAttributes, contextAttributes) ->
-    if Meteor.isClient and widthOrImage instanceof Image
+    if widthOrImage.width
       image = widthOrImage
       contextAttributes = heightOrContextAttributes
   

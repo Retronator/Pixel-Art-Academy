@@ -13,9 +13,6 @@ class LOI.Assets.Palette extends LOI.Assets.Palette
     imageData = PNG.decode arrayBuffer
     AMu.EmbeddedImageData.extract imageData
 
-  databaseContentPath: ->
-    "landsofillusions/palette/#{@debugName}"
-
   getDatabaseContent: ->
     # Add last edit time if needed so that documents don't need unnecessary imports.
     @lastEditTime ?= new Date()

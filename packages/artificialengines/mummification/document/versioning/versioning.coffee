@@ -25,6 +25,9 @@ class AM.Document.Versioning
 
     documentClass.load = documentClass.method 'load'
     documentClass.latestHistoryForId = documentClass.subscription 'latestHistoryForId'
+  
+    documentClass::executeAction = (action) ->
+      AM.Document.Versioning.executeAction @, @lastEditTime or @creationTime, action, new Date
 
     return unless Meteor.isServer
 

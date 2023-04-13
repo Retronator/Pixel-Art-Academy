@@ -39,5 +39,5 @@ Document.startup ->
 
     # Pad with white color.
     ramp.shades[9] = new THREE.Color(0xeeeeee).toObject()
-
-  LOI.Assets.Palette.documents.upsert name: pixelArtAcademyPalette.name, pixelArtAcademyPalette
+  
+  LOI.Assets.Palette.addIfNeeded pixelArtAcademyPalette

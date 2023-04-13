@@ -54,11 +54,10 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     @_initialized = true
 
   toPlainObject: ->
-    plainObject = _.assign {}, @
+    plainObject = super arguments...
     plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in @layerGroups) if @layourGroups
     plainObject.layers = (layer.toPlainObject() for layer in @layers) if @layers
     plainObject.bounds = _.pick @bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if @bounds
-    plainObject.palette = _.pick @palette, ['_id', 'name'] if @palette
     plainObject
 
   # Layers

@@ -55,11 +55,7 @@ class PAA.Challenges.Drawing.Tutorial.Basics.References extends PAA.Practice.Cha
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.ColorFill
-    PAA.Practice.Software.Tools.ToolKeys.Zoom
-    PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
     PAA.Practice.Software.Tools.ToolKeys.References
-    PAA.Practice.Software.Tools.ToolKeys.Undo
-    PAA.Practice.Software.Tools.ToolKeys.Redo
   ]
 
   editorOptions: ->

@@ -80,5 +80,4 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
     if assetData instanceof LOI.Assets.Bitmap
       # Optimize the operations (for the symmetry case) and execute the action.
       action.optimizeOperations assetData
-
-      AM.Document.Versioning.executeAction assetData, assetData.lastEditTime or assetData.creationTime, action, new Date
+      assetData.executeAction action

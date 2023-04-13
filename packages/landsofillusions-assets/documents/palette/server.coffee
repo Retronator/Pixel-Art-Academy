@@ -1,8 +1,27 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 {PNG} = require 'pngjs'
 
+LOI.Assets.Palette.addIfNeeded = (palette) ->
+  if existingPalette = LOI.Assets.Palette.documents.findOne name: palette.name
+    changed = false
+
+    # Check that the palette's keys are the same as in the database (other keys can be present, such as lastEditTime).
+    for key, value of palette
+      unless EJSON.equals value, existingPalette[key]
+        changed = true
+        break
+        
+    return unless changed
+  
+  LOI.Assets.Palette.documents.upsert name: palette.name, palette
+
+# Export all palette documents.
+AM.DatabaseContent.addToExport ->
+  LOI.Assets.Palette.documents.fetch()
+  
 WebApp.connectHandlers.use LOI.Assets.Palette.imageUrl, (request, response, next) ->
   query = request.query
   

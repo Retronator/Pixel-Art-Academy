@@ -38,7 +38,8 @@ Package.onUse(function(api) {
   // Documents
 
   api.addFile('documents/image..');
-  api.addFile('documents/image/methods');
+  api.addFile('documents/image/subscriptions');
+  api.addServerFile('documents/image/image-server-databasecontent');
 
   api.addFile('documents/palette..');
   api.addServerFile('documents/palette/palette-server-databasecontent');
@@ -66,6 +67,14 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset/methods/references');
   api.addFile('documents/visualasset/methods/environments');
   api.addServerFile('documents/visualasset/subscriptions');
+  api.addFile('documents/visualasset/actions..');
+  api.addFile('documents/visualasset/actions/addreferencebyurl');
+  api.addFile('documents/visualasset/actions/updatereference');
+  api.addFile('documents/visualasset/actions/reorderreferencetotop');
+  api.addFile('documents/visualasset/operations..');
+  api.addFile('documents/visualasset/operations/addreference');
+  api.addFile('documents/visualasset/operations/updatereference');
+  api.addFile('documents/visualasset/operations/removereference');
 
   api.addFile('documents/sprite..');
   api.addFile('documents/sprite/rot8');

@@ -220,18 +220,18 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
 
   # Database content
 
-  getSaveData: ->
-    saveData = super arguments...
-    _.extend saveData, _.pick @, ['bounds']
+  toPlainObject: ->
+    plainObject = super arguments...
+    plainObject.bounds = _.pick @bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if @bounds
 
     # When saving layers, don't save pixel maps.
     if @layers
-      saveData.layers = []
+      plainObject.layers = []
 
       for layer in @layers
-        saveData.layers.push _.omit layer, ['_pixelMap']
+        plainObject.layers.push _.omit layer, ['_pixelMap']
 
-    saveData
+    plainObject
 
   getPreviewImage: ->
     engineSprite = new LOI.Assets.Engine.PixelImage.Sprite

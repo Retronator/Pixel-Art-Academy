@@ -1,4 +1,5 @@
 AB = Artificial.Base
+AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
@@ -24,6 +25,19 @@ class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Projec
   @restrictedPaletteName: -> null
   @customPaletteImageUrl: -> null
   @customPalette: -> null
+  
+  @initialize: ->
+    super arguments...
+    
+    # Create reference images on the server. They should be exported as database content.
+    if Meteor.isServer and not Meteor.settings.startEmpty
+      if references = @references?()
+        Document.startup =>
+          for reference in references
+            # Allow sending in just the reference URL.
+            imageUrl = reference.image?.url or reference
+      
+            LOI.Assets.Image.documents.insert url: imageUrl unless LOI.Assets.Image.documents.findOne url: imageUrl
 
   constructor: ->
     super arguments...
@@ -52,13 +66,13 @@ class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Projec
 
     if goalBitmapString = @constructor.goalBitmapString()
       # Load pixels from the bitmapString string.
-      @setGoalPixels @constructor.createPixelsFromBitmapString goalBitmapString
+      @_setGoalPixels @constructor.createPixelsFromBitmapString goalBitmapString
 
     else if goalImageUrl = @constructor.goalImageUrl()
       # Load pixels from the source image.
       image = new Image
       image.addEventListener 'load', =>
-        @setGoalPixels @constructor.createPixelsFromImage image
+        @_setGoalPixels @constructor.createPixelsFromImage image
       ,
         false
 
@@ -155,8 +169,24 @@ class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Projec
 
     @completed.stop()
     @_completedAutorun.stop()
-
-  setGoalPixels: (goalPixels) ->
+  
+  solve: ->
+    bitmap = @bitmap()
+    pixels = @goalPixels()
+  
+    # Mark all transparent pixels for removal (add pixel with just coordinates).
+    for x in [0...bitmap.bounds.width]
+      for y in [0...bitmap.bounds.height]
+        pixels.push {x, y} unless _.find pixels, (pixel) => pixel.x is x and pixel.y is y
+  
+    # Replace the layer pixels in this bitmap.
+    strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @id(), bitmap, [0], pixels
+    AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
+  
+    # Clear the history.
+    AM.Document.Versioning.clearHistory bitmap
+  
+  _setGoalPixels: (goalPixels) ->
     @goalPixels goalPixels
 
     Tracker.autorun (computation) =>

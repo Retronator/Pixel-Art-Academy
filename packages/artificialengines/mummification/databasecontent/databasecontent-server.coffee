@@ -27,17 +27,17 @@ class AM.DatabaseContent extends AM.DatabaseContent
   @startup: (handler) ->
     @startupHandlers.push handler
 
-  @export: (archive) ->
-    console.log "Starting database content export ..."
+  @export: (archive, append) ->
+    console.log "Starting database content export #{if append then "in append mode" else ""}..."
 
-    if directoryJson = AM.DatabaseContent.assets.getText AM.DatabaseContent.directoryUrl
-      currentDirectory = EJSON.parse directoryJson
+    if privateDirectoryJson = AM.DatabaseContent.assets.getText AM.DatabaseContent.directoryUrl
+      currentPrivateDirectory = EJSON.parse privateDirectoryJson
       console.log "Retrieved current directory."
 
       # Create a map of documents.
       currentDirectoryDocumentsMap = {}
 
-      for documentClassId, informationDocuments of currentDirectory.documents
+      for documentClassId, informationDocuments of currentPrivateDirectory.documents
         currentDirectoryDocumentsMap[documentClassId] = {}
 
         console.log "Building map for #{informationDocuments.length} documents of #{documentClassId}."
@@ -45,10 +45,24 @@ class AM.DatabaseContent extends AM.DatabaseContent
         for informationDocument in informationDocuments
           currentDirectoryDocumentsMap[documentClassId][informationDocument._id] = informationDocument
 
-    directory =
-      exportTime: new Date
+    exportTime = new Date
+    
+    if append
+      # In append mode, the private directory can only be extended
+      # with new documents, but existing ones should not be removed.
+      privateDirectory = EJSON.clone currentPrivateDirectory
+      privateDirectory.exportTime = exportTime
+      
+    else
+      privateDirectory =
+        exportTime: exportTime
+        documents: {}
+      
+    # Public directory always includes just the assets exported by the current configuration.
+    publicDirectory =
+      exportTime: exportTime
       documents: {}
-
+      
     paths = {}
     notChangedCount = 0
     encoder = new TextEncoder
@@ -75,18 +89,23 @@ class AM.DatabaseContent extends AM.DatabaseContent
           publicPath = "#{path.substring 0, path.lastIndexOf '.'}.gzip"
           shouldExport = false
   
-          # Load the data directly from the exported files. If any of them missing, force a re-export.
+          # Load the data directly from the exported files. If any of them are missing, force a re-export.
           publicUrl = "databasecontent/#{publicPath}"
           documentResponse = Request.getSync Meteor.absoluteUrl(publicUrl), encoding: null
-          shouldExport = true unless _.startsWith documentResponse.response.headers['content-type'], 'application/gzip'
-          publicData = documentResponse.body
+          contentType = documentResponse.response.headers['content-type']
+          
+          if _.startsWith(contentType, 'application/gzip') or _.startsWith(contentType, 'application/octet-stream')
+            publicData = documentResponse.body
+    
+            privateUrl = "databasecontent/#{path}"
+            privateData = AM.DatabaseContent.assets.getBinary privateUrl
   
-          privateUrl = "databasecontent/#{path}"
-          privateData = AM.DatabaseContent.assets.getBinary privateUrl
-
-          lastEditTime = existingInformationDocument.lastEditTime
-
-          notChangedCount++
+            lastEditTime = existingInformationDocument.lastEditTime
+  
+            notChangedCount++
+            
+          else
+            shouldExport = true
 
         if shouldExport
           console.log "Exporting", document.constructor.name, documentName
@@ -112,23 +131,38 @@ class AM.DatabaseContent extends AM.DatabaseContent
         publicPath = "#{path.substring 0, path.lastIndexOf '.'}.gzip"
     
         # Store information document in directory.
-        informationDocument = {path, lastEditTime, _id: document._id}
+        privateInformationDocument = {path, lastEditTime, _id: document._id}
+        publicInformationDocument = {path: publicPath, lastEditTime, _id: document._id}
   
         # Add any extra fields required for querying the directory.
         if document.constructor.databaseContentInformationFields
           for field of document.constructor.databaseContentInformationFields
-            informationDocument[field] = document[field]
+            publicInformationDocument[field] = document[field]
 
-        directory.documents[documentClassId] ?= []
-        directory.documents[documentClassId].push informationDocument
+        privateDirectory.documents[documentClassId] ?= []
+        privateDirectory.documents[documentClassId].push privateInformationDocument
+        
+        publicDirectory.documents[documentClassId] ?= []
+        publicDirectory.documents[documentClassId].push publicInformationDocument
 
         # Place files in the archive.
         archive.append Buffer.from(privateData), name: "private/databasecontent/#{path}"
         archive.append Buffer.from(publicData), name: "public/databasecontent/#{publicPath}"
+        
+    if append
+      # Go over all the private files that weren't added yet.
+      for documentClassId, privateInformationDocuments of privateDirectory.documents
+        for privateInformationDocument in privateInformationDocuments
+          continue if _.find publicDirectory.documents[documentClassId], (document) => document._id is privateInformationDocument._id
+            
+          path = privateInformationDocument.path
+          privateUrl = "databasecontent/#{path}"
+          privateData = AM.DatabaseContent.assets.getBinary privateUrl
+          archive.append Buffer.from(privateData), name: "private/databasecontent/#{path}"
 
     # Place directory in the archive.
-    archive.append EJSON.stringify(directory), name: 'private/databasecontent/directory.json'
-    archive.append EJSON.stringify(directory), name: 'public/databasecontent/directory.json'
+    archive.append EJSON.stringify(privateDirectory), name: 'private/databasecontent/directory.json'
+    archive.append EJSON.stringify(publicDirectory), name: 'public/databasecontent/directory.json'
 
     # Complete exporting.
     archive.finalize()
@@ -149,6 +183,7 @@ class AM.DatabaseContent extends AM.DatabaseContent
 
       for informationDocument in informationDocuments
         path = informationDocument.privatePath or informationDocument.path
+        url = "databasecontent/#{path}"
         currentDocument = documentClass.documents.findOne informationDocument._id
 
         # See how old the document in the database is. If it has no last edit time, assume it's outdated.
@@ -164,11 +199,9 @@ class AM.DatabaseContent extends AM.DatabaseContent
 
         if currentLastEditTime < exportedLastEditTime
           # The database document is older so we need to update it.
-          do (informationDocument, exportedLastEditTime, documentClass) =>
+          do (informationDocument, exportedLastEditTime, documentClass, path, url) =>
             updatePromises.push new Promise (resolve, reject) =>
               
-              url = "databasecontent/#{path}"
-  
               AM.DatabaseContent.assets.getBinary url, (error, arrayBuffer) =>
                 if error
                   console.error "Error retrieving database content file at url", url

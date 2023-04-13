@@ -10,14 +10,10 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
     imageData = PNG.decode arrayBuffer
     AM.EmbeddedImageData.extract imageData
 
-  getSaveData: ->
-    # Override to add other properties to save.
-    _.pick @, ['_id', 'name', 'history', 'historyPosition', 'lastEditTime', 'editor']
-
   getPreviewImage: -> throw new AE.NotImplementedException "Asset must provide a preview image for exporting database content."
 
   getDatabaseContent: ->
-    saveData = @getSaveData()
+    saveData = @toPlainObject()
     previewImage = @getPreviewImage()
 
     imageData = AM.EmbeddedImageData.embed previewImage, saveData

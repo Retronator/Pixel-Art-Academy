@@ -3,7 +3,19 @@
     <h1>Database Content</h1>
     <p>
       <input class="password" placeholder="Password"/>
+      <input class="append" type="checkbox"/>Append data to existing directory
       <button class="download-button">Download</button>
+    </p>
+    <h2>File preview</h2>
+    <p>
+      <select class="document-class-id">
+        {{#each documentClassIds}}
+          <option value="{{this}}">{{this}}</option>
+        {{/each}}
+      </select>
+      <input class="document-id"/>
+    </p>
+    <p class="file-preview">
     </p>
   </div>
 </template>

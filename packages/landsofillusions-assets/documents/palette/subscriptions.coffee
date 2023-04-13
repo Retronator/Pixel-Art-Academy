@@ -1,4 +1,3 @@
-RA = Retronator.Accounts
 LOI = LandsOfIllusions
 AM = Artificial.Mummification
 
@@ -13,7 +12,7 @@ LOI.Assets.Palette.forId.publish (id) ->
 LOI.Assets.Palette.forName.publish (name) ->
   check name, String
   
-  LOI.Assets.Palette.getPublishingDocuments().find name: name
+  LOI.Assets.Palette.getPublishingDocuments().find {name}
   
 if Meteor.isServer
   LOI.Assets.Palette.all.publish ->

@@ -84,7 +84,12 @@ class LOI.Assets.Editor.References extends FM.View
       LOI.Assets.Components.References.referenceUploadContext.upload file, (url) =>
         # Add reference to asset.
         assetData = @assetData()
-        LOI.Assets.VisualAsset.addReferenceByUrl assetData.constructor.className, assetData._id, null, url
+  
+        if @references.assetClass().versionedDocuments
+          assetData.executeAction new LOI.Assets.VisualAsset.Actions.AddReferenceByUrl @references.id(), assetData, url
+    
+        else
+          LOI.Assets.VisualAsset.addReferenceByUrl assetData.constructor.className, assetData._id, null, url
 
     $fileInput.click()
 

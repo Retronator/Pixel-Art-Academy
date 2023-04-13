@@ -57,13 +57,21 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   _uploadFile: (reference) ->
     LOI.Assets.Components.References.referenceUploadContext.upload reference.file, (url) =>
       # Add reference to asset.
-      LOI.Assets.VisualAsset.addReferenceByUrl @references.assetClassName(), @references.assetId(), LOI.characterId(), url, reference.position(), reference.scale(), reference.displayed(), (error, imageId) =>
-        if error
-          console.error error
-          return
-
-        # Remove uploading reference.
-        @references.removeUploadingReference reference._id, imageId
+      if @references.assetClass().versionedDocuments
+        assetData = Tracker.nonreactive => @references.options.assetData()
+        assetData.executeAction new LOI.Assets.VisualAsset.Actions.AddReferenceByUrl @references.constructor.id(), assetData, url,
+          position: reference.position()
+          scale: reference.scale()
+          reference: reference.displayed()
+  
+      else
+        LOI.Assets.VisualAsset.addReferenceByUrl @references.assetClassName(), @references.assetId(), LOI.characterId(), url, reference.position(), reference.scale(), reference.displayed(), (error, imageId) =>
+          if error
+            console.error error
+            return
+  
+          # Remove uploading reference.
+          @references.removeUploadingReference reference._id, imageId
         
   displaySize: (scale) ->
     return unless imageSize = @imageSize()
@@ -152,7 +160,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     return if EJSON.equals @["current#{upperName}"](), value
 
     if reference.image
-      LOI.Assets.VisualAsset["updateReference#{upperName}"] @references.assetClassName(), @references.assetId(), reference.image._id, value
+      if @references.assetClass().versionedDocuments
+        assetData = Tracker.nonreactive => @references.options.assetData()
+        assetData.executeAction new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
+          "#{name}": value
+
+      else
+        LOI.Assets.VisualAsset["updateReference#{upperName}"] @references.assetClassName(), @references.assetId(), reference.image._id, value
 
     else
       reference[name] value
@@ -161,7 +175,12 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     return unless reference = @data()
 
     if reference.image
-      LOI.Assets.VisualAsset.reorderReferenceToTop @references.assetClassName(), @references.assetId(), reference.image._id
+      if @references.assetClass().versionedDocuments
+        assetData = Tracker.nonreactive => @references.options.assetData()
+        assetData.executeAction new LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop @references.constructor.id(), assetData, reference.image._id
+        
+      else
+        LOI.Assets.VisualAsset.reorderReferenceToTop @references.assetClassName(), @references.assetId(), reference.image._id
 
     else
       # We increase order only by .1 to allow other references to get higher via database calls.

@@ -40,5 +40,5 @@ Document.startup ->
     # Create a hue ramp with just this shade.
     pacManPalette.ramps.push
       shades: [new THREE.Color("rgb(#{colorLine})").toObject()]
-
-  LOI.Assets.Palette.documents.upsert name: pacManPalette.name, pacManPalette
+  
+  LOI.Assets.Palette.addIfNeeded pacManPalette

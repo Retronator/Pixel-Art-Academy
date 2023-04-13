@@ -4,14 +4,21 @@ LOI = LandsOfIllusions
 # An arbitrary image.
 class LOI.Assets.Image extends AM.Document
   @id: -> 'LandsOfIllusions.Assets.Image'
+  # profileId: profile that added this image to the CDN or not present if this is a system image
+  # lastEditTime: time when image was last edited
   # url: link to the image in the CDN
-  # uploader: character that added this image to the CDN
-  #   _id
   @Meta
     name: @id()
-    fields: =>
-      uploader: Document.ReferenceField LOI.Character, [], false
+    
+  @enablePersistence()
+  @enableDatabaseContent()
+  
+  @databaseContentInformationFields =
+    url: 1
+    
+  @forUrl = @subscription 'forUrl'
 
-  # Methods
-
-  @insert: @method 'insert'
+if Meteor.isServer
+  # Export all system images.
+  AM.DatabaseContent.addToExport ->
+    LOI.Assets.Image.documents.fetch profileId: $exists: false

@@ -35,5 +35,5 @@ Document.startup ->
     darkShade = _.clone ramp.shades[0]
     darkShade[attribute] = value * 192 / 255 for attribute, value of darkShade
     ramp.shades.unshift darkShade
-
-  LOI.Assets.Palette.documents.upsert name: palette.name, palette
+  
+  LOI.Assets.Palette.addIfNeeded palette

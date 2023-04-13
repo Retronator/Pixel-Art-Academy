@@ -15,11 +15,11 @@ class Persistence.PersistentCollection extends Mongo.Collection
       removed: (document) => Persistence.removed document
 
   insert: (document) ->
-    throw new AE.ArgumentException "A persistent collection insert of a profiled document must have the last edit time." if document.profileId and not document.lastEditTime
+    throw new AE.ArgumentException "A persistent collection insert of a profiled #{@documentClass.name} document must have the last edit time." if document.profileId and not document.lastEditTime
   
     super arguments...
 
   update: (selector, modifier) ->
-    throw new AE.ArgumentException "A persistent collection update must set the last edit time." unless modifier.$set?.lastEditTime
+    throw new AE.ArgumentException "A persistent collection update of a profiled #{@documentClass.name} document must set the last edit time." if document.profileId and not modifier.$set?.lastEditTime
     
     super arguments...

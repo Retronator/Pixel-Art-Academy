@@ -60,6 +60,10 @@ class AM.Document extends Document
 
   @getClassForId: (id) ->
     @_documentClassesById[id]
+
+  # Returns all registered type names.
+  @getClassIds: ->
+    _.keys @_documentClassesById
   
   @registerType: (typeName, documentClass) ->
     throw new AE.ArgumentNullException "You must specify a document class." unless documentClass
