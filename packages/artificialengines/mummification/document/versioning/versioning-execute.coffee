@@ -70,7 +70,7 @@ AM.Document.Versioning._addChangedFieldsToModifier = (versionedDocument, changed
         return value unless _.isObject value
         
         # EJSON types are left as-is since they will be converted automatically.
-        return value if value.toJSONValue or EJSON.isBinary value
+        return value if value.toJSONValue or EJSON.isBinary(value) or value instanceof Date
         
         # See if the object provides its own plain object conversion.
         object = value
@@ -82,7 +82,7 @@ AM.Document.Versioning._addChangedFieldsToModifier = (versionedDocument, changed
         # Convert all properties of the object to plain objects.
         plainObject = {}
         
-        for key, value of object
+        for key, value of object when not _.isFunction value
           plainObject[key] = toPlainObject value
 
         plainObject

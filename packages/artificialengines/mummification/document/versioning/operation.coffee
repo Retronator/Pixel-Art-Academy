@@ -56,7 +56,8 @@ class AM.Document.Versioning.Operation
 
   _getPublicFields: ->
     # Get all fields that don't start with an underscore.
-    _.pickBy @, (value, key) => key[0] isnt '_'
+    # HACK: In Meteor desktop, pickBy also iterates over functions, so we have to exclude them.
+    _.pickBy @, (value, key) => key[0] isnt '_' and not _.isFunction value
 
   clone: ->
     clone = new @constructor EJSON.clone @_getPublicFields()

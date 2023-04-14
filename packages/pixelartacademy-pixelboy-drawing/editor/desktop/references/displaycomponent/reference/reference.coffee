@@ -37,7 +37,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
       # Scale should be such that 100^2 pixels are covered, but any side is not larger than 150 pixels.
       scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min 150 / imageSize.width, 150 / imageSize.height
-      @setScale scale
+      Tracker.nonreactive => @setScale scale
 
       # Make sure reference is within the tray.
       halfWidth = displaySize.width / 2 + @resizingBorder

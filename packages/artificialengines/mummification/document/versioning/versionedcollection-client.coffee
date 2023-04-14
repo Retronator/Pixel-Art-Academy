@@ -36,7 +36,6 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
         @_loadersUpdatedDependency.changed()
       
       removed: (document) =>
-        @_loaders[document._id].destroy()
         delete @_loaders[document._id]
         
         @_loadersUpdatedDependency.changed()
