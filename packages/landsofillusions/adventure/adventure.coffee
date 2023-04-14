@@ -56,6 +56,7 @@ class LOI.Adventure extends AM.Component
       if currentRegion? then currentRegion.ready() else false
       if @currentMemoryId() then @currentMemory()? else true
       @thingsReady()
+      LOI.palette()
     ]
 
     console.log "Adventure ready?", conditions if LOI.debug

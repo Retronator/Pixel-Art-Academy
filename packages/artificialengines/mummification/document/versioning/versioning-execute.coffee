@@ -3,7 +3,11 @@ AM = Artificial.Mummification
 
 AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action, actionTime) ->
   @_validateActionOrder versionedDocument, lastEditTime, actionTime
-
+  
+  # Increase history position.
+  currentHistoryPosition = versionedDocument.historyPosition or 0
+  newHistoryPosition = currentHistoryPosition + 1
+  
   if Meteor.isClient
     # On the client we need to update both the live document (which we're receiving in the versioned document) as well
     # as the document from the persistence collection. First, execute the action on the live document, unless it
@@ -15,7 +19,13 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
       
     else
       @executeOperations versionedDocument, action.forward
-      
+  
+    versionedDocument.lastEditTime = actionTime
+    versionedDocument.historyPosition = newHistoryPosition
+    versionedDocument.history ?= []
+    versionedDocument.history.splice currentHistoryPosition if versionedDocument.history.length > currentHistoryPosition
+    versionedDocument.history.push action
+    
     # Proceed by applying the changes to the persistent document.
     versionedDocument = versionedDocument.constructor.documents.findOne versionedDocument._id
     versionedDocument.initialize?()
@@ -23,9 +33,6 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   changedFields = @executeOperations versionedDocument, action.forward
 
   # Change history.
-  currentHistoryPosition = versionedDocument.historyPosition or 0
-  newHistoryPosition = currentHistoryPosition + 1
-
   modifier =
     $set:
       historyPosition: newHistoryPosition

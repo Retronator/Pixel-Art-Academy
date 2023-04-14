@@ -6,7 +6,8 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Bitmap'
   # layers: array of top-level layers (not contained in any layer group)
   #   name: name of the layer
-  #   visible: boolean if this layer should be drawn
+  #   order: integer defining the sorting order within other top-level layers and groups (higher value appears above lower)
+  #   visible: boolean if this layer should be drawn (true by default)
   #   blendMode: name of one of the blend modes
   #   bounds: location of this layer's bounds in the sprite.
   #     x, y: absolute pixel coordinates of the top-left pixel of this layer
@@ -14,9 +15,10 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
   #   pixelsData: ArrayBuffer with all attributes following each other as defined in the pixel format, not sent to the server
   #   compressedPixelsData: binary object with compressed version of vertices, sent to the server
   #   attributes: map of attributes with typed arrays isolating the sections of pixels data, not sent to the server
-  # layerGroups: array of groups that hold layers and other groups
+  # layerGroups: array of top-level groups that hold layers and other groups
   #   name: name of the layer group
-  #   visible: boolean if the children of this group should be drawn
+  #   order: integer defining the sorting order within other top-level layers and groups (higher value appears above lower)
+  #   visible: boolean if the children of this group should be drawn (true by default)
   #   blendMode: name of one of the blend modes
   #   layerGroups: array of children groups
   #   layers: array of children layers
@@ -110,16 +112,20 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     @getPixelForLayerAtCoordinates layerAddress, x, y
 
   findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY, layerGroup = @) ->
-    # Go over all layers in the group.
-    for layer in layerGroup.layers
-      x = absoluteX - (layer.bounds?.x or 0)
-      y = absoluteY - (layer.bounds?.y or 0)
-      pixel = layer.getPixel x, y
-      return pixel if pixel
+    # Sort layers and layer groups from high to low order.
+    items = _.sortBy [layerGroup.layers..., layerGroup.layerGroups...], 'order'
 
-    # Go over all sub groups.
-    for layerGroup in layerGroup.layerGroups
-      pixel = @findPixelAtAbsoluteCoordinates absoluteX, absoluteY, layerGroup
-      return pixel if pixel
+    for item in items by -1 when item.visible ? true
+      if item instanceof @constructor.Layer
+        layer = item
+        x = absoluteX - (layer.bounds?.x or 0)
+        y = absoluteY - (layer.bounds?.y or 0)
+        pixel = layer.getPixel x, y
+        return pixel if pixel
+        
+      if item instanceof @constructor.LayerGroup
+        layerGroup = item
+        pixel = @findPixelAtAbsoluteCoordinates absoluteX, absoluteY, layerGroup
+        return pixel if pixel
 
     null

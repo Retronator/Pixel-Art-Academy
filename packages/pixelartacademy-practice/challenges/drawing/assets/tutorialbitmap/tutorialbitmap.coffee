@@ -172,19 +172,17 @@ class PAA.Practice.Challenges.Drawing.TutorialBitmap extends PAA.Practice.Projec
   
   solve: ->
     bitmap = @bitmap()
-    pixels = @goalPixels()
+    goalPixelsMap = @goalPixelsMap()
+    pixels = []
   
     # Mark all transparent pixels for removal (add pixel with just coordinates).
     for x in [0...bitmap.bounds.width]
       for y in [0...bitmap.bounds.height]
-        pixels.push {x, y} unless _.find pixels, (pixel) => pixel.x is x and pixel.y is y
+        pixels.push goalPixelsMap[x]?[y] or {x, y}
   
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @id(), bitmap, [0], pixels
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
-  
-    # Clear the history.
-    AM.Document.Versioning.clearHistory bitmap
   
   _setGoalPixels: (goalPixels) ->
     @goalPixels goalPixels

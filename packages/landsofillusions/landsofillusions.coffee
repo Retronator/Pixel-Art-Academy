@@ -16,7 +16,7 @@ class LandsOfIllusions
 
   # Helper to get the default Lands of Illusions palette.
   @palette: ->
-    LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.defaultPaletteName
+    LOI.Assets.Palette.defaultPalette()
 
   # Access to package's objects.
   @packages = {}

@@ -14,7 +14,7 @@ class PAA.Challenges.Drawing.Tutorial.Colors.ColorPicking extends PAA.Practice.C
 
   @fixedDimensions: -> width: 12, height: 12
   @restrictedPaletteName: -> PAA.Challenges.Drawing.Tutorial.Colors.pacManPaletteName
-  @backgroundColor: -> LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.gray, 2
+  @backgroundColor: -> LOI.Assets.Palette.defaultPalette()?.color LOI.Assets.Palette.Atari2600.hues.gray, 2
 
   @bitmapString: -> """
       |

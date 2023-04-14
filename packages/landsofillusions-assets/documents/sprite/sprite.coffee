@@ -7,7 +7,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Sprite'
   # layers: array of
   #   name: name of the layer
-  #   visible: boolean if this layer should be drawn
+  #   visible: boolean if this layer should be drawn (true by default)
   #   origin: location of this layer's origin (0,0) in the sprite.
   #     x, y: integer 2D location of the origin
   #     z: floating point depth of the origin
@@ -125,14 +125,19 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     @getPixelForLayerAtCoordinates layerIndex, x, y
     
   findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY) ->
-    for layer, layerIndex in @layers when layer?.pixels
+    for layer, layerIndex in @layers when layer?.pixels and (layer.visible ? true)
       x = absoluteX - (layer.origin?.x or 0)
       y = absoluteY - (layer.origin?.y or 0)
-
-      pixel = @getPixelForLayerAtCoordinates layerIndex, x, y
-      return pixel if pixel
-
-    null
+    
+      continue unless pixel = @getPixelForLayerAtCoordinates layerIndex, x, y
+      
+      z = (pixel.z or 0) + (layer.origin?.z or 0)
+      
+      unless topPixel and topZ > z
+        topPixel = pixel
+        topZ = z
+        
+    topPixel
     
   # Bounds operations
 
