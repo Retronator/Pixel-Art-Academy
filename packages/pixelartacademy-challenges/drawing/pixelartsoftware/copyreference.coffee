@@ -2,11 +2,11 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.Challenges.Drawing.TutorialBitmap
+class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @displayName: -> "Copy the reference"
 
   @description: -> """
-      Use the editor or software of your choice to recreate the provided reference.
+      Recreate the provided reference to show you know how to use pixel art software.
     """
 
   @bitmap: -> "" # Empty bitmap
@@ -35,33 +35,38 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
   constructor: ->
     super arguments...
 
-    # Allow to manually provide user bitmap data.
-    @manualUserBitmapData = new ReactiveField null
+    # Allow to manually provide user image data.
+    @manualUserData = new ReactiveField null
     
     # We override the component that shows the goal state with a custom one that only shows drawn errors.
     @engineComponent = new @constructor.ErrorEngineComponent
-      userBitmapData: =>
-        manualUserBitmapData = @manualUserBitmapData()
-        return manualUserBitmapData if manualUserBitmapData
+      userData: =>
+        manualUserData = @manualUserData()
+        return manualUserData if manualUserData
         
         return unless bitmapId = @bitmapId()
-        LOI.Assets.Bitmap.documents.findOne bitmapId
+        LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
 
-      bitmapData: =>
+      spriteData: =>
         return unless goalPixels = @goalPixels()
         return unless bitmapId = @bitmapId()
 
-        # Take same overall bitmap data (bounds, palette) as bitmap used for drawing, but exclude the pixels.
-        bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId,
+        # Take same overall visual asset data (bounds, palette) as the bitmap used for drawing, but
+        # exclude the layers since we'll be converting the bitmap to a sprite and provide our own pixels.
+        bitmap = LOI.Assets.Bitmap.documents.findOne bitmapId,
           fields:
             'layers': false
+            'layerGroups': false
+            'pixelFormat': false
 
-        return unless bitmapData
+        return unless bitmap
+        
+        spriteData = bitmap.toPlainObject()
 
-        # Replace pixels with the goal state.
-        bitmapData.layers = [pixels: goalPixels]
-
-        bitmapData
+        # Replace layers with the goal state.
+        spriteData.layers = [pixels: goalPixels]
+  
+        new LOI.Assets.Sprite spriteData
         
     @uploadMode = new ReactiveField false
 

@@ -73,8 +73,18 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   # Subscriptions
 
   @allSystem: @subscription 'allSystem'
-
-  # Helper methods
+  
+  @toPlainObject: (visualAsset) ->
+    plainObject = LOI.Assets.Asset.toPlainObject visualAsset
+  
+    _.assign plainObject, _.pick visualAsset, ['customPalette', 'materials', 'landmarks', 'authors', 'references']
+    plainObject.palette = _.pick visualAsset.palette, ['_id', 'name'] if visualAsset.palette
+  
+    if plainObject.references
+      plainObject.references = _.cloneDeep plainObject.references
+      reference.image = _.pick reference.image, ['_id', 'url'] for reference in plainObject.references
+  
+    plainObject
 
   constructor: ->
     super arguments...

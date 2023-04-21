@@ -53,15 +53,25 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
     @editor new @constructor.Editor.Desktop @
+    
+    @displayedAssetCustomComponent = new ComputedField =>
+      portfolio = @portfolio()
+      return unless portfolio.isCreated()
+      
+      portfolio.displayedAsset()?.asset.customComponent
 
     @autorun (computation) =>
       portfolio = @portfolio()
       editor = @editor()
+      displayedAssetCustomComponent = @displayedAssetCustomComponent()
 
       if portfolio.isCreated() and portfolio.activeAsset()
         if editor.active()
           @setMaximumPixelBoySize fullscreen: true
 
+        else if displayedAssetCustomComponent
+          displayedAssetCustomComponent.setPixelBoySize @
+          
         else
           @setFixedPixelBoySize 200, 260
 

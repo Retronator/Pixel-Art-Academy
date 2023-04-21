@@ -20,7 +20,8 @@ Package.onUse(function(api) {
   api.addFile('scenes/pixelboy');
   api.addFile('scenes/apps');
   api.addFile('scenes/editors');
-  api.addFile('scenes/drawingchallenges');
+  api.addFile('scenes/challengesdrawing');
+  api.addFile('scenes/tutorialsdrawing');
 
   // Start
 

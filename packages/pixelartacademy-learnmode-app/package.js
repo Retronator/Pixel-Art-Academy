@@ -27,6 +27,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-studyguide');
   api.use('retronator:pixelartacademy-challenges');
+  api.use('retronator:pixelartacademy-tutorials');
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
 

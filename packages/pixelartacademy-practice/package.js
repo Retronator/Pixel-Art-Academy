@@ -87,11 +87,17 @@ Package.onUse(function(api) {
   api.addFile('challenges..');
   api.addFile('challenges/drawing..');
 
-  api.addFile('challenges/drawing/assets/tutorialbitmap..');
-  api.addFile('challenges/drawing/assets/tutorialbitmap/tutorialbitmap-create');
-  api.addFile('challenges/drawing/assets/tutorialbitmap/tutorialbitmap-reset');
-  api.addFile('challenges/drawing/assets/tutorialbitmap/enginecomponent');
-  api.addUnstyledComponent('challenges/drawing/assets/tutorialbitmap/briefcomponent..');
+  // Tutorials
+
+  api.addFile('tutorials..');
+  api.addFile('tutorials/drawing..');
+
+  api.addFile('tutorials/drawing/assets..');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap..');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-create');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-reset');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/enginecomponent');
+  api.addUnstyledComponent('tutorials/drawing/assets/tutorialbitmap/briefcomponent..');
 
   // Software
   api.addFile('software..');

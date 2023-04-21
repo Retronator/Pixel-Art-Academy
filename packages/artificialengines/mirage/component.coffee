@@ -40,7 +40,7 @@ class AM.Component extends CommonComponent
     handle.stop() for handle in @_contentSubscriptionHandles
     
   subscribeContent: ->
-    @_contentSubscriptionHandles.push Artificial.Mummification.DatabaseContent.subscribe arguments
+    @_contentSubscriptionHandles.push Artificial.Mummification.DatabaseContent.subscribe arguments...
 
   # Modified firstNode and lastNode helpers that skip over text nodes. Useful if the component doesn't have
   # persistent first and last nodes, since the original helpers will point to surrounding text elements.

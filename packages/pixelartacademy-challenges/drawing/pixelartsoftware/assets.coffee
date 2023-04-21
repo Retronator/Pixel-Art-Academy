@@ -577,6 +577,8 @@ for assetId, asset of assets
       @bitmapInfo: asset.bitmapInfo
       @maxClipboardScale: asset.maxClipboardScale
       @initialize()
+  
+    PAA.Challenges.Drawing.PixelArtSoftware.copyReferenceClasses[assetId] = CopyReference[assetId]
 
     # On the server also create PADB entries.
     if Meteor.isServer

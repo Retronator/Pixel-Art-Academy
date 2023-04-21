@@ -43,49 +43,12 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
         unless assetId
           choice = @ephemeralState 'choice'
 
-          assetsIds = [
-            'MSHMNetherWorld'
-            'MSHMDespotDungeons'
-            'MSEMDespotDungeons'
-            'MSEMLAbbayeDesMorts'
-            'MSVMLuftrauser'
-            'MSOMMidnightDungeon'
-            'MBHMLouBagelsWaffleBar'
-            'MBHMVVVVVV'
-            'MBEMSaboteurSiO'
-            'MBVMLuftrausers'
-            'MBOMCityClickers'
-            'MBOMInventorious'
-            'CSHMCeleste'
-            'CSEMHookLineAndThinker'
-            'CSEMSuperCrateBox'
-            'CSVMFroggi'
-            'CSOMTheWakingCloak'
-            'CBHMFez'
-            'CBHMOwlboy'
-            'CBHMCourierOfTheCrypts'
-            'CBHMNYKRA'
-            'CBEMSuperCrateBox'
-            'CBEMIntoTheRift'
-            'CBEMKingdomNewLands'
-            'CBEMDontGiveUpACynicalTale'
-            'CBVMIntoTheBreach'
-            'CBVMHydorah'
-            'CBOMVirtuaVerse'
-            'CBOMThimbleweedPark'
-          ]
+          assetIds = _.keys PAA.Challenges.Drawing.PixelArtSoftware.copyReferenceClasses
 
-          possibleAssetIds = _.filter assetsIds, (assetId) => _.startsWith assetId, choice
+          possibleAssetIds = _.filter assetIds, (assetId) => _.startsWith assetId, choice
           assetId = Random.choice possibleAssetIds
-
-        challengeAssets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
-        challengeAssets ?= []
-        id = "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
-
-        # Add the asset it's not already added.
-        challengeAssets.push {id} unless _.find(challengeAssets, (asset) => asset.id is id)
-
-        C1.Challenges.Drawing.PixelArtSoftware.state 'assets', challengeAssets
+  
+        PAA.Challenges.Drawing.PixelArtSoftware.addCopyReferenceAsset assetId
 
         complete()
 

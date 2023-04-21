@@ -8,6 +8,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio'
   
   @Sections:
+    Tutorials: 'Tutorials'
     Challenges: 'Challenges'
     Projects: 'Projects'
     Artworks: 'Artworks'
@@ -83,7 +84,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     zIndex = group.assets().length - assetData.index
 
     zIndex: zIndex
-    width: "#{assetData.asset.width() * assetData.scale() + 12}rem"
+    width: "#{assetData.asset.width() * assetData.scale() + assetData.asset.portfolioBorderWidth() * 2}rem"
 
   _assetScale: (asset) ->
     # Scale the sprite as much as possible (up to 6) while remaining under 84px.

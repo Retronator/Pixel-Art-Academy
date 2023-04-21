@@ -59,7 +59,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Draw Snake sprites"
 
     @instructions: -> """
-      Talk to Reuben about drawing the game sprites. After you get familiar with pixel art software, draw new sprites
+      Talk to Reuben about drawing the game sprites. After you get familiar with pixel art tools, draw new sprites
       for the snake body and food piece in the Projects section of the Drawing app.
     """
 

@@ -81,6 +81,47 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     # Allow up to 4,096 (64 * 64) pixels per layer.
     throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096
 
+  @toPlainObject: (sprite) ->
+    plainObject = LOI.Assets.VisualAsset.toPlainObject sprite
+    plainObject.bounds = _.pick sprite.bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if sprite.bounds
+
+    # When saving layers, don't save pixel maps.
+    if sprite.layers
+      plainObject.layers = []
+
+      for layer in sprite.layers
+        plainObject.layers.push _.omit layer, ['_pixelMap']
+
+    plainObject
+    
+  @fromBitmap = (bitmap) ->
+    spriteData = LOI.Assets.VisualAsset.toPlainObject bitmap
+    spriteData.bounds = _.pick bitmap.bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if bitmap.bounds
+    
+    bitmapLayerToSpriteLayer = (bitmapLayer) =>
+      originX = bitmapLayer.bounds.x
+      originY = bitmapLayer.bounds.y
+  
+      spriteLayer = _.pick bitmapLayer, ['name', 'visible']
+      spriteLayer.origin = x: originX, y: originY
+      spriteLayer.pixels = []
+      
+      for x in [0...bitmapLayer.width]
+        for y in [0...bitmapLayer.height]
+          if pixel = bitmapLayer.getPixel originX + x, originY + y
+            spriteLayer.pixels push pixel
+  
+      spriteLayer
+  
+    addBitmapLayerGroupToSpriteLayers = (layerGroup) =>
+      addBitmapLayerGroupToSpriteLayers childLayerGroup for childLayerGroup in layerGroup.layerGroups if layerGroup.layourGroups
+  
+      if layerGroup.layers
+        spriteData.layers ?= []
+        spriteData.layers.push bitmapLayerToSpriteLayer layer for layer in bitmap.layers
+        
+    new @ spriteData
+
   constructor: ->
     super arguments...
 
@@ -224,19 +265,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     super arguments...
 
   # Database content
-
-  toPlainObject: ->
-    plainObject = super arguments...
-    plainObject.bounds = _.pick @bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if @bounds
-
-    # When saving layers, don't save pixel maps.
-    if @layers
-      plainObject.layers = []
-
-      for layer in @layers
-        plainObject.layers.push _.omit layer, ['_pixelMap']
-
-    plainObject
 
   getPreviewImage: ->
     engineSprite = new LOI.Assets.Engine.PixelImage.Sprite

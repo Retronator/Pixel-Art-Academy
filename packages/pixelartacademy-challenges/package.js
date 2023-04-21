@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartacademy-pixelboy-drawing');
   api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
@@ -28,28 +29,8 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartsoftware/assets');
   api.addUnstyledComponent('drawing/pixelartsoftware/briefcomponent..');
   api.addComponent('drawing/pixelartsoftware/clipboardpagecomponent..');
-
-  api.addFile('drawing/tutorial..');
-
-  api.addFile('drawing/tutorial/basics..');
-  api.addFile('drawing/tutorial/basics/pencil');
-  api.addFile('drawing/tutorial/basics/eraser');
-  api.addFile('drawing/tutorial/basics/colorfill');
-  api.addFile('drawing/tutorial/basics/colorfill2');
-  api.addFile('drawing/tutorial/basics/colorfill3');
-  api.addFile('drawing/tutorial/basics/basictools');
-  api.addFile('drawing/tutorial/basics/shortcuts');
-  api.addFile('drawing/tutorial/basics/references');
-
-  api.addFile('drawing/tutorial/colors..');
-  api.addFile('drawing/tutorial/colors/colorswatches');
-  api.addFile('drawing/tutorial/colors/colorpicking');
-  api.addFile('drawing/tutorial/colors/quickcolorpicking');
-  api.addServerFile('drawing/tutorial/colors/palette-server');
-
-  api.addFile('drawing/tutorial/helpers..');
-  api.addFile('drawing/tutorial/helpers/zoom');
-  api.addFile('drawing/tutorial/helpers/movecanvas');
-  api.addFile('drawing/tutorial/helpers/undoredo');
-  api.addFile('drawing/tutorial/helpers/lines');
+  api.addFile('drawing/pixelartsoftware/referenceselection..');
+  api.addComponent('drawing/pixelartsoftware/referenceselection/portfoliocomponent..');
+  api.addComponent('drawing/pixelartsoftware/referenceselection/customcomponent..');
+  api.addFile('drawing/pixelartsoftware/referenceselection/customcomponent/card');
 });

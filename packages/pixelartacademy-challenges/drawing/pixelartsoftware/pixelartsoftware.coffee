@@ -20,10 +20,28 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   @translations: ->
     noAssetsInstructions: """
       To make sure you are ready to complete pixel art drawing assignments, this challenge requires you to copy an
-      existing game bitmap in your editor of choice. First go to the Retronator HQ Gallery and talk to Corinne to
+      existing game sprite in your editor of choice. First go to the Retronator HQ Gallery and talk to Corinne to
       obtain a reference image and further instructions.
     """
-
+  
+  @copyReferenceClasses = {}
+  
+  @addCopyReferenceAsset: (assetId) ->
+    assets = @state 'assets'
+    assets ?= []
+    id = "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
+    
+    # Add the asset it's not already added.
+    assets.push {id} unless _.find(assets, (asset) => asset.id is id)
+    
+    @state 'assets', assets
+    
+  @remainingCopyReferenceClasses: ->
+    addedAssets = @state('assets') or []
+    addedReferenceClassIds = (asset.id for asset in addedAssets)
+    
+    _.filter _.values(@copyReferenceClasses), (copyReferenceClass) => copyReferenceClass.id() not in addedReferenceClassIds
+    
   constructor: ->
     super arguments...
     
@@ -55,11 +73,11 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     @translations()?.noAssetsInstructions
 
   assetsData: ->
-    return unless LOI.adventure.readOnlyGameState()
+    return unless LOI.adventure.gameState()
 
     # We need to mimic a project, so we need to provide the data. If no state is
     # set, we send a dummy object to let the bitmap know we've loaded the state.
-    @readOnlyState('assets') or []
+    @state('assets') or []
 
   assets: ->
     assets = []
@@ -68,8 +86,12 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
 
     if pixelArtSoftwareAssets = @state 'assets'
       for asset in pixelArtSoftwareAssets
-        assetClassName = _.last asset.id.split '.'
-        @_pixelArtSoftwareAssets[asset.id] ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference[assetClassName] @
+        if asset.id is PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.id()
+          @_pixelArtSoftwareAssets[asset.id] ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection @
+        
+        else
+          assetClassName = _.last asset.id.split '.'
+          @_pixelArtSoftwareAssets[asset.id] ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference[assetClassName] @
 
         assets.push @_pixelArtSoftwareAssets[asset.id]
 

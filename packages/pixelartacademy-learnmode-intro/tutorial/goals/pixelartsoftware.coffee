@@ -36,7 +36,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @instructions: -> """
       Learn how to use essential drawing tools (pencil, eraser, color fill)
-      by completing the Basics tutorial under Challenges in the Drawing app.
+      by completing the Basics tutorial in the Drawing app.
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
@@ -46,7 +46,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
     
     @completedConditions: ->
-      PAA.Challenges.Drawing.Tutorial.Basics.completed()
+      PAA.Tutorials.Drawing.PixelArtTools.Basics.completed()
 
   class @Helpers extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.Helpers'
@@ -67,7 +67,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      PAA.Challenges.Drawing.Tutorial.Helpers.completed()
+      PAA.Tutorials.Drawing.PixelArtTools.Helpers.completed()
 
   class @ColorTools extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.ColorTools'
@@ -88,7 +88,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      PAA.Challenges.Drawing.Tutorial.Colors.completed()
+      PAA.Tutorials.Drawing.PixelArtTools.Colors.completed()
 
   class @CopyReference extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.CopyReference'

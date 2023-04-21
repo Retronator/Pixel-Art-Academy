@@ -43,6 +43,9 @@ class PAA.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
 
   asset: ->
     @drawing.portfolio().displayedAsset()?.asset
+    
+  activeClass: ->
+    'active' if @drawing.activeAssetClass() and not @drawing.displayedAssetCustomComponent()
 
   onBackButton: ->
     # Relay to asset clipboard component.

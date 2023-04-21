@@ -1,0 +1,35 @@
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent">
+  <div class="pixelartacademy-challenges-drawing-pixelartsoftware-referenceselection-customcomponent {{activeClass}} {{finalSelectionClass}} {{selectionFinishedClass}}">
+    {{#if cardsVisible}}
+      <div class="origin">
+        {{#with currentChoice}}
+          <div class="prompt">{{prompt}}</div>
+          <div class="choice left">
+            <div class="name">{{left.name}}</div>
+          </div>
+          <div class="choice right">
+            <div class="name">{{right.name}}</div>
+          </div>
+        {{/with}}
+        {{#if finalSelection}}
+          <div class="prompt">Choose a card</div>
+        {{/if}}
+        <ul class="cards">
+          {{#each cards}}
+            <li class="card {{evenYClass}} {{revealedClass}}" {{style cardStyle}}>
+              <img class="reference" src="{{referenceUrl}}" {{style referenceStyle}}/>
+              {{#if $is this selectedCard}}
+                <img class="front" src="{{frontUrl}}"/>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+        <ul class="card-shadows">
+          {{#each cards}}
+            <li class="card {{revealedClass}}" {{style shadowStyle}}></li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+  </div>
+</template>

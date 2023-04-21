@@ -90,10 +90,12 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   
     # No author was authorized. Only allow editing if the user is an admin.
     RA.authorizeAdmin()
+  
+  @toPlainObject: (asset) ->
+    _.pick asset, ['_id', 'profileId', 'name', 'creationTime', 'lastEditTime', 'editor', 'history', 'historyPosition']
     
   toPlainObject: ->
-    # Override to add other properties to save.
-    _.pick @, ['_id', 'profileId', 'name', 'creationTime', 'lastEditTime', 'editor', 'history', 'historyPosition']
+    @constructor.toPlainObject @
   
   _applyOperation: (forward, backward) ->
     # Update last edit time.

@@ -1,0 +1,127 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-challenges-drawing-pixelartsoftware-referenceselection-customcomponent
+  absolute-cover()
+  background image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem !important
+  opacity 0
+  visibility hidden
+  transition all 0.4s
+
+  &.active
+    opacity 1
+    visibility visible
+    transition all 0.6s 0.2s
+
+  &.final-selection
+    .card
+      cursor pointer
+      transition transform 0.1s !important
+
+      &:hover
+        transform translateY(-2rem)
+
+  &.selection-finished
+    .card
+      cursor pointer
+      transition transform 0.1s !important
+
+      &:hover
+        transform scale(2) rotateY(-179.99deg) translateY(-1rem) !important
+
+  .origin
+    position absolute
+    top 50%
+    left 50%
+
+    .prompt
+      position absolute
+      top -100rem
+      left -140rem
+      right -140rem
+      kyrou-9()
+      font-weight bold
+      text-align center
+      pixel-text-outline(atariBrown(0))
+
+    .choice
+      position absolute
+      z-index 2
+      top -80rem
+      bottom -100rem
+      cursor pointer
+
+      &:hover
+        .name
+          bottom 5rem
+
+      &.left
+        left -170rem
+        right 0
+
+      &.right
+        left 0
+        right -170rem
+
+      .name
+        position absolute
+        bottom 0
+        left 0
+        right 0
+        daily()
+        text-transform uppercase
+        text-align center
+        pixel-text-outline(atariBrown(0))
+        transition bottom 0.1s
+
+    .cards
+    .card-shadows
+      list-style none
+      margin 0
+      position absolute
+
+      .card
+        position absolute
+        width 75rem
+        height 113rem
+        transition none 0.6s cubic-bezier(.82,1.24,.93,.99)
+        transition-property left, top, transform
+
+    .cards
+      z-index 1
+      perspective 200rem
+
+      .card
+        background-image image('/pixelartacademy/challenges/drawing/pixelartsoftware/card-back.png')
+        transform-style preserve-3d
+
+        &.even-y::after
+          content ''
+          display block
+          position absolute
+          bottom 0
+          left 0
+          right 0
+          height 3rem
+          background-image image('/pixelartacademy/challenges/drawing/pixelartsoftware/card-bottom.png')
+
+        &.revealed
+          transform scale(2) rotateY(-179.99deg)
+          cursor pointer
+
+        .reference
+          position absolute
+          filter brightness(0)
+
+        .front
+          absolute-cover-size()
+          transform rotateY(180deg) translateZ(1rem)
+
+    .card-shadows
+      z-index 0
+      opacity 0.5
+
+      .card
+        background-image image('/pixelartacademy/challenges/drawing/pixelartsoftware/card-shadow.png')
+
+        &.revealed
+          transform rotateY(180deg)

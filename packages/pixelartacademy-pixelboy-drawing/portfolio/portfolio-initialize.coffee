@@ -28,6 +28,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
     profileId = LOI.adventure.profileId()
 
     sectionLocations =
+      tutorial: new PAA.Practice.Tutorials.Drawing
       challenge: new PAA.Practice.Challenges.Drawing
       project: new PAA.Practice.Project.Workbench
     
@@ -153,9 +154,10 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
   
     @sections = new ComputedField =>
       sections = []
-
-      sections.push @projectsSection if @projectsSection.groups().length
+  
+      sections.push @tutorialsSection if @tutorialsSection.groups().length
       sections.push @challengesSection if @challengesSection.groups().length
+      sections.push @projectsSection if @projectsSection.groups().length
       sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.

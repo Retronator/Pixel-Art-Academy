@@ -98,7 +98,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
         canvas.width = 15
         canvas.height = ramp.shades.length * 11 + 2
 
-        context = canvas.getContext '2d'
+        context = canvas.getContext '2d', willReadFrequently: true
         imageData = context.getImageData 0, 0, canvas.width, canvas.height
 
         previousRowTotalPower = null

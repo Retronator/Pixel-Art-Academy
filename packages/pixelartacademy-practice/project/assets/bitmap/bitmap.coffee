@@ -3,6 +3,8 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
+  @portfolioBorderWidth = 6
+  
   # Type of this asset.
   @type: -> @Types.Bitmap
 
@@ -86,6 +88,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   
   width: -> @bitmap()?.bounds.width
   height: -> @bitmap()?.bounds.height
+  portfolioBorderWidth: -> 6
 
   fixedDimensions: -> @constructor.fixedDimensions()
 

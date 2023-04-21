@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+Attribute = LOI.Assets.Bitmap.Attribute
 
 _paletteColor = ramp: 0, shade: 0
 _directColor = new THREE.Color
@@ -30,12 +31,14 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
     
     # Render all the layers.
     for layer in layerGroup.layers when layer.visible isnt false
+      flags = layer.attributes.flags
+      
       for layerX in [0...layer.bounds.width]
         for layerY in [0...layer.bounds.height]
-          flagIndex = layer.attributes.flags.getPixelIndex layerX, layerY
+          flagIndex = flags.getPixelIndex layerX, layerY
           
           # See if the pixel exists at these coordinates.
-          continue unless layer.attributes.flags.pixelExistsAtIndex flagIndex
+          continue unless flags.pixelExistsAtIndex flagIndex
           
           absoluteX = layer.bounds.x + layerX
           absoluteY = layer.bounds.y + layerY
@@ -43,7 +46,7 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
           assetX = absoluteX - bitmapData.bounds.x
           assetY = absoluteY - bitmapData.bounds.y
           
-          if layer.attributes.paletteColor
+          if flags.pixelHasFlagAtIndex flagIndex, Attribute.PaletteColor.flagValue
             paletteColorIndex = flagIndex * 2
             _paletteColor.ramp = layer.attributes.paletteColor.array[paletteColorIndex]
             _paletteColor.shade = layer.attributes.paletteColor.array[paletteColorIndex + 1]
@@ -52,7 +55,7 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
           else
             paletteColor = null
             
-          if layer.attributes.directColor
+          if flags.pixelHasFlagAtIndex flagIndex, Attribute.DirectColor.flagValue
             directColorIndex = flagIndex * 3
             _directColor.r = layer.attributes.directColor.array[directColorIndex] / 255
             _directColor.g = layer.attributes.directColor.array[directColorIndex + 1] / 255
@@ -61,8 +64,12 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
             
           else
             directColor = null
+  
+          if flags.pixelHasFlagAtIndex flagIndex, Attribute.MaterialIndex.flagValue
+            materialIndex = layer.attributes.materialIndex.array[flagIndex]
             
-          materialIndex = layer.attributes.materialIndex?.array[flagIndex]
+          else
+            materialIndex = null
           
           if layer.attributes.normal
             normalIndex = flagIndex * 3

@@ -6,7 +6,7 @@ class Migration extends Document.PatchMigration
   forward: (document, collection, currentSchema, newSchema) ->
     count = 0
 
-    tutorialAddress = 'readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial'
+    tutorialAddress = 'readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Tutorials.Drawing.Tutorial'
 
     collection.findEach
       _schema: currentSchema
@@ -17,7 +17,7 @@ class Migration extends Document.PatchMigration
         basicsAssets = _.nestedProperty document, "#{tutorialAddress}.Basics.assets"
 
         for tutorialAddress in ['Pencil', 'Shortcuts']
-          _.remove basicsAssets, (asset) => asset.id is "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics.#{tutorialAddress}"
+          _.remove basicsAssets, (asset) => asset.id is "PixelArtAcademy.Season1.Episode1.Chapter1.Tutorials.Drawing.Tutorial.Basics.#{tutorialAddress}"
 
         # Remove all Colors assets.
         _.nestedProperty document, "#{tutorialAddress}.Colors.assets", []

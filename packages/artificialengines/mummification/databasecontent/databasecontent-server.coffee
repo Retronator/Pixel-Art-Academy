@@ -47,18 +47,10 @@ class AM.DatabaseContent extends AM.DatabaseContent
 
     exportTime = new Date
     
-    if append
-      # In append mode, the private directory can only be extended
-      # with new documents, but existing ones should not be removed.
-      privateDirectory = EJSON.clone currentPrivateDirectory
-      privateDirectory.exportTime = exportTime
-      
-    else
-      privateDirectory =
-        exportTime: exportTime
-        documents: {}
-      
-    # Public directory always includes just the assets exported by the current configuration.
+    privateDirectory =
+      exportTime: exportTime
+      documents: {}
+    
     publicDirectory =
       exportTime: exportTime
       documents: {}
@@ -151,14 +143,23 @@ class AM.DatabaseContent extends AM.DatabaseContent
         
     if append
       # Go over all the private files that weren't added yet.
-      for documentClassId, privateInformationDocuments of privateDirectory.documents
+      for documentClassId, privateInformationDocuments of currentPrivateDirectory.documents
         for privateInformationDocument in privateInformationDocuments
-          continue if _.find publicDirectory.documents[documentClassId], (document) => document._id is privateInformationDocument._id
-            
+          continue if _.find privateDirectory.documents[documentClassId], (document) => document._id is privateInformationDocument._id
+          
           path = privateInformationDocument.path
           privateUrl = "databasecontent/#{path}"
-          privateData = AM.DatabaseContent.assets.getBinary privateUrl
-          archive.append Buffer.from(privateData), name: "private/databasecontent/#{path}"
+          
+          try
+            privateData = AM.DatabaseContent.assets.getBinary privateUrl
+            privateDirectory.documents[documentClassId] ?= []
+            privateDirectory.documents[documentClassId].push privateInformationDocument
+        
+            archive.append Buffer.from(privateData), name: "private/databasecontent/#{path}"
+            
+          catch error
+            # The document was removed from the private folder so it will also be removed from the new json directory.
+            console.log "Removed", documentClassId, "at", path
 
     # Place directory in the archive.
     archive.append EJSON.stringify(privateDirectory), name: 'private/databasecontent/directory.json'

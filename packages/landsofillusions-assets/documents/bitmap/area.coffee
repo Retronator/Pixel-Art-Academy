@@ -54,7 +54,7 @@ class LOI.Assets.Bitmap.Area
     for attributeId in @pixelFormat.attributeIds
       # If the attribute has a flag value, make sure the flag is present for this pixel.
       attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
-      continue if attributeClass.flagValue and not flags & attributeClass.flagValue
+      continue if attributeClass.flagValue and not (flags & attributeClass.flagValue)
       
       pixel[attributeId] = @attributes[attributeId].getPixel x, y
 

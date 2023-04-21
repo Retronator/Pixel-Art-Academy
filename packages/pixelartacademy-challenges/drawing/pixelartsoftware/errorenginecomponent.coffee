@@ -1,45 +1,44 @@
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ErrorEngineComponent extends PAA.Practice.Challenges.Drawing.TutorialBitmap.EngineComponent
+class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ErrorEngineComponent extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.EngineComponent
   constructor: (@options) ->
     super arguments...
 
     @ready = new ComputedField =>
-      return unless @options.userBitmapData()
-      return unless bitmapData = @options.bitmapData()
-      return unless bitmapData.layers?.length and bitmapData.bounds
-      return if bitmapData.palette and not LOI.Assets.Palette.documents.findOne bitmapData.palette._id
+      return unless @options.userData()
+      return unless spriteData = @options.spriteData()
+      return unless spriteData.layers?.length and spriteData.bounds
+      return if spriteData.palette and not LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
       true
 
     @drawMissingPixelsUpTo = new ReactiveField x: -1, y: -1
 
   _render: (context) ->
-    userBitmapData = @options.userBitmapData()
-    userPixels = userBitmapData.layers?[0]?.pixels
+    userData = @options.userData()
 
-    bitmapData = @options.bitmapData()
-    bitmapData.requirePixelMaps()
-    palette = LOI.Assets.Palette.documents.findOne bitmapData.palette._id if bitmapData.palette
+    spriteData = @options.spriteData()
+    spriteData.requirePixelMaps()
+    palette = LOI.Assets.Palette.documents.findOne spriteData.palette._id if spriteData.palette
 
     # Draw background dots to empty pixels.
-    for x in [0...bitmapData.bounds.width]
-      for y in [0...bitmapData.bounds.height]
-        @_drawHint context, x, y, @options.backgroundColor unless bitmapData.findPixelAtAbsoluteCoordinates x, y
+    for x in [0...spriteData.bounds.width]
+      for y in [0...spriteData.bounds.height]
+        @_drawHint context, x, y, @options.backgroundColor unless spriteData.findPixelAtAbsoluteCoordinates x, y
 
     drawMissingPixelsUpTo = @drawMissingPixelsUpTo()
-    drawMissingPixelsUpToIndex = drawMissingPixelsUpTo.x + drawMissingPixelsUpTo.y * bitmapData.bounds.width
+    drawMissingPixelsUpToIndex = drawMissingPixelsUpTo.x + drawMissingPixelsUpTo.y * spriteData.bounds.width
 
-    for layer in bitmapData.layers
+    for layer in spriteData.layers
       continue unless layer.pixels
 
       for pixel in layer.pixels
         # Skip the pixels that the user hasn't painted yet, unless we should draw them.
-        pixelIndex = pixel.x + pixel.y * bitmapData.bounds.width
+        pixelIndex = pixel.x + pixel.y * spriteData.bounds.width
 
         if pixelIndex > drawMissingPixelsUpToIndex
-          continue unless _.find userPixels, (userPixel) => userPixel.x is pixel.x and userPixel.y is pixel.y
+          continue unless userData and userData.findPixelAtAbsoluteCoordinates pixel.x, pixel.y
 
         if pixel.paletteColor
           shades = palette.ramps[pixel.paletteColor.ramp].shades

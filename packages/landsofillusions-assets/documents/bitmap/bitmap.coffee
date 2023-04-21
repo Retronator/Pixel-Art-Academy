@@ -37,6 +37,13 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     PassThrough: 'PassThrough'
     Normal: "Normal"
 
+  @toPlainObject: (bitmap) ->
+    plainObject = LOI.Assets.VisualAsset.toPlainObject bitmap
+    plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in bitmap.layerGroups) if bitmap.layourGroups
+    plainObject.layers = (layer.toPlainObject() for layer in bitmap.layers) if bitmap.layers
+    plainObject.bounds = _.pick bitmap.bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if bitmap.bounds
+    plainObject
+    
   initialize: ->
     # Make sure we don't initialize it multiple times.
     if @_initialized
@@ -54,13 +61,6 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     @constructor.LayerGroup.initializeLayerGroup @, @
 
     @_initialized = true
-
-  toPlainObject: ->
-    plainObject = super arguments...
-    plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in @layerGroups) if @layourGroups
-    plainObject.layers = (layer.toPlainObject() for layer in @layers) if @layers
-    plainObject.bounds = _.pick @bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if @bounds
-    plainObject
 
   # Layers
 

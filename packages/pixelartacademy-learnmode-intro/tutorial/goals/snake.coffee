@@ -44,7 +44,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Draw Snake sprites"
 
     @instructions: -> """
-      After you get familiar with pixel art software, draw new sprites
+      After you get familiar with pixel art tools, draw new sprites
       for the snake body and food piece in the Projects section of the Drawing app.
     """
 
