@@ -2,6 +2,7 @@ AE = Artificial.Everywhere
 AEt = Artificial.Everything
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -298,6 +299,17 @@ class LOI.Adventure.Thing extends AM.Component
     return super(arguments...) if @isCreated()
 
     handle = Meteor.subscribe subscriptionName, params...
+    @_subscriptionHandles.push handle
+
+    handle
+
+  # A variant of subscribe content that works even when the component isn't being rendered.
+  subscribeContent: (subscriptionName, params...) ->
+    # If we're already created, we can simply use default implementation
+    # that will stop the subscribe when component is removed from DOM.
+    return super(arguments...) if @isCreated()
+
+    handle = AMu.DatabaseContent.subscribe subscriptionName, params...
     @_subscriptionHandles.push handle
 
     handle

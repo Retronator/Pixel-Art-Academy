@@ -37,9 +37,6 @@ class AM.Document.Persistence
     # Replace documents with a local collection that can be directly written to and we can observe the changes.
     documentClass.serverDocuments = documentClass.documents
     documentClass.documents = new AM.Document.Persistence.PersistentCollection documentClass
-    documentClass.documents.fetch = ->
-      cursor = documentClass.documents.find arguments...
-      cursor.fetch()
   
     # Use latest resolution strategy by default.
     documentClass.conflictResolutionStrategy ?= @ConflictResolutionStrategies.Latest

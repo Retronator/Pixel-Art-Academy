@@ -5,7 +5,7 @@ AM = Artificial.Mummification
 decoder = null
 Pako = require 'pako'
 
-class AM.DatabaseContent.ContentCollection extends Mongo.Collection
+class AM.DatabaseContent.ContentCollection extends AM.Collection
   constructor: (documentClass) ->
     super null
 
@@ -16,8 +16,8 @@ class AM.DatabaseContent.ContentCollection extends Mongo.Collection
     # Separate Meteor-handled documents if persistence didn't do it yet, so we can manage them ourselves.
     unless @documentClass.serverDocuments
       @documentClass.serverDocuments = @documentClass.documents
-      @documentClass.documents = new Mongo.Collection null, transform: (document) => new documentClass document
-      
+      @documentClass.documents = new AM.Collection null, transform: (document) => new documentClass document
+
     # Observe changes to information documents.
     @find({}).observe
       added: (document) => @_handleDocument document._id

@@ -11,7 +11,9 @@ Package.describe({
 });
 
 Npm.depends({
-  'pngjs': '2.3.0'
+  'pngjs': '2.3.0',
+  'fast-png': '4.0.1',
+  'canvas': '2.6.1'
 });
 
 Package.onUse(function(api) {
@@ -34,7 +36,8 @@ Package.onUse(function(api) {
   api.addServerFile('cartridges/server');
 
   api.addFile('game..');
-  api.addServerFile('game/subscriptions');
+  api.addServerFile('game/game-server-databasecontent');
+  api.addFile('game/subscriptions');
 
   api.addFile('device..');
   api.addFile('device/device-spritereplacement');

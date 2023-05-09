@@ -201,6 +201,7 @@ Package.onUse(function(api) {
 
   // Artificial Mummification
 
+  api.addFile('mummification/collection');
   api.addFile('mummification/mongohelper');
   api.addFile('mummification/persistentstorage');
   api.addFile('mummification/collectionwrapper');

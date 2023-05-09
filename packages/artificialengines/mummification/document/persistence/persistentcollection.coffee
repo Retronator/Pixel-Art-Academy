@@ -3,7 +3,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 Persistence = AM.Document.Persistence
 
-class Persistence.PersistentCollection extends Mongo.Collection
+class Persistence.PersistentCollection extends AM.Collection
   constructor: (documentClass) ->
     super null, transform: (document) => new documentClass document
     
