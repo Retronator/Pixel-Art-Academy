@@ -74,7 +74,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       
       else if assetData instanceof LOI.Assets.Bitmap
         # Add the fill action.
-        colorFillAction = new LOI.Assets.Bitmap.Actions.ColorFill null, assetData, layerAddress, pixel
+        colorFillAction = new LOI.Assets.Bitmap.Actions.ColorFill @, assetData, layerAddress, pixel
         action.append colorFillAction
 
     if assetData instanceof LOI.Assets.Bitmap

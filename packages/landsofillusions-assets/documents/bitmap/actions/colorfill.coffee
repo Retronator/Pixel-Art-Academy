@@ -152,7 +152,7 @@ class LOI.Assets.Bitmap.Actions.ColorFill extends AM.Document.Versioning.Action
           flagPixelIndex = forwardAreaFlags.getPixelIndex changeAreaX, changeAreaY
           forwardAreaFlags.array[flagPixelIndex] = existingFlags
 
-          forwardAreaFlags.switchColorFlagAtIndex flagPixelIndex, colorAttributeClass.flagValue
+          forwardAreaFlags.switchColorFlagAtIndex flagPixelIndex, changedColorAttributeClass.flagValue
   
           # Set the new color attribute value.
           forwardArea.attributes[changedColorAttributeClass.id].setPixel changeAreaX, changeAreaY, newTargetPixel[changedColorAttributeClass.id]
