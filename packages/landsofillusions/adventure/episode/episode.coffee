@@ -60,6 +60,9 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
     chapter for chapter in @chapters when chapter.meetsAccessRequirement() and chapter.active()
 
+  getChapter: (chapterClass) ->
+    _.find @chapters, (chapter) => chapter instanceof chapterClass
+
   ready: ->
     # Episode is ready when its current chapters are ready.
     return unless currentChapters = @currentChapters()

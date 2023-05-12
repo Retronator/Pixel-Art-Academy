@@ -33,3 +33,9 @@ class PAA.Chapter extends LOI.Adventure.Chapter
 
     @_automaticTasksAutorun.stop()
     goal.destroy() for goal in @goals
+
+  getGoal: (goalClass) ->
+    _.find @goals, (goal) => goal instanceof goalClass
+
+  getTask: (taskClass) ->
+    _.find @tasks, (task) => task instanceof taskClass

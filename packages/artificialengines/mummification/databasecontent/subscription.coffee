@@ -4,7 +4,6 @@ AM = Artificial.Mummification
 
 class AM.DatabaseContent.Subscription extends AB.Subscription
   subscribeContent: ->
-    subscribeProvider = Meteor
     parameters = arguments
   
     if arguments[0]?.subscribeContent
@@ -12,7 +11,7 @@ class AM.DatabaseContent.Subscription extends AB.Subscription
       subscribeProvider = arguments[0]
       parameters = _.tail arguments
       subscribeProvider.subscribeContent @options.name, parameters...
-  
+
     else
       AM.DatabaseContent.subscribe @options.name, parameters...
   

@@ -23,9 +23,9 @@ class LOI.StateField
       # Return the final value.
       value
     ,
-      true
-    ,
       options.equalityFunction
+    ,
+      true
 
     # We want the state field to behave as a getter/setter.
     stateField = (value) ->

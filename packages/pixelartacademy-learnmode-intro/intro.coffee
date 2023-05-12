@@ -17,6 +17,7 @@ class LM.Intro extends LOI.Adventure.Episode
     @ChallengesDrawing
     @TutorialsDrawing
     @Pico8Cartridges
+    @Workbench
   ]
   
   @startSection: -> @Start
@@ -24,8 +25,8 @@ class LM.Intro extends LOI.Adventure.Episode
   @initialize()
 
   pico8Enabled: ->
-    tutorial = _.find @chapters, (chapter) => chapter instanceof LM.Intro.Tutorial
-    pixelArtSoftwareGoal = _.find tutorial.goals, (goal) => goal instanceof LM.Intro.Tutorial.Goals.PixelArtSoftware
+    tutorial = @getChapter LM.Intro.Tutorial
+    pixelArtSoftwareGoal = tutorial.getGoal LM.Intro.Tutorial.Goals.PixelArtSoftware
     pixelArtSoftwareGoal.completed() and PAA.PixelBoy.Apps.StudyPlan.hasGoal LM.Intro.Tutorial.Goals.Snake
 
 if Meteor.isServer

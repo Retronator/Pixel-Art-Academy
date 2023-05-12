@@ -65,7 +65,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
   cartridgeImageUrl: ->
     cartridge = @currentData()
 
-    return unless url = cartridge.cartridgeImageUrl()
+    return unless url = cartridge.imageUrl()
 
     # Don't cache local carts.
     if url.indexOf('pico8/cartridge.png') > 0
@@ -126,7 +126,8 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     @pico8.cartridge @selectedCartridge()
 
   onClickSelectedCartridgeCaseTop: (event) ->
-    @pannedLeft true
+    # TODO: Show case top only for online projects.
+    # @pannedLeft true
 
   onClickSelectedCartridgeCaseBottom: (event) ->
     @pannedLeft false

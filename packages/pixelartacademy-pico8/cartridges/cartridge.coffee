@@ -29,9 +29,21 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
       true
 
     @projectId = new ComputedField =>
-      @constructor.projectClass()?.readOnlyState 'activeProjectId'
+      @constructor.projectClass()?.state 'activeProjectId'
     ,
       true
+
+    @imageUrl = new ReactiveField null
+
+    @_imageUrlAutorun = Tracker.autorun =>
+      return unless game = @game()
+
+      if projectId = @projectId()
+        game.getCartridgeImageUrlForProject(projectId).then (imageUrl) =>
+          @imageUrl imageUrl
+
+      else
+        @imageUrl game.cartridge.url
 
   destroy: ->
     super arguments...
@@ -39,20 +51,15 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
     @game.stop()
     @artwork.stop()
     @projectId.stop()
+    @_imageUrlAutorun.stop()
 
   fullName: ->
     @artwork()?.title
 
-  cartridgeImageUrl: ->
+  imageUrl: ->
     return unless game = @game()
 
-    if projectId = @projectId()
-      # We need to create a modified cartridge PNG with the project's assets.
-      Meteor.absoluteUrl "pico8/cartridge.png?gameId=#{game._id}&projectId=#{projectId}"
-
-    else
-      # We can use the cartridge PNG directly.
-      game.cartridge.url
+    game.cartridge.url
 
   shareUrl: ->
     return unless game = @game()

@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.addFile('scenes/challengesdrawing');
   api.addFile('scenes/tutorialsdrawing');
   api.addFile('scenes/pico8cartridges');
+  api.addFile('scenes/workbench');
 
   // Start
 

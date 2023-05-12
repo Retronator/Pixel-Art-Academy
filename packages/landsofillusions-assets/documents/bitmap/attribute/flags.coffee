@@ -30,8 +30,8 @@ class LOI.Assets.Bitmap.Attribute.Flags extends LOI.Assets.Bitmap.Attribute
     # Pixel exists if at least one flag is set.
     @array[index] > 0
     
-  switchColorFlag: (x, y) ->
-    @switchColorFlagAtIndex @getPixelIndex x, y
+  switchColorFlag: (x, y, newColorFlag) ->
+    @switchColorFlagAtIndex @getPixelIndex(x, y), newColorFlag
     
   switchColorFlagAtIndex: (index, newColorFlag) ->
     otherColorFlags = LOI.Assets.Bitmap.Attribute.allColorFlagsMask & ~newColorFlag

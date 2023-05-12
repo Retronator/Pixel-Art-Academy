@@ -12,14 +12,7 @@ class PAA.Pico8.Device extends PAA.Pico8.Device
     @_updatedPixels = []
     @_ioMemory = []
 
-    # Subscribe to all project sprites.
-    @autorun (computation) =>
-      return unless project = @project()
-
-      for asset in project.assets
-        LOI.Assets.Asset.forId.subscribe @, LOI.Assets.Sprite.className, asset.sprite._id
-
-    # Listen to all sprite changes in the project.
+    # Listen to all bitmap changes in the project.
     @autorun (computation) =>
       return unless game = @game()
       return unless project = @project()
@@ -31,37 +24,27 @@ class PAA.Pico8.Device extends PAA.Pico8.Device
           assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
           backgroundIndex = assetClass.backgroundColor().paletteColor.ramp
 
-          LOI.Assets.Sprite.documents.find(
-            _id: projectAsset.sprite._id
-          ,
-            fields:
-              # React only to pixel changes.
-              layers: 1
-          ).observe
-            changed: (newSprite, oldSprite) =>
-              # Find the difference between old and new pixels.
-              newPixels = newSprite.layers[0].pixels
-              oldPixels = oldSprite.layers[0].pixels
+          LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, (bitmap, operation, changedFields) =>
+            return unless bitmap._id is projectAsset.bitmapId
 
-              for oldPixel in oldPixels
-                # Does the pixel still exists?
-                newPixel = _.find newPixels, (pixel) => pixel.x is oldPixel.x and pixel.y is oldPixel.y
-                if newPixel
-                  # Did the color change?
-                  unless newPixel.paletteColor.ramp is oldPixel.paletteColor.ramp
-                    # Pixel has changed color.
-                    @_updatePixel asset.x * 8 + oldPixel.x, asset.y * 8 + oldPixel.y, newPixel.paletteColor.ramp
+            # React only to pixel changes.
+            return unless operation instanceof LOI.Assets.Bitmap.Operations.ChangePixels
+
+            for x in [operation.bounds.x...operation.bounds.x + operation.bounds.width]
+              for y in [operation.bounds.y...operation.bounds.y + operation.bounds.height]
+                if pixel = bitmap.layers[0].getPixel x, y
+                  colorIndex = pixel.paletteColor.ramp
 
                 else
-                  # Pixel was removed. Fill that location with background color.
-                  @_updatePixel asset.x * 8 + oldPixel.x, asset.y * 8 + oldPixel.y, backgroundIndex
+                  # Fill that location with background color.
+                  colorIndex = backgroundIndex
 
-              for newPixel in newPixels
-                # Did this pixel already exist?
-                oldPixel = _.find oldPixels, (pixel) => pixel.x is newPixel.x and pixel.y is newPixel.y
-                unless oldPixel
-                  # This is a new pixel so we need to color it.
-                  @_updatePixel asset.x * 8 + newPixel.x, asset.y * 8 + newPixel.y, newPixel.paletteColor.ramp
+                @_updatePixel asset.x * 8 + x, asset.y * 8 + y, colorIndex
+
+  onDestroyed: ->
+    super arguments...
+
+    LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandlers @
 
   _updatePixel: (x, y, color) ->
     @_updatedPixels.push {x, y, color}

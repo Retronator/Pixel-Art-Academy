@@ -36,6 +36,7 @@ Package.onUse(function(api) {
   api.addServerFile('cartridges/server');
 
   api.addFile('game..');
+  api.addFile('game/game-cartridgeimage');
   api.addServerFile('game/game-server-databasecontent');
   api.addFile('game/subscriptions');
 

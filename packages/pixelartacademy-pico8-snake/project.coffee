@@ -9,11 +9,6 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
 
   @initialize()
 
-  # Methods
-  
-  @start: new AB.Method name: "#{@id()}.start"
-  @end: new AB.Method name: "#{@id()}.end"
-
   constructor: ->
     super arguments...
 

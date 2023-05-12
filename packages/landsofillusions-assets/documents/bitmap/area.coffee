@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 Pako = require 'pako'
@@ -70,6 +71,37 @@ class LOI.Assets.Bitmap.Area
       pixel[attributeId] = @attributes[attributeId].getPixel x, y
   
     pixel
+
+  setPixel: (x, y, values) ->
+    # Make sure the pixel is in bounds.
+    throw new AE.ArgumentOutOfRangeException "Coordinates are outside of area bounds." unless 0 <= x < @width and 0 <= y < @height
+
+    # If there are no flags, we simply return the values of all attributes.
+    unless @attributes.flags
+      @setPixelValues x, y, values
+      return
+
+    # Clear pixel by default.
+    @attributes.flags.setPixel x, y, 0
+    return unless values
+
+    for attributeId, value of values
+      # If the attribute has a flag value, set the flag for this pixel.
+      attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
+
+      if attributeClass.flagValue
+        @attributes.flags.setPixelFlag x, y, attributeClass.flagValue
+
+      @attributes[attributeId].setPixel x, y, value
+
+  setPixelValues: (x, y, values) ->
+    # Make sure the pixel is in bounds.
+    throw new AE.ArgumentOutOfRangeException "Coordinates are outside of area bounds." unless 0 <= x < @width and 0 <= y < @height
+
+    for attributeId, value of values
+      @attributes[attributeId].setPixel x, y, value
+
+  clearPixel: (x, y) -> @setPixel x, y, null
     
   debugOutput: ->
     console.log "AREA #{@width}x#{@height}"

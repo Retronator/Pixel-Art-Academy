@@ -27,15 +27,9 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      return false
-      
-      # TODO: Add Snake project.
-      # Make sure the player has the Snake cartridge.
-      return unless LM.Intro.Tutorial.AdmissionProjects.Snake.Intro.Coworking.Listener.Script.state 'ReceiveCartridge'
-
       # Require score of 5 or higher. Since we reset the high score when the
-      # intro section is finished, we also keep this task completed based on that.
-      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5 or LM.Intro.Tutorial.AdmissionProjects.Snake.Intro.finished()
+      # snake project is created, we also keep this task completed based on that.
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5 or PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
 
   class @Draw extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.Snake.Draw'
@@ -44,8 +38,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Draw Snake sprites"
 
     @instructions: -> """
-      After you get familiar with pixel art tools, draw new sprites
-      for the snake body and food piece in the Projects section of the Drawing app.
+      Draw new sprites for the snake body and food piece in the Projects section of the Drawing app.
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
@@ -59,17 +52,14 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @initialize()
     
     @completedConditions: ->
-      return unless projectId = PAA.Pico8.Cartridges.Snake.Project.readOnlyState 'activeProjectId'
-
-      PAA.Practice.Project.forId.subscribe projectId
+      return unless projectId = PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
       return unless project = PAA.Practice.Project.documents.findOne projectId
 
       for asset in project.assets
-        LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, asset.sprite._id
-        return unless sprite = LOI.Assets.Sprite.documents.findOne asset.sprite._id
+        return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
 
-        # We know the player has changed the sprite if the history position is not zero.
-        return unless sprite.historyPosition
+        # We know the player has changed the bitmap if the history position is not zero.
+        return unless bitmap.historyPosition
 
       true
 
@@ -91,7 +81,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      LM.Intro.Tutorial.AdmissionProjects.Snake.Drawing.Coworking.Listener.Script.state 'AdmissionProjectCompleted'
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 10
 
   @tasks: -> [
     @Play

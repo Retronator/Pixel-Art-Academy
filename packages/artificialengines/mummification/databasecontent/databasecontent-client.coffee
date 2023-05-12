@@ -8,44 +8,50 @@ class AM.DatabaseContent extends AM.DatabaseContent
   @initialized = new ReactiveField false
   
   @subscribe: (name, parameters...) ->
-    # Make sure we're initialized.
-    unless @initialized()
-      # In reactive context we can simply return to be called again later, otherwise throw an exception.
-      return if Tracker.active
-      throw new AE.InvalidOperationException "Database content hasn't finished initializing."
-  
     # Try to find an existing subscription and activate it.
-    if existingSubscription = _.find @_subscriptions[name], (subscription) -> not subscription.active and EJSON.equals subscription.parameters, parameters
-      existingSubscription.active = true
-    
+    if subscription = _.find @_subscriptions[name], (subscription) => not subscription.active and EJSON.equals subscription.parameters, parameters
+      subscriptionId = subscription.id
+      subscription.active = true
+
     else
       # Create a new subscription.
-      newSubscription =
-        id: Random.id()
+      subscriptionId = Random.id()
+      subscription =
+        id: subscriptionId
         parameters: EJSON.clone parameters
         active: true
-        subscribedDocuments: @_subscribeToDocuments @_publishHandlers[name], parameters...
+        subscribedDocuments: null
         stop: =>
+          throw new AE.InvalidOperationException "Multiple stop calls to the same subscription." unless @_subscriptions[name][subscriptionId]
+
+          # Remove the subscription so we can't be stopped multiple times.
+          delete @_subscriptions[name][subscriptionId]
+
+          # If we're stopped before initialization happened, there's nothing to do.
+          return unless subscription.subscribedDocuments
+
           # Mark that the subscription is not requiring this document anymore.
-          for documentClassId, documentIds of newSubscription.subscribedDocuments
+          for documentClassId, documentIds of subscription.subscribedDocuments
             documentClass = AM.Document.getClassForId documentClassId
-            documentClass.contentDocuments.unsubscribeFromDocument documentId for documentId in documentIds
-          
-          # Remove the subscription itself.
-          _.remove @_subscriptions[name][newSubscription.id]
-  
-      @_subscriptions[name][newSubscription.id] = newSubscription
+            Tracker.nonreactive => documentClass.contentDocuments.unsubscribeFromDocument documentId for documentId in documentIds
+
+      # If we're already initialized, we can immediately subscribe to the documents.
+      subscription.subscribedDocuments = @_subscribeToDocuments @_publishHandlers[name], parameters... if @initialized()
+
+      @_subscriptions[name][subscription.id] = subscription
       
       # If we're running in reactive context, stop the subscription if it's not active after a recomputation.
       if Tracker.active
         Tracker.onInvalidate =>
-          newSubscription.active = false
-        
+          subscription.active = false
+
         Tracker.afterFlush =>
-          newSubscription.stop() unless newSubscription.active
+          unless subscription.active
+            @_subscriptions[name][subscriptionId]?.stop()
     
     # Return a handle that the subscriber can use to stop the subscription.
-    stop: => newSubscription.stop()
+    stop: =>
+      @_subscriptions[name][subscriptionId]?.stop()
     
   @_subscribeToDocuments: (handler, parameters ...) ->
     subscribedDocuments = {}
@@ -84,7 +90,12 @@ class AM.DatabaseContent extends AM.DatabaseContent
       continue unless documentClass.contentDocuments
       
       documentClass.contentDocuments.initialize directory.documents[documentClassId]
-  
+
+    # Subscribe to documents of any existing subscriptions.
+    for subscriptionName, subscriptions of @_subscriptions
+      for subscriptionId, subscription of subscriptions
+        subscription.subscribedDocuments = @_subscribeToDocuments @_publishHandlers[subscriptionName], subscription.parameters...
+
     @initialized true
 
   @initializeDocumentClass: (documentClass) ->

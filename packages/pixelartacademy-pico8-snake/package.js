@@ -20,7 +20,7 @@ Package.onUse(function(api) {
   api.addServerFile('server');
 
   api.addFile('project');
-  api.addServerFile('project-methods-server');
+  api.addFile('project-startend');
 
   api.addAssets('snake.p8.png', 'client');
 });

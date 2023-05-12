@@ -31,27 +31,27 @@ class PAA.Pico8.Device extends AM.Component
     @game game
     @projectId projectId
 
-    if projectId
-      # We need to create a modified cartridge PNG with the project's assets.
-      @cartridgeUrl = Meteor.absoluteUrl "pico8/cartridge.png?gameId=#{game._id}&projectId=#{projectId}"
-
-    else
-      # We can use the cartridge PNG directly.
-      @cartridgeUrl = game.cartridge.url
-
   start: ->
     # Create the canvas for PICO-8 display.
     @_$canvas = $('<canvas>')
     @$('.screen').append(@_$canvas)
 
-    # Prepare buffer for IO transfers.
-    io = []
-
     # Clear the pixel replacement cache since changes up to now will be already included in the cartridge itself.
     @_updatedPixels = []
 
+    game = @game()
+
+    if projectId = @projectId()
+      # We need to get a modified cartridge PNG with the project's assets.
+      game.getCartridgeImageUrlForProject(projectId).then (url) => @_startWithCartridgeUrl url
+
+    else
+      # We can use the cartridge PNG directly.
+      @_startWithCartridgeUrl game.cartridge.url
+
+  _startWithCartridgeUrl: (cartridgeUrl) ->
     PAA.Pico8.Device.Module =
-      arguments: [@cartridgeUrl]
+      arguments: [cartridgeUrl]
       canvas: @_$canvas[0]
       postRun: [
           =>
