@@ -27,7 +27,7 @@ class LM.Intro.Tutorial.Goals.Tutorial extends PAA.Learning.Goal
       return unless tutorial = _.find LOI.adventure.currentChapters(), (chapter) => chapter instanceof LM.Intro.Tutorial
 
       tutorialGoals = for goalClass in [LM.Intro.Tutorial.Goals.StudyPlan, LM.Intro.Tutorial.Goals.Snake]
-        _.find tutorial.goals, (goal) => goal instanceof goalClass
+        tutorial.getGoal goalClass
 
       _.every (goal.completed() for goal in tutorialGoals)
 
