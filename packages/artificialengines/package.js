@@ -215,6 +215,7 @@ Package.onUse(function(api) {
 
   api.addFile('mummification/document/persistence/syncedstorages..');
   api.addFile('mummification/document/persistence/syncedstorages/localstorage');
+  api.addFile('mummification/document/persistence/syncedstorages/filesystem');
 
   // We add profile last since it's a persistent document itself.
   api.addFile('mummification/document/persistence/profile');

@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
+Persistence = Artificial.Mummification.Document.Persistence
 
 class LOI.Components.Menu.Items extends AM.Component
   @register 'LandsOfIllusions.Components.Menu.Items'
@@ -148,7 +149,7 @@ class LOI.Components.Menu.Items extends AM.Component
           @_loadGame() if dialog.result
           
   _loadGame: ->
-    return unless profile = LOI.adventure.availableProfiles()[0]
+    return unless profile = Persistence.Profile.documents.fetch()[0]
 
     LOI.adventure.loadGame profile._id
 

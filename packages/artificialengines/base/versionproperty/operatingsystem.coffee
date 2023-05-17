@@ -12,7 +12,7 @@ class AB.OperatingSystem extends AB.VersionProperty
     IOS: 'IOS'
   
   if Meteor.isDesktop
-    Desktop.fetch('desktop', 'getProcessPlatform').then (processPlatform) =>
+    Desktop.call('desktop', 'getProcessPlatform').then (processPlatform) =>
       @setType switch processPlatform
         when 'darwin' then @Types.MacOS
         when 'win32' then @Types.Windows

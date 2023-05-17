@@ -55,6 +55,12 @@ class LM.Interface extends LOI.Interface
   
       @introFadeComplete true
 
+  prepareLocation: ->
+    if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
+      # We're supposed to be in play so we have to make the studio focus on the top and open the PixelBoy.
+      @studio.setFocus @constructor.Studio.FocusPoints.Play
+      @_openPixelBoy()
+
   goToPlay: ->
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeOut()

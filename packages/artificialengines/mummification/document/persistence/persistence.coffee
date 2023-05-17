@@ -154,8 +154,8 @@ class AM.Document.Persistence
       # Deactivate the profile first so that removals will not be seen as active actions.
       @_activeProfileId null
 
-      # Remove all documents belonging to the active profile.
-      for documentClassId, documentClass of @_persistentDocumentClassesById
+      # Remove all documents belonging to the active profile, except profiles.
+      for documentClassId, documentClass of @_persistentDocumentClassesById when documentClassId isnt @Profile.id()
         documentClass.documents.remove {profileId}
 
   @flushChanges: ->

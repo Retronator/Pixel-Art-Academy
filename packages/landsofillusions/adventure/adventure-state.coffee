@@ -96,7 +96,8 @@ class LOI.Adventure extends LOI.Adventure
 
     # Activate the new profile.
     @profileId profileId
-  
+    @_storeProfileId()
+
   saveGame: (options) ->
     # Start syncing the profile to desired storages.
     if options.local and @localSyncedStorage
