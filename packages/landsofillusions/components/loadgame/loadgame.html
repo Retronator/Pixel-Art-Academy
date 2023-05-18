@@ -3,13 +3,13 @@
     <div class="landsofillusions-components-loadgame">
       {{> LandsOfIllusions.Components.BackButton}}
       {{#LandsOfIllusions.Components.Overlay}}
-        <div class="title">{{> t10e 'Choose a save game'}}</div>
+        <div class="title">Choose a save game</div>
         <ul class="profiles" {{style profilesStyle}}>
           {{#each profiles}}
             <li class="profile {{activeClass}}">
               <div class="floppy">
                 <div class="shutter"></div>
-                <div class="label">{{_id}}</div>
+                <div class="label">{{profileName}}</div>
               </div>
             </li>
           {{/each}}

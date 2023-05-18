@@ -1,75 +1,103 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .landsofillusions-components-savegame
-  .profiles
+  .safe-area
     display flex
-    position absolute
-    top 103rem
-    left 0
-    height 75rem
-    padding 0
-    list-style none
-    transition left 0.5s
+    flex-direction column
+    justify-content space-evenly
 
-    .profile
-      position relative
-      vertical-align top
-      flex-shrink 0
-      width 75rem
-      height 75rem
-      margin-right 5rem
-      border 1rem solid transparent
-      cursor pointer
+    .title
+      kyrou-9()
+      font-weight bold
+      text-align center
+      pixel-text-emboss(atariGray(0), atariGray(2))
 
-      .name
-        padding 3rem
-        text-transform uppercase
-        text-align center
-        color atariAqua(4)
+    .new-save-game
+      display flex
+      height 71rem
+      justify-content center
 
-      &:hover
-        .name
-          color atariAqua(6)
+      .floppy
+        position relative
+        top 0
+        width 68rem
+        height 71rem
+        background-image image('/landsofillusions/components/loadgame/floppy.png')
+        filter drop-shadow(-4rem 2rem 10rem rgba(atariGray(0), 0.5))
 
-      &.active
-        cursor default
+        .shutter
+          position absolute
+          top 0
+          left 15rem
+          width 38rem
+          height 25rem
+          background-image image('/landsofillusions/components/loadgame/floppy-shutter.png')
+          transition left ease-out 0.2s
 
-    .character
-      &.active
-        border 1rem solid atariCyan(3)
+        .label
+          position absolute
+          top 35rem
+          left 9rem
+          width 50rem
+          height 28rem
+          checkout()
+          color atariGray(1)
+          overflow-wrap break-word
+          text-align center
 
-        .name
-          color atariCyan(6)
+          textarea
+            width 100%
+            height 100%
+            padding 0
+            margin 0
+            border none
+            background none
+            font inherit
+            color inherit
+            text-align center
+            input-placeholder atariGray(2)
+            appearance none
+            resize none
+            text-transform uppercase
 
-    .lands-of-illusions
-      &.active
-        .name
-          color atariCyan(6)
-          border 1rem solid atariCyan(3)
+            &:focus
+              outline none
 
-  .controls
-    position absolute
-    bottom 0
-    left 0
-    right 2rem
-    text-align center
-
-    .action-button
-      padding 2rem 4rem
-      border 1rem solid atariAqua(4)
-      background black
-      font inherit
-      color inherit
-      text-transform uppercase
+    .controls
       text-align center
 
-      &:hover
-        color atariGray(7)
+      .action-button
+        padding 2rem 4rem
+        border 1rem solid atariGray(4)
+        background black
+        font inherit
+        color inherit
+        text-transform uppercase
+        text-align center
 
-      &.previous-button
-      &.next-button
-        margin 0 3rem
-        visibility hidden
+        &:hover
+          color atariGray(7)
 
-        &.visible
-          visibility visible
+        &.save-button
+          position relative
+          top -2rem
+          visibility hidden
+          background atariGreen(3)
+          color atariGreen(0)
+          border none
+          border-bottom 2rem solid atariGreen(1)
+
+          &:focus
+            background: atariGreen(4)
+            outline none
+
+          &:hover
+            background: atariGreen(4)
+
+          &:active
+            border-bottom none
+            margin-bottom 2rem
+            top 0
+
+          &.visible
+            visibility visible

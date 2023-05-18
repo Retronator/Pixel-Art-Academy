@@ -47,10 +47,11 @@ class LOI.Adventure extends LOI.Adventure
           Tracker.nonreactive =>
             dialogOptions.callback?()
 
-  showDialogMessage: (message) ->
+  showDialogMessage: (message, callback) ->
     @showActivatableModalDialog
       dialog: new LOI.Components.Dialog
         message: message
         buttons: [
           text: "OK"
         ]
+      callback: callback

@@ -3,19 +3,16 @@
     <div class="landsofillusions-components-savegame">
       {{> LandsOfIllusions.Components.BackButton}}
       {{#LandsOfIllusions.Components.Overlay}}
-        <ul class="profiles">
-          <li class="profile character">
-            <div class="avatar">
-            </div>
-            <div class="name">
-            </div>
-          </li>
-          <li class="profile disconnect">
-            <div class="name">
-              Disconnect
-            </div>
-          </li>
-        </ul>
+        <div class="title">Create a new save game</div>
+        <div class="new-save-game">
+          <div class="floppy">
+            <div class="shutter"></div>
+            <div class="label">{{> LandsOfIllusions.Components.SaveGame.NewSaveGameName}}</div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="save-button action-button {{saveButtonVisibleClass}}">Save</button>
+        </div>
       {{/LandsOfIllusions.Components.Overlay}}
     </div>
   {{/unless}}

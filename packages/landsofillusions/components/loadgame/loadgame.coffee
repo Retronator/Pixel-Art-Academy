@@ -5,6 +5,8 @@ LOI = LandsOfIllusions
 
 Persistence = Artificial.Mummification.Document.Persistence
 
+profileWidth = 80
+
 class LOI.Components.LoadGame extends AM.Component
   @id: -> 'LandsOfIllusions.Components.LoadGame'
   @register @id()
@@ -19,6 +21,7 @@ class LOI.Components.LoadGame extends AM.Component
     @activatable = new LOI.Components.Mixins.Activatable()
     
     @profiles = new ComputedField => Persistence.Profile.documents.fetch()
+    @maxFirstProfileOffset = new ComputedField => @profiles().length - 4
     
   mixins: -> [@activatable]
   
@@ -29,26 +32,24 @@ class LOI.Components.LoadGame extends AM.Component
     @firstProfileOffset = new ReactiveField 0
     
   show: ->
+    @firstProfileOffset 0
+
     LOI.adventure.showActivatableModalDialog
       dialog: @
       dontRender: true
 
   onActivate: (finishedActivatingCallback) ->
-    Meteor.setTimeout =>
-      finishedActivatingCallback()
-    ,
-      500
+    await _.waitForSeconds 0.5
+    finishedActivatingCallback()
 
   onDeactivate: (finishedDeactivatingCallback) ->
-    Meteor.setTimeout =>
-      finishedDeactivatingCallback()
-    ,
-      500
+    await _.waitForSeconds 0.5
+    finishedDeactivatingCallback()
 
   profilesStyle: ->
     offset = @firstProfileOffset()
 
-    left: "-#{offset * 76}rem"
+    left: "-#{offset * profileWidth}rem"
 
   profileActiveClass: ->
     profile = @currentData()
@@ -56,7 +57,7 @@ class LOI.Components.LoadGame extends AM.Component
     'active' if profile?._id is LOI.adventure.profileId()
 
   nextButtonVisibleClass: ->
-    'visible' if @firstProfileOffset() < @profiles().length - 4
+    'visible' if @firstProfileOffset() < @maxFirstProfileOffset()
 
   previousButtonVisibleClass: ->
     'visible' if @firstProfileOffset() > 0
@@ -64,6 +65,10 @@ class LOI.Components.LoadGame extends AM.Component
   activeClass: ->
     profile = @currentData()
     'active' if LOI.adventure.profileId() is profile._id
+
+  profileName: ->
+    profile = @currentData()
+    profile.displayName or profile._id
 
   events: ->
     super(arguments...).concat
@@ -79,11 +84,11 @@ class LOI.Components.LoadGame extends AM.Component
     @callFirstWith null, 'deactivate'
     
   onClickPreviousButton: (event) ->
-    newIndex = Math.max 0, @firstProfileOffset() - 1
+    newIndex = Math.max 0, @firstProfileOffset() - 4
 
     @firstProfileOffset newIndex
 
   onClickNextButton: (event) ->
-    newIndex = Math.min @profiles().length - 2, @firstProfileOffset() + 1
+    newIndex = Math.min @maxFirstProfileOffset(), @firstProfileOffset() + 4
 
     @firstProfileOffset newIndex

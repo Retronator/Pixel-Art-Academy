@@ -122,6 +122,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/daterange');
   api.addFile('everywhere/exceptions');
   api.addFile('everywhere/match');
+  api.addFile('everywhere/reactivefield');
   api.addFile('everywhere/reactivearray');
   api.addFile('everywhere/reactivedictionary');
   api.addFile('everywhere/reactiveinstances');

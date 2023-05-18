@@ -152,7 +152,7 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.menu.loadGame.show()
 
   onClickSave: (event) ->
-    LOI.adventure.saveGame local: true
+    LOI.adventure.menu.saveGame.show()
 
   onClickAccount: (event) ->
     LOI.adventure.menu.account.show()
