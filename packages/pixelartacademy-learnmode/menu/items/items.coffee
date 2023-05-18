@@ -56,15 +56,8 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
     LOI.adventure.startNewGame().then =>
       LOI.adventure.interface.goToPlay()
-
-  _loadGame: ->
-    super(arguments...).then =>
-      Tracker.afterFlush =>
-        LOI.adventure.interface.prepareLocation()
   
   onClickQuitToMenu: (event) ->
-    return @_quitGame() # TODO: Remove when saving is enabled.
-    
     # Check if the profile is being synced.
     if LOI.adventure.profile().hasSyncing()
       @_quitGame()

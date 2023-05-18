@@ -149,9 +149,7 @@ class LOI.Components.Menu.Items extends AM.Component
           @_loadGame() if dialog.result
           
   _loadGame: ->
-    return unless profile = Persistence.Profile.documents.fetch()[0]
-
-    LOI.adventure.loadGame profile._id
+    LOI.adventure.menu.loadGame.show()
 
   onClickSave: (event) ->
     LOI.adventure.saveGame local: true

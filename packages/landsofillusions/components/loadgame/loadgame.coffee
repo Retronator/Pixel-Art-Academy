@@ -3,6 +3,8 @@ AC = Artificial.Control
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Persistence = Artificial.Mummification.Document.Persistence
+
 class LOI.Components.LoadGame extends AM.Component
   @id: -> 'LandsOfIllusions.Components.LoadGame'
   @register @id()
@@ -16,7 +18,7 @@ class LOI.Components.LoadGame extends AM.Component
     
     @activatable = new LOI.Components.Mixins.Activatable()
     
-    @profiles = new ComputedField => []
+    @profiles = new ComputedField => Persistence.Profile.documents.fetch()
     
   mixins: -> [@activatable]
   
@@ -31,10 +33,22 @@ class LOI.Components.LoadGame extends AM.Component
       dialog: @
       dontRender: true
 
+  onActivate: (finishedActivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedActivatingCallback()
+    ,
+      500
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedDeactivatingCallback()
+    ,
+      500
+
   profilesStyle: ->
     offset = @firstProfileOffset()
 
-    left: "-#{offset * 75}rem"
+    left: "-#{offset * 76}rem"
 
   profileActiveClass: ->
     profile = @currentData()
@@ -42,10 +56,14 @@ class LOI.Components.LoadGame extends AM.Component
     'active' if profile?._id is LOI.adventure.profileId()
 
   nextButtonVisibleClass: ->
-    'visible' if @firstProfileOffset() < @profiles().length - 1
+    'visible' if @firstProfileOffset() < @profiles().length - 4
 
   previousButtonVisibleClass: ->
     'visible' if @firstProfileOffset() > 0
+
+  activeClass: ->
+    profile = @currentData()
+    'active' if LOI.adventure.profileId() is profile._id
 
   events: ->
     super(arguments...).concat
@@ -55,6 +73,10 @@ class LOI.Components.LoadGame extends AM.Component
 
   onClickProfile: (event) ->
     profile = @currentData()
+    await LOI.adventure.loadGame profile._id
+
+    await _.waitForSeconds 1
+    @callFirstWith null, 'deactivate'
     
   onClickPreviousButton: (event) ->
     newIndex = Math.max 0, @firstProfileOffset() - 1

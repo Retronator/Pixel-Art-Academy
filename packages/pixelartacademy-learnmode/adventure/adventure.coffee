@@ -48,3 +48,9 @@ class LM.Adventure extends LOI.Adventure
   ]
   
   episodeClasses: -> @constructor.episodeClasses()
+
+  loadGame: ->
+    await super arguments...
+    await _.waitForFlush()
+
+    @interface.prepareLocation()

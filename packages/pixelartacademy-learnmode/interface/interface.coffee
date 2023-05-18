@@ -61,6 +61,9 @@ class LM.Interface extends LOI.Interface
       @studio.setFocus @constructor.Studio.FocusPoints.Play
       @_openPixelBoy()
 
+    else
+      @studio.setFocus @constructor.Studio.FocusPoints.MainMenu
+
   goToPlay: ->
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeOut()
