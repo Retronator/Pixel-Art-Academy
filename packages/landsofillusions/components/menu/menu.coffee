@@ -75,6 +75,8 @@ class LOI.Components.Menu extends AM.Component
       complete: =>
         @menuVisible false
 
+  display: -> LOI.adventure.interface.display
+
   menuVisibleClass: ->
     'visible' if @menuVisible()
 

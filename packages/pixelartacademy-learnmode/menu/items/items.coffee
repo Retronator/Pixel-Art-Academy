@@ -23,8 +23,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       Desktop.send 'window', 'isFullscreen'
   
   loadVisible: ->
-    # Load game in Learn Mode is visible only on the landing page.
-    @options.landingPage
+    # Load game in Learn Mode is visible only on the landing page if there are any profiles to load.
+    loadGame = LOI.adventure.menu.loadGame
+    @options.landingPage and loadGame.isCreated() and loadGame.profiles()
     
   isFullscreen: ->
     if Meteor.isDesktop

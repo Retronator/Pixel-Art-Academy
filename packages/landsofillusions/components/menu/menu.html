@@ -1,5 +1,5 @@
 <template name="LandsOfIllusions.Components.Menu">
-  <div class="landsofillusions-components-menu">
+  <div class="landsofillusions-components-menu" {{style display.viewport.viewportBounds.toDimensions}}>
     <div class="menu-overlay {{menuVisibleClass}}">
       {{#if menuVisible}}
         {{> Render menuItems}}

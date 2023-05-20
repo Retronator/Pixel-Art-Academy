@@ -10,7 +10,7 @@ class LM.Adventure extends LOI.Adventure
   @register @id()
 
   @title: ->
-    "Pixel Art Academy: Learn Mode // The most fun way to learn pixel art"
+    "Pixel Art Academy: Learn Mode"
 
   @description: ->
     "Learn pixel art fundamentals in the educational game by Retronator."

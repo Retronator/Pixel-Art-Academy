@@ -26,6 +26,7 @@
         position relative
         vertical-align top
         flex-shrink 0
+        flex-grow 1
         width 80rem
         height 80rem
         cursor pointer
@@ -78,20 +79,32 @@
       text-align center
 
       .action-button
+        position relative
+        top -2rem
         padding 2rem 4rem
-        border 1rem solid atariGray(2)
+        margin 0 3rem
         background black
         font inherit
-        color atariGray(5)
+        color atariGray(0)
         text-transform uppercase
         text-align center
+        border none
+        background atariGray(2)
+        border-bottom 2rem solid atariGray(1)
 
-        &:hover
-          color atariGray(7)
+        &:disabled
+          color atariGray(1)
+
+        &:hover:not(:disabled)
+          background atariGray(3)
+
+        &:active:not(:disabled)
+          border-bottom none
+          margin-bottom 2rem
+          top 0
 
         &.previous-button
         &.next-button
-          margin 0 3rem
           visibility hidden
 
           &.visible

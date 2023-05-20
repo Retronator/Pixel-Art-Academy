@@ -80,7 +80,7 @@ export default class ApplicationMenu {
             label: 'Get help on Discord',
             click: async () => {
               const { shell } = require('electron')
-              await shell.openExternal('https://discord.gg/9w4zNrNqUz')
+              await shell.openExternal('https://discord.gg/mngNfvTwG6')
             }
           }
         ]

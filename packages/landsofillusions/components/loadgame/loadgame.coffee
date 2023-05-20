@@ -18,16 +18,16 @@ class LOI.Components.LoadGame extends AM.Component
   constructor: (@options) ->
     super arguments...
     
-    @activatable = new LOI.Components.Mixins.Activatable()
-    
-    @profiles = new ComputedField => Persistence.Profile.documents.fetch()
-    @maxFirstProfileOffset = new ComputedField => @profiles().length - 4
-    
+    @activatable = new LOI.Components.Mixins.Activatable
+
   mixins: -> [@activatable]
   
   onCreated: ->
     super arguments...
-  
+
+    @profiles = new ComputedField => Persistence.Profile.documents.fetch syncedStorages: $ne: {}
+    @maxFirstProfileOffset = new ComputedField => @profiles().length - 4
+
     # Which profile is shown left-most. Allows to scroll through options.
     @firstProfileOffset = new ReactiveField 0
     
@@ -56,11 +56,17 @@ class LOI.Components.LoadGame extends AM.Component
 
     'active' if profile?._id is LOI.adventure.profileId()
 
+  nextButtonDisabledAttribute: ->
+    disabled: true if @firstProfileOffset() is @maxFirstProfileOffset()
+
+  previousButtonDisabledAttribute: ->
+    disabled: true if @firstProfileOffset() is 0
+
   nextButtonVisibleClass: ->
-    'visible' if @firstProfileOffset() < @maxFirstProfileOffset()
+    'visible' if @maxFirstProfileOffset() > 0
 
   previousButtonVisibleClass: ->
-    'visible' if @firstProfileOffset() > 0
+    'visible' if @maxFirstProfileOffset() > 0
 
   activeClass: ->
     profile = @currentData()

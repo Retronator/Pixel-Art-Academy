@@ -32,7 +32,6 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       return
 
     @directory = await directoryResponse.json()
-    console.log "Got directory", @directory
 
     # Send all profiles to persistence.
     profiles = []

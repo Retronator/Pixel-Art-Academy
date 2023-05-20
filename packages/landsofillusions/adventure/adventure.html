@@ -14,5 +14,7 @@
   {{#if showLoading}}
     {{> LandsOfIllusions.Pages.Loading}}
   {{/if}}
-  <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">{{app.buildName}} {{app.version}}</a>
+  <div class="viewport-bounds" {{style interface.display.viewport.viewportBounds.toDimensions}}>
+    <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">{{app.buildName}} {{app.version}}</a>
+  </div>
 </template>
