@@ -1,0 +1,31 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress {{visibleClass}}">
+    <h1 class="title">Learn Mode</h1>
+    <div class="progress">
+      <h1 class="title">Progress</h1>
+      <h2 class="goal-title {{commitmentGoalCompletedClass}}">Commitment goal</h2>
+      <h2 class="goal-title {{studyPlanCompletedClass}}">Study plan</h2>
+      <h2 class="goal-title {{studyGroupCompletedClass}}">Study group</h2>
+      <h2 class="goal-title {{admissionProjectCompletedClass}}">Admission project</h2>
+    </div>
+    {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.App">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-app">
+    <div class="icon-area">
+      <img src="{{iconUrl}}" class="icon">
+    </div>
+    <div class="info">
+      <div class="header">
+        {{avatar.fullName}}
+      </div>
+      <ul class="features">
+        {{#each features}}
+          <li class="feature">{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

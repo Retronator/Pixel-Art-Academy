@@ -18,5 +18,6 @@ class Artificial.Pages
   
     Artificial.Pages.addAdminPage '/admin/artificial/babel', Artificial.Babel.Pages.Admin
     Artificial.Pages.addAdminPage '/admin/artificial/babel/scripts', Artificial.Babel.Pages.Admin.Scripts
+    Artificial.Pages.addAdminPage '/admin/artificial/mummification', Artificial.Mummification.Pages.Admin
     Artificial.Pages.addAdminPage '/admin/artificial/mummification/databasecontent', Artificial.Mummification.Pages.Admin.DatabaseContent
     Artificial.Pages.addAdminPage '/admin/artificial/mummification/documentcaches', Artificial.Mummification.Pages.Admin.DocumentCaches

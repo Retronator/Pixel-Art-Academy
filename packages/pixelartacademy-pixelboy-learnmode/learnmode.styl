@@ -1,0 +1,23 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-learnmode.app
+  position relative
+  // Place above the shortcuts table so that it's not visible when we overscroll in Safari.
+  z-index 11
+  background atariGray(0)
+  height 100%
+  overflow-y auto
+
+  &.instructions-visible
+    // Don't place over the table on the instructions screen however.
+    z-index auto
+
+  .content
+  .content .pixelartacademy-pixelboy-apps-learnmode-progress
+    position relative
+    min-height 100%
+    background-image url("/pixelartacademy/pixelboy/apps/learnmode/library.png")
+    background-size 229rem 60rem
+    background-position center bottom
+    background-repeat no-repeat
+    background-color atariGray(0)

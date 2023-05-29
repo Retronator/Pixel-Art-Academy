@@ -1,0 +1,33 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-learnmode-instructions
+  position absolute
+  left calc(50% - 114.5rem)
+  width 229rem
+  padding 10rem 20rem
+  visibility hidden
+  text-align justify
+
+  &.visible
+    visibility visible
+
+  .address
+    text-align center
+    text-transform uppercase
+    uni()
+
+  .prompt
+    text-align center
+
+    .start-button
+      margin-top 5rem
+      padding 1rem 3rem 0
+      border 1rem solid atariLime(5)
+      color atariLime(7)
+      background atariLime(2)
+      kyrou-7()
+      text-transform uppercase
+
+      &:hover
+        background atariLime(3)
+        color atariGray(7)
