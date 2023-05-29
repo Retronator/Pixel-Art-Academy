@@ -24,6 +24,8 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @interests: -> ['pico-8', 'gaming']
 
+    @requiredInterests: -> ['pixel art software']
+
     @initialize()
 
     @completedConditions: ->
@@ -46,8 +48,6 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @interests: -> ['snake', 'food']
 
     @predecessors: -> [Goal.Play]
-
-    @requiredInterests: -> ['pixel art software']
 
     @initialize()
     

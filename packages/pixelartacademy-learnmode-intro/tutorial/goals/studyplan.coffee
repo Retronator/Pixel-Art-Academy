@@ -74,7 +74,7 @@ class LM.Intro.Tutorial.Goals.StudyPlan extends PAA.Learning.Goal
     @directive: -> "Plan tutorial requirements"
 
     @instructions: -> """
-      Click on the remaining "learn mode tutorial project" prerequisite of the "Complete the tutorial" goal and add the "Snake game" project that will provide that requirement.
+      Under prerequisites, click on "learn mode tutorial project" and add the "Snake game" project that will provide that requirement.
       Connect the new goal with an arrow to the Tutorial goal.
     """
 
