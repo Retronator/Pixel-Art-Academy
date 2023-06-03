@@ -38,4 +38,9 @@ Package.onUse(function(api) {
   api.addFile('tutorial/goals/pixelartsoftware');
   api.addFile('tutorial/goals/studyplan');
   api.addFile('tutorial/goals/snake');
+
+  api.addFile('tutorial/content..');
+  api.addFile('tutorial/content/course');
+  api.addFile('tutorial/content/apps');
+  api.addFile('tutorial/content/goals');
 });

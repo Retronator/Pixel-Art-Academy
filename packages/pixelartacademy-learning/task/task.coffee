@@ -66,7 +66,7 @@ class PAA.Learning.Task
       Document.startup =>
         return if Meteor.settings.startEmpty
 
-        # Create this avatar's translated names.
+        # Create this task's translated names.
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 

@@ -109,3 +109,9 @@ class LOI.Adventure extends LOI.Adventure
   resetEpisodes: ->
     console.log "Resetting episodes." if LOI.debug
     @_resetEpisodesDependency.changed()
+
+  getEpisode: (episodeClass) ->
+    _.find @episodes(), (episode) => episode instanceof episodeClass
+
+  getCurrentChapter: (chapterClass) ->
+    _.find @currentChapters(), (chapter) => chapter instanceof chapterClass

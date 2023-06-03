@@ -21,9 +21,20 @@ Package.onUse(function(api) {
   api.addClientFile('spacebars');
 
   api.addFile('adventure..');
+  api.addFile('chapter..');
 
   api.addComponent('interface..');
   api.addComponent('interface/studio..');
+
+  api.addFile('content..');
+  api.addFile('content/goalcontent');
+  api.addFile('content/course');
+  api.addFile('content/progress..');
+  api.addFile('content/progress/manualprogress');
+  api.addFile('content/progress/unitprogress');
+  api.addFile('content/progress/contentprogress');
+  api.addFile('content/progress/goalprogress');
+  api.addFile('content/progress/entry');
 
   api.addFile('menu..');
   api.addComponent('menu/items..');

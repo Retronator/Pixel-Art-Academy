@@ -46,7 +46,7 @@ class PAA.Learning.Goal
       Document.startup =>
         return if Meteor.settings.startEmpty
 
-        # Create this avatar's translated names.
+        # Create this goal's translated names.
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName']
 
@@ -150,6 +150,21 @@ class PAA.Learning.Goal
     path.push task for path in paths
 
     paths
+
+  @getAdventureInstanceForId: (goalId) ->
+    for episode in LOI.adventure.episodes()
+      for chapter in episode.chapters
+        for goal in chapter.goals
+          return goal if goal.id() is goalId
+
+    # If the goal is not part of the storyline, it might be in the Study Guide.
+    studyGuideGlobal = _.find LOI.adventure.globals, (global) => global instanceof PAA.StudyGuide.Global
+
+    for studyGuideGoalId, goal of studyGuideGlobal.goals()
+      return goal if studyGuideGoalId is goalId
+
+    console.warn "Unknown goal requested.", goalId
+    null
 
   constructor: (@options = {}) ->
     # By default the task is related to the current profile.

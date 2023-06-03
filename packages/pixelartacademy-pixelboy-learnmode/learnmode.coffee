@@ -22,6 +22,10 @@ class PAA.PixelBoy.Apps.LearnMode extends PAA.PixelBoy.App
 
   @initialize()
 
+  @isAppUnlocked: (appId) ->
+    unlockedApps = @state('unlockedApps') or []
+    appId in unlockedApps
+
   constructor: ->
     super arguments...
 

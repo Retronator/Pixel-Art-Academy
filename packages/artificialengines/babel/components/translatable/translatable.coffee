@@ -61,8 +61,7 @@ class AB.Components.Translatable extends AM.Component
 
     @showNewTranslationInput = new ReactiveField false
 
-  editable: ->
-    Artificial.Babel.inTranslationMode() or @options.editable
+  editable: -> @options.editable
 
   translations: ->
     return unless translation = @translation()

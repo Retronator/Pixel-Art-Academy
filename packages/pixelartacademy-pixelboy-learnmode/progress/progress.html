@@ -1,14 +1,43 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress">
   <div class="pixelartacademy-pixelboy-apps-learnmode-progress {{visibleClass}}">
-    <h1 class="title">Learn Mode</h1>
-    <div class="progress">
-      <h1 class="title">Progress</h1>
-      <h2 class="goal-title {{commitmentGoalCompletedClass}}">Commitment goal</h2>
-      <h2 class="goal-title {{studyPlanCompletedClass}}">Study plan</h2>
-      <h2 class="goal-title {{studyGroupCompletedClass}}">Study group</h2>
-      <h2 class="goal-title {{admissionProjectCompletedClass}}">Admission project</h2>
-    </div>
+    <ul class="courses contents">
+      {{#each courses}}
+        <li class="course content">{{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content}}</li>
+      {{/each}}
+    </ul>
     {{> PixelArtAcademy.PixelBoy.Components.ShortcutsTable}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-content {{unavailableClass}} {{lockedClass}} {{completedClass}}">
+    <div class="title-area">
+      {{#if $is contentDepth 1}}
+        <h1 class="title">{{displayName}}</h1>
+      {{/if}}
+      {{#if $is contentDepth 2}}
+        <h2 class="title">{{displayName}}</h2>
+      {{/if}}
+      {{#if $is contentDepth 3}}
+        <h3 class="title">{{displayName}}</h3>
+      {{/if}}
+      <div class="percentage">
+        {{#if progress.requiredUnits}}
+          Req: {{progress.completedUnits}}/{{progress.requiredUnits}} {{percentageString progress.requiredCompletedRatio}}
+        {{/if}}
+        {{#if progress.totalUnits}}
+          Total: {{progress.completedUnits}}/{{progress.totalUnits}}
+        {{/if}}
+        {{percentageString progress.completedRatio}}
+      </div>
+    </div>
+    {{#if contents.length}}
+      <ul class="contents">
+        {{#each contents}}
+          <li class="content">{{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
   </div>
 </template>
 

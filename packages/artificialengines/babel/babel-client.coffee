@@ -4,8 +4,8 @@ class Artificial.Babel extends Artificial.Babel
   # User's current language preference setting.
   @_userLanguagePreference: new ReactiveField null
 
-  # Global toggle that turns translatables into editable inputs.
-  @inTranslationMode: new ReactiveField false
+  # Global toggle to use live instead of cached translation documents.
+  @inTranslationMode: new ReactiveField true
 
   @languagePreference: (value) ->
     if value

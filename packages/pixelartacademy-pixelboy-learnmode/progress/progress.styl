@@ -12,14 +12,18 @@
 
   h1
     text-transform uppercase
-    kyrou-7()
-    margin 5rem 0
+    kyrou-9()
+    margin 0
 
   h2
     text-transform uppercase
     kyrou-7()
+    margin 0
+
+  h3
+    kyrou-7()
     font-weight normal
-    margin 15rem 0 5rem
+    margin 0
 
   button
     padding 0 2rem 0 3rem
@@ -33,41 +37,36 @@
       background atariLime(3)
       color atariGray(7)
 
-  .progress
-    margin-top 15rem
+  .contents
+    margin 0
+    padding 0
+    list-style none
 
-    h2
-      margin 10rem 0 5rem 10rem
-      kyrou-5()
+.pixelartacademy-pixelboy-apps-learnmode-progress-content
+  margin 10rem 0
 
-    .goal-title
-      &.completed
-        color atariLime(7)
+  &.unavailable
+    color atariGray(3)
 
-        &::after
-          content ' ✓'
-          daily()
-          font-weight bold
+  &.completed
+    > .title-area
+      color atariLime(7)
 
-    .goal-info-area
-      margin-left 20rem
+      .title::after
+        content ' ✓'
+        daily()
+        font-weight bold
 
-      .info-item
-        display flex
-        margin-bottom 8rem
+  &.locked
+    > .title-area
+      .title::after
+        content ' LOCK'
+        daily()
+        font-weight bold
 
-        .label
-          width 80rem
-          margin-right 10rem
-          flex-shrink 0
-          color atariGray(6)
+  .title-area
+    display flex
 
-        .value
-          text-transform uppercase
-          checkout()
-
-          &.completed
-            color atariLime(6)
-
-          &.not-completed
-            color atariPeach(6)
+    .percentage
+      flex-grow 1
+      text-align right

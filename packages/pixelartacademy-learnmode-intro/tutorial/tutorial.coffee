@@ -2,14 +2,18 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-class LM.Intro.Tutorial extends PAA.Chapter
+class LM.Intro.Tutorial extends LM.Chapter
   @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial'
   
   @fullName: -> "Tutorial"
   @number: -> 1
   
   @sections: -> []
-  
+
+  @courses: -> [
+    LM.Intro.Tutorial.Content.Course
+  ]
+
   @initialize()
 
   constructor: ->
