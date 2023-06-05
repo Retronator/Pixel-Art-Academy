@@ -23,6 +23,9 @@ class LM.Content
   # Id string for this content used to identify the content in code.
   @id: -> throw new AE.NotImplementedException "You must specify content's id."
 
+  # The type that identifies the content class individual tasks inherit from.
+  @type: -> 'Content'
+
   # String to represent the course in the UI. Note that we can't use
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the course name."
@@ -45,7 +48,9 @@ class LM.Content
 
         # Create this avatar's translated names.
         translationNamespace = @id()
-        AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'unlockInstructions']
+        for property in ['displayName', 'unlockInstructions']
+          value = @[property]()
+          AB.createTranslation translationNamespace, property, value if value?
 
   @getAdventureInstanceForId: (contentId) ->
     for episode in LOI.adventure.episodes()
@@ -83,8 +88,13 @@ class LM.Content
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
 
-  unlockInstructions: -> AB.translate(@_translationSubscription, 'unlockInstructions').text
-  unlockInstructionsTranslation: -> AB.translation @_translationSubscription, 'unlockInstructions'
+  unlockInstructions: ->
+    return unless @constructor.unlockInstructions()
+    AB.translate(@_translationSubscription, 'unlockInstructions').text
+
+  unlockInstructionsTranslation: ->
+    return unless @constructor.unlockInstructions()
+    AB.translation @_translationSubscription, 'unlockInstructions'
 
   contents: -> @_contents
 
@@ -93,5 +103,15 @@ class LM.Content
   status: -> throw new AE.NotImplementedException "Content must provide its status."
   available: -> @parent.unlocked() and @status() isnt @constructor.Status.Unavailable
   unlocked: -> @parent.unlocked() and @status() is @constructor.Status.Unlocked
-  completed: -> @unlocked() and @progress.completed()
-  hundredPercent: -> @unlocked() and @progress.completedRatio() is 1
+
+  completed: ->
+    return unless @unlocked()
+    @progress.completed()
+
+  completedRatio: ->
+    return 0 unless @unlocked()
+    @progress.completedRatio()
+
+  requiredCompletedRatio: ->
+    return unless @unlocked() and @progress.requiredCompletedRatio?
+    @progress.requiredCompletedRatio()

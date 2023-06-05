@@ -7,5 +7,8 @@ _.mixin
   waitForNextFrame: ->
     _.waitForSeconds 0
 
+  waitForNextAnimationFrame: ->
+    new Promise (resolve) => requestAnimationFrame resolve
+
   waitForFlush: ->
     new Promise (resolve) => Tracker.afterFlush resolve

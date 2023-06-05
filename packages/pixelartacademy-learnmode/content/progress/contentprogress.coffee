@@ -10,22 +10,34 @@ class LM.Content.Progress.ContentProgress extends LM.Content.Progress
     @_weights = (content.progress.weight() for content in @content.contents())
 
   completed: ->
-    return unless @content.unlocked()
-    _.every (content.progress.completed() for content in @content.contents())
+    _.every (content.completed() for content in @content.contents())
 
-  totalUnits: -> _.sum (content.progress.totalUnits?() for content in @content.contents())
+  totalUnits: ->
+    if @options.recursive
+      _.sum (content.progress.totalUnits?() for content in @content.contents())
 
-  requiredUnits: -> _.sum (content.progress.requiredUnits?() for content in @content.contents())
+    else
+      @content.contents().length
 
-  completedUnits: -> _.sum (content.progress.completedUnits?() for content in @content.contents())
+  requiredUnits: ->
+    if @options.recursive
+      _.sum (content.progress.requiredUnits?() for content in @content.contents())
+
+    else
+      @content.contents().length
+
+  completedUnits: ->
+    if @options.recursive
+      _.sum (content.progress.completedUnits?() for content in @content.contents())
+
+    else
+      _.sum ((if content.completed() then 1 else 0) for content in @content.contents())
 
   completedRatio: ->
-    return 0 unless @content.unlocked()
-    @_weightedAverage (content.progress.completedRatio() for content in @content.contents())
+    @_weightedAverage (content.completedRatio() or 0 for content in @content.contents())
 
   requiredCompletedRatio: ->
-    return 0 unless @content.unlocked()
-    @_weightedAverage (content.progress.requiredCompletedRatio?() for content in @content.contents())
+    @_weightedAverage (content.requiredCompletedRatio() or 0 for content in @content.contents())
 
   _weightedAverage: (values) ->
     totalWeight = 0

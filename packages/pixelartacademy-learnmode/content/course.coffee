@@ -68,6 +68,7 @@ class LM.Content.Course
     content.destroy() for content in @_contents
 
   id: -> @constructor.id()
+  type: -> 'Course'
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'

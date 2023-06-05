@@ -1,0 +1,45 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-learnmode-progress-content
+  margin 10rem 0
+
+  &.unavailable
+    color atariGray(3)
+
+  &.completed
+    > .title-area
+      color atariGreen(7)
+
+      .title::after
+        content ' ✓'
+        daily()
+        font-weight bold
+
+  &.locked
+    > .title-area
+      .title::after
+        content ' LOCK'
+        daily()
+        font-weight bold
+
+  .title-area
+    display flex
+
+    &.has-contents
+      cursor pointer
+
+    .percentage
+      flex-grow 1
+      text-align right
+
+  .contents
+    height 0
+    overflow hidden
+
+    &.displayed
+      height auto
+
+.pixelartacademy-pixelboy-apps-learnmode-progress-content-defaultcontent
+  .unlock-instructions
+    color atariGray(3)
+    margin 5rem 0

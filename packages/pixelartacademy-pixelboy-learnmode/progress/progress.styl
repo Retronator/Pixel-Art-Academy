@@ -3,6 +3,7 @@
 .pixelartacademy-pixelboy-apps-learnmode-progress
   position relative
   width 229rem
+  min-height 230rem
   margin 0 auto
   padding 5rem 10rem 70rem
   display none
@@ -27,46 +28,17 @@
 
   button
     padding 0 2rem 0 3rem
-    border 1rem solid atariLime(5)
-    color atariLime(7)
-    background atariLime(2)
+    border 1rem solid atariGreen(5)
+    color atariGreen(7)
+    background atariGreen(2)
     uni()
     text-transform uppercase
 
     &:hover
-      background atariLime(3)
+      background atariGreen(3)
       color atariGray(7)
 
   .contents
     margin 0
     padding 0
     list-style none
-
-.pixelartacademy-pixelboy-apps-learnmode-progress-content
-  margin 10rem 0
-
-  &.unavailable
-    color atariGray(3)
-
-  &.completed
-    > .title-area
-      color atariLime(7)
-
-      .title::after
-        content ' ✓'
-        daily()
-        font-weight bold
-
-  &.locked
-    > .title-area
-      .title::after
-        content ' LOCK'
-        daily()
-        font-weight bold
-
-  .title-area
-    display flex
-
-    .percentage
-      flex-grow 1
-      text-align right

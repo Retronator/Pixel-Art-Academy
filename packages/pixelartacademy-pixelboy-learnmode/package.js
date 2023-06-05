@@ -20,5 +20,7 @@ Package.onUse(function(api) {
   api.addComponent('learnmode');
   api.addComponent('instructions..');
   api.addComponent('progress..');
+  api.addComponent('progress/content..');
+  api.addComponent('progress/content/appcontent..');
 
 });

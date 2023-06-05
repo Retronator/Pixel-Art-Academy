@@ -28,6 +28,7 @@ Package.onUse(function(api) {
 
   api.addFile('content..');
   api.addFile('content/goalcontent');
+  api.addFile('content/appcontent');
   api.addFile('content/course');
   api.addFile('content/progress..');
   api.addFile('content/progress/manualprogress');

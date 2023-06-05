@@ -1,10 +1,11 @@
 AE = Artificial.Everywhere
-AB = Artificial.Babel
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Content.GoalContent extends LM.Content
   @goalClass = null # Override to set which goal this content represents.
+
+  @type: -> 'GoalContent'
 
   @displayName: -> @goalClass.displayName()
 

@@ -1,0 +1,65 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-content {{unavailableClass}} {{lockedClass}} {{completedClass}}">
+    {{#if $is type 'Course'}}
+      {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent}}
+    {{/if}}
+    {{#if $is type 'Content'}}
+      {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent}}
+    {{/if}}
+    {{#if $is type 'AppContent'}}
+      {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.AppContent}}
+    {{/if}}
+    {{#if $is type 'GoalContent'}}
+      {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent}}
+    {{/if}}
+    {{#if contents.length}}
+      <ul class="contents {{contentsDisplayedClass}}">
+        {{#each contents}}
+          <li class="content">{{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.TitleArea">
+  <div class="title-area {{hasContentsClass}}">
+    {{#if $is contentDepth 1}}
+      <h1 class="title">{{displayName}}</h1>
+    {{/if}}
+    {{#if $is contentDepth 2}}
+      <h2 class="title">{{displayName}}</h2>
+    {{/if}}
+    {{#if $is contentDepth 3}}
+      <h3 class="title">{{displayName}}</h3>
+    {{/if}}
+    {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.Percentage}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.Percentage">
+  {{#if showPercentage}}
+    <div class="percentage">
+      {{#if progress.requiredUnits}}
+        Req: {{progress.completedUnits}}/{{progress.requiredUnits}} {{percentageString progress.requiredCompletedRatio}}
+      {{/if}}
+      {{#if progress.totalUnits}}
+        Total: {{progress.completedUnits}}/{{progress.totalUnits}}
+      {{/if}}
+      {{percentageString progress.completedRatio}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-content-defaultcontent">
+    {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.TitleArea}}
+    {{#unless unlocked}}
+      {{#if unlockInstructionsTranslation}}
+        <div class="unlock-instructions">
+          {{> t10e unlockInstructionsTranslation}}
+        </div>
+      {{/if}}
+    {{/unless}}
+  </div>
+</template>
