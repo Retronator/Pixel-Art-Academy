@@ -9,8 +9,16 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics extends PAA.Tutorials.Drawing.P
 
   @initialize()
 
-  @completed: ->
-    @isAssetCompleted @References
+  @assets: -> [
+    @Pencil
+    @Eraser
+    @ColorFill
+    @ColorFill2
+    @ColorFill3
+    @BasicTools
+    @Shortcuts
+    @References
+  ]
 
   # Methods
 

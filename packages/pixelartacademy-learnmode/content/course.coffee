@@ -62,9 +62,7 @@ class LM.Content.Course
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @progress = new LM.Content.Progress.ContentProgress
-      content: @
-      totalRecursive: true
+    @progress = new LM.Content.Progress.ContentProgress content: @
 
   destroy: ->
     @_translationSubscription.stop()

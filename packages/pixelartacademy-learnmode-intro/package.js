@@ -43,4 +43,5 @@ Package.onUse(function(api) {
   api.addFile('tutorial/content/course');
   api.addFile('tutorial/content/apps');
   api.addFile('tutorial/content/goals');
+  api.addFile('tutorial/content/drawingtutorials');
 });

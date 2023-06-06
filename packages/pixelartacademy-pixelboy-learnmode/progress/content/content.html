@@ -13,6 +13,9 @@
       {{#if $is type 'GoalContent'}}
         {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent}}
       {{/if}}
+      {{#if $is type 'DrawingTutorialContent'}}
+        {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent}}
+      {{/if}}
     </div>
     {{#if contents.length}}
       <ul class="contents {{contentsDisplayedClass}}">
@@ -43,11 +46,17 @@
   {{#if unlocked}}
     <div class="completion">
       {{#if completionistMode}}
-        <span class="total-percentage" {{totalPercentageTitleAttribute}}>{{percentageString progress.completedRatio}}</span>
+        <span class="total-percentage" {{totalPercentageTitleAttribute}}>
+          {{percentageString progress.completedRatio}}
+        </span>
       {{else}}
-        {{#if hasRequiredUnits}}
-          {{progress.requiredCompletedUnitsCount}}/{{progress.requiredUnitsCount}}
-        {{/if}}
+        {{#unless completed}}
+          {{#if hasRequiredUnits}}
+            <span class="requiredUnits" {{requiredUnitsTitleAttribute}}>
+              {{progress.requiredCompletedUnitsCount}}/{{progress.requiredUnitsCount}}
+            </span>
+          {{/if}}
+        {{/unless}}
       {{/if}}
     </div>
   {{/if}}

@@ -9,8 +9,12 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers extends PAA.Tutorials.Drawing.
 
   @initialize()
 
-  @completed: ->
-    @isAssetCompleted @Lines
+  @assets: -> [
+    @Zoom
+    @MoveCanvas
+    @UndoRedo
+    @Lines
+  ]
 
   # Methods
 

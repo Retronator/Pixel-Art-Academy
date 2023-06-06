@@ -43,10 +43,21 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content.Component extends AM.Componen
     return unless units = content.progress.totalUnits()
 
     completedUnitsCount = content.progress.completedUnitsCount?()
-    totalUnitsCount = content.progress.totalUnitsCount?()
-    return unless completedUnitsCount? and totalUnitsCount?
+    unitsCount = content.progress.unitsCount?()
+    return unless completedUnitsCount? and unitsCount?
 
-    title: "#{completedUnitsCount}/#{totalUnitsCount} #{units}"
+    title: "#{completedUnitsCount}/#{unitsCount} #{units}"
+
+  requiredUnitsTitleAttribute: ->
+    content = @data()
+    return unless units = content.progress.requiredUnits()
+
+    requiredCompletedUnitsCount = content.progress.requiredCompletedUnitsCount?()
+    requiredUnitsCount = content.progress.requiredUnitsCount?()
+    return unless requiredCompletedUnitsCount? and requiredUnitsCount?
+
+    requiredCompletedRatio = content.progress.requiredCompletedRatio()
+    title: "#{requiredCompletedUnitsCount}/#{requiredUnitsCount} #{units} (#{@percentageString requiredCompletedRatio})"
 
   percentageString: (ratio) ->
     "#{Math.round ratio * 100}%"

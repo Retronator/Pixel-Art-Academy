@@ -11,8 +11,11 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
   
   @pacManPaletteName: 'PAC-MAN'
 
-  @completed: ->
-    @isAssetCompleted @QuickColorPicking
+  @assets: -> [
+    @ColorSwatches
+    @ColorPicking
+    @QuickColorPicking
+  ]
 
   # Methods
 
