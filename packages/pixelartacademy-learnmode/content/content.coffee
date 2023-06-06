@@ -113,5 +113,6 @@ class LM.Content
     @progress.completedRatio()
 
   requiredCompletedRatio: ->
-    return unless @unlocked() and @progress.requiredCompletedRatio?
-    @progress.requiredCompletedRatio()
+    return unless @unlocked()
+    return 1 if @progress.completed()
+    @progress.requiredCompletedRatio?()

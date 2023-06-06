@@ -24,3 +24,17 @@ class PAA.PixelBoy.Apps.LearnMode.Progress extends AM.Component
 
   visibleClass: ->
     'visible' if @learnMode.state 'started'
+
+  class @Completionist extends AM.DataInputComponent
+    @register 'PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Completionist'
+    
+    constructor: ->
+      super arguments...
+
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    load: ->
+      PAA.PixelBoy.Apps.LearnMode.state('completionDisplayType') is PAA.PixelBoy.Apps.LearnMode.CompletionDisplayTypes.TotalPercentage
+
+    save: (value) ->
+      PAA.PixelBoy.Apps.LearnMode.state 'completionDisplayType', if value then PAA.PixelBoy.Apps.LearnMode.CompletionDisplayTypes.TotalPercentage else PAA.PixelBoy.Apps.LearnMode.CompletionDisplayTypes.RequiredUnits

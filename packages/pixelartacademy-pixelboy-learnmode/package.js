@@ -21,6 +21,8 @@ Package.onUse(function(api) {
   api.addComponent('instructions..');
   api.addComponent('progress..');
   api.addComponent('progress/content..');
+  api.addFile('progress/content/component');
+  api.addComponent('progress/content/defaultcontent..');
   api.addComponent('progress/content/appcontent..');
 
 });

@@ -6,13 +6,15 @@
     <div class="info">
       {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.TitleArea}}
       <div class="instructions">
-        {{#unless unlocked}}
+        {{#if unlocked}}
+          You have unlocked the app.
+        {{else}}
           {{#unless available}}
             {{> t10e unlockInstructionsTranslation}}
           {{else}}
             Unlock the app to continue!
           {{/unless}}
-        {{/unless}}
+        {{/if}}
       </div>
       {{#if showUnlockArea}}
         <div class="app-unlock-area">

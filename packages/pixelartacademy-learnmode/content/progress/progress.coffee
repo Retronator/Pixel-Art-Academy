@@ -23,18 +23,22 @@ class LM.Content.Progress
         # Only do it when active.
         return unless @active()
 
+        # Only make an entry if there was any progress.
+        return unless completedRatio = @completedRatio()
+
         selector =
           contentId: @content.id()
           profileId: @options.profileId()
 
         entry = _.extend
           lastEditTime: new Date()
-          completedRatio: @completedRatio()
+          completedRatio: completedRatio
         ,
           selector
 
-        entry.completedUnits = completedUnits if completedUnits = @completedUnits?()
+        entry.completedUnitsCount = completedUnitsCount if completedUnitsCount = @completedUnitsCount?()
         entry.requiredCompletedRatio = requiredCompletedRatio if requiredCompletedRatio = @requiredCompletedRatio?()
+        entry.requiredCompletedUnitsCount = requiredCompletedUnitsCount if requiredCompletedUnitsCount = @requiredCompletedRatio?()
 
         LM.Content.Progress.Entry.documents.upsert selector, entry
 
@@ -44,6 +48,9 @@ class LM.Content.Progress
 
   completed: -> throw new AE.NotImplementedException "Progress must provide if the content has been completed or not."
   completedRatio: -> throw new AE.NotImplementedException "Progress must provide the ratio towards full completion of the content."
+
+  totalUnits: -> @options.totalUnits or @options.units
+  requiredUnits: -> @options.requiredUnits or @options.units
 
   entry: ->
     @constructor.Entry.documents.findOne

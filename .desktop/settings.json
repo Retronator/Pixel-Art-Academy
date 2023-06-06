@@ -96,6 +96,6 @@
         "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Matej Jan, Retronator",
         "overwrite": true,
         "electronVersion": "11.5.0",
-        "platform": "darwin, win32"
+        "platform": "darwin"
     }
 }

@@ -12,8 +12,9 @@ class LM.Content.Progress.Entry extends AM.Document
   # lastEditTime: the time when progress was made
   # contentId: content ID of the course content this is an entry for
   # completedRatio: progress ratio towards fully completing this content
-  # completedUnits: optional number of units completed in this content
+  # completedUnitsCount: optional number of units completed in this content
   # requiredCompletedRatio: optional progress ratio towards completing just the requirements of this content
+  # requiredCompletedUnitsCount: optional number of required units completed in this content
   @Meta
     name: @id()
       

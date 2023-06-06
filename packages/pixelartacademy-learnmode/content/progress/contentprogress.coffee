@@ -12,29 +12,40 @@ class LM.Content.Progress.ContentProgress extends LM.Content.Progress
   completed: ->
     _.every (content.completed() for content in @content.contents())
 
-  totalUnits: ->
-    if @options.recursive
-      _.sum (content.progress.totalUnits?() for content in @content.contents())
+  # Total units
+
+  unitsCount: ->
+    if @options.recursive or @options.totalRecursive
+      _.sum (content.progress.unitsCount?() for content in @content.contents())
 
     else
       @content.contents().length
 
-  requiredUnits: ->
-    if @options.recursive
-      _.sum (content.progress.requiredUnits?() for content in @content.contents())
-
-    else
-      @content.contents().length
-
-  completedUnits: ->
-    if @options.recursive
-      _.sum (content.progress.completedUnits?() for content in @content.contents())
+  completedUnitsCount: ->
+    if @options.recursive or @options.totalRecursive
+      _.sum (content.progress.completedUnitsCount?() for content in @content.contents())
 
     else
       _.sum ((if content.completed() then 1 else 0) for content in @content.contents())
 
   completedRatio: ->
     @_weightedAverage (content.completedRatio() or 0 for content in @content.contents())
+
+  # Required units
+
+  requiredUnitsCount: ->
+    if @options.recursive or @options.requiredRecursive
+      _.sum (content.progress.requiredUnitsCount?() for content in @content.contents())
+
+    else
+      @content.contents().length
+
+  requiredCompletedUnitsCount: ->
+    if @options.recursive or @options.requiredRecursive
+      _.sum (content.progress.requiredCompletedUnitsCount?() for content in @content.contents())
+
+    else
+      _.sum ((if content.completed() then 1 else 0) for content in @content.contents())
 
   requiredCompletedRatio: ->
     @_weightedAverage (content.requiredCompletedRatio() or 0 for content in @content.contents())

@@ -7,14 +7,23 @@ class LM.Content.Progress.UnitProgress extends LM.Content.Progress
   constructor: (@options) ->
     super arguments...
 
-  totalUnits: -> _.propertyValue @options, 'totalUnits'
+  completed: ->
+    return @requiredCompletedUnitsCount() >= @requiredUnitsCount() if @requiredUnitsCount()
 
-  requiredUnits: -> _.propertyValue @options, 'requiredUnits'
+    @completedUnitsCount() > @unitsCount()
 
-  completedUnits: -> @options.completedUnits()
+  # Total units
 
-  completed: -> @completedUnits() >= @totalUnits()
+  unitsCount: -> _.propertyValue @options, 'unitsCount'
 
-  completedRatio: -> @completedUnits() / @totalUnits()
+  completedUnitsCount: -> @options.completedUnitsCount()
 
-  requiredCompletedRatio: -> if @requiredUnits() then @completedUnits() / @requiredUnits() else null
+  completedRatio: -> @completedUnitsCount() / @unitsCount()
+
+  # Required units
+
+  requiredUnitsCount: -> _.propertyValue @options, 'requiredUnitsCount'
+
+  requiredCompletedUnitsCount: -> @options.requiredCompletedUnitsCount?() ? @options.completedUnitsCount()
+
+  requiredCompletedRatio: -> if @requiredUnitsCount() then @requiredCompletedUnitsCount() / @requiredUnitsCount() else null

@@ -6,7 +6,7 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.LearnMode extends PAA.PixelBoy.App
   # started: boolean whether the player has read the instructions
   # unlockedApps: array of app IDs unlocked by the player
-  # completionDisplayType: what percentage to display to the user, required by default
+  # completionDisplayType: how to display progress to the user, required by default
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.LearnMode'
   @url: -> 'learnmode'
 
@@ -24,8 +24,8 @@ class PAA.PixelBoy.Apps.LearnMode extends PAA.PixelBoy.App
   @initialize()
 
   @CompletionDisplayTypes:
-    Required: 'Required'
-    HundredPercent: 'HundredPercent'
+    RequiredUnits: 'RequiredUnits'
+    TotalPercentage: 'TotalPercentage'
 
   @isAppUnlocked: (appId) ->
     unlockedApps = @state('unlockedApps') or []
@@ -57,7 +57,7 @@ class PAA.PixelBoy.Apps.LearnMode extends PAA.PixelBoy.App
     @scrolledToBottom @_app.offsetHeight + @_app.scrollTop >= @_app.scrollHeight
 
   completionDisplayType: ->
-    @state('completionDisplayType') or @constructor.CompletionDisplayTypes.Required
+    @state('completionDisplayType') or @constructor.CompletionDisplayTypes.RequiredUnits
 
   instructionsVisible: ->
     not PAA.PixelBoy.Apps.LearnMode.state 'started'

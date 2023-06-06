@@ -9,8 +9,29 @@ class LM.Content.Progress.ManualProgress extends LM.Content.Progress
 
   completed: -> @options.completed()
 
-  completedRatio: -> @options.completedRatio?() or if @options.completed?() then 1 else 0
+  # Total units
 
-  completedUnits: -> @options.completedUnits?() ? null
+  unitsCount: -> _.propertyValue @options, 'unitsCount'
 
-  requiredCompletedRatio: -> @options.requiredCompletedRatio?() ? null
+  completedUnitsCount: -> @options.completedUnitsCount?()
+
+  completedRatio: ->
+    return @options.completedRatio() if @options.completedRatio
+
+    if @options.completed() then 1 else 0
+
+  # Required units
+
+  requiredUnitsCount: -> _.propertyValue @options, 'requiredUnitsCount'
+
+  requiredCompletedUnitsCount: -> @options.requiredCompletedUnitsCount?() ? @options.completedUnitsCount()
+
+  requiredCompletedRatio: ->
+    return @options.requiredCompletedRatio() if @options.requiredCompletedRatio
+
+    completedUnitsCount = @completedUnitsCount()
+    requiredUnitsCount = @requiredUnitsCount()
+
+    return unless completedUnitsCount? and requiredUnitsCount?
+
+    completedUnitsCount / requiredUnitsCount

@@ -15,5 +15,6 @@ class LM.Content.GoalContent extends LM.Content
     @progress = new LM.Content.Progress.GoalProgress
       content: @
       goalClass: @constructor.goalClass
+      totalUnits: "tasks"
 
   status: -> LM.Content.Status.Unlocked

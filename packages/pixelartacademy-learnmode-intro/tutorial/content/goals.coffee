@@ -4,15 +4,15 @@ LM = PixelArtAcademy.LearnMode
 class LM.Intro.Tutorial.Content.Goals extends LM.Content
   @id: -> 'LearnMode.Intro.Tutorial.Content.Goals'
 
-  @displayName: -> "Goals"
+  @displayName: -> "Study goals"
 
   @unlockInstructions: -> "Unlock the Study Plan app to get access to learning goals."
 
   @contents: -> [
-    @Tutorial
     @StudyPlan
-    @Snake
     @PixelArtSoftware
+    @Snake
+    @Tutorial
   ]
 
   @initialize()
@@ -20,7 +20,12 @@ class LM.Intro.Tutorial.Content.Goals extends LM.Content
   constructor: ->
     super arguments...
 
-    @progress = new LM.Content.Progress.ContentProgress content: @
+    @progress = new LM.Content.Progress.ContentProgress
+      content: @
+      weight: 2
+      requiredUnits: "goals"
+      totalUnits: "tasks"
+      totalRecursive: true
 
   status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked PAA.PixelBoy.Apps.StudyPlan.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 

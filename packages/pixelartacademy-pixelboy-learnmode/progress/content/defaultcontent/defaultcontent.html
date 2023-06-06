@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-content-defaultcontent">
+    {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.TitleArea}}
+    {{#if learnModeDescription}}
+      <div class="description">
+        {{> t10e learnModeDescription}}
+      </div>
+    {{/if}}
+    {{#unless unlocked}}
+      {{#if unlockInstructionsTranslation}}
+        <div class="unlock-instructions">
+          {{> t10e unlockInstructionsTranslation}}
+        </div>
+      {{/if}}
+    {{/unless}}
+  </div>
+</template>

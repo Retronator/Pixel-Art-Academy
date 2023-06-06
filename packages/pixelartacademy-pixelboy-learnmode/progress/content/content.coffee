@@ -71,24 +71,3 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
       complete: => $contents.css height: 'auto' if targetHeight > 0
 
     @contentsDisplayed not contentsDisplayed
-
-  class @Component extends AM.Component
-    contentDepth: ->
-      content = @data()
-
-      # Count how many steps it takes till we get to the course parent.
-      depth = 1
-
-      while content not instanceof LM.Content.Course
-        content = content.parent
-        depth++
-
-      depth
-
-    hasContentsClass: ->
-      content = @data()
-      'has-contents' if content.contents().length > 0
-
-  class @DefaultContent extends @Component
-    @id: -> 'PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent'
-    @register @id()

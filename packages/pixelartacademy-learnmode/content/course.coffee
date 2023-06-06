@@ -26,6 +26,9 @@ class LM.Content.Course
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the course name."
 
+  # String to display under the course name in the Learn Mode app.
+  @learnModeDescription: -> throw new AE.NotImplementedException "You must specify the learn mode description."
+
   # Override to provide content classes that are included in this course.
   @contents: -> []
 
@@ -41,7 +44,7 @@ class LM.Content.Course
 
         # Create this course's translated names.
         translationNamespace = @id()
-        AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName']
+        AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'learnModeDescription']
 
   constructor: (@options = {}) ->
     # By default the content is related to the current profile.
@@ -59,7 +62,9 @@ class LM.Content.Course
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @progress = new LM.Content.Progress.ContentProgress content: @
+    @progress = new LM.Content.Progress.ContentProgress
+      content: @
+      totalRecursive: true
 
   destroy: ->
     @_translationSubscription.stop()
@@ -72,7 +77,10 @@ class LM.Content.Course
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
-  
+
+  learnModeDescription: -> AB.translate(@_translationSubscription, 'learnModeDescription').text
+  learnModeDescriptionTranslation: -> AB.translation @_translationSubscription, 'learnModeDescription'
+
   contents: -> @_contents
 
   allContents: -> _.flatten (content.allContents() for content in @_contents)

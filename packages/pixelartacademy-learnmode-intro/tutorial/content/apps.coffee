@@ -17,7 +17,9 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
   constructor: ->
     super arguments...
 
-    @progress = new LM.Content.Progress.ContentProgress content: @
+    @progress = new LM.Content.Progress.ContentProgress
+      content: @
+      units: "apps"
 
   status: -> LM.Content.Status.Unlocked
 

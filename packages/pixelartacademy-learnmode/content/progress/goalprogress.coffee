@@ -9,8 +9,12 @@ class LM.Content.Progress.GoalProgress extends LM.Content.Progress
 
   completed: -> @_goal()?.completed()
 
-  completedRatio: -> @completedUnits() / @_goal()?.tasks().length
-
-  completedUnits: -> _.filter(@_goal()?.tasks(), (task) -> task.completed()).length
-
   _goal: -> PAA.Learning.Goal.getAdventureInstanceForId @options.goalClass.id()
+
+  # Total units
+
+  unitsCount: -> @_goal()?.tasks().length
+
+  completedUnitsCount: -> _.filter(@_goal()?.tasks(), (task) -> task.completed()).length
+
+  completedRatio: -> @completedUnitsCount() / @unitsCount()

@@ -6,31 +6,42 @@
   &.unavailable
     color atariGray(3)
 
-  &.completed
-    > .title-area
-      color atariGreen(7)
-
-      .title::after
-        content ' ✓'
-        daily()
-        font-weight bold
-
   &.locked
-    > .title-area
+    .title-area
       .title::after
-        content ' LOCK'
-        daily()
+        content ''
+        display inline-block
+        width 7rem
+        height 8rem
+        margin-left 4rem
+        background-image url("/pixelartacademy/pixelboy/apps/learnmode/lock.png")
+
+  .component
+    &.completed
+      color atariGreen(5)
+
+      .title-area
+        h1, h2, h3
+          color atariGreen(6)
+
+        .title::after
+          content ' ✓'
+          daily()
+          font-weight bold
+
+    .title-area
+      display flex
+
+      &.has-contents
+        cursor pointer
+
+      .completion
+        flex-grow 1
+        text-align right
+
+      h1 + .completion
+      h2 + .completion
         font-weight bold
-
-  .title-area
-    display flex
-
-    &.has-contents
-      cursor pointer
-
-    .percentage
-      flex-grow 1
-      text-align right
 
   .contents
     height 0
@@ -38,8 +49,3 @@
 
     &.displayed
       height auto
-
-.pixelartacademy-pixelboy-apps-learnmode-progress-content-defaultcontent
-  .unlock-instructions
-    color atariGray(3)
-    margin 5rem 0
