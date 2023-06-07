@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content">
-  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-content {{unavailableClass}} {{lockedClass}}">
+  <div class="pixelartacademy-pixelboy-apps-learnmode-progress-content {{unavailableClass}} {{lockedClass}} {{contentDepthClass}}">
     <div class="component {{completedClass}}">
       {{#if $is type 'Course'}}
         {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.DefaultContent}}
@@ -29,14 +29,17 @@
 
 <template name="PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.TitleArea">
   <div class="title-area {{hasContentsClass}}">
-    {{#if $is contentDepth 1}}
+    {{#if $is depth 1}}
       <h1 class="title">{{displayName}}</h1>
     {{/if}}
-    {{#if $is contentDepth 2}}
+    {{#if $is depth 2}}
       <h2 class="title">{{displayName}}</h2>
     {{/if}}
-    {{#if $is contentDepth 3}}
+    {{#if $is depth 3}}
       <h3 class="title">{{displayName}}</h3>
+    {{/if}}
+    {{#if $is depth 4}}
+      <h4 class="title">{{displayName}}</h4>
     {{/if}}
     {{> PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content.Completion}}
   </div>

@@ -25,6 +25,10 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
     content = @data()
     'locked' unless content.unlocked()
 
+  contentDepthClass: ->
+    content = @data()
+    "depth-#{content.depth()}"
+
   completedClass: ->
     content = @data()
     'completed' if content.completed()

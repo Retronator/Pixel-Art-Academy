@@ -18,7 +18,14 @@ class LM.Content.Progress.ManualProgress extends LM.Content.Progress
   completedRatio: ->
     return @options.completedRatio() if @options.completedRatio
 
-    if @options.completed() then 1 else 0
+    completedUnitsCount = @completedUnitsCount()
+    unitsCount = @unitsCount()
+
+    if completedUnitsCount? and unitsCount?
+      completedUnitsCount / unitsCount
+
+    else
+      if @options.completed() then 1 else 0
 
   # Required units
 
@@ -29,9 +36,9 @@ class LM.Content.Progress.ManualProgress extends LM.Content.Progress
   requiredCompletedRatio: ->
     return @options.requiredCompletedRatio() if @options.requiredCompletedRatio
 
-    completedUnitsCount = @completedUnitsCount()
+    requiredCompletedUnitsCount = @requiredCompletedUnitsCount()
     requiredUnitsCount = @requiredUnitsCount()
 
-    return unless completedUnitsCount? and requiredUnitsCount?
+    return unless requiredCompletedUnitsCount? and requiredUnitsCount?
 
-    completedUnitsCount / requiredUnitsCount
+    requiredCompletedUnitsCount / requiredUnitsCount

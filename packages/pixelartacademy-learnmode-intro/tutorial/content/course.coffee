@@ -15,6 +15,7 @@ class LM.Intro.Tutorial.Content.Course extends LM.Content.Course
     LM.Intro.Tutorial.Content.Apps
     LM.Intro.Tutorial.Content.Goals
     LM.Intro.Tutorial.Content.DrawingTutorials
+    LM.Intro.Tutorial.Content.DrawingChallenges
   ]
 
   @initialize()

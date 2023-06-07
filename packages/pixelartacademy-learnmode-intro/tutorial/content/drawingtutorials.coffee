@@ -21,13 +21,12 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
 
     @progress = new LM.Content.Progress.ContentProgress
       content: @
-      units: "tutorials"
       weight: 3
       requiredUnits: "tutorials"
       totalUnits: "tutorial steps"
       totalRecursive: true
 
-  status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked PAA.PixelBoy.Apps.StudyPlan.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+  status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked PAA.PixelBoy.Apps.Drawing.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
   class @Basics extends LM.Content.DrawingTutorialContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingTutorials.Basics'

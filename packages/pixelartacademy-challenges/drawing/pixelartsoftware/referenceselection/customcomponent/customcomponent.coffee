@@ -33,7 +33,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         nextChoiceKey: 'CharacterThing'
       right:
         name: "Big"
-        filter:  (id) -> id[1] is 'B'
+        filter: (id) -> id[1] is 'B'
         nextChoiceKey: 'CharacterThing'
     CharacterThing:
       prompt: "What would you like to draw?"

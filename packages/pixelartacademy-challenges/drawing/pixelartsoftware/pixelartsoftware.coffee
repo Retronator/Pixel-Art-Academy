@@ -25,6 +25,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     """
   
   @copyReferenceClasses = {}
+
+  @completed: ->
+    assets = @state 'assets'
+    _.find assets, (asset) => asset.completed
   
   @addCopyReferenceAsset: (assetId) ->
     assets = @state 'assets'

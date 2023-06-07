@@ -116,3 +116,14 @@ class LM.Content
     return unless @unlocked()
     return 1 if @progress.completed()
     @progress.requiredCompletedRatio?()
+
+  # How deep this content is below the course (which is at depth 1).
+  depth: ->
+    content = @
+    depth = 1
+
+    while content not instanceof LM.Content.Course
+      content = content.parent
+      depth++
+
+    depth
