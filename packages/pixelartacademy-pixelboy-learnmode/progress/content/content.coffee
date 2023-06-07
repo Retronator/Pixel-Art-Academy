@@ -5,6 +5,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
+LearnModeApp = PAA.PixelBoy.Apps.LearnMode
+
 class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content'
   @register @id()
@@ -12,10 +14,62 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
   onCreated: ->
     super arguments...
 
-    @learnMode = @ancestorComponentOfType PAA.PixelBoy.Apps.LearnMode
+    @learnMode = @ancestorComponentOfType LearnModeApp
 
+    @contentsDisplayed = new ReactiveField @_defaultContentsDisplayed()
+
+  onRendered: ->
+    super arguments...
+
+    # Automatically update whether the contents are displayed when completion display type changes until changed manually.
+    @_automaticContentDisplayedUpdateAutorun = @autorun (computation) =>
+      content = @data()
+      return unless content.contents().length
+
+      # Depend on completion display type.
+      @learnMode.completionDisplayType()
+
+      Tracker.nonreactive =>
+        @_setContentsDisplayed @_defaultContentsDisplayed(), 1
+
+  _defaultContentsDisplayed: ->
     content = @data()
-    @contentsDisplayed = new ReactiveField content.unlocked() and not content.completed()
+
+    switch @learnMode.completionDisplayType()
+      when LearnModeApp.CompletionDisplayTypes.RequiredUnits
+        content.unlocked() and not content.completed()
+
+      when LearnModeApp.CompletionDisplayTypes.TotalPercentage
+        content.unlocked() and content.completedRatio() < 1
+
+  _setContentsDisplayed: (newContentsDisplayed, durationFactor) ->
+    currentContentsDisplayed = @contentsDisplayed()
+    return if newContentsDisplayed is currentContentsDisplayed
+
+    $contents = @$('.contents').eq(0)
+    $contents.velocity('stop', true)
+
+    scale = LOI.adventure.interface.display.scale()
+
+    fullHeight = $contents[0].scrollHeight
+    fullVisibleHeight = Math.min 230 * scale, fullHeight
+
+    currentHeight = $contents.outerHeight()
+    currentVisibleHeight = Math.min 230 * scale, currentHeight
+
+    if currentContentsDisplayed
+      targetHeight = 0
+
+    else
+      targetHeight = fullVisibleHeight
+
+    $contents.velocity
+      height: [targetHeight, currentVisibleHeight]
+    ,
+      duration: durationFactor * Math.min 500, Math.abs(targetHeight - currentVisibleHeight) / scale * 4
+      complete: => $contents.css height: 'auto' if targetHeight > 0
+
+    @contentsDisplayed newContentsDisplayed
 
   unavailableClass: ->
     content = @data()
@@ -50,28 +104,8 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
     content = @data()
     return unless content.contents().length
 
+    # Prevent automatic changes from now on.
+    @_automaticContentDisplayedUpdateAutorun.stop()
+
     # Toggle whether the contents are displayed.
-    $contents = @$('.contents').eq(0)
-    $contents.velocity('stop', true)
-
-    scale = LOI.adventure.interface.display.scale()
-
-    fullHeight = $contents[0].scrollHeight
-    fullVisibleHeight = Math.min 230 * scale, fullHeight
-
-    currentHeight = $contents.outerHeight()
-    currentVisibleHeight = Math.min 230 * scale, currentHeight
-
-    if contentsDisplayed = @contentsDisplayed()
-      targetHeight = 0
-
-    else
-      targetHeight = fullVisibleHeight
-
-    $contents.velocity
-      height: [targetHeight, currentVisibleHeight]
-    ,
-      duration: Math.min 500, Math.abs(targetHeight - currentVisibleHeight) / scale * 4
-      complete: => $contents.css height: 'auto' if targetHeight > 0
-
-    @contentsDisplayed not contentsDisplayed
+    @_setContentsDisplayed not @contentsDisplayed(), 1

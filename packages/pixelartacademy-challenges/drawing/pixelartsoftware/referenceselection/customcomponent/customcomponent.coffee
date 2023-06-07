@@ -25,6 +25,9 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         name: "Multiple"
         filter: (id) -> id[0] is 'C'
         nextChoiceKey: 'SmallBig'
+        available: -> PAA.Tutorials.Drawing.PixelArtTools.Colors.completed()
+        unlockInstructions: -> "Complete the Colors tutorial to unlock colored sprites."
+
     SmallBig:
       prompt: "Big or small?"
       left:
@@ -35,6 +38,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         name: "Big"
         filter: (id) -> id[1] is 'B'
         nextChoiceKey: 'CharacterThing'
+        available: -> PAA.Tutorials.Drawing.PixelArtTools.Helpers.completed()
+        unlockInstructions: -> "Complete the Helpers tutorial to unlock big sprites."
     CharacterThing:
       prompt: "What would you like to draw?"
       left:
@@ -232,6 +237,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     
   _makeChoice: (madeChoice) ->
     choice = @currentChoice()
+
+    if choice[madeChoice].available
+      return unless choice[madeChoice].available()
+
     @currentChoice null
   
     nextChoiceKey = choice[madeChoice].nextChoiceKey
@@ -298,6 +307,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         @selectionFinished true
       ,
         600
+
+  rightAvailableClass: ->
+    choice = @currentChoice()
+    'available' unless choice.right.available? and not choice.right.available()
 
   activeClass: ->
     'active' if @active()

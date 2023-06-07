@@ -21,6 +21,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
 
     @progress = new LM.Content.Progress.ContentProgress
       content: @
+      weight: 0.1
       totalUnits: "artworks"
       totalRecursive: true
 
@@ -72,7 +73,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
           content: @
           units: "sprites"
 
-          completed: => @progress.completedUnitsCount() > 1
+          completed: => @progress.completedUnitsCount() >= 1
 
           unitsCount: =>
             (id for id of PixelArtSoftware.copyReferenceClasses when @_assetBelongsToGroup id).length

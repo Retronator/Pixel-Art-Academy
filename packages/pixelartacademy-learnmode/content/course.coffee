@@ -86,6 +86,7 @@ class LM.Content.Course
   available: -> true # TODO: Add purchased status
   unlocked: -> true # TODO: Add purchased status
   completed: -> @progress.completed()
+  completedRatio: -> @progress.completedRatio()
 
   # The course is at the top of the content hierarchy.
   depth: -> 1

@@ -48,11 +48,30 @@
       z-index 2
       top -80rem
       bottom -100rem
-      cursor pointer
 
       &:hover
-        .name
-          bottom 5rem
+        .unlock-instructions
+          opacity 1
+
+      &.available
+        cursor pointer
+
+        &:hover
+          .name
+            bottom 5rem
+
+        .unlock-instructions
+          display none
+
+      &:not(.available)
+        .name::after
+          content ''
+          display inline-block
+          width 9rem
+          height 10rem
+          margin-left 4rem
+          vertical-align bottom
+          background-image url("/pixelartacademy/challenges/drawing/pixelartsoftware/lock.png")
 
       &.left
         left -170rem
@@ -61,6 +80,17 @@
       &.right
         left 0
         right -170rem
+
+      .unlock-instructions
+        position absolute
+        opacity 0
+        left 10rem
+        right 10rem
+        bottom 14rem
+        padding 4rem
+        background-color rgba(atariGray(0), 0.6)
+        text-align center
+        transition opacity 0.1s
 
       .name
         position absolute
