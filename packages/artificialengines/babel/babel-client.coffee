@@ -5,7 +5,7 @@ class Artificial.Babel extends Artificial.Babel
   @_userLanguagePreference: new ReactiveField null
 
   # Global toggle to use live instead of cached translation documents.
-  @inTranslationMode: new ReactiveField true
+  @inTranslationMode: new ReactiveField false
 
   @languagePreference: (value) ->
     if value

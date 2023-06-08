@@ -52,6 +52,6 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
     status: ->
       pixelArtSoftwareGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
-      pixelArtSoftwareGoal.completed()
+      return LM.Content.Status.Unavailable unless pixelArtSoftwareGoal.completed()
 
       super arguments...
