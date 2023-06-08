@@ -51,7 +51,7 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
     @initialize()
 
     status: ->
-      return unless intro = LOI.adventure.getEpisode LM.Intro
-      return LM.Content.Status.Unavailable unless intro.pico8Enabled()
+      pixelArtSoftwareGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
+      pixelArtSoftwareGoal.completed()
 
       super arguments...

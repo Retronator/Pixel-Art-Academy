@@ -31,7 +31,7 @@ class LM.Content.Progress.ManualProgress extends LM.Content.Progress
 
   requiredUnitsCount: -> _.propertyValue @options, 'requiredUnitsCount'
 
-  requiredCompletedUnitsCount: -> @options.requiredCompletedUnitsCount?() ? @options.completedUnitsCount()
+  requiredCompletedUnitsCount: -> @options.requiredCompletedUnitsCount?() ? @completedUnitsCount()
 
   requiredCompletedRatio: ->
     return @options.requiredCompletedRatio() if @options.requiredCompletedRatio
