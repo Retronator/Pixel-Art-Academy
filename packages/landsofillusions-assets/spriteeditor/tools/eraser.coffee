@@ -50,6 +50,8 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
   endStroke: (assetData) ->
     # When the stroke ends, we need to execute the whole action as well.
     if assetData instanceof LOI.Assets.Bitmap
+      return unless @_action
+      
       assetData.executeAction @_action
     
       @_action = null

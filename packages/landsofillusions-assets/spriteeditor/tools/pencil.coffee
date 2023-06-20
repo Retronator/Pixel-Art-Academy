@@ -36,7 +36,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
     ignoreNormals = @data.get 'ignoreNormals'
 
     changedPixels = _.filter relativePixels, (pixel) =>
-      existingPixel = assetData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
+      return true unless existingPixel = assetData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
   
       if paintNormals and existingPixel
         # Get the color from the existing pixel.
@@ -48,7 +48,12 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         pixel.normal = existingPixel.normal if existingPixel.normal?
       
       # We need to add this pixel unless one just like it is already there.
-      not EJSON.equals existingPixel, pixel
+      for property in ['materialIndex', 'paletteColor', 'directColor']
+        continue unless pixel[property]? or existingPixel[property]?
+        return true if pixel[property]? isnt existingPixel[property]?
+        return true unless EJSON.equals pixel[property], existingPixel[property]
+        
+      false
 
     return unless changedPixels.length
 
@@ -83,6 +88,8 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
   endStroke: (assetData) ->
     # When the stroke ends, we need to execute the whole action as well.
     if assetData instanceof LOI.Assets.Bitmap
+      return unless @_action
+      
       assetData.executeAction @_action
 
       @_action = null
