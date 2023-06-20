@@ -299,6 +299,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     # Don't capture events when the interface is busy.
     return if LOI.adventure.interface.busy()
 
+    # Open the device with the alt key.
+    return if @active()
+    
     keyCode = event.which
     return unless keyCode is AC.Keys.alt
 
