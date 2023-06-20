@@ -107,10 +107,8 @@ class FM.Interface extends FM.Interface
     # return if key is @_activeKey
 
     # Find if the pressed key matches any of the tools' shortcuts.
-    keyboardState = AC.Keyboard.getState()
-
-    targetTool = _.find @tools(), (tool) => keyboardState.isShortcutDown @getShortcutForOperator tool
-    targetAction = _.find @actions(), (action) => keyboardState.isShortcutDown @getShortcutForOperator action
+    targetTool = _.find @tools(), (tool) => AC.Keyboard.isShortcutDown event, @getShortcutForOperator tool
+    targetAction = _.find @actions(), (action) => AC.Keyboard.isShortcutDown event, @getShortcutForOperator action
 
     if targetTool
       # We want to store the previous tool if we're activating this tool with the hold key.

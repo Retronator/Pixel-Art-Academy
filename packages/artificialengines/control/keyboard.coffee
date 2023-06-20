@@ -20,6 +20,38 @@ class AC.Keyboard
     _.extend state, @_state
     state
 
+  @isCommandOrControlDown: (event) ->
+    event.metaKey or event.ctrlKey
+
+  @isShortcutDown: (event, shortcut) ->
+    return unless shortcut
+
+    # Allow sending in multiple shortcuts.
+    if _.isArray shortcut
+      return _.some (@isShortcutDown event, shortcutItem for shortcutItem in shortcut)
+
+    # Make sure any required modifiers are down.
+    return if shortcut.commandOrControl and not @isCommandOrControlDown event
+    return if (shortcut.command or shortcut.win or shortcut.super) and not event.metaKey
+    return if shortcut.shift and not event.shiftKey
+    return if shortcut.alt and not event.altKey
+    return if shortcut.control and not event.ctrlKey
+
+    # Make sure none of the other modifiers are down.
+    return if @isCommandOrControlDown(event) and not (shortcut.command or shortcut.control or shortcut.commandOrControl)
+    return if event.metaKey and not (shortcut.command or shortcut.win or shortcut.super or shortcut.commandOrControl)
+    return if event.shiftKey and not (shortcut.shift or (shortcut.key is AC.Keys.shift) or (shortcut.holdKey is AC.Keys.shift))
+    return if event.altKey and not (shortcut.alt or (shortcut.key is AC.Keys.alt) or (shortcut.holdKey is AC.Keys.alt))
+    return if event.ctrlKey and not (shortcut.control or (shortcut.key is AC.Keys.ctrl) or (shortcut.holdKey is AC.Keys.ctrl))
+    
+    # Make sure the main key is down.
+    keyDown = true if shortcut.key and (shortcut.key is event.keyCode)
+    holdKeyDown = true if shortcut.holdKey and (shortcut.holdKey is event.keyCode)
+    return unless keyDown or holdKeyDown
+
+    # All shortcut's requirements are met.
+    true
+
   @onKeyDown: (event) ->
     # HACK: If command is pressed, no other non-modifier keys will report key up events,
     # so we assume all other keys got released prior to this new key being pressed.
