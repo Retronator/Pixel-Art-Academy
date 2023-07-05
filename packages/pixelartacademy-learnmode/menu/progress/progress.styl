@@ -1,0 +1,86 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-learnmode-menu-progress
+  fixed-cover()
+  z-index 5
+
+  .safe-area
+    display none
+
+  .viewport-area
+    position absolute
+    overflow scroll
+
+    .progress-area
+      position relative
+      width 320rem
+      margin 16rem auto
+
+      h1, h2, h3, h4
+        margin 0
+        color atariGray(7)
+
+      h1
+        text-transform uppercase
+        kyrou-9()
+
+      h2
+        text-transform uppercase
+        kyrou-7()
+
+      h3
+        kyrou-7()
+        font-weight normal
+
+      h4
+        daily()
+        font-weight normal
+
+      button
+        padding 0 2rem 0 3rem
+        border 1rem solid atariGreen(5)
+        color atariGreen(7)
+        background atariGreen(2)
+        uni()
+        text-transform uppercase
+
+        &:hover
+          background atariGreen(3)
+          color atariGray(7)
+
+      input[type='checkbox']
+        display none
+
+        & + .label::before
+          content '✔'
+          display inline-block
+          width 7rem
+          height 7rem
+          padding 0 0 1rem 1rem
+          margin-right 6rem
+          vertical-align baseline
+          border 1rem solid atariGray(2)
+          text-align center
+          color transparent
+          adventure()
+
+        &:checked + .label::before
+          color inherit
+
+      .courses-area
+      .settings
+        > .title
+          font-weight normal
+          margin 10rem 0
+
+      .courses-area
+        .courses
+          padding 0 10rem
+          margin 0
+          list-style none
+          border 1rem solid atariGray(1)
+          background atariGray(0)
+
+      .settings
+        .completionist
+          cursor pointer

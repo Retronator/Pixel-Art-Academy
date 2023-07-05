@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.LearnMode.Menu.Progress.Content.AppContent">
+  <div class="pixelartacademy-learnmode-menu-progress-content-appcontent">
+    <div class="icon-area">
+      <img src="{{iconUrl}}" class="icon">
+    </div>
+    <div class="info">
+      {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.TitleArea}}
+      <div class="instructions">
+        {{#if unlocked}}
+          You have unlocked the app.
+        {{else}}
+          {{> t10e unlockInstructionsTranslation}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

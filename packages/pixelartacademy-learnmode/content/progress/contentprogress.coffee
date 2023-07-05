@@ -26,7 +26,7 @@ class LM.Content.Progress.ContentProgress extends LM.Content.Progress
       _.sum (content.progress.completedUnitsCount?() for content in @content.contents())
 
     else
-      _.filter(@content.contents(), (content) -> content.completed()).length
+      _.filter(@content.contents(), (content) => content.completed()).length
 
   completedRatio: ->
     if @options.recursive or @options.totalRecursive
@@ -49,7 +49,7 @@ class LM.Content.Progress.ContentProgress extends LM.Content.Progress
       _.sum (content.progress.requiredCompletedUnitsCount?() for content in @content.contents())
 
     else
-      _.filter(@content.contents(), (content) -> content.completed()).length
+      _.filter(@content.contents(), (content) => content.completed()).length
 
   requiredCompletedRatio: ->
     if @options.recursive or @options.requiredRecursive

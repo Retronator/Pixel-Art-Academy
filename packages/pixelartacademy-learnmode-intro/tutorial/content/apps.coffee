@@ -7,7 +7,6 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
   @displayName: -> "Apps"
 
   @contents: -> [
-    @StudyPlan
     @Drawing
     @Pico8
   ]
@@ -23,35 +22,24 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
   status: -> LM.Content.Status.Unlocked
 
-  class @StudyPlan extends LM.Content.AppContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.StudyPlan'
-    @appClass = PAA.PixelBoy.Apps.StudyPlan
-    @initialize()
-
   class @Drawing extends LM.Content.AppContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Drawing'
     @appClass = PAA.PixelBoy.Apps.Drawing
 
-    @unlockInstructions: -> "Complete the Study Plan goal to be able to unlock the Drawing app."
+    @unlockInstructions: -> "Drawing app is unlocked from the start."
 
     @initialize()
 
-    status: ->
-      studyPlanGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.StudyPlan.id()
-      return LM.Content.Status.Unavailable unless studyPlanGoal.completed()
-
-      super arguments...
+    status: -> @constructor.Status.Unlocked
 
   class @Pico8 extends LM.Content.AppContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Pico8'
     @appClass = PAA.PixelBoy.Apps.Pico8
 
-    @unlockInstructions: -> "Complete the Pixel art software goal to be able to unlock the PICO-8 app."
+    @unlockInstructions: -> "Complete the Pixel art software challenge to unlock the PICO-8 app."
 
     @initialize()
 
     status: ->
       pixelArtSoftwareGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
-      return LM.Content.Status.Unavailable unless pixelArtSoftwareGoal.completed()
-
-      super arguments...
+      if pixelArtSoftwareGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Unavailable

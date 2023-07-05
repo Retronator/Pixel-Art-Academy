@@ -15,5 +15,3 @@ class LM.Content.AppContent extends LM.Content
     @progress = new LM.Content.Progress.ManualProgress
       content: @
       completed: => true
-
-  status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked @constructor.appClass.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked

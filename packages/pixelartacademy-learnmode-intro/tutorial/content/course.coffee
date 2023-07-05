@@ -8,7 +8,7 @@ class LM.Intro.Tutorial.Content.Course extends LM.Content.Course
   @displayName: -> "Learn Mode tutorial"
 
   @learnModeDescription: -> """
-    Use the Learn Mode app to track progress through the game and unlock new content.
+    Learn essential pixel art tools and create art for your first game.
   """
 
   @contents: -> [

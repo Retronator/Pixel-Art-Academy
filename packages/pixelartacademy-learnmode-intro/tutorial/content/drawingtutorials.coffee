@@ -6,7 +6,7 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
 
   @displayName: -> "Drawing tutorials"
 
-  @unlockInstructions: -> "Unlock the Drawing app to get access to drawing tutorials."
+  @unlockInstructions: -> "Drawing tutorials are unlocked from the start."
 
   @contents: -> [
     @Basics
@@ -26,7 +26,7 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
       totalUnits: "tutorial steps"
       totalRecursive: true
 
-  status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked PAA.PixelBoy.Apps.Drawing.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+  status: -> LM.Content.Status.Unlocked
 
   class @Basics extends LM.Content.DrawingTutorialContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingTutorials.Basics'

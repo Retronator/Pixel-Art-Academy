@@ -5,16 +5,12 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-LearnModeApp = PAA.PixelBoy.Apps.LearnMode
-
-class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.LearnMode.Progress.Content'
+class LM.Menu.Progress.Content extends AM.Component
+  @id: -> 'PixelArtAcademy.LearnMode.Menu.Progress.Content'
   @register @id()
 
   onCreated: ->
     super arguments...
-
-    @learnMode = @ancestorComponentOfType LearnModeApp
 
     @contentsDisplayed = new ReactiveField @_defaultContentsDisplayed()
 
@@ -27,7 +23,7 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
       return unless content.contents().length
 
       # Depend on completion display type.
-      @learnMode.completionDisplayType()
+      LM.Menu.Progress.completionDisplayType()
 
       Tracker.nonreactive =>
         @_setContentsDisplayed @_defaultContentsDisplayed(), 1
@@ -35,11 +31,11 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
   _defaultContentsDisplayed: ->
     content = @data()
 
-    switch @learnMode.completionDisplayType()
-      when LearnModeApp.CompletionDisplayTypes.RequiredUnits
+    switch LM.Menu.Progress.completionDisplayType()
+      when LM.Menu.Progress.CompletionDisplayTypes.RequiredUnits
         content.unlocked() and not content.completed()
 
-      when LearnModeApp.CompletionDisplayTypes.TotalPercentage
+      when LM.Menu.Progress.CompletionDisplayTypes.TotalPercentage
         content.unlocked() and content.completedRatio() < 1
 
   _setContentsDisplayed: (newContentsDisplayed, durationFactor) ->
@@ -49,13 +45,16 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
     $contents = @$('.contents').eq(0)
     $contents.velocity('stop', true)
 
-    scale = LOI.adventure.interface.display.scale()
+    display = LOI.adventure.interface.display
+    scale = display.scale()
+    
+    viewportHeight = LOI.adventure.interface.display.viewport().viewportBounds.height()
 
     fullHeight = $contents[0].scrollHeight
-    fullVisibleHeight = Math.min 230 * scale, fullHeight
+    fullVisibleHeight = Math.min viewportHeight, fullHeight
 
     currentHeight = $contents.outerHeight()
-    currentVisibleHeight = Math.min 230 * scale, currentHeight
+    currentVisibleHeight = Math.min viewportHeight, currentHeight
 
     if currentContentsDisplayed
       targetHeight = 0
@@ -96,8 +95,8 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content extends AM.Component
 
   onClickTitleArea: (event) ->
     # Only react to the immediate title.
-    contentDiv = @$('.pixelartacademy-pixelboy-apps-learnmode-progress-content')[0]
-    targetContentDiv = @$(event.target).closest('.pixelartacademy-pixelboy-apps-learnmode-progress-content')[0]
+    contentDiv = @$('.pixelartacademy-learnmode-menu-progress-content')[0]
+    targetContentDiv = @$(event.target).closest('.pixelartacademy-learnmode-menu-progress-content')[0]
     return unless contentDiv is targetContentDiv
 
     # Only react if there if we have any contents.

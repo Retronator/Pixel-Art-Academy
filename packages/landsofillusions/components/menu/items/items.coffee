@@ -62,6 +62,9 @@ class LOI.Components.Menu.Items extends AM.Component
 
   inSettings: ->
     @currentScreen() is @constructor.Screens.Settings
+    
+  goToMainMenu: ->
+  
 
   isFullscreen: ->
     AM.Window.isFullscreen()
@@ -96,38 +99,38 @@ class LOI.Components.Menu.Items extends AM.Component
   events: ->
     super(arguments...).concat
       # Main menu
-      'click .continue': @onClickContinue
-      'click .new': @onClickNew
-      'click .load': @onClickLoad
-      'click .save': @onClickSave
-      'click .account': @onClickAccount
-      'click .fullscreen': @onClickFullscreen
-      'click .settings': @onClickSettings
-      'click .quit': @onClickQuit
+      'click .main-menu .continue': @onClickMainMenuContinue
+      'click .main-menu .new': @onClickMainMenuNew
+      'click .main-menu .load': @onClickMainMenuLoad
+      'click .main-menu .save': @onClickMainMenuSave
+      'click .main-menu .account': @onClickMainMenuAccount
+      'click .main-menu .fullscreen': @onClickMainMenuFullscreen
+      'click .main-menu .settings': @onClickMainMenuSettings
+      'click .main-menu .quit': @onClickMainMenuQuit
 
       # Settings
-      'click .audio': @onClickAudio
-      'click .graphics-scale .previous-button': @onClickGraphicsScalePreviousButton
-      'click .graphics-scale .next-button': @onClickGraphicsScaleNextButton
-      'click .smooth-shading': @onClickSmoothShading
-      'click .permissions': @onClickPermissions
-      'click .back-to-menu': @onClickBackToMenu
+      'click .settings .audio': @onClickSettingsAudio
+      'click .settings .graphics-scale .previous-button': @onClickSettingsGraphicsScalePreviousButton
+      'click .settings .graphics-scale .next-button': @onClickSettingsGraphicsScaleNextButton
+      'click .settings .smooth-shading': @onClickSettingsSmoothShading
+      'click .settings .permissions': @onClickSettingsPermissions
+      'click .settings .back-to-menu': @onClickSettingsBackToMenu
 
       # Permissions
-      'click .permissions-persist-settings': @onClickPermissionsPersistSettings
-      'click .permissions-persist-game-state': @onClickPermissionsPersistGameState
-      'click .permissions-persist-command-history': @onClickPermissionsPersistCommandHistory
-      'click .permissions-persist-login': @onClickPermissionsPersistLogin
-      'click .back-to-settings': @onClickBackToSettings
+      'click .permissions .persist-settings': @onClickPermissionsPersistSettings
+      'click .permissions .persist-game-state': @onClickPermissionsPersistGameState
+      'click .permissions .persist-command-history': @onClickPermissionsPersistCommandHistory
+      'click .permissions .persist-login': @onClickPermissionsPersistLogin
+      'click .permissions .back-to-settings': @onClickPermissionsBackToSettings
 
-  onClickContinue: (event) ->
+  onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
 
-  onClickNew: (event) ->
+  onClickMainMenuNew: (event) ->
     # Scroll down to help the player understand they should scroll down to begin.
     LOI.adventure.interface.narrative.scroll()
 
-  onClickLoad: (event) ->
+  onClickMainMenuLoad: (event) ->
     if @options.landingPage
       # On the landing page we can directly load.
       @_loadGame()
@@ -151,26 +154,26 @@ class LOI.Components.Menu.Items extends AM.Component
   _loadGame: ->
     LOI.adventure.menu.loadGame.show()
 
-  onClickSave: (event) ->
+  onClickMainMenuSave: (event) ->
     LOI.adventure.menu.saveGame.show()
 
-  onClickAccount: (event) ->
+  onClickMainMenuAccount: (event) ->
     LOI.adventure.menu.account.show()
 
-  onClickFullscreen: (event) ->
+  onClickMainMenuFullscreen: (event) ->
     if AM.Window.isFullscreen()
       AM.Window.exitFullscreen()
 
     else
       super arguments...
 
-  onClickSettings: (event) ->
+  onClickMainMenuSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
 
     # Store current state of settings.
     @_oldSettings = LOI.settings.toObject()
 
-  onClickQuit: (event) ->
+  onClickMainMenuQuit: (event) ->
     if Retronator.user()
       LOI.adventure.quitGame()
 
@@ -190,7 +193,7 @@ class LOI.Components.Menu.Items extends AM.Component
         callback: =>
           LOI.adventure.quitGame() if dialog.result
 
-  onClickAudio: (event) ->
+  onClickSettingsAudio: (event) ->
     currentValue = LOI.settings.audio.enabled.value()
     values = _.values LOI.Settings.Audio.Enabled
 
@@ -199,7 +202,7 @@ class LOI.Components.Menu.Items extends AM.Component
 
     LOI.settings.audio.enabled.value values[nextIndex]
 
-  onClickGraphicsScalePreviousButton: (event) ->
+  onClickSettingsGraphicsScalePreviousButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value()
     currentValue--
     currentValue = null if currentValue < 2
@@ -207,21 +210,21 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.settings.graphics.minimumScale.value currentValue or 2
     LOI.settings.graphics.maximumScale.value currentValue
 
-  onClickGraphicsScaleNextButton: (event) ->
+  onClickSettingsGraphicsScaleNextButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value() or 1
     currentValue++
 
     LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
 
-  onClickSmoothShading: (event) ->
+  onClickSettingsSmoothShading: (event) ->
     smoothShadingValue = LOI.settings.graphics.smoothShading.value
     smoothShadingValue not smoothShadingValue()
 
-  onClickPermissions: (event) ->
+  onClickSettingsPermissions: (event) ->
     @currentScreen @constructor.Screens.Permissions
 
-  onClickBackToMenu: (event) ->
+  onClickSettingsBackToMenu: (event) ->
     returnToMenu = => @currentScreen @constructor.Screens.MainMenu
 
     if LOI.settings.persistSettings.decided()
@@ -271,5 +274,5 @@ class LOI.Components.Menu.Items extends AM.Component
     else
       consentField.showDialog()
 
-  onClickBackToSettings: (event) ->
+  onClickPermissionsBackToSettings: (event) ->
     @currentScreen @constructor.Screens.Settings

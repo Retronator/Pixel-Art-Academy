@@ -25,7 +25,9 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
       totalUnits: "artworks"
       totalRecursive: true
 
-  status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked PAA.PixelBoy.Apps.Pico8.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+  status: ->
+    pixelArtSoftwareGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
+    if pixelArtSoftwareGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked
 
   class @Snake extends LM.Content
     @id: -> 'LearnMode.Intro.Tutorial.Content.Projects.Snake'

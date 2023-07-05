@@ -8,13 +8,8 @@ class LM.Intro.Apps extends LOI.Adventure.Scene
   @location: -> PAA.PixelBoy.Apps
 
   @initialize()
-
-  things: ->
-    apps = [
-      PAA.PixelBoy.Apps.LearnMode
-    ]
-
-    if unlockedApps = PAA.PixelBoy.Apps.LearnMode.state 'unlockedApps'
-      apps.push _.thingClass appId for appId in unlockedApps
-
-    apps
+  
+  things: -> [
+    PAA.PixelBoy.Apps.Drawing
+    PAA.PixelBoy.Apps.Pico8 if @options.parent.pico8Enabled()
+  ]

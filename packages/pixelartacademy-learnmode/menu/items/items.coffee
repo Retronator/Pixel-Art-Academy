@@ -22,10 +22,16 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
   
+    @progress = new LM.Menu.Progress
+  
   loadVisible: ->
     # Load game in Learn Mode is visible only on the landing page if there are any profiles to load.
     loadGame = LOI.adventure.menu.loadGame
     @options.landingPage and loadGame.isCreated() and loadGame.profiles()
+  
+  progressVisible: ->
+    # Progress is shown when we're not on the landing page.
+    not @options.landingPage
     
   isFullscreen: ->
     if Meteor.isDesktop
@@ -41,24 +47,28 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     @options.landingPage
 
   quitToMenuVisible: ->
-    # We quit to menu when we're not on the landing page
+    # We quit to menu when we're not on the landing page.
     not @options.landingPage
     
   events: ->
     super(arguments...).concat
       # Main menu
-      'click .quit-to-menu': @onClickQuitToMenu
+      'click .main-menu .progress': @onClickMainMenuProgress
+      'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
 
-  onClickContinue: (event) ->
+  onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
   
-  onClickNew: (event) ->
+  onClickMainMenuNew: (event) ->
     LOI.adventure.interface.waiting true
 
     LOI.adventure.startNewGame().then =>
       LOI.adventure.interface.goToPlay()
-  
-  onClickQuitToMenu: (event) ->
+
+  onClickMainMenuProgress: (event) ->
+    @progress.show()
+    
+  onClickMainMenuQuitToMenu: (event) ->
     # Check if the profile is being synced.
     if LOI.adventure.profile().hasSyncing()
       @_quitGame()
@@ -94,17 +104,11 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     ,
       500
 
-  onClickQuit: (event) ->
+  onClickMainMenuQuit: (event) ->
     if Meteor.isDesktop
       Desktop.send 'desktop', 'closeApp'
-  
-  onClickSettings: (event) ->
-    @currentScreen @constructor.Screens.Settings
-  
-    # Store current state of settings.
-    @_oldSettings = LOI.settings.toObject()
-
-  onClickFullscreen: (event) ->
+    
+  onClickMainMenuFullscreen: (event) ->
     if Meteor.isDesktop
       if @_isFullscreen()
         Desktop.send 'window', 'setFullscreen', false
@@ -125,5 +129,5 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     ,
       1000
 
-  onClickBackToMenu: (event) ->
+  onClickSettingsBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu

@@ -8,7 +8,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
 
   @displayName: -> "Drawing challenges"
 
-  @unlockInstructions: -> "Unlock the Drawing app to get access to drawing challenges."
+  @unlockInstructions: -> "Complete the Pixel art tools: basics tutorial to unlock drawing challenges."
 
   @contents: -> [
     @CopyReference
@@ -25,14 +25,12 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
       totalUnits: "artworks"
       totalRecursive: true
 
-  status: -> if PAA.PixelBoy.Apps.LearnMode.isAppUnlocked PAA.PixelBoy.Apps.Drawing.id() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+  status: -> if PAA.Tutorials.Drawing.PixelArtTools.Basics.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
   class @CopyReference extends LM.Content
     @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference'
 
     @displayName: -> "Copy a reference"
-
-    @unlockInstructions: -> "Complete the Basics tutorial to unlock the Copy a reference challenge."
 
     @contents: -> [
       @SmallMonochrome
@@ -61,7 +59,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
 
         requiredUnitsCount: => 1
 
-    status: -> if PAA.Tutorials.Drawing.PixelArtTools.Basics.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+    status: -> LM.Content.Status.Unlocked
 
     class @SpritesGroup extends LM.Content
       @prefixFilter = null # Override with the class name prefix that defines this group.

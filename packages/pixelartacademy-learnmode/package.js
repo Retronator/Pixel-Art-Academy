@@ -41,6 +41,12 @@ Package.onUse(function(api) {
   api.addFile('menu..');
   api.addComponent('menu/items..');
 
+  api.addComponent('menu/progress..');
+  api.addComponent('menu/progress/content..');
+  api.addFile('menu/progress/content/component');
+  api.addComponent('menu/progress/content/defaultcontent..');
+  api.addComponent('menu/progress/content/appcontent..');
+
   api.addFile('locations..');
   api.addComponent('locations/mainmenu..');
   api.addFile('locations/play..');

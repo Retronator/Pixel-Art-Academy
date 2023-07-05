@@ -27,7 +27,7 @@ class LM.Intro extends LOI.Adventure.Episode
   pico8Enabled: ->
     tutorial = @getChapter LM.Intro.Tutorial
     pixelArtSoftwareGoal = tutorial.getGoal LM.Intro.Tutorial.Goals.PixelArtSoftware
-    pixelArtSoftwareGoal.completed() and PAA.PixelBoy.Apps.StudyPlan.hasGoal LM.Intro.Tutorial.Goals.Snake
+    pixelArtSoftwareGoal.completed()
 
 if Meteor.isServer
   LOI.initializePackage

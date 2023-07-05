@@ -1,0 +1,27 @@
+<template name="PixelArtAcademy.LearnMode.Menu.Progress">
+  <div class="pixelartacademy-learnmode-menu-progress">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      <div class="viewport-area">
+        <div class="progress-area">
+          <div class="courses-area">
+          <h1 class="title">Courses</h1>
+            <ul class="courses contents">
+              {{#each courses}}
+                <li class="course content">{{> PixelArtAcademy.LearnMode.Menu.Progress.Content}}</li>
+              {{/each}}
+            </ul>
+          </div>
+          <div class="settings">
+            <h1 class="title">Settings</h1>
+            <label class="completionist" title="Show progress towards the elusive 100%.">
+              {{> PixelArtAcademy.LearnMode.Menu.Progress.Completionist}}
+              <span class="label">Enable completionist mode</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

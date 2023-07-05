@@ -35,7 +35,6 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pixelboy-pico8');
   api.use('retronator:pixelartacademy-pixelboy-drawing');
   api.use('retronator:pixelartacademy-pixelboy-studyplan');
-  api.use('retronator:pixelartacademy-pixelboy-learnmode');
 
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-learnmode-intro');

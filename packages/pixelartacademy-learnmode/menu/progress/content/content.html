@@ -1,0 +1,69 @@
+<template name="PixelArtAcademy.LearnMode.Menu.Progress.Content">
+  <div class="pixelartacademy-learnmode-menu-progress-content {{unavailableClass}} {{lockedClass}} {{contentDepthClass}}">
+    <div class="component {{completedClass}}">
+      {{#if $is type 'Course'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
+      {{/if}}
+      {{#if $is type 'Content'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
+      {{/if}}
+      {{#if $is type 'AppContent'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.AppContent}}
+      {{/if}}
+      {{#if $is type 'GoalContent'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
+      {{/if}}
+      {{#if $is type 'DrawingTutorialContent'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
+      {{/if}}
+    </div>
+    {{#if contents.length}}
+      <ul class="contents {{contentsDisplayedClass}}">
+        {{#each contents}}
+          <li class="content">{{> PixelArtAcademy.LearnMode.Menu.Progress.Content}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.LearnMode.Menu.Progress.Content.TitleArea">
+  <div class="title-area {{hasContentsClass}}">
+    {{#if $is depth 1}}
+      <h1 class="title">{{displayName}}</h1>
+    {{/if}}
+    {{#if $is depth 2}}
+      <h2 class="title">{{displayName}}</h2>
+    {{/if}}
+    {{#if $is depth 3}}
+      <h3 class="title">{{displayName}}</h3>
+    {{/if}}
+    {{#if $is depth 4}}
+      <h4 class="title">{{displayName}}</h4>
+    {{/if}}
+    {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion">
+  {{#if unlocked}}
+    <div class="completion">
+      {{#if completionistMode}}
+        <span class="total-percentage" {{totalPercentageTitleAttribute}}>
+          {{percentageString progress.completedRatio}}
+        </span>
+      {{else}}
+        {{#if showRequiredUnits}}
+          <span class="required-units" {{requiredUnitsTitleAttribute}}>
+            {{progress.requiredCompletedUnitsCount}}/{{progress.requiredUnitsCount}}
+          </span>
+        {{/if}}
+        {{#if showCompletedContentsCount}}
+          <span class="completed-contents-count" {{completedContentsCountTitleAttribute}}>
+            {{completedContentsCount}}/{{contents.length}}
+          </span>
+        {{/if}}
+      {{/if}}
+    </div>
+  {{/if}}
+</template>

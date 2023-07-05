@@ -5,26 +5,21 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-class PAA.PixelBoy.Apps.LearnMode.Progress.Content.Component extends AM.Component
-  onCreated: ->
-    super arguments...
-
-    @learnMode = @ancestorComponentOfType PAA.PixelBoy.Apps.LearnMode
-
+class LM.Menu.Progress.Content.Component extends AM.Component
   hasContentsClass: ->
     content = @data()
     'has-contents' if content.contents().length > 0
 
-  hasRequiredUnits: ->
+  showRequiredUnits: ->
     content = @data()
-    content.progress.requiredUnits()
+    content.progress.requiredUnits() and (not content.completed() or content.contents().length)
 
-  hasTotalUnits: ->
+  showCompletedContentsCount: ->
     content = @data()
-    content.progress.totalUnits()
+    content.contents().length and not @showRequiredUnits()
 
   completionistMode: ->
-    @learnMode.completionDisplayType() is PAA.PixelBoy.Apps.LearnMode.CompletionDisplayTypes.TotalPercentage
+    LM.Menu.Progress.state('completionDisplayType') is LM.Menu.Progress.CompletionDisplayTypes.TotalPercentage
 
   totalPercentageTitleAttribute: ->
     content = @data()
@@ -46,6 +41,21 @@ class PAA.PixelBoy.Apps.LearnMode.Progress.Content.Component extends AM.Componen
 
     requiredCompletedRatio = content.progress.requiredCompletedRatio()
     title: "#{requiredCompletedUnitsCount}/#{requiredUnitsCount} #{units} (#{@percentageString requiredCompletedRatio})"
+  
+  completedContentsCountTitleAttribute: ->
+    content = @data()
+    return unless contents = content.contents()
+  
+    completedContentsCount = @completedContentsCount()
+    completedRatio = completedContentsCount / contents.length
+  
+    title: "#{completedContentsCount}/#{contents.length} sections (#{@percentageString completedRatio})"
 
   percentageString: (ratio) ->
-    "#{Math.round ratio * 100}%"
+    "#{Math.floor ratio * 100}%"
+
+  completedContentsCount: ->
+    content = @data()
+    return unless contents = content.contents()
+  
+    _.filter(contents, (content) => content.completed()).length

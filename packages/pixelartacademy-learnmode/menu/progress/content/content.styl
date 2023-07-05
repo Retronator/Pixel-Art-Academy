@@ -1,7 +1,10 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-.pixelartacademy-pixelboy-apps-learnmode-progress-content
+.pixelartacademy-learnmode-menu-progress-content
   margin-top 8rem
+
+  &.depth-2
+    margin-bottom 16rem
 
   &.unavailable
     color atariGray(3)
@@ -14,7 +17,7 @@
         width 7rem
         height 8rem
         margin-left 4rem
-        background-image url("/pixelartacademy/pixelboy/apps/learnmode/lock.png")
+        background-image url("/pixelartacademy/learnmode/menu/progress/lock.png")
 
   &.depth-4
     padding-left 10rem
@@ -47,14 +50,11 @@
         font-weight bold
 
   .contents
+    list-style none
+    margin 0
+    padding 0
     height 0
     overflow hidden
 
     &.displayed
       height auto
-
-      .contents
-        margin-bottom 16rem
-
-        .contents
-          margin-bottom 0
