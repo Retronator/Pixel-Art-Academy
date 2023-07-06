@@ -36,6 +36,7 @@ Package.onUse(function(api) {
   api.addFile('content/progress/unitprogress');
   api.addFile('content/progress/contentprogress');
   api.addFile('content/progress/goalprogress');
+  api.addFile('content/progress/taskprogress');
   api.addFile('content/progress/entry');
 
   api.addFile('menu..');

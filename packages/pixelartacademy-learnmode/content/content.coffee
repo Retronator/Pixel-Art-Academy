@@ -28,7 +28,7 @@ class LM.Content
 
   # String to represent the course in the UI. Note that we can't use
   # 'name' since it's an existing property holding the class name.
-  @displayName: -> throw new AE.NotImplementedException "You must specify the course name."
+  @displayName: -> throw new AE.NotImplementedException "You must specify the content name."
 
   # Optional instructions how to unlock this content.
   @unlockInstructions: -> null

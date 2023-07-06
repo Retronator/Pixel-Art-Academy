@@ -52,43 +52,45 @@
           </ul>
         </li>
       {{/each}}
-      {{#with settingsSection}}
-        <li class="section settings {{sectionActiveClass}}">
-          <div class="section-name">{{> t10e nameKey}}</div>
-          <div class="content">
-            <div class="instructions">
-              Select how you want to edit artworks.
-            </div>
-            <div class="settings-sections">
-              <div class="settings-section">
-                <div class="title">Built-in editor</div>
-                {{#if editors.length}}
-                  <ul class="pixel-boy editors">
-                    {{#each editors}}
-                      <li class="editor {{selectedEditorClass}}">{{fullName}}</li>
-                    {{/each}}
-                  </ul>
-                {{else}}
-                  <div class="no-editors">
-                    <p>You don't have any PixelBoy editors yet.</p>
-                    <p>Talk to Retro in the store to get started.</p>
-                  </div>
-                {{/if}}
+      {{#if showSettingsSection}}
+        {{#with settingsSection}}
+          <li class="section settings {{sectionActiveClass}}">
+            <div class="section-name">{{> t10e nameKey}}</div>
+            <div class="content">
+              <div class="instructions">
+                Select how you want to edit artworks.
               </div>
-              {{#unless isLearnMode}}
+              <div class="settings-sections">
                 <div class="settings-section">
-                  <div class="title">External software</div>
-                    <ul class="external editors">
-                      {{#each externalSoftware}}
-                        <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
+                  <div class="title">Built-in editor</div>
+                  {{#if editors.length}}
+                    <ul class="pixel-boy editors">
+                      {{#each editors}}
+                        <li class="editor {{selectedEditorClass}}">{{fullName}}</li>
                       {{/each}}
                     </ul>
+                  {{else}}
+                    <div class="no-editors">
+                      <p>You don't have any PixelBoy editors yet.</p>
+                      <p>Talk to Retro in the store to get started.</p>
+                    </div>
+                  {{/if}}
                 </div>
-              {{/unless}}
+                {{#unless isLearnMode}}
+                  <div class="settings-section">
+                    <div class="title">External software</div>
+                      <ul class="external editors">
+                        {{#each externalSoftware}}
+                          <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
+                        {{/each}}
+                      </ul>
+                  </div>
+                {{/unless}}
+              </div>
             </div>
-          </div>
-        </li>
-      {{/with}}
+          </li>
+        {{/with}}
+      {{/if}}
     </ul>
   </div>
 </template>

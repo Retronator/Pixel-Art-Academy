@@ -144,6 +144,13 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'active' if assetData is @activeAsset()
 
+  showSettingsSection: ->
+    # Only potentially hide settings in Learn Mode.
+    return true unless AB.Router.currentRouteName() is LM.Adventure.id()
+    
+    # Only show settings if there is more than one choice.
+    @editors().length > 1
+
   selectedEditorClass: ->
     editor = @currentData()
     selectedEditorId = @drawing.state('editorId') or null

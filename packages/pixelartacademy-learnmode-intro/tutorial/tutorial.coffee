@@ -18,6 +18,14 @@ class LM.Intro.Tutorial extends LM.Chapter
 
   constructor: ->
     super arguments...
+    
+    # Automatically select the Desktop editor.
+    Tracker.autorun (computation) =>
+      if PAA.PixelBoy.Apps.Drawing.state 'editorId'
+        computation.stop()
+        return
+        
+      PAA.PixelBoy.Apps.Drawing.state 'editorId', PAA.PixelBoy.Apps.Drawing.Editor.Desktop.id()
 
     # Create the snake project when the play task has been completed.
     @snakePlayTask = @getTask LM.Intro.Tutorial.Goals.Snake.Play
