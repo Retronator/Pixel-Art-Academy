@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.BasicTools extends PAA.Practice
   @displayName: -> "Basic tools"
 
   @description: -> """
-      Use the pencil, color fill, and eraser to demonstate your use of all 3 basic drawing tools.
+      Use the pencil, color fill, and eraser to demonstrate your use of all 3 basic drawing tools.
     """
 
   @fixedDimensions: -> width: 16, height: 7

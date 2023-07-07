@@ -10,10 +10,10 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers extends PAA.Tutorials.Drawing.
   @initialize()
 
   @assets: -> [
+    @Lines
     @Zoom
     @MoveCanvas
     @UndoRedo
-    @Lines
   ]
 
   # Methods

@@ -3,6 +3,7 @@ AM = Artificial.Mirage
 AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+LM = PixelArtAcademy.LearnMode
 
 class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio'
@@ -20,7 +21,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   constructor: (@drawing) ->
     super arguments...
 
-    @sectionHeight = 21
+    @sectionHeight = 25
     @initialGroupHeight = 17
     @inactiveGroupHeight = 3
     @activeGroupHeight = 150
@@ -118,8 +119,11 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   coverStyle: ->
     sections = @sections()
+    
+    sectionsCount = sections.length
+    sectionsCount++ if @showSettingsSection()
 
-    top = 14 + (sections.length + 1) * @sectionHeight
+    top = 14 + sectionsCount * @sectionHeight
 
     if section = @activeSection()
       if groups = section.groups?()
@@ -148,8 +152,8 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     # Only potentially hide settings in Learn Mode.
     return true unless AB.Router.currentRouteName() is LM.Adventure.id()
     
-    # Only show settings if there is more than one choice.
-    @editors().length > 1
+    # Only show settings if there is more than one choice (besides the None option).
+    @editors().length > 2
 
   selectedEditorClass: ->
     editor = @currentData()
