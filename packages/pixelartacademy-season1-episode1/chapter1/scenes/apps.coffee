@@ -6,7 +6,7 @@ HQ = Retronator.HQ
 class C1.Apps extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Apps'
 
-  @location: -> PAA.PixelBoy.Apps
+  @location: -> PAA.PixelPad.Apps
 
   @initialize()
 
@@ -17,7 +17,7 @@ class C1.Apps extends LOI.Adventure.Scene
     apps = []
     
     obtainableApps = [
-      PAA.PixelBoy.Apps.Pico8
+      PAA.PixelPad.Apps.Pico8
     ]
 
     for appClass in obtainableApps

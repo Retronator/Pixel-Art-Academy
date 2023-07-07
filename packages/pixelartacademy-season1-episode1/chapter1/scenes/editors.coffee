@@ -6,7 +6,7 @@ HQ = Retronator.HQ
 class C1.Editors extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Editors'
 
-  @location: -> PAA.PixelBoy.Apps.Drawing.Editors
+  @location: -> PAA.PixelPad.Apps.Drawing.Editors
 
   @initialize()
 
@@ -14,5 +14,5 @@ class C1.Editors extends LOI.Adventure.Scene
     super arguments...
 
   things: -> [
-    PAA.PixelBoy.Apps.Drawing.Editor.Desktop if C1.PostPixelBoy.PixelArt.Listener.Script.state 'ReceiveDesktopEditor'
+    PAA.PixelPad.Apps.Drawing.Editor.Desktop if C1.PostPixelPad.PixelArt.Listener.Script.state 'ReceiveDesktopEditor'
   ]

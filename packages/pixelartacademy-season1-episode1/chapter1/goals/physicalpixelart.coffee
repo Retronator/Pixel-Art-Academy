@@ -17,7 +17,7 @@ class C1.Goals.PhysicalPixelArt extends PAA.Learning.Goal
     @directive: -> "Choose a pixel art medium"
   
     @instructions: -> """
-      With the Drawing app on PixelBoy, choose one of the physical mediums that can be used to create pixel art.
+      With the Drawing app on PixelPad, choose one of the physical mediums that can be used to create pixel art.
     """
 
     @initialize()

@@ -24,7 +24,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      return unless weeklyGoals = PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals'
+      return unless weeklyGoals = PAA.PixelPad.Apps.Calendar.state 'weeklyGoals'
 
       weeklyGoals.daysWithActivities or weeklyGoals.totalHours
 
@@ -196,7 +196,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
       PAA.Learning.Task.Entry.activityForCharacter.subscribe characterId, dateRange
 
     @completedConditions: ->
-      return unless weeklyGoals = PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals'
+      return unless weeklyGoals = PAA.PixelPad.Apps.Calendar.state 'weeklyGoals'
 
       if weeklyGoals.daysWithActivities
         return unless @daysWithActivitiesInLast7Days() >= weeklyGoals.daysWithActivities

@@ -1,0 +1,46 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Pico8.Drawer">
+  <div class="pixelartacademy-pixelpad-apps-pico-8-drawer {{openedClass}} {{coveredClass}}">
+    <div class="drawer">
+      <div class="contents">
+        {{#if cartridges.length}}
+          <ul class="cartridges">
+            {{#each cartridges}}
+              <li class="cartridge {{selectedClass}}">
+                <div class="case-bottom"></div>
+                <div class="memory-card">
+                  <img class="image" src="{{cartridgeImageUrl}}"/>
+                </div>
+                <div class="case-top"></div>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="no-cartridges">
+            <div class="message">
+              To do:<br/>
+              Get some Pico-8 carts.
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="table-top"></div>
+    <div class="selected-cartridge {{activeClass}} {{pannedLeftClass}}">
+      <div class="case-bottom"></div>
+      <div class="memory-card">
+        {{#with selectedCartridge}}
+          <img class="image" src="{{cartridgeImageUrl}}"/>
+        {{/with}}
+      </div>
+      <div class="case-top">
+        <!-- TODO: Show case top only for online projects.
+          div class="share-area">
+          <p class="title">Share link</p>
+          {{#with selectedCartridge}}
+            <p class="link"><a href="{{cartridgeShareUrl}}" target="_blank">{{cartridgeShareUrl}}</a></p>
+          {{/with}}
+        </div-->
+      </div>
+    </div>
+  </div>
+</template>

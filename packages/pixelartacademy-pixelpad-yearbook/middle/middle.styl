@@ -1,0 +1,124 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-yearbook-middle
+  position absolute
+  top 5rem
+  right 5rem
+  width 374rem
+  height 264rem
+  visibility hidden
+  background-image image('/pixelartacademy/pixelpad/apps/yearbook/book-middle.png')
+
+  &.visible
+    visibility visible
+
+  .spread
+    position absolute
+    left 36rem
+    top 16rem
+    width 305rem
+    height 192rem
+
+    .title
+      position absolute
+      top 0
+      left 0
+      width 130rem
+      height 32rem
+      academy()
+      font-weight normal
+      text-align center
+      text-transform uppercase
+
+      & ~ .students .student:first-child
+        margin-top 32rem
+
+    .students
+      absolute-cover()
+      display flex
+      align-content space-between
+      flex-direction column
+      flex-wrap wrap
+      list-style none
+      margin 0
+      padding 0
+
+      .student
+        position relative
+        z-index 1
+        width 135rem
+        height 16rem
+        display flex
+
+        &.highlighted
+          .name::after
+            content '←'
+            daily()
+
+        .avatar
+          position relative
+          width 20rem
+          height 15rem
+          overflow hidden
+
+          .sanfrancisco-c3-design-terminal-components-avatarpartpreview
+            position relative
+            width 16rem
+            height 42rem
+
+        .name
+          position relative
+          top 3rem
+          width 115rem
+          height 13rem
+          align-self flex-end
+          academy()
+          line-height 12rem
+          overflow hidden
+          white-space nowrap
+          text-overflow ellipsis
+
+          .badges
+            display none
+            padding 0
+            margin 0
+            list-style none
+
+            .badge
+              margin-right 1rem
+
+              .icon
+                height 5rem
+
+              &.kickstarter
+                margin-right 2rem
+
+          &:hover
+            .badges
+              display inline-flex
+
+  .page-button
+    bottom 27rem
+
+    &.previous
+      left 29rem
+
+    &.next
+      right 29rem
+
+    &.front
+      left 155rem
+      width 25rem
+      height 40rem
+      bottom -10rem
+
+  .page-number
+    position absolute
+    bottom 32rem
+    checkout()
+
+    &.left
+      left 100rem
+
+    &.right
+      right 100rem

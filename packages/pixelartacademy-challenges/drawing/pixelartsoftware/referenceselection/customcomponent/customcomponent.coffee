@@ -74,7 +74,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     @_wasActive = false
     @active = new ReactiveField false
     
-    @drawingApp = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing
+    @drawingApp = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing
     
     # Create all the cards
     cards = for id, copyReferenceClass of PAA.Challenges.Drawing.PixelArtSoftware.copyReferenceClasses
@@ -124,8 +124,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
   
       @_wasActive = shouldBeActive
   
-  setPixelBoySize: (drawingApp) ->
-    drawingApp.setMaximumPixelBoySize fullscreen: true
+  setPixelPadSize: (drawingApp) ->
+    drawingApp.setMaximumPixelPadSize fullscreen: true
   
   _initialize: ->
     @currentChoice null

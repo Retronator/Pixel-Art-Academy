@@ -104,7 +104,7 @@ PAA.StudyGuide.Activity.renameGoalId.method (activityId, newGoalId) ->
   # Rename goals in study plans.
   fieldGoalId = activity.goalId.replace /\./g, '_'
   newFieldGoalId = newGoalId.replace /\./g, '_'
-  studyPlanGoalsField = 'state.things.PixelArtAcademy.PixelBoy.Apps.StudyPlan.goals'
+  studyPlanGoalsField = 'state.things.PixelArtAcademy.PixelPad.Apps.StudyPlan.goals'
 
   LOI.GameState.documents.update
     "#{studyPlanGoalsField}.#{fieldGoalId}": $exists: true

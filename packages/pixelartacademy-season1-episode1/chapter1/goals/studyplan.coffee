@@ -18,9 +18,9 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
       return unless LOI.adventure.gameState()
       computation.stop()
     
-      return if PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      return if PAA.PixelPad.Apps.StudyPlan.state 'goals'
   
-      PAA.PixelBoy.Apps.StudyPlan.state 'goals',
+      PAA.PixelPad.Apps.StudyPlan.state 'goals',
         "#{@id()}":
           position:
             x: -100
@@ -40,7 +40,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      return unless goals = PAA.PixelPad.Apps.StudyPlan.state 'goals'
 
       # The Admission goal must be present in the goals state.
       goals[C1.Goals.Admission.id()]
@@ -60,7 +60,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      return unless goals = PAA.PixelPad.Apps.StudyPlan.state 'goals'
       return unless connections = goals[Goal.id()]?.connections
 
       # The connection from this goal to the admission goal must be established.
@@ -82,7 +82,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      return unless goals = PAA.PixelPad.Apps.StudyPlan.state 'goals'
       goalsArray = _.values goals
 
       # Make sure all four required interests are wired into the admission goal.
@@ -110,7 +110,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      return unless goals = PAA.PixelBoy.Apps.StudyPlan.state 'goals'
+      return unless goals = PAA.PixelPad.Apps.StudyPlan.state 'goals'
       goalsArray = _.values goals
 
       # Make sure all interests of all goals are wired into the admission goal.

@@ -1,0 +1,47 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Yearbook.ProfileForm.General">
+  <div class="pixelartacademy-pixelpad-apps-yearbook-profileform-general">
+    <div class="caption">Personal profile</div>
+    <div class="content">
+      <div class="property name">
+        <label class="label">
+          <span class="name">Name</span>
+          <span class="value">
+            {{> renderFullNameInput currentCharacter.document.avatar.fullName}}
+          </span>
+        </label>
+      </div>
+      <div class="property pronouns">
+        <label class="label">
+          <span class="name">Pronouns</span>
+          <span class="value">
+            {{> LandsOfIllusions.Components.Account.Characters.CharacterPronouns currentCharacter.document}}
+          </span>
+        </label>
+      </div>
+      <div class="property age">
+        <label class="label">
+          <span class="name">Age</span>
+          <span class="value">
+            {{> PixelArtAcademy.PixelPad.Apps.Yearbook.ProfileForm.General.Age}}
+          </span>
+        </label>
+      </div>
+      <div class="property country">
+        <label class="label">
+          <span class="name">Country</span>
+          <span class="value">
+            {{> PixelArtAcademy.PixelPad.Apps.Yearbook.ProfileForm.General.Country}}
+          </span>
+        </label>
+      </div>
+      <div class="property aspiration">
+        <label class="label">
+          <span class="name">Aspiration</span>
+          <span class="value">
+            {{> PixelArtAcademy.PixelPad.Apps.Yearbook.ProfileForm.General.Aspiration}}
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+</template>

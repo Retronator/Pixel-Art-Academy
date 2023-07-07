@@ -1,0 +1,8 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Yearbook.ProfileForm">
+  <div class="pixelartacademy-pixelpad-apps-yearbook-profileform {{positionClass}}">
+    {{> Render currentPage}}
+    <div class="page-number">{{currentPageNumber}}/{{pages.length}}</div>
+    <button class="previous page-button {{previousPageVisibleClass}}">← back</button>
+    <button class="next page-button {{nextPageVisibleClass}}">next →</button>
+  </div>
+</template>

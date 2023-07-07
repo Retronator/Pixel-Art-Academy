@@ -1,0 +1,52 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+printColor = atariRed(2)
+paperColor = atariBrown(7)
+inputColor = atariGray(2)
+errorColor = atariRed(4)
+
+typecastLabel()
+  typecast()
+  font-style italic
+  letter-spacing -2rem
+
+freehandValue()
+  freehand()
+  color inputColor
+
+errorTransform()
+  transform rotate(-3deg)
+
+errorUnderline()
+  content ''
+  display block
+  position absolute
+  left 0
+  width 100%
+  border-bottom 1rem solid errorColor
+  errorTransform()
+
+.pixelartacademy-pixelpad-apps-drawing-portfolio-importartwork-clipboardcomponent
+  position absolute
+  left 27rem
+  top 10rem
+  width 145rem
+  z-index 1
+  margin-right 1rem
+  padding 0 8rem 8rem
+  background paperColor
+  box-shadow -1rem 0 0 atariAzure(0)
+  color printColor
+
+  &::before
+    content ''
+    display block
+    height 21rem
+    width 129rem
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/forms/importartwork-header.png')
+
+  .form-title
+    margin 5rem 0
+    thintel()
+    text-align center
+    text-transform uppercase

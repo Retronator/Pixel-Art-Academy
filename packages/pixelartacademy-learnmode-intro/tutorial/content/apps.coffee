@@ -24,7 +24,7 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
   class @Drawing extends LM.Content.AppContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Drawing'
-    @appClass = PAA.PixelBoy.Apps.Drawing
+    @appClass = PAA.PixelPad.Apps.Drawing
 
     @unlockInstructions: -> "Drawing app is unlocked from the start."
 
@@ -34,7 +34,7 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
 
   class @Pico8 extends LM.Content.AppContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Pico8'
-    @appClass = PAA.PixelBoy.Apps.Pico8
+    @appClass = PAA.PixelPad.Apps.Pico8
 
     @unlockInstructions: -> "Complete the Pixel art software challenge to unlock the PICO-8 app."
 

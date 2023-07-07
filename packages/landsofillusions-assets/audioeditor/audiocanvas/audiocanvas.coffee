@@ -262,7 +262,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @dragHasMoved false
 
     # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-audioCanvas', =>
+    $(document).on 'mouseup.pixelartacademy-pixelpad-apps-studyplan-audioCanvas', =>
       # If required to move, don't stop drag until we do so.
       return if @dragRequireMove() and not @dragHasMoved()
 
@@ -278,7 +278,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
         nodeComponent.temporaryPosition null
 
       @dragNodeId null
-      $(document).off '.pixelartacademy-pixelboy-apps-studyplan-audioCanvas'
+      $(document).off '.pixelartacademy-pixelpad-apps-studyplan-audioCanvas'
 
     # Set node component last since it triggers reactivity.
     @dragNodeId options.nodeId

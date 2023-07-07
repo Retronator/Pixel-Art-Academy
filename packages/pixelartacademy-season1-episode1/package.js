@@ -98,27 +98,27 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/sections/waiting..');
 
-  // Pre-PixelBoy
+  // Pre-PixelPad
 
-  api.addFile('chapter1/sections/prepixelboy..');
-  api.addThing('chapter1/sections/prepixelboy/scenes/store');
+  api.addFile('chapter1/sections/prepixelpad..');
+  api.addThing('chapter1/sections/prepixelpad/scenes/store');
 
-  // PixelBoy
+  // PixelPad
 
-  api.addFile('chapter1/sections/pixelboy..');
-  api.addThing('chapter1/sections/pixelboy/scenes/store');
+  api.addFile('chapter1/sections/pixelpad..');
+  api.addThing('chapter1/sections/pixelpad/scenes/store');
 
-  // Post-PixelBoy
+  // Post-PixelPad
 
-  api.addFile('chapter1/sections/postpixelboy..');
-  api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
-  api.addThing('chapter1/sections/postpixelboy/scenes/store');
-  api.addThing('chapter1/sections/postpixelboy/scenes/pixelart');
-  api.addFile('chapter1/sections/postpixelboy/scenes/copyreference..');
-  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/galleryeast');
-  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/gallerywest');
-  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/store');
-  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/bookshelves');
+  api.addFile('chapter1/sections/postpixelpad..');
+  api.addFile('chapter1/sections/postpixelpad/scenes/drawingchallenges');
+  api.addThing('chapter1/sections/postpixelpad/scenes/store');
+  api.addThing('chapter1/sections/postpixelpad/scenes/pixelart');
+  api.addFile('chapter1/sections/postpixelpad/scenes/copyreference..');
+  api.addThing('chapter1/sections/postpixelpad/scenes/copyreference/galleryeast');
+  api.addThing('chapter1/sections/postpixelpad/scenes/copyreference/gallerywest');
+  api.addThing('chapter1/sections/postpixelpad/scenes/copyreference/store');
+  api.addThing('chapter1/sections/postpixelpad/scenes/copyreference/bookshelves');
 
   // Admission projects
 

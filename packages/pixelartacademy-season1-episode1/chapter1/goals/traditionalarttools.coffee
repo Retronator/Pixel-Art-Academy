@@ -17,7 +17,7 @@ class C1.Goals.TraditionalArtTools extends PAA.Learning.Goal
     @directive: -> "Choose a traditional drawing medium"
   
     @instructions: -> """
-      With the Drawing app on PixelBoy, choose a traditional drawing (or painting) medium you want to complete drawing assignments in.
+      With the Drawing app on PixelPad, choose a traditional drawing (or painting) medium you want to complete drawing assignments in.
     """
 
     @initialize()

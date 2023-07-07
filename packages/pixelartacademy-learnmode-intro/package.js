@@ -17,7 +17,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('intro');
-  api.addFile('scenes/pixelboy');
+  api.addFile('scenes/pixelpad');
   api.addFile('scenes/apps');
   api.addFile('scenes/editors');
   api.addFile('scenes/challengesdrawing');

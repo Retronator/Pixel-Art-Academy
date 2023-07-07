@@ -62,13 +62,13 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
 
-  api.use('retronator:pixelartacademy-pixelboy');
-  api.use('retronator:pixelartacademy-pixelboy-journal');
-  api.use('retronator:pixelartacademy-pixelboy-calendar');
-  api.use('retronator:pixelartacademy-pixelboy-yearbook');
-  api.use('retronator:pixelartacademy-pixelboy-pico8');
-  api.use('retronator:pixelartacademy-pixelboy-drawing');
-  api.use('retronator:pixelartacademy-pixelboy-studyplan');
+  api.use('retronator:pixelartacademy-pixelpad');
+  api.use('retronator:pixelartacademy-pixelpad-journal');
+  api.use('retronator:pixelartacademy-pixelpad-calendar');
+  api.use('retronator:pixelartacademy-pixelpad-yearbook');
+  api.use('retronator:pixelartacademy-pixelpad-pico8');
+  api.use('retronator:pixelartacademy-pixelpad-drawing');
+  api.use('retronator:pixelartacademy-pixelpad-studyplan');
 
   api.use('retronator:pixelartacademy-adventuremode');
 

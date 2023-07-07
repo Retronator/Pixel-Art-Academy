@@ -11,6 +11,6 @@ class C1.AdmissionProjects extends LOI.Adventure.Section
   @initialize()
 
   @started: ->
-    @requireFinishedSections C1.PixelBoy
+    @requireFinishedSections C1.PixelPad
 
   # TODO: End the section when the user finalizes admission.

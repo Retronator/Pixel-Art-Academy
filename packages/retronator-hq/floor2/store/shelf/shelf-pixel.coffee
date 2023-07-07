@@ -24,7 +24,7 @@ class HQ.Store.Shelf.Pixel extends HQ.Store.Shelf
   @initialize()
 
   things: -> [
-    PixelArtAcademy.PixelBoy
+    PixelArtAcademy.PixelPad
   ]
 
   canBuyFromShelf: -> LOI.characterId()

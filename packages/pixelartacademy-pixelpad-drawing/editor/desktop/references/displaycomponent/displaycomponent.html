@@ -1,0 +1,34 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent {{openedClass}}">
+    <div class="stored-references table-item {{hideActiveClass}}">
+      <ul class="references">
+        {{#each storedReferences}}
+          <li class="reference">
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference}}
+          </li>
+        {{/each}}
+      </ul>
+      <div class="actions">
+        {{#if assetOptions.upload.enabled}}
+          <div class="upload action">
+            <button class="upload-button button">Upload</button>
+          </div>
+        {{/if}}
+        {{!-- TODO: #if assetOptions.storage.enabled}}
+          <div class="storage action">
+            <button class="storage-button button">Storage</button>
+          </div>
+        {{/if--}}
+      </div>
+    </div>
+    <div class="displayed-references">
+      <ul class="references">
+        {{#each displayedReferences}}
+          <li class="reference">
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

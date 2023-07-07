@@ -5,7 +5,7 @@ LM = PixelArtAcademy.LearnMode
 class LM.Intro.Editors extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.LearnMode.Intro.Editors'
 
-  @location: -> PAA.PixelBoy.Apps.Drawing.Editors
+  @location: -> PAA.PixelPad.Apps.Drawing.Editors
 
   @initialize()
 
@@ -13,5 +13,5 @@ class LM.Intro.Editors extends LOI.Adventure.Scene
     super arguments...
 
   things: -> [
-    PAA.PixelBoy.Apps.Drawing.Editor.Desktop
+    PAA.PixelPad.Apps.Drawing.Editor.Desktop
   ]

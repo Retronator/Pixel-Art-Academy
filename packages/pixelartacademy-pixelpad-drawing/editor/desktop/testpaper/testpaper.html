@@ -1,0 +1,15 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.TestPaper">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-testpaper table-item {{eraserEnabledClass}}">
+    <ul class="actions">
+      {{#each get.actions}}
+        {{#with action}}
+          <li class="action {{actionClass}} {{enabledClass}}" title="{{tooltip}}">
+            <button class="action-button">
+              <span class="name">{{displayName}}</span>
+            </button>
+          </li>
+        {{/with}}
+      {{/each}}
+    </ul>
+  </div>
+</template>

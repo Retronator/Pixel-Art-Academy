@@ -1,0 +1,48 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8
+  position absolute
+  right -330rem
+  bottom -165rem
+  width 320rem
+  height 155rem
+
+  &.dragging
+    transition none !important
+
+  &::before
+  .pixelartacademy-pico8-device-handheld
+    transition all 0.2s
+
+  &::before
+    content ''
+    position absolute
+    z-index 3
+    bottom -4rem
+    left -15rem
+    width 335rem
+    height 161rem
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pico8-shadow.png')
+    mix-blend-mode multiply
+
+  .pixelartacademy-pico8-device-handheld
+    z-index 5
+    cursor pointer
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    right -245rem
+    bottom -140rem
+
+    &:hover:not(.active)
+      &::before
+      .pixelartacademy-pico8-device-handheld
+        transform translate(-5rem, -5rem)
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active &
+    &.active
+      &.dragging
+        .pixelartacademy-pico8-device-handheld
+          cursor grabbing
+
+      .pixelartacademy-pico8-device-handheld
+        cursor grab

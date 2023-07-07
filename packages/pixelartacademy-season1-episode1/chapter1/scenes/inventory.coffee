@@ -19,7 +19,7 @@ class C1.Inventory extends LOI.Adventure.Scene
     ]
     
     obtainableItems = [
-      PAA.PixelBoy
+      PAA.PixelPad
       SanFrancisco.Soma.Items.Map
     ]
 

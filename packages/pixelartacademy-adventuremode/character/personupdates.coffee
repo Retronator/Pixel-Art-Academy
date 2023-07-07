@@ -167,7 +167,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
           journalEntry = journalEntries.entries[0].entry
 
           # Create the journal view context for this entry's journal
-          context = new PAA.PixelBoy.Apps.Journal.JournalView.Context
+          context = new PAA.PixelPad.Apps.Journal.JournalView.Context
             journalId: journalEntry.journal._id
             entryId: journalEntry._id
 

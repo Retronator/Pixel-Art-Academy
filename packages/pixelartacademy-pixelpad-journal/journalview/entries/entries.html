@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Journal.JournalView.Entries">
+  <div class="pixelartacademy-pixelpad-apps-journal-journalview-entries">
+    <ol class="entries">
+    {{#each entries}}
+      <li class="entry {{entryVisibleClass}}">
+        {{> Render this}}
+      </li>
+    {{/each}}
+    </ol>
+    <div class="previous page-button {{previousPageVisibleClass}}">← back</div>
+    <div class="next page-button {{nextPageVisibleClass}} {{newPageClass}}">
+      {{#if nextPageIsNew}}
+        new entry
+      {{else}}
+        next
+      {{/if}}
+      →
+    </div>
+  </div>
+</template>

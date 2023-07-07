@@ -128,10 +128,10 @@ retronator:pixelartacademy-learnmode-app@0.4.0
 retronator:pixelartacademy-learnmode-intro@0.1.0
 retronator:pixelartacademy-pico8@0.3.0
 retronator:pixelartacademy-pico8-snake@0.1.0
-retronator:pixelartacademy-pixelboy@0.0.1
-retronator:pixelartacademy-pixelboy-drawing@0.1.0
-retronator:pixelartacademy-pixelboy-pico8@0.2.0
-retronator:pixelartacademy-pixelboy-studyplan@0.2.0
+retronator:pixelartacademy-pixelpad@0.0.1
+retronator:pixelartacademy-pixelpad-drawing@0.1.0
+retronator:pixelartacademy-pixelpad-pico8@0.2.0
+retronator:pixelartacademy-pixelpad-studyplan@0.2.0
 retronator:pixelartacademy-practice@0.1.0
 retronator:pixelartacademy-studyguide@0.0.1
 retronator:pixelartacademy-tutorials@0.1.0

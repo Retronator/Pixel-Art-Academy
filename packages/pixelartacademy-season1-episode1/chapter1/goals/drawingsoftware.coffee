@@ -17,7 +17,7 @@ class C1.Goals.DrawingSoftware extends PAA.Learning.Goal
     @directive: -> "Choose drawing software"
   
     @instructions: -> """
-      With the Drawing app on PixelBoy, choose the digital drawing (or painting) software you want to use to complete
+      With the Drawing app on PixelPad, choose the digital drawing (or painting) software you want to use to complete
       drawing assignments.
     """
 

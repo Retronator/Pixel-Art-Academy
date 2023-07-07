@@ -1,0 +1,29 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-clipboard
+  position absolute
+  left calc(50% - 100rem)
+  top -275rem
+  width 200rem
+  height 260rem
+  transition all 0.4s
+
+  .board
+    absolute-cover()
+    z-index 1
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/clipboard/clipboard-board.png')
+
+  &::after
+    content ''
+    position absolute
+    width 86rem
+    height 18rem
+    top 1rem
+    left 57rem
+    z-index 2
+    background image('/pixelartacademy/pixelpad/apps/drawing/clipboard/clipboard-clip.png') center / 100%
+
+.pixelartacademy-pixelpad-apps-drawing.active-asset:not(.editor-active)
+  .pixelartacademy-pixelpad-apps-drawing-clipboard.active
+    top calc(50% - 130rem)
+    transition all 0.6s 0.2s

@@ -17,7 +17,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Get the Drawing app"
   
     @instructions: -> """
-      In the Admission Week app, choose to receive the Drawing app for PixelBoy.
+      In the Admission Week app, choose to receive the Drawing app for PixelPad.
       Going forward you will decide between using the in-app editor or
       external software to complete drawing assignments.
       Talk to Retro in the store about pixel art software and decide which route to take.
@@ -26,8 +26,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     completedConditions: ->
-      return unless pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-      PAA.PixelBoy.Apps.Drawing in pixelBoy.os.currentAppsSituation().things()
+      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+      PAA.PixelPad.Apps.Drawing in pixelPad.os.currentAppsSituation().things()
 
   # Main path
   class @Editor extends PAA.Learning.Task.Automatic
@@ -37,7 +37,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Get the drawing editor"
 
     @instructions: -> """
-      Ask Retro for the basic editor for PixelBoy and select it on the Settings page in the Drawing app.
+      Ask Retro for the basic editor for PixelPad and select it on the Settings page in the Drawing app.
       This will give you the ability to edit sprites right in the app.
     """
 
@@ -48,7 +48,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      PAA.PixelBoy.Apps.Drawing.state('editorId')?
+      PAA.PixelPad.Apps.Drawing.state('editorId')?
 
   class @Basics extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Basics'
@@ -135,7 +135,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @initialize()
 
       @completedConditions: ->
-        PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
+        PAA.PixelPad.Apps.Drawing.state('externalSoftware')?
 
     class @WatchTutorial extends PAA.Learning.Task.Manual
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.WatchTutorial'

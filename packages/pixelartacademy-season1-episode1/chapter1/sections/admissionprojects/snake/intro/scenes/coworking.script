@@ -62,7 +62,7 @@ reuben:
 ## GetPico8
 
 reuben: 
-  To play my game, you'll want to get the app for your PixelBoy.
+  To play my game, you'll want to get the app for your PixelPad.
   You can get it in Retronator Store right here in the HQ.
   
 -> [Pico8Questions]
@@ -73,7 +73,7 @@ reuben:
   If you want to code your own games, you need the PICO-8 devkit.
   It's $15 and runs on your PC or Raspberry Pi.
   You can buy it from Lexaloffle's website, and there's a link from Retronator Store as well.
-  To draw art for my game though, all you need is the free PixelBoy app.
+  To draw art for my game though, all you need is the free PixelPad app.
   
 -> [Pico8Questions]
 
@@ -106,7 +106,7 @@ reuben:
   First, let me get you the game cartridge.
   It will appear in your PICO-8 app.
   
-> Reuben gestures something on his PixelBoy and transfers the virtual cart to your device.
+> Reuben gestures something on his PixelPad and transfers the virtual cart to your device.
 
 ## ReceiveCartridge
 
@@ -148,7 +148,7 @@ pause
 
 -> [StartError] `_startError`
 
-> Reuben transmits the files to your PixelBoy.
+> Reuben transmits the files to your PixelPad.
 
 reuben:
   If you go to the Drawing app, the Snake game should appear in the Projects section.
@@ -174,7 +174,7 @@ reuben: See you soon!
 
 ## StartError
 
-> Reuben tries to transmit the files to your PixelBoy, but something goes wrong.
+> Reuben tries to transmit the files to your PixelPad, but something goes wrong.
 
 reuben: 
   Hmmm … 

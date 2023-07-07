@@ -31,10 +31,10 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
 
-  api.use('retronator:pixelartacademy-pixelboy');
-  api.use('retronator:pixelartacademy-pixelboy-pico8');
-  api.use('retronator:pixelartacademy-pixelboy-drawing');
-  api.use('retronator:pixelartacademy-pixelboy-studyplan');
+  api.use('retronator:pixelartacademy-pixelpad');
+  api.use('retronator:pixelartacademy-pixelpad-pico8');
+  api.use('retronator:pixelartacademy-pixelpad-drawing');
+  api.use('retronator:pixelartacademy-pixelpad-studyplan');
 
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-learnmode-intro');

@@ -93,7 +93,7 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
         journalId = student.journalIds[0]
 
         # Create the journal view context and enter it.
-        context = new PAA.PixelBoy.Apps.Journal.JournalView.Context {journalId}
+        context = new PAA.PixelPad.Apps.Journal.JournalView.Context {journalId}
         LOI.adventure.enterContext context
 
   # Listener

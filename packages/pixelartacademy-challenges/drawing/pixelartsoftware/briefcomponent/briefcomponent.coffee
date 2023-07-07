@@ -18,10 +18,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     $(document).off '.pixelartacademy-challenges-drawing-pixelartsoftware-copyreference-briefcomponent'
   
   canEdit: ->
-    PAA.PixelBoy.Apps.Drawing.state('editorId')?
+    PAA.PixelPad.Apps.Drawing.state('editorId')?
 
   canUpload: ->
-    PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
+    PAA.PixelPad.Apps.Drawing.state('externalSoftware')?
 
   processUploadData: (imageData) ->
     # Put the bitmap into upload mode.

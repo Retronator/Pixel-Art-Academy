@@ -33,8 +33,8 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
 
           else
             # Store if the player has the drawing app.
-            pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-            drawingApp = _.find pixelBoy.os.currentApps(), (app) => app instanceof PAA.PixelBoy.Apps.Drawing
+            pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+            drawingApp = _.find pixelPad.os.currentApps(), (app) => app instanceof PAA.PixelPad.Apps.Drawing
             @ephemeralState 'hasDrawingApp', drawingApp?
 
             # Reset high score to force replay.
@@ -67,8 +67,8 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
       return
 
     # Store in state if the character has the PICO-8 app.
-    pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-    hasPico8 = PAA.PixelBoy.Apps.Pico8 in pixelBoy.os.currentAppsSituation().things()
+    pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+    hasPico8 = PAA.PixelPad.Apps.Pico8 in pixelPad.os.currentAppsSituation().things()
     Tracker.nonreactive => @script.ephemeralState 'hasPico8', hasPico8
 
     # If the player has seen PICO-8 questions and has acquired the app, allow to report this.
@@ -82,7 +82,7 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
       return
 
     # Store in state if the character has the Snake project added to the Study Plan.
-    hasSnakeGoal = PAA.PixelBoy.Apps.StudyPlan.hasGoal C1.Goals.Snake
+    hasSnakeGoal = PAA.PixelPad.Apps.StudyPlan.hasGoal C1.Goals.Snake
     Tracker.nonreactive => @script.ephemeralState 'hasSnakeGoal', hasSnakeGoal
 
     # If player has the snake goal and didn't before, let them report it.

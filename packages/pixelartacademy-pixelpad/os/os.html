@@ -1,0 +1,20 @@
+<template name="PixelArtAcademy.PixelPad.OS">
+  {{#if justOS}}
+    <style>
+      html {
+        font-size: {{display.scale}}px
+      }
+    </style>
+    {{> Render display}}
+  {{/if}}
+  <div class="pixelartacademy-pixelpad-os">
+    {{#if currentApp}}
+      <div class="app-wrapper">
+        {{> Render currentApp}}
+      </div>
+    {{/if}}
+    <div class="shortcuts-table {{shortcutsTableVisibleClass}}">
+      {{> PixelArtAcademy.PixelPad.Components.ShortcutsTable}}
+    </div>
+  </div>
+</template>

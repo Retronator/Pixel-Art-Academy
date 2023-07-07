@@ -22,9 +22,9 @@ class PAA.Season1.Episode1.Chapter1 extends PAA.Chapter
   @sections: -> [
     @Intro
     @Waiting
-    @PrePixelBoy
-    @PixelBoy
-    @PostPixelBoy
+    @PrePixelPad
+    @PixelPad
+    @PostPixelPad
     @AdmissionProjects
     @AdmissionProjects.Snake.Intro
     @AdmissionProjects.Snake.Drawing

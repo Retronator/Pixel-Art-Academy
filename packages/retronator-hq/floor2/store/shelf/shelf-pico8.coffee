@@ -24,7 +24,7 @@ class HQ.Store.Shelf.Pico8 extends HQ.Store.Shelf
   @initialize()
 
   things: -> [
-    PixelArtAcademy.PixelBoy.Apps.Pico8
+    PixelArtAcademy.PixelPad.Apps.Pico8
     PixelArtAcademy.Pico8.DevKit
     PixelArtAcademy.Pico8.Fanzine
   ]

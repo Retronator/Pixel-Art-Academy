@@ -4,7 +4,7 @@ AB = Artificial.Babel
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection extends PAA.PixelBoy.Apps.Drawing.Portfolio.Asset
+class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   @id: -> "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.ReferenceSelection"
 
   @displayName: -> "Choose a sprite to copy"

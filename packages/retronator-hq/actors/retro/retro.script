@@ -87,28 +87,28 @@ retro:
 
 ## SoftwareQuestionsIntro
 
-`_pixelBoyDecisionAnswers = false`
+`_pixelPadDecisionAnswers = false`
 
--> [HavePixelBoy] `@inventory['PixelArtAcademy.PixelBoy'] and not HavePixelBoy`
+-> [HavePixelPad] `@inventory['PixelArtAcademy.PixelPad'] and not HavePixelPad`
 -> [SoftwareQuestionsAgain] `SoftwareQuestions`
--> [DontHavePixelBoy]
+-> [DontHavePixelPad]
 
-## HavePixelBoy
+## HavePixelPad
 
 retro:
-  I see you have a PixelBoy with you, so you have one main decision:
-  Do you want to use the drawing tools for the PixelBoy or use other software on your computer?
+  I see you have a PixelPad with you, so you have one main decision:
+  Do you want to use the drawing tools for the PixelPad or use other software on your computer?
 
-`_pixelBoyDecisionAnswers = true`
+`_pixelPadDecisionAnswers = true`
 
 -> [SoftwareQuestions]
 
-## DontHavePixelBoy
+## DontHavePixelPad
 
 retro: Alright. So, are you already used to some drawing software?
 
-* Yeah, I'm already used to something. -> [SoftwareAlready] `not HavePixelBoy`
-* No, I'm just starting out. -> [SoftwareStartingOut] `not HavePixelBoy`
+* Yeah, I'm already used to something. -> [SoftwareAlready] `not HavePixelPad`
+* No, I'm just starting out. -> [SoftwareStartingOut] `not HavePixelPad`
 
 ## SoftwareAlready
 
@@ -143,19 +143,19 @@ retro: Anything in particular?
 
 ## SoftwareQuestions
 
-* What's the easiest? -> [SoftwareEasiest] `HavePixelBoy`
+* What's the easiest? -> [SoftwareEasiest] `HavePixelPad`
 * Do you recommend any online editors? -> [SoftwareOnline] `SoftwareStartingOut`
 * Are there any specific pixel art programs? -> [SoftwareSpecific]
 * Tell me about old-school drawing software. -> [SoftwareSpecificOldSchool] `SoftwareSpecific`
 * What are some modern programs for pixel art? -> [SoftwareSpecificModern] `SoftwareSpecific`
-* Why would I want to use other software? -> [SoftwareGeneric] `HavePixelBoy`
-* When would I choose more generic drawing software? -> [SoftwareGeneric] `not HavePixelBoy`
+* Why would I want to use other software? -> [SoftwareGeneric] `HavePixelPad`
+* When would I choose more generic drawing software? -> [SoftwareGeneric] `not HavePixelPad`
 * I want to do both pixel and non-pixel art, but I can't afford Photoshop. -> [SoftwareGenericFree] `SoftwareGeneric`
-* Can I use both PixelBoy and other software? -> [SoftwareBoth] `HavePixelBoy`
+* Can I use both PixelPad and other software? -> [SoftwareBoth] `HavePixelPad`
 * I want to find an app for my tablet or phone. -> [SoftwareMobile]
-* I need some time to think about it. -> [ThinkAboutIt] `_pixelBoyDecisionAnswers`
-* I know enough to make my decision. -> [MakeDecision] `_pixelBoyDecisionAnswers`
-* That was useful. `not _pixelBoyDecisionAnswers`
+* I need some time to think about it. -> [ThinkAboutIt] `_pixelPadDecisionAnswers`
+* I know enough to make my decision. -> [MakeDecision] `_pixelPadDecisionAnswers`
+* That was useful. `not _pixelPadDecisionAnswers`
 
 retro: Awesome! Any other questions?
 
@@ -176,7 +176,7 @@ retro: Sounds good! Let me know what it is when you want to continue.
 ## SoftwareEasiest
 
 retro:
-  That would be the PixelBoy editor. 
+  That would be the PixelPad editor. 
   You'll get drawing as fast as possible and you'll have all the tools right there next to your project tasks.
 
 -> [SoftwareQuestions]
@@ -237,7 +237,7 @@ retro:
 ## SoftwareBoth
 
 retro:
-  Of course. The editors in the PixelBoy are designed in a way that help you with the transition.
+  Of course. The editors in the PixelPad are designed in a way that help you with the transition.
   All the shortcuts work as they do in popular software such as Photoshop or Aseprite.
   When you get to the challenge for copying a reference, note that you'll have to complete two sprites, one with the built-in editor, one by uploading an image.
 

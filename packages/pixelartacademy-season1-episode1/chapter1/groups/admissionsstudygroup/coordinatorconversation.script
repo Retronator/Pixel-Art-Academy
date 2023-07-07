@@ -64,7 +64,7 @@ coordinator:
 ## StudyPlan
 
 coordinator:
-  It's all done on your PixelBoy. The Study Plan app lets you search for things you're interested in and give you goals based on it.
+  It's all done on your PixelPad. The Study Plan app lets you search for things you're interested in and give you goals based on it.
   For now, only goals related to admission week will be available to you. Make sure you add all prerequisites to the blueprint.
 
 -> [AdmissionWeekQuestionsReturn]

@@ -1,0 +1,304 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-calendar-monthview
+  position absolute
+  top 1rem
+  left calc(50% - 154rem)
+  width 308rem
+  height 228rem
+  background atariGray(6)
+  color atariGray(3)
+  adventure()
+  visibility hidden
+
+  &.visible
+    visibility visible
+
+  &::after
+    content ''
+    display block
+    position absolute
+    top -1rem
+    bottom -1rem
+    left -1rem
+    right -1rem
+    z-index 1
+    background-image image('/pixelartacademy/pixelpad/apps/calendar/monthview-cover.png')
+    pointer-events none
+
+  .header
+    .academy
+    .schoolyear
+      position absolute
+      z-index 2
+      color transparent
+      text-shadow -1rem 0 0 rgba(atariBrown(1), 0.5),
+                  0 0 0 atariBrown(3),
+                  -1rem 0 0 atariBrown(1),
+                  0 1rem 0 atariBrown(0)
+
+    .academy
+      left 8rem
+      top 5rem
+
+    .schoolyear
+      right 8rem
+      top 4rem
+      text-align right
+
+      .year
+        daily()
+
+  .month
+    width 260rem
+    margin 38rem auto 0
+
+    .weekdays
+      display flex
+      list-style none
+      padding 0
+      margin 0 0 2rem
+
+      .weekday
+        width 38rem
+        margin-left -1rem
+        text-align center
+
+        &:first-child
+          margin-left 0
+
+    .weeks
+      list-style none
+      padding 0
+      margin 0
+
+      .week
+        position relative
+        margin-top -1rem
+
+        &.active
+          margin 1rem 0 2rem
+
+        &:first-child
+          margin-top 0
+
+        .days
+          display flex
+          list-style none
+          padding 0
+          margin 0
+
+          .day
+            position relative
+            width 38rem
+            height 29rem
+            margin-left -1rem
+            border 1rem solid atariGray(4)
+
+            &:first-child
+              margin-left 0
+
+            .date
+              position absolute
+              top 0
+              left 2rem
+              color atariGray(5)
+
+            .activities
+              display flex
+              justify-content center
+              list-style none
+              padding 6rem 2rem
+              margin 0
+              text-align center
+
+              .activities-type
+                display flex
+                justify-content center
+
+            &.in-displayed-month
+              .date
+                color atariGray(3)
+
+            &.today
+              z-index 1
+              border-color atariBlue(4)
+
+              .date
+                color atariBlue(4)
+
+            &:hover
+              z-index 1
+              border-color atariGray(3)
+
+              .date
+                color atariGray(2)
+
+        .weekly-goals
+          position absolute
+          top 0
+          bottom 0
+          right -21rem
+          width 20rem
+          text-align center
+
+          .goal-reached
+            position absolute
+            left 0
+            right 0
+            top calc(50% - 4rem)
+            color atariGreen(4)
+
+            &::before
+              content '✔'
+
+          .goal-progress
+            absolute-cover()
+
+            .fraction
+              position absolute
+              top calc(50% - 6rem)
+              left 0
+              right 0
+
+            .percentage
+              position absolute
+              bottom 0
+              left 0
+              right 0
+
+            &:hover
+              color atariGray(2)
+
+        .progress
+          position relative
+          height 6rem
+          border 1rem solid atariGray(4)
+          border-top none
+
+          .bar
+            height 5rem
+            width 33%
+            background image('/pixelartacademy/pixelpad/apps/calendar/progressbar-pattern.png') top left / 3rem 3rem
+
+          .percentage
+            position absolute
+            top -1rem
+            right -22rem
+            width 20rem
+            text-align center
+            cursor pointer
+
+            &:hover
+              color atariBlue(4)
+
+        &.active
+          .weekly-goals
+            cursor pointer
+
+            .goal-reached
+              top calc(50% - 6rem)
+
+            &:hover
+              .goal-reached
+                color atariGreen(2)
+
+    &.includes-today
+      .weeks
+        .week
+          .days .day
+            height 27rem
+
+          &.active:first-child
+            & ~ .week:nth-child(4)
+            & ~ .week:nth-child(5)
+            & ~ .week:nth-child(6)
+              .days .day
+                height 28rem
+
+          &.active:last-child
+            .days .day
+              height 29rem
+
+    &.weeks-count-4
+      .weeks
+        .week
+          .days .day
+            height 36rem
+
+      &.includes-today
+        .weeks
+          .week
+            .days .day
+              height 34rem
+
+            &:nth-child(1)
+            &:nth-child(4)
+              .days .day
+                height 33rem
+
+            &.active:first-child
+              & ~ .week:nth-child(4)
+                .days .day
+                  height 35rem
+
+            &.active:last-child
+              .days .day
+                height 35rem
+
+    &.weeks-count-6
+      .weeks
+        .week
+          .days .day
+            height 24rem
+
+          &:nth-child(5)
+          &:nth-child(6)
+            .days .day
+              height 25rem
+
+      &.includes-today
+        .weeks
+          .week
+            .days .day
+              height 23rem
+
+            &:nth-child(5)
+            &:nth-child(6)
+              .days .day
+                height 22rem
+
+            &.active:first-child
+              & ~ .week:nth-child(5)
+              & ~ .week:nth-child(6)
+                .days .day
+                  height 23rem
+
+            &.active:last-child
+              .days .day
+                height 24rem
+
+  .navigation
+    width 260rem
+    margin 4rem auto 0
+    display flex
+
+    .month-button
+      display block
+      width 38rem
+      height 14rem
+      background none
+      border 1rem solid atariGray(4)
+      font inherit
+      color inherit
+
+      &:hover
+        background atariGray(5)
+
+    .displayed-month
+      padding 2rem
+      border 1rem solid atariGray(4)
+      border-left none
+      border-right none
+      flex-grow 1
+      text-align center

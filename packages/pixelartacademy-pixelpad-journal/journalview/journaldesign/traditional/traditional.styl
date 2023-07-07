@@ -1,0 +1,34 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-journal-journalview-journaldesign.traditional
+  position absolute
+  top 0
+  left calc(50% - 151rem)
+  width 302rem
+  height 223rem
+  background-image image('/pixelartacademy/pixelpad/apps/journal/journal.png')
+
+  .page-button
+    position absolute
+    display none
+    bottom 5rem
+    padding 5rem
+    checkout()
+    color atariBrown(4)
+    cursor pointer
+
+    &:hover
+      color atariBrown(3)
+
+    &.previous
+      left 10rem
+
+    &.next
+      right 10rem
+
+      &.new-page
+        text-transform uppercase
+
+  &:hover
+    .page-button.visible
+      display block

@@ -81,7 +81,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
 
   clipboardPageComponent: ->
     # We only show this page if we can upload.
-    return unless PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
+    return unless PAA.PixelPad.Apps.Drawing.state('externalSoftware')?
     
     @_clipboardPageComponent
 

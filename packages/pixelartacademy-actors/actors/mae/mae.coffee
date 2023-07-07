@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 class PAA.Actors.Mae extends LOI.Character.Actor
   @id: -> 'PixelArtAcademy.Actors.Mae'
   @fullName: -> "Mae"
-  @description: -> "It's Mae, a petite woman focused on her PixelBoy."
+  @description: -> "It's Mae, a petite woman focused on her PixelPad."
   @pronouns: -> LOI.Avatar.Pronouns.Feminine
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.purple

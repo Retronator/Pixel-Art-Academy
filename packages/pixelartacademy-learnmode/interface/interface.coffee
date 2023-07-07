@@ -46,9 +46,9 @@ class LM.Interface extends LOI.Interface
           1000
         
       else if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
-        # We're starting directly in play so we have to make the studio focus on the top and open the PixelBoy.
+        # We're starting directly in play so we have to make the studio focus on the top and open the PixelPad.
         @studio.setFocus @constructor.Studio.FocusPoints.Play
-        @_openPixelBoy()
+        @_openPixelPad()
         
         # We want a fast transition since there is no waiting for the menu fade.
         @introFadeFast true
@@ -57,9 +57,9 @@ class LM.Interface extends LOI.Interface
 
   prepareLocation: ->
     if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
-      # We're supposed to be in play so we have to make the studio focus on the top and open the PixelBoy.
+      # We're supposed to be in play so we have to make the studio focus on the top and open the PixelPad.
       @studio.setFocus @constructor.Studio.FocusPoints.Play
-      @_openPixelBoy()
+      @_openPixelPad()
 
     else
       @studio.setFocus @constructor.Studio.FocusPoints.MainMenu
@@ -74,17 +74,17 @@ class LM.Interface extends LOI.Interface
         speedFactor: 1.5
         completeCallback: =>
           LOI.adventure.goToLocation LM.Locations.Play
-          @_openPixelBoy()
+          @_openPixelPad()
     ,
       750
     
-  _openPixelBoy: ->
+  _openPixelPad: ->
     # Open the PixelPad when it becomes available.
     @autorun (computation) =>
-      return unless pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
+      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
       computation.stop()
     
-      pixelBoy.open()
+      pixelPad.open()
     
       @waiting false
   

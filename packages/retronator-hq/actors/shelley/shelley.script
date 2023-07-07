@@ -24,7 +24,7 @@ shelley: Nice to meet you too! So how can I help you, _char_?
 * Where can I find more about the Academy? -> [AcademyMore] `_immersionDone`
 * How do I apply to the Academy? -> [AcademyApply] `_immersionDone and not _application.applied`
 * I applied but am still waiting to start admission week. -> [ApplicationWaiting] `_application.applied and not _application.accepted`
-* How do I get admission week started? -> [AdmissionWeekStart] `_application.accepted and not @inventory['PixelArtAcademy.PixelBoy']`
+* How do I get admission week started? -> [AdmissionWeekStart] `_application.accepted and not @inventory['PixelArtAcademy.PixelPad']`
 * *CoordinatorMainQuestions*
 * What kind of art does Matej do? -> [RetroArt]
 * See you around.
@@ -62,7 +62,7 @@ shelley:
 ## AdmissionWeekStart
 
 shelley:
-  You'll need to pick up a PixelBoy 2000 in the Store. Look for the shelf with devices from Pixel. 
+  You'll need to pick up a PixelPad 2000 in the Store. Look for the shelf with devices from Pixel. 
   Then talk to Retro to link it up to your Academy account.
 
 -> [MainQuestions]

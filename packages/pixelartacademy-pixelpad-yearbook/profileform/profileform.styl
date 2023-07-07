@@ -1,0 +1,89 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-yearbook-profileform
+  position absolute
+  z-index 2
+  top 20rem
+  width 135rem
+  height 156rem
+  background atariGray(5)
+  border-left 1rem solid atariGray(3)
+  box-shadow -2rem 1rem 0 transparentify(atariGray(6), atariGray(7))
+  color atariGray(2)
+
+  &.left
+    left 42rem
+
+  &.right
+    right 40rem
+
+  .caption
+    position absolute
+    top 5rem
+    right 100%
+    width 100rem
+    transform rotate(-90deg)
+    transform-origin top right
+    text-align right
+    color atariGray(3)
+
+  .content
+    margin 4rem 5rem 0 12rem
+
+    .property
+      border-bottom 1rem solid atariGray(4)
+      margin-bottom 4rem
+
+      .label
+        display block
+        position relative
+
+        .name
+          display block
+          text-transform uppercase
+
+        .value
+          display block
+          margin-top 1rem
+
+          input
+          textarea
+          select
+            position relative
+            top 2rem
+            width 100%
+            padding 0 4px
+            margin 0
+            border none
+            background none
+            freehand()
+            input-placeholder atariGray(3)
+            appearance none
+            color atariIndigo(3)
+
+            &:focus
+              outline none
+
+  .page-number
+    position absolute
+    bottom 3rem
+    left 50rem
+    right 50rem
+    text-align center
+    color atariGray(3)
+
+.pixelartacademy-pixelpad-apps-yearbook.app
+  .pixelartacademy-pixelpad-apps-yearbook-profileform
+    .page-button
+      color atariGray(3)
+      bottom -1rem
+      adventure()
+
+      &.previous
+        left 1rem
+
+      &.next
+        right 0
+
+      &.visible
+        display block

@@ -5,11 +5,11 @@ LM = PixelArtAcademy.LearnMode
 class LM.Intro.Apps extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.LearnMode.Intro.Apps'
 
-  @location: -> PAA.PixelBoy.Apps
+  @location: -> PAA.PixelPad.Apps
 
   @initialize()
   
   things: -> [
-    PAA.PixelBoy.Apps.Drawing
-    PAA.PixelBoy.Apps.Pico8 if @options.parent.pico8Enabled()
+    PAA.PixelPad.Apps.Drawing
+    PAA.PixelPad.Apps.Pico8 if @options.parent.pico8Enabled()
   ]

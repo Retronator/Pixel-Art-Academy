@@ -52,5 +52,5 @@ Package.onUse(function(api) {
   api.addComponent('locations/mainmenu..');
   api.addFile('locations/play..');
 
-  api.addFile('pixelboy..');
+  api.addFile('pixelpad..');
 });

@@ -5,7 +5,7 @@ E1 = PixelArtAcademy.Season1.Episode1
 class E1.Apps extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode1.Apps'
   
-  @location: -> PAA.PixelBoy.Apps
+  @location: -> PAA.PixelPad.Apps
   
   @initialize()
 
@@ -14,7 +14,7 @@ class E1.Apps extends LOI.Adventure.Scene
       @constructor.AdmissionWeek
     ]
 
-    if unlockedApps = PAA.PixelBoy.Apps.AdmissionWeek.state 'unlockedApps'
+    if unlockedApps = PAA.PixelPad.Apps.AdmissionWeek.state 'unlockedApps'
       apps.push _.thingClass appId for appId in unlockedApps
 
     apps

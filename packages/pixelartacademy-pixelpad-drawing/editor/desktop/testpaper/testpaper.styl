@@ -1,0 +1,59 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-testpaper
+  position absolute
+  z-index 1
+  width 60rem
+  height 89rem
+  left -80rem
+  top calc(50% - 44rem)
+  background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/testpaper.png')
+  box-shadow -2rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
+
+  &.eraser-enabled
+    &::before
+      content ''
+      position absolute
+      top 50rem
+      left 0
+      right 0
+      height 7rem
+      background atariGray(5)
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    left -5rem
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.hidden-tools &
+    visibility hidden
+
+  .actions
+    position absolute
+    display flex
+    list-style none
+    top calc(50% + 33rem)
+    left 8rem
+    margin 0
+    padding 0
+    text-align center
+
+    .action
+      position relative
+      width 25rem
+      height 10rem
+      visibility hidden
+      cursor pointer
+
+      &.enabled
+        visibility visible
+
+      .action-button
+        absolute-cover-size()
+        padding 0
+        border none
+        background none
+        freehand()
+        color atariGray(3)
+
+        &:hover
+          color atariGray(2)
+

@@ -1,0 +1,91 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent">
+  <form class="pixelartacademy-pixelpad-apps-drawing-portfolio-newartwork-clipboardcomponent newartwork-form {{errorClasses}}">
+    <div class="form-title">Purchase order form</div>
+    <div class="properties">
+      <label class="property title">
+        <span class="name">Title</span>
+        <span class="value"><input name="title" type="text" placeholder="Enter artwork title"/></span>
+      </label>
+      <div class="property type">
+        <span class="name">Type</span>
+        <span class="value">
+          <label class="option">
+            <input class="option-input" type="radio" name="type" value="Sprite"/><span class="radio"></span>
+            <span class="label">Sprite</span>
+          </label>
+          <label class="option">
+            <input class="option-input" type="radio" name="type" value="Bitmap"/><span class="radio"></span>
+            <span class="label">Canvas</span>
+          </label>
+        </span>
+      </div>
+      <label class="property size">
+        <span class="name">Size</span>
+        <span class="value">
+          <span class="selection">
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType}}
+          </span>
+          {{#if $is sizeType 'Fixed'}}
+            <span class="dimensions">
+              <span class="dimension width">
+                <input class="dimension-value" name="width" type="number" min="1" max="{{maxSize}}" placeholder="width">
+              </span>
+              <span class="multiplication-symbol">&times;</span>
+              <span class="dimension height">
+                <input class="dimension-value" name="height" type="number" min="1" max="{{maxSize}}" placeholder="height">
+              </span>
+              <span class="unit">pixels</span>
+            </span>
+          {{/if}}
+        </span>
+      </label>
+    </div>
+    <div class="extras-title">
+      <span class="text">Extra items</span>
+    </div>
+    <div class="extras">
+      <label class="extra">
+        <span class="name">Colors</span>
+        <span class="value">
+          <select class="palette" name="palette">
+            {{#each palettes}}
+              <option value="{{_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+      <label class="extra">
+        <span class="name"></span>
+        <span class="value"></span>
+      </label>
+    </div>
+    <div class="submit-area">
+      <div class="title">Signature</div>
+      <div class="button-area">
+        <button class="submit-button">{{currentCharacter.avatar.fullName}}</button>
+        <div class="prompt">
+          Click on the line above to order
+        </div>
+      </div>
+    </div>
+    {{#if errorClasses}}
+      <div class="error-message">
+        {{#if typeError}}Please choose the artwork type.{{/if}}
+        {{#if $or widthError heightError}}Please enter a valid size.{{/if}}
+        {{#if sizeOutOfRangeError}}The maximum size for a {{toLower type}} is {{maxSize}}.{{/if}}
+      </div>
+    {{/if}}
+  </form>
+</template>

@@ -1,0 +1,16 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Journal.JournalView.Tasks">
+  <div class="pixelartacademy-pixelpad-apps-journal-journalview-tasks {{visibleClass}}">
+    {{#if activeTasks.length}}
+      <p>Choose from available to-do tasks to plan your day:</p>
+      <ul class="tasks">
+        {{#each activeTasks}}
+          <li class="task">{{> t10e directiveTranslation}}</li>
+        {{/each}}
+      </ul>
+      <p>Get more tasks by adding goals to your study plan.</p>
+    {{else}}
+      <p>You don't currently have any to-do tasks planned.</p>
+      <p>Use the Study Plan app to add new goals for you.</p>
+    {{/if}}
+  </div>
+</template>

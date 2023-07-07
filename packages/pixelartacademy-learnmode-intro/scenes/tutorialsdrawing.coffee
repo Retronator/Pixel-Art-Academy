@@ -18,10 +18,10 @@ class LM.Intro.TutorialsDrawing extends LOI.Adventure.Scene
 
   things: ->
     things = []
-    DrawingApp = PAA.PixelBoy.Apps.Drawing
+    DrawingApp = PAA.PixelPad.Apps.Drawing
 
     # Player needs the Desktop editor selected for the tutorial to display.
-    if DrawingApp.state('editorId') is PAA.PixelBoy.Apps.Drawing.Editor.Desktop.id()
+    if DrawingApp.state('editorId') is PAA.PixelPad.Apps.Drawing.Editor.Desktop.id()
       @_tutorialBasics ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.PixelArtTools.Basics
       things.push @_tutorialBasics
 

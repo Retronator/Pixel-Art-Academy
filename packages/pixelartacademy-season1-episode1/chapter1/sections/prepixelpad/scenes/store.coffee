@@ -1,0 +1,40 @@
+LOI = LandsOfIllusions
+PAA = PixelArtAcademy
+C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+HQ = Retronator.HQ
+
+Vocabulary = LOI.Parser.Vocabulary
+
+class C1.PrePixelPad.Store extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.PrePixelPad.Store'
+
+  @location: -> HQ.Store
+
+  @initialize()
+
+  @listeners: ->
+    super(arguments...).concat [
+      @StoreListener
+    ]
+
+  # Listener
+
+  class @StoreListener extends LOI.Adventure.Listener
+
+    @scriptUrls: -> [
+      'retronator_pixelartacademy-season1-episode1/chapter1/sections/prepixelpad/scenes/store.script'
+    ]
+
+    class @Script extends LOI.Adventure.Script
+      @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.PrePixelPad.Store'
+      @initialize()
+
+    @initialize()
+
+    onScriptsLoaded: ->
+      @script = @scripts[@constructor.Script.id()]
+
+    onAddToCartAttempt: (addToCartResponse) ->
+      if addToCartResponse.catalogKey is PAA.PixelPad.id()
+        addToCartResponse.preventAdding()
+        LOI.adventure.director.startScript @script, label: 'CantBuyPixelPad'

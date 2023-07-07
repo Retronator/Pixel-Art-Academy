@@ -15,7 +15,7 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
   onCreated: ->
     super arguments...
     
-    @drawing = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing
+    @drawing = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing
 
     # Calculate asset size.
     @assetSize = new ComputedField =>
@@ -32,7 +32,7 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
       if maxScale = @asset.maxClipboardScale?()
         options.scaleLimits.max = maxScale
       
-      PAA.PixelBoy.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), bitmapData.bounds, options
+      PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), bitmapData.bounds, options
       
   onBackButton: ->
     if @secondPageActive()

@@ -17,13 +17,13 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
       We were delighted to receive your application to participate in our on-campus program at the Retropolis Academy of Art. We are happy to inform you that you can now begin your admission week.
 
-      As explained in the admissions section on our website, your first step is to pick up a PixelBoy 2000 from your nearest Retronator store. Based on your location, this is:
+      As explained in the admissions section on our website, your first step is to pick up a PixelPad 2000 from your nearest Retronator store. Based on your location, this is:
 
       Retronator Headquarters<br/>
       176 2nd Street<br/>
       San Francisco, CA
 
-      Your PixelBoy will include further instructions. Once you activate it, you will have 7 days to complete your assignments.
+      Your PixelPad will include further instructions. Once you activate it, you will have 7 days to complete your assignments.
 
       The admissions process is completely transparent. You will know how you're doing all along the way and we will be there to help you succeed.
 

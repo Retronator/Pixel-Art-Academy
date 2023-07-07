@@ -22,7 +22,7 @@ class PAA.Practice.Project.Asset.Bitmap.BriefComponent extends AM.Component
       LOI.Assets.Palette.documents.findOne palette._id
 
   needsSettingsSelection: ->
-    not (PAA.PixelBoy.Apps.Drawing.state('editorId') or PAA.PixelBoy.Apps.Drawing.state('externalSoftware'))
+    not (PAA.PixelPad.Apps.Drawing.state('editorId') or PAA.PixelPad.Apps.Drawing.state('externalSoftware'))
 
   needsToolsChallenge: ->
     true
@@ -30,8 +30,8 @@ class PAA.Practice.Project.Asset.Bitmap.BriefComponent extends AM.Component
   noActions: ->
     not (@canEdit() or @canUpload())
 
-  canEdit: -> PAA.PixelBoy.Apps.Drawing.canEdit()
-  canUpload: -> PAA.PixelBoy.Apps.Drawing.canUpload()
+  canEdit: -> PAA.PixelPad.Apps.Drawing.canEdit()
+  canUpload: -> PAA.PixelPad.Apps.Drawing.canUpload()
 
   customPaletteColorsString: ->
     count = 0

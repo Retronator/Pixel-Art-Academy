@@ -35,7 +35,7 @@ class PAA.StudyGuide.Pages.Admin.Activities.Activity.Article extends AM.Componen
   onRendered: ->
     super arguments...
 
-    @$article = @$('.pixelartacademy-pixelboy-apps-journal-journalview-article')
+    @$article = @$('.pixelartacademy-pixelpad-apps-journal-journalview-article')
 
     # Initialize quill.
     quill = new Quill @$('.writing-area')[0],

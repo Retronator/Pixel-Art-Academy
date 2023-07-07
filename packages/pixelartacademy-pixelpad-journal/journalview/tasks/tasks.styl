@@ -1,0 +1,41 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-journal-journalview-tasks
+  position absolute
+  z-index 2
+  top 100%
+  left calc(50% - 85.5rem)
+  width 171rem
+  height 237rem
+  padding 28rem 8rem 12rem 11rem
+  transition top 0.5s ease-in-out
+  background-image image('/pixelartacademy/pixelpad/apps/journal/notebook.png')
+  color atariBlue(2)
+  adventure()
+  line-height 9rem
+
+  &.visible
+    top 0
+
+  p
+    margin 9rem 0
+
+    &:first-child
+      margin-top 0
+
+  .tasks
+    list-style none
+    padding-left 10rem
+
+    .task
+      position relative
+      cursor pointer
+
+      &:hover
+        background atariGray(6)
+
+      &::before
+        content '-'
+        position absolute
+        top 0
+        left -6rem

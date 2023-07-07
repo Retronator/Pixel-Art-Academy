@@ -1,0 +1,495 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.PostPixelPad.PixelArt
+
+<!-- PIXELBOY EDITOR -->
+
+## UsePixelPadEditorChoice
+
+* I've decided, I want to use the PixelPad editor. `not AfterTutorial or not ReceiveDesktopEditor`
+
+## UsePixelPadEditor
+
+retro:
+  Great! You will find many different editors once you get to the Academy.
+  But to start you out, here's the editor called 'Desktop' that's much like drawing behind a desk in real life.
+
+> Retro gets his PixelPad and initiates the transfer.
+
+## ReceiveDesktopEditor
+
+retro: There you go.
+
+-> [NoDrawingApp] `not _hasDrawingApp`
+
+retro:
+  Now all you have to do is go to your Drawing app and select it on the Settings page.
+  A new section will also show up, called Challenges.
+  It contains a tutorial that will teach you all about how the editor works.
+
+-> [Tutorial]
+
+## NoDrawingApp
+
+retro:
+  You'll also need to get the Drawing app where the editor will appear.
+  Select it in the Admission Week app when you can.
+  Once you choose the Desktop editor in the Drawing app, you'll see a tutorial that will guide you through.
+
+## Tutorial
+
+* What do I do after the tutorial? -> [WhatAfterTutorial]
+* Can I skip the tutorial? -> [SkipTutorial]
+
+## WhatAfterTutorial
+
+retro:
+  You'll do a simple drawing task to double check you have the basics down.
+
+-> [AfterTutorial]
+
+## SkipTutorial
+
+retro:
+  Hate tutorials, huh?
+  All you really need is to complete a competency test.
+
+## AfterTutorial
+
+retro:
+  Talk to Corinne upstairs in the gallery to get a reference to copy.
+  Do that and the editor is yours to use for all drawing projects.
+
+-> [Return]
+
+<!-- EXTERNAL SOFTWARE -->
+
+## UseExternalSoftwareChoice
+
+* I think I want to use external software. `not _externalSoftware and not _externalSoftwareName and not AfterChosenSoftware`
+
+## UseExternalSoftware
+
+retro:
+  Alright!
+
+-> [NoDrawingApp] `not _hasDrawingApp`
+
+-> [NoChosenSoftware] `not _externalSoftware`
+
+retro: I see you've chosen `_externalSoftwareName` in your Drawing app. `_externalSoftwareName`
+retro: I see you've already set external software in your Drawing app. `not _externalSoftwareName`
+
+-> [AfterChosenSoftware]
+
+## NoChosenSoftware
+
+retro:
+  Go to the Drawing app on your PixelPad and on the Settings page choose which software you'll be using.
+
+-> [ExternalSoftwareHelpOrSet]
+
+## NoDrawingAppExternal
+
+retro:
+  You'll first need to get the Drawing app that you'll use to upload artworks.
+  Select it in the Admission Week app when you can.
+  Once you get it, use the Settings page to choose the software you'll be using.
+
+## ExternalSoftwareHelpOrSet
+
+* What if I need some help learning the software? -> [HelpLearning]
+* Sounds easy enough. -> [SetSoftware]
+
+## HelpLearning
+
+retro: I have a bunch of steps to start you out.
+
+## SetSoftware
+
+retro: After you've set your software of choice, come back and talk to me.
+
+-> [End]
+
+## ChosenSoftwareChoice
+
+* I've chosen to use `_externalSoftwareName`. `_externalSoftware and _externalSoftwareName and UseExternalSoftware and not AfterChosenSoftware`
+
+retro: Good choice!
+
+-> [AfterChosenSoftware]
+
+## ChosenOtherSoftwareChoice
+
+* I selected the software. `_externalSoftware and not _externalSoftwareName and not AfterChosenSoftware`
+
+retro: Great!
+
+-> [AfterChosenSoftware]
+
+## AfterChosenSoftware
+
+retro:
+  If you're comfortable with it already, go ahead and talk to Corinne upstairs in the gallery to get a reference for you to copy.
+  Otherwise let me know and I can guide you through your first steps.
+
+-> [Return]
+
+## ExternalSoftwareReminderChoice
+
+* Who was I supposed to go see about references again? `AfterChosenSoftware and not _completedTasks.CopyReference`
+
+retro:
+  Talk to Corinne upstairs in the gallery. She'll give you a reference image to copy.
+
+-> [Return]
+
+## ExternalSoftwareTutorialChoice
+
+* I'd like some help with using my software. `AfterChosenSoftware and not ExternalSoftwareTutorial`
+
+## ExternalSoftwareTutorial
+
+retro:
+  I'm here for you!
+  Would you prefer to first watch a tutorial on how to setup your software, or do you want to just jump in and figure things out along the way?
+
+* I like to learn in advance. -> [PrepareInAdvance]
+* I prefer to try things out as fast as possible.
+
+retro:
+  Straight to the action, huh? I actually like to explore first too.
+  Alright, here's what you should try to do.
+
+-> [Doodling]
+
+## PrepareInAdvance
+
+retro: That's great!
+
+-> [WatchTutorialIntro]
+
+## WatchTutorialChoice
+
+* Can you tell me about software tutorials again? `ExternalSoftwareTutorial and WatchTutorialIntro and not _completedTasks.WatchTutorial`
+
+retro: No problem!
+
+-> [WatchTutorialIntro]
+
+## WatchTutorialChoiceChangeMind
+
+* I'd actually like to hear about tutorials for drawing software. `ExternalSoftwareTutorial and not WatchTutorialIntro and not _completedTasks.WatchTutorial`
+
+-> [WatchTutorialIntro]
+
+## WatchTutorialIntro
+
+retro:
+  There are many tutorials out there, especially for popular software.
+  For apps that are geared toward pixel art, most things will be already setup for you.
+  More generic software will require additional steps for drawing pixel art.
+
+## WatchTutorialQuestions
+
+* Any recommendations for Photoshop? -> [WatchTutorialPhotoshop] `_externalSoftware is 'Photoshop'`
+* Any recommendations for GIMP? -> [WatchTutorialGIMP] `_externalSoftware is 'GIMP'`
+* Any recommendations for Aseprite? -> [WatchTutorialAseprite] `_externalSoftware is 'Aseprite'`
+* Any recommendations for Pyxel Edit? -> [WatchTutorialPyxelEdit] `_externalSoftware is 'PyxelEdit'`
+* How can I find tutorials for my software? -> [WatchTutorialSearch]
+* What do I do after I watch tutorials? -> [WatchTutorialJournal]
+* Sounds good! `WatchTutorialJournal`
+
+retro: Yup, anything else?
+
+-> [Return]
+
+## WatchTutorialPhotoshop
+
+retro: MortMort makes great videos and has one about it.
+
+> Retro shows you the video on YouTube.
+
+pause
+
+### WatchTutorialPhotoshop
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialGIMP
+
+retro:
+  I actually made a video about it that people seem to find useful.
+  It's a bit old by now, but should still help you get started.
+
+> Retro shows you his video on YouTube.
+
+pause
+
+### WatchTutorialGIMP
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialAseprite
+
+retro: Jebby made a series of videos that go over the basics.
+
+> Retro shows you the playlist on YouTube.
+
+pause
+
+### WatchTutorialAseprite
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialPyxelEdit
+
+retro: Achebit made a 3-part video about it.
+
+> Retro shows you the playlist on YouTube.
+
+pause
+
+### WatchTutorialPyxelEdit
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialHelped
+
+retro: I hope it helped!
+
+-> [WatchTutorialQuestions]
+
+## WatchTutorialSearch
+
+retro:
+  As always, google is your friend!
+  I also like to search directly on YouTube.
+
+-> [WatchTutorialQuestions] `['Aseprite', 'PyxelEdit', 'GraphicsGale', 'ProMotion', 'GrafX2', 'Photoshop', 'GIMP', 'Krita'].indexOf(_externalSoftware) < 0`
+
+retro: Here's what I find for `_externalSoftwareName`.
+
+> Retro fires up a YouTube search on his computer and shows it to you.
+
+pause
+
+### YouTubeSearch
+
+retro: I hope you found something helpful.
+
+-> [WatchTutorialQuestions]
+
+## WatchTutorialJournal
+
+retro:
+  You should go to your journal and add the 'Watch a tutorial' learning task to it.
+  After you mark it complete, let me know that you're ready to start.
+
+-> [Return]
+
+## DoodlingQuestion
+
+* I'm ready to start using my software. What should I try? `ExternalSoftwareTutorial and not Doodling and not _completedTasks.Doodling`
+
+retro:
+  Alright, let's get this show on the road!
+
+-> [Doodling]
+
+## DoodlingQuestionAgain
+
+* What all should I try with my software again? `ExternalSoftwareTutorial and Doodling and not _completedTasks.Doodling`
+
+-> [Doodling]
+
+## Doodling
+
+retro:
+  First, create a new image. Something small, say 64 by 64 pixels.
+  Your software should have a toolbox with many icons.
+  Try different tools and just play with them. In particular, try to find the pencil, eraser, and color fill (usually a bucket).
+  You might need to set the size of the pencil to 1 pixel if it's not already.
+  Learn how to zoom in and out as well so you can see pixels better.
+  Make sure to save your file at the end.
+
+* Why do I need to save it? -> [WhySave]
+* What do I do next? -> [NextTaskUpload]
+
+## WhySave
+
+retro: At the Academy, you will be documenting all your practice.
+
+## NextTaskUpload
+
+retro: To get to your next task, you need to upload your test image to your journal to mark the task complete.
+
+-> [Return]
+
+## AdvancedToolsAndReferencesChoice
+
+* I've played around with the software. `_completedTasks.Doodling and not _completedTasks.Reference and not AdvancedToolsQuestion`
+
+-> [AdvancedToolsQuestion] `not _completedTasks.AdvancedTools`
+
+retro: Awesome, let's move on to references!
+
+-> [References]
+
+## AdvancedToolsQuestion
+
+retro:
+  Did you also try the more advanced tools?
+  Useful things include drawing lines, selecting and moving parts of the image, drawing different shapes …
+  If you want we can also just move on to references.
+
+* Alright, I'll go try out advanced tools as well. -> [AdvancedTools]
+* Let's go on to references. -> [ReferencesWithExclamation]
+
+## AdvancedTools
+
+retro: Good. Don't forget to ask me about references next time.
+
+-> [Return]
+
+## ReferencesChoice
+
+* Let's go on to references. `_completedTasks.Doodling and not _completedTasks.Reference and AdvancedToolsQuestion`
+
+-> [ReferencesWithExclamation] `not References`
+
+retro: Any more questions about them?
+
+-> [ReferencesQuestions]
+
+## ReferencesWithExclamation
+
+retro: Ah, where to start?
+
+## References
+
+retro:
+  Often when drawing you will want to look at a photograph to know how something looks.
+  Sometimes you will even be doing a direct copy of the reference.
+  So you need a way to look at a photo while drawing your image.
+
+## ReferencesQuestions
+
+* What are my options? -> [ReferencesOptions]
+* I actually have a second screen. -> [ReferencesSecondScreen] `ReferencesOptionsAfter`
+* Can I use my tablet or a phone? -> [ReferencesTablet] `ReferencesOptionsAfter`
+* Are there any specialized programs to display references? -> [ReferencesSpecializedSoftware] `ReferencesOptionsAfter`
+* Any out-of-the-box alternatives? -> [ReferencesAlternatives] `ReferencesOptionsAfter`
+* I think I have an idea how I'll go about this.
+
+-> [ReferencesShortEnd] `_completedTasks.GetReference`
+
+retro:
+  Good. Go talk to Corinne up in the Gallery and ask her for a reference.
+  Once you have it, try to display it in some of the ways we talked about.
+  When you're done, use the Journal to complete this learning task.
+
+-> [Return]
+
+## ReferencesShortEnd
+
+retro: Good. When you're ready, use the Journal to complete this learning task.
+
+-> [Return]
+
+## ReferencesOptions
+
+retro:
+  First, you can copy/paste the reference image directly to your canvas in a new layer.
+  That's only good for small things, like if something is already in pixel art. Like a screenshot.
+
+* And if it's bigger? -> [ReferencesOptionsBigger]
+* What else?
+
+retro: Next is opening the file in the same software, but as its own document.
+
+-> [ReferencesOptionsAfter]
+
+## ReferencesOptionsBigger
+
+retro: You can still open it in the same software, just have it opened as its own document.
+
+## ReferencesOptionsAfter
+
+retro:
+  Arrange the two documents so they're displayed side by side.
+  Another option is to open it in another program, like the default image viewer.
+  You'll probably need to resize your drawing program so you can see the image next to it.
+
+-> [ReferencesQuestions]
+
+## ReferencesSecondScreen
+
+retro:
+  Lucky you!
+  That's the most convenient option.
+
+-> [ReferencesQuestions]
+
+## ReferencesTablet
+
+retro: Of course! That is very useful.
+
+-> [ReferencesQuestions]
+
+## ReferencesSpecializedSoftware
+
+retro:
+  Yes! They usually display above other software so you don't have to resize your drawing program.
+  PureRef is the one I use, but it's a bit unintuitive how to arrange things. I have to read help all the time.
+
+-> [ReferencesQuestions]
+
+## ReferencesAlternatives
+
+retro:
+  You could print the reference and physically set it up next to your screen. Or just draw what you see in real life!
+  Grab a thing on your table, or go out and draw on your tablet in nature or a park.
+
+-> [ReferencesQuestions]
+
+## GridChoice
+
+* I got the hang of references. What's next? -> [Grid] `_completedTasks.Reference and not _completedTasks.Grid`
+
+## Grid
+
+retro:
+  Next up is setting up the grid.
+  Because you'll deal with individual pixels, it's good to actually see where the pixels are.
+  When you zoom in, find a setting to turn on the grid.
+  You can also play with things like spacing and grid color.
+
+* Sounds good. -> [GridPost]
+* And I should post about it in the journal?
+
+retro: Yup. I see you got the hang of it.
+
+-> [Return]
+
+## GridPost
+
+retro: Let me know once you've completed this step.
+
+-> [Return]
+
+## BasicsDoneChoice
+
+* I finished setting the grid. `_completedTasks.Grid and not _completedTasks.CopyReference`
+
+retro:
+  Awesome! You're ready to copy the reference now, so give it a go.
+  Upload your result in the Challenges section of the Drawing app and you will unlock the option to download and upload sprites everywhere.
+
+-> [Return]
+
+## Return
+
+### Return
+
+-> [End]
+
+## End

@@ -1,0 +1,239 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing.editor-desktop
+  &.active-asset
+    .pixelartacademy-pixelpad-apps-drawing-editor-desktop
+      transition all 0.5s 1s
+      pointer-events initial
+
+  &.editor-active
+    &.editor-focused-mode
+      .pixelartacademy-pixelpad-apps-drawing-clipboard
+        top -260rem
+        left -200rem
+
+    .pixelartacademy-pixelpad-apps-drawing-clipboard
+      top -210rem
+      left -145rem
+
+    .fatamorgana-interface
+      &.pencil
+        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/pencil.png?0.1.0') 2 0, default
+
+        html.scale-3-or-up &
+          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/pencil.png?0.1.0') 3 0, default
+
+      &.eraser
+        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/eraser.png?0.1.0') 4 2, default
+
+        html.scale-3-or-up &
+          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/eraser.png?0.1.0') 6 3, default
+
+      &.color-picker
+        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/eyedropper.png?0.1.0') 2 0, default
+
+        html.scale-3-or-up &
+          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/eyedropper.png?0.1.0') 3 0, default
+
+      &.color-fill
+        cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/2x/colorfill.png?0.1.0') 5 30, default
+
+        html.scale-3-or-up &
+          cursor url('/pixelartacademy/pixelpad/apps/drawing/editor/cursors/3x/colorfill.png?0.1.0') 7 45, default
+
+      &.move-canvas
+        cursor grab
+
+    .pixelartacademy-pixelpad-apps-drawing-editor-desktop
+      &:not(.focused-mode)
+        .fatamorgana-toolbox
+          .tools
+            .eraser
+            .pencil
+              left -10rem
+
+              &.active
+                left 0
+
+            .color-picker
+              right -8rem
+
+              &.active
+                right 2rem
+
+            .color-fill
+              top -22rem
+              right -6rem
+
+      &:not(.drawing-active)
+        .table-item
+        .fatamorgana-toolbox .tools .tool
+        .landsofillusions-assets-components-navigator
+          transition-delay 0.5s
+
+      .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
+        &::after
+          opacity 1
+          transition all 0s
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop
+    absolute-cover()
+    pointer-events none
+    user-select none
+
+    &.hidden-tools
+      .fatamorgana-toolbox
+        visibility hidden
+
+    &.hidden-color-picker
+      .color-picker.tool
+        visibility hidden
+
+    &.dragging
+    &.dragging *
+      cursor grabbing
+
+    &.resizing-n
+    &.resizing-s
+    &.resizing-n *
+    &.resizing-s *
+      cursor ns-resize
+
+    &.resizing-e
+    &.resizing-w
+    &.resizing-e *
+    &.resizing-w *
+      cursor ew-resize
+
+    &.resizing-nw
+    &.resizing-se
+    &.resizing-nw *
+    &.resizing-se *
+      cursor nwse-resize
+
+    &.resizing-ne
+    &.resizing-sw
+    &.resizing-ne *
+    &.resizing-sw *
+      cursor nesw-resize
+
+    &.drawing-active
+      .fatamorgana-toolbox .tools .tool
+        transition-duration 0.2s
+
+    .fatamorgana-interface
+      .fatamorgana-area.application
+        position initial
+
+    .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
+      &::after
+        content ''
+        absolute-cover()
+        z-index 0
+        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem
+        opacity 0
+        transition all 0.2s 1s
+
+    .table-item
+    .fatamorgana-toolbox .tools .tool
+    .landsofillusions-assets-components-navigator
+      transition all 1s
+
+    .fatamorgana-menu
+      display none
+
+    .fatamorgana-toolbox
+      .tools
+        list-style none
+        padding 0
+        margin 0
+
+        .tool
+          position absolute
+          cursor pointer
+
+          &::before
+          &::after
+            content ''
+            z-index 3
+
+          &::before
+            position absolute
+            mix-blend-mode multiply
+
+          &::after
+            absolute-cover()
+
+          .tool-button
+            absolute-cover-size()
+            opacity 0
+            z-index 4
+
+        .eraser
+        .pencil
+          left -40rem
+          height 7rem
+
+        .pencil
+          top calc(50% - 9rem)
+          width 28rem
+
+          &::after
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pencil.png')
+
+          &::before
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pencil-shadow.png')
+            top 5rem
+            left 0
+            width 23rem
+            height 4rem
+
+        .eraser
+          top calc(50% + 6rem)
+          width 26rem
+
+          &::after
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/eraser.png')
+
+          &::before
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/eraser-shadow.png')
+            top 7rem
+            left 0
+            width 24rem
+            height 2rem
+
+        .color-picker
+          right -65rem
+          width 55rem
+          height 11rem
+          top calc(50% - 60rem)
+
+          &::after
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/eyedropper.png')
+
+          &::before
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/eyedropper-shadow.png')
+            top 6rem
+            right 3rem
+            width 56rem
+            height 6rem
+
+        .color-fill
+          position absolute
+          top -102rem
+          right -86rem
+          width 72rem
+          height 72rem
+
+  .pixelartacademy-pixelpad-apps-drawing-clipboard
+    &::before
+      content ''
+      position absolute
+      z-index 1
+      right 4rem
+      top 0
+      width 199rem
+      height 262rem
+      background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/clipboard-shadow.png')
+      mix-blend-mode multiply
+      pointer-events none
