@@ -13,6 +13,7 @@ class LM.Intro extends LOI.Adventure.Episode
   @scenes: -> [
     @PixelPad
     @Apps
+    @Systems
     @Editors
     @ChallengesDrawing
     @TutorialsDrawing

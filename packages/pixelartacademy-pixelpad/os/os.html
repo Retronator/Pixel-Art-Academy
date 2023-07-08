@@ -13,6 +13,11 @@
         {{> Render currentApp}}
       </div>
     {{/if}}
+    <div class="systems">
+      {{#each currentSystems}}
+        {{> Render this}}
+      {{/each}}
+    </div>
     <div class="shortcuts-table {{shortcutsTableVisibleClass}}">
       {{> PixelArtAcademy.PixelPad.Components.ShortcutsTable}}
     </div>

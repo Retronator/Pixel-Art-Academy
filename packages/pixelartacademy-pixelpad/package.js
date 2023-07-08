@@ -18,6 +18,8 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addComponent('pixelpad');
+  api.addFile('app');
+  api.addFile('system');
 
   api.addFile('components..');
 
@@ -27,8 +29,9 @@ Package.onUse(function(api) {
   api.addFile('components/mixins/pageturner');
 
   api.addComponent('os..');
-  api.addStyledFile('app..');
 
   api.addFile('apps..');
   api.addComponent('apps/homescreen..');
+
+  api.addFile('systems..');
 });

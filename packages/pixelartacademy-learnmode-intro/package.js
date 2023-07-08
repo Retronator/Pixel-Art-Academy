@@ -19,6 +19,7 @@ Package.onUse(function(api) {
   api.addFile('intro');
   api.addFile('scenes/pixelpad');
   api.addFile('scenes/apps');
+  api.addFile('scenes/systems');
   api.addFile('scenes/editors');
   api.addFile('scenes/challengesdrawing');
   api.addFile('scenes/tutorialsdrawing');

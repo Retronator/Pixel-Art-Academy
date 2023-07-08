@@ -1,0 +1,30 @@
+<template name="PixelArtAcademy.PixelPad.Systems.ToDo">
+  <div class="pixelartacademy-pixelpad-systems-todo system {{taskSelectedClass}}">
+    <div class="notepad">
+      <div class="binding">
+        <div class="turned-page"></div>
+        <div class="retro"></div>
+      </div>
+      <div class="page">
+        <div class="content">
+          {{#with selectedTask}}
+            <div class="instructions">
+              <button class="back-button">←</button>
+              In the Drawing app, complete the Pixel art tools: basics tutorial to
+              learn how to use essential drawing tools (pencil, eraser, color fill).
+            </div>
+          {{else}}
+            <div class="header">
+              TO DO:
+            </div>
+            <ul class="tasks">
+              <li class="task completed"><span class="directive">Learn basic pixel art tools</span></li>
+              <li class="task">Copy a reference</li>
+              <li class="task">Play the Snake game</li>
+            </ul>
+          {{/with}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

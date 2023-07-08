@@ -11,6 +11,7 @@ class PAA.PixelPad.OS extends AM.Component
     @justOS = not @pixelPad
 
     @appsLocation = new PAA.PixelPad.Apps
+    @systemsLocation = new PAA.PixelPad.Systems
 
     @currentAppsSituation = new ComputedField =>
       options =
@@ -20,9 +21,19 @@ class PAA.PixelPad.OS extends AM.Component
       return unless options.timelineId and options.location
 
       new LOI.Adventure.Situation options
-
+  
+    @currentSystemsSituation = new ComputedField =>
+      options =
+        timelineId: LOI.adventure.currentTimelineId()
+        location: @systemsLocation
+    
+      return unless options.timelineId and options.location
+    
+      new LOI.Adventure.Situation options
+  
     # We use caches to avoid reconstruction.
     @_apps = {}
+    @_systems = {}
 
     # Instantiates and returns all apps that are available to listen to commands.
     @currentApps = new ComputedField =>
@@ -53,6 +64,20 @@ class PAA.PixelPad.OS extends AM.Component
 
     @currentApp = new ReactiveField null
 
+    # Instantiates and returns all systems that are active.
+    @currentSystems = new ComputedField =>
+      return unless currentSystemsSituation = @currentSystemsSituation()
+
+      systemClasses = currentSystemsSituation.things()
+
+      for systemClass in systemClasses
+        # We create the instance in a non-reactive context so that
+        # reruns of this autorun don't invalidate instance's autoruns.
+        Tracker.nonreactive =>
+          @_systems[systemClass.id()] ?= new systemClass @
+    
+        @_systems[systemClass.id()]
+        
     # Set currentApp based on url.
     Tracker.autorun (computation) =>
       # Don't route until apps are created.
@@ -130,7 +155,10 @@ class PAA.PixelPad.OS extends AM.Component
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
 
   shortcutsTableVisibleClass: ->
-    'visible' if @currentApp()?.allowsShortcutsTable()
+    programs = @currentSystems()
+    programs.push currentApp if currentApp = @currentApp()
+    
+    'visible' if _.every programs, (program) => program.allowsShortcutsTable()
 
   backButtonCallback: ->
     # See if the app can handle it.

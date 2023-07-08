@@ -1,0 +1,171 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-systems-todo
+  position absolute
+  bottom 0
+  left 0
+  right 0
+  daily()
+  line-height 9rem
+  color atariGray(0)
+
+  &.task-selected
+    .notepad
+      .binding
+        .turned-page
+          visibility visible
+
+        .retro
+          top -31rem
+          width 26rem
+          height 37rem
+          background-image image('/pixelartacademy/pixelpad/systems/todo/turnedpage-retro.png')
+
+      .page::after
+        z-index 1
+        top -16rem
+        width 4rem
+        height 18rem
+        background image('/pixelartacademy/pixelpad/systems/todo/turnedpage-line.png') 0 / 100% 100%
+
+  .notepad
+    position absolute
+    bottom 0
+    right 10rem
+    width 150rem
+    border 1rem solid atariGray(0)
+    border-bottom none
+    background atariBrown(6)
+
+    .binding
+      position relative
+      height 14rem
+      background-image image('/pixelartacademy/pixelpad/systems/todo/binding-back.png')
+
+      &::before
+      &::after
+        content ''
+        display block
+        position absolute
+        top 0
+        bottom 0
+
+      &::before
+        left 0
+        width 1rem
+        background-image image('/pixelartacademy/pixelpad/systems/todo/binding-left.png')
+
+      &::after
+        right 0
+        width 5rem
+        background-image image('/pixelartacademy/pixelpad/systems/todo/binding-right.png')
+
+      .turned-page
+        position absolute
+        visibility hidden
+        z-index 1
+        top -3rem
+        left 0
+        right 0
+        height 19rem
+        border-top 1rem solid atariGray(0)
+        background-image image('/pixelartacademy/pixelpad/systems/todo/turnedpage-back.png')
+
+        &::before
+        &::after
+          content ''
+          display block
+          position absolute
+          top 0
+          height 18rem
+
+        &::before
+          bottom 0
+          left 0
+          width 3rem
+          background-image image('/pixelartacademy/pixelpad/systems/todo/turnedpage-left.png')
+
+        &::after
+          right -3rem
+          width 17rem
+          background-image image('/pixelartacademy/pixelpad/systems/todo/turnedpage-right.png')
+
+      .retro
+        position absolute
+        z-index 1
+        right 10rem
+        top -29rem
+        width 25rem
+        height 38rem
+        background-image image('/pixelartacademy/pixelpad/systems/todo/retro.png')
+
+    .page
+      position relative
+      border-left 1rem solid atariBrown(3)
+      padding-top 6rem
+
+      &::before
+      &::after
+        content ''
+        display block
+        position absolute
+
+      &::before
+        top 0
+        bottom 0
+        left 20rem
+        width 1rem
+        background-color atariRed(5)
+
+      &::after
+        top -1rem
+        left 20rem
+        width 1rem
+        height 1rem
+        background-color atariRed(3)
+
+      .content
+        padding 0 10rem 1em 25rem
+        background repeating-linear-gradient(transparent, transparent 8rem, atariCyan(5) 8rem, atariCyan(5) 9rem)
+
+        .tasks
+          margin 0
+          padding 0 0 0 7rem
+          list-style '- '
+
+          .task
+            cursor pointer
+
+            &::after
+              content '\00a0?'
+              color atariCyan(2)
+
+            &:hover::after
+              color atariCyan(3)
+
+            &.completed
+              &::after
+                content '\00a0✓'
+                color atariGreen(2)
+
+              &:hover::after
+                color atariGreen(3)
+
+              .directive
+                text-decoration-line line-through
+
+        .instructions
+          color atariCyan(1)
+
+          .back-button
+            position absolute
+            left 1rem
+            top 0
+            border none
+            background none
+            color inherit
+            font inherit
+            padding 5rem
+
+            &:hover
+              color atariCyan(2)
