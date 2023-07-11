@@ -3,9 +3,6 @@ LOI = LandsOfIllusions
 
 class LOI.Pages.Loading extends AM.Component
   @register 'LandsOfIllusions.Pages.Loading'
-  
-  constructor: (@showCallback) ->
-    super arguments...
 
   onCreated: ->
     super arguments...
@@ -23,7 +20,7 @@ class LOI.Pages.Loading extends AM.Component
     $loadingText = @$('.loading-text')
     
     # Field to minimize reactivity.
-    @show = new ComputedField => @showCallback()
+    @show = new ComputedField => @data()
     
     @autorun (computation) =>
       # Cancel any previous displaying.

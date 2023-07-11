@@ -6,5 +6,4 @@ class PAA.LearnMode.Region extends LOI.Adventure.Region
   
   @initialize()
   
-  @scenes: -> [
-  ]
+  @scenes: -> []

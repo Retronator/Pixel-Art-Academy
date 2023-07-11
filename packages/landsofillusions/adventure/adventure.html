@@ -11,7 +11,9 @@
       {{/unless}}
     {{/each}}
   </div>
-  {{> LandsOfIllusions.Pages.Loading args showLoadingCallback}}
+  {{! HACK: We set showLoading as the data context to ensure ready and currentRegion methods are called. If they are
+      not, it leads to weird re-creation of components down the road. Why the region method is hard to determine. }}
+  {{> LandsOfIllusions.Pages.Loading showLoading}}
   <div class="viewport-bounds" {{style interface.display.viewport.viewportBounds.toDimensions}}>
     <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">{{app.buildName}} {{app.version}}</a>
   </div>
