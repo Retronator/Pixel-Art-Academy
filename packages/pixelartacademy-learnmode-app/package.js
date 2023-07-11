@@ -42,7 +42,7 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addUnstyledComponent('app');
+  api.addComponent('app');
 
   api.addFile('layouts..');
   api.addUnstyledComponent('layouts/publicaccess..');

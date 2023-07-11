@@ -26,11 +26,13 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
     @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Drawing'
     @appClass = PAA.PixelPad.Apps.Drawing
 
-    @unlockInstructions: -> "Drawing app is unlocked from the start."
+    @unlockInstructions: -> "Learn how to use to-do tasks to unlock the Drawing app."
 
     @initialize()
 
-    status: -> @constructor.Status.Unlocked
+    status: ->
+      toDoTasksGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.ToDoTasks.id()
+      if toDoTasksGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Unavailable
 
   class @Pico8 extends LM.Content.AppContent
     @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Pico8'

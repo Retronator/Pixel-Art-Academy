@@ -107,7 +107,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     EJSON.parse documentJson
 
   _delete: (document) ->
-    delete @_getDirectoryAreaForDocument()[document._id]
+    delete @_getDirectoryAreaForDocument(document)[document._id]
     writeDirectoryPromise = @_saveDirectory()
 
     path = @_getDocumentPath document

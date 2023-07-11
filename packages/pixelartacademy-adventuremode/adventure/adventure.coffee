@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 Persistence = Artificial.Mummification.Document.Persistence
 
 # The adventure component that is served from pixelart.academy.
-class PAA.Adventure extends LOI.Adventure
+class PAA.Adventure extends PAA.Adventure
   @id: -> 'PixelArtAcademy.Adventure'
   @register @id()
 

@@ -19,13 +19,13 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Learn basic pixel art tools"
 
     @instructions: -> """
-      In the Drawing app, complete the Pixel art tools: basics tutorial to
+      In the Drawing app, complete the *Pixel art tools: basics* tutorial to
       learn how to use essential drawing tools (pencil, eraser, color fill).
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
-
-    @predecessors: -> [Goal.Editor]
+  
+    @requiredInterests: -> ['to-do tasks']
 
     @initialize()
     
@@ -39,7 +39,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Learn about helper tools"
 
     @instructions: -> """
-      In the Drawing app, complete the Pixel art tools: helpers
+      In the Drawing app, complete the *Pixel art tools: helpers*
       tutorial to get used to extra tools such as zooming and drawing lines.
     """
 
@@ -61,7 +61,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Learn about switching color"
 
     @instructions: -> """
-      In the Drawing app, complete the Pixel art tools: colors
+      In the Drawing app, complete the *Pixel art tools: colors*
       tutorial to learn how to switch between different colors.
     """
 

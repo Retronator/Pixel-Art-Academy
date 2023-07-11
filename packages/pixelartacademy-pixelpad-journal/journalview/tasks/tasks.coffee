@@ -40,8 +40,7 @@ class PAA.PixelPad.Apps.Journal.JournalView.Tasks extends AM.Component
       goalTasks
 
     @activeTasks = new ComputedField =>
-      return unless activeGoalTasks = _.filter @goalTasks(), (goalTask) =>
-        goalTask.task.active goalTask.goal.tasks()
+      return unless activeGoalTasks = _.filter @goalTasks(), (goalTask) => goalTask.task.active()
 
       activeGoalTask.task for activeGoalTask in activeGoalTasks when activeGoalTask.task.type()
 

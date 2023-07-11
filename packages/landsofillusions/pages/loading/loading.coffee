@@ -3,6 +3,9 @@ LOI = LandsOfIllusions
 
 class LOI.Pages.Loading extends AM.Component
   @register 'LandsOfIllusions.Pages.Loading'
+  
+  constructor: (@showCallback) ->
+    super arguments...
 
   onCreated: ->
     super arguments...
@@ -15,9 +18,35 @@ class LOI.Pages.Loading extends AM.Component
 
   onRendered: ->
     super arguments...
+  
+    $loadingScreen = @$('.landsofillusions-pages-loading')
+    $loadingText = @$('.loading-text')
+    
+    # Field to minimize reactivity.
+    @show = new ComputedField => @showCallback()
+    
+    @autorun (computation) =>
+      # Cancel any previous displaying.
+      Meteor.clearTimeout @_displayTimeout
+      
+      if @show()
+        # Activate the loading cursor and prevent clicking.
+        $loadingScreen.addClass 'active'
+        
+        # Show the loading screen after a brief delay to prevent flickering.
+        @_displayTimeout = Meteor.setTimeout =>
+          $loadingScreen.addClass 'visible'
+  
+          # Show the loading text as well after a while.
+          @_displayTimeout = Meteor.setTimeout =>
+            $loadingText.addClass 'visible'
+          ,
+            1000
+        ,
+          100
+        
+      else
+        # Immediately hide the loading screen.
+        $loadingScreen.removeClass('active').removeClass 'visible'
+        $loadingText.removeClass 'visible'
 
-    Meteor.setTimeout =>
-      return unless @isRendered()
-      @$('.loading').addClass 'visible'
-    ,
-      1000

@@ -11,9 +11,7 @@
       {{/unless}}
     {{/each}}
   </div>
-  {{#if showLoading}}
-    {{> LandsOfIllusions.Pages.Loading}}
-  {{/if}}
+  {{> LandsOfIllusions.Pages.Loading args showLoadingCallback}}
   <div class="viewport-bounds" {{style interface.display.viewport.viewportBounds.toDimensions}}>
     <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">{{app.buildName}} {{app.version}}</a>
   </div>

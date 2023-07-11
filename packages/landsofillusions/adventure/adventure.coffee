@@ -63,10 +63,12 @@ class LOI.Adventure extends AM.Component
 
     _.every conditions
 
-  showLoading: ->
-    # Show the loading screen when we're not ready, except when other dialogs are already present
-    # (for example, the storyline title) and we want to prevent the black blink in that case.
-    not @ready() and not @modalDialogs().length
+  showLoadingCallback: ->
+    # We must return the callback function.
+    =>
+      # Show the loading screen when we're not ready, except when other dialogs are already present
+      # (for example, the storyline title) and we want to prevent the black blink in that case.
+      not @ready() and not @modalDialogs().length
 
   showDescription: (thing) ->
     @interface.showDescription thing

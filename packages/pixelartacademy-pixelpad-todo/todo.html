@@ -1,28 +1,42 @@
 <template name="PixelArtAcademy.PixelPad.Systems.ToDo">
   <div class="pixelartacademy-pixelpad-systems-todo system {{taskSelectedClass}}">
-    <div class="notepad">
+    <div class="notepad {{displayStateClass}}" {{style notepadStyle}}>
       <div class="binding">
+        <div class="close-hint">x</div>
         <div class="turned-page"></div>
         <div class="retro"></div>
       </div>
-      <div class="page">
+      <div class="page" {{style pageStyle}}>
+        <div class="sideline"></div>
         <div class="content">
           {{#with selectedTask}}
             <div class="instructions">
               <button class="back-button">←</button>
-              In the Drawing app, complete the Pixel art tools: basics tutorial to
-              learn how to use essential drawing tools (pencil, eraser, color fill).
+              <div class="goal-name">{{> t10e goal.displayNameTranslation}}</div>
+              {{#Markdown}}{{instructions}}{{/Markdown}}
             </div>
-          {{else}}
-            <div class="header">
-              TO DO:
-            </div>
-            <ul class="tasks">
-              <li class="task completed"><span class="directive">Learn basic pixel art tools</span></li>
-              <li class="task">Copy a reference</li>
-              <li class="task">Play the Snake game</li>
-            </ul>
           {{/with}}
+          <div class="todo">
+            {{#if showToDo}}
+              <div class="header">
+                TO DO:
+              </div>
+              <div class="tasks-area">
+                <ul class="displayed-tasks">
+                </ul>
+                <ul class="tasks">
+                  {{#each completedTasks}}
+                    <li class="task completed"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                  {{/each}}
+                  {{#each activeTasks}}
+                    <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{else}}
+              You're all done!
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>

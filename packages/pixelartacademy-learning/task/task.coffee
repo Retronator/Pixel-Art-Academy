@@ -152,7 +152,9 @@ class PAA.Learning.Task
         when @constructor.PredecessorsCompleteType.Any
           return false if predecessorsCompletedCount is 0
 
-    # TODO: Check that the profile has all required interests.
+    # Check that the profile has all required interests.
+    requiredInterests = @requiredInterests()
+    return false unless _.intersection(requiredInterests, LOI.adventure.currentInterests()).length is requiredInterests.length
 
     # All requirements to be active have been met.
     true

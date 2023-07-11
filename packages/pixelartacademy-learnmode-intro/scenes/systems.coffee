@@ -10,5 +10,5 @@ class LM.Intro.Systems extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Systems.ToDo
+    #PAA.PixelPad.Systems.ToDo
   ]

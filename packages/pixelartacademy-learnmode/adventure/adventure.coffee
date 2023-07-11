@@ -5,7 +5,7 @@ LM = PixelArtAcademy.LearnMode
 Persistence = Artificial.Mummification.Document.Persistence
 
 # The adventure component that is served from pixelart.academy/learn-mode.
-class LM.Adventure extends LOI.Adventure
+class LM.Adventure extends PAA.Adventure
   @id: -> 'PixelArtAcademy.LearnMode.Adventure'
   @register @id()
 
