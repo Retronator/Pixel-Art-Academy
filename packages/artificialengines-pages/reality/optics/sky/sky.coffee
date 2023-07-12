@@ -109,7 +109,7 @@ class AR.Pages.Optics.Sky extends AM.Component
     @autorun (computation) =>
       @drawPreviews()
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
   draw: (appTime) ->

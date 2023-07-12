@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-pixelpad-drawing');
+  api.use('retronator:pixelartacademy-pixelpad-instructions');
   api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
@@ -22,6 +23,10 @@ Package.onUse(function(api) {
   api.addFile('tutorials');
 
   api.addFile('drawing..');
+
+  api.addFile('drawing/instructions..');
+  api.addFile('drawing/instructions/instruction')
+  api.addComponent('drawing/instructions/desktop..');
 
   api.addFile('drawing/pixelarttools..');
 

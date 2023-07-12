@@ -52,6 +52,12 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       @manualDisplayState() or @defaultDisplayState()
   
+    # Automatically deselect the task when not open.
+    @autorun (computation) =>
+      return if @displayState() is @constructor.DisplayState.Open
+
+      @selectedTask null
+  
     @tasks = new ComputedField =>
       _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
   
@@ -221,8 +227,6 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @mouseHovering false
 
   onClickBinding: (event) ->
-    @selectedTask null
-    
     defaultDisplayState = @defaultDisplayState()
     
     if defaultDisplayState is @constructor.DisplayState.Hidden

@@ -42,7 +42,7 @@ class LOI.Engine.World extends AM.Component
   onCreated: ->
     super arguments...
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
     # Initialize components.

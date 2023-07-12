@@ -11,4 +11,5 @@ class LM.Intro.Systems extends LOI.Adventure.Scene
   
   things: -> [
     PAA.PixelPad.Systems.ToDo
+    PAA.Tutorials.Drawing.Instructions.Desktop
   ]

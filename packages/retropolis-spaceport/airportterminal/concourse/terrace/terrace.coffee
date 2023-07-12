@@ -106,7 +106,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   onRendered: ->
     super arguments...
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
     @display = LOI.adventure.interface.display

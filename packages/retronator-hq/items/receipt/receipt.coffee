@@ -138,7 +138,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onRendered: ->
     super arguments...
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
     @display = LOI.adventure.getCurrentThing HQ.Store.Display

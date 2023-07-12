@@ -14,7 +14,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AM.Component
 
     AC.Keyboard.initialize()
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
     # Prepare material selection.

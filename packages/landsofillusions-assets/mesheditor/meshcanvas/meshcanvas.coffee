@@ -166,7 +166,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         scale: camera.scale()
 
     # Register with the app to support updates.
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
   onRendered: ->

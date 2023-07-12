@@ -56,7 +56,7 @@ class AR.Pages.Optics.Scattering extends AM.Component
         # @prepareRayleighScatteringCellsInscatteringAnimated()
         # @prepareRayleighScatteringSingleAnimated()
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
   draw: (appTime) ->

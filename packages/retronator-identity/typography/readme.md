@@ -28,6 +28,18 @@ The project is using these fonts:
 
   Custom, body font of Retronator Daily blog
 
+- **Small Print** by Matej Jan (www.retronator.com)
+
+  Custom, 5px tall, mostly 3px wide miniature version of Daily
+
+- **Illegible** by Matej Jan (www.retronator.com)
+
+  Custom, 3px tall, designed to not be legible as to detract from reading tiny text
+
+- **Lines** by Matej Jan (www.retronator.com)
+
+  Custom, 2px tall, abstractly represents lines of text
+
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
   Acme 9, Acme 7 Wide, Acme 5 Wide, Kyrou 9, Kyrou 7 Wide, Kyrou 5 Wide variants.

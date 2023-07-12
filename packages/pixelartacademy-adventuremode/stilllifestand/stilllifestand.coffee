@@ -42,7 +42,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
   onCreated: ->
     super arguments...
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
     # Initialize components.

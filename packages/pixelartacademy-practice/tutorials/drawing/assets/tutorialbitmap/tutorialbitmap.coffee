@@ -108,10 +108,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return unless goalPixelsMap = @goalPixelsMap()
       return unless @palette()
 
-      if backgroundColor = @constructor.backgroundColor()
-        # Convert background color to the same format as goal pixels.
-        backgroundColor = directColor: backgroundColor unless backgroundColor.paletteColor
-        backgroundColor.integerDirectColor = if backgroundColor.paletteColor then @_paletteToIntegerDirectColor backgroundColor.paletteColor else @_directToIntegerDirectColor backgroundColor.directColor
+      backgroundColor = @getBackgroundColor()
 
       for x in [0...bitmapLayer.width]
         for y in [0...bitmapLayer.height]
@@ -169,6 +166,17 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
     @completed.stop()
     @_completedAutorun.stop()
+  
+  getBackgroundColor: ->
+    return unless backgroundColor = @constructor.backgroundColor()
+
+    # If the color is given directly it's a direct color.
+    backgroundColor = directColor: backgroundColor unless backgroundColor.paletteColor
+    
+    # Calculate integer values for use in comparisons.
+    backgroundColor.integerDirectColor = if backgroundColor.paletteColor then @_paletteToIntegerDirectColor backgroundColor.paletteColor else @_directToIntegerDirectColor backgroundColor.directColor
+    
+    backgroundColor
   
   solve: ->
     bitmap = @bitmap()

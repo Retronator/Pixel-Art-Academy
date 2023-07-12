@@ -30,7 +30,7 @@ class LOI.Pages.Admin.Characters.AnimationsTest extends AM.Component
       safeAreaHeight: 100
       minScale: 3
 
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
 
     # Prepare avatar URLs.
