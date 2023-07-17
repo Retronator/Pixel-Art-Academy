@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 Bresenham = require('bresenham-zingl')
 
 class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools.Tool
-  # cleanLine: boolean whether to maintain a clean line with consistent width
+  # TODO: cleanLine: boolean whether to maintain a clean line with consistent width
   # drawPreview: boolean whether to always draw preview of the pixels to be applied
   # fractionalPerfectLines: boolean whether to allow 3:2 and 5:2 lines
   constructor: ->
@@ -344,7 +344,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
       relativePixel = _.clone absolutePixel
       relativePixel.x -= layerOrigin.x
       relativePixel.y -= layerOrigin.y
-        
+      
       relativePixels.push relativePixel
 
     @applyPixels assetData, layerIndex, relativePixels, @_strokeStarted

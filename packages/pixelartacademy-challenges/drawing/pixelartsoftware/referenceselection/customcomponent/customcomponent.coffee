@@ -25,7 +25,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         name: "Multiple"
         filter: (id) -> id[0] is 'C'
         nextChoiceKey: 'SmallBig'
-        available: -> PAA.Tutorials.Drawing.PixelArtTools.Colors.completed()
+        locked: -> not PAA.Tutorials.Drawing.PixelArtTools.Colors.completed()
         unlockInstructions: -> "Complete the Colors tutorial to unlock colored sprites."
 
     SmallBig:
@@ -38,7 +38,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         name: "Big"
         filter: (id) -> id[1] is 'B'
         nextChoiceKey: 'CharacterThing'
-        available: -> PAA.Tutorials.Drawing.PixelArtTools.Helpers.completed()
+        locked: -> not PAA.Tutorials.Drawing.PixelArtTools.Helpers.completed()
         unlockInstructions: -> "Complete the Helpers tutorial to unlock big sprites."
     CharacterThing:
       prompt: "What would you like to draw?"
@@ -81,6 +81,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       new @constructor.Card id, copyReferenceClass
     
     @cards = new ReactiveField cards
+    @leftChoiceCards = new ReactiveField []
+    @rightChoiceCards = new ReactiveField []
     @selectedCard = new ReactiveField null
     @selectedCardRevealed = new ReactiveField false
     
@@ -153,8 +155,6 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         # Move cards that were already added to the top so they don't appear in closing transitions.
         card.setPosition 0, -@constructor.boundary.y, 0
         
-    #@remainingCards = _.filter @remainingCards, (card) => _.startsWith card.id, 'CBEM'
-    
     Tracker.afterFlush =>
       # Bring the cards in faster and faster.
       delay = 1000
@@ -171,18 +171,48 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
   
       @_timeouts.push Meteor.setTimeout =>
         @_presentChoice()
-        #@_presentFinalSelection()
       ,
         delay
   
   _presentChoice: ->
-    choice = @nextChoice
+    # Do we even need to make a choice?
+    if @remainingCards.length is 1
+      # Automatically choose the card.
+      @_revealSelectedCard()
+      return
     
+    # Does this choice have cards on both sides?
+    loop
+      choice = @nextChoice
+      
+      leftCards = _.filter @remainingCards, (card) => choice.left.filter card.id
+      rightCards = _.filter @remainingCards, (card) => choice.right.filter card.id
+      
+      # Everything is OK if both stacks have some cards.
+      break if leftCards.length and rightCards.length
+      
+      # Automatically move to the next choice.
+      choiceSide = choice[if leftCards.length then 'left' else 'right']
+  
+      # We should still show the choice if the only side is locked.
+      break if choiceSide.locked and choiceSide.locked()
+    
+      if choiceSide.nextChoiceKey
+        @nextChoice = @constructor.Choices[choiceSide.nextChoiceKey]
+  
+      else
+        # No choices are left, but the final one.
+        @_presentFinalSelection()
+        return
+  
+    @leftChoiceCards leftCards
+    @rightChoiceCards rightCards
+  
     # Separate the cards based on the choice filter.
     cardThickness = @constructor.cardThickness
     stackOffset = @constructor.stackOffset
   
-    delay = 0
+    delay = 500
     stackCount = {}
     stackCount[-1] = 0
     stackCount[1] = 0
@@ -205,8 +235,6 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         delay += @_gradualDelay cardsMoved
         cardsMoved++
         stackCount[sign]++
-  
-    delay += 500
   
     @_timeouts.push Meteor.setTimeout =>
       @currentChoice choice
@@ -238,8 +266,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
   _makeChoice: (madeChoice) ->
     choice = @currentChoice()
 
-    if choice[madeChoice].available
-      return unless choice[madeChoice].available()
+    if choice[madeChoice].locked
+      return if choice[madeChoice].locked()
 
     @currentChoice null
   
@@ -308,9 +336,17 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       ,
         600
 
+  leftAvailableClass: ->
+    'available' if @leftChoiceCards().length and not @currentChoice().left.locked?()
+
   rightAvailableClass: ->
-    choice = @currentChoice()
-    'available' unless choice.right.available? and not choice.right.available()
+    'available' if @rightChoiceCards().length and not @currentChoice().right.locked?()
+
+  leftLockedClass: ->
+    'locked' if @currentChoice().left.locked?()
+    
+  rightLockedClass: ->
+    'locked' if @currentChoice().right.locked?()
 
   activeClass: ->
     'active' if @active()
@@ -328,14 +364,14 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
 
   events: ->
     super(arguments...).concat
-      'click .left.choice': @onClickLeftChoice
-      'click .right.choice': @onClickRightChoice
+      'click .left.available.choice': @onClickLeftAvailableChoice
+      'click .right.available.choice': @onClickRightAvailableChoice
       'click .card': @onClickCard
   
-  onClickLeftChoice: (event) ->
+  onClickLeftAvailableChoice: (event) ->
     @_makeChoice 'left'
 
-  onClickRightChoice: (event) ->
+  onClickRightAvailableChoice: (event) ->
     @_makeChoice 'right'
     
   onClickCard: (event) ->

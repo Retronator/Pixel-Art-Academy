@@ -34,10 +34,10 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
       @manualDisplayState() or @defaultDisplayState()
       
     @instructions = for instructionClass in PAA.PixelPad.Systems.Instructions.Instruction.getClasses()
-      new instructionClass
+      new instructionClass @
   
     @activeInstructions = new ComputedField =>
-      activeInstructions = _.filter @instructions, (instruction) -> instruction.activeConditions()
+      activeInstructions = _.filter @instructions, (instruction) -> instruction.activeConditions() and not instruction.completed()
       
       # Sort by priority
       _.sortBy activeInstructions, (instruction) -> -instruction.priority()
@@ -74,13 +74,18 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
         return if displayedInstruction is targetDisplayedInstruction
         
         # If another instruction is open we have to first close it.
-        await @animateClose() if @displayState() is @constructor.DisplayState.Open
-        
-        # Show the new instruction.
-        @displayedInstruction targetDisplayedInstruction
-        await @animateOpen()
+        if @displayState() is @constructor.DisplayState.Open
+          await @animateClose()
+          
+          @displayedInstruction null
+          
+        else
+          # Show the new instruction.
+          @displayedInstruction targetDisplayedInstruction
+          
+          await @animateDisplayState targetDisplayedInstruction.activeDisplayState()
     
-        targetDisplayedInstruction.onDisplay?()
+          targetDisplayedInstruction.onDisplay?()
       
       else
         # We shouldn't be showing any instructions.
@@ -94,7 +99,12 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     instruction.destroy() for instruction in @instructions
   
     @app.removeComponent @
-  
+    
+  getInstruction: (classOrId) ->
+    id = classOrId?.id() or classOrId
+    
+    _.find @instructions, (instruction) -> instruction.id() is id
+    
   animateOpen: -> @animateDisplayState @constructor.DisplayState.Open
   animateClose: -> @animateDisplayState @constructor.DisplayState.Closed
   animateHide: -> @animateDisplayState @constructor.DisplayState.Hidden

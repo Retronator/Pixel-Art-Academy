@@ -35,6 +35,29 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       # No data was provided so we assume the starting image should be empty.
       resetPixels []
 
+    if references = assetClass.references?()
+      # Rebuild references but use the existing image data.
+      bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId
+      newReferences = []
+  
+      for reference in references
+        # Allow sending in just the reference URL.
+        imageUrl = if _.isString reference then reference else reference.image.url
+        reference = {} if _.isString reference
+    
+        existingReference = _.find bitmapData.references, (bitmapReference) => bitmapReference.image.url is imageUrl
+    
+        newReferences.push _.defaults
+          image: _.pick existingReference.image, ['_id', 'url']
+        ,
+          reference
+      
+      LOI.Assets.Bitmap.documents.update bitmapId,
+        $set:
+          references: newReferences
+    
+      LOI.Assets.Bitmap.versionedDocuments.reportNonVersionedChange bitmapId
+
   @createPixelsFromBitmapString: (bitmapString) ->
     # We need to quit if we get an empty string since the regex would never quit on it.
     return [] unless bitmapString?.length

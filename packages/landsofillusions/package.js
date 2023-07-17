@@ -582,6 +582,7 @@ Package.onUse(function(api) {
   api.addComponent('components/overlay..');
   api.addComponent('components/backbutton..');
   api.addComponent('components/signin..');
+  api.addStyle('components/savesystem..');
   api.addComponent('components/savegame..');
   api.addComponent('components/loadgame..');
   api.addComponent('components/storylinetitle..');

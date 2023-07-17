@@ -2,49 +2,13 @@
 
 .landsofillusions-components-savegame
   .safe-area
-    display flex
-    flex-direction column
-    justify-content space-evenly
-
-    .title
-      kyrou-9()
-      font-weight bold
-      text-align center
-      pixel-text-emboss(atariGray(0), atariGray(2))
-
     .new-save-game
       display flex
       height 71rem
       justify-content center
 
       .floppy
-        position relative
-        top 0
-        width 68rem
-        height 71rem
-        background-image image('/landsofillusions/components/loadgame/floppy.png')
-        filter drop-shadow(-4rem 2rem 10rem rgba(atariGray(0), 0.5))
-
-        .shutter
-          position absolute
-          top 0
-          left 15rem
-          width 38rem
-          height 25rem
-          background-image image('/landsofillusions/components/loadgame/floppy-shutter.png')
-          transition left ease-out 0.2s
-
         .label
-          position absolute
-          top 35rem
-          left 9rem
-          width 50rem
-          height 28rem
-          checkout()
-          color atariGray(1)
-          overflow-wrap break-word
-          text-align center
-
           textarea
             width 100%
             height 100%

@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.BasicTools extends PAA.Practice
   @displayName: -> "Basic tools"
 
   @description: -> """
-      Use the pencil, color fill, and eraser to demonstrate your use of all 3 basic drawing tools.
+      Now that you know the 3 most essential tools, use them in unison to quickly complete the sprite.
     """
 
   @fixedDimensions: -> width: 16, height: 7
@@ -40,3 +40,15 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.BasicTools extends PAA.Practice
   ]
 
   @initialize()
+  
+  Asset = @
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+  
+    @message: -> """
+      Use the pencil, color fill, and eraser to demonstrate your use of all 3 basic drawing tools.
+    """
+    
+    @initialize()

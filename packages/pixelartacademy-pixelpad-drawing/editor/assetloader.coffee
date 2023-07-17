@@ -14,7 +14,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.AssetLoader extends FM.Loader
     @editor = @drawing.editor()
   
     @asset = new ComputedField =>
-      @editor.manualSpriteData() or @portfolio.displayedAsset()?.asset.document?()
+      asset = @editor.manualSpriteData() or @portfolio.displayedAsset()?.asset.document?()
+  
+      # We can only deal with assets that can return pixels.
+      if asset instanceof LOI.Assets.Sprite or asset instanceof LOI.Assets.Bitmap then asset else null
   
     # Subscribe to the referenced palette as well.
     @paletteId = new ComputedField =>

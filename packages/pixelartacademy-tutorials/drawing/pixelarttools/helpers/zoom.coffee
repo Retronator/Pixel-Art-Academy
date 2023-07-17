@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
   @displayName: -> "Zoom"
 
   @description: -> """
-      Use the plus and minus signs on the calculator to zoom in and out to make drawing easier.
+      Working on bigger images requires you to zoom in and out to make drawing easier.
 
       Shortcuts: + and -
     """
@@ -111,3 +111,33 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
   ]
 
   @initialize()
+  
+  Asset = @
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Use the plus and minus buttons on the calculator to zoom in and out.
+
+      Shortcuts: + and -
+    """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      not asset.completed()
+  
+    @initialize()
+  
+    onActivate: ->
+      super arguments...
+    
+      drawingEditor = @getEditor()
+      pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
+      @_initialScale = pixelCanvasEditor.camera().scale()
+  
+    completedConditions: ->
+      drawingEditor = @getEditor()
+      pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
+      @_initialScale isnt pixelCanvasEditor.camera().scale()

@@ -24,6 +24,9 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
 
   reportExecuteActionError: (id) ->
     @_loaders[id].reportExecuteActionError()
+    
+  reportNonVersionedChange: (id) ->
+    @_loaders[id].reportNonVersionedChange()
 
   _handleLoaders: ->
     @documentClass.documents.find({}).observe

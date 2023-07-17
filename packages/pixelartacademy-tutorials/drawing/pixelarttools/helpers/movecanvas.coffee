@@ -7,8 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
   @displayName: -> "Move image"
 
   @description: -> """
-      Press the H key or hold down the spacebar to activate the hand cursor.
-      Click and drag to move the image around the table.
+      When working on a bigger artwork, you'll need to move it around to focus on different details.
 
       Shortcut: H (hand)
 
@@ -36,3 +35,58 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
   ]
 
   minClipboardScale: -> 1
+  
+  Asset = @
+  
+  class @Tool extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Tool"
+    @assetClass: -> Asset
+    
+    @message: -> """
+        Hold down the space bar to temporarily switch to the hand cursor.
+      """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      not asset.completed()
+      
+    @completedConditions: ->
+      editor = @getEditor()
+      editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+      
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
+    
+    @initialize()
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Click and drag to move the image around the table.
+    """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      return if asset.completed()
+  
+      editor = @getEditor()
+      editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+  
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
+    
+    @initialize()
+    
+    onActivate: ->
+      super arguments...
+      
+      drawingEditor = @getEditor()
+      pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
+      @_initialOrigin = pixelCanvasEditor.camera().origin()
+    
+    completedConditions: ->
+      drawingEditor = @getEditor()
+      pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
+      not EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()

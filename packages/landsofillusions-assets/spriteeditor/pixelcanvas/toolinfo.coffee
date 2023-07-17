@@ -23,5 +23,5 @@ class LOI.Assets.SpriteEditor.PixelCanvas.ToolInfo
     else
       context.fillStyle = "rgb(25,25,25)"
 
-    context.font = "#{7 / scale}px 'Adventure Pixel Art Academy'"
+    context.font = "#{7 / scale}px 'Adventure Retronator'"
     context.fillText text, mouseCoordinates.x + 16 / scale, mouseCoordinates.y + 8 / scale

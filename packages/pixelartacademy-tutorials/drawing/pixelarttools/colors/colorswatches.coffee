@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorSwatches extends PAA.Pract
   @displayName: -> "Color swatches"
 
   @description: -> """
-      Use the color swatches to change between colors.
+      Draw a sprite with multiple colors.
     """
 
   @fixedDimensions: -> width: 14, height: 14
@@ -48,3 +48,15 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorSwatches extends PAA.Pract
     ]
 
   @initialize()
+  
+  Asset = @
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Use the color swatches to change between colors.
+    """
+    
+    @initialize()

@@ -22,8 +22,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends AM.Component
     super arguments...
 
     @sectionHeight = 25
-    @initialGroupHeight = 17
-    @inactiveGroupHeight = 3
+    @initialGroupHeight = 19
+    @inactiveGroupHeight = 5
     @activeGroupHeight = 150
     @settingsHeight = 118
 

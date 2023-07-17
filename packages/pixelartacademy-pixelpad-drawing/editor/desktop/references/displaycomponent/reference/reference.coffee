@@ -29,21 +29,32 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       PADB.Artwork.forUrl.subscribe @, url
 
     # Automatically scale and position the image when not displayed.
+    @hiddenScale = new ReactiveField null
+    @hiddenPosition = new ReactiveField null, EJSON.equals
+    
     @autorun (computation) =>
+      return unless reference = @data()
       return unless @references.assetId()
       return unless imageSize = @imageSize()
-      return unless displaySize = @displaySize()
-      return if @currentDisplayed()
+      
+      if @currentDisplayed()
+        Tracker.nonreactive =>
+          @hiddenScale null
+          @hiddenPosition null
+        
+        return
 
       # Scale should be such that 100^2 pixels are covered, but any side is not larger than 150 pixels.
       scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min 150 / imageSize.width, 150 / imageSize.height
-      Tracker.nonreactive => @setScale scale
-
+      Tracker.nonreactive => @hiddenScale scale
+  
+      return unless displaySize = @displaySize scale
+  
       # Make sure reference is within the tray.
       halfWidth = displaySize.width / 2 + @resizingBorder
       halfHeight = displaySize.height / 2 + @resizingBorder
 
-      position = @currentPosition()
+      position = _.propertyValue(reference, 'position') or x: 0, y: 0
 
       maxX = @trayWidth / 2 - halfWidth - @trayBorder
       maxY = @trayHeight / 2 - halfHeight - @trayBorder
@@ -51,8 +62,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       position =
         x: _.clamp position.x, -maxX, maxX
         y: _.clamp position.y, -maxY, maxY
-
-      Tracker.nonreactive => @setPosition position
+  
+      Tracker.nonreactive => @hiddenPosition position
 
     @autorun (computation) =>
       return unless draggingPosition = @draggingPosition()
@@ -94,6 +105,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       elements.push year if year
 
       elements.join ', '
+      
+  currentPosition: ->
+    return hiddenPosition if hiddenPosition = @hiddenPosition()
+  
+    super arguments...
 
   imageOnlyClass: ->
     reference = @data()
@@ -109,6 +125,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     height: imageSize.height * scale + captionHeight
 
   endDrag: ->
+    # When displaying a reference, also set its scale from its hidden default.
+    @setScale @hiddenScale() if @references.draggingDisplayed() and not @currentDisplayed()
+  
     super arguments...
 
     @references.hideActive false
@@ -133,10 +152,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     super arguments...
 
   referenceStyle: ->
-    style = super arguments...
+    currentDisplayed = @currentDisplayed()
+    
+    if currentDisplayed
+      style = super arguments...
+      
+    else
+      style = @hiddenReferenceStyle()
 
     # Push assets apart when we're not editing an asset.
-    if @currentDisplayed() and not @references.options.editorActive()
+    if currentDisplayed and not @references.options.editorActive()
       position = new THREE.Vector2 parseFloat(style.left), (parseFloat style.top)
 
       distance = new THREE.Vector2(240, 180).length()
@@ -153,3 +178,25 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       style.top = "#{position.y}rem"
 
     style
+
+  hiddenReferenceStyle: ->
+    scale = @hiddenScale()
+    
+    # We calculate the display size using the potentially hidden scale.
+    return display: 'none' unless displaySize = @displaySize scale
+    
+    if position = @draggingPosition()
+      # Add parent offset since we expect positioned fixed.
+      displayScale = @display.scale()
+      
+      position =
+        x: @parentOffset.left / displayScale + position.x
+        y: @parentOffset.top / displayScale + position.y
+    
+    else
+      position = @hiddenPosition()
+    
+    left: "#{position.x}rem"
+    top: "#{position.y}rem"
+    width: "#{displaySize.width}rem"
+    height: "#{displaySize.height}rem"

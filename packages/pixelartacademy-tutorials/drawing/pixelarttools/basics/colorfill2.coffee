@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill2 extends PAA.Practice
   @displayName: -> "Color fill 2"
 
   @description: -> """
-      Use the color fill and eraser to complete the invader.
+      Sometimes it's faster to fill too many pixels and then erase the extras.
     """
 
   @fixedDimensions: -> width: 12, height: 8
@@ -43,3 +43,15 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill2 extends PAA.Practice
   ]
 
   @initialize()
+  
+  Asset = @
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Use the color fill and eraser to complete the invader.
+    """
+    
+    @initialize()

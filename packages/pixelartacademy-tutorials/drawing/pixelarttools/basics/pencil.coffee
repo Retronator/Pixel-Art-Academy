@@ -40,49 +40,26 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Pencil extends PAA.Practice.Tut
   
   Asset = @
   
-  class @Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @id: -> 'PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Basics.Pencil.Instruction'
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
   
     @message: -> """
       Use the pencil to fill the pixels with the dot in the middle.
     """
-
-    @activeConditions: ->
-      return unless asset = @getActiveAssetOfType Asset
-      
-      # Show until the asset is completed.
-      not asset.completed()
-      
-    @delayDuration: -> 10
     
     @initialize()
-  
-    onActivate: ->
-      super arguments...
-    
-      # Start listening to actions done on the asset.
-      @bitmapId = @constructor.getActiveAssetOfType(Asset).bitmapId()
-      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, @onOperationExecuted
-      
-    onDeactivate: ->
-      super arguments...
-
-      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandlers @
-  
-    onOperationExecuted: (document, operation, changedFields) ->
-      return unless document._id is @bitmapId
-      
-      @resetDelay()
     
   class @Error extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @id: -> 'PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Basics.Pencil.Error'
+    @id: -> "#{Asset.id()}.Error"
+    @assetClass: -> Asset
     
     @message: -> """
       Whoops, you went too far! Use the eraser to delete unwanted pixels.
     """
 
     @activeConditions: ->
-      return unless asset = @getActiveAssetOfType Asset
+      return unless asset = @getActiveAsset()
       
       # Show when there are any extra pixels present.
       @assetHasExtraPixels asset
@@ -93,5 +70,21 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Pencil extends PAA.Practice.Tut
   
     onDisplay: ->
       # Unlock the eraser.
-      asset = @constructor.getActiveAssetOfType Asset
+      asset = @constructor.getActiveAsset()
       asset.unlockEraser true
+      
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Complete"
+    @assetClass: -> Asset
+    
+    @message: -> """
+        Great! Go back to your portfolio to find a new sprite to draw.
+      """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when the asset is completed.
+      asset.completed()
+    
+    @initialize()

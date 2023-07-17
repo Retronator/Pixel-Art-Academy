@@ -7,8 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
   @displayName: -> "Eraser"
 
   @description: -> """
-      Using the eraser, remove the pixels with the dot in the middle.
-      If you delete too much, simply use the pencil to draw things back in.
+      As you can imagine, the eraser is great for removing extra pixels.
     """
 
   @fixedDimensions: -> width: 8, height: 8
@@ -44,3 +43,39 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
   ]
 
   @initialize()
+  
+  Asset = @
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Use the eraser to remove the pixels with the dot in the middle.
+    """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when asset has extra pixels so that we don't display it when there are missing pixels.
+      @assetHasExtraPixels asset
+    
+    @initialize()
+
+  class @Error extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Error"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      You deleted a bit too much! Use the pencil to draw pixels back in.
+    """
+
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when there are any missing pixels present.
+      @assetHasMissingPixels asset
+
+    @priority: -> 1
+    
+    @initialize()

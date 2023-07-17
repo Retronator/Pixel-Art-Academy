@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
   @displayName: -> "Color picking"
 
   @description: -> """
-      Click on the eyedropper and then somewhere on the drawing to pick that color.
+      To switch between colors faster, pick them directly from the canvas.
 
       Shortcut: I (eyedropper)
     """
@@ -63,3 +63,46 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
     ]
 
   @initialize()
+  
+  Asset = @
+  
+  class @Tool extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Tool"
+    @assetClass: -> Asset
+    
+    @message: -> """
+        Click on the eyedropper to activate the color picker tool.
+      """
+    
+    @activeConditions: -> @getActiveAsset()
+    
+    @completedConditions: ->
+      # Color picker has to be the active tool.
+      editor = @getEditor()
+      editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+    
+    @delayDuration: -> @defaultDelayDuration
+    
+    @initialize()
+    
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Click somewhere on the drawing to pick that color.
+
+      Shortcut: I (eyedropper)
+    """
+
+    @activeConditions: ->
+      return unless @getActiveAsset()
+  
+      # Show when color picker is the active tool.
+      editor = @getEditor()
+      return unless editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+  
+      # Show until the asset is completed.
+      super arguments...
+    
+    @initialize()

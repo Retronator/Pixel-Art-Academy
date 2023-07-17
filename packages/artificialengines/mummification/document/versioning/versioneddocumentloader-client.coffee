@@ -18,7 +18,11 @@ class AM.Document.Versioning.VersionedDocumentLoader
     @_documentUpdatedDependency.changed()
 
   reportExecuteActionError: ->
-    # Executing an action on the document resulted in an error so we need to reload it freshly from the server.
+    # Executing an action on the document resulted in an error so we need to reload it freshly from the source.
+    @_loadInitialState()
+  
+  reportNonVersionedChange: ->
+    # Document was updated without a versioned action so we need to reload it freshly from the source.
     @_loadInitialState()
     
   _loadInitialState: ->

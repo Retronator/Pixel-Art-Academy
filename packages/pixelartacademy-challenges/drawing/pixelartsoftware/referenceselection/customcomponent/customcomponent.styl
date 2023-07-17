@@ -60,10 +60,7 @@
           .name
             bottom 5rem
 
-        .unlock-instructions
-          display none
-
-      &:not(.available)
+      &.locked
         .name::after
           content ''
           display inline-block
@@ -72,6 +69,9 @@
           margin-left 4rem
           vertical-align bottom
           background-image url("/pixelartacademy/challenges/drawing/pixelartsoftware/lock.png")
+
+        .unlock-instructions
+          display block
 
       &.left
         left -170rem
@@ -83,6 +83,7 @@
 
       .unlock-instructions
         position absolute
+        display none
         opacity 0
         left 10rem
         right 10rem

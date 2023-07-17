@@ -26,6 +26,8 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
+  api.addFile('drawing/instructions/generalinstruction')
+
   api.addComponent('drawing/instructions/desktop..');
 
   api.addFile('drawing/pixelarttools..');

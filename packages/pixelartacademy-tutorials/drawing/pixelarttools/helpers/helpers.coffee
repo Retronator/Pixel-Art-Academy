@@ -10,10 +10,10 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers extends PAA.Tutorials.Drawing.
   @initialize()
 
   @assets: -> [
-    @Lines
     @Zoom
     @MoveCanvas
     @UndoRedo
+    @Lines
   ]
 
   # Methods
@@ -23,15 +23,15 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers extends PAA.Tutorials.Drawing.
 
     @assets = new ComputedField =>
       assets = []
+      
+      @zoom ?= Tracker.nonreactive => new @constructor.Zoom @
+      assets.push @zoom
   
-      @lines ?= Tracker.nonreactive => new @constructor.Lines @
-      assets.push @lines
-  
-      if @_assetsCompleted @lines
-        @zoom ?= Tracker.nonreactive => new @constructor.Zoom @
-        assets.push @zoom
-
       if @_assetsCompleted @zoom
+        @lines ?= Tracker.nonreactive => new @constructor.Lines @
+        assets.push @lines
+
+      if @_assetsCompleted @lines
         @moveCanvas ?= Tracker.nonreactive => new @constructor.MoveCanvas @
         assets.push @moveCanvas
 

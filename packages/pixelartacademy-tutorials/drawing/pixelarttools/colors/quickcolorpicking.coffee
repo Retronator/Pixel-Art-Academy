@@ -7,9 +7,9 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.QuickColorPicking extends PAA.P
   @displayName: -> "Quick color picking"
 
   @description: -> """
-      When drawing with the pencil, hold down ALT to temporarily switch to color picker until ALT is released.
+      Learn how to quickly pick colors while using the pencil.
 
-      ALT+click is one of the most used shortcuts in pixel art. Learn it well.
+      Quick shortcut: Alt/option
     """
 
   @fixedDimensions: -> width: 11, height: 12
@@ -64,3 +64,63 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.QuickColorPicking extends PAA.P
   editorStyleClasses: -> 'hidden-color-picker'
 
   @initialize()
+  
+  Asset = @
+  
+  class @Tool extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Tool"
+    @assetClass: -> Asset
+    
+    @message: -> """
+        Select the pencil to start drawing as usual.
+      """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      not asset.completed()
+    
+    @completedConditions: ->
+      editor = @getEditor()
+      editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.Pencil.id()
+      
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
+    
+    @priority: -> 1
+    
+    @initialize()
+    
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+        Hold down the alt/option key to temporarily switch to the color picker until the alt/option key is released.
+      """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      return if asset.completed()
+      
+      # Show when the pencil or the color picker are the active tool.
+      editor = @getEditor()
+      editor.interface.activeToolId() in [LOI.Assets.SpriteEditor.Tools.Pencil.id(), LOI.Assets.SpriteEditor.Tools.ColorPicker.id()]
+    
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
+    
+    @initialize()
+  
+    onActivate: ->
+      super arguments...
+      
+      editor = @getEditor()
+      paintHelper = editor.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.Paint
+      
+      @_initialColorRamp = paintHelper.paletteColor().ramp
+  
+    completedConditions: ->
+      editor = @getEditor()
+      paintHelper = editor.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.Paint
+  
+      @_initialColorRamp isnt paintHelper.paletteColor().ramp

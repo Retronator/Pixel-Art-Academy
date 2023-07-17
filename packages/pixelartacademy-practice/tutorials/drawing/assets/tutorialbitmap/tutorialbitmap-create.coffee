@@ -65,8 +65,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           # Allow sending in just the reference URL.
           reference = {} if _.isString reference
           
-          bitmapData.references.push _.extend
-            image: imageResults[index]
+          bitmapData.references.push _.defaults
+            image: _.pick imageResults[index], ['_id', 'url']
           ,
             reference
   

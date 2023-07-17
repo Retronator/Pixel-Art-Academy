@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
 PAA = PixelArtAcademy
@@ -15,10 +16,17 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   @message: -> null
   
   @activeConditions: -> throw new AE.NotImplementedException "Instructions must provide conditions for activation."
-
+  
+  @completedConditions: -> false # Override if this instruction can be completed (and not show up as active afterwards).
+  @resetCompletedConditions: -> false # Override if the completed condition can be reset.
+  
   @priority: -> 0
   
   @delayDuration: -> 0
+  
+  @activeDisplayState: ->
+    # Override if you want the instruction to display closed.
+    PAA.PixelPad.Systems.Instructions.DisplayState.Open
 
   @initialize: ->
     @register @id()
@@ -55,42 +63,66 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
 
   template: -> 'PixelArtAcademy.PixelPad.Systems.Instructions.Instruction'
   
-  constructor: ->
+  constructor: (@instructions) ->
     super arguments...
   
     @delayTime = new ReactiveField 0
+    
+    @completed = new ReactiveField false
   
     @_wasActive = false
   
     @_activeAutorun = Tracker.autorun (computation) =>
       active = @activeConditions()
       
-      @onActivate?() if active and not @_wasActive
-      @onDeactivate?() if @_wasActive and not active
+      @onActivate() if active and not @_wasActive
+      @onDeactivate() if @_wasActive and not active
       
       @_wasActive = active
-      
-  destroy: ->
-    super arguments...
-  
-    @_activeAutorun.stop()
 
+    @_completedAutorun = Tracker.autorun (computation) =>
+      return if @completed()
+      return unless @activeConditions()
+      return unless @completedConditions()
+      
+      @completed true
+      @onCompleted()
+  
+    @_resetCompletedAutorun = Tracker.autorun (computation) =>
+      return unless @completed()
+      return unless @resetCompletedConditions()
+  
+      @completed false
+
+  destroy: ->
+    @_activeAutorun.stop()
+    @_completedAutorun.stop()
+    @_resetCompletedAutorun.stop()
+    
   id: -> @constructor.id()
 
   message: -> @translate('message').text
   messageTranslation: -> @translation 'message'
   
   activeConditions: -> @constructor.activeConditions()
-
+  completedConditions: -> @constructor.completedConditions()
+  resetCompletedConditions: -> @constructor.resetCompletedConditions()
   priority: -> @constructor.priority()
+  delayDuration: -> @constructor.delayDuration()
+  activeDisplayState: -> @constructor.activeDisplayState()
   
   onActivate: ->
+    # Override to perform additional setup when the instruction activates.
     @resetDelay()
   
-  onDeactivate: -> # Override to perform any cleanup when the instruction deactivates.
+  onDeactivate: ->
+    # Override to perform any cleanup when the instruction deactivates.
   
-  resetDelay: -> @delayTime @constructor.delayDuration()
-
+  onCompleted: ->
+    # Override to do something when the instruction has completed.
+  
+  resetDelay: -> @delayTime @delayDuration()
+  
   reduceDelayTime: (elapsedTime) ->
     @delayTime Math.max 0, @delayTime() - elapsedTime
 

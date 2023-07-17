@@ -7,8 +7,9 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
   @displayName: -> "Undo/redo"
 
   @description: -> """
-      Complete the dithering pattern on the CodeMasters logo. If you make a mistake, use the undo button
-      under the pencil. Shortcuts:
+      One of the biggest advantages of digital art is the ability to undo our actions.
+      
+      Shortcuts:
 
       - Cmd/ctrl + Z: undo
       - Cmd/ctrl + shift + Z: redo
@@ -37,3 +38,37 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
   ]
 
   minClipboardScale: -> 1
+  
+  Asset = @
+  
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+    @id: -> "#{Asset.id()}.Instruction"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Complete the dithering pattern on the CodeMasters logo.
+    """
+    
+    @initialize()
+  
+  class @Error extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{Asset.id()}.Error"
+    @assetClass: -> Asset
+    
+    @message: -> """
+      Whoops! Use the undo button under the pencil to get back on track.
+      
+      Shortcuts:
+      - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + shift + Z: redo
+    """
+    
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when there are any extra pixels present.
+      @assetHasExtraPixels asset
+    
+    @priority: -> 1
+    
+    @initialize()

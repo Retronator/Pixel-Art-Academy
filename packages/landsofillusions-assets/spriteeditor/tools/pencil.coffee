@@ -73,12 +73,12 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
       # If the image has no layer, we first have to add it as a partial action.
       unless assetData.getLayer layerAddress
-        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer null, assetData, []
+        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @constructor.id(), assetData, []
         LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, addLayerAction
         @_action.append addLayerAction
 
       # Create the stroke action.
-      action = new LOI.Assets.Bitmap.Actions.Stroke null, assetData, layerAddress, changedPixels
+      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels
       LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, action
       @_action.append action
   

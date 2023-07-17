@@ -4,10 +4,10 @@
       <div class="origin">
         {{#with currentChoice}}
           <div class="prompt">{{prompt}}</div>
-          <div class="choice left available">
+          <div class="choice left {{leftAvailableClass}} {{leftLockedClass}}">
             <div class="name">{{left.name}}</div>
           </div>
-          <div class="choice right {{rightAvailableClass}}">
+          <div class="choice right {{rightAvailableClass}} {{rightLockedClass}}">
             <div class="unlock-instructions">{{right.unlockInstructions}}</div>
             <div class="name">{{right.name}}</div>
           </div>
