@@ -72,37 +72,59 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
     
     @message: -> """
         Click on the eyedropper to activate the color picker tool.
+
+        Shortcut: I (eyedropper)
       """
     
-    @activeConditions: -> @getActiveAsset()
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      not asset.completed()
     
     @completedConditions: ->
       # Color picker has to be the active tool.
       editor = @getEditor()
       editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+  
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
     
     @delayDuration: -> @defaultDelayDuration
     
     @initialize()
     
-  class @Instruction extends PAA.Tutorials.Drawing.Instructions.GeneralInstruction
+  class @Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
     @id: -> "#{Asset.id()}.Instruction"
     @assetClass: -> Asset
     
     @message: -> """
       Click somewhere on the drawing to pick that color.
-
-      Shortcut: I (eyedropper)
     """
 
     @activeConditions: ->
-      return unless @getActiveAsset()
+      return unless asset = @getActiveAsset()
+      return if asset.completed()
   
       # Show when color picker is the active tool.
       editor = @getEditor()
-      return unless editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+      editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
   
-      # Show until the asset is completed.
-      super arguments...
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
+  
+    @delayDuration: -> @defaultDelayDuration
     
     @initialize()
+  
+    onActivate: ->
+      super arguments...
+    
+      editor = @getEditor()
+      paintHelper = editor.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.Paint
+    
+      @_initialColorRamp = paintHelper.paletteColor().ramp
+  
+    completedConditions: ->
+      editor = @getEditor()
+      paintHelper = editor.interface.getHelperForActiveFile LOI.Assets.SpriteEditor.Helpers.Paint
+    
+      @_initialColorRamp isnt paintHelper.paletteColor().ramp

@@ -85,6 +85,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.References extends PAA.Practice
       # Show until the image has a displayed reference.
       bitmap = asset.bitmap()
       not bitmap.references[0].displayed
+  
+    @delayDuration: -> @defaultDelayDuration
     
     @initialize()
     
@@ -111,6 +113,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.References extends PAA.Practice
   
       # We need at least 2 scale operations since displaying the reference will automatically create one.
       scaleOperationsCount < 2
+  
+    @delayDuration: -> @defaultDelayDuration
     
     @initialize()
     

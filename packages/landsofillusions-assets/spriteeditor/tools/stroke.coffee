@@ -52,6 +52,11 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         editor.operationPreview().pixels []
 
       @_previewActive = preview
+  
+    @autorun (computation) =>
+      # Reset last pixel coordinates whenever the active file changes.
+      @interface.activeFileId()
+      @lastPixelCoordinates null
 
   createPixelsFromCoordinates: (coordinates) ->
     # Override to create full pixel data out of stroke coordinates.

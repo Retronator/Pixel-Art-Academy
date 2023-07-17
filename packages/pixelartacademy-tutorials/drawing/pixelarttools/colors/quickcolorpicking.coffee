@@ -95,7 +95,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.QuickColorPicking extends PAA.P
     @assetClass: -> Asset
     
     @message: -> """
-        Hold down the alt/option key to temporarily switch to the color picker until the alt/option key is released.
+        Hold down the alt/option key to temporarily switch to the color picker until the key is released.
       """
     
     @activeConditions: ->
