@@ -42,7 +42,7 @@ class AC.Keyboard
     return if event.metaKey and not (shortcut.command or shortcut.win or shortcut.super or shortcut.commandOrControl)
     return if event.shiftKey and not (shortcut.shift or (shortcut.key is AC.Keys.shift) or (shortcut.holdKey is AC.Keys.shift))
     return if event.altKey and not (shortcut.alt or (shortcut.key is AC.Keys.alt) or (shortcut.holdKey is AC.Keys.alt))
-    return if event.ctrlKey and not (shortcut.control or (shortcut.key is AC.Keys.ctrl) or (shortcut.holdKey is AC.Keys.ctrl))
+    return if event.ctrlKey and not (shortcut.control or (shortcut.key is AC.Keys.ctrl) or (shortcut.holdKey is AC.Keys.ctrl) or shortcut.commandOrControl)
     
     # Make sure the main key is down.
     keyDown = true if shortcut.key and (shortcut.key is event.keyCode)

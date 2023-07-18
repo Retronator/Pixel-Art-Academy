@@ -264,7 +264,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         @lockedCoordinate lockedCoordinate
 
     if @drawLine()
-      if keyboardState.isMetaDown()
+      if keyboardState.isCommandOrControlDown()
         # Draw perfect pixel art line.
         pixelCoordinates = @perfectLine lastPixelCoordinates, currentPixelCoordinates
 
