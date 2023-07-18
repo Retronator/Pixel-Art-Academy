@@ -162,10 +162,14 @@ class PAA.PixelPad.OS extends AM.Component
 
   backButtonCallback: ->
     # See if the app can handle it.
-    if @currentApp().onBackButton?()
-      # Nothing extra needed.
+    return cancel: true if @currentApp().onBackButton?()
+    
+    # See if any of the systems want to handle it.
+    for system in @currentSystems()
+      return cancel: true if system.onBackButton?()
 
-    else if @currentAppParameter()
+    # Clear one of the parameters.
+    if @currentAppParameter()
       # We clear the parameter.
       AB.Router.setParameter 'parameter4', null
 

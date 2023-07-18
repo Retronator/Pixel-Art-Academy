@@ -55,6 +55,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       # Main menu
       'click .main-menu .progress': @onClickMainMenuProgress
       'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
+      'click .settings .fullscreen': @onClickSettingsFullscreen
 
   onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -107,7 +108,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
   onClickMainMenuQuit: (event) ->
     if Meteor.isDesktop
       Desktop.send 'desktop', 'closeApp'
-    
+
   onClickMainMenuFullscreen: (event) ->
     if Meteor.isDesktop
       if @_isFullscreen()
@@ -128,6 +129,10 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       LOI.adventure.interface.resize()
     ,
       1000
+  
+  onClickSettingsFullscreen: (event) ->
+    # Act the same as the main menu fullscreen button.
+    @onClickMainMenuFullscreen event
 
   onClickSettingsBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu

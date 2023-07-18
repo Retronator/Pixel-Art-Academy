@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -30,7 +30,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @bindingHeight = 14
     @hideTop = 30
     
-    @waitBetweenAnimationsDuration = 0.5
+    @waitBetweenAnimationsDuration = 0.3
     @animationStepDuration = 0.03
   
   onCreated: ->
@@ -105,13 +105,19 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       for task in @activeTasks() when task not in displayedActiveTasks
         @_animateTaskAdded task
         return
+        
+  _animationAvailable: ->
+    # If any of the displayed tasks have completed, we should animate.
+    displayedActiveTasks = @displayedActiveTasks()
+    return true for task in displayedActiveTasks when task.completed()
+    
+    # If any of the active tasks is not displayed, we should animate.
+    return true for task in @activeTasks() when task not in displayedActiveTasks
   
   _animateTaskCompleted: (task) ->
     @animating true
     
     await @_animateOpen()
-  
-    await _.waitForSeconds @waitBetweenAnimationsDuration
     
     $taskListItem = $("[data-task-id='#{task.id()}']")
     directive = task.directive()
@@ -125,7 +131,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     displayedActiveTasks = @displayedActiveTasks()
     _.pull displayedActiveTasks, task
     @displayedActiveTasks displayedActiveTasks
-    
+  
+    await _.waitForSeconds @waitBetweenAnimationsDuration
+  
     @animating false
     
     @_animateClose()
@@ -134,8 +142,6 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @animating true
   
     await @_animateOpen()
-  
-    await _.waitForSeconds @waitBetweenAnimationsDuration
     
     displayedActiveTasks = @displayedActiveTasks()
     displayedActiveTasks.push task
@@ -151,6 +157,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       await _.waitForSeconds @animationStepDuration
     
     $taskListItem.addClass('active')
+
+    await _.waitForSeconds @waitBetweenAnimationsDuration
     
     @_animateClose()
 
@@ -162,7 +170,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     return if @displayState() is @constructor.DisplayState.Open
   
     # Give some time for the other UI animations to finish.
-    await _.waitForSeconds 1.5
+    await _.waitForSeconds 1.2
   
     @manualDisplayState @constructor.DisplayState.Open
     
@@ -180,6 +188,16 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       @manualDisplayState null
     ,
       2000
+    
+  onBackButton: ->
+    # If we have an animation waiting to happen, we want the back button to return us to the main menu.
+    return unless @_animationAvailable()
+    
+    parameter1 = AB.Router.getParameter 'parameter1'
+    AB.Router.setParameters {parameter1}
+  
+    # Inform that we've handled the back button.
+    true
     
   displayStateClass: ->
     _.kebabCase @displayState()

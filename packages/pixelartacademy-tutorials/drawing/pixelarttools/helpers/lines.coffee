@@ -24,6 +24,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.Zoom
+    PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   ]
   
   Asset = @
@@ -38,10 +39,14 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
 
     @activeConditions: ->
       return unless asset = @getActiveAsset()
-      return if asset.completed()
-  
+      not asset.completed()
+      
+    @completedConditions: ->
       editor = @getEditor()
-      editor.interface.activeToolId() isnt LOI.Assets.SpriteEditor.Tools.Pencil.id()
+      editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.Pencil.id()
+    
+    @resetCompletedCondition: ->
+      not @getActiveAsset()
     
     @initialize()
   
@@ -196,73 +201,3 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
       asset = @getActiveAsset()
       bitmap = asset.bitmap()
       bitmap.historyPosition is @_historyPosition + 2
-      
-  class @PerfectLineRatio extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @id: -> "#{Asset.id()}.PerfectLineRatio"
-    @assetClass: -> Asset
-    
-    @message: -> """
-        Hold also cmd/ctrl to constrain the line to pixel-perfect diagonals.
-      """
-    
-    @priority: -> -2
-    
-    @initialize()
-    
-    activeConditions: ->
-      return unless asset = @getActiveAsset()
-      return if asset.completed()
-      
-      # Show after the line sequence was completed.
-      return unless @instructions.getInstruction(Asset.LineSequence).completed()
-      
-      # Show when the pencil tool is drawing a line.
-      editor = @getEditor()
-      tool = editor.interface.activeTool()
-      return unless tool instanceof LOI.Assets.SpriteEditor.Tools.Pencil
-      pencil = tool
-      
-      pencil.drawLine()
-
-    onActivate: ->
-      super arguments...
-      
-      asset = @getActiveAsset()
-      bitmap = asset.bitmap()
-      
-      @_historyPosition = bitmap.historyPosition
-    
-    completedConditions: ->
-      return unless @activeConditions()
-  
-      # Wait for the perfect line ratio to be active.
-      editor = @getEditor()
-      pencil = editor.interface.activeTool()
-      pencil.perfectLineRatio()
-      
-  class @DrawStraight extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @id: -> "#{Asset.id()}.DrawStraight"
-    @assetClass: -> Asset
-    
-    @message: -> """
-        Not quite! You pressed shift while your mouse button was still pressed, which constrained the stroke to be
-        horizontal or vertical. Instead—to draw a line at any angle—click to place the line start, release the mouse
-        button, then hold down shift and click where you want the line to end.
-      """
-    
-    @activeConditions: ->
-      return unless @getActiveAsset()
-  
-      # Show when the pencil is drawing straight.
-      editor = @getEditor()
-      tool = editor.interface.activeTool()
-      return unless tool instanceof LOI.Assets.SpriteEditor.Tools.Pencil
-      pencil = tool
-  
-      pencil.drawStraight()
-      
-    @delayDuration: -> 0.5
-    
-    @priority: -> 2
-    
-    @initialize()

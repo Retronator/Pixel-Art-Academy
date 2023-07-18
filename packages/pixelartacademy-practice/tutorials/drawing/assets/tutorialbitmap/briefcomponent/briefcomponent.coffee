@@ -25,6 +25,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.BriefComponent extend
   
     $(document).off '.pixelartacademy-practice-tutorials-drawing-tutorialbitmap-briefcomponent'
 
+  started: ->
+    @tutorialBitmap.bitmap().historyPosition
+    
   events: ->
     super(arguments...).concat
       'click .start-button': @onClickStartButton

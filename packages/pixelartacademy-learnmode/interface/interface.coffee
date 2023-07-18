@@ -14,7 +14,7 @@ class LM.Interface extends LOI.Interface
     # Create pixel scaling display.
     @display = new AM.Display
       safeAreaWidth: 320
-      safeAreaHeight: 240
+      safeAreaHeight: 241
       maxDisplayWidth: 480
       maxDisplayHeight: 360
       minScale: LOI.settings.graphics.minimumScale.value

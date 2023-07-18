@@ -1,15 +1,9 @@
 <template name="PixelArtAcademy.Practice.Tutorials.Drawing.Assets.TutorialBitmap.BriefComponent">
   {{#with tutorialBitmap}}
     <ul class="actions">
-      {{#if completed}}
-        <li class="action completed">
-          <button class="button start-button">Done!</button>
-        </li>
-      {{else}}
-        <li class="action">
-          <button class="button start-button">Start</button>
-        </li>
-      {{/if}}
+      <li class="action">
+        <button class="button start-button">{{#if started}}Edit{{else}}Start{{/if}}</button>
+      </li>
       <li class="action">
         <button class="button reset-button">Reset</button>
       </li>

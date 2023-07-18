@@ -108,6 +108,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.ColorFill
     PAA.Practice.Software.Tools.ToolKeys.Zoom
+    PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   ]
 
   @initialize()

@@ -101,9 +101,9 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   @tasks: -> [
     @Basics
-    @Helpers
-    @ColorTools
     @CopyReference
+    @ColorTools
+    @Helpers
   ]
 
   @finalTasks: -> [
