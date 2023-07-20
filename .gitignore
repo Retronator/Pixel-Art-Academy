@@ -12,3 +12,4 @@ node_modules
 version.desktop
 .desktop-installer
 .desktop-package
+.steam
