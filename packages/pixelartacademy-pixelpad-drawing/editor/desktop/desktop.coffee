@@ -209,9 +209,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     super arguments...
 
     @autorun =>
+      # Cancel any previous timeout.
+      Meteor.clearTimeout @_activateDrawingTimeout
+      
       if @active()
         # Add the drawing active class with delay so that the initial transitions still happen slowly.
-        Meteor.setTimeout =>
+        @_activateDrawingTimeout = Meteor.setTimeout =>
           @drawingActive true
         ,
           1000

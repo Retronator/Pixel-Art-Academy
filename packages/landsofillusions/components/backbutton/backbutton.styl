@@ -4,19 +4,20 @@
   display block
   position fixed
   width 22rem
-  height 18rem
+  height 20rem
   border none
   z-index 1000
-  background image('/interface/back-arrow.png') 0 0 / 100% 100%
+  background image('/interface/back-arrow.png') 0 1rem no-repeat
+  background-size 22rem 18rem !important
   cursor pointer
   opacity 1
   transition opacity ease-out 0.5s
 
   &:hover
-    margin-top -1rem
+    background-position-y 0
 
   &:active
-    margin-top 1rem
+    background-position-y 2rem
 
   &:focus
     outline none
@@ -27,5 +28,6 @@
 .overlaid
   .landsofillusions-components-back-button
     width 22rem
-    height 22rem
-    background image('/interface/close-circle.png') 0 0 / 100% 100%
+    height 24rem
+    background-image image('/interface/close-circle.png')
+    background-size 22rem 22rem !important

@@ -44,16 +44,20 @@ class LOI.Components.BackButton extends AM.Component
         @$backButton.css
           top: viewport.viewportBounds.top() + 10 * scale
           left: viewport.viewportBounds.left() + 10 * scale
-
-    $(document).on 'keydown.landsofillusions-components-backbutton', (event) =>
+          
+    # Handle the escape key, but allow for multiple instances of the
+    # back button, so we need to selectively add/remove our event handler.
+    @_onKeyDownHandler = (event) =>
       return unless event.which is AC.Keys.escape
-
+  
       @onClose event
+  
+    $(document).on 'keydown.landsofillusions-components-backbutton', null, @_onKeyDownHandler
 
   onDestroyed: ->
     super arguments...
-
-    $(document).off '.landsofillusions-components-backbutton'
+  
+    $(document).off 'keydown.landsofillusions-components-backbutton', null, @_onKeyDownHandler
 
   closingClass: ->
     'closing' if @closing()

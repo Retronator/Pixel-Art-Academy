@@ -79,9 +79,14 @@ class PAA.PixelPad.OS extends AM.Component
         @_systems[systemClass.id()]
         
     # Set currentApp based on url.
+    @appTransitioning = new ReactiveField false
+    
     Tracker.autorun (computation) =>
       # Don't route until apps are created.
       return unless currentApps = @currentApps()
+      
+      # Don't route during transitions.
+      return if @appTransitioning()
 
       appUrl = @currentAppUrl()
       appClass = PAA.PixelPad.App.getClassForUrl(appUrl) or PAA.PixelPad.Apps.HomeScreen
@@ -99,8 +104,10 @@ class PAA.PixelPad.OS extends AM.Component
           newApp.activate()
 
         if currentApp
+          @appTransitioning true
           currentApp.deactivate =>
             startNewApp()
+            @appTransitioning false
 
         else
           startNewApp()

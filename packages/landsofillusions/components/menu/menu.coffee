@@ -32,6 +32,9 @@ class LOI.Components.Menu extends AM.Component
     $(document).on 'keydown.menu', (event) =>
       return unless LOI.adventure.interface.active() or @menuVisible()
       return if LOI.adventure.currentContext()
+      
+      # Make sure we're the active modal dialog.
+      return unless LOI.adventure.topModalDialog() is @
 
       # Toggle menu on escape.
       if event.which is AC.Keys.escape
@@ -74,6 +77,9 @@ class LOI.Components.Menu extends AM.Component
       duration: @_transitionDuration
       complete: =>
         @menuVisible false
+        
+        # Move back to the main menu so that when we come back, we'll start fresh.
+        @menuItems.goToMainMenu()
 
   display: -> LOI.adventure.interface.display
 

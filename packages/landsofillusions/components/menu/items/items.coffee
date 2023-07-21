@@ -64,7 +64,7 @@ class LOI.Components.Menu.Items extends AM.Component
     @currentScreen() is @constructor.Screens.Settings
     
   goToMainMenu: ->
-  
+    @currentScreen @constructor.Screens.MainMenu
 
   isFullscreen: ->
     AM.Window.isFullscreen()
@@ -225,11 +225,9 @@ class LOI.Components.Menu.Items extends AM.Component
     @currentScreen @constructor.Screens.Permissions
 
   onClickSettingsBackToMenu: (event) ->
-    returnToMenu = => @currentScreen @constructor.Screens.MainMenu
-
     if LOI.settings.persistSettings.decided()
       # User already decided if they want to save settings so just return to menu.
-      returnToMenu()
+      @goToMainMenu()
 
     else
       # See if settings have changed and ask to save.
@@ -237,7 +235,7 @@ class LOI.Components.Menu.Items extends AM.Component
 
       if EJSON.equals @_oldSettings, newSettings
         # Settings haven't changed, so no need to save.
-        returnToMenu()
+        @goToMainMenu()
 
       else
         # Settings have changed. Ask to save and return to menu when answered.

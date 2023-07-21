@@ -22,6 +22,10 @@ class LOI.Adventure extends LOI.Adventure
   modalDialogs: ->
     @_modalDialogsDependency.depend()
     @_modalDialogs
+    
+  topModalDialog: ->
+    @_modalDialogsDependency.depend()
+    @_modalDialogs[0]?.dialog
 
   # Activates a dialog and waits for the player to complete interacting with it.
   showActivatableModalDialog: (dialogOptions) ->
