@@ -48,7 +48,7 @@ class LM.Interface extends LOI.Interface
       else if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
         # We're starting directly in play so we have to make the studio focus on the top and open the PixelPad.
         @studio.setFocus @constructor.Studio.FocusPoints.Play
-        @_openPixelPad()
+        Tracker.nonreactive => @_openPixelPad()
         
         # We want a fast transition since there is no waiting for the menu fade.
         @introFadeFast true

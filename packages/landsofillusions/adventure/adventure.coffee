@@ -57,6 +57,7 @@ class LOI.Adventure extends AM.Component
       if @currentMemoryId() then @currentMemory()? else true
       @thingsReady()
       LOI.palette()
+      not @loadingStoredProfile()
     ]
 
     console.log "Adventure ready?", conditions if LOI.debug

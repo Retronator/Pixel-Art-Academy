@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   _initializeTimeline: ->
     @currentTimelineId = new ComputedField =>
+      return if @loadingStoredProfile()
+      
       console.log "Recomputing current timeline." if LOI.debug
 
       # Memory overrides other timelines.
@@ -11,7 +13,10 @@ class LOI.Adventure extends LOI.Adventure
         timelineId = LOI.TimelineIds.Memory
         
       else
-        timelineId = @gameState()?.currentTimelineId or @startingPoint()?.timelineId
+        if @profileId()
+          return unless gameState = @gameState()
+          
+        timelineId = gameState?.currentTimelineId or @startingPoint()?.timelineId
 
       console.log "Current timeline ID is", timelineId if LOI.debug or LOI.Adventure.debugLocation
 

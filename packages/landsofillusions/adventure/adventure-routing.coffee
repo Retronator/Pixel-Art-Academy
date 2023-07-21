@@ -35,7 +35,7 @@ class LOI.Adventure extends LOI.Adventure
     @autorun (computation) =>
       url = @currentUrl()
 
-      console.log "%cURL has changed to", 'background: PapayaWhip', url if LOI.debug or LOI.Adventure.debugRouting
+      console.log "%cURL has changed to", 'background: DarkMagenta', url if LOI.debug or LOI.Adventure.debugRouting
 
       # We only want to react to router changes.
       Tracker.nonreactive =>
@@ -86,7 +86,7 @@ class LOI.Adventure extends LOI.Adventure
         else
           return if desiredUrl is currentUrl
 
-        console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug or LOI.Adventure.debugRouting
+        console.log "%cRewriting URL to", 'background: DarkViolet', desiredUrl if LOI.debug or LOI.Adventure.debugRouting
 
         parametersObject = @buildDesiredUrlParameters desiredUrl
 

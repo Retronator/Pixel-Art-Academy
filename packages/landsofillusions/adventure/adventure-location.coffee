@@ -6,6 +6,8 @@ class LOI.Adventure extends LOI.Adventure
   
   _initializeLocation: ->
     @currentLocationId = new ComputedField =>
+      return if @loadingStoredProfile()
+      
       console.log "Recomputing current location." if LOI.debug or LOI.Adventure.debugLocation
 
       # Memory provides its own location.
@@ -13,7 +15,10 @@ class LOI.Adventure extends LOI.Adventure
         locationId = memory.locationId
         
       else
-        locationId = @gameState()?.currentLocationId or @startingPoint()?.locationId
+        if @profileId()
+          return unless gameState = @gameState()
+          
+        locationId = gameState?.currentLocationId or @startingPoint()?.locationId
 
       console.log "Current location ID is", locationId if LOI.debug or LOI.Adventure.debugLocation
 

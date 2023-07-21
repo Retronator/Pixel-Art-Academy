@@ -28,8 +28,9 @@ class LOI.Adventure extends LOI.Adventure
     # Provide game state fields.
     @gameState = new ComputedField =>
       return unless profileId = @profileId()
+      return unless gameStateDocument = LOI.GameState.documents.findOne {profileId}, fields: state: 1
       
-      gameState = LOI.GameState.transformStateFromDatabase LOI.GameState.documents.findOne({profileId}, fields: state: 1)?.state or {}
+      gameState = LOI.GameState.transformStateFromDatabase gameStateDocument.state or {}
       console.log "Retrieved new game state", gameState if LOI.debug or LOI.Adventure.debugState
       gameState
   
@@ -45,24 +46,34 @@ class LOI.Adventure extends LOI.Adventure
   
     @readOnlyGameState = new ComputedField =>
       return unless profileId = @profileId()
+      return unless gameStateDocument = LOI.GameState.documents.findOne {profileId}, fields: readOnlyState: 1
       
-      readOnlyGameState = LOI.GameState.transformStateFromDatabase LOI.GameState.documents.findOne({profileId}, fields: readOnlyState: 1)?.readOnlyState or {}
+      readOnlyGameState = LOI.GameState.transformStateFromDatabase gameStateDocument?.readOnlyState or {}
       console.log "Retrieved new read only game state", readOnlyGameState if LOI.debug or LOI.Adventure.debugState
       readOnlyGameState
       
     # See if we have a profile ID stored locally.
+    @loadingStoredProfile = new ReactiveField false
+    
     if storedProfileId = @_loadStoredProfileId()
+      console.log "Loading stored profile ID", storedProfileId if LOI.debug or LOI.Adventure.debugState
+      @loadingStoredProfile true
+      
       # Wait until the profile becomes available (or another profile gets loaded).
       @autorun (computation) =>
-        if @profileId()
+        if profileId = @profileId()
+          console.log "Another profile was loaded", profileId if LOI.debug or LOI.Adventure.debugState
+          @loadingStoredProfile false
           computation.stop()
           return
           
         if Persistence.Profile.documents.findOne storedProfileId
+          console.log "Stored profile was found! Loading it …" if LOI.debug or LOI.Adventure.debugState
           computation.stop()
           
           # The profile has been added from synced storage(s), so we can now load it.
-          @loadGame storedProfileId
+          @loadGame(storedProfileId).then =>
+            @loadingStoredProfile false
 
   startNewGame: ->
     # Create a fresh profile and reset the game.
