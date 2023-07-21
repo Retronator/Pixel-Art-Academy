@@ -19,8 +19,8 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Learn basic pixel art tools"
 
     @instructions: -> """
-      In the Drawing app, complete the *Pixel art tools: basics* tutorial to
-      learn how to use essential drawing tools (pencil, eraser, color fill).
+      In the Drawing app, complete the *Basics* tutorial to
+      learn how to use essential drawing tools.
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
@@ -39,7 +39,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Learn about helper tools"
 
     @instructions: -> """
-      In the Drawing app, complete the *Pixel art tools: helpers*
+      In the Drawing app, complete the *Helpers*
       tutorial to get used to extra tools such as zooming and drawing lines.
     """
 
@@ -58,10 +58,10 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.ColorTools'
     @goal: -> Goal
 
-    @directive: -> "Learn about switching color"
+    @directive: -> "Learn about switching colors"
 
     @instructions: -> """
-      In the Drawing app, complete the *Pixel art tools: colors*
+      In the Drawing app, complete the *Colors*
       tutorial to learn how to switch between different colors.
     """
 
@@ -80,10 +80,10 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.CopyReference'
     @goal: -> Goal
 
-    @directive: -> "Copy a reference"
+    @directive: -> "Complete the pixel art software challenge"
 
     @instructions: -> """
-      In the Drawing app under the Challenges section, select a pixel art
+      In the Drawing app under the *Challenges* section, select a pixel art
       sprite and copy it to show you got the hang of using pixel art software.
     """
 

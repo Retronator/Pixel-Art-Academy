@@ -19,7 +19,7 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
 
     @instructions: -> """
       This notepad will keep track of your current tasks.
-      You can always click on a task if you need help with how to complete it.
+      You can always click on a task to learn how to complete it.
 
       Click on the arrow to get back to the tasks.
     """

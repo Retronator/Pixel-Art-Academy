@@ -5,11 +5,12 @@
   z-index 1000
   background atariGray(0)
   opacity 0
-  transition opacity 0.2s ease-out
+  transition opacity 0.1s ease-out
   cursor wait
   pointer-events none
 
   &.active
+    transition-duration 0.2s
     pointer-events inherit
     cursor wait
 
