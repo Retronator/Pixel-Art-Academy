@@ -123,7 +123,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     directive = task.directive()
   
     for i in [0..directive.length]
-      $taskListItem.html "<span class='directive'><span style='text-decoration-line: line-through'>#{directive[..i]}</span>#{directive[i+1..]}</span>"
+      $taskListItem.html "<span class='directive'><span class='crossed-off'>#{directive[..i]}</span>#{directive[i+1..]}</span>"
       await _.waitForSeconds @animationStepDuration
       
     $taskListItem.removeClass('active').addClass('completed')
