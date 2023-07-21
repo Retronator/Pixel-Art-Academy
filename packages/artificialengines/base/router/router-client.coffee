@@ -24,7 +24,7 @@ class AB.Router extends AB.Router
     @currentParameters()[parameter]
 
   @setParameter: (parameter, value, options) ->
-    # We need to clone the parameters before we change them, since otherwise we'd be 
+    # We need to clone the parameters before we change them, since otherwise we'd be
     # changing the original with which  the computed field will compare the new array.
     parameters = _.clone @currentParameters()
     parameters[parameter] = value
@@ -129,7 +129,7 @@ class AB.Router extends AB.Router
     
     # Also copy its extra data.
     Meteor.absoluteUrl[key] = value for own key, value of _absoluteUrl
-      
+    
     # React to URL changes.
     $window = $(window)
     $window.on 'hashchange', => @onPathChange()
@@ -140,25 +140,33 @@ class AB.Router extends AB.Router
 
     # Hijack link clicks.
     $('body').on 'click', 'a', (event) =>
-      # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
-      return if event.metaKey or event.ctrlKey or event.shiftKey
-
       link = event.currentTarget
-
-      # Do not act on download links.
-      return if link.download
-
+      href = $(link).attr('href')
+  
       # Do not act on pure hashtag links.
-      return if _.startsWith $(link).attr('href'), '#'
-
-      # Only do soft link changes when we're staying within the same host.
+      return if _.startsWith href, '#'
+      
+      # Do a soft link change when we're staying within the same host.
       if link.hostname is location.hostname
+        # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
+        return if event.metaKey or event.ctrlKey or event.shiftKey
+    
+        # Do not act on download links.
+        return if link.download
+        
         event.preventDefault()
         history.pushState {}, null, link.pathname
         @onPathChange()
 
         # Scroll to top since we expect that to happen if this was a hard link.
         $(document).scrollTop(0)
+  
+      else if AB.ApplicationEnvironment.isElectron
+        # External links in Electron have to be opened in an external browser.
+        event.preventDefault()
+        
+        error = await Desktop.call 'hyperlink', 'open', href
+        throw new AE.ExternalException "Opening a hyperlink failed.", href, error if error
 
   @renderPageComponent: (parentComponent) ->
     return null unless currentRoute = @currentRoute()
