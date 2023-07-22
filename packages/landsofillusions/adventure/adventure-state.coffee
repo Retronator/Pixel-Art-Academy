@@ -68,18 +68,18 @@ class LOI.Adventure extends LOI.Adventure
           return
           
         return unless Persistence.ready()
-          computation.stop()
+        computation.stop()
 
-          if Persistence.Profile.documents.findOne storedProfileId
-            console.log "Stored profile was found! Loading it …" if LOI.debug or LOI.Adventure.debugState
-            
-            # The profile has been added from synced storage(s), so we can now load it.
-            @loadGame(storedProfileId).then =>
-              @loadingStoredProfile false
-              
-          else
-            console.log "Stored profile was not provided by any of the synced storages." if LOI.debug or LOI.Adventure.debugState
+        if Persistence.Profile.documents.findOne storedProfileId
+          console.log "Stored profile was found! Loading it …" if LOI.debug or LOI.Adventure.debugState
+          
+          # The profile has been added from synced storage(s), so we can now load it.
+          @loadGame(storedProfileId).then =>
             @loadingStoredProfile false
+            
+        else
+          console.log "Stored profile was not provided by any of the synced storages." if LOI.debug or LOI.Adventure.debugState
+          @loadingStoredProfile false
 
   startNewGame: ->
     # Create a fresh profile and reset the game.

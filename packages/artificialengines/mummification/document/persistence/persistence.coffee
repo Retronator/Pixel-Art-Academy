@@ -43,13 +43,21 @@ class AM.Document.Persistence
     documentClass.conflictResolutionStrategy ?= @ConflictResolutionStrategies.Latest
     
   @registerSyncedStorage: (syncedStorage) ->
+    console.log "Registered synced storage", syncedStorage.id() if @debug
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
     @_syncedStoragesDependency.changed()
     
   @ready: ->
     @_syncedStoragesDependency.depend()
+    
+    if @debug
+      console.log "Synced storages ready?"
+      console.log id, syncedStorage.ready() for id, syncedStorage of @_syncedStoragesById
+    
     for id, syncedStorage of @_syncedStoragesById
       return false unless syncedStorage.ready()
+      
+    true
     
   @createProfile: ->
     new Promise (resolve, reject) =>
@@ -65,6 +73,8 @@ class AM.Document.Persistence
         resolve profileId
   
   @loadProfile: (profileId) ->
+    console.log "Persistence loading profile", profileId if @debug
+    
     throw new AE.InvalidOperationException "A profile is already loaded. Unload it first before proceeding." if @_activeProfileId()
   
     profile = Persistence.Profile.documents.findOne profileId
