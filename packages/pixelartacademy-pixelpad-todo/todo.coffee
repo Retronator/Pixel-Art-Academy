@@ -133,6 +133,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @displayedActiveTasks displayedActiveTasks
   
     await _.waitForSeconds @waitBetweenAnimationsDuration
+
+    await task.onCompletedDisplayed()
   
     @animating false
     
@@ -159,7 +161,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     $taskListItem.addClass('active')
 
     await _.waitForSeconds @waitBetweenAnimationsDuration
-    
+  
+    await task.onActiveDisplayed()
+  
     @_animateClose()
 
     @animating false

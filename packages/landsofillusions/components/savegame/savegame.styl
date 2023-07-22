@@ -44,23 +44,33 @@
         &.save-button
           position relative
           top -2rem
+          padding 2rem 4rem 4rem
           visibility hidden
-          background atariGreen(3)
           color atariGreen(0)
+          background transparent
           border none
-          border-bottom 2rem solid atariGreen(1)
 
-          &:focus
+          &::before
+            content ''
+            absolute-cover()
+            z-index -1
+            background atariGreen(3)
+            border-bottom 2rem solid atariGreen(1)
+
+          &:focus::before
             background: atariGreen(4)
             outline none
 
-          &:hover
+          &:hover::before
             background: atariGreen(4)
 
           &:active
-            border-bottom none
-            margin-bottom 2rem
-            top 0
+            padding-top 4rem
+            padding-bottom 2rem
+
+            &::before
+              border-bottom none
+              top 2rem
 
           &.visible
             visibility visible

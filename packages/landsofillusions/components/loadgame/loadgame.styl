@@ -40,28 +40,36 @@
 
       .action-button
         position relative
-        top -2rem
-        padding 2rem 4rem
+        padding 2rem 4rem 4rem
         margin 0 3rem
-        background black
+        vertical-align bottom
         font inherit
         color atariGray(0)
         text-transform uppercase
         text-align center
         border none
-        background atariGray(2)
-        border-bottom 2rem solid atariGray(1)
+        background transparent
+
+        &::before
+          content ''
+          absolute-cover()
+          z-index -1
+          background atariGray(2)
+          border-bottom 2rem solid atariGray(1)
 
         &:disabled
           color atariGray(1)
 
-        &:hover:not(:disabled)
+        &:hover:not(:disabled)::before
           background atariGray(3)
 
         &:active:not(:disabled)
-          border-bottom none
-          margin-bottom 2rem
-          top 0
+          padding-top 4rem
+          padding-bottom 2rem
+
+          &::before
+            border-bottom none
+            top 2rem
 
         &.previous-button
         &.next-button

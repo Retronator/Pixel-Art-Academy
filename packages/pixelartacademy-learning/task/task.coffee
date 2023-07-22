@@ -55,6 +55,10 @@ class PAA.Learning.Task
   # Override to place the task in a different group. Tasks in the same group will be drawn
   # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
   @groupNumber: -> 0
+  
+  @onActiveDisplayed: -> # Override to perform an action when the task has been displayed as active to the player.
+  
+  @onCompletedDisplayed: -> # Override to perform an action when the task has been displayed as completed to the player.
 
   @initialize: ->
     # Store task class by ID.
@@ -114,6 +118,9 @@ class PAA.Learning.Task
   requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
+  
+  onActiveDisplayed: -> @constructor.onActiveDisplayed()
+  onCompletedDisplayed: -> @constructor.onCompletedDisplayed()
 
   entry: ->
     PAA.Learning.Task.Entry.documents.findOne
