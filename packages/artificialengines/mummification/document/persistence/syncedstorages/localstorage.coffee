@@ -25,6 +25,8 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
         profiles.push EJSON.parse documentJson
       
     Persistence.addProfiles @constructor.id(), profiles
+
+  ready: -> true
   
   loadDocumentsForProfileId: (profileId) ->
     syncedStorageId = @constructor.id()

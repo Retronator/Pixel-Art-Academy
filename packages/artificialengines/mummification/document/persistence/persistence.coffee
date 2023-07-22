@@ -16,6 +16,7 @@ class AM.Document.Persistence
   
   @_persistentDocumentClassesById = {}
   @_syncedStoragesById = {}
+  @_syncedStoragesDependency = new Tracker.Dependency
 
   @_activeProfileId = new ReactiveField null
   
@@ -43,6 +44,12 @@ class AM.Document.Persistence
     
   @registerSyncedStorage: (syncedStorage) ->
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
+    @_syncedStoragesDependency.changed()
+    
+  @ready: ->
+    @_syncedStoragesDependency.depend()
+    for id, syncedStorage of @_syncedStoragesById
+      return false unless syncedStorage.ready()
     
   @createProfile: ->
     new Promise (resolve, reject) =>

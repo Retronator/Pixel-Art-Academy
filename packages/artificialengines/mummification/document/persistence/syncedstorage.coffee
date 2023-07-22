@@ -13,6 +13,8 @@ class Persistence.SyncedStorage
   
     if @options.throttledChanges
       @_throttledChanges = {}
+      
+  ready: -> throw new AE.NotImplementedException "A synced storage must specify when it has supplied the profiles and is ready to provide documents."
 
   loadDocumentsForProfileId: (profileId) ->
     @loadDocumentsForProfileIdInternal(profileId).then (documents) =>

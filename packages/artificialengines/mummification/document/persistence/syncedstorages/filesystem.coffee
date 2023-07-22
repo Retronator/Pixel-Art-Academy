@@ -10,6 +10,8 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     super arguments...
 
     throw new AE.ArgumentNullException 'Relative directory path must be provided.' unless @options?.relativeDirectoryPath?
+  
+    @_ready = new ReactiveField false
 
     @initialize()
 
@@ -42,6 +44,10 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
         profiles.push document
 
     Persistence.addProfiles @constructor.id(), profiles
+  
+    @_ready true
+    
+  ready: -> @_ready()
 
   loadDocumentsForProfileId: (profileId) ->
     syncedStorageId = @constructor.id()

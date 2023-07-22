@@ -29,27 +29,30 @@ class LOI.Adventure extends LOI.Adventure
 
   # Activates a dialog and waits for the player to complete interacting with it.
   showActivatableModalDialog: (dialogOptions) ->
-    # Wait until dialog has been active and deactivated again.
-    dialogWasActivated = false
-
-    @addModalDialog dialogOptions
-
-    # Wait for the dialog to be rendered.
-    Tracker.afterFlush =>
-      dialogOptions.dialog.activatable.activate()
-
-      Tracker.autorun (computation) =>
-        if dialogOptions.dialog.activatable.activated()
-          dialogWasActivated = true
-
-        else if dialogOptions.dialog.activatable.deactivated() and dialogWasActivated
-          computation.stop()
-          @removeModalDialog dialogOptions.dialog
-
-          # Call callback in nonreactive context in case the callback runs any of its own
-          # autoruns (we don't want them to get invalidated when this autorun completes).
-          Tracker.nonreactive =>
-            dialogOptions.callback?()
+    new Promise (resolve, reject) =>
+      # Wait until dialog has been active and deactivated again.
+      dialogWasActivated = false
+  
+      @addModalDialog dialogOptions
+  
+      # Wait for the dialog to be rendered.
+      Tracker.afterFlush =>
+        dialogOptions.dialog.activatable.activate()
+  
+        Tracker.autorun (computation) =>
+          if dialogOptions.dialog.activatable.activated()
+            dialogWasActivated = true
+  
+          else if dialogOptions.dialog.activatable.deactivated() and dialogWasActivated
+            computation.stop()
+            @removeModalDialog dialogOptions.dialog
+  
+            # Call callback in nonreactive context in case the callback runs any of its own
+            # autoruns (we don't want them to get invalidated when this autorun completes).
+            Tracker.nonreactive =>
+              dialogOptions.callback?()
+              
+            resolve()
 
   showDialogMessage: (message, callback) ->
     @showActivatableModalDialog

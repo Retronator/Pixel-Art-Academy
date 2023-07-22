@@ -75,7 +75,6 @@ class LM.Interface.Studio extends AM.Component
     if targetFocusPointOrOptions.focusPoint
       targetFocusPoint = targetFocusPointOrOptions.focusPoint
       speedFactor = targetFocusPointOrOptions.speedFactor or 1
-      completeCallback = targetFocusPointOrOptions.completeCallback
       
     else
       targetFocusPoint = targetFocusPointOrOptions
@@ -95,7 +94,9 @@ class LM.Interface.Studio extends AM.Component
     @_moveFocusEnabled = true
     @_moveFocusDuration = duration
     @_moveFocusTime = 0
-    @_moveFocusCompleteCallback = completeCallback
+    
+    new Promise (resolve, reject) =>
+      @_moveFocusResolve = resolve
 
   _clampFocusPoint: (focusPoint) ->
     viewport = LOI.adventure.interface.display.viewport()
@@ -155,4 +156,4 @@ class LM.Interface.Studio extends AM.Component
   
     if progress is 1
       @_moveFocusEnabled = false
-      @_moveFocusCompleteCallback?()
+      @_moveFocusResolve()

@@ -69,12 +69,27 @@ class LM.Interface extends LOI.Interface
     mainMenu.fadeOut()
     
     Meteor.setTimeout =>
-      @studio.moveFocus
+      await @studio.moveFocus
         focusPoint: @constructor.Studio.FocusPoints.Play
         speedFactor: 1.5
-        completeCallback: =>
-          LOI.adventure.goToLocation LM.Locations.Play
-          @_openPixelPad()
+
+      # Show the save dialog if we're entering play without syncing.
+      unless LOI.adventure.profile().hasSyncing()
+        await LOI.adventure.menu.saveGame.show()
+        
+        # If the player decided to cancel, send them back to the menu.
+        unless LOI.adventure.profile().hasSyncing()
+          LOI.adventure.quitGame callback: =>
+            LOI.adventure.interface.goToMainMenu()
+      
+            # Notify that we've handled the quitting sequence.
+            true
+            
+          return
+          
+        # We have a profile loaded with syncing, so we can safely continue to play.
+        LOI.adventure.goToLocation LM.Locations.Play
+        @_openPixelPad()
     ,
       750
     
@@ -89,15 +104,15 @@ class LM.Interface extends LOI.Interface
       @waiting false
   
   goToMainMenu: ->
-    @studio.moveFocus
+    await @studio.moveFocus
       focusPoint: @constructor.Studio.FocusPoints.MainMenu
       speedFactor: 1.5
-      completeCallback: =>
-        mainMenu = LOI.adventure.currentLocation()
-        mainMenu.fadeIn()
-  
-        @waiting false
-        
+    
+    mainMenu = LOI.adventure.currentLocation()
+    mainMenu.fadeIn()
+
+    @waiting false
+    
   introFadeCompleteClass: ->
     'complete' if @introFadeComplete()
   
