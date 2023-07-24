@@ -6,6 +6,23 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Menu.Progress.Content.Component extends AM.Component
+  onCreated: ->
+    super arguments...
+    
+    @tags = new ComputedField =>
+      content = @data()
+      
+      for tag in content.tags()
+        translationKey = tag
+        
+        # Apply any translation key overrides.
+        translationKey = 'DLCAppStore' if tag is LM.Content.Tags.DLC and AB.DistributionPlatform.isAppStore
+        
+        # Create the tag information.
+        tagClass: _.kebabCase tag
+        displayName: LM.Content.Tags.getDisplayNameForKey translationKey
+        description: LM.Content.Tags.getDescriptionForKey translationKey
+  
   hasContentsClass: ->
     content = @data()
     'has-contents' if content.contents().length > 0

@@ -4,7 +4,7 @@ LM = PixelArtAcademy.LearnMode
 PixelArtSoftware = PAA.Challenges.Drawing.PixelArtSoftware
 
 class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
-  @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges'
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingChallenges'
 
   @displayName: -> "Drawing challenges"
 
@@ -28,7 +28,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
   status: -> if PAA.Tutorials.Drawing.PixelArtTools.Basics.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
   class @CopyReference extends LM.Content
-    @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference'
 
     @displayName: -> "Copy a reference"
 
@@ -85,7 +85,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
       _assetBelongsToGroup: (assetId) -> _.last(assetId.split '.').substring(0, 2) is @constructor.prefixFilter
 
     class @SmallMonochrome extends @SpritesGroup
-      @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.SmallMonochrome'
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.SmallMonochrome'
 
       @displayName: -> "Small monochrome sprites"
 
@@ -96,7 +96,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
       status: -> LM.Content.Status.Unlocked
 
     class @SmallColored extends @SpritesGroup
-      @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.SmallColored'
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.SmallColored'
 
       @displayName: -> "Small colored sprites"
 
@@ -109,7 +109,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
       status: -> if PAA.Tutorials.Drawing.PixelArtTools.Colors.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
     class @BigMonochrome extends @SpritesGroup
-      @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.BigMonochrome'
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.BigMonochrome'
 
       @displayName: -> "Big monochrome sprites"
 
@@ -122,7 +122,7 @@ class LM.Intro.Tutorial.Content.DrawingChallenges extends LM.Content
       status: -> if PAA.Tutorials.Drawing.PixelArtTools.Helpers.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
     class @BigColored extends @SpritesGroup
-      @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.BigColored'
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference.BigColored'
 
       @displayName: -> "Big colored sprites"
 

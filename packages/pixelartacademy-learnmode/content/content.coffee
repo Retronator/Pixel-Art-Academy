@@ -4,11 +4,15 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Content
-  @Status:
+  @Status =
     Unavailable: 'Unavailable'
     Locked: 'Locked'
     Unlocked: 'Unlocked'
 
+  @Tags =
+    WIP: 'WIP'
+    Future: 'Future'
+    
   @_contentClassesById = {}
   @_contentClassesUpdatedDependency = new Tracker.Dependency
 
@@ -29,6 +33,9 @@ class LM.Content
   # String to represent the course in the UI. Note that we can't use
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the content name."
+  
+  # Override to provide tags for this course.
+  @tags: -> []
 
   # Optional instructions how to unlock this content.
   @unlockInstructions: -> null
@@ -88,6 +95,8 @@ class LM.Content
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
 
+  tags: -> @constructor.tags()
+  
   unlockInstructions: ->
     return unless @constructor.unlockInstructions()
     AB.translate(@_translationSubscription, 'unlockInstructions').text

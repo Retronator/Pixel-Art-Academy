@@ -2,7 +2,7 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
-  @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingTutorials'
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingTutorials'
 
   @displayName: -> "Drawing tutorials"
 
@@ -29,13 +29,13 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
   status: -> LM.Content.Status.Unlocked
 
   class @Basics extends LM.Content.DrawingTutorialContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingTutorials.Basics'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingTutorials.Basics'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtTools.Basics
 
     @initialize()
 
   class @Colors extends LM.Content.DrawingTutorialContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingTutorials.Colors'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingTutorials.Colors'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtTools.Colors
 
     @unlockInstructions: -> "Complete the Basics tutorial to unlock the Colors tutorial."
@@ -48,7 +48,7 @@ class LM.Intro.Tutorial.Content.DrawingTutorials extends LM.Content
       super arguments...
 
   class @Helpers extends LM.Content.DrawingTutorialContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.DrawingTutorials.Helpers'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.DrawingTutorials.Helpers'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtTools.Helpers
 
     @unlockInstructions: -> "Complete the Basics tutorial to unlock the Helpers tutorial."

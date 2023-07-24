@@ -7,7 +7,7 @@ LM = PixelArtAcademy.LearnMode
 # An entry that is created or updated when a player makes progress in course content.
 # Note that these are public documents and should contain no sensitive information.
 class LM.Content.Progress.Entry extends AM.Document
-  @id: -> 'LearnMode.Content.Progress.Entry'
+  @id: -> 'PixelArtAcademy.LearnMode.Content.Progress.Entry'
   # profileId: the profile that made progress
   # lastEditTime: the time when progress was made
   # contentId: content ID of the course content this is an entry for

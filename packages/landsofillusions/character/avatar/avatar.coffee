@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 # Character's implementation of the avatar that takes the data from the character document.
 class LOI.Character.Avatar extends LOI.HumanAvatar
-  @id: -> 'LOI.Character.Avatar'
+  @id: -> 'LandsOfIllusions.Character.Avatar'
 
   constructor: (characterInstanceOrDocument) ->
     console.log "Creating character avatar", characterInstanceOrDocument if LOI.debug

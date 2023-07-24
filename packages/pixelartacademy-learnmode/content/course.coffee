@@ -4,6 +4,11 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Content.Course
+  @Status =
+    Unavailable: 'Unavailable'
+    Available: 'Available'
+    Purchased: 'Purchased'
+
   @_courseClassesById = {}
   @_courseClassesUpdatedDependency = new Tracker.Dependency
 
@@ -27,7 +32,10 @@ class LM.Content.Course
   @displayName: -> throw new AE.NotImplementedException "You must specify the course name."
 
   # String to display under the course name in the Learn Mode app.
-  @learnModeDescription: -> throw new AE.NotImplementedException "You must specify the learn mode description."
+  @description: -> throw new AE.NotImplementedException "You must specify the learn mode description."
+
+  # Override to provide tags for this course.
+  @tags: -> []
 
   # Override to provide content classes that are included in this course.
   @contents: -> []
@@ -44,7 +52,7 @@ class LM.Content.Course
 
         # Create this course's translated names.
         translationNamespace = @id()
-        AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'learnModeDescription']
+        AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'description']
 
   constructor: (@options = {}) ->
     # By default the content is related to the current profile.
@@ -76,8 +84,10 @@ class LM.Content.Course
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
 
-  learnModeDescription: -> AB.translate(@_translationSubscription, 'learnModeDescription').text
-  learnModeDescriptionTranslation: -> AB.translation @_translationSubscription, 'learnModeDescription'
+  description: -> AB.translate(@_translationSubscription, 'description').text
+  descriptionTranslation: -> AB.translation @_translationSubscription, 'description'
+
+  tags: -> @constructor.tags()
 
   contents: -> @_contents
 

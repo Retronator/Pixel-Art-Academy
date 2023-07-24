@@ -4,7 +4,7 @@ LM = PixelArtAcademy.LearnMode
 PixelArtSoftware = PAA.Challenges.Drawing.PixelArtSoftware
 
 class LM.Intro.Tutorial.Content.Projects extends LM.Content
-  @id: -> 'LearnMode.Intro.Tutorial.Content.Projects'
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects'
 
   @displayName: -> "Projects"
 
@@ -30,7 +30,7 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
     if pixelArtSoftwareGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked
 
   class @Snake extends LM.Content
-    @id: -> 'LearnMode.Intro.Tutorial.Content.Projects.Snake'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake'
 
     @displayName: -> "Snake"
 
@@ -77,14 +77,14 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
       status: -> LM.Content.Status.Unlocked
 
     class @Body extends @Sprite
-      @id: -> 'LearnMode.Intro.Tutorial.Content.Projects.Snake.Body'
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Body'
 
       @asset = PAA.Pico8.Cartridges.Snake.Body
 
       @initialize()
 
     class @Food extends @Sprite
-      @id: -> 'LearnMode.Intro.Tutorial.Content.Projects.Snake.Food'
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Food'
 
       @asset = PAA.Pico8.Cartridges.Snake.Food
 

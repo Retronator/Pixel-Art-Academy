@@ -37,9 +37,66 @@
 
     .title-area
       display flex
+      align-items center
 
       &.has-contents
         cursor pointer
+
+      .tags
+        list-style none
+        padding 0
+        margin 0 10rem
+        small-print()
+
+        .tag
+          position relative
+          display inline-block
+          vertical-align middle
+          text-transform uppercase
+          padding-left 1rem
+
+          &:hover
+            .description
+              display block
+
+          &.free
+            background atariGreen(1)
+            color atariGreen(6)
+
+            &::before
+            &::after
+              border-color atariGreen(2)
+
+          &::before
+          &::after
+            content ''
+            absolute-cover()
+            border 1rem solid
+
+          &::before
+            top -1rem
+            bottom -1rem
+            border-left none
+            border-right none
+
+          &::after
+            left -1rem
+            right -1rem
+            border-top none
+            border-bottom none
+
+          .description
+            display none
+            position absolute
+            z-index 1
+            bottom 7rem
+            left 50%
+            width 100rem
+            transform translateX(-50%)
+            background atariGray(1)
+            color atariGray(5)
+            text-align center
+            padding 2rem
 
       .completion
         flex-grow 1

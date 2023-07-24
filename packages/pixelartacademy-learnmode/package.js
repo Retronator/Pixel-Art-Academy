@@ -31,6 +31,8 @@ Package.onUse(function(api) {
   api.addFile('content/appcontent');
   api.addFile('content/drawingtutorialcontent');
   api.addFile('content/course');
+  api.addFile('content/tags');
+
   api.addFile('content/progress..');
   api.addFile('content/progress/manualprogress');
   api.addFile('content/progress/unitprogress');

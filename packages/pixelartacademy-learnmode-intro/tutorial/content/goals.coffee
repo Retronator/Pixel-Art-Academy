@@ -2,7 +2,7 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Intro.Tutorial.Content.Goals extends LM.Content
-  @id: -> 'LearnMode.Intro.Tutorial.Content.Goals'
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Goals'
 
   @displayName: -> "Study goals"
 
@@ -28,11 +28,11 @@ class LM.Intro.Tutorial.Content.Goals extends LM.Content
   status: -> LM.Content.Status.Unlocked
 
   class @Snake extends LM.Content.GoalContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.Goals.Snake'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Goals.Snake'
     @goalClass = LM.Intro.Tutorial.Goals.Snake
     @initialize()
 
   class @PixelArtSoftware extends LM.Content.GoalContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.Goals.PixelArtSoftware'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Goals.PixelArtSoftware'
     @goalClass = LM.Intro.Tutorial.Goals.PixelArtSoftware
     @initialize()

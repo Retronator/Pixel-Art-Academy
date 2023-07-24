@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions

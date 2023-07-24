@@ -2,7 +2,7 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Intro.Tutorial.Content.Apps extends LM.Content
-  @id: -> 'LearnMode.Intro.Tutorial.Content.Apps'
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Apps'
 
   @displayName: -> "Apps"
 
@@ -23,7 +23,7 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
   status: -> LM.Content.Status.Unlocked
 
   class @Drawing extends LM.Content.AppContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Drawing'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Apps.Drawing'
     @appClass = PAA.PixelPad.Apps.Drawing
 
     @unlockInstructions: -> "Learn how to use to-do tasks to unlock the Drawing app."
@@ -35,7 +35,7 @@ class LM.Intro.Tutorial.Content.Apps extends LM.Content
       if toDoTasksGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Unavailable
 
   class @Pico8 extends LM.Content.AppContent
-    @id: -> 'LearnMode.Intro.Tutorial.Content.Apps.Pico8'
+    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Apps.Pico8'
     @appClass = PAA.PixelPad.Apps.Pico8
 
     @unlockInstructions: -> "Complete the Pixel art software challenge to unlock the PICO-8 app."

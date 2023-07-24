@@ -44,6 +44,16 @@
     {{#if $is depth 4}}
       <h4 class="title">{{displayName}}</h4>
     {{/if}}
+    {{#if tags.length}}
+      <ul class="tags">
+        {{#each tags}}
+          <li class="tag {{tagClass}}">
+            {{displayName}}
+            <div class="description">{{description}}</div>
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
     {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
   </div>
 </template>

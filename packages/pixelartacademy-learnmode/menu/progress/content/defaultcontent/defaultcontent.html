@@ -1,9 +1,9 @@
 <template name="PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent">
   <div class="pixelartacademy-learnmode-menu-progress-content-defaultcontent">
     {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.TitleArea}}
-    {{#if learnModeDescription}}
+    {{#if description}}
       <div class="description">
-        {{> t10e learnModeDescription}}
+        {{> t10e description}}
       </div>
     {{/if}}
     {{#unless unlocked}}

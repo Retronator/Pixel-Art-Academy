@@ -3,13 +3,17 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Intro.Tutorial.Content.Course extends LM.Content.Course
-  @id: -> 'LearnMode.Intro.Tutorial.Content.Course'
+  @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Course'
 
-  @displayName: -> "Learn Mode tutorial"
+  @displayName: -> "Pixel art tools"
 
-  @learnModeDescription: -> """
+  @description: -> """
     Learn essential pixel art tools and create art for your first game.
   """
+  
+  @tags: -> [
+    LM.Content.Tags.Free
+  ]
 
   @contents: -> [
     LM.Intro.Tutorial.Content.Apps

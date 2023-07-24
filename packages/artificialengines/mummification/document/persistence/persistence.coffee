@@ -155,6 +155,10 @@ class AM.Document.Persistence
     # Insert all documents belonging to this profile.
     for documentClassId, documentsById of documentsByClassIdAndId
       documentClass = AM.Document.getClassForId documentClassId
+      
+      unless documentClass
+        console.warn "Documents saved for unknown class", documentClassId
+        continue
     
       for documentId, document of documentsById
         documentClass.documents.insert document
