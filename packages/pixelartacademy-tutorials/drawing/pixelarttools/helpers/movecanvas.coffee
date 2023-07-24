@@ -50,15 +50,15 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       return unless asset = @getActiveAsset()
       not asset.completed()
       
-    @completedConditions: ->
-      editor = @getEditor()
-      editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
-      
     @resetCompletedCondition: ->
       not @getActiveAsset()
     
     @initialize()
   
+    completedConditions: ->
+      # Don't show this instruction after the move was made.
+      @instructions.getInstruction(Asset.Instruction).completed()
+      
   class @Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
     @id: -> "#{Asset.id()}.Instruction"
     @assetClass: -> Asset
@@ -77,6 +77,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     @resetCompletedCondition: ->
       not @getActiveAsset()
     
+    @priority: -> 1
+    
     @initialize()
     
     onActivate: ->
@@ -87,6 +89,11 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       @_initialOrigin = pixelCanvasEditor.camera().origin()
     
     completedConditions: ->
+      # Wait until the origin has been changed.
       drawingEditor = @getEditor()
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
-      not EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
+      return if EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
+  
+      # Wait until the move has finished so the text doesn't disappear immediately.
+      moveCanvas = drawingEditor.interface.activeTool()
+      not moveCanvas.moving()
