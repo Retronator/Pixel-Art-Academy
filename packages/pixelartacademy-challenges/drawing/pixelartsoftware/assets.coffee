@@ -403,13 +403,11 @@ assets =
     bitmapInfo: -> """
       Artwork from [NYKRA](http://nykra.com), WIP
 
-      Artist: Seth 'ENDESGA' Groom
+      Artist: ENDESGA
     """
     maxClipboardScale: -> 3.5
     artist:
       name:
-        first: 'Seth'
-        last: 'Groom'
         nickname: 'ENDESGA'
     artwork:
       title: 'Keu'
