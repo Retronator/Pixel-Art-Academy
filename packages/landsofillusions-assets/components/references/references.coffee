@@ -59,9 +59,9 @@ class LOI.Assets.Components.References extends AM.Component
     @assetOptions = new ComputedField =>
       _.defaultsDeep {}, @options.assetOptions?(),
         upload:
-          enabled: true
+          enabled: false # TODO: Enable upload of references in learn mode.
         storage:
-          enabled: true
+          enabled: false # TODO: Enable access to reference storage.
           
     @uploadingReferences = new ReactiveField []
     
@@ -80,6 +80,17 @@ class LOI.Assets.Components.References extends AM.Component
     @highestOrder = new ComputedField =>
       return unless highestReference = _.last @references()
       _.propertyValue(highestReference, 'order') or 0
+      
+    @enabled = new ComputedField =>
+      # Show references only if there are any in the asset or we can upload them or get them from storage.
+      assetData = @assetData()
+      assetOptions = @assetOptions()
+    
+      _.some [
+        assetData?.references?.length
+        assetOptions.upload.enabled
+        assetOptions.storage.enabled
+      ]
 
   removeUploadingReference: (referenceId, imageId) ->
     # Wait until references have updated and we have the new one with created image ID.

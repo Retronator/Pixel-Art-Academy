@@ -28,6 +28,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent exten
   onDestroyed: ->
     $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references'
 
+  enabledClass: ->
+    'enabled' if @enabled()
+    
   openedClass: ->
     'opened' if @opened()
 
