@@ -32,7 +32,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
         return unless spriteData = @spriteData()
         return if spriteData.customPalette
         
-        LOI.Assets.Palette.forId.subscribe @, spriteData.palette._id
+        LOI.Assets.Palette.forId.subscribeContent @, spriteData.palette._id
 
   onRendered: ->
     super arguments...

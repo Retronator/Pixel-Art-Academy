@@ -12,7 +12,7 @@ class LOI.Assets.Components.Palette extends AM.Component
         return paletteData
       
       if paletteId = @options.paletteId?()
-        LOI.Assets.Palette.forId.subscribe paletteId if paletteId
+        LOI.Assets.Palette.forId.subscribeContent paletteId if paletteId
         return LOI.Assets.Palette.documents.findOne paletteId
 
       null

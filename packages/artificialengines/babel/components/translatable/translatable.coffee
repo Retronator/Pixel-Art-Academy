@@ -19,6 +19,7 @@ class AB.Components.Translatable extends AM.Component
 
     # Reactively subscribe to the translation so that refresh on the translation will work.
     @autorun (computation) =>
+      return unless @editable()
       return unless translationOrKey = @data()
       return unless translationOrKey instanceof AB.Translation
 

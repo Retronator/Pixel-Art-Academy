@@ -25,7 +25,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     ]
     
     for paletteName in @paletteNames
-      LOI.Assets.Palette.forName.subscribe @, paletteName
+      LOI.Assets.Palette.forName.subscribeContent @, paletteName
   
     @type = new ReactiveField null
     @maxSize = new ComputedField =>

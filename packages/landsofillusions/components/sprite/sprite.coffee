@@ -17,7 +17,7 @@ class LOI.Components.Sprite extends AM.Component
     @autorun (computation) =>
       spriteData = @data()
       
-      LOI.Assets.Palette.forId.subscribe @, spriteData.palette._id
+      LOI.Assets.Palette.forId.subscribeContent @, spriteData.palette._id
 
     @autorun (computation) =>
       spriteData = @data()

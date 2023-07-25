@@ -25,7 +25,7 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
         return unless bitmapData = @bitmapData()
         return if bitmapData.customPalette
         
-        LOI.Assets.Palette.forId.subscribe @, bitmapData.palette._id
+        LOI.Assets.Palette.forId.subscribeContent @, bitmapData.palette._id
 
   onRendered: ->
     super arguments...

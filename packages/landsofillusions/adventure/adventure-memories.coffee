@@ -14,12 +14,6 @@ class LOI.Adventure extends LOI.Adventure
       LOI.Memory.forId.subscribe memoryId
       LOI.Memory.documents.findOne memoryId
 
-    # Subscribe to profile's memory progress.
-    @autorun (computation) =>
-      return unless profileId = LOI.adventure.profileId()
-
-      LOI.Memory.Progress.forProfile.subscribe profileId
-
   enterMemory: (memoryOrMemoryId) ->
     memoryId = memoryOrMemoryId._id or memoryOrMemoryId
     @currentMemoryId memoryId

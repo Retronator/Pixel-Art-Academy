@@ -16,6 +16,8 @@ class LOI.Memory.Progress extends AM.Document
         memory: Document.ReferenceField LOI.Memory
       ]
 
+  # TODO: Turn into a persistent collection.
+  
   # Methods
 
   @updateProgress: @method 'updateProgress'
