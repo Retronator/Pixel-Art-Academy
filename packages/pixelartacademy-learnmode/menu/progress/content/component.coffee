@@ -9,6 +9,9 @@ class LM.Menu.Progress.Content.Component extends AM.Component
   onCreated: ->
     super arguments...
     
+    @progress = @ancestorComponentOfType LM.Menu.Progress
+    @progressContent = @ancestorComponentOfType LM.Menu.Progress.Content
+    
     @tags = new ComputedField =>
       content = @data()
       
@@ -26,7 +29,26 @@ class LM.Menu.Progress.Content.Component extends AM.Component
   hasContentsClass: ->
     content = @data()
     'has-contents' if content.contents().length > 0
+  
+  showPreview: ->
+    # Show preview only in the courses preview.
+    return unless @progress.inPreview()
+    
+    # Show when the content has any child content.
+    content = @data()
+    return unless content.contents().length
+    
+    # Show when the content is not expanded.
+    not @progressContent.contentsDisplayed()
+  
+  showCompletion: ->
+    # Only show completion in game.
+    return unless @progress.inGame()
 
+    # Show completion when the content has been unlocked.
+    content = @data()
+    content.unlocked()
+  
   showRequiredUnits: ->
     content = @data()
     content.progress.requiredUnits() and (not content.completed() or content.contents().length)

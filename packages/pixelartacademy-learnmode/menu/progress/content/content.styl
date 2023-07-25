@@ -39,6 +39,16 @@
       display flex
       align-items center
 
+      &:hover
+        .preview
+          .button
+            color atariGray(7)
+            background atariCyan(3)
+
+            &:active
+              border-bottom 0
+              margin-top 2rem
+
       &.has-contents
         cursor pointer
 
@@ -98,9 +108,18 @@
             text-align center
             padding 2rem
 
+      .preview
       .completion
         flex-grow 1
         text-align right
+
+      .preview
+        .button
+          text-transform uppercase
+          color atariCyan(7)
+          background atariCyan(2)
+          border none
+          border-bottom 2rem solid atariCyan(1)
 
       h1 + .completion
       h2 + .completion

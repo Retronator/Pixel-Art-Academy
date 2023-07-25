@@ -25,8 +25,8 @@
           <li class="menu-item"><span class="progress actionable">Progress</span></li>
         {{/if}}
         <li class="menu-item"><span class="settings actionable">Settings</span></li>
-        {{#if creditsVisible}}
-          <li class="menu-item"><span class="credits actionable">Credits</span></li>
+        {{#if extrasVisible}}
+          <li class="menu-item"><span class="extras actionable">Extras</span></li>
         {{/if}}
         {{#if quitToMenuVisible}}
           <li class="menu-item"><span class="quit-to-menu actionable">Quit to menu</span></li>
@@ -81,6 +81,13 @@
           </li>
         {{/if}}
         <!-- TODO li class="menu-item"><span class="actionable permissions">Permissions</span></li-->
+        <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
+      </ul>
+    {{/if}}
+    {{#if inExtras}}
+      <ul class="extras menu">
+        <li class="menu-item"><span class="courses actionable">Courses preview</span></li>
+        <li class="menu-item"><span class="credits actionable">Credits</span></li>
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>
     {{/if}}

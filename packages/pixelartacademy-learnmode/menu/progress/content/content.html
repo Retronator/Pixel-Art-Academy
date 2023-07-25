@@ -54,12 +54,17 @@
         {{/each}}
       </ul>
     {{/if}}
+    {{#if showPreview}}
+      <div class="preview">
+        <button class="button">Preview</button>
+      </div>
+    {{/if}}
     {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
   </div>
 </template>
 
 <template name="PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion">
-  {{#if unlocked}}
+  {{#if showCompletion}}
     <div class="completion">
       {{#if completionistMode}}
         <span class="total-percentage" {{totalPercentageTitleAttribute}}>

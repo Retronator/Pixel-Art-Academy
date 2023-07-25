@@ -11,6 +11,8 @@ class LM.Menu.Progress.Content extends AM.Component
 
   onCreated: ->
     super arguments...
+    
+    @progress = @ancestorComponentOfType LM.Menu.Progress
 
     @contentsDisplayed = new ReactiveField @_defaultContentsDisplayed()
 
@@ -29,6 +31,9 @@ class LM.Menu.Progress.Content extends AM.Component
         @_setContentsDisplayed @_defaultContentsDisplayed(), 1
 
   _defaultContentsDisplayed: ->
+    # Never automatically show content in preview mode.
+    return if @progress.inPreview()
+    
     content = @data()
 
     switch LM.Menu.Progress.completionDisplayType()
@@ -72,9 +77,19 @@ class LM.Menu.Progress.Content extends AM.Component
 
   unavailableClass: ->
     content = @data()
-    'unavailable' unless content.available()
+    
+    if @progress.inGame()
+      # In game, use calculated availability status.
+      'unavailable' unless content.available()
+      
+    else if @progress.inPreview()
+      # In course preview, unavailable classes have the future tag.
+      'unavailable' if LM.Content.Tags.Future in content.tags()
 
   lockedClass: ->
+    # Only show locked status when in game.
+    return unless @progress.inGame()
+    
     content = @data()
     'locked' unless content.unlocked()
 

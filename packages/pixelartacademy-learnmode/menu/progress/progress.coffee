@@ -7,7 +7,8 @@ LM = PixelArtAcademy.LearnMode
 
 class LM.Menu.Progress extends AM.Component
   @id: -> 'PixelArtAcademy.LearnMode.Menu.Progress'
-  @url: -> 'progress'
+  @inGameUrl: -> 'progress'
+  @inPreviewUrl: -> 'courses'
   
   @version: -> '0.1.0'
 
@@ -26,13 +27,19 @@ class LM.Menu.Progress extends AM.Component
   
   mixins: -> [@activatable]
   
+  inGame: -> LOI.adventure.profileId()
+  inPreview: -> not @inGame()
+  
+  url: -> if @inGame() then @constructor.inGameUrl() else @constructor.inPreviewUrl()
+  
   constructor: ->
     super arguments...
   
     @activatable = new LOI.Components.Mixins.Activatable
   
-    LOI.Adventure.registerDirectRoute "/#{@constructor.url()}", =>
-      @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
+    for url in [@constructor.inGameUrl(), @constructor.inPreviewUrl()]
+      LOI.Adventure.registerDirectRoute "/#{url}", =>
+        @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
   
   show: ->
     LOI.adventure.showActivatableModalDialog

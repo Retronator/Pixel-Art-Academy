@@ -39,11 +39,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     
     else
       super arguments...
-
-  creditsVisible: ->
-    return false # TODO
-    
-    # Credits are visible only on the landing page.
+  
+  extrasVisible: ->
+    # Extras are visible only on the landing page.
     @options.landingPage
 
   quitToMenuVisible: ->
@@ -54,8 +52,11 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     super(arguments...).concat
       # Main menu
       'click .main-menu .progress': @onClickMainMenuProgress
+      'click .main-menu .extras': @onClickMainMenuExtras
       'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
       'click .settings .fullscreen': @onClickSettingsFullscreen
+      'click .extras .courses': @onClickExtrasCourses
+      'click .extras .back-to-menu': @onClickExtrasBackToMenu
 
   onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -68,6 +69,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
   onClickMainMenuProgress: (event) ->
     @progress.show()
+  
+  onClickMainMenuExtras: (event) ->
+    @currentScreen @constructor.Screens.Extras
     
   onClickMainMenuQuitToMenu: (event) ->
     # Check if the profile is being synced.
@@ -136,3 +140,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
   onClickSettingsBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu
+    
+  onClickExtrasCourses: (event) ->
+    @progress.show()
+    
+  onClickExtrasBackToMenu: (event) ->
+    @goToMainMenu()

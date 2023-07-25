@@ -6,12 +6,12 @@
         {{> t10e description}}
       </div>
     {{/if}}
-    {{#unless unlocked}}
+    {{#if showUnlockInstructions}}
       {{#if unlockInstructionsTranslation}}
         <div class="unlock-instructions">
           {{> t10e unlockInstructionsTranslation}}
         </div>
       {{/if}}
-    {{/unless}}
+    {{/if}}
   </div>
 </template>

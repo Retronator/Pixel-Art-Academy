@@ -52,4 +52,4 @@ LM.Content.Tags.initialize
     description: "This content is currently work in progress. Players with alpha access can play it in its unfinished state."
   Future:
     displayName: "Future"
-    description: "This content is planned for development in the future and is not yet available."
+    description: "This content is planned for development in the future and is not yet available. Content might change as work progresses."

@@ -10,6 +10,7 @@ class LOI.Components.Menu.Items extends AM.Component
     MainMenu: 'MainMenu'
     Settings: 'Settings'
     Permissions: 'Permissions'
+    Extras: 'Extras'
 
   constructor: (@options = {}) ->
     super arguments...
@@ -62,6 +63,12 @@ class LOI.Components.Menu.Items extends AM.Component
 
   inSettings: ->
     @currentScreen() is @constructor.Screens.Settings
+  
+  inPermissions: ->
+    @currentScreen() is @constructor.Screens.Permissions
+    
+  inExtras: ->
+    @currentScreen() is @constructor.Screens.Extras
     
   goToMainMenu: ->
     @currentScreen @constructor.Screens.MainMenu
@@ -77,9 +84,6 @@ class LOI.Components.Menu.Items extends AM.Component
 
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
-
-  inPermissions: ->
-    @currentScreen() is @constructor.Screens.Permissions
 
   permissionsPersistSettings: ->
     @_permissionsValue LOI.settings.persistSettings
