@@ -167,7 +167,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
           
           delay += Math.max 50, @_gradualDelay index
           
-      delay += 1000
+      delay += 200
   
       @_timeouts.push Meteor.setTimeout =>
         @_presentChoice()
@@ -300,7 +300,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
           # Present the final selection.
           @_presentFinalSelection()
     ,
-      if @remainingCards.length is 1 then 600 else 1000
+      if @remainingCards.length is 1 then 600 else 200
   
   _makeFinalSelection: (selection) ->
     @finalSelection false
