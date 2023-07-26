@@ -23,6 +23,7 @@ class LM.Adventure extends PAA.Adventure
 
   @episodeClasses: -> [
     LM.Intro
+    LM.PixelArtFundamentals
   ]
 
   titleSuffix: -> ' // Pixel Art Academy: Learn Mode'

@@ -6,7 +6,22 @@
       <div class="viewport-area">
         <div class="progress-area">
           <div class="courses-area">
-          <h1 class="title">Courses</h1>
+            <h1 class="title">Courses</h1>
+            {{#if inPreview}}
+              <div class="preview-description">
+                <p>
+                  This is an overview of released courses and an approximate roadmap of future courses.
+                  The design will change over time as development proceeds.
+                </p>
+                <p>No time estimates are given since
+                  development of new content is highly unpredictable. The game is mainly developed by one person,
+                  so expect slow, but steady progress.
+                </p>
+                <p>
+                  Click on the preview button to learn more about each course.
+                </p>
+              </div>
+            {{/if}}
             <ul class="courses contents">
               {{#each courses}}
                 <li class="course content">{{> PixelArtAcademy.LearnMode.Menu.Progress.Content}}</li>

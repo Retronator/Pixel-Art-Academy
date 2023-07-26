@@ -4,7 +4,7 @@ LM = PixelArtAcademy.LearnMode
 class LM.Intro extends LOI.Adventure.Episode
   @id: -> 'PixelArtAcademy.LearnMode.Intro'
 
-  @fullName: -> "Learn Mode introduction"
+  @fullName: -> "Pixel art tools"
 
   @chapters: -> [
     @Tutorial

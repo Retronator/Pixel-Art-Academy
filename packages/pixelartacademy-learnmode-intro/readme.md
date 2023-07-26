@@ -4,4 +4,4 @@
 
 ### Intro
 
-The base Learn Mode module that sets everything up and provides the tutorial or demo content.
+The base Learn Mode module that sets everything up and provides the pixel art tools tutorial (demo) content.

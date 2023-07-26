@@ -36,10 +36,11 @@ class LM.Menu.Progress.Content.Component extends AM.Component
     
     # Show when the content has any child content.
     content = @data()
-    return unless content.contents().length
+    content.contents().length
     
-    # Show when the content is not expanded.
-    not @progressContent.contentsDisplayed()
+  previewVisibleClass: ->
+    # The preview text is visible when the content is not expanded.
+    'visible' if not @progressContent.contentsDisplayed()
   
   showCompletion: ->
     # Only show completion in game.

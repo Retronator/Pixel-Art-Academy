@@ -76,15 +76,11 @@ class LM.Menu.Progress.Content extends AM.Component
     @contentsDisplayed newContentsDisplayed
 
   unavailableClass: ->
-    content = @data()
+    # Only show unavailable status when in game.
+    return unless @progress.inGame()
     
-    if @progress.inGame()
-      # In game, use calculated availability status.
-      'unavailable' unless content.available()
-      
-    else if @progress.inPreview()
-      # In course preview, unavailable classes have the future tag.
-      'unavailable' if LM.Content.Tags.Future in content.tags()
+    content = @data()
+    'unavailable' unless content.available()
 
   lockedClass: ->
     # Only show locked status when in game.

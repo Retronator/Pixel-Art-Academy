@@ -33,7 +33,10 @@ class LM.Content
   # String to represent the course in the UI. Note that we can't use
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the content name."
-  
+
+  # Override to provide a string that shortly describes the content as seen in the courses preview screen.
+  @description: -> null
+
   # Override to provide tags for this course.
   @tags: -> []
 
@@ -55,7 +58,7 @@ class LM.Content
 
         # Create this avatar's translated names.
         translationNamespace = @id()
-        for property in ['displayName', 'unlockInstructions']
+        for property in ['displayName', 'description', 'unlockInstructions']
           value = @[property]()
           AB.createTranslation translationNamespace, property, value if value?
 
@@ -94,6 +97,12 @@ class LM.Content
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
+  
+  description: ->
+    translated = AB.translate @_translationSubscription, 'description'
+    if translated.language then translated.text else null
+  
+  descriptionTranslation: -> AB.existingTranslation @_translationSubscription, 'description'
 
   tags: -> @constructor.tags()
   

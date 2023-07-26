@@ -32,30 +32,32 @@
 
 <template name="PixelArtAcademy.LearnMode.Menu.Progress.Content.TitleArea">
   <div class="title-area {{hasContentsClass}}">
-    {{#if $is depth 1}}
-      <h1 class="title">{{displayName}}</h1>
-    {{/if}}
-    {{#if $is depth 2}}
-      <h2 class="title">{{displayName}}</h2>
-    {{/if}}
-    {{#if $is depth 3}}
-      <h3 class="title">{{displayName}}</h3>
-    {{/if}}
-    {{#if $is depth 4}}
-      <h4 class="title">{{displayName}}</h4>
-    {{/if}}
-    {{#if tags.length}}
-      <ul class="tags">
-        {{#each tags}}
-          <li class="tag {{tagClass}}">
-            {{displayName}}
-            <div class="description">{{description}}</div>
-          </li>
-        {{/each}}
-      </ul>
-    {{/if}}
+    <div class="title-with-tags">
+      {{#if $is depth 1}}
+        <h1 class="title">{{displayName}}</h1>
+      {{/if}}
+      {{#if $is depth 2}}
+        <h2 class="title">{{displayName}}</h2>
+      {{/if}}
+      {{#if $is depth 3}}
+        <h3 class="title">{{displayName}}</h3>
+      {{/if}}
+      {{#if $is depth 4}}
+        <h4 class="title">{{displayName}}</h4>
+      {{/if}}
+      {{#if tags.length}}
+        <ul class="tags">
+          {{#each tags}}
+            <li class="tag {{tagClass}}">
+              {{displayName}}
+              <div class="description">{{description}}</div>
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </div>
     {{#if showPreview}}
-      <div class="preview">
+      <div class="preview {{previewVisibleClass}}">
         <button class="button">Preview</button>
       </div>
     {{/if}}

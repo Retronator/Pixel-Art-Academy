@@ -31,8 +31,8 @@ class LM.Content.Course
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the course name."
 
-  # String to display under the course name in the Learn Mode app.
-  @description: -> throw new AE.NotImplementedException "You must specify the learn mode description."
+  # Override to provide a string that shortly describes the content as seen in the courses preview/progress screen.
+  @description: -> throw new AE.NotImplementedException "You must specify the course description."
 
   # Override to provide tags for this course.
   @tags: -> []

@@ -3,8 +3,19 @@
 .pixelartacademy-learnmode-menu-progress-content
   margin-top 8rem
 
+  &.depth-1
+    color atariGray(7)
+
   &.depth-2
     margin-bottom 16rem
+    color atariGray(6)
+
+  &.depth-3
+    color atariGray(5)
+
+  &.depth-4
+    padding-left 10rem
+    color atariGray(4)
 
   &.unavailable
     color atariGray(3)
@@ -18,9 +29,6 @@
         height 8rem
         margin-left 4rem
         background-image url("/pixelartacademy/learnmode/menu/progress/lock.png")
-
-  &.depth-4
-    padding-left 10rem
 
   .component
     &.completed
@@ -38,6 +46,7 @@
     .title-area
       display flex
       align-items center
+      justify-content space-between
 
       &:hover
         .preview
@@ -52,68 +61,89 @@
       &.has-contents
         cursor pointer
 
-      .tags
-        list-style none
-        padding 0
-        margin 0 10rem
-        small-print()
-
-        .tag
-          position relative
-          display inline-block
+      .title-with-tags
+        .tags
+        .title
           vertical-align middle
-          text-transform uppercase
-          padding-left 1rem
 
-          &:hover
-            .description
-              display block
+        .title
+          display inline
 
-          &.free
-            background atariGreen(1)
-            color atariGreen(6)
+        .tags
+          display inline-block
+          list-style none
+          padding 0
+          margin 0 10rem
+          small-print()
+
+          .tag
+            position relative
+            text-transform uppercase
+            padding-left 1rem
+            margin 3rem 0
+
+            &:hover
+              .description
+                display block
+
+            &.free
+            &.base-game
+              background atariGreen(1)
+              color atariGreen(6)
+
+              &::before
+              &::after
+                border-color atariGreen(2)
+
+              .description
+                background atariGreen(0)
+
+            &.future
+              background atariIndigo(1)
+              color atariIndigo(6)
+
+              &::before
+              &::after
+                border-color atariIndigo(2)
+
+              .description
+                background atariIndigo(0)
 
             &::before
             &::after
-              border-color atariGreen(2)
+              content ''
+              absolute-cover()
+              border 1rem solid
 
-          &::before
-          &::after
-            content ''
-            absolute-cover()
-            border 1rem solid
+            &::before
+              top -1rem
+              bottom -1rem
+              border-left none
+              border-right none
 
-          &::before
-            top -1rem
-            bottom -1rem
-            border-left none
-            border-right none
+            &::after
+              left -1rem
+              right -1rem
+              border-top none
+              border-bottom none
 
-          &::after
-            left -1rem
-            right -1rem
-            border-top none
-            border-bottom none
-
-          .description
-            display none
-            position absolute
-            z-index 1
-            bottom 7rem
-            left 50%
-            width 100rem
-            transform translateX(-50%)
-            background atariGray(1)
-            color atariGray(5)
-            text-align center
-            padding 2rem
+            .description
+              display none
+              position absolute
+              z-index 1
+              bottom 7rem
+              left 50%
+              width 120rem
+              transform translateX(-50%)
+              text-align center
+              padding 3rem 4rem
 
       .preview
-      .completion
-        flex-grow 1
-        text-align right
+        visibility hidden
 
-      .preview
+        &.visible
+          visibility visible
+
         .button
           text-transform uppercase
           color atariCyan(7)

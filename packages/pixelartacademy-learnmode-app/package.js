@@ -40,6 +40,7 @@ Package.onUse(function(api) {
 
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-learnmode-intro');
+  api.use('retronator:pixelartacademy-learnmode-pixelartfundamentals');
 
   api.export('PixelArtAcademy');
 
