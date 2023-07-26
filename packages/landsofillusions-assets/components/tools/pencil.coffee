@@ -19,22 +19,22 @@ class LOI.Assets.Components.Tools.Pencil extends LandsOfIllusions.Assets.Compone
     @applyPencil()
 
   applyPencil: ->
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
 
-    xCoordinates = [[@mouseState.x, 1]]
+    xCoordinates = [[@constructor.mouseState.x, 1]]
 
     spriteData = @options.editor().spriteData()
     symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
-      mirroredX = -@mouseState.x + 2 * symmetryXOrigin
+      mirroredX = -@constructor.mouseState.x + 2 * symmetryXOrigin
       xCoordinates.push [mirroredX, -1]
 
     for [xCoordinate, xNormalFactor] in xCoordinates
       # Create the new pixel.
       pixel =
         x: xCoordinate
-        y: @mouseState.y
+        y: @constructor.mouseState.y
 
       # If we have fixed bounds, make sure we're inside.
       if spriteData.bounds?.fixed

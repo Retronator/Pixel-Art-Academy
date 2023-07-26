@@ -12,7 +12,10 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
   onMouseDown: (event) ->
     super arguments...
 
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
+    
+    return unless editor = @editor()
+    return unless pixelCoordinate = editor.mouse().pixelCoordinate()
 
     # Make sure we have paint at all.
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
@@ -30,13 +33,13 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
     layerIndex = paintHelper.layerIndex()
     layer = assetData.layers?[layerIndex]
 
-    xCoordinates = [@mouseState.x]
+    xCoordinates = [pixelCoordinate.x]
 
     # TODO: Get symmetry from interface data.
     # symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
-      mirroredX = -@mouseState.x + 2 * symmetryXOrigin
+      mirroredX = -pixelCoordinate.x + 2 * symmetryXOrigin
       xCoordinates.push mirroredX
 
     layerOrigin =
@@ -58,11 +61,11 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
 
     for xCoordinate in xCoordinates
       # Make sure we're filling inside of bounds.
-      continue unless assetData.bounds.left <= xCoordinate <= assetData.bounds.right and assetData.bounds.top <= @mouseState.y <= assetData.bounds.bottom
+      continue unless assetData.bounds.left <= xCoordinate <= assetData.bounds.right and assetData.bounds.top <= pixelCoordinate.y <= assetData.bounds.bottom
 
       pixel =
         x: xCoordinate - layerOrigin.x
-        y: @mouseState.y - layerOrigin.y
+        y: pixelCoordinate.y - layerOrigin.y
 
       for property in ['materialIndex', 'paletteColor', 'directColor']
         pixel[property] = paint[property] if paint[property]?

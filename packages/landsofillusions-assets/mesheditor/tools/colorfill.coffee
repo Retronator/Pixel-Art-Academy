@@ -23,7 +23,7 @@ class LOI.Assets.MeshEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.Tool
   onMouseDown: (event) ->
     super arguments...
 
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
 
     # Make sure we have paint at all.
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
@@ -54,8 +54,8 @@ class LOI.Assets.MeshEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.Tool
     cornerNeighbors = @data.get('cornerNeighbors')
 
     # See if there is a pixel at the fill location.
-    targetX = @mouseState.x - bounds.x
-    targetY = @mouseState.y - bounds.y
+    targetX = @constructor.mouseState.x - bounds.x
+    targetY = @constructor.mouseState.y - bounds.y
     targetExists = picture.pixelExistsRelative targetX, targetY
 
     # Start filling at the target.

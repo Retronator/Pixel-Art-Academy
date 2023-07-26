@@ -19,7 +19,7 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     @pickCluster false
 
   pickCluster: (cycle) ->
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
 
     meshCanvas = @editor()
 

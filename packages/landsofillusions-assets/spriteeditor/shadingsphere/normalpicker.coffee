@@ -14,7 +14,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Comp
     @calculateNormal()
 
   calculateNormal: ->
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
 
     shadingSphere = @options.editor()
 

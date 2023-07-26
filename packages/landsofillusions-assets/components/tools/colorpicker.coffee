@@ -20,14 +20,14 @@ class LOI.Assets.Components.Tools.ColorPicker extends LandsOfIllusions.Assets.Co
     @pickColor()
 
   pickColor: ->
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
 
     spriteData = @options.editor().spriteData()
 
     # Go over all pixels to find the one we want.
     for layer in spriteData.layers
       for pixel in layer.pixels
-        if pixel.x is @mouseState.x and pixel.y is @mouseState.y
+        if pixel.x is @constructor.mouseState.x and pixel.y is @constructor.mouseState.y
           if pixel.paletteColor
             @options.editor().palette().setColor pixel.paletteColor.ramp, pixel.paletteColor.shade
 

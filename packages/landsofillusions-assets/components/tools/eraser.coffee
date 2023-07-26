@@ -19,23 +19,23 @@ class LOI.Assets.Components.Tools.Eraser extends LandsOfIllusions.Assets.Compone
     @applyEraser()
 
   applyEraser: ->
-    return unless @mouseState.leftButton
+    return unless @constructor.mouseState.leftButton
 
     # Do we even need to remove this pixel? See if it is even there.
     spriteData = @options.editor().spriteData()
 
-    xCoordinates = [@mouseState.x]
+    xCoordinates = [@constructor.mouseState.x]
 
     symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
-      mirroredX = -@mouseState.x + 2 * symmetryXOrigin
+      mirroredX = -@constructor.mouseState.x + 2 * symmetryXOrigin
       xCoordinates.push mirroredX
 
     for xCoordinate in xCoordinates
       pixel =
         x: xCoordinate
-        y: @mouseState.y
+        y: @constructor.mouseState.y
 
       existing = LOI.Assets.Sprite.documents.findOne
         _id: spriteData._id
