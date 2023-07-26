@@ -46,36 +46,42 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     pixelSize = 1 / effectiveScale
     context.lineWidth = pixelSize
 
-    if scale > 4
-      context.strokeStyle = 'rgb(50,50,50)'
-      context.setLineDash [2 / scale]
-
-    else
-      context.strokeStyle = 'rgba(50,50,50,0.5)'
-      context.setLineDash []
-
     size = cursorArea.shape.length
     position = cursorArea.position.pixelPerfectTopLeftCoordinates
 
-    context.beginPath()
+    for step in [1..2]
+      if scale > 4
+        # Alternate between black and white dashes.
+        context.strokeStyle = if step is 1 then 'rgba(255,255,255,0.3)' else 'rgba(0,0,0,0.3)'
+        context.setLineDash [2 / scale]
+        context.lineDashOffset = step * 2 / scale
+      
+      else
+        # The small scale cursor doesn't have two dashed colors.
+        break if step is 2
 
-    for x in [0..size]
-      for y in [0..size]
-        current = (cursorArea.shape[x]?[y] or false)
-        # Look up to see if we should draw a horizontal line.
-        unless current is (cursorArea.shape[x]?[y - 1] or false)
-          context.moveTo position.x + x, position.y + y
-          context.lineTo position.x + x + 1, position.y + y
-
-        # Look left to see if we should draw a vertical line.
-        unless current is (cursorArea.shape[x - 1]?[y] or false)
-          context.moveTo position.x + x, position.y + y
-          context.lineTo position.x + x, position.y + y + 1
-
-    context.stroke()
-
-    # TODO: symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin?()
-    #
-    # if symmetryXOrigin?
-    #   mirroredX = -cursorArea.position.x + 2 * symmetryXOrigin
-    #   context.strokeRect mirroredX, cursorArea.position.y, 1, 1
+        context.strokeStyle = 'rgba(128,128,128,0.5)'
+        context.setLineDash []
+      
+      context.beginPath()
+  
+      for x in [0..size]
+        for y in [0..size]
+          current = (cursorArea.shape[x]?[y] or false)
+          # Look up to see if we should draw a horizontal line.
+          unless current is (cursorArea.shape[x]?[y - 1] or false)
+            context.moveTo position.x + x, position.y + y
+            context.lineTo position.x + x + 1, position.y + y
+  
+          # Look left to see if we should draw a vertical line.
+          unless current is (cursorArea.shape[x - 1]?[y] or false)
+            context.moveTo position.x + x, position.y + y
+            context.lineTo position.x + x, position.y + y + 1
+  
+      context.stroke()
+  
+      # TODO: symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin?()
+      #
+      # if symmetryXOrigin?
+      #   mirroredX = -cursorArea.position.x + 2 * symmetryXOrigin
+      #   context.strokeRect mirroredX, cursorArea.position.y, 1, 1
