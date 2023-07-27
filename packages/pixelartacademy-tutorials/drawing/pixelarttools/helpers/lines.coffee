@@ -12,7 +12,10 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
 
   @fixedDimensions: -> width: 57, height: 32
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-
+  
+  @imageUrl: ->
+    "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/720.png"
+    
   @goalImageUrl: ->
     "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/720-goal.png"
 
