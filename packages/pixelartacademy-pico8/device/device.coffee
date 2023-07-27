@@ -32,6 +32,9 @@ class PAA.Pico8.Device extends AM.Component
     @projectId projectId
 
   start: ->
+    @stop() if @_started
+    @_started = true
+    
     # Create the canvas for PICO-8 display.
     @_$canvas = $('<canvas>')
     @$('.screen').append(@_$canvas)
@@ -50,6 +53,8 @@ class PAA.Pico8.Device extends AM.Component
       @_startWithCartridgeUrl game.cartridge.url
 
   _startWithCartridgeUrl: (cartridgeUrl) ->
+    console.groupCollapsed "PICO-8"
+    
     PAA.Pico8.Device.Module =
       arguments: [cartridgeUrl]
       canvas: @_$canvas[0]
@@ -58,11 +63,13 @@ class PAA.Pico8.Device extends AM.Component
             # Enable PICO-8 runtime to exit normally. We need to do this in postRun since it gets set to true on run.
             PAA.Pico8.Device.Module.noExitRuntime = false
         ]
+      onExit: => console.groupEnd()
       gpio: (address, value) =>
         @options.onInputOutput? address, value
         @handleSpriteReplacementIO address, value
 
     # Start PICO-8 runtime.
+    # HACK: We simply add the script every time we launch to have the runtime use the new Module.
     runtimeUrl = '/packages/retronator_pixelartacademy-pico8/device/runtime/pico8.min.js'
     $('head').append("<script src='#{runtimeUrl}'>")
     
@@ -73,10 +80,13 @@ class PAA.Pico8.Device extends AM.Component
     # Clean up audio context.
     PAA.Pico8.Device.Module?.audioContext.close()
 
+    # Exit PICO-8 module, which will throw an exit status, so we catch it.
     try
       PAA.Pico8.Device.Module?.exit(0)
 
-    catch error
+    catch exitStatus
+    
+    @_started = false
 
   pressButton: (buttonIndex) ->
     PAA.Pico8.Device.Module?.SDL.events.push
@@ -90,10 +100,10 @@ class PAA.Pico8.Device extends AM.Component
 
   keyCodeToButtonIndex: (keyCode) ->
     switch keyCode
-      when AC.Keys.left then @constructor.Buttons.Left
-      when AC.Keys.right then @constructor.Buttons.Right
-      when AC.Keys.up then @constructor.Buttons.Up
-      when AC.Keys.down then @constructor.Buttons.Down
+      when AC.Keys.left, AC.Keys.a then @constructor.Buttons.Left
+      when AC.Keys.right, AC.Keys.d then @constructor.Buttons.Right
+      when AC.Keys.up, AC.Keys.w then @constructor.Buttons.Up
+      when AC.Keys.down, AC.Keys.s then @constructor.Buttons.Down
       when AC.Keys.z, AC.Keys.c, AC.Keys.n then @constructor.Buttons.Z
       when AC.Keys.x, AC.Keys.v, AC.Keys.m then @constructor.Buttons.X
       else

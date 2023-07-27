@@ -46,21 +46,21 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     $(document).off '.pixelartacademy-pico8-device-handheld'
 
-  start: ->
+  powerStart: ->
     @powerOn true
 
     # Actually start with the delay after the switch has animated.
     Meteor.setTimeout =>
-      super arguments...
+      @start()
     ,
       200
 
-  stop: ->
+  powerStop: ->
     @powerOn false
 
     # Actually stop with the delay after the switch has animated.
     Meteor.setTimeout =>
-      super arguments...
+      @stop()
     ,
       200
 
@@ -98,10 +98,10 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     @powerOn not @powerOn()
 
     if @powerOn()
-      @start()
+      @powerStart()
 
     else
-      @stop()
+      @powerStop()
 
   onClickMenuButton: (event) ->
     @reversedControls not @reversedControls()

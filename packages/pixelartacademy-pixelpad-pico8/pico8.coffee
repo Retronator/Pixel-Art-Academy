@@ -59,8 +59,10 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       device = @device()
       device.loadGame cartridge.game(), cartridge.projectId()
 
-      Meteor.setTimeout =>
-        device.start()
+      Meteor.clearTimeout @_deviceStartTimeout
+
+      @_deviceStartTimeout = Meteor.setTimeout =>
+        device.powerStart()
       ,
         1500
 
@@ -68,7 +70,7 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
     drawer = @drawer()
 
     if @cartridge()
-      @device().stop()
+      @device().powerStop()
 
       Meteor.setTimeout =>
         @cartridge null
