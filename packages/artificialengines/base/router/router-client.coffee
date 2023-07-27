@@ -1,7 +1,23 @@
 AB = Artificial.Base
 
 class AB.Router extends AB.Router
-  @currentRouteData = new ReactiveField null
+  @currentRoutingContexts = new ReactiveField []
+  
+  @addRoutingContext: (name) ->
+    currentRoutingContexts = @currentRoutingContexts()
+    currentRoutingContexts.push {name, routeData: null}
+    @currentRoutingContexts currentRoutingContexts
+    
+    @onPathChange()
+    
+  @removeRoutingContext: (name) ->
+    currentRoutingContexts = @currentRoutingContexts()
+    _.remove currentRoutingContexts, (context) -> context.name is name
+    @currentRoutingContexts currentRoutingContexts
+  
+  @currentRouteData = new ComputedField @currentRouteData
+  @currentRouteData: =>
+    _.last(@currentRoutingContexts())?.routeData
 
   # Minimize reactivity by isolating different parts of the route.
   @currentParameters = new ComputedField @currentParameters, EJSON.equals
@@ -20,8 +36,12 @@ class AB.Router extends AB.Router
   @currentRoutePath: =>
     @currentRouteData()?.path
 
-  @getParameter: (parameter) ->
-    @currentParameters()[parameter]
+  @getParameter: (parameter, contextName = null) ->
+    @getParameters(contextName)?[parameter]
+    
+  @getParameters: (contextName = null) ->
+    routingContext = _.find @currentRoutingContexts(), (routingContext) => routingContext.name is contextName
+    routingContext?.routeData.parameters
 
   @setParameter: (parameter, value, options) ->
     # We need to clone the parameters before we change them, since otherwise we'd be
@@ -89,7 +109,7 @@ class AB.Router extends AB.Router
       historyFunction = if options.createHistory then 'pushState' else 'replaceState'
 
       history[historyFunction] {}, null, path
-      @onPathChange()
+      Tracker.nonreactive => @onPathChange()
 
   @postToUrl: (url, parameters) ->
     $form = $("<form method='post' action='#{url}'>")
@@ -135,9 +155,6 @@ class AB.Router extends AB.Router
     $window.on 'hashchange', => @onPathChange()
     $window.on 'popstate', => @onPathChange()
 
-    # Process URL for the first time.
-    @onPathChange()
-
     # Hijack link clicks.
     $('body').on 'click', 'a', (event) =>
       link = event.currentTarget
@@ -168,6 +185,9 @@ class AB.Router extends AB.Router
         error = await Desktop.call 'hyperlink', 'open', href
         throw new AE.ExternalException "Opening a hyperlink failed.", href, error if error
 
+    # Add default route context, which will process the URL for the first time.
+    @addRoutingContext null
+    
   @renderPageComponent: (parentComponent) ->
     return null unless currentRoute = @currentRoute()
     return null unless currentPageComponent = @currentPageComponent()
@@ -188,12 +208,12 @@ class AB.Router extends AB.Router
 
     {route, matchData} = @findRoute host, path
 
-    if matchData
-      currentRouteData = _.extend {route, path, host, searchParameters}, matchData
-      @currentRouteData currentRouteData
+    currentRouteData = null
+    currentRouteData = _.extend {route, path, host, searchParameters}, matchData if matchData
 
-    else
-      @currentRouteData null
+    currentRoutingContexts = @currentRoutingContexts()
+    _.last(currentRoutingContexts).routeData = currentRouteData
+    @currentRoutingContexts currentRoutingContexts
 
   # Dynamically update window title based on the current route.
   @updateWindowTitle: (route, routeParameters) ->

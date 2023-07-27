@@ -91,7 +91,7 @@ class HQ.Adventure extends LOI.Adventure
     # HACK: Feed the 'daily' parameter into the URL so that adventure routing will trigger the daily direct route.
     prefix = 'retronator'
 
-    parameters = AB.Router.currentParameters()
+    parameters = AB.Router.getParameters()
     prefix = 'daily' if parameters.parameter2 in [undefined, 'page', 'tagged', 'post']
 
     "/#{prefix}#{AB.Router.currentRoutePath()}"

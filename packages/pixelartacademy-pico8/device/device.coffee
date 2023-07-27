@@ -26,6 +26,11 @@ class PAA.Pico8.Device extends AM.Component
       return unless projectId = @projectId()
       PAA.Practice.Project.forId.subscribe @, projectId
       PAA.Practice.Project.documents.findOne projectId
+      
+  onDestroyed: ->
+    super arguments...
+    
+    @stop() if @_started
 
   loadGame: (game, projectId) ->
     @game game

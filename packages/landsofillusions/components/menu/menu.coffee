@@ -1,10 +1,12 @@
+AB = Artificial.Base
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Components.Menu extends AM.Component
-  @register 'LandsOfIllusions.Components.Menu'
+  @id: -> 'LandsOfIllusions.Components.Menu'
+  @register @id()
   @url: -> 'menu'
 
   constructor: (@options = {}) ->
@@ -55,6 +57,9 @@ class LOI.Components.Menu extends AM.Component
     $(document).off '.menu'
 
   showMenu: ->
+    # We add a new routing context to not interfere with main adventure routing.
+    AB.Router.addRoutingContext @constructor.id()
+    
     LOI.adventure.addModalDialog
       dialog: @
       # We already render the menu ourselves as it only becomes an active dialog when it's visible.
@@ -69,6 +74,9 @@ class LOI.Components.Menu extends AM.Component
 
   hideMenu: ->
     LOI.adventure.removeModalDialog @
+    
+    # We can return to main adventure routing.
+    AB.Router.removeRoutingContext @constructor.id()
 
     # Fade out and then make menu not visible.
     @$('.menu-overlay').velocity('stop').velocity

@@ -17,7 +17,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
     # On the server we don't have access to route parameters.
     return title if Meteor.isServer
 
-    switch AB.Router.currentParameters().pageOrBook
+    switch AB.Router.getParameters().pageOrBook
       when @Pages.StudyPlan then title = "Study Plan // #{title}"
       when @Pages.About then title = "About // #{title}"
 
@@ -178,7 +178,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
 
   pageClass: ->
     Pages = PAA.StudyGuide.Pages.Home.Pages
-    pageOrBook = @layout.router.currentParameters().pageOrBook
+    pageOrBook = @layout.router.getParameters().pageOrBook
 
     # If first parameter is not defined, we're on activities.
     return Pages.Activities unless pageOrBook
@@ -231,7 +231,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
   sceneStyle: ->
     return unless @_componentsCreated()
 
-    switch @layout.router.currentParameters().pageOrBook
+    switch @layout.router.getParameters().pageOrBook
       when @constructor.Pages.StudyPlan
         top = -@heightConstants.navigation
         left = @studyPlan.left()

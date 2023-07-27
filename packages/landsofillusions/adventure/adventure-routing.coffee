@@ -79,6 +79,9 @@ class LOI.Adventure extends LOI.Adventure
 
         currentUrl = @currentUrl()
 
+        # Desired URL doesn't include a leading slash so we normalize current URL to not have it either.
+        currentUrl = currentUrl[1..] if _.startsWith currentUrl, '/'
+        
         if _.endsWith desiredUrl, '/*'
           urlPrefix = desiredUrl.substring 0, desiredUrl.length - 2
           return if currentUrl.indexOf urlPrefix is 0

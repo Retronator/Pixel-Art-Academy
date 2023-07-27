@@ -1,3 +1,4 @@
+AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
@@ -55,3 +56,9 @@ class LM.Adventure extends PAA.Adventure
     await _.waitForFlush()
 
     @interface.prepareLocation()
+    
+  showLoading: ->
+    # Don't show the loading screen if the interface is already indicating we're waiting.
+    return if LOI.adventure.interface.waiting()
+    
+    super arguments...

@@ -61,10 +61,11 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       return unless fileData = @interface.getActiveFileData()
       
       drawingActive = @drawingActive()
+      paused = LOI.adventure.paused()
       
       Tracker.nonreactive =>
-        # Activate the interface only when drawing is active.
-        @interface.active drawingActive
+        # Activate the interface only when drawing is active and the adventure is not paused.
+        @interface.active drawingActive and not paused
         
         # Enable the pixel grid when in the editor.
         fileData.child('pixelGrid').set 'enabled', drawingActive

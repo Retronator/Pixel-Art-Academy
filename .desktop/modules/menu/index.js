@@ -67,7 +67,6 @@ export default class ApplicationMenu {
           {
             label: 'Report a bug',
             click: async () => {
-              const { shell } = require('electron')
               await shell.openExternal('mailto:hi@retronator.com?subject=Pixel%20Art%20Academy%3A%20Learn%20Mode%20bug%20report')
             }
           }
@@ -79,7 +78,6 @@ export default class ApplicationMenu {
           {
             label: 'Get help on Discord',
             click: async () => {
-              const { shell } = require('electron')
               await shell.openExternal('https://discord.gg/mngNfvTwG6')
             }
           }
