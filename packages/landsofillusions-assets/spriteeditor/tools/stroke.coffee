@@ -162,7 +162,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     if event.which is AC.Keys.shift
       # See if we've already started drawing.
-      if @constructor.mouseState.leftButton
+      if @_strokeActive
         # We're already mid-stroke so we want to detect in which direction to lock the coordinate.
         @lockedCoordinate null
         @drawStraight true
@@ -214,13 +214,14 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     @drawStraight false
 
-    @updatePixels()
-
     assetData = @editor().assetData()
     @endStroke assetData
 
     @_strokeActive = false
 
+    # Update pixels to take account of new starting coordinates for line drawing.
+    @updatePixels()
+  
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
 
@@ -251,7 +252,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     drawStraight = @drawStraight()
 
-    if @constructor.mouseState.leftButton and drawStraight
+    if @_strokeActive and drawStraight
       unless lockedCoordinate = @lockedCoordinate()
         # Calculate which direction to lock to.
         if currentPixelCoordinates.x is lastPixelCoordinates.x
@@ -319,7 +320,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     # TODO: Apply symmetry.
     # symmetryXOrigin = @options.editor().symmetryXOrigin?()
     #if symmetryXOrigin?
-    #  Note: Do not use mouseState.x anymore, instead use
+    #  Note: Do not use mouseState.x anymore, instead use editor.mouse().pixelCoordinate().
     #  mirroredX = -@constructor.mouseState.x + 2 * symmetryXOrigin
     #  xCoordinates.push [mirroredX, -1]
 
@@ -327,7 +328,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @applyTool()
 
   applyTool: ->
-    return unless @constructor.mouseState.leftButton
+    return unless @_strokeActive
 
     assetData = @editor().assetData()
 
