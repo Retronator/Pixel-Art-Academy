@@ -26,9 +26,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
 
       @moving true
 
-      @_mousePosition =
+      startingMousePosition =
         x: event.clientX
         y: event.clientY
+      
+      editor = @interface.getEditorForActiveFile()
+      camera = editor.camera()
+      originDataField = camera.originData()
+      startingOrigin = originDataField.value()
 
       # Wire end of dragging on mouse up.
       $(document).on "mouseup.pixelartacademy-pixelpad-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
@@ -37,23 +42,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
 
       $(document).on "mousemove.pixelartacademy-pixelpad-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
         dragDelta =
-          x: event.clientX - @_mousePosition.x
-          y: event.clientY - @_mousePosition.y
+          x: event.clientX - startingMousePosition.x
+          y: event.clientY - startingMousePosition.y
 
-        editor = @interface.getEditorForActiveFile()
-  
-        originDataField = editor.camera().originData()
-        origin = originDataField.value()
-  
-        scale = editor.camera().effectiveScale()
+        scale = camera.effectiveScale()
 
         originDataField.value
-          x: origin.x - dragDelta.x / scale
-          y: origin.y - dragDelta.y / scale
-
-        @_mousePosition =
-          x: event.clientX
-          y: event.clientY
+          x: startingOrigin.x - dragDelta.x / scale
+          y: startingOrigin.y - dragDelta.y / scale
 
   onDeactivated: ->
     $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-tools-move'
+    $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-tools-move-dragging'
+    @moving false
