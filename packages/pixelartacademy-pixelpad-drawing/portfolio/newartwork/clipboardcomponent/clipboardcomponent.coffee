@@ -141,7 +141,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         computation.stop()
 
         # Navigate to the artwork.
-        AB.Router.setParameter 'parameter3', artworkId
+        AB.Router.changeParameter 'parameter3', artworkId
   
   class @SizeType extends @DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType'

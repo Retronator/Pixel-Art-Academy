@@ -43,15 +43,15 @@ class AB.Router extends AB.Router
     routingContext = _.find @currentRoutingContexts(), (routingContext) => routingContext.name is contextName
     routingContext?.routeData.parameters
 
-  @setParameter: (parameter, value, options) ->
-    # We need to clone the parameters before we change them, since otherwise we'd be
-    # changing the original with which  the computed field will compare the new array.
-    parameters = _.clone @currentParameters()
-    parameters[parameter] = value
-    @setParameters parameters, options
-
   @setParameters: (parameters, options) ->
     @goToRoute @currentRouteName(), parameters, options
+
+  @changeParameters: (parameters, options) ->
+    parameters = _.extend {}, @currentParameters(), parameters
+    @setParameters parameters, options
+  
+  @changeParameter: (parameter, value, options) ->
+    @changeParameters "#{parameter}": value, options
 
   @createUrl: (routeName, parameters, options = {}) ->
     # Allow sending components directly.

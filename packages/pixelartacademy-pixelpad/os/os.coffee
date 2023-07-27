@@ -178,15 +178,15 @@ class PAA.PixelPad.OS extends AM.Component
     # Clear one of the parameters.
     if @currentAppParameter()
       # We clear the parameter.
-      AB.Router.setParameter 'parameter4', null
+      AB.Router.changeParameter 'parameter4', null
 
     else if @currentAppPath()
       # We return to main app screen.
-      AB.Router.setParameter 'parameter3', null
+      AB.Router.changeParameter 'parameter3', null
 
     else if @currentAppUrl()
       # We return to home screen.
-      AB.Router.setParameter 'parameter2', null
+      AB.Router.changeParameter 'parameter2', null
 
     else
       # No app is open, we should actually close PixelPad.

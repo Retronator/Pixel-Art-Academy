@@ -83,13 +83,15 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
 
   onBackButton: ->
     # Relay to editor.
-    editor = @editor()
-    result = editor.onBackButton?()
+    result = @editor().onBackButton?()
     return result if result?
 
     # Relay to clipboard.
-    clipboard = @clipboard()
-    result = clipboard.onBackButton?()
+    result = @clipboard().onBackButton?()
+    return result if result?
+    
+    # Relay to displayed asset custom component.
+    result = @displayedAssetCustomComponent()?.onBackButton?()
     return result if result?
     
     portfolio = @portfolio()

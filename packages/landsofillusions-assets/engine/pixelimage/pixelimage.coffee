@@ -13,15 +13,18 @@ _averageNormal = new THREE.Vector3
 class LOI.Assets.Engine.PixelImage
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()
+    
+    # The ready value might not have been recomputed yet after the
+    # asset was lost, so we make sure it's still being provided.
+    return unless asset = @options.asset()
 
+    # Render the image to canvas.
     @_render renderOptions
 
     # Right now we're using canvas' drawing capabilities, without using our depth data. This is done for simplicity
     # since we can let canvas' context deal with transformations and stuff. Eventually we'll want to move to either
     # a custom drawing routine or upgrade to WebGL.
-    asset = @options.asset()
     bounds = asset.bounds
-
     context.imageSmoothingEnabled = false
     context.drawImage @_canvas, bounds.x, bounds.y
 

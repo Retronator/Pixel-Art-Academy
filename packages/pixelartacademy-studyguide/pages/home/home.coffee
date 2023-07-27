@@ -218,7 +218,7 @@ class PAA.StudyGuide.Pages.Home extends AM.Component
       @book.close()
 
       Meteor.setTimeout =>
-        @layout.router.setParameter 'pageOrBook', null
+        @layout.router.changeParameter 'pageOrBook', null
       ,
         500
 

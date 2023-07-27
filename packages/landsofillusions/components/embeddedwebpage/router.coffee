@@ -58,7 +58,7 @@ class LOI.Components.EmbeddedWebpage.Router
   getParameter: (parameter) ->
     @currentParameters()[parameter]
 
-  setParameter: (parameter, value) ->
+  changeParameter: (parameter, value) ->
     # We need to clone the parameters before we change them, since otherwise we'd be
     # changing the original with which the computed field will compare the new array.
     parameters = _.clone @currentParameters()

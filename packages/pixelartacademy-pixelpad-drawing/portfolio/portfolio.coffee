@@ -241,7 +241,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends AM.Component
     assetData = @currentData()
 
     # Set active sprite ID.
-    AB.Router.setParameter 'parameter3', assetData.asset.urlParameter()
+    AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()
 
   onClickPixelPadEditor: (event) ->
     editor = @currentData()

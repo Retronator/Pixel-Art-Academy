@@ -77,4 +77,4 @@ class PAA.StudyGuide.Pages.Home.Activities extends AM.Component
 
   onClickBook: (event) ->
     book = @currentData()
-    @home.layout.router.setParameter 'pageOrBook', book.slug
+    @home.layout.router.changeParameter 'pageOrBook', book.slug

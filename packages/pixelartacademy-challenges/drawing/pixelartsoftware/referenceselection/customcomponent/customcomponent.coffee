@@ -128,6 +128,14 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
   
   setPixelPadSize: (drawingApp) ->
     drawingApp.setMaximumPixelPadSize fullscreen: true
+    
+  onBackButton: ->
+    return unless @selectedCard()
+    
+    @_goToSelectedCard()
+    
+    # Inform that we've handled the back button.
+    true
   
   _initialize: ->
     @currentChoice null
@@ -335,7 +343,21 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         @selectionFinished true
       ,
         600
-
+      
+  _goToSelectedCard: ->
+    selectedCardId = @selectedCard().id
+    
+    # Find out the asset ID.
+    Tracker.autorun (computation) =>
+      return unless assets = PAA.Challenges.Drawing.PixelArtSoftware.state('assets')
+      return unless selectedAsset = _.find assets, (asset) -> asset.id is "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{selectedCardId}"
+      return unless bitmapId = selectedAsset.bitmapId
+      computation.stop()
+    
+      AB.Router.changeParameters
+        parameter3: bitmapId
+        parameter4: 'edit'
+  
   leftAvailableClass: ->
     'available' if @leftChoiceCards().length and not @currentChoice().left.locked?()
 
@@ -379,4 +401,4 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       @_makeFinalSelection @currentData()
       
     else if @selectionFinished()
-      AB.Router.setParameter 'parameter3', null
+      @_goToSelectedCard()

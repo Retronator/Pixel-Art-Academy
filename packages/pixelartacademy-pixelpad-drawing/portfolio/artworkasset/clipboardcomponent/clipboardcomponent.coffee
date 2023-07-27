@@ -44,7 +44,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       'click .edit-button': @onClickEditButton
 
   onClickEditButton: (event) ->
-    AB.Router.setParameter 'parameter4', 'edit'
+    AB.Router.changeParameter 'parameter4', 'edit'
   
   class @Title extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title'

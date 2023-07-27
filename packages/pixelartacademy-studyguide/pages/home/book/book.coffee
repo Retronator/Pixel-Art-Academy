@@ -147,7 +147,7 @@ class PAA.StudyGuide.Pages.Home.Book extends AM.Component
     # Return to the page of the table of contents that we last saw.
     @visiblePageIndex @_lastTableOfContentsVisiblePageIndex
     @leftPageIndex Math.floor(@_lastTableOfContentsVisiblePageIndex / 2) * 2
-    @home.layout.router.setParameter 'activity', null
+    @home.layout.router.changeParameter 'activity', null
 
     @scrollToTop()
 

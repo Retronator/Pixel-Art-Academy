@@ -45,7 +45,7 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
     @drawing.editor().active()
 
   editAsset: ->
-    AB.Router.setParameter 'parameter4', 'edit'
+    AB.Router.changeParameter 'parameter4', 'edit'
     
   showSecondPage: ->
     @secondPageActive true

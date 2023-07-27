@@ -168,4 +168,4 @@ class PAA.PixelPad.Apps.Journal.JournalsView extends AM.Component
 
   onClickJournal: (event) ->
     journal = @currentData()
-    AB.Router.setParameter 'parameter3', journal._id
+    AB.Router.changeParameter 'parameter3', journal._id
