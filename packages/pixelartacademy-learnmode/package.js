@@ -51,6 +51,8 @@ Package.onUse(function(api) {
   api.addComponent('menu/progress/content/defaultcontent..');
   api.addComponent('menu/progress/content/appcontent..');
 
+  api.addComponent('menu/credits..');
+
   api.addFile('locations..');
   api.addComponent('locations/mainmenu..');
   api.addFile('locations/play..');

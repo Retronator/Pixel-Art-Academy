@@ -1,0 +1,60 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-learnmode-menu-credits
+  fixed-cover()
+  z-index 5
+
+  .background
+    background atariGray(0)
+
+  .safe-area
+    display none
+
+  .viewport-area
+    position absolute
+    overflow hidden
+
+    .credits-area
+      position absolute
+      top 0
+      bottom 0
+      left -100px
+      right -100px
+      overflow-y scroll
+
+      .credits
+        position relative
+        text-align center
+        padding 100vh 0
+        color atariGray(4)
+
+        .presented-by
+          .retronator
+            retrotype()
+            font-size 18rem
+            color atariGray(5)
+            margin-right 5rem
+
+        h1
+          acme-9()
+          color atariGray(7)
+          margin 40rem 0
+
+          .pixel-art-academy
+            font-size 16rem
+
+          .learn-mode
+            display block
+
+          .learn-mode
+            text-transform uppercase
+
+        h2
+          text-transform uppercase
+          adventure()
+          margin-top 30rem
+          color atariGray(6)
+
+        ul
+          list-style none
+          padding 0

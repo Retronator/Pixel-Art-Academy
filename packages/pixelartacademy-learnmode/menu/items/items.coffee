@@ -56,6 +56,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
       'click .settings .fullscreen': @onClickSettingsFullscreen
       'click .extras .courses': @onClickExtrasCourses
+      'click .extras .credits': @onClickExtrasCredits
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
 
   onClickMainMenuContinue: (event) ->
@@ -143,6 +144,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     
   onClickExtrasCourses: (event) ->
     @progress.show()
+    
+  onClickExtrasCredits: (event) ->
+    LM.Menu.Credits.show()
     
   onClickExtrasBackToMenu: (event) ->
     @goToMainMenu()
