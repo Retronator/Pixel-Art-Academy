@@ -19,8 +19,6 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
   #     input: which of the inputs this connection ties into
   #   parameters: object of current parameter values
   #     {name}: value of the parameter with the given name
-  # editor: settings used in the editor that are not sent to non-editors
-  #   locationId: the location at which this audio is edited
   @Meta
     name: @id()
 

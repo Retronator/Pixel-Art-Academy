@@ -50,9 +50,9 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @audio = new ComputedField =>
       @audioLoader()?.audio
 
-    @world = new ComputedField =>
+    @audioManager = new ComputedField =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
-      adventureViews[0]?.adventure.world
+      adventureViews[0]?.adventure.interface.audioManager
 
     @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>
@@ -60,7 +60,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       @interface.getComponentDataForFile @, spriteId
 
     # Initialize components.
-    @camera new LOI.Assets.SpriteEditor.PixelCanvas.Camera @, $parent: @$audioCanvas
+    @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
     @grid new @constructor.Grid @
     @flowchart new @constructor.Flowchart @
@@ -144,10 +144,12 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
 
         hoveredInput = @hoveredInput()
         hoveredOutput = @hoveredOutput()
+        
+      nodeComponentsById = @nodeComponentsById()
 
       for connection in connections
         if connection.startNodeId or hoveredOutput
-          continue unless startNodeComponent = @_nodeComponentsById[connection.startNodeId or hoveredOutput.nodeId]
+          continue unless startNodeComponent = nodeComponentsById[connection.startNodeId or hoveredOutput.nodeId]
           continue unless componentPosition = startNodeComponent.position()
           continue unless outputPosition = startNodeComponent.outputPositionForName connection.output or hoveredOutput?.output
   
@@ -159,7 +161,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
           connection.start = @mouse().canvasCoordinate()
 
         if connection.endNodeId or hoveredInput
-          continue unless endNodeComponent = @_nodeComponentsById[connection.endNodeId or hoveredInput.nodeId]
+          continue unless endNodeComponent = nodeComponentsById[connection.endNodeId or hoveredInput.nodeId]
           continue unless componentPosition = endNodeComponent.position()
 
           input = connection.input or hoveredInput?.input

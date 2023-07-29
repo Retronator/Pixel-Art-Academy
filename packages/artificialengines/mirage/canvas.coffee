@@ -37,13 +37,13 @@ class AM.Canvas
 
 class AM.ReadableCanvas
   constructor: (widthOrImage, heightOrContextAttributes, contextAttributes) ->
-    if widthOrImage.width
+    if widthOrImage?.width
       image = widthOrImage
       contextAttributes = heightOrContextAttributes
   
     else
-      width = widthOrImage
-      height = heightOrContextAttributes
+      width = widthOrImage or 0
+      height = heightOrContextAttributes or 0
   
     contextAttributes ?= {}
     contextAttributes.willReadFrequently = true

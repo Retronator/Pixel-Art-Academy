@@ -61,11 +61,10 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
 
     # Create and connect internal nodes.
     @autorun (computation) =>
-      return unless audioManager = @audioManager()
-      return unless audioManager.contextValid()
+      return unless context = @audio.context()
 
-      constantNode = audioManager.context.createConstantSource()
-      gainNode = audioManager.context.createGain()
+      constantNode = context.createConstantSource()
+      gainNode = context.createGain()
       gainNode.gain.value = 0
 
       constantNode.connect gainNode
@@ -84,13 +83,13 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
     @_press = false
 
     @autorun (computation) =>
-      return unless audioManager = @audioManager()
+      return unless context = @audio.context()
       return unless gainNode = @gainNode()
 
       newPress = @readInput 'press'
-      currentTime = audioManager.context.currentTime
+      currentTime = context.currentTime
 
-      gainNode.gain.cancelScheduledValues currentTime - 1 unless newPress is @_press
+      gainNode.gain.cancelScheduledValues Math.max 0, currentTime - 1 unless newPress is @_press
 
       if newPress and not @_press
         # Start attack + decay.

@@ -19,7 +19,7 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     name: 'out'
     type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
   ]
-    
+  
   @parameters: -> [
     name: 'play control'
     pattern: String
@@ -35,9 +35,9 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
     valueType: LOI.Assets.Engine.Audio.ValueTypes.String
   ]
-    
+  
   @fixedParameterNames: -> ['play control', 'parameters']
-    
+  
   constructor: ->
     super arguments...
 
@@ -61,27 +61,23 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     # Reactively create and destroy audio sources.
     @autorun (computation) =>
       play = @readInput 'play'
-      audioManager = @audioManager()
+      context = @audio.context()
 
-      unless audioManager
-        @_lastPlay = null
-        return
-        
       @registerCreateDependencies()
 
-      if audioManager.contextValid()
+      if context
         # Create the out node if we haven't yet.
         unless @_intermediateNodesCreated
-          @_outNode audioManager.context.createGain()
+          @_outNode context.createGain()
           
           for parameterName of @_parameterNodes
-            @_parameterNodes[parameterName] audioManager.context.createGain()
+            @_parameterNodes[parameterName] context.createGain()
 
           @_intermediateNodesCreated = true
 
         # We start sources when play changes to truthy value.
         if play and not @_lastPlay
-          sourceStarted = @_startSource audioManager
+          sourceStarted = @_startSource context
 
           # If no source was created, we aren't playing.
           play = false unless sourceStarted
@@ -111,8 +107,8 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
   registerCreateDependencies: ->
     # Override and call reactive dependencies that influence creation of new sources.
     
-  _startSource: (audioManager) ->
-    return false unless source = @createSource audioManager.context
+  _startSource: (context) ->
+    return false unless source = @createSource context
 
     source.onended = =>
       _.pull @_sources, source

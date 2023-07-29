@@ -5,16 +5,16 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.AdventureView extends FM.View
-  # 
   # locationId: the location being shown in the view
   @id: -> 'LandsOfIllusions.Assets.AudioEditor.AdventureView'
   @register @id()
   
+  @componentDataFields: -> [
+    'locationId'
+  ]
+  
   onCreated: ->
     super arguments...
-
-    @activeFileData = new ComputedField =>
-      @interface.getComponentDataForActiveFile @
 
     @adventure = new @constructor.Adventure @
     LOI.adventure = @adventure

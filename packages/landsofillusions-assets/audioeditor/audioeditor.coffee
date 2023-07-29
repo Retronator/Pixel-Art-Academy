@@ -11,7 +11,8 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
 
   @defaultInterfaceData: ->
     # Operators
-
+    
+    active = true
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
 
     # Content Components
@@ -120,7 +121,7 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
         mapping: @defaultShortcutsMapping()
 
     # Return combined interface data.
-    {activeToolId, components, layouts, shortcuts}
+    {active, activeToolId, components, layouts, shortcuts}
 
   @defaultShortcutsMapping: ->
     _.extend super(arguments...),

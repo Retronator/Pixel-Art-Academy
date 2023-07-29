@@ -68,10 +68,7 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
     super arguments...
 
     @node = new ComputedField =>
-      return unless audioManager = @audioManager()
-      return unless audioManager.contextValid()
-      
-      audioManager.context.createBiquadFilter()
+      @audio.context()?.createBiquadFilter()
 
     @filterUpdatedDependency = new Tracker.Dependency
 

@@ -33,7 +33,7 @@ class LOI.Assets.Engine.Audio
       if nodes = @data()?.nodes
         nodes[node.id] = node for node in nodes
 
-      nodes  
+      nodes
     ,
       added: (nodeId, node) =>
         console.log "Added audio node", node if LOI.Assets.Engine.Audio.debug
@@ -74,12 +74,12 @@ class LOI.Assets.Engine.Audio
     # Remove all nodes.
     node.destroy() for node in @_nodes
     
-  world: ->
-    if _.isFunction @options.world
-      @options.world()
+  context: ->
+    if _.isFunction @options.context
+      @options.context()
       
     else
-      @options.world
+      @options.context
 
   nodes: ->
     @_nodesDependency.depend()

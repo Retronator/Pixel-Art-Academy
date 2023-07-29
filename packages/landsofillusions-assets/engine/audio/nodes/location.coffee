@@ -21,7 +21,7 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
       value: locationClass.id()
 
     options = _.sortBy options, 'value'
-      
+    
     [
       name: 'id'
       pattern: [String]
@@ -41,7 +41,7 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
       locationIds = [locationIds] unless _.isArray locationIds
 
       # Location value is true if current location is the same as one of the id parameter values.
-      currentLocationId = @audio.world().options.adventure.currentLocationId()
+      currentLocationId = LOI.adventure.currentLocationId()
 
       currentLocationId in locationIds
 

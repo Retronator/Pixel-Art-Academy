@@ -27,8 +27,7 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
 
     # Create and destroy the buffer.
     @autorun =>
-      return unless audioManager = @audioManager()
-      return unless audioManager.contextValid()
+      return unless context = @audio.context()
 
       url = @parametersData()?.url
 
@@ -50,7 +49,7 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
           contentType = request.getResponseHeader 'content-type'
           return unless _.startsWith contentType, 'audio'
 
-          audioManager.context.decodeAudioData request.response, (buffer) =>
+          context.decodeAudioData request.response, (buffer) =>
             # Make sure the url is still the same as at the start of the request.
             return unless @parametersData()?.url is url
 

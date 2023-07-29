@@ -1,3 +1,4 @@
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 {cubicBezier} = require 'bresenham-zingl'
@@ -15,9 +16,8 @@ audioConnectionsDependency = new Tracker.Dependency
 
 class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
   constructor: (@audioCanvas) ->
-    @$canvas = $('<canvas>')
-    @canvas = @$canvas[0]
-    @context = @canvas.getContext '2d'
+    @canvas = new AM.ReadableCanvas
+    @context = @canvas.context
 
   drawToContext: (context) ->
     @_audioConnectionsDrawn = false
@@ -32,12 +32,12 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
     return unless @canvas.width and @canvas.height
 
-    imageData = @context.getImageData 0, 0, @canvas.width, @canvas.height
+    imageData = @canvas.getFullImageData()
 
     for connection in @audioCanvas.connections()
       @_drawConnection connection, imageData
-
-    @context.putImageData imageData, 0, 0
+    
+    @canvas.putFullImageData imageData
 
     # Render the canvas scaled to the main context.
     context.setTransform 1, 0, 0, 1, 0, 0

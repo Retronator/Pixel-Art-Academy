@@ -12,17 +12,13 @@ class LOI.Assets.AudioEditor.AdventureView.Adventure extends AM.Component
   
   onCreated: ->
     super arguments...
-
-    @world = new LOI.Engine.World
-      adventure: @
-      updateMode: LOI.Engine.World.UpdateModes.Hover
-      isolatedAudio: true
   
     @interface =
       illustrationSize: new AE.Rectangle 0, 0, 0, 0
+      audioManager: new LOI.Interface.Components.AudioManager
 
     @currentLocationId = new ComputedField =>
-      @adventureView.activeFileData()?.get 'locationId'
+      @adventureView.locationId()
 
     @_currentLocation = null
     @currentLocation = new ComputedField =>

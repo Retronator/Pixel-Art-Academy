@@ -4,14 +4,16 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Interface.Components.AudioManager
-  constructor: (@interface) ->
+  constructor: ->
     # Wait for user interaction before creating audio context.
-    @contextValid = new ReactiveField false
-    @waitForInteraction()
+    @context = new ReactiveField null
+    
+    $(document).one 'click', (event) =>
+      @context new AudioContext
 
     # Let others reactively know if audio is currently enabled.
     @enabled = new ComputedField =>
-      return false unless @contextValid()
+      return false unless @context()
 
       switch LOI.settings.audio.enabled.value()
         when LOI.Settings.Audio.Enabled.On
@@ -24,38 +26,31 @@ class LOI.Interface.Components.AudioManager
           AM.Window.isFullscreen()
 
     # Start and stop context based on enabled state.
-    @interface.autorun =>
-      return unless @contextValid()
+    @_startStopAutorun = Tracker.autorun (computation) =>
+      return unless @context()
       enabled = @enabled()
 
       if @context.state is 'suspended' and enabled
-        @start()
+        @_start()
 
       else if @context.state is 'running' and not enabled
-        @stop()
+        @_stop()
+        
+  destroy: ->
+    @_startStopAutorun.stop()
 
-  waitForInteraction: ->
-    @contextValid false
-
-    $(document).one 'click', (event) =>
-      unless @context
-        @context = new AudioContext
-        @context.suspend()
-
-      @contextValid true
-
-  start: ->
+  _start: ->
     return unless @context.state is 'suspended'
     return if @_resuming
+    
     @_resuming = true
+    await @context.resume()
+    @_resuming = false
 
-    @context.resume().then =>
-      @_resuming = false
-
-  stop: ->
+  _stop: ->
     return unless @context.state is 'running'
     return if @_suspending
+    
     @_suspending = true
-
-    @context.suspend().then =>
-      @_suspending = false
+    await @context.suspend()
+    @_suspending = false

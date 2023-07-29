@@ -21,7 +21,7 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
       value: locationClass.id()
 
     options = _.sortBy options, 'value'
-      
+    
     [
       name: 'from'
       pattern: [String]
@@ -53,7 +53,7 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
       fromLocationIds = [fromLocationIds] unless _.isArray fromLocationIds
       toLocationIds = [toLocationIds] unless _.isArray toLocationIds
 
-      newLocationId = @audio.world().options.adventure.currentLocationId()
+      newLocationId = LOI.adventure.currentLocationId()
       toLocation = newLocationId in toLocationIds
 
       fromLocation = @locationId in fromLocationIds

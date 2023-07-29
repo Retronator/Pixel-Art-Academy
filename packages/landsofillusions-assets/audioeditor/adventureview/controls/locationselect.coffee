@@ -29,7 +29,7 @@ class LOI.Assets.AudioEditor.AdventureView.LocationSelect extends AM.DataInputCo
 
     options = _.sortBy options, 'value'
 
-    # Add empty option
+    # Add the empty option.
     options.unshift
       name: ''
       value: null
@@ -37,7 +37,7 @@ class LOI.Assets.AudioEditor.AdventureView.LocationSelect extends AM.DataInputCo
     options
 
   load: ->
-    @adventureView.activeFileData().get 'locationId'
+    @adventureView.locationId()
 
   save: (value) ->
-    @adventureView.activeFileData().set 'locationId', value
+    @adventureView.locationId value

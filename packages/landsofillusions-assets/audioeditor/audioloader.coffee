@@ -17,13 +17,13 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
       return unless audioData = @audioData()
       audioData.name or audioData._id
 
-    @world = new ComputedField =>
+    @context = new ComputedField =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
-      adventureViews[0]?.adventure.world
+      adventureViews[0]?.adventure.interface.audioManager.context()
 
     # Create the engine audio.
     @audio = new LOI.Assets.Engine.Audio
-      world: @world
+      context: @context
       audioData: @audioData
 
   destroy: ->

@@ -56,11 +56,11 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
           # If we have a valid audio source, we instead provide values from an analyser.
           sourceConnection = audioNode.getSourceConnection output.name
-          audioManager = @audioCanvas.world()?.audioManager()
+          context = @audioCanvas.audioManager()?.context()
 
-          if sourceConnection.source and audioManager?.contextValid()
+          if sourceConnection.source and context
             # Wire output to an analyzer.
-            analyser = audioManager.context.createAnalyser()
+            analyser = context.createAnalyser()
             analyser.fftSize = 2048
             sourceConnection.source.connect analyser, sourceConnection.index
             outputData[output.name] = analyser
@@ -207,9 +207,6 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
   isParameter: (name) ->
     _.find @nodeClass.parameters(), (parameter) => parameter.name is name
-
-  audioManager: ->
-    @audioCanvas?.world()?.audioManager()
 
   nodeStyle: ->
     # Make sure we have position present, as it will disappear when node is being deleted.

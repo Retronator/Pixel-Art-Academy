@@ -443,6 +443,7 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/audiocanvas/flowchart');
   api.addFile('audioeditor/audiocanvas/grid');
   api.addFile('audioeditor/audiocanvas/mouse');
+  api.addFile('audioeditor/audiocanvas/camera');
 
   api.addComponent('audioeditor/node..');
   api.addComponent('audioeditor/node/parameter..');
