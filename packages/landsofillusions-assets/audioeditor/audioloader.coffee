@@ -9,6 +9,8 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
 
     @audioData = new ComputedField =>
       LOI.Assets.Audio.documents.findOne @fileId
+    ,
+      true
 
     # Create the alias for universal operators.
     @asset = @audioData
@@ -16,19 +18,29 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
     @displayName = new ComputedField =>
       return unless audioData = @audioData()
       audioData.name or audioData._id
-
-    @context = new ComputedField =>
+    ,
+      true
+    
+    # Create the engine audio when context becomes available.
+    @audio = new ReactiveField null
+    
+    @_audioCreateAutorun = Tracker.autorun (computation) =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
-      adventureViews[0]?.adventure.interface.audioManager.context()
+      return unless context = adventureViews[0]?.adventure.interface.audioManager.context()
+      computation.stop()
 
-    # Create the engine audio.
-    @audio = new LOI.Assets.Engine.Audio
-      context: @context
-      audioData: @audioData
+      @audio Tracker.nonreactive => new LOI.Assets.Engine.Audio
+        context: context
+        audioData: @audioData
 
   destroy: ->
-    @_subscription.stop()
+    super arguments...
+    
+    @_audioCreateAutorun.stop()
+    @audio()?.destroy()
+    @displayName.stop()
     @audioData.stop()
+    @_subscription.stop()
     
   addNode: (options) ->
     nodeType = options.nodeClass.type()
@@ -57,6 +69,7 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
       nodePosition: canvasCoordinate
       nodeId: node.id
       requireMove: true
+      expandOnEnd: true
 
   removeNode: (nodeId) ->
     # Remove the node in the database

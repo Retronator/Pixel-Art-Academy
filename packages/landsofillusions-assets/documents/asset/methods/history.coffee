@@ -19,8 +19,6 @@ LOI.Assets.Asset.executeAction.method (assetClassName, assetId, lastEditTime, ac
 LOI.Assets.Asset.undo.method (assetClassName, assetId, lastEditTime, actionTime) ->
   check assetId, Match.DocumentId
   check assetClassName, String
-  check lastEditTime, Date
-  check actionTime, Date
   
   # Authorize action.
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
@@ -29,6 +27,9 @@ LOI.Assets.Asset.undo.method (assetClassName, assetId, lastEditTime, actionTime)
   
   # Handle versioned assets.
   if asset.versioned
+    check lastEditTime, Date
+    check actionTime, Date
+
     AM.Document.Versioning.undo asset, lastEditTime, actionTime
     
     return
@@ -59,8 +60,6 @@ LOI.Assets.Asset.undo.method (assetClassName, assetId, lastEditTime, actionTime)
 LOI.Assets.Asset.redo.method (assetClassName, assetId, lastEditTime, actionTime) ->
   check assetId, Match.DocumentId
   check assetClassName, String
-  check lastEditTime, Date
-  check actionTime, Date
   
   # Authorize action.
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
@@ -69,6 +68,9 @@ LOI.Assets.Asset.redo.method (assetClassName, assetId, lastEditTime, actionTime)
   
   # Handle versioned assets.
   if asset.versioned
+    check lastEditTime, Date
+    check actionTime, Date
+    
     AM.Document.Versioning.redo asset, lastEditTime, actionTime
     
     return

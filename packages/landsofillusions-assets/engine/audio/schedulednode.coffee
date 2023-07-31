@@ -61,7 +61,7 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     # Reactively create and destroy audio sources.
     @autorun (computation) =>
       play = @readInput 'play'
-      context = @audio.context()
+      context = @audio.context
 
       @registerCreateDependencies()
 

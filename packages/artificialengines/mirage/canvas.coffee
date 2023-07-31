@@ -7,15 +7,15 @@ if Meteor.isServer
 # A canvas that works on client and server.
 class AM.Canvas
   constructor: (widthOrImage, heightOrContextAttributes, contextAttributes) ->
-    if widthOrImage.width
+    if widthOrImage?.width
       image = widthOrImage
       width = image.width
       height = image.height
       contextAttributes = heightOrContextAttributes
       
     else
-      width = widthOrImage
-      height = heightOrContextAttributes
+      width = widthOrImage or 0
+      height = heightOrContextAttributes or 0
     
     if Meteor.isServer
       canvas = createCanvas width, height

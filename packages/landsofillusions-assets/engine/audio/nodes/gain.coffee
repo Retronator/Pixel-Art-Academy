@@ -27,23 +27,21 @@ class LOI.Assets.Engine.Audio.Gain extends LOI.Assets.Engine.Audio.Node
   constructor: ->
     super arguments...
 
-    @node = new ComputedField =>
-      @audio.context()?.createGain()
+    @node = @audio.context.createGain()
 
     @autorun (computation) =>
-      return unless node = @node()
+      @node.gain.value = @readParameter 'gain'
 
-      node.gain.value = @readParameter 'gain'
-
+    
   getDestinationConnection: (input) ->
     empty = super arguments...
 
     switch input
       when 'in'
-        destination: @node()
+        destination: @node
 
       when 'gain'
-        destination: @node()?.gain
+        destination: @node.gain
 
       else
         empty
@@ -51,4 +49,4 @@ class LOI.Assets.Engine.Audio.Gain extends LOI.Assets.Engine.Audio.Node
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'
 
-    source: @node()
+    source: @node

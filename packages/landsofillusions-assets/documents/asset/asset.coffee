@@ -94,6 +94,9 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   @toPlainObject: (asset) ->
     _.pick asset, ['_id', 'profileId', 'name', 'creationTime', 'lastEditTime', 'editor', 'history', 'historyPosition']
     
+  undo: -> @constructor.undo @constructor.className, @_id
+  redo: -> @constructor.redo @constructor.className, @_id
+  
   toPlainObject: ->
     @constructor.toPlainObject @
   

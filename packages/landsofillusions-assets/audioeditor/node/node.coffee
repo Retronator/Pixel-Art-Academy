@@ -45,7 +45,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       @outputData = new ReactiveField {}
       
       @autorun (computation) =>
-        return unless audioNode = @audioCanvas.audio().getNode @id
+        return unless audioNode = @audioCanvas.audio()?.getNode @id
 
         # Note: We have to read output data non-reactively since we're assigning it later.
         outputData = Tracker.nonreactive => @outputData()
@@ -273,7 +273,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   events: ->
     super(arguments...).concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
-      'dblclick .landsofillusions-assets-audioeditor-node > .name': @onDoubleClickName
+      'click .landsofillusions-assets-audioeditor-node > .name': @onClickName
       'mousedown .input .connector': @onMouseDownInputConnector
       'mouseup .input': @onMouseUpInput
       'mouseenter .input': @onMouseEnterInput
@@ -300,7 +300,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       nodeId: @id
       nodePosition: @data().position
 
-  onDoubleClickName: (event) ->
+  onClickName: (event) ->
     return unless @audioCanvas
 
     @audioCanvas.audioLoader().changeNodeExpanded @id, not @data().expanded

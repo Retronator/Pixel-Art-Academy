@@ -56,62 +56,50 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
   constructor: ->
     super arguments...
 
-    @constantNode = new ReactiveField null
-    @gainNode = new ReactiveField null
-
     # Create and connect internal nodes.
-    @autorun (computation) =>
-      return unless context = @audio.context()
+    context = @audio.context
 
-      constantNode = context.createConstantSource()
-      gainNode = context.createGain()
-      gainNode.gain.value = 0
+    @constantNode = context.createConstantSource()
+    @gainNode = context.createGain()
+    @gainNode.gain.value = 0
 
-      constantNode.connect gainNode
-      constantNode.start()
-
-      @constantNode constantNode
-      @gainNode gainNode
+    @constantNode.connect gainNode
+    @constantNode.start()
 
     # Update constant node as a parameter.
     @autorun (computation) =>
-      return unless constantNode = @constantNode()
-
-      constantNode.offset.value = @readParameter 'amplitude'
+      @constantNode().offset.value = @readParameter 'amplitude'
 
     # Apply envelope on press changes.
     @_press = false
 
     @autorun (computation) =>
-      return unless context = @audio.context()
-      return unless gainNode = @gainNode()
-
       newPress = @readInput 'press'
       currentTime = context.currentTime
 
-      gainNode.gain.cancelScheduledValues Math.max 0, currentTime - 1 unless newPress is @_press
+      @gainNode.gain.cancelScheduledValues Math.max 0, currentTime - 1 unless newPress is @_press
 
       if newPress and not @_press
         # Start attack + decay.
         attack = @readParameter 'attack'
         decay = @readParameter 'decay'
         sustain = @readParameter 'sustain'
-        gainNode.gain.linearRampToValueAtTime 1, currentTime + attack
-        gainNode.gain.linearRampToValueAtTime sustain, currentTime + attack + decay
+        @gainNode.gain.linearRampToValueAtTime 1, currentTime + attack
+        @gainNode.gain.linearRampToValueAtTime sustain, currentTime + attack + decay
 
       else if @_press and not newPress
         # Start release.
         release = @readParameter 'release'
-        gainNode.gain.linearRampToValueAtTime 0, currentTime + release
+        @gainNode.gain.linearRampToValueAtTime 0, currentTime + release
 
       @_press = newPress
 
   getDestinationConnection: (input) ->
     return(super arguments...) unless input is 'amplitude'
 
-    destination: @constantNode()?.offset
+    destination: @constantNode.offset
 
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'
 
-    source: @gainNode()
+    source: @gainNode

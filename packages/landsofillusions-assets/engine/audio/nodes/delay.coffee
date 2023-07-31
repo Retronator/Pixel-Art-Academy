@@ -37,17 +37,22 @@ class LOI.Assets.Engine.Audio.Delay extends LOI.Assets.Engine.Audio.Node
     super arguments...
 
     @node = new ComputedField =>
-      return unless context = @audio.context()
-
       # We must create a new delay node each time max delay time changes.
       maxDelayTime = @readParameter 'maxDelayTime'
-
-      context.createDelay maxDelayTime
+      
+      @audio.context.createDelay maxDelayTime
+    ,
+      true
 
     @autorun (computation) =>
       return unless node = @node()
 
       node.delayTime.value = @readParameter 'delayTime'
+      
+  destroy: ->
+    super arguments...
+    
+    @node.stop()
 
   getDestinationConnection: (input) ->
     empty = super arguments...

@@ -5,6 +5,8 @@ LOI = LandsOfIllusions
 {cubicBezier} = require 'bresenham-zingl'
 
 LOI.Assets.Audio::getPreviewImage = ->
+  return new AM.Canvas unless @nodes?.length
+  
   # Figure out how big the canvas needs to be to incorporate all
   bounds = null
 

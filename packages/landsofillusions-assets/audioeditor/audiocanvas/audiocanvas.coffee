@@ -48,7 +48,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       @audioLoader()?.audioData()
 
     @audio = new ComputedField =>
-      @audioLoader()?.audio
+      @audioLoader()?.audio()
 
     @audioManager = new ComputedField =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
@@ -268,15 +268,20 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       # If required to move, don't stop drag until we do so.
       return if @dragRequireMove() and not @dragHasMoved()
 
+      audioLoader = @audioLoader()
+      
       # See if we ended up dragging over the trash.
       if @mouseOverTrash()
         # Delete the node.
-        @audioLoader().removeNode options.nodeId
+        audioLoader.removeNode options.nodeId
 
       else
+        # Expand goal if desired.
+        audioLoader.changeNodeExpanded options.nodeId, true if options.expandOnEnd
+    
         # Save temporary position into the database.
         nodeComponent = @nodeComponentsById()[options.nodeId]
-        @audioLoader().changeNodePosition options.nodeId, nodeComponent.position()
+        audioLoader.changeNodePosition options.nodeId, nodeComponent.position()
         nodeComponent.temporaryPosition null
 
       @dragNodeId null

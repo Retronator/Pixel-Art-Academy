@@ -67,19 +67,16 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
   constructor: ->
     super arguments...
 
-    @node = new ComputedField =>
-      @audio.context()?.createBiquadFilter()
+    @node = @audio.context.createBiquadFilter()
 
     @filterUpdatedDependency = new Tracker.Dependency
 
     @autorun (computation) =>
-      return unless node = @node()
-
-      node.type = @readParameter 'type'
-      node.frequency.value = @readParameter 'frequency'
-      node.detune.value = @readParameter 'detune'
-      node.Q.value = @readParameter 'Q'
-      node.gain.value = @readParameter 'gain'
+      @node.type = @readParameter 'type'
+      @node.frequency.value = @readParameter 'frequency'
+      @node.detune.value = @readParameter 'detune'
+      @node.Q.value = @readParameter 'Q'
+      @node.gain.value = @readParameter 'gain'
 
       @filterUpdatedDependency.changed()
 
@@ -88,19 +85,19 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
 
     switch input
       when 'in'
-        destination: @node()
+        destination: @node
 
       when 'frequency'
-        destination: @node()?.frequency
+        destination: @node.frequency
 
       when 'detune'
-        destination: @node()?.detune
+        destination: @node.detune
 
       when 'Q'
-        destination: @node()?.Q
+        destination: @node.Q
 
       when 'gain'
-        destination: @node()?.gain
+        destination: @node.gain
 
       else
         empty
@@ -108,4 +105,4 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'
 
-    source: @node()
+    source: @node

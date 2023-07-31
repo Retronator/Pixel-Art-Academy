@@ -28,6 +28,13 @@ class LOI.Assets.Engine.Audio.Number extends LOI.Assets.Engine.Audio.Node
 
     @value = new ComputedField =>
       @readParameter 'number'
+    ,
+      true
+    
+  destroy: ->
+    super arguments...
+    
+    @value.stop()
 
   getReactiveValue: (output) ->
     return super arguments... unless output is 'value'

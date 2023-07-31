@@ -12,7 +12,5 @@ class LOI.Assets.Engine.Audio.Output extends LOI.Assets.Engine.Audio.Node
   ]
 
   getDestinationConnection: (input) ->
-    return super arguments... unless context = @audio.context()
-
     if input is 'in'
-      destination: context.destination
+      destination: @audio.context.destination

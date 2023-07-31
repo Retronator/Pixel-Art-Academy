@@ -44,6 +44,13 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
       currentLocationId = LOI.adventure.currentLocationId()
 
       currentLocationId in locationIds
+    ,
+      true
+    
+  destroy: ->
+    super arguments...
+    
+    @value.stop()
 
   getReactiveValue: (output) ->
     return super arguments... unless output is 'value'

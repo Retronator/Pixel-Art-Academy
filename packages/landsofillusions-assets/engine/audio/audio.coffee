@@ -18,6 +18,7 @@ class LOI.Assets.Engine.Audio
 
   constructor: (@options) ->
     @data = @options.audioData
+    @context = @options.context
     
     @_nodes = {}
     @_nodesDependency = new Tracker.Dependency
@@ -28,12 +29,12 @@ class LOI.Assets.Engine.Audio
     @_waitingConnections = []
 
     @nodesDictionary = new AE.ReactiveDictionary =>
-      nodes = {}
+      nodesDictionary = {}
 
       if nodes = @data()?.nodes
-        nodes[node.id] = node for node in nodes
-
-      nodes
+        nodesDictionary[node.id] = node for node in nodes
+      
+      nodesDictionary
     ,
       added: (nodeId, node) =>
         console.log "Added audio node", node if LOI.Assets.Engine.Audio.debug
@@ -72,14 +73,7 @@ class LOI.Assets.Engine.Audio
       startNode.disconnect endNode, connection.output, connection.input
 
     # Remove all nodes.
-    node.destroy() for node in @_nodes
-    
-  context: ->
-    if _.isFunction @options.context
-      @options.context()
-      
-    else
-      @options.context
+    node.destroy() for nodeId, node of @_nodes
 
   nodes: ->
     @_nodesDependency.depend()
