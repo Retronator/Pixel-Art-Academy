@@ -1,20 +1,20 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.ADSR'
-  @nodeName: -> 'ADSR'
+class AEc.Node.ADSR extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.ADSR'
+  @displayName: -> 'ADSR'
 
   @initialize()
 
   @inputs: -> [
     name: 'press'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Press
   ]
 
   @outputs: -> [
     name: 'out'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @parameters: -> [
@@ -22,35 +22,35 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 1
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ,
     name: 'attack'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ,
     name: 'decay'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ,
     name: 'sustain'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 1
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ,
     name: 'release'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ]
 
   constructor: ->
@@ -63,12 +63,12 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
     @gainNode = context.createGain()
     @gainNode.gain.value = 0
 
-    @constantNode.connect gainNode
+    @constantNode.connect @gainNode
     @constantNode.start()
 
     # Update constant node as a parameter.
     @autorun (computation) =>
-      @constantNode().offset.value = @readParameter 'amplitude'
+      @constantNode.offset.value = @readParameter 'amplitude'
 
     # Apply envelope on press changes.
     @_press = false

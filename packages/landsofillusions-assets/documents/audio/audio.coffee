@@ -38,6 +38,12 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
         ,
           'nodes.parameters.id': locationId
         ]
+        
+  @forNamespace: new AB.Subscription
+    name: "#{@id()}.forNamespace"
+    query: (path) ->
+      LOI.Assets.Audio.documents.find
+        name: ///^#{path}///
 
   # Methods
 

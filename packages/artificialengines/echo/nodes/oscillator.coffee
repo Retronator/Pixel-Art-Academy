@@ -1,8 +1,8 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.ScheduledNode
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Oscillator'
-  @nodeName: -> 'Oscillator'
+class AEc.Node.Oscillator extends AEc.Node.ScheduledNode
+  @type: -> 'Artificial.Echo.Node.Oscillator'
+  @displayName: -> 'Oscillator'
 
   @Types:
     Sine: 'sine'
@@ -19,20 +19,20 @@ class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.Schedul
       pattern: String
       options: _.values @Types
       default: @Types.Sine
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.String
     ,
       name: 'frequency'
       pattern: Match.OptionalOrNull Number
       default: 440
       step: 1
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+      type: AEc.ConnectionTypes.Parameter
     ,
       name: 'detune'
       pattern: Match.OptionalOrNull Number
       default: 0
       step: 100
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+      type: AEc.ConnectionTypes.Parameter
 
   createSource: (context) ->
     context.createOscillator()

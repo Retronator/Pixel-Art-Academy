@@ -1,26 +1,26 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
 # We need to save the Number class to a temporary variable since it will get set to the new class definition below.
 NumberType = Number
 
-class LOI.Assets.Engine.Audio.Number extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Number'
-  @nodeName: -> 'Number'
+class AEc.Node.Number extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.Number'
+  @displayName: -> 'Number'
 
   @initialize()
 
   @outputs: -> [
     name: 'value'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ]
 
   @parameters: -> [
     name: 'number'
     pattern: Match.OptionalOrNull NumberType
     default: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ]
 
   constructor: ->

@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.Node extends AM.Component
@@ -11,7 +12,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     # We support sending in a node instance (with its ID and audio
     # canvas) or just the node class for a generic display of the node.
-    {@id, @nodeClass, @audioCanvas} = options
+    {@id, @audioCanvas, @nodeType} = options
+    
+    @nodeClass = AEc.Node.getClassForType @nodeType
 
     # Copy the ID for reactive rendering.
     @_id = @id
@@ -40,7 +43,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @parameterPositionsByName = new ReactiveField null
 
     # Do extra preparations for nodes on the canvas (not in the library).
-    if @audioCanvas
+    if @audioCanvas and @nodeClass
       # Enable reading output data.
       @outputData = new ReactiveField {}
       
@@ -69,10 +72,10 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
       # Create custom content component.
       switch @nodeClass
-        when LOI.Assets.Engine.Audio.Sound
+        when AEc.Node.Sound
           @customContent = new LOI.Assets.AudioEditor.Node.Sound @
 
-        when LOI.Assets.Engine.Audio.BiquadFilter
+        when AEc.Node.BiquadFilter
           @customContent = new LOI.Assets.AudioEditor.Node.BiquadFilter @
 
     # Isolate reactivity of data.
@@ -109,6 +112,8 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
             height: $parameters.outerHeight() / scale
       ,
         0
+      
+    return unless @nodeClass
 
     # Update input/output positions.
     @autorun (computation) =>
@@ -150,15 +155,18 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
           @parameterPositionsByName positions
       ,
         0
-
+      
+  nodeValid: ->
+    @nodeClass?
+    
   position: ->
     @temporaryPosition() or @data()?.position
 
   expanded: ->
     @data()?.expanded
 
-  nodeName: ->
-    @nodeClass.nodeName()
+  displayName: ->
+    @nodeClass.displayName()
 
   inputs: ->
     @nodeClass.inputs()
@@ -262,7 +270,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   connectorTypeClass: ->
     connector = @currentData()
 
-    if connector.type is LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    if connector.type is AEc.ConnectionTypes.ReactiveValue
       typeClass = connector.valueType
 
     else

@@ -1,8 +1,8 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.ScheduledNode
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Player'
-  @nodeName: -> 'Player'
+class AEc.Node.Player extends AEc.Node.ScheduledNode
+  @type: -> 'Artificial.Echo.Node.Player'
+  @displayName: -> 'Player'
 
   @initialize()
 
@@ -11,38 +11,38 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.ScheduledNo
     
     parameters.unshift
       name: 'buffer'
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.Buffer
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.Buffer
       
     parameters.push 
       name: 'loop'
       pattern: Boolean
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.Press
     ,
       name: 'loop start'
       pattern: Match.OptionalOrNull Number
       default: 0
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.Number
     ,
       name: 'loop end'
       pattern: Match.OptionalOrNull Number
       default: 0
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.Number
     ,
       name: 'playback rate'
       pattern: Match.OptionalOrNull Number
       default: 1
       step: 0.1
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+      type: AEc.ConnectionTypes.Parameter
     ,
       name: 'detune'
       pattern: Match.OptionalOrNull Number
       default: 0
       step: 100
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+      type: AEc.ConnectionTypes.Parameter
       
     parameters
 

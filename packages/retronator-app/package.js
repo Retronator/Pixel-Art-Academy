@@ -32,8 +32,9 @@ Package.onUse(function(api) {
   api.use('retronator:illustrapedia');
 
   api.use('retronator:landsofillusions');
-  api.use('retronator:landsofillusions-items');
   api.use('retronator:landsofillusions-assets');
+  api.use('retronator:landsofillusions-ui');
+  api.use('retronator:landsofillusions-items');
   api.use('retronator:landsofillusions-world');
   api.use('retronator:landsofillusions-construct');
 

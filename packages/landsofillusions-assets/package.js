@@ -159,6 +159,7 @@ Package.onUse(function(api) {
 
   api.addFile('documents/audio..');
   api.addFile('documents/audio/audio-getpreviewimage');
+  api.addFile('documents/audio/namespace');
   api.addServerFile('documents/audio/subscriptions');
   api.addFile('documents/audio/methods/addnode');
   api.addFile('documents/audio/methods/removenode');
@@ -219,25 +220,9 @@ Package.onUse(function(api) {
   api.addFile('engine/mesh/cluster');
 
   api.addFile('engine/audio..');
-  api.addFile('engine/audio/node');
-  api.addFile('engine/audio/schedulednode');
-
-  api.addFile('engine/audio/nodes/output');
-  api.addFile('engine/audio/nodes/sound');
-
-  api.addFile('engine/audio/nodes/player');
-  api.addFile('engine/audio/nodes/constant');
-  api.addFile('engine/audio/nodes/oscillator');
-
-  api.addFile('engine/audio/nodes/gain');
-  api.addFile('engine/audio/nodes/delay');
-  api.addFile('engine/audio/nodes/biquadfilter');
-
+  api.addFile('engine/audio/nodes..');
   api.addFile('engine/audio/nodes/location');
   api.addFile('engine/audio/nodes/locationchange');
-  api.addFile('engine/audio/nodes/number');
-  api.addFile('engine/audio/nodes/sustainvalue');
-  api.addFile('engine/audio/nodes/adsr');
 
   // Editors
 

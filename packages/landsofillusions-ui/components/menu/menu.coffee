@@ -14,7 +14,7 @@ class LOI.Components.Menu extends AM.Component
 
     @menuVisible = new ReactiveField false
 
-    @menuItems = new (@options.itemsClass or @constructor.Items)
+    @menuItems = new (@options.itemsClass or @constructor.Items) @
 
     @signIn = new LOI.Components.SignIn
   
@@ -97,9 +97,6 @@ class LOI.Components.Menu extends AM.Component
   toolbarVisible: ->
     'visible' if @customShowMenu() or not @menuVisible()
 
-  audioAvailable: ->
-    LOI.adventure.interface.audioManager
-    
   audioEnabledClass: ->
     'audio-enabled' if LOI.adventure.interface.audioManager.enabled()
 
@@ -112,7 +109,7 @@ class LOI.Components.Menu extends AM.Component
     @showMenu()
 
   onClickToggleAudioButton: (event) ->
-    if LOI.adventure.world.audioManager().enabled()
+    if LOI.adventure.interface.audioManager.enabled()
       value = LOI.Settings.Audio.Enabled.Off
 
     else

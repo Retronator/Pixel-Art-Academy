@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -101,7 +102,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
         else
           nodeComponent = new LOI.Assets.AudioEditor.Node
             id: node.id
-            nodeClass: LOI.Assets.Engine.Audio.Node.getClassForType node.type
+            nodeType: node.type
             audioCanvas: @
 
           @_nodeComponentsById[node.id] = nodeComponent

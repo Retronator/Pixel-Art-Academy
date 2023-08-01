@@ -1,19 +1,19 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.Gain extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Gain'
-  @nodeName: -> 'Gain'
+class AEc.Node.Gain extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.Gain'
+  @displayName: -> 'Gain'
 
   @initialize()
 
   @inputs: -> [
     name: 'in'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @outputs: -> [
     name: 'out'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @parameters: -> [
@@ -21,7 +21,7 @@ class LOI.Assets.Engine.Audio.Gain extends LOI.Assets.Engine.Audio.Node
     pattern: Match.OptionalOrNull Number
     step: 1
     default: 1
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ]
 
   constructor: ->

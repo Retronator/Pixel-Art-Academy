@@ -1,3 +1,4 @@
+AEc = Artificial.Echo
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -11,10 +12,15 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
       LOI.Assets.Audio.documents.findOne @fileId
     ,
       true
-
+    
     # Create the alias for universal operators.
     @asset = @audioData
-
+    
+    @audioNodes = new ComputedField =>
+      @audioData()?.nodes
+    ,
+      true
+    
     @displayName = new ComputedField =>
       return unless audioData = @audioData()
       audioData.name or audioData._id
@@ -29,9 +35,7 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
       return unless context = adventureViews[0]?.adventure.interface.audioManager.context()
       computation.stop()
 
-      @audio Tracker.nonreactive => new LOI.Assets.Engine.Audio
-        context: context
-        audioData: @audioData
+      @audio Tracker.nonreactive => new AEc.Audio @fileId, context, @audioNodes
 
   destroy: ->
     super arguments...
@@ -39,6 +43,7 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
     @_audioCreateAutorun.stop()
     @audio()?.destroy()
     @displayName.stop()
+    @audioNodes.stop()
     @audioData.stop()
     @_subscription.stop()
     

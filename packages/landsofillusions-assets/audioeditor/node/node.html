@@ -1,42 +1,51 @@
 <template name="LandsOfIllusions.Assets.AudioEditor.Node">
   <div class="landsofillusions-assets-audioeditor-node {{expandedClass}}" {{style nodeStyle}}>
-    <div class="name">
-      {{nodeName}}
-    </div>
-    <div class="content" {{style contentStyle}}>
-      <div class="parameters">
-        {{#each parameters}}
-          <li class="parameter input" data-name="{{name}}">
+    {{#if nodeValid}}
+      <div class="name">
+        {{displayName}}
+      </div>
+      <div class="content" {{style contentStyle}}>
+        <div class="parameters">
+          {{#each parameters}}
+            <li class="parameter input" data-name="{{name}}">
+              <div class="connector {{connectorTypeClass}}"></div>
+              <div class="connection-target"></div>
+              <div class="name">{{name}}</div>
+              {{> LandsOfIllusions.Assets.AudioEditor.Node.Parameter args parameterOptions}}
+            </li>
+          {{/each}}
+        </div>
+        {{#if customContent}}
+          <div class="custom-content">
+            {{> Render customContent}}
+          </div>
+        {{/if}}
+      </div>
+      <ul class="inputs">
+        {{#each inputs}}
+          <li class="input" data-name="{{name}}" {{style inputStyle}}>
             <div class="connector {{connectorTypeClass}}"></div>
             <div class="connection-target"></div>
             <div class="name">{{name}}</div>
-            {{> LandsOfIllusions.Assets.AudioEditor.Node.Parameter args parameterOptions}}
           </li>
         {{/each}}
-      </div>
-      {{#if customContent}}
-        <div class="custom-content">
-          {{> Render customContent}}
+      </ul>
+      <ul class="outputs">
+        {{#each outputs}}
+          <li class="output" data-name="{{name}}" {{style outputStyle}}>
+            <div class="connector {{connectorTypeClass}}"></div>
+            <div class="connection-target"></div>
+            <div class="name">{{name}}</div>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <div class="name">
+        Unknown node type
+        <div class="node-type">
+          {{nodeType}}
         </div>
-      {{/if}}
-    </div>
-    <ul class="inputs">
-      {{#each inputs}}
-        <li class="input" data-name="{{name}}" {{style inputStyle}}>
-          <div class="connector {{connectorTypeClass}}"></div>
-          <div class="connection-target"></div>
-          <div class="name">{{name}}</div>
-        </li>
-      {{/each}}
-    </ul>
-    <ul class="outputs">
-      {{#each outputs}}
-        <li class="output" data-name="{{name}}" {{style outputStyle}}>
-          <div class="connector {{connectorTypeClass}}"></div>
-          <div class="connection-target"></div>
-          <div class="name">{{name}}</div>
-        </li>
-      {{/each}}
-    </ul>
+      </div>
+    {{/if}}
   </div>
 </template>

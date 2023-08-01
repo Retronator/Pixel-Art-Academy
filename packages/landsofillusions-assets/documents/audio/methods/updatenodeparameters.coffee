@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 
 LOI.Assets.Audio.updateNodeParameters.method (audioId, nodeId, parameters) ->
@@ -13,7 +14,7 @@ LOI.Assets.Audio.updateNodeParameters.method (audioId, nodeId, parameters) ->
   # Nothing to do if same parameters are sent in.
   return if EJSON.equals parameters, node.parameters
 
-  nodeClass = LOI.Assets.Engine.Audio.Node.getClassForType node.type
+  nodeClass = AEc.Node.getClassForType node.type
   parametersInfo = nodeClass.parameters()
 
   # Make sure the new parameters match the required patterns.

@@ -1,6 +1,7 @@
 AB = Artificial.Babel
 AC = Artificial.Control
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -11,22 +12,23 @@ class LOI.Assets.AudioEditor.NodeLibrary extends FM.View
   onCreated: ->
     super arguments...
 
-    @nodeClasses = LOI.Assets.Engine.Audio.Node.getClasses()
+    @nodeClasses = AEc.Node.getClasses()
 
     @searchTerm = new ReactiveField ''
 
     @displayedNodeClasses = new ComputedField =>
       if searchTerm = _.toLower @searchTerm()
-        displayedNodeClasses = _.filter @nodeClasses, (nodeClass) => _.toLower(nodeClass.nodeName()).indexOf(searchTerm) > -1
+        displayedNodeClasses = _.filter @nodeClasses, (nodeClass) => _.toLower(nodeClass.displayName()).indexOf(searchTerm) > -1
 
       else
         displayedNodeClasses = @nodeClasses
 
-      displayedNodeClasses = _.sortBy displayedNodeClasses, (nodeClass) => nodeClass.nodeName()
+      displayedNodeClasses = _.sortBy displayedNodeClasses, (nodeClass) => nodeClass.displayName()
 
       for nodeClass in displayedNodeClasses
         _id: nodeClass.type()
         nodeClass: nodeClass
+        nodeType: nodeClass.type()
 
   events: ->
     super(arguments...).concat

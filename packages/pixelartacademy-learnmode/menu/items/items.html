@@ -55,32 +55,32 @@
         <li class="graphics-scale menu-item">
           Pixel scale:
           {{#if graphicsMaximumScale}}
-            <button class="previous-button">◀</button>
+            <button class="previous-button actionable">◀</button>
           {{/if}}
           {{#if graphicsMaximumScale}}
             {{graphicsMaximumScale}}x
           {{else}}
             Auto
           {{/if}}
-          <button class="next-button">▶</button>
+          <button class="next-button actionable">▶</button>
         </li>
-        {{#if audioAvailable}}
-          <li class="menu-item"><span class="audio actionable">
-            Audio:
-            {{#if $is audioEnabled 'On'}}on{{/if}}
-            {{#if isBrowser}}
-              {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
-            {{/if}}
-            {{#if $is audioEnabled 'Off'}}off{{/if}}
-          </span></li>
-          <li class="sounds menu-item">
-            Sounds: <input type="range" min="0" max="100" step="10" value="{{soundLevel}}"/>
-          </li>
-          <li class="music menu-item">
-            Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
-          </li>
+        <li class="menu-item"><span class="audio actionable">
+          Audio:
+          {{#if $is audioEnabled 'On'}}on{{/if}}
+          {{#if isBrowser}}
+            {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
+          {{/if}}
+          {{#if $is audioEnabled 'Off'}}off{{/if}}
+        </span></li>
+        <li class="sounds menu-item">
+          Sounds: <input type="range" min="0" max="100" step="10" value="{{soundLevel}}"/>
+        </li>
+        <li class="music menu-item">
+          Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
+        </li>
+        {{#if isBrowser}}
+          <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
         {{/if}}
-        <!-- TODO li class="menu-item"><span class="actionable permissions">Permissions</span></li-->
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>
     {{/if}}

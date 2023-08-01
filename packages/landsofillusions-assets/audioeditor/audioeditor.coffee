@@ -93,6 +93,9 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
                     name: 'Navigator'
                     contentComponentId: LOI.Assets.AudioEditor.Navigator.id()
                     active: true
+                  ,
+                    name: 'File info'
+                    contentComponentId: LOI.Assets.Editor.AssetInfo.id()
                   ]
                 remainingArea:
                   type: FM.TabbedView.id()
@@ -106,7 +109,7 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
                 type: FM.SplitView.id()
                 dockSide: FM.SplitView.DockSide.Bottom
                 mainArea:
-                  height: 100
+                  height: 30
                   type: LOI.Assets.AudioEditor.AdventureView.id()
 
                 remainingArea:

@@ -28,7 +28,7 @@ class LM.Interface extends LOI.Interface
     
     @waiting = new ReactiveField true
     
-    @audioManager = new LOI.Interface.Components.AudioManager @
+    @audioManager = new LOI.Interface.Components.AudioManager
     
   onRendered: ->
     super arguments...

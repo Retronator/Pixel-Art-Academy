@@ -1,24 +1,40 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 Persistence = Artificial.Mummification.Document.Persistence
 
 class LOI.Components.Menu.Items extends AM.Component
-  @register 'LandsOfIllusions.Components.Menu.Items'
+  @id: -> 'LandsOfIllusions.Components.Menu.Items'
+  @register @id()
 
   @Screens =
     MainMenu: 'MainMenu'
     Settings: 'Settings'
     Permissions: 'Permissions'
     Extras: 'Extras'
+    
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      hover: AEc.ValueTypes.Trigger
+      click: AEc.ValueTypes.Trigger
 
   constructor: (@options = {}) ->
     super arguments...
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
+    
+    @audio = @constructor.Audio.variables
 
-  onRendered: ->
+  onCreated: ->
     super arguments...
+    
+    @constructor.Audio.load LOI.adventure.interface.audioManager
+    
+  onDestroyed: ->
+    super arguments...
+    
+    @constructor.Audio.unload()
 
   aboutVisible: ->
     # About is visible on the landing page.
@@ -102,6 +118,9 @@ class LOI.Components.Menu.Items extends AM.Component
 
   events: ->
     super(arguments...).concat
+      'mouseenter .actionable': @onMouseEnterActionable
+      'click .actionable': @onClickActionable
+      
       # Main menu
       'click .main-menu .continue': @onClickMainMenuContinue
       'click .main-menu .new': @onClickMainMenuNew
@@ -126,6 +145,19 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .permissions .persist-command-history': @onClickPermissionsPersistCommandHistory
       'click .permissions .persist-login': @onClickPermissionsPersistLogin
       'click .permissions .back-to-settings': @onClickPermissionsBackToSettings
+  
+  onMouseEnterActionable: (event) ->
+    @audio.hover() unless @_justClicked
+    
+  onClickActionable: (event) ->
+    @audio.click()
+    
+    @_justClicked = true
+    
+    Meteor.setTimeout =>
+      @_justClicked = false
+    ,
+      100
 
   onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()

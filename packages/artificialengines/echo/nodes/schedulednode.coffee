@@ -1,6 +1,6 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
+class AEc.Node.ScheduledNode extends AEc.Node
   @PlayControl:
     StartOnly: 'start only'
     StartStop: 'start and stop'
@@ -11,13 +11,13 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
 
   @inputs: -> [
     name: 'play'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Press
   ]
 
   @outputs: -> [
     name: 'out'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
   
   @parameters: -> [
@@ -25,15 +25,15 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     pattern: String
     options: _.values @PlayControl
     default: @PlayControl.StartStop
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.String
   ,
     name: 'parameters'
     pattern: String
     options: _.values @Parameters
     default: @Parameters.Update
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.String
   ]
   
   @fixedParameterNames: -> ['play control', 'parameters']
@@ -55,7 +55,7 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     @_parameterNodes = {}
     @_intermediateNodesCreated = false
 
-    for parameter in @parameters when parameter.type is LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    for parameter in @parameters when parameter.type is AEc.ConnectionTypes.Parameter
       @_parameterNodes[parameter.name] = new ReactiveField null
 
     # Reactively create and destroy audio sources.
@@ -65,35 +65,27 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
 
       @registerCreateDependencies()
 
-      if context
-        # Create the out node if we haven't yet.
-        unless @_intermediateNodesCreated
-          @_outNode context.createGain()
-          
-          for parameterName of @_parameterNodes
-            @_parameterNodes[parameterName] context.createGain()
+      # Create the out node if we haven't yet.
+      unless @_intermediateNodesCreated
+        @_outNode context.createGain()
+        
+        for parameterName of @_parameterNodes
+          @_parameterNodes[parameterName] context.createGain()
 
-          @_intermediateNodesCreated = true
+        @_intermediateNodesCreated = true
 
-        # We start sources when play changes to truthy value.
-        if play and not @_lastPlay
-          sourceStarted = @_startSource context
+      # We start sources when play changes to truthy value.
+      if play and not @_lastPlay
+        sourceStarted = @_startSource context
 
-          # If no source was created, we aren't playing.
-          play = false unless sourceStarted
+        # If no source was created, we aren't playing.
+        play = false unless sourceStarted
 
-        if @readParameter('play control') is @constructor.PlayControl.StartStop
-          # We stop sources when play is falsy.
-          @stopSources() unless play
+      if @readParameter('play control') is @constructor.PlayControl.StartStop
+        # We stop sources when play is falsy.
+        @stopSources() unless play
 
-        @_lastPlay = play
-
-      else
-        # If context was invalidated, stop existing sources.
-        @stopSources()
-
-        # Let go of the out node as well.
-        @_outNode null
+      @_lastPlay = play
 
     # Reactively update parameters.
     @autorun (computation) =>
@@ -139,10 +131,10 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     for source in sources
       for parameter in @parameters when @_childParameterFieldNames[parameter.name]
         switch parameter.type
-          when LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+          when AEc.ConnectionTypes.ReactiveValue
             source[@_childParameterFieldNames[parameter.name]] = parameterValues[parameter.name]
 
-          when LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+          when AEc.ConnectionTypes.Parameter
             source[@_childParameterFieldNames[parameter.name]].value = parameterValues[parameter.name]
 
   stopSources: ->

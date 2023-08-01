@@ -1,19 +1,19 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.Delay extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Delay'
-  @nodeName: -> 'Delay'
+class AEc.Node.Delay extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.Delay'
+  @displayName: -> 'Delay'
 
   @initialize()
 
   @inputs: -> [
     name: 'in'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @outputs: -> [
     name: 'out'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @parameters: -> [
@@ -22,15 +22,15 @@ class LOI.Assets.Engine.Audio.Delay extends LOI.Assets.Engine.Audio.Node
     step: 0.1
     default: 0
     min: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ,
     name: 'maxDelayTime'
     pattern: Match.OptionalOrNull Number
     default: 1
     max: 180
     min: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ]
 
   constructor: ->

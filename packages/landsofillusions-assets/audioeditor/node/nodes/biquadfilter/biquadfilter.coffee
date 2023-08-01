@@ -21,7 +21,7 @@ class LOI.Assets.AudioEditor.Node.BiquadFilter extends AM.Component
   onCreated: ->
     super arguments...
 
-    @audioNode = new ComputedField => 
+    @audioNode = new ComputedField =>
       return unless audio = @node.audioCanvas.audio()
       audio.getNode @node.id
 
@@ -40,7 +40,7 @@ class LOI.Assets.AudioEditor.Node.BiquadFilter extends AM.Component
         # Depend on filter updates.
         audioNode.filterUpdatedDependency.depend()
 
-        if biquadFilterNode = audioNode.node()
+        if biquadFilterNode = audioNode.node
           biquadFilterNode.getFrequencyResponse @constructor._frequencies, @constructor._magnitudeResponse, @constructor._phaseResponse
 
       # Draw phase response.

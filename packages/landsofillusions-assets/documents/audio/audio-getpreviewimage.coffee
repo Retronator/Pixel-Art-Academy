@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AEc = Artificial.Echo
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
@@ -40,7 +41,7 @@ LOI.Assets.Audio::getPreviewImage = ->
 
     for connection in node.connections
       otherNode = _.find @nodes, (node) => node.id is connection.nodeId
-      nodeClass = LOI.Assets.Engine.Audio.Node.getClassForType otherNode.type
+      continue unless nodeClass = AEc.Node.getClassForType otherNode.type
       sideEntry = _.find nodeClass.parameters(), (parameter) => parameter.name is connection.input
 
       end =

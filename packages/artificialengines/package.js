@@ -462,6 +462,27 @@ Package.onUse(function(api) {
 
   // Artificial Echo
 
+  api.addFile('echo/audio');
+  api.addFile('echo/variable');
+  api.addFile('echo/node');
+
+  api.addFile('echo/nodes/output');
+  api.addFile('echo/nodes/sound');
+
+  api.addFile('echo/nodes/schedulednode');
+  api.addFile('echo/nodes/player');
+  api.addFile('echo/nodes/constant');
+  api.addFile('echo/nodes/oscillator');
+
+  api.addFile('echo/nodes/gain');
+  api.addFile('echo/nodes/delay');
+  api.addFile('echo/nodes/biquadfilter');
+
+  api.addFile('echo/nodes/variable');
+  api.addFile('echo/nodes/number');
+  api.addFile('echo/nodes/sustainvalue');
+  api.addFile('echo/nodes/adsr');
+
   // Artificial Everything
 
   api.addFile('everything/item');

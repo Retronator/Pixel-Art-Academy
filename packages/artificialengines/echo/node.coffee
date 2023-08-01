@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.Node
+class AEc.Node
   @_nodeClassesByType = {}
 
   @getClassForType: (type) ->
@@ -15,7 +15,7 @@ class LOI.Assets.Engine.Audio.Node
 
   # Name is how the node is represented in the editor. Not that we can't
   # call it simply name because it conflicts with the class name property.
-  @nodeName: -> throw new AE.NotImplementedException "You must specify node's name."
+  @displayName: -> throw new AE.NotImplementedException "You must specify node's name."
 
   # Override to provide inputs and outputs of the node.
   @inputs: -> []
@@ -61,7 +61,7 @@ class LOI.Assets.Engine.Audio.Node
     handle
 
   type: -> @constructor.type()
-  nodeName: -> @constructor.nodeName()
+  displayName: -> @constructor.displayName()
 
   readInput: (input) ->
     return unless reactiveValue = @_getReactiveValueField(input)()
@@ -87,7 +87,7 @@ class LOI.Assets.Engine.Audio.Node
     @_reactiveValueFields[name] ?= new ReactiveField null
 
   connect: (node, output, input) ->
-    console.log "Connecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
+    console.log "Connecting audio node #{@_connectionDescription node, output, input}" if AEc.debug
 
     @_connect arguments...
     
@@ -108,7 +108,7 @@ class LOI.Assets.Engine.Audio.Node
       inputIndex = destinationConnection.index
       outputIndex = sourceConnection.index
 
-      console.log "Audio node connection created #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
+      console.log "Audio node connection created #{@_connectionDescription node, output, input}" if AEc.debug
 
       if destination instanceof AudioNode
         source.connect destination, outputIndex, inputIndex
@@ -134,7 +134,7 @@ class LOI.Assets.Engine.Audio.Node
     @_connectionAutoruns.push autorun
 
   disconnect: (node, output, input) ->
-    console.log "Disconnecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
+    console.log "Disconnecting audio node #{@_connectionDescription node, output, input}" if AEc.debug
 
     @_disconnect arguments...
 
@@ -150,7 +150,7 @@ class LOI.Assets.Engine.Audio.Node
   _disconnectAutoruns: (autoruns, stop = true) ->
     for autorun in autoruns
       if autorun.audioSource
-        console.log "Audio node connection removed #{@_connectionDescription autorun.audioNode, autorun.audioOutput, autorun.audioInput}" if LOI.Assets.Engine.Audio.debug
+        console.log "Audio node connection removed #{@_connectionDescription autorun.audioNode, autorun.audioOutput, autorun.audioInput}" if AEc.debug
 
         if autorun.audioDestination instanceof AudioNode
           autorun.audioSource.disconnect autorun.audioDestination, autorun.audioOutputIndex, autorun.audioInputIndex
@@ -201,4 +201,4 @@ class LOI.Assets.Engine.Audio.Node
     "#{@_connectorDescription @, output} -> #{@_connectorDescription node, input}"
 
   _connectorDescription: (node, connector) ->
-    "#{node.constructor.nodeName()}(#{_.toLower(node.id).substring 0, 5}):#{_.toUpper connector}"
+    "#{node.constructor.displayName()}(#{_.toLower(node.id).substring 0, 5}):#{_.toUpper connector}"

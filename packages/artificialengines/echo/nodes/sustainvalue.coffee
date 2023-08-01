@@ -1,27 +1,27 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.SustainValue extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.SustainValue'
-  @nodeName: -> 'Sustain Value'
+class AEc.Node.SustainValue extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.SustainValue'
+  @displayName: -> 'Sustain Value'
 
   @initialize()
 
   @inputs: -> [
     name: 'value'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    type: AEc.ConnectionTypes.ReactiveValue
   ]
 
   @outputs: -> [
     name: 'value'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    type: AEc.ConnectionTypes.ReactiveValue
   ]
 
   @parameters: -> [
     name: 'duration'
     pattern: Match.OptionalOrNull Number
     default: 0
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ]
     
   constructor: ->

@@ -1,22 +1,22 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Sound'
-  @nodeName: -> 'Sound'
+class AEc.Node.Sound extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.Sound'
+  @displayName: -> 'Sound'
 
   @initialize()
 
   @outputs: -> [
     name: 'buffer'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Buffer
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Buffer
   ]
 
   @parameters: -> [
     name: 'url'
     pattern: String
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.String
   ]
 
   constructor: ->

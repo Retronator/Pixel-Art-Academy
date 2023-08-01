@@ -1,8 +1,8 @@
-LOI = LandsOfIllusions
+AEc = Artificial.Echo
 
-class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.BiquadFilter'
-  @nodeName: -> 'Biquad Filter'
+class AEc.Node.BiquadFilter extends AEc.Node
+  @type: -> 'Artificial.Echo.Node.BiquadFilter'
+  @displayName: -> 'Biquad Filter'
 
   @Types:
     LowPass: 'lowpass'
@@ -18,12 +18,12 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
 
   @inputs: -> [
     name: 'in'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @outputs: -> [
     name: 'out'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Channels
+    type: AEc.ConnectionTypes.Channels
   ]
 
   @parameters: -> [
@@ -31,8 +31,8 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
     pattern: String
     options: _.values @Types
     default: @Types.LowPass
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.String
   ,
     name: 'frequency'
     pattern: Match.OptionalOrNull Number
@@ -40,13 +40,13 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
     min: 10
     max: 24000
     step: 10
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ,
     name: 'detune'
     pattern: Match.OptionalOrNull Number
     default: 0
     step: 100
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ,
     name: 'Q'
     pattern: Match.OptionalOrNull Number
@@ -54,14 +54,14 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
     default: 1
     min: 0.0001
     max: 1000
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ,
     name: 'gain'
     pattern: Match.OptionalOrNull Number
     default: 0
     min: -40
     max: 40
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+    type: AEc.ConnectionTypes.Parameter
   ]
 
   constructor: ->

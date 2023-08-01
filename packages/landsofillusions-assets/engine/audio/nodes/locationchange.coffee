@@ -1,15 +1,16 @@
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Node
-  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.LocationChange'
-  @nodeName: -> 'Location Change'
+class LOI.Assets.Engine.Audio.Nodes.LocationChange extends AEc.Node
+  @type: -> 'LandsOfIllusions.Assets.Engine.Audio.Nodes.LocationChange'
+  @displayName: -> 'Location Change'
 
   @initialize()
 
   @outputs: -> [
     name: 'trigger'
-    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-    valueType: LOI.Assets.Engine.Audio.ValueTypes.Trigger
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Trigger
   ]
 
   @parameters: ->
@@ -27,15 +28,15 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
       pattern: [String]
       options: options
       showValuesInDropdown: true
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.String
     ,
       name: 'to'
       pattern: [String]
       options: options
       showValuesInDropdown: true
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
-      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.String
     ]
 
   constructor: ->
