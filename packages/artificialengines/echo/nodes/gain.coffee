@@ -31,7 +31,6 @@ class AEc.Node.Gain extends AEc.Node
 
     @autorun (computation) =>
       @node.gain.value = @readParameter 'gain'
-
     
   getDestinationConnection: (input) ->
     empty = super arguments...

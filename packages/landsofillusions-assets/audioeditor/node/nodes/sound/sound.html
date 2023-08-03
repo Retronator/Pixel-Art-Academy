@@ -1,5 +1,8 @@
 <template name="LandsOfIllusions.Assets.AudioEditor.Node.Sound">
   <div class="landsofillusions-assets-audioeditor-node-sound">
+    <div class="open">
+      <button class="open-button">Open</button>
+    </div>
     {{#if audioNode.buffer}}
       <div class="duration">
         {{fixedDecimals audioNode.buffer.duration 1}}s

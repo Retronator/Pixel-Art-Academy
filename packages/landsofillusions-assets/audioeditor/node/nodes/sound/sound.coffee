@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.Node.Sound extends AM.Component
@@ -11,8 +12,10 @@ class LOI.Assets.AudioEditor.Node.Sound extends AM.Component
 
   onCreated: ->
     super arguments...
+    
+    @interface = @ancestorComponentOfType FM.Interface
 
-    @audioNode = new ComputedField => 
+    @audioNode = new ComputedField =>
       return unless audio = @node.audioCanvas.audio()
       audio.getNode @node.id
 
@@ -43,3 +46,18 @@ class LOI.Assets.AudioEditor.Node.Sound extends AM.Component
       context.stroke()
 
       canvas
+
+  events: ->
+    super(arguments...).concat
+      'click .open-button': @onClickOpenButton
+      'drop .open': @onDropOpen
+  
+  onClickOpenButton: (event) ->
+    url = @node.parametersData()?['url']
+    
+    @interface.displayDialog
+      contentComponentId: LOI.Assets.AudioEditor.SoundSelectDialog.id()
+      contentComponentData:
+        selectItem: url
+        open: (selectedItem) =>
+          @node.audioCanvas.audioLoader().changeNodeParameter @node.id, 'url', selectedItem.name

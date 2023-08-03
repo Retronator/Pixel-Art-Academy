@@ -14,13 +14,9 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
 
   onCreated: ->
     super arguments...
-
-    @audioNode = new ComputedField =>
-      return unless audio = @node.audioCanvas.audio()
-      audio.getNode @node.id
-      
+    
     @variable = new ComputedField =>
-      return unless id = @audioNode()?.readParameter 'id'
+      return unless id = @node.parametersData()?['id']
       AEc.Variable.getVariableForId id
       
     @namespace = new ReactiveField null
@@ -28,7 +24,7 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
     
     # Fill out the namespace and name when ID changes.
     @autorun (computation) =>
-      return unless id = @audioNode()?.readParameter 'id'
+      return unless id = @node.parametersData()?['id']
       
       # Only react to ID changes.
       Tracker.nonreactive =>
@@ -43,7 +39,7 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
       
       # Only react to namespace and name changes.
       Tracker.nonreactive =>
-        return unless id = @audioNode()?.readParameter 'id'
+        return unless id = @node.parametersData()?['id']
         newId = "#{namespace}.#{name}"
         return if newId is id
         

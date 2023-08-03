@@ -67,10 +67,10 @@ class AEc.Node.ScheduledNode extends AEc.Node
 
       # Create the out node if we haven't yet.
       unless @_intermediateNodesCreated
-        @_outNode context.createGain()
+        @_outNode new GainNode context
         
         for parameterName of @_parameterNodes
-          @_parameterNodes[parameterName] context.createGain()
+          @_parameterNodes[parameterName] new GainNode context
 
         @_intermediateNodesCreated = true
 

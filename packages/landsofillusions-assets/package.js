@@ -418,6 +418,8 @@ Package.onUse(function(api) {
 
   api.addFile('audioeditor..');
   api.addFile('audioeditor/audioloader');
+  api.addFile('audioeditor/publicdirectory');
+  api.addServerFile('audioeditor/publicdirectory-server');
 
   api.addComponent('audioeditor/adventureview..');
   api.addComponent('audioeditor/adventureview/adventure..');
@@ -443,4 +445,6 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/tools..');
   api.addFile('audioeditor/tools/undo');
   api.addFile('audioeditor/tools/redo');
+
+  api.addUnstyledComponent('audioeditor/soundselectdialog..');
 });

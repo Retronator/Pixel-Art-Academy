@@ -9,7 +9,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.Model.Loader
   @gltfLoader = new THREE.GLTFLoader
 
   dracoLoader = new THREE.DRACOLoader
-  dracoLoader.setDecoderPath '/artificialengines/everywhere/three/draco/'
+  dracoLoader.setDecoderPath '/artificial/everywhere/three/draco/'
   @gltfLoader.setDRACOLoader dracoLoader
 
   @models = {}

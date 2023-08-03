@@ -141,7 +141,14 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
   iconUrl: ->
     item = @currentData()
-    iconName = item.iconName?() or _.toLower item.constructor.name
+    iconName = item.iconName?()
+    
+    unless iconName
+      dotIndex = item.name.lastIndexOf  '.'
+      iconName = item.name[dotIndex + 1..] if dotIndex > -1
+      
+    unless iconName
+      iconName = _.toLower item.constructor.name
 
     "/landsofillusions/assets/components/filemanager/#{iconName}.png"
 
