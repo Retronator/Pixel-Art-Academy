@@ -6,7 +6,7 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
 
   @initialize()
 
-  @parameters: -> 
+  @parameters: ->
     parameters = super arguments...
     
     parameters.unshift
@@ -14,7 +14,7 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
       type: AEc.ConnectionTypes.ReactiveValue
       valueType: AEc.ValueTypes.Buffer
       
-    parameters.push 
+    parameters.push
       name: 'loop'
       pattern: Boolean
       type: AEc.ConnectionTypes.ReactiveValue
@@ -58,7 +58,4 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
   createSource: (context) ->
     return unless buffer = @readParameter 'buffer'
 
-    source = context.createBufferSource()
-    source.buffer = buffer
-
-    source
+    new AudioBufferSourceNode context, {buffer}

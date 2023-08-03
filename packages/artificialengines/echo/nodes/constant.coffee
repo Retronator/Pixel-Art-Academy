@@ -15,4 +15,4 @@ class AEc.Node.Constant extends AEc.Node.ScheduledNode
       type: AEc.ConnectionTypes.Parameter
 
   createSource: (context) ->
-    context.createConstantSource()
+    new ConstantSourceNode context

@@ -35,4 +35,4 @@ class AEc.Node.Oscillator extends AEc.Node.ScheduledNode
       type: AEc.ConnectionTypes.Parameter
 
   createSource: (context) ->
-    context.createOscillator()
+    new OscillatorNode context

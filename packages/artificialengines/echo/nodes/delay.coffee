@@ -40,7 +40,7 @@ class AEc.Node.Delay extends AEc.Node
       # We must create a new delay node each time max delay time changes.
       maxDelayTime = @readParameter 'maxDelayTime'
       
-      @audio.context.createDelay maxDelayTime
+      new DelayNode @audio.context, {maxDelayTime}
     ,
       true
 

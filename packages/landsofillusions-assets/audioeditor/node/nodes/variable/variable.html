@@ -1,0 +1,22 @@
+<template name="LandsOfIllusions.Assets.AudioEditor.Node.Variable">
+  <div class="landsofillusions-assets-audioeditor-node-variable">
+    <ul class="parameters">
+      <li class="parameter namespace">
+        <div class="name">namespace</div>
+        {{> LandsOfIllusions.Assets.AudioEditor.Node.Variable.Namespace}}
+      </li>
+      <li class="parameter name">
+        <div class="name">name</div>
+        {{> LandsOfIllusions.Assets.AudioEditor.Node.Variable.Name}}
+      </li>
+      <li class="parameter test-value">
+        <div class="name">test value</div>
+        <div class="value">
+          {{#if $is variable.valueType 'Trigger'}}
+            <button class="trigger-button">Trigger</button>
+          {{/if}}
+        </div>
+      </li>
+    </ul>
+  </div>
+</template>

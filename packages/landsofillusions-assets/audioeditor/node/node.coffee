@@ -6,6 +6,12 @@ LOI = LandsOfIllusions
 class LOI.Assets.AudioEditor.Node extends AM.Component
   @id: -> 'LandsOfIllusions.Assets.AudioEditor.Node'
   @register @id()
+  
+  @nodesWithCustomComponent: -> [
+    AEc.Node.Sound
+    AEc.Node.BiquadFilter
+    AEc.Node.Variable
+  ]
 
   constructor: (options) ->
     super arguments...
@@ -71,12 +77,8 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
         @outputData outputData
 
       # Create custom content component.
-      switch @nodeClass
-        when AEc.Node.Sound
-          @customContent = new LOI.Assets.AudioEditor.Node.Sound @
-
-        when AEc.Node.BiquadFilter
-          @customContent = new LOI.Assets.AudioEditor.Node.BiquadFilter @
+      if @nodeClass in @constructor.nodesWithCustomComponent()
+        @customContent = new LOI.Assets.AudioEditor.Node[_.last @nodeClass.type().split '.'] @
 
     # Isolate reactivity of data.
     @data = new ComputedField =>
@@ -92,28 +94,25 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   onRendered: ->
     super arguments...
     
-    # Update name height when in audioCanvas.
-    @autorun (computation) =>
-      # Depend on scale.
+    # Update name height.
+    $name = @$('.landsofillusions-assets-audioeditor-node > .name')
+    @_nameResizeObserver = new ResizeObserver =>
       scale = @display.scale()
-
-      # Depend on parameters data.
-      @parametersData()
-
-      # Measure elements after they had a chance to update.
-      Meteor.setTimeout =>
-        # HACK: Also make sure the elements are being rendered since they will return 0 otherwise.
-        requestAnimationFrame =>
-          @nameHeight @$('.landsofillusions-assets-audioeditor-node > .name').outerHeight() / scale
-
-          $parameters = @$('.landsofillusions-assets-audioeditor-node > .content')
-          @contentSize
-            width: $parameters.outerWidth() / scale
-            height: $parameters.outerHeight() / scale
-      ,
-        0
+      @nameHeight $name.outerHeight() / scale
       
+    @_nameResizeObserver.observe $name[0]
+    
     return unless @nodeClass
+    
+    # Update content size.
+    $content = @$('.landsofillusions-assets-audioeditor-node > .content')
+    @_contentResizeObserver = new ResizeObserver =>
+      scale = @display.scale()
+      @contentSize
+        width: $content.outerWidth() / scale
+        height: $content.outerHeight() / scale
+    
+    @_contentResizeObserver.observe $content[0]
 
     # Update input/output positions.
     @autorun (computation) =>
@@ -156,8 +155,17 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       ,
         0
       
+  onDestroyed: ->
+    super arguments...
+    
+    @_nameResizeObserver?.disconnect()
+    @_contentResizeObserver?.disconnect()
+    
   nodeValid: ->
     @nodeClass?
+    
+  nodeTypeClass: ->
+    _.kebabCase @nodeType
     
   position: ->
     @temporaryPosition() or @data()?.position

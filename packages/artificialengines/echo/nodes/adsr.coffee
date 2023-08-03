@@ -59,9 +59,8 @@ class AEc.Node.ADSR extends AEc.Node
     # Create and connect internal nodes.
     context = @audio.context
 
-    @constantNode = context.createConstantSource()
-    @gainNode = context.createGain()
-    @gainNode.gain.value = 0
+    @constantNode = new ConstantSourceNode context
+    @gainNode = new GainNode context gain: 0
 
     @constantNode.connect @gainNode
     @constantNode.start()

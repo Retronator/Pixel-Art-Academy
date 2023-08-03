@@ -435,6 +435,7 @@ Package.onUse(function(api) {
 
   api.addComponent('audioeditor/node/nodes/sound..');
   api.addComponent('audioeditor/node/nodes/biquadfilter..');
+  api.addComponent('audioeditor/node/nodes/variable..');
 
   api.addUnstyledComponent('audioeditor/navigator..');
   api.addComponent('audioeditor/nodelibrary..');

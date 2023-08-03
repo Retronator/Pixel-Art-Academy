@@ -27,7 +27,7 @@ class AEc.Node.Gain extends AEc.Node
   constructor: ->
     super arguments...
 
-    @node = @audio.context.createGain()
+    @node = new GainNode @audio.context
 
     @autorun (computation) =>
       @node.gain.value = @readParameter 'gain'

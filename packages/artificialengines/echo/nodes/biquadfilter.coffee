@@ -67,7 +67,7 @@ class AEc.Node.BiquadFilter extends AEc.Node
   constructor: ->
     super arguments...
 
-    @node = @audio.context.createBiquadFilter()
+    @node = new BiquadFilterNode @audio.context
 
     @filterUpdatedDependency = new Tracker.Dependency
 
