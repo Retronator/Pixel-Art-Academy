@@ -21,6 +21,8 @@ class LOI.Assets.AudioEditor.AudioCanvas.Camera
       y: @options.initialOrigin?.y or 0
     , EJSON.equals
     
+    @_preciseOrigin = @origin()
+    
     # Calculate viewport in canvas coordinates.
     @viewportBounds = new AE.Rectangle()
     
@@ -60,12 +62,20 @@ class LOI.Assets.AudioEditor.AudioCanvas.Camera
             x: windowDelta.x / effectiveScale
             y: windowDelta.y / effectiveScale
           
-          oldOrigin = @origin()
-          
-          @origin
-            x: oldOrigin.x + canvasDelta.x
-            y: oldOrigin.y + canvasDelta.y
+          @offsetOrigin canvasDelta
   
+  setOrigin: (origin) ->
+    @_preciseOrigin = origin
+    
+    @origin
+      x: Math.floor @_preciseOrigin.x
+      y: Math.floor @_preciseOrigin.y
+  
+  offsetOrigin: (offset) ->
+    @setOrigin
+      x: @_preciseOrigin.x + offset.x
+      y: @_preciseOrigin.y + offset.y
+      
   setScale: (scale) ->
     @scale scale
   

@@ -32,6 +32,8 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @dragNodeId = new ReactiveField null
     @dragRequireMove = new ReactiveField false
     @dragHasMoved = new ReactiveField false
+    
+    @dragCanvas = new ReactiveField false
 
   onCreated: ->
     super arguments...
@@ -198,6 +200,21 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       nodeComponent.temporaryPosition
         x: @dragStartNodePosition.x + dragDelta.x
         y: @dragStartNodePosition.y + dragDelta.y
+        
+    # Handle canvas dragging.
+    @autorun (computation) =>
+      return unless @dragCanvas()
+
+      newDisplayCoordinate = @mouse().displayCoordinate()
+      cameraScale = @camera().scale()
+
+      dragDelta =
+        x: (@dragStartDisplayCoordinate.x - newDisplayCoordinate.x) / cameraScale
+        y: (@dragStartDisplayCoordinate.y - newDisplayCoordinate.y) / cameraScale
+
+      @dragStartDisplayCoordinate = newDisplayCoordinate
+
+      @camera().offsetOrigin dragDelta
 
   onRendered: ->
     super arguments...
@@ -292,7 +309,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @dragNodeId options.nodeId
 
   draggingClass: ->
-    'dragging' if @dragNodeId()
+    'dragging' if @dragNodeId() or @dragCanvas()
 
   dragged: ->
     @dragNodeId() and (@dragHasMoved() or @dragRequireMove())
@@ -392,6 +409,18 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
 
   endHoverOutput: ->
     @hoveredOutput null
+    
+  startDragCanvas: ->
+    # Dragging of canvas needs to be handled in display coordinates since the canvas ones should technically stay
+    # the same (the whole point is for the same canvas coordinate to stay under the mouse as we move it around).
+    @dragStartDisplayCoordinate = @mouse().displayCoordinate()
+    @dragCanvas true
+
+    # Wire end of dragging on mouse up anywhere in the window.
+    $(document).on 'mouseup.landsofillusions-assets-audioeditor-audiocanvas', =>
+      $(document).off '.landsofillusions-assets-audioeditor-audiocanvas'
+
+      @dragCanvas false
 
   events: ->
     super(arguments...).concat
@@ -399,10 +428,11 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       'mouseup': @onMouseUp
 
   onMouseDown: (event) ->
-    # Reset dragging on any start of clicks, unless we're already dragging.
-    return if @dragNodeId()
-
+    # Reset dragging on any start of clicks.
     @dragHasMoved false
+    
+    # We should drag the flowchart if we're not dragging a goal and haven't clicked inside a node.
+    @startDragCanvas() unless @dragNodeId() or $(event.target).closest('.landsofillusions-assets-audioeditor-node').length
 
   onMouseUp: (event) ->
     return unless draggedConnection = @draggedConnection()
