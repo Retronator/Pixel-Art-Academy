@@ -18,7 +18,7 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
       name: 'loop'
       pattern: Boolean
       type: AEc.ConnectionTypes.ReactiveValue
-      valueType: AEc.ValueTypes.Press
+      valueType: AEc.ValueTypes.Boolean
     ,
       name: 'loop start'
       pattern: Match.OptionalOrNull Number

@@ -12,7 +12,7 @@ class AEc.Node.RandomBuffer extends AEc.Node
     valueType: AEc.ValueTypes.Trigger
   ]
   
-  @maxBuffersCount = 2
+  @maxBuffersCount = 5
   
   @parameters: -> for i in [1..@maxBuffersCount]
     name: "buffer#{i}"

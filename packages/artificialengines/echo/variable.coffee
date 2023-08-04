@@ -12,7 +12,7 @@ class AEc.Variable
   
   constructor: (id, valueType) ->
     defaultValue = switch valueType
-      when AEc.ValueTypes.Trigger, AEc.ValueTypes.Press then false
+      when AEc.ValueTypes.Trigger, AEc.ValueTypes.Boolean then false
       when AEc.ValueTypes.Number then 0
       else null
     

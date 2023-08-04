@@ -9,6 +9,6 @@ class Artificial.Echo
   @ValueTypes =
     Buffer: 'Buffer'
     Trigger: 'Trigger'
-    Press: 'Press'
+    Boolean: 'Boolean'
     Number: 'Number'
     String: 'String'

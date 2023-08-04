@@ -10,7 +10,7 @@ class LOI.Assets.Engine.Audio.Nodes.Location extends AEc.Node
   @outputs: -> [
     name: 'value'
     type: AEc.ConnectionTypes.ReactiveValue
-    valueType: AEc.ValueTypes.Press
+    valueType: AEc.ValueTypes.Boolean
   ]
 
   @parameters: ->

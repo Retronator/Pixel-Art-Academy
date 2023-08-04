@@ -17,11 +17,12 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
   onCreated: ->
     super arguments...
-
-    @_selectedNames = new ReactiveField []
-    @_previousSelectedNames = new ReactiveField []
-    @_startRangeName = new ReactiveField null
-    @_endRangeName = new ReactiveField null
+    
+    # Internal selected items hold on to old instances that survive recreation of items when documents change.
+    @_internalSelectedItems = new ReactiveField []
+    @_previousSelectedItems = new ReactiveField []
+    @_startRangeItem = new ReactiveField null
+    @_endRangeItem = new ReactiveField null
 
     @width = new ReactiveField 100
 
@@ -75,10 +76,23 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
       items = folders.concat files
 
-      # Update selected items when current items change.
-      selectedNames = @_selectedNames()
-      newSelectedNames = _.filter items, (item) => (item.name or item._id) in selectedNames
-      @selectedItems newSelectedNames
+      # Update selected items to new instances.
+      itemsEqual = (a, b) =>
+        return unless a.constructor is b.constructor
+        if a._id then a._id is b._id else a.name is b.name
+      
+      selectedItems = @_internalSelectedItems()
+      newSelectedItems = _.filter items, (item) => _.find selectedItems, (selectedItem) => itemsEqual item, selectedItem
+      @selectedItems newSelectedItems
+      
+      # Update range items if possible (we don't want to deselect the range while documents are loading in).
+      if startRangeItem = Tracker.nonreactive => @_startRangeItem()
+        if newStartRangeItem = _.find items, (item) => itemsEqual item, startRangeItem
+          @_startRangeItem newStartRangeItem
+      
+      if endRangeItem = Tracker.nonreactive => @_endRangeItem()
+        if newEndRangeItem = _.find items, (item) => itemsEqual item, endRangeItem
+          @_endRangeItem newEndRangeItem
 
       _.sortBy items, 'sortingName'
 
@@ -263,44 +277,44 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     return if @editingNameItem()
 
     item = @currentData()
-    @_changeEndRange item.name or item._id
+    @_changeEndRange item
 
-  _changeEndRange: (endRangeName) ->
-    selectedNames = @_selectedNames()
+  _changeEndRange: (endRangeItem) ->
+    selectedItems = @selectedItems()
     keyboardState = AC.Keyboard.getState()
 
     if @options.fileManager.options.multipleSelect and keyboardState.isKeyDown(AC.Keys.shift)
       # Update range selection.
-      @_changeSelection @_previousSelectedNames(), @_startRangeName(), endRangeName
+      @_changeSelection @_previousSelectedItems(), @_startRangeItem(), endRangeItem
 
     else if @options.fileManager.options.multipleSelect and keyboardState.isCommandOrControlDown()
       # Add or remove the file from selection.
-      if endRangeName in selectedNames
+      if endRangeItem in selectedItems
         # Remove the file from the selection
-        if selectedNames.length is 1
+        if selectedItems.length is 1
           # We're removing the last item so we need to clear everything.
           @_changeSelection [], null, null
 
         else
           # Remove the clicked item and the last added one, which that will become the new range.
-          _.pull selectedNames, endRangeName
+          _.pull selectedItems, endRangeItem
 
-          lastName = _.last selectedNames
-          _.pull selectedNames, lastName
+          lastItem = _.last endRangeItem
+          _.pull selectedItems, lastItem
 
-          @_changeSelection selectedNames, lastName, lastName
+          @_changeSelection endRangeItem, lastItem, lastItem
 
       else
         # Add the file to the selection.
-        @_changeSelection selectedNames, endRangeName, endRangeName
+        @_changeSelection selectedItems, endRangeItem, endRangeItem
 
     else
-      if endRangeName in selectedNames
+      if endRangeItem in selectedItems
         switch event.detail
           when 1
             # This is the first click. Replace selection after a timeout, in case a double click is being performed.
             @_clickItemTimeout = Meteor.setTimeout =>
-              @_changeSelection [], endRangeName, endRangeName
+              @_changeSelection [], endRangeItem, endRangeItem
             ,
               500
 
@@ -315,31 +329,29 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
       else
         # Replace selection.
-        @_changeSelection [], endRangeName, endRangeName
+        @_changeSelection [], endRangeItem, endRangeItem
 
     Meteor.clearTimeout @_startRenamingItemTimeout unless doNotCancelRenaming
 
-  _changeSelection: (previousSelectedNames, startRangeName, endRangeName) ->
+  _changeSelection: (previousSelectedItems, startRangeItem, endRangeItem) ->
     items = @currentItems()
 
-    if endRangeName
-      startRangeIndex = Math.max 0, _.findIndex items, (item) => (item.name or item._id) is startRangeName
-      endRangeIndex = _.findIndex items, (item) => (item.name or item._id) is endRangeName
+    if endRangeItem
+      startRangeIndex = Math.max 0, items.indexOf startRangeItem
+      endRangeIndex = items.indexOf endRangeItem
 
       # Make sure start index is smaller than the end one.
       [startRangeIndex, endRangeIndex] = [endRangeIndex, startRangeIndex] if startRangeIndex > endRangeIndex
 
-      selectedNames = _.union previousSelectedNames, (item.name or item._id for item in items[startRangeIndex..endRangeIndex])
+      selectedItems = _.union previousSelectedItems, items[startRangeIndex..endRangeIndex]
 
     else
-      selectedNames = previousSelectedNames
+      selectedItems = previousSelectedItems
 
-    @_startRangeName startRangeName
-    @_endRangeName endRangeName
-    @_previousSelectedNames previousSelectedNames
-    @_selectedNames selectedNames
-
-    selectedItems = _.filter items, (item) => (item.name or item._id) in selectedNames
+    @_startRangeItem startRangeItem
+    @_endRangeItem endRangeItem
+    @_previousSelectedItems previousSelectedItems
+    @_internalSelectedItems selectedItems
     @selectedItems selectedItems
 
   onDragStartItem: (event) ->
@@ -476,7 +488,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
             name: newName
 
     @editingNameItem null
-    @_selectedNames [newName]
+    @selectedItems [item]
 
     $input.closest('.entry').scrollLeft 0
 
@@ -498,8 +510,8 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
       switch event.which
         when AC.Keys.down, AC.Keys.up
-          endRangeName = @_endRangeName()
-          endRangeIndex = _.findIndex items, (item) => (item.name or item._id) is endRangeName
+          endRangeItem = @_endRangeItem()
+          endRangeIndex = items.indexOf endRangeItem
 
           if event.which is AC.Keys.down
             endRangeIndex = Math.min items.length - 1, endRangeIndex + 1
@@ -508,7 +520,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
             endRangeIndex = Math.max 0, endRangeIndex - 1
 
           newItem = items[endRangeIndex]
-          @_changeEndRange newItem.name or newItem._id
+          @_changeEndRange newItem
 
           # Do not scroll by default.
           event.preventDefault()
@@ -547,7 +559,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
           # Select first item in the new directory.
           item = newDirectory.currentItems()[0]
-          newDirectory._changeSelection [], item?.name, item?.name
+          newDirectory._changeSelection [], item, item
 
           # Do not scroll by default.
           event.preventDefault()

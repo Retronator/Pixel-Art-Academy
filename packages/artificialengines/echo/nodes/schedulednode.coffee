@@ -12,7 +12,7 @@ class AEc.Node.ScheduledNode extends AEc.Node
   @inputs: -> [
     name: 'play'
     type: AEc.ConnectionTypes.ReactiveValue
-    valueType: AEc.ValueTypes.Press
+    valueType: AEc.ValueTypes.Boolean
   ]
 
   @outputs: -> [

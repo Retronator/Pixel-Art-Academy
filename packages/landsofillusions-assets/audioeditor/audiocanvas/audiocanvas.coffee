@@ -228,29 +228,20 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @context canvas.getContext '2d'
 
     # Resize canvas on editor changes.
-    @autorun (computation) =>
-      # Depend on editor view size.
-      AM.Window.clientBounds()
-
-      # Depend on application area changes.
-      @interface.currentApplicationAreaData().value()
-
-      # Depend on editor view tab changes.
-      @editorView.tabDataChanged.depend()
-
-      # After update, measure the size.
-      Tracker.afterFlush =>
-        newSize =
-          width: $audioCanvas.width()
-          height: $audioCanvas.height()
-
-        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-        for key, value of newSize
-          canvas[key] = value unless canvas[key] is value
-
-        @canvasPixelSize newSize
-
+    @_audioCanvasResizeObserver = new ResizeObserver =>
+      newSize =
+        width: $audioCanvas.width()
+        height: $audioCanvas.height()
+      
+      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+      for key, value of newSize
+        canvas[key] = value unless canvas[key] is value
+      
+      @canvasPixelSize newSize
+    
+    @_audioCanvasResizeObserver.observe $audioCanvas[0]
+    
     # Prevent click events from happening when dragging was active. We need to manually add this event
     # listener so that we can set setCapture to true and make this listener be called before child click events.
     $audioCanvas[0].addEventListener 'click', =>
@@ -261,6 +252,11 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       @dragHasMoved false
     ,
       true
+    
+  onDestroyed: ->
+    super arguments...
+    
+    @_audioCanvasResizeObserver?.disconnect()
 
   nodeComponents: ->
     _.values @nodeComponentsById()
@@ -397,7 +393,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
 
   startHoverInput: (options) ->
     # Make sure the input is not already connected.
-    return if _.find @connections(), (connection) => connection.endNodeId is options.nodeId and connection.input is options.input
+    # return if _.find @connections(), (connection) => connection.endNodeId is options.nodeId and connection.input is options.input
 
     @hoveredInput options
 
@@ -413,7 +409,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
   startDragCanvas: ->
     # Dragging of canvas needs to be handled in display coordinates since the canvas ones should technically stay
     # the same (the whole point is for the same canvas coordinate to stay under the mouse as we move it around).
-    @dragStartDisplayCoordinate = @mouse().displayCoordinate()
+    return unless @dragStartDisplayCoordinate = @mouse().displayCoordinate()
     @dragCanvas true
 
     # Wire end of dragging on mouse up anywhere in the window.

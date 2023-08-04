@@ -9,7 +9,7 @@ class AEc.Node.ADSR extends AEc.Node
   @inputs: -> [
     name: 'press'
     type: AEc.ConnectionTypes.ReactiveValue
-    valueType: AEc.ValueTypes.Press
+    valueType: AEc.ValueTypes.Boolean
   ]
 
   @outputs: -> [
