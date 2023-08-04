@@ -223,6 +223,7 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes..');
   api.addFile('engine/audio/nodes/location');
   api.addFile('engine/audio/nodes/locationchange');
+  api.addFile('engine/audio/nodes/modaldialog');
 
   // Editors
 
@@ -425,6 +426,7 @@ Package.onUse(function(api) {
   api.addComponent('audioeditor/adventureview/adventure..');
 
   api.addFile('audioeditor/adventureview/controls/locationselect');
+  api.addFile('audioeditor/adventureview/controls/modaldialogselect');
 
   api.addComponent('audioeditor/audiocanvas..');
   api.addFile('audioeditor/audiocanvas/flowchart');

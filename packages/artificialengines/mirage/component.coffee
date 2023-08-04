@@ -13,7 +13,7 @@ class AM.Component extends CommonComponent
 
     @_componentClassesByName[componentName] = @
 
-  @getComponentForName: (componentName) ->
+  @getClassForName: (componentName) ->
     @_componentClassesByName[componentName]
     
   @getClasses: ->

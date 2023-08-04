@@ -42,3 +42,11 @@ class LOI.Assets.AudioEditor.AdventureView.Adventure extends AM.Component
     @currentLocationThings = => []
 
     @isGameStateEmpty = => false
+    
+    @modalDialogs = new ComputedField =>
+      if componentName = @adventureView.modalDialogComponentName()
+        componentClass = AM.Component.getClassForName componentName
+        [new componentClass]
+        
+      else
+        []

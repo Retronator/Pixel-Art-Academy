@@ -6,11 +6,13 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.AdventureView extends FM.View
   # locationId: the location being shown in the view
+  # modalDialogComponentName: the name of the component being shown as a modal dialog
   @id: -> 'LandsOfIllusions.Assets.AudioEditor.AdventureView'
   @register @id()
   
   @componentDataFields: -> [
     'locationId'
+    'modalDialogComponentName'
   ]
   
   onCreated: ->

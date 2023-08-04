@@ -52,10 +52,18 @@ class AEc.Node.RandomNumber extends AEc.Node
     minimum = @readParameter 'minimum'
     maximum = @readParameter 'maximum'
     
+    if integer = @readParameter 'integer'
+      minimum = Math.floor minimum
+      maximum = Math.floor maximum
+      
     range = Math.abs maximum - minimum
     lowest = Math.min minimum, maximum
     
-    lowest + range * Math.random()
+    if integer
+      lowest + Math.floor (range + 1) * Math.random()
+      
+    else
+      lowest + range * Math.random()
 
   getReactiveValue: (output) ->
     return super arguments... unless output is 'value'

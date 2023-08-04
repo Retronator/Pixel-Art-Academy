@@ -78,7 +78,7 @@ class FM.EditorView extends FM.View
     editorViewData.set 'files', files
 
   getActiveEditor: ->
-    componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
+    componentClass = AM.Component.getClassForName @data().get('editor').contentComponentId
     @allChildComponentsOfType(componentClass)[0]
 
   showTabs: ->
