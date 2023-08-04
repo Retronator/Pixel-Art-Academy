@@ -27,7 +27,7 @@ class AEc.Node.Sound extends AEc.Node
 
     # Create and destroy the buffer.
     @autorun =>
-      url = @parametersData()?.url
+      url = @readParameter 'url'
 
       # Nothing to do if the buffer is already loading from the correct URL.
       return if url is @url
@@ -49,7 +49,7 @@ class AEc.Node.Sound extends AEc.Node
 
           @audio.context.decodeAudioData request.response, (buffer) =>
             # Make sure the url is still the same as at the start of the request.
-            return unless @parametersData()?.url is url
+            return unless @readParameter('url') is url
 
             # Update the buffer.
             @buffer buffer

@@ -14,6 +14,8 @@
         <div class="value">
           {{#if $is variable.valueType 'Trigger'}}
             <button class="trigger-button">Trigger</button>
+          {{else}}
+            {{> Render testValueComponent}}<span class="checkmark"></span>
           {{/if}}
         </div>
       </li>

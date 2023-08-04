@@ -1,12 +1,18 @@
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 
 class LOI.Settings
-  @Audio:
+  @id: -> 'LandsOfIllusions.Settings'
+  
+  @Audio =
     Enabled:
       Off: 'Off'
       Fullscreen: 'Fullscreen'
       On: 'On'
-      
+  
+    soundVolume: new AEc.Variable "#{@id()}.audio.soundVolume", AEc.ValueTypes.Number
+    musicVolume: new AEc.Variable "#{@id()}.audio.musicVolume", AEc.ValueTypes.Number
+    
   constructor: ->
     @persistSettings = new @constructor.ConsentField
       name: 'persistSettings'
@@ -56,6 +62,11 @@ class LOI.Settings
       enabled: new @constructor.Field @constructor.Audio.Enabled.Fullscreen, 'audio.enabled', @persistSettings
       soundVolume: new @constructor.Field 100, 'audio.soundVolume', @persistSettings
       musicVolume: new @constructor.Field 100, 'audio.musicVolume', @persistSettings
+      
+    # Update audio variables.
+    Tracker.autorun =>
+      @constructor.Audio.soundVolume @audio.soundVolume.value()
+      @constructor.Audio.musicVolume @audio.musicVolume.value()
 
   toObject: ->
     values = {}

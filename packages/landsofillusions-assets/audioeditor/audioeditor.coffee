@@ -16,8 +16,10 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
 
     # Content Components
-
-    components = {}
+    
+    components =
+      "#{_.snakeCase LOI.Assets.AudioEditor.AudioCanvas.id()}":
+        initialCameraScale: 1
     
     # Layouts
 

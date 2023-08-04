@@ -19,7 +19,7 @@ class AEc.Node.Gain extends AEc.Node
   @parameters: -> [
     name: 'gain'
     pattern: Match.OptionalOrNull Number
-    step: 1
+    step: 0.1
     default: 1
     type: AEc.ConnectionTypes.Parameter
   ]

@@ -3,25 +3,30 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.AudioCanvas.Camera
   constructor: (@audioCanvas, @options = {}) ->
-    _.defaults @options,
-      enableInput: true
-    
+    @cameraData = new ComputedField =>
+      @audioCanvas.interface.getActiveFileData()?.child 'camera'
+      
+    @scaleData = new ComputedField =>
+      @cameraData()?.child 'scale'
+      
     # At camera scale 1, a canvas pixel matches a display pixel (and not window pixel).
     # Scale is used to go from canvas pixels to display pixels.
-    @scale = new ReactiveField (@options.initialScale or 1), EJSON.equals
+    @scale = new ComputedField =>
+      @scaleData()?.value() or @audioCanvas.initialCameraScale() or 1
     
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
     @effectiveScale = new ComputedField =>
       displayScale = @audioCanvas.display.scale()
       @scale() * displayScale
+      
+    @originData = new ComputedField =>
+      @cameraData()?.child 'origin'
     
-    @origin = new ReactiveField
-      x: @options.initialOrigin?.x or 0
-      y: @options.initialOrigin?.y or 0
-    , EJSON.equals
-    
-    @_preciseOrigin = @origin()
+    @origin = new ComputedField =>
+      @originData()?.value() or x: 0, y: 0
+    ,
+      EJSON.equals
     
     # Calculate viewport in canvas coordinates.
     @viewportBounds = new AE.Rectangle()
@@ -42,42 +47,39 @@ class LOI.Assets.AudioEditor.AudioCanvas.Camera
     
     # Enable panning with scrolling.
     
-    # Wire up mouse wheel event once the sprite editor is rendered.
-    if @options.enableInput
-      @audioCanvas.autorun (computation) =>
-        $audioCanvas = @audioCanvas.$audioCanvas()
-        return unless $audioCanvas
-        computation.stop()
+    # Wire up mouse wheel event once the audio editor is rendered.
+    @audioCanvas.autorun (computation) =>
+      $audioCanvas = @audioCanvas.$audioCanvas()
+      return unless $audioCanvas
+      computation.stop()
+      
+      $audioCanvas.on 'wheel', (event) =>
+        event.preventDefault()
         
-        $audioCanvas.on 'wheel', (event) =>
-          event.preventDefault()
-          
-          effectiveScale = @effectiveScale()
-          
-          windowDelta =
-            x: event.originalEvent.deltaX
-            y: event.originalEvent.deltaY
-          
-          canvasDelta =
-            x: windowDelta.x / effectiveScale
-            y: windowDelta.y / effectiveScale
-          
-          @offsetOrigin canvasDelta
+        effectiveScale = @effectiveScale()
+        
+        windowDelta =
+          x: event.originalEvent.deltaX
+          y: event.originalEvent.deltaY
+        
+        canvasDelta =
+          x: windowDelta.x / effectiveScale
+          y: windowDelta.y / effectiveScale
+        
+        @offsetOrigin canvasDelta
   
   setOrigin: (origin) ->
-    @_preciseOrigin = origin
-    
-    @origin
-      x: Math.floor @_preciseOrigin.x
-      y: Math.floor @_preciseOrigin.y
+    @originData().value origin
   
   offsetOrigin: (offset) ->
+    oldOrigin = @origin()
+  
     @setOrigin
-      x: @_preciseOrigin.x + offset.x
-      y: @_preciseOrigin.y + offset.y
+      x: oldOrigin.x + offset.x
+      y: oldOrigin.y + offset.y
       
   setScale: (scale) ->
-    @scale scale
+    @scaleData().value scale
   
   applyTransformToCanvas: ->
     context = @audioCanvas.context()

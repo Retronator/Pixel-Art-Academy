@@ -393,7 +393,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     if draggedConnection.output
       inputs = _.union @nodeClass.inputs(), @nodeClass.parameters()
-      return unless inputs.length is 1
+      return unless inputs.length
 
       @audioCanvas.startHoverInput
         nodeId: @id
@@ -401,7 +401,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     else
       outputs = @nodeClass.outputs()
-      return unless outputs.length is 1
+      return unless outputs.length
 
       @audioCanvas.startHoverOutput
         nodeId: @id
@@ -418,7 +418,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     if draggedConnection.output
       inputs = @nodeClass.inputs()
-      return unless inputs.length is 1
+      return unless inputs.length
 
       @audioCanvas.endConnection
         nodeId: @id
@@ -426,7 +426,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     else
       outputs = @nodeClass.outputs()
-      return unless outputs.length is 1
+      return unless outputs.length
 
       @audioCanvas.endConnection
         nodeId: @id

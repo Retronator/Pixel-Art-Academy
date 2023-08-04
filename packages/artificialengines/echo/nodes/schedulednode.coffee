@@ -51,32 +51,21 @@ class AEc.Node.ScheduledNode extends AEc.Node
     @_lastPlay = null
     
     # We use intermediate (dummy) nodes to wire sources to so we can connect them using normal logic.
-    @_outNode = new ReactiveField null
+    @_outNode = new GainNode @audio.context
     @_parameterNodes = {}
-    @_intermediateNodesCreated = false
-
+    
     for parameter in @parameters when parameter.type is AEc.ConnectionTypes.Parameter
-      @_parameterNodes[parameter.name] = new ReactiveField null
-
+      @_parameterNodes[parameter.name] = new GainNode @audio.context
+    
     # Reactively create and destroy audio sources.
     @autorun (computation) =>
       play = @readInput 'play'
-      context = @audio.context
 
       @registerCreateDependencies()
 
-      # Create the out node if we haven't yet.
-      unless @_intermediateNodesCreated
-        @_outNode new GainNode context
-        
-        for parameterName of @_parameterNodes
-          @_parameterNodes[parameterName] new GainNode context
-
-        @_intermediateNodesCreated = true
-
       # We start sources when play changes to truthy value.
       if play and not @_lastPlay
-        sourceStarted = @_startSource context
+        sourceStarted = @_startSource @audio.context
 
         # If no source was created, we aren't playing.
         play = false unless sourceStarted
@@ -106,14 +95,14 @@ class AEc.Node.ScheduledNode extends AEc.Node
       _.pull @_sources, source
 
       for parameterName, parameterNode of @_parameterNodes
-        parameterNode().disconnect source[@_childParameterFieldNames[parameterName]]
+        parameterNode.disconnect source[@_childParameterFieldNames[parameterName]]
 
     @updateSources [source]
 
-    source.connect @_outNode()
+    source.connect @_outNode
 
     for parameterName, parameterNode of @_parameterNodes
-      parameterNode().connect source[@_childParameterFieldNames[parameterName]]
+      parameterNode.connect source[@_childParameterFieldNames[parameterName]]
 
     source.start()
 
@@ -145,9 +134,9 @@ class AEc.Node.ScheduledNode extends AEc.Node
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'
 
-    source: @_outNode()
+    source: @_outNode
 
   getDestinationConnection: (input) ->
     return (super arguments...) unless @_parameterNodes[input]
 
-    destination: @_parameterNodes[input]()
+    destination: @_parameterNodes[input]

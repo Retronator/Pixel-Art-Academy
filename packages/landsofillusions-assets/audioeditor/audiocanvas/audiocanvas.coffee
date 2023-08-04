@@ -6,6 +6,8 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
+  # initialCameraScale: default scale for camera if not specified on the file
+  
   # EDITOR FILE DATA
   # camera:
   #   scale: canvas magnification
@@ -14,7 +16,11 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
   #     y
   @id: -> 'LandsOfIllusions.Assets.AudioEditor.AudioCanvas'
   @register @id()
-
+  
+  @componentDataFields: -> [
+    'initialCameraScale'
+  ]
+  
   constructor: (@audioEditor) ->
     super arguments...
     
@@ -360,17 +366,18 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       input: options.input or draggedConnection.input
       output: options.output or draggedConnection.output
 
-    invalid = false
-
     # Make sure the connection goes from an input to an output.
-    invalid = true unless connection.input and connection.output
-
-    # Make sure the input is not already connected. We need to compare to actual connections in the audio
-    # engine (and not our modified ones) since the dragged connection might be going from input to output.
-    invalid = true if _.find @audio()?.connections(), (existingConnection) =>
-      existingConnection.endNodeId is connection.nodeId and existingConnection.input is connection.input
-
-    unless invalid
+    if connection.input and connection.output
+      # Disconnect the input if it is already connected. We need to compare to actual connections in the audio
+      # engine (and not our modified ones) since the dragged connection might be going from input to output.
+      if audioConnections = @audio()?.connections()
+        for existingConnection in audioConnections
+          if existingConnection.endNodeId is connection.nodeId and existingConnection.input is connection.input
+            @audioLoader().removeConnection existingConnection.startNodeId,
+              nodeId: existingConnection.endNodeId
+              input: existingConnection.input
+              output: existingConnection.output
+        
       startNodeId = if options.input then draggedConnection.startNodeId else options.nodeId
 
       # See if this was an existing connection.
@@ -392,9 +399,6 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @draggedConnection null
 
   startHoverInput: (options) ->
-    # Make sure the input is not already connected.
-    # return if _.find @connections(), (connection) => connection.endNodeId is options.nodeId and connection.input is options.input
-
     @hoveredInput options
 
   endHoverInput: ->

@@ -47,6 +47,12 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
         
     @namespaces = _.uniq (id[...id.lastIndexOf('.')] for id in AEc.Variable.getVariableIds())
     
+    # (Re)create the test value component to match its data type.
+    @testValueComponent = new ComputedField =>
+      return unless variable = @variable()
+      
+      new @constructor.TestValue variable
+    
   events: ->
     super(arguments...).concat
       'click .trigger-button': @onClickTriggerButton
@@ -102,3 +108,23 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
           name: name
       
       _.sortBy options, 'name'
+  
+  
+  class @TestValue extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Assets.AudioEditor.Node.Variable.TestValue'
+    
+    constructor: (@variable) ->
+      super arguments...
+      
+      @type = switch @variable.valueType
+        when AEc.ValueTypes.Boolean then AM.DataInputComponent.Types.Checkbox
+        when AEc.ValueTypes.String then AM.DataInputComponent.Types.Text
+        when AEc.ValueTypes.Number then AM.DataInputComponent.Types.Number
+        
+      @realTime = false
+    
+    load: ->
+      @variable.value()
+      
+    save: (value) ->
+      @variable value
