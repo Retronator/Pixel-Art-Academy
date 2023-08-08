@@ -45,6 +45,9 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       # Relay input/output calls to the cartridge.
       onInputOutput: (address, value) =>
         @cartridge().onInputOutput? address, value
+      
+      # Enable interface when the cartridge is in the device.
+      enabled: => @cartridge()
 
     @autorun (computation) =>
       if @cartridge()

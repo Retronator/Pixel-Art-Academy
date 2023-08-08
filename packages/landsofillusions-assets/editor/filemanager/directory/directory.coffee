@@ -113,7 +113,9 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     $(document).off ".landsofillusions-assets-editor-filemanager-directory-#{@_id}"
 
   selectItem: (name) ->
-    @_changeSelection [], name, name
+    itemToSelect = _.find @currentItems(), (item) => item.name is name
+    
+    @_changeSelection [], itemToSelect, itemToSelect
 
   newFolder: ->
     newFolderName = "untitled folder"

@@ -39,7 +39,7 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
       
       # Only react to namespace and name changes.
       Tracker.nonreactive =>
-        return unless id = @node.parametersData()?['id']
+        id = @node.parametersData()?['id']
         newId = "#{namespace}.#{name}"
         return if newId is id
         
@@ -127,4 +127,6 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
       @variable.value()
       
     save: (value) ->
+      return if @variable.valueType is AEc.ValueTypes.Number and _.isNaN value
+      
       @variable value

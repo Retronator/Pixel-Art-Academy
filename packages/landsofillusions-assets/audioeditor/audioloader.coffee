@@ -75,6 +75,49 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
       nodeId: node.id
       requireMove: true
       expandOnEnd: true
+      
+  duplicateNode: (sourceNodeId) ->
+    nodes = @audioNodes()
+    sourceNode = _.find nodes, (existingNode) => existingNode.id is sourceNodeId
+    
+    node =
+      id: Random.id()
+      type: sourceNode.type
+      position: _.clone sourceNode.position
+      expanded: sourceNode.expanded
+
+    # Add the node to the database.
+    LOI.Assets.Audio.addNode @fileId, node
+    
+    # Clone parameters.
+    if sourceNode.parameters
+      for name, value of sourceNode.parameters
+        LOI.Assets.Audio.updateNodeParameters @fileId, node.id,
+          "#{name}": value
+    
+    # Duplicate self-looping connections.
+    if sourceNode.connections
+      for connection in sourceNode.connections when connection.nodeId is sourceNodeId
+        LOI.Assets.Audio.updateConnections @fileId, node.id,
+          output: connection.output
+          nodeId: node.id
+          input: connection.input
+    
+    # Duplicate connections to this node.
+    for otherNode in nodes when otherNode.id isnt sourceNode and otherNode.conncetions
+      for connection in otherNode.conncetions when connection.nodeId is sourceNodeId
+        LOI.Assets.Audio.updateConnections @fileId, otherNode.id,
+          output: connection.output
+          nodeId: node.id
+          input: connection.input
+    
+    # Start drag.
+    audioCanvas = @interface.getEditorForActiveFile()
+    
+    audioCanvas.startDrag
+      nodePosition: node.position
+      nodeId: node.id
+      requireMove: true
 
   removeNode: (nodeId) ->
     # Remove the node in the database

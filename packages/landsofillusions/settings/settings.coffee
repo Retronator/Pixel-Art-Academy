@@ -60,8 +60,8 @@ class LOI.Settings
 
     @audio =
       enabled: new @constructor.Field @constructor.Audio.Enabled.Fullscreen, 'audio.enabled', @persistSettings
-      soundVolume: new @constructor.Field 100, 'audio.soundVolume', @persistSettings
-      musicVolume: new @constructor.Field 100, 'audio.musicVolume', @persistSettings
+      soundVolume: new @constructor.Field 1, 'audio.soundVolume', @persistSettings
+      musicVolume: new @constructor.Field 1, 'audio.musicVolume', @persistSettings
       
     # Update audio variables.
     Tracker.autorun =>

@@ -4,7 +4,7 @@ AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Pico8.Device extends AM.Component
+class PAA.Pico8.Device extends LOI.Component
   @Buttons:
     Left: 0
     Right: 1
@@ -12,6 +12,9 @@ class PAA.Pico8.Device extends AM.Component
     Down: 3
     Z: 4
     X: 5
+    
+  @DPadButtons: [0, 1, 2, 3]
+  @ActionButtons: [4, 5]
 
   constructor: (@options = {}) ->
     super arguments...

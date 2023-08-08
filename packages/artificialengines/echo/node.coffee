@@ -167,8 +167,14 @@ class AEc.Node
 
   onConnect: (input, node, output) ->
     @_getReactiveValueField(input) node.getReactiveValue output
+    @_connectedNode = node
+    @_connectedOutput = output
     
   onDisconnect: (input, node, output) ->
+    # Make sure the disconnecting output is still the currently connected one
+    # (another one could have connected in the mean time).
+    return unless node is @_connectedNode and @_connectedOutput is output
+    
     @_getReactiveValueField(input) null
 
   getDestinationConnection: (input) ->

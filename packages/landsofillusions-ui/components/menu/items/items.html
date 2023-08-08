@@ -90,18 +90,22 @@
           {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
           {{#if $is audioEnabled 'Off'}}off{{/if}}
         </span></li>
-        <li class="sounds menu-item">
-          Sounds: <input type="range" min="0" max="100" step="10" value="{{soundLevel}}"/>
-        </li>
-        <li class="music menu-item">
-          Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
-        </li>
+        {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
         <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>
     {{/if}}
     {{> LandsOfIllusions.Components.Menu.Items.Permissions}}
   </div>
+</template>
+
+<template name="LandsOfIllusions.Components.Menu.Items.VolumeControls">
+  <li class="menu-item">
+    Sounds: <input class="sound-volume" type="range" min="0" max="1" step="0.1" value="{{soundVolume}}"/>
+  </li>
+  <li class="menu-item">
+    Music: <input class="music-volume" type="range" min="0" max="1" step="0.1" value="{{musicVolume}}"/>
+  </li>
 </template>
 
 <template name="LandsOfIllusions.Components.Menu.Items.Permissions">

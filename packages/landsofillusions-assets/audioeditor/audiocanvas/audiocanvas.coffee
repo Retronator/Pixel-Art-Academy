@@ -40,6 +40,9 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     @dragHasMoved = new ReactiveField false
     
     @dragCanvas = new ReactiveField false
+    
+    @hoveredNodeId = new ReactiveField null
+    @selectedNodeId = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -428,11 +431,17 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       'mouseup': @onMouseUp
 
   onMouseDown: (event) ->
-    # Reset dragging on any start of clicks.
-    @dragHasMoved false
+    clickOnNode = $(event.target).closest('.landsofillusions-assets-audioeditor-node').length
+    dragging = @dragNodeId()
+    
+    # Reset dragging on any start of clicks when not dragging a goal.
+    @dragHasMoved false unless dragging
     
     # We should drag the flowchart if we're not dragging a goal and haven't clicked inside a node.
-    @startDragCanvas() unless @dragNodeId() or $(event.target).closest('.landsofillusions-assets-audioeditor-node').length
+    @startDragCanvas() unless dragging or clickOnNode
+    
+    # We should deselect the current node if we click outside the nodes.
+    @selectedNodeId null unless clickOnNode
 
   onMouseUp: (event) ->
     return unless draggedConnection = @draggedConnection()

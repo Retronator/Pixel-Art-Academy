@@ -30,6 +30,8 @@ class LM.Interface extends LOI.Interface
     
     @audioManager = new LOI.Interface.Components.AudioManager
     
+    LOI.Assets.Engine.Audio.initialize @audioManager
+    
   onRendered: ->
     super arguments...
   

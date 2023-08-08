@@ -18,25 +18,25 @@ Package.onUse(function(api) {
 
   api.export('LandsOfIllusions');
 
+  api.addFile('component');
+
   // Interface
 
-  api.addFiles('interface/interface.coffee');
+  api.addFile('interface/interface');
 
-  api.addFiles('interface/components/components.coffee');
-  api.addFiles('interface/components/narrative.coffee');
-  api.addFiles('interface/components/commandinput.coffee');
-  api.addFiles('interface/components/dialogueselection.coffee');
-  api.addFiles('interface/components/audiomanager.coffee');
+  api.addFile('interface/components/components');
+  api.addFile('interface/components/narrative');
+  api.addFile('interface/components/commandinput');
+  api.addFile('interface/components/dialogueselection');
+  api.addFile('interface/components/audiomanager');
 
-  api.addFiles('interface/text/text.coffee');
-  api.addFiles('interface/text/text.html');
-  api.addFiles('interface/text/text.styl');
-  api.addFiles('interface/text/text-initialization.coffee');
-  api.addFiles('interface/text/text-narrative.coffee');
-  api.addFiles('interface/text/text-handlers.coffee');
-  api.addFiles('interface/text/text-nodehandling.coffee');
-  api.addFiles('interface/text/text-resizing.coffee');
-  api.addFiles('interface/text/text-scrolling.coffee');
+  api.addComponent('interface/text/text');
+  api.addFile('interface/text/text-initialization');
+  api.addFile('interface/text/text-narrative');
+  api.addFile('interface/text/text-handlers');
+  api.addFile('interface/text/text-nodehandling');
+  api.addFile('interface/text/text-resizing');
+  api.addFile('interface/text/text-scrolling');
 
   // Components
 

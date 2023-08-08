@@ -1,6 +1,7 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
 AC = Artificial.Control
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -9,7 +10,22 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
   @register @id()
 
   @version: -> '0.2.0'
-
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      buttonOn: AEc.ValueTypes.Trigger
+      buttonOff: AEc.ValueTypes.Trigger
+      buttonPan: AEc.ValueTypes.Number
+      smallButtonOn: AEc.ValueTypes.Trigger
+      smallButtonOff: AEc.ValueTypes.Trigger
+      smallButtonPan: AEc.ValueTypes.Number
+      powerSwitchOn: AEc.ValueTypes.Trigger
+      powerSwitchOff: AEc.ValueTypes.Trigger
+      powerSwitchPan: AEc.ValueTypes.Number
+      dPadOn: AEc.ValueTypes.Trigger
+      dPadOff: AEc.ValueTypes.Trigger
+      dPadPan: AEc.ValueTypes.Number
+      
   constructor: ->
     super arguments...
 
@@ -25,14 +41,18 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     super arguments...
 
     $(document).on 'keydown.pixelartacademy-pico8-device-handheld', (event) =>
+      return unless @enabled()
+      
       keyCode = event.which
       buttonIndex = @keyCodeToButtonIndex keyCode
-      @buttons[buttonIndex] true if buttonIndex?
+      @_updateButton buttonIndex, true if buttonIndex?
 
     $(document).on 'keyup.pixelartacademy-pico8-device-handheld', (event) =>
+      return unless @enabled()
+      
       keyCode = event.which
       buttonIndex = @keyCodeToButtonIndex keyCode
-      @buttons[buttonIndex] false if buttonIndex?
+      @_updateButton buttonIndex, false if buttonIndex?
 
     $(document).on 'mouseup.pixelartacademy-pico8-device-handheld', (event) =>
       # Cancel all buttons when mouse is released.
@@ -45,10 +65,29 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     super arguments...
 
     $(document).off '.pixelartacademy-pico8-device-handheld'
+    
+  enabled: -> if @options.enabled then @options.enabled() else true
+  
+  _updateButton: (buttonIndex, value) ->
+    oldValue = @buttons[buttonIndex]() or false
+    value or= false
+    
+    return if value is oldValue
 
+    if value
+      @audio.dPadOn() if buttonIndex in @constructor.DPadButtons
+      @audio.buttonOn() if buttonIndex in @constructor.ActionButtons
+
+    else
+      @audio.dPadOff() if buttonIndex in @constructor.DPadButtons
+      @audio.buttonOff() if buttonIndex in @constructor.ActionButtons
+  
+    @buttons[buttonIndex] value
+  
   powerStart: ->
     @powerOn true
-
+    @audio.powerSwitchOn()
+    
     # Actually start with the delay after the switch has animated.
     Meteor.setTimeout =>
       @start()
@@ -57,6 +96,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
   powerStop: ->
     @powerOn false
+    @audio.powerSwitchOff()
 
     # Actually stop with the delay after the switch has animated.
     Meteor.setTimeout =>
@@ -94,19 +134,26 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       'touchstart .d-pad, touchmove .d-pad, touchcancel .d-pad, touchend .d-pad': @onTouchDPad
 
   onClickPowerToggleButton: (event) ->
+    return unless @enabled()
+    
     # Toggle power in advance so the switch animates.
-    @powerOn not @powerOn()
+    powerOn = not @powerOn()
+    @powerOn powerOn
 
-    if @powerOn()
+    if powerOn
       @powerStart()
 
     else
       @powerStop()
 
   onClickMenuButton: (event) ->
+    return unless @enabled()
+    
     @reversedControls not @reversedControls()
 
   onMouseDownButtons: (event) ->
+    return unless @enabled()
+    
     position = @_getNormalizedPosition event, event
     buttonIndex = @_getButtonIndex position
 
@@ -114,6 +161,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     @_transferButtons buttons
 
   onTouchButtons: (event) ->
+    return unless @enabled()
+    
     event.preventDefault()
 
     buttons = {}
@@ -121,7 +170,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     for touch in event.originalEvent.targetTouches
       position = @_getNormalizedPosition event, touch
       buttonIndex = @_getButtonIndex position
-      buttons[buttonIndex] = true
+      @_updateButton buttonIndex, true
 
     @_transferButtons buttons
 
@@ -132,10 +181,13 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     oldValue = @buttons[buttonIndex]()
     newValue = buttons[buttonIndex]
 
-    @pressButton buttonIndex if newValue and not oldValue
-    @releaseButton buttonIndex if oldValue and not newValue
-
-    @buttons[buttonIndex] newValue
+    if newValue and not oldValue
+      @pressButton buttonIndex
+    
+    if oldValue and not newValue
+      @releaseButton buttonIndex
+    
+    @_updateButton buttonIndex, newValue
 
   _getButtonIndex: (position) ->
     if @reversedControls()
@@ -147,6 +199,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     if value < 0 then @constructor.Buttons.Z else @constructor.Buttons.X
 
   onMouseDownDPad: (event) ->
+    return unless @enabled()
+    
     @mouseDownDPad true
     @_processMouseOnDPad event
 
@@ -167,6 +221,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     @_transferDirections directions
 
   onTouchDPad: (event) ->
+    return unless @enabled()
+    
     event.preventDefault()
 
     # Touch uses a bigger dead zone.

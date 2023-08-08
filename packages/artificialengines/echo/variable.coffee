@@ -35,16 +35,21 @@ class AEc.Variable
         # Trigger needs to become true for a single frame.
         valueField true
         
+        console.log "Variable", id, "triggered." if AEc.debug
+
         Meteor.setTimeout =>
           valueField false
         ,
           0
         
       else
+        value = valueOrInstanceId
         valueField = getValueFieldForInstanceId instanceId, true
         
         # Set the new value.
-        valueField valueOrInstanceId
+        valueField value
+        
+        console.log "Variable", id, "set to", value if AEc.debug
     
     variable.id = id
     variable.valueType = valueType

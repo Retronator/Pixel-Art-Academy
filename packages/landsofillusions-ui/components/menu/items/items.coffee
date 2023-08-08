@@ -4,7 +4,7 @@ AEc = Artificial.Echo
 LOI = LandsOfIllusions
 Persistence = Artificial.Mummification.Document.Persistence
 
-class LOI.Components.Menu.Items extends AM.Component
+class LOI.Components.Menu.Items extends LOI.Component
   @id: -> 'LandsOfIllusions.Components.Menu.Items'
   @register @id()
 
@@ -23,18 +23,6 @@ class LOI.Components.Menu.Items extends AM.Component
     super arguments...
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
-    
-    @audio = @constructor.Audio.variables
-
-  onCreated: ->
-    super arguments...
-    
-    @constructor.Audio.load LOI.adventure.interface.audioManager
-    
-  onDestroyed: ->
-    super arguments...
-    
-    @constructor.Audio.unload()
 
   aboutVisible: ->
     # About is visible on the landing page.
@@ -94,6 +82,12 @@ class LOI.Components.Menu.Items extends AM.Component
 
   audioEnabled: ->
     LOI.settings.audio.enabled.value()
+    
+  soundVolume: ->
+    LOI.settings.audio.soundVolume.value()
+  
+  musicVolume: ->
+    LOI.settings.audio.musicVolume.value()
 
   smoothShading: ->
     LOI.settings.graphics.smoothShading.value()
@@ -133,6 +127,8 @@ class LOI.Components.Menu.Items extends AM.Component
 
       # Settings
       'click .settings .audio': @onClickSettingsAudio
+      'input .settings .sound-volume': @onInputSettingsSoundVolume
+      'input .settings .music-volume': @onInputSettingsMusicVolume
       'click .settings .graphics-scale .previous-button': @onClickSettingsGraphicsScalePreviousButton
       'click .settings .graphics-scale .next-button': @onClickSettingsGraphicsScaleNextButton
       'click .settings .smooth-shading': @onClickSettingsSmoothShading
@@ -237,7 +233,20 @@ class LOI.Components.Menu.Items extends AM.Component
     nextIndex = (currentIndex + 1) % values.length
 
     LOI.settings.audio.enabled.value values[nextIndex]
-
+    
+  onInputSettingsSoundVolume: (event) ->
+    @_changeVolume 'sound', event
+    
+    # Give audio feedback to indicate loudness of the sounds.
+    @audio.click()
+  
+  onInputSettingsMusicVolume: (event) ->
+    @_changeVolume 'music', event
+    
+  _changeVolume: (property, event) ->
+    value = parseFloat $(event.target).val()
+    LOI.settings.audio["#{property}Volume"].value value
+  
   onClickSettingsGraphicsScalePreviousButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value()
     currentValue--

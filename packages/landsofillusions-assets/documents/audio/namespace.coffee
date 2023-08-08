@@ -11,6 +11,8 @@ class LOI.Assets.Audio.Namespace
       @variables[name] = new AEc.Variable "#{@id}.#{name}", valueType
 
   load: (audioManager) ->
+    @unload()
+  
     # Subscribe to audio assets in the namespace.
     path = @id.toLowerCase().replaceAll('.', '/')
     
@@ -40,5 +42,5 @@ class LOI.Assets.Audio.Namespace
         delete @engineAudioAssets[audioId]
       
   unload: ->
-    @_subscriptionAutorun.stop()
-    @engineAudioDictionary.stop()
+    @_subscriptionAutorun?.stop()
+    @engineAudioDictionary?.stop()

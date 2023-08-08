@@ -448,5 +448,8 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/tools/undo');
   api.addFile('audioeditor/tools/redo');
 
+  api.addFile('audioeditor/actions..');
+  api.addFile('audioeditor/actions/duplicatenode');
+
   api.addUnstyledComponent('audioeditor/soundselectdialog..');
 });

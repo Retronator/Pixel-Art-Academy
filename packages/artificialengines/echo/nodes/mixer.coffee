@@ -26,6 +26,13 @@ class AEc.Node.Mixer extends AEc.Node
       type: AEc.ConnectionTypes.Parameter
       
     parameters.unshift
+      name: "masterGain"
+      pattern: Match.OptionalOrNull Number
+      step: 0.1
+      default: 1
+      type: AEc.ConnectionTypes.Parameter
+      
+    parameters.unshift
       name: 'name'
       pattern: String
       type: AEc.ConnectionTypes.ReactiveValue
@@ -69,7 +76,9 @@ class AEc.Node.Mixer extends AEc.Node
     for channelNumber in [1..@constructor.channelsCount]
       do (channelNumber) =>
         @autorun (computation) =>
-          @inputNodes[channelNumber - 1].gain.value = @readParameter "gain#{channelNumber}"
+          masterGain = @readParameter "masterGain"
+          channelGain = @readParameter "gain#{channelNumber}"
+          @inputNodes[channelNumber - 1].gain.value = masterGain * channelGain
         
   getDestinationConnection: (input) ->
     empty = super arguments...

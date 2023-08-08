@@ -60,4 +60,4 @@ class LOI.Assets.AudioEditor.Node.Sound extends AM.Component
       contentComponentData:
         selectItem: url
         open: (selectedItem) =>
-          @node.audioCanvas.audioLoader().changeNodeParameter @node.id, 'url', selectedItem.name
+          @node.audioCanvas.audioLoader().changeNodeParameter @node.id, 'url', "/#{selectedItem.name}"

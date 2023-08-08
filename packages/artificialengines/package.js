@@ -481,6 +481,7 @@ Package.onUse(function(api) {
 
   api.addFile('echo/nodes/variable');
   api.addFile('echo/nodes/number');
+  api.addFile('echo/nodes/clamp');
   api.addFile('echo/nodes/sustainvalue');
   api.addFile('echo/nodes/adsr');
   api.addFile('echo/nodes/randomnumber');

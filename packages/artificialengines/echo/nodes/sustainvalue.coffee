@@ -23,11 +23,10 @@ class AEc.Node.SustainValue extends AEc.Node
     type: AEc.ConnectionTypes.ReactiveValue
     valueType: AEc.ValueTypes.Number
   ]
-    
+  
   constructor: ->
     super arguments...
 
-    @_value = null
     @value = new ReactiveField null
 
     @autorun (computation) =>

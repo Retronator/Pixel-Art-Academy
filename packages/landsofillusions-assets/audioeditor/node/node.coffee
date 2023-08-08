@@ -254,6 +254,11 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
   expandedClass: ->
     'expanded' if @expanded()
+    
+  selectedClass: ->
+    return unless @audioCanvas
+    
+    'selected' if @audioCanvas.selectedNodeId() is @id
 
   contentStyle: ->
     top: "#{@nameHeight()}rem"
@@ -288,8 +293,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
   events: ->
     super(arguments...).concat
+      'click': @onClick
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
-      'click .landsofillusions-assets-audioeditor-node > .name': @onClickName
+      'dblclick .landsofillusions-assets-audioeditor-node > .name': @onDoubleClickName
       'mousedown .input .connector': @onMouseDownInputConnector
       'mouseup .input': @onMouseUpInput
       'mouseenter .input': @onMouseEnterInput
@@ -301,7 +307,21 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       'mouseenter .landsofillusions-assets-audioeditor-node': @onMouseEnter
       'mouseleave .landsofillusions-assets-audioeditor-node': @onMouseLeave
       'mouseup .landsofillusions-assets-audioeditor-node': @onMouseUp
-
+      
+  onClick: (events) ->
+    return unless @audioCanvas
+    
+    $target = $(event.target)
+    
+    # Ignore actions inside parameters.
+    return if $target.closest('.parameters').length
+    
+    # Ignore actions inside custom content.
+    return if $target.closest('.custom-content').length
+    
+    @audioCanvas.selectedNodeId @id
+    
+  # Node: mousedown has to be registered on the node specifically so that deeper selectors get a chance to prevent it.
   onMouseDownNode: (event) ->
     # We only deal with drag & drop for nodes inside the canvas.
     return unless @audioCanvas
@@ -316,7 +336,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       nodeId: @id
       nodePosition: @data().position
 
-  onClickName: (event) ->
+  onDoubleClickName: (event) ->
     return unless @audioCanvas
 
     @audioCanvas.audioLoader().changeNodeExpanded @id, not @data().expanded
@@ -389,7 +409,11 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @audioCanvas.endHoverOutput()
 
   onMouseEnter: (event) ->
-    return unless draggedConnection = @audioCanvas?.draggedConnection()
+    return unless @audioCanvas
+    
+    @audioCanvas.hoveredNodeId @id
+
+    return unless draggedConnection = @audioCanvas.draggedConnection()
 
     if draggedConnection.output
       inputs = _.union @nodeClass.inputs(), @nodeClass.parameters()
@@ -410,6 +434,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   onMouseLeave: (event) ->
     return unless @audioCanvas
 
+    @audioCanvas.hoveredNodeId null
     @audioCanvas.endHoverInput()
     @audioCanvas.endHoverOutput()
 

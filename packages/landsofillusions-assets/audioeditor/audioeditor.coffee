@@ -44,6 +44,8 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.Editor.Actions.Undo.id()
           LOI.Assets.Editor.Actions.Redo.id()
+          null
+          LOI.Assets.AudioEditor.Actions.DuplicateNode.id()
         ]
       ,
         caption: 'View'
@@ -142,6 +144,9 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
         {commandOrControl: true, key: AC.Keys.dash}
         {key: AC.Keys.numMinus}
         {key: AC.Keys.r}
+      ]
+      "#{LOI.Assets.AudioEditor.Actions.DuplicateNode.id()}": [
+        {key: AC.Keys.d}
       ]
 
   constructor: ->
