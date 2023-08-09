@@ -26,6 +26,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       dPadOff: AEc.ValueTypes.Trigger
       dPadPan: AEc.ValueTypes.Number
       
+  @dPadStereoWidth = 0.1
+  
   constructor: ->
     super arguments...
 
@@ -45,14 +47,26 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       
       keyCode = event.which
       buttonIndex = @keyCodeToButtonIndex keyCode
-      @_updateButton buttonIndex, true if buttonIndex?
+      return unless buttonIndex?
+      
+      if @_isExtraKey keyCode
+        @_transferButton buttonIndex, true
+        
+      else
+        @_updateButton buttonIndex, true
 
     $(document).on 'keyup.pixelartacademy-pico8-device-handheld', (event) =>
       return unless @enabled()
       
       keyCode = event.which
       buttonIndex = @keyCodeToButtonIndex keyCode
-      @_updateButton buttonIndex, false if buttonIndex?
+      return unless buttonIndex?
+
+      if @_isExtraKey keyCode
+        @_transferButton  buttonIndex, false
+    
+      else
+        @_updateButton buttonIndex, false
 
     $(document).on 'mouseup.pixelartacademy-pico8-device-handheld', (event) =>
       # Cancel all buttons when mouse is released.
@@ -60,6 +74,12 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       @_transferDirections {}
 
       @mouseDownDPad false
+      
+    @powerSwitch = @$('.power-switch')[0]
+    @menuButton = @$('.menu-button')[0]
+    @zButton = @$('.z-button')[0]
+    @xButton = @$('.x-button')[0]
+    @dPad = @$('.d-pad')[0]
 
   onDestroyed: ->
     super arguments...
@@ -68,24 +88,59 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     
   enabled: -> if @options.enabled then @options.enabled() else true
   
-  _updateButton: (buttonIndex, value) ->
-    oldValue = @buttons[buttonIndex]() or false
-    value or= false
-    
-    return if value is oldValue
-
-    if value
-      @audio.dPadOn() if buttonIndex in @constructor.DPadButtons
-      @audio.buttonOn() if buttonIndex in @constructor.ActionButtons
-
-    else
-      @audio.dPadOff() if buttonIndex in @constructor.DPadButtons
-      @audio.buttonOff() if buttonIndex in @constructor.ActionButtons
+  _isExtraKey: (keyCode) ->
+    # WASD keys are ones that the device does not detect automatically.
+    keyCode in [AC.Keys.w, AC.Keys.a, AC.Keys.s, AC.Keys.d]
   
-    @buttons[buttonIndex] value
+  _updateButton: (buttonIndex, newValue) ->
+    oldValue = @buttons[buttonIndex]() or false
+    newValue or= false
+    
+    return if newValue is oldValue
+    
+    updatingActionButton = buttonIndex in @constructor.ActionButtons
+    updatingDPadButton = buttonIndex in @constructor.DPadButtons
+    
+    oldDPadDirectionClass = @dPadDirectionClass() if updatingDPadButton
+    
+    @buttons[buttonIndex] newValue
+    
+    newDPadDirectionClass = @dPadDirectionClass() if updatingDPadButton
+    
+    if updatingActionButton
+      @_updateActionButtonPan if buttonIndex is @constructor.Buttons.Z then @zButton else @xButton
+      
+      if newValue then @audio.buttonOn() else @audio.buttonOff()
+      
+    else
+      if newDPadDirectionClass
+        if newDPadDirectionClass isnt oldDPadDirectionClass
+          @_updateDPadPan buttonIndex
+          @audio.dPadOn()
+      
+      else
+        @_updateDPadPan()
+        @audio.dPadOff()
+  
+  _updateActionButtonPan: (button) ->
+    @audio.buttonPan AEc.getPanForElement button
+    
+  _updateDPadPan: (directionIndex) ->
+    dPadPan = AEc.getPanForElement @dPad
+
+    switch directionIndex
+      when @constructor.Buttons.Left
+        dPadPan -= @constructor.dPadStereoWidth / 2
+  
+      when @constructor.Buttons.Right
+        dPadPan += @constructor.dPadStereoWidth / 2
+        
+    @audio.dPadPan dPadPan
   
   powerStart: ->
     @powerOn true
+    
+    @_updatePowerSwitchPan()
     @audio.powerSwitchOn()
     
     # Actually start with the delay after the switch has animated.
@@ -96,6 +151,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
   powerStop: ->
     @powerOn false
+
+    @_updatePowerSwitchPan()
     @audio.powerSwitchOff()
 
     # Actually stop with the delay after the switch has animated.
@@ -103,7 +160,10 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       @stop()
     ,
       200
-
+  
+  _updatePowerSwitchPan: ->
+    @audio.powerSwitchPan AEc.getPanForElement @powerSwitch
+    
   reversedControlsClass: ->
     'reversed-controls' if @reversedControls()
 
@@ -127,6 +187,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     super(arguments...).concat
       'click .power-toggle-button': @onClickPowerToggleButton
       'click .menu-button': @onClickMenuButton
+      'mousedown .menu-button': @onMouseDownMenuButton
+      'mouseup .menu-button': @onMouseUpMenuButton
       'mousedown .buttons': @onMouseDownButtons
       'touchstart .buttons, touchmove .buttons, touchcancel .buttons, touchend .buttons': @onTouchButtons
       'mousedown .d-pad': @onMouseDownDPad
@@ -150,6 +212,17 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     return unless @enabled()
     
     @reversedControls not @reversedControls()
+  
+  onMouseDownMenuButton: (event) ->
+    @_updateMenuButtonPan()
+    @audio.smallButtonOn()
+    
+  onMouseUpMenuButton: (event) ->
+    @_updateMenuButtonPan()
+    @audio.smallButtonOff()
+    
+  _updateMenuButtonPan: ->
+    @audio.smallButtonPan AEc.getPanForElement @menuButton
 
   onMouseDownButtons: (event) ->
     return unless @enabled()
@@ -175,11 +248,10 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     @_transferButtons buttons
 
   _transferButtons: (buttons) ->
-    @_transferButton buttons, buttonIndex for buttonIndex in [@constructor.Buttons.Z, @constructor.Buttons.X]
+    @_transferButton buttonIndex, buttons[buttonIndex] for buttonIndex in [@constructor.Buttons.Z, @constructor.Buttons.X]
 
-  _transferButton: (buttons, buttonIndex) ->
+  _transferButton: (buttonIndex, newValue) ->
     oldValue = @buttons[buttonIndex]()
-    newValue = buttons[buttonIndex]
 
     if newValue and not oldValue
       @pressButton buttonIndex
@@ -239,7 +311,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     @_transferDirections directions
 
   _transferDirections: (directions) ->
-    @_transferButton directions, directionIndex for directionIndex in [@constructor.Buttons.Left..@constructor.Buttons.Down]
+    @_transferButton directionIndex, directions[directionIndex] for directionIndex in [@constructor.Buttons.Left..@constructor.Buttons.Down]
 
   _setDPadDirection: (position, deadZone, directions) ->
     distance = Math.sqrt(Math.pow(position.x, 2) + Math.pow(position.y, 2))

@@ -31,6 +31,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends FM.View
       # Relay input/output calls to the cartridge.
       onInputOutput: (address, value) =>
         @cartridge()?.onInputOutput? address, value
+        
+      # Enable device interface when the editor is active.
+      enabled: => @desktop.active()
 
     @autorun (computation) =>
       return unless cartridge = @cartridge()

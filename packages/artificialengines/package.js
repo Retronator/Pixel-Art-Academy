@@ -478,6 +478,7 @@ Package.onUse(function(api) {
   api.addFile('echo/nodes/delay');
   api.addFile('echo/nodes/biquadfilter');
   api.addFile('echo/nodes/mixer');
+  api.addFile('echo/nodes/stereopanner');
 
   api.addFile('echo/nodes/variable');
   api.addFile('echo/nodes/number');
