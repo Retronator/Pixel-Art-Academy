@@ -185,7 +185,7 @@ class LOI.Assets.Editor.FileManager extends AM.Component
 
   selectedItemType: ->
     selectedItem = @currentData()
-    selectedItem.constructor.className
+    selectedItem.constructor.className or selectedItem.itemType
 
   filename: ->
     selectedItem = @currentData()

@@ -8,7 +8,7 @@ class LOI.Assets.Engine.Audio.Nodes.LocationChange extends AEc.Node
   @initialize()
 
   @outputs: -> [
-    name: 'trigger'
+    name: 'change'
     type: AEc.ConnectionTypes.ReactiveValue
     valueType: AEc.ValueTypes.Trigger
   ]
@@ -42,7 +42,7 @@ class LOI.Assets.Engine.Audio.Nodes.LocationChange extends AEc.Node
   constructor: ->
     super arguments...
 
-    @trigger = new ReactiveField false
+    @change = new ReactiveField false
     
     @locationId = null
 
@@ -61,14 +61,14 @@ class LOI.Assets.Engine.Audio.Nodes.LocationChange extends AEc.Node
 
       # When we're going between locations in from and to sets, set the value to true for one frame.
       if fromLocation and toLocation
-        @trigger true
+        @change true
         
         Meteor.setTimeout =>
-          @trigger false
+          @change false
 
       @locationId = newLocationId
 
   getReactiveValue: (output) ->
-    return super arguments... unless output is 'trigger'
+    return super arguments... unless output is 'change'
     
-    @trigger
+    @change

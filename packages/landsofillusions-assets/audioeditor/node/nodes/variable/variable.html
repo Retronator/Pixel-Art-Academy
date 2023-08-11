@@ -11,13 +11,13 @@
       </li>
       <li class="parameter test-value">
         <div class="name">test value</div>
-        <div class="value">
+        <label class="value">
           {{#if $is variable.valueType 'Trigger'}}
             <button class="trigger-button">Trigger</button>
           {{else}}
             {{> Render testValueComponent}}<span class="checkmark"></span>
           {{/if}}
-        </div>
+        </label>
       </li>
     </ul>
   </div>

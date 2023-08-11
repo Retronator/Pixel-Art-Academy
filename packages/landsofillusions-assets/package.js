@@ -285,6 +285,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/filemanager/previews/sprite..');
   api.addFile('editor/filemanager/previews/mesh..');
   api.addComponent('editor/filemanager/previews/audio..');
+  api.addComponent('editor/filemanager/previews/sound..');
 
   // Sprite editor
 

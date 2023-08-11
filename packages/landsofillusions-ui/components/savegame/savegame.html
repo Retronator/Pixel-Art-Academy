@@ -1,11 +1,13 @@
 <template name="LandsOfIllusions.Components.SaveGame">
   {{#unless deactivated}}
     <div class="landsofillusions-components-savegame landsofillusions-components-savesystem">
-      {{> LandsOfIllusions.Components.BackButton}}
+      {{#unless savingActive}}
+        {{> LandsOfIllusions.Components.BackButton}}
+      {{/unless}}
       {{#LandsOfIllusions.Components.Overlay}}
         <div class="title">Create a new save game</div>
         <div class="new-save-game">
-          <div class="floppy">
+          <div class="floppy {{savingActiveClass}}">
             <div class="shutter"></div>
             <div class="label">{{> LandsOfIllusions.Components.SaveGame.NewSaveGameName}}</div>
           </div>

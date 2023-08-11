@@ -1,15 +1,25 @@
 AE = Artificial.Everywhere
+AEc = Artificial.Echo
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
 
 class LM.Interface extends LOI.Interface
-  @register 'PixelArtAcademy.LearnMode.Interface'
+  @id: -> 'PixelArtAcademy.LearnMode.Interface'
+  @register @id()
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      focusPoint: AEc.ValueTypes.String
+    
+  @FocusPoints:
+    Play: 'Play'
+    MainMenu: 'MainMenu'
+    
   onCreated: ->
     super arguments...
     
-    console.log "Text interface is being created." if LM.debug
+    console.log "Learn Mode interface is being created." if LM.debug
     
     # Create pixel scaling display.
     @display = new AM.Display
@@ -32,6 +42,9 @@ class LM.Interface extends LOI.Interface
     
     LOI.Assets.Engine.Audio.initialize @audioManager
     
+    # Manually load Audio since audio manager wasn't available when calling super.
+    @constructor.Audio.load @audioManager
+    
   onRendered: ->
     super arguments...
   
@@ -45,6 +58,7 @@ class LM.Interface extends LOI.Interface
         Meteor.setTimeout =>
           mainMenu = LOI.adventure.currentLocation()
           mainMenu.fadeIn()
+          @audio.focusPoint @constructor.FocusPoints.MainMenu
           @waiting false
         ,
           1000
@@ -52,6 +66,7 @@ class LM.Interface extends LOI.Interface
       else if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
         # We're starting directly in play so we have to make the studio focus on the top and open the PixelPad.
         @studio.setFocus @constructor.Studio.FocusPoints.Play
+        @audio.focusPoint @constructor.FocusPoints.Play
         Tracker.nonreactive => @_openPixelPad()
         
         # We want a fast transition since there is no waiting for the menu fade.
@@ -63,14 +78,18 @@ class LM.Interface extends LOI.Interface
     if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
       # We're supposed to be in play so we have to make the studio focus on the top and open the PixelPad.
       @studio.setFocus @constructor.Studio.FocusPoints.Play
+      @audio.focusPoint @constructor.FocusPoints.Play
       @_openPixelPad()
 
     else
       @studio.setFocus @constructor.Studio.FocusPoints.MainMenu
+      @audio.focusPoint @constructor.FocusPoints.MainMenu
 
   goToPlay: ->
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeOut()
+
+    @audio.focusPoint @constructor.FocusPoints.Play
     
     Meteor.setTimeout =>
       await @studio.moveFocus
@@ -108,6 +127,8 @@ class LM.Interface extends LOI.Interface
       @waiting false
   
   goToMainMenu: ->
+    @audio.focusPoint @constructor.FocusPoints.MainMenu
+    
     await @studio.moveFocus
       focusPoint: @constructor.Studio.FocusPoints.MainMenu
       speedFactor: 1.5

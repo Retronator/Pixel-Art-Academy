@@ -79,6 +79,8 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
         @setFixedPixelPadSize 332, 241
 
   onDestroyed: ->
+    super arguments...
+    
     @editor().destroy()
 
   onBackButton: ->

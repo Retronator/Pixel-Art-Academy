@@ -1,13 +1,14 @@
 AB = Artificial.Babel
 AC = Artificial.Control
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 
 Persistence = Artificial.Mummification.Document.Persistence
 
 profileWidth = 80
 
-class LOI.Components.LoadGame extends AM.Component
+class LOI.Components.LoadGame extends LOI.Component
   @id: -> 'LandsOfIllusions.Components.LoadGame'
   @register @id()
 
@@ -15,10 +16,17 @@ class LOI.Components.LoadGame extends AM.Component
   
   @version: -> '0.0.1'
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      load: AEc.ValueTypes.Boolean
+      loadPan: AEc.ValueTypes.Number
+  
   constructor: (@options) ->
     super arguments...
     
     @activatable = new LOI.Components.Mixins.Activatable
+    @loadingVisible = new ReactiveField false
+    @loadingTextVisible = new ReactiveField false
 
   mixins: -> [@activatable]
   
@@ -44,6 +52,7 @@ class LOI.Components.LoadGame extends AM.Component
 
   onDeactivate: (finishedDeactivatingCallback) ->
     await _.waitForSeconds 0.5
+    @loadingVisible false
     finishedDeactivatingCallback()
 
   profilesStyle: ->
@@ -75,6 +84,12 @@ class LOI.Components.LoadGame extends AM.Component
   profileName: ->
     profile = @currentData()
     profile.displayName or profile._id
+    
+  loadingVisibleClass: ->
+    'visible' if @loadingVisible()
+  
+  loadingTextVisibleClass: ->
+    'visible' if @loadingTextVisible()
 
   events: ->
     super(arguments...).concat
@@ -84,9 +99,22 @@ class LOI.Components.LoadGame extends AM.Component
 
   onClickProfile: (event) ->
     profile = @currentData()
+    
+    @audio.loadPan AEc.getPanForElement event.target
+    
+    @audio.load true
     await LOI.adventure.loadGame profile._id
+    await _.waitForSeconds 0.5
+    
+    if LOI.adventure.interface.audioManager.enabled()
+      @loadingVisible true
+      await _.waitForSeconds 0.5
+      @loadingTextVisible true
+      await _.waitForSeconds 2.5
+    
+    @audio.load false
+    @loadingTextVisible false
 
-    await _.waitForSeconds 1
     @callFirstWith null, 'deactivate'
     
   onClickPreviousButton: (event) ->

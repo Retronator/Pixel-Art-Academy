@@ -49,15 +49,19 @@ class AEc.Node.Mixer extends AEc.Node
   constructor: ->
     super arguments...
     
-    @inputNodes = (new GainNode @audio.context for channelNumber in [1..@constructor.channelsCount])
+    @masterGainNode = new GainNode @audio.context
     
-    # Reactive rewire input nodes to the named output node.
+    @inputNodes = for channelNumber in [1..@constructor.channelsCount]
+     gainNode = new GainNode @audio.context
+     gainNode.connect @masterGainNode
+     gainNode
+    
+    # Reactively rewire master node to the named output node.
     @outputNode = new ReactiveField null
     
     @autorun (computation) =>
       if outputNode = Tracker.nonreactive => @outputNode()
-        for inputNode in @inputNodes
-          inputNode.disconnect outputNode
+        @masterGainNode.disconnect outputNode
       
       # If we have a name, we want the global output node with that name so we can wire across audio documents.
       if name = @readParameter 'name'
@@ -67,30 +71,40 @@ class AEc.Node.Mixer extends AEc.Node
         # Otherwise we want a local (anonymous) mixer node that just works inside the document.
         outputNode = new GainNode @audio.context
       
-      for inputNode in @inputNodes
-        inputNode.connect outputNode
-        
+      @masterGainNode.connect outputNode
+      
       @outputNode outputNode
       
-    # Update gain on the inputs.
+    # Update gain on the master and input intermediate nodes.
+    @autorun (computation) =>
+      @masterGainNode.gain.value = @readParameter "masterGain"
+      
     for channelNumber in [1..@constructor.channelsCount]
       do (channelNumber) =>
         @autorun (computation) =>
-          masterGain = @readParameter "masterGain"
           channelGain = @readParameter "gain#{channelNumber}"
-          @inputNodes[channelNumber - 1].gain.value = masterGain * channelGain
+          @inputNodes[channelNumber - 1].gain.value = channelGain
         
   getDestinationConnection: (input) ->
     empty = super arguments...
     
-    channelNumber = parseInt(input)
-    return empty if _.isNaN channelNumber
-    
-    if 1 <= channelNumber <= @constructor.channelsCount
-      destination: @inputNodes[channelNumber - 1]
-      
-    else
-      empty
+    switch input
+      when 'masterGain'
+        destination: @masterGainNode.gain
+        
+      else
+        connectToGain = _.startsWith input, 'gain'
+
+        channelNumber = parseInt if connectToGain then input[4..] else input
+        return empty if _.isNaN channelNumber
+        
+        if 1 <= channelNumber <= @constructor.channelsCount
+          connection = destination: @inputNodes[channelNumber - 1]
+          connection.destination = connection.destination.gain if connectToGain
+          connection
+          
+        else
+          empty
   
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'

@@ -109,7 +109,6 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
       
       _.sortBy options, 'name'
   
-  
   class @TestValue extends AM.DataInputComponent
     @register 'LandsOfIllusions.Assets.AudioEditor.Node.Variable.TestValue'
     
@@ -120,8 +119,8 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
         when AEc.ValueTypes.Boolean then AM.DataInputComponent.Types.Checkbox
         when AEc.ValueTypes.String then AM.DataInputComponent.Types.Text
         when AEc.ValueTypes.Number then AM.DataInputComponent.Types.Number
-        
-      @realTime = false
+      
+      @realtime = false
     
     load: ->
       @variable.value()

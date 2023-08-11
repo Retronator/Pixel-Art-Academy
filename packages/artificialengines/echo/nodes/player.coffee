@@ -15,6 +15,18 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
       valueType: AEc.ValueTypes.Buffer
       
     parameters.push
+      name: 'offset'
+      pattern: Match.OptionalOrNull Number
+      default: 0
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.Number
+    ,
+      name: 'duration'
+      pattern: Match.OptionalOrNull Number
+      default: null
+      type: AEc.ConnectionTypes.ReactiveValue
+      valueType: AEc.ValueTypes.Number
+    ,
       name: 'loop'
       pattern: Boolean
       type: AEc.ConnectionTypes.ReactiveValue
@@ -47,7 +59,7 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
     parameters
 
   @fixedParameterNames: ->
-    super(arguments...).concat 'buffer'
+    super(arguments...).concat 'buffer', 'offset', 'duration'
 
   registerCreateDependencies: ->
     # Sources should get created when buffer is connected.
@@ -59,3 +71,14 @@ class AEc.Node.Player extends AEc.Node.ScheduledNode
     return unless buffer = @readParameter 'buffer'
 
     new AudioBufferSourceNode context, {buffer}
+  
+  startSource: (source, context) ->
+    whenToStart = context.currentTime + @readParameter 'when'
+    offset = @readParameter 'offset'
+    duration = @readParameter 'duration'
+    
+    if duration?
+      source.start whenToStart, offset, duration
+      
+    else
+      source.start whenToStart, offset

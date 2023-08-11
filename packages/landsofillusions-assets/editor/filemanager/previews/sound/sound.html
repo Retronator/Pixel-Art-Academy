@@ -1,0 +1,12 @@
+<template name="LandsOfIllusions.Assets.Editor.FileManager.Previews.Sound">
+    <div class="landsofillusions-assets-editor-filemanager-previews-sound">
+      <canvas class="canvas" width="100" height="20"></canvas>
+      {{#if buffer}}
+        {{#if source}}
+          <button class="stop-button">Stop</button>
+        {{else}}
+          <button class="play-button">Play</button>
+        {{/if}}
+      {{/if}}
+    </div>
+</template>

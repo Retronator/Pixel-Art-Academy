@@ -7,12 +7,12 @@ LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class LOI.Adventure.Thing extends AM.Component
+class LOI.Adventure.Thing extends LOI.Component
   # Things should support aggregation.
   _.inherit @, AEt.Item
 
   template: -> 'LandsOfIllusions.Adventure.Thing'
-    
+  
   # Static thing properties and methods
 
   # A map of all thing constructors by url and ID.
@@ -42,10 +42,10 @@ class LOI.Adventure.Thing extends AM.Component
   # instead of 'fullName' because name gets overriden by CoffeeScript with the class name.
   @fullName: -> throw new AE.NotImplementedException "You must specify full name for thing #{@id()}."
 
-  # The short name of the thing which is used to refer to it in the text. 
+  # The short name of the thing which is used to refer to it in the text.
   @shortName: -> @fullName()
 
-  # This sets how this thing's name should be corrected when not spelled correctly. 
+  # This sets how this thing's name should be corrected when not spelled correctly.
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Word
 
   # Common nouns are allowed to chance capitalization to conform to sentence case. Proper nouns always stay unmodified.
@@ -59,7 +59,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   # Text transform for dialog lines delivered by this avatar.
   @dialogTextTransform: -> LOI.Avatar.DialogTextTransform.Auto
-    
+  
   # How this thing delivers dialog, used by the interface to format it appropriately.
   @dialogueDeliveryType: -> LOI.Avatar.DialogueDeliveryType.Saying
 

@@ -10,13 +10,12 @@ LOI.Assets.AudioEditor.PublicDirectory.allSoundFiles.publish ->
   meteorRoot = fileSystem.realpathSync "#{process.cwd()}/../"
   publicPath = "#{meteorRoot}/web.browser/app/"
   
-  soundExtensions = ['mp3', 'wav']
+  soundExtensions = ['mp3', 'wav', 'm4a']
   
   scanDirectory = (relativeDirectoryPath) =>
     directoryEntries = fileSystem.readdirSync "#{publicPath}#{relativeDirectoryPath}", withFileTypes: true
     
     for directoryEntry in directoryEntries
-      
       if directoryEntry.isDirectory() and not directoryEntry.isSymbolicLink()
         scanDirectory "#{relativeDirectoryPath}#{directoryEntry.name}/"
         

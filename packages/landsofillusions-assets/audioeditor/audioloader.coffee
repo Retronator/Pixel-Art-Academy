@@ -76,7 +76,7 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
       requireMove: true
       expandOnEnd: true
       
-  duplicateNode: (sourceNodeId) ->
+  duplicateNode: (sourceNodeId, duplicateConnections) ->
     nodes = @audioNodes()
     sourceNode = _.find nodes, (existingNode) => existingNode.id is sourceNodeId
     
@@ -95,22 +95,23 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
         LOI.Assets.Audio.updateNodeParameters @fileId, node.id,
           "#{name}": value
     
-    # Duplicate self-looping connections.
-    if sourceNode.connections
-      for connection in sourceNode.connections when connection.nodeId is sourceNodeId
-        LOI.Assets.Audio.updateConnections @fileId, node.id,
-          output: connection.output
-          nodeId: node.id
-          input: connection.input
-    
-    # Duplicate connections to this node.
-    for otherNode in nodes when otherNode.id isnt sourceNode and otherNode.conncetions
-      for connection in otherNode.conncetions when connection.nodeId is sourceNodeId
-        LOI.Assets.Audio.updateConnections @fileId, otherNode.id,
-          output: connection.output
-          nodeId: node.id
-          input: connection.input
-    
+    if duplicateConnections
+      # Duplicate self-looping connections.
+      if sourceNode.connections
+        for connection in sourceNode.connections when connection.nodeId is sourceNodeId
+          LOI.Assets.Audio.updateConnections @fileId, node.id,
+            output: connection.output
+            nodeId: node.id
+            input: connection.input
+      
+      # Duplicate connections to this node.
+      for otherNode in nodes when otherNode.id isnt sourceNodeId and otherNode.connections
+        for connection in otherNode.connections when connection.nodeId is sourceNodeId
+          LOI.Assets.Audio.updateConnections @fileId, otherNode.id,
+            output: connection.output
+            nodeId: node.id
+            input: connection.input
+      
     # Start drag.
     audioCanvas = @interface.getEditorForActiveFile()
     

@@ -34,9 +34,15 @@ class AEc.Node.ScheduledNode extends AEc.Node
     default: @Parameters.Update
     type: AEc.ConnectionTypes.ReactiveValue
     valueType: AEc.ValueTypes.String
+  ,
+    name: 'when'
+    pattern: Match.OptionalOrNull Number
+    default: 0
+    type: AEc.ConnectionTypes.ReactiveValue
+    valueType: AEc.ValueTypes.Number
   ]
   
-  @fixedParameterNames: -> ['play control', 'parameters']
+  @fixedParameterNames: -> ['play control', 'parameters', 'when']
   
   constructor: ->
     super arguments...
@@ -59,7 +65,7 @@ class AEc.Node.ScheduledNode extends AEc.Node
     
     # Reactively create and destroy audio sources.
     @autorun (computation) =>
-      play = @readInput 'play'
+      play = if @readInput('play') then true else false
 
       @registerCreateDependencies()
 
@@ -104,7 +110,7 @@ class AEc.Node.ScheduledNode extends AEc.Node
     for parameterName, parameterNode of @_parameterNodes
       parameterNode.connect source[@_childParameterFieldNames[parameterName]]
 
-    source.start()
+    @startSource source, @audio.context
 
     @_sources.push source
 
@@ -112,6 +118,11 @@ class AEc.Node.ScheduledNode extends AEc.Node
     
   createSource: (context) ->
     throw new AE.NotImplementedException "You must create an audio node."
+    
+  startSource: (source, context) ->
+    # Override to start with additional parameters.
+    whenToStart = context.currentTime + @readParameter 'when'
+    source.start whenToStart
 
   updateSources: (sources) ->
     parameterValues = {}

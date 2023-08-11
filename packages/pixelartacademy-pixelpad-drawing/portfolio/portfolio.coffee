@@ -1,11 +1,12 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-class PAA.PixelPad.Apps.Drawing.Portfolio extends AM.Component
+class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio'
   
   @Sections:
@@ -18,6 +19,15 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends AM.Component
   # Subscriptions
   @artworksWithAssets = new AB.Subscription name: "#{@id()}.artworks"
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      sectionOpen: AEc.ValueTypes.Trigger
+      sectionClose: AEc.ValueTypes.Trigger
+      sectionHover: AEc.ValueTypes.Trigger
+      groupOpen: AEc.ValueTypes.Trigger
+      groupClose: AEc.ValueTypes.Trigger
+      groupHover: AEc.ValueTypes.Trigger
+      
   constructor: (@drawing) ->
     super arguments...
 
@@ -172,6 +182,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends AM.Component
       'click .section': @onClickSection
       'click .group-name': @onClickGroupName
       'click': @onClick
+      'mouseenter .section': @onMouseEnterSection
+      'mouseenter .group-name': @onMouseEnterGroupName
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
       'click .brief': @onClickBrief
@@ -223,6 +235,23 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends AM.Component
 
     # If we click outside a section, close current section.
     @activeSection null if @activeSection() and not $(event.target).closest('.section').length
+  
+  onMouseEnterSection: (event) ->
+    section = @currentData()
+    return if section is @activeSection()
+    
+    @audio.sectionHover()
+    
+  onMouseEnterGroupName: (event) ->
+    group = @currentData()
+    return if group is @activeGroup()
+    
+    return unless activeSection = @activeSection()
+    
+    section = @parentDataWith 'groups'
+    return unless section is activeSection
+    
+    @audio.groupHover()
 
   onMouseEnterAsset: (event) ->
     assetData = @currentData()

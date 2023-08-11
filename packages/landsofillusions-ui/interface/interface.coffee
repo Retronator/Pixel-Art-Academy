@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 Nodes = LOI.Adventure.Script.Nodes
 
-class LOI.Interface extends AM.Component
+class LOI.Interface extends LOI.Component
   constructor: (@options) ->
     super arguments...
 

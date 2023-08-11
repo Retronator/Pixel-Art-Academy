@@ -34,15 +34,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     
     for sectionThingName, sectionLocation of sectionLocations
       do (sectionThingName, sectionLocation) =>
-        groups = new ComputedField =>
-          # Get groups from the section location. Note: we expect things to be instances, so
+        sectionThings = new ComputedField =>
+          # Get things from the section location. Note: we expect things to be instances, so
           # they have to be added as instances in the workbench scene, and not as classes.
           currentSituation = new LOI.Adventure.Situation
             location: sectionLocation
-
-          sectionThings = currentSituation.things()
-
-          for sectionThing, index in sectionThings
+          
+          currentSituation.things()
+        ,
+          (a, b) =>
+            _.isArray(a) and _.isArray(b) and a.length is b.length and _.intersection(a, b).length is a.length
+        
+        groups = new ComputedField =>
+          for sectionThing, index in sectionThings()
             do (sectionThing, index) =>
               assets = new ComputedField =>
                 for asset, assetIndex in sectionThing.assets() when asset.urlParameter()
@@ -253,7 +257,38 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @externalSoftware.push
       value: 'other'
       fullName: 'Other software'
+      
+    # Wire sounds on changes of sections and groups, but don't play two at once (group has priority).
+    @autorun (computation) =>
+      # Depend on section changes.
+      section = @activeSection()
+      console.log "new section", section
+      
+      return if @_updateGroupTimeout
+      
+      @_updateSectionTimeout = Meteor.setTimeout =>
+        if section then @audio.sectionOpen() else @audio.sectionClose()
+        @_updateSectionTimeout = null
+      ,
+        0
+    
+    # To isolate recreation of groups, we depend on group names.
+    @activeGroupName = new ComputedField =>
+      @activeGroup()?.name()
 
+    @autorun (computation) =>
+      # Depend on group changes
+      group = Tracker.nonreactive => @activeGroup()
+      console.log "new group", group, @activeGroupName()
+      
+      Meteor.clearTimeout @_updateSectionTimeout
+      
+      @_updateGroupTimeout = Meteor.setTimeout =>
+        if group then @audio.groupOpen() else @audio.groupClose()
+        @_updateGroupTimeout = null
+      ,
+        0
+      
   onDestroyed: ->
     super arguments...
     

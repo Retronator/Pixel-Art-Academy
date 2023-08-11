@@ -25,6 +25,17 @@ class AE.ReactiveDictionary
         options.removed? key, value
 
     reactiveDictionary.stop = ->
+      # Prevent multiple calls to stop.
+      return unless updateAutorun
+      
       updateAutorun.stop()
-
+      updateAutorun = null
+    
+      # Remove all remaining entries.
+      if options.removed
+        for key, value of reactiveDictionary()
+          options.removed key, value
+      
+      reactiveDictionary {}
+    
     return reactiveDictionary

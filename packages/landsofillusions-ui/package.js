@@ -18,8 +18,6 @@ Package.onUse(function(api) {
 
   api.export('LandsOfIllusions');
 
-  api.addFile('component');
-
   // Interface
 
   api.addFile('interface/interface');

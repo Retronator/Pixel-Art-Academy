@@ -77,3 +77,27 @@
 
           &.visible
             visibility visible
+
+  .loading
+    fixed-cover()
+    z-index 1
+    background atariGray(0)
+    opacity 0
+    transition opacity 0.5s ease-in-out
+    cursor wait
+    pointer-events none
+
+    &.visible
+      opacity 1
+
+    .loading-text
+      position absolute
+      top 50%
+      left 50%
+      transform translate(-50%, -50%)
+      color atariGray(7)
+      opacity 0
+      transition opacity 0.2s ease-in-out
+
+      &.visible
+        opacity 1

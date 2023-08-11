@@ -22,7 +22,7 @@ class LOI.Assets.Editor.Actions.Export extends LOI.Assets.Editor.Actions.AssetAc
     $('body').append $link
 
     name = asset.name or asset._id
-    nameStartIndex = name.lastIndexOf('/') or 0
+    nameStartIndex = name.lastIndexOf('/') + 1
     name = "#{name.substring nameStartIndex}.#{_.toLower asset.constructor.className}.png"
 
     link = $link[0]

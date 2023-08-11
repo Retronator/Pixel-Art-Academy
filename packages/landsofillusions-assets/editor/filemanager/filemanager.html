@@ -18,6 +18,9 @@
               {{#if $is selectedItemType 'Audio'}}
                 {{> LandsOfIllusions.Assets.Editor.FileManager.Previews.Audio}}
               {{/if}}
+              {{#if $is selectedItemType 'Sound'}}
+                {{> LandsOfIllusions.Assets.Editor.FileManager.Previews.Sound}}
+              {{/if}}
             </div>
             <div class="name">
               {{filename}}

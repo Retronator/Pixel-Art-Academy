@@ -40,6 +40,7 @@ Package.onUse(function(api) {
   api.export('LandsOfIllusions');
 
   api.addFile('landsofillusions');
+  api.addFile('component');
 
   // Authorize
 

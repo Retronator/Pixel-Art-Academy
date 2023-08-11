@@ -45,8 +45,6 @@ class LOI.Assets.AudioEditor.Node.Sound extends AM.Component
       context.lineTo 100, 10.5
       context.stroke()
 
-      canvas
-
   events: ->
     super(arguments...).concat
       'click .open-button': @onClickOpenButton

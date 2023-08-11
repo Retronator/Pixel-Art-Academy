@@ -1,7 +1,9 @@
 <template name="LandsOfIllusions.Components.LoadGame">
   {{#unless deactivated}}
     <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem">
-      {{> LandsOfIllusions.Components.BackButton}}
+      {{#unless loadingVisible}}
+        {{> LandsOfIllusions.Components.BackButton}}
+      {{/unless}}
       {{#LandsOfIllusions.Components.Overlay}}
         <div class="title">Choose a save game</div>
         <ul class="profiles" {{style profilesStyle}}>
@@ -17,6 +19,11 @@
         <div class="controls">
           <button class="previous-button action-button {{previousButtonVisibleClass}}" {{previousButtonDisabledAttribute}}>←</button>
           <button class="next-button action-button {{nextButtonVisibleClass}}" {{nextButtonDisabledAttribute}}>→</button>
+        </div>
+        <div class="loading {{loadingVisibleClass}}">
+          <div class="loading-text {{loadingTextVisibleClass}}">
+            Loading …
+          </div>
         </div>
       {{/LandsOfIllusions.Components.Overlay}}
     </div>

@@ -60,7 +60,7 @@ class AEc.Node.ADSR extends AEc.Node
     context = @audio.context
 
     @constantNode = new ConstantSourceNode context
-    @gainNode = new GainNode context gain: 0
+    @gainNode = new GainNode context, gain: 0
 
     @constantNode.connect @gainNode
     @constantNode.start()
@@ -73,11 +73,14 @@ class AEc.Node.ADSR extends AEc.Node
     @_press = false
 
     @autorun (computation) =>
-      newPress = @readInput 'press'
+      newPress = if @readInput('press') then true else false
       currentTime = context.currentTime
 
-      @gainNode.gain.cancelScheduledValues Math.max 0, currentTime - 1 unless newPress is @_press
-
+      unless newPress is @_press
+        value = @gainNode.gain.value
+        @gainNode.gain.cancelScheduledValues currentTime
+        @gainNode.gain.setValueAtTime value, currentTime
+        
       if newPress and not @_press
         # Start attack + decay.
         attack = @readParameter 'attack'

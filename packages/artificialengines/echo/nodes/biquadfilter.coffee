@@ -52,8 +52,6 @@ class AEc.Node.BiquadFilter extends AEc.Node
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 1
-    min: 0.0001
-    max: 1000
     type: AEc.ConnectionTypes.Parameter
   ,
     name: 'gain'

@@ -46,7 +46,7 @@ class LOI.Assets.AudioEditor.Node.Parameter extends AM.Component
       # Show a single data input.
       @dataInput = new @constructor.DataInput @options
 
-    else if _.isObject @options.pattern      
+    else if _.isObject @options.pattern
       # Enable editing a map of data inputs.
       @objectValues = true
 
@@ -119,10 +119,7 @@ class LOI.Assets.AudioEditor.Node.Parameter extends AM.Component
 
     save: (value) ->
       if @type is AM.DataInputComponent.Types.Number
-        if value
-          value = parseFloat value
-
-        else
+        if _.isNaN value
           value = null
 
       @dataInputOptions.save value

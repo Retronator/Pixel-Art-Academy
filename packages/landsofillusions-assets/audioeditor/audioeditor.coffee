@@ -45,7 +45,8 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
           LOI.Assets.Editor.Actions.Undo.id()
           LOI.Assets.Editor.Actions.Redo.id()
           null
-          LOI.Assets.AudioEditor.Actions.DuplicateNode.id()
+          LOI.Assets.AudioEditor.Actions.DuplicateNodeWithoutConnections.id()
+          LOI.Assets.AudioEditor.Actions.DuplicateNodeWithConnections.id()
         ]
       ,
         caption: 'View'
@@ -145,10 +146,13 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
         {key: AC.Keys.numMinus}
         {key: AC.Keys.r}
       ]
-      "#{LOI.Assets.AudioEditor.Actions.DuplicateNode.id()}": [
+      "#{LOI.Assets.AudioEditor.Actions.DuplicateNodeWithoutConnections.id()}": [
         {key: AC.Keys.d}
       ]
-
+      "#{LOI.Assets.AudioEditor.Actions.DuplicateNodeWithConnections.id()}": [
+        {key: AC.Keys.d, shift: true}
+      ]
+      
   constructor: ->
     super arguments...
 

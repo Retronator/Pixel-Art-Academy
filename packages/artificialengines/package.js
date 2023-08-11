@@ -474,19 +474,28 @@ Package.onUse(function(api) {
   api.addFile('echo/nodes/constant');
   api.addFile('echo/nodes/oscillator');
 
+  api.addFile('echo/nodes/adsr');
+
   api.addFile('echo/nodes/gain');
   api.addFile('echo/nodes/delay');
   api.addFile('echo/nodes/biquadfilter');
   api.addFile('echo/nodes/mixer');
   api.addFile('echo/nodes/stereopanner');
+  api.addFile('echo/nodes/convolver');
 
   api.addFile('echo/nodes/variable');
   api.addFile('echo/nodes/number');
-  api.addFile('echo/nodes/clamp');
+  api.addFile('echo/nodes/boolean');
+
   api.addFile('echo/nodes/sustainvalue');
-  api.addFile('echo/nodes/adsr');
+  api.addFile('echo/nodes/keepvalue');
+  api.addFile('echo/nodes/clamp');
+
   api.addFile('echo/nodes/randomnumber');
   api.addFile('echo/nodes/randombuffer');
+
+  api.addFile('echo/nodes/valueequals');
+  api.addFile('echo/nodes/valuechange');
 
   // Artificial Everything
 

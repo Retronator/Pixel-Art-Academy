@@ -191,7 +191,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     Tracker.nonreactive =>
       _.extend {}, parameter,
         load: =>
-          @parametersData()?[parameter.name] or parameter.default
+          @parametersData()?[parameter.name] ? parameter.default
 
         save: (value) =>
           @audioCanvas.audioLoader().changeNodeParameter @id, parameter.name, value
