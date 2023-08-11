@@ -262,7 +262,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
     @autorun (computation) =>
       # Depend on section changes.
       section = @activeSection()
-      console.log "new section", section
       
       return if @_updateGroupTimeout
       
@@ -277,9 +276,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       @activeGroup()?.name()
 
     @autorun (computation) =>
-      # Depend on group changes
+      @activeGroupName()
+      
       group = Tracker.nonreactive => @activeGroup()
-      console.log "new group", group, @activeGroupName()
       
       Meteor.clearTimeout @_updateSectionTimeout
       
