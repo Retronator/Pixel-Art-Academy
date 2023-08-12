@@ -10,7 +10,15 @@ class AEc.Variable
   
   @getVariableIds: -> _.keys @_variablesById
   
-  constructor: (id, valueType) ->
+  constructor: (id, valueTypeOrVariableOptions) ->
+    if _.isObject valueTypeOrVariableOptions
+      options = valueTypeOrVariableOptions
+      valueType = options.valueType
+    
+    else
+      options = {}
+      valueType = valueTypeOrVariableOptions
+    
     defaultValue = switch valueType
       when AEc.ValueTypes.Trigger, AEc.ValueTypes.Boolean then false
       when AEc.ValueTypes.Number then 0
@@ -50,6 +58,17 @@ class AEc.Variable
         valueField value
         
         console.log "Variable", id, "set to", value if AEc.debug
+        
+    if options.throttle
+      if _.isNumber options.throttle
+        throttleWait = options.throttle
+        throttleOptions = trailing: false
+        
+      else
+        throttleWait = options.throttle.wait
+        throttleOptions = options.throttle.options
+        
+      variable = _.throttle variable, throttleWait, throttleOptions
     
     variable.id = id
     variable.valueType = valueType

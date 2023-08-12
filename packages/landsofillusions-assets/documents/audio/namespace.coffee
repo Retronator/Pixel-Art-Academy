@@ -7,8 +7,8 @@ class LOI.Assets.Audio.Namespace
     # Create variables.
     @variables = {}
     
-    for name, valueType of options.variables
-      @variables[name] = new AEc.Variable "#{@id}.#{name}", valueType
+    for name, valueTypeOrVariableOptions of options.variables
+      @variables[name] = new AEc.Variable "#{@id}.#{name}", valueTypeOrVariableOptions
 
   load: (audioManager) ->
     @unload()

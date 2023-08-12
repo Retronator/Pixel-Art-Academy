@@ -23,11 +23,18 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     variables:
       sectionOpen: AEc.ValueTypes.Trigger
       sectionClose: AEc.ValueTypes.Trigger
-      sectionHover: AEc.ValueTypes.Trigger
+      sectionHover:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
       groupOpen: AEc.ValueTypes.Trigger
       groupClose: AEc.ValueTypes.Trigger
-      groupHover: AEc.ValueTypes.Trigger
-      
+      groupHover:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      assetHover:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+        
   constructor: (@drawing) ->
     super arguments...
 
@@ -256,9 +263,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   onMouseEnterAsset: (event) ->
     assetData = @currentData()
     @hoveredAsset assetData
+    @_assetHoverUnlessFirst assetData
 
   onMouseLeaveAsset: (event) ->
+    assetData = @hoveredAsset()
     @hoveredAsset null
+
+    # Only trigger the hover sound when we're not leaving because of selecting an asset.
+    @_assetHoverUnlessFirst assetData if assetData and not @activeAsset()
+    
+  _assetHoverUnlessFirst: (assetData) ->
+    return unless assetData.index
+    
+    @audio.assetHover()
 
   onClickBrief: (event) ->
     @_goToClickedAsset()

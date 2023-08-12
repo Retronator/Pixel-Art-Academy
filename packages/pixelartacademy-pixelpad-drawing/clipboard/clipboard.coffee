@@ -1,12 +1,35 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.Drawing.Clipboard extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Clipboard'
+class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Clipboard'
+  @register @id()
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      open: AEc.ValueTypes.Trigger
+      close: AEc.ValueTypes.Trigger
+      
+  onCreated: ->
+    super arguments...
+    
+    @_wasDisplayingAsset = null
+    
+    @autorun (computation) =>
+      displayingAsset = @drawing.portfolio().activeAsset()?
+      
+      if displayingAsset and not @_wasDisplayingAsset
+        @audio.open()
+        
+      else if @_wasDisplayingAsset and not displayingAsset
+        @audio.close()
+      
+      @_wasDisplayingAsset = displayingAsset
+    
   @calculateAssetSize: (portfolioScale, bounds, options) ->
     width = bounds?.width or 1
     height = bounds?.height or 1

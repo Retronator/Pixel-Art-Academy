@@ -16,7 +16,9 @@ class LOI.Components.Menu.Items extends LOI.Component
     
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
-      hover: AEc.ValueTypes.Trigger
+      hover:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 35
       click: AEc.ValueTypes.Trigger
 
   constructor: (@options = {}) ->
