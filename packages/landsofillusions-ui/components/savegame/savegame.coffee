@@ -24,9 +24,8 @@ class LOI.Components.SaveGame extends LOI.Component
     super arguments...
   
     @activatable = new LOI.Components.Mixins.Activatable()
-    
 
-  mixins: -> [@activatable]
+  mixins: -> super(arguments...).concat @activatable
   
   onCreated: ->
     super arguments...

@@ -101,7 +101,10 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
       return options unless namespace = @dataProviderComponent.namespace()
       
       for id in AEc.Variable.getVariableIds() when _.startsWith id, namespace
-        name = id[id.lastIndexOf('.') + 1..]
+        name = id[namespace.length + 1..]
+        
+        # Make sure this is not a variable in a sub-namespace.
+        continue if name.indexOf('.') > -1
         
         options.push
           value: name

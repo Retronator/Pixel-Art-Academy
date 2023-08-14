@@ -32,7 +32,7 @@ class AEc.Node.StereoPanner extends AEc.Node
     @node = new StereoPannerNode @audio.context
 
     @autorun (computation) =>
-      @node.pan.value = @readParameter 'pan'
+      @node.pan.value = _.clamp @readParameter('pan'), -1, 1
     
   getDestinationConnection: (input) ->
     empty = super arguments...

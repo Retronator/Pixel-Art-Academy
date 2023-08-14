@@ -1,7 +1,7 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.References extends AM.Component
+class LOI.Assets.Components.References extends LOI.Component
   @id: -> 'LandsOfIllusions.Assets.Components.References'
   @register @id()
   template: -> @constructor.id()

@@ -13,6 +13,8 @@ class AEc.Audio
   #   parameters: object of current parameter values
   #     {name}: value of the parameter with the given name
   constructor: (@id, @context, @nodesDataProvider) ->
+    console.log "Constructing audio", @id if AEc.debug
+    
     @_nodes = {}
     @_nodesDependency = new Tracker.Dependency
 
@@ -62,6 +64,8 @@ class AEc.Audio
         @_connectionsDependency.changed()
         
   destroy: ->
+    console.log "Destroying audio", @id if AEc.debug
+
     @nodesDictionary.stop()
 
     # Remove all connections.

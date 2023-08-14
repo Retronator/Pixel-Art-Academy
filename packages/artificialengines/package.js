@@ -115,6 +115,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/time');
 
   api.addFile('everywhere/tracker/delayedautorun');
+  api.addFile('everywhere/tracker/triggerondefinedchange');
 
   api.addFile('everywhere/csvparser');
   api.addFile('everywhere/date');
@@ -490,6 +491,7 @@ Package.onUse(function(api) {
   api.addFile('echo/nodes/sustainvalue');
   api.addFile('echo/nodes/keepvalue');
   api.addFile('echo/nodes/clamp');
+  api.addFile('echo/nodes/equation');
 
   api.addFile('echo/nodes/randomnumber');
   api.addFile('echo/nodes/randombuffer');

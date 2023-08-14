@@ -31,6 +31,8 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.imply('retronator:artificialengines');
 
+  api.use('retronator:fatamorgana');
+
   api.use('retronator:retronator-accounts');
   api.imply('retronator:retronator-accounts');
 
@@ -40,7 +42,18 @@ Package.onUse(function(api) {
   api.export('LandsOfIllusions');
 
   api.addFile('landsofillusions');
+
+  // Mixins
+
+  api.addFile('components..');
+  api.addFile('components/mixins..');
+  api.addFile('components/mixins/activatable');
+  api.addFile('components/mixins/audio');
+
+  // Main
+
   api.addFile('component');
+  api.addFile('view');
 
   // Authorize
 

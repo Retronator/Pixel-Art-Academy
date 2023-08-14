@@ -3,14 +3,17 @@ AEc = Artificial.Echo
 LOI = LandsOfIllusions
 
 class LOI.Assets.Audio.Namespace
-  constructor: (@id, options = {}) ->
+  constructor: (@id, @options = {}) ->
     # Create variables.
     @variables = {}
     
-    for name, valueTypeOrVariableOptions of options.variables
+    for name, valueTypeOrVariableOptions of @options.variables
       @variables[name] = new AEc.Variable "#{@id}.#{name}", valueTypeOrVariableOptions
 
   load: (audioManager) ->
+    # Don't load documents in a sub-namespace since they will already be handled from the top namespace.
+    return if @options.subNamespace
+    
     @unload()
   
     # Subscribe to audio assets in the namespace.
@@ -42,5 +45,7 @@ class LOI.Assets.Audio.Namespace
         delete @engineAudioAssets[audioId]
       
   unload: ->
+    return if @options.subNamespace
+    
     @_subscriptionAutorun?.stop()
     @engineAudioDictionary?.stop()

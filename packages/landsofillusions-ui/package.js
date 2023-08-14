@@ -38,11 +38,6 @@ Package.onUse(function(api) {
 
   // Components
 
-  api.addFile('components..');
-
-  api.addFile('components/mixins..');
-  api.addFile('components/mixins/activatable..');
-
   api.addComponent('components/overlay..');
   api.addComponent('components/backbutton..');
   api.addComponent('components/signin..');

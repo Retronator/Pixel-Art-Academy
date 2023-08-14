@@ -44,6 +44,10 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
     query: (path) ->
       LOI.Assets.Audio.documents.find
         name: ///^#{path}///
+      ,
+        fields:
+          history: 0
+          editor: 0
 
   # Methods
 

@@ -1,6 +1,7 @@
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
@@ -17,7 +18,40 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   @styleClass: -> 'editor-desktop'
 
   @initialize()
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      clipboardDrag: AEc.ValueTypes.Boolean
+      clipboardPan: AEc.ValueTypes.Number
+      artworkDrag: AEc.ValueTypes.Boolean
+      artworkPan: AEc.ValueTypes.Number
+      toolsCount: AEc.ValueTypes.Number
+      colorFillDrag: AEc.ValueTypes.Boolean
+      colorFillPan: AEc.ValueTypes.Number
+      pencilDrag: AEc.ValueTypes.Boolean
+      pencilPan: AEc.ValueTypes.Number
+      testPaperPan: AEc.ValueTypes.Number
+      referencesTrayDrag: AEc.ValueTypes.Boolean
+      colorPickerDrag: AEc.ValueTypes.Boolean
+      colorPickerPan: AEc.ValueTypes.Number
+      zoomDrag: AEc.ValueTypes.Boolean
+      zoomPan: AEc.ValueTypes.Number
+      colorSwatchesDrag: AEc.ValueTypes.Boolean
+      colorSwatchesPan: AEc.ValueTypes.Number
+      pico8Drag: AEc.ValueTypes.Boolean
+      pico8Pan: AEc.ValueTypes.Number
 
+  @compressPan: (x) ->
+    # Since desktop items go out of the screen, we don't want them to clamp to -1 and 1, but smoothly approach it.
+    #    2
+    # ──────── - 1
+    # 1 + e⁻ⁿˣ
+    #
+    # n is the initial slope factor (2 being about linear at the start).
+    n = 2
+    
+    2 / (1 + Math.exp(-n * x)) - 1
+    
   constructor: ->
     super arguments...
     
@@ -25,6 +59,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   
   onCreated: ->
     super arguments...
+    
+    @app = @ancestorComponentOfType Artificial.Base.App
+    @app.addComponent @
+    
+    @_dragTimeLeft = 0
     
     # Reactively add views.
     handleView = (viewId, enabled) =>
@@ -223,6 +262,69 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
 
+    # Trigger dragging of present items when the active status changes.
+    Tracker.triggerOnDefinedChange =>
+      if @active() then true else false
+    , (active) =>
+      # Tools come in with a half a second delay when entering.
+      toolsDelay = if active then 500 else 0
+
+      @_dragPresentItems active, true, toolsDelay
+      
+    # Trigger dragging of present items (but not the main ones since those don't move) when the focused mode changes.
+    Tracker.triggerOnDefinedChange @focusedMode, (focused) =>
+      @_dragPresentItems not focused, false, 0
+
+  onDestroyed: ->
+    super arguments...
+    
+    @app.removeComponent @
+    
+  _dragPresentItems: (visible, mainDrag, toolsDelay) ->
+    @_clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')[0]
+    @_canvas = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas .canvas')[0]
+    @_colorFillGlass = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-colorfill .glass')[0]
+    @_testPaper = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-testpaper')[0]
+    @_pencil = $('.fatamorgana-toolbox .pencil')[0]
+    @_eraser = $('.fatamorgana-toolbox .eraser')[0]
+    @_colorPicker = $('.fatamorgana-toolbox .color-picker')[0]
+    @_zoom = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-zoom')[0]
+    @_palette = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette')[0]
+    @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
+
+    @_dragTimeLeft = 1
+    @_mainDrag = mainDrag
+    
+    if mainDrag
+      @_dragEntering = visible
+      @audio.artworkDrag visible
+      
+    @audio.clipboardDrag visible
+    
+    if editorStyleClasses = @displayedAsset().editorStyleClasses()
+      if editorStyleClasses.indexOf('hidden-tools') > -1
+        @audio.toolsCount 0
+        return
+    
+    Meteor.setTimeout =>
+      toolsCount = 0
+      
+      incrementToolCount = (toolIsAvailable) =>
+        toolsCount++ if toolIsAvailable
+        toolIsAvailable
+      
+      @audio.colorFillDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      @audio.pencilDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Pencil) or @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Eraser
+      @audio.referencesTrayDrag visible if incrementToolCount @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.References)?.displayComponent.enabled()
+      @audio.colorPickerDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.ColorPicker) and editorStyleClasses.indexOf('hidden-color-picker') is -1
+      @audio.zoomDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
+      @audio.colorSwatchesDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+      @audio.pico8Drag visible if incrementToolCount @displayedAsset()?.project?.pico8Cartridge?
+      
+      @audio.toolsCount toolsCount
+    ,
+      toolsDelay
+
   onBackButton: ->
     # Turn off focused mode on back button.
     return super(arguments...) unless @focusedMode()
@@ -314,3 +416,26 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     return unless @interface.isCreated()
 
     @interface.allChildComponentsOfType(viewClass)[0]
+    
+  update: (appTime) ->
+    return unless @_dragTimeLeft > 0
+    @_dragTimeLeft -= appTime.elapsedAppTime
+    
+    if @_mainDrag
+      # Account for items being closer together when the editor is closed.
+      timeScale = if @_dragEntering then 1 + @_dragTimeLeft else 2 - @_dragTimeLeft
+      
+    else
+      timeScale = 1
+    
+    adjustPan = (pan) => @constructor.compressPan timeScale * pan
+    
+    @audio.clipboardPan adjustPan AEc.getPanForElement @_clipboard
+    @audio.artworkPan adjustPan AEc.getPanForElement @_canvas
+    @audio.colorFillPan adjustPan AEc.getPanForElement @_colorFillGlass if @_colorFillGlass
+    @audio.testPaperPan adjustPan AEc.getPanForElement @_testPaper if @_testPaper
+    @audio.pencilPan adjustPan AEc.getPanForElement pencil if pencil = @_pencil or @_eraser
+    @audio.colorPickerPan adjustPan AEc.getPanForElement @_colorPicker if @_colorPicker
+    @audio.zoomPan adjustPan AEc.getPanForElement @_zoom if @_zoom
+    @audio.colorSwatchesPan adjustPan AEc.getPanForElement @_palette if @_palette
+    @audio.pico8Pan adjustPan AEc.getPanForElement @_pico8 if @_pico8

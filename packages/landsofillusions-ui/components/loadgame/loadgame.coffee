@@ -27,8 +27,8 @@ class LOI.Components.LoadGame extends LOI.Component
     @activatable = new LOI.Components.Mixins.Activatable
     @loadingVisible = new ReactiveField false
     @loadingTextVisible = new ReactiveField false
-
-  mixins: -> [@activatable]
+  
+  mixins: -> super(arguments...).concat @activatable
   
   onCreated: ->
     super arguments...
