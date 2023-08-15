@@ -9,14 +9,17 @@
   user-select none
 
   .apps
+    display flex
+    flex-wrap wrap
     list-style none
     padding 0
+    margin 10rem 1rem
 
     .app
-      display inline-block !important // Forcing inline-block because velocity is not registering it.
+      display block !important // Forcing inline-block because velocity is not registering it.
       vertical-align top
       padding 5rem
-      width 70rem
+      width 72rem
       text-transform uppercase
       text-align center
       cursor pointer

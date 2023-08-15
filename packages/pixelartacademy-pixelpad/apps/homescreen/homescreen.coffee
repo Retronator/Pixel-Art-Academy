@@ -1,5 +1,7 @@
-PAA = PixelArtAcademy
 AM = Artificial.Mirage
+AEc = Artificial.Echo
+LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
 class PAA.PixelPad.Apps.HomeScreen extends PAA.PixelPad.App
   @id: -> 'PixelArtAcademy.PixelPad.Apps.HomeScreen'
@@ -16,13 +18,27 @@ class PAA.PixelPad.Apps.HomeScreen extends PAA.PixelPad.App
     "
 
   @initialize()
-
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    # Allow for the launch sound to play out.
+    unloadDelay: 1.7
+    variables:
+      appHover: AEc.ValueTypes.Boolean
+      appLaunch: AEc.ValueTypes.Trigger
+      appPan: AEc.ValueTypes.Number
+      
   template: -> @id()
 
   constructor: ->
     super arguments...
     
     @setMinimumPixelPadSize()
+    
+  onCreated: ->
+    super arguments...
+    
+    $(document).on 'visibilitychange.pixelartacademy-pixelpad-apps-homescreen', =>
+      @audio.appHover false if document.visibilityState is 'hidden'
 
   onRendered: ->
     super arguments...
@@ -32,8 +48,15 @@ class PAA.PixelPad.Apps.HomeScreen extends PAA.PixelPad.App
       opacity: 1
       
     @$('.apps .app').velocity 'transition.slideUpIn', stagger: 150
+    
+  onDestroyed: ->
+    super arguments...
+    
+    $(document).off '.pixelartacademy-pixelpad-apps-homescreen'
 
   onDeactivate: (finishedDeactivatingCallback) ->
+    @audio.appHover false
+    
     if $app = @$('.apps .app')
       $app.velocity 'transition.fadeOut',
         complete: ->
@@ -49,3 +72,20 @@ class PAA.PixelPad.Apps.HomeScreen extends PAA.PixelPad.App
   apps: ->
     # Show all apps except the home screen.
     _.without @os.currentApps(), @
+
+  events: ->
+    super(arguments...).concat
+      'mouseenter .apps .app': @onMouseEnterApp
+      'mouseleave .apps .app': @onMouseLeaveApp
+      'click .apps .app .link': @onClickLink
+  
+  onMouseEnterApp: (event) ->
+    @audio.appPan AEc.getPanForElement event.target
+    @audio.appHover true
+    
+  onMouseLeaveApp: (event) ->
+    @audio.appHover false
+    
+  onClickLink: (event) ->
+    @audio.appHover false
+    @audio.appLaunch()

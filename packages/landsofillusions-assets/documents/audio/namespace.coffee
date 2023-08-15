@@ -4,17 +4,25 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Audio.Namespace
   constructor: (@id, @options = {}) ->
+    @options.unloadDelay ?= 0
+    
     # Create variables.
     @variables = {}
     
     for name, valueTypeOrVariableOptions of @options.variables
       @variables[name] = new AEc.Variable "#{@id}.#{name}", valueTypeOrVariableOptions
+      
+    @loadedCount = 0
 
   load: (audioManager) ->
     # Don't load documents in a sub-namespace since they will already be handled from the top namespace.
     return if @options.subNamespace
     
-    @unload()
+    @loadedCount++
+    return if @loadedCount > 1
+    
+    Meteor.clearTimeout @_unloadTimeout
+    @_stop()
   
     # Subscribe to audio assets in the namespace.
     path = @id.toLowerCase().replaceAll('.', '/')
@@ -47,5 +55,14 @@ class LOI.Assets.Audio.Namespace
   unload: ->
     return if @options.subNamespace
     
+    @loadedCount--
+    return if @loadedCount > 0
+    
+    @_unloadTimeout = Meteor.setTimeout =>
+      @_stop()
+    ,
+      @options.unloadDelay * 1000
+    
+  _stop: ->
     @_subscriptionAutorun?.stop()
     @engineAudioDictionary?.stop()

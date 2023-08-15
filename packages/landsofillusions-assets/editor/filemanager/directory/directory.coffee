@@ -159,7 +159,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     item = @currentData()
     iconName = item.iconName?()
     
-    unless iconName
+    unless iconName or not item.name
       dotIndex = item.name.lastIndexOf  '.'
       iconName = item.name[dotIndex + 1..] if dotIndex > -1
       
