@@ -27,6 +27,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
+      open: AEc.ValueTypes.Trigger
+      close: AEc.ValueTypes.Trigger
       pageFlip: AEc.ValueTypes.Trigger
       notepadPan: AEc.ValueTypes.Number
       writing: AEc.ValueTypes.Boolean
@@ -116,6 +118,15 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       for task in @activeTasks() when task not in displayedActiveTasks
         @_animateTaskAdded task
         return
+    
+    Tracker.triggerOnDefinedChange @displayState, (displayState, previousDisplayState) =>
+      @_updateNotepadPan()
+      
+      if displayState is @constructor.DisplayState.Open
+        @audio.open()
+      
+      else if displayState is @constructor.DisplayState.Closed and previousDisplayState is @constructor.DisplayState.Open
+        @audio.close()
         
   _animationAvailable: ->
     # If any of the displayed tasks have completed, we should animate.
@@ -252,7 +263,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   pageStyle: ->
     maxContentHeight = Math.max @contentHeight(), @previousContentHeight()
 
-    height: "#{maxContentHeight}px"
+    # Add 10% to account for the bounce animation.
+    height: "#{maxContentHeight * 1.1}px"
   
   showToDo: ->
     @activeTasks() or @completedTasks()
@@ -301,5 +313,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @_pageFlip()
     
   _pageFlip: ->
-    @audio.notepadPan AEc.getPanForElement @$('.notepad')[0]
+    @_updateNotepadPan()
     @audio.pageFlip()
+    
+  _updateNotepadPan: ->
+    @audio.notepadPan AEc.getPanForElement @$('.notepad')[0]
+

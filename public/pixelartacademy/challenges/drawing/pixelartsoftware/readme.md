@@ -32,7 +32,7 @@ Sprites used with permission from the authors for games:
 - [Thimbleweed Park](https://thimbleweedpark.com) by Gary Winnick (permission via Ron Gilbert)
 
 
-Sound effects in this folder are not covered by CC-SA, but their respective licenses.
+Some sound effects in this folder are not covered by CC-SA, but their respective licenses.
 
 Creative Commons:
 

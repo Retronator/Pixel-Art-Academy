@@ -40,7 +40,10 @@
     border 1rem solid atariGray(0)
     border-bottom none
     background atariBrown(6)
-    transition top 0.35s ease-out
+    transition top 0.35s cubic-bezier(.41,1.25,.84,1)
+
+    &.closed
+      transition-timing-function cubic-bezier(.17,1.02,.84,1)
 
     &.closed:hover
       top -17rem !important
