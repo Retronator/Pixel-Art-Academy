@@ -30,3 +30,10 @@ Sprites used with permission from the authors for games:
 - [Hydorah](https://www.locomalito.com/hydorah.php) by Locomalito
 - [VirtuaVerse](https://www.facebook.com/virtuaversegame) by Ra 'Valenberg' Mei
 - [Thimbleweed Park](https://thimbleweedpark.com) by Gary Winnick (permission via Ron Gilbert)
+
+
+Sound effects in this folder are not covered by CC-SA, but their respective licenses.
+
+Creative Commons:
+
+- [Shuffling Cards, new deck.wav](https://freesound.org/people/ARodLRU2018/sounds/662329/) by ARodLRU2018

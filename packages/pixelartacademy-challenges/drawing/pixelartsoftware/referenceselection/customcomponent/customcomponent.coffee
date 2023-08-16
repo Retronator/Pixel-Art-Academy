@@ -1,10 +1,12 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent extends AM.Component
-  @register 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent'
+class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent extends LOI.Component
+  @id: -> 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent'
+  @register @id()
   
   @cardSize = width: 75, height: 113
   @cardThickness = 0.5
@@ -14,6 +16,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     x: (480 + @cardSize.width) / 2 + @maxShadowWidth
     y: (360 + @cardSize.height) / 2
     
+  # Audio needs to be delayed to accommodate card transition duration.
+  @cardTransitionDuration = 0.6
+  @cardTransitionDelay = @cardTransitionDuration * 1000 - 50
+  
   @Choices =
     MonochromeColor:
       prompt: "One color or more?"
@@ -67,6 +73,17 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         name: "Other"
         filter: (id) -> id[2] is 'O'
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      dealingCenter: AEc.ValueTypes.Boolean
+      dealingLeft: AEc.ValueTypes.Boolean
+      dealingRight: AEc.ValueTypes.Boolean
+      dealOneLeft: AEc.ValueTypes.Trigger
+      dealOneRight: AEc.ValueTypes.Trigger
+      chooseSideFactor: AEc.ValueTypes.Number
+      chooseSide: AEc.ValueTypes.Trigger
+      chooseCard: AEc.ValueTypes.Trigger
+      
   onCreated: ->
     super arguments...
     
@@ -166,6 +183,12 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     Tracker.afterFlush =>
       # Bring the cards in faster and faster.
       delay = 1000
+      
+      @_timeouts.push Meteor.setTimeout =>
+        @audio.dealingCenter true
+      ,
+        delay + @constructor.cardTransitionDelay
+      
       for card, index in @remainingCards
         do (card, index) =>
           @_timeouts.push Meteor.setTimeout =>
@@ -174,7 +197,12 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
             delay
           
           delay += Math.max 50, @_gradualDelay index
-          
+      
+      @_timeouts.push Meteor.setTimeout =>
+        @audio.dealingCenter false
+      ,
+        delay + @constructor.cardTransitionDelay
+        
       delay += 200
   
       @_timeouts.push Meteor.setTimeout =>
@@ -225,6 +253,11 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     stackCount[-1] = 0
     stackCount[1] = 0
     cardsMoved = 0
+    
+    firstLeftCardDelay = null
+    firstRightCardDelay = null
+    lastLeftCardDelay = null
+    lastRightCardDelay = null
   
     for card in @remainingCards by -1
       sign = 0
@@ -232,6 +265,14 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       sign = 1 if choice.right.filter card.id
       
       if sign
+        if sign < 0
+          firstLeftCardDelay ?= delay
+          lastLeftCardDelay = delay
+          
+        else
+          firstRightCardDelay ?= delay
+          lastRightCardDelay = delay
+        
         stackPosition = stackCount[sign]
         
         do (card, sign, stackPosition) =>
@@ -243,7 +284,32 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
         delay += @_gradualDelay cardsMoved
         cardsMoved++
         stackCount[sign]++
-  
+        
+    # We start shuffle sound earlier to simulate the noise of the card sliding off the deck.
+    cardSlideOffDeckDelay = @constructor.cardTransitionDelay / 2
+    
+    if firstLeftCardDelay
+      @_timeouts.push Meteor.setTimeout =>
+        @audio.dealingLeft true
+      ,
+        firstLeftCardDelay + cardSlideOffDeckDelay
+      
+      @_timeouts.push Meteor.setTimeout =>
+        @audio.dealingLeft false
+      ,
+        lastLeftCardDelay + @constructor.cardTransitionDelay
+    
+    if firstRightCardDelay
+      @_timeouts.push Meteor.setTimeout =>
+        @audio.dealingRight true
+      ,
+        firstRightCardDelay + cardSlideOffDeckDelay
+      
+      @_timeouts.push Meteor.setTimeout =>
+        @audio.dealingRight false
+      ,
+        lastRightCardDelay + @constructor.cardTransitionDelay
+      
     @_timeouts.push Meteor.setTimeout =>
       @currentChoice choice
     ,
@@ -278,6 +344,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       return if choice[madeChoice].locked()
 
     @currentChoice null
+    
+    @audio.chooseSideFactor if madeChoice is 'left' then -1 else 1
   
     nextChoiceKey = choice[madeChoice].nextChoiceKey
 
@@ -309,7 +377,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
           @_presentFinalSelection()
     ,
       if @remainingCards.length is 1 then 600 else 200
-  
+    
+    # Slide the deck if there will be another choice after this.
+    @audio.chooseSide() if @remainingCards.length > 1
+    
   _makeFinalSelection: (selection) ->
     @finalSelection false
     
@@ -328,6 +399,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
       600
       
   _revealSelectedCard: ->
+    @audio.chooseCard()
     selectedCard = @remainingCards[0]
     @selectedCard selectedCard
   

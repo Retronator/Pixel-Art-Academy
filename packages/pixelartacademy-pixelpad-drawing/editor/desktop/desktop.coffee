@@ -352,7 +352,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       @audio.colorFillDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorFill
       @audio.pencilDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Pencil) or @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Eraser
       @audio.referencesTrayDrag visible if incrementToolCount @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.References)?.displayComponent.enabled()
-      @audio.colorPickerDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.ColorPicker) and editorStyleClasses.indexOf('hidden-color-picker') is -1
+      @audio.colorPickerDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.ColorPicker) and (not editorStyleClasses or editorStyleClasses.indexOf('hidden-color-picker') is -1)
       @audio.zoomDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
       @audio.colorSwatchesDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
       @audio.pico8Drag visible if incrementToolCount @displayedAsset()?.project?.pico8Cartridge?

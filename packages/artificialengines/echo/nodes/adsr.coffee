@@ -79,20 +79,50 @@ class AEc.Node.ADSR extends AEc.Node
       unless newPress is @_press
         value = @gainNode.gain.value
         @gainNode.gain.cancelScheduledValues currentTime
-        @gainNode.gain.setValueAtTime value, currentTime
         
       if newPress and not @_press
         # Start attack + decay.
         attack = @readParameter 'attack'
         decay = @readParameter 'decay'
         sustain = @readParameter 'sustain'
-        @gainNode.gain.linearRampToValueAtTime 1, currentTime + attack
-        @gainNode.gain.linearRampToValueAtTime sustain, currentTime + attack + decay
+        
+        if attack and decay
+          @gainNode.gain.setValueAtTime value, currentTime
+          @gainNode.gain.linearRampToValueAtTime 1, currentTime + attack
+          @gainNode.gain.linearRampToValueAtTime sustain, currentTime + attack + decay
+          @_lastPressValue = value
+          
+        else if attack
+          @gainNode.gain.setValueAtTime value, currentTime
+          @gainNode.gain.linearRampToValueAtTime 1, currentTime + attack
+          @gainNode.gain.setValueAtTime sustain, currentTime + attack
+          @_lastPressValue = value
+          
+        else if decay
+          @gainNode.gain.setValueAtTime 1, currentTime
+          @gainNode.gain.linearRampToValueAtTime sustain, currentTime + decay
+          @_lastPressValue = 0
+          
+        else
+          @gainNode.gain.setValueAtTime sustain, currentTime
+          @_lastPressValue = sustain
+        
+        @_lastPressTime = currentTime
 
       else if @_press and not newPress
         # Start release.
         release = @readParameter 'release'
-        @gainNode.gain.linearRampToValueAtTime 0, currentTime + release
+        
+        if release
+          # If release happens in the same frame as the press, the value hasn't had the
+          # chance to update itself yet, so we resort to saved desired value on press.
+          value = @_lastPressValue if currentTime is @_lastPressTime
+          
+          @gainNode.gain.setValueAtTime value, currentTime
+          @gainNode.gain.linearRampToValueAtTime 0, currentTime + release
+          
+        else
+          @gainNode.gain.setValueAtTime 0, currentTime
 
       @_press = newPress
 
