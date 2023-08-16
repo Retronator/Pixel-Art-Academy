@@ -15,7 +15,7 @@ class FM.Interface extends FM.Interface
     @activeTool = new ComputedField =>
       @getOperator @activeToolId()
 
-    @_storedTool = new ReactiveField null
+    @storedTool = new ReactiveField null
 
     @operators = new ComputedField =>
       operatorIds = FM.Operator.getIds()
@@ -76,7 +76,7 @@ class FM.Interface extends FM.Interface
     previousActiveTool = @activeTool?()
     return if tool is previousActiveTool
 
-    @_storedTool previousActiveTool if storePreviousTool
+    @storedTool previousActiveTool if storePreviousTool
 
     # Set tool as active.
     @activeToolId tool.id()
@@ -142,8 +142,8 @@ class FM.Interface extends FM.Interface
     return unless @shortcutsActive()
 
     # Restore the stored tool.
-    if storedTool = @_storedTool()
+    if storedTool = @storedTool()
       @activateTool storedTool
-      @_storedTool null
+      @storedTool null
 
     @_activeKey = null

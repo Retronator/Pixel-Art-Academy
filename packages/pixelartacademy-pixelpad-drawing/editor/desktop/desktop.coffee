@@ -28,19 +28,24 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       toolsCount: AEc.ValueTypes.Number
       colorFillDrag: AEc.ValueTypes.Boolean
       colorFillPan: AEc.ValueTypes.Number
+      colorFillActivate: AEc.ValueTypes.Trigger
       pencilDrag: AEc.ValueTypes.Boolean
       pencilPan: AEc.ValueTypes.Number
+      pencilActivate: AEc.ValueTypes.Trigger
+      eraserActivate: AEc.ValueTypes.Trigger
       testPaperPan: AEc.ValueTypes.Number
       referencesTrayDrag: AEc.ValueTypes.Boolean
       colorPickerDrag: AEc.ValueTypes.Boolean
       colorPickerPan: AEc.ValueTypes.Number
+      colorPickerActivate: AEc.ValueTypes.Trigger
       zoomDrag: AEc.ValueTypes.Boolean
       zoomPan: AEc.ValueTypes.Number
       colorSwatchesDrag: AEc.ValueTypes.Boolean
       colorSwatchesPan: AEc.ValueTypes.Number
       pico8Drag: AEc.ValueTypes.Boolean
       pico8Pan: AEc.ValueTypes.Number
-
+      cursorPan: AEc.ValueTypes.Number
+  
   @compressPan: (x) ->
     # Since desktop items go out of the screen, we don't want them to clamp to -1 and 1, but smoothly approach it.
     #    2
@@ -232,10 +237,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       if @active()
         # The editor is opened.
         unless @interface.activeTool()
-          # Make sure the last active tool is still allowed.
-          if @_lastActiveTool in @interface.tools()
-            # Reactivate the last tool.
-            Tracker.nonreactive => @interface.activateTool @_lastActiveTool
+          # Reactivate the last tool, but switch to the arrow (default) if the last active tool is still allowed.
+          tool = if @_lastActiveTool in @interface.tools() then @_lastActiveTool else @interface.getOperator LOI.Assets.Editor.Tools.Arrow
+          Tracker.nonreactive => @interface.activateTool tool
 
       else
         # The editor is being closed.
@@ -243,6 +247,43 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           # Remember which tool was used and deactivate it.
           @_lastActiveTool = activeTool
           Tracker.nonreactive => @interface.deactivateTool()
+          
+    # Listen for tool changes to play activation sounds.
+    @_hadStoredTool = false
+    
+    Tracker.triggerOnDefinedChange =>
+      return unless @interface.isCreated()
+      @interface.activeToolId()
+    ,
+      (activeToolId, previousActiveToolId) =>
+        # Only sound on switching tools.
+        return unless previousActiveToolId
+        
+        # Don't sound when returning from a stored (hold key) tool.
+        if @_hadStoredTool
+          @_hadStoredTool = false
+          return
+        
+        # If the tool was selected through the toolbox, the sound should come from the tool position.
+        toolbox = @interface.getView FM.Toolbox
+        if toolbox?.timeOfLastToolActivation()?.getTime() > Date.now() - 100
+          @_prepareUpdatePan()
+          @_updatePan()
+          
+        else
+          # Otherwise, sound from the center by resetting the pan variables.
+          @audio.colorFillPan 0
+          @audio.pencilPan 0
+          @audio.colorPickerPan 0
+        
+        # Trigger tool sound.
+        switch activeToolId
+          when LOI.Assets.SpriteEditor.Tools.ColorFill.id() then @audio.colorFillActivate()
+          when LOI.Assets.SpriteEditor.Tools.ColorPicker.id() then @audio.colorPickerActivate()
+          when LOI.Assets.SpriteEditor.Tools.Eraser.id() then @audio.eraserActivate()
+          when LOI.Assets.SpriteEditor.Tools.Pencil.id() then @audio.pencilActivate()
+        
+        @_hadStoredTool = @interface.storedTool()
   
   onRendered: ->
     super arguments...
@@ -274,6 +315,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     # Trigger dragging of present items (but not the main ones since those don't move) when the focused mode changes.
     Tracker.triggerOnDefinedChange @focusedMode, (focused) =>
       @_dragPresentItems not focused, false, 0
+      
+    # Update pan for the first time if we're starting directly in the editor.
+    @_prepareUpdatePan()
+    @_updatePan()
 
   onDestroyed: ->
     super arguments...
@@ -281,16 +326,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @app.removeComponent @
     
   _dragPresentItems: (visible, mainDrag, toolsDelay) ->
-    @_clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')[0]
-    @_canvas = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas .canvas')[0]
-    @_colorFillGlass = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-colorfill .glass')[0]
-    @_testPaper = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-testpaper')[0]
-    @_pencil = $('.fatamorgana-toolbox .pencil')[0]
-    @_eraser = $('.fatamorgana-toolbox .eraser')[0]
-    @_colorPicker = $('.fatamorgana-toolbox .color-picker')[0]
-    @_zoom = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-zoom')[0]
-    @_palette = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette')[0]
-    @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
+    @_prepareUpdatePan()
 
     @_dragTimeLeft = 1
     @_mainDrag = mainDrag
@@ -301,7 +337,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       
     @audio.clipboardDrag visible
     
-    if editorStyleClasses = @displayedAsset().editorStyleClasses()
+    if editorStyleClasses = @displayedAsset()?.editorStyleClasses()
       if editorStyleClasses.indexOf('hidden-tools') > -1
         @audio.toolsCount 0
         return
@@ -415,7 +451,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   _getView: (viewClass) ->
     return unless @interface.isCreated()
 
-    @interface.allChildComponentsOfType(viewClass)[0]
+    @interface.getView viewClass
     
   update: (appTime) ->
     return unless @_dragTimeLeft > 0
@@ -425,9 +461,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       # Account for items being closer together when the editor is closed.
       timeScale = if @_dragEntering then 1 + @_dragTimeLeft else 2 - @_dragTimeLeft
       
-    else
-      timeScale = 1
+    @_updatePan timeScale
     
+  _prepareUpdatePan: ->
+    @_clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')[0]
+    @_canvas = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas .canvas')[0]
+    @_colorFillGlass = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-colorfill .glass')[0]
+    @_testPaper = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-testpaper')[0]
+    @_pencil = $('.fatamorgana-toolbox .pencil')[0]
+    @_eraser = $('.fatamorgana-toolbox .eraser')[0]
+    @_colorPicker = $('.fatamorgana-toolbox .color-picker')[0]
+    @_zoom = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-zoom')[0]
+    @_palette = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette')[0]
+    @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
+    
+  _updatePan: (timeScale = 1) ->
     adjustPan = (pan) => @constructor.compressPan timeScale * pan
     
     @audio.clipboardPan adjustPan AEc.getPanForElement @_clipboard

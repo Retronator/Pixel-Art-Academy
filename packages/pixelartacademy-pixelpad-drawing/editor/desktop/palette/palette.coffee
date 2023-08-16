@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -8,6 +9,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
   
   @template: -> @constructor.id()
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
+    subNamespace: true
+    variables:
+      changeColor: AEc.ValueTypes.Trigger
+      
   onCreated: ->
     super arguments...
     
@@ -84,7 +91,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     return if @customPalette()
 
     super arguments...
-
+  
+  onClickColor: ->
+    super arguments...
+    
+    @audio.changeColor()
+    
   class @TrayRamp extends AM.Component
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp'
 

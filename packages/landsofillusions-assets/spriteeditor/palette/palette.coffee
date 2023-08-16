@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Palette extends FM.View
+class LOI.Assets.SpriteEditor.Palette extends LOI.View
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Palette'
   @register @id()
 

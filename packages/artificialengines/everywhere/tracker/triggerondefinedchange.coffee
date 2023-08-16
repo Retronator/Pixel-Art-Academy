@@ -6,7 +6,7 @@ Tracker.triggerOnDefinedChange = (valueFunction, triggerFunction) ->
     newValue = valueFunction()
     
     if currentValue isnt undefined and newValue isnt undefined and newValue isnt currentValue
-      triggerFunction newValue
+      triggerFunction newValue, currentValue
       
     currentValue = newValue
 

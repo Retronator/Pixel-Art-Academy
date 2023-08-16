@@ -148,6 +148,9 @@ class FM.Interface extends AM.Component
   getEditorForActiveFile: ->
     @getEditorViewForActiveFile()?.getActiveEditor()
     
+  getView: (viewClass) ->
+    @allChildComponentsOfType(viewClass)[0]
+    
   getHelper: (helperClassOrId) ->
     helperId = helperClassOrId.id?() or helperClassOrId
 

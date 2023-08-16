@@ -7,6 +7,11 @@ class FM.Toolbox extends FM.View
   #   [toolId]: string identifying the tool
   @id: -> 'FataMorgana.Toolbox'
   @register @id()
+  
+  constructor: ->
+    super arguments...
+    
+    @timeOfLastToolActivation = new ReactiveField null
 
   tool: ->
     toolId = @currentData()
@@ -43,3 +48,5 @@ class FM.Toolbox extends FM.View
   onClickToolButton: (event) ->
     tool = @currentData()
     @interface.activateTool tool
+    
+    @timeOfLastToolActivation new Date()

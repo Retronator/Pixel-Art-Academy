@@ -2,6 +2,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
   constructor: (@pixelCanvas) ->
+    # The mouse coordinate in native window (browser) pixels.
+    @absoluteWindowCoordinate = new ReactiveField null, EJSON.equals
+
     # The mouse coordinate relative to sprite canvas in native window (browser) pixels.
     @windowCoordinate = new ReactiveField null, EJSON.equals
 
@@ -45,6 +48,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
         @pixelCoordinate null
 
   updateCoordinates: ->
+    @absoluteWindowCoordinate
+      x: @_lastPageX
+      y: @_lastPageY
+    
     $pixelCanvas = @pixelCanvas.$pixelCanvas()
     pixelCanvasPosition = $pixelCanvas.offset()
     displayScale = @pixelCanvas.display.scale()
