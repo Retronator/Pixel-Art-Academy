@@ -42,7 +42,7 @@ class AEc.Node.Mixer extends AEc.Node
     
   @_outputNodes = {}
   
-  @_getOutputNodeForName: (name, context) ->
+  @getOutputNodeForName: (name, context) ->
     @_outputNodes[name] ?= new GainNode context
     @_outputNodes[name]
   
@@ -65,7 +65,7 @@ class AEc.Node.Mixer extends AEc.Node
       
       # If we have a name, we want the global output node with that name so we can wire across audio documents.
       if name = @readParameter 'name'
-        outputNode = @constructor._getOutputNodeForName name, @audio.context
+        outputNode = @constructor.getOutputNodeForName name, @audio.context
         
       else
         # Otherwise we want a local (anonymous) mixer node that just works inside the document.

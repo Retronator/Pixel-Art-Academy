@@ -1,12 +1,20 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.Pico8.Drawer extends AM.Component
+class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Pico8.Drawer'
   @register @id()
-
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      drawerOpen: AEc.ValueTypes.Trigger
+      caseOpen: AEc.ValueTypes.Trigger
+      caseClose: AEc.ValueTypes.Trigger
+      cartridgeSelect: AEc.ValueTypes.Trigger
+      
   constructor: (@pico8) ->
     super arguments...
 
@@ -54,6 +62,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends AM.Component
     # Open the drawer on app launch.
     Meteor.setTimeout =>
       @opened true
+      @audio.drawerOpen()
     ,
       500
 
@@ -117,14 +126,18 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends AM.Component
   onClickCartridge: (event) ->
     cartridge = @currentData()
     @selectedCartridge cartridge
-
+    
+    @audio.caseOpen()
+  
   onClickSelectedCartridgeMemoryCard: (event) ->
     if @pannedLeft()
       @pannedLeft false
       return
 
     @pico8.cartridge @selectedCartridge()
-
+    
+    @audio.cartridgeSelect()
+  
   onClickSelectedCartridgeCaseTop: (event) ->
     # TODO: Show case top only for online projects.
     # @pannedLeft true

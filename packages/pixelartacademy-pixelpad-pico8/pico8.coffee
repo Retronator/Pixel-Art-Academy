@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -41,13 +42,24 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
     super arguments...
 
     @drawer new @constructor.Drawer @
-    @device new PAA.Pico8.Device.Handheld
-      # Relay input/output calls to the cartridge.
-      onInputOutput: (address, value) =>
-        @cartridge().onInputOutput? address, value
+    
+    # Create the PICO-8 device once audio context is available, so we can route it through the location mixer.
+    @autorun (computation) =>
+      return unless audioContext = LOI.adventure.interface.audioManager.context()
+      computation.stop()
       
-      # Enable interface when the cartridge is in the device.
-      enabled: => @cartridge()
+      audioOutputNode = AEc.Node.Mixer.getOutputNodeForName 'location', audioContext
+      
+      @device new PAA.Pico8.Device.Handheld
+        audioContext: audioContext
+        audioOutputNode: audioOutputNode
+        
+        # Relay input/output calls to the cartridge.
+        onInputOutput: (address, value) =>
+          @cartridge().onInputOutput? address, value
+        
+        # Enable interface when the cartridge is in the device.
+        enabled: => @cartridge()
 
     @autorun (computation) =>
       if @cartridge()
@@ -83,7 +95,8 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
 
     else if drawer.selectedCartridge()
       drawer.selectedCartridge null
-
+      drawer.audio.caseClose()
+    
     else
       return
 

@@ -64,6 +64,8 @@ class PAA.Pico8.Device extends LOI.Component
     console.groupCollapsed "PICO-8"
     
     PAA.Pico8.Device.Module =
+      audioContext: @options.audioContext
+      audioOutputNode: @options.audioOutputNode
       arguments: [cartridgeUrl]
       canvas: @_$canvas[0]
       postRun: [
@@ -85,8 +87,8 @@ class PAA.Pico8.Device extends LOI.Component
     # Remove the display.
     @_$canvas?.remove()
 
-    # Clean up audio context.
-    PAA.Pico8.Device.Module?.audioContext.close()
+    # Clean up audio context, if it wasn't provided through options.
+    PAA.Pico8.Device.Module?.audioContext.close() unless @options.audioContext
 
     # Exit PICO-8 module, which will throw an exit status, so we catch it.
     try
