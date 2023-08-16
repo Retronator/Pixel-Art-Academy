@@ -1,5 +1,6 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -24,6 +25,14 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     Closed: 'Closed'
     Hidden: 'Hidden'
   
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      pageFlip: AEc.ValueTypes.Trigger
+      notepadPan: AEc.ValueTypes.Number
+      writing: AEc.ValueTypes.Boolean
+      writingPan: AEc.ValueTypes.Number
+      strikethrough: AEc.ValueTypes.Boolean
+  
   constructor: ->
     super arguments...
     
@@ -47,10 +56,11 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @defaultDisplayState = new ComputedField => if @os.currentAppUrl() then @constructor.DisplayState.Hidden else @constructor.DisplayState.Closed
 
     @displayState = new ComputedField =>
-      # Automatically hide if an app is loaded.
-      return @constructor.DisplayState.Hidden if @os.currentAppUrl()
-      
       @manualDisplayState() or @defaultDisplayState()
+      
+    # Automatically hide if an app is loaded.
+    @autorun (computation) =>
+      @manualDisplayState null if @os.currentAppUrl()
   
     # Automatically deselect the task when not open.
     @autorun (computation) =>
@@ -93,6 +103,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       return if @animating()
       return if @selectedTask()
       return if @displayState() is @constructor.DisplayState.Hidden
+      return if LOI.adventure.modalDialogs().length
     
       # Mark completed tasks.
       displayedActiveTasks = @displayedActiveTasks()
@@ -119,15 +130,23 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
     await @_animateOpen()
     
+    # Make sure we're still being rendered.
+    return unless @isRendered()
+    
     $taskListItem = $("[data-task-id='#{task.id()}']")
     directive = task.directive()
+    
+    @audio.strikethrough true
   
     for i in [0..directive.length]
-      $taskListItem.html "<span class='directive'><span class='crossed-off'>#{directive[..i]}</span>#{directive[i+1..]}</span>"
+      $taskListItem.html "<span class='directive'><span class='crossed-off'>#{directive[..i]}</span><span class='cursor'></span>#{directive[i+1..]}</span>"
+      @_updateWritingPan()
       await _.waitForSeconds @animationStepDuration
       
     $taskListItem.removeClass('active').addClass('completed')
-  
+    
+    @audio.strikethrough false
+
     displayedActiveTasks = @displayedActiveTasks()
     _.pull displayedActiveTasks, task
     @displayedActiveTasks displayedActiveTasks
@@ -145,6 +164,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   
     await @_animateOpen()
     
+    # Make sure we're still being rendered.
+    return unless @isRendered()
+    
     displayedActiveTasks = @displayedActiveTasks()
     displayedActiveTasks.push task
     @displayedActiveTasks displayedActiveTasks
@@ -154,11 +176,16 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   
     directive = task.directive()
     
+    @audio.writing true
+    
     for i in [0..directive.length]
-      $taskListItem.html "<span class='directive'>#{directive[..i]}<span style='visibility: hidden'>#{directive[i+1..]}</span></span>"
+      $taskListItem.html "<span class='directive'>#{directive[..i]}<span class='cursor'></span><span style='visibility: hidden'>#{directive[i+1..]}</span></span>"
+      @_updateWritingPan()
       await _.waitForSeconds @animationStepDuration
     
     $taskListItem.addClass('active')
+    
+    @audio.writing false
 
     await _.waitForSeconds @waitBetweenAnimationsDuration
   
@@ -167,6 +194,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @_animateClose()
 
     @animating false
+    
+  _updateWritingPan: ->
+    @audio.writingPan AEc.getPanForElement @$('.cursor')[0]
 
   _animateOpen: ->
     @selectedTask null
@@ -262,6 +292,14 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     taskId = $(event.target).closest('.task').data('taskId')
     
     @selectedTask _.find @tasks(), (task) => task.id() is taskId
+    
+    @_pageFlip()
   
   onClickBackButton: (event) ->
     @selectedTask null
+
+    @_pageFlip()
+    
+  _pageFlip: ->
+    @audio.notepadPan AEc.getPanForElement @$('.notepad')[0]
+    @audio.pageFlip()
