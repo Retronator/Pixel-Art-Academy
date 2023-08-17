@@ -160,7 +160,7 @@ Package.onUse(function(api) {
   api.addFile('documents/audio..');
   api.addFile('documents/audio/audio-getpreviewimage');
   api.addFile('documents/audio/namespace');
-  api.addServerFile('documents/audio/subscriptions');
+  api.addFile('documents/audio/subscriptions');
   api.addFile('documents/audio/methods/addnode');
   api.addFile('documents/audio/methods/removenode');
   api.addFile('documents/audio/methods/updatenode');

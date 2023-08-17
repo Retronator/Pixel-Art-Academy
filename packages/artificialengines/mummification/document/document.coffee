@@ -134,6 +134,15 @@ class AM.Document extends Document
     else
       # On the client, publishing happens from the content documents.
       @contentDocuments
+      
+  @getQueryDocuments: (publishingQuery) ->
+    if Meteor.isServer or not publishingQuery
+      # On the server or when doing normal (not publishing) queries, use the normal documents.
+      @documents
+      
+    else
+      # On the client, when doing a publishing query, query the content documents.
+      @contentDocuments
 
   # Casting functionality based on implementation by @mitar.
   cast: (typeFieldName = 'type') ->

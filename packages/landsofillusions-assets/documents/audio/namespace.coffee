@@ -30,7 +30,7 @@ class LOI.Assets.Audio.Namespace
     @_subscriptionAutorun = Tracker.autorun (computation) =>
       return unless audioManager.enabled()
       
-      LOI.Assets.Audio.forNamespace.subscribe path
+      LOI.Assets.Audio.forNamespace.subscribeContent path
     
     # Create engine audio assets.
     @engineAudioAssets = {}

@@ -1,14 +1,20 @@
 AE = Artificial.Everywhere
 AEc = Artificial.Echo
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Interface.Components.AudioManager
   constructor: ->
-    # Wait for user interaction before creating audio context.
     @context = new ReactiveField null
-    
-    $(document).one 'click', (event) =>
+
+    if AB.ApplicationEnvironment.isBrowser
+      # In the browser, we need to wait for user interaction before creating audio context.
+      $(document).one 'click', (event) =>
+        @context new AudioContext
+        
+    else
+      # Otherwise audio should be available from the start.
       @context new AudioContext
 
     # Let others reactively know if audio is currently enabled.

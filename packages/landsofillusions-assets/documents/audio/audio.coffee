@@ -21,16 +21,20 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
   #     {name}: value of the parameter with the given name
   @Meta
     name: @id()
+    
+  @enableDatabaseContent()
+  
+  @databaseContentInformationFields =
+    name: 1
 
-  @className: 'Audio'
+  @className = 'Audio'
 
   # Subscriptions
 
-  @forLocation: new AB.Subscription
-    name: "#{@id()}.forLocation"
-    query: (locationId) ->
+  @forLocation = @subscription 'forLocation',
+    query: (locationId, publishingQuery) ->
       # Find audio assets that have nodes with location ID in one of the relevant parameters.
-      LOI.Assets.Audio.documents.find
+      LOI.Assets.Audio.getQueryDocuments(publishingQuery).find
         $or: [
           'nodes.parameters.from': locationId
         ,
@@ -39,10 +43,9 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
           'nodes.parameters.id': locationId
         ]
         
-  @forNamespace: new AB.Subscription
-    name: "#{@id()}.forNamespace"
-    query: (path) ->
-      LOI.Assets.Audio.documents.find
+  @forNamespace = @subscription 'forNamespace',
+    query: (path, publishingQuery) ->
+      LOI.Assets.Audio.getQueryDocuments(publishingQuery).find
         name: ///^#{path}///
       ,
         fields:

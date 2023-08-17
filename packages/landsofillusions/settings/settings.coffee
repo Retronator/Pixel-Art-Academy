@@ -1,4 +1,5 @@
 AEc = Artificial.Echo
+AB = Artificial.Base
 LOI = LandsOfIllusions
 
 class LOI.Settings
@@ -58,8 +59,10 @@ class LOI.Settings
       smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
       smoothShadingQuantizationLevels: new @constructor.Field 24, 'graphics.smoothShadingQuantizationLevels', @persistSettings
 
+    audioDefault = if AB.ApplicationEnvironment.isBrowser then @constructor.Audio.Enabled.Fullscreen else @constructor.Audio.Enabled.On
+    
     @audio =
-      enabled: new @constructor.Field @constructor.Audio.Enabled.Fullscreen, 'audio.enabled', @persistSettings
+      enabled: new @constructor.Field audioDefault, 'audio.enabled', @persistSettings
       soundVolume: new @constructor.Field 1, 'audio.soundVolume', @persistSettings
       musicVolume: new @constructor.Field 1, 'audio.musicVolume', @persistSettings
       
