@@ -120,6 +120,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         return
     
     Tracker.triggerOnDefinedChange @displayState, (displayState, previousDisplayState) =>
+      # Make sure we're still being rendered.
+      return unless @isRendered()
+    
       @_updateNotepadPan()
       
       if displayState is @constructor.DisplayState.Open
