@@ -27,24 +27,16 @@ export default class FileSystem {
       this.module.respond('getApplicationPaths', fetchId, this.getApplicationPaths());
     });
 
+    this.writeOperationsByFilePath = {}
+
     this.module.on('writeFile', (event, fetchId, filePath, fileData) => {
       this.log.verbose('writeFile received', filePath);
-      fs.writeFile(filePath, fileData, error => {
-        if (error?.code === 'ENOENT') {
-          const directoryPath = path.dirname(filePath);
-          fs.mkdir(directoryPath, error => {
-            if (error) {
-              this.module.respond('writeFile', fetchId, error)
-            } else {
-              fs.writeFile(filePath, fileData, error => {
-                this.module.respond('writeFile', fetchId, error);
-              });
-            }
-          });
-        } else {
-          this.module.respond('writeFile', fetchId, error);
-        }
-      })
+      this.writeOperationsByFilePath[filePath] ??= []
+      this.writeOperationsByFilePath[filePath].push({fetchId, fileData});
+      // If we have just this file waiting to be written, start the write chain of operations.
+      if (this.writeOperationsByFilePath[filePath].length == 1) {
+        this.writeFirstFile(filePath);
+      }
     });
 
     this.module.on('deleteFile', (event, fetchId, filePath) => {
@@ -54,6 +46,46 @@ export default class FileSystem {
       })
     });
   }
+
+  writeFirstFile(filePath) {
+    let firstWriteOperation = this.writeOperationsByFilePath[filePath][0]
+    let fetchId = firstWriteOperation.fetchId
+    let fileData = firstWriteOperation.fileData
+
+    fs.writeFile(filePath, fileData, error => {
+      if (error?.code === 'ENOENT') {
+        const directoryPath = path.dirname(filePath);
+        fs.mkdir(directoryPath, error => {
+          if (error) {
+            this.endWriteFile(filePath, fetchId, error);
+          } else {
+            fs.writeFile(filePath, fileData, error => {
+              this.endWriteFile(filePath, fetchId, error);
+            });
+          }
+        });
+      } else {
+        this.endWriteFile(filePath, fetchId, error);
+      }
+    })
+  }
+
+  endWriteFile(filePath, fetchId, error) {
+    this.module.respond('writeFile', fetchId, error);
+    this.moveToNextFile(filePath);
+  }
+
+  moveToNextFile(filePath) {
+    // The first file has been written to, so we can remove it.
+    this.writeOperationsByFilePath[filePath].shift();
+
+    // Nothing left to do if we've cleared all operations for this file.
+    if (this.writeOperationsByFilePath[filePath].length === 0) return;
+
+    // Chain to the next operation on this file.
+    this.writeFirstFile(filePath);
+  }
+
 
   getApplicationPaths() {
     let applicationPaths = {};
