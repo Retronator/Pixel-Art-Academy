@@ -96,7 +96,9 @@ class LOI.Adventure extends LOI.Adventure
     Persistence.loadProfile(profileId).then =>
       @_changeProfileId profileId
       
-    , (conflictResolution) => # TODO
+    , (conflictResolution) =>
+      console.log "Conflict resolution invoked.", conflictResolution
+      # TODO
     
   _changeProfileId: (profileId) ->
     # Reset the interface.

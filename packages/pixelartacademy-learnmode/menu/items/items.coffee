@@ -25,6 +25,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     @progress = new LM.Menu.Progress
   
   loadVisible: ->
+    # TODO: You can't load in the kiosk demo.
+    return false
+    
     # Load game in Learn Mode is visible only on the landing page if there are any profiles to load.
     loadGame = LOI.adventure.menu.loadGame
     @options.landingPage and loadGame.isCreated() and loadGame.profiles()
@@ -58,6 +61,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .extras .courses': @onClickExtrasCourses
       'click .extras .credits': @onClickExtrasCredits
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
+      'click .ending': @onClickEnding
 
   onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -150,3 +154,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     
   onClickExtrasBackToMenu: (event) ->
     @goToMainMenu()
+    
+  onClickEnding: ->
+    LOI.adventure.showActivatableModalDialog
+      dialog: new LM.Demo.Ending

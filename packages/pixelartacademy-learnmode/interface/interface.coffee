@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AEc = Artificial.Echo
+AC = Artificial.Control
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
@@ -45,6 +46,9 @@ class LM.Interface extends LOI.Interface
     # Manually load Audio since audio manager wasn't available when calling super.
     @constructor.Audio.load @audioManager
     
+    $(document).on 'keydown.pixelartacademy-learnmode-interface', (event) => @onKeyDown event
+    $(document).on 'click.pixelartacademy-learnmode-interface', (event) => @onClick event
+    
   onRendered: ->
     super arguments...
   
@@ -73,6 +77,11 @@ class LM.Interface extends LOI.Interface
         @introFadeFast true
   
       @introFadeComplete true
+      
+  onDestroyed: ->
+    super arguments...
+    
+    $(document).off '.pixelartacademy-learnmode-interface'
 
   prepareLocation: ->
     if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
@@ -146,3 +155,27 @@ class LM.Interface extends LOI.Interface
   
   waitingOverlayVisibleClass: ->
     'visible' if @waiting()
+  
+  onKeyDown: (event) ->
+    key = event.which
+  
+    @_reset() if key is AC.Keys.f12
+    
+    @_scheduleReset()
+    
+  onClick: (event) ->
+    @_scheduleReset()
+    
+  _scheduleReset: ->
+    Meteor.clearTimeout @_resetTimeout
+    
+    @_resetTimeout = Meteor.setTimeout @_reset, 3 * 60 * 1000
+
+  _reset: ->
+    LOI.adventure._clearStoredProfileId()
+    
+    if LOI.adventure.profileId()
+      LOI.adventure.quitGame()
+      
+    else
+      window.location = LOI.adventure.constructor.rootUrl()
