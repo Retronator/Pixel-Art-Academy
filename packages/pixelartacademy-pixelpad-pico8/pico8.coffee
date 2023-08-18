@@ -48,12 +48,7 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       return unless audioContext = LOI.adventure.interface.audioManager.context()
       computation.stop()
       
-      audioOutputNode = AEc.Node.Mixer.getOutputNodeForName 'location', audioContext
-      
       @device new PAA.Pico8.Device.Handheld
-        audioContext: audioContext
-        audioOutputNode: audioOutputNode
-        
         # Relay input/output calls to the cartridge.
         onInputOutput: (address, value) =>
           @cartridge().onInputOutput? address, value
