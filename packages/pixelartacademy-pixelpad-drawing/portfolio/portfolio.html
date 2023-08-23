@@ -11,11 +11,14 @@
           <ul class="groups">
             {{#each groups}}
               <li class="group content {{groupActiveClass}}" {{style groupStyle}}>
-                <div class="group-name">{{name}}</div>
+                <div class="group-header">
+                  <div class="group-name">{{name}}</div>
+                  {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
+                </div>
                 {{#if assets}}
                   <ul class="briefs">
                     {{#each assets}}
-                      <li class="brief {{assetHoveredClass}} {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
+                      <li class="brief {{assetHoveredClass}} {{assetLastHoveredClass}}  {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
                         <div class="asset-name">
                           {{#if asset.displayNameTranslation}}
                             {{> t10e asset.displayNameTranslation}}

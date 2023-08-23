@@ -35,8 +35,13 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     assets ?= []
     id = "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
     
-    # Add the asset it's not already added.
-    assets.push {id} unless _.find(assets, (asset) => asset.id is id)
+    # Add the asset if it's not already added.
+    unless _.find(assets, (asset) => asset.id is id)
+      referenceSelectionId = PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.id()
+      referenceSelection = _.find assets, (asset) => asset.id is referenceSelectionId
+      
+      insertionIndex = if referenceSelection then 1 else 0
+      assets.splice insertionIndex, 0, {id}
     
     @state 'assets', assets
     

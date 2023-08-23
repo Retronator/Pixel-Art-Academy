@@ -159,6 +159,11 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     assetData = @currentData()
 
     'hovered' if assetData is @hoveredAsset()
+    
+  assetLastHoveredClass: ->
+    assetData = @currentData()
+    
+    'last-hovered' if assetData is @lastHoveredAsset()
 
   assetActiveClass: ->
     assetData = @currentData()
@@ -263,6 +268,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   onMouseEnterAsset: (event) ->
     assetData = @currentData()
     @hoveredAsset assetData
+    @lastHoveredAsset assetData
     @_assetHoverUnlessFirst assetData
 
   onMouseLeaveAsset: (event) ->

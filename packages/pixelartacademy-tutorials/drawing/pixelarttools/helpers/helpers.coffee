@@ -25,19 +25,19 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers extends PAA.Tutorials.Drawing.
       assets = []
       
       @zoom ?= Tracker.nonreactive => new @constructor.Zoom @
-      assets.push @zoom
+      assets.unshift @zoom
   
       if @_assetsCompleted @zoom
         @lines ?= Tracker.nonreactive => new @constructor.Lines @
-        assets.push @lines
+        assets.unshift @lines
 
       if @_assetsCompleted @lines
         @moveCanvas ?= Tracker.nonreactive => new @constructor.MoveCanvas @
-        assets.push @moveCanvas
+        assets.unshift @moveCanvas
 
       if @_assetsCompleted @moveCanvas
         @undoRedo ?= Tracker.nonreactive => new @constructor.UndoRedo @
-        assets.push @undoRedo
+        assets.unshift @undoRedo
 
       assets
     ,

@@ -29,35 +29,35 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics extends PAA.Tutorials.Drawing.P
       assets = []
 
       @pencil ?= Tracker.nonreactive => new @constructor.Pencil @
-      assets.push @pencil
+      assets.unshift @pencil
 
       if @_assetsCompleted @pencil
         @eraser ?= Tracker.nonreactive => new @constructor.Eraser @
-        assets.push @eraser
+        assets.unshift @eraser
 
       if @_assetsCompleted @eraser
         @colorFill ?= Tracker.nonreactive => new @constructor.ColorFill @
-        assets.push @colorFill
+        assets.unshift @colorFill
 
       if @_assetsCompleted @colorFill
         @colorFill2 ?= Tracker.nonreactive => new @constructor.ColorFill2 @
-        assets.push @colorFill2
+        assets.unshift @colorFill2
 
       if @_assetsCompleted @colorFill2
         @colorFill3 ?= Tracker.nonreactive => new @constructor.ColorFill3 @
-        assets.push @colorFill3
+        assets.unshift @colorFill3
 
       if @_assetsCompleted @colorFill3
         @basicTools ?= Tracker.nonreactive => new @constructor.BasicTools @
-        assets.push @basicTools
+        assets.unshift @basicTools
 
       if @_assetsCompleted @basicTools
         @shortcuts ?= Tracker.nonreactive => new @constructor.Shortcuts @
-        assets.push @shortcuts
+        assets.unshift @shortcuts
   
       if @_assetsCompleted @shortcuts
         @references ?= Tracker.nonreactive => new @constructor.References @
-        assets.push @references
+        assets.unshift @references
 
       assets
     ,

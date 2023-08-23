@@ -26,15 +26,15 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
       assets = []
 
       @colorSwatches ?= Tracker.nonreactive => new @constructor.ColorSwatches @
-      assets.push @colorSwatches
+      assets.unshift @colorSwatches
 
       if @_assetsCompleted @colorSwatches
         @colorPicking ?= Tracker.nonreactive => new @constructor.ColorPicking @
-        assets.push @colorPicking
+        assets.unshift @colorPicking
 
       if @_assetsCompleted @colorPicking
         @quickColorPicking ?= Tracker.nonreactive => new @constructor.QuickColorPicking @
-        assets.push @quickColorPicking
+        assets.unshift @quickColorPicking
 
       assets
     ,

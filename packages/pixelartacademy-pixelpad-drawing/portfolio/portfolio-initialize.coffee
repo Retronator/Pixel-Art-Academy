@@ -169,6 +169,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         @activeSection null
         @activeGroup null
         @hoveredAsset null
+        @lastHoveredAsset null
 
       # Update section indices.
       section.index = index for section, index in sections
@@ -205,6 +206,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       @activeGroup null
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
+    @lastHoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>
       return unless parameter = AB.Router.getParameter 'parameter3'
 
