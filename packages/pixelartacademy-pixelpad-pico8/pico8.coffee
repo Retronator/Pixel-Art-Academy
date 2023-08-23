@@ -43,18 +43,13 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
 
     @drawer new @constructor.Drawer @
     
-    # Create the PICO-8 device once audio context is available, so we can route it through the location mixer.
-    @autorun (computation) =>
-      return unless audioContext = LOI.adventure.interface.audioManager.context()
-      computation.stop()
+    @device new PAA.Pico8.Device.Handheld
+      # Relay input/output calls to the cartridge.
+      onInputOutput: (address, value) =>
+        @cartridge().onInputOutput? address, value
       
-      @device new PAA.Pico8.Device.Handheld
-        # Relay input/output calls to the cartridge.
-        onInputOutput: (address, value) =>
-          @cartridge().onInputOutput? address, value
-        
-        # Enable interface when the cartridge is in the device.
-        enabled: => @cartridge()
+      # Enable interface when the cartridge is in the device.
+      enabled: => @cartridge()
 
     @autorun (computation) =>
       if @cartridge()
@@ -67,7 +62,10 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       return unless cartridge = @cartridge()
 
       device = @device()
-      device.loadGame cartridge.game(), cartridge.projectId()
+      
+      # Load the game non-reactively so that changing of the project ID won't
+      # cause a restart (instead we're forcing the player to go out and back in).
+      Tracker.nonreactive => device.loadGame cartridge.game(), cartridge.projectId()
 
       Meteor.clearTimeout @_deviceStartTimeout
 
