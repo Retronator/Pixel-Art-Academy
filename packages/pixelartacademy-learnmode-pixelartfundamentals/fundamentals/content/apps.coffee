@@ -1,7 +1,7 @@
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
+class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content.FutureContent
   @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps'
 
   @displayName: -> "Apps"
@@ -22,8 +22,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Apps extends LM.Content
     @progress = new LM.Content.Progress.ContentProgress
       content: @
       units: "apps"
-
-  status: -> LM.Content.Status.Unlocked
 
   class @StudyPlan extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.StudyPlan'

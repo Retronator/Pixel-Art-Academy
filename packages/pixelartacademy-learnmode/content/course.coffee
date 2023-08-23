@@ -95,6 +95,7 @@ class LM.Content.Course
 
   available: -> true # TODO: Add purchased status
   unlocked: -> true # TODO: Add purchased status
+  locked: -> false # TODO: Add purchased status
   completed: -> @progress.completed()
   completedRatio: -> @progress.completedRatio()
 

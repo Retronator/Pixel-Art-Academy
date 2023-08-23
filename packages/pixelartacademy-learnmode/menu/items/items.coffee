@@ -7,7 +7,12 @@ LM = PixelArtAcademy.LearnMode
 class LM.Menu.Items extends LOI.Components.Menu.Items
   @register 'PixelArtAcademy.LearnMode.Menu.Items'
   template: -> 'PixelArtAcademy.LearnMode.Menu.Items'
-
+  
+  constructor: ->
+    super arguments...
+    
+    @progress = new LM.Menu.Progress
+  
   onCreated: ->
     super arguments...
     
@@ -21,9 +26,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
-  
-    @progress = new LM.Menu.Progress
-  
+    
   loadVisible: ->
     # Load game in Learn Mode is visible only on the landing page if there are any profiles to load.
     loadGame = LOI.adventure.menu.loadGame

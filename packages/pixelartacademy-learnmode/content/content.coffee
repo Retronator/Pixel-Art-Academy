@@ -121,6 +121,7 @@ class LM.Content
   status: -> throw new AE.NotImplementedException "Content must provide its status."
   available: -> @parent.unlocked() and @status() isnt @constructor.Status.Unavailable
   unlocked: -> @parent.unlocked() and @status() is @constructor.Status.Unlocked
+  locked: -> @parent.locked() or @status() is @constructor.Status.Locked
 
   completed: ->
     return unless @unlocked()

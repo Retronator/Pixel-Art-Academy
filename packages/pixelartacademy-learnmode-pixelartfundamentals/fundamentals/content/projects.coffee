@@ -9,7 +9,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.F
   @contents: -> [
     @Invaders
     @PixelSuiteIcons
-    @Pinball
+    @PinballCreator
     @BlockBreaker
     @Chess
   ]
@@ -85,14 +85,14 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.F
       @displayName: -> "Calendar"
       @initialize()
   
-  class @Pinball extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball'
-    @displayName: -> "Pinball"
+  class @PinballCreator extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreator'
+    @displayName: -> "Pinball creator"
     @initialize()
   
   class @BlockBreaker extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.BlockBreaker'
-    @displayName: -> "BlockBreaker"
+    @displayName: -> "Block breaker"
     @initialize()
   
   class @Chess extends LM.Content.FutureContent

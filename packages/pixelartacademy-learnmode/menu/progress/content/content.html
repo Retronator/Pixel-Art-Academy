@@ -60,8 +60,9 @@
       <div class="preview {{previewVisibleClass}}">
         <button class="button">Preview</button>
       </div>
+    {{else}}
+      {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
     {{/if}}
-    {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
   </div>
 </template>
 
@@ -70,12 +71,12 @@
     <div class="completion">
       {{#if completionistMode}}
         <span class="total-percentage" {{totalPercentageTitleAttribute}}>
-          {{percentageString progress.completedRatio}}
+          {{percentageString this.progress.completedRatio}}
         </span>
       {{else}}
         {{#if showRequiredUnits}}
           <span class="required-units" {{requiredUnitsTitleAttribute}}>
-            {{progress.requiredCompletedUnitsCount}}/{{progress.requiredUnitsCount}}
+            {{this.progress.requiredCompletedUnitsCount}}/{{this.progress.requiredUnitsCount}}
           </span>
         {{/if}}
         {{#if showCompletedContentsCount}}

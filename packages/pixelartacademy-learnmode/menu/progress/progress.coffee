@@ -23,23 +23,24 @@ class LM.Menu.Progress extends AM.Component
   
   @completionDisplayType: -> @state('completionDisplayType') or @CompletionDisplayTypes.RequiredUnits
   
+  for url in [@inGameUrl(), @inPreviewUrl()]
+    LOI.Adventure.registerDirectRoute "/#{url}", =>
+      progress = LOI.adventure.menu.menuItems.progress
+      progress.show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is progress
+    
   template: -> @constructor.id()
   
   mixins: -> [@activatable]
-  
-  inGame: -> LOI.adventure.profileId()
-  inPreview: -> not @inGame()
-  
-  url: -> if @inGame() then @constructor.inGameUrl() else @constructor.inPreviewUrl()
   
   constructor: ->
     super arguments...
   
     @activatable = new LOI.Components.Mixins.Activatable
   
-    for url in [@constructor.inGameUrl(), @constructor.inPreviewUrl()]
-      LOI.Adventure.registerDirectRoute "/#{url}", =>
-        @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
+  inGame: -> LOI.adventure.profileId()
+  inPreview: -> not @inGame()
+  
+  url: -> if @inGame() then @constructor.inGameUrl() else @constructor.inPreviewUrl()
   
   show: ->
     LOI.adventure.showActivatableModalDialog

@@ -34,7 +34,9 @@ class LM.Menu.Progress.Content extends AM.Component
     # Never automatically show content in preview mode.
     return if @progress.inPreview()
     
+    # Don't automatically show future content.
     content = @data()
+    return if LM.Content.Tags.Future in content.tags()
 
     switch LM.Menu.Progress.completionDisplayType()
       when LM.Menu.Progress.CompletionDisplayTypes.RequiredUnits
@@ -87,7 +89,7 @@ class LM.Menu.Progress.Content extends AM.Component
     return unless @progress.inGame()
     
     content = @data()
-    'locked' unless content.unlocked()
+    'locked' if content.locked()
 
   contentDepthClass: ->
     content = @data()

@@ -147,7 +147,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     # Make sure we're still being rendered.
     return unless @isRendered()
     
-    $taskListItem = $("[data-task-id='#{task.id()}']")
+    $taskListItem = @$("[data-task-id='#{task.id()}']")
     directive = task.directive()
     
     @audio.strikethrough true
