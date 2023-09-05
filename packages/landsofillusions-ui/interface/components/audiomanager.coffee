@@ -33,30 +33,32 @@ class LOI.Interface.Components.AudioManager
 
     # Start and stop context based on enabled state.
     @_startStopAutorun = Tracker.autorun (computation) =>
-      return unless @context()
+      return unless context = @context()
       enabled = @enabled()
 
-      if @context.state is 'suspended' and enabled
+      if context.state is 'suspended' and enabled
         @_start()
 
-      else if @context.state is 'running' and not enabled
+      else if context.state is 'running' and not enabled
         @_stop()
         
   destroy: ->
     @_startStopAutorun.stop()
 
   _start: ->
-    return unless @context.state is 'suspended'
+    return unless context = @context()
+    return unless context.state is 'suspended'
     return if @_resuming
     
     @_resuming = true
-    await @context.resume()
+    await context.resume()
     @_resuming = false
 
   _stop: ->
-    return unless @context.state is 'running'
+    return unless context = @context()
+    return unless context.state is 'running'
     return if @_suspending
     
     @_suspending = true
-    await @context.suspend()
+    await context.suspend()
     @_suspending = false

@@ -40,17 +40,20 @@ class AM.DatabaseContent extends AM.DatabaseContent
 
       @_subscriptions[name][subscription.id] = subscription
       
-      # If we're running in reactive context, stop the subscription if it's not active after a recomputation.
-      if Tracker.active
-        Tracker.onInvalidate =>
-          subscription.active = false
+    # If we're running in reactive context, stop the subscription if it's not active after a recomputation.
+    if Tracker.active
+      Tracker.onInvalidate =>
+        subscription.active = false
 
         Tracker.afterFlush =>
           unless subscription.active
+            # Note: We make sure the subscription hasn't been stopped yet, so we look for it again via name and id.
             @_subscriptions[name][subscriptionId]?.stop()
-    
+      
     # Return a handle that the subscriber can use to stop the subscription.
     stop: =>
+      # Note: We make sure the wrapped subscription hasn't been stopped yet
+      # from another handle, so we look for it again via name and id.
       @_subscriptions[name][subscriptionId]?.stop()
     
   @_subscribeToDocuments: (handler, parameters ...) ->
