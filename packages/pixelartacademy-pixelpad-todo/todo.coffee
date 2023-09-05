@@ -270,7 +270,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     height: "#{maxContentHeight * 1.1}px"
   
   showToDo: ->
-    @activeTasks() or @completedTasks()
+    @activeTasks().length or @completedTasks().length or @displayedActiveTasks().length
 
   taskSelectedClass: ->
     'task-selected' if @selectedTask()

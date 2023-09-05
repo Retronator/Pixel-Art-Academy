@@ -17,25 +17,25 @@
             </div>
           {{/with}}
           <div class="todo">
-            {{#if showToDo}}
-              <div class="header">
+            <div class="header">
+              {{#if showToDo}}
                 TO DO:
-              </div>
-              <div class="tasks-area">
-                <ul class="displayed-tasks">
-                </ul>
-                <ul class="tasks">
-                  {{#each completedTasks}}
-                    <li class="task completed"><span class="directive">{{> t10e directiveTranslation}}</span></li>
-                  {{/each}}
-                  {{#each activeTasks}}
-                    <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
-                  {{/each}}
-                </ul>
-              </div>
-            {{else}}
-              You're all done!
-            {{/if}}
+              {{else}}
+                You're all done!
+              {{/if}}
+            </div>
+            <div class="tasks-area">
+              <ul class="displayed-tasks">
+              </ul>
+              <ul class="tasks">
+                {{#each completedTasks}}
+                  <li class="task completed"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                {{/each}}
+                {{#each activeTasks}}
+                  <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                {{/each}}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
