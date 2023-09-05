@@ -26,6 +26,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
 
     @dragging = new ReactiveField false
     @positionOffset = new ReactiveField x: 0, y: 0
+    
+    @device = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -41,20 +43,31 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
     @cartridge = new ComputedField =>
       return unless asset = @desktop.activeAsset()
       asset.project?.pico8Cartridge
-
-    @device = new PAA.Pico8.Device.Handheld
-      # Relay input/output calls to the cartridge.
-      onInputOutput: (address, value) =>
-        @cartridge()?.onInputOutput? address, value
+      
+    # Create the PICO-8 device once audio context is available, so we can route it through the location mixer.
+    @autorun (computation) =>
+      return unless audioContext = LOI.adventure.interface.audioManager.context()
+      computation.stop()
+      
+      audioOutputNode = AEc.Node.Mixer.getOutputNodeForName 'location', audioContext
+      
+      @device new PAA.Pico8.Device.Handheld
+        audioContext: audioContext
+        audioOutputNode: audioOutputNode
         
-      # Enable device interface when the editor is active.
-      enabled: => @desktop.active()
+        # Relay input/output calls to the cartridge.
+        onInputOutput: (address, value) =>
+          @cartridge()?.onInputOutput? address, value
+
+        # Enable device interface when the editor is active.
+        enabled: => @desktop.active()
 
     @autorun (computation) =>
       return unless cartridge = @cartridge()
       return unless game = cartridge.game()
+      return unless device = @device()
 
-      @device.loadGame game, @desktop.activeAsset().project.projectId
+      device.loadGame game, @desktop.activeAsset().project.projectId
     
     # Drag handheld when activating and deactivating.
     Tracker.triggerOnDefinedChange @active, =>
@@ -67,11 +80,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
     super arguments...
     
     @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
-    
-  onDestroyed: ->
-    super arguments...
-
-    @device.stop()
 
   activeClass: ->
     'active' if @active()
