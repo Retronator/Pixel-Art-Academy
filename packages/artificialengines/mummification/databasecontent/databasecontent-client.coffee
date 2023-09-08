@@ -90,6 +90,11 @@ class AM.DatabaseContent extends AM.DatabaseContent
     
     for documentClassId in documentClassIds
       documentClass = AM.Document.getClassForId documentClassId
+      
+      unless documentClass
+        console.warn "Unknown class #{documentClassId} in database content."
+        continue
+        
       continue unless documentClass.contentDocuments
       
       documentClass.contentDocuments.initialize directory.documents[documentClassId]

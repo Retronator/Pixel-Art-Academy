@@ -73,7 +73,7 @@ export default class Desktop {
     /**
      * Window crash handler.
      */
-    static windowRenderProcessGoneHandler(error) {
+    windowRenderProcessGoneHandler(error) {
         Desktop.displayRestartDialog(
             'Application render process is gone',
             'Do you want to restart it?',
@@ -84,7 +84,7 @@ export default class Desktop {
     /**
      * Window's unresponsiveness handler.
      */
-    static windowUnresponsiveHandler() {
+    windowUnresponsiveHandler() {
         Desktop.displayRestartDialog(
             'Application is not responding',
             'Do you want to restart it?'
@@ -95,7 +95,7 @@ export default class Desktop {
      * JS's uncaught exception handler.
      * @param {string} error - error message
      */
-    static uncaughtExceptionHandler(error) {
+    uncaughtExceptionHandler(error) {
         // Consider sending a log somewhere, it is good be aware your users are having problems,
         // right?
         Desktop.displayRestartDialog(
@@ -111,8 +111,11 @@ export default class Desktop {
      * @param {string} message - message shown in the dialog
      * @param {string} details - additional details to be displayed
      */
-    static displayRestartDialog(title, message, details = '') {
-        dialog.showMessageBox(
+    displayRestartDialog(title, message, details = '') {
+        // TODO: Actually handle exceptions.
+        this.log.verbose("EXCEPTION", title, message, details);
+
+        /*dialog.showMessageBox(
             {
                 type: 'error', buttons: ['Restart', 'Shutdown'], title, message, detail: details
             },
@@ -122,6 +125,6 @@ export default class Desktop {
                 }
                 app.exit(0);
             }
-        );
+        );*/
     }
 }
