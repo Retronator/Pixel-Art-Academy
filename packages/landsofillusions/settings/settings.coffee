@@ -45,12 +45,21 @@ class LOI.Settings
       name: 'persistEditorsInterface'
       question: "Do you want to automatically save changes made to the user interface?"
       moreInfo: "This will use your browser's local storage to save editor settings."
-
-    # By default, we disallow all but persisting settings.
-    @persistGameState.disallow() unless @persistGameState.decided()
-    @persistCommandHistory.disallow() unless @persistCommandHistory.decided()
-    @persistLogin.disallow() unless @persistLogin.decided()
-    @persistEditorsInterface.disallow() unless @persistEditorsInterface.decided()
+      
+    if AB.ApplicationEnvironment.isBrowser
+      # In the browser, we disallow all but persisting settings by default.
+      @persistGameState.disallow() unless @persistGameState.decided()
+      @persistCommandHistory.disallow() unless @persistCommandHistory.decided()
+      @persistLogin.disallow() unless @persistLogin.decided()
+      @persistEditorsInterface.disallow() unless @persistEditorsInterface.decided()
+      
+    else
+      # In standalone apps, consent is implied.
+      @persistSettings.allow() unless @persistSettings.decided()
+      @persistGameState.allow() unless @persistGameState.decided()
+      @persistCommandHistory.allow() unless @persistCommandHistory.decided()
+      @persistLogin.allow() unless @persistLogin.decided()
+      @persistEditorsInterface.allow() unless @persistEditorsInterface.decided()
 
     @graphics =
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings

@@ -23,28 +23,7 @@
         "fullscreenable": true
     },
     "uglify": true,
-    "plugins": {
-        "meteor-desktop-splash-screen": {
-            "version": "0.5.0",
-            "imagePath": "splash/main.png",
-            "windowSettings": {
-                "width": 512,
-                "height": 512
-            },
-            "updateScreen": true,
-            "updateScreenSettings": {
-                "imagePath": "splash/updating.gif",
-                "windowSettings": {
-                    "width": 400,
-                    "height": 300
-                },
-                "clickThrough": false,
-                "style": {
-                    "background-size": "auto"
-                }
-            }
-        }
-    },
+    "plugins": {},
     "devDependencies": {
         "electron": "11.5.0"
     },
