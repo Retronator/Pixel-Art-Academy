@@ -26,10 +26,14 @@ export default class ApplicationMenu {
   }
 
   start() {
-    const isMac = process.platform === 'darwin';
+    // Only set up the menu on mac.
+    if (process.platform !== 'darwin') {
+      Menu.setApplicationMenu(null);
+      return;
+    }
 
     const template = [
-      ...(isMac ? [{
+      {
         label: app.name,
         submenu: [
           { role: 'about' },
@@ -40,19 +44,12 @@ export default class ApplicationMenu {
           { type: 'separator' },
           { role: 'quit' }
         ]
-      }] : [{
-        label: 'File',
-        submenu: [
-          { role: 'quit' }
-        ]
-      }]),
+      },
       {
         label: 'Window',
         submenu: [
           { role: 'minimize' },
-          ...(isMac ? [
-            { role: 'zoom' },
-          ] : []),
+          { role: 'zoom' },
           { type: 'separator' },
           { role: 'togglefullscreen' }
         ]

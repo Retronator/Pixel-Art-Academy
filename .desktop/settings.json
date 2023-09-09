@@ -11,9 +11,8 @@
         "minWidth": 640,
         "minHeight": 480,
         "fullscreen": true,
-        "autoHideMenuBar": true,
         "icon": "@assets/icons/coatofarms.png",
-        "backgroundColor": "black",
+        "backgroundColor": "#000000",
         "_windows": {
             "icon": "@assets/icons/coatofarms.ico"
         }
