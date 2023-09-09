@@ -93,9 +93,9 @@ class LM.Content.Course
 
   allContents: -> _.flatten (content.allContents() for content in @_contents)
 
-  available: -> true # TODO: Add purchased status
-  unlocked: -> true # TODO: Add purchased status
-  locked: -> false # TODO: Add purchased status
+  available: -> LM.Content.Tags.Future not in @tags() # TODO: Add purchased status
+  unlocked: -> LM.Content.Tags.Future not in @tags() # TODO: Add purchased status
+  locked: -> LM.Content.Tags.Future in @tags() # TODO: Add purchased status
   completed: -> @progress.completed()
   completedRatio: -> @progress.completedRatio()
 

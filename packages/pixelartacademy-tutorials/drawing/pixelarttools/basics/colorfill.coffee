@@ -97,7 +97,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill extends PAA.Practice.
     @assetClass: -> Asset
     
     @message: -> """
-      Whoops, you filled the area outside the lines! Use the undo button to get back on track.
+      Whoops, you filled the area outside the lines! Use the undo button on the left to get back on track.
     """
     
     @activeConditions: ->

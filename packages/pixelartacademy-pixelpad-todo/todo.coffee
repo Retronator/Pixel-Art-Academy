@@ -131,6 +131,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       else if displayState is @constructor.DisplayState.Closed and previousDisplayState is @constructor.DisplayState.Open
         @audio.close()
         
+  onDestroyed: ->
+    super arguments...
+    
+    # Disable any ongoing audio.
+    @audio.strikethrough false
+    @audio.writing false
+    
   _animationAvailable: ->
     # If any of the displayed tasks have completed, we should animate.
     displayedActiveTasks = @displayedActiveTasks()
@@ -140,12 +147,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     return true for task in @activeTasks() when task not in displayedActiveTasks
   
   _animateTaskCompleted: (task) ->
-    @animating true
-    
-    await @_animateOpen()
-    
-    # Make sure we're still being rendered.
-    return unless @isRendered()
+    return unless await @_animateOpen()
     
     $taskListItem = @$("[data-task-id='#{task.id()}']")
     directive = task.directive()
@@ -168,18 +170,11 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     await _.waitForSeconds @waitBetweenAnimationsDuration
 
     await task.onCompletedDisplayed()
-  
-    @animating false
     
     @_animateClose()
   
   _animateTaskAdded: (task) ->
-    @animating true
-  
-    await @_animateOpen()
-    
-    # Make sure we're still being rendered.
-    return unless @isRendered()
+    return unless await @_animateOpen()
     
     displayedActiveTasks = @displayedActiveTasks()
     displayedActiveTasks.push task
@@ -206,25 +201,41 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     await task.onActiveDisplayed()
   
     @_animateClose()
-
-    @animating false
     
   _updateWritingPan: ->
-    @audio.writingPan AEc.getPanForElement @$('.cursor')[0]
+    # Make sure the cursor is still rendered.
+    return unless cursor = @$('.cursor')[0]
+    
+    @audio.writingPan AEc.getPanForElement cursor
 
   _animateOpen: ->
+    @animating true
+  
     @selectedTask null
     
-    return if @displayState() is @constructor.DisplayState.Open
-  
-    # Give some time for the other UI animations to finish.
-    await _.waitForSeconds 1.2
-  
-    @manualDisplayState @constructor.DisplayState.Open
+    unless @displayState() is @constructor.DisplayState.Open
+      # Give some time for the other UI animations to finish.
+      await _.waitForSeconds 1.2
+      
+      # Make sure we're still on the home screen (no app has been opened while we were waiting).
+      if @os.currentAppUrl()
+        @animating false
+        return false
+      
+      @manualDisplayState @constructor.DisplayState.Open
+      
+      await _.waitForSeconds 1
     
-    await _.waitForSeconds 1
+    # Make sure we're still being rendered.
+    unless @isRendered()
+      @animating false
+      return false
     
+    true
+  
   _animateClose: ->
+    @animating false
+    
     Meteor.clearTimeout @_animateCloseTimeout
     
     # Close after a second if no further animations are happening.

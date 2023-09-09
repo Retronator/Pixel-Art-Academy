@@ -107,7 +107,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
     @assetClass: -> Asset
     
     @message: -> """
-      Whoops, the color spilled outside the sprite! Use the undo button to get back on track.
+      Whoops, the color spilled outside the sprite! Use the undo button on the left to get back on track.
     """
     
     @toolId: -> LOI.Assets.SpriteEditor.Tools.ColorFill.id()
@@ -119,7 +119,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
     @assetClass: -> Asset
     
     @message: -> """
-      You've drawn a bit too much! Use the undo button to get back on track.
+      You've drawn a bit too much! Use the undo button on the left to get back on track.
     """
     
     @toolId: -> LOI.Assets.SpriteEditor.Tools.Pencil.id()

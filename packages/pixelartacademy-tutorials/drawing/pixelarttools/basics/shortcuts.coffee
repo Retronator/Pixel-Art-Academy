@@ -71,7 +71,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
       # Show this tip closed.
       PAA.PixelPad.Systems.Instructions.DisplayState.Closed
       
-    @delayDuration: -> 5
+    @delayDuration: -> 3
   
     @resetDelayOnOperationExecuted: -> true
     
