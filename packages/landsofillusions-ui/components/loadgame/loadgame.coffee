@@ -39,6 +39,8 @@ class LOI.Components.LoadGame extends LOI.Component
     # Which profile is shown left-most. Allows to scroll through options.
     @firstProfileOffset = new ReactiveField 0
     
+    @loadingProfileId = new ReactiveField null
+    
   show: ->
     @firstProfileOffset 0
 
@@ -79,7 +81,7 @@ class LOI.Components.LoadGame extends LOI.Component
 
   activeClass: ->
     profile = @currentData()
-    'active' if LOI.adventure.profileId() is profile._id
+    'active' if @loadingProfileId() is profile._id or LOI.adventure.profileId() is profile._id
 
   profileName: ->
     profile = @currentData()
@@ -99,23 +101,35 @@ class LOI.Components.LoadGame extends LOI.Component
 
   onClickProfile: (event) ->
     profile = @currentData()
+
+    @loadingProfileId profile._id
     
     @audio.loadPan AEc.getPanForElement event.target
-    
     @audio.load true
-    await LOI.adventure.loadGame profile._id
     await _.waitForSeconds 0.5
     
-    if LOI.adventure.interface.audioManager.enabled()
-      @loadingVisible true
-      await _.waitForSeconds 0.5
-      @loadingTextVisible true
-      await _.waitForSeconds 2.5
+    @loadingVisible true
+    await _.waitForSeconds 0.5
+    @loadingTextVisible true
+    
+    loadPromise = LOI.adventure.loadGame(profile._id).catch (error) =>
+      LOI.adventure.showDialogMessage "Unfortunately the disk seems to be corrupt. #{error.reason}"
+      
+      @loadingVisible false
+      @loadingTextVisible false
+      @loadingProfileId null
+      @audio.load false
+    
+    # When the audio is on, make loading last a while to hear the sweet floppy drive sounds.
+    await _.waitForSeconds 2.5 if LOI.adventure.interface.audioManager.enabled()
+    
+    await loadPromise
+    @loadingProfileId null
     
     @audio.load false
     @loadingTextVisible false
 
-    @callFirstWith null, 'deactivate'
+    @callFirstWith null, 'deactivate' if LOI.adventure.profileId()
     
   onClickPreviousButton: (event) ->
     newIndex = Math.max 0, @firstProfileOffset() - 4

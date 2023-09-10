@@ -9,7 +9,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection extends PAA.Pix
 
   @displayName: -> "Choose a sprite to copy"
 
-  @description: -> ""
+  @description: -> """
+    To make sure you are ready to complete pixel art drawing assignments, this challenge requires you to copy an
+    existing game sprite.
+  """
   
   @initialize: ->
     # On the server, create this asset's translated names.

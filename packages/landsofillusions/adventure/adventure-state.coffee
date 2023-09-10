@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Base
 AM = Artificial.Mirage
 RA = Retronator.Accounts
@@ -74,7 +75,7 @@ class LOI.Adventure extends LOI.Adventure
           console.log "Stored profile was found! Loading it …" if LOI.debug or LOI.Adventure.debugState
           
           # The profile has been added from synced storage(s), so we can now load it.
-          @loadGame(storedProfileId).then =>
+          @loadGame(storedProfileId).finally =>
             @loadingStoredProfile false
             
         else
@@ -92,8 +93,12 @@ class LOI.Adventure extends LOI.Adventure
       @_changeProfileId profileId
   
   loadGame: (profileId) ->
-    # Load the game profile from persistence and activate it.
+    # Load the game profile from persistence and activate it if it loaded OK.
     Persistence.loadProfile(profileId).then =>
+      # Ensure we received a valid game state.
+      unless LOI.GameState.documents.findOne {profileId}
+        return Persistence.unloadProfile().then => throw new AE.InvalidOperationException "Game state for profile #{profileId} was not found."
+      
       @_changeProfileId profileId
       
     , (conflictResolution) => # TODO

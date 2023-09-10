@@ -25,10 +25,13 @@ class LM.Content.Progress
 
         # Only make an entry if there was any progress.
         return unless completedRatio = @completedRatio()
-
+        
         selector =
           contentId: @content.id()
           profileId: @options.profileId()
+
+        existingEntry = LM.Content.Progress.Entry.documents.findOne selector
+        return if existingEntry?.completedRatio is completedRatio
 
         entry = _.extend
           lastEditTime: new Date()

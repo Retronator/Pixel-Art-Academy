@@ -34,7 +34,7 @@ export default class FileSystem {
       this.writeOperationsByFilePath[filePath] ??= []
       this.writeOperationsByFilePath[filePath].push({fetchId, fileData});
       // If we have just this file waiting to be written, start the write chain of operations.
-      if (this.writeOperationsByFilePath[filePath].length == 1) {
+      if (this.writeOperationsByFilePath[filePath].length === 1) {
         this.writeFirstFile(filePath);
       }
     });
@@ -44,6 +44,60 @@ export default class FileSystem {
       fs.unlink(filePath, (error) => {
         this.module.respond('deleteFile', fetchId, error);
       })
+    });
+
+    this.module.on('getProfiles', async (event, fetchId, directoryPath) => {
+      this.log.verbose('getProfiles received', directoryPath);
+      const profileJsons = [];
+
+      // Scan the directory for subdirectories, whose names correspond to profile IDs.
+      const directory = await fs.promises.opendir(directoryPath);
+      for await (const directoryEntry of directory) {
+        if (!directoryEntry.isDirectory()) continue;
+
+        const profileId = directoryEntry.name;
+
+        // Read the profile document.
+        const profileDocumentPath = path.join(directoryPath, profileId, `Artificial.Mummification.Document.Persistence.Profile/${profileId}.json`);
+
+        try {
+          const profileJson = await fs.promises.readFile(profileDocumentPath, {encoding: 'utf8'})
+          profileJsons.push(profileJson);
+          this.log.verbose("Found profile directory", profileId);
+        }
+        catch (e) {
+          this.log.error("Invalid profile directory", profileId);
+        }
+      }
+
+      this.module.respond('getProfiles', fetchId, profileJsons);
+    });
+
+    this.module.on('getProfileDocuments', async (event, fetchId, rootDirectoryPath) => {
+      this.log.verbose('getProfileDocuments received', rootDirectoryPath);
+      const documentJsons = {};
+
+      // Scan the root directory for subdirectories, whose names correspond to class names.
+      const rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+      for await (const rootDirectoryEntry of rootDirectory) {
+        if (!rootDirectoryEntry.isDirectory()) continue;
+
+        const className = rootDirectoryEntry.name;
+        documentJsons[className] = []
+
+        // Scan the directory for files, whose names correspond to document IDs.
+        const classDirectoryPath = path.join(rootDirectoryPath, className);
+        const classDirectory = await fs.promises.opendir(classDirectoryPath);
+        for await (const classDirectoryEntry of classDirectory) {
+          if (!classDirectoryEntry.isFile()) continue;
+
+          const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
+          const fileJson = await fs.promises.readFile(filePath, {encoding: 'utf8'})
+          documentJsons[className].push(fileJson);
+        }
+      }
+
+      this.module.respond('getProfileDocuments', fetchId, documentJsons);
     });
   }
 
@@ -55,7 +109,7 @@ export default class FileSystem {
     fs.writeFile(filePath, fileData, error => {
       if (error?.code === 'ENOENT') {
         const directoryPath = path.dirname(filePath);
-        fs.mkdir(directoryPath, error => {
+        fs.mkdir(directoryPath, {recursive: true}, error => {
           if (error) {
             this.endWriteFile(filePath, fetchId, error);
           } else {
@@ -85,7 +139,6 @@ export default class FileSystem {
     // Chain to the next operation on this file.
     this.writeFirstFile(filePath);
   }
-
 
   getApplicationPaths() {
     let applicationPaths = {};

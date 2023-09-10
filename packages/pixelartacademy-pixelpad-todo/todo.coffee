@@ -204,7 +204,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
   _updateWritingPan: ->
     # Make sure the cursor is still rendered.
-    return unless cursor = @$('.cursor')[0]
+    return unless cursor = @$('.cursor')?[0]
     
     @audio.writingPan AEc.getPanForElement cursor
 
