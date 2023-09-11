@@ -58,7 +58,4 @@ Package.onUse(function(api) {
   api.addFile('locations/play..');
 
   api.addFile('pixelpad..');
-
-  api.addFile('demo..');
-  api.addComponent('demo/ending..');
 });

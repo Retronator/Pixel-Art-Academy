@@ -83,11 +83,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @completedConditions: ->
       PAA.Pico8.Cartridges.Snake.state('highScore') >= 10
-
-    @onCompletedDisplayed: ->
-      LOI.adventure.showActivatableModalDialog
-        dialog: new LM.Demo.Ending
-        
+      
   @tasks: -> [
     @Play
     @Draw

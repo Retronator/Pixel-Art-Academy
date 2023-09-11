@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AEc = Artificial.Echo
@@ -228,13 +229,22 @@ class LOI.Components.Menu.Items extends LOI.Component
           LOI.adventure.quitGame() if dialog.result
 
   onClickSettingsAudio: (event) ->
-    currentValue = LOI.settings.audio.enabled.value()
-    values = _.values LOI.Settings.Audio.Enabled
+    switch LOI.settings.audio.enabled.value()
+      when LOI.Settings.Audio.Enabled.Off
+        # Fullscreen option is only available in the browser.
+        if AB.ApplicationEnvironment.isBrowser
+          value = LOI.Settings.Audio.Enabled.Fullscreen
+          
+        else
+          value = LOI.Settings.Audio.Enabled.On
+        
+      when LOI.Settings.Audio.Enabled.Fullscreen
+        value = LOI.Settings.Audio.Enabled.On
+      
+      when LOI.Settings.Audio.Enabled.On
+        value = LOI.Settings.Audio.Enabled.Off
 
-    currentIndex = _.indexOf values, currentValue
-    nextIndex = (currentIndex + 1) % values.length
-
-    LOI.settings.audio.enabled.value values[nextIndex]
+    LOI.settings.audio.enabled.value value
     
   onInputSettingsSoundVolume: (event) ->
     @_changeVolume 'sound', event
