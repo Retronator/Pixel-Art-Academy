@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AM = Artificial.Mirage
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
@@ -55,6 +55,15 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
           @_cartridges[cartridgeClass.id()] ?= new cartridgeClass
 
         @_cartridges[cartridgeClass.id()]
+        
+    # Select cartridge based on URL parameter.
+    @autorun (computation) =>
+      if gameSlug = AB.Router.getParameter 'parameter3'
+        @selectedCartridge _.find @cartridges(), (cartridge) => cartridge.constructor.gameSlug() is gameSlug
+      
+      else
+        @audio.caseClose() if Tracker.nonreactive => @selectedCartridge()
+        @selectedCartridge null
 
   onRendered: ->
     super arguments...
@@ -69,7 +78,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
   onDestroyed: ->
     super arguments...
 
-    cartridge.destroy() for id, cartridge of @_cartridges
+    cartridge.destroy() for gameSlug, cartridge of @_cartridges
 
   cartridgeImageUrl: ->
     cartridge = @currentData()
@@ -83,7 +92,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     url
 
   deselectCartridge: ->
-    @selectedCartridge null
+    AB.Router.changeParameter 'parameter3', null
     @pannedLeft false
 
   cartridgeShareUrl: ->
@@ -125,7 +134,7 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
 
   onClickCartridge: (event) ->
     cartridge = @currentData()
-    @selectedCartridge cartridge
+    AB.Router.changeParameter 'parameter3', cartridge.constructor.gameSlug()
     
     @audio.caseOpen()
   
@@ -133,8 +142,8 @@ class PAA.PixelPad.Apps.Pico8.Drawer extends LOI.Component
     if @pannedLeft()
       @pannedLeft false
       return
-
-    @pico8.cartridge @selectedCartridge()
+      
+    AB.Router.changeParameter 'parameter4', 'play'
     
     @audio.cartridgeSelect()
   

@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AM = Artificial.Mirage
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
@@ -61,17 +61,47 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         # Enable interface when the cartridge is in the device.
         enabled: => @cartridge()
 
+    # Change PixelPad size.
     @autorun (computation) =>
       if @cartridge()
         @setFixedPixelPadSize 320, 157
 
       else
         @setFixedPixelPadSize 380, 300
-
+    
+    # Set/unset cartridge if in play.
+    @autorun (computation) =>
+      # Depend only on parameters to minimize reactivity.
+      cartridgeParameter = AB.Router.getParameter 'parameter3'
+      playParameter = AB.Router.getParameter 'parameter4'
+      
+      Tracker.nonreactive =>
+        drawer = @drawer()
+        
+        if cartridgeParameter and playParameter
+          @cartridge drawer.selectedCartridge()
+        
+        else
+          # Turn off the device and deselect the cartridge when returning from play.
+          if @cartridge()
+            # Wait for the power off animation if needed.
+            delay = 0
+            device = @device()
+  
+            if device.powerOn()
+              device.powerStop()
+              delay = 500
+            
+            Meteor.setTimeout =>
+              @cartridge null
+              drawer.deselectCartridge()
+            ,
+              delay
+      
+    # Start the device when we have the cartridge.
     @autorun (computation) =>
       return unless cartridge = @cartridge()
-
-      device = @device()
+      return unless device = @device()
       
       # Load the game non-reactively so that changing of the project ID won't
       # cause a restart (instead we're forcing the player to go out and back in).
@@ -83,28 +113,6 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         device.powerStart()
       ,
         1500
-
-  onBackButton: ->
-    drawer = @drawer()
-
-    if @cartridge()
-      @device().powerStop()
-
-      Meteor.setTimeout =>
-        @cartridge null
-        drawer.deselectCartridge()
-      ,
-        500
-
-    else if drawer.selectedCartridge()
-      drawer.selectedCartridge null
-      drawer.audio.caseClose()
-    
-    else
-      return
-
-    # Inform that we've handled the back button.
-    true
 
   cartridgeActiveClass: ->
     'cartridge-active' if @cartridge()
