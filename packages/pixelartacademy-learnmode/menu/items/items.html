@@ -67,9 +67,7 @@
         <li class="menu-item"><span class="audio actionable">
           Audio:
           {{#if $is audioEnabled 'On'}}on{{/if}}
-          {{#if isBrowser}}
-            {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
-          {{/if}}
+          {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
           {{#if $is audioEnabled 'Off'}}off{{/if}}
         </span></li>
         {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
