@@ -1,0 +1,64 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-learnmode-demo-ending
+  position fixed
+  background atariGray(0)
+  z-index 4
+
+  .thank-you-area
+    text-align center
+    color atariGray(0)
+    font-weight bold
+
+    .thank-you
+      kyrou-9()
+      text-transform uppercase
+
+    .pixel-art-academy
+      acme-9()
+
+  .links
+    position absolute
+    bottom 29rem
+    left 50%
+    transform translateX(-50%)
+    list-style none
+    padding 0
+    margin 0
+    kyrou-9()
+    letter-spacing 1rem
+    font-weight bold
+    text-transform uppercase
+    text-align center
+
+    .link-area
+      margin 5rem
+
+      .link
+        display block
+        position relative
+        padding 3rem 10rem 4rem
+        text-decoration none
+        white-space nowrap
+
+        &::before
+          content ''
+          absolute-cover()
+          z-index -1
+          background atariAqua(2)
+          border-bottom 2rem solid atariAqua(0)
+
+        &:hover::before
+          background: atariAqua(3)
+
+        &:active
+          padding-top 5rem
+          padding-bottom 2rem
+
+          &::before
+            border-bottom none
+            top 2rem
+
+  .landsofillusions-components-overlay
+    > .background
+      background black image('/pixelartacademy/learnmode/demo/ending/keyart.png') 50% 50% / 480rem 270rem no-repeat
