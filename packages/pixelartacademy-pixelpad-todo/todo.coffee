@@ -70,21 +70,24 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
 
       @selectedTask null
   
+    # Handle displayed tasks.
     @tasks = new ComputedField =>
       _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
   
     @activeTasks = new ComputedField =>
       _.filter @tasks(), (task) => task.active()
-      
-    @completedTasks = new ReactiveField []
+
+    @activeTasksToBeDisplayed = new ReactiveField []
     @displayedActiveTasks = new ReactiveField []
-  
+    @completedTasks = new ReactiveField []
+    
     @autorun (computation) =>
-      completedTasks = Tracker.nonreactive => @completedTasks()
-  
-      completedTasks.push task for task in @displayedActiveTasks() when task.completed() and task not in completedTasks
+      activeTasksToBeDisplayed = Tracker.nonreactive => @activeTasksToBeDisplayed()
+      displayedActiveTasks = Tracker.nonreactive => @displayedActiveTasks()
       
-      @completedTasks completedTasks
+      activeTasksToBeDisplayed.push task for task in @activeTasks() when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
+      
+      @activeTasksToBeDisplayed activeTasksToBeDisplayed
 
   onRendered: ->
     super arguments...
@@ -115,7 +118,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
           @_animateTaskCompleted task
           return
           
-      for task in @activeTasks() when task not in displayedActiveTasks
+      # Add new tasks.
+      for task in @activeTasksToBeDisplayed()
         @_animateTaskAdded task
         return
     
@@ -164,8 +168,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @audio.strikethrough false
 
     displayedActiveTasks = @displayedActiveTasks()
+    completedTasks = @completedTasks()
+
     _.pull displayedActiveTasks, task
+    completedTasks.push task
+
     @displayedActiveTasks displayedActiveTasks
+    @completedTasks completedTasks
   
     await _.waitForSeconds @waitBetweenAnimationsDuration
 
@@ -176,8 +185,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   _animateTaskAdded: (task) ->
     return unless await @_animateOpen()
     
+    activeTasksToBeDisplayed = @activeTasksToBeDisplayed()
     displayedActiveTasks = @displayedActiveTasks()
+    
+    _.pull activeTasksToBeDisplayed, task
     displayedActiveTasks.push task
+    
+    @activeTasksToBeDisplayed activeTasksToBeDisplayed
     @displayedActiveTasks displayedActiveTasks
     
     $taskListItem = $("<li class='task' data-task-id='#{task.id()}'>")
