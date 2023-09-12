@@ -269,6 +269,15 @@
                 flex-shrink 0.2
                 transition all 0.2s
 
+                &::before
+                  content: ''
+                  position absolute
+                  left -50%
+                  width 50%
+                  top 0
+                  bottom 0
+                  pointer-events all
+
               &:first-child
                 flex-shrink 0
 

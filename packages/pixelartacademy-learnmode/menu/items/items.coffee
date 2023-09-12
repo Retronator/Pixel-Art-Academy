@@ -119,12 +119,11 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
   onClickMainMenuFullscreen: (event) ->
     if Meteor.isDesktop
-      if @_isFullscreen()
-        Desktop.send 'window', 'setFullscreen', false
-    
-      else
-        Desktop.send 'window', 'setFullscreen', true
-        
+      fullscreen = not @_isFullscreen()
+      
+      Desktop.send 'window', 'setFullscreen', fullscreen
+      @_isFullscreen fullscreen
+      
     else
       if AM.Window.isFullscreen()
         AM.Window.exitFullscreen()

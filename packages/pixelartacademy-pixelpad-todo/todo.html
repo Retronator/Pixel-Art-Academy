@@ -31,7 +31,10 @@
                 {{#each completedTasks}}
                   <li class="task completed"><span class="directive">{{> t10e directiveTranslation}}</span></li>
                 {{/each}}
-                {{#each activeTasks}}
+                {{#each displayedActiveTasks}}
+                  <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
+                {{/each}}
+                {{#each activeTasksToBeDisplayed}}
                   <li class="task active"><span class="directive">{{> t10e directiveTranslation}}</span></li>
                 {{/each}}
               </ul>

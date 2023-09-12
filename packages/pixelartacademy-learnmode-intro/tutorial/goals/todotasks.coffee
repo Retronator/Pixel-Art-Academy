@@ -23,48 +23,47 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
 
       Click on the arrow to get back to the tasks.
     """
-  
-    @initialize()
-
-    @completedConditions: ->
-      # Instructions for this task have to be open.
-      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      return unless toDoSystem = _.find pixelPad.os.currentSystems(), (system) => system instanceof PAA.PixelPad.Systems.ToDo
-      return unless toDoSystem.isCreated()
-      
-      toDoSystem.selectedTask() instanceof @
-      
-  class @ReceiveDrawingApp extends PAA.Learning.Task.Automatic
-    @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.ToDoTasks.ReceiveDrawingApp'
-    @goal: -> Goal
-
-    @directive: -> "Receive the drawing app"
-
-    @instructions: -> """
-      You now have access to the main app where you will practice drawing.
-    """
-  
-    @predecessors: -> [Goal.OpenInstructions]
     
     @interests: -> ['to-do tasks']
-    
+  
     @initialize()
-
-    @completedConditions: ->
-      # Instructions for the previous task have to be closed.
-      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      return unless toDoSystem = _.find pixelPad.os.currentSystems(), (system) => system instanceof PAA.PixelPad.Systems.ToDo
-      return unless toDoSystem.isCreated()
+    
+    constructor: ->
+      super arguments...
       
-      not toDoSystem.selectedTask()
+      @_instructionsWereOpened = false
+      @_instructionsWereOpenedAndClosed = new ReactiveField false
+      
+      @_instructionsAutorun = Tracker.autorun (computation) =>
+        return unless LOI.adventure.ready()
+        return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+        return unless toDoSystem = _.find pixelPad.os.currentSystems(), (system) => system instanceof PAA.PixelPad.Systems.ToDo
+        return unless toDoSystem.isCreated()
+        
+        selectedTask = toDoSystem.selectedTask()
+        
+        # Wait for instructions to be opened.
+        @_instructionsWereOpened = true if selectedTask
+        
+        # Wait for instructions to close after they've been opened.
+        if @_instructionsWereOpened and not selectedTask
+          @_instructionsWereOpenedAndClosed true
+          computation.stop()
+        
+    destroy: ->
+      super arguments...
+      
+      @_instructionsAutorun.stop()
 
+    completedConditions: ->
+      @_instructionsWereOpenedAndClosed()
+      
   @tasks: -> [
     @OpenInstructions
-    @ReceiveDrawingApp
   ]
 
   @finalTasks: -> [
-    @ReceiveDrawingApp
+    @OpenInstructions
   ]
 
   @initialize()
