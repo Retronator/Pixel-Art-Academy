@@ -29,10 +29,10 @@ class AM.Document.Versioning
     documentClass::executeAction = (action) ->
       AM.Document.Versioning.executeAction @, @lastEditTime or @creationTime, action, new Date
   
-    documentClass::undo = (action) ->
+    documentClass::undo = ->
       AM.Document.Versioning.undo @, @lastEditTime or @creationTime, new Date
   
-    documentClass::redo = (action) ->
+    documentClass::redo = ->
       AM.Document.Versioning.redo @, @lastEditTime or @creationTime, new Date
       
     return unless Meteor.isServer
