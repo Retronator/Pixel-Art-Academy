@@ -11,10 +11,10 @@
         "minWidth": 640,
         "minHeight": 480,
         "fullscreen": true,
-        "icon": "@assets/icons/coatofarms.png",
+        "icon": "@assets/icons/learnmode-a.png",
         "backgroundColor": "#000000",
         "_windows": {
-            "icon": "@assets/icons/coatofarms.ico"
+            "icon": "@assets/icons/learnmode-a.ico"
         }
     },
     "windowDev": {
@@ -65,9 +65,9 @@
     },
     "packagerOptions": {
         "appBundleId": "com.retronator.pixelartacademy-learnmode",
-        "icon": ".desktop/assets/icons/coatofarms.ico",
+        "icon": ".desktop/assets/icons/learnmode-a.ico",
         "_osx": {
-            "icon": ".desktop/assets/icons/coatofarms.icns"
+            "icon": ".desktop/assets/icons/learnmode-a.icns"
         },
         "darwinDarkModeSupport": true,
         "appCategoryType": "public.app-category.education",
