@@ -25,6 +25,10 @@ Package.onUse(function(api) {
   // Fundamentals
 
   api.addFile('fundamentals..');
+  api.addFile('fundamentals/scenes/tutorialsdrawing');
+
+  api.addFile('fundamentals/goals..');
+  api.addFile('fundamentals/goals/elementsofart');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');

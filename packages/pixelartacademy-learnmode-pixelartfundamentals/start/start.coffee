@@ -10,4 +10,10 @@ class LM.PixelArtFundamentals.Start extends LOI.Adventure.Section
 
   @started: -> true
 
-  @finished: -> true
+  @finished: ->
+    return unless LOI.adventureInitialized()
+    
+    # Pixel art fundamentals start after the intro is finished.
+    return false unless tutorial = Tracker.nonreactive => LOI.adventure.getCurrentChapter LM.Intro.Tutorial
+    
+    tutorial.finished()

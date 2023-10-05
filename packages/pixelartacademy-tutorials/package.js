@@ -30,6 +30,8 @@ Package.onUse(function(api) {
 
   api.addComponent('drawing/instructions/desktop..');
 
+  // Pixel art tools
+
   api.addFile('drawing/pixelarttools..');
 
   api.addFile('drawing/pixelarttools/basics..');
@@ -53,4 +55,11 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelarttools/helpers/movecanvas');
   api.addFile('drawing/pixelarttools/helpers/undoredo');
   api.addFile('drawing/pixelarttools/helpers/lines');
+
+  // Elements of art
+
+  api.addFile('drawing/elementsofart..');
+
+  api.addFile('drawing/elementsofart/line..');
+  api.addFile('drawing/elementsofart/line/brokenlines');
 });

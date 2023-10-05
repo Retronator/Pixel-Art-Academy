@@ -10,6 +10,10 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
   
   @sections: -> []
 
+  @scenes: -> [
+    @TutorialsDrawing
+  ]
+
   @courses: -> [
     LM.PixelArtFundamentals.Fundamentals.Content.Course
   ]

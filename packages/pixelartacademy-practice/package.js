@@ -94,11 +94,18 @@ Package.onUse(function(api) {
   api.addFile('tutorials/drawing/tutorial');
 
   api.addFile('tutorials/drawing/assets..');
+
   api.addFile('tutorials/drawing/assets/tutorialbitmap..');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-create');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-reset');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/enginecomponent');
   api.addUnstyledComponent('tutorials/drawing/assets/tutorialbitmap/briefcomponent..');
+
+  api.addFile('tutorials/drawing/assets/vectortutorialbitmap..');
+  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/vectortutorialbitmap-create');
+  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/vectortutorialbitmap-reset');
+  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/enginecomponent');
+  api.addUnstyledComponent('tutorials/drawing/assets/vectortutorialbitmap/briefcomponent..');
 
   // Software
   api.addFile('software..');
