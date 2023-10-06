@@ -1,5 +1,3 @@
-AB = Artificial.Base
-AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
@@ -59,20 +57,43 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
     @svgPaths = new ReactiveField null
     @currentActivePathIndex = new ReactiveField 0
 
-    # Load pixels from the source image.
     svgUrl = Meteor.absoluteUrl @constructor.svgUrl()
     fetch(svgUrl).then((response) => response.text()).then (svgXml) =>
       parser = new DOMParser();
       svgDocument = parser.parseFromString svgXml, "image/svg+xml"
       @svgPaths svgDocument.getElementsByTagName 'path'
+      
+    # Create paths
+    @paths = new ReactiveField []
+    
+    Tracker.autorun (computation) =>
+      return unless @bitmap()
+      return unless svgPaths = @svgPaths()
+      computation.stop()
+      
+      @paths (new @constructor.Path @, svgPath for svgPath in svgPaths)
 
     # Create the component that will show the goal state.
     @engineComponent = new @constructor.EngineComponent
       svgPaths: => @svgPaths()
+      paths: => @paths()
       currentActivePathIndex: => @currentActivePathIndex()
 
     @completed = new ComputedField =>
-      false
+      return unless paths = @paths()
+
+      completedPaths = 0
+      
+      for path in paths
+        if path.completed()
+          completedPaths++
+          
+        else
+          break
+      
+      @currentActivePathIndex Math.min completedPaths, paths.length - 1
+      
+      completedPaths is paths.length
     ,
       true
 

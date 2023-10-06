@@ -2,6 +2,8 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.EngineComponent
+  @debug = false
+  
   constructor: (@options) ->
     @ready = new ComputedField =>
       return unless @options.svgPaths()
@@ -15,6 +17,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.EngineComponent
     
     svgPaths = @options.svgPaths()
     currentActivePathIndex = @options.currentActivePathIndex()
+    
+    if @constructor.debug
+      context.globalAlpha = 0.5
+      context.imageSmoothingEnabled = false
+      
+      if paths = @options.paths()
+        for pathIndex in [0..currentActivePathIndex]
+          context.drawImage paths[pathIndex].canvas, 0, 0
+          
+      context.globalAlpha = 1
     
     context.save()
     halfPixelSize = pixelSize / 2
