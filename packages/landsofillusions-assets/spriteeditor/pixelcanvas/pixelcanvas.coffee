@@ -179,11 +179,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     
   _redraw: ->
     return unless context = @context()
+    canvas = @canvas()
   
     camera = @camera()
   
     context.setTransform 1, 0, 0, 1, 0, 0
-    context.clearRect 0, 0, camera.canvasWindowBounds.width(), camera.canvasWindowBounds.height()
+    context.clearRect 0, 0, canvas.width, canvas.height
   
     camera.applyTransformToCanvas()
   
@@ -235,8 +236,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   _resizeCanvas: ->
     camera = @camera()
     newSize =
-      width: camera.canvasWindowBounds.width()
-      height:  camera.canvasWindowBounds.height()
+      width: camera.canvasWindowBounds.width() * devicePixelRatio
+      height:  camera.canvasWindowBounds.height() * devicePixelRatio
     
     changedCanvasSize = false
     

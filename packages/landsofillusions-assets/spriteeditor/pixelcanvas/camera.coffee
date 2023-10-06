@@ -196,12 +196,13 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()
     effectiveScale = @effectiveScale()
+    canvasScale = effectiveScale * devicePixelRatio
 
     # Start from the identity.
     context.setTransform 1, 0, 0, 1, 0, 0
 
     # Scale the canvas around the origin.
-    context.scale effectiveScale, effectiveScale
+    context.scale canvasScale, canvasScale
 
     # Move to viewport corner.
     translateX = @viewportCanvasBounds.x()
