@@ -13,7 +13,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines extends PAA.Practice.
   @fixedDimensions: -> width: 54, height: 21
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
   
-  @imageUrl: -> "/pixelartacademy/tutorials/drawing/elementsofart/line/brokenlines.png"
+  @svgUrl: -> "/pixelartacademy/tutorials/drawing/elementsofart/line/brokenlines.svg"
 
   availableToolKeys: ->
     [

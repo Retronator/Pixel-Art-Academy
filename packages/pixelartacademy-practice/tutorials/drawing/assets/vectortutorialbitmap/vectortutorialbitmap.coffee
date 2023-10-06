@@ -56,22 +56,20 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
       bitmapData.customPalette or LOI.Assets.Palette.documents.findOne bitmapData.palette._id
 
     # Load SVG.
-    @svg = new ReactiveField null
+    @svgPaths = new ReactiveField null
+    @currentActivePathIndex = new ReactiveField 0
 
     # Load pixels from the source image.
-    svgObject = document.createElement 'object'
-    svgObject.type = 'image/svg+xml'
-    svgObject.addEventListener 'load', =>
-      console.log "SVG LOADED!", svgObject
-    ,
-      false
-
-    # Initiate the loading.
-    svgObject.data = Meteor.absoluteUrl @constructor.svgUrl()
+    svgUrl = Meteor.absoluteUrl @constructor.svgUrl()
+    fetch(svgUrl).then((response) => response.text()).then (svgXml) =>
+      parser = new DOMParser();
+      svgDocument = parser.parseFromString svgXml, "image/svg+xml"
+      @svgPaths svgDocument.getElementsByTagName 'path'
 
     # Create the component that will show the goal state.
     @engineComponent = new @constructor.EngineComponent
-      svgData: => svgObject
+      svgPaths: => @svgPaths()
+      currentActivePathIndex: => @currentActivePathIndex()
 
     @completed = new ComputedField =>
       false
@@ -123,7 +121,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
   solve: ->
   
   editorDrawComponents: -> [
-    component: @engineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
+    component: @engineComponent, before: LOI.Assets.Engine.PixelImage.Bitmap
   ]
 
   styleClasses: ->
