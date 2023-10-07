@@ -34,7 +34,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
     pixelIndex = x + y * @_imageData.width
     @_imageData.data[pixelIndex * 4 + 3]
     
-  _hasPixel: (x, y) ->
+  hasPixel: (x, y) ->
     @_getPixelAlpha(x, y) > 0
     
   completed: ->
@@ -61,8 +61,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
           maxOffset = if pixelAlpha > 250 then 0 else 1
           
           for offset in [-maxOffset..maxOffset]
-            found = true if @_hasPixel(x + offset, y) and bitmapLayer.getPixel x + offset, y
-            found = true if offset isnt 0 and @_hasPixel(x, y + offset) and bitmapLayer.getPixel x, y + offset
+            found = true if @hasPixel(x + offset, y) and bitmapLayer.getPixel x + offset, y
+            found = true if offset isnt 0 and @hasPixel(x, y + offset) and bitmapLayer.getPixel x, y + offset
             
           return false unless found
           
@@ -97,7 +97,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
           neighborX = x + dx
           neighborY = y + dy
           
-          continue unless @_hasPixel neighborX, neighborY
+          continue unless @hasPixel neighborX, neighborY
 
           visitPixel neighborX, neighborY
       

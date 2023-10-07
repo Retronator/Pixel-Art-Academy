@@ -101,7 +101,58 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         spriteData.layers = [pixels: goalPixels]
   
         new LOI.Assets.Sprite spriteData
+        
+    @hasExtraPixels = new ComputedField =>
+      # Compare goal layer with current bitmap layer.
+      return unless bitmapLayer = @bitmap()?.layers[0]
+      return unless goalPixelsMap = @goalPixelsMap()
+      return unless @palette()
+  
+      backgroundColor = @getBackgroundColor()
+  
+      for x in [0...bitmapLayer.width]
+        for y in [0...bitmapLayer.height]
+          # Extra pixels can only exist where pixels are placed.
+          continue unless pixel = bitmapLayer.getPixel(x, y)
+          
+          # Extra pixels can only exist where there aren't goal pixels.
+          continue if goalPixelsMap[x]?[y]
+  
+          # Make sure the extra pixel doesn't match the background color.
+          return true unless backgroundColor
+    
+          pixelIntegerDirectColor = if pixel.paletteColor then @_paletteToIntegerDirectColor pixel.paletteColor else @_directToIntegerDirectColor pixel.directColor
+          return true unless EJSON.equals pixelIntegerDirectColor, backgroundColor.integerDirectColor
 
+      false
+    ,
+      true
+      
+    @hasMissingPixels = new ComputedField =>
+      # Compare goal layer with current bitmap layer.
+      return unless bitmapLayer = @bitmap()?.layers[0]
+      return unless goalPixelsMap = @goalPixelsMap()
+      return unless @palette()
+  
+      backgroundColor = @getBackgroundColor()
+  
+      for x in [0...bitmapLayer.width]
+        for y in [0...bitmapLayer.height]
+          # Missing pixels can only exist where there is a goal pixel.
+          continue unless goalPixel = goalPixelsMap[x]?[y]
+          
+          # If we don't have a pixel at all, it's definitely a missing one.
+          return true unless pixel = bitmapLayer.getPixel(x, y)
+          
+          # Make sure the pixel doesn't match the background color.
+          if backgroundColor
+            pixelIntegerDirectColor = if pixel.paletteColor then @_paletteToIntegerDirectColor pixel.paletteColor else @_directToIntegerDirectColor pixel.directColor
+            return true if EJSON.equals pixelIntegerDirectColor, backgroundColor.integerDirectColor
+
+      false
+    ,
+      true
+      
     @completed = new ComputedField =>
       # Compare goal layer with current bitmap layer.
       return unless bitmapLayer = @bitmap()?.layers[0]
@@ -163,7 +214,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
   destroy: ->
     super arguments...
-
+    
+    @hasExtraPixels.stop()
+    @hasMissingPixels.stop()
     @completed.stop()
     @_completedAutorun.stop()
   

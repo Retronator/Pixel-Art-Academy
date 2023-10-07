@@ -104,7 +104,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill extends PAA.Practice.
       return unless asset = @getActiveAsset()
       
       # Show when there are any extra pixels present.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
 
     @priority: -> 1
     

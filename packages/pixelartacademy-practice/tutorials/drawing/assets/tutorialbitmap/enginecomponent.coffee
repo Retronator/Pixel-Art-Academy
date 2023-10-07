@@ -55,8 +55,5 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.EngineComponent
         @_drawHint context, pixel.x, pixel.y, color
 
   _drawHint: (context, pixelX, pixelY, color) ->
-    unless color
-      console.log "bad"
-      
     context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_opacity})"
     context.fillRect pixelX + @_offset, pixelY + @_offset, @_hintSize, @_hintSize

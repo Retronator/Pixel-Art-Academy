@@ -106,7 +106,8 @@ Package.onUse(function(api) {
   api.addFile('tutorials/drawing/assets/vectortutorialbitmap/vectortutorialbitmap-create');
   api.addFile('tutorials/drawing/assets/vectortutorialbitmap/vectortutorialbitmap-reset');
   api.addFile('tutorials/drawing/assets/vectortutorialbitmap/path');
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/enginecomponent');
+  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/pathsenginecomponent');
+  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/hintsenginecomponent');
   api.addUnstyledComponent('tutorials/drawing/assets/vectortutorialbitmap/briefcomponent..');
 
   // Software

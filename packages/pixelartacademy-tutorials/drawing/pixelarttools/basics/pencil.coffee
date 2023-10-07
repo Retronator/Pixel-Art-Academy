@@ -49,7 +49,10 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Pencil extends PAA.Practice.Tut
     """
     
     @activeConditions: ->
-      return unless @getActiveAsset()
+      return unless asset = @getActiveAsset()
+      
+      # Don't show if we're already done.
+      return if asset.completed()
       
       # Show when pencil is not the active tool.
       editor = @getEditor()
@@ -89,7 +92,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Pencil extends PAA.Practice.Tut
       return unless asset = @getActiveAsset()
       
       # Show when there are any extra pixels present.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
 
     @priority: -> 1
     

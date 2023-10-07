@@ -1,7 +1,7 @@
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.EngineComponent
+class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.PathsEngineComponent
   @debug = false
   
   constructor: (@options) ->

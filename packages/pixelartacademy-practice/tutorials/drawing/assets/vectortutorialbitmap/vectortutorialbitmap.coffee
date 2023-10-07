@@ -64,7 +64,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
       @svgPaths svgDocument.getElementsByTagName 'path'
       
     # Create paths
-    @paths = new ReactiveField []
+    @paths = new ReactiveField null
     
     Tracker.autorun (computation) =>
       return unless @bitmap()
@@ -73,27 +73,58 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
       
       @paths (new @constructor.Path @, svgPath for svgPath in svgPaths)
 
-    # Create the component that will show the goal state.
-    @engineComponent = new @constructor.EngineComponent
+    # Create the components that will show the goal state.
+    @pathsEngineComponent = new @constructor.PathsEngineComponent
       svgPaths: => @svgPaths()
       paths: => @paths()
       currentActivePathIndex: => @currentActivePathIndex()
-
+    
+    @hintsEngineComponent = new @constructor.HintsEngineComponent
+      paths: => @paths()
+      
+    @hasExtraPixels = new ComputedField =>
+      return unless bitmapLayer = @bitmap()?.layers[0]
+      return unless paths = @paths()
+      
+      currentActivePathIndex = @currentActivePathIndex()
+      
+      # See if there are any pixels in the bitmap that don't belong to any path.
+      for x in [0...bitmapLayer.width]
+        for y in [0...bitmapLayer.height]
+          # Extra pixels can only exist where pixels are placed.
+          continue unless bitmapLayer.getPixel(x, y)
+          
+          # Try to find a pixel in one of the paths.
+          found = false
+          for path in paths
+            if path.hasPixel x, y
+              found = true
+              break
+          
+          # If we didn't find a path that required this pixel, we have an extra.
+          return true unless found
+          
+      false
+    ,
+      true
+      
     @completed = new ComputedField =>
       return unless paths = @paths()
-
+      
       completedPaths = 0
       
       for path in paths
         if path.completed()
           completedPaths++
-          
+        
         else
           break
       
       @currentActivePathIndex Math.min completedPaths, paths.length - 1
       
-      completedPaths is paths.length
+      # Note: We shouldn't quit early because of extra pixels, since we wouldn't update
+      # active path index otherwise, so we do it here at the end as a final condition.
+      completedPaths is paths.length and not @hasExtraPixels()
     ,
       true
 
@@ -127,22 +158,17 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
 
   destroy: ->
     super arguments...
-
+    
+    @hasExtraPixels.stop()
     @completed.stop()
     @_completedAutorun.stop()
-  
-  getBackgroundColor: ->
-    return unless backgroundColor = @constructor.backgroundColor()
-
-    # If the color is given directly it's a direct color.
-    backgroundColor = directColor: backgroundColor unless backgroundColor.paletteColor
-    
-    backgroundColor
   
   solve: ->
   
   editorDrawComponents: -> [
-    component: @engineComponent, before: LOI.Assets.Engine.PixelImage.Bitmap
+    component: @pathsEngineComponent, before: LOI.Assets.Engine.PixelImage.Bitmap
+  ,
+    component: @hintsEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
   ]
 
   styleClasses: ->
