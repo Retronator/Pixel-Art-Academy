@@ -13,6 +13,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     @drawLine = new ReactiveField false
     @drawStraight = new ReactiveField false
+    @strokeActive = new ReactiveField false
 
     @lastPixelCoordinates = new ReactiveField null
     @currentPixelCoordinates = new ReactiveField null
@@ -162,7 +163,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     if event.which is AC.Keys.shift
       # See if we've already started drawing.
-      if @_strokeActive
+      if @strokeActive()
         # We're already mid-stroke so we want to detect in which direction to lock the coordinate.
         @lockedCoordinate null
         @drawStraight true
@@ -198,7 +199,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     # Register that the stroke has just started.
     @_strokeStarted = true
 
-    @_strokeActive = true
+    @strokeActive true
 
     # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @processStroke()
@@ -206,7 +207,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   onMouseUp: (event) ->
     super arguments...
 
-    return unless @_strokeActive
+    return unless @strokeActive()
 
     # End stroke.
     @lastStrokeCoordinates null
@@ -217,7 +218,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     assetData = @editor().assetData()
     @endStroke assetData
 
-    @_strokeActive = false
+    @strokeActive false
 
     # Update pixels to take account of new starting coordinates for line drawing.
     @updatePixels()
@@ -252,7 +253,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     drawStraight = @drawStraight()
 
-    if @_strokeActive and drawStraight
+    if @strokeActive() and drawStraight
       unless lockedCoordinate = @lockedCoordinate()
         # Calculate which direction to lock to.
         if currentPixelCoordinates.x is lastPixelCoordinates.x
@@ -328,7 +329,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @applyTool()
 
   applyTool: ->
-    return unless @_strokeActive
+    return unless @strokeActive()
 
     assetData = @editor().assetData()
 

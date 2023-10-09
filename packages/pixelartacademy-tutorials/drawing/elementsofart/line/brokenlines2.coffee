@@ -23,21 +23,3 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines2 extends PAA.Tutorial
     """
     
     @initialize()
-  
-  class @Error extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @id: -> "#{Asset.id()}.Error"
-    @assetClass: -> Asset
-    
-    @message: -> """
-      You went too far from the line, but don't worry. You can easily fix it with the eraser.
-    """
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show when there are any extra pixels present.
-      asset.hasExtraPixels()
-    
-    @priority: -> 1
-    
-    @initialize()

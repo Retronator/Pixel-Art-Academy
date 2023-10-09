@@ -66,4 +66,5 @@ Package.onUse(function(api) {
   api.addFile('drawing/elementsofart/line/curvedlines');
   api.addFile('drawing/elementsofart/line/brokenlines');
   api.addFile('drawing/elementsofart/line/brokenlines2');
+  api.addFile('drawing/elementsofart/line/errorinstruction');
 });

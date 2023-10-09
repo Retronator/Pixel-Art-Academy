@@ -6,6 +6,8 @@ if Meteor.isClient
   require 'path-data-polyfill/path-data-polyfill.js'
 
 class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
+  @minimumAntiAliasingAlpha = 10
+  
   constructor: (@vectorTutorialBitmap, svgPath) ->
     @canvas = new AM.ReadableCanvas @vectorTutorialBitmap.width(), @vectorTutorialBitmap.height()
 
@@ -14,6 +16,14 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
     @canvas.context.stroke path
     
     @_imageData = @canvas.getFullImageData()
+    
+    for x in [0...@canvas.width]
+      for y in [0...@canvas.height]
+        pixelIndex = x + y * @_imageData.width
+        alpha = @_imageData.data[pixelIndex * 4 + 3]
+        @_imageData.data[pixelIndex * 4 + 3] = 0 if alpha < @constructor.minimumAntiAliasingAlpha
+      
+      @canvas.putFullImageData @_imageData
     
     # Calculate positions of corner points.
     @corners = []
