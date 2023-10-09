@@ -1,14 +1,14 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines extends PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset
-  @displayName: -> "Broken lines"
-
+class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset
+  @displayName: -> "Curved lines"
+  
   @description: -> """
-    Lines often change direction in corners to create more complex designs.
+    Curves require a steadier hand and more practice but with pixel art, it's always easy to fix them.
   """
-
-  @fixedDimensions: -> width: 65, height: 27
+  
+  @fixedDimensions: -> width: 38, height: 35
   
   @initialize()
   
@@ -19,7 +19,11 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines extends PAA.Tutorials
     @assetClass: -> Asset
     
     @message: -> """
-      Chain together straight and curved lines from corner to corner.
+      Draw the line by using the pencil. You can either:
+
+      - Click on individual pixels that the line crosses.
+      - Click and drag along the line to complete it in one stroke.
+      - Click on the starting pixel and then shift-click along the line in small increments to draw a curve out of many straight segments.
     """
     
     @initialize()

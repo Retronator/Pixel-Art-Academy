@@ -35,8 +35,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.PathsEngineComp
     context.lineWidth = pixelSize
     
     # Determine path opacity.
-    pathOpacity = Math.min 1, renderOptions.camera.scale()
-    context.strokeStyle = "rgba(128,128,128,#{pathOpacity})"
+    pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
+    context.strokeStyle = "lch(50% 0 0 / #{pathOpacity})"
     
     for pathIndex in [0..currentActivePathIndex]
       path = new Path2D svgPaths[pathIndex].getAttribute 'd'

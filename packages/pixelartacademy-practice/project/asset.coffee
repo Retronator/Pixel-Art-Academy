@@ -71,7 +71,7 @@ class PAA.Practice.Project.Asset
 
   id: -> @constructor.id()
   
-  urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to used in the URL to identify this asset."
+  urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to be used in the URL to identify this asset."
 
   ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."
 

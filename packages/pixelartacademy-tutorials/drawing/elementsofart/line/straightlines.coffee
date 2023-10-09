@@ -1,14 +1,14 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines extends PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset
-  @displayName: -> "Broken lines"
-
+class PAA.Tutorials.Drawing.ElementsOfArt.Line.StraightLines extends PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset
+  @displayName: -> "Straight lines"
+  
   @description: -> """
-    Lines often change direction in corners to create more complex designs.
+    The most straightforward lines! If you know your tools well, drawing them should be as easy as shift-clicking.
   """
-
-  @fixedDimensions: -> width: 65, height: 27
+  
+  @fixedDimensions: -> width: 28, height: 28
   
   @initialize()
   
@@ -19,7 +19,11 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines extends PAA.Tutorials
     @assetClass: -> Asset
     
     @message: -> """
-      Chain together straight and curved lines from corner to corner.
+      Draw the line by using the pencil. You can either:
+
+      - Click on individual pixels that the line crosses.
+      - Click and drag along the line to complete it in one stroke.
+      - Click on the starting pixel and then shift-click on the ending pixel.
     """
     
     @initialize()
@@ -29,7 +33,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.BrokenLines extends PAA.Tutorials
     @assetClass: -> Asset
     
     @message: -> """
-      You went too far from the line, but don't worry. You can easily fix it with the eraser.
+      You went outside the line, but don't worry. You can easily fix it with the eraser.
     """
     
     @activeConditions: ->

@@ -10,7 +10,10 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
   @initialize()
   
   @assets: -> [
+    @StraightLines
+    @CurvedLines
     @BrokenLines
+    @BrokenLines2
   ]
 
   # Methods
@@ -21,8 +24,20 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
     @assets = new ComputedField =>
       assets = []
 
-      @brokenLines ?= Tracker.nonreactive => new @constructor.BrokenLines @
-      assets.unshift @brokenLines
+      @straightLines ?= Tracker.nonreactive => new @constructor.StraightLines @
+      assets.unshift @straightLines
+      
+      if @_assetsCompleted @straightLines
+        @curvedLines ?= Tracker.nonreactive => new @constructor.CurvedLines @
+        assets.unshift @curvedLines
+        
+      if @_assetsCompleted @curvedLines
+        @brokenLines ?= Tracker.nonreactive => new @constructor.BrokenLines @
+        assets.unshift @brokenLines
+        
+      if @_assetsCompleted @brokenLines
+        @brokenLines2 ?= Tracker.nonreactive => new @constructor.BrokenLines2 @
+        assets.unshift @brokenLines2
 
       assets
     ,
@@ -31,6 +46,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
       true
 
   destroy: ->
+    @straightLines?.destroy()
+    @curvedLines?.destroy()
     @brokenLines?.destroy()
+    @brokenLines2?.destroy()
 
     @assets.stop()
