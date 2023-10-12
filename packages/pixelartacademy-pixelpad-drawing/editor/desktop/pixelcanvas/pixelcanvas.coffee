@@ -41,13 +41,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
       return unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
     
       # Dictate camera scale when asset is on clipboard and when setting for the first time.
-      clipboardAssetScale = clipboardAssetSize.scale
-    
-      unless @desktop.active() and displayedAsset is @_previousDisplayedAsset and clipboardAssetScale is @_previousClipboardSpriteScale
-        Tracker.nonreactive => camera.setScale clipboardAssetScale
-    
-      @_previousDisplayedAsset = displayedAsset
-      @_previousClipboardSpriteScale = clipboardAssetScale
+      unless @desktop.active() and @_initialScaleSet
+        Tracker.nonreactive => camera.setScale clipboardAssetSize.scale
+        @_initialScaleSet = true
   
     # Switch between full and framed display modes.
     @autorun (computation) =>

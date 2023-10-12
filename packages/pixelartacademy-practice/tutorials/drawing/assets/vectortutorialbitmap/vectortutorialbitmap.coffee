@@ -2,10 +2,14 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Practice.Project.Asset.Bitmap
+  # [chosenReferenceUrls]: array of reference URLs chosen to be drawn
   @id: -> 'PixelArtAcademy.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap'
   
   # Override to provide an SVG URL to describing the drawing.
   @svgUrl: -> null
+
+  # Override to provide an SVG URLs that correspond to references.
+  @referenceSvgUrls: -> null
 
   # Override to limit the scale at which the bitmap appears in the clipboard.
   @minClipboardScale: -> null
@@ -18,6 +22,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
   @restrictedPaletteName: -> null
   @customPaletteImageUrl: -> null
   @customPalette: -> null
+  
+  # Override to not use progressive path completion.
+  @progressivePathCompletion: -> true
   
   @initialize: ->
     super arguments...
@@ -53,29 +60,159 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
       return unless bitmapData = @bitmap()
       bitmapData.customPalette or LOI.Assets.Palette.documents.findOne bitmapData.palette._id
 
-    # Load SVG.
-    @svgPaths = new ReactiveField null
+    @svgPathGroups = new ReactiveField null
     @currentActivePathIndex = new ReactiveField 0
-
-    svgUrl = Meteor.absoluteUrl @constructor.svgUrl()
-    fetch(svgUrl).then((response) => response.text()).then (svgXml) =>
-      parser = new DOMParser();
-      svgDocument = parser.parseFromString svgXml, "image/svg+xml"
-      @svgPaths svgDocument.getElementsByTagName 'path'
-      
-    # Create paths
-    @paths = new ReactiveField null
     
-    Tracker.autorun (computation) =>
-      return unless @bitmap()
-      return unless svgPaths = @svgPaths()
-      computation.stop()
+    # Load SVG if only a single one is provided.
+    if svgUrl = @constructor.svgUrl()
+      svgUrl = Meteor.absoluteUrl svgUrl
       
-      @paths (new @constructor.Path @, svgPath for svgPath in svgPaths)
+      fetch(svgUrl).then((response) => response.text()).then (svgXml) =>
+        parser = new DOMParser();
+        svgDocument = parser.parseFromString svgXml, "image/svg+xml"
+        @svgPathGroups [svgPaths: svgDocument.getElementsByTagName 'path']
+        
+    # Load SVGs of used references.
+    if referenceSvgUrls = @constructor.referenceSvgUrls()
+      @referenceSvgPaths = new ReactiveField []
+      
+      for svgUrl, index in referenceSvgUrls
+        svgUrl = Meteor.absoluteUrl svgUrl
+        
+        do (svgUrl, index) =>
+          fetch(svgUrl).then((response) => response.text()).then (svgXml) =>
+            parser = new DOMParser();
+            svgDocument = parser.parseFromString svgXml, "image/svg+xml"
+            referenceSvgPaths = @referenceSvgPaths()
+            referenceSvgPaths[index] = svgDocument.getElementsByTagName 'path'
+            @referenceSvgPaths referenceSvgPaths
+      
+      # Update chosen references.
+      @chosenReferenceUrls = new ComputedField =>
+        @data()?.chosenReferenceUrls
+      ,
+        true
+      
+      # Only react to displayed reference changes to minimize resizes.
+      @displayedReferenceUrls = new ComputedField =>
+        return unless bitmap = @bitmap()
+        return unless references = bitmap.references
+        displayedReferences = _.filter references, (reference) => reference.displayed
+        
+        reference.image.url for reference in displayedReferences
+      ,
+        EJSON.equals
+      ,
+        true
+
+      # Update chosen references and resize the bitmap accordingly if needed.
+      @_chosenReferencesAutorun = Tracker.autorun (computation) =>
+        return unless displayedReferenceUrls = @displayedReferenceUrls()
+        
+        Tracker.nonreactive => Tracker.afterFlush =>
+          return unless bitmapId = @bitmapId()
+          return unless bitmap = @bitmap()
+          
+          chosenReferenceUrls = Tracker.nonreactive => @chosenReferenceUrls() or []
+
+          # Remove references in the back that haven't been drawn on yet.
+          fixedDimensions = @constructor.fixedDimensions()
+          singleWidth = fixedDimensions.width
+          
+          removeNeeded = false
+          
+          for referenceUrl in chosenReferenceUrls when referenceUrl not in displayedReferenceUrls
+            removeNeeded = true
+            break
+          
+          if removeNeeded
+            for referenceUrl, index in chosenReferenceUrls by -1
+              startX = index * singleWidth
+              
+              found = false
+              for x in [0...singleWidth]
+                for y in [0...fixedDimensions.height]
+                  if bitmap.findPixelAtAbsoluteCoordinates startX + x, y
+                    found = true
+                    break
+                    
+                break if found
+                
+              # Stop removing unused references since the player has already drawn here.
+              break if found
+              
+              # The player hasn't drawn so far, so if we don't want the reference anymore, we can remove it.
+              if referenceUrl not in displayedReferenceUrls
+                _.pull chosenReferenceUrls, referenceUrl
+          
+          # Add new references.
+          for referenceUrl in displayedReferenceUrls
+            chosenReferenceUrls.push referenceUrl unless referenceUrl in chosenReferenceUrls
+          
+          assets = @tutorial.assetsData()
+          asset = _.find assets, (asset) => asset.id is @id()
+          asset.chosenReferenceUrls = chosenReferenceUrls
+          
+          @tutorial.state 'assets', assets
+  
+          # If necessary, resize the bitmap to make space for all the chosen references.
+          desiredWidth = singleWidth * Math.max 1, chosenReferenceUrls.length
+          
+          bitmap = Tracker.nonreactive => LOI.Assets.Bitmap.documents.findOne bitmapId, fields: bounds: 1
+          width = bitmap.bounds.right - bitmap.bounds.left + 1
+          
+          unless desiredWidth is width
+            bitmap = Tracker.nonreactive => LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+  
+            # Create a change bounds action.
+            changeBounds = new LOI.Assets.Bitmap.Actions.ChangeBounds @id(), bitmap,
+              left: 0
+              top: 0
+              right: desiredWidth - 1
+              bottom: fixedDimensions.height - 1
+              fixed: true
+              
+            bitmap.executeAction changeBounds, true
+        
+      # Dynamically load svg paths of the chosen references.
+      @_referenceSvgPathsAutorun = Tracker.autorun (computation) =>
+        return unless chosenReferenceUrls = @chosenReferenceUrls()
+        return unless bitmap = @bitmap()
+        return unless references = bitmap.references
+        
+        referenceSvgPaths = @referenceSvgPaths()
+
+        svgPathGroups = []
+        
+        singleWidth = @constructor.fixedDimensions().width
+        
+        for chosenReferenceUrl, index in chosenReferenceUrls
+          urlIndex = _.findIndex references, (reference) => reference.image.url is chosenReferenceUrl
+          return unless svgPaths = referenceSvgPaths[urlIndex]
+          
+          svgPathGroups.push
+            offset:
+              x: index * singleWidth
+              y: 0
+            svgPaths: svgPaths
+        
+        @svgPathGroups svgPathGroups
+        
+    # Create paths.
+    @paths = new ComputedField =>
+      return unless @bitmap()
+      return unless svgPathGroups = @svgPathGroups()
+      
+      paths = for svgPathGroup in svgPathGroups
+        new @constructor.Path @, svgPath, svgPathGroup.offset for svgPath in svgPathGroup.svgPaths
+        
+      _.flatten paths
+    ,
+      true
 
     # Create the components that will show the goal state.
     @pathsEngineComponent = new @constructor.PathsEngineComponent
-      svgPaths: => @svgPaths()
+      svgPathGroups: => @svgPathGroups()
       paths: => @paths()
       currentActivePathIndex: => @currentActivePathIndex()
     
@@ -85,8 +222,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
     @hasExtraPixels = new ComputedField =>
       return unless bitmapLayer = @bitmap()?.layers[0]
       return unless paths = @paths()
-      
-      currentActivePathIndex = @currentActivePathIndex()
       
       # See if there are any pixels in the bitmap that don't belong to any path.
       for x in [0...bitmapLayer.width]
@@ -110,6 +245,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
       
     @completed = new ComputedField =>
       return unless paths = @paths()
+      return unless paths.length
       
       completedPaths = 0
       
@@ -119,8 +255,13 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
         
         else
           break
-      
-      @currentActivePathIndex Math.min completedPaths, paths.length - 1
+          
+      # As a side effect, update which one is the current path to draw.
+      if @constructor.progressivePathCompletion()
+        @currentActivePathIndex Math.min completedPaths, paths.length - 1
+        
+      else
+        @currentActivePathIndex paths.length - 1
       
       # Note: We shouldn't quit early because of extra pixels, since we wouldn't update
       # active path index otherwise, so we do it here at the end as a final condition.
@@ -159,6 +300,11 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
   destroy: ->
     super arguments...
     
+    @chosenReferenceUrls?.stop()
+    @displayedReferenceUrls?.stop()
+    @_chosenReferencesAutorun?.stop()
+    @_referenceSvgPathsAutorun?.stop()
+    @paths.stop()
     @hasExtraPixels.stop()
     @completed.stop()
     @_completedAutorun.stop()

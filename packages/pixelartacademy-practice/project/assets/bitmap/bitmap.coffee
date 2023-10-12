@@ -3,6 +3,8 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
+  # bitmapId: reference to a bitmap
+  
   @portfolioBorderWidth = 6
   
   # Type of this asset.

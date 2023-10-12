@@ -14,7 +14,8 @@ class PAA.Practice.Project extends AM.Document
   #   type: what kind of asset this is
   #
   #   BITMAP
-  #   bitmapId: reference to a bitmap
+  #   bitmap: reference to a bitmap
+  #     _id
   @Meta
     name: @id()
     fields: =>

@@ -26,8 +26,8 @@ class AM.Document.Versioning
     documentClass.load = documentClass.method 'load'
     documentClass.latestHistoryForId = documentClass.subscription 'latestHistoryForId'
   
-    documentClass::executeAction = (action) ->
-      AM.Document.Versioning.executeAction @, @lastEditTime or @creationTime, action, new Date
+    documentClass::executeAction = (action, appendToLastAction) ->
+      AM.Document.Versioning.executeAction @, @lastEditTime or @creationTime, action, new Date, appendToLastAction
   
     documentClass::undo = ->
       AM.Document.Versioning.undo @, @lastEditTime or @creationTime, new Date

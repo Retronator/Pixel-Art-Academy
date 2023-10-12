@@ -37,7 +37,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.BriefComponent 
     @parent.editAsset()
 
   onClickResetButton: (event) ->
-    PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.reset @vectorTutorialBitmap.id(), @vectorTutorialBitmap.bitmapId()
+    PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.reset @vectorTutorialBitmap.tutorial, @vectorTutorialBitmap.id(), @vectorTutorialBitmap.bitmapId()
     
   onKeyDown: (event) ->
     if event.which is AC.Keys.f2

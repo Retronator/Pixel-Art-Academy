@@ -1,12 +1,16 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
-AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action, actionTime) ->
+AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action, actionTime, appendToLastAction = false) ->
   @_validateActionOrder versionedDocument, lastEditTime, actionTime
   
   # Increase history position.
   currentHistoryPosition = versionedDocument.historyPosition or 0
-  newHistoryPosition = currentHistoryPosition + 1
+  lastAction = versionedDocument.history?[currentHistoryPosition - 1]
+  appendToLastAction = false unless lastAction
+  
+  newHistoryPosition = currentHistoryPosition
+  newHistoryPosition++ unless appendToLastAction
   
   if Meteor.isClient
     # On the client we need to update both the live document (which we're receiving in the versioned document) as well
@@ -24,7 +28,12 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
     versionedDocument.historyPosition = newHistoryPosition
     versionedDocument.history ?= []
     versionedDocument.history.splice currentHistoryPosition if versionedDocument.history.length > currentHistoryPosition
-    versionedDocument.history.push action
+    
+    if appendToLastAction
+      lastAction.append action
+      
+    else
+      versionedDocument.history.push action
     
     # Proceed by applying the changes to the persistent document.
     versionedDocument = versionedDocument.constructor.documents.findOne versionedDocument._id
@@ -33,13 +42,15 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   changedFields = @executeOperations versionedDocument, action.forward
 
   # Change history.
+  action = lastAction if appendToLastAction
+  
   modifier =
     $set:
       historyPosition: newHistoryPosition
       lastEditTime: actionTime
     $push:
       history:
-        $position: currentHistoryPosition
+        $position: newHistoryPosition - 1
         $each: [action]
         $slice: newHistoryPosition
     

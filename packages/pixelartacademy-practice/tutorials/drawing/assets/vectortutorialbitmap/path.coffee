@@ -8,8 +8,9 @@ if Meteor.isClient
 class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
   @minimumAntiAliasingAlpha = 10
   
-  constructor: (@vectorTutorialBitmap, svgPath) ->
+  constructor: (@vectorTutorialBitmap, svgPath, offset) ->
     @canvas = new AM.ReadableCanvas @vectorTutorialBitmap.width(), @vectorTutorialBitmap.height()
+    @canvas.context.translate offset.x, offset.y if offset
 
     # Rasterize the path to the canvas.
     path = new Path2D svgPath.getAttribute 'd'
@@ -30,6 +31,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
     pathData = svgPath.getPathData normalize: true
     
     addCorner = (x, y) =>
+      if offset
+        x += offset.x
+        y += offset.y
+        
       @corners.push x: Math.floor(x), y: Math.floor(y)
     
     for segment in pathData

@@ -6,7 +6,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.PathsEngineComp
   
   constructor: (@options) ->
     @ready = new ComputedField =>
-      return unless @options.svgPaths()
+      return unless @options.svgPathGroups()
 
       true
 
@@ -15,7 +15,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.PathsEngineComp
     
     pixelSize = 1 / renderOptions.camera.effectiveScale()
     
-    svgPaths = @options.svgPaths()
+    svgPathGroups = @options.svgPathGroups()
     currentActivePathIndex = @options.currentActivePathIndex()
     
     if @constructor.debug
@@ -38,8 +38,20 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.PathsEngineComp
     pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
     context.strokeStyle = "lch(50% 0 0 / #{pathOpacity})"
     
-    for pathIndex in [0..currentActivePathIndex]
-      path = new Path2D svgPaths[pathIndex].getAttribute 'd'
-      context.stroke path
+    pathsDrawnCount = 0
+    
+    for svgPathGroup in svgPathGroups
+      context.save()
+      context.translate svgPathGroup.offset.x, svgPathGroup.offset.y if svgPathGroup.offset
+      
+      for svgPath in svgPathGroup.svgPaths
+        path = new Path2D svgPath.getAttribute 'd'
+        context.stroke path
+        pathsDrawnCount++
+        
+        break if pathsDrawnCount > currentActivePathIndex
+
+      context.restore()
+      break if pathsDrawnCount > currentActivePathIndex
 
     context.restore()

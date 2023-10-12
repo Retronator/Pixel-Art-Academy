@@ -10,6 +10,10 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
   #   BITMAP
   #   bitmap: reference to a bitmap
   #     _id
+  #
+  #   VECTOR TUTORIAL BITMAP
+  #   [chosenReferenceUrls]: array of reference URLs chosen to be drawn
+  #
   @assets: -> [] # Override to provide asset classes that are included in this tutorial.
 
   @assetsCount: -> @assets().length

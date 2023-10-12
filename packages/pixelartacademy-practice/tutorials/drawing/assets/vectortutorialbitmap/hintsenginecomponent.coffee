@@ -29,6 +29,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.HintsEngineComp
 
   _render: (context) ->
     paths = @options.paths()
+    return unless paths.length
     
     width = paths[0].canvas.width
     height = paths[0].canvas.height

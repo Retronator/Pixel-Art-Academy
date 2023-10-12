@@ -14,6 +14,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
     @CurvedLines
     @BrokenLines
     @BrokenLines2
+    @Outlines
   ]
 
   # Methods
@@ -38,6 +39,10 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
       if @_assetsCompleted @brokenLines
         @brokenLines2 ?= Tracker.nonreactive => new @constructor.BrokenLines2 @
         assets.unshift @brokenLines2
+        
+      if @_assetsCompleted @brokenLines2
+        @outlines ?= Tracker.nonreactive => new @constructor.Outlines @
+        assets.unshift @outlines
 
       assets
     ,
@@ -50,5 +55,6 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
     @curvedLines?.destroy()
     @brokenLines?.destroy()
     @brokenLines2?.destroy()
+    @outlines?.destroy()
 
     @assets.stop()

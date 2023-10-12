@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.References.Reference extends AM.Component
@@ -81,9 +82,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     height: imageSize.height * scale
 
   endDrag: ->
+    @startUpdate()
+    
     @setPosition @draggingPosition()
     @setDisplayed @references.draggingDisplayed()
     @reorderToTop() unless @currentOrder() is @references.highestOrder()
+    
+    @endUpdate()
 
     @draggingPosition null
 
@@ -143,6 +148,17 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   currentDisplayMode: ->
     return unless reference = @data()
     _.propertyValue(reference, 'displayMode') or LOI.Assets.VisualAsset.ReferenceDisplayModes.FloatingInside
+    
+  startUpdate: ->
+    return unless @references.assetClass().versionedDocuments
+    return if @_updateAction
+    
+    @_updateAction = new AMu.Document.Versioning.Action @references.constructor.id()
+    
+  endUpdate: ->
+    assetData = Tracker.nonreactive => @references.options.assetData()
+    assetData.executeAction @_updateAction
+    @_updateAction = null
 
   setPosition: (position) ->
     @_setReferenceProperty 'position', position
@@ -162,8 +178,14 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     if reference.image
       if @references.assetClass().versionedDocuments
         assetData = Tracker.nonreactive => @references.options.assetData()
-        assetData.executeAction new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
+        action = new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
           "#{name}": value
+          
+        if @_updateAction
+          @_updateAction.append action
+          
+        else
+          assetData.executeAction action
 
       else
         LOI.Assets.VisualAsset["updateReference#{upperName}"] @references.assetClassName(), @references.assetId(), reference.image._id, value
@@ -177,7 +199,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     if reference.image
       if @references.assetClass().versionedDocuments
         assetData = Tracker.nonreactive => @references.options.assetData()
-        assetData.executeAction new LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop @references.constructor.id(), assetData, reference.image._id
+        action = new LOI.Assets.VisualAsset.Actions.ReorderReferenceToTop @references.constructor.id(), assetData, reference.image._id
+        
+        if @_updateAction
+          @_updateAction.append action
+        
+        else
+          assetData.executeAction action
         
       else
         LOI.Assets.VisualAsset.reorderReferenceToTop @references.assetClassName(), @references.assetId(), reference.image._id

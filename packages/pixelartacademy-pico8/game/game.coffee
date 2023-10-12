@@ -21,6 +21,8 @@ class PAA.Pico8.Game extends AM.Document
     name: @id()
     fields: =>
       artwork: Document.ReferenceField PADB.Artwork, [], false
+      
+  # Note: Database content gets enabled in the subclass.
 
   @databaseContentInformationFields =
     slug: 1

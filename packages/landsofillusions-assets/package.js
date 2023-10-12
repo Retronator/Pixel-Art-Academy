@@ -111,11 +111,13 @@ Package.onUse(function(api) {
   api.addFile('documents/bitmap/actions/addlayer');
   api.addFile('documents/bitmap/actions/stroke');
   api.addFile('documents/bitmap/actions/colorfill');
+  api.addFile('documents/bitmap/actions/changebounds');
 
   api.addFile('documents/bitmap/operations..');
   api.addFile('documents/bitmap/operations/addlayer');
   api.addFile('documents/bitmap/operations/removelayer');
   api.addFile('documents/bitmap/operations/changepixels');
+  api.addFile('documents/bitmap/operations/changebounds');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/methods');

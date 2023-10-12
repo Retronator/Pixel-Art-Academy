@@ -78,8 +78,9 @@ class LOI.Assets.Components.References extends LOI.Component
       _.sortBy [assetReferences..., uploadingReferences...], (reference) => _.propertyValue(reference, 'order') or 0
 
     @highestOrder = new ComputedField =>
-      return unless highestReference = _.last @references()
-      _.propertyValue(highestReference, 'order') or 0
+      references = _.sortBy @references(), 'order'
+      return unless highestReference = _.last references
+      _.propertyValue(highestReference, 'order') or references.length
       
     @enabled = new ComputedField =>
       # Show references only if there are any in the asset or we can upload them or get them from storage.

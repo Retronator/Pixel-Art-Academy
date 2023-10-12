@@ -7,7 +7,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset extends PAA.Practice.Tutori
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
   
   @svgUrl: -> "/pixelartacademy/tutorials/drawing/elementsofart/line/#{_.fileCase @displayName()}.svg"
-
+  
+  minClipboardScale: -> 2
+  
   availableToolKeys: ->
     [
       PAA.Practice.Software.Tools.ToolKeys.Pencil

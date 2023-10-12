@@ -4,7 +4,7 @@ class LOI.Assets.Bitmap.Layer extends LOI.Assets.Bitmap.Area
   # name: name of the layer
   # visible: boolean if this layer should be drawn
   # blendMode: name of one of the blend modes
-  # bounds: location of this layer's origin (0,0) in the sprite.
+  # bounds: location of this layer's bounds in the bitmap
   #   x, y: absolute pixel coordinates of the top-left pixel of this layer
   #   width, height: the size of the layer in pixels
   # compressedPixelsData: binary object with compressed version of vertices, sent to the server
@@ -64,3 +64,22 @@ class LOI.Assets.Bitmap.Layer extends LOI.Assets.Bitmap.Area
     
   getOperationChangedFields: (layerChangedFields) ->
     @constructor.getOperationChangedFields layerChangedFields, @getAddress()
+    
+  crop: (bounds) ->
+    # Crop the layer area to bounds (relative to the bitmap).
+    sourceArea = @clone()
+    
+    sourceBounds =
+      x: bounds.x - @bounds.x
+      y: bounds.y - @bounds.y
+      width: bounds.width
+      height: bounds.height
+      
+    destinationPosition =
+      x: 0
+      y: 0
+      
+    @initialize bounds.width, bounds.height, @pixelFormat
+    @copyPixels sourceArea, sourceBounds, destinationPosition
+    
+    @bounds = _.pick bounds, ['x', 'y', 'width', 'height']
