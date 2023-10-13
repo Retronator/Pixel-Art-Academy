@@ -1,14 +1,14 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.ElementsOfArt.Line.Patters extends PAA.Tutorials.Drawing.ElementsOfArt.Line.AssetWithReferences
-  @displayName: -> "EdgPatterses"
+class PAA.Tutorials.Drawing.ElementsOfArt.Line.Patterns extends PAA.Tutorials.Drawing.ElementsOfArt.Line.AssetWithReferences
+  @displayName: -> "Patterns"
   
   @description: -> """
     We can arrange lines into patterns to indicate details, texture, or shading.
   """
   
-  @fixedDimensions: -> width: 29, height: 39
+  @fixedDimensions: -> width: 29, height: 29
 
   @referenceNames: -> [
     'patterns-bamboo'

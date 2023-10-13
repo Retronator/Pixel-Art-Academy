@@ -27,23 +27,31 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
       @canvas.putFullImageData @_imageData
     
     # Calculate positions of corner points.
-    @corners = []
+    @cornersOfParts = []
     pathData = svgPath.getPathData normalize: true
     
+    currentCornersOfPart = null
+
     addCorner = (x, y) =>
       if offset
         x += offset.x
         y += offset.y
-        
-      @corners.push x: Math.floor(x), y: Math.floor(y)
+      
+      currentCornersOfPart.push x: Math.floor(x), y: Math.floor(y)
     
     for segment in pathData
+      if segment.type is 'M'
+        @cornersOfParts.push currentCornersOfPart if currentCornersOfPart
+        currentCornersOfPart = []
+      
       switch segment.type
         when 'M', 'L'
           addCorner segment.values[0], segment.values[1]
           
         when 'C'
           addCorner segment.values[4], segment.values[5]
+    
+    @cornersOfParts.push currentCornersOfPart
   
   _getPixelAlpha: (x, y) ->
     pixelIndex = x + y * @_imageData.width
@@ -86,12 +94,11 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
             firstCoveredPixel ?= {x, y}
           
     # Make sure all corners are covered.
-    for corner in @corners
-      return false unless bitmapLayer.getPixel corner.x, corner.y
+    for cornersForPart in @cornersOfParts
+      for corner in cornersForPart
+        return false unless bitmapLayer.getPixel corner.x, corner.y
       
-    # Make sure all covered pixels are connected together.
-    visitedPixelCount = 0
-    
+    # Make sure all covered pixels of parts are connected together.
     visitPixel = (x, y) =>
       # Return if we've already visited this pixel.
       pixelIndex = x + y * bitmapLayer.width
@@ -102,7 +109,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
       
       # Mark that we've visited this pixel.
       pixelCoverage[pixelIndex * 2 + 1] = 1
-      visitedPixelCount++
       
       # Visit all neighbors.
       for dx in [-1..1]
@@ -115,7 +121,18 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
           continue unless @hasPixel neighborX, neighborY
 
           visitPixel neighborX, neighborY
-      
+          
+    pixelVisited = (x, y) =>
+      pixelIndex = x + y * bitmapLayer.width
+      pixelCoverage[pixelIndex * 2 + 1]
+    
     visitPixel firstCoveredPixel.x, firstCoveredPixel.y
     
-    visitedPixelCount is coveredPixelsCount
+    for cornersForPart in @cornersOfParts
+      # Visit pixels from the initial corner.
+      visitPixel cornersForPart[0].x, cornersForPart[0].y
+      
+      for corner in cornersForPart
+        return false unless pixelVisited corner.x, corner.y
+
+    true
