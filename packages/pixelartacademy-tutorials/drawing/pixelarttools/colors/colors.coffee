@@ -16,35 +16,3 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
     @ColorPicking
     @QuickColorPicking
   ]
-
-  # Methods
-
-  constructor: ->
-    super arguments...
-
-    @assets = new ComputedField =>
-      assets = []
-
-      @colorSwatches ?= Tracker.nonreactive => new @constructor.ColorSwatches @
-      assets.unshift @colorSwatches
-
-      if @_assetsCompleted @colorSwatches
-        @colorPicking ?= Tracker.nonreactive => new @constructor.ColorPicking @
-        assets.unshift @colorPicking
-
-      if @_assetsCompleted @colorPicking
-        @quickColorPicking ?= Tracker.nonreactive => new @constructor.QuickColorPicking @
-        assets.unshift @quickColorPicking
-
-      assets
-    ,
-      @_assetsComparison
-    ,
-      true
-
-  destroy: ->
-    @colorSwatches?.destroy()
-    @colorPicking?.destroy()
-    @quickColorPicking?.destroy()
-
-    @assets.stop()

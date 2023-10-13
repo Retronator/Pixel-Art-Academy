@@ -1,19 +1,18 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.ElementsOfArt.Line.Outlines extends PAA.Tutorials.Drawing.ElementsOfArt.Line.AssetWithReferences
-  @displayName: -> "Outlines"
+class PAA.Tutorials.Drawing.ElementsOfArt.Line.Outlines2 extends PAA.Tutorials.Drawing.ElementsOfArt.Line.AssetWithReferences
+  @displayName: -> "Outlines 2"
   
   @description: -> """
-    If you join lines together, you can draw outlines of objects.
+    Some objects can be drawn in a more stylized way.
   """
   
-  @fixedDimensions: -> width: 25, height: 25
+  @fixedDimensions: -> width: 29, height: 39
 
   @referenceNames: -> [
-    'outlines-banana'
-    'outlines-orange'
-    'outlines-apple'
+    'outlines-palmtree'
+    'outlines-sprucetree'
   ]
   
   @initialize()

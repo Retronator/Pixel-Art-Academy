@@ -39,6 +39,31 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
 
     asset.completed
 
+  constructor: ->
+    super arguments...
+    
+    @_assets = []
+
+    @assets = new ComputedField =>
+      assets = []
+      
+      for assetClass, index in @constructor.assets()
+        @_assets[index] ?= Tracker.nonreactive => new assetClass @
+        assets.unshift @_assets[index]
+        
+        break unless @_assetsCompleted @_assets[index]
+
+      assets
+    ,
+      @_assetsComparison
+    ,
+      true
+
+  destroy: ->
+    asset.destroy() for asset in @_assets
+
+    @assets.stop()
+    
   completed: -> @constructor.completed()
   isAssetCompleted: (assetClassOrId) -> @constructor.isAssetCompleted assetClassOrId
 

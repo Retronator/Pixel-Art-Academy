@@ -62,10 +62,17 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/elementsofart/line..');
   api.addFile('drawing/elementsofart/line/asset');
+  api.addFile('drawing/elementsofart/line/assetwithreferences');
+
   api.addFile('drawing/elementsofart/line/straightlines');
   api.addFile('drawing/elementsofart/line/curvedlines');
   api.addFile('drawing/elementsofart/line/brokenlines');
   api.addFile('drawing/elementsofart/line/brokenlines2');
   api.addFile('drawing/elementsofart/line/outlines');
+  api.addFile('drawing/elementsofart/line/outlines2');
+  api.addFile('drawing/elementsofart/line/edges');
+  api.addFile('drawing/elementsofart/line/patterns');
+
   api.addFile('drawing/elementsofart/line/errorinstruction');
+  api.addFile('drawing/elementsofart/line/referencestrayinstruction');
 });
