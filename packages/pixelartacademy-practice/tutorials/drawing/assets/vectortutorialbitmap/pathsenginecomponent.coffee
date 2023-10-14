@@ -22,7 +22,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.PathsEngineComp
       context.globalAlpha = 0.5
       context.imageSmoothingEnabled = false
       
-      if paths = @options.paths()
+      paths = @options.paths()
+      
+      if paths?.length
         for pathIndex in [0..currentActivePathIndex]
           context.drawImage paths[pathIndex].canvas, 0, 0
           

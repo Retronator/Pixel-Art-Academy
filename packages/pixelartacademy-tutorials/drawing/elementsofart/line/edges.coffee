@@ -8,7 +8,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.Edges extends PAA.Tutorials.Drawi
     Lines are also used to draw the internal edges of objects.
   """
   
-  @fixedDimensions: -> width: 29, height: 39
+  @fixedDimensions: -> width: 33, height: 33
 
   @referenceNames: -> [
     'edges-cube'
