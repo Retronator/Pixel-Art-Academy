@@ -11,7 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers extends PAA.Tutorials.Drawing.
 
   @assets: -> [
     @Zoom
+    @Lines
     @MoveCanvas
     @UndoRedo
-    @Lines
   ]
