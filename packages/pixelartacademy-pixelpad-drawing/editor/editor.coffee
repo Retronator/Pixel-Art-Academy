@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
@@ -69,7 +70,17 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         
         # Enable the pixel grid when in the editor.
         fileData.child('pixelGrid').set 'enabled', drawingActive
-      
+  
+  onRendered: ->
+    super arguments...
+    
+    $(document).on 'keydown.pixelartacademy-pixelpad-apps-drawing-editor', (event) => @onKeyDown event
+    
+  onDestroyed: ->
+    super arguments...
+    
+    $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor'
+    
   defaultInterfaceData: -> throw new AE.NotImplementedException "Editor must provide default interface data."
 
   active: ->
@@ -81,3 +92,10 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
     # Inform that we've handled the back button.
     true
+    
+  onKeyDown: (event) ->
+    # Prevent the alt key opening the menu in the desktop version.
+    return unless Meteor.isDesktop
+    return unless @drawingActive()
+    
+    event.preventDefault() if event.keyCode is AC.Keys.alt
