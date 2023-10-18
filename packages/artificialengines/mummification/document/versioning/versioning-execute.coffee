@@ -30,7 +30,8 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
     versionedDocument.history.splice currentHistoryPosition if versionedDocument.history.length > currentHistoryPosition
     
     if appendToLastAction
-      lastAction.append action
+      # Note: We have to call the static append since actions don't get deserialized to rich objects.
+      AM.Document.Versioning.Action.append lastAction, action
       
     else
       versionedDocument.history.push action
