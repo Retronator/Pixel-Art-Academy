@@ -1,3 +1,5 @@
+AE = Artificial.Everywhere
+AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
@@ -88,13 +90,11 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
             @referenceSvgPaths referenceSvgPaths
       
       # Update chosen references.
-      @chosenReferenceUrls = new ComputedField =>
+      @chosenReferenceUrls = new AE.LiveComputedField =>
         @data()?.chosenReferenceUrls
-      ,
-        true
-      
+
       # Only react to displayed reference changes to minimize resizes.
-      @displayedReferenceUrls = new ComputedField =>
+      @displayedReferenceUrls = new AE.LiveComputedField =>
         return unless bitmap = @bitmap()
         return unless references = bitmap.references
         displayedReferences = _.filter references, (reference) => reference.displayed
@@ -102,8 +102,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
         reference.image.url for reference in displayedReferences
       ,
         EJSON.equals
-      ,
-        true
 
       # Update chosen references and resize the bitmap accordingly if needed.
       @_chosenReferencesAutorun = Tracker.autorun (computation) =>
@@ -199,7 +197,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
         @svgPathGroups svgPathGroups
         
     # Create paths.
-    @paths = new ComputedField =>
+    @paths = new AE.LiveComputedField =>
       return unless @bitmap()
       return unless svgPathGroups = @svgPathGroups()
       
@@ -207,8 +205,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
         new @constructor.Path @, svgPath, svgPathGroup.offset for svgPath in svgPathGroup.svgPaths
         
       _.flatten paths
-    ,
-      true
 
     # Create the components that will show the goal state.
     @pathsEngineComponent = new @constructor.PathsEngineComponent
@@ -219,7 +215,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
     @hintsEngineComponent = new @constructor.HintsEngineComponent
       paths: => @paths()
       
-    @hasExtraPixels = new ComputedField =>
+    @hasExtraPixels = new AE.LiveComputedField =>
       return unless bitmapLayer = @bitmap()?.layers[0]
       return unless paths = @paths()
       
@@ -240,10 +236,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
           return true unless found
           
       false
-    ,
-      true
       
-    @completed = new ComputedField =>
+    @completed = new AE.LiveComputedField =>
       return unless paths = @paths()
       return unless paths.length
       
@@ -266,8 +260,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
       # Note: We shouldn't quit early because of extra pixels, since we wouldn't update
       # active path index otherwise, so we do it here at the end as a final condition.
       completedPaths is paths.length and not @hasExtraPixels()
-    ,
-      true
 
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
@@ -310,6 +302,19 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
     @_completedAutorun.stop()
   
   solve: ->
+    bitmap = @bitmap()
+    paths = @paths()
+
+    pixels = []
+    
+    for x in [0...bitmap.bounds.width]
+      for y in [0...bitmap.bounds.height]
+        for path in paths when path.hasPixel x, y
+          pixels.push {x, y, paletteColor: {ramp: 0, shade: 0}}
+    
+    # Replace the layer pixels in this bitmap.
+    strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @id(), bitmap, [0], pixels
+    AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
   
   editorDrawComponents: -> [
     component: @pathsEngineComponent, before: LOI.Assets.Engine.PixelImage.Bitmap
