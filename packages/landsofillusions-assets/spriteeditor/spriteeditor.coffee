@@ -107,7 +107,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         LOI.Assets.Editor.Tools.Arrow.id()
         LOI.Assets.SpriteEditor.Tools.Translate.id()
         LOI.Assets.SpriteEditor.Tools.Pencil.id()
-        LOI.Assets.SpriteEditor.Tools.Eraser.id()
+        LOI.Assets.SpriteEditor.Tools.HardEraser.id()
         LOI.Assets.SpriteEditor.Tools.Smooth.id()
         LOI.Assets.SpriteEditor.Tools.ColorFill.id()
         LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
@@ -206,7 +206,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
-      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+      "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
       "#{LOI.Assets.SpriteEditor.Tools.Translate.id()}": key: AC.Keys.v
       "#{LOI.Assets.SpriteEditor.Tools.Smooth.id()}": key: AC.Keys.s

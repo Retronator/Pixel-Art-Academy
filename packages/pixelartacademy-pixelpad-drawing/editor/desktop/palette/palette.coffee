@@ -31,7 +31,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     @palette = new ComputedField =>
       return unless palette = paletteField()
 
-      # Go over all shades of all ramps.
+      # Randomize palette for the tray.
       for ramp in palette.ramps
         ramp.blendOffset = Math.random()
 

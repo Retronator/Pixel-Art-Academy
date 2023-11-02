@@ -2,8 +2,8 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools.Eraser
-  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Tools.Eraser'
+class LOI.Assets.MeshEditor.Tools.HardEraser extends LOI.Assets.SpriteEditor.Tools.HardEraser
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Tools.HardEraser'
   @displayName: -> "Eraser"
 
   @initialize()

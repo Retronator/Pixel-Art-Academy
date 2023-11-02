@@ -19,11 +19,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.TestPaper extends FM.View
     toolId = @currentData()
     @interface.getOperator toolId
 
-  toolClass: ->
-    actionId = @currentData()
-
-    @interface.getOperatorForId actionId
-
   tooltip: ->
     action = @currentData()
     name = action.displayName()

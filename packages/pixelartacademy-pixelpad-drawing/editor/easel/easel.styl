@@ -1,0 +1,221 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing.editor-easel
+  &.active-asset
+    .pixelartacademy-pixelboy-apps-drawing-editor-easel
+      transition all 0.5s 1s
+      pointer-events initial
+
+  &.editor-active
+    .pixelartacademy-pixelboy-apps-drawing-clipboard
+      top calc(50% - 130rem)
+      left -200rem
+
+    .pixelartacademy-pixelboy-apps-drawing-portfolio
+      visibility hidden
+      opacity 0
+      transition all 0s
+
+    .fatamorgana-interface
+      &.move-canvas
+        cursor grab
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-easel
+    absolute-cover()
+    pointer-events none
+    user-select none
+
+    &.dragging
+    &.dragging *
+      cursor grabbing
+
+    .fatamorgana-interface
+      .fatamorgana-area.application
+        position initial
+
+    .fatamorgana-menu
+      display none
+
+    .fatamorgana-toolbox
+      .tools
+        list-style none
+        padding 0
+        margin 0
+
+        .tool
+          position absolute
+
+          &.active
+            .tool-button
+              display none
+
+          &::after
+          &::before
+            z-index 4
+
+          .tool-button
+            absolute-cover-size()
+            opacity 0
+            z-index 7
+            cursor pointer
+
+        .color-picker
+        .square-brush
+        .pixel-brush
+        .round-brush
+          &:hover
+            &::after
+              top -2rem
+
+          &.active
+            &::after
+              top -15rem
+              opacity 0
+
+            &::before
+              opacity 0
+
+          &::after
+          &::before
+            content ''
+            absolute-cover-size()
+
+          &::after
+          &::before
+            transition all ease-out 0.1s
+
+        .color-picker
+          top -7rem
+          left 90rem
+          width 31rem
+          height 12rem
+
+          &::after
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/eyedropper.png')
+
+          &::before
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/eyedropper-shadow.png')
+
+        .square-brush
+          left 103rem
+          top 18rem
+          width 11rem
+          height 31rem
+
+          &::after
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brush-square.png')
+
+          &::before
+            left 1rem
+            top 21rem
+            width 7rem
+            height 7rem
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brushshadow-square.png')
+
+        .pixel-brush
+          left 114rem
+          top 18rem
+          width 11rem
+          height 31rem
+
+          &::after
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brush-small.png')
+
+          &::before
+            left 5rem
+            top 20rem
+            width 4rem
+            height 6rem
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brushshadow-small.png')
+
+        .round-brush
+          left 125rem
+          top 18rem
+          width 14rem
+          height 31rem
+
+          &::after
+            width 16rem
+            left -2rem
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brush-round.png')
+
+          &::before
+            left 2rem
+            top 27rem
+            width 10rem
+            height 3rem
+            z-index 6
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/brushshadow-round.png')
+
+        .color-fill
+          top 10rem
+          left 75rem
+          width 29rem
+          height 39rem
+
+    .actions
+      list-style none
+      padding 0
+      margin 0
+
+      .action
+        position absolute
+
+        &.enabled
+          cursor pointer
+
+        .action-button
+          absolute-cover-size()
+          opacity 0
+          z-index 7
+
+        &::after
+        &::before
+          content ''
+          absolute-cover-size()
+          z-index 6
+          transition all ease-out 0.1s
+
+      .cycle-display-mode
+        top 33rem
+        left 34rem
+        width 41rem
+        height 15rem
+
+        &:hover
+          &::after
+            top -1rem
+
+        &::after
+        &::before
+          width 38rem
+          left 3rem
+
+        &::after
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/glasses.png')
+
+        &::before
+          background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/glasses-shadow.png')
+
+      .clear-paint
+        top 7rem
+        left 13rem
+        width 22rem
+        height 40rem
+
+        &:hover
+          &::after
+            top -1rem
+
+        &::after
+          left 1rem
+          width 20rem
+          background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/turpentine.png')
+
+        &::before
+          top 34rem
+          height 7rem
+          background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/easel/turpentine-shadow.png')
+
+  .pixelartacademy-pixelboy-apps-drawing-portfolio
+    transition all 0s 1s

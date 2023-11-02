@@ -37,6 +37,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #     _id
   #     url
   #   active: boolean if the environment is the one to be used to light the asset
+  # properties: extra properties the player can define for the asset
+  #   pixelArtScaling: boolean whether the asset is pixel art and should be scaled up with nearest neighbor
+  #   normals: boolean whether the asset has normal painting turned on
+  #   paletteIds: array of palettes that should be available to the player (but not restrict the colors)
   @Meta
     abstract: true
     fields: =>
@@ -95,7 +99,46 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
-
+  
+  hasRestrictedPalette: ->
+    @palette or @customPalette
+    
+  getAllPaletteIds: ->
+    paletteIds = []
+  
+    if @palette
+      paletteIds.push @palette._id
+  
+    if @properties?.paletteIds
+      paletteIds.push @properties?.paletteIds...
+  
+    paletteIds
+  
+  getRestrictedPalette: ->
+    return unless @hasRestrictedPalette()
+    
+    @customPalette or LOI.Assets.Palette.documents.findOne @palette._id
+    
+  getAllPalettes: ->
+    palettes = []
+    
+    if @hasRestrictedPalette()
+      palettes.push @getRestrictedPalette()
+    
+    if @properties?.paletteIds
+      palettes.push LOI.Assets.Palette.documents.fetch(_id: $in: @properties.paletteIds)...
+    
+    palettes
+    
+  allPalettesAvailable: ->
+    return false if @hasRestrictedPalette() and not @getRestrictedPalette()
+    
+    if @properties?.paletteIds
+      for paletteId in @properties.paletteIds
+        return false unless LOI.Assets.Palette.documents.findOne paletteId
+        
+    true
+  
   getLandmarkForName: (name, flipped) ->
     if flipped
       originalName = name

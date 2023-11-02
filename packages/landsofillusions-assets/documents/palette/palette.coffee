@@ -23,6 +23,7 @@ class LOI.Assets.Palette extends AM.Document
   @all = @subscription 'all'
   @allLospec = @subscription 'allLospec'
   @forId = @subscription 'forId'
+  @forIds = @subscription 'forIds'
   @forName = @subscription 'forName'
   
   @insert = @method 'insert'

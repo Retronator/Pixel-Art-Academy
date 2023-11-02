@@ -168,6 +168,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       top = @sectionsMargin + sectionsCount * inactiveSectionHeight
 
     top: "#{top}rem"
+  
+  sectionsVisible: ->
+    # Only show sections when not in the editor to prevent updates while editing.
+    not @drawing.editor().active()
 
   assetHoveredClass: ->
     assetData = @currentData()

@@ -43,9 +43,13 @@ Package.onUse(function(api) {
   api.addComponent('clipboard..');
 
   api.addFile('editor..');
+  api.addStyle('editor..');
   api.addFile('editor/editors');
   api.addFile('editor/assetloader');
   api.addFile('editor/pixelcanvascomponents');
+
+  api.addFile('editor/tools..');
+  api.addFile('editor/tools/movecanvas');
 
   api.addComponent('editor/desktop..');
   api.addComponent('editor/desktop/pixelcanvas..');
@@ -59,9 +63,21 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/references/displaycomponent..');
   api.addComponent('editor/desktop/references/displaycomponent/reference..');
 
-  api.addFile('editor/desktop/tools..');
-  api.addFile('editor/desktop/tools/movecanvas');
-
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');
+
+  api.addComponent('editor/easel..');
+  api.addComponent('editor/easel/layout..');
+  api.addComponent('editor/easel/pixelcanvas..');
+  api.addComponent('editor/easel/colorfill..');
+
+  api.addFile('editor/easel/tools..');
+  api.addFile('editor/easel/tools/brush..');
+  api.addFile('editor/easel/tools/brush/square');
+  api.addFile('editor/easel/tools/brush/pixel');
+  api.addFile('editor/easel/tools/brush/round');
+
+  api.addFile('editor/easel/actions..');
+  api.addFile('editor/easel/actions/displaymode');
+  api.addFile('editor/easel/actions/clearpaint');
 });

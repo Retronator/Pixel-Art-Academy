@@ -215,14 +215,6 @@ class FM.Interface extends AM.Component
       childData._id = index
       childData
 
-  toolClass: ->
-    return unless tool = @activeTool()
-
-    toolClass = _.kebabCase tool.displayName()
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
-
   events: ->
     super(arguments...).concat
       'click .dialog-area': @onClickDialogArea

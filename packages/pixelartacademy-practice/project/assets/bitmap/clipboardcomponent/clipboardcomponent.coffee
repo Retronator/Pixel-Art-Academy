@@ -23,6 +23,8 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
       return unless assetData = @drawing.portfolio().displayedAsset()
 
       options =
+        border: true
+        pixelArtScaling: true
         scaleLimits: {}
 
       # Check if the asset provides a minimum or maximum scale.

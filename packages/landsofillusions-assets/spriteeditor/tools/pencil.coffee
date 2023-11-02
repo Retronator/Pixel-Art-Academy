@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Stroke
+class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.AliasedStroke
   # paintNormals: boolean whether only normals are being painted
   # ignoreNormals: boolean whether normals are not painted
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
@@ -11,24 +11,42 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
   @initialize()
 
-  createPixelsFromCoordinates: (coordinates) ->
+  createPixelsFromCoordinates: (assetData, strokeMask) ->
     # Make sure we have paint at all.
     paint =
       directColor: @paintHelper.directColor()
       paletteColor: @paintHelper.paletteColor()
       materialIndex: @paintHelper.materialIndex()
-    
+      
     return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
     paint.normal = @paintHelper.normal().toObject()
-
-    for coordinate in coordinates
-      pixel = _.clone coordinate
-
-      for property in ['normal', 'materialIndex', 'paletteColor', 'directColor']
-        pixel[property] = paint[property] if paint[property]?
+  
+    if assetData instanceof LOI.Assets.Bitmap
+      paint.alpha = Math.round @paintHelper.opacity() * 255
+      
+      if paint.directColor
+        paint.directColor.r = Math.round paint.directColor.r * 255
+        paint.directColor.g = Math.round paint.directColor.g * 255
+        paint.directColor.b = Math.round paint.directColor.b * 255
+  
+    pixels = []
+    
+    for x in [0...assetData.bounds.width]
+      for y in [0...assetData.bounds.height]
+        maskIndex = x + y * assetData.bounds.width
+        continue unless strokeMask[maskIndex]
         
-      pixel
+        pixel =
+          x: x + assetData.bounds.left
+          y: y + assetData.bounds.top
+  
+        for property in ['normal', 'materialIndex', 'paletteColor', 'directColor', 'alpha']
+          pixel[property] = paint[property] if paint[property]?
+          
+        pixels.push pixel
+        
+    pixels
 
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
     # See if we're only painting normals.

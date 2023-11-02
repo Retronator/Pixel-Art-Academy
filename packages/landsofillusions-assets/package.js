@@ -298,9 +298,9 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
-  api.addFile('spriteeditor/tools/stroke');
+  api.addFile('spriteeditor/tools/aliasedstroke');
   api.addFile('spriteeditor/tools/pencil');
-  api.addFile('spriteeditor/tools/eraser');
+  api.addFile('spriteeditor/tools/harderaser');
   api.addFile('spriteeditor/tools/smooth');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');

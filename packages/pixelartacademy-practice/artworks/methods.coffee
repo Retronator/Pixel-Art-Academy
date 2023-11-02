@@ -17,6 +17,10 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
       width: Match.PositiveInteger
       height: Match.PositiveInteger
     paletteId: Match.Optional Match.DocumentId
+    properties: Match.Optional
+      pixelArtScaling: Match.Optional Boolean
+      paletteIds: Match.Optional [Match.DocumentId]
+      normals: Match.Optional Boolean
     
   character = LOI.Authorize.characterAction characterId
   
@@ -24,10 +28,6 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
   assetData =
     authors: [_id: characterId]
     creationTime: new Date()
-    pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor'
-
-  # Bitmap asset type needs to be versioned.
-  assetData.versioned = true if artworkInfo.assetClassName is 'Bitmap'
     
   if artworkInfo.size
     maxSize = PAA.Practice.Artworks.maxSizes[artworkInfo.assetClassName]
@@ -42,7 +42,18 @@ PAA.Practice.Artworks.insert.method (characterId, artworkInfo) ->
       bottom: artworkInfo.size.height - 1
       
   assetData.palette = _id: artworkInfo.paletteId if artworkInfo.paletteId
+  assetData.properties = artworkInfo.properties if artworkInfo.properties
   
+  # Add extra properties for the Bitmap asset type
+  if artworkInfo.assetClassName is 'Bitmap'
+    assetData.versioned = true
+    
+    assetData.pixelFormat = new LOI.Assets.Bitmap.PixelFormat 'flags'
+    assetData.pixelFormat.push if artworkInfo.paletteId then 'paletteColor' else 'directColor'
+    assetData.pixelFormat.push 'alpha' unless artworkInfo.paletteId
+    assetData.pixelFormat.push 'normal' if artworkInfo.properties?.normals
+
+  # Insert the document.
   assetClass = LOI.Assets[artworkInfo.assetClassName]
   assetId = assetClass.documents.insert assetData
   

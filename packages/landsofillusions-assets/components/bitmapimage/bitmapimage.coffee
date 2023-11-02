@@ -24,6 +24,7 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
       @autorun (computation) =>
         return unless bitmapData = @bitmapData()
         return if bitmapData.customPalette
+        return unless bitmapData.palette
         
         LOI.Assets.Palette.forId.subscribeContent @, bitmapData.palette._id
 

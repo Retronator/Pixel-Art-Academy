@@ -114,10 +114,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     # Reactively add tools and actions.
     toolRequirements =
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
-      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
+      "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-      "#{@constructor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
       
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -162,61 +162,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       actions = (actionId for actionId, toolKey of zoomActionRequirements when @toolIsAvailable toolKey)
 
       Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
-  
-    # Invert UI colors for assets with dark backgrounds.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-      return unless fileData = @interface.getActiveFileData()
-      
-      invert = false
-  
-      if backgroundColor = @displayedAsset()?.backgroundColor?()
-        invert = backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
-      
-      Tracker.nonreactive => fileData.set 'invertUIColors', invert
-  
-    # Select the first color if no color is set or the color is not available.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-      @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
-
-      if paletteColor = @paintHelper.paletteColor()
-        # We have a palette color. Wait until information about the palette is available.
-        return unless palette = @interface.getLoaderForActiveFile()?.palette()
-
-        # Only reset the color if the palette does not contain the current one.
-        setFirst = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
-
-      else
-        # Palette color has not been set yet so we set it automatically.
-        setFirst = true
-
-      if setFirst
-        Tracker.nonreactive => @paintHelper.setPaletteColor ramp: 0, shade: 0
-
-    # Set zoom levels based on display scale.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-
-      zoomLevels = [100, 200, 300, 400, 600, 800, 1200, 1600]
-      displayScale = LOI.adventure.interface.display.scale()
-
-      if displayScale % 3 is 0
-        zoomLevels = [100 / 3, 200 / 3, zoomLevels...]
-
-      else
-        zoomLevels = [50, zoomLevels...]
-
-      # Extend zoom levels down to clipboard scale if necessary.
-      if displayedAsset = @displayedAsset()
-        if displayedAsset.clipboardComponent.isCreated()
-          if clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
-            minimumScale = clipboardAssetSize.scale * 100
-            while Math.round(minimumScale) < Math.round(zoomLevels[0])
-              zoomLevels.unshift zoomLevels[0] / 2
-        
-      zoomLevelsHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
-      Tracker.nonreactive => zoomLevelsHelper zoomLevels
 
     # Automatically enter focused mode when PICO-8 is active.
     @autorun (computation) =>
@@ -399,23 +344,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         applicationArea:
           type: FM.MultiView.id()
           views: views
-          
-    shortcuts =
-      currentMappingId: 'default'
+  
+    shortcuts = _.defaultsDeep
       default:
-        name: "Default"
         mapping:
-          "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
-          "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
-          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+          "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
-          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
           
-          "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-          "#{LOI.Assets.Editor.Actions.Redo.id()}": commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
-          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+          "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+    ,
+      @getShortcuts()
 
     # Return combined interface data.
     {activeToolId, components, layouts, shortcuts}
@@ -428,7 +366,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   
   draggingClass: ->
     return unless @interface.isCreated()
-    moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+    moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()
 
     references = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.References
     pico8 = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8

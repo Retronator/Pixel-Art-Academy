@@ -123,7 +123,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         LOI.Assets.Editor.Tools.Arrow.id()
         LOI.Assets.MeshEditor.Tools.Translate.id()
         LOI.Assets.MeshEditor.Tools.Pencil.id()
-        LOI.Assets.MeshEditor.Tools.Eraser.id()
+        LOI.Assets.MeshEditor.Tools.HardEraser.id()
         LOI.Assets.MeshEditor.Tools.ColorFill.id()
         LOI.Assets.MeshEditor.Tools.ClusterPicker.id()
         LOI.Assets.MeshEditor.Tools.MoveCamera.id()
@@ -253,8 +253,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Tools.MoveCamera.id()}": key: AC.Keys.m
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.Pencil.id()}": key: AC.Keys.b
-      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": null
-      "#{LOI.Assets.MeshEditor.Tools.Eraser.id()}": key: AC.Keys.e
+      "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": null
+      "#{LOI.Assets.MeshEditor.Tools.HardEraser.id()}": key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.ColorFill.id()}": key: AC.Keys.g
       "#{LOI.Assets.MeshEditor.Tools.Translate.id()}": key: AC.Keys.v

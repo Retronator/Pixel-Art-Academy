@@ -52,7 +52,12 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     # Initialize components.
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
-    @editor new @constructor.Editor.Desktop @
+    
+    @autorun (computation) =>
+      return unless editorId = @state('editorId')
+      
+      editorClass = LOI.Adventure.Thing.getClassForId editorId
+      @editor new editorClass @
     
     @displayedAssetCustomComponent = new ComputedField =>
       portfolio = @portfolio()

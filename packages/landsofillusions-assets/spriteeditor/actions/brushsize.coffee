@@ -49,18 +49,18 @@ class BrushSize extends FM.Action
     keyboardState = AC.Keyboard.getState()
 
     if @brushHelper.round() and keyboardState.isCommandOrControlDown()
-      currentShape = @brushHelper.shape()
+      currentAliasedShape = @brushHelper.aliasedShape()
       diameter = @brushHelper.diameter()
 
       # Gradually change size until the shape is different.
       while diameter >= 1
         diameter += @sign / 100
-        newShape = @brushHelper.shapeForDiameter diameter
+        newAliasedShape = @brushHelper.aliasedShapeForDiameter diameter
 
         # Reject shapes with only one pixel in first line (except for 3x3).
-        continue if newShape[0].length > 3 and _.sum(newShape[0]) is 1
+        continue if newAliasedShape[0].length > 3 and _.sum(newAliasedShape[0]) is 1
 
-        break unless _.isEqual currentShape, newShape
+        break unless _.isEqual currentAliasedShape, newAliasedShape
 
       @brushHelper.setDiameter Math.max 1, diameter
 

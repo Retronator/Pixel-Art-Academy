@@ -10,23 +10,21 @@ class LOI.Assets.SpriteEditor.Helpers.Brush extends FM.Helper
   constructor: ->
     super arguments...
 
-    @diameter = new ComputedField =>
-      @data.get('diameter') or 1
-
-    @shape = new ComputedField =>
-      @shapeForDiameter @diameter()
+    @aliasedShape = new ComputedField =>
+      @aliasedShapeForDiameter @diameter()
     ,
       EJSON.equals
 
-    @size = new ComputedField =>
-      @shape().length
+    @aliasedSize = new ComputedField =>
+      @aliasedShape().length
 
+  diameter: -> @data.get('diameter') or 1
   round: -> @data.get 'round'
 
   setDiameter: (diameter) -> @data.set 'diameter', diameter
   setRound: (round) -> @data.set 'round', round
 
-  shapeForDiameter: (diameter) ->
+  aliasedShapeForDiameter: (diameter) ->
     if round = @round()
       # See which size we need to have to fill a circle with this diameter.
       size = Math.floor diameter

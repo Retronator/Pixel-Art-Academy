@@ -31,32 +31,15 @@
       <span class="text">Extra items</span>
     </div>
     <div class="extras">
-      <label class="extra">
-        <span class="name">Colors</span>
-        <span class="value">
-          <select class="palette" name="palette">
-            {{#each palettes}}
-              <option value="{{_id}}">{{name}}</option>
-            {{/each}}
-          </select>
-        </span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
+      {{#each extras}}
+        {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra}}
+      {{/each}}
+      {{#each blankExtras}}
+        <div class="extra">
+          <div class="name"></div>
+          <div class="value"></div>
+        </div>
+      {{/each}}
     </div>
     <div class="submit-area">
       <div class="title">Signature</div>
@@ -82,4 +65,25 @@
       </div>
     {{/if}}
   </form>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra">
+  <div class="extra">
+    <div class="name">
+      {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Type}}
+    </div>
+    <div class="value">
+      {{#if $is type 'RestrictedColors'}}
+        {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+      {{/if}}
+      {{#if $is type 'PixelArtScaling'}}
+        <label>
+          {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling}}<span class="checkmark"></span>
+        </label>
+      {{/if}}
+      {{#if $is type 'ColorPalette'}}
+        {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+      {{/if}}
+    </div>
+  </div>
 </template>

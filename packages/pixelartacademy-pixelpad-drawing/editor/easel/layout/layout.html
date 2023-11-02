@@ -1,0 +1,32 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel.Layout">
+  <div class="pixelartacademy-pixelboy-apps-drawing-editor-easel-layout" {{style layoutStyle}}>
+    <div class="frame">
+      <div class="frame-bottom"></div>
+      <div class="tray">
+        <div class="tray-back"></div>
+        <div class="tray-front"></div>
+        {{> FataMorgana.Area toolboxData}}
+        {{#if colorFillEnabled}}
+          {{> FataMorgana.Area colorFillData}}
+        {{/if}}
+        <ul class="actions">
+          {{#each get.actions}}
+            {{#with action}}
+              <li class="action {{actionClass}} {{actionEnabledClass}}" title="{{actionTooltip}}">
+                <button class="action-button">
+                  <span class="name">{{displayName}}</span>
+                </button>
+              </li>
+            {{/with}}
+          {{/each}}
+        </ul>
+      </div>
+      <div class="frame-top-back"></div>
+      <div class="movable-stand" {{style movableStandStyle}}>
+        <div class="movable-stand-bottom"></div>
+        <div class="movable-stand-top" {{style movableStandTopStyle}}></div>
+        <div class="asset-placeholder" {{style assetPlaceholderStyle}}></div>
+      </div>
+    </div>
+  </div>
+</template>

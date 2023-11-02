@@ -2,7 +2,7 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Smooth extends LOI.Assets.SpriteEditor.Tools.Stroke
+class LOI.Assets.SpriteEditor.Tools.Smooth extends LOI.Assets.SpriteEditor.Tools.AliasedStroke
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Smooth'
   @displayName: -> "Smooth"
 
