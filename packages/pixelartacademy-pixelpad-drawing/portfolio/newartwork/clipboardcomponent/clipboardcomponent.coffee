@@ -7,10 +7,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent'
   @initializeDataComponent()
   
-  @ArtworkTypes =
-    Sprite: 'Sprite'
-    Bitmap: 'Bitmap'
-  
   @SizeTypes =
     Freeform: 'Freeform'
     Fixed: 'Fixed'

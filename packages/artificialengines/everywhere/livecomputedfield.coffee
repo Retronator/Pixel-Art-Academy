@@ -3,11 +3,11 @@ AE = Artificial.Everywhere
 # Based on ComputedField from PeerLibrary
 # https://github.com/peerlibrary/meteor-computed-field
 class AE.LiveComputedField
-  constructor: (valueFunctions, equalsFunction) ->
+  constructor: (valueFunction, equalsFunction) ->
     lastValue = null
 
     autorunHandle = Tracker.nonreactive -> Tracker.autorun (computation) ->
-      value = valueFunctions()
+      value = valueFunction()
 
       if lastValue
         lastValue.set value

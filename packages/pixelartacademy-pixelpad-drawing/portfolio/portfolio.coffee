@@ -43,6 +43,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @inactiveGroupHeight = 5
     @activeGroupHeight = 150
     @settingsHeight = 118
+    @sectionsMargin = 13
+    @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
 
   sectionActiveClass: ->
     section = @currentData()
@@ -57,23 +59,30 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   sectionStyle: ->
     section = @currentData()
     groups = section.groups()
-    active = @activeSection() is section
+    
+    activeSection = @activeSection()
+    activeGroup = @activeGroup()
+    
     sections = @sections()
 
     width = 292 - 4 * (sections.length - section.index)
-
+    
+    if section is activeSection
+      if activeGroup
+        activeSectionHeight = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+      
+      else
+        activeSectionHeight = @sectionHeight + groups.length * @initialGroupHeight
+        
+      height = activeSectionHeight
+      
+    else
+      height = @inactiveSectionHeight()
+      
     style =
       width: "#{width}rem"
-
-    if active
-      if @activeGroup()
-        height = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
-
-      else
-        height = @sectionHeight + groups.length * @initialGroupHeight
-
-      style.height = "#{height}rem"
-
+      height: "#{height}rem"
+    
     style
 
   groupStyle: ->
@@ -139,10 +148,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     sectionsCount = sections.length
     sectionsCount++ if @showSettingsSection()
-
-    top = 14 + sectionsCount * @sectionHeight
+    
+    inactiveSectionHeight = @inactiveSectionHeight()
 
     if section = @activeSection()
+      top = @sectionsMargin + (sectionsCount - 1) * inactiveSectionHeight + @sectionHeight
+  
       if groups = section.groups?()
         if @activeGroup()
           top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
@@ -152,6 +163,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
       else
         top += @settingsHeight
+        
+    else
+      top = @sectionsMargin + sectionsCount * inactiveSectionHeight
 
     top: "#{top}rem"
 

@@ -26,7 +26,12 @@ class LM.Adventure extends PAA.Adventure
     LM.Intro
     LM.PixelArtFundamentals
   ]
-
+  
+  constructor: ->
+    super arguments...
+    
+    @isLearnMode = true
+  
   titleSuffix: -> ' // Pixel Art Academy: Learn Mode'
 
   title: ->

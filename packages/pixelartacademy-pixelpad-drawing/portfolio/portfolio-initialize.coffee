@@ -125,8 +125,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
               scale: => @_assetScale asset
   
         # New artworks can be created if the player can edit art with built-in editors.
-        # TODO: Enable ability to create artworks.
-        if false # PAA.PixelPad.Apps.Drawing.canEdit()
+        if PAA.PixelPad.Apps.Drawing.canEdit()
           assets.push
             _id: @_newArtworkAsset.urlParameter()
             index: assets.length
@@ -134,8 +133,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
             scale: => 1
   
         # Artworks can be imported if the player can edit or upload art made with external software.
-        # TODO: Enable ability to import artworks.
-        if false # PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
+        if PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
           assets.push
             _id: @_importArtworkAsset.urlParameter()
             index: assets.length
@@ -289,6 +287,28 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         @_updateGroupTimeout = null
       ,
         0
+      
+    @inactiveSectionHeight = new ComputedField =>
+      return @sectionHeight unless activeSection = @activeSection()
+      
+      sections = @sections()
+      activeSectionGroups = activeSection.groups()
+
+      if @activeGroup()
+        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        
+      else
+        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @initialGroupHeight
+      
+      sectionsTotalHeight = (sections.length - 1) * @sectionHeight + activeSectionHeight
+      
+      if sectionsTotalHeight > @sectionsMaxTotalHeight
+        # We need to decrease inactive section heights to make them all fit into maximum total height.
+        heightForInactiveSections = @sectionsMaxTotalHeight - activeSectionHeight
+        heightForInactiveSections / (sections.length - 1)
+        
+      else
+        @sectionHeight
       
   onDestroyed: ->
     super arguments...

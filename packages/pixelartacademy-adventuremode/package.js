@@ -33,9 +33,8 @@ Package.onUse(function(api) {
   api.addFile('character/person');
   api.addFile('character/agent');
   api.addFile('character/actor');
-
+  api.addClientFile('character/spacebars');
   api.addServerFile('character/methods');
-
   api.addThing('character/personupdates');
   api.addFile('character/characterupdateshelper');
 
