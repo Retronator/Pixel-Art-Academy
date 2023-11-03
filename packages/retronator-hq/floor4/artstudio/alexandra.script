@@ -585,16 +585,16 @@ alexandra:
 
 ## LearnDrawing
 
--> [LearnDrawingPixelBoy] `@inventory['PixelArtAcademy.PixelBoy']`
+-> [LearnDrawingPixelPad] `@inventory['PixelArtAcademy.PixelPad']`
 
 alexandra:
   The Retropolis Academy of Art published some books on the topics of sketching and drawing.
   They're all free so that might be a good place to start.
-  Even better, if you decide to go study there yourself, let me know when you get a PixelBoy during Admission Week and I can give you an editor made specifically to learn drawing and painting.
+  Even better, if you decide to go study there yourself, let me know when you get a PixelPad during Admission Week and I can give you an editor made specifically to learn drawing and painting.
   Do you want to check out the Retropolis Academy of Art Study Guide now?
 
 * Yes, please, I want to start learning on my own. -> [LearnDrawingStudyGuide]
-* I think I'll just come back for the editor when I get my PixelBoy.
+* I think I'll just come back for the editor when I get my PixelPad.
 * Uhm, maybe later.
 
 alexandra: I'll be here!
@@ -613,13 +613,13 @@ alexandra: I hope it was useful!
 
 -> [MainQuestions]
 
-## LearnDrawingPixelBoy
+## LearnDrawingPixelPad
 
 alexandra:
-  Awesome! Since you have the PixelBoy, let me give you an editor for the Drawing app that will simulate working at an easel.
+  Awesome! Since you have the PixelPad, let me give you an editor for the Drawing app that will simulate working at an easel.
   Just choose it on the Options page of the app, and you'll get a new tutorial section for using it.
 
-> Alexandra rummages around for her PixelBoy and initiates the transfer.
+> Alexandra rummages around for her PixelPad and initiates the transfer.
 
 ## ReceiveEaselEditor
 

@@ -3,8 +3,8 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas'
+class PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas'
   @displayName: -> "Move canvas"
   
   @initialize()
@@ -18,7 +18,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
 
   onActivated: ->
     # Listen for mouse down.
-    $(document).on "mousedown.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move", (event) =>
+    $(document).on "mousedown.pixelartacademy-pixelpad-apps-drawing-editor-tools-move", (event) =>
       $target = $(event.target)
 
       # Only activate when we're moving from the background or the canvas.
@@ -31,11 +31,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
         y: event.clientY
 
       # Wire end of dragging on mouse up.
-      $(document).on "mouseup.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
-        $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging'
+      $(document).on "mouseup.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging", (event) =>
+        $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging'
         @moving false
 
-      $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
+      $(document).on "mousemove.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging", (event) =>
         dragDelta =
           x: event.clientX - @_mousePosition.x
           y: event.clientY - @_mousePosition.y
@@ -56,4 +56,4 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
           y: event.clientY
 
   onDeactivated: ->
-    $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move'
+    $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-tools-move'

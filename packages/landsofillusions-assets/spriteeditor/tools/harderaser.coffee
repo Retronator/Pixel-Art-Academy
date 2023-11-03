@@ -8,19 +8,31 @@ class LOI.Assets.SpriteEditor.Tools.HardEraser extends LOI.Assets.SpriteEditor.T
   @displayName: -> "Eraser"
 
   @initialize()
-
-  createPixelsFromCoordinates: (coordinates) ->
-    for coordinate in coordinates
-      pixel = _.clone coordinate
-
-      # Set direct color to color of the background to fake erasing.
-      pixel.directColor = r: 0.34, g: 0.34, b: 0.34
-
-      pixel
-
+  
+  createPixelsFromStrokeMask: (assetData, strokeMask) ->
+    # Set direct color to color of the background to fake erasing.
+    # TODO: This only works in 3D Paint. It would require querying the pixel canvas what its background color is.
+    directColor = r: 0.34, g: 0.34, b: 0.34
+    
+    pixels = []
+    
+    for x in [0...assetData.bounds.width]
+      for y in [0...assetData.bounds.height]
+        maskIndex = x + y * assetData.bounds.width
+        continue unless strokeMask[maskIndex]
+        
+        pixel =
+          x: x + assetData.bounds.left
+          y: y + assetData.bounds.top
+          directColor: directColor
+          
+        pixels.push pixel
+        
+    pixels
+    
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
     changedPixels = for pixel in relativePixels when assetData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
-      # We must send only the coordinates to the server.
+      # We must send only the coordinates to the stroke action to have the color deleted.
       _.pick pixel, ['x', 'y']
 
     return unless changedPixels.length
@@ -40,7 +52,7 @@ class LOI.Assets.SpriteEditor.Tools.HardEraser extends LOI.Assets.SpriteEditor.T
         @startOfStrokeProcessed()
     
       # Create the stroke action.
-      action = new LOI.Assets.Bitmap.Actions.Stroke null, assetData, layerAddress, changedPixels
+      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels
       LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, action
       @_action.append action
 

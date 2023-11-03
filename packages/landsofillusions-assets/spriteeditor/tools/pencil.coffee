@@ -10,8 +10,8 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
   @displayName: -> "Pencil"
 
   @initialize()
-
-  createPixelsFromCoordinates: (assetData, strokeMask) ->
+  
+  createPixelsFromStrokeMask: (assetData, strokeMask) ->
     # Make sure we have paint at all.
     paint =
       directColor: @paintHelper.directColor()
@@ -21,14 +21,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
     return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
     paint.normal = @paintHelper.normal().toObject()
-  
-    if assetData instanceof LOI.Assets.Bitmap
-      paint.alpha = Math.round @paintHelper.opacity() * 255
-      
-      if paint.directColor
-        paint.directColor.r = Math.round paint.directColor.r * 255
-        paint.directColor.g = Math.round paint.directColor.g * 255
-        paint.directColor.b = Math.round paint.directColor.b * 255
+    paint.alpha = @paintHelper.opacity()
   
     pixels = []
     
@@ -41,11 +34,11 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
           x: x + assetData.bounds.left
           y: y + assetData.bounds.top
   
-        for property in ['normal', 'materialIndex', 'paletteColor', 'directColor', 'alpha']
-          pixel[property] = paint[property] if paint[property]?
-          
         pixels.push pixel
-        
+      
+    for property in ['normal', 'materialIndex', 'paletteColor', 'directColor', 'alpha'] when paint[property]?
+      pixel[property] = paint[property] for pixel in pixels
+    
     pixels
 
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
@@ -96,7 +89,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         @_action.append addLayerAction
 
       # Create the stroke action.
-      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels
+      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels, true
       LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, action
       @_action.append action
   

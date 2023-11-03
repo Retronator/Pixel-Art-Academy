@@ -202,7 +202,7 @@ Package.onUse(function(api) {
   api.addFile('components/tools..');
   api.addFile('components/tools/tool');
   api.addFile('components/tools/pencil');
-  api.addFile('components/tools/eraser');
+  api.addFile('components/tools/harderaser');
   api.addFile('components/tools/colorfill');
   api.addFile('components/tools/colorpicker');
   api.addFile('components/tools/undo');
@@ -358,7 +358,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
   api.addFile('mesheditor/tools/pencil');
-  api.addFile('mesheditor/tools/eraser');
+  api.addFile('mesheditor/tools/harderaser');
   api.addFile('mesheditor/tools/colorfill');
   api.addFile('mesheditor/tools/translate');
 

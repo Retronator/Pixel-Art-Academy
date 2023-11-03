@@ -3,7 +3,7 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.SpriteEditor.Tools.Tool
+class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.SpriteEditor.Tools.Tool
   extraToolClasses: -> 'brush'
   
   constructor: ->

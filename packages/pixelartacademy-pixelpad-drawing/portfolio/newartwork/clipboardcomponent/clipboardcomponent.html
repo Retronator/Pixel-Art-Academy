@@ -32,7 +32,7 @@
     </div>
     <div class="extras">
       {{#each extras}}
-        {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra}}
       {{/each}}
       {{#each blankExtras}}
         <div class="extra">
@@ -67,22 +67,22 @@
   </form>
 </template>
 
-<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra">
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra">
   <div class="extra">
     <div class="name">
-      {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Type}}
+      {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Type}}
     </div>
     <div class="value">
       {{#if $is type 'RestrictedColors'}}
-        {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
       {{/if}}
       {{#if $is type 'PixelArtScaling'}}
         <label>
-          {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling}}<span class="checkmark"></span>
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling}}<span class="checkmark"></span>
         </label>
       {{/if}}
       {{#if $is type 'ColorPalette'}}
-        {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
       {{/if}}
     </div>
   </div>

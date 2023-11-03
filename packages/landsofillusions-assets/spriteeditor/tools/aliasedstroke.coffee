@@ -113,7 +113,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
   onDeactivated: ->
     @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
-    @editor().operationPreview().pixels []
+    @editor().operationPreview().pixels [] if @_previewActive
 
   cursorType: -> LOI.Assets.SpriteEditor.PixelCanvas.Cursor.Types.AliasedBrush
   
@@ -221,7 +221,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
         unless keyboardState.isCommandOrControlDown() or keyboardState.isKeyDown AC.Keys.alt
           @drawLine true
           @realtimeUpdating true
-          @updatePixels()
+          @processStroke()
 
     else if @drawLine()
       # React to any modifier changes when line drawing.
@@ -238,7 +238,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
     else if @drawLine()
       # React to any modifier changes when line drawing.
-      @updatePixels()
+      @processStroke()
 
   onMouseDown: (event) ->
     super arguments...
@@ -320,7 +320,9 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
         @perfectLine _lastPixelCoordinates, _currentPixelCoordinates
 
         # Match current coordinates to the ending perfect coordinates.
-        @currentPixelCoordinates _.last pixelCoordinates
+        @currentPixelCoordinates
+          x: _pixelCoordinates[_pixelCoordinatesLength - 2]
+          y: _pixelCoordinates[_pixelCoordinatesLength - 1]
 
       else
         @perfectLineRatio null
@@ -372,7 +374,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     #  mirroredX = -@constructor.mouseState.x + 2 * symmetryXOrigin
     #  xCoordinates.push [mirroredX, -1]
 
-    @pixels @createPixelsFromCoordinates assetData, _strokeMask
+    @pixels @createPixelsFromStrokeMask assetData, _strokeMask
     
     @applyTool()
 
@@ -416,7 +418,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
   startOfStrokeProcessed: ->
     @_strokeStarted = false
 
-  createPixelsFromCoordinates: (strokeMask) ->
+  createPixelsFromStrokeMask: (assetData, strokeMask) ->
     throw new AE.NotImplementedException "Provide a method that creates full pixel data out of the stroke mask."
     
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->

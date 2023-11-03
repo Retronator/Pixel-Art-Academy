@@ -51,14 +51,16 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
           @_renderPixelShaded x, y, z, pixel.x, pixel.y, pixel.paletteColor, pixel.directColor, pixel.materialIndex, pixel.normal, spriteData, renderOptions
           
         else
-          paletteColorRamp = pixel.paletteColor?.ramp
-          paletteColorShade = pixel.paletteColor?.shade
+          pixelIndex = (x + y * @_canvas.width) * 4
+          
+          if pixel.paletteColor
+            @_renderPixelPaletteColor pixelIndex, pixel.paletteColor.ramp, pixel.paletteColor.shade, 255
           
           if pixel.directColor
             directColorR = pixel.directColor.r * 255
             directColorG = pixel.directColor.g * 255
             directColorB = pixel.directColor.b * 255
           
-          @_renderPixel x, y, paletteColorRamp, paletteColorShade, directColorR, directColorG, directColorB, 255
+            @_renderPixelDirectColor pixelIndex, directColorR, directColorG, directColorB, 255
 
     @_endRender()

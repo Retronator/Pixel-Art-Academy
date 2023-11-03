@@ -78,20 +78,21 @@ class LOI.Assets.Engine.PixelImage
       smoothShadingQuantizationLevels = renderOptions.smoothShadingQuantizationLevels ? LOI.settings.graphics.smoothShadingQuantizationLevels.value()
       @_smoothShadingQuantizationFactor = (smoothShadingQuantizationLevels or 1) - 1
   
-  _renderPixel: (x, y, paletteColorRamp, paletteColorShade, directColorR, directColorG, directColorB, alpha) ->
-    pixelIndex = (x + y * @_canvas.width) * 4
-  
-    if paletteColorRamp?
-      return unless shades = @_palette.ramps[paletteColorRamp]?.shades
-      directColor = shades[paletteColorShade]
-      directColorR = directColor.r * 255
-      directColorG = directColor.g * 255
-      directColorB = directColor.b * 255
+  _renderPixelPaletteColor: (pixelIndex, paletteColorRamp, paletteColorShade, alpha) ->
+    return unless shades = @_palette.ramps[paletteColorRamp]?.shades
     
+    directColor = shades[paletteColorShade]
+    directColorR = directColor.r * 255
+    directColorG = directColor.g * 255
+    directColorB = directColor.b * 255
+    
+    @_renderPixelDirectColor pixelIndex, directColorR, directColorG, directColorB, alpha
+    
+  _renderPixelDirectColor: (pixelIndex, directColorR, directColorG, directColorB, alpha) ->
     @_imageData.data[pixelIndex] = directColorR
     @_imageData.data[pixelIndex + 1] = directColorG
     @_imageData.data[pixelIndex + 2] = directColorB
-    @_imageData.data[pixelIndex + 3] = alpha ? 255
+    @_imageData.data[pixelIndex + 3] = alpha
     
   # Call for each pixel and specify the coordinates within asset bounds.
   _renderPixelShaded: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->

@@ -1,6 +1,6 @@
-@import "{retronator:landsofillusions}/style/style.import"
+@import "{retronator:retronator-identity}/style/style.import"
 
-.pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+.pixelartacademy-pixelpad-apps-drawing-editor-easel-pixelcanvas
   &.landsofillusions-assets-spriteeditor-pixelcanvas
     background initial
 
@@ -29,28 +29,28 @@
     canvas
       absolute-cover-size()
 
-.pixelartacademy-pixelboy-apps-drawing-editor-easel
+.pixelartacademy-pixelpad-apps-drawing-editor-easel
   &.zoomed-in-mode
   &.focused-mode
-    .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+    .pixelartacademy-pixelpad-apps-drawing-editor-easel-pixelcanvas
       .drawing-area
         z-index 1
 
-.pixelartacademy-pixelboy-apps-drawing.editor-easel
+.pixelartacademy-pixelpad-apps-drawing.editor-easel
   &.editor-active
-    .pixelartacademy-pixelboy-apps-drawing-editor-easel.dragging
+    .pixelartacademy-pixelpad-apps-drawing-editor-easel.dragging
       .fatamorgana-interface.move-canvas
-        .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+        .pixelartacademy-pixelpad-apps-drawing-editor-easel-pixelcanvas
           .drawing-area
             transition none !important
 
   &.active-asset:not(.editor-active)
-    .pixelartacademy-pixelboy-apps-drawing-editor-easel
-      .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+    .pixelartacademy-pixelpad-apps-drawing-editor-easel
+      .pixelartacademy-pixelpad-apps-drawing-editor-easel-pixelcanvas
         .drawing-area
           transition top 0.6s 0.2s, left 0.6s 0.2s, width 0.2s, height 0.2s
 
-  .pixelartacademy-pixelboy-apps-drawing-editor-easel.drawing-active
-    .pixelartacademy-pixelboy-apps-drawing-editor-easel-pixelcanvas
+  .pixelartacademy-pixelpad-apps-drawing-editor-easel.drawing-active
+    .pixelartacademy-pixelpad-apps-drawing-editor-easel-pixelcanvas
       .drawing-area
         transition top 0.6s, left 0.6s, width 0.6s, height 0.6s, border-width 0.6s

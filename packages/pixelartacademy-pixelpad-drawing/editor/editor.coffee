@@ -70,14 +70,14 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         
         # Enable the pixel grid when in the editor.
         fileData.child('pixelGrid').set 'enabled', drawingActive
-       
+    
     # Invert UI colors for assets with dark backgrounds.
     @autorun (computation) =>
       return unless @interface.isCreated()
       return unless fileData = @interface.getActiveFileData()
       
       invert = false
-  
+      
       if backgroundColor = @displayedAsset()?.backgroundColor?()
         invert = backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
       
@@ -188,13 +188,13 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       mapping:
         "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
         "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
-        "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-        "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
+        "#{LOI.Assets.Editor.Actions.Redo.id()}": commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z
         "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
         "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
-
+        
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'
 

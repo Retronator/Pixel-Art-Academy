@@ -5,8 +5,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.Editor
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel'
+class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.Editor
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel'
   @version: -> '0.1.0-wip'
 
   @register @id()
@@ -68,22 +68,22 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
   
     # Reactively add tools and actions.
     toolRequirements =
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   
     actionRequirements =
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.ClearPaint.id()}": PAA.Practice.Software.Tools.ToolKeys.ClearColor
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.ClearPaint.id()}": PAA.Practice.Software.Tools.ToolKeys.ClearColor
   
     @autorun (computation) =>
       return unless @interface.isCreated()
       applicationAreaData = @interface.currentApplicationAreaData()
       views = applicationAreaData.get 'views'
-      layoutViewIndex = _.findIndex views, (view) => view.type is PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout.id()
+      layoutViewIndex = _.findIndex views, (view) => view.type is PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout.id()
       
       tools = [
         LOI.Assets.Editor.Tools.Arrow.id()
@@ -124,7 +124,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
       return unless @interface.isCreated()
       return unless @displayMode() is @constructor.DisplayModes.Normal
     
-      moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()
+      moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()
       return unless moveTool.moving()
     
       layoutView = @getLayoutView()
@@ -169,10 +169,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         @drawingActive false
     
   getLayoutView: ->
-    @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout
+    @_getView PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout
     
   getPixelCanvas: ->
-    @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
+    @_getView PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas
     
   cycleDisplayMode: ->
     displayMode = @displayMode()
@@ -247,8 +247,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
   
     components =
-      "#{_.snakeCase PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas.id()}":
-        components: [PAA.PixelBoy.Apps.Drawing.Editor.PixelCanvasComponents.id()]
+      "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas.id()}":
+        components: [PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents.id()]
       
       "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
         diameter: 5
@@ -265,17 +265,17 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
         LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
       ]
     ,
-      type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout.id()
+      type: PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout.id()
       toolbox:
         type: FM.Toolbox.id()
         tools: []
       colorFill:
-        type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill.id()
+        type: PAA.PixelPad.Apps.Drawing.Editor.Easel.ColorFill.id()
     ,
       type: FM.EditorView.id()
       files: @_dummyEditorViewFiles
       editor:
-        contentComponentId: PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas.id()
+        contentComponentId: PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas.id()
     ]
 
     layouts =
@@ -289,11 +289,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
     shortcuts = _.defaultsDeep
       default:
         mapping:
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": key: AC.Keys.b
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": key: AC.Keys.b
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": key: AC.Keys.b
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": key: AC.Keys.b
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
   
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": key: AC.Keys.f
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": key: AC.Keys.f
           "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
           "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
     ,
@@ -310,7 +310,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel extends PAA.PixelBoy.Apps.Drawing.E
   
   draggingClass: ->
     return unless @interface.isCreated()
-    moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()
+    moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()
   
     'dragging' if _.some [
       moveTool.moving()

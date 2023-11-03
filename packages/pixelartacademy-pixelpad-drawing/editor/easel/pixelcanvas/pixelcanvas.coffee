@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.SpriteEditor.PixelCanvas
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas'
+class PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.SpriteEditor.PixelCanvas
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas'
   @register @id()
   
   template: -> @constructor.id()
@@ -11,8 +11,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
   onCreated: ->
     super arguments...
   
-    @drawing = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing
-    @easel = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing.Editor.Easel
+    @drawing = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing
+    @easel = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Easel
   
     # Allow triggering asset style change.
     @assetStyleChangeDependency = new Tracker.Dependency
@@ -44,7 +44,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     
       # Dictate camera scale when asset is on clipboard and normal display mode.
       clipboardAssetScale = clipboardAssetSize.scale
-      normalDisplayMode = @easel.displayMode() is PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
+      normalDisplayMode = @easel.displayMode() is PAA.PixelPad.Apps.Drawing.Editor.Easel.DisplayModes.Normal
     
       if not @easel.active() or normalDisplayMode or displayedAsset isnt @_previousDisplayedAsset or clipboardAssetScale isnt @_previousClipboardSpriteScale
         Tracker.nonreactive =>
@@ -84,7 +84,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     
     editorActive = @easel.active()
     
-    activeZoomedIn = editorActive and @easel.displayMode() isnt PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
+    activeZoomedIn = editorActive and @easel.displayMode() isnt PAA.PixelPad.Apps.Drawing.Editor.Easel.DisplayModes.Normal
   
     if activeZoomedIn
       # When the editor is open and zoomed in, the size depends on the internal pixel canvas camera scale.
@@ -111,7 +111,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
       style.top = "#{style.top.substring(0, style.top.length - 1)} - #{borderWidth}rem)"
 
     else
-      $assetPlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .asset-placeholder')
+      $assetPlaceholder = $('.pixelartacademy-pixelpad-apps-drawing-clipboard .asset-placeholder')
       unless $assetPlaceholder.length
         # Force re-measure after the asset placeholder is visible again.
         Meteor.setTimeout => @assetStyleChangeDependency.changed()
@@ -119,7 +119,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
 
       assetOffset = $assetPlaceholder.offset()
 
-      $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
+      $clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')
       positionOrigin = $clipboard.offset()
 
       # Make these measurements relative to clipboard center.

@@ -3,8 +3,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill extends FM.View
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill'
+class PAA.PixelPad.Apps.Drawing.Editor.Easel.ColorFill extends FM.View
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel.ColorFill'
   @register @id()
   
   @template: -> @constructor.id()

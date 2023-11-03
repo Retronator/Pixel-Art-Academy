@@ -117,7 +117,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
       
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -225,7 +225,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         switch activeToolId
           when LOI.Assets.SpriteEditor.Tools.ColorFill.id() then @audio.colorFillActivate()
           when LOI.Assets.SpriteEditor.Tools.ColorPicker.id() then @audio.colorPickerActivate()
-          when LOI.Assets.SpriteEditor.Tools.Eraser.id() then @audio.eraserActivate()
+          when LOI.Assets.SpriteEditor.Tools.HardEraser.id() then @audio.eraserActivate()
           when LOI.Assets.SpriteEditor.Tools.Pencil.id() then @audio.pencilActivate()
         
         @_hadStoredTool = @interface.storedTool()
@@ -351,7 +351,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
     ,
       @getShortcuts()
 

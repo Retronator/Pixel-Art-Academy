@@ -83,7 +83,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     pixelSize = 1 / effectiveScale
     context.lineWidth = pixelSize
 
-    size = cursorArea.shape.length
     position = cursorArea.position.pixelPerfectTopLeftCoordinates
 
     for step in [1..2]

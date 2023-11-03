@@ -181,7 +181,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @_redraw()
   
     # Register with the app to support updates.
-    @app = @ancestorComponent Retronator.App
+    @app = @ancestorComponentWith 'addComponent'
     @app.addComponent @
     
   _redraw: ->

@@ -3,8 +3,8 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode extends FM.Action
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode'
+class PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode extends FM.Action
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode'
   @displayName: -> "Cycle display mode"
   
   @initialize()
@@ -12,7 +12,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode extends FM.Acti
   constructor: ->
     super arguments...
 
-    @easel = @interface.ancestorComponentOfType PAA.PixelBoy.Apps.Drawing.Editor.Easel
+    @easel = @interface.ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Easel
 
   execute: ->
     @easel.cycleDisplayMode()

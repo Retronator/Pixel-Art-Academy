@@ -99,6 +99,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+      
+    # For backwards compatibility, if no properties are present, a pixel art asset is assumed.
+    @properties ?=
+      pixelArtScaling: true
   
   hasRestrictedPalette: ->
     @palette or @customPalette
