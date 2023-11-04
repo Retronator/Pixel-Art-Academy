@@ -7,6 +7,4 @@ class PAA.Practice.Artworks
   
   @insert = new AB.Method name: "#{@id()}.insert"
   
-  @maxSizes =
-    Sprite: 64
-    Bitmap: 4096
+  @maxSize = 4096

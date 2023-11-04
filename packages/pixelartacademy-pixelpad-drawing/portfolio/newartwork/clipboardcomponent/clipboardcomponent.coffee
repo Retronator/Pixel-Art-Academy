@@ -23,20 +23,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     for paletteName in @paletteNames
       LOI.Assets.Palette.forName.subscribeContent @, paletteName
   
-    @type = new ReactiveField null
-    @maxSize = new ComputedField =>
-      type = @type()
-      if type then PAA.Practice.Artworks.maxSizes[type] else Number.POSITIVE_INFINITY
-    
     @sizeType = new ReactiveField @constructor.SizeTypes.Fixed
     
-    @typeError = new ReactiveField false
     @widthError = new ReactiveField false
     @heightError = new ReactiveField false
     @sizeOutOfRangeError = new ReactiveField false
     
     @properties = new ReactiveField []
-    @_changedProperties = false
     
     @extras = new ComputedField =>
       properties = @properties()
@@ -57,25 +50,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       return if properties.length > 4
       
       [properties.length...5]
-      
-  updateType: (value) ->
-    @type value
-    
-    # If you haven't changed any properties, load defaults.
-    return if @_changedProperties
-    
-    if value is @constructor.ArtworkTypes.Sprite
-      @properties [
-        type: @constructor.Extra.Types.PixelArtScaling, value: true
-      ,
-        type: @constructor.Extra.Types.RestrictedColors, value: @paletteNames[0]
-      ]
-      
-    else if value is @constructor.ArtworkTypes.Bitmap
-      @properties [
-        type: @constructor.Extra.Types.ColorPalette, value: @paletteNames[0]
-      ]
-  
+
   updatePropertyAtIndex: (index, type, value) ->
     properties = @properties()
     property = {type, value}
@@ -97,14 +72,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     
     @properties properties
   
-    @_changedProperties = true
-  
   removePropertyAtIndex: (index) ->
     properties = @properties()
     properties.splice index, 1
     @properties properties
-  
-    @_changedProperties = true
   
   validateWidth: (value) -> @widthError @validateDimension value
   validateHeight: (value) -> @heightError @validateDimension value
@@ -115,24 +86,21 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     _.isNaN(value) or 0 <= value > maxSize
   
   errorClasses: ->
-    errorClasses = for field in ['type', 'width', 'height'] when @["#{field}Error"]()
+    errorClasses = for field in ['width', 'height'] when @["#{field}Error"]()
       "error-#{field}"
       
     errorClasses.join ' '
+    
+  maxSize: -> PAA.Practice.Artworks.maxSize
   
   events: ->
     super(arguments...).concat
-      'change .property.type input': @onChangeType
       'input .property.size .width input': @onInputWidth
       'input .property.size .height input': @onInputHeight
       'change .property.size .width input': @onChangeWidth
       'change .property.size .height input': @onChangeHeight
       'change .palette': @onChangePalette
       'submit .newartwork-form': @onSubmitNewArtworkForm
-  
-  onChangeType: (event) ->
-    @typeError false
-    @updateType @$('.newartwork-form')[0].type.value
 
   onInputWidth: (event) ->
     @widthError false
@@ -175,10 +143,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     data = new FormData event.target
     
     artworkInfo =
-      assetClassName: data.get 'type'
       title: data.get 'title'
-      
-    @typeError true unless artworkInfo.assetClassName
     
     if @sizeType() is @constructor.SizeTypes.Fixed
       artworkInfo.size =
@@ -246,11 +211,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       RestrictedColors: 'RestrictedColors'
       ColorPalette: 'ColorPalette'
       PixelArtScaling: 'PixelArtScaling'
+      PixelArtGrading: 'PixelArtGrading'
     
     @TypeNames =
       RestrictedColors: 'Restricted colors'
       ColorPalette: 'Color palette'
       PixelArtScaling: 'Pixel art scaling'
+      PixelArtGrading: 'Pixel art grading'
       
     @MultiselectionTypes = [
       @Types.ColorPalette
@@ -272,7 +239,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       # Select defaults when changing the type.
       else if newType isnt lastType
         switch newType
-          when @constructor.Types.PixelArtScaling then value = true
+          when @constructor.Types.PixelArtScaling, @constructor.Types.PixelArtGrading then value = true
           when @constructor.Types.ColorPalette, @constructor.Types.RestrictedColors then value = @clipboardComponent.paletteNames[0]
   
         @clipboardComponent.updatePropertyAtIndex index, newType, value
@@ -340,6 +307,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         
     class @PixelArtScaling extends @Value
       @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling'
+      
+      constructor: ->
+        super arguments...
+        
+        @type = AM.DataInputComponent.Types.Checkbox
+        
+    class @PixelArtGrading extends @Value
+      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtGrading'
       
       constructor: ->
         super arguments...

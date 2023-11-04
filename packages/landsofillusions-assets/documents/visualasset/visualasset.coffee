@@ -41,6 +41,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #   pixelArtScaling: boolean whether the asset is pixel art and should be scaled up with nearest neighbor
   #   normals: boolean whether the asset has normal painting turned on
   #   paletteIds: array of palettes that should be available to the player (but not restrict the colors)
+  #   pixelArtGrading: object or null whether to show the pixel art grading rubric
+  #     pixelPerfectDiagonals: boolean whether pixel-perfect diagonals are evaluated
+  #     smoothCurves: boolean whether smoothness of curves is evaluated
+  #     lineWidthConsistency: boolean whether consistent line width is evaluated
   @Meta
     abstract: true
     fields: =>

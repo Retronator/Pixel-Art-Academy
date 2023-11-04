@@ -59,9 +59,8 @@
     </div>
     {{#if errorClasses}}
       <div class="error-message">
-        {{#if typeError}}Please choose the artwork type.{{/if}}
         {{#if $or widthError heightError}}Please enter a valid size.{{/if}}
-        {{#if sizeOutOfRangeError}}The maximum size for a {{toLower type}} is {{maxSize}}.{{/if}}
+        {{#if sizeOutOfRangeError}}The maximum size is {{maxSize}}.{{/if}}
       </div>
     {{/if}}
   </form>
@@ -76,13 +75,18 @@
       {{#if $is type 'RestrictedColors'}}
         {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
       {{/if}}
+      {{#if $is type 'ColorPalette'}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+      {{/if}}
       {{#if $is type 'PixelArtScaling'}}
         <label>
           {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling}}<span class="checkmark"></span>
         </label>
       {{/if}}
-      {{#if $is type 'ColorPalette'}}
-        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+      {{#if $is type 'PixelArtGrading'}}
+        <label>
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtGrading}}<span class="checkmark"></span>
+        </label>
       {{/if}}
     </div>
   </div>
