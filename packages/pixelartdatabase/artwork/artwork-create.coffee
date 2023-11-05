@@ -40,4 +40,4 @@ PADB.Artwork.create = (documentData) ->
     artworkId = PADB.Artwork.documents.insert documentData
 
   # Return the new document.
-  PADB.Artist.documents.findOne artworkId
+  PADB.Artwork.documents.findOne artworkId

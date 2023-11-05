@@ -66,5 +66,5 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       
     save: (value) ->
       artwork = @currentData()
-      PADB.Artwork.updateCharacterArtwork LOI.characterId(), artwork._id,
+      PADB.Artwork.updateArtwork artwork._id,
         title: value

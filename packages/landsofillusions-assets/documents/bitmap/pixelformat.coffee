@@ -3,6 +3,9 @@ LOI = LandsOfIllusions
 class LOI.Assets.Bitmap.PixelFormat
   constructor: ->
     @attributeIds = [arguments...]
+    
+  addAttribute: (attributeId) ->
+    @attributeIds.push attributeId
   
   getBytesPerPixel: ->
     _.sumBy @attributeIds, (attributeId) ->

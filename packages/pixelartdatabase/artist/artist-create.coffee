@@ -21,6 +21,12 @@ PADB.Artist.create = (documentData) ->
       
     else
       artistQuery["character._id"] = $in: (character._id for character in documentData.characters[0])
+      
+  else if documentData.user
+    artistQuery["user._id"] = documentData.user._id
+    
+  else if documentData.profileId
+    artistQuery["profileId"] = documentData.profileId
 
   artists = PADB.Artist.documents.fetch artistQuery
 

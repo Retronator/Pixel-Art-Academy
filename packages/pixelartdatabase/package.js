@@ -22,18 +22,19 @@ Package.onUse(function(api) {
 
   api.addFile('pixelartdatabase');
   api.addServerFile('server');
-  
+
   // Artist
 
   api.addFile('artist..');
-  api.addServerFile('artist/server');
+  api.addFile('artist/artist-create');
   api.addFile('artist/methods');
   api.addServerFile('artist/subscriptions');
 
   // Artwork
 
   api.addFile('artwork..');
-  api.addServerFile('artwork/server');
+  api.addFile('artwork/artwork-create');
+  api.addFile('artwork/artwork-updateartwork');
   api.addFile('artwork/methods');
   api.addServerFile('artwork/subscriptions');
   api.addServerFile('artwork/migrations/0000-converttohttps');

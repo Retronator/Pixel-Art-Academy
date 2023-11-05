@@ -116,5 +116,4 @@ Package.onUse(function(api) {
 
   // Artworks
   api.addFile('artworks..');
-  api.addFile('artworks/methods');
 });

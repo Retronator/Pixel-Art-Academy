@@ -176,21 +176,15 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     artworkInfo.properties = properties if _.keys(properties).length > 0
     artworkInfo.paletteId = paletteId if paletteId?
     
-    PAA.Practice.Artworks.insert LOI.characterId(), artworkInfo, (error, artworkId) =>
-      return console.error error if error
-      
-      # Add artwork to the drawing app.
-      artworks = PAA.PixelPad.Apps.Drawing.state('artworks') or []
-      artworks.push {artworkId}
-      PAA.PixelPad.Apps.Drawing.state 'artworks', artworks
-      
-      # Wait for the artwork to be available on the client.
-      Tracker.autorun (computation) =>
-        return unless PADB.Artwork.documents.findOne artworkId
-        computation.stop()
-
-        # Navigate to the artwork.
-        AB.Router.changeParameter 'parameter3', artworkId
+    artwork = PAA.Practice.Artworks.insert artworkInfo
+    
+    # Add artwork to the drawing app.
+    artworks = PAA.PixelPad.Apps.Drawing.state('artworks') or []
+    artworks.push artworkId: artwork._id
+    PAA.PixelPad.Apps.Drawing.state 'artworks', artworks
+    
+    # Navigate to the artwork.
+    AB.Router.changeParameter 'parameter3', artwork._id
   
   class @SizeType extends @DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType'

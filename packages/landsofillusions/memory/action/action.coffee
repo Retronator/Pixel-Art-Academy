@@ -7,6 +7,7 @@ Nodes = LOI.Adventure.Script.Nodes
 class LOI.Memory.Action extends AM.Document
   @id: -> 'LandsOfIllusions.Memory.Action'
   # profileId: profile who did this action
+  # lastEditTime: the time the document was last edited
   # type: constructor type for inheritance
   # time: when this action was done
   # timelineId: timeline when the action was done
