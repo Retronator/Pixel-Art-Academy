@@ -58,6 +58,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/palette..');
   api.addComponent('editor/desktop/zoom..');
   api.addComponent('editor/desktop/pico8..');
+  api.addComponent('editor/desktop/pixelartgrading..');
 
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');

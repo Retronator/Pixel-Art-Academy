@@ -75,6 +75,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
       @_lastAudioDragTime = Date.now()
       
       @_dragTimeLeft = 1
+    
+    # Automatically enter focused mode when active.
+    @autorun (computation) =>
+      @desktop.focusedMode @active()
+    
+    # Automatically deactivate when exiting focused mode.
+    @autorun (computation) =>
+      @active false unless @desktop.focusedMode()
       
   onRendered: ->
     super arguments...

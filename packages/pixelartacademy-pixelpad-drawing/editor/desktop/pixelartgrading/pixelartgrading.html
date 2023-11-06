@@ -1,0 +1,30 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartgrading table-item {{activeClass}}">
+    <div class="paper">
+      <div class="title">
+        Pixel Art Grading
+      </div>
+      <table class="grading-breakdown">
+        <tr class="header-row">
+          {{#if editable}}
+            <th>Req.</th>
+          {{/if}}
+          <th>Criteria</th>
+          <th>Grade</th>
+        </tr>
+        {{#each criteria}}
+          <tr class="criterion">
+            {{#if editable}}
+              <td class="required">✓</td>
+            {{/if}}
+            <td class="name-area"><span class="name">{{name}}</span></td>
+            <td class="grade">{{gradePercentage}}</td>
+          </tr>
+        {{/each}}
+      </table>
+      <div class="letter-grade">
+        A-
+      </div>
+    </div>
+  </div>
+</template>

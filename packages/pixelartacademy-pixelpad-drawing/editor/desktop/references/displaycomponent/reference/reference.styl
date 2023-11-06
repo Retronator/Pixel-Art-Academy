@@ -1,11 +1,12 @@
 @import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
 
 .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
   position absolute
   margin 0
   border 4rem solid atariGray(6)
   background atariGray(6)
-  box-shadow -1rem 1rem 0 rgba(atariGray(0), 0.08)
+  box-shadow -1rem 1rem 0 desktopShadowColor
   transform translate(-50%, -50%)
   transition all 1s
   cursor grab
@@ -14,15 +15,15 @@
     border none
     background none
     box-shadow none
-    filter drop-shadow(-1rem 1rem 0 rgba(atariGray(0), 0.08))
+    filter drop-shadow(-1rem 1rem 0 desktopShadowColor)
 
     &.dragging
       box-shadow none
-      filter drop-shadow(-12rem 4rem 20rem rgba(atariGray(0), 0.08))
+      filter drop-shadow(-12rem 3rem 20rem desktopShadowColor)
 
   &.dragging
     position fixed
-    box-shadow -12rem 4rem 20rem rgba(atariGray(0), 0.08)
+    box-shadow -12rem 3rem 20rem desktopShadowColor
     z-index 101 !important
 
   &.resizing-n

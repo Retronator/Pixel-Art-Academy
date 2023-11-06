@@ -1,0 +1,154 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+paperColor = atariBrown(7)
+printColor = atariGray(2)
+penColor = atariCyan(3)
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartgrading
+  position absolute
+  right 0
+  bottom 0
+  z-index 14
+  transform translate(calc(100% + 10rem), calc(100% + 10rem))
+  cursor pointer
+
+  &.active
+    transform translate(0, 0)
+    right calc(50% - 105rem)
+    cursor default
+
+    .paper
+      box-shadow -20rem 5rem 0 desktopShadowColor
+
+  .paper
+    width 210rem
+    padding 6rem 6rem 3rem
+    transition all 0.2s
+    background-color paperColor
+    box-shadow -1rem 1rem 0 desktopShadowColor
+    color printColor
+
+    .title
+      typecast()
+      text-align center
+      text-transform uppercase
+      font-style italic
+      letter-spacing -2rem
+
+      &::after
+        content ''
+        display block
+        margin 5rem 0 3rem
+        height 1rem
+        border-top 2rem solid printColor
+        border-bottom 1rem solid printColor
+
+    .grading-breakdown
+      width 100%
+      border-spacing 1rem
+
+      .header-row
+        position relative
+
+        &::after
+          content ''
+          position absolute
+          bottom -2rem
+          left 0
+          width 100%
+          height 1rem
+          background-color printColor
+
+        th
+          checkout()
+          font-weight normal
+          text-transform uppercase
+          text-align left
+
+        th:not(:first-child)
+          border-left 1rem solid printColor
+          padding-left 2rem
+
+      .criterion
+        td
+          position relative
+          padding 1rem 0 0
+          vertical-align bottom
+
+          &::after
+            content ''
+            position absolute
+            bottom -1rem
+            left 0
+            right 0
+            height 1rem
+            background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pixelartgrading-dottedline.png') 0 0 / 4rem 1rem
+
+        td:not(:first-child)::after
+          left 3rem
+
+        td:not(:first-child)::before
+          content ''
+          position absolute
+          left 0
+          top 2rem
+          width 1rem
+          height calc(100% + 3rem)
+          background-color printColor
+
+        .required
+          width 17rem
+          daily()
+          color penColor
+          text-align center
+          line-height 10rem
+
+        .name-area
+          typecast()
+          letter-spacing -1rem
+          line-height 10rem
+
+          &:not(:first-child)
+            .name
+              padding 0 2rem
+              margin-left 1rem
+
+          .name
+            display inline-block
+            position relative
+            z-index 1
+            top 2rem
+            padding-right 2rem
+            background-color paperColor
+
+        .grade
+          width 25rem
+          freehand()
+          color penColor
+          text-align center
+          padding 1rem 2rem 0 3rem
+
+        .name-area
+        .grade
+          cursor pointer
+
+    .letter-grade
+      position absolute
+      top 3rem
+      left 4rem
+      width 17rem
+      height 12rem
+      padding 2rem 3rem
+      freehand()
+      color penColor
+      text-align center
+      background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pixelartgrading-gradecircle.png')
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    transform translate(calc(100% - 26rem), calc(100% - 18rem))
+
+    &:hover:not(.active)
+      .paper
+        transform translate(-4rem, -4rem)
+        box-shadow -8rem 2rem 0 desktopShadowColor

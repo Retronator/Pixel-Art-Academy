@@ -110,6 +110,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @autorun (computation) =>
       pico8Cartridge = @displayedAsset()?.project?.pico8Cartridge?
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
+    
+    @autorun (computation) =>
+      pixelArtGrading = @displayedAsset()?.document()?.properties?.pixelArtGrading
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.id(), pixelArtGrading
 
     # Reactively add tools and actions.
     toolRequirements =
@@ -162,18 +166,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       actions = (actionId for actionId, toolKey of zoomActionRequirements when @toolIsAvailable toolKey)
 
       Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
-
-    # Automatically enter focused mode when PICO-8 is active.
-    @autorun (computation) =>
-      return unless pico8 = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8
-
-      @focusedMode pico8.active()
-
-    # Automatically deactivate PICO-8 when exiting focused mode.
-    @autorun (computation) =>
-      return unless pico8 = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8
-
-      pico8.active false unless @focusedMode()
 
     # Deactivate active tool when closing the editor and reactivate it when opening if it's still available.
     @autorun (computation) =>
