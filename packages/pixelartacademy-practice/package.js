@@ -116,4 +116,7 @@ Package.onUse(function(api) {
 
   // Artworks
   api.addFile('artworks..');
+
+  // Pixel art grading
+  api.addFile('pixelartgrading..')
 });

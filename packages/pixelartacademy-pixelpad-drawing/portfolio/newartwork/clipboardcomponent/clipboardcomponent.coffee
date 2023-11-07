@@ -169,6 +169,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       else if property.type is @constructor.Extra.Types.RestrictedColors
         paletteId = getPaletteId property.value
         
+      else if property.type is @constructor.Extra.Types.PixelArtGrading
+        # Convert from a boolean to an editable pixel art grading.
+        properties.pixelArtGrading = editable: true
+        
       else
         properties[_.camelCase property.type] = property.value
         
