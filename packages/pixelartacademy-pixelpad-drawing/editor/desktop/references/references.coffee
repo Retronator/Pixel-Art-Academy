@@ -7,8 +7,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References extends FM.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References'
   @register @id()
 
-  @template: -> @constructor.id()
-
   onCreated: ->
     super arguments...
 

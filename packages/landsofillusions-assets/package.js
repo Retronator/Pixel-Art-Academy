@@ -71,10 +71,12 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset/actions/addreferencebyurl');
   api.addFile('documents/visualasset/actions/updatereference');
   api.addFile('documents/visualasset/actions/reorderreferencetotop');
+  api.addFile('documents/visualasset/actions/updateproperty');
   api.addFile('documents/visualasset/operations..');
   api.addFile('documents/visualasset/operations/addreference');
   api.addFile('documents/visualasset/operations/updatereference');
   api.addFile('documents/visualasset/operations/removereference');
+  api.addFile('documents/visualasset/operations/updateproperty');
 
   api.addFile('documents/sprite..');
   api.addFile('documents/sprite/rot8');

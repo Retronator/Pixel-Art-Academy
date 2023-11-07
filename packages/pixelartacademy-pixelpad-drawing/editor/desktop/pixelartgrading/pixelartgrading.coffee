@@ -7,8 +7,6 @@ FM = FataMorgana
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading'
   @register @id()
-
-  @template: -> @constructor.id()
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
@@ -17,7 +15,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       flipPaper: AEc.ValueTypes.Trigger
       
   @CriteriaNames:
-    PixelPerfectDiagonals: 'Pixel-perfect diagonals'
+    PerfectDiagonals: 'Perfect diagonals'
     SmoothCurves: 'Smooth curves'
     ConsistentLineWidth: 'Consistent line width'
 
@@ -25,6 +23,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     super arguments...
 
     @active = new ReactiveField false
+    @_wasActive = false
     
   onCreated: ->
     super arguments...
@@ -49,6 +48,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
         continue unless editable or pixelArtGradingProperty[criterionProperty]?
         
         criteria.push
+          propertyName: criterion
           name: @constructor.CriteriaNames[criterion]
           grade: pixelArtGradingProperty[criterionProperty]?.score
       
@@ -60,16 +60,47 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     
     # Automatically deactivate when exiting focused mode.
     @autorun (computation) =>
-      @active false unless @desktop.focusedMode()
+      @deactivate() unless @desktop.focusedMode()
+      
+  activate: ->
+    @_changeActive true
+    
+  deactivate: ->
+    @_changeActive false
+    
+  _changeActive: (value) ->
+    @active value
+    
+    return if value is @_wasActive
+    @_wasActive = value
+    
+    return unless @isRendered()
+
+    Tracker.nonreactive =>
+      editor = @interface.getEditorForActiveFile()
+      editor.triggerSmoothMovement()
+
+      camera = editor.camera()
+      scale = camera.effectiveScale()
+      
+      paperHeight = @$('.paper').height() / scale
+      originDeltaY = paperHeight / 2
+      originDeltaY *= -1 unless value
+      
+      originDataField = camera.originData()
+      origin = originDataField.value()
+      
+      originDataField.value
+        x: origin.x
+        y: origin.y + originDeltaY
 
   activeClass: ->
     'active' if @active()
     
-  gradePercentage: ->
-    criterion = @currentData()
-    return unless criterion.grade?
+  gradePercentage: (value) ->
+    return unless value?
     
-    "#{Math.floor criterion.grade * 100}%"
+    "#{Math.floor value * 100}%"
     
   letterGrade: ->
     grade = @pixelArtGradingProperty()?.grade or 0
@@ -82,4 +113,40 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
   onClick: (event) ->
     return if @active()
 
-    @active true
+    @activate()
+    
+  class @CriterionEnabled extends AM.DataInputComponent
+    @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.CriterionEnabled'
+    @register @id()
+    
+    constructor: ->
+      super arguments...
+      
+      @type = AM.DataInputComponent.Types.Checkbox
+      @extraComponent = @parentComponent()
+      
+    onCreated: ->
+      super arguments...
+      
+      @pixelArtGrading = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+    
+    load: ->
+      criterion = @data()
+      
+      @pixelArtGrading.pixelArtGradingProperty()[criterion.propertyName]?
+    
+    save: (value) ->
+      criterion = @data()
+      
+      pixelArtGradingProperty = EJSON.clone @pixelArtGrading.pixelArtGradingProperty()
+      
+      if value
+        pixelArtGradingProperty[criterion.propertyName] = {}
+        
+      else
+        delete pixelArtGradingProperty[criterion.propertyName]
+      
+      asset = @pixelArtGrading.interface.getLoaderForActiveFile()?.asset()
+      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtGrading', pixelArtGradingProperty
+      
+      asset.executeAction updatePropertyAction

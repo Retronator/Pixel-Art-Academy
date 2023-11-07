@@ -47,6 +47,7 @@ penColor = atariCyan(3)
     .grading-breakdown
       width 100%
       border-spacing 1rem
+      margin-bottom 6rem
 
       .header-row
         position relative
@@ -72,10 +73,6 @@ penColor = atariCyan(3)
 
       .criterion
         td
-          position relative
-          padding 1rem 0 0
-          vertical-align bottom
-
           &::after
             content ''
             position absolute
@@ -94,7 +91,7 @@ penColor = atariCyan(3)
           left 0
           top 2rem
           width 1rem
-          height calc(100% + 3rem)
+          height calc(100% + 7rem)
           background-color printColor
 
         .required
@@ -103,6 +100,19 @@ penColor = atariCyan(3)
           color penColor
           text-align center
           line-height 10rem
+
+          .checkmark-area
+            display block
+            absolute-cover()
+            bottom -1rem
+            z-index 1
+            cursor text
+
+            input[type='checkbox']
+              display none
+
+              &:checked + .checkmark::before
+                content '✓'
 
         .name-area
           typecast()
@@ -122,16 +132,58 @@ penColor = atariCyan(3)
             padding-right 2rem
             background-color paperColor
 
-        .grade
-          width 25rem
-          freehand()
-          color penColor
-          text-align center
-          padding 1rem 2rem 0 3rem
-
         .name-area
         .grade
           cursor pointer
+
+    .criterion
+    .empty-row
+    .final-grade-row
+      td
+        position relative
+        padding 1rem 0 0
+        vertical-align bottom
+
+      .grade
+        width 25rem
+        freehand()
+        color penColor
+        text-align center
+        padding 1rem 2rem 0 3rem
+
+    .empty-row
+    .final-grade-row
+      position relative
+      height 10rem
+
+      &::after
+        content ''
+        position absolute
+        left 0
+        width 100%
+        height 1rem
+
+    .empty-row
+      &::after
+        bottom 0
+        background printColor
+
+    .final-grade-row
+      &::after
+        bottom -4rem
+        border-top 1rem solid printColor
+        border-bottom 1rem solid printColor
+
+      .average
+        checkout()
+        text-transform uppercase
+        padding-bottom 1rem
+
+        &:not(:first-child)
+          padding-left 3rem
+
+      .grade
+        border-left 1rem solid printColor
 
     .letter-grade
       position absolute

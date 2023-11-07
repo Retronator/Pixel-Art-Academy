@@ -2,7 +2,7 @@ PAA = PixelArtAcademy
 
 class PAA.Practice.PixelArtGrading
   @Criteria =
-    PixelPerfectDiagonals: 'PixelPerfectDiagonals'
+    PerfectDiagonals: 'PerfectDiagonals'
     SmoothCurves: 'SmoothCurves'
     ConsistentLineWidth: 'ConsistentLineWidth'
     

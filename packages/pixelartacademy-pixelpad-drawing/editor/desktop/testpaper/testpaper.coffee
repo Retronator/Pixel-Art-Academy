@@ -8,8 +8,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.TestPaper extends FM.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.TestPaper'
   @register @id()
   
-  @template: -> @constructor.id()
-  
   onCreated: ->
     super arguments...
   

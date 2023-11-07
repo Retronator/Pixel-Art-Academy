@@ -7,8 +7,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.ColorFill extends FM.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel.ColorFill'
   @register @id()
   
-  @template: -> @constructor.id()
-  
   onCreated: ->
     super arguments...
   

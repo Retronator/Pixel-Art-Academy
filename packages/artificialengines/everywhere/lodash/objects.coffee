@@ -20,7 +20,7 @@ _.mixin
           difference[key] = valueDifference
           changed = true
           
-      for key, valueB of b when a[key] isnt undefined
+      for key, valueB of b when a[key] is undefined and valueB isnt undefined
         difference[key] = valueB
         changed = true
   

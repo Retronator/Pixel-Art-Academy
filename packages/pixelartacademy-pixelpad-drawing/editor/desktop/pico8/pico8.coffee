@@ -7,8 +7,6 @@ FM = FataMorgana
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Pico8'
   @register @id()
-
-  @template: -> @constructor.id()
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.

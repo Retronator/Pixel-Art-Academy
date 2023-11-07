@@ -15,12 +15,30 @@
         {{#each criteria}}
           <tr class="criterion">
             {{#if editable}}
-              <td class="required">✓</td>
+              <td class="required">
+                <label class="checkmark-area">
+                  {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.CriterionEnabled}}<span class="checkmark"></span>
+                </label>
+              </td>
             {{/if}}
             <td class="name-area"><span class="name">{{name}}</span></td>
-            <td class="grade">{{gradePercentage}}</td>
+            <td class="grade">{{gradePercentage grade}}</td>
           </tr>
         {{/each}}
+        <tr class="empty-row">
+          {{#if editable}}
+            <td></td>
+          {{/if}}
+          <td></td>
+          <td></td>
+        </tr>
+        <tr class="final-grade-row">
+          {{#if editable}}
+            <td></td>
+          {{/if}}
+          <td class="average">Average</td>
+          <td class="grade">{{gradePercentage pixelArtGradingProperty.grade}}</td>
+        </tr>
       </table>
       <div class="letter-grade">
         {{letterGrade}}

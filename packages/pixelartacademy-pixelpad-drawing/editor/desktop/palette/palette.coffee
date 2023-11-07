@@ -7,8 +7,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette'
   @register @id()
   
-  @template: -> @constructor.id()
-  
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
     subNamespace: true

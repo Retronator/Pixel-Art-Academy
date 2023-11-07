@@ -77,17 +77,26 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
   ]
 
   onChange: (event) ->
+    return if @realtime
+
+    @_processChange event
+
+  onBlur: (event) ->
+    return if @realtime
+    
+    @_processChange event
+
+  onInput: (event) ->
+    return unless @realtime
+    
+    @_processChange event
+  
+  _processChange: (event) ->
     if @type is @constructor.Types.Checkbox
       @save $(event.target).is(':checked')
       return
-
-    @save @_convertValue $(event.target).val() unless @realtime
-
-  onBlur: (event) ->
-    @save @_convertValue $(event.target).val() unless @realtime
-
-  onInput: (event) ->
-    @save @_convertValue $(event.target).val() if @realtime
+  
+    @save @_convertValue $(event.target).val()
 
   onChangeSelect: (event) ->
     # Return the value of the option and the text.
