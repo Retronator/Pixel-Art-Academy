@@ -261,6 +261,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     super arguments...
     
     @app.removeComponent @
+  
+  editorDrawComponents: ->
+    providers = [
+      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+    ]
+    
+    _.flatten(provider.editorDrawComponents() for provider in providers when provider?)
     
   _dragPresentItems: (visible, mainDrag, toolsDelay) ->
     @_prepareUpdatePan()

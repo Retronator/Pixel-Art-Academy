@@ -30,8 +30,20 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     
     @desktop = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
     
+    @bitmap = new ComputedField =>
+      @interface.getLoaderForActiveFile()?.asset()
+    ,
+      (a, b) => a is b
+      
+    @pixelArtGrading = new ComputedField =>
+      return unless bitmap = @bitmap()
+      new PAA.Practice.PixelArtGrading bitmap
+    
+    @engineComponent = new PAA.Practice.PixelArtGrading.EngineComponent
+      pixelArtGrading: => @pixelArtGrading()
+    
     @pixelArtGradingProperty = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.asset().properties?.pixelArtGrading
+      @bitmap()?.properties?.pixelArtGrading
     
     @editable = new ComputedField => @pixelArtGradingProperty()?.editable
     
@@ -62,6 +74,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     @autorun (computation) =>
       @deactivate() unless @desktop.focusedMode()
       
+  editorDrawComponents: -> [
+    @engineComponent
+  ]
+  
   activate: ->
     @_changeActive true
     

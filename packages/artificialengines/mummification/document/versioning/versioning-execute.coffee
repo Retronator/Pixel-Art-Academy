@@ -61,6 +61,9 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   # Update the persistent/database document.
   versionedDocument.constructor.documents.update versionedDocument._id, modifier
 
+  # On the client, raise an event that changes were made.
+  versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, action.forward, changedFields if Meteor.isClient
+  
 AM.Document.Versioning._validateActionOrder = (versionedDocument, lastEditTime, newLastEditTime) ->
   # If we have no last edit time we use the creation time.
   documentLastEditTime = versionedDocument.lastEditTime or versionedDocument.creationTime
