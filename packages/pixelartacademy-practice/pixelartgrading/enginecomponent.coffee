@@ -8,6 +8,8 @@ pointColor = "hsl(350deg 50% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
 diagonalColor = "hsl(60deg 50% 50% / 100%)"
 
+_diagonalLine = new THREE.Line3
+
 class PAG.EngineComponent
   constructor: (@options) ->
     @ready = new ComputedField =>
@@ -102,10 +104,9 @@ class PAG.EngineComponent
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    xOffset = if pointA.x < pointB.x then -0.5 else 0.5
-    yOffset = if pointA.y < pointB.y then -0.5 else 0.5
+    PAG.Point.setDiagonalLine pointA, pointB, _diagonalLine
     
-    context.moveTo pointA.x + 0.5 + xOffset, pointA.y + 0.5 + yOffset
-    context.lineTo pointB.x + 0.5 - xOffset, pointB.y + 0.5 - yOffset
+    context.moveTo _diagonalLine.start.x + 0.5, _diagonalLine.start.y + 0.5
+    context.lineTo _diagonalLine.end.x + 0.5, _diagonalLine.end.y + 0.5
     
     context.stroke()

@@ -8,6 +8,12 @@ getEdgeVector = (x, y) ->
   edgeVectors[x] ?= {}
   edgeVectors[x][y] ?= new THREE.Vector2 x, y
   edgeVectors[x][y]
+  
+maxPointDistanceFromLine = Math.sqrt 2
+
+_testLine = new THREE.Line3
+_testPosition = new THREE.Vector3
+_projectedPosition = new THREE.Vector3
 
 class PAG.Line
   constructor: (@grading) ->
@@ -20,6 +26,7 @@ class PAG.Line
     @isClosed = false
 
     @edges = []
+    @edgeSegments = []
     @diagonals = []
     
   destroy: ->
@@ -121,73 +128,95 @@ class PAG.Line
       dy = nextPoint.y - point.y
       @edges.push getEdgeVector dx, dy
       
-    # Detect perfect diagonals.
-    getEdge = (index) => if @isClosed then @edges[index % @edges.length] else @edges[index]
-    getPoint = (index) => if @isClosed then @points[index % @points.length] else @points[index]
-
-    lastDiagonalStartIndex = null
-    lastDiagonalEndIndex = null
+    # Shift points in closed lines to consolidate same edges at the ends.
+    if @isClosed
+      while @edges[0] is @edges[@edges.length - 1]
+        @points.push @points.shift()
+        @edges.push @edges.shift()
+        
+    # Create edge segments.
+    currentEdgeSegment = null
     
+    for edge, edgeIndex in @edges
+      if edge isnt currentEdgeSegment?.edge
+        @edgeSegments.push currentEdgeSegment if currentEdgeSegment?
+        
+        currentEdgeSegment =
+          edge: edge
+          count: 0
+          startPointIndex: edgeIndex
+          endPointIndex: edgeIndex
+          
+      currentEdgeSegment.count++
+      currentEdgeSegment.endPointIndex++
+    
+    @edgeSegments.push currentEdgeSegment
+    
+    # Detect diagonals.
+    getEdge = (index) => if @isClosed then @edges[_.modulo index, @edges.length] else @edges[index]
+    getEdgeSegment = (index) => if @isClosed then @edgeSegments[_.modulo index, @edgeSegments.length] else @edgeSegments[index]
+    getPoint = (index) => if @isClosed then @points[_.modulo index, @points.length] else @points[index]
+
     addDiagonal = (startIndex, endIndex) =>
-      # Don't add diagonals that are already contained within the last diagonal.
-      return if lastDiagonalStartIndex? and startIndex >= lastDiagonalStartIndex and endIndex <= lastDiagonalEndIndex
-      
       # Don't add horizontals or verticals.
       startPoint = getPoint startIndex
-      endPoint = getPoint endIndex + 1
-      return if startPoint.x is endPoint.x or startPoint.y is endPoint.y
-
-      lastDiagonalStartIndex = startIndex
-      lastDiagonalEndIndex = endIndex
+      endPoint = getPoint endIndex
       
       @diagonals.push
         startPoint: startPoint
         endPoint: endPoint
-      
-    for startIndex in [0...@edges.length]
-      mainEdge = @edges[startIndex]
-      mainEdgeCount = 1
-      
-      # Keep expanding until we hit a change.
-      endIndex = startIndex
-      
-      loop
-        endIndex++
-        endEdge = getEdge endIndex
-        break unless endEdge and endEdge is mainEdge
         
-        mainEdgeCount++
-        
-      # If we came to the end, we have a straight line.
-      unless endEdge
-        addDiagonal startIndex, endIndex - 1
-        break
-        
-      offEdge = endEdge
+    edgeSegmentCovered = (false for edgeSegment in @edgeSegments)
+    
+    # Cover edge segments from biggest to smallest.
+    loop
+      largestSegmentIndex = null
+      largestSegmentCount = 0
       
-      # Try to find repetitions of main and off edges.
-      lastRepetitionEndIndex = null
-      repetitionFound = true
+      for edgeSegment, index in @edgeSegments when not edgeSegmentCovered[index]
+        if edgeSegment.count > largestSegmentCount
+          largestSegmentIndex = index
+          largestSegmentCount = edgeSegment.count
       
-      loop
-        for i in [0...mainEdgeCount]
-          endIndex++
-          endEdge = getEdge endIndex
+      break unless largestSegmentIndex?
+      largestSegment = @edgeSegments[largestSegmentIndex]
+      edgeSegmentCovered[largestSegmentIndex] = true
+      
+      diagonalSegmentStartIndex = largestSegmentIndex
+      diagonalSegmentEndIndex = largestSegmentIndex
+      
+      # Diagonal edges are by default diagonal.
+      diagonalFound = largestSegment.edge.x isnt 0 and largestSegment.edge.y isnt 0
+      
+      firstNextSegment = null
+      
+      expandSegment = (index, indexDirection) =>
+        loop
+          break if edgeSegmentCovered[index + indexDirection] or edgeSegmentCovered[index + 2 * indexDirection]
           
-          unless endEdge and endEdge is mainEdge
-            repetitionFound = false
-            break
-        
-        break unless repetitionFound
+          break unless nextSegment = getEdgeSegment index + indexDirection
+          break if nextSegment.count > 1
+          
+          firstNextSegment ?= nextSegment
+          
+          break if nextSegment.edge.x and nextSegment.edge.x is -firstNextSegment.edge.x
+          break if nextSegment.edge.y and nextSegment.edge.y is -firstNextSegment.edge.y
+          
+          break unless nextRepeatingSegment = getEdgeSegment index + 2 * indexDirection
+          break if nextRepeatingSegment.edge isnt largestSegment.edge
+          break if nextRepeatingSegment.count > largestSegment.count
+          
+          index += 2 * indexDirection
+          diagonalFound = true
+          break if nextRepeatingSegment.count < largestSegment.count - 1
+          
+        index
 
-        lastRepetitionEndIndex = endIndex
-        
-        endIndex++
-        endEdge = getEdge endIndex
-        break unless endEdge and endEdge is offEdge
-        
-      if lastRepetitionEndIndex
-        addDiagonal startIndex, lastRepetitionEndIndex
-        
-      else
-        addDiagonal startIndex, startIndex + mainEdgeCount - 1
+      diagonalSegmentEndIndex = expandSegment diagonalSegmentEndIndex, 1
+      diagonalSegmentStartIndex = expandSegment diagonalSegmentStartIndex, -1
+      
+      break unless diagonalFound
+      
+      edgeSegmentCovered[i] = true for i in [diagonalSegmentStartIndex..diagonalSegmentEndIndex]
+      
+      addDiagonal @edgeSegments[diagonalSegmentStartIndex].startPointIndex, @edgeSegments[diagonalSegmentEndIndex].endPointIndex

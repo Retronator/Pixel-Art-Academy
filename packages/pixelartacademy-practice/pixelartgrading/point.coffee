@@ -8,7 +8,32 @@ class PAG.Point
       return line if line in pointB.lines and line.core
       
     null
-  
+    
+  @setDiagonalLine: (pointA, pointB, line) ->
+    if pointA.x < pointB.x
+      line.start.x = pointA.x - pointA.radius
+      line.end.x = pointB.x + pointB.radius
+      
+    else if pointA.x is pointB.x
+      line.start.x = pointA.x
+      line.end.x = pointB.x
+    
+    else
+      line.start.x = pointA.x + pointA.radius
+      line.end.x = pointB.x - pointB.radius
+      
+    if pointA.y < pointB.y
+      line.start.y = pointA.y - pointA.radius
+      line.end.y = pointB.y + pointB.radius
+    
+    else if pointA.y is pointB.y
+      line.start.y = pointA.y
+      line.end.y = pointB.y
+    
+    else
+      line.start.y = pointA.y + pointA.radius
+      line.end.y = pointB.y - pointB.radius
+      
   constructor: (@grading) ->
     @id = Random.id()
     
@@ -18,6 +43,7 @@ class PAG.Point
     
     @x = null
     @y = null
+    @radius = null
     
   destroy: ->
     pixel.unassignPoint @ for pixel in @pixels
@@ -36,18 +62,28 @@ class PAG.Point
     @pixels.push pixel
     pixel.assignPoint @
 
-    @_updatePosition()
+    @_updateProperties()
   
-  _updatePosition: ->
+  _updateProperties: ->
     @x = 0
     @y = 0
+    
+    # We assume a symmetrical point for radius determination so only need to consider one axis.
+    minX = Number.POSITIVE_INFINITY
+    maxX = Number.NEGATIVE_INFINITY
     
     for pixel in @pixels
       @x += pixel.x
       @y += pixel.y
       
+      minX = Math.min minX, pixel.x
+      maxX = Math.max maxX, pixel.x
+      
     @x /= @pixels.length
     @y /= @pixels.length
+    
+    size = maxX - minX + 1
+    @radius = size / 2
     
   connectNeighbors: ->
     for pixel in @pixels
