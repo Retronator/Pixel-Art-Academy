@@ -149,7 +149,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     load: ->
       criterion = @data()
       
-      @pixelArtGrading.pixelArtGradingProperty()[criterion.propertyName]?
+      @pixelArtGrading.pixelArtGradingProperty()?[criterion.propertyName]?
     
     save: (value) ->
       criterion = @data()

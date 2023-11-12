@@ -21,8 +21,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
     $(document).on "mousedown.pixelartacademy-pixelpad-apps-drawing-editor-tools-move", (event) =>
       $target = $(event.target)
 
-      # Only activate when we're moving from the background or the canvas.
-      return unless $target.hasClass('background') or $target.closest('.drawing-area').length
+      # Only activate when we're moving from the pixel canvas.
+      return unless $target.closest('.landsofillusions-assets-spriteeditor-pixelcanvas').length
 
       @moving true
 

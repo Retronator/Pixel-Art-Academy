@@ -7,6 +7,7 @@ shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
 pointColor = "hsl(350deg 50% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
 diagonalColor = "hsl(60deg 50% 50% / 100%)"
+curveColor = "hsl(100deg 50% 50% / 100%)"
 
 _diagonalLine = new THREE.Line3
 
@@ -49,8 +50,11 @@ class PAG.EngineComponent
     
     # Draw diagonals.
     for line in pixelArtGrading.lines
-      for diagonal in line.diagonals
-        @_drawDiagonal context, diagonal.startPoint, diagonal.endPoint
+      #for diagonal in line.diagonals
+      #  @_drawDiagonal context, diagonal
+      
+      for curve in line.curves
+        @_drawCurve context, curve
 
   _addPixelToPath: (context, pixel) ->
     context.rect pixel.x, pixel.y, 1, 1
@@ -94,19 +98,51 @@ class PAG.EngineComponent
     points = line.points
     
     context.moveTo points[0].x + 0.5, points[0].y + 0.5
-    context.lineTo points[i].x + 0.5, points[i].y + 0.5 for i in [1...line.points.length]
+    context.lineTo points[i].x + 0.5, points[i].y + 0.5 for i in [1...points.length]
     context.lineTo points[0].x + 0.5, points[0].y + 0.5 if line.isClosed
     
     context.stroke()
     
-  _drawDiagonal: (context, pointA, pointB) ->
+  _drawDiagonal: (context, diagonal) ->
     context.strokeStyle = diagonalColor
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    PAG.Point.setDiagonalLine pointA, pointB, _diagonalLine
+    PAG.Point.setDiagonalLine diagonal.startPoint, diagonal.endPoint, _diagonalLine
     
     context.moveTo _diagonalLine.start.x + 0.5, _diagonalLine.start.y + 0.5
     context.lineTo _diagonalLine.end.x + 0.5, _diagonalLine.end.y + 0.5
     
     context.stroke()
+    
+  _drawCurve: (context, curve) ->
+    context.strokeStyle = curveColor
+    context.lineWidth = @_pixelSize * 3
+    context.beginPath()
+    
+    points = curve.points
+    getPoint = (index) => if curve.isClosed then points[_.modulo index, points.length - 1] else points[index]
+    
+    context.moveTo points[0].x + 0.5, points[0].y + 0.5
+    
+    for i in [0...points.length - 1]
+      @_drawCurveBetweenPoints context, getPoint(i - 1), getPoint(i), getPoint(i + 1), getPoint(i + 2)
+      
+    context.stroke()
+    
+  _drawCurveBetweenPoints: (context, p1, p2, p3, p4) ->
+    p1 ?= p2
+    p4 ?= p3
+    
+    for t in [0.1..1] by 0.1
+      x = @_catmullRom t, p1.x, p2.x, p3.x, p4.x
+      y = @_catmullRom t, p1.y, p2.y, p3.y, p4.y
+      context.lineTo x + 0.5, y + 0.5
+  
+  _catmullRom: (t, p0, p1, p2, p3) ->
+    v0 = (p2 - p0) * 0.5
+    v1 = (p3 - p1) * 0.5
+    t2 = t * t
+    t3 = t * t2
+    
+    (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1
