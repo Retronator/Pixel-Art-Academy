@@ -6,10 +6,10 @@ deepCoreColor = "hsl(100deg 50% 50% / 50%)"
 shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
 pointColor = "hsl(350deg 50% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
-diagonalColor = "hsl(60deg 50% 50% / 100%)"
+straightLineColor = "hsl(60deg 50% 50% / 100%)"
 curveColor = "hsl(100deg 50% 50% / 100%)"
 
-_diagonalLine = new THREE.Line3
+_straightLine = new THREE.Line3
 
 class PAG.EngineComponent
   constructor: (@options) ->
@@ -48,13 +48,13 @@ class PAG.EngineComponent
     # Draw lines.
     #@_drawLine context, line for line in pixelArtGrading.lines
     
-    # Draw diagonals.
+    # Draw line parts.
     for line in pixelArtGrading.lines
-      #for diagonal in line.diagonals
-      #  @_drawDiagonal context, diagonal
+      for straightLinePart in line.straightLineParts
+        @_drawStraightLine context, straightLinePart
       
-      for curve in line.curves
-        @_drawCurve context, curve
+      for curvePart in line.curveParts
+        @_drawCurve context, curvePart
 
   _addPixelToPath: (context, pixel) ->
     context.rect pixel.x, pixel.y, 1, 1
@@ -102,16 +102,16 @@ class PAG.EngineComponent
     context.lineTo points[0].x + 0.5, points[0].y + 0.5 if line.isClosed
     
     context.stroke()
-    
-  _drawDiagonal: (context, diagonal) ->
-    context.strokeStyle = diagonalColor
+  
+  _drawStraightLine: (context, straightLine) ->
+    context.strokeStyle = straightLineColor
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    PAG.Point.setDiagonalLine diagonal.startPoint, diagonal.endPoint, _diagonalLine
+    PAG.Point.setStraightLine straightLine.startPoint, straightLine.endPoint, _straightLine
     
-    context.moveTo _diagonalLine.start.x + 0.5, _diagonalLine.start.y + 0.5
-    context.lineTo _diagonalLine.end.x + 0.5, _diagonalLine.end.y + 0.5
+    context.moveTo _straightLine.start.x + 0.5, _straightLine.start.y + 0.5
+    context.lineTo _straightLine.end.x + 0.5, _straightLine.end.y + 0.5
     
     context.stroke()
     

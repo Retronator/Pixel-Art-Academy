@@ -6,7 +6,11 @@ edgeVectors = {}
 
 getEdgeVector = (x, y) ->
   edgeVectors[x] ?= {}
-  edgeVectors[x][y] ?= new THREE.Vector2 x, y
+  
+  unless edgeVectors[x][y]
+    edgeVectors[x][y] = new THREE.Vector2 x, y
+    edgeVectors[x][y].isAxisAligned = x is 0 or y is 0
+    
   edgeVectors[x][y]
   
 maxPointDistanceFromLine = Math.sqrt 2
@@ -27,8 +31,8 @@ class PAG.Line
 
     @edges = []
     @edgeSegments = []
-    @diagonals = []
-    @curves = []
+    @straightLineParts = []
+    @curveParts = []
     
   destroy: ->
     pixel.unassignLine @ for pixel in @pixels
@@ -115,7 +119,7 @@ class PAG.Line
       previousPoint = currentPoint
       currentPoint = nextPoint
       
-  classifyLineSegments: ->
+  classifyLineParts: ->
     # Create edges.
     for point, index in @points
       nextPoint = @points[index + 1]
@@ -147,88 +151,107 @@ class PAG.Line
           count: 0
           startPointIndex: edgeIndex
           endPointIndex: edgeIndex
+          clockwise:
+            before: null
+            after: null
+          curveClockwise:
+            before: null
+            after: null
           
       currentEdgeSegment.count++
       currentEdgeSegment.endPointIndex++
     
     @edgeSegments.push currentEdgeSegment
     
-    # Detect diagonals.
     getEdge = (index) => if @isClosed then @edges[_.modulo index, @edges.length] else @edges[index]
     getEdgeSegment = (index) => if @isClosed then @edgeSegments[_.modulo index, @edgeSegments.length] else @edgeSegments[index]
     getPoint = (index) => if @isClosed then @points[_.modulo index, @points.length] else @points[index]
-
-    addDiagonal = (startIndex, endIndex) =>
-      startPoint = getPoint startIndex
-      endPoint = getPoint endIndex
-      
-      @diagonals.push
-        startPoint: startPoint
-        endPoint: endPoint
-        
-    edgeSegmentCovered = (false for edgeSegment in @edgeSegments)
     
-    # Cover edge segments from biggest to smallest.
-    loop
-      largestSegmentIndex = null
-      largestSegmentCount = 0
-      
-      for edgeSegment, index in @edgeSegments when not edgeSegmentCovered[index]
-        if edgeSegment.count > largestSegmentCount
-          largestSegmentIndex = index
-          largestSegmentCount = edgeSegment.count
-      
-      break unless largestSegmentIndex?
-      largestSegment = @edgeSegments[largestSegmentIndex]
-      edgeSegmentCovered[largestSegmentIndex] = true
-      
-      diagonalSegmentStartIndex = largestSegmentIndex
-      diagonalSegmentEndIndex = largestSegmentIndex
-      
-      # Diagonal edges are by default diagonal.
-      diagonalFound = largestSegment.edge.x isnt 0 and largestSegment.edge.y isnt 0
-      
-      firstNextSegment = null
-      
-      expandSegment = (index, indexDirection) =>
-        loop
-          break if edgeSegmentCovered[index + indexDirection] or edgeSegmentCovered[index + 2 * indexDirection]
-          
-          break unless nextSegment = getEdgeSegment index + indexDirection
-          break if nextSegment.count > 1
-          
-          firstNextSegment ?= nextSegment
-          
-          break if nextSegment.edge.x and nextSegment.edge.x is -firstNextSegment.edge.x
-          break if nextSegment.edge.y and nextSegment.edge.y is -firstNextSegment.edge.y
-          
-          break unless nextRepeatingSegment = getEdgeSegment index + 2 * indexDirection
-          break if nextRepeatingSegment.edge isnt largestSegment.edge
-          break if nextRepeatingSegment.count > largestSegment.count
-          
-          index += 2 * indexDirection
-          diagonalFound = true
-          break if nextRepeatingSegment.count < largestSegment.count - 1
-          
-        index
+    # Analyze edge segments.
+    for edgeSegment, edgeSegmentIndex in @edgeSegments
+      edgeSegmentBefore = getEdgeSegment edgeSegmentIndex - 1
+      edgeSegmentAfter = getEdgeSegment edgeSegmentIndex + 1
 
-      diagonalSegmentEndIndex = expandSegment diagonalSegmentEndIndex, 1
-      diagonalSegmentStartIndex = expandSegment diagonalSegmentStartIndex, -1
+      edgeSegment.hasPointSegment =
+        before: not edgeSegment.edge.isAxisAligned and not edgeSegmentBefore?.edge.isAxisAligned
+        on: edgeSegment.edge.isAxisAligned or edgeSegment.count > 1
+        after: not edgeSegment.edge.isAxisAligned and not edgeSegmentAfter?.edge.isAxisAligned
+        
+      edgeSegment.clockwise.after = if not edgeSegmentAfter? or edgeSegment.edge is edgeSegmentAfter.edge then null else _.angleDifference(edgeSegment.edge.angle(), edgeSegmentAfter.edge.angle()) < 0
+      edgeSegmentAfter?.clockwise.before = edgeSegment.clockwise.after
+
+      edgeSegment.curveClockwise.after = edgeSegment.clockwise.after
+      edgeSegmentAfter?.curveClockwise.before = edgeSegmentAfter.clockwise.before
       
-      break unless diagonalFound
+    for edgeSegment, edgeSegmentIndex in @edgeSegments when edgeSegment.edge.isAxisAligned
+      continue unless edgeSegmentAfter = getEdgeSegment edgeSegmentIndex + 1
+      continue unless edgeSegmentAfter.count is 1
       
-      edgeSegmentCovered[i] = true for i in [diagonalSegmentStartIndex..diagonalSegmentEndIndex]
+      continue unless edgeSegmentAfter2 = getEdgeSegment edgeSegmentIndex + 2
+      continue unless edgeSegmentAfter2.edge is edgeSegment.edge
       
-      addDiagonal getEdgeSegment(diagonalSegmentStartIndex).startPointIndex, getEdgeSegment(diagonalSegmentEndIndex).endPointIndex
+      # We have two neighboring point segments in the same direction so the curvature direction is dependent on the change of repetition count.
+      if edgeSegmentAfter2.count is edgeSegment.count
+        # This is a straight segment so no direction can be determined.
+        edgeSegment.curveClockwise.after = null
+
+      else if edgeSegmentAfter2.count > edgeSegment.count
+        # The repeating count is increasing so the curve curves in the direction towards the after segment.
+        edgeSegment.curveClockwise.after = edgeSegmentAfter2.curveClockwise.before
       
+      edgeSegmentAfter.curveClockwise.before = edgeSegment.curveClockwise.after
+      edgeSegmentAfter.curveClockwise.after = edgeSegment.curveClockwise.after
+      edgeSegmentAfter2.curveClockwise.before = edgeSegment.curveClockwise.after
+
+    # Detect straight lines.
+    lastStraightLineStartSegmentIndex = null
+    lastStraightEndSegmentIndex = null
+    
+    addStraightLinePart = (startSegmentIndex, endSegmentIndex) =>
+      # Don't add diagonals that are already contained within the last diagonal.
+      return if lastStraightLineStartSegmentIndex? and startSegmentIndex >= lastStraightLineStartSegmentIndex and endSegmentIndex <= lastStraightEndSegmentIndex
+      
+      lastStraightLineStartSegmentIndex = startSegmentIndex
+      lastStraightEndSegmentIndex = endSegmentIndex
+      
+      @straightLineParts.push
+        startPoint: getPoint getEdgeSegment(startSegmentIndex).startPointIndex
+        endPoint: getPoint getEdgeSegment(endSegmentIndex).endPointIndex
+    
+    for startSegmentIndex in [0...@edgeSegments.length]
+      mainEdgeSegment = @edgeSegments[startSegmentIndex]
+
+      sideEdgeClockwise = mainEdgeSegment.clockwise.after
+
+      mainCount = mainEdgeSegment.count
+      extraCount = mainCount
+
+      endSegmentIndex = startSegmentIndex
+      
+      loop
+        break unless nextEdgeSegment = getEdgeSegment endSegmentIndex + 1
+        break unless nextEdgeSegment.count is 1
+        
+        break unless nextEdgeSegment = getEdgeSegment endSegmentIndex + 2
+        break unless nextEdgeSegment.edge is mainEdgeSegment.edge
+        
+        unless extraCount isnt mainCount or nextEdgeSegment.count is mainCount
+          extraCount = nextEdgeSegment.count
+          break unless Math.abs(mainCount - extraCount) is 1
+          
+        break unless nextEdgeSegment.count in [mainCount, extraCount]
+        
+        endSegmentIndex += 2
+        
+        break unless nextEdgeSegment.clockwise.after is sideEdgeClockwise
+      
+      addStraightLinePart startSegmentIndex, endSegmentIndex
+    
     # Detect curves
     lastCurveStartSegmentIndex = null
     lastCurveEndSegmentIndex = null
     
-    addCurve = (startSegmentIndex, endSegmentIndex, segmentsInfo) =>
-      getEdgeSegment(startSegmentIndex).startPointIndex
-      getEdgeSegment(endSegmentIndex).endPointIndex
-      
+    addCurvePart = (startSegmentIndex, endSegmentIndex) =>
       if endSegmentIndex >= startSegmentIndex + @edgeSegments.length
         endSegmentIndex = startSegmentIndex + @edgeSegments.length - 1
         isClosed = true
@@ -249,19 +272,21 @@ class PAG.Line
       
       segmentParameter = 0.5
       
-      for segmentInfo in segmentsInfo
-        segmentIndex = segmentInfo.index
+      for segmentIndex in [startSegmentIndex..endSegmentIndex]
         segment = getEdgeSegment segmentIndex
         curve.segments.push segment
         
         # Exclude side-step segments from generating curve points, except at end points.
-        isEnd = segmentIndex is startSegmentIndex or segmentIndex is endSegmentIndex
-        continue if segmentInfo.isSideStep and not (isEnd and not isClosed)
+        continue unless segment.hasPointSegment.before or segment.hasPointSegment.on or segment.hasPointSegment.after
         
         startPoint = getPoint segment.startPointIndex
         endPoint = getPoint segment.endPointIndex
         
-        segmentParameter = (segmentIndex - startSegmentIndex) / (endSegmentIndex - startSegmentIndex) unless isClosed
+        unless isClosed
+          segmentParameter = switch segmentIndex
+            when startSegmentIndex then 0
+            when endSegmentIndex then 1
+            else 0.5
         
         curve.points.push
           x: THREE.MathUtils.lerp startPoint.x, endPoint.x, segmentParameter
@@ -278,109 +303,29 @@ class PAG.Line
           x: THREE.MathUtils.lerp startPoint.x, endPoint.x, 0.5
           y: THREE.MathUtils.lerp startPoint.y, endPoint.y, 0.5
       
-      @curves.push curve
+      @curveParts.push curve
       
     for startSegmentIndex in [0...@edgeSegments.length]
-      clockwise = null
-      endSegmentIndex = startSegmentIndex
-      setNewMainSegment = true
-      segmentsInfo = []
+      startEdgeSegment = @edgeSegments[startSegmentIndex]
+      edgeSegment = startEdgeSegment
       
-      loop
-        break unless nextSegment = getEdgeSegment endSegmentIndex + 1
+      # Start on edge segments that introduce point segments.
+      continue unless edgeSegment.hasPointSegment.before or edgeSegment.hasPointSegment.on
+      clockwise = edgeSegment.curveClockwise.after
+      endSegmentIndex = startSegmentIndex
+      
+      # Keep expanding until the turn of direction.
+      while clockwise is edgeSegment.curveClockwise.after or not clockwise? or not edgeSegment.curveClockwise.after?
+        clockwise ?= edgeSegment.curveClockwise.after
 
-        currentSegment = getEdgeSegment endSegmentIndex
-        
-        if setNewMainSegment
-          mainDirection = currentSegment.edge
-          mainDirectionIsAxisAligned = mainDirection.x is 0 or mainDirection.y is 0
-          currentMainCount = currentSegment.count
-          
-          # Don't start on non-axis-aligned side-step segments except at the start of the line or if followed by a non-axis-aligned segment
-          startingCurve = endSegmentIndex is startSegmentIndex
-          nonAxisAligned = not mainDirectionIsAxisAligned
-          isSideStep = currentMainCount is 1
-          atStartOfLine = startSegmentIndex is 0
-          followedByNonAxisAligned = nextSegment and (nextSegment.edge.x isnt 0 and nextSegment.edge.y isnt 0)
-          
-          break if startingCurve and nonAxisAligned and isSideStep and not (atStartOfLine or followedByNonAxisAligned)
-          
-          mainAngle = mainDirection.angle()
-          setNewMainSegment = false
-          
-        segmentsInfo.push
-          index: endSegmentIndex
-          isSideStep: false
-        
-        nextSegmentAngle = nextSegment.edge.angle()
-        nextSegmentClockwise = _.angleDifference(mainAngle, nextSegmentAngle) < 0
-        
-        if nextSegment.count > 1
-          # The segment isn't a single side-step, so we have new tangent direction
-          # but only continue the current curve if it has the same curvature direction.
-          nextClockwise = nextSegmentClockwise
-          setNewMainSegment = true
-
-        else
-          if mainDirectionIsAxisAligned
-            # For axis-aligned directions, the curvature depends on the length of the segment after side-step, if we have it.
-            if nextRepeatingSegment = getEdgeSegment endSegmentIndex + 2
-              # If we're returning back to the original direction, we can
-              # determine the direction based on change of repetition count.
-              if nextRepeatingSegment.edge is mainDirection
-                # Check if repetition count actually changed (otherwise we
-                # can't determine it as it mimics a diagonal at this point).
-                if currentMainCount is nextRepeatingSegment.count
-                  # Move to next repeating segment (skip over side-step).
-                  endSegmentIndex++
-                  
-                  segmentsInfo.push
-                    index: endSegmentIndex + 1
-                    isSideStep: true
-                  
-                else
-                  # If the repeating count is decreasing, the curve curves in the same direction as the sidestep.
-                  nextClockwise = if nextRepeatingSegment.count < currentMainCount then nextSegmentClockwise else not nextSegmentClockwise
-                  currentMainCount = nextRepeatingSegment.count
-                
-                  # Check if we'll be terminating the curve due to change of direction.
-                  unless clockwise? and nextClockwise isnt clockwise
-                    # We're not terminating, we can move to the next repeating segment (skip over side-step).
-                    endSegmentIndex++
-                    
-                    segmentsInfo.push
-                      index: endSegmentIndex + 1
-                      isSideStep: true
-              
-              else
-                # The direction completely changes after the side-step, so for now just consider the side-step.
-                nextClockwise = nextSegmentClockwise
-                setNewMainSegment = true
-    
-            else
-              # We do not have the second segment so the direction is then
-              # simply the one from the next segment (since it's the last one).
-              nextClockwise = nextSegmentClockwise
-              
-          else
-            # We're turning away from a non-axis-aligned direction so we consider this a turn in direction.
-            nextClockwise = nextSegmentClockwise
-            setNewMainSegment = true
-          
-        # Terminate the curve if curvature changed.
-        if clockwise?
-          break if nextClockwise isnt clockwise
-          
-        else
-          clockwise = nextClockwise
-          
+        break unless edgeSegment = getEdgeSegment endSegmentIndex + 1
         endSegmentIndex++
-        
-        break if endSegmentIndex >= startSegmentIndex + @edgeSegments.length
+
+        break if edgeSegment is startEdgeSegment
         
       continue unless clockwise?
 
-      addCurve startSegmentIndex, endSegmentIndex, segmentsInfo
+      addCurvePart startSegmentIndex, endSegmentIndex
       
       # No need to keep going if we found a closed curve.
-      break if _.last(@curves).isClosed
+      break if _.last(@curveParts).isClosed

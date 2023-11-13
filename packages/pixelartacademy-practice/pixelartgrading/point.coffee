@@ -9,7 +9,7 @@ class PAG.Point
       
     null
     
-  @setDiagonalLine: (pointA, pointB, line) ->
+  @setStraightLine: (pointA, pointB, line) ->
     if pointA.x < pointB.x
       line.start.x = pointA.x - pointA.radius
       line.end.x = pointB.x + pointB.radius
