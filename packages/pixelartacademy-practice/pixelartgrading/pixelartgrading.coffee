@@ -221,7 +221,7 @@ class PAA.Practice.PixelArtGrading
         line.fillFromPoints point, neighbor
         
     # Classify lines.
-    line.classifyLineSegments() for line in newLines
+    line.classifyLineParts() for line in newLines
     
   _addPixel: (x, y) ->
     pixel = new @constructor.Pixel @, x, y

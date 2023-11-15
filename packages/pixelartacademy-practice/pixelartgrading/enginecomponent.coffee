@@ -6,10 +6,13 @@ deepCoreColor = "hsl(100deg 50% 50% / 50%)"
 shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
 pointColor = "hsl(350deg 50% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
-straightLineColor = "hsl(60deg 50% 50% / 100%)"
+getStraightLineColor = (opacity) -> "hsl(60deg 50% 50% / #{opacity})"
+straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
 
 _straightLine = new THREE.Line3
+_pointPosition = new THREE.Vector3
+_pointPositionOnLine = new THREE.Vector3
 
 class PAG.EngineComponent
   constructor: (@options) ->
@@ -50,11 +53,9 @@ class PAG.EngineComponent
     
     # Draw line parts.
     for line in pixelArtGrading.lines
-      for straightLinePart in line.straightLineParts
-        @_drawStraightLine context, straightLinePart
-      
-      for curvePart in line.curveParts
-        @_drawCurve context, curvePart
+      for part in line.parts
+        @_drawStraightLine context, part, false if part instanceof PAG.Line.Part.StraightLine
+        @_drawCurve context, part if part instanceof PAG.Line.Part.Curve
 
   _addPixelToPath: (context, pixel) ->
     context.rect pixel.x, pixel.y, 1, 1
@@ -103,14 +104,41 @@ class PAG.EngineComponent
     
     context.stroke()
   
-  _drawStraightLine: (context, straightLine) ->
+  _drawStraightLine: (context, straightLine, showConfidence) ->
     context.strokeStyle = straightLineColor
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    PAG.Point.setStraightLine straightLine.startPoint, straightLine.endPoint, _straightLine
-    
+    PAG.Point.setStraightLine straightLine.displayPoints[0], straightLine.displayPoints[1], _straightLine
+
     context.moveTo _straightLine.start.x + 0.5, _straightLine.start.y + 0.5
+    
+    if showConfidence
+      context.strokeStyle = getStraightLineColor straightLine.pointConfidences[straightLine.startPointIndex]
+      
+      for segmentIndex in [straightLine.startSegmentIndex..straightLine.endSegmentIndex]
+        segment = straightLine.line.getEdgeSegment segmentIndex
+        
+        if segment.startPointIndex?
+          startPointIndex = segment.startPointIndex
+          endPointIndex = segment.endPointIndex
+          
+          startPointIndex = Math.max startPointIndex, @startPointIndex if segmentIndex is @startSegmentIndex
+          endPointIndex = Math.min endPointIndex, @endPointIndex if segmentIndex is @endSegmentIndex
+          
+          for pointIndex in [segment.startPointIndex..segment.endPointIndex]
+            point = straightLine.line.getPoint pointIndex
+            _pointPosition.x = point.x
+            _pointPosition.y = point.y
+            _straightLine.closestPointToPoint _pointPosition, false, _pointPositionOnLine
+            
+            context.lineTo _pointPositionOnLine.x + 0.5, _pointPositionOnLine.y + 0.5
+            context.stroke()
+            
+            context.beginPath()
+            context.moveTo _pointPositionOnLine.x + 0.5, _pointPositionOnLine.y + 0.5
+            context.strokeStyle = getStraightLineColor straightLine.pointConfidences[pointIndex]
+
     context.lineTo _straightLine.end.x + 0.5, _straightLine.end.y + 0.5
     
     context.stroke()
@@ -120,7 +148,7 @@ class PAG.EngineComponent
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    points = curve.points
+    points = curve.displayPoints
     getPoint = (index) => if curve.isClosed then points[_.modulo index, points.length - 1] else points[index]
     
     context.moveTo points[0].x + 0.5, points[0].y + 0.5

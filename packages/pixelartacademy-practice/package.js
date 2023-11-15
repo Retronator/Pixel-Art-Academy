@@ -120,8 +120,12 @@ Package.onUse(function(api) {
   // Pixel art grading
   api.addFile('pixelartgrading..')
   api.addFile('pixelartgrading/core')
-  api.addFile('pixelartgrading/line')
   api.addFile('pixelartgrading/pixel')
   api.addFile('pixelartgrading/point')
   api.addFile('pixelartgrading/enginecomponent')
+
+  api.addFile('pixelartgrading/line..')
+  api.addFile('pixelartgrading/line/part..')
+  api.addFile('pixelartgrading/line/part/straightline')
+  api.addFile('pixelartgrading/line/part/curve')
 });

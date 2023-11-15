@@ -12,12 +12,6 @@ getEdgeVector = (x, y) ->
     edgeVectors[x][y].isAxisAligned = x is 0 or y is 0
     
   edgeVectors[x][y]
-  
-maxPointDistanceFromLine = Math.sqrt 2
-
-_testLine = new THREE.Line3
-_testPosition = new THREE.Vector3
-_projectedPosition = new THREE.Vector3
 
 class PAG.Line
   constructor: (@grading) ->
@@ -31,13 +25,22 @@ class PAG.Line
 
     @edges = []
     @edgeSegments = []
-    @straightLineParts = []
-    @curveParts = []
+
+    @potentialParts = []
+    @pointPotentialParts = []
+    
+    @parts = []
     
   destroy: ->
     pixel.unassignLine @ for pixel in @pixels
     point.unassignLine @ for point in @points
     @core?.unassignOutline @
+    
+  getEdgeSegment: (index) ->
+    if @isClosed then @edgeSegments[_.modulo index, @edgeSegments.length] else @edgeSegments[index]
+
+  getPoint: (index) ->
+    if @isClosed then @points[_.modulo index, @points.length] else @points[index]
   
   assignPoint: (point, end = true) ->
     throw new AE.ArgumentException "The point is already assigned to this line.", point, @ if point in @points
@@ -163,20 +166,36 @@ class PAG.Line
     
     @edgeSegments.push currentEdgeSegment
     
-    getEdge = (index) => if @isClosed then @edges[_.modulo index, @edges.length] else @edges[index]
-    getEdgeSegment = (index) => if @isClosed then @edgeSegments[_.modulo index, @edgeSegments.length] else @edgeSegments[index]
-    getPoint = (index) => if @isClosed then @points[_.modulo index, @points.length] else @points[index]
-    
     # Analyze edge segments.
     for edgeSegment, edgeSegmentIndex in @edgeSegments
-      edgeSegmentBefore = getEdgeSegment edgeSegmentIndex - 1
-      edgeSegmentAfter = getEdgeSegment edgeSegmentIndex + 1
+      edgeSegment.displayStartPointIndex = edgeSegment.startPointIndex
+      edgeSegment.displayEndPointIndex = edgeSegment.endPointIndex
+    
+      edgeSegmentBefore = @getEdgeSegment edgeSegmentIndex - 1
+      edgeSegmentAfter = @getEdgeSegment edgeSegmentIndex + 1
 
       edgeSegment.hasPointSegment =
         before: not edgeSegment.edge.isAxisAligned and not edgeSegmentBefore?.edge.isAxisAligned
         on: edgeSegment.edge.isAxisAligned or edgeSegment.count > 1
         after: not edgeSegment.edge.isAxisAligned and not edgeSegmentAfter?.edge.isAxisAligned
+      
+      if edgeSegment.edge.isAxisAligned
+        # Axis aligned edge segments create 1 multiple-point segment.
+        edgeSegment.pointSegmentsCount = 1
+        edgeSegment.pointSegmentLength = if edgeSegment.startPointIndex? then edgeSegment.endPointIndex - edgeSegment.startPointIndex + 1 else 0
         
+      else
+        edgeSegment.startPointIndex++ unless edgeSegment.hasPointSegment.before
+        edgeSegment.endPointIndex-- unless edgeSegment.hasPointSegment.after
+        
+        if edgeSegment.startPointIndex > edgeSegment.endPointIndex
+          edgeSegment.startPointIndex = null
+          edgeSegment.endPointIndex = null
+          
+        # Diagonal edge segments create multiple 1-point segments.
+        edgeSegment.pointSegmentsCount = if edgeSegment.startPointIndex? then edgeSegment.endPointIndex - edgeSegment.startPointIndex + 1 else 0
+        edgeSegment.pointSegmentLength = 1
+      
       edgeSegment.clockwise.after = if not edgeSegmentAfter? or edgeSegment.edge is edgeSegmentAfter.edge then null else _.angleDifference(edgeSegment.edge.angle(), edgeSegmentAfter.edge.angle()) < 0
       edgeSegmentAfter?.clockwise.before = edgeSegment.clockwise.after
 
@@ -184,10 +203,10 @@ class PAG.Line
       edgeSegmentAfter?.curveClockwise.before = edgeSegmentAfter.clockwise.before
       
     for edgeSegment, edgeSegmentIndex in @edgeSegments when edgeSegment.edge.isAxisAligned
-      continue unless edgeSegmentAfter = getEdgeSegment edgeSegmentIndex + 1
+      continue unless edgeSegmentAfter = @getEdgeSegment edgeSegmentIndex + 1
       continue unless edgeSegmentAfter.count is 1
       
-      continue unless edgeSegmentAfter2 = getEdgeSegment edgeSegmentIndex + 2
+      continue unless edgeSegmentAfter2 = @getEdgeSegment edgeSegmentIndex + 2
       continue unless edgeSegmentAfter2.edge is edgeSegment.edge
       
       # We have two neighboring point segments in the same direction so the curvature direction is dependent on the change of repetition count.
@@ -205,47 +224,87 @@ class PAG.Line
 
     # Detect straight lines.
     lastStraightLineStartSegmentIndex = null
-    lastStraightEndSegmentIndex = null
+    lastStraightLineEndSegmentIndex = null
     
-    addStraightLinePart = (startSegmentIndex, endSegmentIndex) =>
-      # Don't add diagonals that are already contained within the last diagonal.
-      return if lastStraightLineStartSegmentIndex? and startSegmentIndex >= lastStraightLineStartSegmentIndex and endSegmentIndex <= lastStraightEndSegmentIndex
+    addStraightLinePart = (startSegmentIndex, endSegmentIndex, averageSegmentCount) =>
+      # Don't add a straight line that is already contained within the last straight line.
+      return if lastStraightLineStartSegmentIndex? and startSegmentIndex >= lastStraightLineStartSegmentIndex and endSegmentIndex <= lastStraightLineEndSegmentIndex
       
       lastStraightLineStartSegmentIndex = startSegmentIndex
-      lastStraightEndSegmentIndex = endSegmentIndex
+      lastStraightLineEndSegmentIndex = endSegmentIndex
       
-      @straightLineParts.push
-        startPoint: getPoint getEdgeSegment(startSegmentIndex).startPointIndex
-        endPoint: getPoint getEdgeSegment(endSegmentIndex).endPointIndex
-    
+      @potentialParts.push new PAG.Line.Part.StraightLine @, startSegmentIndex, endSegmentIndex, null, null, averageSegmentCount
+
     for startSegmentIndex in [0...@edgeSegments.length]
-      mainEdgeSegment = @edgeSegments[startSegmentIndex]
+      startEdgeSegment = @edgeSegments[startSegmentIndex]
+      
+      # Start on edge segments that introduce point segments.
+      continue unless startEdgeSegment.pointSegmentsCount
 
-      sideEdgeClockwise = mainEdgeSegment.clockwise.after
+      sideEdgeClockwise = startEdgeSegment.clockwise.after
 
-      mainCount = mainEdgeSegment.count
-      extraCount = mainCount
+      mainCount = null
+      extraCount = null
 
       endSegmentIndex = startSegmentIndex
       
       loop
-        break unless nextEdgeSegment = getEdgeSegment endSegmentIndex + 1
+        break unless nextEdgeSegment = @getEdgeSegment endSegmentIndex + 1
         break unless nextEdgeSegment.count is 1
+        break unless startEdgeSegment.edge.isAxisAligned or nextEdgeSegment.edge.isAxisAligned
         
-        break unless nextEdgeSegment = getEdgeSegment endSegmentIndex + 2
-        break unless nextEdgeSegment.edge is mainEdgeSegment.edge
-        
-        unless extraCount isnt mainCount or nextEdgeSegment.count is mainCount
-          extraCount = nextEdgeSegment.count
-          break unless Math.abs(mainCount - extraCount) is 1
+        unless secondNextEdgeSegment = @getEdgeSegment endSegmentIndex + 2
+          # Include the final side-step segment if it provides a point.
+          endSegmentIndex++ if nextEdgeSegment.pointSegmentsCount
           
-        break unless nextEdgeSegment.count in [mainCount, extraCount]
+          break
+        
+        break unless secondNextEdgeSegment.edge is startEdgeSegment.edge
+
+        endStraightLine = false
+        determineExtraCount = false
+
+        unless mainCount
+          # We're determining the initial count.
+          if secondNextEdgeSegment.count > startEdgeSegment.count
+            # The first element is shorter so we can consider it being the ending part.
+            mainCount = secondNextEdgeSegment.count
+            
+          else
+            mainCount = startEdgeSegment.count
+            determineExtraCount = true
+            
+        else unless extraCount
+          determineExtraCount = true
+          
+        else unless secondNextEdgeSegment.count in [mainCount, extraCount]
+          endStraightLine = true
+          
+        if determineExtraCount
+          unless secondNextEdgeSegment.count is mainCount
+            # The extra count can only differ by 1 from main count.
+            if Math.abs(mainCount - secondNextEdgeSegment.count) is 1
+              extraCount = secondNextEdgeSegment.count
+            
+            else
+              endStraightLine = true
+          
+        if endStraightLine
+          # This segment is too much different than the main segment, but it could be the final part if it's shorter.
+          if secondNextEdgeSegment.count < mainCount
+            # Allow this segment to be the end of the straight line.
+            endSegmentIndex += 2
+            
+          break
         
         endSegmentIndex += 2
         
-        break unless nextEdgeSegment.clockwise.after is sideEdgeClockwise
+        break unless secondNextEdgeSegment.clockwise.after is sideEdgeClockwise
+        
+      mainCount ?= startEdgeSegment.count
+      extraCount ?= mainCount
       
-      addStraightLinePart startSegmentIndex, endSegmentIndex
+      addStraightLinePart startSegmentIndex, endSegmentIndex, (mainCount + extraCount) / 2
     
     # Detect curves
     lastCurveStartSegmentIndex = null
@@ -259,58 +318,23 @@ class PAG.Line
       else
         isClosed = false
         
-      # Don't add curves that are already contained within the last curve.
+      # Don't add a curve that is already contained within the last curve.
       return if lastCurveStartSegmentIndex? and startSegmentIndex >= lastCurveStartSegmentIndex and endSegmentIndex <= lastCurveEndSegmentIndex
       
       lastCurveStartSegmentIndex = startSegmentIndex
       lastCurveEndSegmentIndex = endSegmentIndex
       
-      curve =
-        segments: []
-        points: []
-        isClosed: isClosed
-      
-      segmentParameter = 0.5
-      
-      for segmentIndex in [startSegmentIndex..endSegmentIndex]
-        segment = getEdgeSegment segmentIndex
-        curve.segments.push segment
-        
-        # Exclude side-step segments from generating curve points, except at end points.
-        continue unless segment.hasPointSegment.before or segment.hasPointSegment.on or segment.hasPointSegment.after
-        
-        startPoint = getPoint segment.startPointIndex
-        endPoint = getPoint segment.endPointIndex
-        
-        unless isClosed
-          segmentParameter = switch segmentIndex
-            when startSegmentIndex then 0
-            when endSegmentIndex then 1
-            else 0.5
-        
-        curve.points.push
-          x: THREE.MathUtils.lerp startPoint.x, endPoint.x, segmentParameter
-          y: THREE.MathUtils.lerp startPoint.y, endPoint.y, segmentParameter
-          
-      if isClosed and (curve.points[0].x isnt curve.points[curve.points.length - 1].x or curve.points[0].y isnt curve.points[curve.points.length - 1].y)
-        curve.points.push curve.points[0]
-        
-      if curve.points.length is 2
-        startPoint = getPoint getEdgeSegment(startSegmentIndex).endPointIndex
-        endPoint = getPoint getEdgeSegment(endSegmentIndex).startPointIndex
-        
-        curve.points.splice 1, 0,
-          x: THREE.MathUtils.lerp startPoint.x, endPoint.x, 0.5
-          y: THREE.MathUtils.lerp startPoint.y, endPoint.y, 0.5
-      
-      @curveParts.push curve
+      curve = new PAG.Line.Part.Curve @, startSegmentIndex, endSegmentIndex, null, null, isClosed
+      @potentialParts.push curve
+
+      curve
       
     for startSegmentIndex in [0...@edgeSegments.length]
       startEdgeSegment = @edgeSegments[startSegmentIndex]
       edgeSegment = startEdgeSegment
       
       # Start on edge segments that introduce point segments.
-      continue unless edgeSegment.hasPointSegment.before or edgeSegment.hasPointSegment.on
+      continue unless edgeSegment.pointSegmentsCount
       clockwise = edgeSegment.curveClockwise.after
       endSegmentIndex = startSegmentIndex
       
@@ -318,14 +342,60 @@ class PAG.Line
       while clockwise is edgeSegment.curveClockwise.after or not clockwise? or not edgeSegment.curveClockwise.after?
         clockwise ?= edgeSegment.curveClockwise.after
 
-        break unless edgeSegment = getEdgeSegment endSegmentIndex + 1
+        break unless edgeSegment = @getEdgeSegment endSegmentIndex + 1
         endSegmentIndex++
 
         break if edgeSegment is startEdgeSegment
         
       continue unless clockwise?
 
-      addCurvePart startSegmentIndex, endSegmentIndex
+      curve = addCurvePart startSegmentIndex, endSegmentIndex
       
       # No need to keep going if we found a closed curve.
-      break if _.last(@curveParts).isClosed
+      break if curve?.isClosed
+      
+    # Pick the most likely parts for each point.
+    potentialLinePart.calculatePointConfidence() for potentialLinePart in @potentialParts
+    
+    for point, pointIndex in @points
+      maxWeightedConfidence = Number.NEGATIVE_INFINITY
+      mostConfidentPart = null
+      
+      for potentialLinePart in @potentialParts
+        confidence = potentialLinePart.pointConfidences[pointIndex]
+        continue unless confidence?
+        
+        weightedConfidence = confidence * Math.min 10, potentialLinePart.points.length
+        
+        if weightedConfidence > maxWeightedConfidence
+          maxWeightedConfidence = weightedConfidence
+          mostConfidentPart = potentialLinePart
+      
+      @pointPotentialParts.push mostConfidentPart
+      
+    # Create final line parts.
+    startPointIndex = 0
+    
+    for point, pointIndex in @points
+      unless potentialPart = @pointPotentialParts[pointIndex]
+        startPointIndex = pointIndex + 1
+        continue
+
+      nextPotentialPart = @pointPotentialParts[pointIndex + 1]
+      continue if nextPotentialPart is potentialPart
+      
+      endPointIndex = pointIndex
+    
+      # Find which edge segments include starting/ending point indexes.
+      startSegmentIndex = null
+      endSegmentIndex = null
+      
+      for segmentIndex in [potentialPart.startSegmentIndex..potentialPart.endSegmentIndex]
+        segment = @getEdgeSegment segmentIndex
+        
+        startSegmentIndex ?= segmentIndex if segment.startPointIndex <= startPointIndex <= segment.endPointIndex
+        endSegmentIndex = segmentIndex if segment.startPointIndex <= endPointIndex <= segment.endPointIndex
+        
+      @parts.push new potentialPart.constructor @, startSegmentIndex, endSegmentIndex, startPointIndex, endPointIndex, potentialPart.isClosed
+      
+      startPointIndex = endPointIndex + 1
