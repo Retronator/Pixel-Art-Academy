@@ -6,14 +6,8 @@ class PAG.Line.Part
   constructor: (@line, @startSegmentIndex, @endSegmentIndex, @startPointIndex, @endPointIndex) ->
     @id = Random.id()
     
-    displayStartPointIndex = @startPointIndex
-    displayEndPointIndex = @endPointIndex
-    
     @startPointIndex ?= @line.getEdgeSegment(@startSegmentIndex).startPointIndex
     @endPointIndex ?= @line.getEdgeSegment(@endSegmentIndex).endPointIndex
-    
-    displayStartPointIndex ?= @line.getEdgeSegment(@startSegmentIndex).displayStartPointIndex
-    displayEndPointIndex ?= @line.getEdgeSegment(@endSegmentIndex).displayEndPointIndex
     
     # Collect points.
     @points = []
@@ -32,15 +26,19 @@ class PAG.Line.Part
         for pointIndex in [startPointIndex..endPointIndex]
           point = @line.getPoint pointIndex
           @points.push point
+  
+  overlaysPointRange: (startPointIndex, endPointIndex) ->
+    pointCount = @line.points.length
+    startPointIndex = startPointIndex % pointCount
+    endPointIndex = endPointIndex % pointCount
+
+    for segmentIndex in [@startSegmentIndex..@endSegmentIndex]
+      segment = @line.getEdgeSegment segmentIndex
       
-      startPointIndex = segment.displayStartPointIndex
-      endPointIndex = segment.displayEndPointIndex
-      
-      startPointIndex = Math.max startPointIndex, displayStartPointIndex if segmentIndex is @startSegmentIndex
-      endPointIndex = Math.min endPointIndex, displayEndPointIndex if segmentIndex is @endSegmentIndex
-      
-      for pointIndex in [startPointIndex..endPointIndex]
-        point = @line.getPoint pointIndex
-        @displayPoints.push point unless point is @displayPoints[@displayPoints.length - 1]
+      if endPointIndex >= startPointIndex
+        return true if startPointIndex <= segment.endPointIndex and endPointIndex >= segment.startPointIndex
         
-  calculatePointConfidence: -> throw new AE.NotImplementedException "Line part must provide confidence calculation."
+      else
+        return true if startPointIndex <= segment.endPointIndex or endPointIndex >= segment.startPointIndex
+
+    false

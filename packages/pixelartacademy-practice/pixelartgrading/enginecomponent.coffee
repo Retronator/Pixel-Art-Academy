@@ -15,11 +15,21 @@ _pointPosition = new THREE.Vector3
 _pointPositionOnLine = new THREE.Vector3
 
 class PAG.EngineComponent
+  @debug = true
+  
   constructor: (@options) ->
     @ready = new ComputedField =>
       return unless @options.pixelArtGrading()
 
       true
+      
+    @showPotentialParts = new ReactiveField false
+    
+    if @constructor.debug
+      $(document).on 'keydown', (event) =>
+        return unless event.which is Artificial.Control.Keys.forwardSlash
+        
+        @showPotentialParts not @showPotentialParts()
 
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()
@@ -52,10 +62,12 @@ class PAG.EngineComponent
     #@_drawLine context, line for line in pixelArtGrading.lines
     
     # Draw line parts.
+    linePartsProperty = if @showPotentialParts() then 'potentialParts' else 'parts'
+    
     for line in pixelArtGrading.lines
-      for part in line.parts
-        @_drawStraightLine context, part, false if part instanceof PAG.Line.Part.StraightLine
-        @_drawCurve context, part if part instanceof PAG.Line.Part.Curve
+      for part in line[linePartsProperty]
+        @_drawStraightLine context, part if part instanceof PAG.Line.Part.StraightLine
+        @_drawCurve context, part, true if part instanceof PAG.Line.Part.Curve
 
   _addPixelToPath: (context, pixel) ->
     context.rect pixel.x, pixel.y, 1, 1
@@ -104,7 +116,7 @@ class PAG.EngineComponent
     
     context.stroke()
   
-  _drawStraightLine: (context, straightLine, showConfidence) ->
+  _drawStraightLine: (context, straightLine) ->
     context.strokeStyle = straightLineColor
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
@@ -112,33 +124,6 @@ class PAG.EngineComponent
     PAG.Point.setStraightLine straightLine.displayPoints[0], straightLine.displayPoints[1], _straightLine
 
     context.moveTo _straightLine.start.x + 0.5, _straightLine.start.y + 0.5
-    
-    if showConfidence
-      context.strokeStyle = getStraightLineColor straightLine.pointConfidences[straightLine.startPointIndex]
-      
-      for segmentIndex in [straightLine.startSegmentIndex..straightLine.endSegmentIndex]
-        segment = straightLine.line.getEdgeSegment segmentIndex
-        
-        if segment.startPointIndex?
-          startPointIndex = segment.startPointIndex
-          endPointIndex = segment.endPointIndex
-          
-          startPointIndex = Math.max startPointIndex, @startPointIndex if segmentIndex is @startSegmentIndex
-          endPointIndex = Math.min endPointIndex, @endPointIndex if segmentIndex is @endSegmentIndex
-          
-          for pointIndex in [segment.startPointIndex..segment.endPointIndex]
-            point = straightLine.line.getPoint pointIndex
-            _pointPosition.x = point.x
-            _pointPosition.y = point.y
-            _straightLine.closestPointToPoint _pointPosition, false, _pointPositionOnLine
-            
-            context.lineTo _pointPositionOnLine.x + 0.5, _pointPositionOnLine.y + 0.5
-            context.stroke()
-            
-            context.beginPath()
-            context.moveTo _pointPositionOnLine.x + 0.5, _pointPositionOnLine.y + 0.5
-            context.strokeStyle = getStraightLineColor straightLine.pointConfidences[pointIndex]
-
     context.lineTo _straightLine.end.x + 0.5, _straightLine.end.y + 0.5
     
     context.stroke()

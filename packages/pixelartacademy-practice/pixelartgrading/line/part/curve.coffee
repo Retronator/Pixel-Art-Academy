@@ -15,7 +15,7 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
       segment = @line.getEdgeSegment segmentIndex
       
       # Exclude side-step segments from generating curve points, except at end points.
-      continue unless segment.hasPointSegment.before or segment.hasPointSegment.on or segment.hasPointSegment.after
+      continue unless segment.pointSegmentsCount or segmentIndex in [@startSegmentIndex, @endSegmentIndex]
       
       startPointIndex = segment.startPointIndex
       endPointIndex = segment.endPointIndex
@@ -48,37 +48,99 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
         y: THREE.MathUtils.lerp startPoint.y, endPoint.y, 0.5
 
   calculatePointConfidence: ->
+    # Create point segments.
+    @pointSegments = []
+    
+    for startSegmentIndex in [@startSegmentIndex..@endSegmentIndex]
+      edgeSegment = @_getEdgeSegment startSegmentIndex
+      continue unless edgeSegment.pointSegmentsCount
+      
+      startPointIndex = edgeSegment.startPointIndex
+
+      endSegmentIndex = startSegmentIndex
+      testSegmentIndex = startSegmentIndex
+      length = 0
+      
+      # Expand segment to as many segments with points while no curvature changes happen.
+      loop
+        break unless edgeSegment = @_getEdgeSegment testSegmentIndex
+        
+        if edgeSegment.pointSegmentsCount
+          endSegmentIndex = testSegmentIndex
+          length += edgeSegment.pointSegmentsCount * edgeSegment.pointSegmentLength
+        
+        break if edgeSegment.curveClockwise.after?
+        
+        testSegmentIndex++
+        
+      lastSegment = _.last @pointSegments
+      continue if lastSegment and endSegmentIndex <= lastSegment.endSegmentIndex
+      
+      endEdgeSegment = @_getEdgeSegment endSegmentIndex
+      endPointIndex = endEdgeSegment.endPointIndex
+      
+      @pointSegments.push {startSegmentIndex, endSegmentIndex, startPointIndex, endPointIndex, length}
+    
     @pointConfidences = []
     
-    previousConfidence = 0
-    
-    for segmentIndex in [@startSegmentIndex..@endSegmentIndex]
-      segment = @line.getEdgeSegment segmentIndex
-      continue unless segment.pointSegmentsCount
-      
-      nextSegment = null
-      nextSegment = @line.getEdgeSegment segmentIndex + 1 if segmentIndex + 1 <= @endSegmentIndex
-      nextSegment = @line.getEdgeSegment segmentIndex + 2 unless nextSegment?.pointSegmentsCount or segmentIndex + 2 > @endSegmentIndex
-      
-      if nextSegment
-        nextConfidence = @_getConfidenceBetweenSegments segment, nextSegment
-      
+    for pointSegment, pointSegmentIndex in @pointSegments
+      # Start by being confident in the points by default.
+      if pointSegment.endPointIndex > pointSegment.startPointIndex
+        @pointConfidences[pointIndex] = true for pointIndex in [pointSegment.startPointIndex..pointSegment.endPointIndex]
+        
       else
-        nextConfidence = 0
+        @pointConfidences[pointIndex] = true for pointIndex in [0..pointSegment.endPointIndex]
+        @pointConfidences[pointIndex] = true for pointIndex in [pointSegment.startPointIndex...@line.points.length]
       
-      pointsCount = segment.endPointIndex - segment.startPointIndex + 1
-      
-      for pointIndex in [segment.startPointIndex..segment.endPointIndex]
-        pointParameter = (pointIndex - segment.startPointIndex + 1) / (pointsCount + 1)
-        @pointConfidences[pointIndex] = THREE.MathUtils.lerp previousConfidence, nextConfidence, pointParameter
-      
-      previousConfidence = nextConfidence
-      
-  _getConfidenceBetweenSegments: (segmentA, segmentB) ->
-    totalLength = segmentA.pointSegmentLength + segmentB.pointSegmentLength
-    lengthDifference = Math.abs segmentA.pointSegmentLength - segmentB.pointSegmentLength
-    maxLengthDifference = totalLength - 2
+      # If we're on the longer segment than the two neighbors combined (+2), we need to break the curve.
+      maxPointSegmentLength = 0
 
-    maxConfidence = 3 / totalLength
+      angle = @_getEdgeSegment(pointSegment.startSegmentIndex).edge.angle()
+      
+      if previousPointSegment = @_getPointSegment pointSegmentIndex - 1
+        previousAngle = @_getEdgeSegment(previousPointSegment.startSegmentIndex).edge.angle()
+        
+        if _.angleDistance(angle, previousAngle) > 1
+          startConfidentPointsCount = 1
+        
+        else
+          startConfidentPointsCount = previousPointSegment.length + 1
+        
+        maxPointSegmentLength += startConfidentPointsCount
+      
+      if nextPointSegment = @_getPointSegment pointSegmentIndex + 1
+        nextAngle = @_getEdgeSegment(nextPointSegment.startSegmentIndex).edge.angle()
+        
+        if _.angleDistance(angle, nextAngle) > 1
+          endConfidentPointsCount = 1
+          
+        else
+          endConfidentPointsCount = nextPointSegment.length + 1
+        
+        maxPointSegmentLength += startConfidentPointsCount
+      
+      continue if pointSegment.length <= maxPointSegmentLength
+      
+      unconfidentStartPointIndex = pointSegment.startPointIndex
+      unconfidentStartPointIndex += startConfidentPointsCount if previousPointSegment
+      
+      unconfidentEndPointIndex = pointSegment.endPointIndex
+      unconfidentEndPointIndex -= endConfidentPointsCount if nextPointSegment
+      
+      unconfidentStartPointIndex = _.modulo unconfidentStartPointIndex, @line.points.length
+      unconfidentEndPointIndex = _.modulo unconfidentEndPointIndex, @line.points.length
+      
+      if unconfidentEndPointIndex >= unconfidentStartPointIndex
+        @pointConfidences[pointIndex] = false for pointIndex in [unconfidentStartPointIndex..unconfidentEndPointIndex]
+        
+      else
+        @pointConfidences[pointIndex] = false for pointIndex in [0..unconfidentEndPointIndex]
+        @pointConfidences[pointIndex] = false for pointIndex in [unconfidentStartPointIndex...@line.points.length]
+        
+  _getPointSegment: (index) ->
+    if @isClosed then @pointSegments[_.modulo index, @pointSegments.length] else @pointSegments[index]
     
-    maxConfidence * lengthDifference / maxLengthDifference
+  _getEdgeSegment: (index) ->
+    return null unless @isClosed or @startSegmentIndex <= index <= @endSegmentIndex
+
+    @line.getEdgeSegment index
