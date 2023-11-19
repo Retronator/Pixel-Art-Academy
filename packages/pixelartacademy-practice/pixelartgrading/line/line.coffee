@@ -251,6 +251,7 @@ class PAG.Line
       
       # Side-step segments can't be corners.
       edgeSegment.corner.after = false
+      edgeSegmentAfter.corner.after = false
 
     # Detect straight lines.
     lastStraightLineStartSegmentIndex = null
@@ -364,7 +365,7 @@ class PAG.Line
         for part in @potentialParts
           return if startSegmentIndex >= part.startSegmentIndex and endSegmentIndex <= part.endSegmentIndex
       
-      curve = new PAG.Line.Part.Curve @, startSegmentIndex, endSegmentIndex, startPointIndex, endPointIndex, isClosed
+      curve = new PAG.Line.Part.Curve @, startSegmentIndex, endSegmentIndex, null, null, isClosed
       @potentialParts.push curve
       @potentialCurveParts.push curve
 
@@ -378,9 +379,6 @@ class PAG.Line
       continue unless edgeSegment.pointSegmentsCount
       clockwise = edgeSegment.curveClockwise.after
       endSegmentIndex = startSegmentIndex
-      
-      startPointIndex = null
-      endPointIndex = null
       
       # Keep expanding until the turn of direction.
       while clockwise is edgeSegment.curveClockwise.after or not clockwise? or not edgeSegment.curveClockwise.after?

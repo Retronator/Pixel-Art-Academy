@@ -59,7 +59,6 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
 
       endSegmentIndex = startSegmentIndex
       testSegmentIndex = startSegmentIndex
-      length = 0
       
       # Expand segment to as many segments with points while no curvature changes happen.
       loop
@@ -67,7 +66,6 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
         
         if edgeSegment.pointSegmentsCount
           endSegmentIndex = testSegmentIndex
-          length += edgeSegment.pointSegmentsCount * edgeSegment.pointSegmentLength
         
         break if edgeSegment.curveClockwise.after?
         
@@ -79,13 +77,40 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
       endEdgeSegment = @_getEdgeSegment endSegmentIndex
       endPointIndex = endEdgeSegment.endPointIndex
       
+      if endPointIndex > startPointIndex
+        length = endPointIndex - startPointIndex + 1
+        
+      else
+        length = startPointIndex + 1 + @line.points.length - endPointIndex
+      
       @pointSegments.push {startSegmentIndex, endSegmentIndex, startPointIndex, endPointIndex, length}
-    
+      
+    # Remove remaining side-step segments.
+    pointSegmentIndex = 1
+    loop
+      previousPointSegment = @_getPointSegment pointSegmentIndex - 1
+      pointSegment = @_getPointSegment pointSegmentIndex
+      break unless nextPointSegment = @_getPointSegment pointSegmentIndex + 1
+      
+      if pointSegment.length is 2 and pointSegment.startPointIndex is previousPointSegment.endPointIndex and pointSegment.endPointIndex is nextPointSegment.startPointIndex
+        @pointSegments.splice pointSegmentIndex, 1
+        continue
+        
+      pointSegmentIndex++
+      
+    # Shorten overlapping segments.
+    for pointSegment, pointSegmentIndex in @pointSegments
+      continue unless previousPointSegment = @_getPointSegment pointSegmentIndex - 1
+      continue unless pointSegment.startPointIndex is previousPointSegment.endPointIndex
+      pointSegment.startPointIndex++
+      pointSegment.length--
+
+    # Calculate point confidences.
     @pointConfidences = []
     
     for pointSegment, pointSegmentIndex in @pointSegments
       # Start by being confident in the points by default.
-      if pointSegment.endPointIndex > pointSegment.startPointIndex
+      if pointSegment.endPointIndex >= pointSegment.startPointIndex
         @pointConfidences[pointIndex] = true for pointIndex in [pointSegment.startPointIndex..pointSegment.endPointIndex]
         
       else
@@ -117,7 +142,7 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
         else
           endConfidentPointsCount = nextPointSegment.length + 1
         
-        maxPointSegmentLength += startConfidentPointsCount
+        maxPointSegmentLength += endConfidentPointsCount
       
       continue if pointSegment.length <= maxPointSegmentLength
       
