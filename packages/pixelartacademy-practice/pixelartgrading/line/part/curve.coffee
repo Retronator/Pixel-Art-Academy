@@ -56,6 +56,7 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
       continue unless edgeSegment.pointSegmentsCount
       
       startPointIndex = edgeSegment.startPointIndex
+      startPointIndex++ unless edgeSegment.edge.isAxisAligned or edgeSegment.hasPointSegment.before
 
       endSegmentIndex = startSegmentIndex
       testSegmentIndex = startSegmentIndex
@@ -76,8 +77,9 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
       
       endEdgeSegment = @_getEdgeSegment endSegmentIndex
       endPointIndex = endEdgeSegment.endPointIndex
+      endPointIndex-- unless endEdgeSegment.edge.isAxisAligned or endEdgeSegment.hasPointSegment.after
       
-      if endPointIndex > startPointIndex
+      if endPointIndex >= startPointIndex
         length = endPointIndex - startPointIndex + 1
         
       else
@@ -87,7 +89,8 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
       
     # Remove remaining side-step segments.
     pointSegmentIndex = 1
-    loop
+
+    while pointSegmentIndex < @pointSegments.length
       previousPointSegment = @_getPointSegment pointSegmentIndex - 1
       pointSegment = @_getPointSegment pointSegmentIndex
       break unless nextPointSegment = @_getPointSegment pointSegmentIndex + 1
