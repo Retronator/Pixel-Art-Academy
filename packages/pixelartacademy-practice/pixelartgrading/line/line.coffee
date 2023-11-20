@@ -184,11 +184,15 @@ class PAG.Line
         after: not edgeSegment.edge.isAxisAligned and not edgeSegmentAfter?.edge.isAxisAligned
       
       if edgeSegment.edge.isAxisAligned
-        # Axis aligned edge segments create 1 multiple-point segment.
+        # Axis-aligned edge segments create 1 multiple-point segment.
         edgeSegment.pointSegmentsCount = 1
-        edgeSegment.pointSegmentLength = if edgeSegment.startPointIndex? then edgeSegment.endPointIndex - edgeSegment.startPointIndex + 1 else 0
+        edgeSegment.pointSegmentLength = edgeSegment.endPointIndex - edgeSegment.startPointIndex + 1
         
+        # If we're coming from an axis-aligned segment, don't count the same point twice.
+        edgeSegment.pointSegmentLength-- if edgeSegmentBefore?.edge.isAxisAligned
+      
       else
+        # Diagonal edge segments create multiple 1-point segments.
         startPointIndex = edgeSegment.startPointIndex
         endPointIndex = edgeSegment.endPointIndex
         
@@ -198,11 +202,12 @@ class PAG.Line
         if startPointIndex > endPointIndex
           startPointIndex = null
           endPointIndex = null
-          
-        # Diagonal edge segments create multiple 1-point segments.
+        
         edgeSegment.pointSegmentsCount = if startPointIndex? then endPointIndex - startPointIndex + 1 else 0
         edgeSegment.pointSegmentLength = 1
         
+      edgeSegment.pointsCount = edgeSegment.pointSegmentsCount * edgeSegment.pointSegmentLength
+      
       angle = edgeSegment.edge.angle()
       angleAfter = edgeSegmentAfter?.edge.angle()
       
@@ -214,6 +219,7 @@ class PAG.Line
       
       edgeSegment.corner = after: false
       
+    # Detect corners.
     for edgeSegment, edgeSegmentIndex in @edgeSegments
       continue unless edgeSegmentAfter = @getEdgeSegment edgeSegmentIndex + 1
       
@@ -229,6 +235,7 @@ class PAG.Line
         edgeSegmentAfterIsLong = edgeSegmentAfter.pointSegmentLength >= minPointLength or edgeSegmentAfter.pointSegmentsCount >= minPointLength
         edgeSegment.corner.after = edgeSegmentIsLong and edgeSegmentAfterIsLong
     
+    # Detect side-step segments.
     for edgeSegment, edgeSegmentIndex in @edgeSegments when edgeSegment.edge.isAxisAligned
       continue unless edgeSegmentAfter = @getEdgeSegment edgeSegmentIndex + 1
       continue unless edgeSegmentAfter.count is 1
@@ -272,15 +279,15 @@ class PAG.Line
       startEdgeSegment = @edgeSegments[startSegmentIndex]
       
       # Start on edge segments that introduce point segments.
-      continue unless startEdgeSegment.pointSegmentsCount
+      continue unless startEdgeSegment.pointsCount
 
       sideEdgeClockwise = startEdgeSegment.clockwise.after
 
       # Straight lines are composed of equally sized segments, but allow for 1 count difference for intermediary lines,
       # so we need two possible main counts. Further, the starting and ending segment can be of any length shorter than
       # the main count.
-      mainCount1 = null
-      mainCount2 = null
+      mainPointsCount1 = null
+      mainPointsCount2 = null
 
       endSegmentIndex = startSegmentIndex
       
@@ -291,7 +298,11 @@ class PAG.Line
         
         # Find a side-step segment.
         break unless nextEdgeSegment = @getEdgeSegment endSegmentIndex + 1
-        break unless nextEdgeSegment.count is 1
+        unless nextEdgeSegment.count is 1
+          # The final segment can be a longer if it's not really a side-step as we were only on 1-length segments so far.
+          endSegmentIndex++ if mainPointsCount1 is 1 and nextEdgeSegment.pointsCount is 2
+          
+          break
 
         # Prevent diagonal to diagonal segments (most likely 90 degrees on a 45 degree diagonal).
         break unless startEdgeSegment.edge.isAxisAligned or nextEdgeSegment.edge.isAxisAligned
@@ -310,34 +321,34 @@ class PAG.Line
         # Determine how long the main (middle) parts of the diagonal are.
         determineExtraCount = false
 
-        unless mainCount1
+        unless mainPointsCount1
           # We're determining the initial count.
-          if secondNextEdgeSegment.count > startEdgeSegment.count
+          if secondNextEdgeSegment.pointsCount > startEdgeSegment.pointsCount
             # The first element is shorter so we can consider it being the ending part.
-            mainCount1 = secondNextEdgeSegment.count
+            mainPointsCount1 = secondNextEdgeSegment.pointsCount
             
           else
-            mainCount1 = startEdgeSegment.count
+            mainPointsCount1 = startEdgeSegment.pointsCount
             determineExtraCount = true
             
-        else unless mainCount2
+        else unless mainPointsCount2
           determineExtraCount = true
           
-        else unless secondNextEdgeSegment.count in [mainCount1, mainCount2]
+        else unless secondNextEdgeSegment.pointsCount in [mainPointsCount1, mainPointsCount2]
           endStraightLine = true
           
         if determineExtraCount
-          unless secondNextEdgeSegment.count is mainCount1
+          unless secondNextEdgeSegment.pointsCount is mainPointsCount1
             # The extra count can only differ by 1 from main count.
-            if Math.abs(mainCount1 - secondNextEdgeSegment.count) is 1
-              mainCount2 = secondNextEdgeSegment.count
+            if Math.abs(mainPointsCount1 - secondNextEdgeSegment.pointsCount) is 1
+              mainPointsCount2 = secondNextEdgeSegment.pointsCount
             
             else
               endStraightLine = true
           
         if endStraightLine
           # This segment is too much different than the main segment, but it could be the final part if it's shorter.
-          if secondNextEdgeSegment.count < mainCount1
+          if secondNextEdgeSegment.pointsCount < mainPointsCount1
             # Allow this segment to be the end of the straight line.
             endSegmentIndex += 2
             
@@ -347,10 +358,10 @@ class PAG.Line
         
         break unless secondNextEdgeSegment.clockwise.after is sideEdgeClockwise
         
-      mainCount1 ?= startEdgeSegment.count
-      mainCount2 ?= mainCount1
+      mainPointsCount1 ?= startEdgeSegment.pointsCount
+      mainPointsCount2 ?= mainPointsCount1
       
-      addStraightLinePart startSegmentIndex, endSegmentIndex, (mainCount1 + mainCount2) / 2
+      addStraightLinePart startSegmentIndex, endSegmentIndex, (mainPointsCount1 + mainPointsCount2) / 2
     
     # Detect curves.
     addCurvePart = (startSegmentIndex, endSegmentIndex) =>
@@ -468,23 +479,51 @@ class PAG.Line
       else
         # Find which straight line parts overlay the segment.
         potentialStraightLineParts = (part for part in @potentialStraightLineParts when part.overlaysPointRange normalizedStartPointIndex, normalizedPointIndex)
-
+        
+        potentialStraightLineSegmentRanges = []
+        
+        # Remove segments that aren't in the straight-line window.
         for part, partIndex in potentialStraightLineParts
           startPointIndex = _.modulo Math.max(part.startPointIndex, normalizedStartPointIndex - 1), @points.length
           endPointIndex = _.modulo Math.min(part.endPointIndex, normalizedPointIndex + 1), @points.length
           
-          startSegmentIndex = part.startSegmentIndex
-          endSegmentIndex = part.endSegmentIndex
+          start = part.startSegmentIndex
+          end = part.endSegmentIndex
           
-          startSegmentIndex++ while not @_edgeSegmentOverlaysPointRange startSegmentIndex, startPointIndex, endPointIndex
-          endSegmentIndex-- while not @_edgeSegmentOverlaysPointRange endSegmentIndex, startPointIndex, endPointIndex
+          start++ while not @_edgeSegmentOverlaysPointRange start, startPointIndex, endPointIndex
+          end-- while not @_edgeSegmentOverlaysPointRange end, startPointIndex, endPointIndex
           
-          @parts.push new PAG.Line.Part.StraightLine @, startSegmentIndex, endSegmentIndex
+          potentialStraightLineSegmentRanges.push {start, end}
+        
+        # Remove lines that are included in other lines.
+        segmentRangeIndex = 0
+        
+        while segmentRangeIndex < potentialStraightLineSegmentRanges.length
+          start = potentialStraightLineSegmentRanges[segmentRangeIndex].start
+          end = potentialStraightLineSegmentRanges[segmentRangeIndex].end
+          
+          remove = false
+          for segmentRange, otherSegmentRangeIndex in potentialStraightLineSegmentRanges when otherSegmentRangeIndex isnt segmentRangeIndex
+            if start >= segmentRange.start and end <= segmentRange.end
+              remove = true
+              break
+              
+          if remove
+            potentialStraightLineSegmentRanges.splice segmentRangeIndex, 1
+            
+          else
+            segmentRangeIndex++
+            
+        for segmentRange in potentialStraightLineSegmentRanges
+          @parts.push new PAG.Line.Part.StraightLine @, segmentRange.start, segmentRange.end
         
       startSegmentIndex = null
       startPointIndex = null
       normalizedStartPointIndex = null
       pointPartIsCurve = null
+      
+    for part, partIndex in @parts
+      part.setNeighbors @parts[partIndex - 1], @parts[partIndex + 1]
     
   _edgeSegmentOverlaysPointRange: (segmentIndex, startPointIndex, endPointIndex) ->
     segment = @getEdgeSegment segmentIndex

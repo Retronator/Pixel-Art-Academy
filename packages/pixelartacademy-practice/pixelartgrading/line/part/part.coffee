@@ -11,7 +11,6 @@ class PAG.Line.Part
     
     # Collect points.
     @points = []
-    @displayPoints = []
     
     for segmentIndex in [@startSegmentIndex..@endSegmentIndex]
       segment = @line.getEdgeSegment segmentIndex
@@ -42,3 +41,6 @@ class PAG.Line.Part
         return true if startPointIndex <= segment.endPointIndex or endPointIndex >= segment.startPointIndex
 
     false
+  
+  setNeighbors: (@previousPart, @nextPart) ->
+    # Extend to adjust display points.

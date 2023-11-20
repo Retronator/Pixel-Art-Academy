@@ -10,7 +10,7 @@ getStraightLineColor = (opacity) -> "hsl(60deg 50% 50% / #{opacity})"
 straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
 
-_straightLine = new THREE.Line3
+_straightLine = new THREE.Line2
 _pointPosition = new THREE.Vector3
 _pointPositionOnLine = new THREE.Vector3
 
@@ -121,10 +121,8 @@ class PAG.EngineComponent
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    PAG.Point.setStraightLine straightLine.displayPoints[0], straightLine.displayPoints[1], _straightLine
-
-    context.moveTo _straightLine.start.x + 0.5, _straightLine.start.y + 0.5
-    context.lineTo _straightLine.end.x + 0.5, _straightLine.end.y + 0.5
+    context.moveTo straightLine.displayLine2.start.x + 0.5, straightLine.displayLine2.start.y + 0.5
+    context.lineTo straightLine.displayLine2.end.x + 0.5, straightLine.displayLine2.end.y + 0.5
     
     context.stroke()
     
@@ -136,26 +134,16 @@ class PAG.EngineComponent
     points = curve.displayPoints
     getPoint = (index) => if curve.isClosed then points[_.modulo index, points.length - 1] else points[index]
     
-    context.moveTo points[0].x + 0.5, points[0].y + 0.5
+    context.moveTo points[0].position.x + 0.5, points[0].position.y + 0.5
     
-    for i in [0...points.length - 1]
-      @_drawCurveBetweenPoints context, getPoint(i - 1), getPoint(i), getPoint(i + 1), getPoint(i + 2)
+    endIndex = if curve.isClosed then points.length - 1 else points.length - 2
+    
+    for pointIndex in [0..endIndex]
+      start = getPoint pointIndex
+      end = getPoint pointIndex + 1
+      @_bezierCurve context, start.controlPoints.after, end.controlPoints.before, end.position
       
     context.stroke()
-    
-  _drawCurveBetweenPoints: (context, p1, p2, p3, p4) ->
-    p1 ?= p2
-    p4 ?= p3
-    
-    for t in [0.1..1] by 0.1
-      x = @_catmullRom t, p1.x, p2.x, p3.x, p4.x
-      y = @_catmullRom t, p1.y, p2.y, p3.y, p4.y
-      context.lineTo x + 0.5, y + 0.5
   
-  _catmullRom: (t, p0, p1, p2, p3) ->
-    v0 = (p2 - p0) * 0.5
-    v1 = (p3 - p1) * 0.5
-    t2 = t * t
-    t3 = t * t2
-    
-    (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1
+  _bezierCurve: (context, controlPoint1, controlPoint2, end) ->
+    context.bezierCurveTo controlPoint1.x + 0.5, controlPoint1.y + 0.5, controlPoint2.x + 0.5, controlPoint2.y + 0.5, end.x + 0.5, end.y + 0.5
