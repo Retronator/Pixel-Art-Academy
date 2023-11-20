@@ -132,8 +132,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
             asset: @_newArtworkAsset
             scale: => 1
   
-        # Artworks can be imported if the player can edit or upload art made with external software.
-        if PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
+        # TODO: Artworks can be imported if the player can edit or upload art made with external software.
+        if false and (PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload())
           assets.push
             _id: @_importArtworkAsset.urlParameter()
             index: assets.length
