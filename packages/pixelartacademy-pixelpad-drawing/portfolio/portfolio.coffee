@@ -63,9 +63,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     activeSection = @activeSection()
     activeGroup = @activeGroup()
     
-    sections = @sections()
-
-    width = 292 - 4 * (sections.length - section.index)
+    width = @sectionWidth section
     
     if section is activeSection
       if activeGroup
@@ -84,12 +82,17 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       height: "#{height}rem"
     
     style
+    
+  sectionWidth: (section) ->
+    292 - 4 * (@sections().length - section.index)
 
   groupStyle: ->
     group = @currentData()
     section = @parentDataWith 'groups'
+    
+    sectionWidth = @sectionWidth section
 
-    width: "#{270 - 3 * (section.groups().length - group.index - 1)}rem"
+    width: "#{sectionWidth - 18 - 3 * (section.groups().length - group.index - 1)}rem"
 
   groupActiveClass: ->
     group = @currentData()

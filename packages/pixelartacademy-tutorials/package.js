@@ -75,4 +75,13 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/elementsofart/line/errorinstruction');
   api.addFile('drawing/elementsofart/line/referencestrayinstruction');
+
+  // Pixel art fundamentals
+
+  api.addFile('drawing/pixelartfundamentals..');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/asset');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/jaggies-asset');
 });
