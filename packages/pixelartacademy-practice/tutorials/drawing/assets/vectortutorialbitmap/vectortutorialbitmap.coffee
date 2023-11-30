@@ -28,6 +28,12 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
   # Override to not use progressive path completion.
   @progressivePathCompletion: -> true
   
+  # Override if the asset requires display of markup.
+  @markup: -> false
+
+  # Override if the asset requires a pixel art grading analysis.
+  @pixelArtGrading: -> false
+
   @initialize: ->
     super arguments...
     
@@ -215,6 +221,14 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
     @hintsEngineComponent = new @constructor.HintsEngineComponent
       paths: => @paths()
       
+    if @constructor.markup()
+      @markupEngineComponent = new PAA.Practice.Tutorials.Drawing.MarkupEngineComponent
+      
+    if @constructor.pixelArtGrading()
+      @pixelArtGrading = new ComputedField =>
+        return unless bitmap = @bitmap()
+        new PAA.Practice.PixelArtGrading bitmap
+      
     @hasExtraPixels = new AE.LiveComputedField =>
       return unless bitmapLayer = @bitmap()?.layers[0]
       return unless paths = @paths()
@@ -316,11 +330,18 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap extends PAA.Pra
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @id(), bitmap, [0], pixels
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
   
-  editorDrawComponents: -> [
-    component: @pathsEngineComponent, before: LOI.Assets.Engine.PixelImage.Bitmap
-  ,
-    component: @hintsEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
-  ]
+  editorDrawComponents: ->
+    components = [
+      component: @pathsEngineComponent, before: LOI.Assets.Engine.PixelImage.Bitmap
+    ,
+      component: @hintsEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
+    ]
+    
+    if @markupEngineComponent
+      components.push
+        component: @markupEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
+    
+    components
 
   styleClasses: ->
     classes = [

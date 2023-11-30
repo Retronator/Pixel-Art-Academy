@@ -41,6 +41,11 @@ class PAA.Practice.PixelArtGrading
   getPixel: (x, y) ->
     @pixelsMap[x]?[y]
     
+  getLinesAt: (x, y) ->
+    return unless pixel = @getPixel x, y
+    
+    pixel.lines
+    
   mergeCoreInto: (removingCore, enlargingCore) ->
     enlargingCore.mergeCore removingCore
     @_removeCore removingCore

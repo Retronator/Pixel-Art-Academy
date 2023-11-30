@@ -93,6 +93,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials..');
   api.addFile('tutorials/drawing..');
   api.addFile('tutorials/drawing/tutorial');
+  api.addFile('tutorials/drawing/markupenginecomponent');
 
   api.addFile('tutorials/drawing/assets..');
 

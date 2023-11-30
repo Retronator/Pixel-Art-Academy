@@ -40,6 +40,39 @@ class PAG.Line
     point.unassignLine @ for point in @points
     @core?.unassignOutline @
     
+  getCornerPoints: ->
+    return @_cornerPoints if @_cornerPoints
+    
+    @_cornerPoints = []
+    
+    for part, partIndex in @parts[...@parts.length]
+      nextPart = @parts[partIndex + 1]
+      continue unless part instanceof @constructor.Part.StraightLine and nextPart instanceof @constructor.Part.StraightLine
+      
+      @_cornerPoints.push @getPoint part.endPointIndex
+    
+    @_cornerPoints
+    
+  getJaggies: ->
+    return @_jaggies if @_jaggies
+    
+    @_jaggies = []
+    cornerPoints = @getCornerPoints()
+    
+    for point in @points[1...@points.length] when point not in cornerPoints
+      for pixel in point.pixels
+        if @_isJaggyInCorner(pixel, -1, -1) or @_isJaggyInCorner(pixel, -1, 1) or @_isJaggyInCorner(pixel, 1, -1) or @_isJaggyInCorner(pixel, 1, 1)
+          @_jaggies.push pixel unless pixel in @_jaggies
+    
+    @_jaggies
+    
+  _isJaggyInCorner: (pixel, dx, dy) ->
+    # A jaggy will have a diagonal neighbor and its two direct neighbors empty.
+    return if @grading.getPixel pixel.x + dx, pixel.y + dy
+    return if @grading.getPixel pixel.x, pixel.y + dy
+    return if @grading.getPixel pixel.x + dx, pixel.y
+    true
+    
   getEdgeSegment: (index) ->
     if @isClosed then @edgeSegments[_.modulo index, @edgeSegments.length] else @edgeSegments[index]
 
@@ -57,6 +90,8 @@ class PAG.Line
     
     else
       @points.unshift point
+    
+    @_cornerPoints = null
   
   assignCore: (core) ->
     throw new AE.ArgumentException "A core is already assigned to this line.", core, @ if @core
@@ -73,6 +108,8 @@ class PAG.Line
   addPixel: (pixel) ->
     @pixels.push pixel
     pixel.assignLine @
+    
+    @_jaggies = null
   
   fillFromPoints: (pointA, pointB) ->
     # Start the line with these two points.

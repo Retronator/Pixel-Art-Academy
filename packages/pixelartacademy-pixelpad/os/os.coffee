@@ -133,6 +133,9 @@ class PAA.PixelPad.OS extends AM.Component
     super arguments...
 
     @$root.removeClass('pixelartacademy-pixelpad-os-root')
+    
+  getSystem: (systemClass) ->
+    _.find @currentSystems(), (system) => system instanceof systemClass
 
   url: ->
     url = PAA.PixelPad.url()
