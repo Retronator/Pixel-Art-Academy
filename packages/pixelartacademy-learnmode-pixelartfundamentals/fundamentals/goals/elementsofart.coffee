@@ -22,6 +22,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @interests: -> ['line']
   
     @initialize()
     

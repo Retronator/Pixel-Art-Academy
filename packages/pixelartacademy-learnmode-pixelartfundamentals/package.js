@@ -29,6 +29,7 @@ Package.onUse(function(api) {
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');
+  api.addFile('fundamentals/goals/jaggies');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');

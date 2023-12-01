@@ -2,11 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset extends PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap
-  @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.#{_.pascalCase @displayName()}"
-  
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-  
-  @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/#{_.fileCase @displayName()}.svg"
   
   minClipboardScale: -> 2
   

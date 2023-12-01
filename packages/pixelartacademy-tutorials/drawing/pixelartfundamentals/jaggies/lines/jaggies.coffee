@@ -5,14 +5,14 @@ TextOriginPosition = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextOr
 TextAlign = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextAlign
 Atari2600 = LOI.Assets.Palette.Atari2600
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
   @displayName: -> "Jaggies"
   
   @description: -> """
     Learn about the main stylistic characteristic of pixel art.
   """
   
-  @fixedDimensions: -> width: 45, height: 25
+  @fixedDimensions: -> width: 41, height: 21
   
   @markup: -> true
   @pixelArtGrading: -> true
@@ -41,7 +41,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Jaggies extends PAA.Tut
     @stepNumber: -> 1
     
     @message: -> """
-      Pixel art is drawn on a raster grid. When we draw lines and edges that align with the grid, the result perfectly matches the intended shapes.
+      Pixel art is drawn on a raster grid. When we draw lines that align with the grid, the result perfectly matches the intended shapes.
     """
     
     @initialize()
@@ -86,9 +86,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Jaggies extends PAA.Tut
       jaggyStyle =
         style: "##{jaggyColor.getHexString()}"
         
-      return unless trashCanLine = pixelArtGrading.getLinesAt(8, 14)?[0]
-      return unless lampLine = pixelArtGrading.getLinesAt(15, 8)?[0]
-      return unless handrailLine = pixelArtGrading.getLinesAt(19, 14)?[0]
+      return unless trashCanLine = pixelArtGrading.getLinesAt(6, 12)?[0]
+      return unless lampLine = pixelArtGrading.getLinesAt(13, 6)?[0]
+      return unless handrailLine = pixelArtGrading.getLinesAt(17, 12)?[0]
       
       for line in [trashCanLine, lampLine, handrailLine]
         for jaggy in line.getJaggies()
@@ -116,65 +116,65 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Jaggies extends PAA.Tut
       markup.push
         line: _.extend {}, arrowStyle,
           points: [
-            x: 26.5, y: 20.5
+            x: 28.5, y: 16.5
           ,
-            x: 23.5, y: 18.5, bezierControlPoints: [
-              x: 24.5, y: 20.5
+            x: 25.5, y: 14.5, bezierControlPoints: [
+              x: 26.5, y: 16.5
             ,
-              x: 24, y: 19
+              x: 26, y: 15
             ]
           ]
         text: _.extend {}, textStyle,
           position:
-            x: 26.5, y: 20.5, origin: TextOriginPosition.TopLeft
-          value: "not a jaggy\n(actual stairs)"
+            x: 28.5, y: 16.5, origin: TextOriginPosition.TopLeft
+          value: "not jaggies\n(actual stairs)"
 
       markup.push
         line: _.extend {}, arrowStyle,
           points: [
-            x: 20.5, y: 9.5
+            x: 20.5, y: 6.5
           ,
-            x: 20.5, y: 12.5, bezierControlPoints: [
-              x: 19, y: 11
+            x: 20.5, y: 9.5, bezierControlPoints: [
+              x: 19, y: 8
             ,
-              x: 20, y: 12
+              x: 20, y: 9
             ]
           ]
         text: _.extend {}, textStyle,
           position:
-            x: 21, y: 9.5, origin: TextOriginPosition.BottomLeft
-          value: "jaggy\n(diagonal)"
+            x: 21, y: 6.5, origin: TextOriginPosition.BottomLeft
+          value: "jaggies\n(diagonal)"
       
       markup.push
         line: _.extend {}, arrowStyle,
           points: [
-            x: 13, y: 6
+            x: 11, y: 4
           ,
-            x: 14.5, y: 7, bezierControlPoints: [
-              x: 13, y: 7
+            x: 12.5, y: 5, bezierControlPoints: [
+              x: 11, y: 5
             ,
-              x: 14, y: 7
+              x: 12, y: 5
             ]
           ]
         text: _.extend {}, textStyle,
           position:
-            x: 13, y: 5.5, origin: TextOriginPosition.BottomCenter
-          value: "jaggy\n(curve)"
+            x: 11, y: 3.5, origin: TextOriginPosition.BottomCenter
+          value: "jaggies\n(curve)"
       
       markup.push
         line: _.extend {}, arrowStyle,
           points: [
-            x: 6.5, y: 12
+            x: 4.5, y: 10
           ,
-            x: 7.5, y: 13.5, bezierControlPoints: [
-              x: 6.5, y: 13
+            x: 5.5, y: 11.5, bezierControlPoints: [
+              x: 4.5, y: 11
             ,
-              x: 7.25, y: 13.25
+              x: 5.25, y: 11.25
             ]
           ]
         text: _.extend {}, textStyle,
           position:
-            x: 6.5, y: 11.5, origin: TextOriginPosition.BottomCenter
+            x: 4.5, y: 9.5, origin: TextOriginPosition.BottomCenter
           value: "not a jaggy\n(sharp corner)"
       
       # Add intended lines.
@@ -185,69 +185,73 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Jaggies extends PAA.Tut
       markup.push
         line: _.extend {}, intendedLineStyle,
           points: [
-            x: 20.5, y: 18.5
-          ,
-            x: 20.5, y: 17.5
-          ,
-            x: 22.5, y: 17.5
-          ,
-            x: 22.5, y: 16.5
-          ,
-            x: 24.5, y: 16.5
-          ,
-            x: 24.5, y: 15.5
-          ,
-            x: 26.5, y: 15.5
-          ]
-      
-      markup.push
-        line: _.extend {}, intendedLineStyle,
-          points: [
             x: 18.5, y: 16.5
           ,
-            x: 19.5, y: 14.75, bezierControlPoints: [
-              x: 18.5, y: 15.5
+            x: 18.5, y: 15.5
+          ,
+            x: 20.5, y: 15.5
+          ,
+            x: 20.5, y: 14.5
+          ,
+            x: 22.5, y: 14.5
+          ,
+            x: 22.5, y: 13.5
+          ,
+            x: 24.5, y: 13.5
+          ,
+            x: 24.5, y: 12.5
+          ,
+            x: 26.5, y: 12.5
+          ]
+      
+      markup.push
+        line: _.extend {}, intendedLineStyle,
+          points: [
+            x: 16.5, y: 14.5
+          ,
+            x: 17.5, y: 12.75, bezierControlPoints: [
+              x: 16.5, y: 13.5
             ,
-              x: 19, y: 15
+              x: 17, y: 13
             ]
           ,
-            x: 25.25, y: 11.875
+            x: 23.25, y: 9.875
           ,
-            x: 27.125, y: 12.125, bezierControlPoints: [
-              x: 25.75, y: 11.625
+            x: 25.125, y: 10.125, bezierControlPoints: [
+              x: 23.75, y: 9.625
             ,
-              x: 26.625, y: 11.625
+              x: 24.625, y: 9.625
             ]
           ,
-            x: 27.5, y: 13.125, bezierControlPoints: [
-              x: 27.325, y: 12.325
+            x: 25.5, y: 11.125, bezierControlPoints: [
+              x: 25.325, y: 10.325
             ,
-              x: 27.5, y: 12.625
+              x: 25.5, y: 10.625
             ]
           ]
       
       markup.push
         line: _.extend {}, intendedLineStyle,
           points: [
-            x: 15.5, y: 8.25
+            x: 13.5, y: 6.25
           ,
-            x: 17.25, y: 6.5, bezierControlPoints: [
-              x: 15.5, y: 7.25
+            x: 15.25, y: 4.5, bezierControlPoints: [
+              x: 13.5, y: 5.25
             ,
-              x: 16.26, y: 6.5
+              x: 14.26, y: 4.5
             ]
           ]
       
       markup.push
         line: _.extend {}, intendedLineStyle,
           points: [
-            x: 9.5, y: 18
+            x: 7.5, y: 16
           ,
-            x: 8.625, y: 14.5
+            x: 6.625, y: 12.5
           ,
-            x: 12.375, y: 14.5
+            x: 10.375, y: 12.5
           ,
-            x: 11.5, y: 18
+            x: 9.5, y: 16
           ]
       
       markup

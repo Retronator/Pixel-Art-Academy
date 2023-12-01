@@ -7,8 +7,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
   @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
     @ElementsOfArt
-    @Diagonals
-    @Curves
+    @PixelArtLines
+    @PixelArtDiagonals
+    @PixelArtCurves
     @AntiAliasing
     @Dithering
     @Rotation
@@ -93,14 +94,20 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.ElementsOfArt.Texture'
       @displayName: -> "Elements of art: texture"
       @initialize()
-      
-  class @Diagonals extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Diagonals'
+  
+  class @PixelArtLines extends LM.Content.DrawingTutorialContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLines'
+    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
+    @tags: -> [LM.Content.Tags.WIP]
+    @initialize()
+    
+  class @PixelArtDiagonals extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtDiagonals'
     @displayName: -> "Pixel art diagonals"
     @initialize()
   
-  class @Curves extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Curves'
+  class @PixelArtCurves extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtCurves'
     @displayName: -> "Pixel art curves"
     @initialize()
   

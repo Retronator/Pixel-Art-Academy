@@ -83,5 +83,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies..');
   api.addFile('drawing/pixelartfundamentals/jaggies/asset');
 
-  api.addFile('drawing/pixelartfundamentals/jaggies/jaggies-asset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/asset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
 });
