@@ -5,14 +5,28 @@ TextOriginPosition = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextOr
 TextAlign = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextAlign
 Atari2600 = LOI.Assets.Palette.Atari2600
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
-  @displayName: -> "Jaggies"
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.PerfectDiagonals extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
+  @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Diagonals.PerfectDiagonals"
+
+  @displayName: -> "Perfect diagonals"
   
   @description: -> """
-    Learn about the main stylistic characteristic of pixel art.
+    Not all jaggies are created equal and not all diagonals are equally aesthetic.
   """
   
   @fixedDimensions: -> width: 41, height: 21
+  
+  @resources: -> [
+    step1Markup: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/perfectdiagonals-1.svg"
+    step2Markup: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/perfectdiagonals-2.svg"
+  ]
+  
+  @steps: -> [
+    imageUrl: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/perfectdiagonals.png"
+    goalImageUrl: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/perfectdiagonals-1.png"
+  ,
+    "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/perfectdiagonals-2.png"
+  ]
   
   @markup: -> true
   @pixelArtGrading: -> true
@@ -29,7 +43,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       return unless asset = @getActiveAsset()
       
       # Show with the correct step.
-      return unless asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
+      return unless asset.currentActivePathIndex() is @stepNumber() - 1
       
       # Show until the asset is completed.
       not asset.completed()

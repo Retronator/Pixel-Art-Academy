@@ -101,8 +101,8 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
       name: restrictedPaletteName
       
   customPalette: ->
-    @bitmap()?.customPalette
-
+    new LOI.Assets.Palette customPalette if customPalette = @bitmap()?.customPalette
+  
   backgroundColor: ->
     return unless backgroundColor = @constructor.backgroundColor()
 

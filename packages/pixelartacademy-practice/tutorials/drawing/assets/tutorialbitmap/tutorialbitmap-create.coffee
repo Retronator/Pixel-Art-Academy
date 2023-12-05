@@ -48,14 +48,15 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         # Allow sending in just the reference URL.
         imageUrl = if _.isString reference then reference else reference.image.url
       
-        # Find the ID of the image with this URL.
-        imagePromises.push new Promise (resolve, reject) =>
-          Tracker.autorun (computation) ->
-            LOI.Assets.Image.forUrl.subscribeContent imageUrl
-            return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
-            computation.stop()
-            
-            resolve image
+        do (imageUrl) =>
+          # Find the ID of the image with this URL.
+          imagePromises.push new Promise (resolve, reject) =>
+            Tracker.autorun (computation) ->
+              LOI.Assets.Image.forUrl.subscribeContent imageUrl
+              return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
+              computation.stop()
+              
+              resolve image
           
       Promise.all(imagePromises).then (imageResults) =>
         bitmapData.references = []
@@ -153,7 +154,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         resolve bitmapId
 
   @_resetAndAddToTutorial: (tutorial, assetId, bitmapId) ->
-    @reset assetId, bitmapId
+    @reset tutorial, assetId, bitmapId
   
     assets = tutorial.assetsData()
     

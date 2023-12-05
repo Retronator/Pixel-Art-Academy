@@ -51,7 +51,7 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
         @_assets[index] ?= Tracker.nonreactive => new assetClass @
         assets.unshift @_assets[index]
         
-        break unless @_assetsCompleted @_assets[index]
+        break unless @isAssetCompleted @_assets[index]
 
       assets
     ,
@@ -73,13 +73,6 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
     # We need to mimic a project, so we need to provide the data. If no state is
     # set, we send a dummy object to let the bitmap know we've loaded the state.
     @state('assets') or []
-
-  _assetsCompleted: (assets...) ->
-    for asset in assets
-      return unless asset
-      return unless @isAssetCompleted asset
-
-    true
 
   _assetsComparison: (a, b) =>
     # We consider assets have changed only when the array values differ.

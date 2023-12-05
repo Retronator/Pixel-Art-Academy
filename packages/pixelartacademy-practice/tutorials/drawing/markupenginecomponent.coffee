@@ -20,7 +20,7 @@ class PAA.Practice.Tutorials.Drawing.MarkupEngineComponent
     Center: 'Center'
     Right: 'Right'
   
-  constructor: (@options = {}) ->
+  constructor: ->
     @markup = new ComputedField =>
       return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
       return unless instructions = pixelPad.os.getSystem PAA.PixelPad.Systems.Instructions

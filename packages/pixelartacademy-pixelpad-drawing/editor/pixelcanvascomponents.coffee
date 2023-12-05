@@ -34,15 +34,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents extends FM.Helper
         if editorActive
           if assetComponents = provider?.editorDrawComponents?()
             components.push assetComponents...
-      
-      # Set extra info to components
-      backgroundColor = displayedAsset?.backgroundColor?()
-      backgroundColor ?= LOI.Assets.Palette.defaultPalette()?.color LOI.Assets.Palette.Atari2600.hues.gray, 7
-    
-      for componentInfo in components
-        component = componentInfo.component or componentInfo
-
-        component.options.backgroundColor = backgroundColor
     
       components
     ,

@@ -53,11 +53,9 @@ class PAA.Practice.Project.Asset
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @data = new ComputedField =>
+    @data = new AE.LiveComputedField =>
       return unless assets = @project.assetsData()
       _.find assets, (asset) => asset.id is @id()
-    ,
-      true
   
     portfolioComponentClass = @constructor.portfolioComponentClass()
     @portfolioComponent = new portfolioComponentClass @

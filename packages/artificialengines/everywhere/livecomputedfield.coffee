@@ -35,7 +35,7 @@ class AE.LiveComputedField
 
     # Sometimes you want to force recomputation of the new value before the global Tracker flush is done.
     # This is a noop if autorun was not invalidated.
-    getter.flush = -> Tracker.nonreactive -> autorunHandle.flush()
+    getter.flush = -> Tracker.nonreactive -> autorunHandle?.flush()
     
     # Return the getter instead of constructed object. Return must be explicit.
     return getter

@@ -14,9 +14,10 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.References extends PAA.Practice
 
   @fixedDimensions: -> width: 7, height: 16
   @customPalette: ->
-    ramps: [
-      shades: [r: 0.95, g: 0.30, b: 0.5]
-    ]
+    new LOI.Assets.Palette
+      ramps: [
+        shades: [r: 0.95, g: 0.30, b: 0.5]
+      ]
 
   @bitmapString: -> "" # Empty bitmap
 

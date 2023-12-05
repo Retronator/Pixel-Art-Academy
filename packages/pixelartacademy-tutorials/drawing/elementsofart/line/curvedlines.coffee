@@ -21,7 +21,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     @activeConditions: ->
       return unless asset = @getActiveAsset()
       
-      asset.currentActivePathIndex() is @stepNumber() - 1
+      asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
     
     @resetDelayOnOperationExecuted: -> true
     

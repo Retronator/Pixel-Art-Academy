@@ -98,27 +98,40 @@ Package.onUse(function(api) {
   api.addFile('tutorials/drawing/assets..');
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap..');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-steps');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-resources');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-references');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-create');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/tutorialbitmap-reset');
-  api.addFile('tutorials/drawing/assets/tutorialbitmap/enginecomponent');
+
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/hintsenginecomponent');
+
   api.addUnstyledComponent('tutorials/drawing/assets/tutorialbitmap/briefcomponent..');
 
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap..');
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/vectortutorialbitmap-create');
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/vectortutorialbitmap-reset');
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/path');
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/pathsenginecomponent');
-  api.addFile('tutorials/drawing/assets/vectortutorialbitmap/hintsenginecomponent');
-  api.addUnstyledComponent('tutorials/drawing/assets/vectortutorialbitmap/briefcomponent..');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/resource..');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/resource/pixels');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/resource/bitmapstringpixels');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/resource/imagepixels');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/resource/svgpaths');
+
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/steparea');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/step');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pixelsstep');
+
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep..');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep/path');
 
   // Software
+
   api.addFile('software..');
   api.addFile('software/tools');
 
   // Artworks
+
   api.addFile('artworks..');
 
   // Pixel art grading
+
   api.addFile('pixelartgrading..')
   api.addFile('pixelartgrading/core')
   api.addFile('pixelartgrading/pixel')

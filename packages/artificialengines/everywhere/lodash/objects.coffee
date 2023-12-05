@@ -2,6 +2,8 @@ unchangedObject = {}
 
 _.mixin
   # Returns a property, either defined as a direct value or a function.
+  # Note: we couldn't have just passed the target property directly
+  # to be invoked as it wouldn't be bound to correct this.
   propertyValue: (target, propertyName) ->
     return target[propertyName]() if _.isFunction target[propertyName]
 

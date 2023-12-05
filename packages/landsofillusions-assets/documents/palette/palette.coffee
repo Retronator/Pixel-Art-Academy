@@ -52,4 +52,4 @@ class LOI.Assets.Palette extends AM.Document
     shadeIndex = THREE.Math.clamp shadeIndex, 0, ramp.shades.length - 1
     colorData = ramp.shades[shadeIndex]
 
-    new THREE.Color.fromObject colorData
+    THREE.Color.fromObject colorData

@@ -35,43 +35,16 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
   constructor: ->
     super arguments...
 
-    # Allow to manually provide user image data.
-    @manualUserData = new ReactiveField null
-    
-    # We override the component that shows the goal state with a custom one that only shows drawn errors.
-    @engineComponent = new @constructor.ErrorEngineComponent
-      userData: =>
-        manualUserData = @manualUserData()
-        return manualUserData if manualUserData
-        
-        return unless bitmapId = @bitmapId()
-        LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-
-      spriteData: =>
-        return unless goalPixels = @goalPixels()
-        return unless bitmapId = @bitmapId()
-
-        # Take same overall visual asset data (bounds, palette) as the bitmap used for drawing, but
-        # exclude the layers since we'll be converting the bitmap to a sprite and provide our own pixels.
-        bitmap = LOI.Assets.Bitmap.documents.findOne bitmapId,
-          fields:
-            'layers': false
-            'layerGroups': false
-            'pixelFormat': false
-
-        return unless bitmap
-        
-        spriteData = bitmap.toPlainObject()
-
-        # Replace layers with the goal state.
-        spriteData.layers = [pixels: goalPixels]
-  
-        new LOI.Assets.Sprite spriteData
-        
     @uploadMode = new ReactiveField false
 
     @_clipboardPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
-
+  
+  initializeSteps: ->
+    super arguments...
+    
+    # Make the pixels step only show drawn errors.
+    @stepAreas()[0].steps()[0].options.drawHintsForGoalPixels = false
+    
   editorOptions: ->
     references:
       upload:

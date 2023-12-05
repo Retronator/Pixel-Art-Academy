@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
@@ -5,17 +6,19 @@ LOI = LandsOfIllusions
 if Meteor.isClient
   require 'path-data-polyfill/path-data-polyfill.js'
 
-class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
+TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+
+class TutorialBitmap.PathStep.Path
   @minimumAntiAliasingAlpha = 10
   @minimumRequiredPixelAlpha = 250
   
-  constructor: (@vectorTutorialBitmap, svgPath, offset) ->
-    @canvas = new AM.ReadableCanvas @vectorTutorialBitmap.width(), @vectorTutorialBitmap.height()
+  constructor: (@tutorialBitmap, svgPath, offset) ->
+    @canvas = new AM.ReadableCanvas @tutorialBitmap.width(), @tutorialBitmap.height()
     @canvas.context.translate offset.x, offset.y if offset
 
     # Rasterize the path to the canvas.
-    path = new Path2D svgPath.getAttribute 'd'
-    @canvas.context.stroke path
+    @path = new Path2D svgPath.getAttribute 'd'
+    @canvas.context.stroke @path
     
     @_imageData = @canvas.getFullImageData()
     
@@ -87,7 +90,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.VectorTutorialBitmap.Path
     
   completed: ->
     # Make sure all corners are covered.
-    bitmapLayer = @vectorTutorialBitmap.bitmap()?.layers[0]
+    return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
 
     for cornersForPart in @cornersOfParts
       for corner in cornersForPart
