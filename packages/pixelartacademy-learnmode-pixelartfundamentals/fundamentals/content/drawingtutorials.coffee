@@ -101,9 +101,10 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
     @tags: -> [LM.Content.Tags.WIP]
     @initialize()
     
-  class @PixelArtDiagonals extends LM.Content.FutureContent
+  class @PixelArtDiagonals extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtDiagonals'
-    @displayName: -> "Pixel art diagonals"
+    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
+    @tags: -> [LM.Content.Tags.WIP]
     @initialize()
   
   class @PixelArtCurves extends LM.Content.FutureContent

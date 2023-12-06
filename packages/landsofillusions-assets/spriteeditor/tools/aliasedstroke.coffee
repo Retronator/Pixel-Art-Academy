@@ -121,7 +121,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     return unless @drawLine()
     return unless ratio = @perfectLineRatio()
 
-    "#{ratio[0]}:#{ratio[1]}"
+    "#{ratio[1]}:#{ratio[0]}"
 
   perfectLine: (start, end) ->
     dx = end.x - start.x
@@ -329,7 +329,13 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
         # Draw bresenham line from last coordinates (which persist after end of stroke).
         _clearPixelCoordinates()
-        Bresenham.line _lastPixelCoordinates.x, _lastPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
+        
+        # To assure consistency between drawing lines from both directions, we always draw from top to bottom.
+        if _lastPixelCoordinates.y < _currentPixelCoordinates.y
+          Bresenham.line _lastPixelCoordinates.x, _lastPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
+          
+        else
+          Bresenham.line _currentPixelCoordinates.x, _currentPixelCoordinates.y, _lastPixelCoordinates.x, _lastPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
 
     else
       # Apply locked coordinate.

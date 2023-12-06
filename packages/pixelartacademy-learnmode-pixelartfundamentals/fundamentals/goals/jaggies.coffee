@@ -21,21 +21,49 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
       In the Drawing app, complete the pixel art lines tutorial to learn about jaggies.
     """
     
-    @requiredInterests: -> ['line']
-
     @icon: -> PAA.Learning.Task.Icons.Drawing
-  
+    
+    @requiredInterests: -> ['line']
+    
+    @interests: -> ['pixel art line']
+    
     @initialize()
     
     @completedConditions: ->
       PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed()
-
+  
+  class @Diagonals extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.Diagonals'
+    @goal: -> Goal
+    
+    @directive: -> "Learn about diagonals in pixel art"
+    
+    @instructions: -> """
+      In the Drawing app, complete the pixel art diagonals tutorial to learn about how different angles affect the patterns of jaggies.
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @requiredInterests: -> ['pixel art line']
+    
+    @interests: -> ['pixel art line']
+    
+    @predecessors: -> [Goal.Lines]
+    
+    @groupNumber: -> -1
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.completed()
+      
   @tasks: -> [
     @Lines
+    @Diagonals
   ]
 
   @finalTasks: -> [
-    @Lines
+    @Diagonals
   ]
 
   @initialize()

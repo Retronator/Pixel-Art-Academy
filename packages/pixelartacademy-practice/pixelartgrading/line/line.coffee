@@ -301,14 +301,14 @@ class PAG.Line
     lastStraightLineStartSegmentIndex = null
     lastStraightLineEndSegmentIndex = null
     
-    addStraightLinePart = (startSegmentIndex, endSegmentIndex, averageSegmentCount) =>
+    addStraightLinePart = (startSegmentIndex, endSegmentIndex) =>
       # Don't add a straight line that is already contained within the last straight line.
       return if lastStraightLineStartSegmentIndex? and startSegmentIndex >= lastStraightLineStartSegmentIndex and endSegmentIndex <= lastStraightLineEndSegmentIndex
       
       lastStraightLineStartSegmentIndex = startSegmentIndex
       lastStraightLineEndSegmentIndex = endSegmentIndex
       
-      straightLine = new PAG.Line.Part.StraightLine @, startSegmentIndex, endSegmentIndex, null, null, averageSegmentCount
+      straightLine = new PAG.Line.Part.StraightLine @, startSegmentIndex, endSegmentIndex
       @potentialParts.push straightLine
       @potentialStraightLineParts.push straightLine
 
@@ -395,10 +395,7 @@ class PAG.Line
         
         break unless secondNextEdgeSegment.clockwise.after is sideEdgeClockwise
         
-      mainPointsCount1 ?= startEdgeSegment.pointsCount
-      mainPointsCount2 ?= mainPointsCount1
-      
-      addStraightLinePart startSegmentIndex, endSegmentIndex, (mainPointsCount1 + mainPointsCount2) / 2
+      addStraightLinePart startSegmentIndex, endSegmentIndex
     
     # Detect curves.
     addCurvePart = (startSegmentIndex, endSegmentIndex) =>

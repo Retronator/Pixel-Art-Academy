@@ -47,7 +47,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
       unless @desktop.active() and @_initialScaleSet
         Tracker.nonreactive => camera.setScale clipboardAssetSize.scale
         @_initialScaleSet = true
-  
+
+    # Update border width.
+    @autorun (computation) =>
+      borderWidth = @_borderWidth()
+      Tracker.nonreactive => @borderWidth borderWidth
+      
     # Switch between full and framed display modes.
     @autorun (computation) =>
       desktopActive = @desktop.active()
@@ -119,22 +124,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
     else
       # When we're on the clipboard, the size depends on the size provided by the asset's clipboard component.
       scale = clipboardAssetSize.scale
-
-    width = assetData.bounds.width * scale
-    height = assetData.bounds.height * scale
-
-    displayScale = LOI.adventure.interface.display.scale()
-
-    # Resize the border proportionally to its clipboard size
-    borderWidth = clipboardAssetSize.borderWidth / clipboardAssetSize.scale * scale
-
+    
     if editorActive
       # Let the parent implementation handle positioning.
       style = super arguments...
-      
-      # Remove the border.
-      style.left = "#{style.left.substring(0, style.left.length - 1)} - #{borderWidth}rem)"
-      style.top = "#{style.top.substring(0, style.top.length - 1)} - #{borderWidth}rem)"
 
     else
       $assetPlaceholder = $('.pixelartacademy-pixelpad-apps-drawing-clipboard .asset-placeholder')
@@ -158,6 +151,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
 
       positionOrigin.top += $clipboard.height() / 2 if activeAsset
       top = assetOffset.top - positionOrigin.top
+      
+      displayScale = LOI.adventure.interface.display.scale()
 
       if activeAsset
         top = "calc(50% + #{top}px)"
@@ -165,6 +160,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
       else
         # Clipboard is hidden up, so move the asset up and relative to top.
         top -= 265 * displayScale
+
+      borderWidth = @_borderWidth()
+    
+      width = (assetData.bounds.width + 2 * borderWidth) * scale
+      height = (assetData.bounds.height + 2 * borderWidth) * scale
   
       style =
         width: "#{width}rem"
@@ -172,10 +172,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
         left: left
         top: top
         
-    style.borderWidth = "#{borderWidth}rem"
-
     if backgroundColor = displayedAsset.backgroundColor?()
       style.backgroundColor = "##{backgroundColor.getHexString()}"
       style.borderColor = style.backgroundColor
     
     style
+    
+  _borderWidth: ->
+    return 0 unless displayedAsset = @desktop.displayedAsset()
+    return 0 unless displayedAsset.clipboardComponent.isCreated()
+    return 0 unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
+    
+    # Convert from display to asset pixels.
+    clipboardAssetSize.borderWidth / clipboardAssetSize.scale

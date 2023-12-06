@@ -24,21 +24,29 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
     true
   
-  hasPixel: (x, y) ->
+  hasPixel: (absoluteX, absoluteY) ->
+    x = absoluteX - @stepArea.bounds.x
+    y = absoluteY - @stepArea.bounds.y
+    
     for path in @paths
-      return true if path.hasPixel()
+      return true if path.hasPixel x, y
   
-    true
+    false
   
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
     
     pixels = []
     
-    for x in [0...bitmap.bounds.width]
-      for y in [0...bitmap.bounds.height]
+    for x in [0...@stepArea.bounds.width]
+      for y in [0...@stepArea.bounds.height]
         for path in @paths when path.hasPixel x, y
-          pixels.push {x, y, paletteColor: {ramp: 0, shade: 0}}
+          pixels.push
+            x: @stepArea.bounds.x + x
+            y: @stepArea.bounds.y + y
+            paletteColor:
+              ramp: 0
+              shade: 0
     
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
@@ -77,6 +85,6 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     # Erase dots at empty pixels.
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
-        continue if @hasPixel x, y
+        continue if @stepArea.hasPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
         @_drawPixelHint context, x, y, null

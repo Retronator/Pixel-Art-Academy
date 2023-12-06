@@ -50,10 +50,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
      
       # Calculate drawing area bounds in canvas coordinates.
       displayMode = @pixelCanvas.displayMode()
+      borderWidth = @pixelCanvas.borderWidth() or 0
       
       if assetData.bounds.fixed or displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         # When the asset bounds are fixed, or if we're drawing the full canvas, the drawing area matches it directly.
         @drawingAreaCanvasBounds.copy assetData.bounds
+        
+        # Add an optional border around the asset.
+        @drawingAreaCanvasBounds.extrude borderWidth, borderWidth if borderWidth
       
       else if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed
         # When the asset bounds are freeform and we need to frame the drawing, we make the drawing area 50% bigger than the existing asset bounds.
@@ -70,8 +74,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         @drawingAreaCanvasBounds.bottom Number.POSITIVE_INFINITY
         
       if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
-        # When the full canvas is rendered, pixel canvas is assumed to fully cover it.
+        # When the full canvas is rendered, pixel canvas is assumed to fully cover it, optionally with the border.
         @renderableAreaCanvasBounds.copy assetData.bounds
+        @renderableAreaCanvasBounds.extrude borderWidth, borderWidth if borderWidth
       
       else
         # Renderable area is twice the pixel canvas to prevent the canvas being cut-off during transitions.
@@ -91,10 +96,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     
       if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         effectiveScale = @effectiveScale()
-        @drawingAreaWindowBounds.x 0
-        @drawingAreaWindowBounds.y 0
-        @drawingAreaWindowBounds.width assetData.bounds.width * effectiveScale
-        @drawingAreaWindowBounds.height assetData.bounds.height * effectiveScale
+        @drawingAreaWindowBounds.x -borderWidth
+        @drawingAreaWindowBounds.y -borderWidth
+        @drawingAreaWindowBounds.width (assetData.bounds.width + 2 * borderWidth) * effectiveScale
+        @drawingAreaWindowBounds.height (assetData.bounds.height + 2 * borderWidth) * effectiveScale
   
         @canvasWindowBounds.copy @drawingAreaWindowBounds
         

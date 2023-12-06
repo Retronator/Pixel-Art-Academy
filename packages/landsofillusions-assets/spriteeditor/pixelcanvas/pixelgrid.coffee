@@ -42,12 +42,22 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
     pixelSize = 1 / effectiveScale
     context.lineWidth = pixelSize
     context.beginPath()
-
-    gridBounds =
-      left: Math.floor viewportBounds.left()
-      top: Math.floor viewportBounds.top()
-      right: Math.ceil viewportBounds.right()
-      bottom: Math.ceil viewportBounds.bottom()
+    
+    bounds = @pixelCanvas.assetData()?.bounds
+    
+    if bounds?.fixed
+      gridBounds =
+        left: bounds.left
+        top: bounds.top
+        right: bounds.right + 1
+        bottom: bounds.bottom + 1
+      
+    else
+      gridBounds =
+        left: Math.floor viewportBounds.left()
+        top: Math.floor viewportBounds.top()
+        right: Math.ceil viewportBounds.right()
+        bottom: Math.ceil viewportBounds.bottom()
 
     for y in [gridBounds.top..gridBounds.bottom]
       pixelPerfectCoordinate = camera.roundCanvasToWindowPixel x: 0, y: y

@@ -317,6 +317,8 @@ Package.onUse(function(api) {
   api.addFile('pyramid/complexnumber');
   api.addGlsl('pyramid/complexnumber');
 
+  api.addFile('pyramid/fraction');
+
   api.addFile('pyramid/besselfunctions');
 
   api.addFile('pyramid/integration..');

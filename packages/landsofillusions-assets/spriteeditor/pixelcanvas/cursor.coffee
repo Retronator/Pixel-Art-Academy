@@ -75,6 +75,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     
     cursorArea = @cursorArea()
     return unless cursorArea.position
+    position = cursorArea.position.pixelPerfectTopLeftCoordinates
+
+    # Don't draw an out-of-bounds pixel brush
+    type = @type()
+    bounds = @pixelCanvas.assetData()?.bounds
+    
+    if type is @constructor.Types.Pixel and bounds?.fixed
+      return unless bounds.left <= position.x <= bounds.right and bounds.top <= position.y <= bounds.bottom
   
     # Determine stroke style.
     scale = @pixelCanvas.camera().scale()
@@ -82,8 +90,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
   
     pixelSize = 1 / effectiveScale
     context.lineWidth = pixelSize
-
-    position = cursorArea.position.pixelPerfectTopLeftCoordinates
 
     for step in [1..2]
       if scale > 4
@@ -101,8 +107,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     
       context.beginPath()
       
-      type = @type()
-    
       if type is @constructor.Types.AntiAliasedBrush
         if cursorArea.round
           # Draw the cursor as a circle.

@@ -84,6 +84,7 @@ class TutorialBitmap.StepArea
     false
     
   hasPixel: (x, y) ->
+    # Check if any of the steps require a pixel at these absolute bitmap coordinates.
     for step in @steps()
       return true if step.hasPixel x, y
     

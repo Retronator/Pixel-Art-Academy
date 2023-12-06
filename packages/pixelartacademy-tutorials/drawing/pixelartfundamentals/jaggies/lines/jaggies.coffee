@@ -29,7 +29,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       return unless asset = @getActiveAsset()
       
       # Show with the correct step.
-      return unless asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
+      return unless asset.stepAreas()[0]?.activeStepIndex() is @stepNumber() - 1
       
       # Show until the asset is completed.
       not asset.completed()
@@ -83,7 +83,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       
       # Add jaggies.
       jaggyColor = palette.color Atari2600.hues.red, 3
-      jaggyStyle =
+      jaggyBase =
         style: "##{jaggyColor.getHexString()}"
         
       return unless trashCanLine = pixelArtGrading.getLinesAt(6, 12)?[0]
@@ -93,28 +93,22 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       for line in [trashCanLine, lampLine, handrailLine]
         for jaggy in line.getJaggies()
           markup.push
-            pixel: _.extend {}, jaggyStyle,
+            pixel: _.extend {}, jaggyBase,
               x: jaggy.x
               y: jaggy.y
       
       # Add jaggy arrows.
-      markupColor = palette.color Atari2600.hues.azure, 4
-      markupStyle = "##{markupColor.getHexString()}"
+      markupStyle = Asset.markupStyle()
       
-      arrowStyle =
+      arrowBase =
         arrow:
           end: true
         style: markupStyle
         
-      textStyle =
-        size: 6
-        lineHeight: 7
-        font: 'Small Print Retronator'
-        style: markupStyle
-        align: TextAlign.Center
+      textBase = Asset.markupTextBase()
       
       markup.push
-        line: _.extend {}, arrowStyle,
+        line: _.extend {}, arrowBase,
           points: [
             x: 28.5, y: 16.5
           ,
@@ -124,13 +118,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
               x: 26, y: 15
             ]
           ]
-        text: _.extend {}, textStyle,
+        text: _.extend {}, textBase,
           position:
             x: 28.5, y: 16.5, origin: TextOriginPosition.TopLeft
           value: "not jaggies\n(actual stairs)"
 
       markup.push
-        line: _.extend {}, arrowStyle,
+        line: _.extend {}, arrowBase,
           points: [
             x: 20.5, y: 6.5
           ,
@@ -140,13 +134,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
               x: 20, y: 9
             ]
           ]
-        text: _.extend {}, textStyle,
+        text: _.extend {}, textBase,
           position:
             x: 21, y: 6.5, origin: TextOriginPosition.BottomLeft
           value: "jaggies\n(diagonal)"
       
       markup.push
-        line: _.extend {}, arrowStyle,
+        line: _.extend {}, arrowBase,
           points: [
             x: 11, y: 4
           ,
@@ -156,13 +150,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
               x: 12, y: 5
             ]
           ]
-        text: _.extend {}, textStyle,
+        text: _.extend {}, textBase,
           position:
             x: 11, y: 3.5, origin: TextOriginPosition.BottomCenter
           value: "jaggies\n(curve)"
       
       markup.push
-        line: _.extend {}, arrowStyle,
+        line: _.extend {}, arrowBase,
           points: [
             x: 4.5, y: 10
           ,
@@ -172,18 +166,16 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
               x: 5.25, y: 11.25
             ]
           ]
-        text: _.extend {}, textStyle,
+        text: _.extend {}, textBase,
           position:
             x: 4.5, y: 9.5, origin: TextOriginPosition.BottomCenter
           value: "not a jaggy\n(sharp corner)"
       
       # Add intended lines.
-      intendedLineColor = palette.color Atari2600.hues.azure, 5
-      intendedLineStyle =
-        style: "##{intendedLineColor.getHexString()}"
+      intendedLineBase = Asset.markupIntendedLineBase()
       
       markup.push
-        line: _.extend {}, intendedLineStyle,
+        line: _.extend {}, intendedLineBase,
           points: [
             x: 18.5, y: 16.5
           ,
@@ -205,7 +197,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineStyle,
+        line: _.extend {}, intendedLineBase,
           points: [
             x: 16.5, y: 14.5
           ,
@@ -231,7 +223,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineStyle,
+        line: _.extend {}, intendedLineBase,
           points: [
             x: 13.5, y: 6.25
           ,
@@ -243,7 +235,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineStyle,
+        line: _.extend {}, intendedLineBase,
           points: [
             x: 7.5, y: 16
           ,

@@ -19,6 +19,10 @@ class PAA.Practice.Tutorials.Drawing.MarkupEngineComponent
     Left: 'Left'
     Center: 'Center'
     Right: 'Right'
+    
+  # The minimum zoom level where markup pixels match display pixels
+  # (markup pixels will be scaled down when zoomed out more than this).
+  @minimumZoomPercentage = 400 # %
   
   constructor: ->
     @markup = new ComputedField =>
@@ -34,7 +38,7 @@ class PAA.Practice.Tutorials.Drawing.MarkupEngineComponent
     displayScale = renderOptions.editor.display.scale()
     displayPixelSize = pixelSize * displayScale
     
-    scaledDisplayPixelSize = Math.min 1 / 8, displayPixelSize
+    scaledDisplayPixelSize = Math.min 100 / @constructor.minimumZoomPercentage, displayPixelSize
     
     context.save()
     

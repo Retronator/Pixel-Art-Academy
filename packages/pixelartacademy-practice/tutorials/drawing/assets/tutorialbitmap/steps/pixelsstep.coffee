@@ -32,23 +32,20 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
   completed: ->
     # Compare goal pixels with first bitmap layer.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
-    palette = @tutorialBitmap.palette()
+    return unless palette = @tutorialBitmap.palette()
     
     if backgroundColor = @tutorialBitmap.getBackgroundColor()
       backgroundPixel =
         directColor: backgroundColor
         color: THREE.Color.fromObject backgroundColor
 
-    for x in [0...bitmapLayer.width]
-      for y in [0...bitmapLayer.height]
-        pixel = bitmapLayer.getPixel(x, y) or backgroundPixel
-        goalPixel = @goalPixelsMap[x]?[y] or backgroundPixel
-        
-        # Both pixels must either exist or not.
-        return false unless pixel? is goalPixel?
-        
-        # Nothing further to check if the pixel is empty.
-        continue unless pixel and goalPixel
+    for x in [0...@stepArea.bounds.width]
+      for y in [0...@stepArea.bounds.height]
+        # See if we require a pixel here.
+        continue unless goalPixel = @goalPixelsMap[x]?[y] or backgroundPixel
+
+        # We do require a pixel here so check if we have it in the bitmap.
+        return false unless pixel = bitmapLayer.getPixel(@stepArea.bounds.x + x, @stepArea.bounds.y + y) or backgroundPixel
         
         # If either of the pixels has a direct color, we need to translate the other one too.
         if pixel.paletteColor and goalPixel.paletteColor
@@ -60,15 +57,18 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
 
     true
 
-  hasPixel: (x, y) -> @goalPixelsMap[x]?[y]?
+  hasPixel: (x, y) -> @goalPixelsMap[@stepArea.bounds.x + x]?[@stepArea.bounds.y + y]?
 
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
     pixels = []
     
-    for x in [0...bitmap.bounds.width]
-      for y in [0...bitmap.bounds.height]
-        pixels.push @goalPixelsMap[x]?[y] or {x, y}
+    for x in [0...@stepArea.bounds.width]
+      for y in [0...@stepArea.bounds.height]
+        pixel = _.clone @goalPixelsMap[x]?[y] or {x, y}
+        pixel.x += @stepArea.bounds.x
+        pixel.y += @stepArea.bounds.y
+        pixels.push pixel
     
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
@@ -88,14 +88,15 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         pixel = bitmap.findPixelAtAbsoluteCoordinates absoluteX, absoluteY
         
         # Do we need a pixel here?
+        anyPixel = @stepArea.hasPixel x, y
         goalPixel = @goalPixelsMap[x]?[y]
         
         # Clear hints at pixels that should be empty.
-        if pixel and not goalPixel
+        if pixel and not anyPixel
           @_drawPixelHint context, x, y, null
           
-        # Draw hints on drawn pixels and optionally all goal pixels.
-        else if pixel or goalPixel and @options.drawHintsForGoalPixels
+        # Draw hints on drawn goal pixels and optionally all goal pixels.
+        else if goalPixel and (pixel or @options.drawHintsForGoalPixels)
           if goalPixel.paletteColor
             shades = palette.ramps[goalPixel.paletteColor.ramp].shades
             shadeIndex = THREE.Math.clamp goalPixel.paletteColor.shade, 0, shades.length - 1

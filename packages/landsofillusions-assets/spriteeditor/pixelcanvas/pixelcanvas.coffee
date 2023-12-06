@@ -9,6 +9,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # scrollingEnabled: boolean whether you can scroll to pan and zoom
   # components: array of helper IDs that should be drawn to context
   # displayMode: how to display the canvas relative to the pixel canvas
+  # borderWidth: how many pixels to add as a border around the image in framed and full modes
   #
   # EDITOR FILE DATA
   # camera:
@@ -33,6 +34,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     'scrollingEnabled'
     'components'
     'displayMode'
+    'borderWidth'
   ]
 
   @editorFileDataFieldsWithDefaults: ->
