@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 TextOriginPosition = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextOriginPosition
-TextAlign = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextAlign
 Atari2600 = LOI.Assets.Palette.Atari2600
+Markup = PAA.Tutorials.Drawing.PixelArtFundamentals.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
   @displayName: -> "Jaggies"
@@ -74,18 +74,14 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
     @initialize()
     
     markup: ->
-      palette = LOI.palette()
-      
       return unless asset = @getActiveAsset()
       return unless pixelArtGrading = asset.pixelArtGrading()
       
       markup = []
       
       # Add jaggies.
-      jaggyColor = palette.color Atari2600.hues.red, 3
-      jaggyBase =
-        style: "##{jaggyColor.getHexString()}"
-        
+      jaggyBase = style: Markup.jaggyStyle()
+      
       return unless trashCanLine = pixelArtGrading.getLinesAt(6, 12)?[0]
       return unless lampLine = pixelArtGrading.getLinesAt(13, 6)?[0]
       return unless handrailLine = pixelArtGrading.getLinesAt(17, 12)?[0]
@@ -98,14 +94,14 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
               y: jaggy.y
       
       # Add jaggy arrows.
-      markupStyle = Asset.markupStyle()
+      markupStyle = Markup.defaultStyle()
       
       arrowBase =
         arrow:
           end: true
         style: markupStyle
         
-      textBase = Asset.markupTextBase()
+      textBase = Markup.textBase()
       
       markup.push
         line: _.extend {}, arrowBase,
@@ -172,7 +168,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           value: "not a jaggy\n(sharp corner)"
       
       # Add intended lines.
-      intendedLineBase = Asset.markupIntendedLineBase()
+      intendedLineBase = Markup.intendedLineBase()
       
       markup.push
         line: _.extend {}, intendedLineBase,

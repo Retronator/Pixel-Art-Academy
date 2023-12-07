@@ -207,3 +207,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
   solve: ->
     stepArea.solve() for stepArea in @stepAreas()
+  
+  hasGoalPixel: (x, y) ->
+    # Check if any of the step areas require a pixel at these absolute bitmap coordinates.
+    for stepArea in @stepAreas()
+      return true if stepArea.hasGoalPixel x, y
+    
+    false

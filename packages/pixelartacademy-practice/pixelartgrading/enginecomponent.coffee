@@ -9,6 +9,7 @@ edgeColor = "hsl(200deg 50% 50% / 50%)"
 getStraightLineColor = (opacity) -> "hsl(60deg 50% 50% / #{opacity})"
 straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
+segmentBoundaryColor = "hsl(80deg 50% 50% / 100%)"
 
 _straightLine = new THREE.Line2
 _pointPosition = new THREE.Vector3
@@ -41,6 +42,9 @@ class PAG.EngineComponent
   _render: (context) ->
     pixelArtGrading = @options.pixelArtGrading()
     
+    context.save()
+    context.translate 0.5, 0.5
+    
     # Draw deep core pixels.
     #context.beginPath()
     #@_addPixelToPath context, pixel for pixel in pixelArtGrading.pixels when pixel.isDeepCore
@@ -68,6 +72,8 @@ class PAG.EngineComponent
       for part in line[linePartsProperty]
         @_drawStraightLine context, part if part instanceof PAG.Line.Part.StraightLine
         @_drawCurve context, part, true if part instanceof PAG.Line.Part.Curve
+    
+    context.restore()
 
   _addPixelToPath: (context, pixel) ->
     context.rect pixel.x, pixel.y, 1, 1
@@ -91,14 +97,14 @@ class PAG.EngineComponent
     context.lineWidth = @_pixelSize * 2
     context.beginPath()
     
-    context.moveTo pointA.x + 0.5, pointA.y + 0.5
-    context.lineTo pointB.x + 0.5, pointB.y + 0.5
+    context.moveTo pointA.x, pointA.y
+    context.lineTo pointB.x, pointB.y
     
     context.stroke()
     
   _drawPoint: (context, point) ->
     context.beginPath()
-    context.arc point.x + 0.5, point.y + 0.5, @_pixelSize * 3, 0, 2 * Math.PI
+    context.arc point.x, point.y, @_pixelSize * 3, 0, 2 * Math.PI
     context.fillStyle = pointColor
     context.fill()
 
@@ -110,9 +116,9 @@ class PAG.EngineComponent
     
     points = line.points
     
-    context.moveTo points[0].x + 0.5, points[0].y + 0.5
-    context.lineTo points[i].x + 0.5, points[i].y + 0.5 for i in [1...points.length]
-    context.lineTo points[0].x + 0.5, points[0].y + 0.5 if line.isClosed
+    context.moveTo points[0].x, points[0].y
+    context.lineTo points[i].x, points[i].y for i in [1...points.length]
+    context.lineTo points[0].x, points[0].y if line.isClosed
     
     context.stroke()
   
@@ -121,11 +127,26 @@ class PAG.EngineComponent
     context.lineWidth = @_pixelSize * 3
     context.beginPath()
     
-    context.moveTo straightLine.displayLine2.start.x + 0.5, straightLine.displayLine2.start.y + 0.5
-    context.lineTo straightLine.displayLine2.end.x + 0.5, straightLine.displayLine2.end.y + 0.5
+    context.moveTo straightLine.displayLine2.start.x, straightLine.displayLine2.start.y
+    context.lineTo straightLine.displayLine2.end.x, straightLine.displayLine2.end.y
     
     context.stroke()
     
+    context.strokeStyle = segmentBoundaryColor
+    context.lineWidth = @_pixelSize * 2
+    segmentCorners = straightLine.getSegmentCorners()
+    
+    for side in ['left', 'right']
+      points = segmentCorners[side]
+      
+      context.beginPath()
+      context.moveTo points[0].x, points[0].y
+      
+      for point in points[1..]
+        context.lineTo point.x, point.y
+        
+      context.stroke()
+  
   _drawCurve: (context, curve) ->
     context.strokeStyle = curveColor
     context.lineWidth = @_pixelSize * 3
@@ -134,7 +155,7 @@ class PAG.EngineComponent
     points = curve.displayPoints
     getPoint = (index) => if curve.isClosed then points[_.modulo index, points.length - 1] else points[index]
     
-    context.moveTo points[0].position.x + 0.5, points[0].position.y + 0.5
+    context.moveTo points[0].position.x, points[0].position.y
     
     endIndex = if curve.isClosed then points.length - 1 else points.length - 2
     
@@ -146,4 +167,4 @@ class PAG.EngineComponent
     context.stroke()
   
   _bezierCurve: (context, controlPoint1, controlPoint2, end) ->
-    context.bezierCurveTo controlPoint1.x + 0.5, controlPoint1.y + 0.5, controlPoint2.x + 0.5, controlPoint2.y + 0.5, end.x + 0.5, end.y + 0.5
+    context.bezierCurveTo controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, end.x, end.y

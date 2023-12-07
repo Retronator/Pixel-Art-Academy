@@ -88,7 +88,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         pixel = bitmap.findPixelAtAbsoluteCoordinates absoluteX, absoluteY
         
         # Do we need a pixel here?
-        anyPixel = @stepArea.hasPixel x, y
+        anyPixel = @stepArea.hasGoalPixel x, y
         goalPixel = @goalPixelsMap[x]?[y]
         
         # Clear hints at pixels that should be empty.

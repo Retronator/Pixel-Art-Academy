@@ -1,7 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-TextOriginPosition = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextOriginPosition
+StraightLine = PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+Markup = PAA.Tutorials.Drawing.PixelArtFundamentals.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals"
@@ -12,9 +13,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     Not all jaggies are created equal and not all diagonals have the same aesthetic.
   """
   
-  @fixedDimensions: -> width: 28, height: 32
+  @fixedDimensions: -> width: 26, height: 26
   
-  @steps: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals-#{step}.png" for step in [1..5]
+  @steps: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals-#{step}.png" for step in [1..4]
   
   @markup: -> true
   @pixelArtGrading: -> true
@@ -42,34 +43,34 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
       
       markup = []
       
-      textBase = Asset.markupTextBase()
-      
       for line in pixelArtGrading.lines
         # Draw this only for lines that are recognized as straight lines.
         continue unless line.parts.length is 1
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
         
-        if diagonalRatio = linePart.diagonalRatio()
-          startPoint = _.first linePart.points
-          endPoint = _.last linePart.points
-          rightPoint = if endPoint.x > startPoint.x then endPoint else startPoint
-  
-          markup.push
-            text: _.extend {}, textBase,
-              position:
-                x: rightPoint.x + 1.75, y: rightPoint.y - 0.75, origin: TextOriginPosition.BottomLeft
-              value: "#{diagonalRatio.numerator}:#{diagonalRatio.denominator}"
+        lineGrading = linePart.grade()
+        markup.push Markup.diagonalRatioText linePart, lineGrading unless lineGrading.type is StraightLine.Type.AxisAligned
         
       markup
-    
-  class @instructionStepWithSegmentLines extends @InstructionStep
+  
+  class @InstructionStepWithSegmentLines extends @InstructionStep
     markup: ->
-      palette = LOI.palette()
+      markup = super arguments...
       
-      return unless asset = @getActiveAsset()
-      return unless pixelArtGrading = asset.pixelArtGrading()
-    
+      return markup unless asset = @getActiveAsset()
+      return markup unless pixelArtGrading = asset.pixelArtGrading()
+      
+      # Add intended lines for straight lines.
+      for line in pixelArtGrading.lines
+        continue unless line.parts.length is 1
+        linePart = line.parts[0]
+        continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+        
+        markup.push Markup.intendedLine linePart
+
+      markup
+      
   class @Horizontal extends @InstructionStep
     @id: -> "#{Asset.id()}.Aligned"
     @stepNumber: -> 1
@@ -85,7 +86,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     @stepNumber: -> 2
     
     @message: -> """
-      Even though a 45° diagonal creates jaggies, they follow a uniform pattern by raising exactly one pixel for each pixel traveled forward. We call this the 1:1 diagonal.
+      Even though a 45° diagonal creates jaggies, the line follows a uniform pattern by raising exactly one pixel for each pixel traveled forward. We call this the 1:1 diagonal.
     """
     
     @initialize()
@@ -95,29 +96,18 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     @stepNumber: -> 3
     
     @message: -> """
-      If the segments are 2 pixels long, we get the 1:2 diagonal.
+      If the segments are 2 pixels long, we get the 1:2 and 2:1 diagonals.
     """
     
     @initialize()
   
-  class @Even extends @InstructionStep
+  class @Even extends @InstructionStepWithSegmentLines
     @id: -> "#{Asset.id()}.Even"
     @stepNumber: -> 4
     
     @message: -> """
-      Whenever we use an even number of pixels in each segment we create even or 'perfect' diagonals.
+      Whenever we use the same number of pixels in each segment, we create even or 'perfect' diagonals.
       These angles are considered perfect in pixel art because the corners of the segments exactly follow the intended line.
-    """
-    
-    @initialize()
-  
-  class @Intermediary extends @InstructionStep
-    @id: -> "#{Asset.id()}.Intermediary"
-    @stepNumber: -> 5
-    
-    @message: -> """
-      The lines that fall between the even diagonals are called intermediary diagonals.
-      Their segments change in length and lead to jaggies that don't align perfectly with the diagonal.
     """
     
     @initialize()

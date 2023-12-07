@@ -141,5 +141,6 @@ Package.onUse(function(api) {
   api.addFile('pixelartgrading/line..')
   api.addFile('pixelartgrading/line/part..')
   api.addFile('pixelartgrading/line/part/straightline')
+  api.addFile('pixelartgrading/line/part/straightline-getsegmentcorners')
   api.addFile('pixelartgrading/line/part/curve')
 });

@@ -24,7 +24,7 @@ class PAG.Line.Part
         
         for pointIndex in [startPointIndex..endPointIndex]
           point = @line.getPoint pointIndex
-          @points.push point
+          @points.push point unless point in @points
   
   overlaysPointRange: (startPointIndex, endPointIndex) ->
     pointCount = @line.points.length

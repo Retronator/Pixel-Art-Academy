@@ -57,7 +57,7 @@ class TutorialBitmap.StepArea
         continue unless bitmapLayer.getPixel x, y
         
         # If we don't find a step that requires this pixel, we have an extra.
-        return true unless @hasPixel x, y
+        return true unless @hasGoalPixel x, y
         
     false
     
@@ -71,7 +71,7 @@ class TutorialBitmap.StepArea
     for x in [@bounds.x...@bounds.x + @bounds.width]
       for y in [@bounds.y...@bounds.y + @bounds.height]
         # Missing pixels can only exist where there is a goal pixel.
-        continue unless @hasPixel x, y
+        continue unless @hasGoalPixel x, y
         
         # If we don't have a pixel at all, it's definitely a missing one.
         return true unless pixel = bitmapLayer.getPixel x, y
@@ -82,8 +82,8 @@ class TutorialBitmap.StepArea
           return true if pixelColor.equals backgroundColor
 
     false
-    
-  hasPixel: (x, y) ->
+  
+  hasGoalPixel: (x, y) ->
     # Check if any of the steps require a pixel at these absolute bitmap coordinates.
     for step in @steps()
       return true if step.hasPixel x, y

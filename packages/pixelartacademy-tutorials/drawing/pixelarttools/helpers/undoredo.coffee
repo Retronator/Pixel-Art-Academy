@@ -12,6 +12,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       Shortcuts:
 
       - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
     """
 
@@ -60,6 +61,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       
       Shortcuts:
       - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
     """
     

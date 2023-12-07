@@ -11,4 +11,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals extends PAA.P
   
   @assets: -> [
     @EvenDiagonals
+    @ConstrainingAngles
+    @UnevenDiagonals
   ]

@@ -79,6 +79,7 @@ Package.onUse(function(api) {
   // Pixel art fundamentals
 
   api.addFile('drawing/pixelartfundamentals..');
+  api.addFile('drawing/pixelartfundamentals/markup');
 
   api.addFile('drawing/pixelartfundamentals/jaggies..');
   api.addFile('drawing/pixelartfundamentals/jaggies/asset');
@@ -89,4 +90,6 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals..');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/constrainingangles');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonals');
 });

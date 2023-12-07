@@ -85,6 +85,6 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     # Erase dots at empty pixels.
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
-        continue if @stepArea.hasPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
+        continue if @stepArea.hasGoalPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
         @_drawPixelHint context, x, y, null

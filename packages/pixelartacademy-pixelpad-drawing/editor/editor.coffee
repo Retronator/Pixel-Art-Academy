@@ -191,7 +191,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-        "#{LOI.Assets.Editor.Actions.Redo.id()}": commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z
+        "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z}]
         "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}, {key: AC.Keys.numPlus}]
         "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}, {key: AC.Keys.numMinus}]
         
