@@ -306,6 +306,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       toolsDelay
 
   onBackButton: ->
+    # Ask children components if they want to handle the back button.
+    for backButtonHandler in @allChildComponentsWith 'onBackButton'
+      return true if backButtonHandler.onBackButton()
+    
     # Turn off focused mode on back button.
     return super(arguments...) unless @focusedMode()
     

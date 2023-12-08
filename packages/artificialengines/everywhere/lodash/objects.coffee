@@ -56,7 +56,7 @@ _.mixin
   
       source
       
-    if _.isArray(source) and _.isArray(difference)
+    else if _.isArray(source) and _.isArray(difference)
       source.length = difference.length
       
       for i in [0...source.length] when difference[i] isnt undefined

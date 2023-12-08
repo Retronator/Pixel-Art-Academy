@@ -12,7 +12,7 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
   @PointSegmentLengths:
     Even: 'Even'
     Alternating: 'Alternating'
-    Unorganized: 'Unorganized'
+    Broken: 'Broken'
     
   @EndPointSegmentLengths:
     Matching: 'Matching'
@@ -122,13 +122,13 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
     return @constructor.PointSegmentLengths.Alternating if @pointSegmentLengths.length is 2
     
     if @pointSegmentLengths.length is 3
-      return if @pointSegmentLengths[0] is @pointSegmentLengths[2] then @constructor.PointSegmentLengths.Alternating else @constructor.PointSegmentLengths.Unorganized
+      return if @pointSegmentLengths[0] is @pointSegmentLengths[2] then @constructor.PointSegmentLengths.Alternating else @constructor.PointSegmentLengths.Broken
     
     oddPointSegmentLength = @pointSegmentLengths[1]
     evenPointSegmentLength = @pointSegmentLengths[2]
     
     for pointSegmentIndex in [1...@pointSegmentLengths.length - 1] by 2
-      return @constructor.PointSegmentLengths.Unorganized unless @pointSegmentLengths[pointSegmentIndex] is oddPointSegmentLength and @pointSegmentLengths[pointSegmentIndex + 1] is evenPointSegmentLength
+      return @constructor.PointSegmentLengths.Broken unless @pointSegmentLengths[pointSegmentIndex] is oddPointSegmentLength and @pointSegmentLengths[pointSegmentIndex + 1] is evenPointSegmentLength
       
     @constructor.PointSegmentLengths.Alternating
 

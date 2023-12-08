@@ -85,7 +85,17 @@ class AM.Component extends CommonComponent
       return true if current is component
 
     return false
-
+  
+  allChildComponentsWith: (propertyOrMatcherOrFunction) ->
+    # Start by searching the children of this component.
+    result = @childComponentsWith propertyOrMatcherOrFunction
+    
+    # Recursively search also in each child.
+    for childComponent in @childComponents() when childComponent instanceof AM.Component
+      result.push childComponent.allChildComponentsWith(propertyOrMatcherOrFunction)...
+    
+    result
+    
   ancestorComponentOfType: (constructor) ->
     @ancestorComponentWith (ancestor) ->
       ancestor instanceof constructor
@@ -95,14 +105,8 @@ class AM.Component extends CommonComponent
       child instanceof constructor
 
   allChildComponentsOfType: (constructor) ->
-    # Start by searching the children of this component.
-    result = @childComponentsOfType constructor
-
-    # Recursively search also in each child.
-    for childComponent in @childComponents() when childComponent instanceof AM.Component
-      result.push childComponent.allChildComponentsOfType(constructor)...
-      
-    result
+    @allChildComponentsWith (child) ->
+      child instanceof constructor
 
   ancestorComponents: ->
     components = []

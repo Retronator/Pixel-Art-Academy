@@ -1,24 +1,38 @@
 PAA = PixelArtAcademy
 
 class PAA.Practice.PixelArtGrading
+  # score: float between 0 and 1 for the final average score
+  # consistentLineWidth:
+  #   score: float between 0 and 1 with this criterion evaluation
+  # evenDiagonals
+  #   score: float between 0 and 1 with this criterion's weighted average
+  #   segmentLengths:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #   endSegments:
+  #     score: float between 0 and 1 with this criterion evaluation
+  # smoothCurves: objects with different criteria evaluations
+  #   score: float between 0 and 1 with this criterion evaluation
+
   @Criteria =
-    PerfectDiagonals: 'PerfectDiagonals'
-    SmoothCurves: 'SmoothCurves'
     ConsistentLineWidth: 'ConsistentLineWidth'
+    EvenDiagonals:
+      SegmentLengths: 'SegmentLengths'
+      EndSegments: 'EndSegments'
+    SmoothCurves: 'SmoothCurves'
     
-  @getLetterGrade = (grade) ->
-    grade10 = grade * 10
+  @getLetterGrade = (score) ->
+    scoreOutOf10 = score * 10
     
-    letterBracket = Math.min 9, Math.floor grade10
+    letterBracket = Math.min 9, Math.floor scoreOutOf10
     letterBracket = 4 if letterBracket < 6
     
     letterGrade = String.fromCharCode(65 + 9 - letterBracket)
     
     if letterBracket > 4
-      gradeRemainder100 = Math.round (grade10 - letterBracket) * 10
+      scoreRemainderOutOf100 = Math.round (scoreOutOf10 - letterBracket) * 10
       
-      letterGrade += '-' if gradeRemainder100 < 3
-      letterGrade += '+' if gradeRemainder100 >= 7
+      letterGrade += '-' if scoreRemainderOutOf100 < 3
+      letterGrade += '+' if scoreRemainderOutOf100 >= 7
     
     letterGrade
     

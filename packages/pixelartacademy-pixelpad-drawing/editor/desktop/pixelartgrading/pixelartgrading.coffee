@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
+PAG = PAA.Practice.PixelArtGrading
+
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading'
   @register @id()
@@ -13,11 +15,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     subNamespace: true
     variables:
       flipPaper: AEc.ValueTypes.Trigger
-      
-  @CriteriaNames:
-    PerfectDiagonals: 'Perfect diagonals'
-    SmoothCurves: 'Smooth curves'
-    ConsistentLineWidth: 'Consistent line width'
 
   constructor: ->
     super arguments...
@@ -30,41 +27,26 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     
     @desktop = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
     
+    @activeCriterion = new ReactiveField null
+    @contentHeight = new ReactiveField 0
+    
     @bitmap = new ComputedField =>
       @interface.getLoaderForActiveFile()?.asset()
+    
+    @bitmapObject = new ComputedField =>
+      @bitmap()
     ,
       (a, b) => a is b
       
     @pixelArtGrading = new ComputedField =>
-      return unless bitmap = @bitmap()
-      new PAA.Practice.PixelArtGrading bitmap
+      return unless bitmap = @bitmapObject()
+      new PAG bitmap
     
-    @engineComponent = new PAA.Practice.PixelArtGrading.EngineComponent
+    @engineComponent = new PAG.EngineComponent
       pixelArtGrading: => @pixelArtGrading()
     
     @pixelArtGradingProperty = new ComputedField =>
       @bitmap()?.properties?.pixelArtGrading
-    
-    @editable = new ComputedField => @pixelArtGradingProperty()?.editable
-    
-    @criteria = new ComputedField =>
-      return unless pixelArtGradingProperty = @pixelArtGradingProperty()
-      editable = @editable()
-      
-      criteria = []
-      
-      for criterion of PAA.Practice.PixelArtGrading.Criteria
-        criterionProperty = _.lowerFirst criterion
-        
-        # Show only existing criteria when not editable (and all otherwise so we can toggle them on and off).
-        continue unless editable or pixelArtGradingProperty[criterionProperty]?
-        
-        criteria.push
-          propertyName: criterion
-          name: @constructor.CriteriaNames[criterion]
-          grade: pixelArtGradingProperty[criterionProperty]?.score
-      
-      criteria
     
     # Automatically enter focused mode when active.
     @autorun (computation) =>
@@ -73,7 +55,29 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     # Automatically deactivate when exiting focused mode.
     @autorun (computation) =>
       @deactivate() unless @desktop.focusedMode()
-      
+  
+  onRendered: ->
+    super arguments...
+    
+    @content$ = @$('.content')
+    @_resizeObserver = new ResizeObserver =>
+      @contentHeight @content$.outerHeight()
+    
+    @_resizeObserver.observe @content$[0]
+    
+  onDestroyed: ->
+    super arguments...
+    
+    @_resizeObserver?.disconnect()
+    
+  onBackButton: ->
+    return unless @activeCriterion()
+    
+    @activeCriterion null
+    
+    # Inform that we've handled the back button.
+    true
+    
   editorDrawComponents: -> [
     @engineComponent
   ]
@@ -113,15 +117,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
   activeClass: ->
     'active' if @active()
     
-  gradePercentage: (value) ->
-    return unless value?
+  contentPlaceholderStyle: ->
+    height: "#{@contentHeight()}px"
     
-    "#{Math.floor value * 100}%"
-    
-  letterGrade: ->
-    grade = @pixelArtGradingProperty()?.grade or 0
-    PAA.Practice.PixelArtGrading.getLetterGrade grade
-  
   events: ->
     super(arguments...).concat
       'click': @onClick
@@ -130,7 +128,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     return if @active()
 
     @activate()
-    
+  
   class @CriterionEnabled extends AM.DataInputComponent
     @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.CriterionEnabled'
     @register @id()
@@ -139,7 +137,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       super arguments...
       
       @type = AM.DataInputComponent.Types.Checkbox
-      @extraComponent = @parentComponent()
       
     onCreated: ->
       super arguments...
@@ -149,7 +146,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     load: ->
       criterion = @data()
       
-      @pixelArtGrading.pixelArtGradingProperty()?[criterion.propertyName]?
+      _.nestedProperty @pixelArtGrading.pixelArtGradingProperty(), criterion.propertyPath
     
     save: (value) ->
       criterion = @data()
@@ -157,10 +154,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       pixelArtGradingProperty = EJSON.clone @pixelArtGrading.pixelArtGradingProperty()
       
       if value
-        pixelArtGradingProperty[criterion.propertyName] = {}
+        _.nestedProperty pixelArtGradingProperty, criterion.propertyPath, {}
         
       else
-        delete pixelArtGradingProperty[criterion.propertyName]
+        _.deleteNestedProperty pixelArtGradingProperty, criterion.propertyPath
       
       asset = @pixelArtGrading.interface.getLoaderForActiveFile()?.asset()
       updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtGrading', pixelArtGradingProperty
