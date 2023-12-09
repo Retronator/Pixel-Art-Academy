@@ -25,6 +25,12 @@ class PAG.Line.Part
         for pointIndex in [startPointIndex..endPointIndex]
           point = @line.getPoint pointIndex
           @points.push point unless point in @points
+          
+  hasPixel: (pixel) ->
+    for point in @points
+      return true if pixel in point.pixels
+      
+    false
   
   overlaysPointRange: (startPointIndex, endPointIndex) ->
     pointCount = @line.points.length

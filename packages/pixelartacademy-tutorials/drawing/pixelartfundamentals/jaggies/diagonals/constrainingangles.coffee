@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 StraightLine = PAA.Practice.PixelArtGrading.Line.Part.StraightLine
-Markup = PAA.Tutorials.Drawing.PixelArtFundamentals.Markup
+Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingAngles extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingAngles"
@@ -48,7 +48,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
       markup = []
       
       # Highlight uneven pixels.
-      unevenPixelBase = style: Markup.jaggyStyle()
+      unevenPixelBase = style: Markup.errorStyle()
       
       for x in [bitmap.bounds.left..bitmap.bounds.right]
         for y in [bitmap.bounds.top..bitmap.bounds.bottom]

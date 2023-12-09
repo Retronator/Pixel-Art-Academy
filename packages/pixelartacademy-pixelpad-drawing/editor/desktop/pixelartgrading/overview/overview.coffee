@@ -54,7 +54,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview extends 
   events: ->
     super(arguments...).concat
       'click .criterion .name-area, click .criterion .grade': @onClickCriterion
+      'mouseenter .criterion .name-area, mouseenter .criterion .grade': @onMouseEnterCriterion
+      'mouseleave .criterion .name-area, mouseleave .criterion .grade': @onMouseLeaveCriterion
       
   onClickCriterion: (event) ->
     criterion = @currentData()
     @pixelArtGrading.activeCriterion criterion.id
+  
+  onMouseEnterCriterion: (event) ->
+    criterion = @currentData()
+    @pixelArtGrading.hoveredCriterion criterion.id
+  
+  onMouseLeaveCriterion: (event) ->
+    @pixelArtGrading.hoveredCriterion null

@@ -1,9 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-TextOriginPosition = PAA.Practice.Tutorials.Drawing.MarkupEngineComponent.TextOriginPosition
+TextOriginPosition = PAA.Practice.Helpers.Drawing.Markup.TextOriginPosition
 Atari2600 = LOI.Assets.Palette.Atari2600
-Markup = PAA.Tutorials.Drawing.PixelArtFundamentals.Markup
+Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
   @displayName: -> "Jaggies"
@@ -80,7 +80,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       markup = []
       
       # Add jaggies.
-      jaggyBase = style: Markup.jaggyStyle()
+      jaggyBase = style: Markup.errorStyle()
       
       return unless trashCanLine = pixelArtGrading.getLinesAt(6, 12)?[0]
       return unless lampLine = pixelArtGrading.getLinesAt(13, 6)?[0]
@@ -168,7 +168,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           value: "not a jaggy\n(sharp corner)"
       
       # Add intended lines.
-      intendedLineBase = Markup.intendedLineBase()
+      intendedLineBase = Markup.PixelArt.intendedLineBase()
       
       markup.push
         line: _.extend {}, intendedLineBase,

@@ -86,7 +86,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       overlaid: new @constructor.HintsEngineComponent @, 'drawOverlaidHints'
     
     if @constructor.markup()
-      @markupEngineComponent = new PAA.Practice.Tutorials.Drawing.MarkupEngineComponent
+      @instructionsMarkupEngineComponent = new PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent
     
     # Create additional helpers.
     if @constructor.pixelArtGrading()
@@ -189,9 +189,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       component: @hintsEngineComponents.overlaid, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
     ]
     
-    if @markupEngineComponent
+    if @instructionsMarkupEngineComponent
       components.push
-        component: @markupEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
+        component: @instructionsMarkupEngineComponent, before: LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
     
     components
 

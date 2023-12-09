@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 StraightLine = PAA.Practice.PixelArtGrading.Line.Part.StraightLine
-Markup = PAA.Tutorials.Drawing.PixelArtFundamentals.Markup
+Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonals extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonals"
@@ -51,7 +51,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
         
         # Add intended line.
-        markup.push Markup.intendedLine linePart
+        markup.push Markup.PixelArt.intendedLine linePart
         
       markup
   
@@ -72,7 +72,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         lineGrading = linePart.grade()
         
         unless lineGrading.type is StraightLine.Type.AxisAligned
-          diagonalRatioText = Markup.diagonalRatioText linePart, lineGrading
+          diagonalRatioText = Markup.PixelArt.diagonalRatioText linePart, lineGrading
           diagonalRatioText.text.style = @_getLineStyle lineGrading
           markup.push diagonalRatioText
         
@@ -103,7 +103,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         # Add segment corner lines.
         lineGrading = linePart.grade()
         
-        segmentCornersLineBase = Markup.intendedLineBase()
+        segmentCornersLineBase = Markup.PixelArt.intendedLineBase()
         segmentCornersLineBase.style = @_getLineStyle lineGrading
         
         segmentCorners = linePart.getSegmentCorners()

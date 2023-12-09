@@ -15,10 +15,13 @@ class PAA.Practice.PixelArtGrading
 
   @Criteria =
     ConsistentLineWidth: 'ConsistentLineWidth'
+    EvenDiagonals: 'EvenDiagonals'
+    SmoothCurves: 'SmoothCurves'
+
+  @Subcriteria =
     EvenDiagonals:
       SegmentLengths: 'SegmentLengths'
       EndSegments: 'EndSegments'
-    SmoothCurves: 'SmoothCurves'
     
   @getLetterGrade = (score) ->
     scoreOutOf10 = score * 10
@@ -56,9 +59,14 @@ class PAA.Practice.PixelArtGrading
     @pixelsMap[x]?[y]
     
   getLinesAt: (x, y) ->
-    return unless pixel = @getPixel x, y
+    return [] unless pixel = @getPixel x, y
     
     pixel.lines
+    
+  getLinePartsAt: (x, y) ->
+    return [] unless pixel = @getPixel x, y
+    
+    _.flatten(line.getPartsForPixel pixel for line in pixel.lines)
     
   mergeCoreInto: (removingCore, enlargingCore) ->
     enlargingCore.mergeCore removingCore

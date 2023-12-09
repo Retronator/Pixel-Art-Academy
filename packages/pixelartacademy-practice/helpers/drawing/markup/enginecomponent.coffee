@@ -1,39 +1,16 @@
-PAA = PixelArtAcademy
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
 _normal = new THREE.Vector2
 
-class PAA.Practice.Tutorials.Drawing.MarkupEngineComponent
-  @TextOriginPosition =
-    TopLeft: 'TopLeft'
-    TopCenter: 'TopCenter'
-    TopRight: 'TopRight'
-    MiddleLeft: 'MiddleLeft'
-    MiddleCenter: 'MiddleCenter'
-    MiddleRight: 'MiddleRight'
-    BottomLeft: 'BottomLeft'
-    BottomCenter: 'BottomCenter'
-    BottomRight: 'BottomRight'
-    
-  @TextAlign =
-    Left: 'Left'
-    Center: 'Center'
-    Right: 'Right'
-    
+class PAA.Practice.Helpers.Drawing.Markup.EngineComponent
   # The minimum zoom level where markup pixels match display pixels
   # (markup pixels will be scaled down when zoomed out more than this).
   @minimumZoomPercentage = 400 # %
   
-  constructor: ->
-    @markup = new ComputedField =>
-      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      return unless instructions = pixelPad.os.getSystem PAA.PixelPad.Systems.Instructions
-      return unless instruction = instructions.displayedInstruction()
-      instruction.markup?()
-
-  drawToContext: (context, renderOptions = {}) ->
-    return unless markup = @markup()
-    
+  constructor: (@options) ->
+  
+  drawMarkup: (markup, context, renderOptions = {}) ->
     pixelSize = 1 / renderOptions.camera.effectiveScale()
     displayScale = renderOptions.editor.display.scale()
     displayPixelSize = pixelSize * displayScale

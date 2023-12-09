@@ -41,9 +41,35 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     @pixelArtGrading = new ComputedField =>
       return unless bitmap = @bitmapObject()
       new PAG bitmap
+      
+    @hoveredCriterion = new ReactiveField null
+    @hoveredCategoryValue = new ReactiveField null
+
+    @hoveredPixel = new ComputedField =>
+      pixelCanvas = @interface.getEditorForActiveFile()
+      pixelCanvas.mouse().pixelCoordinate()
+      
+    # Due to animation, the grading sheet is full displayed a second after it's activated.
+    @displayed = new ReactiveField false
+    
+    @autorun (computation) =>
+      active = @active()
+      
+      if active
+        @_displayedTimeout = Meteor.setTimeout =>
+          @displayed true
+        ,
+          1000
+        
+      else
+        Meteor.clearTimeout @_displayedTimeout
+        @displayed false
     
     @engineComponent = new PAG.EngineComponent
       pixelArtGrading: => @pixelArtGrading()
+      displayedCriterion: => if @displayed() then @activeCriterion() or @hoveredCriterion() else null
+      displayedCategoryValue: => if @displayed() then @hoveredCategoryValue() else null
+      displayedPixel: => if @displayed() then @hoveredPixel() else null
     
     @pixelArtGradingProperty = new ComputedField =>
       @bitmap()?.properties?.pixelArtGrading

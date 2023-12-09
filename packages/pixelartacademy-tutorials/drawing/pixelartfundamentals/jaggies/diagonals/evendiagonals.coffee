@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 StraightLine = PAA.Practice.PixelArtGrading.Line.Part.StraightLine
-Markup = PAA.Tutorials.Drawing.PixelArtFundamentals.Markup
+Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals"
@@ -50,7 +50,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
         
         lineGrading = linePart.grade()
-        markup.push Markup.diagonalRatioText linePart, lineGrading unless lineGrading.type is StraightLine.Type.AxisAligned
+        markup.push Markup.PixelArt.diagonalRatioText linePart, lineGrading unless lineGrading.type is StraightLine.Type.AxisAligned
         
       markup
   
@@ -67,7 +67,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
         
-        markup.push Markup.intendedLine linePart
+        markup.push Markup.PixelArt.intendedLine linePart
 
       markup
       

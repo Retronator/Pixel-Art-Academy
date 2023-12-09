@@ -69,6 +69,14 @@ Package.onUse(function(api) {
   api.addComponent('pages/importcheckins/importcheckins');
   api.addServerFile('pages/importcheckins/methods-server');
 
+  // Helpers
+
+  api.addFile('helpers..')
+  api.addFile('helpers/drawing..')
+  api.addFile('helpers/drawing/markup..')
+  api.addFile('helpers/drawing/markup/pixelart')
+  api.addFile('helpers/drawing/markup/enginecomponent')
+
   // Project
 
   api.addFile('project..');
@@ -93,7 +101,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials..');
   api.addFile('tutorials/drawing..');
   api.addFile('tutorials/drawing/tutorial');
-  api.addFile('tutorials/drawing/markupenginecomponent');
+  api.addFile('tutorials/drawing/instructionsmarkupenginecomponent');
 
   api.addFile('tutorials/drawing/assets..');
 
@@ -137,10 +145,12 @@ Package.onUse(function(api) {
   api.addFile('pixelartgrading/pixel')
   api.addFile('pixelartgrading/point')
   api.addFile('pixelartgrading/enginecomponent')
+  api.addFile('pixelartgrading/enginecomponent-debug')
 
   api.addFile('pixelartgrading/line..')
   api.addFile('pixelartgrading/line/part..')
   api.addFile('pixelartgrading/line/part/straightline')
   api.addFile('pixelartgrading/line/part/straightline-getsegmentcorners')
   api.addFile('pixelartgrading/line/part/curve')
+  api.addFile('pixelartgrading/line/part/curve-calculatepointconfidence')
 });

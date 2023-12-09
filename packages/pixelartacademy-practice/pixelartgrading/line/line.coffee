@@ -73,6 +73,9 @@ class PAG.Line
     return if @grading.getPixel pixel.x + dx, pixel.y
     true
     
+  getPartsForPixel: (pixel) ->
+    part for part in @parts when part.hasPixel pixel
+    
   getEdgeSegment: (index) ->
     if @isClosed then @edgeSegments[_.modulo index, @edgeSegments.length] else @edgeSegments[index]
 

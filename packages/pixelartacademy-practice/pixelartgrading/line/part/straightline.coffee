@@ -44,14 +44,18 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
         @nextPart.projectToLine @nextPart.startPointIndex, @, @displayLine2.end
         
   grade: ->
+    return @_grading if @_grading
+    
     @_analyzeSegments()
     
     diagonalRatio = @_analyzeDiagonalRatio()
     type = @_analyzeType diagonalRatio
-    pointSegmentLengths = @_analyzePointSegmentLengths()
-    endPointSegmentLengths = @_analyzeEndPointSegmentLengths()
+    segmentLengths = @_analyzePointSegmentLengths()
+    endSegments = @_analyzeEndPointSegmentLengths()
     
-    {type, diagonalRatio, pointSegmentLengths, endPointSegmentLengths}
+    @_grading = {type, diagonalRatio, segmentLengths, endSegments}
+    
+    @_grading
     
   _analyzeSegments: ->
     return if @pointSegmentLengths
@@ -67,7 +71,10 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
       
       @pointSegmentLengthFrequency[segment.pointSegmentLength] ?= 0
       @pointSegmentLengthFrequency[segment.pointSegmentLength] += segment.pointSegmentsCount
-
+      
+    @uniquePointSegmentLengths = _.sortBy _.uniq @pointSegmentLengths
+    @largestPointSegmentLengths = @uniquePointSegmentLengths[@uniquePointSegmentLengths.length - 2..]
+  
   _analyzeDiagonalRatio: ->
     @_analyzeSegments()
     
@@ -115,26 +122,56 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
       else @constructor.Type.IntermediaryDiagonal
     
   _analyzePointSegmentLengths: ->
-    uniquePointSegmentLengths = _.sortBy _.uniq @pointSegmentLengths
+    # If we have only one segment length, it's a perfect even diagonal.
+    if @uniquePointSegmentLengths.length is 1
+      return type: @constructor.PointSegmentLengths.Even, score: 1
+    
+    # The line is not perfect so we can calculate a ratio between its largest segments for scoring purposes.
+    largestPointSegmentsLengthRatio = @largestPointSegmentLengths[0] / @largestPointSegmentLengths[1]
 
-    return @constructor.PointSegmentLengths.Even if uniquePointSegmentLengths.length is 1
+    # Alternating score can go from C (75%) at worst (1:2) to A at best (∞:∞).
+    alternatingScore = THREE.MathUtils.mapLinear largestPointSegmentsLengthRatio, 0.5, 1, 0.75, 1
     
-    return @constructor.PointSegmentLengths.Alternating if @pointSegmentLengths.length is 2
-    
-    if @pointSegmentLengths.length is 3
-      return if @pointSegmentLengths[0] is @pointSegmentLengths[2] then @constructor.PointSegmentLengths.Alternating else @constructor.PointSegmentLengths.Broken
-    
+    # If we don't have enough segments to determine repetition, we classify as alternating as the next best thing.
+    if @pointSegmentLengths.length <= 3
+      return type: @constructor.PointSegmentLengths.Alternating, score: alternatingScore
+
+    # We have at least 2 middle segments (besides 2 end ones) so we can check if they are alternating.
     oddPointSegmentLength = @pointSegmentLengths[1]
     evenPointSegmentLength = @pointSegmentLengths[2]
     
     for pointSegmentIndex in [1...@pointSegmentLengths.length - 1] by 2
-      return @constructor.PointSegmentLengths.Broken unless @pointSegmentLengths[pointSegmentIndex] is oddPointSegmentLength and @pointSegmentLengths[pointSegmentIndex + 1] is evenPointSegmentLength
-      
-    @constructor.PointSegmentLengths.Alternating
+      unless @pointSegmentLengths[pointSegmentIndex] is oddPointSegmentLength and @pointSegmentLengths[pointSegmentIndex + 1] is evenPointSegmentLength
+        # We found a break in the repetition. We want to see what's the ratio between the frequency of each possible segment.
+        largestPointSegmentsFrequency = _.sortBy(@pointSegmentLengthFrequency[pointSegmentLength] for pointSegmentLength in @largestPointSegmentLengths)
+        largestPointSegmentsFrequencyRatio = largestPointSegmentsFrequency[0] / largestPointSegmentsFrequency[1]
+        
+        # Broken scores can go from F (50%) at worst (1:∞) to C (75%) at best (1:1).
+        brokenScore = THREE.MathUtils.mapLinear largestPointSegmentsFrequencyRatio, 0, 1, 0.5, 0.75
+        
+        return type: @constructor.PointSegmentLengths.Broken, score: brokenScore
+    
+    # There was no break in repetition so this is a nicely alternating diagonal.
+    type: @constructor.PointSegmentLengths.Alternating
+    score: alternatingScore
 
   _analyzeEndPointSegmentLengths: ->
-    return @constructor.EndPointSegmentLengths.Matching if @pointSegmentLengths.length is 1
-    return @constructor.EndPointSegmentLengths.Matching if @pointSegmentLengths.length is 2 and @pointSegmentLengths[0] is @pointSegmentLengths[1]
-    return @constructor.EndPointSegmentLengths.Matching if @pointSegmentLengths.length is 3 and @pointSegmentLengths[0] is @pointSegmentLengths[2] and Math.abs(@pointSegmentLengths[1] - @pointSegmentLengths[0]) <= 1
-    return @constructor.EndPointSegmentLengths.Matching if @pointSegmentLengths[0] is @pointSegmentLengths[2] and @pointSegmentLengths[1] is @pointSegmentLengths[3]
-    @constructor.EndPointSegmentLengths.Shorter
+    result =
+      type: @constructor.EndPointSegmentLengths.Matching,
+      startScore: 1
+      endScore: 1
+      score: 1
+      
+    return result if @pointSegmentLengthFrequency[@pointSegmentLengths[0]] is @pointSegmentLengths.length
+
+    firstPointSegmentLength = _.first @pointSegmentLengths
+    endPointSegmentLength = _.last @pointSegmentLengths
+    comparisonLength = _.min @largestPointSegmentLengths
+  
+    result.startScore = firstPointSegmentLength / comparisonLength unless firstPointSegmentLength in @largestPointSegmentLengths
+    result.endScore = endPointSegmentLength / comparisonLength unless endPointSegmentLength in @largestPointSegmentLengths
+    result.score = (result.startScore + result.endScore) / 2
+    
+    result.type = @constructor.EndPointSegmentLengths.Shorter unless result.score is 1
+    
+    result
