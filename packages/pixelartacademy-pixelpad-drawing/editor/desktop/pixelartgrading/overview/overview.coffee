@@ -36,34 +36,26 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview extends 
         
         criteria.push
           id: criterion
+          property: criterionProperty
           propertyPath: criterionProperty
           name: @constructor.CriteriaNames[criterion]
+          enabled: pixelArtGradingProperty[criterionProperty]?
           score: pixelArtGradingProperty[criterionProperty]?.score
       
       criteria
   
-  scorePercentage: (value) ->
-    return unless value?
-    
-    "#{Math.floor value * 100}%"
+  scorePercentage: (value) -> PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.scorePercentage value
+  
+  hasFinalScore: ->
+    @pixelArtGrading.pixelArtGradingProperty()?.score?
     
   letterGrade: ->
-    grade = @pixelArtGrading.pixelArtGradingProperty()?.grade or 0
-    PAG.getLetterGrade grade
+    PAG.getLetterGrade @pixelArtGrading.pixelArtGradingProperty().score
 
   events: ->
     super(arguments...).concat
-      'click .criterion .name-area, click .criterion .grade': @onClickCriterion
-      'mouseenter .criterion .name-area, mouseenter .criterion .grade': @onMouseEnterCriterion
-      'mouseleave .criterion .name-area, mouseleave .criterion .grade': @onMouseLeaveCriterion
+      'click .criterion .name-area, click .criterion .score': @onClickCriterion
       
   onClickCriterion: (event) ->
     criterion = @currentData()
     @pixelArtGrading.activeCriterion criterion.id
-  
-  onMouseEnterCriterion: (event) ->
-    criterion = @currentData()
-    @pixelArtGrading.hoveredCriterion criterion.id
-  
-  onMouseLeaveCriterion: (event) ->
-    @pixelArtGrading.hoveredCriterion null

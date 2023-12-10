@@ -72,8 +72,34 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
       @pointSegmentLengthFrequency[segment.pointSegmentLength] ?= 0
       @pointSegmentLengthFrequency[segment.pointSegmentLength] += segment.pointSegmentsCount
       
-    @uniquePointSegmentLengths = _.sortBy _.uniq @pointSegmentLengths
-    @largestPointSegmentLengths = @uniquePointSegmentLengths[@uniquePointSegmentLengths.length - 2..]
+    @startPointSegmentLength = null
+    @endPointSegmentLength = null
+    
+    if @pointSegmentLengths.length < 3
+      @centralPointSegmentLengths = @pointSegmentLengths
+      
+    else
+      @centralPointSegmentLengths = @pointSegmentLengths[1...@pointSegmentLengths.length - 1]
+      uniqueCentralPointSegmentLengths = _.sortBy _.uniq @centralPointSegmentLengths
+      
+      startPointSegmentLength = _.first @pointSegmentLengths
+      endPointSegmentLength = _.last @pointSegmentLengths
+      largestCentralPointSegmentLength = _.last uniqueCentralPointSegmentLengths
+
+      if startPointSegmentLength in uniqueCentralPointSegmentLengths or startPointSegmentLength > largestCentralPointSegmentLength
+        @centralPointSegmentLengths.unshift startPointSegmentLength
+        
+      else
+        @startPointSegmentLength = startPointSegmentLength
+      
+      if endPointSegmentLength in uniqueCentralPointSegmentLengths or endPointSegmentLength > largestCentralPointSegmentLength
+        @centralPointSegmentLengths.push endPointSegmentLength
+      
+      else
+        @endPointSegmentLength = endPointSegmentLength
+        
+    @uniqueCentralPointSegmentLengths = _.sortBy _.uniq @centralPointSegmentLengths
+    @largestCentralPointSegmentLengths = @uniqueCentralPointSegmentLengths[@uniqueCentralPointSegmentLengths.length - 2..]
   
   _analyzeDiagonalRatio: ->
     @_analyzeSegments()
@@ -89,20 +115,19 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
         
       else
         return new AP.Fraction height, 0
-    
-    mostFrequentPointSegmentLengths = @pointSegmentLengthFrequency[@pointSegmentLengthFrequency.length - 2..]
-    smallerPointSegmentLength = @pointSegmentLengthFrequency.length - 2
-    largerPointSegmentLength = @pointSegmentLengthFrequency.length - 1
-    
-    if mostFrequentPointSegmentLengths[0] and mostFrequentPointSegmentLengths[1] and Math.abs(mostFrequentPointSegmentLengths[0] - mostFrequentPointSegmentLengths[1]) <= 1
-      ratio = new AP.Fraction 2, smallerPointSegmentLength + largerPointSegmentLength
+        
+    if @largestCentralPointSegmentLengths.length is 1
+      ratio = new AP.Fraction 1, @largestCentralPointSegmentLengths[0]
       
     else
-      largerPointSegmentFrequency = @pointSegmentLengthFrequency[largerPointSegmentLength]
-      smallerPointSegmentFrequency = @pointSegmentLengthFrequency[smallerPointSegmentLength]
+      smallerPointSegmentLength = @largestCentralPointSegmentLengths[0]
+      largerPointSegmentLength = @largestCentralPointSegmentLengths[1]
       
-      unless smallerPointSegmentFrequency and smallerPointSegmentFrequency > largerPointSegmentFrequency
-        ratio = new AP.Fraction 1, largerPointSegmentLength
+      smallerPointSegmentFrequency = @pointSegmentLengthFrequency[smallerPointSegmentLength]
+      largerPointSegmentFrequency = @pointSegmentLengthFrequency[largerPointSegmentLength]
+      
+      if Math.abs(smallerPointSegmentFrequency - largerPointSegmentFrequency) <= 1
+        ratio = new AP.Fraction 2, smallerPointSegmentLength + largerPointSegmentLength
         
       else
         frequenciesCount = largerPointSegmentFrequency + smallerPointSegmentFrequency
@@ -123,27 +148,22 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
     
   _analyzePointSegmentLengths: ->
     # If we have only one segment length, it's a perfect even diagonal.
-    if @uniquePointSegmentLengths.length is 1
+    if @uniqueCentralPointSegmentLengths.length is 1
       return type: @constructor.PointSegmentLengths.Even, score: 1
     
     # The line is not perfect so we can calculate a ratio between its largest segments for scoring purposes.
-    largestPointSegmentsLengthRatio = @largestPointSegmentLengths[0] / @largestPointSegmentLengths[1]
+    largestPointSegmentsLengthRatio = @largestCentralPointSegmentLengths[0] / @largestCentralPointSegmentLengths[1]
 
     # Alternating score can go from C (75%) at worst (1:2) to A at best (∞:∞).
     alternatingScore = THREE.MathUtils.mapLinear largestPointSegmentsLengthRatio, 0.5, 1, 0.75, 1
     
-    # If we don't have enough segments to determine repetition, we classify as alternating as the next best thing.
-    if @pointSegmentLengths.length <= 3
-      return type: @constructor.PointSegmentLengths.Alternating, score: alternatingScore
-
-    # We have at least 2 middle segments (besides 2 end ones) so we can check if they are alternating.
-    oddPointSegmentLength = @pointSegmentLengths[1]
-    evenPointSegmentLength = @pointSegmentLengths[2]
+    oddPointSegmentLength = @centralPointSegmentLengths[0]
+    evenPointSegmentLength = @centralPointSegmentLengths[1]
     
-    for pointSegmentIndex in [1...@pointSegmentLengths.length - 1] by 2
-      unless @pointSegmentLengths[pointSegmentIndex] is oddPointSegmentLength and @pointSegmentLengths[pointSegmentIndex + 1] is evenPointSegmentLength
+    for pointSegmentIndex in [0...@centralPointSegmentLengths.length] by 2
+      unless @centralPointSegmentLengths[pointSegmentIndex] is oddPointSegmentLength and (@centralPointSegmentLengths[pointSegmentIndex + 1] is evenPointSegmentLength or pointSegmentIndex > @centralPointSegmentLengths.length - 2)
         # We found a break in the repetition. We want to see what's the ratio between the frequency of each possible segment.
-        largestPointSegmentsFrequency = _.sortBy(@pointSegmentLengthFrequency[pointSegmentLength] for pointSegmentLength in @largestPointSegmentLengths)
+        largestPointSegmentsFrequency = _.sortBy(@pointSegmentLengthFrequency[pointSegmentLength] for pointSegmentLength in @largestCentralPointSegmentLengths)
         largestPointSegmentsFrequencyRatio = largestPointSegmentsFrequency[0] / largestPointSegmentsFrequency[1]
         
         # Broken scores can go from F (50%) at worst (1:∞) to C (75%) at best (1:1).
@@ -158,20 +178,17 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
   _analyzeEndPointSegmentLengths: ->
     result =
       type: @constructor.EndPointSegmentLengths.Matching,
-      startScore: 1
-      endScore: 1
+      startScore: null
+      endScore: null
       score: 1
       
-    return result if @pointSegmentLengthFrequency[@pointSegmentLengths[0]] is @pointSegmentLengths.length
-
-    firstPointSegmentLength = _.first @pointSegmentLengths
-    endPointSegmentLength = _.last @pointSegmentLengths
-    comparisonLength = _.min @largestPointSegmentLengths
-  
-    result.startScore = firstPointSegmentLength / comparisonLength unless firstPointSegmentLength in @largestPointSegmentLengths
-    result.endScore = endPointSegmentLength / comparisonLength unless endPointSegmentLength in @largestPointSegmentLengths
-    result.score = (result.startScore + result.endScore) / 2
+    return result unless @startPointSegmentLength or @endPointSegmentLength
     
-    result.type = @constructor.EndPointSegmentLengths.Shorter unless result.score is 1
+    comparisonLength = _.min @largestCentralPointSegmentLengths
+
+    result.startScore = @startPointSegmentLength / comparisonLength if @startPointSegmentLength
+    result.endScore = @endPointSegmentLength / comparisonLength if @endPointSegmentLength
+    result.score = ((result.startScore ? 1) + (result.endScore ? 1)) / 2
+    result.type = @constructor.EndPointSegmentLengths.Shorter
     
     result

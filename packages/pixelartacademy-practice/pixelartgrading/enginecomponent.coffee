@@ -25,27 +25,14 @@ class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
   _render: (context, renderOptions) ->
     pixelArtGrading = @options.pixelArtGrading()
     
-    displayedCriterion = @options.displayedCriterion()
-    displayedCategoryValue = @options.displayedCategoryValue()
-    displayedPixel = @options.displayedPixel()
+    displayedCriteria = @options.displayedCriteria()
+    filterToCategoryValue = @options.filterToCategoryValue()
+    focusedPixel = @options.focusedPixel()
     
-    if displayedCriterion
-      # When we're asked to display a specific criterion, just draw that one.
-      enabledCriteria = [displayedCriterion]
-      
-    else if displayedPixel
-      # Draw all criteria when we're asked to display a pixel.
-      enabledCriteria = _.keys PAG.Criteria
-      
-    else
-      return
-      
-    if displayedPixel
+    if focusedPixel
       # Draw all the line parts that cross the displayed pixels.
-      lineParts = pixelArtGrading.getLinePartsAt displayedPixel.x, displayedPixel.y
-      
-      # If no lines are under the pixel, draw all the lines when a criterion is selected.
-      return unless lineParts.length or displayedCriterion
+      focusedLineParts = pixelArtGrading.getLinePartsAt focusedPixel.x, focusedPixel.y
+      lineParts = focusedLineParts
       
     unless lineParts?.length
       lineParts = []
@@ -53,14 +40,14 @@ class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
       for line in pixelArtGrading.lines
         for part in line.parts
           # Filter to evaluated property if needed.
-          continue if displayedCategoryValue and part.grade()[displayedCategoryValue.property]?.type isnt displayedCategoryValue.value
+          continue if filterToCategoryValue and part.grade()[filterToCategoryValue.property]?.type isnt filterToCategoryValue.value
 
           lineParts.push part
       
     markup = []
   
     # Add markup for even diagonals.
-    if PAG.Criteria.EvenDiagonals in enabledCriteria
+    if PAG.Criteria.EvenDiagonals in displayedCriteria
       for linePart in lineParts when linePart instanceof PAG.Line.Part.StraightLine
         markup.push Markup.PixelArt.intendedLine linePart
         

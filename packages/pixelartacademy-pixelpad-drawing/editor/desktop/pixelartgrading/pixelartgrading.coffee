@@ -15,7 +15,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     subNamespace: true
     variables:
       flipPaper: AEc.ValueTypes.Trigger
-
+  
+  @scorePercentage: (value) ->
+    return "N/A" unless value?
+    
+    "#{Math.floor value * 100}%"
+    
   constructor: ->
     super arguments...
 
@@ -42,7 +47,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       return unless bitmap = @bitmapObject()
       new PAG bitmap
       
-    @hoveredCriterion = new ReactiveField null
     @hoveredCategoryValue = new ReactiveField null
 
     @hoveredPixel = new ComputedField =>
@@ -64,15 +68,28 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       else
         Meteor.clearTimeout @_displayedTimeout
         @displayed false
-    
-    @engineComponent = new PAG.EngineComponent
-      pixelArtGrading: => @pixelArtGrading()
-      displayedCriterion: => if @displayed() then @activeCriterion() or @hoveredCriterion() else null
-      displayedCategoryValue: => if @displayed() then @hoveredCategoryValue() else null
-      displayedPixel: => if @displayed() then @hoveredPixel() else null
-    
+        
     @pixelArtGradingProperty = new ComputedField =>
       @bitmap()?.properties?.pixelArtGrading
+    
+    @enabledCriteria = new ComputedField =>
+      return [] unless pixelArtGradingProperty = @pixelArtGradingProperty()
+      
+      criterion for criterion of PAG.Criteria when pixelArtGradingProperty[_.lowerFirst criterion]
+      
+    @engineComponent = new PAG.EngineComponent
+      pixelArtGrading: => @pixelArtGrading()
+      displayedCriteria: =>
+        return [] unless @displayed()
+        
+        if activeCriterion = @activeCriterion()
+          [activeCriterion]
+        
+        else
+          @enabledCriteria()
+        
+      filterToCategoryValue: => if @displayed() then @hoveredCategoryValue() else null
+      focusedPixel: => if @displayed() then @hoveredPixel() else null
     
     # Automatically enter focused mode when active.
     @autorun (computation) =>
@@ -81,7 +98,24 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     # Automatically deactivate when exiting focused mode.
     @autorun (computation) =>
       @deactivate() unless @desktop.focusedMode()
-  
+      
+    # Update grading where requested.
+    @autorun (computation) =>
+      pixelArtGradingProperty = @pixelArtGradingProperty()
+      
+      return unless pixelArtGrading = @pixelArtGrading()
+      grading = pixelArtGrading.grade pixelArtGradingProperty
+      
+      Tracker.nonreactive =>
+        # See if there was any change from the current data.
+        asset = @interface.getLoaderForActiveFile()?.asset()
+        return if _.objectContains asset.properties.pixelArtGrading, grading
+        
+        pixelArtGradingProperty = _.extend {}, asset.properties.pixelArtGrading, grading
+      
+        updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtGrading', pixelArtGradingProperty
+        asset.executeAction updatePropertyAction, true
+    
   onRendered: ->
     super arguments...
     
@@ -180,11 +214,30 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       pixelArtGradingProperty = EJSON.clone @pixelArtGrading.pixelArtGradingProperty()
       
       if value
-        _.nestedProperty pixelArtGradingProperty, criterion.propertyPath, {}
+        # Enable all subcriteria if they exist.
+        criterionData = {}
+        
+        if PAG.Subcriteria[criterion.id]
+          for subcriterion of PAG.Subcriteria[criterion.id]
+            criterionData[_.lowerFirst subcriterion] = {}
+        
+        _.nestedProperty pixelArtGradingProperty, criterion.propertyPath, criterionData
         
       else
         _.deleteNestedProperty pixelArtGradingProperty, criterion.propertyPath
-      
+        
+        # If this is a subcriteria, check that the parent even has any subcriteria left.
+        if criterion.parentId
+          found = false
+          criterionProperty = _.lowerFirst criterion.parentId
+
+          for subcriterion of PAG.Subcriteria[criterion.parentId]
+            found = true if pixelArtGradingProperty[criterionProperty][_.lowerFirst subcriterion]
+            
+          unless found
+            # No subcriteria are left, we can disable the whole criteria.
+            delete pixelArtGradingProperty[criterionProperty]
+            
       asset = @pixelArtGrading.interface.getLoaderForActiveFile()?.asset()
       updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtGrading', pixelArtGradingProperty
       

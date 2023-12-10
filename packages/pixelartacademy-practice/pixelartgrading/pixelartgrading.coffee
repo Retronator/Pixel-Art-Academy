@@ -8,8 +8,12 @@ class PAA.Practice.PixelArtGrading
   #   score: float between 0 and 1 with this criterion's weighted average
   #   segmentLengths:
   #     score: float between 0 and 1 with this criterion evaluation
+  #     linePartCounts: object with counts of line parts with a certain segment lengths type
+  #       even, alternating, broken: how many line parts has this type
   #   endSegments:
   #     score: float between 0 and 1 with this criterion evaluation
+  #     linePartCounts: object with counts of line parts with a certain end segments type
+  #       matching, shorter: how many line parts has this type
   # smoothCurves: objects with different criteria evaluations
   #   score: float between 0 and 1 with this criterion evaluation
 
@@ -22,7 +26,13 @@ class PAA.Practice.PixelArtGrading
     EvenDiagonals:
       SegmentLengths: 'SegmentLengths'
       EndSegments: 'EndSegments'
-    
+  
+  @SubcriteriaWeights =
+    EvenDiagonals:
+      SegmentLengths: 0.75
+      EndSegments: 0.25
+  
+  
   @getLetterGrade = (score) ->
     scoreOutOf10 = score * 10
     
@@ -46,6 +56,8 @@ class PAA.Practice.PixelArtGrading
     @points = []
     @lines = []
     
+    @_gradingDependency = new Tracker.Dependency
+
     # Initialize by updating the full area of the bitmap.
     @_updateArea()
     
@@ -249,6 +261,89 @@ class PAA.Practice.PixelArtGrading
         
     # Classify lines.
     line.classifyLineParts() for line in newLines
+    
+    @_grading = {}
+    @_gradingDependency.changed()
+    
+  grade: (pixelArtGradingProperty) ->
+    @_gradingDependency.depend()
+    
+    grading = {}
+
+    finalScore = 0
+    criteriaCount = 0
+    
+    if pixelArtGradingProperty.evenDiagonals
+      # Compute grading if needed.
+      unless @_grading.evenDiagonals
+        @_grading.evenDiagonals =
+          segmentLengths:
+            score: 0
+            linePartCounts:
+              even: 0
+              alternating: 0
+              broken: 0
+          endSegments:
+            score: 0
+            linePartCounts:
+              matching: 0
+              shorter: 0
+  
+        linePartsCount = 0
+        
+        for line in @lines
+          for linePart in line.parts when linePart instanceof @constructor.Line.Part.StraightLine
+            linePartGrading = linePart.grade()
+            
+            for subcriterion of @constructor.Subcriteria.EvenDiagonals
+              subcriterionProperty = _.lowerFirst subcriterion
+              @_grading.evenDiagonals[subcriterionProperty].score += linePartGrading[subcriterionProperty].score
+              @_grading.evenDiagonals[subcriterionProperty].linePartCounts[_.lowerFirst linePartGrading[subcriterionProperty].type]++
+            
+            linePartsCount++
+        
+        for subcriterion of @constructor.Subcriteria.EvenDiagonals
+          subcriterionProperty = _.lowerFirst subcriterion
+          
+          if linePartsCount
+            @_grading.evenDiagonals[subcriterionProperty].score /= linePartsCount
+            
+          else
+            # There were no lines to be graded, so the category doesn't have a meaning.
+            @_grading.evenDiagonals[subcriterionProperty].score = null
+      
+      grading.evenDiagonals = score: 0
+      
+      # Choose only enabled subcriteria.
+      totalWeight = 0
+      
+      subcriteriaInfo = for subcriterion of @constructor.Subcriteria.EvenDiagonals
+        subcriterionProperty = _.lowerFirst subcriterion
+        continue unless pixelArtGradingProperty.evenDiagonals[subcriterionProperty]
+        
+        weight = if @_grading.evenDiagonals[subcriterionProperty].score? then @constructor.SubcriteriaWeights.EvenDiagonals[subcriterion] else 0
+        totalWeight += weight
+        
+        property: subcriterionProperty
+        score: @_grading.evenDiagonals[subcriterionProperty].score or 0
+        weight: weight
+        
+      for subcriterionInfo in subcriteriaInfo
+        grading.evenDiagonals[subcriterionInfo.property] = @_grading.evenDiagonals[subcriterionInfo.property]
+        grading.evenDiagonals.score += subcriterionInfo.score * subcriterionInfo.weight / totalWeight if totalWeight
+      
+      if totalWeight
+        finalScore += grading.evenDiagonals.score
+        criteriaCount++
+        
+      else
+        grading.evenDiagonals.score = null
+      
+    finalScore /= criteriaCount if criteriaCount
+    
+    grading.score = if criteriaCount then finalScore else null
+    
+    grading
     
   _addPixel: (x, y) ->
     pixel = new @constructor.Pixel @, x, y

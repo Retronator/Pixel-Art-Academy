@@ -21,7 +21,11 @@
             </td>
           {{/if}}
           <td class="name-area"><span class="name">{{name}}</span></td>
-          <td class="score">{{scorePercentage score}}</td>
+          <td class="score">
+            {{#if enabled}}
+              {{scorePercentage score}}
+            {{/if}}
+          </td>
         </tr>
       {{/each}}
       <tr class="empty-row">
@@ -36,11 +40,17 @@
           <td></td>
         {{/if}}
         <td class="average">Average</td>
-        <td class="score">{{scorePercentage pixelArtGradingProperty.score}}</td>
+        <td class="score">
+          {{#if hasFinalScore}}
+            {{scorePercentage pixelArtGrading.pixelArtGradingProperty.score}}
+          {{/if}}
+        </td>
       </tr>
     </table>
-    <div class="letter-grade">
-      {{letterGrade}}
-    </div>
+    {{#if hasFinalScore}}
+      <div class="letter-grade">
+        {{letterGrade}}
+      </div>
+    {{/if}}
   </div>
 </template>

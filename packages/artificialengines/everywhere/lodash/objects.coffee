@@ -66,3 +66,20 @@ _.mixin
     
     else
       difference
+
+  # Calculates if object a contains all values set in b.
+  objectContains: (a, b) ->
+    if _.isObject(a) and _.isObject(b)
+      for key, valueB of b
+        return false unless _.objectContains a[key], valueB
+        
+      true
+      
+    else if _.isArray(a) and _.isArray(b)
+      for i in [0...valueB.length]
+        return false unless _.objectContains a[i], b[i]
+        
+      true
+
+    else
+      a is b

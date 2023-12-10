@@ -38,7 +38,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals ext
     @editable = new ComputedField => @evenDiagonalsProperty()?.editable ? @pixelArtGrading.pixelArtGradingProperty()?.editable
     
     @criteria = new ComputedField =>
-      return unless evenDiagonalsProperty = @evenDiagonalsProperty()
+      evenDiagonalsProperty = @evenDiagonalsProperty()
       editable = @editable()
       
       criteria = []
@@ -47,30 +47,31 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals ext
         criterionProperty = _.lowerFirst criterion
         
         # Show only existing criteria when not editable (and all otherwise so we can toggle them on and off).
-        continue unless editable or evenDiagonalsProperty[criterionProperty]?
+        continue unless editable or evenDiagonalsProperty?[criterionProperty]?
         
-        categories = for category of PAG.Line.Part.StraightLine[@constructor.CategoryEnumerationNames[criterion]]
-          id: category
-          propertyName: _.lowerFirst category
-          name: @constructor.CategoryNames[criterion][category]
-          count: 0
+        if enabled = evenDiagonalsProperty?[criterionProperty]?
+          categories = for category of PAG.Line.Part.StraightLine[@constructor.CategoryEnumerationNames[criterion]]
+            id: category
+            name: @constructor.CategoryNames[criterion][category]
+            count: evenDiagonalsProperty[criterionProperty].linePartCounts[_.lowerFirst category]
+            
+        else
+          categories = null
         
         criteria.push
           id: criterion
+          parentId: PAG.Criteria.EvenDiagonals
           property: criterionProperty
           propertyPath: "evenDiagonals.#{criterionProperty}"
           name: @constructor.CriteriaNames[criterion]
-          enabled: evenDiagonalsProperty[criterionProperty]?
-          score: evenDiagonalsProperty[criterionProperty]?.score
+          enabled: enabled
+          score: evenDiagonalsProperty?[criterionProperty]?.score
           categories: categories
       
       criteria
-    
-  scorePercentage: (value) ->
-    return unless value?
-    
-    "#{Math.floor value * 100}%"
-    
+  
+  scorePercentage: (value) -> PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.scorePercentage value
+  
   events: ->
     super(arguments...).concat
       'mouseenter .category .count': @onMouseEnterCategory
