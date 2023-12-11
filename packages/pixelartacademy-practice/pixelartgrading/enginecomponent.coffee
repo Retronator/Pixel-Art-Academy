@@ -29,27 +29,26 @@ class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     filterToCategoryValue = @options.filterToCategoryValue()
     focusedPixel = @options.focusedPixel()
     
-    if focusedPixel
-      # Draw all the line parts that cross the displayed pixels.
-      focusedLineParts = pixelArtGrading.getLinePartsAt focusedPixel.x, focusedPixel.y
-      lineParts = focusedLineParts
-      
-    unless lineParts?.length
-      lineParts = []
-      
-      for line in pixelArtGrading.lines
-        for part in line.parts
-          # Filter to evaluated property if needed.
-          continue if filterToCategoryValue and part.grade()[filterToCategoryValue.property]?.type isnt filterToCategoryValue.value
+    focusedLineParts = if focusedPixel then pixelArtGrading.getLinePartsAt focusedPixel.x, focusedPixel.y else []
+    lineParts = []
+    
+    for line in pixelArtGrading.lines
+      for part in line.parts
+        # Filter to evaluated property if needed.
+        continue if filterToCategoryValue and part.grade()[filterToCategoryValue.property]?.type isnt filterToCategoryValue.value
 
-          lineParts.push part
+        lineParts.push part
       
     markup = []
   
     # Add markup for even diagonals.
     if PAG.Criteria.EvenDiagonals in displayedCriteria
       for linePart in lineParts when linePart instanceof PAG.Line.Part.StraightLine
-        markup.push Markup.PixelArt.intendedLine linePart
+        if linePart in focusedLineParts
+          markup.push Markup.PixelArt.straightLineBreakdown(linePart)...
+          
+        else
+          markup.push Markup.PixelArt.gradedIntendedLine(linePart)...
         
     @drawMarkup markup, context, renderOptions
 

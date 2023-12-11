@@ -1,9 +1,11 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Markup = PAA.Practice.Helpers.Drawing.Markup
+
 _normal = new THREE.Vector2
 
-class PAA.Practice.Helpers.Drawing.Markup.EngineComponent
+class Markup.EngineComponent
   # The minimum zoom level where markup pixels match display pixels
   # (markup pixels will be scaled down when zoomed out more than this).
   @minimumZoomPercentage = 400 # %
@@ -93,8 +95,15 @@ class PAA.Practice.Helpers.Drawing.Markup.EngineComponent
     maxWidth = _.max widths
     
     middleFactor = 0
-    middleFactor = 0.5 if _.startsWith position.origin, 'Middle'
-    middleFactor = 1 if _.startsWith position.origin, 'Bottom'
+    context.textBaseline = 'top'
+    
+    if _.startsWith position.origin, 'Middle'
+      middleFactor = 0.5
+      context.textBaseline = 'middle'
+  
+    if _.startsWith position.origin, 'Bottom'
+      middleFactor = 1
+      context.textBaseline = 'bottom'
 
     centerFactor = 0
     centerFactor = 0.5 if _.endsWith position.origin, 'Center'
@@ -104,8 +113,8 @@ class PAA.Practice.Helpers.Drawing.Markup.EngineComponent
     originX = position.x - maxWidth * centerFactor
     
     alignFactor = 0
-    alignFactor = 0.5 if align is @constructor.TextAlign.Center
-    alignFactor = 1 if align is @constructor.TextAlign.Right
+    alignFactor = 0.5 if align is Markup.TextAlign.Center
+    alignFactor = 1 if align is Markup.TextAlign.Right
     
     for line in lines
       width = context.measureText(line).width

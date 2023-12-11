@@ -5,6 +5,7 @@ PAA = PixelArtAcademy
 FM = FataMorgana
 
 PAG = PAA.Practice.PixelArtGrading
+Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview'
@@ -44,7 +45,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview extends 
       
       criteria
   
-  scorePercentage: (value) -> PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.scorePercentage value
+  scorePercentage: (value) -> Markup.percentage value
   
   hasFinalScore: ->
     @pixelArtGrading.pixelArtGradingProperty()?.score?

@@ -56,3 +56,8 @@ class PAA.Practice.Helpers.Drawing.Markup
     font: 'Small Print Retronator'
     style: @defaultStyle()
     align: @TextAlign.Center
+  
+  @percentage: (value) ->
+    return "N/A" unless value?
+    
+    "#{Math.floor value * 100}%"

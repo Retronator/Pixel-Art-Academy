@@ -72,7 +72,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         lineGrading = linePart.grade()
         
         unless lineGrading.type is StraightLine.Type.AxisAligned
-          diagonalRatioText = Markup.PixelArt.diagonalRatioText linePart, lineGrading
+          diagonalRatioText = Markup.PixelArt.diagonalRatioText linePart
           diagonalRatioText.text.style = @_getLineStyle lineGrading
           markup.push diagonalRatioText
         
@@ -82,7 +82,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       if lineGrading.type in [StraightLine.Type.AxisAligned, StraightLine.Type.EvenDiagonal]
         Markup.betterStyle()
       
-      else if lineGrading.pointSegmentLengths is StraightLine.PointSegmentLengths.Alternating
+      else if lineGrading.pointSegmentLengths is StraightLine.SegmentLengths.Alternating
         Markup.mediocreStyle()
         
       else

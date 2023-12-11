@@ -223,19 +223,19 @@ class PAG.Line
         on: edgeSegment.edge.isAxisAligned or edgeSegment.count > 1
         after: not edgeSegment.edge.isAxisAligned and not edgeSegmentAfter?.edge.isAxisAligned
       
+      startPointIndex = edgeSegment.startPointIndex
+      endPointIndex = edgeSegment.endPointIndex
+      
       if edgeSegment.edge.isAxisAligned
         # Axis-aligned edge segments create 1 multiple-point segment.
         edgeSegment.pointSegmentsCount = 1
-        edgeSegment.pointSegmentLength = edgeSegment.endPointIndex - edgeSegment.startPointIndex + 1
+        edgeSegment.pointSegmentLength = endPointIndex - startPointIndex + 1
         
         # If we're coming from an axis-aligned segment, don't count the same point twice.
         edgeSegment.pointSegmentLength-- if edgeSegmentBefore?.edge.isAxisAligned
       
       else
         # Diagonal edge segments create multiple 1-point segments.
-        startPointIndex = edgeSegment.startPointIndex
-        endPointIndex = edgeSegment.endPointIndex
-        
         startPointIndex++ unless edgeSegment.hasPointSegment.before
         endPointIndex-- unless edgeSegment.hasPointSegment.after
         
@@ -246,6 +246,8 @@ class PAG.Line
         edgeSegment.pointSegmentsCount = if startPointIndex? then endPointIndex - startPointIndex + 1 else 0
         edgeSegment.pointSegmentLength = 1
         
+      edgeSegment.pointSegmentsStartPointIndex = startPointIndex
+      edgeSegment.pointSegmentsEndPointIndex = endPointIndex
       edgeSegment.pointsCount = edgeSegment.pointSegmentsCount * edgeSegment.pointSegmentLength
       
       angle = edgeSegment.edge.angle()

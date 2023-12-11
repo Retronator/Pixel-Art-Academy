@@ -5,6 +5,7 @@ PAA = PixelArtAcademy
 FM = FataMorgana
 
 PAG = PAA.Practice.PixelArtGrading
+Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals'
@@ -22,10 +23,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals ext
     EndSegments:
       Matching: "Matching (A)"
       Shorter: "Shorter (A–F)"
-    
-  @CategoryEnumerationNames:
-    SegmentLengths: 'PointSegmentLengths'
-    EndSegments: 'EndPointSegmentLengths'
   
   onCreated: ->
     super arguments...
@@ -50,7 +47,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals ext
         continue unless editable or evenDiagonalsProperty?[criterionProperty]?
         
         if enabled = evenDiagonalsProperty?[criterionProperty]?
-          categories = for category of PAG.Line.Part.StraightLine[@constructor.CategoryEnumerationNames[criterion]]
+          categories = for category of PAG.Line.Part.StraightLine[criterion]
             id: category
             name: @constructor.CategoryNames[criterion][category]
             count: evenDiagonalsProperty[criterionProperty].linePartCounts[_.lowerFirst category]
@@ -70,7 +67,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.EvenDiagonals ext
       
       criteria
   
-  scorePercentage: (value) -> PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.scorePercentage value
+  scorePercentage: (value) -> Markup.percentage value
   
   events: ->
     super(arguments...).concat

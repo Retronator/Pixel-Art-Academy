@@ -15,11 +15,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     subNamespace: true
     variables:
       flipPaper: AEc.ValueTypes.Trigger
-  
-  @scorePercentage: (value) ->
-    return "N/A" unless value?
-    
-    "#{Math.floor value * 100}%"
     
   constructor: ->
     super arguments...

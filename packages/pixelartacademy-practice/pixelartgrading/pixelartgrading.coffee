@@ -32,7 +32,6 @@ class PAA.Practice.PixelArtGrading
       SegmentLengths: 0.75
       EndSegments: 0.25
   
-  
   @getLetterGrade = (score) ->
     scoreOutOf10 = score * 10
     

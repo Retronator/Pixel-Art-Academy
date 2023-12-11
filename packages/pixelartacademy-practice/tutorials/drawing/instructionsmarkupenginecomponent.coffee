@@ -12,4 +12,6 @@ class PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent extends P
       instruction.markup?()
 
   drawToContext: (context, renderOptions = {}) ->
-    @drawMarkup @markup(), context, renderOptions
+    return unless markup = @markup()
+    
+    @drawMarkup markup, context, renderOptions

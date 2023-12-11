@@ -9,12 +9,12 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
     EvenDiagonal: 'EvenDiagonal'
     IntermediaryDiagonal: 'IntermediaryDiagonal'
     
-  @PointSegmentLengths:
+  @SegmentLengths:
     Even: 'Even'
     Alternating: 'Alternating'
     Broken: 'Broken'
     
-  @EndPointSegmentLengths:
+  @EndSegments:
     Matching: 'Matching'
     Shorter: 'Shorter'
   
@@ -149,7 +149,7 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
   _analyzePointSegmentLengths: ->
     # If we have only one segment length, it's a perfect even diagonal.
     if @uniqueCentralPointSegmentLengths.length is 1
-      return type: @constructor.PointSegmentLengths.Even, score: 1
+      return type: @constructor.SegmentLengths.Even, score: 1
     
     # The line is not perfect so we can calculate a ratio between its largest segments for scoring purposes.
     largestPointSegmentsLengthRatio = @largestCentralPointSegmentLengths[0] / @largestCentralPointSegmentLengths[1]
@@ -169,15 +169,15 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
         # Broken scores can go from F (50%) at worst (1:∞) to C (75%) at best (1:1).
         brokenScore = THREE.MathUtils.mapLinear largestPointSegmentsFrequencyRatio, 0, 1, 0.5, 0.75
         
-        return type: @constructor.PointSegmentLengths.Broken, score: brokenScore
+        return type: @constructor.SegmentLengths.Broken, score: brokenScore
     
     # There was no break in repetition so this is a nicely alternating diagonal.
-    type: @constructor.PointSegmentLengths.Alternating
+    type: @constructor.SegmentLengths.Alternating
     score: alternatingScore
 
   _analyzeEndPointSegmentLengths: ->
     result =
-      type: @constructor.EndPointSegmentLengths.Matching,
+      type: @constructor.EndSegments.Matching,
       startScore: null
       endScore: null
       score: 1
@@ -189,6 +189,6 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
     result.startScore = @startPointSegmentLength / comparisonLength if @startPointSegmentLength
     result.endScore = @endPointSegmentLength / comparisonLength if @endPointSegmentLength
     result.score = ((result.startScore ? 1) + (result.endScore ? 1)) / 2
-    result.type = @constructor.EndPointSegmentLengths.Shorter
+    result.type = @constructor.EndSegments.Shorter
     
     result

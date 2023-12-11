@@ -50,7 +50,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
         
         lineGrading = linePart.grade()
-        markup.push Markup.PixelArt.diagonalRatioText linePart, lineGrading unless lineGrading.type is StraightLine.Type.AxisAligned
+        markup.push Markup.PixelArt.diagonalRatioText linePart unless lineGrading.type is StraightLine.Type.AxisAligned
         
       markup
   

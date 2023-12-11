@@ -15,17 +15,16 @@ class PAG.Line.Part
     for segmentIndex in [@startSegmentIndex..@endSegmentIndex]
       segment = @line.getEdgeSegment segmentIndex
       
-      if segment.startPointIndex?
-        startPointIndex = segment.startPointIndex
-        endPointIndex = segment.endPointIndex
+      startPointIndex = segment.startPointIndex
+      endPointIndex = segment.endPointIndex
+      
+      startPointIndex = Math.max startPointIndex, @startPointIndex if segmentIndex is @startSegmentIndex
+      endPointIndex = Math.min endPointIndex, @endPointIndex if segmentIndex is @endSegmentIndex
+      
+      for pointIndex in [startPointIndex..endPointIndex]
+        point = @line.getPoint pointIndex
+        @points.push point unless point in @points
         
-        startPointIndex = Math.max startPointIndex, @startPointIndex if segmentIndex is @startSegmentIndex
-        endPointIndex = Math.min endPointIndex, @endPointIndex if segmentIndex is @endSegmentIndex
-        
-        for pointIndex in [startPointIndex..endPointIndex]
-          point = @line.getPoint pointIndex
-          @points.push point unless point in @points
-          
   hasPixel: (pixel) ->
     for point in @points
       return true if pixel in point.pixels
