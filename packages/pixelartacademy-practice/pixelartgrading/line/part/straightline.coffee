@@ -67,10 +67,11 @@ class PAG.Line.Part.StraightLine extends PAG.Line.Part
       segment = @line.getEdgeSegment segmentIndex
       
       if segment.pointSegmentsCount and segment.pointSegmentLength
-        @pointSegmentLengths.push segment.pointSegmentLength for i in [1..segment.pointSegmentsCount]
+        pointSegmentLength = if segmentIndex in [@startSegmentIndex, @endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+        @pointSegmentLengths.push pointSegmentLength for i in [1..segment.pointSegmentsCount]
       
-      @pointSegmentLengthFrequency[segment.pointSegmentLength] ?= 0
-      @pointSegmentLengthFrequency[segment.pointSegmentLength] += segment.pointSegmentsCount
+      @pointSegmentLengthFrequency[pointSegmentLength] ?= 0
+      @pointSegmentLengthFrequency[pointSegmentLength] += segment.pointSegmentsCount
       
     @startPointSegmentLength = null
     @endPointSegmentLength = null

@@ -153,7 +153,9 @@ class Markup.PixelArt
       startPointIndex = Math.max startPointIndex, linePart.startPointIndex if segmentIndex is linePart.startSegmentIndex
       endPointIndex = Math.min endPointIndex, linePart.endPointIndex if segmentIndex is linePart.endSegmentIndex
       
-      if segment.pointSegmentLength > 1
+      pointSegmentLength = if segmentIndex in [linePart.startSegmentIndex, linePart.endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+
+      if pointSegmentLength > 1
         # We have one long segment.
         startPoint = linePart.line.getPoint startPointIndex
         endPoint = linePart.line.getPoint endPointIndex
@@ -164,7 +166,7 @@ class Markup.PixelArt
           x: (startPoint.x + endPoint.x) / 2
           y: (startPoint.y + endPoint.y) / 2
         
-        addText segmentCenter, segment.pointSegmentLength
+        addText segmentCenter, pointSegmentLength
         
       else
         # We have multiple points.

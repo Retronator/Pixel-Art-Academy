@@ -102,8 +102,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       grading = pixelArtGrading.grade pixelArtGradingProperty
       
       Tracker.nonreactive =>
-        # See if there was any change from the current data.
+        # Only update grading when we're at the end of history to prevent recalculation when undoing/redoing
+        # (in case we change grading and this would cause new values—history is more important).
         asset = @interface.getLoaderForActiveFile()?.asset()
+        return unless asset.historyPosition is asset.history.length
+
+        # See if there was any change from the current data.
         return if _.objectContains asset.properties.pixelArtGrading, grading
         
         pixelArtGradingProperty = _.extend {}, asset.properties.pixelArtGrading, grading

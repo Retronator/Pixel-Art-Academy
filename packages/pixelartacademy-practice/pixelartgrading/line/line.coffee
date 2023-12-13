@@ -82,6 +82,9 @@ class PAG.Line
   getPoint: (index) ->
     if @isClosed then @points[_.modulo index, @points.length] else @points[index]
   
+  getPart: (index) ->
+    if @isClosed then @parts[_.modulo index, @parts.length] else @parts[index]
+
   isPointPartCurve: (index) ->
     if @isClosed then @pointPartIsCurve[_.modulo index, @points.length] else @pointPartIsCurve[index]
 
@@ -232,6 +235,7 @@ class PAG.Line
         edgeSegment.pointSegmentLength = endPointIndex - startPointIndex + 1
         
         # If we're coming from an axis-aligned segment, don't count the same point twice.
+        edgeSegment.externalPointSegmentLength = edgeSegment.pointSegmentLength
         edgeSegment.pointSegmentLength-- if edgeSegmentBefore?.edge.isAxisAligned
       
       else
@@ -245,6 +249,7 @@ class PAG.Line
         
         edgeSegment.pointSegmentsCount = if startPointIndex? then endPointIndex - startPointIndex + 1 else 0
         edgeSegment.pointSegmentLength = 1
+        edgeSegment.externalPointSegmentLength = 1
         
       edgeSegment.pointSegmentsStartPointIndex = startPointIndex
       edgeSegment.pointSegmentsEndPointIndex = endPointIndex
@@ -341,6 +346,16 @@ class PAG.Line
         # Find a side-step segment.
         break unless nextEdgeSegment = @getEdgeSegment endSegmentIndex + 1
         unless nextEdgeSegment.count is 1
+          # If we've started on a side-step segment, we can move on.
+          if endSegmentIndex is startSegmentIndex and edgeSegment.count is 1
+            endSegmentIndex++
+            
+            # Pretend as we're starting fresh from the next segment.
+            startEdgeSegment = @edgeSegments[endSegmentIndex]
+            sideEdgeClockwise = startEdgeSegment.clockwise.after
+            
+            continue
+          
           # The final segment can be a longer if it's not really a side-step as we were only on 1-length segments so far.
           endSegmentIndex++ if mainPointsCount1 is 1 and nextEdgeSegment.pointsCount is 2
           
@@ -553,6 +568,13 @@ class PAG.Line
           else
             segmentRangeIndex++
             
+        # Rotate the parts until the first one is the one starting at this starting segment.
+        if @isClosed
+          normalizedStartSegmentIndex = _.modulo startSegmentIndex, @edgeSegments.length
+          
+          while potentialStraightLineSegmentRanges[0].end < normalizedStartSegmentIndex
+            potentialStraightLineSegmentRanges.push potentialStraightLineSegmentRanges.shift()
+            
         for segmentRange in potentialStraightLineSegmentRanges
           @parts.push new PAG.Line.Part.StraightLine @, segmentRange.start, segmentRange.end
         
@@ -562,7 +584,7 @@ class PAG.Line
       pointPartIsCurve = null
       
     for part, partIndex in @parts
-      part.setNeighbors @parts[partIndex - 1], @parts[partIndex + 1]
+      part.setNeighbors @getPart(partIndex - 1), @getPart(partIndex + 1)
     
   _edgeSegmentOverlaysPointRange: (segmentIndex, startPointIndex, endPointIndex) ->
     segment = @getEdgeSegment segmentIndex

@@ -32,7 +32,7 @@ class PAA.Practice.PixelArtGrading
       SegmentLengths: 0.75
       EndSegments: 0.25
   
-  @getLetterGrade = (score) ->
+  @getLetterGrade = (score, plusMinus = false) ->
     scoreOutOf10 = score * 10
     
     letterBracket = Math.min 9, Math.floor scoreOutOf10
@@ -40,7 +40,7 @@ class PAA.Practice.PixelArtGrading
     
     letterGrade = String.fromCharCode(65 + 9 - letterBracket)
     
-    if letterBracket > 4
+    if plusMinus and letterBracket > 4
       scoreRemainderOutOf100 = Math.round (scoreOutOf10 - letterBracket) * 10
       
       letterGrade += '-' if scoreRemainderOutOf100 < 3
@@ -127,7 +127,11 @@ class PAA.Practice.PixelArtGrading
         invalidatedLines[line.id] = line for line in pixel.lines
         invalidatedPoints[point.id] = point for point in pixel.points
         invalidatedCores[pixel.core.id] = pixel.core if pixel.core
-      
+    
+    # Invalidated outlines invalidate their cores.
+    for id, line of invalidatedLines when line.core
+      invalidatedCores[line.core.id] = line.core
+
     # Invalidated cores invalidate their outlines.
     for id, core of invalidatedCores
       invalidatedLines[core.outline.id] = core.outline

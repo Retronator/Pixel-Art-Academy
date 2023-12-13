@@ -53,7 +53,7 @@ class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     @drawMarkup markup, context, renderOptions
 
   _addPixelToPath: (context, pixel) ->
-    context.rect pixel.x, pixel.y, 1, 1
+    context.rect pixel.x - 0.5, pixel.y - 0.5, 1, 1
 
   _diagonalDash: (context, bounds, color) ->
     context.save()

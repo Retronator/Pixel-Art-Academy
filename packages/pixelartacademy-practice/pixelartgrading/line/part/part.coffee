@@ -44,8 +44,25 @@ class PAG.Line.Part
         
       else
         return true if startPointIndex <= segment.endPointIndex or endPointIndex >= segment.startPointIndex
+        
+      # Special case for the segment that is closing an outline.
+      if segment.endPointIndex is pointCount
+        if endPointIndex >= startPointIndex
+          return true if startPointIndex is 0
+          
+        else
+          return true
 
     false
   
   setNeighbors: (@previousPart, @nextPart) ->
     # Extend to adjust display points.
+    
+  startsOnACorner: ->
+    return true unless preStartSegment = @line.getEdgeSegment @startSegmentIndex - 1
+    
+    preStartSegment.corner.after
+  
+  endsOnACorner: ->
+    endSegment = @line.getEdgeSegment @endSegmentIndex
+    endSegment.corner.after

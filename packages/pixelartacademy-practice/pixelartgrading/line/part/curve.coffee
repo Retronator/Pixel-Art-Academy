@@ -39,11 +39,8 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
     if @isClosed and (@displayPoints[0].x isnt @displayPoints[@displayPoints.length - 1].x or @displayPoints[0].y isnt @displayPoints[@displayPoints.length - 1].y)
       @displayPoints.push @displayPoints[0]
       
-    if @displayPoints.length is 2
-      startPoint = @line.getPoint @line.getEdgeSegment(@startSegmentIndex).endPointIndex
-      endPoint = @line.getPoint @line.getEdgeSegment(@endSegmentIndex).startPointIndex
-      
-      @displayPoints.splice 1, 0, @_createDisplayPoint new THREE.Vector2().lerpVectors startPoint, endPoint, 0.5
+    if @displayPoints.length is 1
+      @displayPoints.push @_createDisplayPoint @displayPoints[0].position.clone()
     
     @_calculateControlPoints 0, @displayPoints.length - 1
   
@@ -62,14 +59,14 @@ class PAG.Line.Part.Curve extends PAG.Line.Part
       
       # Calculate the normal.
       unless previousPoint
-        if @previousPart
+        if @previousPart and not @previousPart.endsOnACorner()
           @previousPart.line2.delta point.normal
         
         else
           point.normal.subVectors nextPoint.position, point.position
           
       else unless nextPoint
-        if @nextPart
+        if @nextPart and not @nextPart.startsOnACorner()
           @nextPart.line2.delta point.normal
         
         else
