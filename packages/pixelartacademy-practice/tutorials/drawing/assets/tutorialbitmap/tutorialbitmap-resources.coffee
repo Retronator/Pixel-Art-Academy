@@ -25,6 +25,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
   # Override to provide an array of steps to be completed in this tutorial asset.
   @steps: -> null
+
+  # Override to set the default whether created steps draw hints after completion.
+  @drawHintsAfterCompleted: -> null
   
   # Override to provide an array of goals the player can choose to complete this tutorial bitmap.
   @goalChoices: -> null

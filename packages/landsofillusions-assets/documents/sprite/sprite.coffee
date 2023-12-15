@@ -138,7 +138,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @requirePixelMaps()
       
       # For backwards compatibility, sprites should have pixel art scaling by default.
-      @properties ?= {}
       @properties.pixelArtScaling ?= true
 
   requirePixelMaps: ->

@@ -10,8 +10,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
     
     # Crop to initial size if needed.
-    assetClass = PAA.Practice.Project.Asset.getClassForId assetId
-    size = assetClass.fixedDimensions()
+    size = @fixedDimensions()
     
     unless bitmap.bounds.width is size.width and bitmap.bounds.height is size.height
       bitmap.crop
@@ -37,6 +36,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           y: 100 * (Math.random() - 0.5)
       
       bitmapData.references = newReferences
+      
+    # Reset properties.
+    if properties = @properties()
+      bitmapData.properties = properties
     
     # Update persistent document.
     LOI.Assets.Bitmap.documents.update bitmapData._id, bitmapData

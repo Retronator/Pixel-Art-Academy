@@ -2,6 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+PAG = PAA.Practice.PixelArtGrading
+
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.SpriteEditor.PixelCanvas
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas'
   @register @id()
@@ -185,3 +187,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
     
     # Convert from display to asset pixels.
     clipboardAssetSize.borderWidth / clipboardAssetSize.scale
+  
+  letterGrade: ->
+    return unless displayedAsset = @desktop.displayedAsset()
+    return unless pixelArtGrading = displayedAsset.document()?.properties?.pixelArtGrading
+    PAG.getLetterGrade pixelArtGrading.score

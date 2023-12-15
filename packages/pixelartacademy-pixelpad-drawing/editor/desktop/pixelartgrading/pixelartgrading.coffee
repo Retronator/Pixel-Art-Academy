@@ -90,14 +90,35 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     @autorun (computation) =>
       @desktop.focusedMode @active()
     
+    # Force the analyze tool when activated.
+    @autorun (computation) =>
+      return unless @active()
+      
+      analyzeTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.Analyze
+      
+      # We need to compare to the active tool ID since the active tool field won't have time to recompute yet.
+      return if @interface.activeTool() is analyzeTool
+      
+      # Activate the analyze tool, storing the previous one.
+      Tracker.nonreactive =>
+        # Note: We don't want to reactively read the stored tool
+        # since it will be updated before the active tool recomputes.
+        return if @interface.storedTool() is analyzeTool
+
+        @interface.activateTool analyzeTool, true
+  
     # Automatically deactivate when exiting focused mode.
     @autorun (computation) =>
-      @deactivate() unless @desktop.focusedMode()
+      return if @desktop.focusedMode()
+      
+      @deactivate()
+      
+      # Deactivate the analyze tool to restore the previous one.
+      Tracker.nonreactive => @interface.deactivateTool()
       
     # Update grading where requested.
     @autorun (computation) =>
-      pixelArtGradingProperty = @pixelArtGradingProperty()
-      
+      return unless pixelArtGradingProperty = @pixelArtGradingProperty()
       return unless pixelArtGrading = @pixelArtGrading()
       grading = pixelArtGrading.grade pixelArtGradingProperty
       
@@ -141,8 +162,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     @engineComponent
   ]
   
-  activate: ->
+  activate: (criterion = null) ->
     @_changeActive true
+    @activeCriterion criterion
     
   deactivate: ->
     @_changeActive false

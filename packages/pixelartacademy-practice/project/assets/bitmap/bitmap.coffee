@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
@@ -58,17 +59,19 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   constructor: ->
     super arguments...
 
-    @bitmapId = new ComputedField =>
+    @bitmapId = new AE.LiveComputedField =>
       @data()?.bitmapId
-    ,
-      true
 
-    @bitmap = new ComputedField =>
+    @bitmap = new AE.LiveComputedField =>
       return unless bitmapId = @bitmapId()
 
       LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-    ,
-      true
+    
+    # Allow to get the versioned document in a non-reactive way.
+    @versionedBitmap = new AE.LiveComputedField =>
+      return unless bitmapId = @bitmapId()
+      
+      LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId, false
     
     # Alias for the drawing app.
     @document = @bitmap
@@ -81,6 +84,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
     @bitmapId.stop()
     @bitmap.stop()
+    @versionedBitmap.stop()
 
   urlParameter: -> @bitmapId()
   
@@ -127,6 +131,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 # We want a generic state for bitmap assets so we create it outside of the constructor as inherited classes don't need it.
 # canEdit: can the user edit the bitmaps with built-in editors
 # canUpload: can the user upload bitmaps
+# unlockedPixelArtGradingCriteria: array of pixel art grading criteria that the user can enable
 Bitmap = PAA.Practice.Project.Asset.Bitmap
 
 Bitmap.stateAddress = new LOI.StateAddress "things.PixelArtAcademy.Practice.Project.Asset.Bitmap"

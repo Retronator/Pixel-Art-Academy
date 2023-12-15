@@ -15,15 +15,52 @@ class TutorialBitmap.StepArea
     
     @activeStepIndex = new ComputedField =>
       @data()?.activeStepIndex
+      
+    @hasExtraPixels = new AE.LiveComputedField =>
+      return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
+      
+      # See if there are any pixels in our area that don't belong to any step.
+      for x in [@bounds.x...@bounds.x + @bounds.width]
+        for y in [@bounds.y...@bounds.y + @bounds.height]
+          # Extra pixels can only exist where pixels are placed.
+          continue unless bitmapLayer.getPixel x, y
+          
+          # If we don't find a step that requires this pixel, we have an extra.
+          return true unless @hasGoalPixel x, y
+          
+      false
+      
+    @hasMissingPixels = new AE.LiveComputedField =>
+      # Compare goal layer with current bitmap layer.
+      return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
+      return unless palette = @tutorialBitmap.palette()
   
+      backgroundColor = @tutorialBitmap.getBackgroundColor()
+  
+      for x in [@bounds.x...@bounds.x + @bounds.width]
+        for y in [@bounds.y...@bounds.y + @bounds.height]
+          # Missing pixels can only exist where there is a goal pixel.
+          continue unless @hasGoalPixel x, y
+          
+          # If we don't have a pixel at all, it's definitely a missing one.
+          return true unless pixel = bitmapLayer.getPixel x, y
+          
+          # Make sure the pixel doesn't match the background color.
+          if backgroundColor
+            pixelColor = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
+            return true if pixelColor.equals backgroundColor
+  
+      false
+      
     @completed = new AE.LiveComputedField =>
       steps = @steps()
       return unless steps.length
       
+      activeStepIndex = Tracker.nonreactive => @activeStepIndex()
       completedSteps = 0
       
-      for step in steps
-        if step.completed()
+      for step, stepIndex in steps
+        if (step.preserveCompleted() and stepIndex < activeStepIndex) or step.completed()
           completedSteps++
         
         else
@@ -37,51 +74,23 @@ class TutorialBitmap.StepArea
       completedSteps is steps.length and not @hasExtraPixels()
 
   destroy: ->
+    @hasExtraPixels.stop()
+    @hasMissingPixels.stop()
     @completed.stop()
     
-  addStep: (step) ->
+  addStep: (step, stepIndex) ->
     steps = @steps()
-    steps.push step
+    
+    if stepIndex
+      steps.splice stepIndex, 0, step
+      
+    else
+      steps.push step
+      
     @steps steps
   
   solve: ->
     step.solve() for step in @steps()
-    
-  hasExtraPixels: ->
-    return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
-    
-    # See if there are any pixels in our area that don't belong to any step.
-    for x in [@bounds.x...@bounds.x + @bounds.width]
-      for y in [@bounds.y...@bounds.y + @bounds.height]
-        # Extra pixels can only exist where pixels are placed.
-        continue unless bitmapLayer.getPixel x, y
-        
-        # If we don't find a step that requires this pixel, we have an extra.
-        return true unless @hasGoalPixel x, y
-        
-    false
-    
-  hasMissingPixels: ->
-    # Compare goal layer with current bitmap layer.
-    return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
-    return unless palette = @tutorialBitmap.palette()
-
-    backgroundColor = @tutorialBitmap.getBackgroundColor()
-
-    for x in [@bounds.x...@bounds.x + @bounds.width]
-      for y in [@bounds.y...@bounds.y + @bounds.height]
-        # Missing pixels can only exist where there is a goal pixel.
-        continue unless @hasGoalPixel x, y
-        
-        # If we don't have a pixel at all, it's definitely a missing one.
-        return true unless pixel = bitmapLayer.getPixel x, y
-        
-        # Make sure the pixel doesn't match the background color.
-        if backgroundColor
-          pixelColor = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
-          return true if pixelColor.equals backgroundColor
-
-    false
   
   hasGoalPixel: (x, y) ->
     # Check if any of the steps require a pixel at these absolute bitmap coordinates.

@@ -166,7 +166,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     @message: -> """
       Since the segments of uneven lines change in length, this leads to jaggies that don't align perfectly with the intended direction.
       
-      These angles are less commonly used in pixel art, usually reserved for works with a perspective graphical projection.
+      For this reason, these angles are sometimes considered less aesthetic and avoided if possible, depending on the needs of the artwork and the chosen art style.
     """
     
     @activeConditions: ->

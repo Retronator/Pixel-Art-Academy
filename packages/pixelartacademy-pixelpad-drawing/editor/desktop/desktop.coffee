@@ -166,25 +166,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       actions = (actionId for actionId, toolKey of zoomActionRequirements when @toolIsAvailable toolKey)
 
       Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
-
-    # Deactivate active tool when closing the editor and reactivate it when opening if it's still available.
-    @autorun (computation) =>
-      return unless @interface.isCreated()
-
-      if @active()
-        # The editor is opened.
-        unless @interface.activeTool()
-          # Reactivate the last tool, but switch to the arrow (default) if the last active tool is still allowed.
-          tool = if @_lastActiveTool in @interface.tools() then @_lastActiveTool else @interface.getOperator LOI.Assets.Editor.Tools.Arrow
-          Tracker.nonreactive => @interface.activateTool tool
-
-      else
-        # The editor is being closed.
-        if activeTool = @interface.activeTool()
-          # Remember which tool was used and deactivate it.
-          @_lastActiveTool = activeTool
-          Tracker.nonreactive => @interface.deactivateTool()
-          
+      
     # Listen for tool changes to play activation sounds.
     @_hadStoredTool = false
     

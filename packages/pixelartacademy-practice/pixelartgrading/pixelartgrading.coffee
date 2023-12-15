@@ -58,13 +58,16 @@ class PAA.Practice.PixelArtGrading
     @_gradingDependency = new Tracker.Dependency
 
     # Initialize by updating the full area of the bitmap.
-    @_updateArea()
+    Tracker.nonreactive => @_updateArea()
     
     # Subscribe to changes.
     LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.addHandler @, @onOperationsExecuted
 
   destroy: ->
     LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.removeHandler @, @onOperationsExecuted
+    
+  depend: ->
+    @_gradingDependency.depend()
     
   getPixel: (x, y) ->
     @pixelsMap[x]?[y]
@@ -74,10 +77,22 @@ class PAA.Practice.PixelArtGrading
     
     pixel.lines
     
+  getLinesBetween: (points...) ->
+    linesForPoints = for point in points
+      @getLinesAt point.x, point.y
+      
+    _.intersection linesForPoints...
+    
   getLinePartsAt: (x, y) ->
     return [] unless pixel = @getPixel x, y
     
     _.flatten(line.getPartsForPixel pixel for line in pixel.lines)
+  
+  getLinePartsBetween: (points...) ->
+    linePartsForPoints = for point in points
+      @getLinePartsAt point.x, point.y
+    
+    _.intersection linePartsForPoints...
     
   mergeCoreInto: (removingCore, enlargingCore) ->
     enlargingCore.mergeCore removingCore

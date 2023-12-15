@@ -5,18 +5,13 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.Instructions.Instruction extends PAA.PixelPad.Systems.Instructions.Instruction
-  # The default amount of time before we show instructions to the user to let them figure it out themselves
+  # The default amount of time before we show instructions to the user to let them figure it out themselves.
   @defaultDelayDuration = 10
   
   @assetClass: -> throw new AE.NotImplementedException "You must specify the asset class this instruction is for."
   
-  @getEditor: ->
-    return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-    return unless currentApp = pixelPad.os.currentApp()
-    return unless currentApp instanceof PAA.PixelPad.Apps.Drawing
-    drawing = currentApp
-    drawing.editor()
-    
+  @getEditor: -> PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+  
   @getActiveAsset: ->
     # We must be in the editor on the provided asset.
     return unless editor = @getEditor()

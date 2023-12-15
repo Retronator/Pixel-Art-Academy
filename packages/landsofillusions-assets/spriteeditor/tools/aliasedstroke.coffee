@@ -111,6 +111,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
       @lastPixelCoordinates null
 
   onDeactivated: ->
+    @finalizeStroke()
+    
     @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels [] if @_previewActive
@@ -254,7 +256,10 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
   onMouseUp: (event) ->
     super arguments...
+    
+    @finalizeStroke()
 
+  finalizeStroke: ->
     return unless @strokeActive()
 
     # End stroke.

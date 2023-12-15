@@ -114,6 +114,7 @@ Package.onUse(function(api) {
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap/hintsenginecomponent');
 
+  api.addComponent('tutorials/drawing/assets/tutorialbitmap/portfoliocomponent..');
   api.addUnstyledComponent('tutorials/drawing/assets/tutorialbitmap/briefcomponent..');
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap/resource..');
@@ -125,6 +126,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/steparea');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/step');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pixelsstep');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/ephemeralstep');
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep..');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep/path');

@@ -8,7 +8,14 @@ FM = FataMorgana
 
 class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
   @styleClass: -> throw new AE.NotImplementedException "Editor must provide a style class name."
-
+  
+  @getEditor: ->
+    return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+    return unless currentApp = pixelPad.os.currentApp()
+    return unless currentApp instanceof PAA.PixelPad.Apps.Drawing
+    drawing = currentApp
+    drawing.editor()
+    
   constructor: (@drawing) ->
     super arguments...
   
@@ -90,10 +97,9 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       if @active()
         # The editor is opened.
         unless @interface.activeTool()
-          # Make sure the last active tool is still allowed.
-          if @_lastActiveTool in @interface.tools()
-            # Reactivate the last tool.
-            Tracker.nonreactive => @interface.activateTool @_lastActiveTool
+          # Reactivate the last tool, but switch to the arrow (default) if the last active tool is not allowed anymore.
+          tool = if @_lastActiveTool in @interface.tools() then @_lastActiveTool else @interface.getOperator LOI.Assets.Editor.Tools.Arrow
+          Tracker.nonreactive => @interface.activateTool tool
 
       else
         # The editor is being closed.

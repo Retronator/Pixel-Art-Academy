@@ -9,7 +9,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   #   activeStepIndex: the index of the currently active step
   #   referenceUrl: optional url of the reference chosen to be drawn in this step area
 
-  # @id: -> 'PixelArtAcademy.Practice.Tutorials.Drawing.Assets.TutorialBitmap'
+  # Id used for the source of versioning actions.
+  @id: -> 'PixelArtAcademy.Practice.Tutorials.Drawing.Assets.TutorialBitmap'
+  
+  @portfolioComponentClass: -> @PortfolioComponent
   
   # Override to limit the scale at which the bitmap appears in the clipboard.
   @minClipboardScale: -> null
@@ -31,6 +34,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
   # Override if the asset requires a pixel art grading analysis.
   @pixelArtGrading: -> false
+
+  # Override to provide bitmap properties that need to be set on the asset.
+  @properties: -> null
   
   @initialize: ->
     super arguments...
@@ -90,9 +96,14 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     # Create additional helpers.
     if @constructor.pixelArtGrading()
-      @pixelArtGrading = new ComputedField =>
-        return unless bitmap = @bitmap()
+      @pixelArtGradingInstance = new ComputedField =>
+        return unless bitmap = @versionedBitmap()
         new PAA.Practice.PixelArtGrading bitmap
+        
+      @pixelArtGrading = new ComputedField =>
+        pixelArtGrading = @pixelArtGradingInstance()
+        pixelArtGrading.depend()
+        pixelArtGrading
        
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>

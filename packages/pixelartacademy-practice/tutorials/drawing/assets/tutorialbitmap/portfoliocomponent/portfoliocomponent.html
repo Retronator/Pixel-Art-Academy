@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.Practice.Tutorials.Drawing.Assets.TutorialBitmap.PortfolioComponent">
+  <div class="pixelartacademy-practice-tutorials-drawing-assets-tutorialbitmap-portfoliocomponent pixelartacademy-practice-project-asset-bitmap-portfoliocomponent" {{style bitmapStyle}}>
+    <div class="grading">
+      {{#if tutorialBitmap.completed}}
+        {{#if letterGrade}}
+          <span class="grade">{{letterGrade}}</span>
+        {{else}}
+          <span class="completed">✔︎</span>
+        {{/if}}
+      {{/if}}
+    </div>
+    {{> Render bitmapImage}}
+  </div>
+</template>

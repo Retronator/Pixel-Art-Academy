@@ -92,4 +92,8 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/constrainingangles');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonals');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsgrading..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsgrading/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsgrading/instructions');
 });

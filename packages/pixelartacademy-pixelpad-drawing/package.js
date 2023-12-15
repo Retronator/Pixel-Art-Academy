@@ -50,6 +50,7 @@ Package.onUse(function(api) {
 
   api.addFile('editor/tools..');
   api.addFile('editor/tools/movecanvas');
+  api.addFile('editor/tools/analyze');
 
   api.addComponent('editor/desktop..');
   api.addComponent('editor/desktop/pixelcanvas..');

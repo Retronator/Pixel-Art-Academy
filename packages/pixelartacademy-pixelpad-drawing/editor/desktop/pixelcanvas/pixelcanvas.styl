@@ -18,16 +18,22 @@
     &.hidden
       display none
 
-    &.completed
-      &::before
-        content '︎'
-        position absolute
-        z-index 1
-        top 5rem
-        right 5rem
+    .grading
+      position absolute
+      z-index 1
+      top 5rem
+      right 4rem
+
+      .completed
+        display inline-block
         width 10rem
         height 8rem
         background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/completedcheckmark.png')
+
+      .grade
+        color atariGreen(3)
+        kyrou-9()
+        font-weight bold
 
     canvas
       absolute-cover-size()

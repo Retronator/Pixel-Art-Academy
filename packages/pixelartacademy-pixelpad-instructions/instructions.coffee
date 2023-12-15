@@ -8,6 +8,10 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     Open: 'Open'
     Closed: 'Closed'
     Hidden: 'Hidden'
+    
+  @DisplaySide =
+    Top: 'Top'
+    Bottom: 'Bottom'
   
   constructor: ->
     super arguments...
@@ -50,7 +54,13 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
         return instruction
         
       null
+
+    @targetDisplaySide = new ComputedField =>
+      instruction = @targetDisplayedInstruction()
+      instruction?.displaySide?() or @constructor.DisplaySide.Bottom
       
+    @displaySide = new ReactiveField @constructor.DisplaySide.Bottom
+    
     @displayedInstruction = new ReactiveField null
 
   onRendered: ->
@@ -69,6 +79,23 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
       return if @animating()
       
       if targetDisplayedInstruction = @targetDisplayedInstruction()
+        targetDisplaySide = @targetDisplaySide()
+        displaySide = @displaySide()
+        
+        # If we're changing sides, hide the current instruction.
+        unless displaySide is targetDisplaySide
+          await @animateHide()
+
+          # Wait for a frame for the new side style to apply to allow for animations starting with new positioning.
+          @animating true
+          @displaySide targetDisplaySide
+          @displayedInstruction null
+          await _.waitForFlush()
+          await _.waitForNextAnimationFrame()
+          @animating false
+          
+          return
+        
         # Nothing to do if we're displaying the correct instruction.
         displayedInstruction = @displayedInstruction()
         return if displayedInstruction is targetDisplayedInstruction
@@ -129,19 +156,9 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     
   displayStateClass: ->
     _.kebabCase @displayState()
-  
-  instructionsStyle: ->
-    switch @displayState()
-      when @constructor.DisplayState.Open
-        top = "calc(-#{@contentHeight()}px - #{@headerHeight}rem)"
-        
-      when @constructor.DisplayState.Closed
-        top = "-#{@headerHeight}rem"
-        
-      else
-        top = "#{@hideTop}rem"
-  
-    {top}
+    
+  displaySideClass: ->
+    _.kebabCase @displaySide()
     
   containerStyle: ->
     maxContentHeight = Math.max @contentHeight(), @previousContentHeight()

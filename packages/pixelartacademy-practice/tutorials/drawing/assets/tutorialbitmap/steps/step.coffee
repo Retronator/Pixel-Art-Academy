@@ -6,14 +6,33 @@ LOI = LandsOfIllusions
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 class TutorialBitmap.Step
-  constructor: (@tutorialBitmap, @stepArea, @options) ->
-    @stepArea.addStep @
+  # Override to true (or provide through options) if the step area should
+  # remember the completed state of this step instead of asking to reconfirm it.
+  @preserveCompleted: -> false
+
+  # Override to false (or provide through options) if the hint drawing should not be called after the step is completed.
+  @drawHintsAfterCompleted: -> true
+  
+  @getEditor: -> PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+  
+  constructor: (@tutorialBitmap, @stepArea, @options = {}) ->
+    @stepArea.addStep @, @options.stepIndex
   
   completed: -> throw new AE.NotImplementedException "A step has to specify when it has been completed."
   
   hasPixel: -> throw new AE.NotImplementedException "A step has to specify if it requires a specific pixel for its completion."
   
   solve: -> throw new AE.NotImplementedException "A step has to provide a method to solve itself to a completed state."
+
+  preserveCompleted: -> if @options.preserveCompleted? then @options.preserveCompleted else @constructor.preserveCompleted()
+  drawHintsAfterCompleted: -> if @options.drawHintsAfterCompleted? then @options.drawHintsAfterCompleted else @constructor.drawHintsAfterCompleted()
+  getEditor: -> @constructor.getEditor()
+  
+  getIndexInArea: ->
+    @stepArea.steps().indexOf @
+    
+  isActiveStepInArea: ->
+    @stepArea.activeStepIndex() is @getIndexInArea()
   
   activate: ->
     return unless @options.startPixels
