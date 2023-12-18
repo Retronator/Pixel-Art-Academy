@@ -10,7 +10,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset extends PAA.Practice.Tutori
 
   @breakPathsIntoSteps: -> true
   
-  minClipboardScale: -> 2
+  @minClipboardScale: -> 2
   
   availableToolKeys: ->
     [

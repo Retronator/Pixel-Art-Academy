@@ -139,6 +139,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       else if customPalette = @customPalette()
         bitmapData.customPalette = customPalette
         resolve bitmapData
+        
+      else
+        resolve bitmapData
 
   @_insertBitmap: (bitmapData) ->
     new Promise (resolve, reject) =>

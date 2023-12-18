@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
@@ -63,10 +64,34 @@ class PAA.Practice.Project.Asset
     clipboardComponentClass = @constructor.clipboardComponentClass()
     @clipboardComponent = new clipboardComponentClass @
     
+    # Provides support for autorun and subscribe calls.
+    @_autorunHandles = []
+    @_subscriptionHandles = []
+    
   destroy: ->
     @_translationSubscription.stop()
     @data.stop()
 
+    handle.stop() for handle in [@_autorunHandles..., @_subscriptionHandles...]
+  
+  autorun: (handler) ->
+    handle = Tracker.autorun handler
+    @_autorunHandles.push handle
+    
+    handle
+
+  subscribe: (subscriptionName, params...) ->
+    handle = Meteor.subscribe subscriptionName, params...
+    @_subscriptionHandles.push handle
+    
+    handle
+
+  subscribeContent: (subscriptionName, params...) ->
+    handle = AM.DatabaseContent.subscribe subscriptionName, params...
+    @_subscriptionHandles.push handle
+    
+    handle
+    
   id: -> @constructor.id()
   
   urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to be used in the URL to identify this asset."

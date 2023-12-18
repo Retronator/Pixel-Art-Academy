@@ -34,35 +34,36 @@ class PAG.EngineComponent extends PAG.EngineComponent
 
     context.save()
     context.translate 0.5, 0.5
-
-    # Draw deep core pixels.
-    context.beginPath()
-    @_addPixelToPath context, pixel for pixel in pixelArtGrading.pixels when pixel.isDeepCore
-    @_diagonalDash context, pixelArtGrading.bitmap.bounds, deepCoreColor
     
-    # Draw shallow core pixels.
-    context.beginPath()
-    @_addPixelToPath context, pixel for pixel in pixelArtGrading.pixels when pixel.isShallowCore
-    @_diagonalDash context, pixelArtGrading.bitmap.bounds, shallowCoreColor
-    
-    # Draw point network.
-    for point in pixelArtGrading.points
-      @_drawDebugEdge context, point, neighbor for neighbor in point.neighbors
-    
-    # Draw points.
-    @_drawDebugPoint context, point for point in pixelArtGrading.points
-    
-    # Draw lines.
-    @_drawDebugLine context, line for line in pixelArtGrading.lines
-    
-    # Draw line parts.
-    linePartsProperty = if @showPotentialParts() then 'potentialParts' else 'parts'
-    
-    for line in pixelArtGrading.lines
-      for part in line[linePartsProperty]
-        @_drawDebugStraightLine context, part if part instanceof PAG.Line.Part.StraightLine
-        @_drawDebugCurve context, part, true if part instanceof PAG.Line.Part.Curve
-    
+    for layer in pixelArtGrading.layers
+      # Draw deep core pixels.
+      context.beginPath()
+      @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isDeepCore
+      @_diagonalDash context, pixelArtGrading.bitmap.bounds, deepCoreColor
+      
+      # Draw shallow core pixels.
+      context.beginPath()
+      @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
+      @_diagonalDash context, pixelArtGrading.bitmap.bounds, shallowCoreColor
+      
+      # Draw point network.
+      for point in layer.points
+        @_drawDebugEdge context, point, neighbor for neighbor in point.neighbors
+      
+      # Draw points.
+      @_drawDebugPoint context, point for point in layer.points
+      
+      # Draw lines.
+      @_drawDebugLine context, line for line in layer.lines
+      
+      # Draw line parts.
+      linePartsProperty = if @showPotentialParts?() then 'potentialParts' else 'parts'
+      
+      for line in layer.lines
+        for part in line[linePartsProperty]
+          @_drawDebugStraightLine context, part if part instanceof PAG.Line.Part.StraightLine
+          @_drawDebugCurve context, part, true if part instanceof PAG.Line.Part.Curve
+      
     context.restore()
 
   _drawDebugEdge: (context, pointA, pointB) ->

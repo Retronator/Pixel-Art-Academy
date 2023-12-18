@@ -45,7 +45,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
         assets = @tutorial.assetsData()
         asset = _.find assets, (asset) => asset.id is @id()
-        stepAreas = asset.stepAreas or []
+        
+        # Note: create a clone of step areas since the object gets compared for equality.
+        stepAreas = if asset.stepAreas then EJSON.clone asset.stepAreas else []
         
         # Remove references at the end that haven't been drawn on yet.
         fixedDimensions = @constructor.fixedDimensions()
@@ -109,13 +111,24 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     return unless goalChoices = @resources.goalChoices
 
     # Dynamically load steps of the chosen references. Note that initializeSteps
-    # get called from an autorun, so we have to continue in nonreactive context.
+    # gets called from an autorun, so we have to continue in nonreactive context.
     Tracker.nonreactive =>
-      @_referenceStepsAutorun = Tracker.autorun (computation) =>
-        # Create new areas from asset data.
+      @assetStepAreas = new AE.LiveComputedField =>
         assets = @tutorial.assetsData()
         return unless asset = _.find assets, (asset) => asset.id is @id()
-        return unless asset.stepAreas
+        asset.stepAreas
+      ,
+        # Limit reactivity to changes in the reference URLs.
+        (a, b) =>
+          return unless _.isArray(a) and _.isArray(b) and a.length is b.length
+          
+          for i in [0...a.length]
+            return unless a.referenceUrl is b.referenceUrl
+            
+          true
+      
+      @_referenceStepsAutorun = Tracker.autorun (computation) =>
+        return unless assetStepAreas = @assetStepAreas()
         
         # Only react to changes of the asset data.
         Tracker.nonreactive =>
@@ -125,7 +138,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           
           fixedDimensions = @constructor.fixedDimensions()
           
-          for stepAreaData, index in asset.stepAreas
+          for stepAreaData, index in assetStepAreas
             stepAreaBounds =
               x: index * fixedDimensions.width
               y: 0
@@ -141,5 +154,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     super arguments...
     
     @displayedReferenceUrlChoices?.stop()
+    @assetStepAreas?.stop()
     @_chosenReferencesAutorun?.stop()
     @_referenceStepsAutorun?.stop()

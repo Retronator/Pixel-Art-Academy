@@ -83,7 +83,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.QuickColorPicking extends PAA.P
       editor = @getEditor()
       editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.Pencil.id()
       
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @priority: -> 1
@@ -106,7 +106,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.QuickColorPicking extends PAA.P
       editor = @getEditor()
       editor.interface.activeToolId() in [LOI.Assets.SpriteEditor.Tools.Pencil.id(), LOI.Assets.SpriteEditor.Tools.ColorPicker.id()]
     
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @initialize()

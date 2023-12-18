@@ -455,6 +455,7 @@ Package.onUse(function(api) {
 
   api.addFile('audioeditor/actions..');
   api.addFile('audioeditor/actions/duplicatenode');
+  api.addFile('audioeditor/actions/deletenode');
 
   api.addUnstyledComponent('audioeditor/soundselectdialog..');
 });

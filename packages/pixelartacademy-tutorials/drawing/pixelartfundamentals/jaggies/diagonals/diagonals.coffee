@@ -14,4 +14,5 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals extends PAA.P
     @ConstrainingAngles
     @UnevenDiagonals
     @DiagonalsGrading
+    @UnevenDiagonalsArtStyle
   ]

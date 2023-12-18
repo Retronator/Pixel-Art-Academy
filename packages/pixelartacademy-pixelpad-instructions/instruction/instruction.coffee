@@ -27,6 +27,10 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   @activeDisplayState: ->
     # Override if you want the instruction to display closed.
     PAA.PixelPad.Systems.Instructions.DisplayState.Open
+    
+  @displaySide: ->
+    # Override if the instruction doesn't appear at the bottom.
+    PAA.PixelPad.Systems.Instructions.DisplaySide.Bottom
 
   @initialize: ->
     @register @id()
@@ -110,6 +114,7 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   priority: -> @constructor.priority()
   delayDuration: -> @constructor.delayDuration()
   activeDisplayState: -> @constructor.activeDisplayState()
+  displaySide: -> @constructor.displaySide()
   
   onActivate: ->
     # Override to perform additional setup when the instruction activates.
@@ -120,6 +125,12 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   
   onCompleted: ->
     # Override to do something when the instruction has completed.
+  
+  onDisplay: ->
+    # Override to do something when the instruction starts displaying.
+    
+  onDisplayed: ->
+    # Override to do something when the instruction is fully displayed.
   
   resetDelay: -> @delayTime @delayDuration()
   

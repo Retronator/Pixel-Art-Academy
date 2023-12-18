@@ -85,7 +85,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
       editor = @getEditor()
       editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
   
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @delayDuration: -> @defaultDelayDuration
@@ -108,7 +108,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors.ColorPicking extends PAA.Practi
       editor = @getEditor()
       editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
   
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
   
     @delayDuration: -> @defaultDelayDuration

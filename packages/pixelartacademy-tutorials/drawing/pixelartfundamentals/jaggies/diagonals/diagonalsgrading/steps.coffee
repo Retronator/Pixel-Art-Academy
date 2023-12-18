@@ -48,6 +48,7 @@ class DiagonalsGrading.Steps
       linePartsAtAllCorners = _.intersection linePartsAtCorners...
       
       return unless linePart = linePartsAtAllCorners[0]
+      return unless linePart instanceof StraightLine
       
       linePart.grade()
       

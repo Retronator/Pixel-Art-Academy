@@ -29,13 +29,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview extends 
       
       criteria = []
       
-      unlockedPixelArtGradingCriteria = PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtGradingCriteria') or []
+      pixelArtGradingCriteria = pixelArtGradingProperty.allowedCriteria or PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtGradingCriteria') or []
       
       for criterion of PAG.Criteria
         criterionProperty = _.lowerFirst criterion
         
         # Show only existing criteria when not editable (and unlocked otherwise so we can toggle them on and off).
-        continue unless criterion in unlockedPixelArtGradingCriteria or pixelArtGradingProperty[criterionProperty]?
+        continue unless criterion in pixelArtGradingCriteria or pixelArtGradingProperty[criterionProperty]?
         
         criteria.push
           id: criterion
@@ -61,4 +61,4 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview extends 
       
   onClickCriterion: (event) ->
     criterion = @currentData()
-    @pixelArtGrading.activate criterion.id
+    @pixelArtGrading.setCriterion criterion.id

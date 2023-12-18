@@ -14,6 +14,7 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
   
     @_tutorialLine?.destroy()
     @_tutorialJaggies?.destroy()
+    @_tutorialPixelArtDiagonals?.destroy()
 
   things: ->
     things = []

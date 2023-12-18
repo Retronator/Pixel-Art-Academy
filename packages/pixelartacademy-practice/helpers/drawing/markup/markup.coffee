@@ -50,11 +50,19 @@ class PAA.Practice.Helpers.Drawing.Markup
     
     "##{errorColor.getHexString()}"
     
+  @backgroundStyle: ->
+    palette = LOI.palette()
+    backgroundColor = palette.color Atari2600.hues.gray, 7
+    
+    "##{backgroundColor.getHexString()}"
+    
   @textBase: ->
     size: 6
     lineHeight: 7
     font: 'Small Print Retronator'
     style: @defaultStyle()
+    outline:
+      style: @backgroundStyle()
     align: @TextAlign.Center
   
   @percentage: (value) ->

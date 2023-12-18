@@ -3,7 +3,7 @@ PAA = PixelArtAcademy
 PAG = PAA.Practice.PixelArtGrading
 
 class PAG.Pixel
-  constructor: (@grading, @x, @y) ->
+  constructor: (@layer, @x, @y) ->
     @lines = []
     @points = []
     @core = null
@@ -64,7 +64,7 @@ class PAG.Pixel
   forEachNeighbor: (operation) ->
     for x in [@x - 1..@x + 1]
       for y in [@y - 1..@y + 1] when x isnt @x or y isnt @y
-        if pixel = @grading.getPixel x, y
+        if pixel = @layer.getPixel x, y
           operation pixel
         
     # Explicit return to avoid result collection.

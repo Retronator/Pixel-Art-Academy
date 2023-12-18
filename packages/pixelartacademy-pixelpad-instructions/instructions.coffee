@@ -56,8 +56,7 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
       null
 
     @targetDisplaySide = new ComputedField =>
-      instruction = @targetDisplayedInstruction()
-      instruction?.displaySide?() or @constructor.DisplaySide.Bottom
+      @targetDisplayedInstruction()?.displaySide()
       
     @displaySide = new ReactiveField @constructor.DisplaySide.Bottom
     
@@ -110,9 +109,11 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
           # Show the new instruction.
           @displayedInstruction targetDisplayedInstruction
           
+          targetDisplayedInstruction.onDisplay()
+
           await @animateDisplayState targetDisplayedInstruction.activeDisplayState()
     
-          targetDisplayedInstruction.onDisplay?()
+          targetDisplayedInstruction.onDisplayed()
       
       else
         # We shouldn't be showing any instructions.

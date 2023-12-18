@@ -44,6 +44,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #   pixelArtGrading: object or null whether to show the pixel art grading rubric
   #     editable: boolean whether grading criteria can be toggled on and off
   #     score: float between 0 and 1 for the final average grade
+  #     allowedCriteria: array of criterion IDs or null to use only unlocked criteria
   #     consistentLineWidth, evenDiagonals, smoothCurves: objects with different criteria evaluations
   #       editable: boolean overriding whether grading criteria can be toggled on and off
   #       score: float between 0 and 1 with this criterion evaluation

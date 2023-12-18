@@ -32,12 +32,13 @@ class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     focusedLineParts = if focusedPixel then pixelArtGrading.getLinePartsAt focusedPixel.x, focusedPixel.y else []
     lineParts = []
     
-    for line in pixelArtGrading.lines
-      for part in line.parts
-        # Filter to evaluated property if needed.
-        continue if filterToCategoryValue and part.grade()[filterToCategoryValue.property]?.type isnt filterToCategoryValue.value
-
-        lineParts.push part
+    for layer in pixelArtGrading.layers
+      for line in layer.lines
+        for part in line.parts
+          # Filter to evaluated property if needed.
+          continue if filterToCategoryValue and part.grade()[filterToCategoryValue.property]?.type isnt filterToCategoryValue.value
+  
+          lineParts.push part
       
     markup = []
   

@@ -78,6 +78,10 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
     briefComponentClass = @constructor.briefComponentClass()
     @briefComponent = new briefComponentClass @
+    
+    # Subscribe to the palette.
+    if restrictedPaletteName = @constructor.restrictedPaletteName()
+      LOI.Assets.Palette.forName.subscribeContent restrictedPaletteName
 
   destroy: ->
     super arguments...

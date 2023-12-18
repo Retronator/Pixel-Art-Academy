@@ -14,7 +14,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
     subNamespace: true
     variables:
+      lift:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      release:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      open: AEc.ValueTypes.Trigger
+      close: AEc.ValueTypes.Trigger
       flipPaper: AEc.ValueTypes.Trigger
+      checkmarkOn: AEc.ValueTypes.Trigger
+      checkmarkOff: AEc.ValueTypes.Trigger
     
   constructor: ->
     super arguments...
@@ -40,7 +50,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       
     @pixelArtGrading = new ComputedField =>
       return unless bitmap = @bitmapObject()
-      new PAG bitmap
+      @_pixelArtGrading?.destroy()
+      @_pixelArtGrading = new PAG bitmap
       
     @hoveredCategoryValue = new ReactiveField null
 
@@ -48,7 +59,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       pixelCanvas = @interface.getEditorForActiveFile()
       pixelCanvas.mouse().pixelCoordinate()
       
-    # Due to animation, the grading sheet is full displayed a second after it's activated.
+    # Due to animation, the grading sheet is fully displayed a second after it's activated.
     @displayed = new ReactiveField false
     
     @autorun (computation) =>
@@ -149,11 +160,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     super arguments...
     
     @_resizeObserver?.disconnect()
+    @_pixelArtGrading?.destroy()
     
   onBackButton: ->
     return unless @activeCriterion()
     
-    @activeCriterion null
+    @setCriterion null
     
     # Inform that we've handled the back button.
     true
@@ -165,9 +177,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
   activate: (criterion = null) ->
     @_changeActive true
     @activeCriterion criterion
+    @audio.open()
     
   deactivate: ->
     @_changeActive false
+    @audio.close()
+    
+  # Use this to change the criterion when already active.
+  setCriterion: (criterion) ->
+    @activeCriterion criterion
+    @audio.flipPaper()
     
   _changeActive: (value) ->
     @active value
@@ -203,12 +222,25 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
     
   events: ->
     super(arguments...).concat
-      'click': @onClick
+      'click .paper': @onClickPaper
+      'mouseenter .paper': @onMouseEnterPaper
+      'mouseleave .paper': @onMouseLeavePaper
     
-  onClick: (event) ->
+  onClickPaper: (event) ->
     return if @active()
 
     @activate()
+  
+  onMouseEnterPaper: (event) ->
+    return if @active()
+    
+    @audio.lift()
+    @_liftTime = Date.now()
+    
+  onMouseLeavePaper: (event) ->
+    return if @active()
+    
+    @audio.release() if Date.now() - @_liftTime > 100
   
   class @CriterionEnabled extends AM.DataInputComponent
     @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.CriterionEnabled'
@@ -263,3 +295,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading extends LOI.View
       updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtGrading', pixelArtGradingProperty
       
       asset.executeAction updatePropertyAction
+      
+      if value
+        @pixelArtGrading.audio.checkmarkOn()
+        
+      else
+        @pixelArtGrading.audio.checkmarkOff()

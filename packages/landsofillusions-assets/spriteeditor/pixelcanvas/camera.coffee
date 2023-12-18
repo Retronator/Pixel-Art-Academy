@@ -79,15 +79,15 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         @renderableAreaCanvasBounds.extrude borderWidth, borderWidth if borderWidth
       
       else
-        # Renderable area is twice the pixel canvas to prevent the canvas being cut-off during transitions.
+        # Renderable area is larger than the pixel canvas to prevent the canvas being cut-off during transitions.
         pixelCanvasWindowSize = @pixelCanvas.windowSize()
         effectiveScale = @effectiveScale()
         width = pixelCanvasWindowSize.width / effectiveScale
         height = pixelCanvasWindowSize.height / effectiveScale
         origin = @origin()
     
-        @renderableAreaCanvasBounds.width width * 2
-        @renderableAreaCanvasBounds.height height * 2
+        @renderableAreaCanvasBounds.width width * 3
+        @renderableAreaCanvasBounds.height height * 3
         @renderableAreaCanvasBounds.x origin.x - width
         @renderableAreaCanvasBounds.y origin.y - height
 

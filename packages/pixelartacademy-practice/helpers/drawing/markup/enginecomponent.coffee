@@ -59,7 +59,10 @@ class Markup.EngineComponent
             @_drawArrow context, startPoint, endPoint
         
       if text = element.text
-        context.fillStyle = text.style
+        if text.backgroundStyle
+          context.fillStyle = text.backgroundStyle
+          @_drawTextBackground context, text.value, text.position, lineHeight, text.backgroundPadding
+      
         textSize = text.size * scaledDisplayPixelSize
         context.font = "#{textSize}px #{text.font}"
         
@@ -68,7 +71,24 @@ class Markup.EngineComponent
           
         else
           lineHeight = textSize * 1.2
-
+          
+        if text.outline
+          context.fillStyle = text.outline.style
+          
+          outlineWidth = text.outline.width or 1
+          outlinePosition = _.clone text.position
+          
+          context.beginPath()
+          
+          for offsetX in [-outlineWidth..outlineWidth]
+            for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
+              outlinePosition.x = text.position.x + offsetX * scaledDisplayPixelSize
+              outlinePosition.y = text.position.y + offsetY * scaledDisplayPixelSize
+              @_drawText context, text.value, outlinePosition, lineHeight, text.align
+              
+          context.fill()
+        
+        context.fillStyle = text.style
         @_drawText context, text.value, text.position, lineHeight, text.align
       
     context.restore()
@@ -124,3 +144,24 @@ class Markup.EngineComponent
       x = originX + (maxWidth - width) * alignFactor
       context.fillText line, x, y
       y += lineHeight
+  
+  _drawTextBackground: (context, text, position, lineHeight, padding = 0) ->
+    lines = text.split '\n'
+    
+    widths = (context.measureText(line).width for line in lines)
+
+    width = _.max widths
+    height = lineHeight * lines.length
+    
+    verticalFactor = 0
+    verticalFactor = 0.5 if _.startsWith position.origin, 'Middle'
+    verticalFactor = 1 if _.startsWith position.origin, 'Bottom'
+    
+    centerFactor = 0
+    centerFactor = 0.5 if _.endsWith position.origin, 'Center'
+    centerFactor = 1 if _.endsWith position.origin, 'Right'
+    
+    y = position.y - height * verticalFactor - padding
+    x = position.x - width * centerFactor - padding
+    
+    context.fillRect x, y, width + 2 * padding, height + 2 * padding

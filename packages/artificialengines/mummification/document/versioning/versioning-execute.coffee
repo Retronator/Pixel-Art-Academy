@@ -42,7 +42,9 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   
   changedFields = @executeOperations versionedDocument, action.forward
 
-  # Change history.
+  # Change history. Store the new action's operations before they get
+  # potentially overwritten so we can report them in the event later.
+  executedOperations = action.forward
   action = lastAction if appendToLastAction
   
   modifier =
@@ -62,7 +64,7 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   versionedDocument.constructor.documents.update versionedDocument._id, modifier
 
   # On the client, raise an event that changes were made.
-  versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, action.forward, changedFields if Meteor.isClient
+  versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, executedOperations, changedFields if Meteor.isClient
   
 AM.Document.Versioning._validateActionOrder = (versionedDocument, lastEditTime, newLastEditTime) ->
   # If we have no last edit time we use the creation time.

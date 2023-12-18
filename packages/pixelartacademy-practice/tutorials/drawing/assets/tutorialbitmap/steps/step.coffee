@@ -20,7 +20,8 @@ class TutorialBitmap.Step
   
   completed: -> throw new AE.NotImplementedException "A step has to specify when it has been completed."
   
-  hasPixel: -> throw new AE.NotImplementedException "A step has to specify if it requires a specific pixel for its completion."
+  # Override if the step requires pixels for its completion (so other steps don't consider them to be invalid).
+  hasPixel: -> false
   
   solve: -> throw new AE.NotImplementedException "A step has to provide a method to solve itself to a completed state."
 
@@ -39,15 +40,36 @@ class TutorialBitmap.Step
     
     # Add start pixels.
     bitmap = @tutorialBitmap.bitmap()
-    strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], @options.startPixels.pixels()
     
+    if @options.startPixels instanceof TutorialBitmap.Resource.Pixels
+      layers = [
+        @options.startPixels
+      ]
+      
+    else
+      layers = @options.startPixels
+    
+    action = new AM.Document.Versioning.Action @tutorialBitmap.id()
+    
+    for layer, layerIndex in layers
+      # Add layer if necessary.
+      unless bitmap.getLayer layerIndex
+        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @tutorialBitmap.id(), bitmap
+        AM.Document.Versioning.executePartialAction bitmap, addLayerAction
+        action.append addLayerAction
+      
+      # Add the pixels.
+      strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [layerIndex], layer.pixels()
+      AM.Document.Versioning.executePartialAction bitmap, strokeAction
+      action.append strokeAction
+      
     # If this activation happened as part of a user action, append the new pixels to that action.
     appendToLastAction = bitmap.historyPosition > 0
-    AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date, appendToLastAction
+    AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, action, new Date, appendToLastAction
 
     # If this was the initial step, make it appear as if the bitmap started with these pixels.
     AM.Document.Versioning.clearHistory bitmap unless appendToLastAction
-  
+
   drawUnderlyingHints: (context, renderOptions = {}) -> # Override to draw hints under the bitmap.
   drawOverlaidHints: (context, renderOptions = {}) -> # Override to draw hints over the bitmap.
   

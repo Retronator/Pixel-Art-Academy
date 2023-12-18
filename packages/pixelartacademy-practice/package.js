@@ -143,6 +143,7 @@ Package.onUse(function(api) {
   // Pixel art grading
 
   api.addFile('pixelartgrading..')
+  api.addFile('pixelartgrading/layer')
   api.addFile('pixelartgrading/core')
   api.addFile('pixelartgrading/pixel')
   api.addFile('pixelartgrading/point')

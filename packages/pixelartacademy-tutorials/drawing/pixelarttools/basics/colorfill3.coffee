@@ -97,7 +97,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
       lastAction = bitmap.partialAction or bitmap.history[bitmap.historyPosition - 1]
       lastAction.operatorId is @toolId()
 
-    onDisplay: ->
+    onDisplayed: ->
       # Unlock the undo.
       asset = @constructor.getActiveAsset()
       asset.unlockUndo true

@@ -34,7 +34,7 @@ class PAG.Point
       line.start.y = pointA.y + pointA.radius
       line.end.y = pointB.y - pointB.radius
       
-  constructor: (@grading) ->
+  constructor: (@layer) ->
     @id = Random.id()
     
     @neighbors = []

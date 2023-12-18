@@ -3,7 +3,7 @@ PAA = PixelArtAcademy
 PAG = PAA.Practice.PixelArtGrading
 
 class PAG.Core
-  constructor: (@grading) ->
+  constructor: (@layer) ->
     @id = Random.id()
     
     @pixels = []
@@ -47,7 +47,7 @@ class PAG.Core
           
     # Merge any touched cores.
     for id, core of touchedCores
-      @grading.mergeCoreInto core, @
+      @layer.mergeCoreInto core, @
 
   mergeCore: (core) ->
     # Take over all pixels of the core.

@@ -32,6 +32,10 @@ class LM.App extends Artificial.Base.App
     LM.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', LM.Adventure
   
     AB.Router.initialize()
+    
+    # Listen for cheats.
+    Desktop.on 'menu', 'unlockPixelArtFundamentals', (event) =>
+      LM.PixelArtFundamentals.state 'unlock', true
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer

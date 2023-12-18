@@ -24,10 +24,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
     true
   
-  hasPixel: (absoluteX, absoluteY) ->
-    x = absoluteX - @stepArea.bounds.x
-    y = absoluteY - @stepArea.bounds.y
-    
+  hasPixel: (x, y) ->
     for path in @paths
       return true if path.hasPixel x, y
   
@@ -38,12 +35,12 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
     pixels = []
     
-    for x in [0...@stepArea.bounds.width]
-      for y in [0...@stepArea.bounds.height]
+    for x in [@stepArea.bounds.x...@stepArea.bounds.x + @stepArea.bounds.width]
+      for y in [@stepArea.bounds.y...@stepArea.bounds.y + @stepArea.bounds.height]
         for path in @paths when path.hasPixel x, y
           pixels.push
-            x: @stepArea.bounds.x + x
-            y: @stepArea.bounds.y + y
+            x: x
+            y: y
             paletteColor:
               ramp: 0
               shade: 0

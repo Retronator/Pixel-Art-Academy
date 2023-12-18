@@ -191,4 +191,5 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
   letterGrade: ->
     return unless displayedAsset = @desktop.displayedAsset()
     return unless pixelArtGrading = displayedAsset.document()?.properties?.pixelArtGrading
+    return unless pixelArtGrading.score?
     PAG.getLetterGrade pixelArtGrading.score

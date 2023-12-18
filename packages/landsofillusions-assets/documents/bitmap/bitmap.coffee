@@ -103,13 +103,13 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     if _.isNumber layerAddress
       # Addressing with a number indexes into the top layers.
       return @layers[layerAddress]
+    
+    [groupAddress..., layerIndex] = layerAddress
 
     group = @
+    group = group.layers[groupIndex] for groupIndex in groupAddress
 
-    for groupIndex, index in layerAddress when index < layerAddress.length - 1
-      group = group.layers[groupIndex]
-
-    group.layers[layerAddress[layerAddress.length - 1]]
+    group.layers[layerIndex]
 
   # Pixel retrieval
 

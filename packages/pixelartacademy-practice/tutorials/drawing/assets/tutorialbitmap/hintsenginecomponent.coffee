@@ -6,7 +6,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.HintsEngineComponent
 
   drawToContext: (context, renderOptions = {}) ->
     for stepArea in @tutorialBitmap.stepAreas()
-      activeStepIndex = stepArea.activeStepIndex()
+      activeStepIndex = stepArea.activeStepIndex() or 0
       steps = stepArea.steps()
 
       for step, index in steps[..activeStepIndex]

@@ -110,7 +110,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill extends PAA.Practice.
     
     @initialize()
   
-    onDisplay: ->
+    onDisplayed: ->
       # Unlock the undo.
       asset = @constructor.getActiveAsset()
       asset.unlockUndo true

@@ -98,7 +98,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Pencil extends PAA.Practice.Tut
     
     @initialize()
   
-    onDisplay: ->
+    onDisplayed: ->
       # Unlock the eraser.
       asset = @constructor.getActiveAsset()
       asset.unlockEraser true

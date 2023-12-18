@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
   
-  minClipboardScale: -> 2
+  @minClipboardScale: -> 2
   
   availableToolKeys: ->
     [

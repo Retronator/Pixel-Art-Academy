@@ -16,7 +16,7 @@ getEdgeVector = (x, y) ->
 class PAG.Line
   @edgeSegmentMinPointLengthForCorner = 3
   
-  constructor: (@grading) ->
+  constructor: (@layer) ->
     @id = Random.id()
     
     @pixels = []
@@ -68,9 +68,9 @@ class PAG.Line
     
   _isJaggyInCorner: (pixel, dx, dy) ->
     # A jaggy will have a diagonal neighbor and its two direct neighbors empty.
-    return if @grading.getPixel pixel.x + dx, pixel.y + dy
-    return if @grading.getPixel pixel.x, pixel.y + dy
-    return if @grading.getPixel pixel.x + dx, pixel.y
+    return if @layer.getPixel pixel.x + dx, pixel.y + dy
+    return if @layer.getPixel pixel.x, pixel.y + dy
+    return if @layer.getPixel pixel.x + dx, pixel.y
     true
     
   getPartsForPixel: (pixel) ->

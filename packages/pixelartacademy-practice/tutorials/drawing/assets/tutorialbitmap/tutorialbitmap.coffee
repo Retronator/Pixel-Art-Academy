@@ -49,7 +49,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     @tutorial = @project
 
     # Create bitmap automatically if it is not present.
-    Tracker.autorun (computation) =>
+    @_createBitmapAutorun = Tracker.autorun (computation) =>
       return unless assets = @tutorial.assetsData()
       computation.stop()
 
@@ -61,6 +61,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
     # Fetch palette.
     @palette = new ComputedField => @customPalette() or @restrictedPalette()
+    @hasPalette = new ComputedField => @constructor.customPalette() or @constructor.customPaletteImageUrl() or @constructor.restrictedPaletteName()
     
     # Prepare steps.
     @stepAreas = new ReactiveField []
@@ -98,10 +99,11 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     if @constructor.pixelArtGrading()
       @pixelArtGradingInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
-        new PAA.Practice.PixelArtGrading bitmap
+        @_pixelArtGrading?.destroy()
+        @_pixelArtGrading = new PAA.Practice.PixelArtGrading bitmap
         
       @pixelArtGrading = new ComputedField =>
-        pixelArtGrading = @pixelArtGradingInstance()
+        return unless pixelArtGrading = @pixelArtGradingInstance()
         pixelArtGrading.depend()
         pixelArtGrading
        
@@ -155,7 +157,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return unless resourcesReady @resources
 
       # Wait until the declared palette (and default for background colors) have loaded.
-      return unless @palette()
+      return if @hasPalette() and not @palette()
       LOI.Assets.Palette.defaultPalette()
       
       # Wait until the bitmap document becomes available.
@@ -169,6 +171,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   destroy: ->
     super arguments...
     
+    @_createBitmapAutorun.stop()
     @hasExtraPixels.stop()
     @hasMissingPixels.stop()
     @completed.stop()
@@ -176,6 +179,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     @_loadResourcesAutorun.stop()
   
     stepArea.destroy() for stepArea in @stepAreas()
+    
+    @_pixelArtGrading?.destroy()
     
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()

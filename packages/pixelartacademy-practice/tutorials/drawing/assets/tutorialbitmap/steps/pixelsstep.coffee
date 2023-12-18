@@ -68,7 +68,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         pixel = _.clone @goalPixelsMap[x]?[y] or {x, y}
         pixel.x += @stepArea.bounds.x
         pixel.y += @stepArea.bounds.y
-        pixels.push pixel
+        pixels.push pixel if @goalPixelsMap[x]?[y] or not @stepArea.hasGoalPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
     
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels

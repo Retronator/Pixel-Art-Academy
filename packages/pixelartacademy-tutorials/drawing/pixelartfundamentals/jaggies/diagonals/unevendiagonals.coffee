@@ -45,7 +45,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       
       markup = []
       
-      for line in pixelArtGrading.lines
+      for line in pixelArtGrading.layers[0].lines
         continue unless line.parts.length is 1
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
@@ -63,7 +63,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       return markup unless asset = @getActiveAsset()
       return markup unless pixelArtGrading = asset.pixelArtGrading()
       
-      for line in pixelArtGrading.lines
+      for line in pixelArtGrading.layers[0].lines
         # Draw this only for lines that are recognized as straight lines.
         continue unless line.parts.length is 1
         linePart = line.parts[0]
@@ -95,7 +95,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       return markup unless asset = @getActiveAsset()
       return markup unless pixelArtGrading = asset.pixelArtGrading()
       
-      for line in pixelArtGrading.lines
+      for line in pixelArtGrading.layers[0].lines
         continue unless line.parts.length is 1
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine

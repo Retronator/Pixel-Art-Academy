@@ -162,6 +162,7 @@ class DiagonalsGrading.Instructions
     
     @message: -> """
       Nice! This diagonal now consistently drops 3 pixels for every 2 across, making it the ideal 3:2 diagonal.
+      Close the grading sheet to draw the next line.
     """
     
     @initialize()
@@ -261,7 +262,7 @@ class DiagonalsGrading.Instructions
     
     @message: -> """
       With long segments it becomes harder to distinguish between even and alternating diagonals, making this less of a consideration.
-      What is more desirable is for the end segments to match the length of the middle ones.
+      What is more relevant is for the end segments to match the length of the middle ones.
     """
     
     @closeOutsideGradingSheet: -> true

@@ -48,7 +48,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
       editor = @getEditor()
       editor.interface.activeToolId() is LOI.Assets.SpriteEditor.Tools.Pencil.id()
     
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @initialize()

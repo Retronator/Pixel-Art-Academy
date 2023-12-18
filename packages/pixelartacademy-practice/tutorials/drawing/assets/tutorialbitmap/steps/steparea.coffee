@@ -11,7 +11,7 @@ class TutorialBitmap.StepArea
     @steps = new ReactiveField []
     
     @data = new ComputedField =>
-      @tutorialBitmap.data().stepAreas?[@stepAreaIndex]
+      @tutorialBitmap.data()?.stepAreas?[@stepAreaIndex]
     
     @activeStepIndex = new ComputedField =>
       @data()?.activeStepIndex
@@ -53,6 +53,9 @@ class TutorialBitmap.StepArea
       false
       
     @completed = new AE.LiveComputedField =>
+      # Don't recompute when loading/unloading.
+      return unless Tracker.nonreactive => @tutorialBitmap.data()
+      
       steps = @steps()
       return unless steps.length
       
@@ -102,7 +105,7 @@ class TutorialBitmap.StepArea
   _updateActiveStepIndex: (index) ->
     # Note, we do not want to read the active step index from the computed field since it will
     # need time to recalculate. We want to rely on the object we're also changing (the asset data).
-    assets = @tutorialBitmap.tutorial.assetsData()
+    assets = @tutorialBitmap.tutorial.state 'assets'
     asset = _.find assets, (asset) => asset.id is @tutorialBitmap.id()
 
     activeStepIndex = asset.stepAreas?[@stepAreaIndex]?.activeStepIndex
@@ -118,3 +121,6 @@ class TutorialBitmap.StepArea
     asset.stepAreas[@stepAreaIndex].activeStepIndex = index
     
     @tutorialBitmap.tutorial.state 'assets', assets
+    
+    assets =  @tutorialBitmap.tutorial.state 'assets'
+    asset = _.find assets, (asset) => asset.id is @tutorialBitmap.id()
