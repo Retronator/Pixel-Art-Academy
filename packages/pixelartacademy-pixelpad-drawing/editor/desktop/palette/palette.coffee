@@ -105,7 +105,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
         ramp = @data()
 
         canvas = @$('.canvas')[0]
-        canvas.width = 15
+        canvas.width = 16
         canvas.height = ramp.shades.length * 11 + 2
 
         context = canvas.getContext '2d', willReadFrequently: true
@@ -127,7 +127,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
             for shade, index in ramp.shades
               center =
-                x: shade.offset + 6
+                x: shade.offset + 7
                 y: index * 11 + 6
 
               distanceToCenter = Math.sqrt Math.pow(x - center.x, 2) + Math.pow(y - center.y, 2)
@@ -170,4 +170,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
           previousRowTotalPower = rowTotalPower
 
+        # Add cast shadow.
+        for y in [0...canvas.height]
+          for x in [0...canvas.width - 1]
+            pixelOffset = (x + y * canvas.width) * 4
+            
+            continue unless imageData.data[pixelOffset + 7] and not imageData.data[pixelOffset + 3]
+            
+            neighborR = Math.max 0, imageData.data[pixelOffset + 4] - 150
+            neighborG = Math.max 0, imageData.data[pixelOffset + 5] - 150
+            neighborB = Math.max 0, imageData.data[pixelOffset + 6] - 150
+            neighborValue = Math.max neighborR, Math.max neighborG, neighborB
+            
+            imageData.data[pixelOffset] = 178
+            imageData.data[pixelOffset + 1] = 178
+            imageData.data[pixelOffset + 2] = 178
+            imageData.data[pixelOffset + 3] = 255 - neighborValue * 2
+            
         context.putImageData imageData, 0, 0
