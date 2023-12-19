@@ -113,7 +113,10 @@ class TutorialBitmap.StepArea
     
     # Activate the step when progressing to it.
     if index > activeStepIndex or not activeStepIndex
-      @steps()[index].activate()
+      step = @steps()[index]
+      # To preserve steps completed before migration to step areas, only activate steps that aren't completed.
+      # We assume that a step would not be returning true for completed if it hasn't been activated yet.
+      step.activate() unless step.completed()
     
     # Update the index in the asset.
     asset.stepAreas ?= []

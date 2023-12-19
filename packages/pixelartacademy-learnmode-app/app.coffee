@@ -33,9 +33,10 @@ class LM.App extends Artificial.Base.App
   
     AB.Router.initialize()
     
-    # Listen for cheats.
-    Desktop.on 'menu', 'unlockPixelArtFundamentals', (event) =>
-      LM.PixelArtFundamentals.state 'unlock', true
+    if Meteor.isDesktop
+      # Listen for cheats.
+      Desktop.on 'menu', 'unlockPixelArtFundamentals', (event) =>
+        LM.PixelArtFundamentals.state 'unlocked', true
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer

@@ -45,7 +45,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
   @initialize()
   
   availableToolKeys: -> [
-    #PAA.Practice.Software.Tools.ToolKeys.Zoom
+    PAA.Practice.Software.Tools.ToolKeys.Zoom
     PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   ]
   
