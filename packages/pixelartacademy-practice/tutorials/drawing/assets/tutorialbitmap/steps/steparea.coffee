@@ -47,7 +47,12 @@ class TutorialBitmap.StepArea
           
           # Make sure the pixel doesn't match the background color.
           if backgroundColor
-            pixelColor = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
+            if pixel.paletteColor
+              pixelColor = palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
+            
+            else
+              pixelColor = THREE.Color.fromObject pixel.directColor
+            
             return true if pixelColor.equals backgroundColor
   
       false

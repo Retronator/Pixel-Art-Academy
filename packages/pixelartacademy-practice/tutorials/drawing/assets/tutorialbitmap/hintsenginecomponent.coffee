@@ -3,6 +3,7 @@ LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.HintsEngineComponent
   constructor: (@tutorialBitmap, @drawHintsFunctionName) ->
+    @drawMissingPixelsUpTo = new ReactiveField null
 
   drawToContext: (context, renderOptions = {}) ->
     for stepArea in @tutorialBitmap.stepAreas()

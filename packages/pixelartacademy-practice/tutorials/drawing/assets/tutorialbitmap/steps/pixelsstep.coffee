@@ -24,7 +24,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
       @goalPixelsMap[pixel.x][pixel.y] = pixel
       
       if pixel.paletteColor
-        pixel.color = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
+        pixel.color = palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
         
       else
         pixel.color = THREE.Color.fromObject pixel.directColor
@@ -77,6 +77,8 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
   drawOverlaidHints: (context, renderOptions = {}) ->
     @_preparePixelHintSize renderOptions
     
+    drawMissingPixelsUpTo = @tutorialBitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo()
+    
     bitmap = @tutorialBitmap.bitmap()
     palette = @tutorialBitmap.palette()
     
@@ -97,6 +99,8 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
           
         # Draw hints on drawn goal pixels and optionally all goal pixels.
         else if goalPixel and (pixel or @options.drawHintsForGoalPixels)
+          continue if drawMissingPixelsUpTo and (y > drawMissingPixelsUpTo.y or drawMissingPixelsUpTo.y is y and x > drawMissingPixelsUpTo.x)
+          
           if goalPixel.paletteColor
             shades = palette.ramps[goalPixel.paletteColor.ramp].shades
             shadeIndex = THREE.Math.clamp goalPixel.paletteColor.shade, 0, shades.length - 1

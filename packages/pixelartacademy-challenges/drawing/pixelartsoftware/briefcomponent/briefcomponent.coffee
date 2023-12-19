@@ -32,7 +32,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     bitmapData = _.cloneDeep @bitmap.bitmap()
     editor.manualBitmapData bitmapData
     @bitmap.manualUserBitmapData bitmapData
-    @bitmap.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
+    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
 
     # Open the editor and zoom in the bitmap as much as possible.
     editor.manuallyActivated true
@@ -97,8 +97,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
       # Re-set bitmap data to force image refresh.
       editor.manualBitmapData bitmapData
       @bitmap.manualUserBitmapData bitmapData
-
-      @bitmap.engineComponent.drawMissingPixelsUpTo {x, y}
+      
+      @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo {x, y}
 
       # Move to next pixel.
       x++
@@ -156,7 +156,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     @bitmap.uploadMode false
 
     # Don't show missing pixels.
-    @bitmap.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
+    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
 
     super arguments...
     
