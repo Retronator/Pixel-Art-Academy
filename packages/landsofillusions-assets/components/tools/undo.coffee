@@ -8,8 +8,8 @@ class LOI.Assets.Components.Tools.Undo extends LandsOfIllusions.Assets.Component
     @name = "Undo"
     @shortcut = AC.Keys.z
     @shortcutCommandOrCtrl = true
-
-  extraToolClasses: ->
+  
+  toolClass: ->
     return unless spriteData = @options.editor().spriteData()
     'enabled' if spriteData.historyPosition
 

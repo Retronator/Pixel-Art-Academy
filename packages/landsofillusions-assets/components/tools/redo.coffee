@@ -9,8 +9,8 @@ class LOI.Assets.Components.Tools.Redo extends LandsOfIllusions.Assets.Component
     @shortcut = AC.Keys.z
     @shortcutCommandOrCtrl = true
     @shortcutShift = true
-
-  extraToolClasses: ->
+  
+  toolClass: ->
     return unless spriteData = @options.editor().spriteData()
     'enabled' if spriteData.historyPosition < spriteData.history?.length
 
