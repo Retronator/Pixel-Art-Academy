@@ -215,13 +215,10 @@ class FM.Interface extends AM.Component
       childData._id = index
       childData
 
-  toolClass: ->
+  toolClasses: ->
     return unless tool = @activeTool()
-
-    toolClass = _.kebabCase tool.displayName()
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
+    
+    tool.toolClasses()
 
   events: ->
     super(arguments...).concat
