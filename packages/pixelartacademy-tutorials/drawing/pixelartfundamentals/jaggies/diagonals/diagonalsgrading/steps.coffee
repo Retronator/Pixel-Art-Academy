@@ -20,7 +20,7 @@ class DiagonalsGrading.Steps
       return true if super arguments...
       
       drawingEditor = @getEditor()
-      pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      return unless pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
       pixelArtGrading.activeCriterion() is PAG.Criteria.EvenDiagonals
     
   class @HoverOverTheDiagonal extends TutorialBitmap.EphemeralStep
@@ -28,7 +28,7 @@ class DiagonalsGrading.Steps
       return true if super arguments...
       
       drawingEditor = @getEditor()
-      pixelArtGradingView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      return unless pixelArtGradingView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
       return unless hoveredPixel = pixelArtGradingView.hoveredPixel()
       
       pixelArtGrading = pixelArtGradingView.pixelArtGrading()
@@ -73,7 +73,7 @@ class DiagonalsGrading.Steps
       return true if super arguments...
       
       drawingEditor = @getEditor()
-      pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      return unless pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
       active = pixelArtGrading.active()
       
       return true if @_wasActive and not active
