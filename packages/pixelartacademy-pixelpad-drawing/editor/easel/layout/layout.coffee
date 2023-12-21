@@ -3,8 +3,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Easel.Layout'
+class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Easel.Layout'
   @register @id()
   
   @template: -> @constructor.id()
@@ -12,21 +12,21 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
   onCreated: ->
     super arguments...
 
-    @easel = @interface.ancestorComponentOfType PAA.PixelBoy.Apps.Drawing.Editor.Easel
+    @easel = @interface.ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Easel
     
     frameBottom = 49 # rem
     @movableStandMinimumBottom = 16 # rem
     movableStandMinimumOffset = frameBottom + @movableStandMinimumBottom
     layoutMaximumOffset = 45 # rem
     
-    @pixelBoyHeight = new ComputedField =>
-      @easel.drawing.getMaximumPixelBoySize(fullscreen: true).height
+    @pixelPadHeight = new ComputedField =>
+      @easel.drawing.getMaximumPixelPadSize(fullscreen: true).height
       
     @layoutAdjustedMaximumOffset = new ComputedField =>
       # Proportionally adjust how much we offset the layout based on how much over safe area height we are.
       safeAreaHeight = LOI.adventure.interface.display.safeAreaHeight()
       maxOverlayHeight = safeAreaHeight * 1.5
-      currentHeight = @pixelBoyHeight()
+      currentHeight = @pixelPadHeight()
       
       layoutMaximumOffset * ((currentHeight - safeAreaHeight) / (maxOverlayHeight - safeAreaHeight))
    
@@ -42,9 +42,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
       
     @frameOffset = new ComputedField =>
       return unless assetSize = @assetSize()
-      pixelBoyHeight = @pixelBoyHeight()
+      pixelPadHeight = @pixelPadHeight()
   
-      totalOffset = (pixelBoyHeight - assetSize.height) / 2
+      totalOffset = (pixelPadHeight - assetSize.height) / 2
   
       layoutBottom = 0
       movableStandBottom = @movableStandMinimumBottom
@@ -71,7 +71,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout extends FM.View
           # Raise movable stand to achieve total offset.
           movableStandBottom += remainingOffset
           
-      assetTop = pixelBoyHeight - assetBottom - assetSize.height
+      assetTop = pixelPadHeight - assetBottom - assetSize.height
   
       { layoutBottom, movableStandBottom, assetTop }
       

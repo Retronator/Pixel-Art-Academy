@@ -65,21 +65,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
   
     # Reactively add tools and actions.
     toolRequirements =
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
   
     actionRequirements =
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Actions.ClearPaint.id()}": PAA.Practice.Software.Tools.ToolKeys.ClearColor
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.ClearPaint.id()}": PAA.Practice.Software.Tools.ToolKeys.ClearColor
   
     @autorun (computation) =>
       return unless @interface.isCreated()
       applicationAreaData = @interface.currentApplicationAreaData()
       views = applicationAreaData.get 'views'
-      layoutViewIndex = _.findIndex views, (view) => view.type is PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout.id()
+      layoutViewIndex = _.findIndex views, (view) => view.type is PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout.id()
       
       tools = [
         LOI.Assets.Editor.Tools.Arrow.id()
@@ -151,7 +151,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
         @drawingActive false
     
   getLayoutView: ->
-    @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.Layout
+    @_getView PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout
     
   cycleDisplayMode: ->
     displayMode = @displayMode()
@@ -195,7 +195,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
         type: FM.Toolbox.id()
         tools: []
       colorFill:
-        type: PAA.PixelBoy.Apps.Drawing.Editor.Easel.ColorFill.id()
+        type: PAA.PixelPad.Apps.Drawing.Editor.Easel.ColorFill.id()
     ,
       type: FM.EditorView.id()
       files: @_dummyEditorViewFiles
@@ -214,9 +214,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
     shortcuts = _.defaultsDeep
       default:
         mapping:
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": key: AC.Keys.b
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": key: AC.Keys.b
-          "#{PAA.PixelBoy.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Square.id()}": key: AC.Keys.b
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Pixel.id()}": key: AC.Keys.b
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
     ,
       @getShortcuts()
 

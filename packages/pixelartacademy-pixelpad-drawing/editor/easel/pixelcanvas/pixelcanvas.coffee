@@ -100,7 +100,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     
     editorActive = @easel.active()
     
-    activeZoomedIn = editorActive and @easel.displayMode() isnt PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
+    activeZoomedIn = editorActive and @easel.displayMode() isnt PAA.PixelPad.Apps.Drawing.Editor.Easel.DisplayModes.Normal
   
     if activeZoomedIn
       # When the editor is open and zoomed in, the size depends on the internal pixel canvas camera scale.
