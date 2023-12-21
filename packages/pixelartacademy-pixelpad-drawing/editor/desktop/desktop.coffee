@@ -117,7 +117,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": PAA.Practice.Software.Tools.ToolKeys.Eraser
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
       
     @autorun (computation) =>
       return unless @interface.isCreated()

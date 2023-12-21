@@ -24,11 +24,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
     @camera = new ComputedField =>
       @easel.getPixelCanvas()?.camera()
   
-    @pixelBoySize = new ComputedField =>
-      @easel.drawing.getMaximumPixelBoySize fullscreen: true
+    @pixelPadSize = new ComputedField =>
+      @easel.drawing.getMaximumPixelPadSize fullscreen: true
     
-    @pixelBoyHeight = new ComputedField =>
-      @pixelBoySize().height
+    @pixelPadHeight = new ComputedField =>
+      @pixelPadSize().height
       
     @layoutAdjustedMaximumOffset = new ComputedField =>
       # Proportionally adjust how much we offset the layout based on how much over safe area height we are.
@@ -52,7 +52,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
     @defaultDrawingArea = new ComputedField =>
       return unless assetSize = @assetSize()
       
-      pixelPadSize = @pixelBoySize()
+      pixelPadSize = @pixelPadSize()
   
       totalOffset = (pixelPadSize.height - assetSize.height) / 2
   
@@ -104,11 +104,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
         x: defaultDrawingArea.left - drawingAreaCanvasBounds.left * scale
         y: defaultDrawingArea.top - drawingAreaCanvasBounds.top * scale
   
-      pixelBoySize = @pixelBoySize()
+      pixelPadSize = @pixelPadSize()
       
       origin =
-        x: (pixelBoySize.width / 2 - defaultAssetOrigin.x) / scale
-        y: (pixelBoySize.height / 2 - defaultAssetOrigin.y) / scale
+        x: (pixelPadSize.width / 2 - defaultAssetOrigin.x) / scale
+        y: (pixelPadSize.height / 2 - defaultAssetOrigin.y) / scale
       
       origin
       
@@ -123,11 +123,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
       centerRelativeToCameraOrigin = camera.origin()
       drawingAreaBottomRelativeToCenter = (drawingAreaBottomCanvas - centerRelativeToCameraOrigin.y) * scale
   
-      pixelBoySize = @pixelBoySize()
-      drawingAreaBottom = drawingAreaBottomRelativeToCenter + pixelBoySize.height / 2
+      pixelPadSize = @pixelPadSize()
+      drawingAreaBottom = drawingAreaBottomRelativeToCenter + pixelPadSize.height / 2
       
-      # Calculate the offset of the asset from the bottom of the PixelBoy.
-      totalOffset = pixelBoySize.height - (drawingAreaBottom + assetSize.clipboardAssetSize.borderWidth)
+      # Calculate the offset of the asset from the bottom of the PixelPad.
+      totalOffset = pixelPadSize.height - (drawingAreaBottom + assetSize.clipboardAssetSize.borderWidth)
   
       # Determine how much each movable part needs to be offset.
       layoutBottom = 0
@@ -162,7 +162,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
             
             outOfBounds = true
           
-      assetTop = pixelBoySize.height - assetBottom - assetSize.height
+      assetTop = pixelPadSize.height - assetBottom - assetSize.height
   
       { layoutBottom, movableStandBottom, assetTop, outOfBounds }
       
@@ -235,7 +235,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout extends FM.View
     bottom: "#{bottom}rem"
     
   _canvasHeld: ->
-    normalDisplayMode = @easel.displayMode() is PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
+    normalDisplayMode = @easel.displayMode() is PAA.PixelPad.Apps.Drawing.Editor.Easel.DisplayModes.Normal
     @easel.active() and normalDisplayMode
 
   events: ->

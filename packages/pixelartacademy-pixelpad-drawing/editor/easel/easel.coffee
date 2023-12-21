@@ -73,7 +73,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
       "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": PAA.Practice.Software.Tools.ToolKeys.Brush
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorFill
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-      "#{PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   
     actionRequirements =
       "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
@@ -163,7 +163,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
       return unless @interface.isCreated()
       return unless @displayMode() is @constructor.DisplayModes.Normal
     
-      moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()
+      moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()
       return unless moveTool.moving()
     
       layoutView = @getLayoutView()
@@ -209,7 +209,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
     @_getView PAA.PixelPad.Apps.Drawing.Editor.Easel.Layout
     
   getPixelCanvas: ->
-    @_getView PAA.PixelBoy.Apps.Drawing.Editor.Easel.PixelCanvas
+    @_getView PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas
     
   cycleDisplayMode: ->
     displayMode = @displayMode()
@@ -344,7 +344,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
   
   draggingClass: ->
     return unless @interface.isCreated()
-    moveTool = @interface.getOperator PAA.PixelBoy.Apps.Drawing.Editor.Tools.MoveCanvas.id()
+    moveTool = @interface.getOperator PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()
   
     'dragging' if _.some [
       moveTool.moving()

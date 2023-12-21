@@ -42,7 +42,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
     
       # Dictate camera scale when asset is on clipboard and normal display mode.
       clipboardAssetScale = clipboardAssetSize.scale
-      normalDisplayMode = @easel.displayMode() is PAA.PixelBoy.Apps.Drawing.Editor.Easel.DisplayModes.Normal
+      normalDisplayMode = @easel.displayMode() is PAA.PixelPad.Apps.Drawing.Editor.Easel.DisplayModes.Normal
     
       if not @easel.active() or normalDisplayMode or displayedAsset isnt @_previousDisplayedAsset or clipboardAssetScale isnt @_previousClipboardSpriteScale
         Tracker.nonreactive => camera.setScale clipboardAssetScale
@@ -115,7 +115,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.PixelCanvas extends LOI.Assets.Spri
 
       assetOffset = $assetPlaceholder.offset()
 
-      $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
+      $clipboard = $('.pixelartacademy-pixelpad-apps-drawing-clipboard')
       positionOrigin = $clipboard.offset()
 
       # Make these measurements relative to clipboard center.
