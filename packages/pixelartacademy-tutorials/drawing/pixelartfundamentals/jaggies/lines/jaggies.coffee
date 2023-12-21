@@ -80,7 +80,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       markup = []
       
       # Add jaggies.
-      jaggyBase = style: Markup.errorStyle()
+      palette = LOI.palette()
+      lineColor = palette.color Atari2600.hues.green, 3
+      jaggyBase = style: "##{lineColor.getHexString()}"
       
       return unless trashCanLine = pixelArtGrading.getLinesAt(6, 12)?[0]
       return unless lampLine = pixelArtGrading.getLinesAt(13, 6)?[0]
