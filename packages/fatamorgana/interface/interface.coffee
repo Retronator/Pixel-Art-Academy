@@ -215,6 +215,11 @@ class FM.Interface extends AM.Component
       childData._id = index
       childData
 
+  # HACK: If we do this access directly in the template, the desktop build breaks since @
+  # gets assigned to Interface in Tool classes for what must be an incredibly obscure reason.
+  activeToolClasses: ->
+    @activeTool()?.toolClasses()
+
   events: ->
     super(arguments...).concat
       'click .dialog-area': @onClickDialogArea
