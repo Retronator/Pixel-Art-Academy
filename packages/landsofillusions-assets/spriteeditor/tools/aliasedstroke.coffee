@@ -113,6 +113,10 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
   onDeactivated: ->
     @finalizeStroke()
     
+    @drawStraight false
+    @drawLine false
+    @realtimeUpdating false
+    
     @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels [] if @_previewActive
