@@ -53,6 +53,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
     # Update border width.
     @autorun (computation) =>
       borderWidth = @_borderWidth()
+      
+      # Make sure we were able to compute the new border (we don't
+      # want the pixel canvas to update with temporary values).
+      return unless borderWidth?
+
       Tracker.nonreactive => @borderWidth borderWidth
       
     # Switch between full and framed display modes.
@@ -163,7 +168,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
         # Clipboard is hidden up, so move the asset up and relative to top.
         top -= 265 * displayScale
 
-      borderWidth = @_borderWidth()
+      borderWidth = @_borderWidth() or 0
     
       width = (assetData.bounds.width + 2 * borderWidth) * scale
       height = (assetData.bounds.height + 2 * borderWidth) * scale
@@ -181,9 +186,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
     style
     
   _borderWidth: ->
-    return 0 unless displayedAsset = @desktop.displayedAsset()
-    return 0 unless displayedAsset.clipboardComponent.isCreated()
-    return 0 unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
+    return unless displayedAsset = @desktop.displayedAsset()
+    return unless displayedAsset.clipboardComponent.isCreated()
+    return unless clipboardAssetSize = displayedAsset.clipboardComponent.assetSize()
     
     # Convert from display to asset pixels.
     clipboardAssetSize.borderWidth / clipboardAssetSize.scale
