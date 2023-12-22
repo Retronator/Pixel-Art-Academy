@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-PAG = PAA.Practice.PixelArtGrading
+PAG = PAA.Practice.PixelArtEvaluation
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.SpriteEditor.PixelCanvas
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas'
@@ -195,6 +195,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
   
   letterGrade: ->
     return unless displayedAsset = @desktop.displayedAsset()
-    return unless pixelArtGrading = displayedAsset.document()?.properties?.pixelArtGrading
-    return unless pixelArtGrading.score?
-    PAG.getLetterGrade pixelArtGrading.score
+    return unless pixelArtEvaluation = displayedAsset.document()?.properties?.pixelArtEvaluation
+    return unless pixelArtEvaluation.score?
+    PAG.getLetterGrade pixelArtEvaluation.score

@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAG = PAA.Practice.PixelArtGrading
+PAG = PAA.Practice.PixelArtEvaluation
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonalsArtStyle extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonalsArtStyle"
@@ -32,12 +32,12 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       
     resources
 
-  @pixelArtGrading: -> true
+  @pixelArtEvaluation: -> true
   @markup: -> true
   
   @properties: ->
     pixelArtScaling: true
-    pixelArtGrading:
+    pixelArtEvaluation:
       editable: true
       allowedCriteria: [PAG.Criteria.EvenDiagonals]
       evenDiagonals:
@@ -61,22 +61,22 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     stepArea = new @constructor.StepArea @, stepAreaBounds
     
-    new @constructor.DisableEvenDiagonalsGrading @, stepArea,
+    new @constructor.DisableEvenDiagonalsEvaluation @, stepArea,
       startPixels: @resources.layers
   
   Asset = @
   
-  class @DisableEvenDiagonalsGrading extends TutorialBitmap.Step
+  class @DisableEvenDiagonalsEvaluation extends TutorialBitmap.Step
     completed: ->
-      not @tutorialBitmap.bitmap().properties.pixelArtGrading.evenDiagonals
+      not @tutorialBitmap.bitmap().properties.pixelArtEvaluation.evenDiagonals
       
     solve: ->
-      # Disable pixel art grading.
+      # Disable pixel art evaluation.
       bitmap = @tutorialBitmap.bitmap()
-      pixelArtGrading = bitmap.properties.pixelArtGrading
-      delete pixelArtGrading.evenDiagonals
+      pixelArtEvaluation = bitmap.properties.pixelArtEvaluation
+      delete pixelArtEvaluation.evenDiagonals
       
-      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.id(), bitmap, 'pixelArtGrading', pixelArtGrading
+      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.id(), bitmap, 'pixelArtEvaluation', pixelArtEvaluation
       AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, updatePropertyAction, new Date
     
     hasPixel: (x, y) ->
@@ -89,7 +89,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @message: -> """
       Even diagonals are a convention and you can make great art with or without them, as you can see in this artwork from Into the Breach.
-      Open the grading sheet to continue.
+      Open the evaluation paper to continue.
     """
     
     @activeConditions: ->
@@ -98,15 +98,15 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @completedConditions: ->
       editor = @getEditor()
-      pixelArtGrading = editor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
-      pixelArtGrading.active()
+      pixelArtEvaluation = editor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      pixelArtEvaluation.active()
     
     @resetCompletedConditions: ->
       return true unless @getActiveAsset()
       
       editor = @getEditor()
-      pixelArtGrading = editor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
-      not pixelArtGrading.active()
+      pixelArtEvaluation = editor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      not pixelArtEvaluation.active()
       
     @priority: -> 1
     
@@ -119,7 +119,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     @message: -> """
       The high viewing angle helps with the readability of the game board and creates a unique, standout style.
       The use of uneven, broken diagonals is a deliberate choice.
-      You can choose too, so to complete this lesson, turn off Even diagonals grading by removing the required checkmark.
+      You can choose too, so to complete this lesson, turn off Even diagonals evaluation by removing the required checkmark.
     """
     
     @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySide.Top
@@ -128,11 +128,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       return unless asset = @getActiveAsset()
       return if asset.completed()
       
-      # Note: We have to activate only when the grading sheet is open, so that the onActivate animation
+      # Note: We have to activate only when the evaluation paper is open, so that the onActivate animation
       # happens immediately, even before the previous instruction hides and displays this one.
       return unless editor = @getEditor()
-      return unless pixelArtGrading = editor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
-      pixelArtGrading.active()
+      return unless pixelArtEvaluation = editor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      pixelArtEvaluation.active()
     
     @initialize()
     
@@ -153,7 +153,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
 
     markup: ->
       return [] unless asset = @getActiveAsset()
-      return [] unless pixelArtGrading = asset.pixelArtGrading()
+      return [] unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
-      linePart = pixelArtGrading.getLinePartsAt(40, 21)[0]
+      linePart = pixelArtEvaluation.getLinePartsAt(40, 21)[0]
       Markup.PixelArt.straightLineBreakdown linePart

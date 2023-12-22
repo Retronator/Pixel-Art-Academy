@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
-_gradingToCanvasOffset = new THREE.Vector2 0.5, 0.5
+_evaluationToCanvasOffset = new THREE.Vector2 0.5, 0.5
 
 _start = new THREE.Vector2
 _end = new THREE.Vector2
@@ -30,7 +30,7 @@ class Markup.PixelArt
     style: "##{lineColor.getHexString()}"
   
   @diagonalRatioText: (straightLine) ->
-    grading = straightLine.grade()
+    evaluation = straightLine.evaluate()
     
     startPoint = _.first straightLine.points
     endPoint = _.last straightLine.points
@@ -39,11 +39,11 @@ class Markup.PixelArt
     text: _.extend Markup.textBase(),
       position:
         x: rightPoint.x + 1.5, y: rightPoint.y, origin: Markup.TextOriginPosition.BottomLeft
-      value: "#{grading.diagonalRatio.numerator}:#{grading.diagonalRatio.denominator}"
+      value: "#{evaluation.diagonalRatio.numerator}:#{evaluation.diagonalRatio.denominator}"
     
-  @gradedDiagonalRatioText: (straightLine) ->
+  @evaluatedDiagonalRatioText: (straightLine) ->
     element = @diagonalRatioText straightLine
-    element.text.style = @gradedSegmentLengthsStyle straightLine
+    element.text.style = @evaluatedSegmentLengthsStyle straightLine
     element
   
   @intendedLine: (straightLine) ->
@@ -54,34 +54,34 @@ class Markup.PixelArt
         x: straightLine.displayLine2.end.x + 0.5, y: straightLine.displayLine2.end.y + 0.5
       ]
   
-  @gradedIntendedLine: (straightLine) ->
+  @evaluatedIntendedLine: (straightLine) ->
     @_prepareLineParts straightLine
     
-    grading = straightLine.grade()
+    evaluation = straightLine.evaluate()
     markup = []
     
     if straightLine.startPointSegmentLength
       markup.push
         line:
           points: [_start.clone(), _centralPartStart.clone()]
-          style: if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+          style: if evaluation.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
     
     if straightLine.endPointSegmentLength
       markup.push
         line:
           points: [_centralPartEnd.clone(), _end.clone()]
-          style: if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+          style: if evaluation.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
       
     markup.push
       line:
         points: [_centralPartStart.clone(), _centralPartEnd.clone()]
-        style: @gradedSegmentLengthsStyle straightLine
+        style: @evaluatedSegmentLengthsStyle straightLine
  
     markup
     
   @_prepareLineParts: (straightLine) ->
-    _start.copy(straightLine.displayLine2.start).add _gradingToCanvasOffset
-    _end.copy(straightLine.displayLine2.end).add _gradingToCanvasOffset
+    _start.copy(straightLine.displayLine2.start).add _evaluationToCanvasOffset
+    _end.copy(straightLine.displayLine2.end).add _evaluationToCanvasOffset
     
     _centralPartStart.copy _start
     _centralPartEnd.copy _end
@@ -105,16 +105,16 @@ class Markup.PixelArt
     _centralPartCenter.copy(_centralPart).multiplyScalar(0.5).add _centralPartStart
     _endPartCenter.copy(_endPart).multiplyScalar(0.5).add _centralPartEnd
 
-  @gradedSegmentCornerLines: (straightLine) ->
-    grading = straightLine.grade()
+  @evaluatedSegmentCornerLines: (straightLine) ->
+    evaluation = straightLine.evaluate()
     
     if straightLine.startPointSegmentLength
-      startStyle = if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+      startStyle = if evaluation.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
     
     if straightLine.endPointSegmentLength
-      endStyle = if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+      endStyle = if evaluation.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
     
-    middleStyle = @gradedSegmentLengthsStyle straightLine
+    middleStyle = @evaluatedSegmentLengthsStyle straightLine
 
     segmentCorners = straightLine.getSegmentCorners()
     markup = []
@@ -145,12 +145,12 @@ class Markup.PixelArt
     
     markup
   
-  @gradedSegmentLengthsStyle: (straightLine) ->
-    # Note: We don't have the PAG shorthand since helpers are included before pixel art grading.
-    SegmentLengths = PAA.Practice.PixelArtGrading.Line.Part.StraightLine.SegmentLengths
-    grading = straightLine.grade()
+  @evaluatedSegmentLengthsStyle: (straightLine) ->
+    # Note: We don't have the PAG shorthand since helpers are included before pixel art evaluation.
+    SegmentLengths = PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine.SegmentLengths
+    evaluation = straightLine.evaluate()
     
-    switch grading.segmentLengths.type
+    switch evaluation.segmentLengths.type
       when SegmentLengths.Even then Markup.betterStyle()
       when SegmentLengths.Alternating then Markup.mediocreStyle()
       when SegmentLengths.Broken then Markup.worseStyle()
@@ -221,12 +221,12 @@ class Markup.PixelArt
       
     markup
     
-  @lineGradingPercentageTexts: (straightLine) ->
+  @lineEvaluationPercentageTexts: (straightLine) ->
     @_prepareLineParts straightLine
     
     textBase = Markup.textBase()
     
-    grading = straightLine.grade()
+    evaluation = straightLine.evaluate()
     markup = []
     
     # Determine the direction of the offset from the line and text origin.
@@ -257,8 +257,8 @@ class Markup.PixelArt
       markup.push
         text: _.extend {}, textBase,
           position: position
-          value: Markup.percentage grading.endSegments.startScore
-          style: if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+          value: Markup.percentage evaluation.endSegments.startScore
+          style: if evaluation.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
     
     if straightLine.endPointSegmentLength
       _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _endPartCenter
@@ -267,8 +267,8 @@ class Markup.PixelArt
       markup.push
         text: _.extend {}, textBase,
           position: position
-          value: Markup.percentage grading.endSegments.endScore
-          style: if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+          value: Markup.percentage evaluation.endSegments.endScore
+          style: if evaluation.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
       
     _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _centralPartCenter
     position = _.extend _textPosition.clone(), {origin}
@@ -276,17 +276,17 @@ class Markup.PixelArt
     markup.push
       text: _.extend {}, textBase,
         position: position
-        value: Markup.percentage grading.segmentLengths.score
-        style: @gradedSegmentLengthsStyle straightLine
+        value: Markup.percentage evaluation.segmentLengths.score
+        style: @evaluatedSegmentLengthsStyle straightLine
     
     markup
   
   @straightLineBreakdown: (straightLine) ->
     markup = [
-      @gradedDiagonalRatioText straightLine
-      @gradedIntendedLine(straightLine)...
+      @evaluatedDiagonalRatioText straightLine
+      @evaluatedIntendedLine(straightLine)...
       @segmentLengthTexts(straightLine)...
-      @lineGradingPercentageTexts(straightLine)...
+      @lineEvaluationPercentageTexts(straightLine)...
     ]
     
     markup

@@ -140,20 +140,20 @@ Package.onUse(function(api) {
 
   api.addFile('artworks..');
 
-  // Pixel art grading
+  // Pixel art evaluation
 
-  api.addFile('pixelartgrading..')
-  api.addFile('pixelartgrading/layer')
-  api.addFile('pixelartgrading/core')
-  api.addFile('pixelartgrading/pixel')
-  api.addFile('pixelartgrading/point')
-  api.addFile('pixelartgrading/enginecomponent')
-  api.addFile('pixelartgrading/enginecomponent-debug')
+  api.addFile('pixelartevaluation..')
+  api.addFile('pixelartevaluation/layer')
+  api.addFile('pixelartevaluation/core')
+  api.addFile('pixelartevaluation/pixel')
+  api.addFile('pixelartevaluation/point')
+  api.addFile('pixelartevaluation/enginecomponent')
+  api.addFile('pixelartevaluation/enginecomponent-debug')
 
-  api.addFile('pixelartgrading/line..')
-  api.addFile('pixelartgrading/line/part..')
-  api.addFile('pixelartgrading/line/part/straightline')
-  api.addFile('pixelartgrading/line/part/straightline-getsegmentcorners')
-  api.addFile('pixelartgrading/line/part/curve')
-  api.addFile('pixelartgrading/line/part/curve-calculatepointconfidence')
+  api.addFile('pixelartevaluation/line..')
+  api.addFile('pixelartevaluation/line/part..')
+  api.addFile('pixelartevaluation/line/part/straightline')
+  api.addFile('pixelartevaluation/line/part/straightline-getsegmentcorners')
+  api.addFile('pixelartevaluation/line/part/curve')
+  api.addFile('pixelartevaluation/line/part/curve-calculatepointconfidence')
 });

@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-StraightLine = PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+StraightLine = PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonals extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
@@ -18,7 +18,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
   @steps: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonals-#{step}.png" for step in [1..4]
   
   @markup: -> true
-  @pixelArtGrading: -> true
+  @pixelArtEvaluation: -> true
   
   @initialize()
   
@@ -41,14 +41,14 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     markup: ->
       return unless asset = @getActiveAsset()
-      return unless pixelArtGrading = asset.pixelArtGrading()
+      return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = []
       
-      for line in pixelArtGrading.layers[0].lines
+      for line in pixelArtEvaluation.layers[0].lines
         continue unless line.parts.length is 1
         linePart = line.parts[0]
-        continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+        continue unless linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
         
         # Add intended line.
         markup.push Markup.PixelArt.intendedLine linePart
@@ -61,28 +61,28 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       
       # Write diagonal ratios next to lines.
       return markup unless asset = @getActiveAsset()
-      return markup unless pixelArtGrading = asset.pixelArtGrading()
+      return markup unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
-      for line in pixelArtGrading.layers[0].lines
+      for line in pixelArtEvaluation.layers[0].lines
         # Draw this only for lines that are recognized as straight lines.
         continue unless line.parts.length is 1
         linePart = line.parts[0]
-        continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+        continue unless linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
         
-        lineGrading = linePart.grade()
+        lineEvaluation = linePart.evaluate()
         
-        unless lineGrading.type is StraightLine.Type.AxisAligned
+        unless lineEvaluation.type is StraightLine.Type.AxisAligned
           diagonalRatioText = Markup.PixelArt.diagonalRatioText linePart
-          diagonalRatioText.text.style = @_getLineStyle lineGrading
+          diagonalRatioText.text.style = @_getLineStyle lineEvaluation
           markup.push diagonalRatioText
         
       markup
       
-    _getLineStyle: (lineGrading) ->
-      if lineGrading.type in [StraightLine.Type.AxisAligned, StraightLine.Type.EvenDiagonal]
+    _getLineStyle: (lineEvaluation) ->
+      if lineEvaluation.type in [StraightLine.Type.AxisAligned, StraightLine.Type.EvenDiagonal]
         Markup.betterStyle()
       
-      else if lineGrading.pointSegmentLengths is StraightLine.SegmentLengths.Alternating
+      else if lineEvaluation.pointSegmentLengths is StraightLine.SegmentLengths.Alternating
         Markup.mediocreStyle()
         
       else
@@ -93,18 +93,18 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       markup = super arguments...
       
       return markup unless asset = @getActiveAsset()
-      return markup unless pixelArtGrading = asset.pixelArtGrading()
+      return markup unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
-      for line in pixelArtGrading.layers[0].lines
+      for line in pixelArtEvaluation.layers[0].lines
         continue unless line.parts.length is 1
         linePart = line.parts[0]
-        continue unless linePart instanceof PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+        continue unless linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
         
         # Add segment corner lines.
-        lineGrading = linePart.grade()
+        lineEvaluation = linePart.evaluate()
         
         segmentCornersLineBase = Markup.PixelArt.intendedLineBase()
-        segmentCornersLineBase.style = @_getLineStyle lineGrading
+        segmentCornersLineBase.style = @_getLineStyle lineEvaluation
         
         segmentCorners = linePart.getSegmentCorners()
         

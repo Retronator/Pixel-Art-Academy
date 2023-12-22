@@ -169,9 +169,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       else if property.type is @constructor.Extra.Types.RestrictedColors
         paletteId = getPaletteId property.value
         
-      else if property.type is @constructor.Extra.Types.PixelArtGrading
-        # Convert from a boolean to an editable pixel art grading.
-        properties.pixelArtGrading = editable: true
+      else if property.type is @constructor.Extra.Types.PixelArtEvaluation
+        # Convert from a boolean to an editable pixel art evaluation.
+        properties.pixelArtEvaluation = editable: true
         
       else
         properties[_.camelCase property.type] = property.value
@@ -209,13 +209,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       RestrictedColors: 'RestrictedColors'
       ColorPalette: 'ColorPalette'
       PixelArtScaling: 'PixelArtScaling'
-      PixelArtGrading: 'PixelArtGrading'
+      PixelArtEvaluation: 'PixelArtEvaluation'
     
     @TypeNames =
       RestrictedColors: 'Restricted colors'
       ColorPalette: 'Color palette'
       PixelArtScaling: 'Pixel art scaling'
-      PixelArtGrading: 'Pixel art grading'
+      PixelArtEvaluation: 'Pixel art evaluation'
       
     @MultiselectionTypes = [
       @Types.ColorPalette
@@ -237,7 +237,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       # Select defaults when changing the type.
       else if newType isnt lastType
         switch newType
-          when @constructor.Types.PixelArtScaling, @constructor.Types.PixelArtGrading then value = true
+          when @constructor.Types.PixelArtScaling, @constructor.Types.PixelArtEvaluation then value = true
           when @constructor.Types.ColorPalette, @constructor.Types.RestrictedColors then value = @clipboardComponent.paletteNames[0]
   
         @clipboardComponent.updatePropertyAtIndex index, newType, value
@@ -311,8 +311,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         
         @type = AM.DataInputComponent.Types.Checkbox
         
-    class @PixelArtGrading extends @Value
-      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtGrading'
+    class @PixelArtEvaluation extends @Value
+      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtEvaluation'
       
       constructor: ->
         super arguments...

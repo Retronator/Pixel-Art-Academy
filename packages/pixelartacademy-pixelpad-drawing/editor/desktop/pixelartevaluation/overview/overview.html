@@ -1,0 +1,56 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation-overview">
+    <div class="title">
+      Pixel Art Evaluation
+    </div>
+    <table class="evaluation-breakdown">
+      <tr class="header-row">
+        {{#if editable}}
+          <th>Req.</th>
+        {{/if}}
+        <th>Criteria</th>
+        <th>Score</th>
+      </tr>
+      {{#each criteria}}
+        <tr class="criterion">
+          {{#if editable}}
+            <td class="required">
+              <label class="checkmark-area">
+                {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.CriterionEnabled}}<span class="checkmark"></span>
+              </label>
+            </td>
+          {{/if}}
+          <td class="name-area"><span class="name">{{name}}</span></td>
+          <td class="score">
+            {{#if enabled}}
+              {{scorePercentage score}}
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+      <tr class="empty-row">
+        {{#if editable}}
+          <td></td>
+        {{/if}}
+        <td></td>
+        <td></td>
+      </tr>
+      <tr class="final-score-row">
+        {{#if editable}}
+          <td></td>
+        {{/if}}
+        <td class="average">Average</td>
+        <td class="score">
+          {{#if hasFinalScore}}
+            {{scorePercentage pixelArtEvaluation.pixelArtEvaluationProperty.score}}
+          {{/if}}
+        </td>
+      </tr>
+    </table>
+    {{#if hasFinalScore}}
+      <div class="letter-grade">
+        {{letterGrade}}
+      </div>
+    {{/if}}
+  </div>
+</template>

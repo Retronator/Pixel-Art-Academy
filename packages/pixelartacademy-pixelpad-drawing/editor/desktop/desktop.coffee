@@ -44,8 +44,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       colorSwatchesPan: AEc.ValueTypes.Number
       pico8Drag: AEc.ValueTypes.Boolean
       pico8Pan: AEc.ValueTypes.Number
-      pixelArtGradingDrag: AEc.ValueTypes.Boolean
-      pixelArtGradingPan: AEc.ValueTypes.Number
+      pixelArtEvaluationDrag: AEc.ValueTypes.Boolean
+      pixelArtEvaluationPan: AEc.ValueTypes.Number
       cursorPan: AEc.ValueTypes.Number
   
   @compressPan: (x) ->
@@ -114,8 +114,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
     
     @autorun (computation) =>
-      pixelArtGrading = @displayedAsset()?.document()?.properties?.pixelArtGrading
-      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.id(), pixelArtGrading
+      pixelArtEvaluation = @displayedAsset()?.document()?.properties?.pixelArtEvaluation
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), pixelArtEvaluation
 
     # Reactively add tools and actions.
     toolRequirements =
@@ -248,7 +248,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   
   editorDrawComponents: ->
     providers = [
-      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
     ]
     
     _.flatten(provider.editorDrawComponents() for provider in providers when provider?)
@@ -286,7 +286,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       @audio.zoomDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
       @audio.colorSwatchesDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
       @audio.pico8Drag visible if incrementToolCount displayedAsset?.project?.pico8Cartridge?
-      @audio.pixelArtGradingDrag visible if incrementToolCount displayedAsset?.pixelArtGrading and not @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading)?.active()
+      @audio.pixelArtEvaluationDrag visible if incrementToolCount displayedAsset?.pixelArtEvaluation and not @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation)?.active()
       
       @audio.toolsCount toolsCount
     ,
@@ -402,7 +402,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @_zoom = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-zoom')[0]
     @_palette = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette')[0]
     @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
-    @_pixelArtGrading = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartgrading')[0]
+    @_pixelArtEvaluation = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation')[0]
     
   _updatePan: (timeScale = 1) ->
     adjustPan = (pan) => @constructor.compressPan timeScale * pan
@@ -416,4 +416,4 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @audio.zoomPan adjustPan AEc.getPanForElement @_zoom if @_zoom
     @audio.colorSwatchesPan adjustPan AEc.getPanForElement @_palette if @_palette
     @audio.pico8Pan adjustPan AEc.getPanForElement @_pico8 if @_pico8
-    @audio.pixelArtGradingPan adjustPan AEc.getPanForElement @_pixelArtGrading if @_pixelArtGrading
+    @audio.pixelArtEvaluationPan adjustPan AEc.getPanForElement @_pixelArtEvaluation if @_pixelArtEvaluation

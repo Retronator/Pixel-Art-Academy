@@ -41,12 +41,12 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #   pixelArtScaling: boolean whether the asset is pixel art and should be scaled up with nearest neighbor
   #   normals: boolean whether the asset has normal painting turned on
   #   paletteIds: array of palettes that should be available to the player (but not restrict the colors)
-  #   pixelArtGrading: object or null whether to show the pixel art grading rubric
-  #     editable: boolean whether grading criteria can be toggled on and off
+  #   pixelArtEvaluation: object or null whether to show the pixel art evaluation rubric
+  #     editable: boolean whether evaluation criteria can be toggled on and off
   #     score: float between 0 and 1 for the final average grade
   #     allowedCriteria: array of criterion IDs or null to use only unlocked criteria
   #     consistentLineWidth, evenDiagonals, smoothCurves: objects with different criteria evaluations
-  #       editable: boolean overriding whether grading criteria can be toggled on and off
+  #       editable: boolean overriding whether evaluation criteria can be toggled on and off
   #       score: float between 0 and 1 with this criterion evaluation
   #       ...: any extra information provided relating to this criterion
   @Meta

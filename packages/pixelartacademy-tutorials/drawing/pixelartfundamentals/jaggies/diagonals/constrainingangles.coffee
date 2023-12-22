@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-StraightLine = PAA.Practice.PixelArtGrading.Line.Part.StraightLine
+StraightLine = PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingAngles extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset

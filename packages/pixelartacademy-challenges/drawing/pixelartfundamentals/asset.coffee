@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Challenges.Drawing.PixelFundamentals.EvenDiagonals extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-  @criterion: -> throw new AE.NotImplementedException "You must provide which pixel art grading criterion this challenge unlocks."
+  @criterion: -> throw new AE.NotImplementedException "You must provide which pixel art evaluation criterion this challenge unlocks."
   
   constructor: ->
     super arguments...
@@ -16,26 +16,26 @@ class PAA.Challenges.Drawing.PixelFundamentals.EvenDiagonals extends PAA.Practic
         Bitmap = PAA.Practice.Project.Asset.Bitmap
         criterion = @constructor.criterion()
         
-        unlockedPixelArtGradingCriteria = Bitmap.state('unlockedPixelArtGradingCriteria') or []
+        unlockedPixelArtEvaluationCriteria = Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
         
-        return if completed and criterion in unlockedPixelArtGradingCriteria
-        return unless completed or criterion in unlockedPixelArtGradingCriteria
+        return if completed and criterion in unlockedPixelArtEvaluationCriteria
+        return unless completed or criterion in unlockedPixelArtEvaluationCriteria
         
         if completed
-          unlockedPixelArtGradingCriteria.push criterion
+          unlockedPixelArtEvaluationCriteria.push criterion
         
         else
-          _.pull unlockedPixelArtGradingCriteria, criterion
+          _.pull unlockedPixelArtEvaluationCriteria, criterion
         
-        Bitmap.state 'unlockedPixelArtGradingCriteria', unlockedPixelArtGradingCriteria
+        Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
   
   destroy: ->
     super arguments...
     
     @_completedAutorun.stop()
     
-  class @EnableGrading extends PAA.PixelPad.Systems.Instructions.Instruction
-    @criterion: -> throw new AE.NotImplementedException "You must provide which pixel art grading criterion this challenge unlocks."
+  class @EnableEvaluation extends PAA.PixelPad.Systems.Instructions.Instruction
+    @criterion: -> throw new AE.NotImplementedException "You must provide which pixel art evaluation criterion this challenge unlocks."
 
     @activeDisplayState: ->
       # We only want a pop-up without a normal instruction message.
@@ -53,11 +53,11 @@ class PAA.Challenges.Drawing.PixelFundamentals.EvenDiagonals extends PAA.Practic
       super arguments...
       
       criterion = Asset.criterion()
-      criterionName = PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading.Overview.CriteriaNames[criterion]
+      criterionName = PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview.CriteriaNames[criterion]
       
       dialog = new LOI.Components.Dialog
         message: """
-            Well done! You now have access to grading #{_.toLower criterionName} in previous pixel art tutorials.
+            Well done! You now have access to evaluation #{_.toLower criterionName} in previous pixel art tutorials.
             Do you want to automatically turn it on for relevant lessons?
           """
         moreInfo: "You can come back to this challenge to enable it at a later point."
@@ -73,5 +73,5 @@ class PAA.Challenges.Drawing.PixelFundamentals.EvenDiagonals extends PAA.Practic
         callback: =>
           return unless dialog.result
 
-          PAA.Tutorials.Drawing.PixelArtFundamentals.enablePixelArtGrading criterion
+          PAA.Tutorials.Drawing.PixelArtFundamentals.enablePixelArtEvaluation criterion
     

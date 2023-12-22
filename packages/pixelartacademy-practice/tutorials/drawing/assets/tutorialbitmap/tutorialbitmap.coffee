@@ -32,8 +32,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   # Override if the asset requires display of markup.
   @markup: -> false
 
-  # Override if the asset requires a pixel art grading analysis.
-  @pixelArtGrading: -> false
+  # Override if the asset requires a pixel art evaluation analysis.
+  @pixelArtEvaluation: -> false
 
   # Override to provide bitmap properties that need to be set on the asset.
   @properties: -> null
@@ -106,16 +106,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       @instructionsMarkupEngineComponent = new PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent
     
     # Create additional helpers.
-    if @constructor.pixelArtGrading()
-      @pixelArtGradingInstance = new ComputedField =>
+    if @constructor.pixelArtEvaluation()
+      @pixelArtEvaluationInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
-        @_pixelArtGrading?.destroy()
-        @_pixelArtGrading = new PAA.Practice.PixelArtGrading bitmap
+        @_pixelArtEvaluation?.destroy()
+        @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
         
-      @pixelArtGrading = new ComputedField =>
-        return unless pixelArtGrading = @pixelArtGradingInstance()
-        pixelArtGrading.depend()
-        pixelArtGrading
+      @pixelArtEvaluation = new ComputedField =>
+        return unless pixelArtEvaluation = @pixelArtEvaluationInstance()
+        pixelArtEvaluation.depend()
+        pixelArtEvaluation
        
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
@@ -190,7 +190,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   
     stepArea.destroy() for stepArea in @stepAreas()
     
-    @_pixelArtGrading?.destroy()
+    @_pixelArtEvaluation?.destroy()
     
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()

@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-PAG = PAA.Practice.PixelArtGrading
+PAG = PAA.Practice.PixelArtEvaluation
 
 class PAA.Challenges.Drawing.PixelFundamentals.EvenDiagonals extends PAA.Challenges.Drawing.PixelFundamentals.Asset
   @id: -> 'PixelArtAcademy.Challenges.Drawing.PixelFundamentals.EvenDiagonals'
@@ -13,11 +13,11 @@ class PAA.Challenges.Drawing.PixelFundamentals.EvenDiagonals extends PAA.Challen
     Adjust the image to use only even diagonals.
   """
   
-  @criterion: -> PAA.Practice.PixelArtGrading.Criteria.EvenDiagonals
+  @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.EvenDiagonals
   
   Asset = @
   
-  class @EnableGrading extends PAA.Challenges.Drawing.PixelFundamentals.EnableGrading
-    @id: -> "#{Asset.id()}.EnableGrading"
+  class @EnableEvaluation extends PAA.Challenges.Drawing.PixelFundamentals.EnableEvaluation
+    @id: -> "#{Asset.id()}.EnableEvaluation"
     
-    @criterion: -> PAA.Practice.PixelArtGrading.Criteria.EvenDiagonals
+    @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.EvenDiagonals

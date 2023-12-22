@@ -135,7 +135,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 # We want a generic state for bitmap assets so we create it outside of the constructor as inherited classes don't need it.
 # canEdit: can the user edit the bitmaps with built-in editors
 # canUpload: can the user upload bitmaps
-# unlockedPixelArtGradingCriteria: array of pixel art grading criteria that the user can enable
+# unlockedPixelArtEvaluationCriteria: array of pixel art evaluation criteria that the user can enable
 Bitmap = PAA.Practice.Project.Asset.Bitmap
 
 Bitmap.stateAddress = new LOI.StateAddress "things.PixelArtAcademy.Practice.Project.Asset.Bitmap"

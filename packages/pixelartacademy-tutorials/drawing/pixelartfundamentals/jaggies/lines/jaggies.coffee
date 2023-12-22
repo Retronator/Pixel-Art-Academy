@@ -15,7 +15,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
   @fixedDimensions: -> width: 41, height: 21
   
   @markup: -> true
-  @pixelArtGrading: -> true
+  @pixelArtEvaluation: -> true
   
   @initialize()
   
@@ -75,7 +75,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
     
     markup: ->
       return unless asset = @getActiveAsset()
-      return unless pixelArtGrading = asset.pixelArtGrading()
+      return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = []
       
@@ -84,9 +84,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
       lineColor = palette.color Atari2600.hues.green, 3
       jaggyBase = style: "##{lineColor.getHexString()}"
       
-      return unless trashCanLine = pixelArtGrading.getLinesAt(6, 12)?[0]
-      return unless lampLine = pixelArtGrading.getLinesAt(13, 6)?[0]
-      return unless handrailLine = pixelArtGrading.getLinesAt(17, 12)?[0]
+      return unless trashCanLine = pixelArtEvaluation.getLinesAt(6, 12)?[0]
+      return unless lampLine = pixelArtEvaluation.getLinesAt(13, 6)?[0]
+      return unless handrailLine = pixelArtEvaluation.getLinesAt(17, 12)?[0]
       
       for line in [trashCanLine, lampLine, handrailLine]
         for jaggy in line.getJaggies()

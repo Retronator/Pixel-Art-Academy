@@ -9,6 +9,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.PortfolioComponent ex
     super arguments...
   
   letterGrade: ->
-    return unless pixelArtGrading = @tutorialBitmap.bitmap()?.properties?.pixelArtGrading
-    return unless pixelArtGrading.score?
-    PAA.Practice.PixelArtGrading.getLetterGrade pixelArtGrading.score
+    return unless pixelArtEvaluation = @tutorialBitmap.bitmap()?.properties?.pixelArtEvaluation
+    return unless pixelArtEvaluation.score?
+    PAA.Practice.PixelArtEvaluation.getLetterGrade pixelArtEvaluation.score

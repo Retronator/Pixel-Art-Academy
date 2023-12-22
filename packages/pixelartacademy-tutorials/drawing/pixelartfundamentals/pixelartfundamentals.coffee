@@ -3,5 +3,5 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals
-  @enablePixelArtGrading: (criterion, enableCriterion) ->
+  @enablePixelArtEvaluation: (criterion, enableCriterion) ->
   
