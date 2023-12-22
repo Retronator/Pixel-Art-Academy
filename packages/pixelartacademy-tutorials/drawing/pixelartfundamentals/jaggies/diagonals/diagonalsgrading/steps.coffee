@@ -24,15 +24,43 @@ class DiagonalsGrading.Steps
       pixelArtGrading.activeCriterion() is PAG.Criteria.EvenDiagonals
     
   class @HoverOverTheDiagonal extends TutorialBitmap.EphemeralStep
+    @timeToHover = 2
+    
+    constructor: ->
+      super arguments...
+      
+      @timeHovered = 0
+      
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
-      return unless pixelArtGradingView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
-      return unless hoveredPixel = pixelArtGradingView.hoveredPixel()
+      return @stopCountingTime() unless drawingEditor = @getEditor()
+      return @stopCountingTime() unless pixelArtGradingView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      return @stopCountingTime() unless hoveredPixel = pixelArtGradingView.hoveredPixel()
       
       pixelArtGrading = pixelArtGradingView.pixelArtGrading()
-      pixelArtGrading.getLinePartsAt(hoveredPixel.x, hoveredPixel.y).length
+      return @stopCountingTime() unless pixelArtGrading.getLinePartsAt(hoveredPixel.x, hoveredPixel.y).length
+      
+      @countTime()
+      
+      # We return false since we'll complete this step by solving it which will resolve in the base completed.
+      false
+      
+    stopCountingTime: ->
+      @timeHovered = 0
+      Meteor.clearTimeout @_countTimeout
+
+    countTime: ->
+      @_countTimeout = Meteor.setTimeout =>
+        @timeHovered += 0.1
+        
+        if @timeHovered >= @constructor.timeToHover
+          @solve()
+          
+        else
+          @countTime()
+      ,
+        100
       
   class @LineGradingStep extends TutorialBitmap.PathStep
     @drawHintsAfterCompleted: -> false
@@ -56,9 +84,6 @@ class DiagonalsGrading.Steps
     @type: -> throw new AE.NotImplementedException "A line of type step must provide the type needed for completion."
     
     completed: ->
-      # Don't allow to continue if drawing outside of bounds.
-      return if @stepArea.hasExtraPixels() and @isActiveStepInArea()
-
       # Ensure ideal results by also requiring matching ends.
       return unless lineGrading = @getLineGrading()
       return unless lineGrading.endSegments.type is StraightLine.EndSegments.Matching

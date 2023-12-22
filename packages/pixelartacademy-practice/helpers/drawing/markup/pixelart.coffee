@@ -64,13 +64,13 @@ class Markup.PixelArt
       markup.push
         line:
           points: [_start.clone(), _centralPartStart.clone()]
-          style: if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.mediocreStyle()
+          style: if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
     
     if straightLine.endPointSegmentLength
       markup.push
         line:
           points: [_centralPartEnd.clone(), _end.clone()]
-          style: if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.mediocreStyle()
+          style: if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
       
     markup.push
       line:
@@ -104,6 +104,46 @@ class Markup.PixelArt
     _startPartCenter.copy(_startPart).multiplyScalar(0.5).add _start
     _centralPartCenter.copy(_centralPart).multiplyScalar(0.5).add _centralPartStart
     _endPartCenter.copy(_endPart).multiplyScalar(0.5).add _centralPartEnd
+
+  @gradedSegmentCornerLines: (straightLine) ->
+    grading = straightLine.grade()
+    
+    if straightLine.startPointSegmentLength
+      startStyle = if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+    
+    if straightLine.endPointSegmentLength
+      endStyle = if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+    
+    middleStyle = @gradedSegmentLengthsStyle straightLine
+
+    segmentCorners = straightLine.getSegmentCorners()
+    markup = []
+    
+    for side in ['left', 'right']
+      points = segmentCorners[side]
+      
+      for point in points
+        point.x += 0.5
+        point.y += 0.5
+  
+      if startStyle
+        markup.push
+          line:
+            points: points[0..1]
+            style: startStyle
+            
+      if endStyle
+        markup.push
+          line:
+            points: points[points.length - 2..points.length - 1]
+            style: endStyle
+        
+      markup.push
+        line:
+          points: points[(if startStyle then 1 else 0)..points.length - (if endStyle then 2 else 1)]
+          style: middleStyle
+    
+    markup
   
   @gradedSegmentLengthsStyle: (straightLine) ->
     # Note: We don't have the PAG shorthand since helpers are included before pixel art grading.
@@ -218,7 +258,7 @@ class Markup.PixelArt
         text: _.extend {}, textBase,
           position: position
           value: Markup.percentage grading.endSegments.startScore
-          style: if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.mediocreStyle()
+          style: if grading.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
     
     if straightLine.endPointSegmentLength
       _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _endPartCenter
@@ -228,7 +268,7 @@ class Markup.PixelArt
         text: _.extend {}, textBase,
           position: position
           value: Markup.percentage grading.endSegments.endScore
-          style: if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.mediocreStyle()
+          style: if grading.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
       
     _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _centralPartCenter
     position = _.extend _textPosition.clone(), {origin}

@@ -19,6 +19,9 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
       new @constructor.Path @tutorialBitmap, svgPath, @stepArea.bounds
   
   completed: ->
+    return unless super arguments...
+
+    # Check that all paths have their pixels covered.
     for path in @paths
       return false unless path.completed()
     

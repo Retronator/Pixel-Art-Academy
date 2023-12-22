@@ -30,6 +30,8 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         pixel.color = THREE.Color.fromObject pixel.directColor
 
   completed: ->
+    return unless super arguments...
+    
     # Compare goal pixels with first bitmap layer.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()

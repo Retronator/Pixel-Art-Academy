@@ -18,12 +18,20 @@ class TutorialBitmap.Step
   constructor: (@tutorialBitmap, @stepArea, @options = {}) ->
     @stepArea.addStep @, @options.stepIndex
   
-  completed: -> throw new AE.NotImplementedException "A step has to specify when it has been completed."
+  # Override to specify when the step's conditions are satisfied.
+  completed: ->
+    # Don't allow to continue if drawing outside of bounds.
+    return if @stepArea.hasExtraPixels() and @isActiveStepInArea()
+    
+    true
   
   # Override if the step requires pixels for its completion (so other steps don't consider them to be invalid).
   hasPixel: -> false
   
   solve: -> throw new AE.NotImplementedException "A step has to provide a method to solve itself to a completed state."
+  
+  # Override if the step needs to reset any internal state when the asset is reset.
+  reset: ->
 
   preserveCompleted: -> if @options.preserveCompleted? then @options.preserveCompleted else @constructor.preserveCompleted()
   drawHintsAfterCompleted: -> if @options.drawHintsAfterCompleted? then @options.drawHintsAfterCompleted else @constructor.drawHintsAfterCompleted()

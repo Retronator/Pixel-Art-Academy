@@ -16,7 +16,7 @@ class DiagonalsGrading.Instructions
     @assetClass: -> DiagonalsGrading
 
     # The amount of time before we show instructions to the user after a new UI element is introduced.
-    @uiRevealDelayDuration = 4
+    @uiRevealDelayDuration = 3
     
     # The amount of time before we show instructions when a new line is introduced.
     @newLineDelayDuration = 3
@@ -40,11 +40,17 @@ class DiagonalsGrading.Instructions
     
     @closeOutsideGradingSheet: -> false
     
+    @resetCompletedConditions: ->
+      not @getActiveAsset()
+    
+    @getPixelArtGrading: ->
+      drawingEditor = @getEditor()
+      drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+    
     @activeDisplayState: ->
       return PAA.PixelPad.Systems.Instructions.DisplayState.Open unless @closeOutsideGradingSheet()
       
-      drawingEditor = @getEditor()
-      pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      pixelArtGrading = @getPixelArtGrading()
       
       if pixelArtGrading.active() then PAA.PixelPad.Systems.Instructions.DisplayState.Open else PAA.PixelPad.Systems.Instructions.DisplayState.Closed
     
@@ -56,18 +62,17 @@ class DiagonalsGrading.Instructions
       asset.stepAreas()[0].steps()[stepNumber - 1]
     
     displaySide: ->
-      drawingEditor = @getEditor()
-      pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      pixelArtGrading = @constructor.getPixelArtGrading()
 
       if pixelArtGrading.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
       
     openGradingSheet: (focusPoint, scale, criterion = PAG.Criteria.EvenDiagonals) ->
-      drawingEditor = @getEditor()
-      pixelArtGrading = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtGrading
+      pixelArtGrading = @constructor.getPixelArtGrading()
       pixelArtGrading.activate criterion
       
       return unless focusPoint or scale
       
+      drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
       pixelCanvas.triggerSmoothMovement()
       
@@ -90,15 +95,20 @@ class DiagonalsGrading.Instructions
       
       originDataField = camera.originData()
       originDataField.value x: 15, y: 14.5
-    
-    getLineBreakdownMarkup: (stepNumber) ->
-      return [] unless asset = @getActiveAsset()
-      return [] unless pixelArtGrading = asset.pixelArtGrading()
-      return [] unless step = @getTutorialStep stepNumber
+      
+    getLinePartForStep: (stepNumber) ->
+      return unless asset = @getActiveAsset()
+      return unless pixelArtGrading = asset.pixelArtGrading()
+      return unless step = @getTutorialStep stepNumber
       
       corners = _.flatten step.paths[0].cornersOfParts
-      return [] unless linePart = pixelArtGrading.getLinePartsBetween(corners...)[0]
-      return [] unless linePart instanceof StraightLine
+      return unless linePart = pixelArtGrading.getLinePartsBetween(corners...)[0]
+      return unless linePart instanceof StraightLine
+      
+      linePart
+    
+    getLineBreakdownMarkup: (stepNumber) ->
+      return [] unless linePart  = @getLinePartForStep stepNumber
       
       Markup.PixelArt.straightLineBreakdown linePart
   
@@ -142,6 +152,32 @@ class DiagonalsGrading.Instructions
       super arguments...
       @openGradingSheet {x: 15, y: 18}, 4
   
+  class @NotBrokenAlternative extends @InstructionStep
+    @id: -> "#{DiagonalsGrading.id()}.NotBrokenAlternative"
+    @stepNumber: -> 4
+    
+    @message: -> """
+      Hover over the line to see segment length numbers.
+    """
+    
+    @activeConditions: ->
+      return false unless super arguments...
+      
+      # See if we have an alternative diagonal to begin with.
+      return unless bitmap = @getActiveAsset().bitmap()
+      
+      bitmap.properties.pixelArtGrading.evenDiagonals.segmentLengths.linePartCounts.broken is 0
+    
+    @delayDuration: -> @uiRevealDelayDuration
+    
+    @priority: -> 1
+    
+    @initialize()
+    
+    onActivate: ->
+      super arguments...
+      @openGradingSheet {x: 15, y: 18}, 4
+  
   class @Alternating extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Alternating"
     @stepNumber: -> 5
@@ -149,8 +185,6 @@ class DiagonalsGrading.Instructions
     @message: -> """
       It's possible to make this line alternate between double and single segments (pattern 2-1-2-1-2-…). Close the grading sheet and change the pixels to follow that pattern.
     """
-    
-    @delayDuration: -> @uiRevealDelayDuration
     
     @closeOutsideGradingSheet: -> true
     
@@ -161,7 +195,7 @@ class DiagonalsGrading.Instructions
     @stepNumber: -> 6
     
     @message: -> """
-      Nice! This diagonal now consistently drops 3 pixels for every 2 across, making it the ideal 3:2 diagonal.
+      Nice! This diagonal consistently drops 3 pixels for every 2 across, making it the ideal 3:2 diagonal.
       Close the grading sheet to draw the next line.
     """
     
@@ -191,7 +225,7 @@ class DiagonalsGrading.Instructions
     
   class @Alternating25 extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Alternating25"
-    @stepNumbers: -> [8, 9]
+    @stepNumber: -> 8
     
     @message: -> """
       This diagonal consists of segments with lengths 2 and 3.
@@ -208,12 +242,14 @@ class DiagonalsGrading.Instructions
       @openGradingSheet {x: 15, y: 10}, 4
     
     markup: ->
-      return unless @constructor.activeStepNumber() is 8
+      pixelArtGrading = @constructor.getPixelArtGrading()
+      return [] unless pixelArtGrading.active()
+      
       @getLineBreakdownMarkup 7
   
   class @Alternating25Fixed extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Alternating24Fixed"
-    @stepNumber: -> 10
+    @stepNumber: -> 9
     
     @message: -> """
       The percentage score for this line is higher than for the previous one because the segments are longer, which makes alternating less noticeable.
@@ -230,7 +266,7 @@ class DiagonalsGrading.Instructions
   
   class @ContinueLine3 extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.ContinueLine3"
-    @stepNumber: -> 11
+    @stepNumber: -> 10
     
     @message: -> """
       Continue by drawing the next line using alternating segment lengths.
@@ -246,7 +282,7 @@ class DiagonalsGrading.Instructions
   
   class @Alternating29 extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Alternating29"
-    @stepNumber: -> 12
+    @stepNumber: -> 11
     
     @message: -> """
       Fix the line to use the 4-5-4-5-4 pattern of segment lengths.
@@ -258,7 +294,7 @@ class DiagonalsGrading.Instructions
   
   class @Ends extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Ends"
-    @stepNumber: -> 13
+    @stepNumber: -> 12
     
     @message: -> """
       With long segments it becomes harder to distinguish between even and alternating diagonals, making this less of a consideration.
@@ -278,13 +314,11 @@ class DiagonalsGrading.Instructions
   
   class @ContinueLine4 extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.ContinueLine4"
-    @stepNumber: -> 14
+    @stepNumber: -> 13
     
     @message: -> """
-      Continue by drawing the final line.
+      Draw the final line with the default Bresenham algorithm (shift + click without using the even diagonals option).
     """
-    
-    @delayDuration: -> @newLineDelayDuration
     
     @initialize()
     
@@ -294,7 +328,7 @@ class DiagonalsGrading.Instructions
       
   class @Highlight extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Highlight"
-    @stepNumbers: -> [15, 16]
+    @stepNumbers: -> [14, 15]
     
     @message: -> """
       The End segments criterion can now help you identify lines that have shorter end segments.
@@ -311,6 +345,16 @@ class DiagonalsGrading.Instructions
     onActivate: ->
       super arguments...
       @openGradingSheet {x: 15, y: 25}, 4
+      
+    markup: ->
+      pixelArtGrading = @constructor.getPixelArtGrading()
+      return [] unless pixelArtGrading.active()
+      return [] unless linePart  = @getLinePartForStep 13
+      
+      [
+        Markup.PixelArt.gradedIntendedLine linePart
+        Markup.PixelArt.gradedSegmentCornerLines(linePart)...
+      ]
     
   class @Complete extends @InstructionStep
     @id: -> "#{DiagonalsGrading.id()}.Complete"

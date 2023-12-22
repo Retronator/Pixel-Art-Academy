@@ -13,7 +13,12 @@ class TutorialBitmap.EphemeralStep extends TutorialBitmap.Step
     
     @_solved = new ReactiveField false
     
-  completed: -> @_solved()
+  completed: ->
+    return unless super arguments...
+  
+    @_solved()
   
   hasPixel: -> false
   solve: -> @_solved true
+  
+  reset: -> @solved false

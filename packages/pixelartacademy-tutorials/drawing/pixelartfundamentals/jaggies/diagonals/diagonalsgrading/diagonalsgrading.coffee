@@ -62,25 +62,23 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsGrad
     
     # Step index 6 is the second path.
     
-    new @constructor.Steps.CloseGradingSheet @, stepArea, stepIndex: 7
-    
     new @constructor.Steps.AlternatingLine @, stepArea,
       svgPaths: pathSteps[1].options.svgPaths
-      stepIndex: 8
+      stepIndex: 7
     
-    new @constructor.Steps.CloseGradingSheet @, stepArea, stepIndex: 9
+    new @constructor.Steps.CloseGradingSheet @, stepArea, stepIndex: 8
 
-    # Step index 10 is the third path.
+    # Step index 9 is the third path.
     
     new @constructor.Steps.AlternatingLine @, stepArea,
       svgPaths: pathSteps[2].options.svgPaths
-      stepIndex: 11
+      stepIndex: 10
       
-    new @constructor.Steps.CloseGradingSheet @, stepArea, stepIndex: 12
+    new @constructor.Steps.CloseGradingSheet @, stepArea, stepIndex: 11
     
-    # Step index 13 is the final, fourth path.
+    # Step index 12 is the final, fourth path.
 
-    new @constructor.Steps.EnableEndSegments @, stepArea, stepIndex: 14
+    new @constructor.Steps.EnableEndSegments @, stepArea, stepIndex: 13
     
     new @constructor.Steps.FinalLine @, stepArea,
       svgPaths: pathSteps[3].options.svgPaths

@@ -96,7 +96,7 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
       return unless @completed()
       return unless @resetCompletedConditions()
   
-      @completed false
+      @resetCompleted()
 
   destroy: ->
     @_activeAutorun.stop()
@@ -138,3 +138,6 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
     @delayTime Math.max 0, @delayTime() - elapsedTime
 
   delayed: -> @delayTime() > 0
+  
+  resetCompleted: ->
+    @completed false

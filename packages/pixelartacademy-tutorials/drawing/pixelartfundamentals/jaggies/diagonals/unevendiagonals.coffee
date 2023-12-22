@@ -144,7 +144,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     @stepNumber: -> 3
     
     @message: -> """
-      The gap is the biggest between the 1:2 and 1:1 diagonals. There are no even lines in between in that range.
+      The gap is the biggest between the 1:2 and 1:1 diagonals. There are no even lines in between that range.
     """
     
     @initialize()
