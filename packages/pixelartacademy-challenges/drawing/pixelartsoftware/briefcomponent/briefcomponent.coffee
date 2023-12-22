@@ -5,17 +5,6 @@ LOI = LandsOfIllusions
 
 class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.BriefComponent
   @register 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent'
-
-  onRendered: ->
-    super arguments...
-  
-    # Allow cheating with the F2 key.
-    $(document).on 'keydown.pixelartacademy-challenges-drawing-pixelartsoftware-copyreference-briefcomponent', (event) => @onKeyDown event
-
-  onDestroyed: ->
-    super arguments...
-  
-    $(document).off '.pixelartacademy-challenges-drawing-pixelartsoftware-copyreference-briefcomponent'
   
   canEdit: ->
     PAA.PixelPad.Apps.Drawing.state('editorId')?
@@ -159,8 +148,3 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
 
     super arguments...
-    
-  onKeyDown: (event) ->
-    if event.which is AC.Keys.f2
-      @bitmap.solve()
-      event.preventDefault()

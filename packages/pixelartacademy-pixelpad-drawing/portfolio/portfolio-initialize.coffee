@@ -56,6 +56,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
                     asset: asset
                     scale: => @_assetScale asset
 
+              thing: sectionThing
               index: index
               name: => sectionThing.fullName()
               noAssetsInstructions: => sectionThing.noAssetsInstructions?()
@@ -309,9 +310,17 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         
       else
         @sectionHeight
-      
+        
+  onRendered: ->
+    super arguments...
+    
+    # Allow cheating with the function keys.
+    $(document).on 'keydown.pixelartacademy-pixelpad-apps-drawing-portfolio', (event) => @onKeyDown event
+  
   onDestroyed: ->
     super arguments...
+    
+    $(document).off '.pixelartacademy-pixelpad-apps-drawing-portfolio'
     
     editor.destroy?() for editor in @_editors
   

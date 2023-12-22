@@ -1,3 +1,4 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -69,6 +70,15 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     completed: ->
       not @tutorialBitmap.bitmap().properties.pixelArtGrading.evenDiagonals
       
+    solve: ->
+      # Disable pixel art grading.
+      bitmap = @tutorialBitmap.bitmap()
+      pixelArtGrading = bitmap.properties.pixelArtGrading
+      delete pixelArtGrading.evenDiagonals
+      
+      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.id(), bitmap, 'pixelArtGrading', pixelArtGrading
+      AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, updatePropertyAction, new Date
+    
     hasPixel: (x, y) ->
       # We simply require pixels everywhere we have them.
       @tutorialBitmap.bitmap().findPixelAtAbsoluteCoordinates x, y

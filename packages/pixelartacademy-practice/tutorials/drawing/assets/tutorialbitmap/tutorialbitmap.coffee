@@ -79,6 +79,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       false
       
     @completed = new AE.LiveComputedField =>
+      # Read completed state from the stored assets field unless we're in the editor.
+      return unless assets = @tutorial.state 'assets'
+      asset = _.find assets, (asset) => asset.id is @id()
+      storedCompleted = asset?.completed
+      
+      return storedCompleted unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+      return storedCompleted unless editor.drawingActive()
+      return storedCompleted unless asset = editor.activeAsset()
+      return storedCompleted unless asset instanceof @constructor
+      
       stepAreas = @stepAreas()
       return unless stepAreas.length
       
@@ -223,6 +233,14 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
   solve: ->
     stepArea.solve() for stepArea in @stepAreas()
+    
+  solveAndComplete: ->
+    @solve()
+    
+    assets = @tutorial.state 'assets'
+    asset = _.find assets, (asset) => asset.id is @id()
+    asset.completed = true
+    @tutorial.state 'assets', assets
   
   hasGoalPixel: (x, y) ->
     # Check if any of the step areas require a pixel at these absolute bitmap coordinates.

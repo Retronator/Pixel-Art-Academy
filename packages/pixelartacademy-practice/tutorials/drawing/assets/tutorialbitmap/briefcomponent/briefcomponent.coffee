@@ -13,17 +13,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.BriefComponent extend
     super arguments...
     
     @parent = @ancestorComponentWith 'editAsset'
-    
-  onRendered: ->
-    super arguments...
-  
-    # Allow cheating with the F2 key.
-    $(document).on 'keydown.pixelartacademy-practice-tutorials-drawing-tutorialbitmap-briefcomponent', (event) => @onKeyDown event
-
-  onDestroyed: ->
-    super arguments...
-  
-    $(document).off '.pixelartacademy-practice-tutorials-drawing-tutorialbitmap-briefcomponent'
 
   started: ->
     @tutorialBitmap.bitmap().historyPosition
@@ -38,8 +27,3 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.BriefComponent extend
 
   onClickResetButton: (event) ->
     @tutorialBitmap.constructor.reset @tutorialBitmap.tutorial, @tutorialBitmap.id(), @tutorialBitmap.bitmapId()
-    
-  onKeyDown: (event) ->
-    if event.which is AC.Keys.f2
-      @tutorialBitmap.solve()
-      event.preventDefault()

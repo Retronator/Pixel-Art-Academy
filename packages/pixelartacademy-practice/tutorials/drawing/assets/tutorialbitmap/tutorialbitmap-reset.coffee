@@ -52,5 +52,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     if asset = _.find assets, (asset) => asset.id is assetId
       asset.stepAreas = []
+      asset.completed = false
       
       tutorial.state 'assets', assets

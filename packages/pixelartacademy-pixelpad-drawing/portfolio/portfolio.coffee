@@ -2,6 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
 AEc = Artificial.Echo
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
@@ -323,3 +324,42 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   onClickExternalEditor: (event) ->
     program = @currentData()
     @drawing.state 'externalSoftware', program.value
+  
+  onKeyDown: (event) ->
+    if event.which is AC.Keys.f2
+      return unless asset = @activeAsset()?.asset
+      
+      asset.solveAndComplete?()
+      event.preventDefault()
+    
+    else if event.which is AC.Keys.f3
+      console.log "Cheating commences …"
+      
+      return unless activeGroup = @activeGroup()
+      return unless activeGroup.thing.assets() and activeGroup.thing.state 'assets'
+      
+      cheating = =>
+        assets = activeGroup.thing.assets()
+        assetsData = activeGroup.thing.state 'assets'
+        
+        cheatMore = false
+        
+        while uncompletedAssetData = _.find assetsData, (assetData) -> not assetData.completed
+          console.log "Completing", uncompletedAssetData.id
+          
+          uncompletedAsset = _.find assets, (asset) -> asset.id() is uncompletedAssetData.id
+          uncompletedAsset.solve()
+          uncompletedAssetData.completed = true
+          
+          cheatMore = true
+        
+        if cheatMore
+          activeGroup.thing.state 'assets', assetsData
+          Meteor.setTimeout cheating, 100
+        
+        else
+          console.log "Cheating commenced!"
+      
+      cheating()
+      
+      event.preventDefault()
