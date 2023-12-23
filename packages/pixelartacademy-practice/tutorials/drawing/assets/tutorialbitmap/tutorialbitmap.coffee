@@ -115,7 +115,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     return if @_initializing
     @_initializing = true
     @_initialize()
-    @initialized true
     
   # Override to provide extra initialization functionality.
   _initialize: ->
@@ -218,7 +217,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
       # Resources are loaded, create tutorial steps.
       @initializeSteps()
-    
+      
+      @initialized true
+  
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()
     stepAreas.push stepArea
