@@ -161,7 +161,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       sections.push @tutorialsSection if @tutorialsSection.groups().length
       sections.push @challengesSection if @challengesSection.groups().length
       sections.push @projectsSection if @projectsSection.groups().length
-      sections.push @artworksSection if @artworksSection.groups().length
+      # sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.
       if @activeSection and not @activeSection() in sections

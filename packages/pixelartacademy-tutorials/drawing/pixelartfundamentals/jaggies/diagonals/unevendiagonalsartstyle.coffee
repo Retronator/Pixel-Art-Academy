@@ -89,6 +89,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @message: -> """
       Even diagonals are a convention and you can make great art with or without them, as you can see in this artwork from Into the Breach.
+      The high viewing angle helps with the readability of the game board and creates a unique, standout style.
+      
       Open the evaluation paper to continue.
     """
     
@@ -117,8 +119,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     @assetClass: -> Asset
     
     @message: -> """
-      The high viewing angle helps with the readability of the game board and creates a unique, standout style.
-      The use of uneven, broken diagonals is a deliberate choice.
+      The use of uneven, broken diagonals here is a deliberate choice.
       You can choose too, so to complete this lesson, turn off Even diagonals evaluation by removing the required checkmark.
     """
     

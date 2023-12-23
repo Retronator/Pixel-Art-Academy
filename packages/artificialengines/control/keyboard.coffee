@@ -11,8 +11,21 @@ class AC.Keyboard
     @_state = new AC.KeyboardState
     @_stateDependency = new Tracker.Dependency
 
-    $(document).keydown (event) => @onKeyDown event
-    $(document).keyup (event) => @onKeyUp event
+    $document = $(document)
+    $window = $(window)
+
+    $document.keydown (event) => @onKeyDown event
+    $document.keyup (event) => @onKeyUp event
+    
+    # Create a fresh state when leaving or entering the app so that any keyboard-based operations can complete
+    # and we don't have any lingering keys pressed when key up events aren't triggered due to loss of focus.
+    resetState = =>
+      @_state = new AC.KeyboardState
+      @_stateDependency.changed()
+    
+    $document.on 'visibilitychange', (event) => resetState()
+    $window.blur (event) => resetState()
+    $window.focus (event) => resetState()
 
   @getState: ->
     @_stateDependency.depend()

@@ -351,10 +351,7 @@ class DiagonalsEvaluation.Instructions
       return [] unless pixelArtEvaluation.active()
       return [] unless linePart  = @getLinePartForStep 13
       
-      [
-        Markup.PixelArt.evaluatedIntendedLine linePart
-        Markup.PixelArt.evaluatedSegmentCornerLines(linePart)...
-      ]
+      Markup.PixelArt.evaluatedSegmentCornerLines linePart
     
   class @Complete extends @InstructionStep
     @id: -> "#{DiagonalsEvaluation.id()}.Complete"
@@ -377,3 +374,10 @@ class DiagonalsEvaluation.Instructions
     onActivate: ->
       super arguments...
       @openEvaluationPaper {x: 15, y: 15}, 3, null
+    
+    markup: ->
+      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      return [] unless pixelArtEvaluation.active()
+      return [] unless linePart  = @getLinePartForStep 13
+      
+      Markup.PixelArt.evaluatedSegmentCornerLines linePart

@@ -12,6 +12,9 @@ class TutorialBitmap.Step
 
   # Override to false (or provide through options) if the hint drawing should not be called after the step is completed.
   @drawHintsAfterCompleted: -> true
+
+  # Override to true (or provide through options) if the step can be completed even if extra pixels are present.
+  @canCompleteWithExtraPixels: -> false
   
   @getEditor: -> PAA.PixelPad.Apps.Drawing.Editor.getEditor()
   
@@ -21,7 +24,7 @@ class TutorialBitmap.Step
   # Override to specify when the step's conditions are satisfied.
   completed: ->
     # Don't allow to continue if drawing outside of bounds.
-    return if @stepArea.hasExtraPixels() and @isActiveStepInArea()
+    return if @stepArea.hasExtraPixels() and @isActiveStepInArea() and not @canCompleteWithExtraPixels()
     
     true
   
@@ -35,6 +38,7 @@ class TutorialBitmap.Step
 
   preserveCompleted: -> if @options.preserveCompleted? then @options.preserveCompleted else @constructor.preserveCompleted()
   drawHintsAfterCompleted: -> if @options.drawHintsAfterCompleted? then @options.drawHintsAfterCompleted else @constructor.drawHintsAfterCompleted()
+  canCompleteWithExtraPixels: -> if @options.canCompleteWithExtraPixels? then @options.canCompleteWithExtraPixels else @constructor.canCompleteWithExtraPixels()
   getEditor: -> @constructor.getEditor()
   
   getIndexInArea: ->
