@@ -18,6 +18,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.ErrorInstruction extends PAA.Tuto
     
     return unless asset = editor.activeAsset()
     return unless asset instanceof PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset
+    return unless asset.initialized()
     
     asset
     

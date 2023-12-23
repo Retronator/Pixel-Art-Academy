@@ -19,6 +19,7 @@ class PAA.Tutorials.Drawing.Instructions.Instruction extends PAA.PixelPad.System
     
     return unless asset = editor.activeAsset()
     return unless asset instanceof @assetClass()
+    return unless asset.initialized()
     
     asset
   

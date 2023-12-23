@@ -18,11 +18,11 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
           LOI.Assets.Image.documents.insert url: imageUrl unless LOI.Assets.Image.documents.findOne url: imageUrl
           
-  constructor: ->
+  _initialize: ->
     super arguments...
     
-    return @ unless references = @constructor.references()
-    return @ unless goalChoices = @resources.goalChoices
+    return unless references = @constructor.references()
+    return unless goalChoices = @resources.goalChoices
     
     referenceUrlChoices = (goalChoice.referenceUrl for goalChoice in goalChoices)
 
@@ -37,6 +37,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
  
     # Update step areas and resize the bitmap accordingly if needed.
     @_chosenReferencesAutorun = Tracker.autorun (computation) =>
+      return unless @initialized()
       return unless displayedReferenceUrlChoices = @displayedReferenceUrlChoices()
       
       Tracker.nonreactive => Tracker.afterFlush =>
@@ -104,51 +105,23 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
             fixed: true
             
           bitmap.executeAction changeBounds, true
-          
-  initializeSteps: ->
-    super arguments...
-    
-    return unless goalChoices = @resources.goalChoices
 
-    # Dynamically load steps of the chosen references. Note that initializeSteps
-    # gets called from an autorun, so we have to continue in nonreactive context.
-    Tracker.nonreactive =>
-      @assetStepAreas = new AE.LiveComputedField =>
-        assets = @tutorial.assetsData()
-        return unless asset = _.find assets, (asset) => asset.id is @id()
-        asset.stepAreas
-      ,
-        # Limit reactivity to changes in the reference URLs.
-        (a, b) =>
-          return unless _.isArray(a) and _.isArray(b) and a.length is b.length
-          
-          for i in [0...a.length]
-            return unless a.referenceUrl is b.referenceUrl
-            
-          true
-      
-      @_referenceStepsAutorun = Tracker.autorun (computation) =>
-        return unless assetStepAreas = @assetStepAreas()
+        # Change step area instances.
+        stepAreaInstances = @stepAreas()
+        @stepAreas []
+        stepAreaInstance.destroy() for stepAreaInstance in stepAreaInstances
         
-        # Only react to changes of the asset data.
-        Tracker.nonreactive =>
-          stepAreas = @stepAreas()
-          @stepAreas []
-          stepArea.destroy() for stepArea in stepAreas
+        for stepArea, index in stepAreas
+          stepAreaBounds =
+            x: index * fixedDimensions.width
+            y: 0
+            width: fixedDimensions.width
+            height: fixedDimensions.height
           
-          fixedDimensions = @constructor.fixedDimensions()
-          
-          for stepAreaData, index in assetStepAreas
-            stepAreaBounds =
-              x: index * fixedDimensions.width
-              y: 0
-              width: fixedDimensions.width
-              height: fixedDimensions.height
-            
-            stepArea = new @constructor.StepArea @, stepAreaBounds
-    
-            goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepAreaData.referenceUrl
-            @_createSteps stepArea, goalChoice
+          stepAreaInstance = new @constructor.StepArea @, stepAreaBounds
+  
+          goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepArea.referenceUrl
+          @_createSteps stepAreaInstance, goalChoice
         
   destroy: ->
     super arguments...

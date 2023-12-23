@@ -58,7 +58,67 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
       # We need to create the asset with the bitmap.
       Tracker.nonreactive => @constructor.create LOI.adventure.profileId(), @tutorial, @id()
+    
+    # Prepare lazy initialization.
+    @initialized = new ReactiveField false
+    
+    @completed = new AE.LiveComputedField =>
+      # Read completed state from the stored assets field unless we're in the editor.
+      return unless assets = @tutorial.state 'assets'
+      asset = _.find assets, (asset) => asset.id is @id()
+      storedCompleted = asset?.completed
       
+      return storedCompleted unless @_isActiveInEditor(true) and @initialized()
+      
+      stepAreas = @stepAreas()
+      return unless stepAreas.length
+      
+      for stepArea in stepAreas
+        return false unless stepArea.completed()
+      
+      true
+    
+    @_initializingAutorun = Tracker.autorun (computation) =>
+      # Initialize uncompleted artworks immediately so their starting steps can place any pixels.
+      # Otherwise wait till we've selected the asset as the active one in the editor.
+      return unless @tutorial.state 'assets'
+      return unless @_isActiveInEditor(false) or not @completed()
+      computation.stop()
+      Tracker.nonreactive => @initialize()
+      
+  destroy: ->
+    super arguments...
+    
+    @_createBitmapAutorun.stop()
+    @_initializingAutorun.stop()
+    @completed.stop()
+
+    @hasExtraPixels?.stop()
+    @hasMissingPixels?.stop()
+    @_completedAutorun?.stop()
+    @_loadResourcesAutorun?.stop()
+    
+    if @stepAreas
+      stepArea.destroy() for stepArea in @stepAreas()
+    
+    @_pixelArtEvaluation?.destroy()
+    
+  _isActiveInEditor: (drawingActive) ->
+    return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+    return unless editor.isCreated()
+    return unless asset = editor.activeAsset()
+    return unless asset instanceof @constructor
+    return if drawingActive and not editor.drawingActive()
+    true
+
+  initialize: ->
+    return if @_initializing
+    @_initializing = true
+    @_initialize()
+    @initialized true
+    
+  # Override to provide extra initialization functionality.
+  _initialize: ->
     # Fetch palette.
     @palette = new ComputedField => @customPalette() or @restrictedPalette()
     @hasPalette = new ComputedField => @constructor.customPalette() or @constructor.customPaletteImageUrl() or @constructor.restrictedPaletteName()
@@ -77,25 +137,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return true if stepArea.hasMissingPixels()
       
       false
-      
-    @completed = new AE.LiveComputedField =>
-      # Read completed state from the stored assets field unless we're in the editor.
-      return unless assets = @tutorial.state 'assets'
-      asset = _.find assets, (asset) => asset.id is @id()
-      storedCompleted = asset?.completed
-      
-      return storedCompleted unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
-      return storedCompleted unless editor.drawingActive()
-      return storedCompleted unless asset = editor.activeAsset()
-      return storedCompleted unless asset instanceof @constructor
-      
-      stepAreas = @stepAreas()
-      return unless stepAreas.length
-      
-      for stepArea in stepAreas
-        return false unless stepArea.completed()
-      
-      true
       
     # Create engine components.
     @hintsEngineComponents =
@@ -177,20 +218,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
       # Resources are loaded, create tutorial steps.
       @initializeSteps()
-  
-  destroy: ->
-    super arguments...
-    
-    @_createBitmapAutorun.stop()
-    @hasExtraPixels.stop()
-    @hasMissingPixels.stop()
-    @completed.stop()
-    @_completedAutorun.stop()
-    @_loadResourcesAutorun.stop()
-  
-    stepArea.destroy() for stepArea in @stepAreas()
-    
-    @_pixelArtEvaluation?.destroy()
     
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()
@@ -202,6 +229,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
   getBackgroundColor: ->
     return unless backgroundColor = @constructor.backgroundColor()
+    return unless @initialized()
 
     if backgroundColor.paletteColor
       backgroundColor = @palette().color backgroundColor.paletteColor.ramp, backgroundColor.paletteColor.shade
@@ -209,6 +237,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     backgroundColor
   
   editorDrawComponents: ->
+    return [] unless @initialized()
+    
     components = [
       component: @hintsEngineComponents.underlying, before: LOI.Assets.Engine.PixelImage.Bitmap
     ,
@@ -232,17 +262,29 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   maxClipboardScale: -> @constructor.maxClipboardScale?()
 
   solve: ->
-    stepArea.solve() for stepArea in @stepAreas()
+    @_afterInitialization =>
+      stepArea.solve() for stepArea in @stepAreas()
     
   solveAndComplete: ->
-    @solve()
+    @_afterInitialization =>
+      @solve()
+      
+      assets = @tutorial.state 'assets'
+      asset = _.find assets, (asset) => asset.id is @id()
+      asset.completed = true
+      @tutorial.state 'assets', assets
     
-    assets = @tutorial.state 'assets'
-    asset = _.find assets, (asset) => asset.id is @id()
-    asset.completed = true
-    @tutorial.state 'assets', assets
+  _afterInitialization: (action) ->
+    @initialize()
+    
+    Tracker.autorun (computation) =>
+      return unless @initialized()
+      computation.stop()
+      action()
   
   hasGoalPixel: (x, y) ->
+    return unless @initialized()
+    
     # Check if any of the step areas require a pixel at these absolute bitmap coordinates.
     for stepArea in @stepAreas()
       return true if stepArea.hasGoalPixel x, y

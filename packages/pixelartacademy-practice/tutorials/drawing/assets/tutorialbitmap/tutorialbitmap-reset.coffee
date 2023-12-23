@@ -28,14 +28,21 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     bitmapData = bitmap.toPlainObject()
     
     # Reset references.
-    if references = bitmapData.references
-      newReferences = for reference in references
-        image: reference.image
-        position:
-          x: 100 * (Math.random() - 0.5)
-          y: 100 * (Math.random() - 0.5)
-      
-      bitmapData.references = newReferences
+    if references = @references?()
+      bitmapData.references = for reference in references
+        imageUrl = if _.isString reference then reference else reference.image.url
+        reference = {} if _.isString reference
+        
+        existingReference = _.find bitmapData.references, (bitmapReference) => bitmapReference.image.url is imageUrl
+        
+        # We need to copy extra meta data (like displayOptions from existing ones).
+        _.defaults
+          image: existingReference.image
+          position:
+            x: 100 * (Math.random() - 0.5)
+            y: 100 * (Math.random() - 0.5)
+        ,
+          reference
       
     # Reset properties.
     if properties = @properties()
