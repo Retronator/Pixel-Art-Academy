@@ -18,7 +18,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
   @bitmapInfo: -> """
     Artwork from [Into The Breach](https://subsetgames.com/itb.html), 2018
 
-    Artist: Justin Ma
+    Artist: Jay Ma
   """
   
   @fixedDimensions: -> width: 56, height: 86
