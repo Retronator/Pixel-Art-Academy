@@ -179,12 +179,18 @@
             height 150rem
             overflow initial
 
-          .group-name
+          .group-header
+            display flex
             height 19rem
             padding 6rem 9rem
             adventure()
             color atariGray(1)
             cursor pointer
+            justify-content space-between
+
+            .completed
+              color atariGreen(2)
+              adventure()
 
           .briefs
             position absolute

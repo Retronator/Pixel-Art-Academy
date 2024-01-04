@@ -14,7 +14,9 @@
                 <li class="group content {{groupActiveClass}}" {{style groupStyle}}>
                   <div class="group-header">
                     <div class="group-name">{{name}}</div>
-                    {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.Completion}}
+                    {{#if content.completed}}
+                      <div class="completed">✔︎</div>
+                    {{/if}}
                   </div>
                   {{#if assets}}
                     <ul class="briefs">

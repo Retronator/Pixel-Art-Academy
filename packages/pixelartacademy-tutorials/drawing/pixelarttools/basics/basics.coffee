@@ -19,3 +19,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics extends PAA.Tutorials.Drawing.P
     @Shortcuts
     @References
   ]
+  
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
+    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.DrawingTutorials.Basics

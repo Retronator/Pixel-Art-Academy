@@ -25,3 +25,7 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Practice.Project.Thing
   destroy: ->
     @assets.stop()
     @pico8Cartridge.destroy()
+    
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
+    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.Projects.Snake

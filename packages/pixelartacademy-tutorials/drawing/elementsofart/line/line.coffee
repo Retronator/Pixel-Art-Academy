@@ -19,3 +19,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line extends PAA.Tutorials.Drawing.Ele
     @Edges
     @Patterns
   ]
+
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals
+    chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.ElementsOfArt.Line

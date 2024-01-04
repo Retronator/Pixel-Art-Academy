@@ -214,7 +214,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   events: ->
     super(arguments...).concat
       'click .section': @onClickSection
-      'click .group-name': @onClickGroupName
+      'click .group-header': @onClickGroupHeader
       'click': @onClick
       'mouseenter .section': @onMouseEnterSection
       'mouseenter .group-name': @onMouseEnterGroupName
@@ -240,7 +240,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       # In that case the group handler will activate a new group in this new section.
       @activeGroup null unless clickInsideContent
 
-  onClickGroupName: (event) ->
+  onClickGroupHeader: (event) ->
     group = @currentData()
     section = @parentDataWith 'groups'
     

@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum..');
   api.addFile('reality..');
   api.addFile('echo..');
+  api.addFile('melody..');
   api.addFile('everything..');
   api.addFile('workforce..');
 
@@ -502,6 +503,18 @@ Package.onUse(function(api) {
 
   api.addFile('echo/nodes/valueequals');
   api.addFile('echo/nodes/valuechange');
+
+  // Artificial Melody
+
+  api.addFile('melody/composition');
+  api.addFile('melody/section');
+  api.addFile('melody/transition');
+  api.addFile('melody/event');
+  api.addFile('melody/sectionhandle');
+  api.addFile('melody/eventhandle');
+  api.addFile('melody/playback');
+
+  api.addFile('melody/events/player');
 
   // Artificial Everything
 

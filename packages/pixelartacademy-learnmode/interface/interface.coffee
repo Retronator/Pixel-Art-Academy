@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AEc = Artificial.Echo
+AMe = Artificial.Melody
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
@@ -11,6 +12,13 @@ class LM.Interface extends LOI.Interface
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
       focusPoint: AEc.ValueTypes.String
+      inGameMusicInLocation: AEc.ValueTypes.Boolean
+      homeScreen: AEc.ValueTypes.Trigger
+      tutorialStart: AEc.ValueTypes.Trigger
+      tutorialMiddle: AEc.ValueTypes.Trigger
+      tutorialEnding: AEc.ValueTypes.Trigger
+      challengeStart: AEc.ValueTypes.Trigger
+      projectStart: AEc.ValueTypes.Trigger
     
   @FocusPoints:
     Play: 'Play'

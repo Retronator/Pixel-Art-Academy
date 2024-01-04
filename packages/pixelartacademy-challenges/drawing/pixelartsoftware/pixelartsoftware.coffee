@@ -105,3 +105,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
         assets.push @_pixelArtSoftwareAssets[asset.id]
 
     assets
+  
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
+    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.DrawingChallenges.CopyReference

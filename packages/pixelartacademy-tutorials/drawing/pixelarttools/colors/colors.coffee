@@ -16,3 +16,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
     @ColorPicking
     @QuickColorPicking
   ]
+  
+  content: ->
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
+    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.DrawingTutorials.Colors

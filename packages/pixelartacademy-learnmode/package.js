@@ -24,6 +24,7 @@ Package.onUse(function(api) {
   api.addFile('chapter..');
 
   api.addComponent('interface..');
+  api.addFile('interface/interface-music');
   api.addComponent('interface/studio..');
 
   api.addFile('content..');

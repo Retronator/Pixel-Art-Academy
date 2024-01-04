@@ -61,6 +61,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
               name: => sectionThing.fullName()
               noAssetsInstructions: => sectionThing.noAssetsInstructions?()
               assets: assets
+              content: => sectionThing.content?()
 
         section =
           nameKey: @constructor.Sections["#{_.upperFirst sectionThingName}s"]
