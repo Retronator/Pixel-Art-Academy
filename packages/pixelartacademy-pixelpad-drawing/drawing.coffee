@@ -111,6 +111,13 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
 
     # Inform that we've handled the back button.
     true
+  
+  inGameMusicInLocation: ->
+    # Play music in location when in the editor or if the asset requests it.
+    if activeAsset = @portfolio()?.activeAsset()
+      return activeAsset.inGameMusicInLocation() if activeAsset.inGameMusicInLocation
+    
+    @editor()?.active()
 
   activeAssetClass: ->
     portfolio = @portfolio()

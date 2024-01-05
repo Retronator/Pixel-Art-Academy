@@ -12,6 +12,8 @@ class LM.Interface extends LOI.Interface
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
       focusPoint: AEc.ValueTypes.String
+      playAmbient: AEc.ValueTypes.Boolean
+      muteInGameAudio: AEc.ValueTypes.Boolean
       inGameMusicInLocation: AEc.ValueTypes.Boolean
       homeScreen: AEc.ValueTypes.Trigger
       tutorialStart: AEc.ValueTypes.Trigger
@@ -52,6 +54,19 @@ class LM.Interface extends LOI.Interface
     
     # Manually load Audio since audio manager wasn't available when calling super.
     @constructor.Audio.load @audioManager
+    
+    # Play ambient when in the play focus and in the audio section.
+    @autorun (computation) =>
+      if @audio.focusPoint.value() is @constructor.FocusPoints.Play
+        value = true
+      
+      else if LOI.adventure.ready() and LOI.adventure.currentLocationId() is LM.Locations.MainMenu.id()
+        value = LOI.adventure.currentLocation().menuItems.inAudio()
+      
+      else
+        value = false
+      
+      @audio.playAmbient value
     
   onRendered: ->
     super arguments...

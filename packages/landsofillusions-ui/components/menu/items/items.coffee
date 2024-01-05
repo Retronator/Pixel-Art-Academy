@@ -12,6 +12,8 @@ class LOI.Components.Menu.Items extends LOI.Component
   @Screens =
     MainMenu: 'MainMenu'
     Settings: 'Settings'
+    Display: 'Display'
+    Audio: 'Audio'
     Permissions: 'Permissions'
     Extras: 'Extras'
     
@@ -71,6 +73,12 @@ class LOI.Components.Menu.Items extends LOI.Component
   inSettings: ->
     @currentScreen() is @constructor.Screens.Settings
   
+  inDisplay: ->
+    @currentScreen() is @constructor.Screens.Display
+    
+  inAudio: ->
+    @currentScreen() is @constructor.Screens.Audio
+  
   inPermissions: ->
     @currentScreen() is @constructor.Screens.Permissions
     
@@ -117,7 +125,8 @@ class LOI.Components.Menu.Items extends LOI.Component
     super(arguments...).concat
       'mouseenter .actionable': @onMouseEnterActionable
       'click .actionable': @onClickActionable
-      
+      'click .back-to-settings': @onClickBackToSettings
+
       # Main menu
       'click .main-menu .continue': @onClickMainMenuContinue
       'click .main-menu .new': @onClickMainMenuNew
@@ -129,21 +138,27 @@ class LOI.Components.Menu.Items extends LOI.Component
       'click .main-menu .quit': @onClickMainMenuQuit
 
       # Settings
+      'click .settings .display': @onClickSettingsDisplay
       'click .settings .audio': @onClickSettingsAudio
-      'input .settings .sound-volume': @onInputSettingsSoundVolume
-      'input .settings .music-volume': @onInputSettingsMusicVolume
-      'click .settings .graphics-scale .previous-button': @onClickSettingsGraphicsScalePreviousButton
-      'click .settings .graphics-scale .next-button': @onClickSettingsGraphicsScaleNextButton
-      'click .settings .smooth-shading': @onClickSettingsSmoothShading
       'click .settings .permissions': @onClickSettingsPermissions
       'click .settings .back-to-menu': @onClickSettingsBackToMenu
+      
+      # Display
+      'click .display .graphics-scale .previous-button': @onClickDisplayGraphicsScalePreviousButton
+      'click .display .graphics-scale .next-button': @onClickDisplayGraphicsScaleNextButton
+      'click .display .smooth-shading': @onClickDisplaySmoothShading
+    
+      # Audio
+      'click .audio .enabled': @onClickAudioEnabled
+      'input .audio .sound-volume': @onInputAudioSoundVolume
+      'input .audio .ambient-volume': @onInputAudioAmbientVolume
+      'input .audio .music-volume': @onInputAudioMusicVolume
 
       # Permissions
       'click .permissions .persist-settings': @onClickPermissionsPersistSettings
       'click .permissions .persist-game-state': @onClickPermissionsPersistGameState
       'click .permissions .persist-command-history': @onClickPermissionsPersistCommandHistory
       'click .permissions .persist-login': @onClickPermissionsPersistLogin
-      'click .permissions .back-to-settings': @onClickPermissionsBackToSettings
   
   onMouseEnterActionable: (event) ->
     @audio.hover() unless @_justClicked
@@ -228,7 +243,13 @@ class LOI.Components.Menu.Items extends LOI.Component
         callback: =>
           LOI.adventure.quitGame() if dialog.result
 
+  onClickSettingsDisplay: (event) ->
+    @currentScreen @constructor.Screens.Display
+    
   onClickSettingsAudio: (event) ->
+    @currentScreen @constructor.Screens.Audio
+
+  onClickAudioEnabled: (event) ->
     switch LOI.settings.audio.enabled.value()
       when LOI.Settings.Audio.Enabled.Off
         # Fullscreen option is only available in the browser.
@@ -246,20 +267,23 @@ class LOI.Components.Menu.Items extends LOI.Component
 
     LOI.settings.audio.enabled.value value
     
-  onInputSettingsSoundVolume: (event) ->
+  onInputAudioSoundVolume: (event) ->
     @_changeVolume 'sound', event
     
     # Give audio feedback to indicate loudness of the sounds.
     @audio.click()
   
-  onInputSettingsMusicVolume: (event) ->
+  onInputAudioAmbientVolume: (event) ->
+    @_changeVolume 'ambient', event
+    
+  onInputAudioMusicVolume: (event) ->
     @_changeVolume 'music', event
     
   _changeVolume: (property, event) ->
     value = parseFloat $(event.target).val()
     LOI.settings.audio["#{property}Volume"].value value
   
-  onClickSettingsGraphicsScalePreviousButton: (event) ->
+  onClickDisplayGraphicsScalePreviousButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value()
     currentValue--
     currentValue = null if currentValue < 2
@@ -267,14 +291,14 @@ class LOI.Components.Menu.Items extends LOI.Component
     LOI.settings.graphics.minimumScale.value currentValue or 2
     LOI.settings.graphics.maximumScale.value currentValue
 
-  onClickSettingsGraphicsScaleNextButton: (event) ->
+  onClickDisplayGraphicsScaleNextButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value() or 1
     currentValue++
 
     LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
 
-  onClickSettingsSmoothShading: (event) ->
+  onClickDisplaySmoothShading: (event) ->
     smoothShadingValue = LOI.settings.graphics.smoothShading.value
     smoothShadingValue not smoothShadingValue()
 
@@ -329,5 +353,5 @@ class LOI.Components.Menu.Items extends LOI.Component
     else
       consentField.showDialog()
 
-  onClickPermissionsBackToSettings: (event) ->
+  onClickBackToSettings: (event) ->
     @currentScreen @constructor.Screens.Settings

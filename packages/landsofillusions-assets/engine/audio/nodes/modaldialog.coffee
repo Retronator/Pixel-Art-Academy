@@ -49,7 +49,7 @@ class LOI.Assets.Engine.Audio.Nodes.ModalDialog extends AEc.Node
       return true if modalDialogs.length and '_any' in componentNames
       
       for modalDialog in modalDialogs
-        return true if modalDialog.constructor.componentName() in componentNames
+        return true if modalDialog.dialog.constructor.componentName() in componentNames
         
       false
     ,

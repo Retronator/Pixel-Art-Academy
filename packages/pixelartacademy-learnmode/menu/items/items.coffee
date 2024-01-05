@@ -43,6 +43,9 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     else
       super arguments...
   
+  inGameMusicOutput: ->
+    LOI.settings.audio.inGameMusicOutput.value()
+  
   extrasVisible: ->
     # Extras are visible only on the landing page.
     @options.landingPage
@@ -57,7 +60,8 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .main-menu .progress': @onClickMainMenuProgress
       'click .main-menu .extras': @onClickMainMenuExtras
       'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
-      'click .settings .fullscreen': @onClickSettingsFullscreen
+      'click .display .fullscreen': @onClickDisplayFullscreen
+      'click .audio .in-game-music': @onClickAudioInGameMusic
       'click .extras .courses': @onClickExtrasCourses
       'click .extras .credits': @onClickExtrasCredits
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
@@ -103,10 +107,12 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
 
     LOI.adventure.menu.hideMenu()
     LOI.adventure.deactivateActiveItem()
+    LOI.adventure.interface.quitting true
     
     Meteor.setTimeout =>
       LOI.adventure.quitGame callback: =>
         LOI.adventure.interface.goToMainMenu()
+        LOI.adventure.interface.quitting false
         
         # Notify that we've handled the quitting sequence.
         true
@@ -137,9 +143,22 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
     ,
       1000
   
-  onClickSettingsFullscreen: (event) ->
+  onClickDisplayFullscreen: (event) ->
     # Act the same as the main menu fullscreen button.
     @onClickMainMenuFullscreen event
+  
+  onClickAudioInGameMusic: (event) ->
+    switch LOI.settings.audio.inGameMusicOutput.value()
+      when LOI.Settings.Audio.InGameMusicOutput.Dynamic
+        value = LOI.Settings.Audio.InGameMusicOutput.InLocation
+      
+      when LOI.Settings.Audio.InGameMusicOutput.InLocation
+        value = LOI.Settings.Audio.InGameMusicOutput.Direct
+      
+      when LOI.Settings.Audio.InGameMusicOutput.Direct
+        value = LOI.Settings.Audio.InGameMusicOutput.Dynamic
+      
+    LOI.settings.audio.inGameMusicOutput.value value
 
   onClickSettingsBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu

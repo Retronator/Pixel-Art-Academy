@@ -1,9 +1,16 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AEc = Artificial.Echo
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.OS extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.OS'
+class PAA.PixelPad.OS extends LOI.Component
+  @id: -> 'PixelArtAcademy.PixelPad.OS'
+  @register @id()
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      complete: AEc.ValueTypes.Trigger
 
   constructor: (@pixelPad) ->
     super arguments...

@@ -37,46 +37,57 @@
         {{/if}}
       </ul>
     {{/if}}
+
     {{#if inSettings}}
       <ul class="settings menu">
         <!-- li class="language menu-item">
           Language: English
         </li -->
-        {{#unless isBrowser}}
-          <li class="menu-item"><span class="fullscreen actionable">
-            Fullscreen:
-            {{#if isFullscreen}}
-              on
-            {{else}}
-              off
-            {{/if}}
-          </span></li>
-        {{/unless}}
-        <li class="graphics-scale menu-item">
-          Pixel scale:
-          {{#if graphicsMaximumScale}}
-            <button class="previous-button actionable">◀</button>
-          {{/if}}
-          {{#if graphicsMaximumScale}}
-            {{graphicsMaximumScale}}x
-          {{else}}
-            Auto
-          {{/if}}
-          <button class="next-button actionable">▶</button>
-        </li>
-        <li class="menu-item"><span class="audio actionable">
-          Audio:
-          {{#if $is audioEnabled 'On'}}on{{/if}}
-          {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
-          {{#if $is audioEnabled 'Off'}}off{{/if}}
-        </span></li>
-        {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
+        <li class="menu-item"><span class="actionable display">Display</span></li>
+        <li class="menu-item"><span class="actionable audio">Audio</span></li>
         {{#if isBrowser}}
           <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
         {{/if}}
         <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
       </ul>
     {{/if}}
+
+    {{#if inDisplay}}
+      <ul class="display menu">
+        {{#unless isBrowser}}
+          <li class="menu-item"><span class="fullscreen actionable">
+              Fullscreen:
+            {{#if isFullscreen}}
+              on
+            {{else}}
+              off
+            {{/if}}
+            </span></li>
+        {{/unless}}
+        {{> LandsOfIllusions.Components.Menu.Items.GraphicsScale}}
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inAudio}}
+      <ul class="audio menu">
+        <li class="menu-item"><span class="enabled actionable">
+          Audio:
+          {{#if $is audioEnabled 'On'}}on{{/if}}
+          {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
+          {{#if $is audioEnabled 'Off'}}off{{/if}}
+        </span></li>
+        {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
+        <li class="menu-item"><span class="in-game-music actionable">
+          Music effects:
+          {{#if $is inGameMusicOutput 'Dynamic'}}automatic{{/if}}
+          {{#if $is inGameMusicOutput 'InLocation'}}radio{{/if}}
+          {{#if $is inGameMusicOutput 'Direct'}}off{{/if}}
+        </span></li>
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
     {{#if inExtras}}
       <ul class="extras menu">
         <li class="menu-item"><span class="courses actionable">Courses preview</span></li>

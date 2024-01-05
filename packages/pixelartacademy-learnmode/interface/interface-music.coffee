@@ -236,8 +236,12 @@ class LM.Interface extends LM.Interface
 
     @autorun (computation) =>
       if @inGameMusicPlaying()
-        Meteor.clearTimeout @_musicStopTimeout
-        Tracker.nonreactive => @musicPlayback.start()
+        # Start the music after a short amount of silence.
+        @_musicStartTimeout ?= Meteor.setTimeout =>
+          @musicPlayback.start()
+          @_musicStartTimeout = null
+        ,
+          2000
         
       else
         # Stop the music after a fade out.
@@ -296,8 +300,29 @@ class LM.Interface extends LM.Interface
           
     # Control if the in-game music is played through the location or directly.
     @autorun (computation) =>
-      # By default we switch between the modes depending on whether we're in the drawing editor.
-      @audio.inGameMusicInLocation PAA.PixelPad.Apps.Drawing.Editor.getEditor()?.active()
+      inLocation = switch LOI.settings.audio.inGameMusicOutput.value()
+        when LOI.Settings.Audio.InGameMusicOutput.InLocation then true
+        when LOI.Settings.Audio.InGameMusicOutput.Direct then false
+        else
+          pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+          pixelPad?.os.currentApp().inGameMusicInLocation?()
+      
+      @audio.inGameMusicInLocation inLocation
+      
+    # Mute in-game audio in the menu, except in the audio section.
+    @quitting = new ReactiveField false
+    
+    @autorun (computation) =>
+      if LOI.adventure.menu.visible()
+        value = not LOI.adventure.menu.items.inAudio()
+      
+      else if @quitting() or LOI.adventure.currentLocationId() is LM.Locations.MainMenu.id()
+        value = true
+        
+      else
+        value = false
+        
+      @audio.muteInGameAudio value
 
   onDestroyed: ->
     super arguments...

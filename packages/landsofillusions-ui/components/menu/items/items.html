@@ -62,6 +62,7 @@
         {{/if}}
       </ul>
     {{/if}}
+
     {{#if inSettings}}
       <ul class="settings menu">
         {{!
@@ -69,39 +70,61 @@
           Language: English
         </li>
         }}
-        <li class="graphics-scale menu-item">
-          Pixel scale:
-          {{#if graphicsMaximumScale}}
-            <button class="previous-button">◀</button>
-          {{/if}}
-          {{#if graphicsMaximumScale}}
-            {{graphicsMaximumScale}}x
-          {{else}}
-            Auto
-          {{/if}}
-          <button class="next-button">▶</button>
-        </li>
+        <li class="menu-item"><span class="actionable display">Display</span></li>
+        <li class="menu-item"><span class="actionable audio">Audio</span></li>
+        <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
+        <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inDisplay}}
+      <ul class="display menu">
+        {{> LandsOfIllusions.Components.Menu.Items.GraphicsScale}}
         <li class="menu-item"><span class="smooth-shading actionable">
           Smooth shading: {{#if smoothShading}}on{{else}}off{{/if}}
         </span></li>
-        <li class="menu-item"><span class="audio actionable">
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inAudio}}
+      <ul class="audio menu">
+        <li class="menu-item"><span class="enabled actionable">
           Audio:
           {{#if $is audioEnabled 'On'}}on{{/if}}
           {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
           {{#if $is audioEnabled 'Off'}}off{{/if}}
         </span></li>
         {{> LandsOfIllusions.Components.Menu.Items.VolumeControls}}
-        <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
-        <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
+        <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
       </ul>
     {{/if}}
+
     {{> LandsOfIllusions.Components.Menu.Items.Permissions}}
   </div>
+</template>
+
+<template name="LandsOfIllusions.Components.Menu.Items.GraphicsScale">
+  <li class="graphics-scale menu-item">
+    Pixel scale:
+    {{#if graphicsMaximumScale}}
+      <button class="previous-button">◀</button>
+    {{/if}}
+    {{#if graphicsMaximumScale}}
+      {{graphicsMaximumScale}}x
+    {{else}}
+      Auto
+    {{/if}}
+    <button class="next-button">▶</button>
+  </li>
 </template>
 
 <template name="LandsOfIllusions.Components.Menu.Items.VolumeControls">
   <li class="menu-item">
     Sounds: <input class="sound-volume" type="range" min="0" max="1" step="0.1" value="{{soundVolume}}"/>
+  </li>
+  <li class="menu-item">
+    Ambient: <input class="ambient-volume" type="range" min="0" max="1" step="0.1" value="{{ambientVolume}}"/>
   </li>
   <li class="menu-item">
     Music: <input class="music-volume" type="range" min="0" max="1" step="0.1" value="{{musicVolume}}"/>

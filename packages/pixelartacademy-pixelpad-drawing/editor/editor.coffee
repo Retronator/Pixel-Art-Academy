@@ -172,6 +172,15 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
           # Set a black direct color.
           else
             paintHelper.setDirectColor r: 0, g: 0, b: 0
+            
+    # React to completing assets.
+    @autorun (computation) =>
+      return unless asset = @activeAsset()
+      return unless asset.completed
+      
+      completed = asset.completed()
+      @drawing.os.audio.complete() if @drawingActive() and completed and not @_assetWasCompleted
+      @_assetWasCompleted = completed
   
   onRendered: ->
     super arguments...

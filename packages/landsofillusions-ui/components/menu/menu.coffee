@@ -12,9 +12,9 @@ class LOI.Components.Menu extends AM.Component
   constructor: (@options = {}) ->
     super arguments...
 
-    @menuVisible = new ReactiveField false
+    @visible = new ReactiveField false
 
-    @menuItems = new (@options.itemsClass or @constructor.Items) @
+    @items = new (@options.itemsClass or @constructor.Items) @
 
     @signIn = new LOI.Components.SignIn
   
@@ -32,7 +32,7 @@ class LOI.Components.Menu extends AM.Component
     super arguments...
 
     $(document).on 'keydown.menu', (event) =>
-      return unless LOI.adventure.interface.active() or @menuVisible()
+      return unless LOI.adventure.interface.active() or @visible()
       return if LOI.adventure.currentContext()
       
       # Make sure we're the active modal dialog.
@@ -45,7 +45,7 @@ class LOI.Components.Menu extends AM.Component
           customShowMenuHandler()
 
         else
-          if @menuVisible()
+          if @visible()
             @hideMenu()
 
           else
@@ -66,7 +66,7 @@ class LOI.Components.Menu extends AM.Component
       dontRender: true
 
     # Make menu visible and do the fade in.
-    @menuVisible true
+    @visible true
     @$('.menu-overlay').velocity('stop').velocity
       opacity: [1, 0]
     ,
@@ -84,18 +84,18 @@ class LOI.Components.Menu extends AM.Component
     ,
       duration: @_transitionDuration
       complete: =>
-        @menuVisible false
+        @visible false
         
         # Move back to the main menu so that when we come back, we'll start fresh.
-        @menuItems.goToMainMenu()
+        @items.goToMainMenu()
 
   display: -> LOI.adventure.interface.display
 
-  menuVisibleClass: ->
-    'visible' if @menuVisible()
+  visibleClass: ->
+    'visible' if @visible()
 
   toolbarVisible: ->
-    'visible' if @customShowMenu() or not @menuVisible()
+    'visible' if @customShowMenu() or not @visible()
 
   audioEnabledClass: ->
     'audio-enabled' if LOI.adventure.interface.audioManager.enabled()

@@ -113,6 +113,10 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         device.powerStart()
       ,
         1500
-
+  
+  inGameMusicInLocation: ->
+    # Play music in location when viewing the device.
+    AB.Router.getParameter 'parameter4'
+    
   cartridgeActiveClass: ->
     'cartridge-active' if @cartridge()
