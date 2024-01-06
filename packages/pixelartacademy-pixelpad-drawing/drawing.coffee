@@ -3,6 +3,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+LM = PixelArtAcademy.LearnMode
 
 class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
   # editorId: which editor component to use for editing sprites in the app
@@ -112,12 +113,12 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     # Inform that we've handled the back button.
     true
   
-  inGameMusicInLocation: ->
+  inGameMusicMode: ->
     # Play music in location when in the editor or if the asset requests it.
     if activeAsset = @portfolio()?.activeAsset()
-      return activeAsset.inGameMusicInLocation() if activeAsset.inGameMusicInLocation
+      return activeAsset.inGameMusicMode() if activeAsset.inGameMusicMode
     
-    @editor()?.active()
+    if @editor()?.active() then LM.Interface.InGameMusicMode.InLocation else LM.Interface.InGameMusicMode.Direct
 
   activeAssetClass: ->
     portfolio = @portfolio()

@@ -1,6 +1,8 @@
 FM = FataMorgana
 LOI = LandsOfIllusions
 
+_position = x: 0, y: 0
+
 class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
   constructor: (@pixelCanvas) ->
     @pixelGridData = new ComputedField =>
@@ -60,13 +62,17 @@ class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
         bottom: Math.ceil viewportBounds.bottom()
 
     for y in [gridBounds.top..gridBounds.bottom]
-      pixelPerfectCoordinate = camera.roundCanvasToWindowPixel x: 0, y: y
-      context.moveTo gridBounds.left, pixelPerfectCoordinate.y
-      context.lineTo gridBounds.right, pixelPerfectCoordinate.y
+      _position.x = 0
+      _position.y = y
+      camera.roundCanvasToWindowPixel _position, _position
+      context.moveTo gridBounds.left, _position.y
+      context.lineTo gridBounds.right, _position.y
 
     for x in [gridBounds.left..gridBounds.right]
-      pixelPerfectCoordinate = camera.roundCanvasToWindowPixel x: x, y: 0
-      context.moveTo pixelPerfectCoordinate.x, gridBounds.top
-      context.lineTo pixelPerfectCoordinate.x, gridBounds.bottom
+      _position.x = x
+      _position.y = 0
+      camera.roundCanvasToWindowPixel _position, _position
+      context.moveTo _position.x, gridBounds.top
+      context.lineTo _position.x, gridBounds.bottom
   
     context.stroke()

@@ -88,3 +88,6 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
         continue if @stepArea.hasGoalPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
         @_drawPixelHint context, x, y, null
+    
+    # Explicit return to avoid result collection.
+    return

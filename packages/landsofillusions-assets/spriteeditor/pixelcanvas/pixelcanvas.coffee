@@ -56,6 +56,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     
     @canvas = new ReactiveField null
     @context = new ReactiveField null
+    
+    @_drawToContextOptions =
+      lightDirection: null
+      camera: null
+      editor: @
+      smoothShading: false
 
   onCreated: ->
     super arguments...
@@ -199,18 +205,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   
     lightDirection = @lightDirectionHelper()
     shadingEnabled = @shadingEnabled()
+    
+    @_drawToContextOptions.lightDirection = if shadingEnabled then lightDirection() else null
+    @_drawToContextOptions.camera = camera
   
     for component in @drawComponents()
       continue unless component
     
-      context.save()
-      component.drawToContext context,
-        lightDirection: if shadingEnabled then lightDirection() else null
-        camera: camera
-        editor: @
-        smoothShading: false
-    
-      context.restore()
+      component.drawToContext context, @_drawToContextOptions
 
   onRendered: ->
     super arguments...

@@ -19,7 +19,7 @@ class LM.Interface extends LM.Interface
       
     introSection.events = [
       new AMe.Event.Player introSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-intro.mp3'
+        audioUrl: '/pixelartacademy/learnmode/interface/music/intro.mp3'
     ]
     
     @musicComposition.sections.push introSection
@@ -32,14 +32,7 @@ class LM.Interface extends LM.Interface
     
     homeScreenSection.events = [
       new AMe.Event.Player homeScreenSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player homeScreenSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player homeScreenSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-tutorial-start.mp3'
-        time: 8
+        audioUrl: '/pixelartacademy/learnmode/interface/music/homescreen.mp3'
     ]
     
     @musicComposition.sections.push homeScreenSection
@@ -51,17 +44,7 @@ class LM.Interface extends LM.Interface
       
     tutorialStartSection.events = [
       new AMe.Event.Player tutorialStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player tutorialStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/drums-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player tutorialStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player tutorialStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-tutorial-start.mp3'
-        time: 8
+        audioUrl: '/pixelartacademy/learnmode/interface/music/tutorial-start.mp3'
     ]
     
     @musicComposition.sections.push tutorialStartSection
@@ -73,17 +56,7 @@ class LM.Interface extends LM.Interface
       
     tutorialMiddleSection.events = [
       new AMe.Event.Player tutorialMiddleSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player tutorialMiddleSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/drums-tutorial-start.mp3'
-    ,
-      new AMe.Event.Player tutorialMiddleSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-tutorial-middle.mp3'
-    ,
-      new AMe.Event.Player tutorialMiddleSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-tutorial-middle.mp3'
-        time: 8
+        audioUrl: '/pixelartacademy/learnmode/interface/music/tutorial-middle.mp3'
     ]
     
     @musicComposition.sections.push tutorialMiddleSection
@@ -95,29 +68,7 @@ class LM.Interface extends LM.Interface
       
     tutorialEndingSection.events = [
       new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-tutorial-ending.mp3'
-    ,
-      new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/chords-tutorial-ending.mp3'
-        time: 16
-        volume: 0.5
-    ,
-      new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/hihats-tutorial-ending.mp3'
-        time: 8
-        volume: 0.2
-    ,
-      new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/drums-tutorial-ending.mp3'
-        time: 8
-    ,
-      new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-tutorial-ending.mp3'
-        volume: 0.5
-    ,
-      new AMe.Event.Player tutorialEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-tutorial-ending.mp3'
-        time: 4
+        audioUrl: '/pixelartacademy/learnmode/interface/music/tutorial-ending.mp3'
     ]
     
     @musicComposition.sections.push tutorialEndingSection
@@ -129,26 +80,7 @@ class LM.Interface extends LM.Interface
       
     challengeStartSection.events = [
       new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-challenge-start.mp3'
-    ,
-      new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/chords-challenge-start.mp3'
-        volume: 0.2
-    ,
-      new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/hihats-challenge-start.mp3'
-        volume: 0.2
-    ,
-      new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/drums-challenge-start.mp3'
-    ,
-      new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-challenge-start.mp3'
-        time: 8
-        volume: 0.5
-    ,
-      new AMe.Event.Player challengeStartSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-challenge-start.mp3'
+        audioUrl: '/pixelartacademy/learnmode/interface/music/challenge-start.mp3'
     ]
     
     @musicComposition.sections.push challengeStartSection
@@ -160,21 +92,7 @@ class LM.Interface extends LM.Interface
       
     challengeEndingSection.events = [
       new AMe.Event.Player challengeEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-challenge-ending.mp3'
-    ,
-      new AMe.Event.Player challengeEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/hihats-challenge-ending.mp3'
-        volume: 0.2
-    ,
-      new AMe.Event.Player challengeEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/drums-challenge-ending.mp3'
-    ,
-      new AMe.Event.Player challengeEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-challenge-ending.mp3'
-        volume: 0.5
-    ,
-      new AMe.Event.Player challengeEndingSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-challenge-ending.mp3'
+        audioUrl: '/pixelartacademy/learnmode/interface/music/challenge-ending.mp3'
     ]
     
     @musicComposition.sections.push challengeEndingSection
@@ -186,18 +104,7 @@ class LM.Interface extends LM.Interface
       
     projectSection.events = [
       new AMe.Event.Player projectSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/bass-project.mp3'
-    ,
-      new AMe.Event.Player projectSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/drums-project.mp3'
-    ,
-      new AMe.Event.Player projectSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/melody-project.mp3'
-        time: 6
-    ,
-      new AMe.Event.Player projectSection,
-        audioUrl: '/pixelartacademy/learnmode/interface/music/pads-project.mp3'
-        time: 14
+        audioUrl: '/pixelartacademy/learnmode/interface/music/project.mp3'
     ]
     
     @musicComposition.sections.push projectSection
@@ -244,12 +151,7 @@ class LM.Interface extends LM.Interface
           2000
         
       else
-        # Stop the music after a fade out.
-        @_musicStopTimeout ?= Meteor.setTimeout =>
-          @musicPlayback.stop()
-          @_musicStopTimeout = null
-        ,
-          2000
+        @musicPlayback.stop()
       
     # Trigger events.
     @autorun (computation) =>
@@ -298,31 +200,23 @@ class LM.Interface extends LM.Interface
         when PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Projects
           @audio.projectStart()
           
-    # Control if the in-game music is played through the location or directly.
+    # Control how to play the in-game music.
     @autorun (computation) =>
-      inLocation = switch LOI.settings.audio.inGameMusicOutput.value()
-        when LOI.Settings.Audio.InGameMusicOutput.InLocation then true
-        when LOI.Settings.Audio.InGameMusicOutput.Direct then false
-        else
-          pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-          pixelPad?.os.currentApp().inGameMusicInLocation?()
+      pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+      value = pixelPad?.os.currentApp().inGameMusicMode?()
       
-      @audio.inGameMusicInLocation inLocation
+      unless value is @constructor.InGameMusicMode.Off
+        switch LOI.settings.audio.inGameMusicOutput.value()
+          when LOI.Settings.Audio.InGameMusicOutput.InLocation then value = @constructor.InGameMusicMode.InLocation
+          when LOI.Settings.Audio.InGameMusicOutput.Direct then value = @constructor.InGameMusicMode.Direct
       
-    # Mute in-game audio in the menu, except in the audio section.
-    @quitting = new ReactiveField false
-    
+      # We need separate booleans for whether the music is playing instead of an enum and how it's playing so that the effects don't change
+      @audio.inGameMusic value isnt @constructor.InGameMusicMode.Off
+      @audio.inGameMusicInLocation value is @constructor.InGameMusicMode.InLocation unless value is @constructor.InGameMusicMode.Off
+      
+    # Play the dynamic soundtrack when no custom music is playing.
     @autorun (computation) =>
-      if LOI.adventure.menu.visible()
-        value = not LOI.adventure.menu.items.inAudio()
-      
-      else if @quitting() or LOI.adventure.currentLocationId() is LM.Locations.MainMenu.id()
-        value = true
-        
-      else
-        value = false
-        
-      @audio.muteInGameAudio value
+      @audio.dynamicSoundtrack true
 
   onDestroyed: ->
     super arguments...

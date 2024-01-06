@@ -86,8 +86,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         height = pixelCanvasWindowSize.height / effectiveScale
         origin = @origin()
     
-        @renderableAreaCanvasBounds.width width * 3
-        @renderableAreaCanvasBounds.height height * 3
+        extrudeFactor = 3
+        @renderableAreaCanvasBounds.width width * extrudeFactor
+        @renderableAreaCanvasBounds.height height * extrudeFactor
         @renderableAreaCanvasBounds.x origin.x - width
         @renderableAreaCanvasBounds.y origin.y - height
 
@@ -214,80 +215,79 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     translateY = @viewportCanvasBounds.y()
     context.translate -translateX, -translateY
 
-  transformCanvasToWindowCenter: (canvasCoordinate) ->
+  transformCanvasToWindowCenter: (canvasCoordinate, target = {}) ->
     effectiveScale = @effectiveScale()
     origin = @origin()
   
-    x = canvasCoordinate.x
-    y = canvasCoordinate.y
+    target.x = (canvasCoordinate.x - origin.x) * effectiveScale
+    target.y = (canvasCoordinate.y - origin.y) * effectiveScale
   
-    x: (x - origin.x) * effectiveScale
-    y: (y - origin.y) * effectiveScale
+    target
     
-  transformCanvasToWindow: (canvasCoordinate) ->
-    windowCoordinateCenter = @transformCanvasToWindowCenter canvasCoordinate
+  transformCanvasToWindow: (canvasCoordinate, target = {}) ->
+    @transformCanvasToWindowCenter canvasCoordinate, target
   
     pixelCanvasWindowSize = @pixelCanvas.windowSize()
     width = pixelCanvasWindowSize.width
     height = pixelCanvasWindowSize.height
     
-    windowCoordinateCenter.x += width / 2
-    windowCoordinateCenter.y += height / 2
+    target.x += width / 2
+    target.y += height / 2
   
-    windowCoordinateCenter
+    target
 
-  transformCanvasToDisplay: (canvasCoordinate) ->
-    windowCoordinate = @transformCanvasToWindow canvasCoordinate
+  transformCanvasToDisplay: (canvasCoordinate, target = {}) ->
+    @transformCanvasToWindow canvasCoordinate, target
     displayScale = @pixelCanvas.display.scale()
 
-    x: windowCoordinate.x / displayScale
-    y: windowCoordinate.y / displayScale
+    target.x /= displayScale
+    target.y /= displayScale
 
-  transformWindowToCanvas: (windowCoordinate) ->
+    target
+
+  transformWindowToCanvas: (windowCoordinate, target = {}) ->
     pixelCanvasWindowSize = @pixelCanvas.windowSize()
 
-    x = windowCoordinate.x - pixelCanvasWindowSize.width / 2
-    y = windowCoordinate.y - pixelCanvasWindowSize.height / 2
+    target.x = windowCoordinate.x - pixelCanvasWindowSize.width / 2
+    target.y = windowCoordinate.y - pixelCanvasWindowSize.height / 2
     
-    @transformWindowCenterToCanvas {x, y}
+    @transformWindowCenterToCanvas target, target
   
-  transformWindowCenterToCanvas: (windowCoordinate) ->
+  transformWindowCenterToCanvas: (windowCoordinate, target = {}) ->
     effectiveScale = @effectiveScale()
     origin = @origin()
     
-    x = windowCoordinate.x
-    y = windowCoordinate.y
+    target.x = windowCoordinate.x / effectiveScale + origin.x
+    target.y = windowCoordinate.y / effectiveScale + origin.y
     
-    x: x / effectiveScale + origin.x
-    y: y / effectiveScale + origin.y
+    target
 
-  transformDisplayToCanvas: (displayCoordinate) ->
+  transformDisplayToCanvas: (displayCoordinate, target = {}) ->
     displayScale = @pixelCanvas.display.scale()
 
-    windowCoordinate =
-      x: displayCoordinate.x * displayScale
-      y: displayCoordinate.y * displayScale
+    target.x = displayCoordinate.x * displayScale
+    target.y = displayCoordinate.y * displayScale
 
-    @transformWindowToCanvas windowCoordinate
+    @transformWindowToCanvas target, target
 
-  roundCanvasToWindowPixel: (canvasCoordinate) ->
-    windowCoordinate = @transformCanvasToWindowCenter canvasCoordinate
+  roundCanvasToWindowPixel: (canvasCoordinate, target = {}) ->
+    @transformCanvasToWindowCenter canvasCoordinate, target
     
     # Transform to corner of the canvas.
     canvasX = @canvasWindowBounds.x()
     canvasY = @canvasWindowBounds.y()
-    windowCoordinate.x -= canvasX
-    windowCoordinate.y -= canvasY
+    target.x -= canvasX
+    target.y -= canvasY
     
     # Move to the center of the pixel.
-    windowCoordinate.x = Math.floor(windowCoordinate.x) + 0.5
-    windowCoordinate.y = Math.floor(windowCoordinate.y) + 0.5
+    target.x = Math.floor(target.x) + 0.5
+    target.y = Math.floor(target.y) + 0.5
     
     # Transform back to window center.
-    windowCoordinate.x += canvasX
-    windowCoordinate.y += canvasY
+    target.x += canvasX
+    target.y += canvasY
 
-    @transformWindowCenterToCanvas windowCoordinate
+    @transformWindowCenterToCanvas target, target
 
   debugOutput: ->
     console.log "PIXEL CANVAS CAMERA"

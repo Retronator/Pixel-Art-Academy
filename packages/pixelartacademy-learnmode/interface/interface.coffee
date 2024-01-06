@@ -12,8 +12,9 @@ class LM.Interface extends LOI.Interface
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
       focusPoint: AEc.ValueTypes.String
-      playAmbient: AEc.ValueTypes.Boolean
+      dynamicSoundtrack: AEc.ValueTypes.Boolean
       muteInGameAudio: AEc.ValueTypes.Boolean
+      inGameMusic: AEc.ValueTypes.Boolean
       inGameMusicInLocation: AEc.ValueTypes.Boolean
       homeScreen: AEc.ValueTypes.Trigger
       tutorialStart: AEc.ValueTypes.Trigger
@@ -25,7 +26,12 @@ class LM.Interface extends LOI.Interface
   @FocusPoints:
     Play: 'Play'
     MainMenu: 'MainMenu'
-    
+  
+  @InGameMusicMode:
+    Direct: 'Direct'
+    InLocation: 'InLocation'
+    Off: 'Off'
+  
   onCreated: ->
     super arguments...
     
@@ -55,18 +61,22 @@ class LM.Interface extends LOI.Interface
     # Manually load Audio since audio manager wasn't available when calling super.
     @constructor.Audio.load @audioManager
     
-    # Play ambient when in the play focus and in the audio section.
+    # Mute in-game audio in the menus, except in the audio section. We have an additional extended silence during
+    # quitting when the game transitions from the play to the main menu location and audio would still be played as the
+    # adventure menu fades out before location switch.
+    @quitting = new ReactiveField false
+    
     @autorun (computation) =>
-      if @audio.focusPoint.value() is @constructor.FocusPoints.Play
-        value = true
+      if LOI.adventure.menu.visible()
+        value = not LOI.adventure.menu.items.inAudio()
       
-      else if LOI.adventure.ready() and LOI.adventure.currentLocationId() is LM.Locations.MainMenu.id()
-        value = LOI.adventure.currentLocation().menuItems.inAudio()
-      
+      else if @audio.focusPoint.value() is @constructor.FocusPoints.MainMenu
+        value = not LOI.adventure.currentLocation()?.menuItems?.inAudio()
+        
       else
-        value = false
+        value = @quitting()
       
-      @audio.playAmbient value
+      @audio.muteInGameAudio value
     
   onRendered: ->
     super arguments...
