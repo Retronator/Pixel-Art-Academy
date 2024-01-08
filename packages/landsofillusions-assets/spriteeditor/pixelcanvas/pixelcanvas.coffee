@@ -6,7 +6,8 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
-  # scrollingEnabled: boolean whether you can scroll to pan and zoom
+  # smoothScrolling: boolean whether you can scroll to pan and zoom with a smooth, 2D input device
+  # scrollToZoom: boolean whether you can change zoom levels by scrolling
   # components: array of helper IDs that should be drawn to context
   # displayMode: how to display the canvas relative to the pixel canvas
   # borderWidth: how many pixels to add as a border around the image in framed and full modes
@@ -31,7 +32,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     
   @componentDataFields: -> [
     'initialCameraScale'
-    'scrollingEnabled'
+    'smoothScrolling'
+    'scrollToZoom'
     'components'
     'displayMode'
     'borderWidth'

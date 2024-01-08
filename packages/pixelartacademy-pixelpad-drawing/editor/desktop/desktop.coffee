@@ -311,6 +311,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     components =
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         components: [PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents.id()]
+        scrollToZoom: true
       
     views = [
       type: FM.Menu.id()

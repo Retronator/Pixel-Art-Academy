@@ -21,8 +21,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       displayScale = @pixelCanvas.display.scale()
       @scale() * displayScale
 
-    @scrollingEnabled = new ComputedField =>
-      @pixelCanvas.scrollingEnabled()
+    @smoothScrolling = new ComputedField =>
+      @pixelCanvas.smoothScrolling()
+      
+    @scrollToZoom = new ComputedField =>
+      @pixelCanvas.scrollToZoom()
       
     @originData = new ComputedField =>
       @cameraData()?.child 'origin'
@@ -31,6 +34,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       @originData()?.value() or x: 0, y: 0
     ,
       EJSON.equals
+    
+    @zoomLevelsHelper = @pixelCanvas.interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
 
     # Calculate various bounds. Canvas bounds are relative to the asset origin.
     @assetCanvasBounds = new AE.Rectangle()
@@ -126,24 +131,44 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
           width: Math.floor(canvasBottomRight.x) - Math.floor(canvasTopLeft.x) + 1
           height: Math.floor(canvasBottomRight.y) - Math.floor(canvasTopLeft.y) + 1
           
-    # Enable panning with scrolling.
+    # Enable smooth pan and zoom with scrolling.
     @pixelCanvas.autorun (computation) =>
       # Wire up mouse wheel event once the sprite editor is rendered.
       $parent = options.$parent()
       return unless $parent
-
-      scrollingEnabled = @scrollingEnabled()
       
-      if scrollingEnabled and not @_scrollingFunction
+      smoothScrolling = @smoothScrolling()
+      
+      if smoothScrolling and not @_scrollingFunction
         # Enable the wheel event.
-        @_scrollingFunction = (event) => @_onWheel event
+        @_scrollingFunction = (event) => @_onSmoothScrollingWheel event
         $parent.on 'wheel', @_scrollingFunction
         
-      else if @_scrollingFunction and not scrollingEnabled
+      else if @_scrollingFunction and not smoothScrolling
         # Disable the wheel event.
         $parent.off 'wheel', @_scrollingFunction
-    
-  _onWheel: (event) ->
+        
+    # Enable discrete zoom changes with scrolling.
+    @pixelCanvas.autorun (computation) =>
+      # Create the discrete wheel event listener once the sprite editor is rendered.
+      $parent = options.$parent()
+      return unless $parent
+      
+      scrollToZoom = @scrollToZoom()
+      
+      if scrollToZoom and not @_discreteWheelEventListener
+        # Enable the wheel event.
+        @_discreteWheelEventListener = new AC.DiscreteWheelEventListener
+          callback: (sign) => @_onScrollToZoom sign
+          timeout: 0.1
+          $element: $parent
+        
+      else if @_discreteWheelEventListener and not scrollToZoom
+        # Disable the wheel event.
+        @_discreteWheelEventListener.destroy()
+        @_discreteWheelEventListener = null
+  
+  _onSmoothScrollingWheel: (event) ->
     event.preventDefault()
 
     effectiveScale = @effectiveScale()
@@ -192,7 +217,29 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       @originData().value
         x: oldOrigin.x + canvasDelta.x
         y: oldOrigin.y + canvasDelta.y
-
+        
+  _onScrollToZoom: (sign) ->
+    zoomLevels = @zoomLevelsHelper()
+    percentage = @scale() * 100
+    
+    newZoomLevel = null
+    
+    if sign > 0
+      # Zoom out.
+      for zoomLevel in zoomLevels by -1
+        if Math.round(zoomLevel) < Math.round(percentage)
+          newZoomLevel = zoomLevel
+          break
+          
+    else
+      # Zoom in.
+      for zoomLevel in zoomLevels
+        if Math.round(zoomLevel) > Math.round(percentage)
+          newZoomLevel = zoomLevel
+          break
+          
+    @setScale newZoomLevel / 100 if newZoomLevel
+  
   setScale: (scale) ->
     @scaleData().value scale
 

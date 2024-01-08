@@ -76,7 +76,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
   onActivated: ->
     # Create a pixel coordinates array large enough to hold the entire stroke.
-    return unless assetData = @editor().assetData()
+    return unless assetData = @editor()?.assetData()
     _createPixelCoordinates assetData.bounds.width, assetData.bounds.height
     _createStrokeMask assetData.bounds.width, assetData.bounds.height
     
