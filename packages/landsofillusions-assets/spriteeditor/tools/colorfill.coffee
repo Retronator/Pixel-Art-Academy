@@ -9,13 +9,13 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
 
   @initialize()
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
 
-    return unless @constructor.mouseState.leftButton
+    return unless @constructor.pointerState.mainButton
     
     return unless editor = @editor()
-    return unless pixelCoordinate = editor.mouse().pixelCoordinate()
+    return unless pixelCoordinate = editor.pointer().pixelCoordinate()
 
     # Make sure we have paint at all.
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint

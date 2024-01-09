@@ -49,7 +49,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
 
     if event.which is AC.Keys.shift
       # See if we've already started drawing.
-      if @mouseState.leftButton
+      if @pointerState.mainButton
         # We're already mid-stroke so we want to detect in which direction to lock the coordinate.
         @lockedCoordinate null
         @drawStraight true
@@ -79,7 +79,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
       # React to any modifier changes when line drawing.
       @updateChangedArea()
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
 
     # Register that the stroke has just started.
@@ -87,10 +87,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
 
     @_strokeActive = true
 
-    # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
+    # If pointer down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @processStroke()
 
-  onMouseUp: (event) ->
+  onPointerUp: (event) ->
     super arguments...
 
     return unless @_strokeActive
@@ -140,7 +140,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
 
     drawStraight = @drawStraight()
 
-    if @mouseState.leftButton and drawStraight
+    if @pointerState.mainButton and drawStraight
       unless lockedCoordinate = @lockedCoordinate()
         # Calculate which direction to lock to.
         if currentPixelCoordinates.x is lastPixelCoordinates.x
@@ -208,7 +208,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
     # TODO: Apply symmetry.
     # symmetryXOrigin = @options.editor().symmetryXOrigin?()
     #if symmetryXOrigin?
-    #  mirroredX = -@mouseState.x + 2 * symmetryXOrigin
+    #  mirroredX = -@pointerState.x + 2 * symmetryXOrigin
     #  xCoordinates.push [mirroredX, -1]
   
     assetData = @editor().assetData()
@@ -217,7 +217,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush extends LOI.Assets.Spri
     @applyTool()
 
   applyTool: ->
-    return unless @mouseState.leftButton
+    return unless @pointerState.mainButton
 
     assetData = @editor().assetData()
 

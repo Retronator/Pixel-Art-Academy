@@ -133,7 +133,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
           
     # Enable smooth pan and zoom with scrolling.
     @pixelCanvas.autorun (computation) =>
-      # Wire up mouse wheel event once the sprite editor is rendered.
+      # Wire up pointer wheel event once the sprite editor is rendered.
       $parent = options.$parent()
       return unless $parent
       
@@ -185,17 +185,17 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       # Also move the origin, depending on how much off-center we were zooming.
       canvasOrigin = $parent.offset()
 
-      mouseWindowCoordinate =
+      pointerWindowCoordinate =
         x: event.originalEvent.pageX - canvasOrigin.left
         y: event.originalEvent.pageY - canvasOrigin.top
 
-      mouseCanvasCoordinate = @transformWindowToCanvas mouseWindowCoordinate
+      pointerCanvasCoordinate = @transformWindowToCanvas pointerWindowCoordinate
 
       oldOrigin = @origin()
 
       offCenter =
-        x: mouseCanvasCoordinate.x - oldOrigin.x
-        y: mouseCanvasCoordinate.y - oldOrigin.y
+        x: pointerCanvasCoordinate.x - oldOrigin.x
+        y: pointerCanvasCoordinate.y - oldOrigin.y
 
       @originData().value
         x: oldOrigin.x + offCenter.x * (scaleChange - 1)

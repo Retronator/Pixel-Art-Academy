@@ -92,8 +92,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @_updatePreviewAutorun = @autorun (computation) =>
       return unless editor = @editor()
 
-      # Show preview when we're drawing a line and mouse is on the canvas.
-      preview = (@data.get('drawPreview') or @drawLine()) and editor.mouse().pixelCoordinate()
+      # Show preview when we're drawing a line and pointer is on the canvas.
+      preview = (@data.get('drawPreview') or @drawLine()) and editor.pointer().pixelCoordinate()
 
       if preview
         # Update preview pixels.
@@ -246,7 +246,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
       # React to any modifier changes when line drawing.
       @processStroke()
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
 
     # Register that the stroke has just started.
@@ -255,10 +255,10 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @strokeActive true
     @realtimeUpdating true
 
-    # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
+    # If pointer down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @processStroke()
 
-  onMouseUp: (event) ->
+  onPointerUp: (event) ->
     super arguments...
     
     @finalizeStroke()
@@ -385,8 +385,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     # TODO: Apply symmetry.
     # symmetryXOrigin = @options.editor().symmetryXOrigin?()
     #if symmetryXOrigin?
-    #  Note: Do not use mouseState.x anymore, instead use editor.mouse().pixelCoordinate().
-    #  mirroredX = -@constructor.mouseState.x + 2 * symmetryXOrigin
+    #  Note: Do not use pointerState.x anymore, instead use editor.pointer().pixelCoordinate().
+    #  mirroredX = -@constructor.pointerState.x + 2 * symmetryXOrigin
     #  xCoordinates.push [mirroredX, -1]
 
     @pixels @createPixelsFromStrokeMask assetData, _strokeMask

@@ -220,16 +220,16 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   events: ->
     super(arguments...).concat
       'load .image': @onLoadImage
-      'mousedown': @onMouseDown
-      'mousemove': @onMouseMove
-      'mouseleave': @onMouseLeave
+      'pointerdown': @onPointerDown
+      'pointermove': @onPointerMove
+      'pointerleave': @onPointerLeave
 
   onLoadImage: (event) ->
     @imageSize
       width: event.target.width
       height: event.target.height
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     return unless event.which is 1
 
     # Prevent browser select/dragging behavior
@@ -247,7 +247,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
         referenceCenter:
           x: offset.left + $reference.outerWidth() / 2
           y: offset.top + $reference.outerHeight() / 2
-        mouseCoordinate:
+        pointerCoordinate:
           x: event.clientX
           y: event.clientY
     else
@@ -258,11 +258,11 @@ class LOI.Assets.Components.References.Reference extends AM.Component
       @references.startDrag
         reference: @
         referencePosition: @currentPosition()
-        mouseCoordinate:
+        pointerCoordinate:
           x: event.clientX
           y: event.clientY
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     return if @resizingScale()?
 
     draggingScale = @references.draggingScale()
@@ -285,7 +285,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     @resizingDirection direction
 
-  onMouseLeave: (event) ->
+  onPointerLeave: (event) ->
     return if @resizingScale()?
 
     @resizingDirection null

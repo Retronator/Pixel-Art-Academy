@@ -136,7 +136,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     @references.hideActive false
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
     
     return unless event.which is 1
@@ -149,7 +149,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @parentOffset.left -= pixelPadOffset.left
       @parentOffset.top -= pixelPadOffset.top
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     # Don't allow resizing when not displayed.
     return unless @currentDisplayed()
 

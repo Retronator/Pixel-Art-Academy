@@ -1,34 +1,29 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
+class LOI.Assets.SpriteEditor.PixelCanvas.Pointer
   constructor: (@pixelCanvas) ->
-    # The mouse coordinate in native window (browser) pixels.
+    # The pointer coordinate in native window (browser) pixels.
     @absoluteWindowCoordinate = new ReactiveField null, EJSON.equals
 
-    # The mouse coordinate relative to sprite canvas in native window (browser) pixels.
+    # The pointer coordinate relative to sprite canvas in native window (browser) pixels.
     @windowCoordinate = new ReactiveField null, EJSON.equals
 
-    # The mouse coordinate relative to sprite canvas as measured in display pixels (as scaled by AM.Display).
+    # The pointer coordinate relative to sprite canvas as measured in display pixels (as scaled by AM.Display).
     @displayCoordinate = new ReactiveField null, EJSON.equals
 
-    # The floating point value where the mouse is in canvas' coordinate system.
+    # The floating point value where the pointer is in canvas' coordinate system.
     @canvasCoordinate = new ReactiveField null, EJSON.equals
 
-    # The integer value of asset's pixel the mouse is hovering over.
+    # The integer value of asset's pixel the pointer is hovering over.
     @pixelCoordinate = new ReactiveField null, EJSON.equals
 
-    # Wire up mouse move event once the sprite editor is rendered.
+    # Wire up pointer move event once the sprite editor is rendered.
     @pixelCanvas.autorun (computation) =>
       $pixelCanvas = @pixelCanvas.$pixelCanvas()
 
       return unless $pixelCanvas
       computation.stop()
 
-      $pixelCanvas.mousemove (event) =>
-        @_lastPageX = event.pageX
-        @_lastPageY = event.pageY
-        @updateCoordinates()
-  
       $pixelCanvas.on 'pointermove', (event) =>
         @_lastPageX = event.pageX
         @_lastPageY = event.pageY
@@ -40,8 +35,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
           @pixelCanvas.camera().origin()
           @updateCoordinates() if @pixelCoordinate()
 
-      # Remove coordinates when mouse leaves the canvas.
-      $pixelCanvas.mouseleave (event) =>
+      # Remove coordinates when pointer leaves the canvas.
+      $pixelCanvas.on 'pointerleave', (event) =>
         @windowCoordinate null
         @displayCoordinate null
         @canvasCoordinate null

@@ -57,7 +57,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
 
     @hoveredPixel = new ComputedField =>
       pixelCanvas = @interface.getEditorForActiveFile()
-      pixelCanvas.mouse().pixelCoordinate()
+      pixelCanvas.pointer().pixelCoordinate()
       
     # Due to animation, the evaluation paper is fully displayed a second after it's activated.
     @displayed = new ReactiveField false
@@ -223,21 +223,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
   events: ->
     super(arguments...).concat
       'click .paper': @onClickPaper
-      'mouseenter .paper': @onMouseEnterPaper
-      'mouseleave .paper': @onMouseLeavePaper
+      'pointerenter .paper': @onPointerEnterPaper
+      'pointerleave .paper': @onPointerLeavePaper
     
   onClickPaper: (event) ->
     return if @active()
 
     @activate()
   
-  onMouseEnterPaper: (event) ->
+  onPointerEnterPaper: (event) ->
     return if @active()
     
     @audio.lift()
     @_liftTime = Date.now()
     
-  onMouseLeavePaper: (event) ->
+  onPointerLeavePaper: (event) ->
     return if @active()
     
     @audio.release() if Date.now() - @_liftTime > 100

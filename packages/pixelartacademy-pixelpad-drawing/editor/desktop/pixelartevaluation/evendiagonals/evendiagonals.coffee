@@ -71,10 +71,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
   
   events: ->
     super(arguments...).concat
-      'mouseenter .category .count': @onMouseEnterCategory
-      'mouseleave .category .count': @onMouseLeaveCategory
+      'pointerenter .category .count': @onPointerEnterCategory
+      'pointerleave .category .count': @onPointerLeaveCategory
   
-  onMouseEnterCategory: (event) ->
+  onPointerEnterCategory: (event) ->
     category = @currentData()
     criterion = Template.parentData()
 
@@ -82,5 +82,5 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
       property: criterion.property
       value: category.id
   
-  onMouseLeaveCategory: (event) ->
+  onPointerLeaveCategory: (event) ->
     @pixelArtEvaluation.hoveredCategoryValue null

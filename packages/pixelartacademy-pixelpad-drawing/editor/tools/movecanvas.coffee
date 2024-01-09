@@ -17,8 +17,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
     @display = @interface.callAncestorWith 'display'
 
   onActivated: ->
-    # Listen for mouse down.
-    $(document).on "mousedown.pixelartacademy-pixelpad-apps-drawing-editor-tools-move", (event) =>
+    # Listen for pointer down.
+    $(document).on "pointerdown.pixelartacademy-pixelpad-apps-drawing-editor-tools-move", (event) =>
       $target = $(event.target)
 
       # Only activate when we're moving from the pixel canvas.
@@ -26,19 +26,19 @@ class PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
 
       @moving true
 
-      @_mousePosition =
+      @_pointerPosition =
         x: event.clientX
         y: event.clientY
 
-      # Wire end of dragging on mouse up.
-      $(document).on "mouseup.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging", (event) =>
+      # Wire end of dragging on pointer up.
+      $(document).on "pointerup.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging", (event) =>
         $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging'
         @moving false
 
-      $(document).on "mousemove.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging", (event) =>
+      $(document).on "pointermove.pixelartacademy-pixelpad-apps-drawing-editor-tools-move-dragging", (event) =>
         dragDelta =
-          x: event.clientX - @_mousePosition.x
-          y: event.clientY - @_mousePosition.y
+          x: event.clientX - @_pointerPosition.x
+          y: event.clientY - @_pointerPosition.y
 
         editor = @interface.getEditorForActiveFile()
   
@@ -51,7 +51,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
           x: origin.x - dragDelta.x / scale
           y: origin.y - dragDelta.y / scale
 
-        @_mousePosition =
+        @_pointerPosition =
           x: event.clientX
           y: event.clientY
 

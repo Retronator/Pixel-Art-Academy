@@ -46,7 +46,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     super arguments...
     
     @camera = new ReactiveField null
-    @mouse = new ReactiveField null
+    @pointer = new ReactiveField null
     @cursor = new ReactiveField null
     @landmarks = new ReactiveField null
     @pixelGrid = new ReactiveField null
@@ -128,7 +128,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     # Initialize components.
     @camera new @constructor.Camera @, $parent: @$pixelCanvas
-    @mouse new @constructor.Mouse @
+    @pointer new @constructor.Pointer @
     @cursor new @constructor.Cursor @
     @landmarks new @constructor.Landmarks @
     @pixelGrid new @constructor.PixelGrid @
@@ -240,11 +240,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   
     @_resizeObserver.observe $pixelCanvas[0]
 
-    # React to keys and global mouse events.
+    # React to keys and global pointer events.
     $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event if @interface.active()
     $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event if @interface.active()
-    $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event if @interface.active()
-    $(document).on 'mouseleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event if @interface.active()
+    $(document).on 'pointerup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerUp? event if @interface.active()
+    $(document).on 'pointerleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerLeaveWindow? event if @interface.active()
     
   onDestroyed: ->
     super arguments...
@@ -307,23 +307,23 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
   events: ->
     super(arguments...).concat
-      'mousedown .canvas': @onMouseDownCanvas
-      'mousemove .canvas': @onMouseMoveCanvas
-      'mouseenter .canvas': @onMouseEnterCanvas
-      'mouseleave .canvas': @onMouseLeaveCanvas
+      'pointerdown .canvas': @onPointerDownCanvas
+      'pointermove .canvas': @onPointerMoveCanvas
+      'pointerenter .canvas': @onPointerEnterCanvas
+      'pointerleave .canvas': @onPointerLeaveCanvas
       'dragstart .canvas': @onDragStartCanvas
 
-  onMouseDownCanvas: (event) ->
-    @interface.activeTool()?.onMouseDown? event if @interface.active()
+  onPointerDownCanvas: (event) ->
+    @interface.activeTool()?.onPointerDown? event if @interface.active()
 
-  onMouseMoveCanvas: (event) ->
-    @interface.activeTool()?.onMouseMove? event if @interface.active()
+  onPointerMoveCanvas: (event) ->
+    @interface.activeTool()?.onPointerMove? event if @interface.active()
 
-  onMouseEnterCanvas: (event) ->
-    @interface.activeTool()?.onMouseEnter? event if @interface.active()
+  onPointerEnterCanvas: (event) ->
+    @interface.activeTool()?.onPointerEnter? event if @interface.active()
 
-  onMouseLeaveCanvas: (event) ->
-    @interface.activeTool()?.onMouseLeave? event if @interface.active()
+  onPointerLeaveCanvas: (event) ->
+    @interface.activeTool()?.onPointerLeave? event if @interface.active()
 
   onDragStartCanvas: (event) ->
     @interface.activeTool()?.onDragStart? event if @interface.active()

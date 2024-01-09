@@ -14,7 +14,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
       toolType or @constructor.Types.Pixel
 
     @cursorPosition = new ComputedField =>
-      return unless canvasCoordinates = @pixelCanvas.mouse()?.canvasCoordinate()
+      return unless canvasCoordinates = @pixelCanvas.pointer()?.canvasCoordinate()
       return unless camera = @pixelCanvas.camera()
       
       type = @type()

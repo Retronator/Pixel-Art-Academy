@@ -4,12 +4,12 @@ class FM.Tool extends FM.Operator
   @icon: -> # Override to provide a URL to this tool's icon.
   icon: -> @constructor.icon()
   
-  @mouseState =
+  @pointerState =
     x: null
     y: null
-    leftButton: false
-    middleButton: false
-    rightButton: false
+    mainButton: false
+    auxiliaryButton: false
+    secondaryButton: false
 
   extraToolClasses: -> '' # Override to provide extra style classes to be used besides its display name.
   
@@ -27,25 +27,25 @@ class FM.Tool extends FM.Operator
   onKeyUp: (event) ->
     # Override to handle key releases.
 
-  onMouseDown: (event) ->
-    switch event.which
-      when 1 then @constructor.mouseState.leftButton = true
-      when 2 then @constructor.mouseState.middleButton = true
-      when 3 then @constructor.mouseState.rightButton = true
+  onPointerDown: (event) ->
+    switch event.originalEvent.button
+      when 0 then @constructor.pointerState.mainButton = true
+      when 1 then @constructor.pointerState.auxiliaryButton = true
+      when 2 then @constructor.pointerState.secondaryButton = true
 
-  onMouseUp: (event) ->
-    switch event.which
-      when 1 then @constructor.mouseState.leftButton = false
-      when 2 then @constructor.mouseState.middleButton = false
-      when 3 then @constructor.mouseState.rightButton = false
+  onPointerUp: (event) ->
+    switch event.originalEvent.button
+      when 0 then @constructor.pointerState.mainButton = false
+      when 1 then @constructor.pointerState.auxiliaryButton = false
+      when 2 then @constructor.pointerState.secondaryButton = false
 
-  onMouseMove: (event) ->
-    @constructor.mouseState.x = event.pageX
-    @constructor.mouseState.y = event.pageY
+  onPointerMove: (event) ->
+    @constructor.pointerState.x = event.pageX
+    @constructor.pointerState.y = event.pageY
 
-  onMouseLeaveWindow: (event) ->
+  onPointerLeaveWindow: (event) ->
     # Just in case we clean up button state when leaving. Nowadays browsers
-    # don't fire mouse leave when a button is pressed so it's not really necessary.
-    @constructor.mouseState.leftButton = false
-    @constructor.mouseState.middleButton = false
-    @constructor.mouseState.rightButton = false
+    # don't fire pointer leave when a button is pressed so it's not really necessary.
+    @constructor.pointerState.mainButton = false
+    @constructor.pointerState.auxiliaryButton = false
+    @constructor.pointerState.secondaryButton = false

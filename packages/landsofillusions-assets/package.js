@@ -339,7 +339,7 @@ Package.onUse(function(api) {
   api.addComponent('spriteeditor/resizedialog..');
 
   api.addComponent('spriteeditor/pixelcanvas..');
-  api.addFile('spriteeditor/pixelcanvas/mouse');
+  api.addFile('spriteeditor/pixelcanvas/pointer');
   api.addFile('spriteeditor/pixelcanvas/cursor');
   api.addFile('spriteeditor/pixelcanvas/camera');
   api.addFile('spriteeditor/pixelcanvas/landmarks');
