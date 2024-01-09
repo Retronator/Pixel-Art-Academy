@@ -3,6 +3,15 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  onDestroyed: ->
+    super arguments...
+    
+    @episodes.stop()
+    @currentChapters.stop()
+    @currentSections.stop()
+    @currentScenes.stop()
+    @activeScenes.stop()
+    
   episodeClasses: ->
     # Override to provide classes for adding chapters, sections, and scenes.
     []
@@ -18,40 +27,34 @@ class LOI.Adventure extends LOI.Adventure
     # Create episodes.
     @_resetEpisodesDependency = new Tracker.Dependency
     
-    @episodes = new ComputedField =>
+    @episodes = new AE.LiveComputedField =>
       console.log "Recomputing episodes." if LOI.debug
 
       # Allow resetting of episodes.
       @_resetEpisodesDependency.depend()
-
-      # Destroy previous episodes.
-      episode.destroy() for episode in @_episodes if @_episodes
-  
-      # Create new ones.
+      
       Tracker.nonreactive =>
+        # Destroy previous episodes.
+        episode.destroy() for episode in @_episodes if @_episodes
+    
+        # Create new ones.
         @_episodes = for episodeClass in @episodeClasses()
           new episodeClass
 
       @_episodes
-    ,
-      true
 
-    @currentChapters = new ComputedField =>
+    @currentChapters = new AE.LiveComputedField =>
       chapters = _.flattenDeep (episode.currentChapters() for episode in @episodes())
 
       _.without chapters, null, undefined
-    ,
-      true
 
-    @currentSections = new ComputedField =>
+    @currentSections = new AE.LiveComputedField =>
       chapterSections = (chapter.currentSections() for chapter in @currentChapters())
       startSections = (episode.startSection for episode in @episodes() when not episode.startSection.finished())
 
       _.flattenDeep [chapterSections, startSections]
-    ,
-      true
       
-    @currentScenes = new ComputedField =>
+    @currentScenes = new AE.LiveComputedField =>
       # Add scenes in decreasing order of priority (most general things first, specific overrides later)
       scenes = _.flattenDeep [
         global.scenes() for global in @globals()
@@ -62,11 +65,9 @@ class LOI.Adventure extends LOI.Adventure
       ]
 
       _.without scenes, null, undefined
-    ,
-      true
 
     # Active scenes are the ones at current location/time and contribute to current situation.
-    @activeScenes = new ComputedField =>
+    @activeScenes = new AE.LiveComputedField =>
       return unless currentTimelineId = @currentTimelineId()
       return unless currentLocationId = @currentLocationId()
 
@@ -103,8 +104,6 @@ class LOI.Adventure extends LOI.Adventure
         scenes.push scene if validLocation and validTimeline
 
       scenes
-    ,
-      true
 
   resetEpisodes: ->
     console.log "Resetting episodes." if LOI.debug
