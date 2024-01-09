@@ -41,8 +41,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @bindingHeight = 14
     @hideTop = 30
     
-    @waitBetweenAnimationsDuration = 0.2
-    @animationStepDuration = 0.025
+    @waitBetweenAnimationsDuration = 0.1
+    @animationStepDuration = 0.02
   
   onCreated: ->
     super arguments...
