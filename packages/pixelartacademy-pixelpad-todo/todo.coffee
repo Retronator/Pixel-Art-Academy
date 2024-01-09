@@ -261,7 +261,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       @manualDisplayState null
     ,
       2000
-    
+      
+  allowsShortcutsTable: -> false
+  
   onBackButton: ->
     # If we have an animation waiting to happen, we want the back button to return us to the main menu.
     return unless @_animationAvailable()

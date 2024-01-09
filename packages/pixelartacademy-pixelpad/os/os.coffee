@@ -172,10 +172,7 @@ class PAA.PixelPad.OS extends LOI.Component
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
 
   shortcutsTableVisibleClass: ->
-    programs = @currentSystems()
-    programs.push currentApp if currentApp = @currentApp()
-    
-    'visible' if _.every programs, (program) => program.allowsShortcutsTable()
+    'visible' if _.every [@currentSystems()..., @currentApp()], (program) => program.allowsShortcutsTable()
 
   backButtonCallback: ->
     # See if the app can handle it.
