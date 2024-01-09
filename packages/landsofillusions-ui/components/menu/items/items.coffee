@@ -96,6 +96,9 @@ class LOI.Components.Menu.Items extends LOI.Component
     
   soundVolume: ->
     LOI.settings.audio.soundVolume.value()
+
+  ambientVolume: ->
+    LOI.settings.audio.ambientVolume.value()
   
   musicVolume: ->
     LOI.settings.audio.musicVolume.value()
