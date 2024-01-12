@@ -34,6 +34,12 @@ _Useful bits and pieces_
 Some static classes and routines are just useful right about everywhere in your code and don’t fall into any specific
 category. The place for them is Artificial Everywhere (AE).
 
+### Artificial Melody
+
+_Procedural music playback and composition_
+
+Artificial Melody provides the framework for composing and playing songs created out of different parts.
+
 ### Artificial Mirage
 
 _Graphical user interface elements_

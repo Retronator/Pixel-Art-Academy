@@ -25,7 +25,7 @@ class LM.Menu.Progress extends AM.Component
   
   for url in [@inGameUrl(), @inPreviewUrl()]
     LOI.Adventure.registerDirectRoute "/#{url}", =>
-      progress = LOI.adventure.menu.menuItems.progress
+      progress = LOI.adventure.menu.items.progress
       progress.show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is progress
     
   template: -> @constructor.id()
@@ -54,7 +54,18 @@ class LM.Menu.Progress extends AM.Component
   
   courses: ->
     return unless LOI.adventureInitialized()
-    _.flatten (chapter.courses for chapter in LOI.adventure.currentChapters())
+    
+    if @inPreview()
+      # Show all courses.
+      courses = for episode in LOI.adventure.episodes()
+        for chapter in episode.chapters
+          chapter.courses
+          
+      _.flattenDeep courses
+      
+    else
+      # Show only accessible courses.
+      _.flatten (chapter.courses for chapter in LOI.adventure.currentChapters())
   
   class @Completionist extends AM.DataInputComponent
     @register 'PixelArtAcademy.LearnMode.Menu.Progress.Completionist'

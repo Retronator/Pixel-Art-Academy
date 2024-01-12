@@ -48,8 +48,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Zoom extends LOI.View
   events: ->
     super(arguments...).concat
       'change .zoom-percentage-input': @onSubmitZoomPercentage
-      'mousedown .zoom-in-button': @onMouseDownZoomIn
-      'mousedown .zoom-out-button': @onMouseDownZoomOut
+      'pointerdown .zoom-in-button': @onPointerDownZoomIn
+      'pointerdown .zoom-out-button': @onPointerDownZoomOut
       'click .zoom-in-button': @onClickZoomIn
       'click .zoom-out-button': @onClickZoomOut
 
@@ -60,10 +60,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Zoom extends LOI.View
       zoom = parseInt $(event.target).val()
       @interface.getEditorForActiveFile()?.camera()?.setScale zoom / 100
       
-  onMouseDownZoomIn: (event) ->
+  onPointerDownZoomIn: (event) ->
     @_triggerAudio event, true
     
-  onMouseDownZoomOut: (event) ->
+  onPointerDownZoomOut: (event) ->
     @_triggerAudio event, true
 
   onClickZoomIn: (event) ->

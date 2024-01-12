@@ -7,15 +7,16 @@ LOI = LandsOfIllusions
 class LOI.Interface.Components.AudioManager
   constructor: ->
     @context = new ReactiveField null
-
+    @running = new ReactiveField false
+    
     if AB.ApplicationEnvironment.isBrowser
       # In the browser, we need to wait for user interaction before creating audio context.
       $(document).one 'click', (event) =>
-        @context new AudioContext
+        @_createContext()
         
     else
       # Otherwise audio should be available from the start.
-      @context new AudioContext
+      @_createContext()
 
     # Let others reactively know if audio is currently enabled.
     @enabled = new ComputedField =>
@@ -44,6 +45,10 @@ class LOI.Interface.Components.AudioManager
         
   destroy: ->
     @_startStopAutorun.stop()
+    
+  _createContext: ->
+    @context new AudioContext
+    @running true
 
   _start: ->
     return unless context = @context()
@@ -53,6 +58,8 @@ class LOI.Interface.Components.AudioManager
     @_resuming = true
     await context.resume()
     @_resuming = false
+    
+    @running true
 
   _stop: ->
     return unless context = @context()
@@ -62,3 +69,5 @@ class LOI.Interface.Components.AudioManager
     @_suspending = true
     await context.suspend()
     @_suspending = false
+    
+    @running false

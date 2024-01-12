@@ -25,7 +25,8 @@ class LOI.Assets.Engine.PixelImage
     # since we can let canvas' context deal with transformations and stuff. Eventually we'll want to move to either
     # a custom drawing routine or upgrade to WebGL.
     bounds = asset.bounds
-    context.imageSmoothingEnabled = false
+
+    context.imageSmoothingEnabled = not asset.properties?.pixelArtScaling
     context.drawImage @_canvas, bounds.x, bounds.y
 
   getImageData: (renderOptions = {}) ->
@@ -52,10 +53,8 @@ class LOI.Assets.Engine.PixelImage
     # Build a new canvas if needed.
     unless @_canvas?.width is asset.bounds.width and @_canvas?.height is asset.bounds.height
       @_canvas = new AM.ReadableCanvas asset.bounds.width, asset.bounds.height
-
-    # Resize the canvas if needed.
-    @_imageData = @_canvas.getFullImageData()
-    @_canvasPixelsCount = @_canvas.width * @_canvas.height
+      @_imageData = @_canvas.getFullImageData()
+      @_canvasPixelsCount = @_canvas.width * @_canvas.height
 
     # Clear the image buffer to transparent.
     @_imageData.data.fill 0
@@ -78,9 +77,25 @@ class LOI.Assets.Engine.PixelImage
     if @_smoothShading
       smoothShadingQuantizationLevels = renderOptions.smoothShadingQuantizationLevels ? LOI.settings.graphics.smoothShadingQuantizationLevels.value()
       @_smoothShadingQuantizationFactor = (smoothShadingQuantizationLevels or 1) - 1
-      
+  
+  _renderPixelPaletteColor: (pixelIndex, paletteColorRamp, paletteColorShade, alpha) ->
+    return unless shades = @_palette.ramps[paletteColorRamp]?.shades
+    
+    directColor = shades[paletteColorShade]
+    directColorR = directColor.r * 255
+    directColorG = directColor.g * 255
+    directColorB = directColor.b * 255
+    
+    @_renderPixelDirectColor pixelIndex, directColorR, directColorG, directColorB, alpha
+    
+  _renderPixelDirectColor: (pixelIndex, directColorR, directColorG, directColorB, alpha) ->
+    @_imageData.data[pixelIndex] = directColorR
+    @_imageData.data[pixelIndex + 1] = directColorG
+    @_imageData.data[pixelIndex + 2] = directColorB
+    @_imageData.data[pixelIndex + 3] = alpha
+    
   # Call for each pixel and specify the coordinates within asset bounds.
-  _renderPixel: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->
+  _renderPixelShaded: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->
     # Find pixel index in the image buffer.
     depthPixelIndex = x + y * @_canvas.width
     pixelIndex = depthPixelIndex * 4
@@ -293,7 +308,7 @@ class LOI.Assets.Engine.PixelImage
       @_imageData.data[pixelIndex] = destinationColor.r * 255
       @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
       @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
-      @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
+      @_imageData.data[pixelIndex + 3] = (destinationColor.a ? 1) * 255
 
   _endRender: ->
     @_canvas.putFullImageData @_imageData

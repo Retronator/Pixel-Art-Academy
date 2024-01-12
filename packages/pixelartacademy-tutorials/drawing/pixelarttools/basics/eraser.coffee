@@ -58,7 +58,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
       return unless asset = @getActiveAsset()
       
       # Show when asset has extra pixels so that we don't display it when there are missing pixels.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
     
     @initialize()
 
@@ -74,7 +74,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Eraser extends PAA.Practice.Tut
       return unless asset = @getActiveAsset()
       
       # Show when there are any missing pixels present.
-      @assetHasMissingPixels asset
+      asset.hasMissingPixels()
 
     @priority: -> 1
     

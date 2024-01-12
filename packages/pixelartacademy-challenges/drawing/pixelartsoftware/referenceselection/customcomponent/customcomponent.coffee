@@ -138,6 +138,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
   
         Meteor.setTimeout =>
           @cardsVisible shouldBeActive
+          
+          @audio.dealingCenter false
+          @audio.dealingLeft false
+          @audio.dealingRight false
         ,
           1000
   

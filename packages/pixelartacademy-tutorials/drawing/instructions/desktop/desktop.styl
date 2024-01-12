@@ -2,21 +2,52 @@
 
 .pixelartacademy-tutorials-drawing-instructions-desktop
   position absolute
-  bottom 0
   left 0
   right 0
   daily()
   line-height 9rem
   color atariGray(0)
 
+  &.bottom
+    bottom 0
+
+    .paper
+      transition top 0.25s ease-out
+
+      &.closed:hover
+        top -17rem !important
+
+      .container
+        .content
+          padding-bottom 1em
+
+  &.top
+    top 0
+
+    .paper
+      transition bottom 0.25s ease-out
+
+      &.closed:hover
+        bottom -17rem !important
+
+      .container
+        &::before
+          background repeating-linear-gradient(to top, atariCyan(5), atariCyan(5) 1rem, atariGray(5) 1rem, atariGray(5) 9rem)
+
+        .gutter
+          &::before
+          &::after
+            background-position bottom
+
+        .content
+          position absolute
+          bottom 0
+          padding-top 1em
+
   .paper
     position absolute
     width 200rem
     left calc(50% - 100rem)
-    transition top 0.35s ease-out
-
-    &.closed:hover
-      top -17rem !important
 
     &.open:hover
       .header
@@ -27,7 +58,7 @@
       content ''
       display block
       position absolute
-      z-index 2
+      z-index 12
       left 18rem
       width 1rem
       top 0
@@ -47,7 +78,7 @@
       &::after
         content ''
         display block
-        z-index 2
+        z-index 12
 
       &::before
         absolute-cover()
@@ -64,7 +95,7 @@
 
       .close-hint
         position absolute
-        z-index 2
+        z-index 12
         right 3rem
         top 1rem
         visibility hidden
@@ -72,6 +103,14 @@
 
     .container
       position relative
+
+      &::before
+        content ''
+        display block
+        absolute-cover()
+        z-index 12
+        left 19rem
+        background repeating-linear-gradient(atariGray(5), atariGray(5) 8rem, atariCyan(5) 8rem, atariCyan(5) 9rem)
 
       .gutter
         position absolute
@@ -84,7 +123,7 @@
         &::after
           content ''
           display block
-          z-index 2
+          z-index 12
 
         &::before
           position absolute
@@ -99,21 +138,14 @@
           absolute-cover()
           background image('/pixelartacademy/tutorials/drawing/instructions/desktop/left.png') 0 0 / 18rem 27rem
 
-      &::before
-        content ''
-        display block
-        absolute-cover()
-        z-index 2
-        left 19rem
-        background repeating-linear-gradient(atariGray(5), atariGray(5) 8rem, atariCyan(5) 8rem, atariCyan(5) 9rem)
-
       .content
         position relative
-        z-index 2
-        padding 0 10rem 1em 25rem
+        z-index 12
+        padding 0 10rem 0 25rem
 
         p
         ul
+        ol
           margin 9rem 0
 
           &:first-child

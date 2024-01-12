@@ -7,7 +7,7 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
     @ready = new ComputedField =>
       return unless spriteData = @options.asset()
       return unless spriteData.layers?.length and spriteData.bounds
-      return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne(spriteData.palette?._id) or @options.visualizeNormals?()
+      return unless spriteData.customPalette or spriteData.allPalettesAvailable() or @options.visualizeNormals?()
 
       true
       
@@ -47,6 +47,20 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
         y = pixel.y + layerOrigin.y - spriteData.bounds.y
         z = layerOrigin.z + (pixel.z or 0)
         
-        @_renderPixel x, y, z, pixel.x, pixel.y, pixel.paletteColor, pixel.directColor, pixel.materialIndex, pixel.normal, spriteData, renderOptions
+        if renderOptions.shaded
+          @_renderPixelShaded x, y, z, pixel.x, pixel.y, pixel.paletteColor, pixel.directColor, pixel.materialIndex, pixel.normal, spriteData, renderOptions
+          
+        else
+          pixelIndex = (x + y * @_canvas.width) * 4
+          
+          if pixel.paletteColor
+            @_renderPixelPaletteColor pixelIndex, pixel.paletteColor.ramp, pixel.paletteColor.shade, 255
+          
+          if pixel.directColor
+            directColorR = pixel.directColor.r * 255
+            directColorG = pixel.directColor.g * 255
+            directColorB = pixel.directColor.b * 255
+          
+            @_renderPixelDirectColor pixelIndex, directColorR, directColorG, directColorB, 255
 
     @_endRender()

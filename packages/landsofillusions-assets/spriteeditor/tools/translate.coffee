@@ -8,8 +8,8 @@ class LOI.Assets.SpriteEditor.Tools.Translate extends LOI.Assets.SpriteEditor.To
   @initialize()
 
   onActivated: ->
-    # Listen for mouse down.
-    $(document).on "mousedown.landsofillusions-assets-spriteeditor-tools-translate", (event) =>
+    # Listen for pointer down.
+    $(document).on "pointerdown.landsofillusions-assets-spriteeditor-tools-translate", (event) =>
       $target = $(event.target)
 
       # Only activate when we're moving on the canvas.
@@ -22,20 +22,20 @@ class LOI.Assets.SpriteEditor.Tools.Translate extends LOI.Assets.SpriteEditor.To
 
       return unless layer = assetData.layers[layerIndex]
 
-      @_mousePosition =
+      @_pointerPosition =
         x: event.clientX
         y: event.clientY
 
-      # Wire end of dragging on mouse up.
-      $(document).on "mouseup.landsofillusions-assets-spriteeditor-tools-translate-mousemove", (event) =>
-        $(document).off '.landsofillusions-assets-spriteeditor-tools-translate-mousemove'
+      # Wire end of dragging on pointer up.
+      $(document).on "pointerup.landsofillusions-assets-spriteeditor-tools-translate-pointermove", (event) =>
+        $(document).off '.landsofillusions-assets-spriteeditor-tools-translate-pointermove'
 
-      $(document).on "mousemove.landsofillusions-assets-spriteeditor-tools-translate-mousemove", (event) =>
+      $(document).on "pointermove.landsofillusions-assets-spriteeditor-tools-translate-pointermove", (event) =>
         scale = camera.effectiveScale()
 
         dragDelta =
-          x: Math.round (event.clientX - @_mousePosition.x) / scale
-          y: Math.round (event.clientY - @_mousePosition.y) / scale
+          x: Math.round (event.clientX - @_pointerPosition.x) / scale
+          y: Math.round (event.clientY - @_pointerPosition.y) / scale
 
         return unless dragDelta.x or dragDelta.y
 
@@ -51,9 +51,9 @@ class LOI.Assets.SpriteEditor.Tools.Translate extends LOI.Assets.SpriteEditor.To
             x: currentLayerOrigin.x + dragDelta.x
             y: currentLayerOrigin.y + dragDelta.y
 
-        # Also adjust the mouse position by the delta.
-        @_mousePosition.x += dragDelta.x * scale
-        @_mousePosition.y += dragDelta.y * scale
+        # Also adjust the pointer position by the delta.
+        @_pointerPosition.x += dragDelta.x * scale
+        @_pointerPosition.y += dragDelta.y * scale
 
   onDeactivated: ->
     $(document).off '.landsofillusions-assets-spriteeditor-tools-translate'

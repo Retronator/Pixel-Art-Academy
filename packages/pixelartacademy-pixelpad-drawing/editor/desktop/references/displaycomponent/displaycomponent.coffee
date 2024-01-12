@@ -62,14 +62,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent exten
     
   events: ->
     super(arguments...).concat
-      'mouseenter .stored-references': @onMouseEnterStoredReferences
-      'mouseleave .stored-references': @onMouseLeaveStoredReferences
+      'pointerenter .stored-references': @onPointerEnterStoredReferences
+      'pointerleave .stored-references': @onPointerLeaveStoredReferences
       'click .stored-references': @onClickStoredReferences
   
-  onMouseLeaveStoredReferences: (event) ->
+  onPointerLeaveStoredReferences: (event) ->
     @_trayDragTiny()
     
-  onMouseEnterStoredReferences: (event) ->
+  onPointerEnterStoredReferences: (event) ->
     @_trayDragTiny()
     
   _trayDragTiny: ->

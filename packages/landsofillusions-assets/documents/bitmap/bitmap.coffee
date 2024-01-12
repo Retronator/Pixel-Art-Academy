@@ -9,7 +9,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
   #   order: integer defining the sorting order within other top-level layers and groups (higher value appears above lower)
   #   visible: boolean if this layer should be drawn (true by default)
   #   blendMode: name of one of the blend modes
-  #   bounds: location of this layer's bounds in the sprite.
+  #   bounds: location of this layer's bounds in the bitmap
   #     x, y: absolute pixel coordinates of the top-left pixel of this layer
   #     width, height: the size of the layer in pixels
   #   pixelsData: ArrayBuffer with all attributes following each other as defined in the pixel format, not sent to the server
@@ -41,6 +41,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     plainObject = LOI.Assets.VisualAsset.toPlainObject bitmap
     plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in bitmap.layerGroups) if bitmap.layourGroups
     plainObject.layers = (layer.toPlainObject() for layer in bitmap.layers) if bitmap.layers
+    plainObject.pixelFormat = bitmap.pixelFormat
     plainObject.bounds = _.pick bitmap.bounds, ['left', 'top', 'right', 'bottom', 'fixed'] if bitmap.bounds
     plainObject
     
@@ -50,17 +51,20 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
       console.warn "Multiple calls to initialize of bitmap", @
       return
 
+    @updateDerivedBounds()
+
+    # Create rich layer and layer group objects.
+    @constructor.LayerGroup.initializeLayerGroup @, @
+
+    @_initialized = true
+    
+  updateDerivedBounds: ->
     # Add computed properties to bounds.
     if @bounds
       @bounds.x = @bounds.left
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
-
-    # Create rich layer and layer group objects.
-    @constructor.LayerGroup.initializeLayerGroup @, @
-
-    @_initialized = true
 
   # Layers
 
@@ -69,6 +73,15 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
 
   removeLayer: (index) ->
     @layers.splice index, 1
+    
+  crop: (bounds) ->
+    _.extend @bounds, bounds
+    @updateDerivedBounds()
+
+    @constructor.LayerGroup.crop @, @bounds
+    
+  clear: ->
+    @constructor.LayerGroup.clear @
 
   getAddress: -> []
   
@@ -90,13 +103,13 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     if _.isNumber layerAddress
       # Addressing with a number indexes into the top layers.
       return @layers[layerAddress]
+    
+    [groupAddress..., layerIndex] = layerAddress
 
     group = @
+    group = group.layers[groupIndex] for groupIndex in groupAddress
 
-    for groupIndex, index in layerAddress when index < layerAddress.length - 1
-      group = group.layers[groupIndex]
-
-    group.layers[layerAddress[layerAddress.length - 1]]
+    group.layers[layerIndex]
 
   # Pixel retrieval
 

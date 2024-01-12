@@ -3,25 +3,25 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Components.Tools.Tool
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
 
     @calculateNormal()
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     super arguments...
 
     @calculateNormal()
 
   calculateNormal: ->
-    return unless @constructor.mouseState.leftButton
+    return unless @constructor.pointerState.mainButton
 
     shadingSphere = @options.editor()
 
     keyboardState = AC.Keyboard.getState()
     editLight = shadingSphere.editLight() or keyboardState.isKeyDown AC.Keys.shift
 
-    canvasCoordinate = shadingSphere.pixelCanvas().mouse().canvasCoordinate()
+    canvasCoordinate = shadingSphere.pixelCanvas().pointer().canvasCoordinate()
 
     # Snap to angle when choosing a normal, but not for changing light.
     angleSnap = shadingSphere.angleSnap() unless editLight

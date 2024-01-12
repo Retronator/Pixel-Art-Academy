@@ -14,7 +14,7 @@ class LM.PixelPad extends PAA.PixelPad
         
       else
         # When the back button is not visible, we should open the menu (if it's not open already).
-        LOI.adventure.menu.showMenu() unless LOI.adventure.menu.menuVisible()
+        LOI.adventure.menu.showMenu() unless LOI.adventure.menu.visible()
   
       # Instruct the back button to cancel closing (so it doesn't disappear).
       cancel: true

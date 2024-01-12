@@ -2,7 +2,7 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
-  constructor: (operatorId, bitmap, layerAddress, changedPixels) ->
+  constructor: (operatorId, bitmap, layerAddress, changedPixels, fractionalValues) ->
     super arguments...
 
     # Create the forward and backward change pixels operations.
@@ -81,11 +81,11 @@ class LOI.Assets.Bitmap.Actions.Stroke extends AM.Document.Versioning.Action
         forwardAreaFlags.switchColorFlagAtIndex flagPixelIndex, changedColorAttributeClass.flagValue
 
         # Set the new color attribute value.
-        forwardArea.attributes[changedColorAttributeClass.id].setPixel changeAreaX, changeAreaY, pixel[changedColorAttributeClass.id]
+        forwardArea.attributes[changedColorAttributeClass.id].setPixel changeAreaX, changeAreaY, pixel[changedColorAttributeClass.id], fractionalValues
 
         # Transfer all the other attributes not related to the colors.
         for attributeClass in otherAttributeClasses
-          value = layer.attributes[attributeClass.id].getPixel layerX, layerY
+          value = pixel[attributeClass.id] ? layer.attributes[attributeClass.id].getPixel layerX, layerY
           forwardArea.attributes[attributeClass.id].setPixel changeAreaX, changeAreaY, value
 
       # When going backward, we simply write back the old values.

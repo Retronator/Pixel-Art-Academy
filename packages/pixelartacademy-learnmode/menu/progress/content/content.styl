@@ -111,6 +111,17 @@
               .description
                 background atariIndigo(0)
 
+            &.wip
+              background atariBrown(2)
+              color atariBrown(7)
+
+              &::before
+              &::after
+                border-color atariBrown(3)
+
+              .description
+                background atariBrown(1)
+
             &::before
             &::after
               content ''
@@ -160,9 +171,12 @@
   .contents
     list-style none
     margin 0
-    padding 0
+    padding 1px 0 0 0
     height 0
     overflow hidden
 
     &.displayed
       height auto
+
+    &.fully-displayed
+      overflow visible

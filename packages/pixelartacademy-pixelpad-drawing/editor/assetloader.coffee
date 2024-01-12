@@ -18,14 +18,18 @@ class PAA.PixelPad.Apps.Drawing.Editor.AssetLoader extends FM.Loader
   
       # We can only deal with assets that can return pixels.
       if asset instanceof LOI.Assets.Sprite or asset instanceof LOI.Assets.Bitmap then asset else null
+    ,
+      true
   
     # Subscribe to the referenced palette as well.
-    @paletteId = new ComputedField =>
-      @asset()?.palette?._id
+    @paletteIds = new ComputedField =>
+      @asset()?.getAllPaletteIds()
+    ,
+      true
   
-    @_paletteSubscription = Tracker.autorun (computation) =>
-      return unless paletteId = @paletteId()
-      LOI.Assets.Palette.forId.subscribeContent paletteId
+    @_palettesSubscription = Tracker.autorun (computation) =>
+      return unless paletteIds = @paletteIds()
+      LOI.Assets.Palette.forIds.subscribeContent paletteIds
 
     # We extract the custom palette separately to minimize reactivity.
     @customPalette = new ComputedField =>
@@ -33,16 +37,28 @@ class PAA.PixelPad.Apps.Drawing.Editor.AssetLoader extends FM.Loader
     ,
       EJSON.equals
   
-    @palette = new ComputedField =>
-      if paletteId = @paletteId()
-        LOI.Assets.Palette.documents.findOne paletteId
+    @palettes = new ComputedField =>
+      if paletteIds = @paletteIds()
+        LOI.Assets.Palette.documents.fetch _id: $in: paletteIds
     
       else
         # See if we have an embedded custom palette.
-        @customPalette()
-        
+        if customPalette = @customPalette()
+          [customPalette]
+          
+        else
+          []
+    ,
+      true
+    
+    @palette = new ComputedField =>
+      @palettes()[0]
+    ,
+      true
+      
   destroy: ->
     @asset.stop()
-    @paletteId.stop()
-    @_paletteSubscription.stop()
+    @paletteIds.stop()
+    @_palettesSubscription.stop()
+    @palettes.stop()
     @palette.stop()

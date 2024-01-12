@@ -10,13 +10,14 @@
     top 10rem
     left 11rem
     width 178rem
+    height 240rem
     padding 14rem 12rem
 
     &::before
       content ''
       display block
       absolute-cover()
-      z-index 1
+      z-index 11
       background-color atariGray(7)
       box-shadow -1rem 0 0 atariAzure(0),
                  0 1rem 0 rgba(atariGray(0), 0.1)
@@ -25,7 +26,7 @@
       content ''
       display block
       position absolute
-      z-index 1
+      z-index 11
       top 0
       left 42rem
       width 87rem
@@ -34,7 +35,7 @@
 
     .artwork
       position relative
-      z-index 1
+      z-index 11
 
       .title
         text-transform uppercase
@@ -123,7 +124,7 @@
       &::after
         content ''
         position absolute
-        z-index 3
+        z-index 13
         top 15rem
         left -6rem
         width 23rem
@@ -131,7 +132,7 @@
         background-image image('/pixelartacademy/pixelpad/apps/drawing/clipboard/paperclip.png')
 
   .bottom
-    z-index 1
+    z-index 11
     position absolute
     top 11rem
     left 12rem
@@ -168,7 +169,7 @@
   .turned-page
     absolute-cover-size()
     height 30rem
-    z-index 3
+    z-index 13
     background image('/pixelartacademy/practice/project/asset/sprite/clipboardcomponent/page-top-turned.png') center / 100%
     border none
     cursor pointer

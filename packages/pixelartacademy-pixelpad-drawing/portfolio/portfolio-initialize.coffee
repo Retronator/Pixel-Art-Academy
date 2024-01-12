@@ -56,10 +56,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
                     asset: asset
                     scale: => @_assetScale asset
 
+              thing: sectionThing
               index: index
               name: => sectionThing.fullName()
               noAssetsInstructions: => sectionThing.noAssetsInstructions?()
               assets: assets
+              content: => sectionThing.content?()
 
         section =
           nameKey: @constructor.Sections["#{_.upperFirst sectionThingName}s"]
@@ -125,17 +127,15 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
               scale: => @_assetScale asset
   
         # New artworks can be created if the player can edit art with built-in editors.
-        # TODO: Enable ability to create artworks.
-        if false # PAA.PixelPad.Apps.Drawing.canEdit()
+        if PAA.PixelPad.Apps.Drawing.canEdit()
           assets.push
             _id: @_newArtworkAsset.urlParameter()
             index: assets.length
             asset: @_newArtworkAsset
             scale: => 1
   
-        # Artworks can be imported if the player can edit or upload art made with external software.
-        # TODO: Enable ability to import artworks.
-        if false # PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
+        # TODO: Artworks can be imported if the player can edit or upload art made with external software.
+        if false and (PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload())
           assets.push
             _id: @_importArtworkAsset.urlParameter()
             index: assets.length
@@ -162,7 +162,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       sections.push @tutorialsSection if @tutorialsSection.groups().length
       sections.push @challengesSection if @challengesSection.groups().length
       sections.push @projectsSection if @projectsSection.groups().length
-      sections.push @artworksSection if @artworksSection.groups().length
+      # sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.
       if @activeSection and not @activeSection() in sections
@@ -290,8 +290,38 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       ,
         0
       
+    @inactiveSectionHeight = new ComputedField =>
+      return @sectionHeight unless activeSection = @activeSection()
+      
+      sections = @sections()
+      activeSectionGroups = activeSection.groups()
+
+      if @activeGroup()
+        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        
+      else
+        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @initialGroupHeight
+      
+      sectionsTotalHeight = (sections.length - 1) * @sectionHeight + activeSectionHeight
+      
+      if sectionsTotalHeight > @sectionsMaxTotalHeight
+        # We need to decrease inactive section heights to make them all fit into maximum total height.
+        heightForInactiveSections = @sectionsMaxTotalHeight - activeSectionHeight
+        heightForInactiveSections / (sections.length - 1)
+        
+      else
+        @sectionHeight
+        
+  onRendered: ->
+    super arguments...
+    
+    # Allow cheating with the function keys.
+    $(document).on 'keydown.pixelartacademy-pixelpad-apps-drawing-portfolio', (event) => @onKeyDown event
+  
   onDestroyed: ->
     super arguments...
+    
+    $(document).off '.pixelartacademy-pixelpad-apps-drawing-portfolio'
     
     editor.destroy?() for editor in @_editors
   

@@ -24,7 +24,7 @@
     &::before
       content ''
       absolute-cover()
-      z-index 3
+      z-index 13
       left -20rem
       bottom -5rem
       background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/tray-shadow.png')
@@ -50,7 +50,7 @@
       &::after
         content ''
         absolute-cover()
-        z-index 3
+        z-index 13
         background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/tray.png')
 
       .reference
@@ -59,7 +59,7 @@
         top 95rem
 
         .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-          z-index 6
+          z-index 16
 
           &.dragging
             transform translate(-52%, -52%)
@@ -75,7 +75,7 @@
 
       .action
         position absolute
-        z-index 4
+        z-index 14
         width 88rem
         height 96rem
         background atariGray(6)
@@ -93,7 +93,7 @@
           background atariGray(2)
 
         &.upload
-          z-index 5
+          z-index 15
           left 64rem
           bottom 25rem
 
@@ -122,7 +122,7 @@
 
       .reference
         .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-          z-index 2
+          z-index 12
 
           &.dragging
             transform translate(-50%, -52%)
@@ -132,7 +132,7 @@
       transition all 0.2s !important
 
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-      transition none
+      transition box-shadow 0.05s !important
 
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
     .stored-references

@@ -25,7 +25,6 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelartsoftware..');
   api.addFile('drawing/pixelartsoftware/copyreference');
-  api.addFile('drawing/pixelartsoftware/errorenginecomponent');
   api.addFile('drawing/pixelartsoftware/assets');
   api.addUnstyledComponent('drawing/pixelartsoftware/briefcomponent..');
   api.addComponent('drawing/pixelartsoftware/clipboardpagecomponent..');

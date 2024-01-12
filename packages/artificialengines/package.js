@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum..');
   api.addFile('reality..');
   api.addFile('echo..');
+  api.addFile('melody..');
   api.addFile('everything..');
   api.addFile('workforce..');
 
@@ -100,6 +101,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three/quaternion');
   api.addFile('everywhere/three/matrices');
   api.addFile('everywhere/three/object3d');
+  api.addFile('everywhere/three/line2');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');
@@ -122,6 +124,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/datehelper');
   api.addFile('everywhere/daterange');
   api.addFile('everywhere/exceptions');
+  api.addFile('everywhere/livecomputedfield');
   api.addFile('everywhere/match');
   api.addFile('everywhere/reactivefield');
   api.addFile('everywhere/reactivearray');
@@ -135,6 +138,7 @@ Package.onUse(function(api) {
   api.addFile('control/keyboard');
   api.addFile('control/keyboardstate');
   api.addFile('control/keys');
+  api.addFile('control/discretewheeleventlistener');
 
   // Artificial Mirage
 
@@ -314,6 +318,8 @@ Package.onUse(function(api) {
 
   api.addFile('pyramid/complexnumber');
   api.addGlsl('pyramid/complexnumber');
+
+  api.addFile('pyramid/fraction');
 
   api.addFile('pyramid/besselfunctions');
 
@@ -498,6 +504,18 @@ Package.onUse(function(api) {
 
   api.addFile('echo/nodes/valueequals');
   api.addFile('echo/nodes/valuechange');
+
+  // Artificial Melody
+
+  api.addFile('melody/composition');
+  api.addFile('melody/section');
+  api.addFile('melody/transition');
+  api.addFile('melody/event');
+  api.addFile('melody/sectionhandle');
+  api.addFile('melody/eventhandle');
+  api.addFile('melody/playback');
+
+  api.addFile('melody/events/player');
 
   // Artificial Everything
 

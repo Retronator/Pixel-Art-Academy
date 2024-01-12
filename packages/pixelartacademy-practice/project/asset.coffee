@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
@@ -53,11 +54,9 @@ class PAA.Practice.Project.Asset
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @data = new ComputedField =>
+    @data = new AE.LiveComputedField =>
       return unless assets = @project.assetsData()
       _.find assets, (asset) => asset.id is @id()
-    ,
-      true
   
     portfolioComponentClass = @constructor.portfolioComponentClass()
     @portfolioComponent = new portfolioComponentClass @
@@ -65,13 +64,37 @@ class PAA.Practice.Project.Asset
     clipboardComponentClass = @constructor.clipboardComponentClass()
     @clipboardComponent = new clipboardComponentClass @
     
+    # Provides support for autorun and subscribe calls.
+    @_autorunHandles = []
+    @_subscriptionHandles = []
+    
   destroy: ->
     @_translationSubscription.stop()
     @data.stop()
 
+    handle.stop() for handle in [@_autorunHandles..., @_subscriptionHandles...]
+  
+  autorun: (handler) ->
+    handle = Tracker.autorun handler
+    @_autorunHandles.push handle
+    
+    handle
+
+  subscribe: (subscriptionName, params...) ->
+    handle = Meteor.subscribe subscriptionName, params...
+    @_subscriptionHandles.push handle
+    
+    handle
+
+  subscribeContent: (subscriptionName, params...) ->
+    handle = AM.DatabaseContent.subscribe subscriptionName, params...
+    @_subscriptionHandles.push handle
+    
+    handle
+    
   id: -> @constructor.id()
   
-  urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to used in the URL to identify this asset."
+  urlParameter: -> throw new AE.NotImplementedException "You must provide the parameter to be used in the URL to identify this asset."
 
   ready: -> throw new AE.NotImplementedException "You must report when all asset's information is ready to be used."
 

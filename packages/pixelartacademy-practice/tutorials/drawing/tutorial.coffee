@@ -10,6 +10,10 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
   #   BITMAP
   #   bitmap: reference to a bitmap
   #     _id
+  #
+  #   VECTOR TUTORIAL BITMAP
+  #   [chosenReferenceUrls]: array of reference URLs chosen to be drawn
+  #
   @assets: -> [] # Override to provide asset classes that are included in this tutorial.
 
   @assetsCount: -> @assets().length
@@ -35,6 +39,31 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
 
     asset.completed
 
+  constructor: ->
+    super arguments...
+    
+    @_assets = []
+
+    @assets = new ComputedField =>
+      assets = []
+      
+      for assetClass, index in @constructor.assets()
+        @_assets[index] ?= Tracker.nonreactive => new assetClass @
+        assets.unshift @_assets[index]
+        
+        break unless @isAssetCompleted @_assets[index]
+
+      assets
+    ,
+      @_assetsComparison
+    ,
+      true
+
+  destroy: ->
+    asset.destroy() for asset in @_assets
+
+    @assets.stop()
+    
   completed: -> @constructor.completed()
   isAssetCompleted: (assetClassOrId) -> @constructor.isAssetCompleted assetClassOrId
 
@@ -44,13 +73,6 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
     # We need to mimic a project, so we need to provide the data. If no state is
     # set, we send a dummy object to let the bitmap know we've loaded the state.
     @state('assets') or []
-
-  _assetsCompleted: (assets...) ->
-    for asset in assets
-      return unless asset
-      return unless @isAssetCompleted asset
-
-    true
 
   _assetsComparison: (a, b) =>
     # We consider assets have changed only when the array values differ.

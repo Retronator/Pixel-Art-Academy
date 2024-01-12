@@ -25,8 +25,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     @assetSize = new ComputedField =>
       return unless document = @artworkAsset.document()
       return unless assetData = @drawing.portfolio().displayedAsset()
+
+      # Add border to sprites.
+      options =
+        border: document instanceof LOI.Assets.Sprite
+        pixelArtScaling: document.properties?.pixelArtScaling
   
-      PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), document.bounds
+      PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), document.bounds, options
     ,
       EJSON.equals
 
@@ -61,5 +66,5 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       
     save: (value) ->
       artwork = @currentData()
-      PADB.Artwork.updateCharacterArtwork LOI.characterId(), artwork._id,
+      PADB.Artwork.updateArtwork artwork._id,
         title: value

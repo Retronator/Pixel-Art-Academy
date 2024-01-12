@@ -24,3 +24,6 @@ class LM.Chapter extends PAA.Chapter
 
   getTask: (taskClass) ->
     _.find @tasks, (task) => task instanceof taskClass
+
+  getContent: (contentClass) ->
+    _.find @contents, (content) => content instanceof contentClass

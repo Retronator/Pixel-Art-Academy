@@ -215,13 +215,10 @@ class FM.Interface extends AM.Component
       childData._id = index
       childData
 
-  toolClass: ->
-    return unless tool = @activeTool()
-
-    toolClass = _.kebabCase tool.displayName()
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
+  # HACK: If we do this access directly in the template, the desktop build breaks since @
+  # gets assigned to Interface in Tool classes for what must be an incredibly obscure reason.
+  activeToolClasses: ->
+    @activeTool()?.toolClasses()
 
   events: ->
     super(arguments...).concat

@@ -11,8 +11,15 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map.DirectColor extends LOI.Assets.Me
     g: @data[dataIndex + 1]
     b: @data[dataIndex + 2]
 
-  setPixel: (x, y, value) ->
+  setPixel: (x, y, value, fractionalValues) ->
     dataIndex = @calculateDataIndex x, y
-    @data[dataIndex] = value.r
-    @data[dataIndex + 1] = value.g
-    @data[dataIndex + 2] = value.b
+    
+    if fractionalValues
+      @data[dataIndex] = value.r * 255
+      @data[dataIndex + 1] = value.g * 255
+      @data[dataIndex + 2] = value.b * 255
+      
+    else
+      @data[dataIndex] = value.r
+      @data[dataIndex + 1] = value.g
+      @data[dataIndex + 2] = value.b

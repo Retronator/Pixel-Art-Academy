@@ -21,8 +21,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       displayScale = @pixelCanvas.display.scale()
       @scale() * displayScale
 
-    @scrollingEnabled = new ComputedField =>
-      @pixelCanvas.scrollingEnabled()
+    @smoothScrolling = new ComputedField =>
+      @pixelCanvas.smoothScrolling()
+      
+    @scrollToZoom = new ComputedField =>
+      @pixelCanvas.scrollToZoom()
       
     @originData = new ComputedField =>
       @cameraData()?.child 'origin'
@@ -31,6 +34,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       @originData()?.value() or x: 0, y: 0
     ,
       EJSON.equals
+    
+    @zoomLevelsHelper = @pixelCanvas.interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
 
     # Calculate various bounds. Canvas bounds are relative to the asset origin.
     @assetCanvasBounds = new AE.Rectangle()
@@ -50,10 +55,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
      
       # Calculate drawing area bounds in canvas coordinates.
       displayMode = @pixelCanvas.displayMode()
+      borderWidth = @pixelCanvas.borderWidth() or 0
       
       if assetData.bounds.fixed or displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         # When the asset bounds are fixed, or if we're drawing the full canvas, the drawing area matches it directly.
         @drawingAreaCanvasBounds.copy assetData.bounds
+        
+        # Add an optional border around the asset.
+        @drawingAreaCanvasBounds.extrude borderWidth, borderWidth if borderWidth
       
       else if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Framed
         # When the asset bounds are freeform and we need to frame the drawing, we make the drawing area 50% bigger than the existing asset bounds.
@@ -70,19 +79,21 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         @drawingAreaCanvasBounds.bottom Number.POSITIVE_INFINITY
         
       if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
-        # When the full canvas is rendered, pixel canvas is assumed to fully cover it.
+        # When the full canvas is rendered, pixel canvas is assumed to fully cover it, optionally with the border.
         @renderableAreaCanvasBounds.copy assetData.bounds
+        @renderableAreaCanvasBounds.extrude borderWidth, borderWidth if borderWidth
       
       else
-        # Renderable area is twice the pixel canvas to prevent the canvas being cut-off during transitions.
+        # Renderable area is larger than the pixel canvas to prevent the canvas being cut-off during transitions.
         pixelCanvasWindowSize = @pixelCanvas.windowSize()
         effectiveScale = @effectiveScale()
         width = pixelCanvasWindowSize.width / effectiveScale
         height = pixelCanvasWindowSize.height / effectiveScale
         origin = @origin()
     
-        @renderableAreaCanvasBounds.width width * 2
-        @renderableAreaCanvasBounds.height height * 2
+        extrudeFactor = 3
+        @renderableAreaCanvasBounds.width width * extrudeFactor
+        @renderableAreaCanvasBounds.height height * extrudeFactor
         @renderableAreaCanvasBounds.x origin.x - width
         @renderableAreaCanvasBounds.y origin.y - height
 
@@ -91,10 +102,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
     
       if displayMode is LOI.Assets.SpriteEditor.PixelCanvas.DisplayModes.Full
         effectiveScale = @effectiveScale()
-        @drawingAreaWindowBounds.x 0
-        @drawingAreaWindowBounds.y 0
-        @drawingAreaWindowBounds.width assetData.bounds.width * effectiveScale
-        @drawingAreaWindowBounds.height assetData.bounds.height * effectiveScale
+        @drawingAreaWindowBounds.x -borderWidth
+        @drawingAreaWindowBounds.y -borderWidth
+        @drawingAreaWindowBounds.width (assetData.bounds.width + 2 * borderWidth) * effectiveScale
+        @drawingAreaWindowBounds.height (assetData.bounds.height + 2 * borderWidth) * effectiveScale
   
         @canvasWindowBounds.copy @drawingAreaWindowBounds
         
@@ -120,24 +131,44 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
           width: Math.floor(canvasBottomRight.x) - Math.floor(canvasTopLeft.x) + 1
           height: Math.floor(canvasBottomRight.y) - Math.floor(canvasTopLeft.y) + 1
           
-    # Enable panning with scrolling.
+    # Enable smooth pan and zoom with scrolling.
     @pixelCanvas.autorun (computation) =>
-      # Wire up mouse wheel event once the sprite editor is rendered.
+      # Wire up pointer wheel event once the sprite editor is rendered.
       $parent = options.$parent()
       return unless $parent
-
-      scrollingEnabled = @scrollingEnabled()
       
-      if scrollingEnabled and not @_scrollingFunction
+      smoothScrolling = @smoothScrolling()
+      
+      if smoothScrolling and not @_scrollingFunction
         # Enable the wheel event.
-        @_scrollingFunction = (event) => @_onWheel event
+        @_scrollingFunction = (event) => @_onSmoothScrollingWheel event
         $parent.on 'wheel', @_scrollingFunction
         
-      else if @_scrollingFunction and not scrollingEnabled
+      else if @_scrollingFunction and not smoothScrolling
         # Disable the wheel event.
         $parent.off 'wheel', @_scrollingFunction
-    
-  _onWheel: (event) ->
+        
+    # Enable discrete zoom changes with scrolling.
+    @pixelCanvas.autorun (computation) =>
+      # Create the discrete wheel event listener once the sprite editor is rendered.
+      $parent = options.$parent()
+      return unless $parent
+      
+      scrollToZoom = @scrollToZoom()
+      
+      if scrollToZoom and not @_discreteWheelEventListener
+        # Enable the wheel event.
+        @_discreteWheelEventListener = new AC.DiscreteWheelEventListener
+          callback: (sign) => @_onScrollToZoom sign
+          timeout: 0.1
+          $element: $parent
+        
+      else if @_discreteWheelEventListener and not scrollToZoom
+        # Disable the wheel event.
+        @_discreteWheelEventListener.destroy()
+        @_discreteWheelEventListener = null
+  
+  _onSmoothScrollingWheel: (event) ->
     event.preventDefault()
 
     effectiveScale = @effectiveScale()
@@ -154,17 +185,17 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       # Also move the origin, depending on how much off-center we were zooming.
       canvasOrigin = $parent.offset()
 
-      mouseWindowCoordinate =
+      pointerWindowCoordinate =
         x: event.originalEvent.pageX - canvasOrigin.left
         y: event.originalEvent.pageY - canvasOrigin.top
 
-      mouseCanvasCoordinate = @transformWindowToCanvas mouseWindowCoordinate
+      pointerCanvasCoordinate = @transformWindowToCanvas pointerWindowCoordinate
 
       oldOrigin = @origin()
 
       offCenter =
-        x: mouseCanvasCoordinate.x - oldOrigin.x
-        y: mouseCanvasCoordinate.y - oldOrigin.y
+        x: pointerCanvasCoordinate.x - oldOrigin.x
+        y: pointerCanvasCoordinate.y - oldOrigin.y
 
       @originData().value
         x: oldOrigin.x + offCenter.x * (scaleChange - 1)
@@ -186,7 +217,29 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       @originData().value
         x: oldOrigin.x + canvasDelta.x
         y: oldOrigin.y + canvasDelta.y
-
+        
+  _onScrollToZoom: (sign) ->
+    zoomLevels = @zoomLevelsHelper()
+    percentage = @scale() * 100
+    
+    newZoomLevel = null
+    
+    if sign > 0
+      # Zoom out.
+      for zoomLevel in zoomLevels by -1
+        if Math.round(zoomLevel) < Math.round(percentage)
+          newZoomLevel = zoomLevel
+          break
+          
+    else
+      # Zoom in.
+      for zoomLevel in zoomLevels
+        if Math.round(zoomLevel) > Math.round(percentage)
+          newZoomLevel = zoomLevel
+          break
+          
+    @setScale newZoomLevel / 100 if newZoomLevel
+  
   setScale: (scale) ->
     @scaleData().value scale
 
@@ -196,89 +249,102 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()
     effectiveScale = @effectiveScale()
+    canvasScale = effectiveScale * devicePixelRatio
 
     # Start from the identity.
     context.setTransform 1, 0, 0, 1, 0, 0
 
     # Scale the canvas around the origin.
-    context.scale effectiveScale, effectiveScale
+    context.scale canvasScale, canvasScale
 
     # Move to viewport corner.
     translateX = @viewportCanvasBounds.x()
     translateY = @viewportCanvasBounds.y()
     context.translate -translateX, -translateY
 
-  transformCanvasToWindowCenter: (canvasCoordinate) ->
+  transformCanvasToWindowCenter: (canvasCoordinate, target = {}) ->
     effectiveScale = @effectiveScale()
     origin = @origin()
   
-    x = canvasCoordinate.x
-    y = canvasCoordinate.y
+    target.x = (canvasCoordinate.x - origin.x) * effectiveScale
+    target.y = (canvasCoordinate.y - origin.y) * effectiveScale
   
-    x: (x - origin.x) * effectiveScale
-    y: (y - origin.y) * effectiveScale
+    target
     
-  transformCanvasToWindow: (canvasCoordinate) ->
-    windowCoordinateCenter = @transformCanvasToWindowCenter canvasCoordinate
+  transformCanvasToWindow: (canvasCoordinate, target = {}) ->
+    @transformCanvasToWindowCenter canvasCoordinate, target
   
     pixelCanvasWindowSize = @pixelCanvas.windowSize()
     width = pixelCanvasWindowSize.width
     height = pixelCanvasWindowSize.height
     
-    windowCoordinateCenter.x += width / 2
-    windowCoordinateCenter.y += height / 2
+    target.x += width / 2
+    target.y += height / 2
   
-    windowCoordinateCenter
+    target
 
-  transformCanvasToDisplay: (canvasCoordinate) ->
-    windowCoordinate = @transformCanvasToWindow canvasCoordinate
+  transformCanvasToDisplay: (canvasCoordinate, target = {}) ->
+    @transformCanvasToWindow canvasCoordinate, target
     displayScale = @pixelCanvas.display.scale()
 
-    x: windowCoordinate.x / displayScale
-    y: windowCoordinate.y / displayScale
+    target.x /= displayScale
+    target.y /= displayScale
 
-  transformWindowToCanvas: (windowCoordinate) ->
+    target
+
+  transformWindowToCanvas: (windowCoordinate, target = {}) ->
     pixelCanvasWindowSize = @pixelCanvas.windowSize()
 
-    x = windowCoordinate.x - pixelCanvasWindowSize.width / 2
-    y = windowCoordinate.y - pixelCanvasWindowSize.height / 2
+    target.x = windowCoordinate.x - pixelCanvasWindowSize.width / 2
+    target.y = windowCoordinate.y - pixelCanvasWindowSize.height / 2
     
-    @transformWindowCenterToCanvas {x, y}
+    @transformWindowCenterToCanvas target, target
   
-  transformWindowCenterToCanvas: (windowCoordinate) ->
+  transformWindowCenterToCanvas: (windowCoordinate, target = {}) ->
     effectiveScale = @effectiveScale()
     origin = @origin()
     
-    x = windowCoordinate.x
-    y = windowCoordinate.y
+    target.x = windowCoordinate.x / effectiveScale + origin.x
+    target.y = windowCoordinate.y / effectiveScale + origin.y
     
-    x: x / effectiveScale + origin.x
-    y: y / effectiveScale + origin.y
+    target
 
-  transformDisplayToCanvas: (displayCoordinate) ->
+  transformDisplayToCanvas: (displayCoordinate, target = {}) ->
     displayScale = @pixelCanvas.display.scale()
 
-    windowCoordinate =
-      x: displayCoordinate.x * displayScale
-      y: displayCoordinate.y * displayScale
+    target.x = displayCoordinate.x * displayScale
+    target.y = displayCoordinate.y * displayScale
 
-    @transformWindowToCanvas windowCoordinate
+    @transformWindowToCanvas target, target
 
-  roundCanvasToWindowPixel: (canvasCoordinate) ->
-    windowCoordinate = @transformCanvasToWindowCenter canvasCoordinate
+  roundCanvasToWindowPixel: (canvasCoordinate, target = {}) ->
+    @transformCanvasToWindowCenter canvasCoordinate, target
     
     # Transform to corner of the canvas.
     canvasX = @canvasWindowBounds.x()
     canvasY = @canvasWindowBounds.y()
-    windowCoordinate.x -= canvasX
-    windowCoordinate.y -= canvasY
+    target.x -= canvasX
+    target.y -= canvasY
     
     # Move to the center of the pixel.
-    windowCoordinate.x = Math.floor(windowCoordinate.x) + 0.5
-    windowCoordinate.y = Math.floor(windowCoordinate.y) + 0.5
+    target.x = Math.floor(target.x) + 0.5
+    target.y = Math.floor(target.y) + 0.5
     
     # Transform back to window center.
-    windowCoordinate.x += canvasX
-    windowCoordinate.y += canvasY
+    target.x += canvasX
+    target.y += canvasY
 
-    @transformWindowCenterToCanvas windowCoordinate
+    @transformWindowCenterToCanvas target, target
+
+  debugOutput: ->
+    console.log "PIXEL CANVAS CAMERA"
+    console.log "scale:", @scale()
+    console.log "origin:", @origin()
+    
+    console.log "asset canvas bounds", @assetCanvasBounds.toDimensions()
+    console.log "drawing area canvas bounds", @drawingAreaCanvasBounds.toDimensions()
+    console.log "renderable area canvas bounds", @renderableAreaCanvasBounds.toDimensions()
+    console.log "viewport canvas bounds", @viewportCanvasBounds.toDimensions()
+    
+    console.log "drawing area window bounds", @drawingAreaWindowBounds.toDimensions()
+    console.log "canvas window bounds", @canvasWindowBounds.toDimensions()

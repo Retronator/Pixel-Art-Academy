@@ -6,19 +6,6 @@
         <span class="name">Title</span>
         <span class="value"><input name="title" type="text" placeholder="Enter artwork title"/></span>
       </label>
-      <div class="property type">
-        <span class="name">Type</span>
-        <span class="value">
-          <label class="option">
-            <input class="option-input" type="radio" name="type" value="Sprite"/><span class="radio"></span>
-            <span class="label">Sprite</span>
-          </label>
-          <label class="option">
-            <input class="option-input" type="radio" name="type" value="Bitmap"/><span class="radio"></span>
-            <span class="label">Canvas</span>
-          </label>
-        </span>
-      </div>
       <label class="property size">
         <span class="name">Size</span>
         <span class="value">
@@ -44,48 +31,63 @@
       <span class="text">Extra items</span>
     </div>
     <div class="extras">
-      <label class="extra">
-        <span class="name">Colors</span>
-        <span class="value">
-          <select class="palette" name="palette">
-            {{#each palettes}}
-              <option value="{{_id}}">{{name}}</option>
-            {{/each}}
-          </select>
-        </span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
-      <label class="extra">
-        <span class="name"></span>
-        <span class="value"></span>
-      </label>
+      {{#each extras}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra}}
+      {{/each}}
+      {{#each blankExtras}}
+        <div class="extra">
+          <div class="name"></div>
+          <div class="value"></div>
+        </div>
+      {{/each}}
     </div>
     <div class="submit-area">
       <div class="title">Signature</div>
       <div class="button-area">
-        <button class="submit-button">{{currentCharacter.avatar.fullName}}</button>
+        <button class="submit-button">
+          {{#if adventure.isAdventureMode}}
+            {{currentCharacter.avatar.fullName}}
+          {{else}}
+            {{currentProfile.displayName}}
+          {{/if}}
+        </button>
         <div class="prompt">
-          Click on the line above to order
+          Click on the line<br/>
+          above to order
         </div>
       </div>
     </div>
     {{#if errorClasses}}
       <div class="error-message">
-        {{#if typeError}}Please choose the artwork type.{{/if}}
         {{#if $or widthError heightError}}Please enter a valid size.{{/if}}
-        {{#if sizeOutOfRangeError}}The maximum size for a {{toLower type}} is {{maxSize}}.{{/if}}
+        {{#if sizeOutOfRangeError}}The maximum size is {{maxSize}}.{{/if}}
       </div>
     {{/if}}
   </form>
+</template>
+
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra">
+  <div class="extra">
+    <div class="name">
+      {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Type}}
+    </div>
+    <div class="value">
+      {{#if $is type 'RestrictedColors'}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+      {{/if}}
+      {{#if $is type 'ColorPalette'}}
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette}}
+      {{/if}}
+      {{#if $is type 'PixelArtScaling'}}
+        <label>
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling}}<span class="checkmark"></span>
+        </label>
+      {{/if}}
+      {{#if $is type 'PixelArtEvaluation'}}
+        <label>
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtEvaluation}}<span class="checkmark"></span>
+        </label>
+      {{/if}}
+    </div>
+  </div>
 </template>

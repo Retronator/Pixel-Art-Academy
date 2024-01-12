@@ -29,6 +29,10 @@ class LM.Menu.Progress.Content extends AM.Component
 
       Tracker.nonreactive =>
         @_setContentsDisplayed @_defaultContentsDisplayed(), 1
+        
+    # Set initial fully-displayed class.
+    @$contents = @$('.contents').eq(0)
+    @$contents.addClass 'fully-displayed' if @contentsDisplayed()
 
   _defaultContentsDisplayed: ->
     # Never automatically show content in preview mode.
@@ -49,18 +53,17 @@ class LM.Menu.Progress.Content extends AM.Component
     currentContentsDisplayed = @contentsDisplayed()
     return if newContentsDisplayed is currentContentsDisplayed
 
-    $contents = @$('.contents').eq(0)
-    $contents.velocity('stop', true)
+    @$contents.velocity('stop', true)
 
     display = LOI.adventure.interface.display
     scale = display.scale()
     
     viewportHeight = LOI.adventure.interface.display.viewport().viewportBounds.height()
 
-    fullHeight = $contents[0].scrollHeight
+    fullHeight = @$contents[0].scrollHeight
     fullVisibleHeight = Math.min viewportHeight, fullHeight
 
-    currentHeight = $contents.outerHeight()
+    currentHeight = @$contents.outerHeight()
     currentVisibleHeight = Math.min viewportHeight, currentHeight
 
     if currentContentsDisplayed
@@ -68,12 +71,17 @@ class LM.Menu.Progress.Content extends AM.Component
 
     else
       targetHeight = fullVisibleHeight
+      
+    @$contents.removeClass 'fully-displayed'
 
-    $contents.velocity
+    @$contents.velocity
       height: [targetHeight, currentVisibleHeight]
     ,
       duration: durationFactor * Math.min 500, Math.abs(targetHeight - currentVisibleHeight) / scale * 4
-      complete: => $contents.css height: 'auto' if targetHeight > 0
+      complete: =>
+        if targetHeight > 0
+          @$contents.css height: 'auto'
+          @$contents.addClass 'fully-displayed'
 
     @contentsDisplayed newContentsDisplayed
 

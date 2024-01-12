@@ -27,11 +27,9 @@ pixel-text-emboss(mainColor, topColor)
   text-shadow unquote(join(',', value))
 
 pixel-image-rendering()
-  image-rendering -moz-crisp-edges            // Firefox
-  image-rendering -o-crisp-edges              // Opera
-  image-rendering pixelated                   // Webkit
-  image-rendering crisp-edges                 // CSS3
-  -ms-interpolation-mode nearest-neighbor
+  image-rendering crisp-edges                 // Current nearest-neighbor standard
+  image-rendering -webkit-optimize-contrast   // Alternative name for Chrome, Edge, and Opera
+  image-rendering pixelated                   // Supported everywhere, but includes smooth downscaling by standard
 
 image(url, version = random())
   url(url + '?' + version)

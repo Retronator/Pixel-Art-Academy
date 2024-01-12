@@ -15,7 +15,7 @@ class LOI.Assets.VisualAsset.Actions.UpdateReference extends AM.Document.Version
     reverseChanges = {}
     
     for key of changes
-      reverseChanges[key] = asset.references[index][key]
+      reverseChanges[key] = asset.references[index][key] or null
     
     backwardOperation = new LOI.Assets.VisualAsset.Operations.UpdateReference
       index: index

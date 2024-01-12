@@ -11,7 +11,7 @@ class LOI.Components.Mixins.Audio extends BlazeComponent
   onCreated: ->
     super arguments...
     
-    if LOI.adventure.interface.audioManager
+    if LOI.adventure?.interface.audioManager
       @audioComponent.constructor.Audio?.load LOI.adventure.interface.audioManager
   
   onDestroyed: ->

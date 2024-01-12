@@ -38,6 +38,16 @@ class LOI.Assets.Bitmap.LayerGroup
     layerGroup.layerGroups ?= []
     for subGroup, index in layerGroup.layerGroups
       layerGroup.layerGroups[index] = new LOI.Assets.Bitmap.LayerGroup bitmap, layerGroup, subGroup
+      
+  @crop: (layerGroup, bounds) ->
+    @crop subGroup, bounds for subGroup in layerGroup.layerGroups
+
+    layer.crop bounds for layer in layerGroup.layers
+    
+  @clear: (layerGroup) ->
+    @clear subGroup for subGroup in layerGroup.layerGroups
+    
+    layer.clear() for layer in layerGroup.layers
 
   constructor: (@bitmap, @parent, properties) ->
     # Transfer all the properties.
@@ -61,7 +71,7 @@ class LOI.Assets.Bitmap.LayerGroup
     @constructor.getOperationChangedFields layerGroupChangedFields, @getAddress()
 
   addLayer: ->
-    @layers.push new LOI.Assets.Bitmap.Layer @bitmap, @, {}
+    @layers.push new LOI.Assets.Bitmap.Layer @bitmap, @, bounds: @bitmap.bounds
 
   removeLayer: (index) ->
     @layers.splice index, 1

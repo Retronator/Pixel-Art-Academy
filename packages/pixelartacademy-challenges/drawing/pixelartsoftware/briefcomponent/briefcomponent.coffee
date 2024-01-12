@@ -5,17 +5,6 @@ LOI = LandsOfIllusions
 
 class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extends PAA.Practice.Project.Asset.Bitmap.BriefComponent
   @register 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent'
-
-  onRendered: ->
-    super arguments...
-  
-    # Allow cheating with the F2 key.
-    $(document).on 'keydown.pixelartacademy-challenges-drawing-pixelartsoftware-copyreference-briefcomponent', (event) => @onKeyDown event
-
-  onDestroyed: ->
-    super arguments...
-  
-    $(document).off '.pixelartacademy-challenges-drawing-pixelartsoftware-copyreference-briefcomponent'
   
   canEdit: ->
     PAA.PixelPad.Apps.Drawing.state('editorId')?
@@ -32,7 +21,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     bitmapData = _.cloneDeep @bitmap.bitmap()
     editor.manualBitmapData bitmapData
     @bitmap.manualUserBitmapData bitmapData
-    @bitmap.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
+    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
 
     # Open the editor and zoom in the bitmap as much as possible.
     editor.manuallyActivated true
@@ -97,8 +86,8 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
       # Re-set bitmap data to force image refresh.
       editor.manualBitmapData bitmapData
       @bitmap.manualUserBitmapData bitmapData
-
-      @bitmap.engineComponent.drawMissingPixelsUpTo {x, y}
+      
+      @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo {x, y}
 
       # Move to next pixel.
       x++
@@ -156,11 +145,6 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     @bitmap.uploadMode false
 
     # Don't show missing pixels.
-    @bitmap.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
+    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
 
     super arguments...
-    
-  onKeyDown: (event) ->
-    if event.which is AC.Keys.f2
-      @bitmap.solve()
-      event.preventDefault()

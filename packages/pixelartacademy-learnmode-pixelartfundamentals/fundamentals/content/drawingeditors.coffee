@@ -10,6 +10,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingEditors extends LM.Con
   @initialize()
 
   class @PixelPaint extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Apps.PixelPaint'
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingEditors.PixelPaint'
     @displayName: -> "PixelPaint"
     @initialize()

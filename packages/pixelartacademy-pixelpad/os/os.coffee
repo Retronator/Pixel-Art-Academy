@@ -1,9 +1,16 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AEc = Artificial.Echo
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.OS extends AM.Component
-  @register 'PixelArtAcademy.PixelPad.OS'
+class PAA.PixelPad.OS extends LOI.Component
+  @id: -> 'PixelArtAcademy.PixelPad.OS'
+  @register @id()
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      complete: AEc.ValueTypes.Trigger
 
   constructor: (@pixelPad) ->
     super arguments...
@@ -133,6 +140,9 @@ class PAA.PixelPad.OS extends AM.Component
     super arguments...
 
     @$root.removeClass('pixelartacademy-pixelpad-os-root')
+    
+  getSystem: (systemClass) ->
+    _.find @currentSystems(), (system) => system instanceof systemClass
 
   url: ->
     url = PAA.PixelPad.url()
@@ -162,10 +172,7 @@ class PAA.PixelPad.OS extends AM.Component
     AB.Router.goToUrl @appPath appUrl, appPath, appParameter
 
   shortcutsTableVisibleClass: ->
-    programs = @currentSystems()
-    programs.push currentApp if currentApp = @currentApp()
-    
-    'visible' if _.every programs, (program) => program.allowsShortcutsTable()
+    'visible' if _.every [@currentSystems()..., @currentApp()], (program) => program.allowsShortcutsTable()
 
   backButtonCallback: ->
     # See if the app can handle it.

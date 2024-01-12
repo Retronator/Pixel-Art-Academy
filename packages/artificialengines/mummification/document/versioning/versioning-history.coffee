@@ -46,6 +46,9 @@ AM.Document.Versioning._moveInHistory = (versionedDocument, operations, newHisto
   # Update the database document.
   versionedDocument.constructor.documents.update versionedDocument._id, modifier
   
+  # On the client, raise an event that changes were made.
+  versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, operations, changedFields if Meteor.isClient
+
 AM.Document.Versioning.clearHistory = (versionedDocument) ->
   # Reinstate initial history state.
   _.assign versionedDocument,

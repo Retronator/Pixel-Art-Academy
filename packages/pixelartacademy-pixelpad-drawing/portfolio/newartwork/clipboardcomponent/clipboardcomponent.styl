@@ -31,7 +31,7 @@ errorUnderline()
   left 27rem
   top 10rem
   width 145rem
-  z-index 1
+  z-index 11
   margin-right 1rem
   padding 0 8rem 8rem
   background paperColor
@@ -89,6 +89,17 @@ errorUnderline()
 
   input[type=text]
     padding-left 4rem
+
+  input[type='checkbox']
+    display none
+
+    & + .checkmark
+      cursor pointer
+
+    &:checked + .checkmark::before
+      daily()
+      font-weight bold
+      content '✔'
 
   .option
     padding 0 0 2rem 4rem
@@ -250,12 +261,15 @@ errorUnderline()
           border-bottom 1rem dotted printColor
 
       .name
+        width 60%
         border-right 1rem solid printColor
 
         &::before
           right 2rem
 
       .value
+        padding-left 2rem
+
         &::before
           left 2rem
 
@@ -269,6 +283,7 @@ errorUnderline()
 
     .button-area
       position relative
+      flex-grow 1
 
       &::before
         content ''
@@ -291,7 +306,7 @@ errorUnderline()
 
       .prompt
         margin-top 2rem
-        checkout()
+        small-print()
         text-align center
         line-height 1em
 

@@ -3,6 +3,7 @@ AM = Artificial.Mirage
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+LM = PixelArtAcademy.LearnMode
 
 class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Pico8'
@@ -113,6 +114,10 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
         device.powerStart()
       ,
         1500
-
+  
+  inGameMusicMode: ->
+    # Turn off music when viewing the device.
+    if AB.Router.getParameter 'parameter4' then LM.Interface.InGameMusicMode.Off else LM.Interface.InGameMusicMode.Direct
+    
   cartridgeActiveClass: ->
     'cartridge-active' if @cartridge()

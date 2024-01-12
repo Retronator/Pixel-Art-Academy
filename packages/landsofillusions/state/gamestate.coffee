@@ -4,7 +4,8 @@ RA = Retronator.Accounts
 
 class LOI.GameState extends AM.Document
   @id: -> 'LandsOfIllusions.GameState'
-  # profileId: the user or character ID this state belongs to
+  # profileId: the persistence profile this state belongs to
+  # lastEditTime: the time the document was last edited
   # state: object that holds editable game information
   #   things: a map of all things
   #     {thingId}: state of the thing
@@ -31,8 +32,6 @@ class LOI.GameState extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: Document.ReferenceField RA.User, ['displayName']
-      character: Document.ReferenceField LOI.Character, ['debugName']
       # Events and state both influence next simulation time (we need earliest event,
       # and latest game time, as well as when that game time was written (last updated at)).
       nextSimulateTime: Document.GeneratedField 'self', ['events', 'state', 'stateLastUpdatedAt'], (fields) ->

@@ -2,6 +2,8 @@ unchangedObject = {}
 
 _.mixin
   # Returns a property, either defined as a direct value or a function.
+  # Note: we couldn't have just passed the target property directly
+  # to be invoked as it wouldn't be bound to correct this.
   propertyValue: (target, propertyName) ->
     return target[propertyName]() if _.isFunction target[propertyName]
 
@@ -20,7 +22,7 @@ _.mixin
           difference[key] = valueDifference
           changed = true
           
-      for key, valueB of b when a[key] isnt undefined
+      for key, valueB of b when a[key] is undefined and valueB isnt undefined
         difference[key] = valueB
         changed = true
   
@@ -39,8 +41,9 @@ _.mixin
       if changed then arrayDifference else unchangedObject
 
     else
-      # Other value types can be compared directly.
-      if a is b then unchangedObject else b
+      # Other value types can be compared directly. Note that we want to return the clone of b so we
+      # get a completely new version in case we're setting a reference type that might change later.
+      if a is b then unchangedObject else EJSON.clone b
       
   # Changes source to get the values from difference (or remove them where undefined).
   applyObjectDifference: (source, difference) ->
@@ -54,7 +57,7 @@ _.mixin
   
       source
       
-    if _.isArray(source) and _.isArray(difference)
+    else if _.isArray(source) and _.isArray(difference)
       source.length = difference.length
       
       for i in [0...source.length] when difference[i] isnt undefined
@@ -63,4 +66,22 @@ _.mixin
       source
     
     else
-      difference
+      # Note: To allow for the difference object to be changing, we need to return a fresh copy of reference types.
+      EJSON.clone difference
+
+  # Calculates if object a contains all values set in b.
+  objectContains: (a, b) ->
+    if _.isObject(a) and _.isObject(b)
+      for key, valueB of b
+        return false unless _.objectContains a[key], valueB
+        
+      true
+      
+    else if _.isArray(a) and _.isArray(b)
+      for i in [0...valueB.length]
+        return false unless _.objectContains a[i], b[i]
+        
+      true
+
+    else
+      a is b

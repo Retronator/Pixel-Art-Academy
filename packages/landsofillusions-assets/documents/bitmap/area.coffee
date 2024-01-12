@@ -36,7 +36,16 @@ class LOI.Assets.Bitmap.Area
     for attributeId in @pixelFormat.attributeIds
       attributeClass = LOI.Assets.Bitmap.Attribute.getClassForId attributeId
       @attributes[attributeId] = new attributeClass @
-
+      
+  clone: ->
+    pixelFormat = new LOI.Assets.Bitmap.PixelFormat @pixelFormat.attributeIds...
+    pixelsData = @pixelsData.slice()
+    new LOI.Assets.Bitmap.Area @width, @height, pixelFormat, pixelsData
+    
+  clear: ->
+    array = new Uint8Array @pixelsData
+    array.fill 0
+  
   getCompressedPixelsData: ->
     Pako.deflateRaw @pixelsData, @constructor.compressionOptions
 
@@ -102,6 +111,45 @@ class LOI.Assets.Bitmap.Area
       @attributes[attributeId].setPixel x, y, value
 
   clearPixel: (x, y) -> @setPixel x, y, null
+  
+  copyPixels: (sourceArea, sourceBounds, destinationPosition) ->
+    return unless sourceArea.attributes
+    
+    # Go over each of the source pixels and set them in the
+    # destination area where the operation mask is set (if provided).
+    sourceAreaOperationMaskAttribute = sourceArea.attributes[LOI.Assets.Bitmap.Attribute.OperationMask.id]
+    
+    for yOffset in [0...sourceBounds.height]
+      sourceY = sourceBounds.y + yOffset
+      continue unless 0 <= sourceY < sourceArea.height
+      
+      destinationY = destinationPosition.y + yOffset
+      continue unless 0 <= destinationY < @height
+      
+      for xOffset in [0...sourceBounds.width]
+        sourceX = sourceBounds.x + xOffset
+        continue unless 0 <= sourceX < sourceArea.width
+        
+        destinationX = destinationPosition.x + xOffset
+        continue unless 0 <= destinationX < @width
+        
+        # See if the pixel was changed at this location.
+        continue if sourceAreaOperationMaskAttribute and not sourceAreaOperationMaskAttribute.pixelWasChanged sourceX, sourceY
+        
+        # It was, copy all the attributes from the source to the destination.
+        for attributeId in @pixelFormat.attributeIds
+          continue unless sourceAreaAttribute = sourceArea.attributes[attributeId]
+          destinationAreaAttribute = @attributes[attributeId]
+          
+          sourcePixelIndex = sourceAreaAttribute.getPixelIndex sourceX, sourceY
+          destinationPixelIndex = destinationAreaAttribute.getPixelIndex destinationX, destinationY
+          
+          for offset in [0...sourceAreaAttribute.constructor.elementsPerPixel]
+            newValue = sourceAreaAttribute.array[sourcePixelIndex + offset]
+            destinationAreaAttribute.array[destinationPixelIndex + offset] = newValue
+    
+    # Optimization: Explicit return to not collect results of for loops.
+    return
     
   debugOutput: ->
     console.log "AREA #{@width}x#{@height}"

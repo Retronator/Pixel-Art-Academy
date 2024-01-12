@@ -13,16 +13,27 @@ class AM.Document.Versioning.Action
     forward: [AM.Document.Versioning.Operation.pattern]
     backward: [AM.Document.Versioning.Operation.pattern]
 
+  # Note: The Action class doesn't get deserialized back to a rich object, so we provide
+  # static methods for additional manipulation of actions beyond their construction.
+  @append: (existingAction, appendedAction) ->
+    existingAction.forward.push appendedAction.forward...
+    existingAction.backward.unshift appendedAction.backward...
+    @_updateHashCode existingAction
+    
+  @_updateHashCode: (action) ->
+    # Hash all forward operations.
+    action.hashCode = 0
+    
+    for operation in action.forward
+      action.hashCode = AP.HashFunctions.circularShift5 action.hashCode, operation.getHashCode()
+  
   constructor: (@operatorId) ->
     @forward = []
     @backward = []
 
     # Call _updateHashCode in inherited actions once you set up the forward and backward operations.
 
-  append: (action) ->
-    @forward.push action.forward...
-    @backward.unshift action.backward...
-    @_updateHashCode()
+  append: (action) -> @constructor.append @, action
 
   optimizeOperations: (document) ->
     for operationsArray in [@forward, @backward]
@@ -47,9 +58,4 @@ class AM.Document.Versioning.Action
 
     @_updateHashCode()
 
-  _updateHashCode: ->
-    # Hash all forward operations.
-    @hashCode = 0
-
-    for operation in @forward
-      @hashCode = AP.HashFunctions.circularShift5 @hashCode, operation.getHashCode()
+  _updateHashCode: -> @constructor._updateHashCode @

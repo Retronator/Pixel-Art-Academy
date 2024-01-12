@@ -1,0 +1,44 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation-evendiagonals">
+    <div class="title">
+      Even diagonals
+    </div>
+    <table class="evaluation-breakdown">
+      <tr class="header-row">
+        {{#if editable}}
+          <th>Req.</th>
+        {{/if}}
+        <th>Criteria</th>
+        <th>Score</th>
+      </tr>
+      {{#each criteria}}
+        <tr class="criterion">
+          {{#if editable}}
+            <td class="required">
+              <label class="checkmark-area">
+                {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.CriterionEnabled}}<span class="checkmark"></span>
+              </label>
+            </td>
+          {{/if}}
+          <td class="name-area"><span class="name">{{name}}</span></td>
+          <td class="score">
+            {{#if enabled}}
+              {{scorePercentage score}}
+            {{/if}}
+          </td>
+        </tr>
+        {{#if enabled}}
+          {{#each categories}}
+            <tr class="category">
+              {{#if editable}}
+                <td class="required"></td>
+              {{/if}}
+              <td class="name-area"><span class="name">{{name}}</span></td>
+              <td class="count">{{count}}</td>
+            </tr>
+          {{/each}}
+        {{/if}}
+      {{/each}}
+    </table>
+  </div>
+</template>

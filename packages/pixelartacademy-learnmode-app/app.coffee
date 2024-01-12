@@ -11,7 +11,7 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '1.0.1'
+  @version: -> '1.1.0'
   
   buildName: -> 'Learn Mode demo'
 
@@ -32,6 +32,11 @@ class LM.App extends Artificial.Base.App
     LM.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', LM.Adventure
   
     AB.Router.initialize()
+    
+    if Meteor.isDesktop
+      # Listen for cheats.
+      Desktop.on 'menu', 'unlockPixelArtFundamentals', (event) =>
+        LM.PixelArtFundamentals.state 'unlocked', true
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer

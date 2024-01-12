@@ -12,11 +12,13 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       Shortcuts:
 
       - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
     """
 
   @fixedDimensions: -> width: 59, height: 59
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @minClipboardScale: -> 1
   @maxClipboardScale: -> 1
 
   @imageUrl: ->
@@ -36,8 +38,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
     PAA.Practice.Software.Tools.ToolKeys.Undo
     PAA.Practice.Software.Tools.ToolKeys.Redo
   ]
-
-  minClipboardScale: -> 1
   
   Asset = @
   
@@ -60,6 +60,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       
       Shortcuts:
       - Cmd/ctrl + Z: undo
+      - Cmd/ctrl + Y: redo
       - Cmd/ctrl + shift + Z: redo
     """
     
@@ -67,7 +68,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
       return unless asset = @getActiveAsset()
       
       # Show when there are any extra pixels present.
-      @assetHasExtraPixels asset
+      asset.hasExtraPixels()
     
     @priority: -> 1
     

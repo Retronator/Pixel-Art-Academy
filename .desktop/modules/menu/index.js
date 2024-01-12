@@ -26,14 +26,10 @@ export default class ApplicationMenu {
   }
 
   start() {
-    // Only set up the menu on mac.
-    if (process.platform !== 'darwin') {
-      Menu.setApplicationMenu(null);
-      return;
-    }
+    const isMac = process.platform === 'darwin';
 
     const template = [
-      {
+      ...(isMac ? [{
         label: app.name,
         submenu: [
           { role: 'about' },
@@ -44,12 +40,19 @@ export default class ApplicationMenu {
           { type: 'separator' },
           { role: 'quit' }
         ]
-      },
+      }] : [{
+        label: 'File',
+        submenu: [
+          { role: 'quit' }
+        ]
+      }]),
       {
         label: 'Window',
         submenu: [
           { role: 'minimize' },
-          { role: 'zoom' },
+          ...(isMac ? [
+            { role: 'zoom' },
+          ] : []),
           { type: 'separator' },
           { role: 'togglefullscreen' }
         ]
@@ -65,6 +68,13 @@ export default class ApplicationMenu {
             label: 'Report a bug',
             click: async () => {
               await shell.openExternal('mailto:hi@retronator.com?subject=Pixel%20Art%20Academy%3A%20Learn%20Mode%20bug%20report')
+            }
+          },
+          { type: 'separator'},
+          {
+            label: 'Unlock Pixel art fundamentals',
+            click: async () => {
+              this.module.send('unlockPixelArtFundamentals');
             }
           }
         ]

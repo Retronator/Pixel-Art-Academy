@@ -87,8 +87,16 @@ class FM.Interface extends FM.Interface
 
   deactivateTool: ->
     return unless activeTool = @activeTool()
-    @activeToolId null
+    @activeToolId null unless @restoreStoredTool()
     activeTool.onDeactivated?()
+    
+  restoreStoredTool: ->
+    if storedTool = @storedTool()
+      @activateTool storedTool
+      @storedTool null
+      return true
+      
+    false
 
   shortcutsActive: ->
     # Make sure we're not currently typing into an input.
@@ -141,9 +149,6 @@ class FM.Interface extends FM.Interface
 
     return unless @shortcutsActive()
 
-    # Restore the stored tool.
-    if storedTool = @storedTool()
-      @activateTool storedTool
-      @storedTool null
+    @restoreStoredTool()
 
     @_activeKey = null

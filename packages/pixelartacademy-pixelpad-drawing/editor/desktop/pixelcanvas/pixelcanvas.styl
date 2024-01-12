@@ -1,4 +1,5 @@
 @import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
 
 .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
   &.landsofillusions-assets-spriteeditor-pixelcanvas
@@ -6,26 +7,33 @@
 
   .drawing-area
     position absolute
-    z-index 1
+    z-index 11
     background atariGray(6)
-    box-sizing content-box
-    border solid atariGray(6)
-    box-shadow -1rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
+    box-shadow -1rem 1rem 0 desktopShadowColor
     transition all 0.6s
+
+    &.smooth-movement
+      transition all 1s !important
 
     &.hidden
       display none
 
-    &.completed
-      &::before
-        content '︎'
-        position absolute
-        z-index 1
-        top -2rem
-        right -2rem
+    .evaluation
+      position absolute
+      z-index 1
+      top 5rem
+      right 4rem
+
+      .completed
+        display inline-block
         width 10rem
         height 8rem
         background-image image('/pixelartacademy/practice/project/asset/bitmap/clipboardcomponent/completedcheckmark.png')
+
+      .grade
+        color atariGreen(3)
+        kyrou-9()
+        font-weight bold
 
     canvas
       absolute-cover-size()

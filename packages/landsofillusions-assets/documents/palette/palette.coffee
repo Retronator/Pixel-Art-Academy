@@ -23,6 +23,7 @@ class LOI.Assets.Palette extends AM.Document
   @all = @subscription 'all'
   @allLospec = @subscription 'allLospec'
   @forId = @subscription 'forId'
+  @forIds = @subscription 'forIds'
   @forName = @subscription 'forName'
   
   @insert = @method 'insert'
@@ -51,4 +52,4 @@ class LOI.Assets.Palette extends AM.Document
     shadeIndex = THREE.Math.clamp shadeIndex, 0, ramp.shades.length - 1
     colorData = ramp.shades[shadeIndex]
 
-    new THREE.Color.fromObject colorData
+    THREE.Color.fromObject colorData

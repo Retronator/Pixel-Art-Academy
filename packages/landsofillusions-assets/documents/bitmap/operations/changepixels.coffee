@@ -28,7 +28,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
     layer = document.getLayer @layerAddress
     
     # Expand the layer if necessary to include these new pixels.
-    @_resizeLayerToIncludeBounds layer, @bounds
+    @_resizeLayerToIncludeBounds layer, @bounds, document.pixelFormat
 
     # Apply the changed area to the layer.
     @_copyPixels {area: changeArea, bounds: @bounds}, {area: layer, bounds: layer.bounds}, document.pixelFormat
@@ -86,7 +86,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
     # Optimization: Explicit return to not collect results of for loops.
     return
 
-  _resizeLayerToIncludeBounds: (layer, bounds) ->
+  _resizeLayerToIncludeBounds: (layer, bounds, pixelFormat) ->
     # If the bounds are within the layer bounds, there's nothing to do.
     return if bounds.x >= layer.bounds.x and bounds.y >= layer.bounds.y and bounds.x + bounds.width <= layer.bounds.x + layer.bounds.width and bounds.y + bounds.height <= layer.bounds.y + layer.bounds.height
     
@@ -101,7 +101,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
         attributes: oldAttributes
       bounds: oldLayerBounds
     
-    layer.initialize width, height, format
+    layer.initialize layer.width, layer.height, pixelFormat
     
     @_copyPixels source, {area: layer, bounds: layer.bounds}, layer.pixelFormat
   

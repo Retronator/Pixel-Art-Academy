@@ -2,6 +2,7 @@ Artworks in this folder are NOT covered by CC-SA. Copyright belongs to their res
 
 Sprites used under fair use:
 
+- 720° (ZX Spectrum) by Atari, 1987
 - Out Run (ZX Spectrum) by Probe Software, 1987
 - CodeMasters logo (from the loading screen of Fast Food) by Neil Adamson, 1989
 

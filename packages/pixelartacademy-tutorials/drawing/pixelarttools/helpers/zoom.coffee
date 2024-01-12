@@ -9,7 +9,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
   @description: -> """
       Working on bigger images requires you to zoom in and out to make drawing easier.
 
-      Shortcuts: + and -
+      Shortcuts: Mouse scroll or Cmd/ctrl with +/-
     """
 
   @fixedDimensions: -> width: 64, height: 40
@@ -122,7 +122,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
     @message: -> """
       Use the plus and minus buttons on the calculator to zoom in and out.
 
-      Shortcuts: + and -
+      Shortcuts: Mouse scroll or Cmd/ctrl with +/-
     """
     
     @activeConditions: ->

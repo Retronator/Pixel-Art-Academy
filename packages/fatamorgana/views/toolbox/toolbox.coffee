@@ -17,14 +17,6 @@ class FM.Toolbox extends FM.View
     toolId = @currentData()
     @interface.getOperator toolId
 
-  toolClass: ->
-    tool = @currentData()
-
-    toolClass = _.kebabCase tool.displayName()
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
-
   activeToolClass: ->
     tool = @currentData()
 

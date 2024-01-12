@@ -16,6 +16,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
 
   @fixedDimensions: -> width: 256, height: 32
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @minClipboardScale: -> 1
 
   @imageUrl: ->
     "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/outrun-hills.png"
@@ -33,8 +34,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     PAA.Practice.Software.Tools.ToolKeys.Zoom
     PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   ]
-
-  minClipboardScale: -> 1
   
   Asset = @
   
@@ -50,7 +49,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       return unless asset = @getActiveAsset()
       not asset.completed()
       
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @initialize()
@@ -74,7 +73,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       editor = @getEditor()
       editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
   
-    @resetCompletedCondition: ->
+    @resetCompletedConditions: ->
       not @getActiveAsset()
     
     @priority: -> 1

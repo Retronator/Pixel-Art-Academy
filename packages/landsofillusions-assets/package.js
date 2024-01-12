@@ -71,10 +71,12 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset/actions/addreferencebyurl');
   api.addFile('documents/visualasset/actions/updatereference');
   api.addFile('documents/visualasset/actions/reorderreferencetotop');
+  api.addFile('documents/visualasset/actions/updateproperty');
   api.addFile('documents/visualasset/operations..');
   api.addFile('documents/visualasset/operations/addreference');
   api.addFile('documents/visualasset/operations/updatereference');
   api.addFile('documents/visualasset/operations/removereference');
+  api.addFile('documents/visualasset/operations/updateproperty');
 
   api.addFile('documents/sprite..');
   api.addFile('documents/sprite/rot8');
@@ -111,11 +113,13 @@ Package.onUse(function(api) {
   api.addFile('documents/bitmap/actions/addlayer');
   api.addFile('documents/bitmap/actions/stroke');
   api.addFile('documents/bitmap/actions/colorfill');
+  api.addFile('documents/bitmap/actions/changebounds');
 
   api.addFile('documents/bitmap/operations..');
   api.addFile('documents/bitmap/operations/addlayer');
   api.addFile('documents/bitmap/operations/removelayer');
   api.addFile('documents/bitmap/operations/changepixels');
+  api.addFile('documents/bitmap/operations/changebounds');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/methods');
@@ -200,7 +204,7 @@ Package.onUse(function(api) {
   api.addFile('components/tools..');
   api.addFile('components/tools/tool');
   api.addFile('components/tools/pencil');
-  api.addFile('components/tools/eraser');
+  api.addFile('components/tools/harderaser');
   api.addFile('components/tools/colorfill');
   api.addFile('components/tools/colorpicker');
   api.addFile('components/tools/undo');
@@ -296,9 +300,9 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
-  api.addFile('spriteeditor/tools/stroke');
+  api.addFile('spriteeditor/tools/aliasedstroke');
   api.addFile('spriteeditor/tools/pencil');
-  api.addFile('spriteeditor/tools/eraser');
+  api.addFile('spriteeditor/tools/harderaser');
   api.addFile('spriteeditor/tools/smooth');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
@@ -335,7 +339,7 @@ Package.onUse(function(api) {
   api.addComponent('spriteeditor/resizedialog..');
 
   api.addComponent('spriteeditor/pixelcanvas..');
-  api.addFile('spriteeditor/pixelcanvas/mouse');
+  api.addFile('spriteeditor/pixelcanvas/pointer');
   api.addFile('spriteeditor/pixelcanvas/cursor');
   api.addFile('spriteeditor/pixelcanvas/camera');
   api.addFile('spriteeditor/pixelcanvas/landmarks');
@@ -356,7 +360,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
   api.addFile('mesheditor/tools/pencil');
-  api.addFile('mesheditor/tools/eraser');
+  api.addFile('mesheditor/tools/harderaser');
   api.addFile('mesheditor/tools/colorfill');
   api.addFile('mesheditor/tools/translate');
 
@@ -451,6 +455,7 @@ Package.onUse(function(api) {
 
   api.addFile('audioeditor/actions..');
   api.addFile('audioeditor/actions/duplicatenode');
+  api.addFile('audioeditor/actions/deletenode');
 
   api.addUnstyledComponent('audioeditor/soundselectdialog..');
 });

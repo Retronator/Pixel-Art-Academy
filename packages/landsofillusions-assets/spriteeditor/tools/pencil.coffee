@@ -3,32 +3,43 @@ AM = Artificial.Mummification
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Stroke
+class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.AliasedStroke
   # paintNormals: boolean whether only normals are being painted
   # ignoreNormals: boolean whether normals are not painted
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
   @displayName: -> "Pencil"
 
   @initialize()
-
-  createPixelsFromCoordinates: (coordinates) ->
+  
+  createPixelsFromStrokeMask: (assetData, strokeMask) ->
     # Make sure we have paint at all.
     paint =
       directColor: @paintHelper.directColor()
       paletteColor: @paintHelper.paletteColor()
       materialIndex: @paintHelper.materialIndex()
-    
+      
     return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
     paint.normal = @paintHelper.normal().toObject()
-
-    for coordinate in coordinates
-      pixel = _.clone coordinate
-
-      for property in ['normal', 'materialIndex', 'paletteColor', 'directColor']
-        pixel[property] = paint[property] if paint[property]?
+    paint.alpha = @paintHelper.opacity()
+  
+    pixels = []
+    
+    for x in [0...assetData.bounds.width]
+      for y in [0...assetData.bounds.height]
+        maskIndex = x + y * assetData.bounds.width
+        continue unless strokeMask[maskIndex]
         
-      pixel
+        pixel =
+          x: x + assetData.bounds.left
+          y: y + assetData.bounds.top
+  
+        pixels.push pixel
+      
+    for property in ['normal', 'materialIndex', 'paletteColor', 'directColor', 'alpha'] when paint[property]?
+      pixel[property] = paint[property] for pixel in pixels
+    
+    pixels
 
   applyPixels: (assetData, layerIndex, relativePixels, strokeStarted) ->
     # See if we're only painting normals.
@@ -74,12 +85,12 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       # If the image has no layer, we first have to add it as a partial action.
       unless assetData.getLayer layerAddress
         addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @constructor.id(), assetData, []
-        LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, addLayerAction
+        AM.Document.Versioning.executePartialAction assetData, addLayerAction
         @_action.append addLayerAction
 
       # Create the stroke action.
-      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels
-      LOI.Assets.Bitmap.executePartialAction LOI.Assets.Bitmap.className, assetData._id, action
+      action = new LOI.Assets.Bitmap.Actions.Stroke @constructor.id(), assetData, layerAddress, changedPixels, true
+      AM.Document.Versioning.executePartialAction assetData, action
       @_action.append action
   
       # Optimize the partial stroke operations.

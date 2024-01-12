@@ -41,8 +41,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @bindingHeight = 14
     @hideTop = 30
     
-    @waitBetweenAnimationsDuration = 0.3
-    @animationStepDuration = 0.03
+    @waitBetweenAnimationsDuration = 0.1
+    @animationStepDuration = 0.02
   
   onCreated: ->
     super arguments...
@@ -229,7 +229,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
     unless @displayState() is @constructor.DisplayState.Open
       # Give some time for the other UI animations to finish.
-      await _.waitForSeconds 1.2
+      await _.waitForSeconds 1
       
       # Make sure we're still on the home screen (no app has been opened while we were waiting).
       if @os.currentAppUrl()
@@ -238,7 +238,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       @manualDisplayState @constructor.DisplayState.Open
       
-      await _.waitForSeconds 1
+      await _.waitForSeconds 0.35
     
     # Make sure we're still being rendered.
     unless @isRendered()
@@ -261,7 +261,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       @manualDisplayState null
     ,
       2000
-    
+      
+  allowsShortcutsTable: -> false
+  
   onBackButton: ->
     # If we have an animation waiting to happen, we want the back button to return us to the main menu.
     return unless @_animationAvailable()

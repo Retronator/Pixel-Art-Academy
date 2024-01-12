@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AEc = Artificial.Echo
+AMe = Artificial.Melody
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
@@ -11,11 +12,26 @@ class LM.Interface extends LOI.Interface
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
       focusPoint: AEc.ValueTypes.String
+      dynamicSoundtrack: AEc.ValueTypes.Boolean
+      muteInGameAudio: AEc.ValueTypes.Boolean
+      inGameMusic: AEc.ValueTypes.Boolean
+      inGameMusicInLocation: AEc.ValueTypes.Boolean
+      homeScreen: AEc.ValueTypes.Trigger
+      tutorialStart: AEc.ValueTypes.Trigger
+      tutorialMiddle: AEc.ValueTypes.Trigger
+      tutorialEnding: AEc.ValueTypes.Trigger
+      challengeStart: AEc.ValueTypes.Trigger
+      projectStart: AEc.ValueTypes.Trigger
     
   @FocusPoints:
     Play: 'Play'
     MainMenu: 'MainMenu'
-    
+  
+  @InGameMusicMode:
+    Direct: 'Direct'
+    InLocation: 'InLocation'
+    Off: 'Off'
+  
   onCreated: ->
     super arguments...
     
@@ -44,6 +60,23 @@ class LM.Interface extends LOI.Interface
     
     # Manually load Audio since audio manager wasn't available when calling super.
     @constructor.Audio.load @audioManager
+    
+    # Mute in-game audio in the menus, except in the audio section. We have an additional extended silence during
+    # quitting when the game transitions from the play to the main menu location and audio would still be played as the
+    # adventure menu fades out before location switch.
+    @quitting = new ReactiveField false
+    
+    @autorun (computation) =>
+      if LOI.adventure.menu.visible()
+        value = not LOI.adventure.menu.items.inAudio()
+      
+      else if @audio.focusPoint.value() is @constructor.FocusPoints.MainMenu
+        value = not LOI.adventure.currentLocation()?.menuItems?.inAudio()
+        
+      else
+        value = @quitting()
+      
+      @audio.muteInGameAudio value
     
   onRendered: ->
     super arguments...

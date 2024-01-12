@@ -7,5 +7,5 @@ class PAA.PixelPad.System extends LOI.Adventure.Item
     super arguments...
     
   allowsShortcutsTable: ->
-    # Override to display shortcuts table in the app.
-    false
+    # Override if the system interferes with displaying the shortcuts table.
+    true

@@ -18,11 +18,21 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
     @drawing = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing
 
     # Calculate asset size.
+    @bitmapBounds = new ComputedField =>
+      @asset.bitmap()?.bounds
+    ,
+      EJSON.equals
+    
+    @assetScale = new ComputedField =>
+      @drawing.portfolio().displayedAsset()?.scale()
+    
     @assetSize = new ComputedField =>
-      return unless bitmapData = @asset.bitmap()
-      return unless assetData = @drawing.portfolio().displayedAsset()
+      return unless bitmapBounds = @bitmapBounds()
+      return unless assetScale = @assetScale()
 
       options =
+        border: true
+        pixelArtScaling: true
         scaleLimits: {}
 
       # Check if the asset provides a minimum or maximum scale.
@@ -32,7 +42,8 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
       if maxScale = @asset.maxClipboardScale?()
         options.scaleLimits.max = maxScale
       
-      PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), bitmapData.bounds, options
+      PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetScale, bitmapBounds, options
+      
       
   onBackButton: ->
     if @secondPageActive()

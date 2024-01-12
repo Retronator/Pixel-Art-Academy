@@ -2,6 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 AB = Artificial.Base
 AEc = Artificial.Echo
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
@@ -43,6 +44,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @inactiveGroupHeight = 5
     @activeGroupHeight = 150
     @settingsHeight = 118
+    @sectionsMargin = 13
+    @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
 
   sectionActiveClass: ->
     section = @currentData()
@@ -57,30 +60,40 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   sectionStyle: ->
     section = @currentData()
     groups = section.groups()
-    active = @activeSection() is section
-    sections = @sections()
-
-    width = 292 - 4 * (sections.length - section.index)
-
+    
+    activeSection = @activeSection()
+    activeGroup = @activeGroup()
+    
+    width = @sectionWidth section
+    
+    if section is activeSection
+      if activeGroup
+        activeSectionHeight = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+      
+      else
+        activeSectionHeight = @sectionHeight + groups.length * @initialGroupHeight
+        
+      height = activeSectionHeight
+      
+    else
+      height = @inactiveSectionHeight()
+      
     style =
       width: "#{width}rem"
-
-    if active
-      if @activeGroup()
-        height = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
-
-      else
-        height = @sectionHeight + groups.length * @initialGroupHeight
-
-      style.height = "#{height}rem"
-
+      height: "#{height}rem"
+    
     style
+    
+  sectionWidth: (section) ->
+    292 - 4 * (@sections().length - section.index)
 
   groupStyle: ->
     group = @currentData()
     section = @parentDataWith 'groups'
+    
+    sectionWidth = @sectionWidth section
 
-    width: "#{270 - 3 * (section.groups().length - group.index - 1)}rem"
+    width: "#{sectionWidth - 18 - 3 * (section.groups().length - group.index - 1)}rem"
 
   groupActiveClass: ->
     group = @currentData()
@@ -139,10 +152,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     sectionsCount = sections.length
     sectionsCount++ if @showSettingsSection()
-
-    top = 14 + sectionsCount * @sectionHeight
+    
+    inactiveSectionHeight = @inactiveSectionHeight()
 
     if section = @activeSection()
+      top = @sectionsMargin + (sectionsCount - 1) * inactiveSectionHeight + @sectionHeight
+  
       if groups = section.groups?()
         if @activeGroup()
           top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
@@ -152,8 +167,15 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
       else
         top += @settingsHeight
+        
+    else
+      top = @sectionsMargin + sectionsCount * inactiveSectionHeight
 
     top: "#{top}rem"
+  
+  sectionsVisible: ->
+    # Only show sections when not in the editor to prevent updates while editing.
+    not @drawing.editor().active()
 
   assetHoveredClass: ->
     assetData = @currentData()
@@ -192,7 +214,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   events: ->
     super(arguments...).concat
       'click .section': @onClickSection
-      'click .group-name': @onClickGroupName
+      'click .group-header': @onClickGroupHeader
       'click': @onClick
       'mouseenter .section': @onMouseEnterSection
       'mouseenter .group-name': @onMouseEnterGroupName
@@ -218,7 +240,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       # In that case the group handler will activate a new group in this new section.
       @activeGroup null unless clickInsideContent
 
-  onClickGroupName: (event) ->
+  onClickGroupHeader: (event) ->
     group = @currentData()
     section = @parentDataWith 'groups'
     
@@ -302,3 +324,42 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   onClickExternalEditor: (event) ->
     program = @currentData()
     @drawing.state 'externalSoftware', program.value
+  
+  onKeyDown: (event) ->
+    if event.which is AC.Keys.f2
+      return unless asset = @activeAsset()?.asset
+      
+      asset.solveAndComplete?()
+      event.preventDefault()
+    
+    else if event.which is AC.Keys.f3
+      console.log "Cheating commences …"
+      
+      return unless activeGroup = @activeGroup()
+      return unless activeGroup.thing.assets() and activeGroup.thing.state 'assets'
+      
+      cheating = =>
+        assets = activeGroup.thing.assets()
+        assetsData = activeGroup.thing.state 'assets'
+        
+        cheatMore = false
+        
+        while uncompletedAssetData = _.find assetsData, (assetData) -> not assetData.completed
+          console.log "Completing", uncompletedAssetData.id
+          
+          uncompletedAsset = _.find assets, (asset) -> asset.id() is uncompletedAssetData.id
+          uncompletedAsset.solve()
+          uncompletedAssetData.completed = true
+          
+          cheatMore = true
+        
+        if cheatMore
+          activeGroup.thing.state 'assets', assetsData
+          Meteor.setTimeout cheating, 100
+        
+        else
+          console.log "Cheating commenced!"
+      
+      cheating()
+      
+      event.preventDefault()

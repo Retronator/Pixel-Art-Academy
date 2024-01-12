@@ -44,3 +44,7 @@ class LM.Intro.Tutorial extends LM.Chapter
     super arguments...
 
     @_createSnakeProjectAutorun.stop()
+    
+  finished: ->
+    # Tutorial ends when you complete the snake game goal.
+    @getGoal(LM.Intro.Tutorial.Goals.Snake).completed() or false

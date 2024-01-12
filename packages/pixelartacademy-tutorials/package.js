@@ -30,6 +30,8 @@ Package.onUse(function(api) {
 
   api.addComponent('drawing/instructions/desktop..');
 
+  // Pixel art tools
+
   api.addFile('drawing/pixelarttools..');
 
   api.addFile('drawing/pixelarttools/basics..');
@@ -53,4 +55,46 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelarttools/helpers/movecanvas');
   api.addFile('drawing/pixelarttools/helpers/undoredo');
   api.addFile('drawing/pixelarttools/helpers/lines');
+
+  // Elements of art
+
+  api.addFile('drawing/elementsofart..');
+
+  api.addFile('drawing/elementsofart/line..');
+  api.addFile('drawing/elementsofart/line/asset');
+  api.addFile('drawing/elementsofart/line/assetwithreferences');
+
+  api.addFile('drawing/elementsofart/line/straightlines');
+  api.addFile('drawing/elementsofart/line/curvedlines');
+  api.addFile('drawing/elementsofart/line/brokenlines');
+  api.addFile('drawing/elementsofart/line/brokenlines2');
+  api.addFile('drawing/elementsofart/line/outlines');
+  api.addFile('drawing/elementsofart/line/outlines2');
+  api.addFile('drawing/elementsofart/line/edges');
+  api.addFile('drawing/elementsofart/line/patterns');
+
+  api.addFile('drawing/elementsofart/line/errorinstruction');
+  api.addFile('drawing/elementsofart/line/referencestrayinstruction');
+
+  // Pixel art fundamentals
+
+  api.addFile('drawing/pixelartfundamentals..');
+  api.addFile('drawing/pixelartfundamentals/markup');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/asset');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/asset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/constrainingangles');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonals');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonalsartstyle');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/instructions');
 });

@@ -91,13 +91,13 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
       return unless asset = @getActiveAsset()
   
       # Show when there are any extra pixels present and the last operation was a color fill.
-      return unless @assetHasExtraPixels asset
+      return unless asset.hasExtraPixels()
   
       bitmap = asset.bitmap()
       lastAction = bitmap.partialAction or bitmap.history[bitmap.historyPosition - 1]
       lastAction.operatorId is @toolId()
 
-    onDisplay: ->
+    onDisplayed: ->
       # Unlock the undo.
       asset = @constructor.getActiveAsset()
       asset.unlockUndo true

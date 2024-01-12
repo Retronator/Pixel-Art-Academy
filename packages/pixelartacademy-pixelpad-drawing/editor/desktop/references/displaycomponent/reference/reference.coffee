@@ -67,8 +67,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     @autorun (computation) =>
       return unless draggingPosition = @draggingPosition()
-      return unless displaySize = @displaySize()
-      displayScale = @display.scale()
+      
+      referenceScale = if @currentDisplayed() then @currentScale() else @hiddenScale()
+      return unless displaySize = @displaySize referenceScale
 
       halfWidth = displaySize.width / 2
       halfHeight = displaySize.height / 2
@@ -78,6 +79,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         @references.opened false
 
       # Activate hide mode when nearing tray.
+      displayScale = @display.scale()
       @references.hideActive not @references.opened() and Math.abs(draggingPosition.x) < @trayWidth / 2 and draggingPosition.y + @parentOffset.top / displayScale - halfHeight < @trayHideActiveHeight
 
     @caption = new ComputedField =>
@@ -125,6 +127,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     height: imageSize.height * scale + captionHeight
 
   endDrag: ->
+    @startUpdate()
+    
     # When displaying a reference, also set its scale from its hidden default.
     @setScale @hiddenScale() if @references.draggingDisplayed() and not @currentDisplayed()
   
@@ -132,7 +136,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     @references.hideActive false
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     super arguments...
     
     return unless event.which is 1
@@ -145,7 +149,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @parentOffset.left -= pixelPadOffset.left
       @parentOffset.top -= pixelPadOffset.top
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     # Don't allow resizing when not displayed.
     return unless @currentDisplayed()
 

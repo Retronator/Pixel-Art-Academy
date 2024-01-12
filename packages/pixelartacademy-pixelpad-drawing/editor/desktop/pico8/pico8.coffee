@@ -7,8 +7,6 @@ FM = FataMorgana
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Pico8'
   @register @id()
-
-  @template: -> @constructor.id()
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
@@ -75,6 +73,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
       @_lastAudioDragTime = Date.now()
       
       @_dragTimeLeft = 1
+    
+    # Automatically enter focused mode when active.
+    @autorun (computation) =>
+      @desktop.focusedMode @active()
+    
+    # Automatically deactivate when exiting focused mode.
+    @autorun (computation) =>
+      @active false unless @desktop.focusedMode()
       
   onRendered: ->
     super arguments...
@@ -103,15 +109,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
 
   events: ->
     super(arguments...).concat
-      'mouseenter .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8': @onMouseEnterPico8
-      'mouseleave .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8': @onMouseLeavePico8
+      'pointerenter .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8': @onPointerEnterPico8
+      'pointerleave .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8': @onPointerLeavePico8
       'click': @onClick
-      'mousedown': @onMouseDown
+      'pointerdown': @onPointerDown
   
-  onMouseEnterPico8: (event) ->
+  onPointerEnterPico8: (event) ->
     @_handheldDragTiny()
     
-  onMouseLeavePico8: (event) ->
+  onPointerLeavePico8: (event) ->
     @_handheldDragTiny()
   
   _handheldDragTiny: ->
@@ -134,7 +140,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
     @positionOffset x: 0, y: 0
     @active true
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     return unless @active()
 
     # Only react to clicks directly on the case or screen.
@@ -144,12 +150,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
     @dragging true
     @_moved = false
 
-    @_mousePosition =
+    @_pointerPosition =
       x: event.clientX
       y: event.clientY
 
-    # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on "mouseup.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8", (event) =>
+    # Wire end of dragging on pointer up anywhere in the window.
+    $(document).on "pointerup.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8", (event) =>
       $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8'
 
       @dragging false
@@ -159,19 +165,19 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
         @_draggingDeactivated = true
         @active false
 
-    $(document).on "mousemove.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8", (event) =>
+    $(document).on "pointermove.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8", (event) =>
       @_moved = true
       scale = @display.scale()
 
       dragDelta =
-        x: (event.clientX - @_mousePosition.x) / scale
-        y: (event.clientY - @_mousePosition.y) / scale
+        x: (event.clientX - @_pointerPosition.x) / scale
+        y: (event.clientY - @_pointerPosition.y) / scale
 
       offset = @positionOffset()
       @positionOffset
         x: offset.x + dragDelta.x
         y: offset.y + dragDelta.y
 
-      @_mousePosition =
+      @_pointerPosition =
         x: event.clientX
         y: event.clientY

@@ -13,7 +13,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Course extends LM.Content.Cou
   
   @tags: -> [
     LM.Content.Tags.BaseGame
-    LM.Content.Tags.Future
+    LM.Content.Tags.WIP
   ]
 
   @contents: -> [

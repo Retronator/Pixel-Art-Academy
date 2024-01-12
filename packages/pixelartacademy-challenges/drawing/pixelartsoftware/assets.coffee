@@ -495,12 +495,12 @@ assets =
     bitmapInfo: -> """
       Artwork from [Into The Breach](https://subsetgames.com/itb.html), 2018
 
-      Artist: Justin Ma
+      Artist: Jay Ma
     """
     maxClipboardScale: -> 2.5
     artist:
       name:
-        first: 'Justin'
+        first: 'Jay'
         last: 'Ma'
     artwork:
       title: 'Rift Walkers Combat Mech'
