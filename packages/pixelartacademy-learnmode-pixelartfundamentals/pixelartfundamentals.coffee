@@ -15,6 +15,10 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
   @startSection: -> @Start
   
   @initialize()
+  
+  meetsAccessRequirement: ->
+    # Pixel art fundamentals are not available in the demo.
+    false
 
 if Meteor.isServer
   LOI.initializePackage
