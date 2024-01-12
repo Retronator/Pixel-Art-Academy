@@ -1,6 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+TextOriginPosition = PAA.Practice.Helpers.Drawing.Markup.TextOriginPosition
+Markup = PAA.Practice.Helpers.Drawing.Markup
+
 class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @id: -> 'PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Helpers.Lines'
 
@@ -18,6 +21,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     imageUrl: "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/720.png" if step is 1
   
   @bitmapInfo: -> "Artwork from 720° (ZX Spectrum), Atari, 1987"
+
+  @markup: -> true
 
   @initialize()
 
@@ -79,6 +84,33 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     """
     
     @initialize()
+    
+    markup: ->
+      markupStyle = Markup.defaultStyle()
+      
+      arrowBase =
+        arrow:
+          end: true
+        style: markupStyle
+      
+      textBase = Markup.textBase()
+      
+      [
+        line: _.extend {}, arrowBase,
+          points: [
+            x: 4, y: 20.5
+          ,
+            x: 5.5, y: 23.5, bezierControlPoints: [
+              x: 4, y: 22
+            ,
+              x: 5.25, y: 23.25
+            ]
+          ]
+        text: _.extend {}, textBase,
+          position:
+            x: 4, y: 20, origin: TextOriginPosition.BottomCenter
+          value: "start\nhere"
+      ]
   
   class @LineEnd extends @InstructionStep
     @id: -> "#{Asset.id()}.LineEnd"

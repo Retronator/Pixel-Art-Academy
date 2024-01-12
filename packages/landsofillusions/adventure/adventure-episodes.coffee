@@ -50,7 +50,7 @@ class LOI.Adventure extends LOI.Adventure
 
     @currentSections = new AE.LiveComputedField =>
       chapterSections = (chapter.currentSections() for chapter in @currentChapters())
-      startSections = (episode.startSection for episode in @episodes() when not episode.startSection.finished())
+      startSections = (episode.startSection for episode in @episodes() when episode.startSection.active())
 
       _.flattenDeep [chapterSections, startSections]
       
