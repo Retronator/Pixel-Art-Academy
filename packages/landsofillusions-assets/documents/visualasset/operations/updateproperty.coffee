@@ -8,7 +8,14 @@ class LOI.Assets.VisualAsset.Operations.UpdateProperty extends AM.Document.Versi
   @initialize()
 
   execute: (document) ->
-    _.applyObjectDifference document.properties[@property], @changes
+    if not document.properties[@property] and @changes
+      document.properties[@property] = @changes
+      
+    else if document.properties[@property] and not @changes
+      delete document.properties[@property]
+    
+    else
+      _.applyObjectDifference document.properties[@property], @changes
 
     # Return that the property was changed.
     properties:

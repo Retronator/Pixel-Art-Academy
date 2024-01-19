@@ -12,6 +12,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
   @register @id()
   
   @CriteriaNames:
+    PixelPerfectLines: "Pixel-perfect lines"
     ConsistentLineWidth: "Consistent line width"
     EvenDiagonals: "Even diagonals"
     SmoothCurves: "Smooth curves"

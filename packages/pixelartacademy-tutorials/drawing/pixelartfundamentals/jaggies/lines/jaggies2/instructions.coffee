@@ -3,7 +3,6 @@ PAA = PixelArtAcademy
 
 Markup = PAA.Practice.Helpers.Drawing.Markup
 PAE = PAA.Practice.PixelArtEvaluation
-StraightLine = PAE.Line.Part.StraightLine
 
 # Note: We can't call this Instructions since we introduce a namespace class called that below.
 Jaggies2 = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2

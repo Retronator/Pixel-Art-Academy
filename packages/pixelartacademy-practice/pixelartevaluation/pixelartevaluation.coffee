@@ -2,6 +2,8 @@ PAA = PixelArtAcademy
 
 class PAA.Practice.PixelArtEvaluation
   # score: float between 0 and 1 for the final average score
+  # pixelPerfectLines:
+  #   score: float between 0 and 1 with this criterion evaluation
   # consistentLineWidth:
   #   score: float between 0 and 1 with this criterion evaluation
   # evenDiagonals
@@ -18,6 +20,7 @@ class PAA.Practice.PixelArtEvaluation
   #   score: float between 0 and 1 with this criterion evaluation
 
   @Criteria =
+    PixelPerfectLines: 'PixelPerfectLines'
     ConsistentLineWidth: 'ConsistentLineWidth'
     EvenDiagonals: 'EvenDiagonals'
     SmoothCurves: 'SmoothCurves'

@@ -3,7 +3,6 @@ PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 PAE = PAA.Practice.PixelArtEvaluation
-StraightLine = PAE.Line.Part.StraightLine
 Jaggies2 = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2
 
 class Jaggies2.Steps

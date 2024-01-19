@@ -86,6 +86,7 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2..');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/steps');

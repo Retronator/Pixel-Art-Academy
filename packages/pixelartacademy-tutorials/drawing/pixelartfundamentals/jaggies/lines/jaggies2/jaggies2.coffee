@@ -1,10 +1,6 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-TextOriginPosition = PAA.Practice.Helpers.Drawing.Markup.TextOriginPosition
-Atari2600 = LOI.Assets.Palette.Atari2600
-Markup = PAA.Practice.Helpers.Drawing.Markup
-
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2"
 
@@ -17,7 +13,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
   @fixedDimensions: -> width: 37, height: 22
   
   @resources: ->
-    path = '/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/jaggies2'
+    path = '/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/jaggies2'
 
     line1:
       goalPixels: new @Resource.ImagePixels "#{path}-1-goal.png"
