@@ -1,10 +1,10 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
-class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComponent
+class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComponent
   @debug = true
   
   constructor: ->
@@ -43,13 +43,13 @@ class PAG.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     markup = []
   
     # Add markup for even diagonals.
-    if PAG.Criteria.EvenDiagonals in displayedCriteria
-      for linePart in lineParts when linePart instanceof PAG.Line.Part.StraightLine
+    if PAE.Criteria.EvenDiagonals in displayedCriteria
+      for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine
         if linePart in focusedLineParts
           markup.push Markup.PixelArt.straightLineBreakdown(linePart)...
           
         else
-          markup.push Markup.PixelArt.evaluatedIntendedLine(linePart)...
+          markup.push Markup.PixelArt.evaluatedImpliedStraightLine(linePart)...
         
     @drawMarkup markup, context, renderOptions
 

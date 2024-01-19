@@ -1,8 +1,8 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Pixel
+class PAE.Pixel
   constructor: (@layer, @x, @y) ->
     @lines = []
     @points = []

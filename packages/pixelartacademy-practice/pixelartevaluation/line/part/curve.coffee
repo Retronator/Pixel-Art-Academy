@@ -1,10 +1,10 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 _point = new THREE.Vector2
 
-class PAG.Line.Part.Curve extends PAG.Line.Part
+class PAE.Line.Part.Curve extends PAE.Line.Part
   constructor: (..., @isClosed) ->
     super arguments...
 

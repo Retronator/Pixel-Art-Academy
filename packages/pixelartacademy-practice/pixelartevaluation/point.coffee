@@ -1,8 +1,8 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Point
+class PAE.Point
   @getSharedOutline: (pointA, pointB) ->
     for line in pointA.lines
       return line if line in pointB.lines and line.core

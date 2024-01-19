@@ -1,8 +1,8 @@
 PAA = PixelArtAcademy
 
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Layer
+class PAE.Layer
   constructor: (@pixelArtEvaluation, @layerAddress) ->
     @pixels = []
     @pixelsMap = {}
@@ -222,7 +222,7 @@ class PAG.Layer
     line.classifyLineParts() for line in newLines
   
   _addPixel: (x, y) ->
-    pixel = new PAG.Pixel @, x, y
+    pixel = new PAE.Pixel @, x, y
 
     @pixels.push pixel
     @pixelsMap[x] ?= {}
@@ -235,7 +235,7 @@ class PAG.Layer
     @pixelsMap[pixel.x][pixel.y] = null
     
   _addLine: ->
-    line = new PAG.Line @
+    line = new PAE.Line @
     
     @lines.push line
     
@@ -247,7 +247,7 @@ class PAG.Layer
     line.destroy()
   
   _addPoint: ->
-    point = new PAG.Point @
+    point = new PAE.Point @
     
     @points.push point
     
@@ -259,7 +259,7 @@ class PAG.Layer
     point.destroy()
     
   _addCore: ->
-    core = new PAG.Core @
+    core = new PAE.Core @
     
     @cores.push core
     

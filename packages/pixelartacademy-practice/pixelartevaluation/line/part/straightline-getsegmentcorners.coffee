@@ -1,9 +1,9 @@
 AE = Artificial.Everywhere
 AP = Artificial.Pyramid
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-PAG.Line.Part.StraightLine::getSegmentCorners = ->
+PAE.Line.Part.StraightLine::getSegmentCorners = ->
   @_analyzeSegments()
   
   startPoint = _.first @points

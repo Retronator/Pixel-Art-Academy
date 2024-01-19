@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAG = PAA.Practice.PixelArtEvaluation
-StraightLine = PAG.Line.Part.StraightLine
+PAE = PAA.Practice.PixelArtEvaluation
+StraightLine = PAE.Line.Part.StraightLine
 
 # Note: We can't call this Instructions since we introduce a namespace class called that below.
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
@@ -66,7 +66,7 @@ class DiagonalsEvaluation.Instructions
 
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
       
-    openEvaluationPaper: (focusPoint, scale, criterion = PAG.Criteria.EvenDiagonals) ->
+    openEvaluationPaper: (focusPoint, scale, criterion = PAE.Criteria.EvenDiagonals) ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
       pixelArtEvaluation.activate criterion
       

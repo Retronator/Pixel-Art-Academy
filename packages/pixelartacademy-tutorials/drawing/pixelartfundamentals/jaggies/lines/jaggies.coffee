@@ -5,7 +5,9 @@ TextOriginPosition = PAA.Practice.Helpers.Drawing.Markup.TextOriginPosition
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
+  @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies"
+  
   @displayName: -> "Jaggies"
   
   @description: -> """
@@ -13,6 +15,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
   """
   
   @fixedDimensions: -> width: 41, height: 21
+  
+  @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/#{_.fileCase @displayName()}.svg"
+  @breakPathsIntoSteps: -> true
   
   @markup: -> true
   @pixelArtEvaluation: -> true
@@ -169,11 +174,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
             x: 4.5, y: 9.5, origin: TextOriginPosition.BottomCenter
           value: "not a jaggy\n(sharp corner)"
       
-      # Add intended lines.
-      intendedLineBase = Markup.PixelArt.intendedLineBase()
+      # Add implied lines.
+      impliedLineBase = Markup.PixelArt.impliedLineBase()
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, impliedLineBase,
           points: [
             x: 18.5, y: 16.5
           ,
@@ -195,7 +200,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, impliedLineBase,
           points: [
             x: 16.5, y: 14.5
           ,
@@ -221,7 +226,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, impliedLineBase,
           points: [
             x: 13.5, y: 6.25
           ,
@@ -233,7 +238,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, impliedLineBase,
           points: [
             x: 7.5, y: 16
           ,

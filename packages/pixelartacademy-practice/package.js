@@ -151,8 +151,11 @@ Package.onUse(function(api) {
   api.addFile('pixelartevaluation/enginecomponent-debug')
 
   api.addFile('pixelartevaluation/line..')
+  api.addFile('pixelartevaluation/line/line-classifylineparts')
+  api.addFile('pixelartevaluation/line/line-evaluate')
   api.addFile('pixelartevaluation/line/part..')
   api.addFile('pixelartevaluation/line/part/straightline')
+  api.addFile('pixelartevaluation/line/part/straightline-evaluate')
   api.addFile('pixelartevaluation/line/part/straightline-getsegmentcorners')
   api.addFile('pixelartevaluation/line/part/curve')
   api.addFile('pixelartevaluation/line/part/curve-calculatepointconfidence')

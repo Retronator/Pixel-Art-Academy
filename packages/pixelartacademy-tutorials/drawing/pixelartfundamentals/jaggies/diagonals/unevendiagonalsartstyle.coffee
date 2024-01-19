@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonalsArtStyle extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonalsArtStyle"
@@ -39,7 +39,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     pixelArtScaling: true
     pixelArtEvaluation:
       editable: true
-      allowedCriteria: [PAG.Criteria.EvenDiagonals]
+      allowedCriteria: [PAE.Criteria.EvenDiagonals]
       evenDiagonals:
         segmentLengths: {}
   

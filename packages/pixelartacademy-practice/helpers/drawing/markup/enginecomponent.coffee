@@ -56,7 +56,7 @@ class Markup.EngineComponent
             else
               startPoint = line.points[line.points.length - 2]
               
-            @_drawArrow context, startPoint, endPoint
+            @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
         
       if text = element.text
         if text.backgroundStyle
@@ -93,7 +93,7 @@ class Markup.EngineComponent
       
     context.restore()
 
-  _drawArrow: (context, start, end, length) ->
+  _drawArrow: (context, start, end, width = 1, length = 0.5) ->
     _normal.subVectors end, start
     
     context.save()
@@ -101,11 +101,9 @@ class Markup.EngineComponent
     context.translate end.x, end.y
     context.rotate _normal.angle() + Math.PI
     
-    length = 0.5
-    
-    context.moveTo length, length
+    context.moveTo length, width / 2
     context.lineTo 0, 0
-    context.lineTo length, -length
+    context.lineTo length, -width / 2
     
     context.stroke()
     

@@ -110,6 +110,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     return unless asset instanceof @constructor
     return if drawingActive and not editor.drawingActive()
     true
+    
+  debugResourceLoading: -> false
 
   initialize: ->
     return if @_initializing
@@ -189,7 +191,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     # Create resources.
     @resources = @constructor.createResources()
     
-    resourcesReady = (resources) ->
+    resourcesReady = (resources) =>
+      if @debugResourceLoading()
+        console.log "Resource ready?", resources, resources.ready() if resources.ready
+        
       return resources.ready() if resources.ready
       
       if _.isArray resources

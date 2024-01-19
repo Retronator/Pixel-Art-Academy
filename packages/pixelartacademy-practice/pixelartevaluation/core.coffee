@@ -1,8 +1,8 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Core
+class PAE.Core
   constructor: (@layer) ->
     @id = Random.id()
     

@@ -1,8 +1,8 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Line.Part
+class PAE.Line.Part
   constructor: (@line, @startSegmentIndex, @endSegmentIndex, @startPointIndex, @endPointIndex) ->
     @id = Random.id()
     

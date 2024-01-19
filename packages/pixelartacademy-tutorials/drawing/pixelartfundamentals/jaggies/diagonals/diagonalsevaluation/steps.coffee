@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-PAG = PAA.Practice.PixelArtEvaluation
-StraightLine = PAG.Line.Part.StraightLine
+PAE = PAA.Practice.PixelArtEvaluation
+StraightLine = PAE.Line.Part.StraightLine
 DiagonalsEvaluation = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEvaluation
 
 class DiagonalsEvaluation.Steps
@@ -21,7 +21,7 @@ class DiagonalsEvaluation.Steps
       
       drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluation.activeCriterion() is PAG.Criteria.EvenDiagonals
+      pixelArtEvaluation.activeCriterion() is PAE.Criteria.EvenDiagonals
     
   class @HoverOverTheDiagonal extends TutorialBitmap.EphemeralStep
     @timeToHover = 2

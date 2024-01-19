@@ -1,10 +1,10 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 _point = new THREE.Vector2
 
-PAG.Line.Part.Curve::calculatePointConfidence = ->
+PAE.Line.Part.Curve::calculatePointConfidence = ->
   # Create point segments.
   @pointSegments = []
   

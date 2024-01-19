@@ -85,8 +85,11 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/asset');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
-  api.addFile('drawing/pixelartfundamentals/jaggies/lines/asset');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/instructions');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals..');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals');

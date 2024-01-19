@@ -10,6 +10,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     super arguments...
     
     @options.drawHintsForGoalPixels ?= true
+    @options.hasPixelsWhenInactive ?= true
     
     goalPixelsResource = @options.goalPixels
     
@@ -59,7 +60,10 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
 
     true
 
-  hasPixel: (x, y) -> @goalPixelsMap[@stepArea.bounds.x + x]?[@stepArea.bounds.y + y]?
+  hasPixel: (x, y) ->
+    return unless @options.hasPixelsWhenInactive or @isActiveStepInArea()
+
+    @goalPixelsMap[@stepArea.bounds.x + x]?[@stepArea.bounds.y + y]?
 
   solve: ->
     bitmap = @tutorialBitmap.bitmap()

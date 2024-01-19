@@ -61,13 +61,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
       return markup unless asset = @getActiveAsset()
       return markup unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
-      # Add intended lines for straight lines.
+      # Add implied lines for straight lines.
       for line in pixelArtEvaluation.layers[0].lines
         continue unless line.parts.length is 1
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
         
-        markup.push Markup.PixelArt.intendedLine linePart
+        markup.push Markup.PixelArt.impliedStraightLine linePart
 
       markup
       
@@ -107,7 +107,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     
     @message: -> """
       Whenever we use the same number of pixels in each segment, we create even or 'perfect' diagonals.
-      These angles are considered perfect in pixel art because the corners of the segments exactly follow the intended line.
+      These angles are considered perfect in pixel art because the corners of the segments exactly follow the implied line.
     """
     
     @initialize()

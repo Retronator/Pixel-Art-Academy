@@ -23,7 +23,7 @@ _endPartCenter = new THREE.Vector2
 _textPosition = new THREE.Vector2
 
 class Markup.PixelArt
-  @intendedLineBase: ->
+  @impliedLineBase: ->
     palette = LOI.palette()
     lineColor = palette.color Atari2600.hues.azure, 5
     
@@ -45,16 +45,45 @@ class Markup.PixelArt
     element = @diagonalRatioText straightLine
     element.text.style = @evaluatedSegmentLengthsStyle straightLine
     element
+    
+  @impliedLine: (line) ->
+    # Add points at the extents of each edge segments.
+    points = [
+      line.getPoint line.edgeSegments[0].startPointIndex
+    ]
+    
+    for edgeSegment in line.edgeSegments
+      points.push line.getPoint edgeSegment.endPointIndex
+      
+    # Create modifiable points (offset to the center of the pixels).
+    points = for point in points
+      x: point.x + 0.5
+      y: point.y + 0.5
+      
+    # Move points of diagonal segments to the segment corners.
+    for edgeSegment, index in line.edgeSegments when not edgeSegment.edge.isAxisAligned
+      startToEndOffsetX = 0.5 * Math.sign points[index + 1].x - points[index].x
+      startToEndOffsetY = 0.5 * Math.sign points[index + 1].y - points[index].y
+      
+      if index > 0
+        points[index].x += startToEndOffsetX
+        points[index].y += startToEndOffsetY
+
+      if index < line.edgeSegments.length - 1
+        points[index + 1].x -= startToEndOffsetX
+        points[index + 1].y -= startToEndOffsetY
+    
+    line: _.extend @impliedLineBase(), {points}
   
-  @intendedLine: (straightLine) ->
-    line: _.extend @intendedLineBase(),
+  @impliedStraightLine: (straightLine) ->
+    line: _.extend @impliedLineBase(),
       points: [
         x: straightLine.displayLine2.start.x + 0.5, y: straightLine.displayLine2.start.y + 0.5
       ,
         x: straightLine.displayLine2.end.x + 0.5, y: straightLine.displayLine2.end.y + 0.5
       ]
   
-  @evaluatedIntendedLine: (straightLine) ->
+  @evaluatedImpliedStraightLine: (straightLine) ->
     @_prepareLineParts straightLine
     
     evaluation = straightLine.evaluate()
@@ -284,7 +313,7 @@ class Markup.PixelArt
   @straightLineBreakdown: (straightLine) ->
     markup = [
       @evaluatedDiagonalRatioText straightLine
-      @evaluatedIntendedLine(straightLine)...
+      @evaluatedImpliedStraightLine(straightLine)...
       @segmentLengthTexts(straightLine)...
       @lineEvaluationPercentageTexts(straightLine)...
     ]

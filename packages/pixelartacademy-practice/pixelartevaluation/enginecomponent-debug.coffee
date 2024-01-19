@@ -1,6 +1,6 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 deepCoreColor = "hsl(100deg 50% 50% / 50%)"
 shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
@@ -11,7 +11,7 @@ straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
 segmentBoundaryColor = "hsl(80deg 50% 50% / 100%)"
 
-class PAG.EngineComponent extends PAG.EngineComponent
+class PAE.EngineComponent extends PAE.EngineComponent
   @debug = false
   
   constructor: (@options) ->
@@ -61,8 +61,8 @@ class PAG.EngineComponent extends PAG.EngineComponent
       
       for line in layer.lines
         for part in line[linePartsProperty]
-          @_drawDebugStraightLine context, part if part instanceof PAG.Line.Part.StraightLine
-          @_drawDebugCurve context, part, true if part instanceof PAG.Line.Part.Curve
+          @_drawDebugStraightLine context, part if part instanceof PAE.Line.Part.StraightLine
+          @_drawDebugCurve context, part, true if part instanceof PAE.Line.Part.Curve
       
     context.restore()
 
