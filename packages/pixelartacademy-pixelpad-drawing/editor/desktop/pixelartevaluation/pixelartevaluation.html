@@ -6,6 +6,9 @@
         {{#unless activeCriterion}}
           {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview}}
         {{/unless}}
+        {{#if $is activeCriterion 'PixelPerfectLines'}}
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.PixelPerfectLines}}
+        {{/if}}
         {{#if $is activeCriterion 'EvenDiagonals'}}
           {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals}}
         {{/if}}

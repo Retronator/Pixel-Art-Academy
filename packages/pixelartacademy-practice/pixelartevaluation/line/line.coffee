@@ -71,14 +71,38 @@ class PAE.Line
     
     @_doubles = []
     
+    # Doubles are all pixels on axis-aligned side steps.
     for edgeSegment in @edgeSegments when edgeSegment.isSideStep and edgeSegment.edge.isAxisAligned
       for pointIndex in [edgeSegment.startPointIndex, edgeSegment.endPointIndex]
         point = @getPoint pointIndex
         continue unless point.pixels.length is 1
 
         @_doubles.push point.pixels[0] unless point.pixels[0] in @_doubles
+        
+    # Doubles are all pixels on points with multiple pixels.
+    for point in @points when point.pixels.length > 1
+      for pixel in point.pixels
+        @_doubles.push pixel unless pixel in @_doubles
     
     @_doubles
+    
+  getCorners: ->
+    return @_corners if @_corners
+    
+    @_corners = []
+    
+    # Corners are pixels at the point between two consecutive axis-aligned edge segments that are not a side-step.
+    for edgeSegment, edgeSegmentIndex in @edgeSegments when not edgeSegment.isSideStep
+      break unless nextEdgeSegment = @getEdgeSegment edgeSegmentIndex + 1
+      continue if nextEdgeSegment.isSideStep
+      continue unless edgeSegment.edge.isAxisAligned and nextEdgeSegment.edge.isAxisAligned
+      continue if edgeSegment.edge is nextEdgeSegment.edge
+      
+      point = @getPoint edgeSegment.endPointIndex
+      for pixel in point.pixels
+        @_corners.push pixel unless pixel in @_corners
+        
+    @_corners
     
   getPartsForPixel: (pixel) ->
     part for part in @parts when part.hasPixel pixel

@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals extends LOI.View
@@ -40,14 +40,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
       
       criteria = []
       
-      for criterion of PAG.Subcriteria.EvenDiagonals
+      for criterion of PAE.Subcriteria.EvenDiagonals
         criterionProperty = _.lowerFirst criterion
         
         # Show only existing criteria when not editable (and all otherwise so we can toggle them on and off).
         continue unless editable or evenDiagonalsProperty?[criterionProperty]?
         
         if enabled = evenDiagonalsProperty?[criterionProperty]?
-          categories = for category of PAG.Line.Part.StraightLine[criterion]
+          categories = for category of PAE.Line.Part.StraightLine[criterion]
             id: category
             name: @constructor.CategoryNames[criterion][category]
             count: evenDiagonalsProperty[criterionProperty].linePartCounts[_.lowerFirst category]
@@ -57,7 +57,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
         
         criteria.push
           id: criterion
-          parentId: PAG.Criteria.EvenDiagonals
+          parentId: PAE.Criteria.EvenDiagonals
           property: criterionProperty
           propertyPath: "evenDiagonals.#{criterionProperty}"
           name: @constructor.CriteriaNames[criterion]
@@ -78,9 +78,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
     category = @currentData()
     criterion = Template.parentData()
 
-    @pixelArtEvaluation.hoveredCategoryValue
+    @pixelArtEvaluation.hoveredFilterValue
       property: criterion.property
       value: category.id
   
   onPointerLeaveCategory: (event) ->
-    @pixelArtEvaluation.hoveredCategoryValue null
+    @pixelArtEvaluation.hoveredFilterValue null

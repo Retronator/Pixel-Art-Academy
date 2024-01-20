@@ -12,7 +12,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines extends PAA.Pract
   @assets: -> [
     @Jaggies
     @Jaggies2
-    @LineartCleanup
+    @LineArtCleanup
   ]
 
   content: ->

@@ -12,6 +12,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     
     @ready = new ComputedField =>
       return unless @options.pixelArtEvaluation()
+      return unless LOI.palette()
 
       true
 
@@ -26,9 +27,26 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     pixelArtEvaluation = @options.pixelArtEvaluation()
     
     displayedCriteria = @options.displayedCriteria()
-    filterToCategoryValue = @options.filterToCategoryValue()
+    filterValue = @options.filterValue()
     focusedPixel = @options.focusedPixel()
     
+    markup = []
+    
+    # Add markup for pixel-perfect lines.
+    if PAE.Criteria.PixelPerfectLines in displayedCriteria
+      focusedLines = if focusedPixel then pixelArtEvaluation.getLinesAt focusedPixel.x, focusedPixel.y else []
+      
+      for layer in pixelArtEvaluation.layers
+        for line in layer.lines
+          continue if focusedLines.length and line not in focusedLines
+          
+          # Draw doubles and corners.
+          drawDoubles = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Doubles else true
+          drawCorners = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Corners else true
+          
+          markup.push Markup.PixelArt.pixelPerfectLineErrors(line, drawDoubles, drawCorners)...
+          
+    # Prepare line parts for markup.
     focusedLineParts = if focusedPixel then pixelArtEvaluation.getLinePartsAt focusedPixel.x, focusedPixel.y else []
     lineParts = []
     
@@ -36,12 +54,10 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
       for line in layer.lines
         for part in line.parts
           # Filter to evaluated property if needed.
-          continue if filterToCategoryValue and part.evaluate()[filterToCategoryValue.property]?.type isnt filterToCategoryValue.value
+          continue if filterValue and part.evaluate()[filterValue.property]?.type isnt filterValue.value
   
           lineParts.push part
-      
-    markup = []
-  
+        
     # Add markup for even diagonals.
     if PAE.Criteria.EvenDiagonals in displayedCriteria
       for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine

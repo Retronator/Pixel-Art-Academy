@@ -62,6 +62,7 @@ Package.onUse(function(api) {
 
   api.addComponent('editor/desktop/pixelartevaluation..');
   api.addComponent('editor/desktop/pixelartevaluation/overview..');
+  api.addComponent('editor/desktop/pixelartevaluation/pixelperfectlines..');
   api.addComponent('editor/desktop/pixelartevaluation/evendiagonals..');
 
   api.addUnstyledComponent('editor/desktop/references..');

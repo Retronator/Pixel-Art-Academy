@@ -3,8 +3,6 @@ PAA = PixelArtAcademy
 
 Markup = PAA.Practice.Helpers.Drawing.Markup
 PAE = PAA.Practice.PixelArtEvaluation
-
-# Note: We can't call this Instructions since we introduce a namespace class called that below.
 Jaggies2 = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2
 
 class Jaggies2.Instructions
@@ -62,15 +60,8 @@ class Jaggies2.Instructions
       markup = []
       lines = pixelArtEvaluation.getLinesAt point.x, point.y
       
-      markupStyle = Markup.worseStyle()
-      
       for line in lines
-        for pixel in line.getDoubles()
-          markup.push
-            pixel:
-              x: pixel.x
-              y: pixel.y
-              style: markupStyle
+        markup.push Markup.PixelArt.pixelPerfectLineErrors(line)...
       
       markup
     
@@ -188,7 +179,7 @@ class Jaggies2.Instructions
       bitmap = asset.bitmap()
       
       unless bitmap.findPixelAtAbsoluteCoordinates 25, 6
-        markupStyle = Markup.worseStyle()
+        markupStyle = Markup.errorStyle()
         
         arrowBase =
           arrow:
@@ -245,7 +236,7 @@ class Jaggies2.Instructions
         
       markup = _.flatten markup
       
-      markupStyle = Markup.worseStyle()
+      markupStyle = Markup.errorStyle()
       
       arrowBase =
         arrow:

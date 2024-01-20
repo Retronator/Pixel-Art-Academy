@@ -61,6 +61,9 @@ class TutorialBitmap.StepArea
       # Don't recompute when loading/unloading.
       return unless Tracker.nonreactive => @tutorialBitmap.data()
       
+      # Don't recompute when resetting.
+      return if @tutorialBitmap.resetting()
+      
       steps = @steps()
       return unless steps.length
       
@@ -133,5 +136,5 @@ class TutorialBitmap.StepArea
     
     @tutorialBitmap.tutorial.state 'assets', assets
     
-    assets =  @tutorialBitmap.tutorial.state 'assets'
+    assets = @tutorialBitmap.tutorial.state 'assets'
     asset = _.find assets, (asset) => asset.id is @tutorialBitmap.id()

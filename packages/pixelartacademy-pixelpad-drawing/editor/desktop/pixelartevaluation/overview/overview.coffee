@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview extends LOI.View
@@ -32,7 +32,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
       
       pixelArtEvaluationCriteria = pixelArtEvaluationProperty.allowedCriteria or PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
       
-      for criterion of PAG.Criteria
+      for criterion of PAE.Criteria
         criterionProperty = _.lowerFirst criterion
         
         # Show only existing criteria when not editable (and unlocked otherwise so we can toggle them on and off).
@@ -54,7 +54,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
     @pixelArtEvaluation.pixelArtEvaluationProperty()?.score?
     
   letterGrade: ->
-    PAG.getLetterGrade @pixelArtEvaluation.pixelArtEvaluationProperty().score
+    PAE.getLetterGrade @pixelArtEvaluation.pixelArtEvaluationProperty().score
 
   events: ->
     super(arguments...).concat

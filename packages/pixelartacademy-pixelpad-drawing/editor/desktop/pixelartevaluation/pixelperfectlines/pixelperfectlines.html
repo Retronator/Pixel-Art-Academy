@@ -1,0 +1,33 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.PixelPerfectLines">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation-pixelperfectlines">
+    <div class="title">
+      Pixel-perfect lines
+    </div>
+    <table class="evaluation-breakdown">
+      <tr class="header-row">
+        {{#if editable}}
+          <th>Req.</th>
+        {{/if}}
+        <th>Criteria</th>
+        <th>Count</th>
+      </tr>
+      {{#each criteria}}
+        <tr class="criterion">
+          {{#if editable}}
+            <td class="required">
+              <label class="checkmark-area">
+                {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.CriterionEnabled}}<span class="checkmark"></span>
+              </label>
+            </td>
+          {{/if}}
+          <td class="name-area"><span class="name">{{name}}</span></td>
+          <td class="count">
+            {{#if enabled}}
+              {{count}}
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>

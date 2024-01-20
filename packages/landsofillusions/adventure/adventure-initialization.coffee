@@ -1,5 +1,6 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
@@ -88,4 +89,4 @@ class LOI.Adventure extends LOI.Adventure
 
   endRun: ->
     # Flush persistent document updates when the page is about to unload.
-    Persistence.flushUpdates()
+    AMu.Document.Persistence.flushUpdates()

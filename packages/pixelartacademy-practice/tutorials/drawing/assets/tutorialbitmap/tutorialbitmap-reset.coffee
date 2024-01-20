@@ -54,11 +54,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     # Trigger reactivity.
     LOI.Assets.Bitmap.versionedDocuments.reportNonVersionedChange bitmapId
     
-    # Reset pre-existing asset data.
-    assets = tutorial.assetsData()
-    
-    if asset = _.find assets, (asset) => asset.id is assetId
-      asset.stepAreas = []
-      asset.completed = false
-      
-      tutorial.state 'assets', assets
+    # Reset the asset and its data.
+    assets = tutorial.assets()
+    asset = _.find assets, (asset) => asset.id() is assetId
+    asset.reset()

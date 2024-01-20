@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation'
@@ -51,9 +51,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @pixelArtEvaluation = new ComputedField =>
       return unless bitmap = @bitmapObject()
       @_pixelArtEvaluation?.destroy()
-      @_pixelArtEvaluation = new PAG bitmap
+      @_pixelArtEvaluation = new PAE bitmap
       
-    @hoveredCategoryValue = new ReactiveField null
+    @hoveredFilterValue = new ReactiveField null
 
     @hoveredPixel = new ComputedField =>
       pixelCanvas = @interface.getEditorForActiveFile()
@@ -81,9 +81,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @enabledCriteria = new ComputedField =>
       return [] unless pixelArtEvaluationProperty = @pixelArtEvaluationProperty()
       
-      criterion for criterion of PAG.Criteria when pixelArtEvaluationProperty[_.lowerFirst criterion]
+      criterion for criterion of PAE.Criteria when pixelArtEvaluationProperty[_.lowerFirst criterion]
       
-    @engineComponent = new PAG.EngineComponent
+    @engineComponent = new PAE.EngineComponent
       pixelArtEvaluation: => @pixelArtEvaluation()
       displayedCriteria: =>
         return [] unless @displayed()
@@ -94,7 +94,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         else
           @enabledCriteria()
         
-      filterToCategoryValue: => if @displayed() then @hoveredCategoryValue() else null
+      filterValue: => if @displayed() then @hoveredFilterValue() else null
       focusedPixel: => if @displayed() then @hoveredPixel() else null
     
     # Automatically enter focused mode when active.
@@ -270,8 +270,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         # Enable all subcriteria if they exist.
         criterionData = {}
         
-        if PAG.Subcriteria[criterion.id]
-          for subcriterion of PAG.Subcriteria[criterion.id]
+        if PAE.Subcriteria[criterion.id]
+          for subcriterion of PAE.Subcriteria[criterion.id]
             criterionData[_.lowerFirst subcriterion] = {}
         
         _.nestedProperty pixelArtEvaluationProperty, criterion.propertyPath, criterionData
@@ -284,7 +284,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
           found = false
           criterionProperty = _.lowerFirst criterion.parentId
 
-          for subcriterion of PAG.Subcriteria[criterion.parentId]
+          for subcriterion of PAE.Subcriteria[criterion.parentId]
             found = true if pixelArtEvaluationProperty[criterionProperty][_.lowerFirst subcriterion]
             
           unless found

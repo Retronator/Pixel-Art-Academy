@@ -4,6 +4,12 @@ class PAA.Practice.PixelArtEvaluation
   # score: float between 0 and 1 for the final average score
   # pixelPerfectLines:
   #   score: float between 0 and 1 with this criterion evaluation
+  #   doubles:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     count: how many pixels lie on axis-aligned side-steps or wide lines
+  #   corners:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     count: how many pixels have two or more direct neighbors
   # consistentLineWidth:
   #   score: float between 0 and 1 with this criterion evaluation
   # evenDiagonals
@@ -26,11 +32,17 @@ class PAA.Practice.PixelArtEvaluation
     SmoothCurves: 'SmoothCurves'
 
   @Subcriteria =
+    PixelPerfectLines:
+      Doubles: 'Doubles'
+      Corners: 'Corners'
     EvenDiagonals:
       SegmentLengths: 'SegmentLengths'
       EndSegments: 'EndSegments'
   
   @SubcriteriaWeights =
+    PixelPerfectLines:
+      Doubles: 0.75
+      Corners: 0.25
     EvenDiagonals:
       SegmentLengths: 0.75
       EndSegments: 0.25
@@ -114,6 +126,49 @@ class PAA.Practice.PixelArtEvaluation
     finalScore = 0
     criteriaCount = 0
     
+    if pixelArtEvaluationProperty.pixelPerfectLines
+      # Compute evaluation if needed.
+      unless @_evaluation.pixelPerfectLines
+        @_evaluation.pixelPerfectLines =
+          doubles:
+            score: 0
+            count: 0
+          corners:
+            score: 0
+            count: 0
+            
+        # Compute average score, weighted by line length.
+        totalWeight = 0
+        
+        for layer in @layers
+          for line in layer.lines
+            lineEvaluation = line.evaluate()
+            # We use the square root of the length so that long lines can't hugely overtake the short ones.
+            weight = Math.sqrt line.points.length
+            
+            for subcriterion of @constructor.Subcriteria.PixelPerfectLines
+              subcriterionProperty = _.lowerFirst subcriterion
+              @_evaluation.pixelPerfectLines[subcriterionProperty].score += lineEvaluation[subcriterionProperty].score * weight
+              @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count
+            
+            totalWeight += weight
+          
+        for subcriterion of @constructor.Subcriteria.PixelPerfectLines
+          subcriterionProperty = _.lowerFirst subcriterion
+          
+          if totalWeight
+            @_evaluation.pixelPerfectLines[subcriterionProperty].score /= totalWeight
+            
+          else
+            # There were no lines to be evaluated, so the category doesn't have a meaning.
+            @_evaluation.pixelPerfectLines[subcriterionProperty].score = null
+    
+      evaluation.pixelPerfectLines = @_calculateWeightedEvaluation @constructor.Subcriteria.PixelPerfectLines, @constructor.SubcriteriaWeights.PixelPerfectLines, pixelArtEvaluationProperty.pixelPerfectLines, @_evaluation.pixelPerfectLines
+      
+      if evaluation.pixelPerfectLines.score
+        finalScore += evaluation.pixelPerfectLines.score
+        criteriaCount++
+        
     if pixelArtEvaluationProperty.evenDiagonals
       # Compute evaluation if needed.
       unless @_evaluation.evenDiagonals
@@ -155,38 +210,42 @@ class PAA.Practice.PixelArtEvaluation
             # There were no lines to be evaluated, so the category doesn't have a meaning.
             @_evaluation.evenDiagonals[subcriterionProperty].score = null
       
-      evaluation.evenDiagonals = score: 0
+      evaluation.evenDiagonals = @_calculateWeightedEvaluation @constructor.Subcriteria.EvenDiagonals, @constructor.SubcriteriaWeights.EvenDiagonals, pixelArtEvaluationProperty.evenDiagonals, @_evaluation.evenDiagonals
       
-      # Choose only enabled subcriteria.
-      totalWeight = 0
-      
-      subcriteriaInfo = for subcriterion of @constructor.Subcriteria.EvenDiagonals
-        subcriterionProperty = _.lowerFirst subcriterion
-        continue unless pixelArtEvaluationProperty.evenDiagonals[subcriterionProperty]
-        
-        weight = if @_evaluation.evenDiagonals[subcriterionProperty].score? then @constructor.SubcriteriaWeights.EvenDiagonals[subcriterion] else 0
-        totalWeight += weight
-        
-        property: subcriterionProperty
-        score: @_evaluation.evenDiagonals[subcriterionProperty].score or 0
-        weight: weight
-        
-      for subcriterionInfo in subcriteriaInfo
-        evaluation.evenDiagonals[subcriterionInfo.property] = @_evaluation.evenDiagonals[subcriterionInfo.property]
-        evaluation.evenDiagonals.score += subcriterionInfo.score * subcriterionInfo.weight / totalWeight if totalWeight
-      
-      if totalWeight
+      if evaluation.evenDiagonals.score
         finalScore += evaluation.evenDiagonals.score
         criteriaCount++
-        
-      else
-        evaluation.evenDiagonals.score = null
       
     finalScore /= criteriaCount if criteriaCount
     
     evaluation.score = if criteriaCount then finalScore else null
     
     evaluation
+    
+  _calculateWeightedEvaluation: (subcriteria, subcriteriaWeights, enabledProperties, evaluation) ->
+    weightedEvaluation = score: 0
+    
+    # Choose only enabled subcriteria.
+    totalWeight = 0
+    
+    subcriteriaInfo = for subcriterion of subcriteria
+      subcriterionProperty = _.lowerFirst subcriterion
+      continue unless enabledProperties[subcriterionProperty]
+      
+      weight = if evaluation[subcriterionProperty].score? then subcriteriaWeights[subcriterion] else 0
+      totalWeight += weight
+      
+      property: subcriterionProperty
+      score: evaluation[subcriterionProperty].score or 0
+      weight: weight
+    
+    for subcriterionInfo in subcriteriaInfo
+      weightedEvaluation[subcriterionInfo.property] = evaluation[subcriterionInfo.property]
+      weightedEvaluation.score += subcriterionInfo.score * subcriterionInfo.weight / totalWeight if totalWeight
+    
+    weightedEvaluation.score = null unless totalWeight
+    
+    weightedEvaluation
     
   onOperationsExecuted: (document, operations, changedFields) ->
     return unless document._id is @bitmap._id

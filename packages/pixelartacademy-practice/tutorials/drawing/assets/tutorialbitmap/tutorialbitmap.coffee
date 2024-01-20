@@ -86,6 +86,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       computation.stop()
       Tracker.nonreactive => @initialize()
       
+    @resetting = new ReactiveField false
+    
   destroy: ->
     super arguments...
     
@@ -224,6 +226,26 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       @initializeSteps()
       
       @initialized true
+      
+  reset: ->
+    # Prevent recomputation of completed states while resetting.
+    @resetting true
+    
+    # Reset all steps.
+    stepArea.reset() for stepArea in @stepAreas()
+    
+    # Remove any asset data.
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    if assetData = _.find assetsData, (assetData) => assetData.id is assetId
+      assetData.stepAreas = []
+      assetData.completed = false
+      
+      @tutorial.state 'assets', assetsData
+    
+    # Unlock recomputation after changes have been applied.
+    Tracker.afterFlush => @resetting false
   
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()

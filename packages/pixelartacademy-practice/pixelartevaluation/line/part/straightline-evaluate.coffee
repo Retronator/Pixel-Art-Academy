@@ -106,8 +106,8 @@ PAE.Line.Part.StraightLine::_analyzeType = (diagonalRatio) ->
     when 0 then @constructor.Type.AxisAligned
     when 1 then @constructor.Type.EvenDiagonal
     else @constructor.Type.IntermediaryDiagonal
-  
-_analyzePointSegmentLengths: ->
+
+PAE.Line.Part.StraightLine::_analyzePointSegmentLengths = ->
   # If we have only one segment length, it's a perfect even diagonal.
   if @uniqueCentralPointSegmentLengths.length is 1
     return type: @constructor.SegmentLengths.Even, score: 1

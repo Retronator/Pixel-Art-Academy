@@ -23,6 +23,21 @@ _endPartCenter = new THREE.Vector2
 _textPosition = new THREE.Vector2
 
 class Markup.PixelArt
+  @pixelPerfectLineErrors: (line, doubles = true, corners = true) ->
+    markup = []
+    
+    pixelPerfectLineErrors = []
+    pixelPerfectLineErrors.push line.getDoubles()... if doubles
+    pixelPerfectLineErrors.push line.getCorners()... if corners
+    
+    pixelPerfectErrorBase = style: Markup.errorStyle()
+    
+    for error in pixelPerfectLineErrors
+      markup.push
+        pixel: _.extend {}, pixelPerfectErrorBase, _.pick error, 'x', 'y'
+        
+    markup
+  
   @impliedLineBase: ->
     palette = LOI.palette()
     lineColor = palette.color Atari2600.hues.azure, 5

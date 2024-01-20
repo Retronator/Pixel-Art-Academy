@@ -51,6 +51,7 @@ class DiagonalsEvaluation.Steps
       Meteor.clearTimeout @_countTimeout
 
     countTime: ->
+      Meteor.clearTimeout @_countTimeout
       @_countTimeout = Meteor.setTimeout =>
         @timeHovered += 0.1
         
