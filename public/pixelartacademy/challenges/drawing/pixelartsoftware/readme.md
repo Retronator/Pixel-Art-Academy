@@ -17,7 +17,7 @@ Sprites used with permission from the authors for games:
 - [Hook, Line and Thinker](https://rhythmlynx.itch.io/hook-line-and-thinker) by Connor Halford
 - [Super Crate Box](http://supercratebox.com) by Roy Nathan de Groot
 - [Froggi](https://sophieh.itch.io/froggi), by Sophie Houlden
-- [The Waking Cloak](http://www.thewakingcloak.com), by Daniel Müller
+- [The Waking Cloak](http://www.thewakingcloak.com) by Daniel Müller
 - [FEZ](http://www.fezgame.com) by Phil Fish
 - [Owlboy](http://www.owlboygame.com) by Simon Stafsnes 'Snake' Andersen
 - [Courier of the Crypts](http://www.courierofthecrypts.com) by Primož Vovk

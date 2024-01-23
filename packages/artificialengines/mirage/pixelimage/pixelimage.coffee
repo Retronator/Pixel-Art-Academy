@@ -4,9 +4,14 @@ AM = Artificial.Mirage
 # Creates an image that scales down to desired pixel size.
 class AM.PixelImage extends AM.Component
   @register 'Artificial.Mirage.PixelImage'
+  
+  @TargetSizeFitType:
+    Contain: 'Contain'
 
   constructor: (@options) ->
     super arguments...
+    
+    @options.imageSmoothingEnabled ?= false
 
     if _.isFunction @options.image
       @image = @options.image
@@ -51,11 +56,28 @@ class AM.PixelImage extends AM.Component
   update: ->
     return unless @isRendered()
     return unless image = @image()
-
+    return unless displayScale = @display.scale()
+    
     return unless targetWidth = @targetWidth() or image.width
     return unless targetHeight = @targetHeight() or image.height
-    return unless displayScale = @display.scale()
-
+    
+    drawWidth = targetWidth
+    drawHeight = targetHeight
+    
+    if @options.targetSizeFit is @constructor.TargetSizeFitType.Contain
+      aspectRatio = image.width / image.height
+      targetAspectRatio = targetWidth / targetHeight
+      
+      if aspectRatio > targetAspectRatio
+        # Reduce width.
+        drawWidth = targetWidth
+        drawHeight = targetWidth / aspectRatio
+        
+      else
+        # Reduce height.
+        drawHeight = targetHeight
+        drawWidth = targetHeight * aspectRatio
+      
     # Resize canvas if needed.
     unless @canvas.width is targetWidth and @canvas.height is targetHeight and @displayScale is displayScale
       @canvas.width = targetWidth
@@ -66,5 +88,5 @@ class AM.PixelImage extends AM.Component
         width: @canvas.width * displayScale
         height: @canvas.height * displayScale
 
-    @context.imageSmoothingEnabled = false
-    @context.drawImage image, 0, 0, targetWidth, targetHeight
+    @context.imageSmoothingEnabled = @options.imageSmoothingEnabled
+    @context.drawImage image, (targetWidth - drawWidth) / 2, (targetHeight - drawHeight) / 2, targetWidth, targetHeight

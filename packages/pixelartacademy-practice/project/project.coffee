@@ -14,15 +14,10 @@ class PAA.Practice.Project extends AM.Document
   #   type: what kind of asset this is
   #
   #   BITMAP
-  #   bitmap: reference to a bitmap
-  #     _id
+  #   bitmapId: ID of the bitmap representing this asset
   @Meta
     name: @id()
-    fields: =>
-      assets: [
-        bitmap: Document.ReferenceField LOI.Assets.Bitmap
-      ]
-      
+    
   @enablePersistence()
 
   # Subscriptions

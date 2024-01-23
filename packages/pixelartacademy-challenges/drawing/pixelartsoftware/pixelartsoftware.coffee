@@ -9,8 +9,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   #   uploaded: tells if the player used the upload action for this asset
   #
   #   BITMAP
-  #   bitmap: reference to a bitmap
-  #     _id
+  #   bitmapId: ID of the bitmap representing this asset
   @id: -> 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware'
 
   @fullName: -> "Pixel art software"
@@ -20,7 +19,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   @translations: ->
     noAssetsInstructions: """
       To make sure you are ready to complete pixel art drawing assignments, this challenge requires you to copy an
-      existing game sprite in your editor of choice. First go to the Retronator HQ Gallery and talk to Corinne to
+      existing game sprite in your editor of choice. First, go to the Retronator HQ Gallery and talk to Corinne to
       obtain a reference image and further instructions.
     """
   

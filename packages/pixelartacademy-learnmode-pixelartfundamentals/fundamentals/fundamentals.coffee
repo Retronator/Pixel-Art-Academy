@@ -12,6 +12,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
 
   @scenes: -> [
     @TutorialsDrawing
+    @ChallengesDrawing
   ]
 
   @courses: -> [

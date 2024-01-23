@@ -1,0 +1,38 @@
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent">
+  <div class="pixelartacademy-challenges-drawing-pixelartlineArt-referenceselection-customcomponent {{activeClass}}">
+    {{#if binderVisible}}
+      <div class="prompt">{{> t10e "Choose a reference"}}</div>
+      <div class="binder-area {{binderOpenClass}}">
+        <div class="binder-closed">
+          <div class="label">{{> t10e "References"}}</div>
+          <div class="open-hint">{{> t10e "open here"}}</div>
+        </div>
+        <div class="binder-open">
+          <div class="references flipped">
+            {{#each previousReferences}}
+              {{> PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference}}
+            {{/each}}
+          </div>
+          <div class="references">
+            {{#each nextReferences}}
+              {{> PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      {{#if canMoveBack}}
+        <button class="navigation-button previous-reference"></button>
+      {{/if}}
+      {{#if canMoveForward}}
+        <button class="navigation-button next-reference"></button>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference">
+  <div class="reference" {{style referenceStyle}}>
+    <img class="image" src="{{imageUrl}}" {{style imageStyle}}/>
+    <div class="cover"></div>
+  </div>
+</template>

@@ -114,7 +114,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.CustomComponent
     super arguments...
   
     @autorun (computation) =>
-      active = @drawingApp.activeAssetClass()?
+      active = @drawingApp.activeAsset()?
       
       Meteor.setTimeout =>
         @active active
