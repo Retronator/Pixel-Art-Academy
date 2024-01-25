@@ -12,8 +12,8 @@ class PAA.Pico8.Cartridges.Snake.Project extends PAA.Pico8.Cartridges.Snake.Proj
 
     new Promise (resolve, reject) =>
       Tracker.autorun (computation) =>
-        LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.pico8
-        return unless pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.pico8
+        LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Pico8
+        return unless pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Pico8
         computation.stop()
 
         # Create two pre-made sprites.

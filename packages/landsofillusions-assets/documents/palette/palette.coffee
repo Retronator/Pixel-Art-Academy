@@ -30,13 +30,13 @@ class LOI.Assets.Palette extends AM.Document
 
   # Enumeration of palette names provided by the system.
   @SystemPaletteNames:
-    pixelArtAcademy: "Pixel Art Academy"
-    pico8: "PICO-8"
-    black: "Black"
-    zxSpectrum: "ZX Spectrum"
+    PixelArtAcademy: "Pixel Art Academy"
+    Pico8: "PICO-8"
+    Black: "Black"
+    ZXSpectrum: "ZX Spectrum"
 
   # Default palette is the modified Atari 2600.
-  @defaultPaletteName = @SystemPaletteNames.pixelArtAcademy
+  @defaultPaletteName = @SystemPaletteNames.PixelArtAcademy
 
   @imageUrl = "/landsofillusions/assets/palette.png"
 

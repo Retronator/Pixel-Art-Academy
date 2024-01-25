@@ -1,6 +1,7 @@
 AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
 class Zoom extends FM.Action
   enabled: -> @interface.activeFileId()? and @newZoomLevel()
@@ -16,10 +17,10 @@ class Zoom extends FM.Action
   execute: ->
     return unless newZoomLevel = @newZoomLevel()
 
-    @interface.getEditorForActiveFile()?.camera()?.setScale newZoomLevel / 100
+    @interface.getEditorForActiveFile()?.camera()?.scaleTo newZoomLevel / 100, 0.2
 
-class LOI.Assets.SpriteEditor.Actions.ZoomIn extends Zoom
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Actions.ZoomIn'
+class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn extends Zoom
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn'
   @displayName: -> "Zoom in"
 
   @initialize()
@@ -33,8 +34,8 @@ class LOI.Assets.SpriteEditor.Actions.ZoomIn extends Zoom
 
     null
 
-class LOI.Assets.SpriteEditor.Actions.ZoomOut extends Zoom
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Actions.ZoomOut'
+class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut extends Zoom
+  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut'
   @displayName: -> "Zoom out"
 
   @initialize()

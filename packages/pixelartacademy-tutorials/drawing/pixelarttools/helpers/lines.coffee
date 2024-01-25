@@ -14,7 +14,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     """
 
   @fixedDimensions: -> width: 57, height: 32
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   
   @steps: -> for step in [1..5]
     goalImageUrl: "/pixelartacademy/tutorials/drawing/pixelarttools/helpers/720-#{step}.png"

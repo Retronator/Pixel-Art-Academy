@@ -5,7 +5,7 @@ PADB = PixelArtDatabase
 
 assets =
   MickeyMouseSoundCartoon:
-    dimensions: -> width: 64, height: 32
+    dimensions: -> width: 100, height: 120
     imageName: -> 'mickeymousesoundcartoon'
     bitmapInfo: -> """
       Fan art based on Mickey Mouse Sound Cartoons, Ub Iwerks, 1928.

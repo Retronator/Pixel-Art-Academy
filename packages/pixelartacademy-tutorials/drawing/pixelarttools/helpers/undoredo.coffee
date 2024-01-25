@@ -17,7 +17,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.UndoRedo extends PAA.Practice.
     """
 
   @fixedDimensions: -> width: 59, height: 59
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   @minClipboardScale: -> 1
   @maxClipboardScale: -> 1
 

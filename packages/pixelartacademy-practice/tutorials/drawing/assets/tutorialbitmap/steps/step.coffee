@@ -106,5 +106,5 @@ class TutorialBitmap.Step
       context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_pixelHintOpacity})"
       context.fillRect absoluteX, absoluteY, @_pixelHintSize, @_pixelHintSize
     
-    else
+    else unless @_pixelHintOpacity < 1
       context.clearRect absoluteX, absoluteY, @_pixelHintSize, @_pixelHintSize

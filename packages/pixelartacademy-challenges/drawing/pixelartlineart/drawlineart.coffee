@@ -9,7 +9,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     Demonstrate the use of pixel art rules for drawing line art.
   """
 
-  @goalImageSvg: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.svg"
+  @svgUrl: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.svg"
   @referenceImageUrl: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.webp"
 
   @imageName: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
@@ -20,11 +20,20 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     displayOptions:
       imageOnly: true
   ]
+  
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
+  
+  @goalChoices: -> [
+    referenceUrl: @referenceImageUrl()
+    svgUrl: @svgUrl()
+  ]
 
   @briefComponentClass: ->
     # Note: We need to fully qualify the name instead of using @constructor
     # since we're overriding with a class with the same name.
     PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
+    
+  @pixelArtEvaluation: -> true
   
   constructor: ->
     super arguments...
@@ -54,7 +63,18 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
 
   availableToolKeys: ->
     # When we're in upload mode, don't show any tools in the editor.
-    if @uploadMode() then [] else null
+    return [] if @uploadMode()
+    
+    [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+      PAA.Practice.Software.Tools.ToolKeys.Eraser
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      PAA.Practice.Software.Tools.ToolKeys.Zoom
+      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      PAA.Practice.Software.Tools.ToolKeys.Undo
+      PAA.Practice.Software.Tools.ToolKeys.Redo
+      PAA.Practice.Software.Tools.ToolKeys.References
+    ]
 
   templateUrl: ->
     "/pixelartacademy/challenges/drawing/pixelartsoftware/#{@constructor.imageName()}-template.png"

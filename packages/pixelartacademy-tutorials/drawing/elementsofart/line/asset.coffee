@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 class PAA.Tutorials.Drawing.ElementsOfArt.Line.Asset extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @id: -> "PixelArtAcademy.Tutorials.Drawing.ElementsOfArt.Line.#{_.pascalCase @displayName()}"
   
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   
   @svgUrl: -> "/pixelartacademy/tutorials/drawing/elementsofart/line/#{_.fileCase @displayName()}.svg"
 

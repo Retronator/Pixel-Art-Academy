@@ -207,16 +207,6 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
         "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z}]
-        "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [
-          {commandOrControl: true, key: AC.Keys.equalSign}
-          {key: AC.Keys.numPlus}
-          {commandOrControl: true, key: AC.Keys.numPlus}
-        ]
-        "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [
-          {commandOrControl: true, key: AC.Keys.dash}
-          {key: AC.Keys.numMinus}
-          {commandOrControl: true, key: AC.Keys.numMinus}
-        ]
       
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'

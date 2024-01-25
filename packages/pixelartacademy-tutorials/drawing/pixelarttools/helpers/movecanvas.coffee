@@ -15,7 +15,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     """
 
   @fixedDimensions: -> width: 256, height: 32
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   @minClipboardScale: -> 1
 
   @imageUrl: ->

@@ -74,27 +74,21 @@ class DiagonalsEvaluation.Instructions
       
       drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
-      pixelCanvas.triggerSmoothMovement()
       
       camera = pixelCanvas.camera()
 
       if focusPoint
-        originDataField = camera.originData()
-        originDataField.value focusPoint
+        camera.translateTo focusPoint, 1
         
       if scale
-        scaleDataField = camera.scaleData()
-        scaleDataField.value scale
+        camera.scaleTo scale, 1
         
     centerFocus: ->
       drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
-      pixelCanvas.triggerSmoothMovement()
       
       camera = pixelCanvas.camera()
-      
-      originDataField = camera.originData()
-      originDataField.value x: 15, y: 14.5
+      camera.translateTo {x: 15, y: 14.5}, 1
       
     getLinePartForStep: (stepNumber) ->
       return unless asset = @getActiveAsset()

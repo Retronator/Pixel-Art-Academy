@@ -142,15 +142,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       
       drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
-      pixelCanvas.triggerSmoothMovement()
       
       camera = pixelCanvas.camera()
       
-      originDataField = camera.originData()
-      originDataField.value x: 28, y: 16
-
-      scaleDataField = camera.scaleData()
-      scaleDataField.value 5
+      camera.translateTo {x: 28, y: 16}, 1
+      camera.scaleTo 5, 1
 
     markup: ->
       return [] unless asset = @getActiveAsset()

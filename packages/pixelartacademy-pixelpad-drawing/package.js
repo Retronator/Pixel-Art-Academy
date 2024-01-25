@@ -71,6 +71,7 @@ Package.onUse(function(api) {
 
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');
+  api.addFile('editor/desktop/actions/zoom');
 
   api.addComponent('editor/easel..');
   api.addComponent('editor/easel/layout..');

@@ -19,8 +19,8 @@ class PAA.Pico8.Game extends PAA.Pico8.Game
 
       new Promise (resolve, reject) =>
         Tracker.autorun (computation) =>
-          LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.pico8
-          return unless pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.pico8
+          LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Pico8
+          return unless pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Pico8
           return unless project = PAA.Practice.Project.documents.findOne projectId
           computation.stop()
 

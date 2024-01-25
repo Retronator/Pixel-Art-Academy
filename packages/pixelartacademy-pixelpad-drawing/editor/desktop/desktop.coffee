@@ -155,8 +155,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       Tracker.nonreactive => applicationAreaData.set "views.#{testPaperViewIndex}.actions", actions
 
     zoomActionRequirements =
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
 
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -311,7 +311,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     components =
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         components: [PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents.id()]
-        scrollToZoom: true
+        scrollToZoom: animate: duration: 0.2
       
     views = [
       type: FM.Menu.id()
@@ -341,6 +341,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         mapping:
           "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+          
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": [
+            {commandOrControl: true, key: AC.Keys.equalSign}
+            {key: AC.Keys.numPlus}
+            {commandOrControl: true, key: AC.Keys.numPlus}
+          ]
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": [
+            {commandOrControl: true, key: AC.Keys.dash}
+            {key: AC.Keys.numMinus}
+            {commandOrControl: true, key: AC.Keys.numMinus}
+          ]
           
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
     ,

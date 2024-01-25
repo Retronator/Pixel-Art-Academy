@@ -198,7 +198,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
 
     Tracker.nonreactive =>
       editor = @interface.getEditorForActiveFile()
-      editor.triggerSmoothMovement()
 
       camera = editor.camera()
       scale = camera.effectiveScale()
@@ -210,9 +209,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
       originDataField = camera.originData()
       origin = originDataField.value()
       
-      originDataField.value
+      camera.translateTo
         x: origin.x
         y: origin.y + originDeltaY
+      ,
+        1
 
   activeClass: ->
     'active' if @active()

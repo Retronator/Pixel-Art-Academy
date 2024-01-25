@@ -22,14 +22,13 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
     assets = @state 'assets'
     _.find assets, (asset) => asset.completed
   
-  @addDrawLineArtAsset: (assetId) ->
+  @addDrawLineArtAsset: (id) ->
     assets = @state 'assets'
     assets ?= []
-    id = "PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.DrawLineArt.#{assetId}"
     
     # Add the asset if it's not already added.
     unless _.find(assets, (asset) => asset.id is id)
-      referenceSelectionId = PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection.id()
+      referenceSelectionId = PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.id()
       referenceSelection = _.find assets, (asset) => asset.id is referenceSelectionId
       
       insertionIndex = if referenceSelection then 1 else 0
@@ -93,7 +92,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
         
         else
           assetClassName = _.last asset.id.split '.'
-          @_pixelArtLineArtAssets[asset.id] ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtLineArt.DrawLineaArt[assetClassName] @
+          @_pixelArtLineArtAssets[asset.id] ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt[assetClassName] @
         
         assets.push @_pixelArtLineArtAssets[asset.id]
 

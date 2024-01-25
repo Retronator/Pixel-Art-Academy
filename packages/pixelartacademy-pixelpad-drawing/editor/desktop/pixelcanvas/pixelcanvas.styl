@@ -12,9 +12,6 @@
     box-shadow -1rem 1rem 0 desktopShadowColor
     transition all 0.6s
 
-    &.smooth-movement
-      transition all 1s !important
-
     &.hidden
       display none
 
@@ -39,20 +36,13 @@
       absolute-cover-size()
 
 .pixelartacademy-pixelpad-apps-drawing.editor-desktop
-  &.editor-active
-    .pixelartacademy-pixelpad-apps-drawing-editor-desktop.dragging
-      .fatamorgana-interface.move-canvas
-        .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
-          .drawing-area
-            transition none !important
-
   &.active-asset:not(.editor-active)
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop
       .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
         .drawing-area
-          transition top 0.6s 0.2s, left 0.6s 0.2s, width 0.2s, height 0.2s
+          transition top 0.6s 0.2s, left 0.6s 0.2s, width 0.8s, height 0.8s
 
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
       .drawing-area
-        transition all 0.2s
+        transition none

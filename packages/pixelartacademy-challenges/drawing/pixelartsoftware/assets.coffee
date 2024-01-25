@@ -63,7 +63,7 @@ assets =
 
   MSEMLAbbayeDesMorts:
     dimensions: -> width: 15, height: 9
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
     backgroundColor: ->
       paletteColor:
         ramp: 0
@@ -162,7 +162,7 @@ assets =
 
   MBEMSaboteurSiO:
     dimensions: -> width: 32, height: 46
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
     imageName: -> 'mbem-saboteursio'
     bitmapInfo: -> """
       Artwork from [Saboteur SiO](http://www.clivetownsend.com), WIP
@@ -239,7 +239,7 @@ assets =
 
   CSHMCeleste:
     dimensions: -> width: 9, height: 7
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     backgroundColor: ->
       paletteColor:
         ramp: 0
@@ -261,7 +261,7 @@ assets =
 
   CSEMHookLineAndThinker:
     dimensions: -> width: 7, height: 8
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     backgroundColor: ->
       paletteColor:
         ramp: 1
@@ -302,7 +302,7 @@ assets =
 
   CSVMFroggi:
     dimensions: -> width: 16, height: 12
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     backgroundColor: ->
       paletteColor:
         ramp: 0

@@ -70,6 +70,11 @@
       background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/binder-open.png')
       visibility hidden
 
+      &.selected
+        .references
+          .reference
+            cursor auto
+
       &::after
         content ''
         position absolute
@@ -104,6 +109,12 @@
             .image
               transform translateY(-2rem)
 
+          &.selected
+            .image
+              transition-duration 1s
+              transition-timing-function cubic-bezier(0.6, 0.4, 0.8, -0.4)
+              transform translateY(-100vh)
+
           &::before
             content ''
             position absolute
@@ -117,8 +128,9 @@
             position absolute
             width calc(100% - 15rem)
             height calc(100% - 15rem)
-            transition transform 0.1s !important
+            transition transform 0.1s
             image-rendering auto
+            object-fit contain
 
           .cover
             absolute-cover()

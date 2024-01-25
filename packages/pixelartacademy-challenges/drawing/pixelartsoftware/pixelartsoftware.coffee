@@ -29,10 +29,10 @@ class PAA.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     assets = @state 'assets'
     _.find assets, (asset) => asset.completed
   
-  @addCopyReferenceAsset: (assetId) ->
+  @addCopyReferenceAsset: (assetClassName) ->
     assets = @state 'assets'
     assets ?= []
-    id = "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
+    id = "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetClassName}"
     
     # Add the asset if it's not already added.
     unless _.find(assets, (asset) => asset.id is id)

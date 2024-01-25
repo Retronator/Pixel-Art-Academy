@@ -29,7 +29,7 @@ WebApp.connectHandlers.use '/pico8/cartridge.png', (request, response, next) ->
   cartridgeResponse = Request.getSync cartridgeUrl, encoding: null
   png = PNG.sync.read cartridgeResponse.body
 
-  pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.pico8
+  pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Pico8
 
   try
     game.replaceCartridgeImageAssets png, project, pico8Palette

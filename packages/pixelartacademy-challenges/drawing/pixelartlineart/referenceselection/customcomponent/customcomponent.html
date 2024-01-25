@@ -7,7 +7,7 @@
           <div class="label">{{> t10e "References"}}</div>
           <div class="open-hint">{{> t10e "open here"}}</div>
         </div>
-        <div class="binder-open">
+        <div class="binder-open {{binderReferenceSelectedClass}}">
           <div class="references flipped">
             {{#each previousReferences}}
               {{> PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference}}
@@ -31,7 +31,7 @@
 </template>
 
 <template name="PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference">
-  <div class="reference" {{style referenceStyle}}>
+  <div class="reference {{referenceSelectedClass}}" {{style referenceStyle}}>
     <img class="image" src="{{imageUrl}}" {{style imageStyle}}/>
     <div class="cover"></div>
   </div>
