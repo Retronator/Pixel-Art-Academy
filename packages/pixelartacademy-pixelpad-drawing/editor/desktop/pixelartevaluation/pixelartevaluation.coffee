@@ -78,6 +78,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @pixelArtEvaluationProperty = new ComputedField =>
       @bitmap()?.properties?.pixelArtEvaluation
     
+    @editable = new ComputedField =>
+      return unless pixelArtEvaluationProperty = @pixelArtEvaluationProperty()
+      pixelArtEvaluationProperty.editable or pixelArtEvaluationProperty.unlockable
+    
     @enabledCriteria = new ComputedField =>
       return [] unless pixelArtEvaluationProperty = @pixelArtEvaluationProperty()
       

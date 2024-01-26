@@ -50,7 +50,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
     # Create bitmap automatically if it is not present.
     @_createBitmapAutorun = Tracker.autorun (computation) =>
-      return unless assets = @tutorial.assetsData()
+      return unless assets = @tutorial.state 'assets'
       computation.stop()
 
       # All is good if we have the asset with a bitmap ID.

@@ -32,7 +32,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
     @evenDiagonalsProperty = new ComputedField =>
       @pixelArtEvaluation.bitmap()?.properties?.pixelArtEvaluation?.evenDiagonals
       
-    @editable = new ComputedField => @evenDiagonalsProperty()?.editable ? @pixelArtEvaluation.pixelArtEvaluationProperty()?.editable
+    @editable = new ComputedField => @evenDiagonalsProperty()?.editable ? @pixelArtEvaluation.editable()
     
     @criteria = new ComputedField =>
       evenDiagonalsProperty = @evenDiagonalsProperty()

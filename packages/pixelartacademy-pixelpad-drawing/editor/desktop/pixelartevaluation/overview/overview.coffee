@@ -22,15 +22,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
     
     @pixelArtEvaluation = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
     
-    @editable = new ComputedField => @pixelArtEvaluation.pixelArtEvaluationProperty()?.editable
+    @editable = new ComputedField => @pixelArtEvaluation.editable()
+    @unlockable = new ComputedField => @pixelArtEvaluation.pixelArtEvaluationProperty()?.unlockable
     
     @criteria = new ComputedField =>
       return unless pixelArtEvaluationProperty = @pixelArtEvaluation.pixelArtEvaluationProperty()
-      editable = @editable()
-      
       criteria = []
       
       pixelArtEvaluationCriteria = pixelArtEvaluationProperty.allowedCriteria or PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
+      
+      if @unlockable()
+        pixelArtEvaluationCriteria.push (PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria') or [])...
       
       for criterion of PAE.Criteria
         criterionProperty = _.lowerFirst criterion

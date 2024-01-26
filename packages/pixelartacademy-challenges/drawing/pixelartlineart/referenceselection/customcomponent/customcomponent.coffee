@@ -85,16 +85,16 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
     @currentPage 0
     @referenceSelected false
     Meteor.clearTimeout @_switchToBitmapTimeout
-    @_swithcToBitmapAutorun?.stop()
   
   _selectReference: ->
     selectedReferenceId = @references()[@currentReferenceIndex()].id
-    PAA.Challenges.Drawing.PixelArtLineArt.addDrawLineArtAsset selectedReferenceId
     @referenceSelected true
     
     @_switchToBitmapTimeout = Meteor.setTimeout =>
+      PAA.Challenges.Drawing.PixelArtLineArt.addDrawLineArtAsset selectedReferenceId
+
       # Find out the bitmap ID.
-      @_swithcToBitmapAutorun = Tracker.autorun (computation) =>
+      Tracker.autorun (computation) =>
         return unless assets = PAA.Challenges.Drawing.PixelArtLineArt.state('assets')
         return unless selectedAsset = _.find assets, (asset) -> asset.id is selectedReferenceId
         return unless bitmapId = selectedAsset.bitmapId

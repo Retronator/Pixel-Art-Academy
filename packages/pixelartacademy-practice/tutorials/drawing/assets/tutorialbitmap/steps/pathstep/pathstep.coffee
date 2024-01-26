@@ -68,14 +68,15 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     context.lineWidth = pixelSize
     
     pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
-    context.strokeStyle = "lch(50% 0 0 / #{pathOpacity})"
+    context.strokeStyle = "hsl(0 0% 50% / #{pathOpacity})"
+    context.fillStyle = "hsl(0 0% 50%)"
     
     # Draw path to step area.
     context.save()
     halfPixelSize = pixelSize / 2
     context.translate @stepArea.bounds.x + halfPixelSize, @stepArea.bounds.y + halfPixelSize
     
-    context.stroke path.path for path in @paths
+    path.drawUnderlyingHints context, renderOptions for path in @paths
 
     context.restore()
     

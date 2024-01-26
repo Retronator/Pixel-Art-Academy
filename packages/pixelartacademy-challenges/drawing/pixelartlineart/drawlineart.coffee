@@ -35,6 +35,11 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     
   @pixelArtEvaluation: -> true
   
+  @properties: ->
+    pixelArtScaling: true
+    pixelArtEvaluation:
+      unlockable: true
+  
   constructor: ->
     super arguments...
 

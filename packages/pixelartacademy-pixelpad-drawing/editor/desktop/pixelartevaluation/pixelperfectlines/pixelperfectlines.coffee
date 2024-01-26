@@ -23,7 +23,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.PixelPerfectLi
     @pixelPerfectLinesProperty = new ComputedField =>
       @pixelArtEvaluation.bitmap()?.properties?.pixelArtEvaluation?.pixelPerfectLines
       
-    @editable = new ComputedField => @pixelPerfectLinesProperty()?.editable ? @pixelArtEvaluation.pixelArtEvaluationProperty()?.editable
+    @editable = new ComputedField => @pixelPerfectLinesProperty()?.editable ? @pixelArtEvaluation.editable()
     
     @criteria = new ComputedField =>
       pixelPerfectLinesProperty = @pixelPerfectLinesProperty()

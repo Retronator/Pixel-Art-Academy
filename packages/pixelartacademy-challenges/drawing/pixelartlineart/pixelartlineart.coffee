@@ -45,13 +45,26 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
   constructor: ->
     super arguments...
     
+    # Listen to a change in completed tutorials to determine which pixel art evaluation criteria can be challenged.
+    requiredTutorials =
+      PixelPerfectLines: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
+      EvenDiagonals: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
+    
+    @_completedChallengesAutorun = Tracker.autorun =>
+      unlockablePixelArtEvaluationCriteria = []
+      
+      for criterion, tutorial of requiredTutorials when tutorial.completed()
+        unlockablePixelArtEvaluationCriteria.push criterion
+    
+      PAA.Practice.Project.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria', unlockablePixelArtEvaluationCriteria
+    
     @completedBitmapIds = new AE.LiveComputedField =>
       assets = @state 'assets'
       completedAssets = _.filter assets, (asset) => asset.completed
       asset.bitmapId for asset in completedAssets
     
     # Listen to a change in completed of assets to determine which pixel art evaluation criteria can be granted.
-    @_completedAutorun = Tracker.autorun =>
+    @_completedChallengesAutorun = Tracker.autorun =>
       completedBitmapIds = @completedBitmapIds()
       
       Tracker.nonreactive =>
@@ -70,7 +83,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
 
   destroy: ->
     @completedBitmapIds.stop()
-    @_completedAutorun.stop()
+    @_completedChallengesAutorun.stop()
     asset.destroy() for asset in @_pixelArtLineArtAssets if @_pixelArtLineArtAssets
 
   assetsData: ->

@@ -15,10 +15,16 @@ class TutorialBitmap.PathStep.Path
   constructor: (@tutorialBitmap, svgPath, offset) ->
     @canvas = new AM.ReadableCanvas @tutorialBitmap.width(), @tutorialBitmap.height()
     @canvas.context.translate offset.x, offset.y if offset
-
-    # Rasterize the path to the canvas.
+    
     @path = new Path2D svgPath.getAttribute 'd'
+    style = svgPath.getAttribute 'style'
+    
+    fillColorString = style.match(/fill:(.*?);/)?[1]
+    @filled = fillColorString and fillColorString isnt 'none'
+    
+    # Rasterize the path to the canvas.
     @canvas.context.stroke @path
+    @canvas.context.fill @path if @filled
     
     @_imageData = @canvas.getFullImageData()
     
@@ -163,3 +169,10 @@ class TutorialBitmap.PathStep.Path
         return false unless pixelVisited corner.x, corner.y
 
     true
+  
+  drawUnderlyingHints: (context, renderOptions) ->
+    if @filled
+      context.fill @path
+      
+    else
+      context.stroke @path
