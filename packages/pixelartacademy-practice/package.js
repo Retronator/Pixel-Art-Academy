@@ -147,10 +147,12 @@ Package.onUse(function(api) {
   api.addFile('pixelartevaluation/core')
   api.addFile('pixelartevaluation/pixel')
   api.addFile('pixelartevaluation/point')
+  api.addFile('pixelartevaluation/point-optimizeneighbors')
   api.addFile('pixelartevaluation/enginecomponent')
   api.addFile('pixelartevaluation/enginecomponent-debug')
 
   api.addFile('pixelartevaluation/line..')
+  api.addFile('pixelartevaluation/line/line-addoutlinepoints')
   api.addFile('pixelartevaluation/line/line-classifylineparts')
   api.addFile('pixelartevaluation/line/line-evaluate')
   api.addFile('pixelartevaluation/line/part..')

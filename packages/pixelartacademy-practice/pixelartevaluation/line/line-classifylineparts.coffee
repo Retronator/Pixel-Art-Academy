@@ -184,8 +184,9 @@ PAE.Line::classifyLineParts = ->
     endSegmentIndex = startSegmentIndex
     
     loop
-      # Stop if we reached a corner.
       edgeSegment = @getEdgeSegment endSegmentIndex
+
+      # Stop if we reached a corner.
       break if edgeSegment.corner.after
       
       # Find a side-step segment.
@@ -196,8 +197,10 @@ PAE.Line::classifyLineParts = ->
           endSegmentIndex++
           
           # Pretend as we're starting fresh from the next segment.
-          startEdgeSegment = @edgeSegments[endSegmentIndex]
-          sideEdgeClockwise = startEdgeSegment.clockwise.after
+          startEdgeSegment = @getEdgeSegment endSegmentIndex
+          sideEdgeClockwise = not startEdgeSegment.clockwise.before
+          
+          break unless startEdgeSegment.clockwise.after is sideEdgeClockwise
           
           continue
         

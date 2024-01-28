@@ -66,7 +66,14 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           
         else
           markup.push Markup.PixelArt.evaluatedImpliedStraightLine(linePart)...
-        
+      
+      # If we're not going to be drawing curves, draw a faint unevaluated outline to indicate they were detected.
+      unless PAE.Criteria.SmoothCurves in displayedCriteria
+        for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
+          curveMarkup = Markup.PixelArt.impliedCurve linePart
+          curveMarkup.line.width = 0
+          markup.push curveMarkup
+          
     @drawMarkup markup, context, renderOptions
 
   _addPixelToPath: (context, pixel) ->

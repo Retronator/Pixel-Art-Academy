@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AC = Artificial.Control
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
@@ -18,12 +19,23 @@ class PAE.EngineComponent extends PAE.EngineComponent
     super arguments...
     
     if @constructor.debug
-      @showPotentialParts = new ReactiveField false
+      @drawCore = new ReactiveField false
+      @drawPoints = new ReactiveField false
+      @drawLines = new ReactiveField false
+      @drawLineParts = new ReactiveField false
+      @drawPotentialParts = new ReactiveField false
+      @drawSegmentCorners = new ReactiveField false
   
       $(document).on 'keydown', (event) =>
-        return unless event.which is Artificial.Control.Keys.forwardSlash
-        
-        @showPotentialParts not @showPotentialParts()
+        switch event.which
+          when AC.Keys['1'] then field = @drawCore
+          when AC.Keys['2'] then field = @drawPoints
+          when AC.Keys['3'] then field = @drawLines
+          when AC.Keys['4'] then field = @drawLineParts
+          when AC.Keys['5'] then field = @drawPotentialParts
+          when AC.Keys['6'] then field = @drawSegmentCorners
+          
+        field not field() if field
 
   _render: (context) ->
     super arguments...
@@ -36,34 +48,38 @@ class PAE.EngineComponent extends PAE.EngineComponent
     context.translate 0.5, 0.5
     
     for layer in pixelArtEvaluation.layers
-      # Draw deep core pixels.
-      context.beginPath()
-      @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isDeepCore
-      @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, deepCoreColor
+      if @drawCore()
+        # Draw deep core pixels.
+        context.beginPath()
+        @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isDeepCore
+        @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, deepCoreColor
+        
+        # Draw shallow core pixels.
+        context.beginPath()
+        @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
+        @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, shallowCoreColor
       
-      # Draw shallow core pixels.
-      context.beginPath()
-      @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
-      @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, shallowCoreColor
+      if @drawPoints()
+        # Draw point network.
+        for point in layer.points
+          @_drawDebugEdge context, point, neighbor for neighbor in point.neighbors
+        
+        # Draw points.
+        @_drawDebugPoint context, point for point in layer.points
       
-      # Draw point network.
-      for point in layer.points
-        @_drawDebugEdge context, point, neighbor for neighbor in point.neighbors
-      
-      # Draw points.
-      @_drawDebugPoint context, point for point in layer.points
-      
-      # Draw lines.
-      @_drawDebugLine context, line for line in layer.lines
-      
-      # Draw line parts.
-      linePartsProperty = if @showPotentialParts?() then 'potentialParts' else 'parts'
-      
-      for line in layer.lines
-        for part in line[linePartsProperty]
-          @_drawDebugStraightLine context, part if part instanceof PAE.Line.Part.StraightLine
-          @_drawDebugCurve context, part, true if part instanceof PAE.Line.Part.Curve
-      
+      if @drawLines()
+        # Draw lines.
+        @_drawDebugLine context, line for line in layer.lines
+
+      if @drawLineParts()
+        # Draw line parts.
+        linePartsProperty = if @drawPotentialParts?() then 'potentialParts' else 'parts'
+        
+        for line in layer.lines
+          for part in line[linePartsProperty]
+            @_drawDebugStraightLine context, part if part instanceof PAE.Line.Part.StraightLine
+            @_drawDebugCurve context, part, true if part instanceof PAE.Line.Part.Curve
+        
     context.restore()
 
   _drawDebugEdge: (context, pointA, pointB) ->
@@ -105,6 +121,8 @@ class PAE.EngineComponent extends PAE.EngineComponent
     context.lineTo straightLine.displayLine2.end.x, straightLine.displayLine2.end.y
     
     context.stroke()
+    
+    return unless @drawSegmentCorners()
     
     context.strokeStyle = segmentBoundaryColor
     context.lineWidth = @_pixelSize * 2

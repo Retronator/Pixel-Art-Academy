@@ -180,25 +180,3 @@ class PAE.Line
     
     for pixel in point.pixels
       @addPixel pixel unless pixel in @pixels
-  
-  addOutlinePoints: ->
-    # For outlines, we expect the line already has all the pixels assigned and all the points already
-    # have this line assigned to them, we just need to add the points in the correct order.
-    startingPoint = _.find @pixels[0].points, (point) => @ in point.lines
-    @points.push startingPoint
-
-    previousPoint = startingPoint
-    currentPoint = _.find startingPoint.neighbors, (point) => @ in point.lines
-    @points.push currentPoint
-    
-    @isClosed = true
-    
-    loop
-      nextPoint = _.find currentPoint.neighbors, (point) => @ in point.lines and point isnt previousPoint
-      
-      return if nextPoint is startingPoint
-      
-      @points.push nextPoint
-      
-      previousPoint = currentPoint
-      currentPoint = nextPoint

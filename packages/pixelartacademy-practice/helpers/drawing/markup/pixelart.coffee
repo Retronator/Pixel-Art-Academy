@@ -97,6 +97,30 @@ class Markup.PixelArt
       ,
         x: straightLine.displayLine2.end.x + 0.5, y: straightLine.displayLine2.end.y + 0.5
       ]
+      
+  @impliedCurve: (curve) ->
+    startPosition = curve.displayPoints[0].position
+    points = [x: startPosition.x + 0.5, y: startPosition.y + 0.5]
+
+    getCurvePoint = (index) => if curve.isClosed then curve.displayPoints[_.modulo index, curve.displayPoints.length - 1] else curve.displayPoints[index]
+    endIndex = if curve.isClosed then curve.displayPoints.length - 1 else curve.displayPoints.length - 2
+    
+    for pointIndex in [0..endIndex]
+      start = getCurvePoint pointIndex
+      end = getCurvePoint pointIndex + 1
+      
+      points.push
+        x: end.position.x + 0.5
+        y: end.position.y + 0.5
+        bezierControlPoints: [
+          x: start.controlPoints.after.x + 0.5
+          y: start.controlPoints.after.y + 0.5
+        ,
+          x: end.controlPoints.before.x + 0.5
+          y: end.controlPoints.before.y + 0.5
+        ]
+    
+    line: _.extend @impliedLineBase(), {points}
   
   @evaluatedImpliedStraightLine: (straightLine) ->
     @_prepareLineParts straightLine

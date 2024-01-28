@@ -7,6 +7,7 @@ class PAE.Pixel
     @lines = []
     @points = []
     @core = null
+    @outlineCores = []
     
     @isShallowCore = null
     @isDeepCore = null
@@ -25,6 +26,10 @@ class PAE.Pixel
     throw new AE.ArgumentException "A core is already assigned to this pixel.", core, @ if @core
     @core = core
 
+  assignOutlineCore: (core) ->
+    throw new AE.ArgumentException "The outline core is already assigned to this pixel.", core, @ if core in @outlineCores
+    @outlineCores.push core
+  
   unassignLine: (line) ->
     throw new AE.ArgumentException "The line is not assigned to this pixel.", line, @ unless line in @lines
     _.pull @lines, line
@@ -36,6 +41,10 @@ class PAE.Pixel
   unassignCore: (core) ->
     throw new AE.ArgumentException "The core is not assigned to this pixel.", core, @ unless core is @core
     @core = null
+  
+  unassignOutlineCore: (core) ->
+    throw new AE.ArgumentException "The outline core is not assigned to this pixel.", core, @ unless core in @outlineCores
+    _.pull @outlineCores, core
   
   classifyCore: ->
     @isDeepCore = false
@@ -67,5 +76,14 @@ class PAE.Pixel
         if pixel = @layer.getPixel x, y
           operation pixel
         
+    # Explicit return to avoid result collection.
+    return
+  
+  forEachPixelInNeighborhood: (operation) ->
+    for x in [@x - 1..@x + 1]
+      for y in [@y - 1..@y + 1]
+        if pixel = @layer.getPixel x, y
+          operation pixel
+    
     # Explicit return to avoid result collection.
     return
