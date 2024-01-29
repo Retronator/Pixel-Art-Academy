@@ -85,39 +85,40 @@ PAE.Point.optimizeNeighbors = (points) ->
   for rootPoint in points
     # Test if we still have more than 2 neighbors on the same outline.
     continue unless outlinePixel = rootPoint.getOutlinePixel()
-
-    outlineNeighbors = _.filter rootPoint.neighbors, (neighbor) =>
-      return unless neighborOutlinePixel = neighbor.getOutlinePixel()
-      outlineCore in neighborOutlinePixel.outlineCores
-      
-    continue if outlineNeighbors.length is 2
     
-    # Remove inner core edges (diagonals connecting two parts of the outline on different sides of the core).
-    for neighbor in outlineNeighbors
-      # We must have at least one outside pixel neighbor in common, otherwise this is an inner edge.
-      sharedNonClusterPixelFound = false
-      
-      if neighbor.pixels.length > 1
-        console.error "Neighboring outline point has multiple pixels", neighbor
-        continue
+    for outlineCore, index in outlinePixel.outlineCores
+      outlineNeighbors = _.filter rootPoint.neighbors, (neighbor) =>
+        return unless neighborOutlinePixel = neighbor.getOutlinePixel()
+        outlineCore in neighborOutlinePixel.outlineCores
         
-      neighborOutlinePixel = neighbor.pixels[0]
+      continue if outlineNeighbors.length is 2
       
-      for x in [neighborOutlinePixel.x - 1..neighborOutlinePixel.x + 1] when outlinePixel.x - 1 <= x <= outlinePixel.x + 1
-        for y in [neighborOutlinePixel.y - 1..neighborOutlinePixel.y + 1] when outlinePixel.y - 1 <= y <= outlinePixel.y + 1
-          if pixel = rootPoint.layer.getPixel x, y
-            unless pixel.core or outlineCore in pixel.outlineCores
+      # Remove inner core edges (diagonals connecting two parts of the outline on different sides of the core).
+      for neighbor in outlineNeighbors
+        # We must have at least one outside pixel neighbor in common, otherwise this is an inner edge.
+        sharedNonClusterPixelFound = false
+        
+        if neighbor.pixels.length > 1
+          console.error "Neighboring outline point has multiple pixels", neighbor
+          continue
+          
+        neighborOutlinePixel = neighbor.pixels[0]
+        
+        for x in [neighborOutlinePixel.x - 1..neighborOutlinePixel.x + 1] when outlinePixel.x - 1 <= x <= outlinePixel.x + 1
+          for y in [neighborOutlinePixel.y - 1..neighborOutlinePixel.y + 1] when outlinePixel.y - 1 <= y <= outlinePixel.y + 1
+            if pixel = rootPoint.layer.getPixel x, y
+              unless pixel.core or outlineCore in pixel.outlineCores
+                sharedNonClusterPixelFound = true
+                break
+            
+            else
               sharedNonClusterPixelFound = true
               break
-          
-          else
-            sharedNonClusterPixelFound = true
-            break
-        break if sharedNonClusterPixelFound
-      continue if sharedNonClusterPixelFound
-      
-      rootPoint._disconnectNeighbor neighbor
-      neighbor._disconnectNeighbor rootPoint
-      
+          break if sharedNonClusterPixelFound
+        continue if sharedNonClusterPixelFound
+        
+        rootPoint._disconnectNeighbor neighbor
+        neighbor._disconnectNeighbor rootPoint
+        
   # Explicit return to avoid result collection.
   return

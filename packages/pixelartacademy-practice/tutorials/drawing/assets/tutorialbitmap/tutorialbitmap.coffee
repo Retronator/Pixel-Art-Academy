@@ -50,7 +50,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
     # Create bitmap automatically if it is not present.
     @_createBitmapAutorun = Tracker.autorun (computation) =>
-      return unless assets = @tutorial.state 'assets'
+      # Note: We need to read the assets from the assetsData property instead of directly from the state since this
+      # needs to work even when assets array is not even yet present in the state. The assetsData method ensures at
+      # least an empty array is sent as soon as the state is ready.
+      return unless assets = @tutorial.assetsData()
       computation.stop()
 
       # All is good if we have the asset with a bitmap ID.
@@ -228,6 +231,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       @initialized true
       
   reset: ->
+    # Nothing to reset if we haven't initialized yet (resetting will be called when first creating the bitmap).
+    return unless @initialized()
+    
     # Prevent recomputation of completed states while resetting.
     @resetting true
     

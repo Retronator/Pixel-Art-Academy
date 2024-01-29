@@ -17,18 +17,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   # Override to provide an SVG URL to describing the drawing.
   @svgUrl: -> null
 
-  # Override to create a step for each path in the svg.
-  @breakPathsIntoSteps: -> false
-  
-  # Override to provide SVG URLs that correspond to references.
-  @referenceSvgUrls: -> null
-
   # Override to provide an array of steps to be completed in this tutorial asset.
   @steps: -> null
 
-  # Override to set the default whether created steps draw hints after completion.
-  @drawHintsAfterCompleted: -> null
-  
   # Override to provide an array of goals the player can choose to complete this tutorial bitmap.
   @goalChoices: -> null
   

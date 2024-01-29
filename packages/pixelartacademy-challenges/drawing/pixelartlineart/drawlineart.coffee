@@ -47,11 +47,16 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
 
     @_clipboardPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
   
-  initializeSteps: ->
-    super arguments...
-    
-    # Make the pixels step only show drawn errors.
-    @stepAreas()[0].steps()[0].options.drawHintsForGoalPixels = false
+  # Note: We have to override initializeStepsInAreaWithResources instead of initializeSteps since
+  # this will be called when creating steps after reference selection.
+  initializeStepsInAreaWithResources: (stepArea, stepResources) ->
+    # Create a path step that has increased tolerance to allow for more freedom where you place the lines.
+    svgPaths = stepResources.svgPaths.svgPaths()
+  
+    new @constructor.PathStep @, stepArea,
+      svgPaths: svgPaths
+      drawHintsAfterCompleted: false
+      tolerance: 2
     
   editorOptions: ->
     references:
