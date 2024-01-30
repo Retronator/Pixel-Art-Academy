@@ -11,6 +11,7 @@ assets =
       Fan art study based on Mickey Mouse Sound Cartoons, Ub Iwerks, 1928.
     """
 
+      ###
   SuperMarioBros3World5:
     dimensions: -> width: 64, height: 32
     imageName: -> 'supermariobros3world5'
@@ -24,6 +25,8 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Sonic the Hedgehog 3, Sega, 1994.
     """
+  
+###
 
 for assetId, asset of assets
   do (assetId, asset) ->

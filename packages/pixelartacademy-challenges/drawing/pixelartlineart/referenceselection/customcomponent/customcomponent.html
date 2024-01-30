@@ -21,10 +21,12 @@
         </div>
       </div>
       {{#if canMoveBack}}
-        <button class="navigation-button previous-reference"></button>
+        {{! HACK: Electron Chrome doesn't support absolute positioning of buttons with left + right combo so we turn them into divs.}}
+        {{! TODO: Change back to a button when Electron is upgraded.}}
+        <div class="navigation-button previous-reference"></div>
       {{/if}}
       {{#if canMoveForward}}
-        <button class="navigation-button next-reference"></button>
+        <div class="navigation-button next-reference"></div>
       {{/if}}
     {{/if}}
   </div>

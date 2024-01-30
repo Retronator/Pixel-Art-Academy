@@ -13,7 +13,7 @@ curveColor = "hsl(100deg 50% 50% / 100%)"
 segmentBoundaryColor = "hsl(80deg 50% 50% / 100%)"
 
 class PAE.EngineComponent extends PAE.EngineComponent
-  @debug = false
+  @debug = true
   
   constructor: (@options) ->
     super arguments...
