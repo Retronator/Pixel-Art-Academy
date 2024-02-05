@@ -26,31 +26,22 @@ PAE.Line::_analyzeDoubles = ->
     
   sideStepScore = if sideStepsCount then diagonalSideStepsCount / sideStepsCount else 1
   
-  # Points need to be single instead of double.
-  singleCount = _.sumBy @points, (point) => if point.radius is 0.5 then 1 else 0
-  pointRadiusScore = singleCount / @points.length
-  
-  score: sideStepScore * pointRadiusScore
-  count: doubles.length
+  score: sideStepScore
+  pixels: doubles
 
 PAE.Line::_analyzeCorners = ->
+  corners = @getCorners()
+
+  # Count how many total transitions there were on this line so we can compare how many of these are corners.
   transitionsCount = 0
-  cornerTransitionsCount = 0
-  
-  # Corners are pixels at the point between two consecutive axis-aligned edge segments that are not a side-step.
+
   for edgeSegment, edgeSegmentIndex in @edgeSegments when not edgeSegment.isSideStep
     break unless nextEdgeSegment = @getEdgeSegment edgeSegmentIndex + 1
     continue if nextEdgeSegment.isSideStep
-    
     transitionsCount++
     
-    continue unless edgeSegment.edge.isAxisAligned and nextEdgeSegment.edge.isAxisAligned
-    continue if edgeSegment.edge is nextEdgeSegment.edge
-    
-    cornerTransitionsCount++
-    
-  score: if transitionsCount then 1 - cornerTransitionsCount / transitionsCount else 1
-  count: cornerTransitionsCount
+  score: if transitionsCount then 1 - corners.length / transitionsCount else 1
+  count: corners.length
 
 PAE.Line::_analyzeWidthType = ->
   # Analyze single and double points.

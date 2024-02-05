@@ -66,7 +66,7 @@ class PAE.Line
     return if @layer.getPixel pixel.x + dx, pixel.y
     true
     
-  getDoubles: ->
+  getDoubles: (countPointsWithMultiplePixels = false) ->
     return @_doubles if @_doubles
     
     @_doubles = []
@@ -79,10 +79,11 @@ class PAE.Line
 
         @_doubles.push point.pixels[0] unless point.pixels[0] in @_doubles
         
-    # Doubles are all pixels on points with multiple pixels.
-    for point in @points when point.pixels.length > 1
-      for pixel in point.pixels
-        @_doubles.push pixel unless pixel in @_doubles
+    if countPointsWithMultiplePixels
+      # Doubles are all pixels on points with multiple pixels.
+      for point in @points when point.pixels.length > 1
+        for pixel in point.pixels
+          @_doubles.push pixel unless pixel in @_doubles
     
     @_doubles
     
@@ -97,6 +98,19 @@ class PAE.Line
       continue if nextEdgeSegment.isSideStep
       continue unless edgeSegment.edge.isAxisAligned and nextEdgeSegment.edge.isAxisAligned
       continue if edgeSegment.edge is nextEdgeSegment.edge
+      
+      # Ignore corners neighboring intersections with other lines.
+      foundIntersection = false
+
+      for pointIndexOffset in [-1..1]
+        point = @getPoint edgeSegment.endPointIndex + pointIndexOffset
+        # Note: We want to check for multiple neighbors and not lines
+        # to catch places where double lines connect to outlines.
+        if point.neighbors.length > 2
+          foundIntersection = true
+          break
+
+      continue if foundIntersection
       
       point = @getPoint edgeSegment.endPointIndex
       for pixel in point.pixels

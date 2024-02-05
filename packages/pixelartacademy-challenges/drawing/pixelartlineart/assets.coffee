@@ -11,23 +11,20 @@ assets =
       Fan art study based on Mickey Mouse Sound Cartoon (Ub Iwerks, 1928).
     """
 
-      ###
   SuperMarioBros3World5:
-    dimensions: -> width: 64, height: 32
+    dimensions: -> width: 100, height: 100
     imageName: -> 'supermariobros3world5'
     bitmapInfo: -> """
       Fan art study based on Super Mario Bros. 3 (Nintendo Power Strategy Guide, vol. SG1/NP13, Nintendo, 1990).
     """
-    
+  
   SonicTheHedgehog3:
-    dimensions: -> width: 64, height: 32
+    dimensions: -> width: 80, height: 100
     imageName: -> 'sonicthehedgehog3'
     bitmapInfo: -> """
       Fan art study based on Sonic the Hedgehog 3 (Sega, 1994).
     """
   
-###
-
 for assetId, asset of assets
   do (assetId, asset) ->
     class DrawLineArt[assetId] extends DrawLineArt

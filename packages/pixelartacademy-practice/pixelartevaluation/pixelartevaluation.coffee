@@ -140,19 +140,28 @@ class PAA.Practice.PixelArtEvaluation
         # Compute average score, weighted by line length.
         totalWeight = 0
         
+        doubles = []
+
         for layer in @layers
           for line in layer.lines
             lineEvaluation = line.evaluate()
+            
+            # We collect doubles separately so we can count them all at once to avoid them accounted multiple times.
+            for pixel in lineEvaluation.doubles.pixels
+              doubles.push pixel unless pixel in doubles
+            
             # We use the square root of the length so that long lines can't hugely overtake the short ones.
             weight = Math.sqrt line.points.length
             
             for subcriterion of @constructor.Subcriteria.PixelPerfectLines
               subcriterionProperty = _.lowerFirst subcriterion
               @_evaluation.pixelPerfectLines[subcriterionProperty].score += lineEvaluation[subcriterionProperty].score * weight
-              @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count
+              @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count if lineEvaluation[subcriterionProperty].count
             
             totalWeight += weight
-          
+            
+        @_evaluation.pixelPerfectLines.doubles.count = doubles.length
+        
         for subcriterion of @constructor.Subcriteria.PixelPerfectLines
           subcriterionProperty = _.lowerFirst subcriterion
           

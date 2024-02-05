@@ -135,9 +135,9 @@ class TutorialBitmap.PathStep.Path
 
     for cornersForPart in @cornersOfParts
       for corner in cornersForPart
+        corner.foundCoveredPixelPositions = []
+        
         if @pathStep.options.tolerance
-          found = false
-          
           # Try to find a pixel in increasing offset levels.
           for maxOffset in [0..@pathStep.options.tolerance]
             for dx in [-maxOffset..maxOffset]
@@ -145,17 +145,13 @@ class TutorialBitmap.PathStep.Path
                 x = corner.x + dx
                 y = corner.y + dy
                 if @hasPixel(x, y) and bitmapLayer.getPixel x, y
-                  found = true
-                  corner.foundCoveredPixelPosition = {x, y}
-                  break
-              break if found
-            break if found
+                  corner.foundCoveredPixelPositions.push {x, y}
           
-          return false unless found
+          return false unless corner.foundCoveredPixelPositions.length
         
         else
           return false unless bitmapLayer.getPixel corner.x, corner.y
-          corner.foundCoveredPixelPosition = corner
+          corner.foundCoveredPixelPositions = [corner]
         
     # See which pixels have been covered in the allowed area.
     pixelCoverage = new Uint8Array bitmapLayer.width * bitmapLayer.height * 2
@@ -223,11 +219,18 @@ class TutorialBitmap.PathStep.Path
       pixelCoverage[pixelIndex * 2 + 1]
     
     for cornersForPart in @cornersOfParts
-      # Visit pixels from the initial corner.
-      visitPixel cornersForPart[0].foundCoveredPixelPosition.x, cornersForPart[0].foundCoveredPixelPosition.y
+      # Visit pixels from the initial corners.
+      for position in cornersForPart[0].foundCoveredPixelPositions
+        visitPixel position.x, position.y
       
       for corner in cornersForPart
-        return false unless pixelVisited corner.foundCoveredPixelPosition.x, corner.foundCoveredPixelPosition.y
+        # Find at least one of the positions that is covered.
+        found = false
+        for position in corner.foundCoveredPixelPositions
+          if pixelVisited position.x, position.y
+            found = true
+            break
+        return false unless found
     
     @_completed = true
     @_completed
