@@ -30,6 +30,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEval
   @properties: ->
     pixelArtScaling: true
     pixelArtEvaluation:
+      allowedCriteria: [PAE.Criteria.EvenDiagonals]
       evenDiagonals:
         segmentLengths: {}
   

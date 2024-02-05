@@ -42,6 +42,12 @@ class TutorialBitmap.PathStep.Path
     
     @_imageData = @canvas.getFullImageData()
     
+    @pathBounds =
+      left: Number.POSITIVE_INFINITY
+      right: Number.NEGATIVE_INFINITY
+      top: Number.POSITIVE_INFINITY
+      bottom: Number.NEGATIVE_INFINITY
+    
     for x in [0...@canvas.width]
       for y in [0...@canvas.height]
         pixelIndex = x + y * @_imageData.width
@@ -51,6 +57,11 @@ class TutorialBitmap.PathStep.Path
           @_imageData.data[pixelIndex * 4 + 3] = 0
           
         else
+          @pathBounds.left = Math.min @pathBounds.left, x
+          @pathBounds.right = Math.max @pathBounds.right, x
+          @pathBounds.top = Math.min @pathBounds.top, y
+          @pathBounds.bottom = Math.max @pathBounds.bottom, y
+          
           # Turn anti-aliased pixels blue and required green for debugging purposes.
           channelOffset = if alpha >= @constructor.minimumRequiredPixelAlpha then 1 else 2
           @_imageData.data[pixelIndex * 4 + channelOffset] = 255
@@ -58,7 +69,10 @@ class TutorialBitmap.PathStep.Path
           # Make allowed pixels more visible, but don't change their
           # upper end since that's used for detecting required pixels.
           @_imageData.data[pixelIndex * 4 + 3] = Math.max 128, alpha
-        
+    
+    @pathBounds.width = @pathBounds.right - @pathBounds.left + 1
+    @pathBounds.height = @pathBounds.bottom - @pathBounds.top + 1
+    
     # Calculate positions of corner points.
     @cornersOfParts = []
     pathData = svgPath.getPathData normalize: true
@@ -219,6 +233,17 @@ class TutorialBitmap.PathStep.Path
     @_completed
   
   drawUnderlyingHints: (context, renderOptions) ->
+    # Determine if the path is even visible on the canvas.
+    visibleBoundsLeft = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.left(), @pathBounds.left
+    visibleBoundsRight = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.right(), @pathBounds.right
+    visibleBoundsTop = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.top(), @pathBounds.top
+    visibleBoundsBottom = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.bottom(), @pathBounds.bottom
+    visibleBoundsWidth = visibleBoundsRight - visibleBoundsLeft + 1
+    visibleBoundsHeight = visibleBoundsBottom - visibleBoundsTop + 1
+    
+    # Note: We have to allow 0 width and height for vertical and horizontal lines at integer positions.
+    return if visibleBoundsWidth < 0 or visibleBoundsHeight < 0
+    
     # Completed lines draw much fainter if we're not supposed to draw hints after completion.
     if @_completed and not @pathStep.options.drawHintsAfterCompleted
       initialStrokeStyle = context.strokeStyle
@@ -233,13 +258,13 @@ class TutorialBitmap.PathStep.Path
 
       context.beginPath()
       
-      height = @pathStep.stepArea.bounds.height
-      width = @pathStep.stepArea.bounds.width
+      height = visibleBoundsBottom - visibleBoundsTop
       pixelSize = 1 / renderOptions.camera.effectiveScale()
+      spacing = Math.max 5 * pixelSize, 1 / 3
       
-      for x in [-height...width] by 5 * pixelSize
-        context.moveTo x, 0
-        context.lineTo x + height, height
+      for x in [visibleBoundsLeft - height...visibleBoundsRight] by spacing
+        context.moveTo x, visibleBoundsTop
+        context.lineTo x + height, visibleBoundsTop + height
       
       context.stroke()
       context.restore()

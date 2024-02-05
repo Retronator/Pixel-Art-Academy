@@ -8,7 +8,7 @@ assets =
     dimensions: -> width: 100, height: 120
     imageName: -> 'mickeymousesoundcartoon'
     bitmapInfo: -> """
-      Fan art study based on Mickey Mouse Sound Cartoons, Ub Iwerks, 1928.
+      Fan art study based on Mickey Mouse Sound Cartoon (Ub Iwerks, 1928).
     """
 
       ###
@@ -16,14 +16,14 @@ assets =
     dimensions: -> width: 64, height: 32
     imageName: -> 'supermariobros3world5'
     bitmapInfo: -> """
-      Fan art study based on Super Mario Bros. 3, Nintendo Power Strategy Guide (vol. SG1/NP13), Nintendo, 1990.
+      Fan art study based on Super Mario Bros. 3 (Nintendo Power Strategy Guide, vol. SG1/NP13, Nintendo, 1990).
     """
     
   SonicTheHedgehog3:
     dimensions: -> width: 64, height: 32
     imageName: -> 'sonicthehedgehog3'
     bitmapInfo: -> """
-      Fan art study based on Sonic the Hedgehog 3, Sega, 1994.
+      Fan art study based on Sonic the Hedgehog 3 (Sega, 1994).
     """
   
 ###
