@@ -29,7 +29,7 @@ class TutorialBitmap.Step
     true
   
   # Override if the step requires pixels for its completion (so other steps don't consider them to be invalid).
-  hasPixel: -> false
+  hasPixel: (absoluteX, absoluteY) -> false
   
   solve: -> throw new AE.NotImplementedException "A step has to provide a method to solve itself to a completed state."
   

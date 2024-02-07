@@ -68,12 +68,17 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
   _initialize: ->
     references =
       for drawLineArtClass, index in _.values PAA.Challenges.Drawing.PixelArtLineArt.remainingDrawLineArtClasses()
+        scalePercentage = drawLineArtClass.binderScale() * 100
+        offsetRangePercentage = 100 - scalePercentage
+      
         id: drawLineArtClass.id()
         index: index
         imageUrl: drawLineArtClass.referenceImageUrl()
         imageStyle:
-          top: "#{5 + Math.floor Math.random() * 5}rem"
-          left: "#{5 + Math.floor Math.random() * 5}rem"
+          top: "calc(#{5 + Math.floor Math.random() * 5}rem + #{offsetRangePercentage}%)"
+          left: "calc(#{5 + Math.floor Math.random() * 5}rem + #{Math.random() * offsetRangePercentage}%)"
+          width: "calc(#{scalePercentage}% - 15rem)"
+          height: "calc(#{scalePercentage}% - 15rem)"
         referenceStyle:
           width: "#{@constructor.sheetWidth + 2 * index}rem"
     

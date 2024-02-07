@@ -60,10 +60,13 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
 
     true
 
-  hasPixel: (x, y) ->
+  hasPixel: (absoluteX, absoluteY) ->
     return unless @options.hasPixelsWhenInactive or @isActiveStepInArea()
+    
+    relativeX = absoluteX - @stepArea.bounds.x
+    relativeY = absoluteY - @stepArea.bounds.y
 
-    @goalPixelsMap[@stepArea.bounds.x + x]?[@stepArea.bounds.y + y]?
+    @goalPixelsMap[relativeX]?[relativeY]?
 
   solve: ->
     bitmap = @tutorialBitmap.bitmap()

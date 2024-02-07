@@ -13,8 +13,7 @@ class TutorialBitmap.PathStep.Path
   @minimumRequiredPixelAlpha = 250
   
   constructor: (@tutorialBitmap, @pathStep, svgPath) ->
-    @canvas = new AM.ReadableCanvas @tutorialBitmap.width(), @tutorialBitmap.height()
-    @canvas.context.translate offset.x, offset.y if offset = @pathStep.stepArea.bounds
+    @canvas = new AM.ReadableCanvas @pathStep.stepArea.bounds.width, @pathStep.stepArea.bounds.height
     
     @path = new Path2D svgPath.getAttribute 'd'
     style = svgPath.getAttribute 'style'
@@ -82,10 +81,6 @@ class TutorialBitmap.PathStep.Path
     cornerAlpha = if @pathStep.options.tolerance then @constructor.minimumRequiredPixelAlpha - 10 else 255
 
     addCorner = (x, y) =>
-      if offset
-        x += offset.x
-        y += offset.y
-        
       x = Math.floor x
       y = Math.floor y
       
@@ -133,6 +128,8 @@ class TutorialBitmap.PathStep.Path
     # Make sure all corners are covered.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
 
+    bounds = @pathStep.stepArea.bounds
+    
     for cornersForPart in @cornersOfParts
       for corner in cornersForPart
         corner.foundCoveredPixelPositions = []
@@ -144,27 +141,31 @@ class TutorialBitmap.PathStep.Path
               for dy in [-maxOffset..maxOffset]
                 x = corner.x + dx
                 y = corner.y + dy
-                if @hasPixel(x, y) and bitmapLayer.getPixel x, y
+                absoluteX = bounds.x + x
+                absoluteY = bounds.y + y
+                if @hasPixel(x, y) and bitmapLayer.getPixel absoluteX, absoluteY
                   corner.foundCoveredPixelPositions.push {x, y}
           
           return false unless corner.foundCoveredPixelPositions.length
         
         else
-          return false unless bitmapLayer.getPixel corner.x, corner.y
+          absoluteX = bounds.x + corner.x
+          absoluteY = bounds.y + corner.y
+          return false unless bitmapLayer.getPixel absoluteX, absoluteY
           corner.foundCoveredPixelPositions = [corner]
         
     # See which pixels have been covered in the allowed area.
-    pixelCoverage = new Uint8Array bitmapLayer.width * bitmapLayer.height * 2
+    pixelCoverage = new Uint8Array bounds.width * bounds.height * 2
     
     coveredPixelsCount = 0
     
     coverPixel = (x, y) =>
-      pixelIndex = x + y * bitmapLayer.width
+      pixelIndex = x + y * bounds.width
       pixelCoverage[pixelIndex * 2] = 1
       coveredPixelsCount++
       
-    for x in [0...bitmapLayer.width]
-      for y in [0...bitmapLayer.height] when pixelAlpha = @_getPixelAlpha x, y
+    for x in [0...bounds.width]
+      for y in [0...bounds.height] when pixelAlpha = @_getPixelAlpha x, y
         # Tolerance of 0 requires all required area to be drawn (at least in the vicinity for anti-aliased pixel).
         # Higher tolerances don't have this requirement to allow for own interpretation, but still require pixels in
         # fully-filled areas (above minimum alpha for required pixels).
@@ -176,19 +177,26 @@ class TutorialBitmap.PathStep.Path
           
           for dx in [-maxOffset..maxOffset]
             for dy in [-maxOffset..maxOffset]
-              if @hasPixel(x + dx, y + dy) and bitmapLayer.getPixel x + dx, y + dy
+              relativeX = x + dx
+              relativeY = y + dy
+              absoluteX = bounds.x + relativeX
+              absoluteY = bounds.y + relativeY
+              if @hasPixel(relativeX, relativeY) and bitmapLayer.getPixel absoluteX, absoluteY
                 found = true
                 break
             break if found
           
           return false unless found
-          
-        coverPixel x, y if bitmapLayer.getPixel x, y
+        
+        absoluteX = bounds.x + x
+        absoluteY = bounds.y + y
+        
+        coverPixel x, y if bitmapLayer.getPixel absoluteX, absoluteY
       
     # Make sure all covered pixels of parts are connected together.
     visitPixel = (x, y) =>
       # Return if we've already visited this pixel.
-      pixelIndex = x + y * bitmapLayer.width
+      pixelIndex = x + y * bounds.width
       return if pixelCoverage[pixelIndex * 2 + 1] > 0
 
       # Return if this pixel wasn't covered.
@@ -215,7 +223,7 @@ class TutorialBitmap.PathStep.Path
       return
       
     pixelVisited = (x, y) =>
-      pixelIndex = x + y * bitmapLayer.width
+      pixelIndex = x + y * bounds.width
       pixelCoverage[pixelIndex * 2 + 1]
     
     for cornersForPart in @cornersOfParts

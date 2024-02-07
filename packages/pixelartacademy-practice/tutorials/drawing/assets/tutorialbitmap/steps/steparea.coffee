@@ -106,10 +106,10 @@ class TutorialBitmap.StepArea
   reset: ->
     step.reset() for step in @steps()
   
-  hasGoalPixel: (x, y) ->
+  hasGoalPixel: (absoluteX, absoluteY) ->
     # Check if any of the steps require a pixel at these absolute bitmap coordinates.
     for step in @steps()
-      return true if step.hasPixel x, y
+      return true if step.hasPixel absoluteX, absoluteY
     
     false
     

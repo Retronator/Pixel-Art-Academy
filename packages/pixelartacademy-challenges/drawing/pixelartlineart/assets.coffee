@@ -24,6 +24,21 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Sonic the Hedgehog 3 (Sega, 1994).
     """
+    
+  TetrisGameBoy:
+    dimensions: -> width: 180, height: 200
+    imageName: -> 'tetrisgameboy'
+    bitmapInfo: -> """
+      Fan art study based on Tetris (Game Boy, Nintendo, 1989).
+    """
+    binderScale: 0.5
+  
+  Rayman:
+    dimensions: -> width: 65, height: 100
+    imageName: -> 'rayman'
+    bitmapInfo: -> """
+      Fan art study based on Rayman (Ubisoft, 1995).
+    """
   
 for assetId, asset of assets
   do (assetId, asset) ->
@@ -34,6 +49,7 @@ for assetId, asset of assets
       @imageName: asset.imageName
       @bitmapInfo: asset.bitmapInfo
       @maxClipboardScale: asset.maxClipboardScale
+      @binderScale: -> asset.binderScale or super arguments...
       @initialize()
   
     PAA.Challenges.Drawing.PixelArtLineArt.drawLineArtClasses[assetId] = DrawLineArt[assetId]

@@ -21,6 +21,10 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
       imageOnly: true
   ]
   
+  @binderScale: ->
+    # Override if the reference should appear smaller than filling the entire folder.
+    1
+  
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   
   @goalChoices: -> [
