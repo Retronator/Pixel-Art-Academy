@@ -38,7 +38,7 @@ class PAE.Point
       line.end.y = pointB.y - pointB.radius
       
   constructor: (@layer) ->
-    @id = Random.id()
+    @id = PAE.nextId()
     
     @neighbors = []
     @lines = []

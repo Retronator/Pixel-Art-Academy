@@ -4,7 +4,7 @@ PAE = PAA.Practice.PixelArtEvaluation
 
 class PAE.Line.Part
   constructor: (@line, @startSegmentIndex, @endSegmentIndex, @startPointIndex, @endPointIndex) ->
-    @id = Random.id()
+    @id = PAE.nextId()
     
     @startPointIndex ?= @line.getEdgeSegment(@startSegmentIndex).startPointIndex
     @endPointIndex ?= @line.getEdgeSegment(@endSegmentIndex).endPointIndex

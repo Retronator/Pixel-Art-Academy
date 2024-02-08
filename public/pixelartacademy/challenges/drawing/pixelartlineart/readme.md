@@ -7,7 +7,8 @@ Scans provided by [VideoGameArt&Tidbits](https://twitter.com/VGArtAndTidbits):
 
 Other scans:
 
-- Rayman, Ubisoft, 1995 ([Rayman - PC - Europe](https://archive.org/details/rayman-pc-europe by KailoKyra)
+- Rayman, Ubisoft, 1995 ([Rayman - PC - Europe](https://archive.org/details/rayman-pc-europe) by KailoKyra)
+- Maniac Mansion, Lucasfilm Games, 1987 ([Maniac Mansion (Spain) NES-JM-ESP-ESP](https://archive.org/details/nes-jm-esp-esp-covers_RAW) by AlMagno)
 
 Public domain images:
 

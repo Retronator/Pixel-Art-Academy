@@ -291,6 +291,19 @@ class PAE.Layer
         
         line.fillFromPoints point, neighbor
         
+    # Filter out lines that don't have any core pixels.
+    tooShortLines = []
+    
+    for line in newLines when line.points.length is 2
+      corePoints = 2
+      corePoints-- if line.points[0].lines.length > 1
+      corePoints-- if line.points[1].lines.length > 1
+      continue if corePoints
+      
+      @_removeLine line
+      
+    _.pullAll line, tooShortLines
+    
     # Classify lines.
     line.classifyLineParts() for line in newLines
   

@@ -73,6 +73,11 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     
     # Request realtime updates when actively changing pixels.
     @realtimeUpdating = new ReactiveField false
+    
+    # Reset last pixel coordinates whenever the active file changes.
+    @autorun (computation) =>
+      @interface.activeFileId()
+      @lastPixelCoordinates null
 
   onActivated: ->
     # Create a pixel coordinates array large enough to hold the entire stroke.
@@ -104,11 +109,6 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
         editor.operationPreview().pixels []
 
       @_previewActive = preview
-  
-    @autorun (computation) =>
-      # Reset last pixel coordinates whenever the active file changes.
-      @interface.activeFileId()
-      @lastPixelCoordinates null
 
   onDeactivated: ->
     @finalizeStroke()

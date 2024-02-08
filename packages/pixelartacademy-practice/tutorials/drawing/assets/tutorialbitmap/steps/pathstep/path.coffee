@@ -194,31 +194,41 @@ class TutorialBitmap.PathStep.Path
         coverPixel x, y if bitmapLayer.getPixel absoluteX, absoluteY
       
     # Make sure all covered pixels of parts are connected together.
-    visitPixel = (x, y) =>
-      # Return if we've already visited this pixel.
-      pixelIndex = x + y * bounds.width
-      return if pixelCoverage[pixelIndex * 2 + 1] > 0
-
-      # Return if this pixel wasn't covered.
-      return if pixelCoverage[pixelIndex * 2] is 0
+    visitPixels = (originX, originY) =>
+      # Visit all the pixels from this pixel.
+      fringe = [{x: originX, y: originY}]
       
-      # Mark that we've visited this pixel.
-      pixelCoverage[pixelIndex * 2 + 1] = 1
+      # Mark that we've visited the origin.
+      originPixelIndex = originX + originY * bounds.width
+      pixelCoverage[originPixelIndex * 2 + 1] = 1
       
-      # Visit all neighbors.
-      # Note: We need unique variables and not use dx, dy since those are
-      # scoped to the outer method and not redeclared for each call of recursion.
-      for neighborDx in [-1..1]
-        for neighborDy in [-1..1]
-          continue if neighborDx is 0 and neighborDy is 0
-
-          neighborX = x + neighborDx
-          neighborY = y + neighborDy
-          
-          continue unless @hasPixel neighborX, neighborY
-
-          visitPixel neighborX, neighborY
-      
+      while fringe.length
+        pixel = fringe.pop()
+        pixelIndex = pixel.x + pixel.y * bounds.width
+        
+        # Continue if this pixel wasn't covered.
+        continue if pixelCoverage[pixelIndex * 2] is 0
+        
+        # Visit all neighbors.
+        for neighborDx in [-1..1]
+          for neighborDy in [-1..1]
+            continue if neighborDx is 0 and neighborDy is 0
+  
+            neighborX = pixel.x + neighborDx
+            neighborY = pixel.y + neighborDy
+            neighborPixelIndex = neighborX + neighborY * bounds.width
+            
+            # Continue if we've already visited this pixel.
+            continue if pixelCoverage[neighborPixelIndex * 2 + 1] > 0
+            
+            # Make sure there is a neighbor here.
+            continue unless @hasPixel neighborX, neighborY
+            
+            fringe.push {x: neighborX, y: neighborY}
+            
+            # Mark that we've visited this pixel.
+            pixelCoverage[neighborPixelIndex * 2 + 1] = 1
+        
       # Prevent collection of results from the loops.
       return
       
@@ -229,7 +239,7 @@ class TutorialBitmap.PathStep.Path
     for cornersForPart in @cornersOfParts
       # Visit pixels from the initial corners.
       for position in cornersForPart[0].foundCoveredPixelPositions
-        visitPixel position.x, position.y
+        visitPixels position.x, position.y
       
       for corner in cornersForPart
         # Find at least one of the positions that is covered.
@@ -269,13 +279,12 @@ class TutorialBitmap.PathStep.Path
 
       context.beginPath()
       
-      height = visibleBoundsBottom - visibleBoundsTop
       pixelSize = 1 / renderOptions.camera.effectiveScale()
       spacing = Math.max 5 * pixelSize, 1 / 3
       
-      for x in [visibleBoundsLeft - height...visibleBoundsRight] by spacing
+      for x in [visibleBoundsLeft - visibleBoundsHeight...visibleBoundsRight] by spacing
         context.moveTo x, visibleBoundsTop
-        context.lineTo x + height, visibleBoundsTop + height
+        context.lineTo x + visibleBoundsHeight, visibleBoundsTop + visibleBoundsHeight
       
       context.stroke()
       context.restore()

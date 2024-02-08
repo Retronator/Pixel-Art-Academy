@@ -46,6 +46,12 @@ class PAA.Practice.PixelArtEvaluation
     EvenDiagonals:
       SegmentLengths: 0.75
       EndSegments: 0.25
+      
+  @_lastId = 0
+
+  @nextId: ->
+    @_lastId++
+    @_lastId
   
   @getLetterGrade = (score, plusMinus = false) ->
     scoreOutOf10 = score * 10
@@ -199,7 +205,10 @@ class PAA.Practice.PixelArtEvaluation
         for layer in @layers
           for line in layer.lines
             for linePart in line.parts when linePart instanceof @constructor.Line.Part.StraightLine
+              # Count only diagonals.
               linePartEvaluation = linePart.evaluate()
+              continue if linePartEvaluation.type is @constructor.Line.Part.StraightLine.Type.AxisAligned
+              
               weight = Math.sqrt linePart.points.length
               
               for subcriterion of @constructor.Subcriteria.EvenDiagonals

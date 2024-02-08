@@ -10,7 +10,7 @@ class PAE.Line
     Variable: 'Variable'
     
   constructor: (@layer) ->
-    @id = Random.id()
+    @id = PAE.nextId()
     
     @pixels = []
     @points = []

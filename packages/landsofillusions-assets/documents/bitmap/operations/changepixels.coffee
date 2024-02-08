@@ -117,6 +117,10 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
     super arguments...
 
   clone: ->
+    # Note: We want to always compress the data so that further
+    # clone and toJSONValue calls will not need compressing.
+    @_compressPixelsData()
+    
     clone = super arguments...
     clone._pixelsData = @_pixelsData
     clone
@@ -138,7 +142,7 @@ class LOI.Assets.Bitmap.Operations.ChangePixels extends AM.Document.Versioning.O
   _compressPixelsData: ->
     @compressedPixelsData ?= Pako.deflateRaw @_pixelsData, LOI.Assets.Bitmap.Area.compressionOptions if @_pixelsData
     
-    console.log "Change pixels operation compression ratio: #{(@compressedPixelsData.byteLength / @_pixelsData.byteLength * 100).toFixed(2)}%" if LOI.Assets.debug
+    console.log "Change pixels operation compression ratio: #{(@compressedPixelsData.byteLength / @_pixelsData.byteLength * 100).toFixed(2)}%" if LOI.Assets.debug and @compressedPixelsData and @_pixelsData
     
   _decompressPixelsData: ->
     @_pixelsData ?= Pako.inflateRaw @compressedPixelsData, LOI.Assets.Bitmap.Area.compressionOptions if @compressedPixelsData

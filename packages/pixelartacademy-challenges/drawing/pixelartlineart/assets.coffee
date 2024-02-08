@@ -39,6 +39,13 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Rayman (Ubisoft, 1995).
     """
+    
+  ManiacMansion:
+    dimensions: -> width: 200, height: 200
+    imageName: -> 'maniacmansion'
+    bitmapInfo: -> """
+      Fan art study based on Maniac Mansion (Ken Macklin, Lucasfilm Games, 1987).
+    """
   
 for assetId, asset of assets
   do (assetId, asset) ->

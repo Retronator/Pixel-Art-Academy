@@ -4,9 +4,10 @@ PAE = PAA.Practice.PixelArtEvaluation
 
 class PAE.Core
   constructor: (@layer) ->
-    @id = Random.id()
+    @id = PAE.nextId()
     
     @pixels = []
+    @_pixelsMap = {}
     @outlinePixels = []
     @outlines = []
     
@@ -30,14 +31,17 @@ class PAE.Core
   fillFromPixel: (initialPixel) ->
     touchedCores = {}
     fringe = [initialPixel]
+    fringeMap = {}
+    fringeMap[initialPixel.x] = {}
+    fringeMap[initialPixel.x][initialPixel.y] = true
     
     while fringe.length
-      pixel = fringe.shift()
+      pixel = fringe.pop()
       @_addPixel pixel
       
       pixel.forEachNeighbor (neighbor) =>
         # Skip our own pixels (which were already added during the fill).
-        return if neighbor in @pixels
+        return if @_pixelsMap[neighbor.x]?[neighbor.y]
         
         # Skip surface pixels.
         return unless neighbor.couldBeCore()
@@ -48,9 +52,14 @@ class PAE.Core
           touchedCores[neighbor.core.id] = neighbor.core
         
         else
+          # Did we already add this neighbor to the fringe?
+          return if fringeMap[neighbor.x]?[neighbor.y]
+
           # The neighbor should be filled.
-          fringe.push neighbor unless neighbor in fringe
-          
+          fringe.push neighbor
+          fringeMap[neighbor.x] ?= {}
+          fringeMap[neighbor.x][neighbor.y] = true
+    
     # Merge any touched cores.
     for id, core of touchedCores
       @layer.mergeCoreInto core, @
@@ -72,10 +81,13 @@ class PAE.Core
     return
   
   _addPixel: (pixel) ->
+    @_pixelsMap[pixel.x] ?= {}
+    @_pixelsMap[pixel.x][pixel.y] = true
     @pixels.push pixel
     pixel.assignCore @
     
   _removePixel: (pixel) ->
+    @_pixelsMap[pixel.x][pixel.y] = false
     _.pull @pixels, pixel
     pixel.unassignCore @
   
