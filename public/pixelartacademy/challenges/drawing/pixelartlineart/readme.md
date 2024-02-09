@@ -4,11 +4,14 @@ Scans provided by [VideoGameArt&Tidbits](https://twitter.com/VGArtAndTidbits):
 
 - Super Mario Bros. 3, Nintendo Power Strategy Guide (vol. SG1/NP13), Nintendo, 1990
 - Sonic the Hedgehog 3, Sega, 1994
+- Zelda II: The Adventure of Link (instruction booklet), Nintendo, 1987
 
 Other scans:
 
 - Rayman, Ubisoft, 1995 ([Rayman - PC - Europe](https://archive.org/details/rayman-pc-europe) by KailoKyra)
 - Maniac Mansion, Lucasfilm Games, 1987 ([Maniac Mansion (Spain) NES-JM-ESP-ESP](https://archive.org/details/nes-jm-esp-esp-covers_RAW) by AlMagno)
+- Bubble Bobble, Taito, 1986 ([Bubble Bobble](https://archive.org/details/arcadeflyer_bubble-bobble_alt) by AlMagno)
+- Day of the Tentacle, LucasArts, 1993 ([Day Of The Tentacle HintBook](https://archive.org/details/Day_Of_The_Tentacle_HintBook) by Sketch the Cow)
 
 Public domain images:
 

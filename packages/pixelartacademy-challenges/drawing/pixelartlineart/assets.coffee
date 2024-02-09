@@ -47,6 +47,27 @@ assets =
       Fan art study based on Maniac Mansion (Ken Macklin, Lucasfilm Games, 1987).
     """
   
+  BubbleBobble:
+    dimensions: -> width: 80, height: 70
+    imageName: -> 'bubblebobble'
+    bitmapInfo: -> """
+      Fan art study based on Bubble Bobble (Taito, 1986).
+    """
+  
+  ZeldaII:
+    dimensions: -> width: 100, height: 100
+    imageName: -> 'zeldaii'
+    bitmapInfo: -> """
+      Fan art study based on Zelda II: The Adventure of Link (instruction booklet, Nintendo, 1987).
+    """
+  
+  DayOfTheTentacle:
+    dimensions: -> width: 60, height: 100
+    imageName: -> 'dayofthetentacle'
+    bitmapInfo: -> """
+      Fan art study based on Day of the Tentacle (Peter Chan, LucasArts, 1993).
+    """
+  
 for assetId, asset of assets
   do (assetId, asset) ->
     class DrawLineArt[assetId] extends DrawLineArt
