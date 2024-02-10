@@ -69,12 +69,12 @@ class AM.PixelImage extends AM.Component
       targetAspectRatio = targetWidth / targetHeight
       
       if aspectRatio > targetAspectRatio
-        # Reduce width.
+        # Reduce height.
         drawWidth = targetWidth
         drawHeight = targetWidth / aspectRatio
         
       else
-        # Reduce height.
+        # Reduce width.
         drawHeight = targetHeight
         drawWidth = targetHeight * aspectRatio
       
@@ -89,4 +89,4 @@ class AM.PixelImage extends AM.Component
         height: @canvas.height * displayScale
 
     @context.imageSmoothingEnabled = @options.imageSmoothingEnabled
-    @context.drawImage image, (targetWidth - drawWidth) / 2, (targetHeight - drawHeight) / 2, targetWidth, targetHeight
+    @context.drawImage image, (targetWidth - drawWidth) / 2, (targetHeight - drawHeight) / 2, drawWidth, drawHeight

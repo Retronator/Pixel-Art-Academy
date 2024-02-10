@@ -181,11 +181,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
   activate: (criterion = null) ->
     @_changeActive true
     @activeCriterion criterion
-    @audio.open()
     
   deactivate: ->
     @_changeActive false
-    @audio.close()
     
   # Use this to change the criterion when already active.
   setCriterion: (criterion) ->
@@ -199,7 +197,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @_wasActive = value
     
     return unless @isRendered()
-
+    
+    if value
+      @audio.open()
+    
+    else
+      @audio.close()
+    
     Tracker.nonreactive =>
       editor = @interface.getEditorForActiveFile()
 

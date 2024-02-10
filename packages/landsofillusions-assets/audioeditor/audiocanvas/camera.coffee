@@ -14,6 +14,10 @@ class LOI.Assets.AudioEditor.AudioCanvas.Camera
     @scale = new ComputedField =>
       @scaleData()?.value() or @audioCanvas.initialCameraScale() or 1
     
+    # We need target scale for compatibility with the zoom action.
+    # Since we don't need animations, this can simply be the same as scale.
+    @targetScale = @scale
+    
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
     @effectiveScale = new ComputedField =>

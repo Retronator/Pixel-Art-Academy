@@ -12,11 +12,6 @@
     visibility visible
     transition all 0.6s 0.2s
 
-    .binder-area
-      .binder-closed
-        top calc(50% - 90rem)
-        transition-delay 0.5s
-
   .prompt
     position absolute
     left 50rem
@@ -28,6 +23,12 @@
     pixel-text-outline(atariBrown(0))
 
   .binder-area
+    &.displayed
+      .binder-closed
+        top calc(50% - 90rem)
+        transition-delay 0.5s
+        transition-timing-function ease-out
+
     &.open
       .binder-closed
         visibility hidden
@@ -38,11 +39,11 @@
     .binder-closed
       position absolute
       left calc(50% - 76rem)
-      top calc(100%)
+      top 100%
       width 183rem
       height 207rem
       background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/binder-closed.png')
-      transition top 1s
+      transition top 1s ease-in
 
       .label
         position absolute

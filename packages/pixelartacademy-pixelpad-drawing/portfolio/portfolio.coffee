@@ -35,6 +35,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       assetHover:
         valueType: AEc.ValueTypes.Trigger
         throttle: 100
+      assetPan:
+        valueType: AEc.ValueTypes.Number
         
   constructor: (@drawing) ->
     super arguments...
@@ -291,6 +293,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     assetData = @currentData()
     @hoveredAsset assetData
     @lastHoveredAsset assetData
+    
+    @audio.assetPan AEc.getPanForElement event.target
     @_assetHoverUnlessFirst assetData
 
   onMouseLeaveAsset: (event) ->

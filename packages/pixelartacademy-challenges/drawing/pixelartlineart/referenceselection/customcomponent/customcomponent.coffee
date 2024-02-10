@@ -12,15 +12,21 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
+      binderDrag: AEc.ValueTypes.Boolean
       binderOpen: AEc.ValueTypes.Trigger
       binderClose: AEc.ValueTypes.Trigger
-      sheetMove: AEc.ValueTypes.Trigger
-      referenceRemove: AEc.ValueTypes.Trigger
+      turnSheet: AEc.ValueTypes.Trigger
+      selectReference: AEc.ValueTypes.Trigger
       
   onCreated: ->
     super arguments...
     
+    # Controls whether the binder is visible anywhere in the screen.
     @binderVisible = new ReactiveField false
+    
+    # Controls whether the binder should be displayed in the center of the table.
+    @binderDisplayed = new ReactiveField false
+    
     @_wasActive = false
     @active = new ReactiveField false
     
@@ -36,36 +42,70 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
     
   onRendered: ->
     super arguments...
+    
+    @audio.binderDrag false
 
     @autorun (computation) =>
       shouldBeActive = @drawingApp.activeAsset()?
   
       if shouldBeActive and not @_wasActive
-        @_initialize()
+        @_initializeReferences()
+        
+        # Start rendering the binder in closed state.
+        @currentPage 0
         @binderVisible true
         
-        Meteor.clearTimeout @_activeTimeout
+        @_resetActivateTimers()
         @_activeTimeout = Meteor.setTimeout =>
+          # Fade in the component.
           @active true
+
+          # Move the binder to the center of the table.
+          @binderDisplayed true
         ,
           100
+        
+        @_binderDragTimeout = Meteor.setTimeout =>
+          @audio.binderDrag true
+        ,
+          800
       
       else if @_wasActive and not shouldBeActive
-        @_close()
-        @active false
+        # End any animation for selecting a reference.
+        @referenceSelected false
+        Meteor.clearTimeout @_switchToBitmapTimeout
+        Meteor.clearTimeout @_closeBinderTimeout
+
+        # Close the binder and move it from the table.
+        @currentPage 0
+        @binderDisplayed false
+        @audio.binderDrag false
+
+        # Fade out the component.
+        @_resetActivateTimers()
+        @_deactivateTimeout = Meteor.setTimeout =>
+          @active false
+        ,
+          500
         
-        Meteor.clearTimeout @_activeTimeout
-        @_activeTimeout = Meteor.setTimeout =>
+        # Stop rendering the binder.
+        @_hideTimeout = Meteor.setTimeout =>
           @binderVisible false
         ,
           1000
   
       @_wasActive = shouldBeActive
+      
+  _resetActivateTimers: ->
+    Meteor.clearTimeout @_activeTimeout
+    Meteor.clearTimeout @_deactivateTimeout
+    Meteor.clearTimeout @_binderDragTimeout
+    Meteor.clearTimeout @_hideTimeout
   
   setPixelPadSize: (drawingApp) ->
     drawingApp.setMaximumPixelPadSize fullscreen: true
   
-  _initialize: ->
+  _initializeReferences: ->
     references =
       for drawLineArtClass, index in _.values PAA.Challenges.Drawing.PixelArtLineArt.remainingDrawLineArtClasses()
         scalePercentage = drawLineArtClass.binderScale() * 100
@@ -83,14 +123,8 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
           width: "#{@constructor.sheetWidth + 2 * index}rem"
     
     @references references
-    @currentPage 0
     @referenceSelected false
-    
-  _close: ->
-    @currentPage 0
-    @referenceSelected false
-    Meteor.clearTimeout @_switchToBitmapTimeout
-  
+
   _selectReference: ->
     selectedReferenceId = @references()[@currentReferenceIndex()].id
     @referenceSelected true
@@ -109,10 +143,21 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
           parameter3: bitmapId
           parameter4: 'edit'
     ,
-      1000
+      2500
+    
+    @_closeBinderTimeout = Meteor.setTimeout =>
+      @currentPage 0
+      @binderDisplayed false
+      @audio.binderClose()
+      @audio.binderDrag false
+    ,
+      1500
   
   activeClass: ->
     'active' if @active()
+    
+  binderDisplayedClass: ->
+    'displayed' if @binderDisplayed()
     
   binderOpenClass: ->
     'open' if @currentPage() > 0
@@ -141,12 +186,30 @@ class PAA.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent 
       'click .reference': @onClickReference
   
   onClickNextReference: (event) ->
-    @currentPage @currentPage() + 1
+    currentPage = @currentPage()
+    
+    if currentPage
+      @audio.turnSheet()
+      
+    else
+      @audio.binderOpen()
+
+    @currentPage currentPage + 1
   
   onClickPreviousReference: (event) ->
-    @currentPage @currentPage() - 1
+    currentPage = @currentPage()
+    
+    if currentPage is 1
+      @audio.binderClose()
+      
+    else
+      @audio.turnSheet()
+    
+    @currentPage currentPage - 1
   
   onClickReference: (event) ->
     return if @referenceSelected()
+    
+    @audio.selectReference()
     
     @_selectReference()
