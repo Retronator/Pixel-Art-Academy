@@ -76,10 +76,21 @@ PAE.Line::classifyLineParts = ->
       # Axis-aligned edge segments create 1 multiple-point segment.
       edgeSegment.pointSegmentsCount = 1
       edgeSegment.pointSegmentLength = endPointIndex - startPointIndex + 1
+
+      # Store how long the segment is if we're not making it shorter because of pixel sharing.
+      edgeSegment.externalPointSegmentLength = edgeSegment.pointSegmentLength
       
       # If we're coming from an axis-aligned segment, don't count the same point twice.
-      edgeSegment.externalPointSegmentLength = edgeSegment.pointSegmentLength
-      edgeSegment.pointSegmentLength-- if edgeSegmentBefore?.edge.isAxisAligned
+      # We either need to let the previous segment count for our starting pixel or us take it away from them.
+      if edgeSegmentBefore?.edge.isAxisAligned
+        if edgeSegmentBefore.pointSegmentLength is 1
+          # Capture the single point of side-step segments.
+          edgeSegmentBefore.pointSegmentsCount = 0
+          edgeSegmentBefore.hasPointSegment.on = false
+          
+        else
+          edgeSegment.pointSegmentLength--
+          startPointIndex++
     
     else
       # Diagonal edge segments create multiple 1-point segments.

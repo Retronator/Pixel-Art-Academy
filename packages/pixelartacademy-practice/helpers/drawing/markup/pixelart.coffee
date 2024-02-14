@@ -23,6 +23,11 @@ _endPartCenter = new THREE.Vector2
 _textPosition = new THREE.Vector2
 
 class Markup.PixelArt
+  @OffsetDirections:
+    Up: 'Up'
+    UpLeft: 'UpLeft'
+    Left: 'Left'
+  
   @pixelPerfectLineErrors: (line, doubles = true, corners = true) ->
     markup = []
     
@@ -214,7 +219,7 @@ class Markup.PixelArt
     markup
   
   @evaluatedSegmentLengthsStyle: (straightLine) ->
-    # Note: We don't have the PAG shorthand since helpers are included before pixel art evaluation.
+    # Note: We don't have the PAE shorthand since helpers are included before pixel art evaluation.
     SegmentLengths = PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine.SegmentLengths
     evaluation = straightLine.evaluate()
     
@@ -223,50 +228,42 @@ class Markup.PixelArt
       when SegmentLengths.Alternating then Markup.mediocreStyle()
       when SegmentLengths.Broken then Markup.worseStyle()
       
-  @segmentLengthTexts: (linePart) ->
+  @segmentLengthTexts: (lineOrLinePart) ->
     textBase = Markup.textBase()
     
-    markup = []
-
-    # Prepare to write text as soon as we know where to position the text.
-    numberAppearsAboveSegment = null
     texts = []
     
-    processTexts = ->
-      while text = texts.pop()
-        if numberAppearsAboveSegment
-          position = x: text.segmentCenter.x + 0.5, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomCenter
-          
-        else
-          position = x: text.segmentCenter.x, y: text.segmentCenter.y + 0.5, origin: Markup.TextOriginPosition.MiddleRight
-        
-        markup.push
-          text: _.extend {}, textBase,
-            position: position
-            value: "#{text.number}"
-    
-    addText = (segmentCenter, number) ->
-      texts.push {segmentCenter, number}
-      return unless numberAppearsAboveSegment?
+    if lineOrLinePart instanceof  PAA.Practice.PixelArtEvaluation.Line
+      line = lineOrLinePart
+      startSegmentIndex = 0
+      endSegmentIndex = line.edgeSegments.length - 1
       
-      processTexts()
+    else
+      linePart = lineOrLinePart
+      line = linePart.line
+      startSegmentIndex = linePart.startSegmentIndex
+      endSegmentIndex = linePart.endSegmentIndex
       
-    for segmentIndex in [linePart.startSegmentIndex..linePart.endSegmentIndex]
-      segment = linePart.line.getEdgeSegment segmentIndex
+    for segmentIndex in [startSegmentIndex..endSegmentIndex]
+      segment = line.getEdgeSegment segmentIndex
       continue unless segment.pointSegmentsCount
       
       startPointIndex = segment.pointSegmentsStartPointIndex
       endPointIndex = segment.pointSegmentsEndPointIndex
       
-      startPointIndex = Math.max startPointIndex, linePart.startPointIndex if segmentIndex is linePart.startSegmentIndex
-      endPointIndex = Math.min endPointIndex, linePart.endPointIndex if segmentIndex is linePart.endSegmentIndex
+      if linePart
+        startPointIndex = Math.max startPointIndex, linePart.startPointIndex if segmentIndex is startSegmentIndex
+        endPointIndex = Math.min endPointIndex, linePart.endPointIndex if segmentIndex is endSegmentIndex
       
-      pointSegmentLength = if segmentIndex in [linePart.startSegmentIndex, linePart.endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+        pointSegmentLength = if segmentIndex in [startSegmentIndex, endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+        
+      else
+        pointSegmentLength = segment.pointSegmentLength
 
       if pointSegmentLength > 1
         # We have one long segment.
-        startPoint = linePart.line.getPoint startPointIndex
-        endPoint = linePart.line.getPoint endPointIndex
+        startPoint = line.getPoint startPointIndex
+        endPoint = line.getPoint endPointIndex
         
         numberAppearsAboveSegment = endPoint.x isnt startPoint.x
         
@@ -274,18 +271,73 @@ class Markup.PixelArt
           x: (startPoint.x + endPoint.x) / 2
           y: (startPoint.y + endPoint.y) / 2
         
-        addText segmentCenter, pointSegmentLength
+        texts.push
+          segmentCenter: segmentCenter
+          number: pointSegmentLength
+          offsetDirection: if numberAppearsAboveSegment then @OffsetDirections.Up else @OffsetDirections.Left
         
       else
         # We have multiple points.
         for pointIndex in [startPointIndex..endPointIndex]
-          point = linePart.line.getPoint pointIndex
-          addText point, 1
+          point = line.getPoint pointIndex
+          
+          texts.push
+            segmentCenter: point
+            number: 1
+            
+    # Determine positions for single segments.
+    for text, index in texts when not text.offsetDirection
+      previousOffsetDirection = null
+      nextOffsetDirection = null
       
-    # If we haven't figured out where to write the text yet, default to top.
-    if texts.length
-      numberAppearsAboveSegment = true
-      processTexts()
+      for previousIndex in [index - 1..0] by -1
+        if previousOffsetDirection = texts[previousIndex].offsetDirection
+          break
+          
+      for nextIndex in [index + 1...texts.length]
+        if nextOffsetDirection = texts[nextIndex].offsetDirection
+          break
+          
+      if previousOffsetDirection is nextOffsetDirection
+        # Preserve direction in between segments with the same direction.
+        text.offsetDirection = previousOffsetDirection
+        
+      else unless previousOffsetDirection and nextOffsetDirection
+        # Use the only provided direction or default to up when no direction is set at all.
+        text.offsetDirection = previousOffsetDirection or nextOffsetDirection or @OffsetDirections.Up
+        
+      else
+        # Use diagonal offset to transition between different orientations when there is empty space up-left.
+        previousText = texts[index - 1]
+        previousTextIsInTheUpLeftArea = previousText.segmentCenter.x < text.segmentCenter.x and previousText.segmentCenter.y < text.segmentCenter.y
+        
+        nextText = texts[index + 1]
+        nextTextIsInTheUpLeftArea = nextText.segmentCenter.x < text.segmentCenter.x and nextText.segmentCenter.y < text.segmentCenter.y
+        
+        if previousTextIsInTheUpLeftArea or nextTextIsInTheUpLeftArea
+          text.offsetDirection = @OffsetDirections.Up
+        
+        else
+          text.offsetDirection = @OffsetDirections.UpLeft
+    
+    # Create markup for texts.
+    markup = []
+
+    for text in texts
+      switch text.offsetDirection
+        when @OffsetDirections.Up
+          position = x: text.segmentCenter.x + 0.5, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomCenter
+        
+        when @OffsetDirections.UpLeft
+          position = x: text.segmentCenter.x, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomRight
+
+        when @OffsetDirections.Left
+          position = x: text.segmentCenter.x, y: text.segmentCenter.y + 0.5, origin: Markup.TextOriginPosition.MiddleRight
+      
+      markup.push
+        text: _.extend {}, textBase,
+          position: position
+          value: "#{text.number}"
       
     markup
     

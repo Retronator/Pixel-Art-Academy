@@ -15,6 +15,7 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
     @_tutorialLine?.destroy()
     @_tutorialJaggies?.destroy()
     @_tutorialPixelArtDiagonals?.destroy()
+    @_tutorialPixelArtCurves?.destroy()
 
   things: ->
     things = []
@@ -30,4 +31,7 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
       @_tutorialPixelArtDiagonals ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
       things.push @_tutorialPixelArtDiagonals
     
+      @_tutorialPixelArtCurves ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
+      things.push @_tutorialPixelArtCurves
+      
     things

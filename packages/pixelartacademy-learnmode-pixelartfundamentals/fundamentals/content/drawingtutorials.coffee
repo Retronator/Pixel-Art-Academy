@@ -107,11 +107,12 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
     @tags: -> [LM.Content.Tags.WIP]
     @initialize()
   
-  class @PixelArtCurves extends LM.Content.FutureContent
+  class @PixelArtCurves extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtCurves'
-    @displayName: -> "Pixel art curves"
+    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
+    @tags: -> [LM.Content.Tags.WIP]
     @initialize()
-  
+
   class @AntiAliasing extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.AntiAliasing'
     @displayName: -> "Anti-aliasing"

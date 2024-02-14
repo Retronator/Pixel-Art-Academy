@@ -104,4 +104,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation..');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/smoothcurves');
 });

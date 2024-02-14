@@ -226,7 +226,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       computation.stop()
       
       # Resources are loaded, create tutorial steps.
-      @initializeSteps()
+      Tracker.nonreactive => @initializeSteps()
       
       @initialized true
       

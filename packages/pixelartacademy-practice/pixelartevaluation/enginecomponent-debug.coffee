@@ -99,7 +99,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
     context.fill()
 
   _drawDebugLine: (context, line) ->
-    hueDegrees = (line.id.charCodeAt(0) * 9) % 360
+    hueDegrees = (line.id * 9) % 360
     context.strokeStyle = "hsl(#{hueDegrees}deg 50% 50%)"
     context.lineWidth = @_pixelSize * 2
     context.beginPath()
