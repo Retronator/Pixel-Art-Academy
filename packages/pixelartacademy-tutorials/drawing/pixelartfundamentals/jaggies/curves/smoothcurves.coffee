@@ -86,7 +86,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
       
       for line in pixelArtEvaluation.layers[0].lines
         # Write segment lengths next to lines.
-        markup.push Markup.PixelArt.segmentLengthTexts(line)...
+        markup.push Markup.PixelArt.pointSegmentLengthTexts(line)...
       
       markup
     
@@ -201,7 +201,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
       
       for line in pixelArtEvaluation.layers[0].lines
         # Write segment lengths next to lines.
-        markup.push Markup.PixelArt.segmentLengthTexts(line)...
+        markup.push Markup.PixelArt.pointSegmentLengthTexts(line)...
         
         # Draw perceived curves.
         markup.push Markup.PixelArt.impliedCurve linePart for linePart in line.parts when linePart instanceof PAE.Line.Part.Curve

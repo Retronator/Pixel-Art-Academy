@@ -24,6 +24,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
       @drawLines = new ReactiveField false
       @drawLineParts = new ReactiveField false
       @drawPotentialParts = new ReactiveField false
+      @drawcurvatureCurveParts = new ReactiveField false
       @drawSegmentCorners = new ReactiveField false
   
       $(document).on 'keydown', (event) =>
@@ -33,7 +34,8 @@ class PAE.EngineComponent extends PAE.EngineComponent
           when AC.Keys['3'] then field = @drawLines
           when AC.Keys['4'] then field = @drawLineParts
           when AC.Keys['5'] then field = @drawPotentialParts
-          when AC.Keys['6'] then field = @drawSegmentCorners
+          when AC.Keys['6'] then field = @drawcurvatureCurveParts
+          when AC.Keys['7'] then field = @drawSegmentCorners
           
         field not field() if field
 
@@ -73,7 +75,9 @@ class PAE.EngineComponent extends PAE.EngineComponent
 
       if @drawLineParts()
         # Draw line parts.
-        linePartsProperty = if @drawPotentialParts?() then 'potentialParts' else 'parts'
+        linePartsProperty = 'parts'
+        linePartsProperty = 'potentialParts' if @drawPotentialParts?()
+        linePartsProperty = 'curvatureCurveParts' if @drawcurvatureCurveParts?()
         
         for line in layer.lines
           for part in line[linePartsProperty]
@@ -157,3 +161,5 @@ class PAE.EngineComponent extends PAE.EngineComponent
       @_bezierCurve context, start.controlPoints.after, end.controlPoints.before, end.position
       
     context.stroke()
+
+    @_drawDebugPoint context, point.position for point in points

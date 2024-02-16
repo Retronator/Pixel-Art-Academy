@@ -21,10 +21,15 @@ class PAE.Line
     @edges = []
     @edgeSegments = []
 
+    # Potential parts are considered when determining whether a point on the line is part of a curve or a straight line.
     @potentialParts = []
     @potentialStraightLineParts = []
     @potentialCurveParts = []
     @pointPartIsCurve = []
+    
+    # Curvature curve parts are curve parts that exist only in areas of clear curvature
+    # (defined curveClockwise direction). Used for displaying inflection points.
+    @curvatureCurveParts = []
     
     @parts = []
     
@@ -194,3 +199,25 @@ class PAE.Line
     
     for pixel in point.pixels
       @addPixel pixel unless pixel in @pixels
+
+  getCentralSegmentPosition: (startSegmentIndex, endSegmentIndex = startSegmentIndex) ->
+    averageSegmentIndex = (startSegmentIndex + endSegmentIndex) / 2
+    centralSegments = [@getEdgeSegment(Math.floor averageSegmentIndex), @getEdgeSegment(Math.ceil averageSegmentIndex)]
+    centralPoints = [@getPoint(centralSegments[0].endPointIndex), @getPoint(centralSegments[1].startPointIndex)]
+
+    x: (centralPoints[0].x + centralPoints[1].x) / 2
+    y: (centralPoints[0].y + centralPoints[1].y) / 2
+
+  isLineCurveBetweenEdgeSegments: (startEdgeSegmentIndex, endEdgeSegmentIndex) -> @_isLineCurveBetweenEdgeSegmentsValue startEdgeSegmentIndex, endEdgeSegmentIndex, true
+  isLineStraightBetweenEdgeSegments: (startEdgeSegmentIndex, endEdgeSegmentIndex) -> @_isLineCurveBetweenEdgeSegmentsValue startEdgeSegmentIndex, endEdgeSegmentIndex, false
+  
+  _isLineCurveBetweenEdgeSegmentsValue: (startEdgeSegmentIndex, endEdgeSegmentIndex, value) ->
+    startEdgeSegment = @getEdgeSegment startEdgeSegmentIndex
+    endEdgeSegment = @getEdgeSegment endEdgeSegmentIndex
+    startPointIndex = startEdgeSegment.startPointIndex
+    endPointIndex = endEdgeSegment.endPointIndex
+    
+    for pointIndex in [startPointIndex..endPointIndex] when @isPointPartCurve(pointIndex) isnt value
+      return false
+      
+    true

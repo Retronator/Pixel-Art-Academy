@@ -24,7 +24,7 @@ class DiagonalsEvaluation.Steps
       pixelArtEvaluation.activeCriterion() is PAE.Criteria.EvenDiagonals
     
   class @HoverOverTheDiagonal extends TutorialBitmap.EphemeralStep
-    @timeToHover = 2
+    @timeToHover = 1.5
     
     constructor: ->
       super arguments...

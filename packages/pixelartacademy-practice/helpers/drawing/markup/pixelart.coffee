@@ -1,6 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+# Note: We don't have the PAE shorthand since helpers are included before pixel art evaluation.
+
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
@@ -219,7 +221,6 @@ class Markup.PixelArt
     markup
   
   @evaluatedSegmentLengthsStyle: (straightLine) ->
-    # Note: We don't have the PAE shorthand since helpers are included before pixel art evaluation.
     SegmentLengths = PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine.SegmentLengths
     evaluation = straightLine.evaluate()
     
@@ -228,12 +229,12 @@ class Markup.PixelArt
       when SegmentLengths.Alternating then Markup.mediocreStyle()
       when SegmentLengths.Broken then Markup.worseStyle()
       
-  @segmentLengthTexts: (lineOrLinePart) ->
+  @pointSegmentLengthTexts: (lineOrLinePart, options = {}) ->
     textBase = Markup.textBase()
     
     texts = []
     
-    if lineOrLinePart instanceof  PAA.Practice.PixelArtEvaluation.Line
+    if lineOrLinePart instanceof PAA.Practice.PixelArtEvaluation.Line
       line = lineOrLinePart
       startSegmentIndex = 0
       endSegmentIndex = line.edgeSegments.length - 1
@@ -322,8 +323,19 @@ class Markup.PixelArt
     
     # Create markup for texts.
     markup = []
+    
+    if options.abruptEvaluation
+      betterStyle = Markup.betterStyle()
+      mediocreStyle = Markup.mediocreStyle()
+      worseStyle = Markup.worseStyle()
 
-    for text in texts
+      {pointSegmentLengthChanges} = linePart.evaluate()
+    
+    AbruptSegmentLengthChanges = PAA.Practice.PixelArtEvaluation.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges
+    MajorAbruptSegmentLengthChanges = PAA.Practice.PixelArtEvaluation.Line.Part.Curve.AbruptSegmentLengthChanges.Major
+    MinorAbruptSegmentLengthChanges = PAA.Practice.PixelArtEvaluation.Line.Part.Curve.AbruptSegmentLengthChanges.Minor
+
+    for text, pointSegmentIndex in texts
       switch text.offsetDirection
         when @OffsetDirections.Up
           position = x: text.segmentCenter.x + 0.5, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomCenter
@@ -334,10 +346,30 @@ class Markup.PixelArt
         when @OffsetDirections.Left
           position = x: text.segmentCenter.x, y: text.segmentCenter.y + 0.5, origin: Markup.TextOriginPosition.MiddleRight
       
-      markup.push
-        text: _.extend {}, textBase,
-          position: position
-          value: "#{text.number}"
+      element =
+        position: position
+        value: "#{text.number}"
+        
+      if options.abruptEvaluation
+        element.style = betterStyle
+        
+        abruptChangesAtIndex = _.filter pointSegmentLengthChanges.abruptPointSegmentLengthChanges, (change) => change.index in [pointSegmentIndex, pointSegmentIndex - 1]
+        
+        if biggestAbruptChange = _.maxBy abruptChangesAtIndex, (change) => change.abruptIncrease
+          if biggestAbruptChange.abruptIncrease >= PAA.Practice.PixelArtEvaluation.Line.Part.Curve.majorAbruptIncreaseThreshold
+            # This is a major abrupt change.
+            continue if options.abruptFilterValue and options.abruptFilterValue not in [AbruptSegmentLengthChanges, MajorAbruptSegmentLengthChanges]
+            element.style = worseStyle
+
+          else if biggestAbruptChange.abruptIncrease
+            # This is a minor abrupt change.
+            continue if options.abruptFilterValue and options.abruptFilterValue not in [AbruptSegmentLengthChanges, MinorAbruptSegmentLengthChanges]
+            element.style = mediocreStyle
+            
+        else
+          continue if options.abruptFilterValue
+        
+      markup.push text: _.defaults element, textBase
       
     markup
     
@@ -405,7 +437,7 @@ class Markup.PixelArt
     markup = [
       @evaluatedDiagonalRatioText straightLine
       @evaluatedImpliedStraightLine(straightLine)...
-      @segmentLengthTexts(straightLine)...
+      @pointSegmentLengthTexts(straightLine)...
       @lineEvaluationPercentageTexts(straightLine)...
     ]
     

@@ -25,6 +25,13 @@ class Markup.EngineComponent
       if pixel = element.pixel
         context.fillStyle = pixel.style
         context.fillRect pixel.x, pixel.y, 1, 1
+        
+      if point = element.point
+        radius = scaledDisplayPixelSize * (point.radius or 0.5)
+        context.fillStyle = point.style
+        context.beginPath()
+        context.arc point.x, point.y, radius, 0, 2 * Math.PI
+        context.fill()
       
       if line = element.line
         context.strokeStyle = line.style

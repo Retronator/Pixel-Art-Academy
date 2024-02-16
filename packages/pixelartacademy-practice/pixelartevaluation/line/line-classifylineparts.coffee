@@ -444,6 +444,39 @@ PAE.Line::classifyLineParts = ->
     
   for part, partIndex in @parts
     part.setNeighbors @getPart(partIndex - 1), @getPart(partIndex + 1)
+    
+  # Detect curves for displaying curvature changes.
+  addCurvatureCurvePart = (startSegmentIndex, endSegmentIndex, clockwise) =>
+    # Fully closed curves don't have a curvature.
+    return if endSegmentIndex >= startSegmentIndex + @edgeSegments.length
+    
+    # Ignore curves that are inside straight parts.
+    return if @isLineStraightBetweenEdgeSegments startSegmentIndex, endSegmentIndex
+    
+    @curvatureCurveParts.push new PAE.Line.Part.Curve @, startSegmentIndex, endSegmentIndex, null, null, false, clockwise
+    
+  for startSegmentIndex in [0...@edgeSegments.length]
+    startEdgeSegment = @edgeSegments[startSegmentIndex]
+    edgeSegment = startEdgeSegment
+    
+    # Start on edge segments that introduce point segments.
+    continue unless edgeSegment.pointSegmentsCount
+    
+    # Curvature curves start at changes of curvature.
+    clockwise = edgeSegment.curveClockwise.after
+    continue unless clockwise? and clockwise isnt edgeSegment.curveClockwise.before
+    
+    endSegmentIndex = startSegmentIndex
+    
+    # Keep expanding until the turn of direction.
+    while clockwise is edgeSegment.curveClockwise.after
+      # Stop at the end, otherwise continue to next segment.
+      break unless edgeSegment = @getEdgeSegment endSegmentIndex + 1
+      endSegmentIndex++
+
+      break if edgeSegment is startEdgeSegment
+    
+    addCurvatureCurvePart startSegmentIndex, endSegmentIndex, clockwise
 
 PAE.Line::_edgeSegmentOverlaysPointRange = (segmentIndex, startPointIndex, endPointIndex) ->
   segment = @getEdgeSegment segmentIndex

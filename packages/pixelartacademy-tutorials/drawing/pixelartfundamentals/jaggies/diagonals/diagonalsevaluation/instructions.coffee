@@ -160,7 +160,7 @@ class DiagonalsEvaluation.Instructions
       # See if we have an alternative diagonal to begin with.
       return unless bitmap = @getActiveAsset().bitmap()
       
-      bitmap.properties.pixelArtEvaluation.evenDiagonals.segmentLengths.linePartCounts.broken is 0
+      bitmap.properties.pixelArtEvaluation.evenDiagonals.segmentLengths.counts.broken is 0
     
     @delayDuration: -> @uiRevealDelayDuration
     

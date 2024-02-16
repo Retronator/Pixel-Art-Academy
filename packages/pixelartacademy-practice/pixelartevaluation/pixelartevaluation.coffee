@@ -16,14 +16,26 @@ class PAA.Practice.PixelArtEvaluation
   #   score: float between 0 and 1 with this criterion's weighted average
   #   segmentLengths:
   #     score: float between 0 and 1 with this criterion evaluation
-  #     linePartCounts: object with counts of line parts with a certain segment lengths type
+  #     counts: object with counts of line parts with a certain segment lengths type
   #       even, alternating, broken: how many line parts has this type
   #   endSegments:
   #     score: float between 0 and 1 with this criterion evaluation
-  #     linePartCounts: object with counts of line parts with a certain end segments type
+  #     counts: object with counts of line parts with a certain end segments type
   #       matching, shorter: how many line parts has this type
   # smoothCurves: objects with different criteria evaluations
   #   score: float between 0 and 1 with this criterion evaluation
+  #   abruptSegmentLengthChanges:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of how many segment length changes are abrupt for each severity
+  #       minor, major: how many segment length changes of this severity there are
+  #   straightParts:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of line parts with a certain positioning in the curve
+  #       middle, end: how many line parts of this type there are
+  #   inflectionPoints:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of how many inflection points appear on curves
+  #       isolated, sparse, dense: how many inflection points of this type there are
 
   @Criteria =
     PixelPerfectLines: 'PixelPerfectLines'
@@ -38,6 +50,10 @@ class PAA.Practice.PixelArtEvaluation
     EvenDiagonals:
       SegmentLengths: 'SegmentLengths'
       EndSegments: 'EndSegments'
+    SmoothCurves:
+      AbruptSegmentLengthChanges: 'AbruptSegmentLengthChanges'
+      StraightParts: 'StraightParts'
+      InflectionPoints: 'InflectionPoints'
   
   @SubcriteriaWeights =
     PixelPerfectLines:
@@ -46,6 +62,10 @@ class PAA.Practice.PixelArtEvaluation
     EvenDiagonals:
       SegmentLengths: 0.75
       EndSegments: 0.25
+    SmoothCurves:
+      AbruptSegmentLengthChanges: 0.34
+      StraightParts: 0.33
+      InflectionPoints: 0.33
       
   @_lastId = 0
 
@@ -190,13 +210,13 @@ class PAA.Practice.PixelArtEvaluation
         @_evaluation.evenDiagonals =
           segmentLengths:
             score: 0
-            linePartCounts:
+            counts:
               even: 0
               alternating: 0
               broken: 0
           endSegments:
             score: 0
-            linePartCounts:
+            counts:
               matching: 0
               shorter: 0
         
@@ -214,7 +234,7 @@ class PAA.Practice.PixelArtEvaluation
               for subcriterion of @constructor.Subcriteria.EvenDiagonals
                 subcriterionProperty = _.lowerFirst subcriterion
                 @_evaluation.evenDiagonals[subcriterionProperty].score += linePartEvaluation[subcriterionProperty].score * weight
-                @_evaluation.evenDiagonals[subcriterionProperty].linePartCounts[_.lowerFirst linePartEvaluation[subcriterionProperty].type]++
+                @_evaluation.evenDiagonals[subcriterionProperty].counts[_.lowerFirst linePartEvaluation[subcriterionProperty].type]++
               
               totalWeight += weight
           
@@ -234,6 +254,65 @@ class PAA.Practice.PixelArtEvaluation
         finalScore += evaluation.evenDiagonals.score
         criteriaCount++
       
+    if pixelArtEvaluationProperty.smoothCurves
+      # Compute evaluation if needed.
+      unless @_evaluation.smoothCurves
+        @_evaluation.smoothCurves =
+          abruptSegmentLengthChanges:
+            score: 0
+            counts:
+              minor: 0
+              major: 0
+          straightParts:
+            score: 0
+            counts:
+              middle: 0
+              end: 0
+          inflectionPoints:
+            score: 0
+            counts:
+              isolated: 0
+              sparse: 0
+              dense: 0
+            
+        # Compute average score, weighted by line length.
+        totalWeight = 0
+        
+        for layer in @layers
+          for line in layer.lines
+            lineEvaluation = line.evaluate()
+            continue unless lineEvaluation.curveSmoothness
+            
+            # We use the square root of the length so that long lines can't hugely overtake the short ones.
+            weight = Math.sqrt line.points.length
+            
+            for subcriterion of @constructor.Subcriteria.SmoothCurves
+              subcriterionProperty = _.lowerFirst subcriterion
+              curveSmoothness = lineEvaluation.curveSmoothness[subcriterionProperty]
+              
+              @_evaluation.smoothCurves[subcriterionProperty].score += curveSmoothness.score * weight
+              
+              for category, linePartCount of curveSmoothness.counts
+                @_evaluation.smoothCurves[subcriterionProperty].counts[category] += linePartCount
+              
+            totalWeight += weight
+        
+        for subcriterion of @constructor.Subcriteria.SmoothCurves
+          subcriterionProperty = _.lowerFirst subcriterion
+          
+          if totalWeight
+            @_evaluation.smoothCurves[subcriterionProperty].score /= totalWeight
+            
+          else
+            # There were no curves to be evaluated, so the category doesn't have a meaning.
+            @_evaluation.smoothCurves[subcriterionProperty].score = null
+    
+      evaluation.smoothCurves = @_calculateWeightedEvaluation @constructor.Subcriteria.SmoothCurves, @constructor.SubcriteriaWeights.SmoothCurves, pixelArtEvaluationProperty.smoothCurves, @_evaluation.smoothCurves
+      
+      if evaluation.smoothCurves.score?
+        finalScore += evaluation.smoothCurves.score
+        criteriaCount++
+        
     finalScore /= criteriaCount if criteriaCount
     
     evaluation.score = if criteriaCount then finalScore else null

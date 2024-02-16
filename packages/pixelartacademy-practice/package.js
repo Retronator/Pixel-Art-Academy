@@ -148,8 +148,6 @@ Package.onUse(function(api) {
   api.addFile('pixelartevaluation/pixel')
   api.addFile('pixelartevaluation/point')
   api.addFile('pixelartevaluation/point-optimizeneighbors')
-  api.addFile('pixelartevaluation/enginecomponent')
-  api.addFile('pixelartevaluation/enginecomponent-debug')
 
   api.addFile('pixelartevaluation/line..')
   api.addFile('pixelartevaluation/line/line-addoutlinepoints')
@@ -160,5 +158,10 @@ Package.onUse(function(api) {
   api.addFile('pixelartevaluation/line/part/straightline-evaluate')
   api.addFile('pixelartevaluation/line/part/straightline-getsegmentcorners')
   api.addFile('pixelartevaluation/line/part/curve')
+  api.addFile('pixelartevaluation/line/part/curve-evaluate')
   api.addFile('pixelartevaluation/line/part/curve-calculatepointconfidence')
+
+  // Engine component requires lines to be defined.
+  api.addFile('pixelartevaluation/enginecomponent')
+  api.addFile('pixelartevaluation/enginecomponent-debug')
 });

@@ -50,7 +50,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals 
           categories = for category of PAE.Line.Part.StraightLine[criterion]
             id: category
             name: @constructor.CategoryNames[criterion][category]
-            count: evenDiagonalsProperty[criterionProperty].linePartCounts[_.lowerFirst category]
+            count: evenDiagonalsProperty[criterionProperty].counts[_.lowerFirst category]
             
         else
           categories = null

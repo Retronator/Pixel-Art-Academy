@@ -5,7 +5,28 @@ PAE = PAA.Practice.PixelArtEvaluation
 _point = new THREE.Vector2
 
 class PAE.Line.Part.Curve extends PAE.Line.Part
-  constructor: (..., @isClosed) ->
+  @AbruptSegmentLengthChanges:
+    Minor: 'Minor'
+    Major: 'Major'
+  
+  @StraightParts:
+    End: 'End'
+    Middle: 'Middle'
+  
+  @InflectionPoints:
+    Isolated: 'Isolated'
+    Sparse: 'Sparse'
+    Dense: 'Dense'
+  
+  @majorAbruptIncreaseThreshold = 2
+  
+  @inflectionPointSpacingThresholds:
+    dense: 0.6 # F
+    sparse: 0.9 # E-B
+  
+  # Note: We must not use @ on the parameters that will be (re)assigned
+  # in the parent since we'd otherwise overwrite their values.
+  constructor: (line, startSegmentIndex, endSegmentIndex, startPointIndex, endPointIndex, @isClosed, @clockwise) ->
     super arguments...
 
     # Create display points.
@@ -38,6 +59,9 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
       
     if @isClosed and (@displayPoints[0].x isnt @displayPoints[@displayPoints.length - 1].x or @displayPoints[0].y isnt @displayPoints[@displayPoints.length - 1].y)
       @displayPoints.push @displayPoints[0]
+    
+    if @displayPoints.length is 2
+      @displayPoints.splice 1, 0, @_createDisplayPoint new THREE.Vector2().copy @line.getCentralSegmentPosition @startSegmentIndex, @endSegmentIndex
       
     if @displayPoints.length is 1
       @displayPoints.push @_createDisplayPoint @displayPoints[0].position.clone()
@@ -91,6 +115,9 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
   
   setNeighbors: ->
     super arguments...
+    
+    # Remove the middle point in 3 point curves for a smoother transition.
+    @displayPoints.splice 1, 1 if @displayPoints.length is 3
     
     if @previousPart
       @projectToLine @startPointIndex, @previousPart, @displayPoints[0].position
