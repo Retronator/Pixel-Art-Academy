@@ -106,9 +106,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             if curveSmoothness.inflectionPoints.points.length
               closestInflectionPoint = _.minBy curveSmoothness.inflectionPoints.points, (point) =>
                 # Constraint to points inside the curve bounds.
-                if curve.startSegmentIndex <= point.averageInflectionAreaEdgeSegmentIndex <= curve.endSegmentIndex
-                  distanceToStartSegment = point.averageInflectionAreaEdgeSegmentIndex - curve.startSegmentIndex
-                  distanceToEndSegment = curve.endSegmentIndex - point.averageInflectionAreaEdgeSegmentIndex
+                if curve.startSegmentIndex <= point.inflectionArea.averageEdgeSegmentIndex <= curve.endSegmentIndex
+                  distanceToStartSegment = point.inflectionArea.averageEdgeSegmentIndex - curve.startSegmentIndex
+                  distanceToEndSegment = curve.endSegmentIndex - point.inflectionArea.averageEdgeSegmentIndex
                   point._distanceToClosestInflectionPoint = Math.min distanceToStartSegment, distanceToEndSegment
                   
                 else
@@ -138,20 +138,21 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             impliedLineMarkup.line.points = @_sideOffsetLine impliedLineMarkup.line.points, if curve.clockwise then -1.5 else 1.5
             
             markup.push impliedLineMarkup
-        
-      else
+      
+      # When focusing on abrupt changes, we don't draw curve lines, to focus better on the actual pixel lines.
+      else unless filterValue in abruptSegmentLengthChangesFilterValues
         # Draw curved parts unless we're focusing on straight parts.
         unless filterValue in straightPartsFilters
           betterStyle = Markup.betterStyle()
           
-          for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
+          for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve and linePart.line not in focusedLines
             impliedLineMarkup = Markup.PixelArt.impliedCurve linePart
             impliedLineMarkup.line.style = betterStyle
             markup.push impliedLineMarkup
             
         # Draw straight parts unless they're already drawn.
         unless PAE.Criteria.EvenDiagonals in displayedCriteria
-          for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine
+          for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine and linePart.line not in focusedLines
             # Ignore lines without curves.
             {curveSmoothness} = linePart.line.evaluate()
             continue unless curveSmoothness
@@ -177,9 +178,13 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           # If a line part is focused on, don't draw point segment lengths on other parts.
           continue if focusedLineParts.length and linePart not in focusedLineParts
           
-          # If we're not focused on this line specifically, only show abrupt changes.
-          pointSegmentLengthTextsOptions.abruptFilterValue = filterValue
-          pointSegmentLengthTextsOptions.abruptFilterValue ?= PAE.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges unless linePart in focusedLineParts
+          # If we're not focused on this line specifically, only show abrupt changes, except if focusing on abrupt changes as the category.
+          if filterValue is PAE.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges
+            pointSegmentLengthTextsOptions.abruptFilterValue = null
+          
+          else
+            pointSegmentLengthTextsOptions.abruptFilterValue = filterValue
+            pointSegmentLengthTextsOptions.abruptFilterValue ?= PAE.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges unless linePart.line in focusedLines
           
           markup.push Markup.PixelArt.pointSegmentLengthTexts(linePart, pointSegmentLengthTextsOptions)...
           

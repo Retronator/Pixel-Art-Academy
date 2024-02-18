@@ -27,9 +27,9 @@ class PAE.Line
     @potentialCurveParts = []
     @pointPartIsCurve = []
     
-    # Curvature curve parts are curve parts that exist only in areas of clear curvature
-    # (defined curveClockwise direction). Used for displaying inflection points.
+    # Curvature curve parts are curve parts that connect the line between inflection points.
     @curvatureCurveParts = []
+    @inflectionPoints = []
     
     @parts = []
     
@@ -199,11 +199,16 @@ class PAE.Line
     
     for pixel in point.pixels
       @addPixel pixel unless pixel in @pixels
-
-  getCentralSegmentPosition: (startSegmentIndex, endSegmentIndex = startSegmentIndex) ->
+  
+  getCentralSegmentAveragePointIndex: (startSegmentIndex, endSegmentIndex = startSegmentIndex) ->
     averageSegmentIndex = (startSegmentIndex + endSegmentIndex) / 2
     centralSegments = [@getEdgeSegment(Math.floor averageSegmentIndex), @getEdgeSegment(Math.ceil averageSegmentIndex)]
-    centralPoints = [@getPoint(centralSegments[0].endPointIndex), @getPoint(centralSegments[1].startPointIndex)]
+    
+    (centralSegments[0].endPointIndex + centralSegments[1].startPointIndex) / 2
+
+  getCentralSegmentPosition: (startSegmentIndex, endSegmentIndex = startSegmentIndex) ->
+    averagePointIndex = @getCentralSegmentAveragePointIndex startSegmentIndex, endSegmentIndex
+    centralPoints = [@getPoint(Math.floor averagePointIndex), @getPoint(Math.ceil averagePointIndex)]
 
     x: (centralPoints[0].x + centralPoints[1].x) / 2
     y: (centralPoints[0].y + centralPoints[1].y) / 2

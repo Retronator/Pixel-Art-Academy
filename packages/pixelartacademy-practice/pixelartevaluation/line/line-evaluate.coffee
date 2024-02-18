@@ -198,56 +198,22 @@ PAE.Line::_analyzeCurveSmoothness = ->
 PAE.Line::_analyzeInflectionPoints = ->
   inflectionPoints = []
   
-  currentCurveClockwise = null
-  inflectionAreaStartEdgeSegmentIndex = null
-  inflectionAreaEndEdgeSegmentIndex = null
-  
-  for edgeSegmentIndex in [0...@edgeSegments.length]
-    edgeSegment = @getEdgeSegment edgeSegmentIndex
-    
-    # Set initial curvature.
-    currentCurveClockwise ?= edgeSegment.curveClockwise.after
-    continue unless currentCurveClockwise?
-    
-    # Continue until curvature is defined.
-    continue unless edgeSegment.curveClockwise.after?
-    
-    # Keep searching for the start of the inflection area if we're in the area of same curvature.
-    if edgeSegment.curveClockwise.after is currentCurveClockwise
-      # The direction after is the same, push the start of the inflection area forward.
-      inflectionAreaStartEdgeSegmentIndex = edgeSegmentIndex + 1
-      continue
-    
-    # We've reached a different curvature, this is the end of the inflection area.
-    inflectionAreaEndEdgeSegmentIndex = edgeSegmentIndex
-    
-    # Ignore inflection areas that overlap straight parts.
-    continue unless @isLineCurveBetweenEdgeSegments inflectionAreaStartEdgeSegmentIndex, inflectionAreaEndEdgeSegmentIndex
-
-    # Find the point in the center of the inflection area.
-    averageInflectionAreaEdgeSegmentIndex = (inflectionAreaStartEdgeSegmentIndex + inflectionAreaEndEdgeSegmentIndex) / 2
-    position = @getCentralSegmentPosition inflectionAreaStartEdgeSegmentIndex, inflectionAreaEndEdgeSegmentIndex
-    
-    inflectionPoints.push {position, averageInflectionAreaEdgeSegmentIndex}
-
-    # Continue searching for the inflection area after the current curvature starts changing.
-    currentCurveClockwise = edgeSegment.curveClockwise.after
-    inflectionAreaStartEdgeSegmentIndex = edgeSegmentIndex + 1
-    
-  for inflectionPoint, inflectionPointIndex in inflectionPoints
-    previousInflectionPoint = inflectionPoints[inflectionPointIndex - 1]
-    nextInflectionPoint = inflectionPoints[inflectionPointIndex + 1]
+  for inflectionPoint, inflectionPointIndex in @inflectionPoints
+    previousInflectionPoint = @inflectionPoints[inflectionPointIndex - 1]
+    nextInflectionPoint = @inflectionPoints[inflectionPointIndex + 1]
     
     # TODO: Add support for closed lines if points are not found.
     
     segmentDistanceFromPreviousInflectionPoint = Number.POSITIVE_INFINITY
     segmentDistanceFromNextInflectionPoint = Number.POSITIVE_INFINITY
 
-    segmentDistanceFromPreviousInflectionPoint = inflectionPoint.averageInflectionAreaEdgeSegmentIndex - previousInflectionPoint.averageInflectionAreaEdgeSegmentIndex if previousInflectionPoint
-    segmentDistanceFromNextInflectionPoint = nextInflectionPoint.averageInflectionAreaEdgeSegmentIndex - inflectionPoint.averageInflectionAreaEdgeSegmentIndex if nextInflectionPoint
+    segmentDistanceFromPreviousInflectionPoint = inflectionPoint.inflectionArea.averageEdgeSegmentIndex - previousInflectionPoint.inflectionArea.averageEdgeSegmentIndex if previousInflectionPoint
+    segmentDistanceFromNextInflectionPoint = nextInflectionPoint.inflectionArea.averageEdgeSegmentIndex - inflectionPoint.inflectionArea.averageEdgeSegmentIndex if nextInflectionPoint
     
     segmentDistanceFromClosestInflectionPoint = Math.min segmentDistanceFromPreviousInflectionPoint, segmentDistanceFromNextInflectionPoint
-    # We add 0.5 to the distance so that a distance of 2 leads to a score of 0.6 (D).
-    inflectionPoint.spacingScore = 1 - 1 / (0.5 + segmentDistanceFromClosestInflectionPoint)
+    
+    inflectionPoints.push _.extend {}, inflectionPoint,
+      # We add 0.5 to the distance so that a distance of 2 leads to a score of 0.6 (D).
+      spacingScore: 1 - 1 / (0.5 + segmentDistanceFromClosestInflectionPoint)
   
   inflectionPoints
