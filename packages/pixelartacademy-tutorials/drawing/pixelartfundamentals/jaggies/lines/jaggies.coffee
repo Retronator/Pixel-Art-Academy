@@ -16,7 +16,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
   
   @fixedDimensions: -> width: 41, height: 21
   
-  @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/#{_.fileCase @displayName()}.svg"
+  @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/jaggies.svg"
   @breakPathsIntoSteps: -> true
   
   @markup: -> true
@@ -46,7 +46,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
     @stepNumber: -> 1
     
     @message: -> """
-      Pixel art is drawn on a raster grid. When we draw lines that align with the grid, the result perfectly matches the intended shapes.
+      Many things in your drawings will align with the grid. Pixels can perfectly match such shapes.
     """
     
     @initialize()
@@ -56,8 +56,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
     @stepNumber: -> 2
     
     @message: -> """
-      When lines don't align with the grid, such as with diagonals and curves, they become jagged—spiky and sharp.
-      These stair-like deformations are called 'jaggies' and contribute to the blocky appearance of pixel art.
+      With diagonals and curves, what should be straight and smooth appears jagged—spiky and sharp.
+      These stair-like deformations (unintended jagged edges) are called 'jaggies' and contribute to the blocky appearance of pixel art.
     """
     
     @initialize()
@@ -174,11 +174,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
             x: 4.5, y: 9.5, origin: TextOriginPosition.BottomCenter
           value: "not a jaggy\n(sharp corner)"
       
-      # Add implied lines.
-      impliedLineBase = Markup.PixelArt.impliedLineBase()
+      # Add perceived lines.
+      perceivedLineBase = Markup.PixelArt.perceivedLineBase()
       
       markup.push
-        line: _.extend {}, impliedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 18.5, y: 16.5
           ,
@@ -200,7 +200,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, impliedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 16.5, y: 14.5
           ,
@@ -226,7 +226,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, impliedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 13.5, y: 6.25
           ,
@@ -238,7 +238,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, impliedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 7.5, y: 16
           ,

@@ -89,7 +89,7 @@ class PAA.Practice.PixelArtEvaluation
     
     letterGrade
     
-  constructor: (@bitmap) ->
+  constructor: (@bitmap, @options = {}) ->
     @layers = []
     
     @_evaluationDependency = new Tracker.Dependency
@@ -99,10 +99,18 @@ class PAA.Practice.PixelArtEvaluation
       @_updateArea layerIndex for layerIndex in [0...@bitmap.layers.length]
     
     # Subscribe to changes.
-    LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.addHandler @, @onOperationsExecuted
+    if @options.partialUpdates
+      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, @onOperationExecuted
+      
+    else
+      LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.addHandler @, @onOperationsExecuted
 
   destroy: ->
-    LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.removeHandler @, @onOperationsExecuted
+    if @options.partialUpdates
+      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandler @, @onOperationsExecuted
+      
+    else
+      LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.removeHandler @, @onOperationsExecuted
     
   depend: ->
     @_evaluationDependency.depend()
@@ -182,7 +190,7 @@ class PAA.Practice.PixelArtEvaluation
             for subcriterion of @constructor.Subcriteria.PixelPerfectLines
               subcriterionProperty = _.lowerFirst subcriterion
               @_evaluation.pixelPerfectLines[subcriterionProperty].score += lineEvaluation[subcriterionProperty].score * weight
-              @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count if lineEvaluation[subcriterionProperty].count
+              @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count
             
             totalWeight += weight
             
@@ -343,6 +351,12 @@ class PAA.Practice.PixelArtEvaluation
     weightedEvaluation.score = null unless totalWeight
     
     weightedEvaluation
+  
+  onOperationExecuted: (document, operation, changedFields) ->
+    return unless document._id is @bitmap._id
+    return unless operation instanceof LOI.Assets.Bitmap.Operations.ChangePixels
+
+    @_updateArea operation.layerAddress[0], operation.bounds
     
   onOperationsExecuted: (document, operations, changedFields) ->
     return unless document._id is @bitmap._id

@@ -45,11 +45,12 @@ class Markup.PixelArt
         
     markup
   
-  @impliedLineBase: ->
+  @perceivedLineBase: ->
     palette = LOI.palette()
     lineColor = palette.color Atari2600.hues.azure, 5
     
     style: "##{lineColor.getHexString()}"
+    cap: 'round'
   
   @diagonalRatioText: (straightLine) ->
     evaluation = straightLine.evaluate()
@@ -68,7 +69,8 @@ class Markup.PixelArt
     element.text.style = @evaluatedSegmentLengthsStyle straightLine
     element
     
-  @impliedLine: (line) ->
+  # This line connects corners of line segments to perfectly match the actual pixels.
+  @segmentedPerceivedLine: (line) ->
     # Add points at the extents of each edge segments.
     points = [
       line.getPoint line.edgeSegments[0].startPointIndex
@@ -95,17 +97,27 @@ class Markup.PixelArt
         points[index + 1].x -= startToEndOffsetX
         points[index + 1].y -= startToEndOffsetY
     
-    line: _.extend @impliedLineBase(), {points}
+    line: _.extend @perceivedLineBase(), {points}
+    
+  # This line is a smooth interpretation of the perceived line based on line parts.
+  @perceivedLine: (line) ->
+    @perceivedLinePart linePart for linePart in line.parts
+    
+  @perceivedLinePart: (linePart) ->
+    switch
+      when linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine then @perceivedStraightLine linePart
+      when linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.Curve then @perceivedCurve linePart
+      else null
   
-  @impliedStraightLine: (straightLine) ->
-    line: _.extend @impliedLineBase(),
+  @perceivedStraightLine: (straightLine) ->
+    line: _.extend @perceivedLineBase(),
       points: [
         x: straightLine.displayLine2.start.x + 0.5, y: straightLine.displayLine2.start.y + 0.5
       ,
         x: straightLine.displayLine2.end.x + 0.5, y: straightLine.displayLine2.end.y + 0.5
       ]
       
-  @impliedCurve: (curve) ->
+  @perceivedCurve: (curve) ->
     startPosition = curve.displayPoints[0].position
     points = [x: startPosition.x + 0.5, y: startPosition.y + 0.5]
 
@@ -127,9 +139,9 @@ class Markup.PixelArt
           y: end.controlPoints.before.y + 0.5
         ]
     
-    line: _.extend @impliedLineBase(), {points}
+    line: _.extend @perceivedLineBase(), {points}
   
-  @evaluatedImpliedStraightLine: (straightLine) ->
+  @evaluatedperceivedStraightLine: (straightLine) ->
     @_prepareLineParts straightLine
     
     evaluation = straightLine.evaluate()
@@ -436,7 +448,7 @@ class Markup.PixelArt
   @straightLineBreakdown: (straightLine) ->
     markup = [
       @evaluatedDiagonalRatioText straightLine
-      @evaluatedImpliedStraightLine(straightLine)...
+      @evaluatedperceivedStraightLine(straightLine)...
       @pointSegmentLengthTexts(straightLine)...
       @lineEvaluationPercentageTexts(straightLine)...
     ]

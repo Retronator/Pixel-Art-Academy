@@ -78,18 +78,18 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           markup.push Markup.PixelArt.straightLineBreakdown(linePart)...
           
         else
-          markup.push Markup.PixelArt.evaluatedImpliedStraightLine(linePart)...
+          markup.push Markup.PixelArt.evaluatedPerceivedStraightLine(linePart)...
       
       # If we're not going to be drawing curves, draw a faint unevaluated outline to indicate they were detected.
       unless PAE.Criteria.SmoothCurves in displayedCriteria
         for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
-          curveMarkup = Markup.PixelArt.impliedCurve linePart
+          curveMarkup = Markup.PixelArt.perceivedCurve linePart
           curveMarkup.line.width = 0
           markup.push curveMarkup
           
     # Add markup for smooth curves.
     if PAE.Criteria.SmoothCurves in displayedCriteria
-      # Draw implied lines.
+      # Draw perceived lines.
       if filterValue in inflectionPointsFilterValues
         # When focusing on inflection points, we draw just the curvature curve parts.
         for line in lines
@@ -98,9 +98,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           continue unless curveSmoothness
           
           for curve in line.curvatureCurveParts
-            impliedLineMarkup = Markup.PixelArt.impliedCurve curve
-            impliedLineMarkup.line.arrow = end: true
-            impliedLineMarkup.line.style = betterStyle
+            perceivedLineMarkup = Markup.PixelArt.perceivedCurve curve
+            perceivedLineMarkup.line.arrow = end: true
+            perceivedLineMarkup.line.style = betterStyle
             
             # Color the line according to the spacing score of the closest inflection point.
             if curveSmoothness.inflectionPoints.points.length
@@ -119,7 +119,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               # Skip lines that don't overlap an infliction point.
               continue if closestInflectionPoint._distanceToClosestInflectionPoint is Number.POSITIVE_INFINITY
               
-              impliedLineMarkup.line.style = switch
+              perceivedLineMarkup.line.style = switch
                 when closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.dense then worseStyle
                 when closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.sparse then mediocreStyle
                 else betterStyle
@@ -135,9 +135,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
                 else
                   continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Isolated
               
-            impliedLineMarkup.line.points = @_sideOffsetLine impliedLineMarkup.line.points, if curve.clockwise then -1.5 else 1.5
+            perceivedLineMarkup.line.points = @_sideOffsetLine perceivedLineMarkup.line.points, if curve.clockwise then -1.5 else 1.5
             
-            markup.push impliedLineMarkup
+            markup.push perceivedLineMarkup
       
       # When focusing on abrupt changes, we don't draw curve lines, to focus better on the actual pixel lines.
       else unless filterValue in abruptSegmentLengthChangesFilterValues
@@ -146,9 +146,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           betterStyle = Markup.betterStyle()
           
           for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve and linePart.line not in focusedLines
-            impliedLineMarkup = Markup.PixelArt.impliedCurve linePart
-            impliedLineMarkup.line.style = betterStyle
-            markup.push impliedLineMarkup
+            perceivedLineMarkup = Markup.PixelArt.perceivedCurve linePart
+            perceivedLineMarkup.line.style = betterStyle
+            markup.push perceivedLineMarkup
             
         # Draw straight parts unless they're already drawn.
         unless PAE.Criteria.EvenDiagonals in displayedCriteria
@@ -157,18 +157,18 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             {curveSmoothness} = linePart.line.evaluate()
             continue unless curveSmoothness
             
-            impliedLineMarkup = Markup.PixelArt.impliedStraightLine linePart
+            perceivedLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
             
             # Straight lines at the start/end are better than in between.
             if linePart in [_.first(linePart.line.parts), _.last(linePart.line.parts)]
-              impliedLineMarkup.line.style = mediocreStyle
+              perceivedLineMarkup.line.style = mediocreStyle
               continue if filterValue is PAE.Line.Part.Curve.StraightParts.Middle
               
             else
-              impliedLineMarkup.line.style = worseStyle
+              perceivedLineMarkup.line.style = worseStyle
               continue if filterValue is PAE.Line.Part.Curve.StraightParts.End
             
-            markup.push impliedLineMarkup
+            markup.push perceivedLineMarkup
       
       # Write point segment lengths.
       unless filterValue and filterValue not in abruptSegmentLengthChangesFilterValues

@@ -50,8 +50,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
         
-        # Add implied line.
-        markup.push Markup.PixelArt.impliedStraightLine linePart
+        # Add the perceived line.
+        markup.push Markup.PixelArt.perceivedStraightLine linePart
         
       markup
   
@@ -103,7 +103,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         # Add segment corner lines.
         lineEvaluation = linePart.evaluate()
         
-        segmentCornersLineBase = Markup.PixelArt.impliedLineBase()
+        segmentCornersLineBase = Markup.PixelArt.perceivedLineBase()
         segmentCornersLineBase.style = @_getLineStyle lineEvaluation
         
         segmentCorners = linePart.getSegmentCorners()

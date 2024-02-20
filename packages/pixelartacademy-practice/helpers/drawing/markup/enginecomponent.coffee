@@ -35,10 +35,14 @@ class Markup.EngineComponent
       
       if line = element.line
         context.strokeStyle = line.style
+        context.lineCap = line.cap
         context.lineWidth = scaledDisplayPixelSize * (line.width or 1)
 
         # Allow for 'hairline' width (as small as possible).
         context.lineWidth = pixelSize if line.width is 0
+        
+        # Allow for width defined in absolute pixel units.
+        context.lineWidth = line.absoluteWidth if line.absoluteWidth
         
         context.beginPath()
       

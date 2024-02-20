@@ -204,6 +204,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
         markup.push Markup.PixelArt.pointSegmentLengthTexts(line)...
         
         # Draw perceived curves.
-        markup.push Markup.PixelArt.impliedCurve linePart for linePart in line.parts when linePart instanceof PAE.Line.Part.Curve
+        markup.push Markup.PixelArt.perceivedCurve linePart for linePart in line.parts when linePart instanceof PAE.Line.Part.Curve
       
       markup

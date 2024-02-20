@@ -31,6 +31,7 @@ class LineArtCleanup.Steps
       bitmap = @tutorialBitmap.bitmap()
       
       pixelArtEvaluation =
+        allowedCriteria: [PAE.Criteria.PixelPerfectLines]
         pixelPerfectLines:
           doubles: {}
           corners: {}

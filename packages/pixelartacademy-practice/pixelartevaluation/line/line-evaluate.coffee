@@ -28,6 +28,7 @@ PAE.Line::_analyzeDoubles = ->
   sideStepScore = if sideStepsCount then diagonalSideStepsCount / sideStepsCount else 1
   
   score: sideStepScore
+  count: doubles.length
   pixels: doubles
 
 PAE.Line::_analyzeCorners = ->
@@ -43,6 +44,7 @@ PAE.Line::_analyzeCorners = ->
     
   score: if transitionsCount then 1 - corners.length / transitionsCount else 1
   count: corners.length
+  pixels: corners
 
 PAE.Line::_analyzeWidthType = ->
   # Analyze single and double points.

@@ -10,6 +10,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines extends PAA.Pract
   @initialize()
   
   @assets: -> [
+    @IntendedAndPerceivedLines
     @Jaggies
     @Jaggies2
     @LineArtCleanup

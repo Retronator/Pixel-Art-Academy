@@ -42,7 +42,7 @@ class Jaggies2.Instructions
 
       asset.stepAreas()[0].steps()[stepNumber - 1]
     
-    impliedLineMarkupForStep: (asset, pixelArtEvaluation, stepNumber) ->
+    perceivedLineMarkupForStep: (asset, pixelArtEvaluation, stepNumber) ->
       markup = []
       lines = []
       
@@ -52,7 +52,7 @@ class Jaggies2.Instructions
         lines.push line for line in pixelArtEvaluation.getLinesAt(point.x, point.y) when line not in lines
       
       for line in lines
-        markup.push Markup.PixelArt.impliedLine line
+        markup.push Markup.PixelArt.segmentedPerceivedLine line
       
       markup
       
@@ -90,7 +90,7 @@ class Jaggies2.Instructions
     @stepNumber: -> 3
     
     @message: -> """
-      These unintentional corners are also referred to as 'doubles' since we only need one of them for a minimal line.
+      These unintentional pixels are also referred to as 'doubles' since we only need one of them for a minimal line.
       Remove one pixel in each of the doubles.
     """
     
@@ -107,7 +107,7 @@ class Jaggies2.Instructions
     @stepNumber: -> 4
     
     @message: -> """
-      Doubles create jaggies (sharp corners) also on a conceptual level if we imagine how we perceive the flow of the line.
+      Doubles create jaggies in perceived lines, disrupting the smooth flow across the line art.
     """
     
     @initialize()
@@ -116,7 +116,7 @@ class Jaggies2.Instructions
       return unless asset = @getActiveAsset()
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
-      @impliedLineMarkupForStep asset, pixelArtEvaluation, 4
+      @perceivedLineMarkupForStep asset, pixelArtEvaluation, 4
   
   class @Line3Fix extends @InstructionStep
     @id: -> "#{Jaggies2.id()}.Line3Fix"
@@ -134,7 +134,7 @@ class Jaggies2.Instructions
       
       [
         @doublesMarkup(pixelArtEvaluation, {x: 3, y:14})...
-        @impliedLineMarkupForStep(asset, pixelArtEvaluation, 4)...
+        @perceivedLineMarkupForStep(asset, pixelArtEvaluation, 4)...
       ]
   
   class @Line4Draw extends @InstructionStep
@@ -142,7 +142,7 @@ class Jaggies2.Instructions
     @stepNumber: -> 6
     
     @message: -> """
-      Even without doubles, certain patterns of line segments lead to jaggies in the perceived lines.
+      Even without doubles, certain patterns of line segments lead to jaggies in perceived lines.
       Pixel artists nowadays mostly use the term jaggies to describe these undesired pixels.
     """
     
@@ -153,7 +153,7 @@ class Jaggies2.Instructions
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = for stepNumber in [4, 6]
-        @impliedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
+        @perceivedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
       
       _.flatten markup
   
@@ -172,7 +172,7 @@ class Jaggies2.Instructions
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = for stepNumber in [4, 6]
-        @impliedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
+        @perceivedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
         
       markup = _.flatten markup
       
@@ -213,7 +213,7 @@ class Jaggies2.Instructions
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = for stepNumber in [4, 6, 8]
-        @impliedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
+        @perceivedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
         
       _.flatten markup
       
@@ -232,7 +232,7 @@ class Jaggies2.Instructions
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = for stepNumber in [4, 6, 8]
-        @impliedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
+        @perceivedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
         
       markup = _.flatten markup
       
@@ -281,6 +281,6 @@ class Jaggies2.Instructions
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
       markup = for stepNumber in [4, 6, 8]
-        @impliedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
+        @perceivedLineMarkupForStep asset, pixelArtEvaluation, stepNumber
       
       _.flatten markup

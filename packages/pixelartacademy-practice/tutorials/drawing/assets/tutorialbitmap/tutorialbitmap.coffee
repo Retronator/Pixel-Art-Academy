@@ -33,6 +33,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   @markup: -> false
 
   # Override if the asset requires a pixel art evaluation analysis.
+  # You can return an object to be sent as options to the constructor.
   @pixelArtEvaluation: -> false
 
   # Override to provide bitmap properties that need to be set on the asset.
@@ -153,16 +154,18 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       @instructionsMarkupEngineComponent = new PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent
     
     # Create additional helpers.
-    if @constructor.pixelArtEvaluation()
+    if pixelArtEvaluation = @constructor.pixelArtEvaluation()
+      pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
+      
       @pixelArtEvaluationInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
         @_pixelArtEvaluation?.destroy()
-        @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
+        @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap, pixelArtEvaluationOptions
         
       @pixelArtEvaluation = new ComputedField =>
-        return unless pixelArtEvaluation = @pixelArtEvaluationInstance()
-        pixelArtEvaluation.depend()
-        pixelArtEvaluation
+        return unless pixelArtEvaluationInstance = @pixelArtEvaluationInstance()
+        pixelArtEvaluationInstance.depend()
+        pixelArtEvaluationInstance
        
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
