@@ -6,27 +6,11 @@ PAE = PAA.Practice.PixelArtEvaluation
 Jaggies2 = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2
 
 class Jaggies2.Instructions
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Jaggies2
     
     # The length of the arrow to indicate a pixel move.
     @movePixelArrowLength = 1.2
-    
-    @activeStepNumber: ->
-      return unless asset = @getActiveAsset()
-      asset.stepAreas()[0].activeStepIndex() + 1
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless @activeStepNumber() is @stepNumber()
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
     
     @resetCompletedConditions: ->
       not @getActiveAsset()
@@ -34,13 +18,6 @@ class Jaggies2.Instructions
     @getPixelArtEvaluation: ->
       drawingEditor = @getEditor()
       drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-    
-    getTutorialStep: (stepNumber) ->
-      return unless asset = @getActiveAsset()
-
-      stepNumber ?= @constructor.stepNumber()
-
-      asset.stepAreas()[0].steps()[stepNumber - 1]
     
     perceivedLineMarkupForStep: (asset, pixelArtEvaluation, stepNumber) ->
       markup = []
@@ -65,7 +42,7 @@ class Jaggies2.Instructions
       
       markup
     
-  class @Line1 extends @InstructionStep
+  class @Line1 extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line1"
     @stepNumber: -> 1
     
@@ -75,7 +52,7 @@ class Jaggies2.Instructions
     
     @initialize()
   
-  class @Line2Draw extends @InstructionStep
+  class @Line2Draw extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line2Draw"
     @stepNumber: -> 2
     
@@ -85,7 +62,7 @@ class Jaggies2.Instructions
     
     @initialize()
 
-  class @Line2Fix extends @InstructionStep
+  class @Line2Fix extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line2Fix"
     @stepNumber: -> 3
     
@@ -102,7 +79,7 @@ class Jaggies2.Instructions
       
       @doublesMarkup pixelArtEvaluation, {x: 3, y:9}
   
-  class @Line3Draw extends @InstructionStep
+  class @Line3Draw extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line3Draw"
     @stepNumber: -> 4
     
@@ -118,7 +95,7 @@ class Jaggies2.Instructions
       
       @perceivedLineMarkupForStep asset, pixelArtEvaluation, 4
   
-  class @Line3Fix extends @InstructionStep
+  class @Line3Fix extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line3Fix"
     @stepNumber: -> 5
     
@@ -137,7 +114,7 @@ class Jaggies2.Instructions
         @perceivedLineMarkupForStep(asset, pixelArtEvaluation, 4)...
       ]
   
-  class @Line4Draw extends @InstructionStep
+  class @Line4Draw extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line4Draw"
     @stepNumber: -> 6
     
@@ -157,7 +134,7 @@ class Jaggies2.Instructions
       
       _.flatten markup
   
-  class @Line4Fix extends @InstructionStep
+  class @Line4Fix extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line4Fix"
     @stepNumber: -> 7
     
@@ -198,7 +175,7 @@ class Jaggies2.Instructions
         
       markup
   
-  class @Line5Draw extends @InstructionStep
+  class @Line5Draw extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line5Draw"
     @stepNumber: -> 8
     
@@ -217,7 +194,7 @@ class Jaggies2.Instructions
         
       _.flatten markup
       
-  class @Line5Fix extends @InstructionStep
+  class @Line5Fix extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Line5Fix"
     @stepNumber: -> 9
     
@@ -261,7 +238,7 @@ class Jaggies2.Instructions
             
       markup
       
-  class @Complete extends @InstructionStep
+  class @Complete extends @StepInstruction
     @id: -> "#{Jaggies2.id()}.Complete"
     
     @activeDisplayState: ->

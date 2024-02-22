@@ -14,6 +14,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines extends PAA.Pract
     @Jaggies
     @Jaggies2
     @LineArtCleanup
+    @Corners
   ]
 
   content: ->

@@ -27,6 +27,8 @@ Package.onUse(function(api) {
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
   api.addFile('drawing/instructions/generalinstruction')
+  api.addFile('drawing/instructions/completeinstruction')
+  api.addFile('drawing/instructions/stepinstruction')
 
   api.addComponent('drawing/instructions/desktop..');
 
@@ -87,6 +89,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/intendedandperceivedlines');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/corners');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup..');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup/steps');

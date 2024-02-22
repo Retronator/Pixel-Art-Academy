@@ -32,23 +32,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumbers: -> throw new AE.NotImplementedException "Instruction step must provide the step numbers."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      stepNumbers = @stepNumbers()
-      stepNumbers = [stepNumbers] unless _.isArray stepNumbers
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0].activeStepIndex() + 1 in stepNumbers
-
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
     
     markup: ->
       return unless asset = @getActiveAsset()
@@ -71,7 +56,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
           
       markup
    
-  class @DrawLine extends @InstructionStep
+  class @DrawLine extends @StepInstruction
     @id: -> "#{Asset.id()}.DrawLine"
     @stepNumbers: -> 1
     
@@ -81,7 +66,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
     
     @initialize()
   
-  class @Cleanup extends @InstructionStep
+  class @Cleanup extends @StepInstruction
     @id: -> "#{Asset.id()}.Cleanup"
     @stepNumbers: -> 2
     
@@ -93,7 +78,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
     
     @initialize()
   
-  class @ConstrainAngle extends @InstructionStep
+  class @ConstrainAngle extends @StepInstruction
     @id: -> "#{Asset.id()}.ConstrainAngle"
     @stepNumbers: -> [3, 4]
     

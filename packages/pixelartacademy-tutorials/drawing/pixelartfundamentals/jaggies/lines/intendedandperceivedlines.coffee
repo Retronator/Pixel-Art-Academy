@@ -35,23 +35,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
 
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
-    @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0]?.activeStepIndex() is @stepNumber() - 1
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
-    
-  class @Horizontal extends @InstructionStep
+  class @Horizontal extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Horizontal"
+    @assetClass: -> Asset
     @stepNumber: -> 1
     
     @message: -> """
@@ -60,8 +46,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
     
     @initialize()
   
-  class @Diagonal extends @InstructionStep
+  class @Diagonal extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Diagonal"
+    @assetClass: -> Asset
     @stepNumber: -> 2
     
     @message: -> """
@@ -71,8 +58,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
     
     @initialize()
   
-  class @Curve extends @InstructionStep
+  class @Curve extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Curve"
+    @assetClass: -> Asset
     @stepNumber: -> 3
     
     @message: -> """
@@ -92,19 +80,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
         
       markup
     
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
     @id: -> "#{Asset.id()}.Complete"
     @assetClass: -> Asset
     
     @activeDisplayState: ->
       # We only have markup without a message.
       PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
-
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show when the asset is completed.
-      asset.completed()
     
     @initialize()
     

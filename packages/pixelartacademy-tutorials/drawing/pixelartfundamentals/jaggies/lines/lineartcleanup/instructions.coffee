@@ -7,25 +7,13 @@ InstructionsSystem = PAA.PixelPad.Systems.Instructions
 LineArtCleanup = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup
 
 class LineArtCleanup.Instructions
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> LineArtCleanup
     
     # The amount of time before we show instructions to the user after a new UI element is introduced.
     @uiRevealDelayDuration = 3
     
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0]?.activeStepIndex() is @stepNumber() - 1
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
-    
-  class @DrawCurve extends @InstructionStep
+  class @DrawCurve extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.DrawCurve"
     @stepNumber: -> 1
     
@@ -35,7 +23,7 @@ class LineArtCleanup.Instructions
     
     @initialize()
   
-  class @OpenEvaluationPaper extends @InstructionStep
+  class @OpenEvaluationPaper extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.OpenEvaluationPaper"
     @stepNumber: -> 2
     
@@ -45,7 +33,7 @@ class LineArtCleanup.Instructions
     
     @initialize()
     
-  class @OpenPixelPerfectLines extends @InstructionStep
+  class @OpenPixelPerfectLines extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.OpenPixelPerfectLines"
     @stepNumber: -> 3
     
@@ -59,7 +47,7 @@ class LineArtCleanup.Instructions
     
     @initialize()
     
-  class @HoverOverCriterion extends @InstructionStep
+  class @HoverOverCriterion extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.HoverOverCriterion"
     @stepNumber: -> 4
     
@@ -72,7 +60,7 @@ class LineArtCleanup.Instructions
     
     @initialize()
     
-  class @CloseEvaluationPaper extends @InstructionStep
+  class @CloseEvaluationPaper extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.CloseEvaluationPaper"
     @stepNumber: -> 5
     
@@ -84,8 +72,34 @@ class LineArtCleanup.Instructions
     @delayDuration: -> @uiRevealDelayDuration
 
     @initialize()
+  
+  class @CloseEvaluationPaperWithoutCorners extends @StepInstruction
+    @id: -> "#{LineArtCleanup.id()}.CloseEvaluationPaperWithoutCorners"
+    @stepNumber: -> 5
+    
+    @message: -> """
+      In this detailed view, you can hover over the numbers in the count column to show just those pixels in the analysis.
+      Right now you have no corners so this is not useful, but it will be later.
 
-  class @CleanDoubles extends @InstructionStep
+      Close the evaluation paper and eliminate all doubles.
+    """
+    
+    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @delayDuration: -> @uiRevealDelayDuration
+    
+    @activeConditions: ->
+      return unless super arguments...
+      
+      return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
+      return unless pixelArtEvaluation.pixelPerfectLines.corners.count
+      
+      true
+      
+    @priority: -> 1
+    
+    @initialize()
+
+  class @CleanDoubles extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.CleanDoubles"
     @stepNumber: -> 6
     
@@ -105,19 +119,13 @@ class LineArtCleanup.Instructions
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
     
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
     @id: -> "#{LineArtCleanup.id()}.Complete"
     @assetClass: -> LineArtCleanup
     
     @message: -> """
       Great job! Pixel art software often includes a pixel-perfect option for the pencil, which avoids the creation of doubles and sharp corners, but it is important to know how to clean a line by hand too.
     """
-
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show when the asset is completed.
-      asset.completed()
     
     @initialize()
     

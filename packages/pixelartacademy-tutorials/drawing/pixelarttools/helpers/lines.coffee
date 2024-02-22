@@ -44,7 +44,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
       
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
     @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
     @assetClass: -> Asset
     
@@ -75,7 +75,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     
     @initialize()
   
-  class @LineStart extends @InstructionStep
+  class @LineStart extends @StepInstruction
     @id: -> "#{Asset.id()}.LineStart"
     @stepNumber: -> 1
     
@@ -112,7 +112,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
           value: "start\nhere"
       ]
   
-  class @LineEnd extends @InstructionStep
+  class @LineEnd extends @StepInstruction
     @id: -> "#{Asset.id()}.LineEnd"
     @stepNumber: -> 2
     
@@ -122,7 +122,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
     
     @initialize()
   
-  class @LineSequence extends @InstructionStep
+  class @LineSequence extends @StepInstruction
     @id: -> "#{Asset.id()}.LineSequence"
     @stepNumber: -> 3
     
@@ -132,7 +132,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Lines extends PAA.Practice.Tut
 
     @initialize()
     
-  class @SeparateLines extends @InstructionStep
+  class @SeparateLines extends @StepInstruction
     @id: -> "#{Asset.id()}.SeparateLines"
     @stepNumber: -> 4
     

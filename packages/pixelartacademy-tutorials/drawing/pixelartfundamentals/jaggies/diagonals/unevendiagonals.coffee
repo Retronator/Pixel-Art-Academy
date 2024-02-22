@@ -24,20 +24,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
     
     markup: ->
       return unless asset = @getActiveAsset()
@@ -55,7 +43,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
         
       markup
   
-  class @InstructionStepWithDiagonalRatios extends @InstructionStep
+  class @StepInstructionWithDiagonalRatios extends @StepInstruction
     markup: ->
       markup = super arguments...
       
@@ -88,7 +76,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       else
         Markup.worseStyle()
   
-  class @InstructionStepWithSegmentLines extends @InstructionStepWithDiagonalRatios
+  class @StepInstructionWithSegmentLines extends @StepInstructionWithDiagonalRatios
     markup: ->
       markup = super arguments...
       
@@ -119,7 +107,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
             
       markup
       
-  class @ShallowAngles extends @InstructionStep
+  class @ShallowAngles extends @StepInstruction
     @id: -> "#{Asset.id()}.ShallowAngles"
     @stepNumber: -> 1
     
@@ -129,7 +117,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @initialize()
   
-  class @OneToTwo extends @InstructionStep
+  class @OneToTwo extends @StepInstruction
     @id: -> "#{Asset.id()}.OneToTwo"
     @stepNumber: -> 2
     
@@ -139,7 +127,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @initialize()
   
-  class @OneToOne extends @InstructionStep
+  class @OneToOne extends @StepInstruction
     @id: -> "#{Asset.id()}.OneToOne"
     @stepNumber: -> 3
     
@@ -149,7 +137,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @initialize()
   
-  class @Intermediary extends @InstructionStepWithDiagonalRatios
+  class @Intermediary extends @StepInstructionWithDiagonalRatios
     @id: -> "#{Asset.id()}.Intermediary"
     @stepNumber: -> 4
     
@@ -159,7 +147,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     
     @initialize()
   
-  class @Complete extends @InstructionStepWithSegmentLines
+  class @Complete extends @StepInstructionWithSegmentLines
     @id: -> "#{Asset.id()}.Complete"
     @assetClass: -> Asset
     

@@ -26,23 +26,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
-    @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0]?.activeStepIndex() is @stepNumber() - 1
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
-    
-  class @Aligned extends @InstructionStep
+  class @Aligned extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Aligned"
+    @assetClass: -> Asset
     @stepNumber: -> 1
     
     @message: -> """
@@ -51,8 +37,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
     
     @initialize()
   
-  class @NonAligned extends @InstructionStep
+  class @NonAligned extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.NonAligned"
+    @assetClass: -> Asset
     @stepNumber: -> 2
     
     @message: -> """
@@ -62,19 +49,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
     
     @initialize()
   
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
     @id: -> "#{Asset.id()}.Complete"
     @assetClass: -> Asset
     
     @activeDisplayState: ->
       # We only have markup without a message.
       PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
-
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show when the asset is completed.
-      asset.completed()
     
     @initialize()
     

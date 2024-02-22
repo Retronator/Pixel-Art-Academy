@@ -53,7 +53,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
     @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
     @assetClass: -> Asset
     
@@ -90,7 +90,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
       
       markup
     
-  class @Curve1 extends @InstructionStep
+  class @Curve1 extends @StepInstruction
     @id: -> "#{Asset.id()}.Curve1"
     @stepNumber: -> 1
     
@@ -100,7 +100,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     
     @initialize()
     
-  class @Curve2Draw extends @InstructionStep
+  class @Curve2Draw extends @StepInstruction
     @id: -> "#{Asset.id()}.Curve2Draw"
     @stepNumber: -> 2
     
@@ -110,7 +110,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     
     @initialize()
   
-  class @Curve2Fix extends @InstructionStep
+  class @Curve2Fix extends @StepInstruction
     @id: -> "#{Asset.id()}.Curve2Fix"
     @stepNumber: -> 3
     
@@ -157,7 +157,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
       
       markup
   
-  class @Curve3 extends @InstructionStep
+  class @Curve3 extends @StepInstruction
     @id: -> "#{Asset.id()}.Curve3"
     @stepNumber: -> 4
     
@@ -167,7 +167,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     
     @initialize()
   
-  class @Curve4 extends @InstructionStep
+  class @Curve4 extends @StepInstruction
     @id: -> "#{Asset.id()}.Curve4"
     @stepNumber: -> 5
     

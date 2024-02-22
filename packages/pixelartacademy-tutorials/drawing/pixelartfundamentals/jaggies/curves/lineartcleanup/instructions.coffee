@@ -7,7 +7,7 @@ InstructionsSystem = PAA.PixelPad.Systems.Instructions
 LineArtCleanup = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.LineArtCleanup
 
 class LineArtCleanup.Instructions
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
     @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
     @assetClass: -> LineArtCleanup
     
@@ -36,7 +36,7 @@ class LineArtCleanup.Instructions
       
       asset.stepAreas()[0].steps()[stepNumber - 1]
     
-  class @DrawLine extends @InstructionStep
+  class @DrawLine extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.DrawLine"
     @stepNumber: -> 1
     
@@ -51,7 +51,7 @@ class LineArtCleanup.Instructions
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
   
-  class @OpenSmoothCurves extends @InstructionStep
+  class @OpenSmoothCurves extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.OpenSmoothCurves"
     @stepNumber: -> 2
     
@@ -64,7 +64,7 @@ class LineArtCleanup.Instructions
     
     @initialize()
     
-  class @AnalyzeTheCurve extends @InstructionStep
+  class @AnalyzeTheCurve extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.AnalyzeTheCurve"
     @stepNumber: -> 3
     
@@ -82,7 +82,7 @@ class LineArtCleanup.Instructions
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
   
-  class @SmoothenTheCurve extends @InstructionStep
+  class @SmoothenTheCurve extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.SmoothenTheCurve"
     @stepNumber: -> 4
     
