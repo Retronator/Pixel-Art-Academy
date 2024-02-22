@@ -153,10 +153,14 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         # Draw straight parts unless they're already drawn.
         unless PAE.Criteria.EvenDiagonals in displayedCriteria
           for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine and linePart.line not in focusedLines
-            # Ignore lines without curves.
+            # Draw lines without curves with minimal lines.
             {curveSmoothness} = linePart.line.evaluate()
-            continue unless curveSmoothness
-            
+            unless curveSmoothness
+              straightLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
+              straightLineMarkup.line.width = 0
+              markup.push straightLineMarkup
+              continue
+              
             perceivedLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
             
             # Straight lines at the start/end are better than in between.

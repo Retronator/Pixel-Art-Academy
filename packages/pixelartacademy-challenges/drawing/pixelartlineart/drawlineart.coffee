@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -12,6 +13,9 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
   @svgUrl: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.svg"
   @referenceImageUrl: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.webp"
 
+  @resources: ->
+    solvePixels: new @Resource.ImagePixels "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.png"
+  
   @imageName: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
 
   @references: -> [
@@ -57,7 +61,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     # Create a path step that has increased tolerance to allow for more freedom where you place the lines.
     svgPaths = stepResources.svgPaths.svgPaths()
   
-    new @constructor.PathStep @, stepArea,
+    new @constructor.CustomSolutionPathStep @, stepArea,
       svgPaths: svgPaths
       drawHintsAfterCompleted: false
       tolerance: 2
@@ -95,6 +99,15 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
 
   referenceUrl: ->
     @constructor.references()[0].image.url
+    
+  class @CustomSolutionPathStep extends @PathStep
+    solve: ->
+      bitmap = @tutorialBitmap.bitmap()
+      pixels = @tutorialBitmap.resources.solvePixels.pixels()
+      
+      # Replace the layer pixels in this bitmap.
+      strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
+      AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
 
     ###
   class @EnableEvaluation extends PAA.PixelPad.Systems.Instructions.Instruction

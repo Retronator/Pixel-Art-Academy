@@ -139,6 +139,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
       @_initialScale = pixelCanvasEditor.camera().scale()
   
     completedConditions: ->
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
       @_initialScale isnt pixelCanvasEditor.camera().scale()

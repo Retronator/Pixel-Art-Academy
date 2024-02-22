@@ -100,8 +100,8 @@ class LineArtCleanup.Instructions
     @initialize()
     
     displaySide: ->
-      drawingEditor = @getEditor()
-      pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      return unless drawingEditor = @getEditor()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
     
@@ -122,7 +122,7 @@ class LineArtCleanup.Instructions
     @initialize()
     
     displaySide: ->
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom

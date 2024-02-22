@@ -43,7 +43,7 @@ class LineArtCleanup.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluation.active()
   
@@ -51,7 +51,7 @@ class LineArtCleanup.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluation.activeCriterion() is PAE.Criteria.PixelPerfectLines
   
@@ -61,7 +61,7 @@ class LineArtCleanup.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return @stopCountingTime() unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       return @stopCountingTime() unless pixelArtEvaluation.hoveredFilterValue()
       
@@ -91,7 +91,7 @@ class LineArtCleanup.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       not pixelArtEvaluation.active()
 

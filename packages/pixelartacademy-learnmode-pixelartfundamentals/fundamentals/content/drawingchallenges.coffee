@@ -53,7 +53,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
         units: "evaluation criteria"
   
     status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
-
+    
+    @unlockInstructions: -> "Complete the Pixel art lines tutorial to unlock the Pixel art line art challenge."
+    
     class @CompletedCriteria extends LM.Content
       @prefixFilter = null # Override with the class name prefix that defines this group.
 
@@ -72,6 +74,8 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
 
       @displayName: -> "Pixel-perfect lines"
       
+      @unlockInstructions: -> "Complete the Pixel art lines tutorial to unlock Pixel-perfect lines evaluation."
+      
       @initialize()
 
       @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.PixelPerfectLines
@@ -83,25 +87,33 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
       @displayName: -> "Even diagonals"
       
+      @unlockInstructions: -> "Complete the Pixel art diagonals tutorial to unlock Even diagonals evaluation."
+
       @initialize()
       
       @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.EvenDiagonals
       
       status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
     
-    class @SmoothCurves extends LM.Content.FutureContent
+    class @SmoothCurves extends @CompletedCriteria
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtLineArt.SmoothCurves'
       
       @displayName: -> "Smooth curves"
       
+      @unlockInstructions: -> "Complete the Pixel art curves tutorial to unlock Smooth curves evaluation."
+      
       @initialize()
       
       @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.SmoothCurves
-    
+      
+      status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
     class @ConsistentLineWidth extends LM.Content.FutureContent
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtLineArt.ConsistentLineWidth'
       
       @displayName: -> "Consistent line width"
+      
+      @unlockInstructions: -> "Complete the Pixel art line width tutorial to unlock Consistent line width evaluation."
       
       @initialize()
       

@@ -25,7 +25,7 @@ class LineArtCleanup.Steps
       pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
       
       # Pixel art evaluation paper needs to be open.
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluationView.active()
   
@@ -33,7 +33,7 @@ class LineArtCleanup.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluation.activeCriterion() is PAE.Criteria.SmoothCurves
 

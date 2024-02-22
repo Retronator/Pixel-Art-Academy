@@ -18,7 +18,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     @directive: -> "Learn about lines"
 
     @instructions: -> """
-      In the Drawing app, complete the line tutorial to learn about the most foundational element of art.
+      In the Drawing app, complete the Elements of art: line tutorial to learn about the most foundational element of art.
     """
 
     @icon: -> PAA.Learning.Task.Icons.Drawing

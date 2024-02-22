@@ -19,9 +19,54 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
   @drawLineArtClasses = {}
 
   @completed: ->
-    assets = @state 'assets'
-    _.find assets, (asset) => asset.completed
+    _.every [
+      @completedPixelPerfectLines()
+      @completedEvenDiagonals()
+      @completedSmoothCurves()
+    ]
   
+  @completedPixelPerfectLines: ->
+    assets = @state 'assets'
+    
+    _.find assets, (asset) =>
+      return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset.bitmapId
+      return unless pixelPerfectLines = bitmap.properties?.pixelArtEvaluation?.pixelPerfectLines
+      
+      _.every [
+        asset.completed
+        pixelPerfectLines.score > 0.8
+        pixelPerfectLines.doubles?
+        pixelPerfectLines.corners?
+      ]
+      
+  @completedEvenDiagonals: ->
+    assets = @state 'assets'
+    
+    _.find assets, (asset) =>
+      return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset.bitmapId
+      return unless evenDiagonals = bitmap.properties?.pixelArtEvaluation?.evenDiagonals
+      
+      _.every [
+        asset.completed
+        evenDiagonals.score > 0.8
+        evenDiagonals.segmentLengths?.counts?.even > 10
+      ]
+      
+  @completedSmoothCurves: ->
+    assets = @state 'assets'
+    
+    _.find assets, (asset) =>
+      return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset.bitmapId
+      return unless smoothCurves = bitmap.properties?.pixelArtEvaluation?.smoothCurves
+      
+      _.every [
+        asset.completed
+        smoothCurves.score > 0.8
+        smoothCurves.abruptSegmentLengthChanges?.score > 0.8
+        smoothCurves.straightParts?.score > 0.8
+        smoothCurves.inflectionPoints?.score > 0.8
+      ]
+    
   @addDrawLineArtAsset: (id) ->
     assets = @state 'assets'
     assets ?= []
@@ -49,6 +94,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
     requiredTutorials =
       PixelPerfectLines: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
       EvenDiagonals: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
+      SmoothCurves: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
     
     @_completedChallengesAutorun = Tracker.autorun =>
       unlockablePixelArtEvaluationCriteria = []
@@ -58,28 +104,21 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
     
       PAA.Practice.Project.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria', unlockablePixelArtEvaluationCriteria
     
-    @completedBitmapIds = new AE.LiveComputedField =>
-      assets = @state 'assets'
-      completedAssets = _.filter assets, (asset) => asset.completed
-      asset.bitmapId for asset in completedAssets
-    
     # Listen to a change in completed of assets to determine which pixel art evaluation criteria can be granted.
+    @completedChallenges = new AE.LiveComputedField =>
+      PixelPerfectLines: Boolean @constructor.completedPixelPerfectLines()
+      EvenDiagonals: Boolean @constructor.completedEvenDiagonals()
+      SmoothCurves: Boolean @constructor.completedSmoothCurves()
+    ,
+      EJSON.equals
+    
     @_completedChallengesAutorun = Tracker.autorun =>
-      completedBitmapIds = @completedBitmapIds()
+      unlockedPixelArtEvaluationCriteria = []
       
-      Tracker.nonreactive =>
-        unlockedPixelArtEvaluationCriteria = []
-        
-        for bitmapId in completedBitmapIds
-          bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-          
-          for criterion of PAA.Practice.PixelArtEvaluation.Criteria
-            criterionProperty = _.lowerFirst criterion
-            continue unless bitmap.properties?.pixelArtEvaluation?[criterionProperty]?.score >= 0.9
-
-            unlockedPixelArtEvaluationCriteria.push criterion unless criterion in unlockedPixelArtEvaluationCriteria
-        
-        PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
+      for criterion, completed of @completedChallenges() when completed
+        unlockedPixelArtEvaluationCriteria.push criterion
+      
+      PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
 
   destroy: ->
     @completedBitmapIds.stop()

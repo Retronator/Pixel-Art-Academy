@@ -11,7 +11,7 @@ class DiagonalsEvaluation.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluation.active()
     
@@ -19,7 +19,7 @@ class DiagonalsEvaluation.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluation.activeCriterion() is PAE.Criteria.EvenDiagonals
     
@@ -98,7 +98,7 @@ class DiagonalsEvaluation.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       active = pixelArtEvaluation.active()
       

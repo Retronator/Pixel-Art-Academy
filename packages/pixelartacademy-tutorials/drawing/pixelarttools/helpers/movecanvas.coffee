@@ -89,7 +89,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     
     completedConditions: ->
       # Wait until the origin has been changed.
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
       return if EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
   

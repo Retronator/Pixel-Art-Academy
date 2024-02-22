@@ -141,7 +141,7 @@ class Markup.PixelArt
     
     line: _.extend @perceivedLineBase(), {points}
   
-  @evaluatedperceivedStraightLine: (straightLine) ->
+  @evaluatedPerceivedStraightLine: (straightLine) ->
     @_prepareLineParts straightLine
     
     evaluation = straightLine.evaluate()
@@ -448,7 +448,7 @@ class Markup.PixelArt
   @straightLineBreakdown: (straightLine) ->
     markup = [
       @evaluatedDiagonalRatioText straightLine
-      @evaluatedperceivedStraightLine(straightLine)...
+      @evaluatedPerceivedStraightLine(straightLine)...
       @pointSegmentLengthTexts(straightLine)...
       @lineEvaluationPercentageTexts(straightLine)...
     ]

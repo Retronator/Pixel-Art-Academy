@@ -25,7 +25,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @requiredInterests: -> ['line']
     
-    @interests: -> ['pixel art line']
+    @interests: -> ['jaggy']
     
     @initialize()
     
@@ -44,13 +44,9 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
-    @requiredInterests: -> ['pixel art line']
-    
-    @interests: -> ['pixel art diagonal']
-    
     @predecessors: -> [Goal.Lines]
     
-    @groupNumber: -> -1
+    @groupNumber: -> 1
     
     @initialize()
     
@@ -69,26 +65,98 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
-    @requiredInterests: -> ['pixel art line']
-    
-    @interests: -> ['pixel art curve']
-    
     @predecessors: -> [Goal.Lines]
     
-    @groupNumber: -> 1
+    @groupNumber: -> 2
     
     @initialize()
     
     @completedConditions: ->
       PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.completed()
   
+  class @PixelPerfectLines extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.PixelPerfectLines'
+    @goal: -> Goal
+    
+    @directive: -> "Draw a sprite with pixel-perfect lines"
+    
+    @instructions: -> """
+      In the Drawing app, choose a reference in the Pixel art line art challenge.
+      Complete the drawing, enable the Pixel-perfect lines criterion in the pixel art evaluation paper, and achieve a score of 80% or more (keep both doubles and corners as required).
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @interests: -> ['pixel-perfect line']
+    
+    @predecessors: -> [Goal.Lines]
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Challenges.Drawing.PixelArtLineArt.completedPixelPerfectLines()
+  
+  class @EvenDiagonals extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.EvenDiagonals'
+    @goal: -> Goal
+    
+    @directive: -> "Draw a sprite with even diagonals"
+    
+    @instructions: -> """
+      In the Drawing app, choose a reference in the Pixel art line art challenge.
+      Complete the drawing, enable the Even diagonals criterion in the pixel art evaluation paper, and achieve a score of 80% or more while having at least 10 lines with even segment lengths.
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @interests: -> ['even diagonal (pixel art)']
+    
+    @predecessors: -> [Goal.Diagonals]
+    
+    @groupNumber: -> 1
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Challenges.Drawing.PixelArtLineArt.completedEvenDiagonals()
+  
+  class @SmoothCurves extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves'
+    @goal: -> Goal
+    
+    @directive: -> "Draw a sprite with smooth curves"
+    
+    @instructions: -> """
+      In the Drawing app, choose a reference in the Pixel art line art challenge.
+      Complete the drawing and enable the Smooth curves criterion in the pixel art evaluation paper, and achieve a score of 80% or more (both in total and individually for abrupt length changes, straight parts, and inflection points).
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @interests: -> ['smooth curve (pixel art)']
+    
+    @predecessors: -> [Goal.Curves]
+    
+    @groupNumber: -> 2
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Challenges.Drawing.PixelArtLineArt.completedSmoothCurves()
+      
   @tasks: -> [
     @Lines
     @Diagonals
+    @Curves
+    @PixelPerfectLines
+    @EvenDiagonals
+    @SmoothCurves
   ]
 
   @finalTasks: -> [
-    @Diagonals
+    @PixelPerfectLines
+    @EvenDiagonals
+    @SmoothCurves
   ]
 
   @initialize()
