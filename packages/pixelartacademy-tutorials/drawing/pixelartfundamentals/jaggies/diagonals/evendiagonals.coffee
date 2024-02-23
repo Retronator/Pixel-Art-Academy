@@ -100,12 +100,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
       Whenever we use the same number of pixels in each segment, we create even or 'perfect' diagonals.
       These angles are considered perfect in pixel art because the corners of the segments exactly follow the perceived lines.
     """
-    
+
+    # Note: We want this instruction to appear also when the asset
+    # is completed, which is why we're overriding this method.
     @activeConditions: ->
       # Show with the correct step.
       return unless @activeStepNumber() in @stepNumbers()
       
-      # Note: We want this instruction to appear also when the asset
-      # is completed, which is why we're overriding this method.
+      true
       
     @initialize()

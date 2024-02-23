@@ -96,7 +96,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         # Do we have a pixel here?
         absoluteX = x + @stepArea.bounds.x
         absoluteY = y + @stepArea.bounds.y
-        pixel = bitmap.findPixelAtAbsoluteCoordinates absoluteX, absoluteY
+        pixel = bitmap.getPixelForLayerAtAbsoluteCoordinates 0, absoluteX, absoluteY
         
         # Do we need a pixel here?
         anyPixel = @stepArea.hasGoalPixel x, y

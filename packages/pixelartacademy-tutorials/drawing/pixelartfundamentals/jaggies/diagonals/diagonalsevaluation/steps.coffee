@@ -64,8 +64,6 @@ class DiagonalsEvaluation.Steps
         100
       
   class @LineEvaluationStep extends TutorialBitmap.PathStep
-    @drawHintsAfterCompleted: -> false
-  
     getLineEvaluation: ->
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
       

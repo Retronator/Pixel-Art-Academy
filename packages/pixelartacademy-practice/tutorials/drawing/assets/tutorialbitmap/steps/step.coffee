@@ -10,8 +10,8 @@ class TutorialBitmap.Step
   # remember the completed state of this step instead of asking to reconfirm it.
   @preserveCompleted: -> false
 
-  # Override to false (or provide through options) if the hint drawing should not be called after the step is completed.
-  @drawHintsAfterCompleted: -> true
+  # Override to true (or provide through options) if the hint drawing should be called after the step is completed.
+  @drawHintsAfterCompleted: -> false
 
   # Override to true (or provide through options) if the step can be completed even if extra pixels are present.
   @canCompleteWithExtraPixels: -> false

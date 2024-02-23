@@ -63,7 +63,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
       goalPixels: @resources.line2a.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      drawHintsAfterCompleted: false
       
     new @constructor.Steps.LineWithoutDoublesStep @, stepArea,
       allowedPixels: @resources.line2a.goalPixels
@@ -74,7 +73,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
       goalPixels: @resources.line3a.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      drawHintsAfterCompleted: false
       
     new @constructor.Steps.LineWithoutDoublesStep @, stepArea,
       allowedPixels: @resources.line3a.goalPixels
@@ -85,7 +83,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
       goalPixels: @resources.line4a.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      drawHintsAfterCompleted: false
     
     new @constructor.Steps.FixStep @, stepArea,
       hintPixels: @resources.line4b.hintPixels
@@ -96,7 +93,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
       goalPixels: @resources.line5a.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      drawHintsAfterCompleted: false
     
     new @constructor.Steps.FixStep @, stepArea,
       hintPixels: @resources.line5b.hintPixels

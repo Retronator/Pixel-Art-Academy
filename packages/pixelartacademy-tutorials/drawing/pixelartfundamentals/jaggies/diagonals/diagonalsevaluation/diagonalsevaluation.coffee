@@ -22,7 +22,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEval
   
   @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation.svg"
   @breakPathsIntoSteps: -> true
-  @drawHintsAfterCompleted: -> false
   
   @markup: -> true
   @pixelArtEvaluation: -> true
@@ -44,7 +43,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEval
     pathSteps = _.clone stepArea.steps()
     
     for pathStep in pathSteps
-      pathStep.options.drawHintsAfterCompleted = false
       pathStep.options.preserveCompleted = true
     
     # Step index 0 is the first path.

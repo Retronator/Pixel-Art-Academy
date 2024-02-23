@@ -34,7 +34,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       
       _.every [
         asset.completed
-        pixelPerfectLines.score > 0.8
+        pixelPerfectLines.score >= 0.8
         pixelPerfectLines.doubles?
         pixelPerfectLines.corners?
       ]
@@ -48,7 +48,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       
       _.every [
         asset.completed
-        evenDiagonals.score > 0.8
+        evenDiagonals.score >= 0.8
         evenDiagonals.segmentLengths?.counts?.even > 10
       ]
       
@@ -61,10 +61,10 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       
       _.every [
         asset.completed
-        smoothCurves.score > 0.8
-        smoothCurves.abruptSegmentLengthChanges?.score > 0.8
-        smoothCurves.straightParts?.score > 0.8
-        smoothCurves.inflectionPoints?.score > 0.8
+        smoothCurves.score >= 0.8
+        smoothCurves.abruptSegmentLengthChanges?.score >= 0.8
+        smoothCurves.straightParts?.score >= 0.8
+        smoothCurves.inflectionPoints?.score >= 0.8
       ]
     
   @addDrawLineArtAsset: (id) ->
@@ -96,7 +96,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       EvenDiagonals: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
       SmoothCurves: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
     
-    @_completedChallengesAutorun = Tracker.autorun =>
+    @_unlockableCriteriaAutorun = Tracker.autorun =>
       unlockablePixelArtEvaluationCriteria = []
       
       for criterion, tutorial of requiredTutorials when tutorial.completed()
@@ -112,7 +112,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
     ,
       EJSON.equals
     
-    @_completedChallengesAutorun = Tracker.autorun =>
+    @_unlockedCriteriaAutorun = Tracker.autorun =>
       unlockedPixelArtEvaluationCriteria = []
       
       for criterion, completed of @completedChallenges() when completed
@@ -121,8 +121,10 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
 
   destroy: ->
-    @completedBitmapIds.stop()
-    @_completedChallengesAutorun.stop()
+    @_unlockableCriteriaAutorun.stop()
+    @completedChallenges.stop()
+    @_unlockedCriteriaAutorun.stop()
+    
     asset.destroy() for asset in @_pixelArtLineArtAssets if @_pixelArtLineArtAssets
 
   assetsData: ->

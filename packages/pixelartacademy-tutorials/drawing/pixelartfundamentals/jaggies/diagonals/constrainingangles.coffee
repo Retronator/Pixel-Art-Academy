@@ -58,7 +58,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
    
   class @DrawLine extends @StepInstruction
     @id: -> "#{Asset.id()}.DrawLine"
-    @stepNumbers: -> 1
+    @stepNumber: -> 1
     
     @message: -> """
       Connect the two dots with a line using the pencil's line-drawing capability (shift + click).
@@ -68,7 +68,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
   
   class @Cleanup extends @StepInstruction
     @id: -> "#{Asset.id()}.Cleanup"
-    @stepNumbers: -> 2
+    @stepNumber: -> 2
     
     @message: -> """
       The most common algorithm used for drawing lines in raster art (Bresenham's line algorithm) doesn't create even

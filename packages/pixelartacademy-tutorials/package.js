@@ -111,6 +111,7 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelartfundamentals/jaggies/curves..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/smoothcurves');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/circles');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/steps');

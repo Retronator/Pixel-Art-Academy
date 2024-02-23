@@ -49,7 +49,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     # Step 2 needs to behave like a temporary step.
     steps[1].options.preserveCompleted = true
     steps[1].options.hasPixelsWhenInactive = false
-    steps[1].options.drawHintsAfterCompleted = false
     
   Asset = @
   

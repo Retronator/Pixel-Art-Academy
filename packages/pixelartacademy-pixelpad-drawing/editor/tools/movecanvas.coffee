@@ -16,6 +16,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas extends FM.Tool
 
     @display = @interface.callAncestorWith 'display'
 
+    # Request realtime updates when moving the canvas.
+    @realtimeUpdating = @moving
+    
   onActivated: ->
     # Listen for pointer down.
     $(document).on "pointerdown.pixelartacademy-pixelpad-apps-drawing-editor-tools-move", (event) =>

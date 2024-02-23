@@ -62,10 +62,10 @@ class LineArtCleanup.Steps
       return true if super arguments...
       
       # We don't require this step if there are no doubles.
-      return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
-      return true unless pixelArtEvaluation.pixelPerfectLines.corners.count
+      return @stopCountingTime() unless bitmap = @tutorialBitmap.bitmap()
+      return true unless bitmap.properties.pixelArtEvaluation.pixelPerfectLines.corners.count
       
-      return unless drawingEditor = @getEditor()
+      return @stopCountingTime() unless drawingEditor = @getEditor()
       return @stopCountingTime() unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       return @stopCountingTime() unless pixelArtEvaluationView.hoveredFilterValue()
       

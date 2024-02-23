@@ -90,8 +90,9 @@ class LineArtCleanup.Instructions
     @activeConditions: ->
       return unless super arguments...
       
-      return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
-      return unless pixelArtEvaluation.pixelPerfectLines.corners.count
+      return unless asset = @getActiveAsset()
+      return unless bitmap = asset.bitmap()
+      return if bitmap.properties.pixelArtEvaluation.pixelPerfectLines.corners.count
       
       true
       

@@ -45,29 +45,37 @@ class Markup.EngineComponent
         context.lineWidth = line.absoluteWidth if line.absoluteWidth
         
         context.beginPath()
-      
-        context.moveTo line.points[0].x, line.points[0].y
         
-        for point in line.points[1..]
-          if controlPoints = point.bezierControlPoints
-            context.bezierCurveTo controlPoints[0].x, controlPoints[0].y, controlPoints[1].x, controlPoints[1].y, point.x, point.y
-            
-          else
-            context.lineTo point.x, point.y
-      
-        context.stroke()
-        
-        if line.arrow
-          if line.arrow.end
-            endPoint = line.points[line.points.length - 1]
-            
-            if endPoint.bezierControlPoints
-              startPoint = endPoint.bezierControlPoints[1]
+        if line.points
+          context.moveTo line.points[0].x, line.points[0].y
+          
+          for point in line.points[1..]
+            if controlPoints = point.bezierControlPoints
+              context.bezierCurveTo controlPoints[0].x, controlPoints[0].y, controlPoints[1].x, controlPoints[1].y, point.x, point.y
               
             else
-              startPoint = line.points[line.points.length - 2]
+              context.lineTo point.x, point.y
+        
+          context.stroke()
+          
+          if line.arrow
+            if line.arrow.end
+              endPoint = line.points[line.points.length - 1]
               
-            @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+              if endPoint.bezierControlPoints
+                startPoint = endPoint.bezierControlPoints[1]
+                
+              else
+                startPoint = line.points[line.points.length - 2]
+                
+              @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+            
+        if line.arc
+          startAngle = line.arc.startAngle or 0
+          endAngle = line.arc.endAngle or Math.PI * 2
+
+          context.arc line.arc.x, line.arc.y, line.arc.radius, startAngle, endAngle
+          context.stroke()
         
       if text = element.text
         if text.backgroundStyle

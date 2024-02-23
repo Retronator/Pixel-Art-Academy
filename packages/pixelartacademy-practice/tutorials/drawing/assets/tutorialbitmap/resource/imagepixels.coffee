@@ -38,7 +38,7 @@ class TutorialBitmap.Resource.ImagePixels extends TutorialBitmap.Resource.Pixels
   _createPixelsFromImageData: (imageData) ->
     pixels = []
     
-    palette = @options.palette()
+    palette = @options.palette?()
 
     for x in [0...imageData.width]
       for y in [0...imageData.height]
