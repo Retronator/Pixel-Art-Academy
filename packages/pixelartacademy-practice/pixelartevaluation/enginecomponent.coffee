@@ -95,7 +95,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         for line in lines
           # Ignore lines without curves.
           {curveSmoothness} = line.evaluate()
-          continue unless curveSmoothness
+          continue unless curveSmoothness?.inflectionPoints.points.length
           
           for curve in line.curvatureCurveParts
             perceivedLineMarkup = Markup.PixelArt.perceivedCurve curve
@@ -103,37 +103,37 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             perceivedLineMarkup.line.style = betterStyle
             
             # Color the line according to the spacing score of the closest inflection point.
-            if curveSmoothness.inflectionPoints.points.length
-              closestInflectionPoint = _.minBy curveSmoothness.inflectionPoints.points, (point) =>
-                # Constraint to points inside the curve bounds.
-                if curve.startSegmentIndex <= point.inflectionArea.averageEdgeSegmentIndex <= curve.endSegmentIndex
-                  distanceToStartSegment = point.inflectionArea.averageEdgeSegmentIndex - curve.startSegmentIndex
-                  distanceToEndSegment = curve.endSegmentIndex - point.inflectionArea.averageEdgeSegmentIndex
-                  point._distanceToClosestInflectionPoint = Math.min distanceToStartSegment, distanceToEndSegment
-                  
-                else
-                  point._distanceToClosestInflectionPoint = Number.POSITIVE_INFINITY
-                  
-                point._distanceToClosestInflectionPoint
+            closestInflectionPoint = _.minBy curveSmoothness.inflectionPoints.points, (point) =>
+              # Constraint to points inside the curve bounds.
+              if curve.startSegmentIndex <= point.inflectionArea.averageEdgeSegmentIndex <= curve.endSegmentIndex
+                distanceToStartSegment = point.inflectionArea.averageEdgeSegmentIndex - curve.startSegmentIndex
+                distanceToEndSegment = curve.endSegmentIndex - point.inflectionArea.averageEdgeSegmentIndex
+                point._distanceToClosestInflectionPoint = Math.min distanceToStartSegment, distanceToEndSegment
                 
-              # Skip lines that don't overlap an infliction point.
-              continue if closestInflectionPoint._distanceToClosestInflectionPoint is Number.POSITIVE_INFINITY
+              else
+                point._distanceToClosestInflectionPoint = Number.POSITIVE_INFINITY
+                
+              point._distanceToClosestInflectionPoint
               
-              perceivedLineMarkup.line.style = switch
-                when closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.dense then worseStyle
-                when closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.sparse then mediocreStyle
-                else betterStyle
+            # Skip lines that don't overlap an infliction point.
+            continue if closestInflectionPoint._distanceToClosestInflectionPoint is Number.POSITIVE_INFINITY
+            
+            perceivedLineMarkup.line.style = switch
+              when closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.dense then worseStyle
+              when closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.sparse then mediocreStyle
+              else betterStyle
+              
+            # Apply filtering.
+            if PAE.Line.Part.Curve.InflectionPoints[filterValue]
+              if closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.dense
+                continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Dense
                 
-              # Apply filtering
-              if PAE.Line.Part.Curve.InflectionPoints[filterValue]
-                if closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.dense
-                  continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Dense
-                  
-                else if closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.sparse
-                  continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Sparse
+              else if closestInflectionPoint.spacingScore < PAE.Line.Part.Curve.inflectionPointSpacingThresholds.sparse
+                continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Sparse
+              
+              else
+                continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Isolated
                 
-                else
-                  continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Isolated
               
             perceivedLineMarkup.line.points = @_sideOffsetLine perceivedLineMarkup.line.points, if curve.clockwise then -1.5 else 1.5
             
