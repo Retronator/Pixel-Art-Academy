@@ -120,4 +120,8 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth..');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/linewidthasset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thinlines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thicklines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
 });

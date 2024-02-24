@@ -55,248 +55,251 @@
       background image('/pixelartacademy/pixelpad/apps/drawing/portfolio/handle-shadow.png') top center / 100% 64rem no-repeat
       mix-blend-mode darken
 
-  .sections
-    list-style none
-    margin-top 13rem
-    padding 0
+  .sections-area
+    overflow hidden
 
-    .section
-      position relative
-      z-index 100
-      background-color atariGray(5)
-      box-shadow 0 0 10rem rgba(atariGray(0), 0.25)
-      margin 0 auto
-      height 25rem
-      transition all 0.2s
-      overflow hidden
+    .sections
+      list-style none
+      margin-top 13rem
+      padding 0
 
-      &:hover:not(.active)
-        height 38rem !important
-        margin-top -5rem
+      .section
+        position relative
+        z-index 100
+        background-color atariGray(5)
+        box-shadow 0 0 10rem rgba(atariGray(0), 0.25)
+        margin 0 auto
+        height 25rem
+        transition all 0.2s
+        overflow hidden
 
-      &.active
-        overflow initial
-
-        .groups
-          .group
-            height 19rem
-            margin-top 0
-
-            &:hover:not(.active)
-              height 21rem !important
-              margin-top -1rem
-
-      &.group-in-section-active
-        .groups
-          .group
-            height 5rem
-
-            &:first-child:not(.active)
-              height 5rem
-
-            &:hover:not(.active)
-              height 15rem
-              margin-top -1rem
-
-      &.settings
-        width 292rem
+        &:hover:not(.active)
+          height 38rem !important
+          margin-top -5rem
 
         &.active
-          height 139rem
+          overflow initial
 
-        .content
-          height 100rem
-          padding 3rem 11rem
-          color atariGray(1)
+          .groups
+            .group
+              height 19rem
+              margin-top 0
 
-          .instructions
-            margin-bottom 6rem
+              &:hover:not(.active)
+                height 21rem !important
+                margin-top -1rem
 
-          .settings-sections
-            display flex
-            justify-content space-between
+        &.group-in-section-active
+          .groups
+            .group
+              height 5rem
 
-            .settings-section
-              width 130rem
+              &:first-child:not(.active)
+                height 5rem
 
-              .title
-                daily()
-                text-transform uppercase
-                margin-bottom 2rem
+              &:hover:not(.active)
+                height 15rem
+                margin-top -1rem
 
-              .editors
-              .no-editors
-                border 1rem solid atariCyan(2)
-                height 80rem
-
-              .editors
-                list-style none
-                padding 0
-                overflow auto
-
-                .editor
-                  height 14rem
-                  padding 2rem 4rem
-                  cursor pointer
-
-                  &:hover
-                    background atariGray(4)
-
-                  &.selected
-                    background atariGray(4)
-                    cursor default
-
-              .no-editors
-                padding 10rem 8rem
-                text-align center
-
-      .section-name
-        height 25rem
-        padding 9rem
-        acme-7()
-        color atariCyan(1)
-        cursor pointer
-
-      .groups
-        list-style none
-        margin 0
-        padding 0
-
-        .group
-          position relative
-          z-index 0
-          height 4rem
-          margin 0 auto
-          background-color atariBrown(4)
-          box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
-          transition all 0.2s
-          overflow hidden
-
-          &:last-child
-            height 19rem
+        &.settings
+          width 292rem
 
           &.active
-            height 150rem
-            overflow initial
+            height 139rem
 
-          .group-header
-            display flex
-            height 19rem
-            padding 6rem 9rem
-            adventure()
+          .content
+            height 100rem
+            padding 3rem 11rem
             color atariGray(1)
-            cursor pointer
-            justify-content space-between
 
-            .completed
-              color atariGreen(2)
-              adventure()
+            .instructions
+              margin-bottom 6rem
 
-          .briefs
-            position absolute
+            .settings-sections
+              display flex
+              justify-content space-between
+
+              .settings-section
+                width 130rem
+
+                .title
+                  daily()
+                  text-transform uppercase
+                  margin-bottom 2rem
+
+                .editors
+                .no-editors
+                  border 1rem solid atariCyan(2)
+                  height 80rem
+
+                .editors
+                  list-style none
+                  padding 0
+                  overflow auto
+
+                  .editor
+                    height 14rem
+                    padding 2rem 4rem
+                    cursor pointer
+
+                    &:hover
+                      background atariGray(4)
+
+                    &.selected
+                      background atariGray(4)
+                      cursor default
+
+                .no-editors
+                  padding 10rem 8rem
+                  text-align center
+
+        .section-name
+          height 25rem
+          padding 9rem
+          acme-7()
+          color atariCyan(1)
+          cursor pointer
+
+        .groups
+          list-style none
+          margin 0
+          padding 0
+
+          .group
+            position relative
             z-index 0
-            left 0
-            right 0
-            top 22rem
-            margin 0
-            padding 0
-            list-style none
-            text-align center
+            height 4rem
+            margin 0 auto
+            background-color atariBrown(4)
+            box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
+            transition all 0.2s
+            overflow hidden
 
-            .brief
-              display inline-block
-              position relative
-              top 0
+            &:last-child
+              height 19rem
+
+            &.active
+              height 150rem
+              overflow initial
+
+            .group-header
+              display flex
+              height 19rem
+              padding 6rem 9rem
+              adventure()
+              color atariGray(1)
+              cursor pointer
+              justify-content space-between
+
+              .completed
+                color atariGreen(2)
+                adventure()
+
+            .briefs
+              position absolute
+              z-index 0
+              left 0
+              right 0
+              top 22rem
+              margin 0
+              padding 0
+              list-style none
+              text-align center
+
+              .brief
+                display inline-block
+                position relative
+                top 0
+                width 120rem
+                height 150rem
+                margin-left -120rem
+                padding 8rem
+                vertical-align top
+                background atariGray(7)
+                color atariGray(2)
+                box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
+                text-align left
+                transition top 0.5s 0.3s
+                cursor pointer
+
+                &:first-child
+                  margin-left 0
+
+                &.last-hovered
+                &.active
+                  z-index 99 !important
+
+                &.hovered
+                  top -4rem
+                  transition top 0.2s
+
+                &.active
+                  top -240rem
+                  transition top 0.5s
+
+                .asset-name
+                  margin-bottom 4.5rem
+                  small-print()
+                  text-transform uppercase
+
+                .description
+                  small-print()
+
+            .assets
+              position absolute
+              z-index 1
+              display flex
+              justify-content space-around
+              top 54rem
+              left 10rem
+              right 10rem
+              height 100rem
+              margin 0
+              padding 0
+              list-style none
+              pointer-events none
+
+              &::before
+              &::after
+                content ''
+                display block
+                width 100%
+                flex-shrink 2
+
+              .asset
+                position relative
+                top 0
+                height 100rem
+                transition all 0.2s, top 0.5s 0.3s
+                cursor pointer
+                pointer-events none
+
+                &:hover
+                  flex-shrink 0.2
+                  transition all 0.2s
+
+                  &::before
+                    content: ''
+                    position absolute
+                    left -50%
+                    width 50%
+                    top 0
+                    bottom 0
+                    pointer-events all
+
+                &:first-child
+                  flex-shrink 0
+
+                &.active
+                  top -240rem
+                  transition all 0.2s, top 0.5s
+
+            .no-assets-instructions
               width 120rem
               height 150rem
-              margin-left -120rem
+              margin 0 auto
               padding 8rem
-              vertical-align top
               background atariGray(7)
               color atariGray(2)
               box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
-              text-align left
-              transition top 0.5s 0.3s
-              cursor pointer
-
-              &:first-child
-                margin-left 0
-
-              &.last-hovered
-              &.active
-                z-index 99 !important
-
-              &.hovered
-                top -4rem
-                transition top 0.2s
-
-              &.active
-                top -240rem
-                transition top 0.5s
-
-              .asset-name
-                margin-bottom 4.5rem
-                small-print()
-                text-transform uppercase
-
-              .description
-                small-print()
-
-          .assets
-            position absolute
-            z-index 1
-            display flex
-            justify-content space-around
-            top 54rem
-            left 10rem
-            right 10rem
-            height 100rem
-            margin 0
-            padding 0
-            list-style none
-            pointer-events none
-
-            &::before
-            &::after
-              content ''
-              display block
-              width 100%
-              flex-shrink 2
-
-            .asset
-              position relative
-              top 0
-              height 100rem
-              transition all 0.2s, top 0.5s 0.3s
-              cursor pointer
-              pointer-events none
-
-              &:hover
-                flex-shrink 0.2
-                transition all 0.2s
-
-                &::before
-                  content: ''
-                  position absolute
-                  left -50%
-                  width 50%
-                  top 0
-                  bottom 0
-                  pointer-events all
-
-              &:first-child
-                flex-shrink 0
-
-              &.active
-                top -240rem
-                transition all 0.2s, top 0.5s
-
-          .no-assets-instructions
-            width 120rem
-            height 150rem
-            margin 0 auto
-            padding 8rem
-            background atariGray(7)
-            color atariGray(2)
-            box-shadow 0 0 5rem rgba(atariGray(0), 0.1)
-            hyphens auto
+              hyphens auto

@@ -37,18 +37,13 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()
     
-    if backgroundColor = @tutorialBitmap.getBackgroundColor()
-      backgroundPixel =
-        directColor: backgroundColor
-        color: THREE.Color.fromObject backgroundColor
-
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         # See if we require a pixel here.
-        continue unless goalPixel = @goalPixelsMap[x]?[y] or backgroundPixel
+        continue unless goalPixel = @goalPixelsMap[x]?[y]
 
         # We do require a pixel here so check if we have it in the bitmap.
-        return false unless pixel = bitmapLayer.getPixel(@stepArea.bounds.x + x, @stepArea.bounds.y + y) or backgroundPixel
+        return false unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
         # If either of the pixels has a direct color, we need to translate the other one too.
         if pixel.paletteColor and goalPixel.paletteColor

@@ -67,7 +67,9 @@ class Markup.EngineComponent
               
               else
                 startPoint = line.points[1]
-              
+                
+              @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+            
             if line.arrow.end
               endPoint = line.points[line.points.length - 1]
               
@@ -76,8 +78,8 @@ class Markup.EngineComponent
                 
               else
                 startPoint = line.points[line.points.length - 2]
-                
-            @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+              
+              @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
             
         if line.arc
           startAngle = line.arc.startAngle or 0

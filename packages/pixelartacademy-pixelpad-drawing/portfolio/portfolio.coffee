@@ -333,10 +333,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     if event.which is AC.Keys.f2
       return unless asset = @activeAsset()?.asset
       
+      return unless stepArea = asset.stepAreas?()[0]
+      activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+      
+      activeStep.solve()
+      event.preventDefault()
+      
+    else if event.which is AC.Keys.f3
+      return unless asset = @activeAsset()?.asset
+      
       asset.solveAndComplete?()
       event.preventDefault()
     
-    else if event.which is AC.Keys.f3
+    else if event.which is AC.Keys.f4
       console.log "Cheating commences …"
       
       return unless activeGroup = @activeGroup()

@@ -5,99 +5,101 @@
       <div class="handle-shadow"></div>
     </div>
     {{#if sectionsVisible}}
-      <ul class="sections">
-        {{#each sections}}
-          <li class="section {{sectionActiveClass}} {{groupInSectionActiveClass}}" {{style sectionStyle}}>
-            <div class="section-name">{{> t10e nameKey}}</div>
-            <ul class="groups">
-              {{#each groups}}
-                <li class="group content {{groupActiveClass}}" {{style groupStyle}}>
-                  <div class="group-header">
-                    <div class="group-name">{{name}}</div>
-                    {{#if content.completed}}
-                      <div class="completed">✔︎</div>
-                    {{/if}}
-                  </div>
-                  {{#if assets}}
-                    <ul class="briefs">
-                      {{#each assets}}
-                        <li class="brief {{assetHoveredClass}} {{assetLastHoveredClass}}  {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
-                          <div class="asset-name">
-                            {{#if asset.displayNameTranslation}}
-                              {{> t10e asset.displayNameTranslation}}
-                            {{else}}
-                              {{asset.displayName}}
-                            {{/if}}
-                          </div>
-                          <div class="description">
-                            {{#if asset.descriptionTranslation}}
-                              {{> t10e asset.descriptionTranslation}}
-                            {{else}}
-                              {{asset.description}}
-                            {{/if}}
-                          </div>
-                        </li>
-                      {{/each}}
-                    </ul>
-                    <ul class="assets">
-                      {{#each assets}}
-                        <li class="asset {{assetActiveClass}} {{asset.styleClasses}}" {{style assetStyle}}>
-                          {{> Render asset.portfolioComponent}}
-                        </li>
-                      {{/each}}
-                    </ul>
-                  {{else}}
-                    {{#if noAssetsInstructions}}
-                      <div class="no-assets-instructions">
-                        {{noAssetsInstructions}}
-                      </div>
-                    {{/if}}
-                  {{/if}}
-                </li>
-              {{/each}}
-            </ul>
-          </li>
-        {{/each}}
-        {{#if showSettingsSection}}
-          {{#with settingsSection}}
-            <li class="section settings {{sectionActiveClass}}">
+      <div class="sections-area">
+        <ul class="sections">
+          {{#each sections}}
+            <li class="section {{sectionActiveClass}} {{groupInSectionActiveClass}}" {{style sectionStyle}}>
               <div class="section-name">{{> t10e nameKey}}</div>
-              <div class="content">
-                <div class="instructions">
-                  Select how you want to edit artworks.
-                </div>
-                <div class="settings-sections">
-                  <div class="settings-section">
-                    <div class="title">Built-in editor</div>
-                    {{#if editors.length}}
-                      <ul class="pixel-boy editors">
-                        {{#each editors}}
-                          <li class="editor {{selectedEditorClass}}">{{fullName}}</li>
+              <ul class="groups">
+                {{#each groups}}
+                  <li class="group content {{groupActiveClass}}" {{style groupStyle}}>
+                    <div class="group-header">
+                      <div class="group-name">{{name}}</div>
+                      {{#if content.completed}}
+                        <div class="completed">✔︎</div>
+                      {{/if}}
+                    </div>
+                    {{#if assets}}
+                      <ul class="briefs">
+                        {{#each assets}}
+                          <li class="brief {{assetHoveredClass}} {{assetLastHoveredClass}}  {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
+                            <div class="asset-name">
+                              {{#if asset.displayNameTranslation}}
+                                {{> t10e asset.displayNameTranslation}}
+                              {{else}}
+                                {{asset.displayName}}
+                              {{/if}}
+                            </div>
+                            <div class="description">
+                              {{#if asset.descriptionTranslation}}
+                                {{> t10e asset.descriptionTranslation}}
+                              {{else}}
+                                {{asset.description}}
+                              {{/if}}
+                            </div>
+                          </li>
+                        {{/each}}
+                      </ul>
+                      <ul class="assets">
+                        {{#each assets}}
+                          <li class="asset {{assetActiveClass}} {{asset.styleClasses}}" {{style assetStyle}}>
+                            {{> Render asset.portfolioComponent}}
+                          </li>
                         {{/each}}
                       </ul>
                     {{else}}
-                      <div class="no-editors">
-                        <p>You don't have any PixelPad editors yet.</p>
-                        <p>Talk to Retro in the store or to Alexandra in the art studio to get started.</p>
-                      </div>
+                      {{#if noAssetsInstructions}}
+                        <div class="no-assets-instructions">
+                          {{noAssetsInstructions}}
+                        </div>
+                      {{/if}}
                     {{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+            </li>
+          {{/each}}
+          {{#if showSettingsSection}}
+            {{#with settingsSection}}
+              <li class="section settings {{sectionActiveClass}}">
+                <div class="section-name">{{> t10e nameKey}}</div>
+                <div class="content">
+                  <div class="instructions">
+                    Select how you want to edit artworks.
                   </div>
-                  {{#unless isLearnMode}}
+                  <div class="settings-sections">
                     <div class="settings-section">
-                      <div class="title">External software</div>
-                        <ul class="external editors">
-                          {{#each externalSoftware}}
-                            <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
+                      <div class="title">Built-in editor</div>
+                      {{#if editors.length}}
+                        <ul class="pixel-boy editors">
+                          {{#each editors}}
+                            <li class="editor {{selectedEditorClass}}">{{fullName}}</li>
                           {{/each}}
                         </ul>
+                      {{else}}
+                        <div class="no-editors">
+                          <p>You don't have any PixelPad editors yet.</p>
+                          <p>Talk to Retro in the store or to Alexandra in the art studio to get started.</p>
+                        </div>
+                      {{/if}}
                     </div>
-                  {{/unless}}
+                    {{#unless isLearnMode}}
+                      <div class="settings-section">
+                        <div class="title">External software</div>
+                          <ul class="external editors">
+                            {{#each externalSoftware}}
+                              <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
+                            {{/each}}
+                          </ul>
+                      </div>
+                    {{/unless}}
+                  </div>
                 </div>
-              </div>
-            </li>
-          {{/with}}
-        {{/if}}
-      </ul>
+              </li>
+            {{/with}}
+          {{/if}}
+        </ul>
+      </div>
     {{/if}}
   </div>
 </template>

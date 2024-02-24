@@ -11,6 +11,10 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth extends PAA.P
   
   @assets: -> [
     @LineWidth
+    @ThinLines
+    @ThickLines
+    @WideLines
+    @VaryingLineWidth
   ]
   
   content: ->
