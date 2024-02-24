@@ -10,8 +10,6 @@ class PAA.Practice.PixelArtEvaluation
   #   corners:
   #     score: float between 0 and 1 with this criterion evaluation
   #     count: how many pixels have two or more direct neighbors
-  # consistentLineWidth:
-  #   score: float between 0 and 1 with this criterion evaluation
   # evenDiagonals
   #   score: float between 0 and 1 with this criterion's weighted average
   #   segmentLengths:
@@ -36,6 +34,10 @@ class PAA.Practice.PixelArtEvaluation
   #     score: float between 0 and 1 with this criterion evaluation
   #     counts: object with counts of how many inflection points appear on curves
   #       isolated, sparse, dense: how many inflection points of this type there are
+  # consistentLineWidth:
+  #   score: float between 0 and 1 with this criterion evaluation
+  #   counts: object with counts of lines with a certain width type
+  #     thin, thick, wide, varied: how many lines have this type of line width
 
   @Criteria =
     PixelPerfectLines: 'PixelPerfectLines'

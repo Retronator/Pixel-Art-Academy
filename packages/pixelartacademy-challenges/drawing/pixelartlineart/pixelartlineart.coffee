@@ -66,7 +66,21 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
         smoothCurves.straightParts?.score >= 0.8
         smoothCurves.inflectionPoints?.score >= 0.8
       ]
+      
+  @completedConsistentLineWidth: ->
+    assets = @state 'assets'
     
+    _.find assets, (asset) =>
+      return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset.bitmapId
+      return unless consistentLineWidth = bitmap.properties?.pixelArtEvaluation?.consistentLineWidth
+      
+      _.every [
+        asset.completed
+        consistentLineWidth.score >= 0.8
+        consistentLineWidth.counts?.thin is 0
+      ]
+  
+  
   @addDrawLineArtAsset: (id) ->
     assets = @state 'assets'
     assets ?= []

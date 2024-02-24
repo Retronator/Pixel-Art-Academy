@@ -10,6 +10,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
     @PixelArtLines
     @PixelArtDiagonals
     @PixelArtCurves
+    @PixelArtLineWidth
     @AntiAliasing
     @Dithering
     @Rotation
@@ -112,7 +113,13 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
     @tags: -> [LM.Content.Tags.WIP]
     @initialize()
-
+  
+  class @PixelArtLineWidth extends LM.Content.DrawingTutorialContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLineWidth'
+    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
+    @tags: -> [LM.Content.Tags.WIP]
+    @initialize()
+    
   class @AntiAliasing extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.AntiAliasing'
     @displayName: -> "Anti-aliasing"

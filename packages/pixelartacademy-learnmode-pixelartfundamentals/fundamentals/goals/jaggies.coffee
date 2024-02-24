@@ -73,6 +73,27 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @completedConditions: ->
       PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.completed()
+      
+  class @LineWidth extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.LineWidth'
+    @goal: -> Goal
+    
+    @directive: -> "Learn about line width in pixel art"
+    
+    @instructions: -> """
+      In the Drawing app, complete the Pixel art line width tutorial to learn how you can achieve different line thicknesses.
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @predecessors: -> [Goal.Lines]
+    
+    @groupNumber: -> 3
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.completed()
   
   class @PixelPerfectLines extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.PixelPerfectLines'
@@ -128,7 +149,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @instructions: -> """
       In the Drawing app, choose a reference in the Pixel art line art challenge.
-      Complete the drawing and enable the Smooth curves criterion in the pixel art evaluation paper, and achieve a score of 80% or more (both in total and individually for abrupt length changes, straight parts, and inflection points).
+      Complete the drawing, enable the Smooth curves criterion in the pixel art evaluation paper, and achieve a score of 80% or more (both in total and individually for abrupt length changes, straight parts, and inflection points).
     """
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
@@ -143,20 +164,47 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @completedConditions: ->
       PAA.Challenges.Drawing.PixelArtLineArt.completedSmoothCurves()
-      
+  
+  class @ConsistentLineWidth extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.ConsistentLineWidth'
+    @goal: -> Goal
+    
+    @directive: -> "Draw a sprite with a consistent, thicker line width"
+    
+    @instructions: -> """
+      In the Drawing app, choose a reference in the Pixel art line art challenge.
+      Complete the drawing, enable the Consistent line width criterion in the pixel art evaluation paper, and achieve a score of 80% or more using one of the thicker line width styles (1-pixel thick or 2-pixel wide).
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @interests: -> ['line width (pixel art)']
+    
+    @predecessors: -> [Goal.Curves]
+    
+    @groupNumber: -> 3
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Challenges.Drawing.PixelArtLineArt.completedConsistentLineWidth()
+  
   @tasks: -> [
     @Lines
     @Diagonals
     @Curves
+    @LineWidth
     @PixelPerfectLines
     @EvenDiagonals
     @SmoothCurves
+    @ConsistentLineWidth
   ]
 
   @finalTasks: -> [
     @PixelPerfectLines
     @EvenDiagonals
     @SmoothCurves
+    @ConsistentLineWidth
   ]
 
   @initialize()
