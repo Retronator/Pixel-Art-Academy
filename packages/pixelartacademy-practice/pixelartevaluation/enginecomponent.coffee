@@ -10,7 +10,6 @@ abruptSegmentLengthChangesFilterValues = [PAE.Subcriteria.SmoothCurves.AbruptSeg
 straightPartsFilters = [PAE.Subcriteria.SmoothCurves.StraightParts, _.keys(PAE.Line.Part.Curve.StraightParts)...]
 inflectionPointsFilterValues = [PAE.Subcriteria.SmoothCurves.InflectionPoints, _.keys(PAE.Line.Part.Curve.InflectionPoints)...]
 
-_offsetDirection = new THREE.Vector2
 
 class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComponent
   @debug = true
@@ -133,9 +132,8 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               
               else
                 continue unless filterValue is PAE.Line.Part.Curve.InflectionPoints.Isolated
-                
               
-            perceivedLineMarkup.line.points = @_sideOffsetLine perceivedLineMarkup.line.points, if curve.clockwise then -1.5 else 1.5
+            perceivedLineMarkup.line.points = Markup.offsetPoints perceivedLineMarkup.line.points, if curve.clockwise then -1.5 else 1.5
             
             markup.push perceivedLineMarkup
       
@@ -246,29 +244,3 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
   
   _bezierCurve: (context, controlPoint1, controlPoint2, end) ->
     context.bezierCurveTo controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, end.x, end.y
-
-  _sideOffsetLine: (points, amount) ->
-    offsetPoints = _.cloneDeep points
-    
-    for point, pointIndex in points
-      previousPointForDirection = points[pointIndex - 1] or point
-      nextPointForDirection = points[pointIndex + 1] or point
-      
-      _offsetDirection.x = previousPointForDirection.y - nextPointForDirection.y
-      _offsetDirection.y = nextPointForDirection.x - previousPointForDirection.x
-      _offsetDirection.normalize().multiplyScalar amount
-      
-      offsetPoint = offsetPoints[pointIndex]
-      offsetPoint.x += _offsetDirection.x
-      offsetPoint.y += _offsetDirection.y
-      
-      if offsetPoint.bezierControlPoints
-        offsetPoint.bezierControlPoints[1].x += _offsetDirection.x
-        offsetPoint.bezierControlPoints[1].y += _offsetDirection.y
-        
-      nextOffsetPoint = offsetPoints[pointIndex + 1]
-      if nextOffsetPoint?.bezierControlPoints
-        nextOffsetPoint.bezierControlPoints[0].x += _offsetDirection.x
-        nextOffsetPoint.bezierControlPoints[0].y += _offsetDirection.y
-    
-    offsetPoints

@@ -45,6 +45,13 @@ class Markup.PixelArt
         
     markup
   
+  @intendedLineBase: ->
+    palette = LOI.palette()
+    lineColor = palette.color Atari2600.hues.gray, 4
+    
+    style: "##{lineColor.getHexString()}"
+    width: 0
+  
   @perceivedLineBase: ->
     palette = LOI.palette()
     lineColor = palette.color Atari2600.hues.azure, 5

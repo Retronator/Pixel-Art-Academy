@@ -31,19 +31,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles extends 
 
     @maxSizeNumber: -> throw new AE.NotImplementedException "Step needs to specify up to which number to draw the sizes on top."
 
-    intendedLineBase: ->
-      return @_intendedLineBase if @_intendedLineBase
-      
-      return unless palette = LOI.palette()
-      intendedLineColor = palette.color Atari2600.hues.gray, 4
-      intendedLineStyle = "##{intendedLineColor.getHexString()}"
-      
-      @_intendedLineBase =
-        style: intendedLineStyle
-        width: 0
-      
-      @_intendedLineBase
-      
     markup: ->
       markup = []
       
@@ -62,7 +49,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles extends 
       
     _addCircle: (markup, x, y, radius) ->
       markup.push
-        line: _.extend {}, @intendedLineBase(),
+        line: _.extend {}, Markup.PixelArt.intendedLineBase(),
           arc: {x, y, radius}
   
   class @Size1 extends @StepInstruction
@@ -260,7 +247,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles extends 
 
   class @Complete extends @StepInstruction
     @id: -> "#{Asset.id()}.Complete"
-    @assetClass: -> Asset
     @maxSizeNumber: -> 16
     
     @message: -> """

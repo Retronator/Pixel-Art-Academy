@@ -59,6 +59,15 @@ class Markup.EngineComponent
           context.stroke()
           
           if line.arrow
+            if line.arrow.start
+              endPoint = line.points[0]
+              
+              if line.points[1].bezierControlPoints
+                startPoint = line.points[1].bezierControlPoints[0]
+              
+              else
+                startPoint = line.points[1]
+              
             if line.arrow.end
               endPoint = line.points[line.points.length - 1]
               
@@ -68,7 +77,7 @@ class Markup.EngineComponent
               else
                 startPoint = line.points[line.points.length - 2]
                 
-              @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+            @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
             
         if line.arc
           startAngle = line.arc.startAngle or 0

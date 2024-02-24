@@ -52,30 +52,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
     
   Asset = @
   
-  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
     
     # The length of the arrow to indicate a pixel move.
     @movePixelArrowLength = 1.2
-    
-    @activeStepNumber: ->
-      return unless asset = @getActiveAsset()
-      asset.stepAreas()[0].activeStepIndex() + 1
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless @activeStepNumber() is @stepNumber()
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
-    
-    @resetCompletedConditions: ->
-      not @getActiveAsset()
     
     markup: ->
       return unless asset = @getActiveAsset()
