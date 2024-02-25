@@ -108,7 +108,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
       status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
-    class @ConsistentLineWidth extends LM.Content.FutureContent
+    class @ConsistentLineWidth extends @CompletedCriteria
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtLineArt.ConsistentLineWidth'
       
       @displayName: -> "Consistent line width"
@@ -118,6 +118,8 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       @initialize()
       
       @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.ConsistentLineWidth
+      
+      status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
       
   class @AntiAliasing extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.AntiAliasing'

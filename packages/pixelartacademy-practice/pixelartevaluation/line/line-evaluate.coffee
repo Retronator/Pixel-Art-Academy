@@ -7,10 +7,10 @@ PAE.Line::evaluate = ->
   
   doubles = @_analyzeDoubles()
   corners = @_analyzeCorners()
-  widthType = @_analyzeWidthType()
+  width = @_analyzeWidth()
   curveSmoothness = @_analyzeCurveSmoothness()
   
-  @_evaluation = {widthType, doubles, corners, curveSmoothness}
+  @_evaluation = {width, doubles, corners, curveSmoothness}
   
   @_evaluation
   
@@ -46,25 +46,33 @@ PAE.Line::_analyzeCorners = ->
   count: corners.length
   pixels: corners
 
-PAE.Line::_analyzeWidthType = ->
+PAE.Line::_analyzeWidth = ->
   # Analyze single and double points.
   radiusCounts = _.countBy @points, 'radius'
-  singleCount = radiusCounts[0.5]
-  doubleCount = radiusCounts[1]
+  singleCount = radiusCounts[0.5] or 0
+  doubleCount = radiusCounts[1] or 0
   
-  return @constructor.WidthType.Variable if singleCount and doubleCount
-  return @constructor.WidthType.Wide if doubleCount
+  if doubleCount and not singleCount
+    return type: @constructor.WidthType.Wide, score: 1
   
-  # We only have single points so we need to determine if the line is thin or thick.
+  score = Math.abs 2 * singleCount / (singleCount + doubleCount) - 1
+  
+  # We have some single points so we need to determine if those are thin or thick.
   sideStepEdgeSegments = _.filter  @edgeSegments, (edgeSegment) => edgeSegment.isSideStep
   
-  axisAlignedCount = _.countBy sideStepEdgeSegments, (edgeSegment) => edgeSegment.edge.isAxisAligned
-  thinCount = axisAlignedCount[false]
-  thickCount = axisAlignedCount[true]
+  if sideStepEdgeSegments.length
+    axisAlignedCount = _.countBy sideStepEdgeSegments, (edgeSegment) => edgeSegment.edge.isAxisAligned
+    thinCount = axisAlignedCount[false] or 0
+    thickCount = axisAlignedCount[true] or 0
+    
+    score *= Math.abs 2 * thinCount / (thinCount + thickCount) - 1
   
-  return @constructor.WidthType.Variable if thinCount and thickCount
-  return @constructor.WidthType.Thick if thickCount
-  @constructor.WidthType.Thin
+  if thinCount and thickCount or singleCount and doubleCount
+    # Varying width type should have the score of 0.9 (B) or less.
+    return type: @constructor.WidthType.Varying, score: score * 0.9
+    
+  type: if thinCount then @constructor.WidthType.Thin else @constructor.WidthType.Thick
+  score: 1
 
 PAE.Line::_analyzeCurveSmoothness = ->
   # Nothing to do if we don't have curved parts.

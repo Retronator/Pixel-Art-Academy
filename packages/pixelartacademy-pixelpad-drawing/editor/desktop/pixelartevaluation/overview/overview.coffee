@@ -13,9 +13,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
   
   @CriteriaNames:
     PixelPerfectLines: "Pixel-perfect lines"
-    ConsistentLineWidth: "Consistent line width"
     EvenDiagonals: "Even diagonals"
     SmoothCurves: "Smooth curves"
+    ConsistentLineWidth: "Consistent line width"
   
   onCreated: ->
     super arguments...
@@ -32,7 +32,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
       pixelArtEvaluationCriteria = pixelArtEvaluationProperty.allowedCriteria or PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
       
       if @unlockable()
-        pixelArtEvaluationCriteria.push (PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria') or [])...
+        # Note: We need to use concat since we don't want to modify the array we got from the state.
+        pixelArtEvaluationCriteria = pixelArtEvaluationCriteria.concat PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria') or []
       
       for criterion of PAE.Criteria
         criterionProperty = _.lowerFirst criterion

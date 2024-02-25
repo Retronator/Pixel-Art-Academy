@@ -10,9 +10,14 @@ abruptSegmentLengthChangesFilterValues = [PAE.Subcriteria.SmoothCurves.AbruptSeg
 straightPartsFilters = [PAE.Subcriteria.SmoothCurves.StraightParts, _.keys(PAE.Line.Part.Curve.StraightParts)...]
 inflectionPointsFilterValues = [PAE.Subcriteria.SmoothCurves.InflectionPoints, _.keys(PAE.Line.Part.Curve.InflectionPoints)...]
 
-
 class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComponent
   @debug = true
+  
+  @LineWidths:
+    Thin: 1
+    Thick: 2
+    Wide: 3
+    Varying: 2
   
   constructor: ->
     super arguments...
@@ -223,6 +228,34 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               
             markup.push {point}
           
+    if PAE.Criteria.ConsistentLineWidth in displayedCriteria
+      for line in lines
+        continue if focusedLines.length and line not in focusedLines
+        
+        lineEvaluation = line.evaluate()
+        widthType = lineEvaluation.width.type
+        
+        # Apply filtering.
+        if filterValue
+          if filterValue.criterion is PAE.Subcriteria.ConsistentLineWidth.GlobalConsistency
+            continue unless widthType is filterValue.value
+            
+          else if filterValue.criterion is PAE.Subcriteria.ConsistentLineWidth.IndividualConsistency
+            if filterValue.value is PAE.Line.WidthConsistency.Varying
+              continue unless widthType is PAE.Line.WidthType.Varying
+              
+            else
+              continue if widthType is PAE.Line.WidthType.Varying
+          
+        # Draw the line with desired width and colored differently if it's varying.
+        lineMarkup = Markup.PixelArt.perceivedLine line
+        
+        for element in lineMarkup
+          element.line.style = if widthType is PAE.Line.WidthType.Varying then mediocreStyle else betterStyle
+          element.line.width = @constructor.LineWidths[widthType]
+          
+        markup.push lineMarkup...
+        
     @drawMarkup markup, context, renderOptions
 
   _addPixelToPath: (context, pixel) ->

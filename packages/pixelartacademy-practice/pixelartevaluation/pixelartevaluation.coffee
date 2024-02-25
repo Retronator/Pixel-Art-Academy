@@ -36,14 +36,20 @@ class PAA.Practice.PixelArtEvaluation
   #       isolated, sparse, dense: how many inflection points of this type there are
   # consistentLineWidth:
   #   score: float between 0 and 1 with this criterion evaluation
-  #   counts: object with counts of lines with a certain width type
-  #     thin, thick, wide, varied: how many lines have this type of line width
+  #   individualConsistency: float between 0 and 1 telling how much lines have the same width within themselves
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of how many lines have this width consistency
+  #       consistent, varied: how many lines of this severity there are
+  #   globalConsistency: float between 0 and 1 telling how much line types are consistent in the image
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of lines with a certain width type
+  #       thin, thick, wide, varied: how many lines have this type of line width
 
   @Criteria =
     PixelPerfectLines: 'PixelPerfectLines'
-    ConsistentLineWidth: 'ConsistentLineWidth'
     EvenDiagonals: 'EvenDiagonals'
     SmoothCurves: 'SmoothCurves'
+    ConsistentLineWidth: 'ConsistentLineWidth'
 
   @Subcriteria =
     PixelPerfectLines:
@@ -56,6 +62,9 @@ class PAA.Practice.PixelArtEvaluation
       AbruptSegmentLengthChanges: 'AbruptSegmentLengthChanges'
       StraightParts: 'StraightParts'
       InflectionPoints: 'InflectionPoints'
+    ConsistentLineWidth:
+      IndividualConsistency: 'IndividualConsistency'
+      GlobalConsistency: 'GlobalConsistency'
   
   @SubcriteriaWeights =
     PixelPerfectLines:
@@ -68,6 +77,9 @@ class PAA.Practice.PixelArtEvaluation
       AbruptSegmentLengthChanges: 0.34
       StraightParts: 0.33
       InflectionPoints: 0.33
+    ConsistentLineWidth:
+      IndividualConsistency: 0.5
+      GlobalConsistency: 0.5
       
   @_lastId = 0
 
@@ -188,13 +200,12 @@ class PAA.Practice.PixelArtEvaluation
             
             # We use the square root of the length so that long lines can't hugely overtake the short ones.
             weight = Math.sqrt line.points.length
+            totalWeight += weight
             
             for subcriterion of @constructor.Subcriteria.PixelPerfectLines
               subcriterionProperty = _.lowerFirst subcriterion
               @_evaluation.pixelPerfectLines[subcriterionProperty].score += lineEvaluation[subcriterionProperty].score * weight
               @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count
-            
-            totalWeight += weight
             
         @_evaluation.pixelPerfectLines.doubles.count = doubles.length
         
@@ -240,14 +251,13 @@ class PAA.Practice.PixelArtEvaluation
               continue if linePartEvaluation.type is @constructor.Line.Part.StraightLine.Type.AxisAligned
               
               weight = Math.sqrt linePart.points.length
+              totalWeight += weight
               
               for subcriterion of @constructor.Subcriteria.EvenDiagonals
                 subcriterionProperty = _.lowerFirst subcriterion
                 @_evaluation.evenDiagonals[subcriterionProperty].score += linePartEvaluation[subcriterionProperty].score * weight
                 @_evaluation.evenDiagonals[subcriterionProperty].counts[_.lowerFirst linePartEvaluation[subcriterionProperty].type]++
               
-              totalWeight += weight
-          
         for subcriterion of @constructor.Subcriteria.EvenDiagonals
           subcriterionProperty = _.lowerFirst subcriterion
           
@@ -295,6 +305,7 @@ class PAA.Practice.PixelArtEvaluation
             
             # We use the square root of the length so that long lines can't hugely overtake the short ones.
             weight = Math.sqrt line.points.length
+            totalWeight += weight
             
             for subcriterion of @constructor.Subcriteria.SmoothCurves
               subcriterionProperty = _.lowerFirst subcriterion
@@ -304,8 +315,6 @@ class PAA.Practice.PixelArtEvaluation
               
               for category, linePartCount of curveSmoothness.counts
                 @_evaluation.smoothCurves[subcriterionProperty].counts[category] += linePartCount
-              
-            totalWeight += weight
         
         for subcriterion of @constructor.Subcriteria.SmoothCurves
           subcriterionProperty = _.lowerFirst subcriterion
@@ -321,6 +330,54 @@ class PAA.Practice.PixelArtEvaluation
       
       if evaluation.smoothCurves.score?
         finalScore += evaluation.smoothCurves.score
+        criteriaCount++
+        
+    if pixelArtEvaluationProperty.consistentLineWidth
+      # Compute evaluation if needed.
+      unless @_evaluation.consistentLineWidth
+        @_evaluation.consistentLineWidth =
+          individualConsistency:
+            score: 0
+            counts:
+              consistent: 0
+              varying: 0
+          globalConsistency:
+            counts:
+              thin: 0
+              thick: 0
+              wide: 0
+              varying: 0
+        
+        totalWeight = 0
+        
+        for layer in @layers
+          for line in layer.lines
+            lineEvaluation = line.evaluate()
+            widthType = lineEvaluation.width.type
+            
+            weight = Math.sqrt line.points.length
+            totalWeight += weight
+            
+            @_evaluation.consistentLineWidth.individualConsistency.score += lineEvaluation.width.score * weight
+            @_evaluation.consistentLineWidth.individualConsistency.counts[if widthType is @constructor.Line.WidthType.Varying then 'varying' else 'consistent']++
+            @_evaluation.consistentLineWidth.globalConsistency.counts[_.lowerFirst lineEvaluation.width.type]++
+          
+        if totalWeight
+          @_evaluation.consistentLineWidth.individualConsistency.score /= totalWeight
+          
+          # Calculate global consistency score by using the share the most common type has.
+          largestTypeCount = _.max _.values @_evaluation.consistentLineWidth.globalConsistency.counts
+          @_evaluation.consistentLineWidth.globalConsistency.score = largestTypeCount / layer.lines.length
+          
+        else
+          # There were no lines to be evaluated, so the category doesn't have a meaning.
+          @_evaluation.consistentLineWidth.individualConsistency.score = null
+          @_evaluation.consistentLineWidth.globalConsistency.score = null
+      
+      evaluation.consistentLineWidth = @_calculateWeightedEvaluation @constructor.Subcriteria.ConsistentLineWidth, @constructor.SubcriteriaWeights.ConsistentLineWidth, pixelArtEvaluationProperty.consistentLineWidth, @_evaluation.consistentLineWidth
+      
+      if evaluation.consistentLineWidth.score
+        finalScore += evaluation.consistentLineWidth.score
         criteriaCount++
         
     finalScore /= criteriaCount if criteriaCount

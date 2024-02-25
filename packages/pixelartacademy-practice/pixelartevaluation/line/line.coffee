@@ -7,7 +7,11 @@ class PAE.Line
     Thin: 'Thin'
     Thick: 'Thick'
     Wide: 'Wide'
-    Variable: 'Variable'
+    Varying: 'Varying'
+  
+  @WidthConsistency:
+    Consistent: 'Consistent'
+    Varying: 'Varying'
     
   constructor: (@layer) ->
     @id = PAE.nextId()

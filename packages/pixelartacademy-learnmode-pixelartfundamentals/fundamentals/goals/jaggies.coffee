@@ -169,18 +169,18 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.ConsistentLineWidth'
     @goal: -> Goal
     
-    @directive: -> "Draw a sprite with a consistent, thicker line width"
+    @directive: -> "Draw a sprite with a consistent line width style"
     
     @instructions: -> """
       In the Drawing app, choose a reference in the Pixel art line art challenge.
-      Complete the drawing, enable the Consistent line width criterion in the pixel art evaluation paper, and achieve a score of 80% or more using one of the thicker line width styles (1-pixel thick or 2-pixel wide).
+      Complete the drawing, enable the Consistent line width criterion in the pixel art evaluation paper, and achieve a score of 80% or more for either individual line width consistency or for having a uniform line width type.
     """
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
     @interests: -> ['line width (pixel art)']
     
-    @predecessors: -> [Goal.Curves]
+    @predecessors: -> [Goal.LineWidth]
     
     @groupNumber: -> 3
     

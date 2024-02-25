@@ -76,10 +76,8 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       
       _.every [
         asset.completed
-        consistentLineWidth.score >= 0.8
-        consistentLineWidth.counts?.thin is 0
+        consistentLineWidth.individualConsistency.score >= 0.8 or consistentLineWidth.globalConsistency.score >= 0.8
       ]
-  
   
   @addDrawLineArtAsset: (id) ->
     assets = @state 'assets'
@@ -109,6 +107,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       PixelPerfectLines: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
       EvenDiagonals: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
       SmoothCurves: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
+      ConsistentLineWidth: PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
     
     @_unlockableCriteriaAutorun = Tracker.autorun =>
       unlockablePixelArtEvaluationCriteria = []
@@ -123,6 +122,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       PixelPerfectLines: Boolean @constructor.completedPixelPerfectLines()
       EvenDiagonals: Boolean @constructor.completedEvenDiagonals()
       SmoothCurves: Boolean @constructor.completedSmoothCurves()
+      ConsistentLineWidth: Boolean @constructor.completedConsistentLineWidth()
     ,
       EJSON.equals
     
