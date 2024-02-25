@@ -32,7 +32,7 @@ class Jaggies2.Steps
       
       # The line has to have a thin width (no doubles).
       evaluation = line.evaluate()
-      evaluation.widthType is PAE.Line.WidthType.Thin
+      evaluation.width.type is PAE.Line.WidthType.Thin
       
   class @FixStep extends TutorialBitmap.PixelsStep
     constructor: ->
