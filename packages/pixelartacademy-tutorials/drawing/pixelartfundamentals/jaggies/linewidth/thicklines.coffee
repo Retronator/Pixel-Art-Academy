@@ -16,7 +16,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.ThickLines ex
   @bitmapInfo: -> """
     Artwork from [64x64 rpg](https://castpixel.artstation.com/projects/0XOaE8), 2019
 
-    Artist: Christina Antoinette Neofotistou
+    Artist: Christina 'castpixel' Neofotistou
   """
   
   @fixedDimensions: -> width: 36, height: 53
