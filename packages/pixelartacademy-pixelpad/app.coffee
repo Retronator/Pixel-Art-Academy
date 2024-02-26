@@ -35,13 +35,6 @@ class PAA.PixelPad.App extends LOI.Adventure.Item
     # Override to display shortcuts table in the app.
     false
 
-  onRendered: ->
-    super arguments...
-    
-    $appWrapper = $('.app-wrapper')
-    $appWrapper.velocity 'transition.slideUpIn', complete: ->
-      $appWrapper.css('transform', '')
-
   setDefaultPixelPadSize: ->
     @setMaximumPixelPadSize()
 

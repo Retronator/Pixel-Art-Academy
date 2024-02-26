@@ -89,6 +89,8 @@ class PAA.PixelPad.OS extends LOI.Component
     @appTransitioning = new ReactiveField false
     
     Tracker.autorun (computation) =>
+      return unless @isRendered()
+      
       # Don't route until apps are created.
       return unless currentApps = @currentApps()
       
@@ -107,9 +109,19 @@ class PAA.PixelPad.OS extends LOI.Component
         startNewApp = =>
           return unless newApp
 
+          # Hide app area to prevent flickering before the transition starts.
+          @$appArea.css opacity: 0
+
           @currentApp newApp
           newApp.activate()
 
+          # Transition the new app in after it has rendered (and we have a new app wrapper).
+          Tracker.autorun (computation) =>
+            return unless newApp.isRendered()
+            computation.stop()
+            
+            @$appArea.velocity 'transition.slideUpIn', complete: => @$appArea.css transform: ''
+          
         if currentApp
           @appTransitioning true
           currentApp.deactivate =>
@@ -135,6 +147,8 @@ class PAA.PixelPad.OS extends LOI.Component
 
     @$root = if @justOS then $('html') else @$('.pixelartacademy-pixelpad-os').closest('.os')
     @$root.addClass('pixelartacademy-pixelpad-os-root')
+    
+    @$appArea = @$('.app-area')
 
   onDestroyed: ->
     super arguments...

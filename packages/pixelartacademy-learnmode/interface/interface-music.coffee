@@ -203,7 +203,7 @@ class LM.Interface extends LM.Interface
     # Control how to play the in-game music.
     @autorun (computation) =>
       pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      value = pixelPad?.os.currentApp().inGameMusicMode?()
+      value = pixelPad?.os.currentApp()?.inGameMusicMode?()
       
       unless value is @constructor.InGameMusicMode.Off
         switch LOI.settings.audio.inGameMusicOutput.value()
