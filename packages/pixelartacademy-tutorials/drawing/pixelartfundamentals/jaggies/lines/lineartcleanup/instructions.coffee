@@ -99,6 +99,34 @@ class LineArtCleanup.Instructions
     @priority: -> 1
     
     @initialize()
+  
+  class @CloseEvaluationPaperWithPixelPerfectLine extends @StepInstruction
+    @id: -> "#{LineArtCleanup.id()}.CloseEvaluationPaperWithPixelPerfectLine"
+    @stepNumber: -> 5
+    
+    @message: -> """
+      In this detailed view, you can hover over the numbers in the count column to show just those pixels in the analysis.
+      You've already made your line pixel-perfect so this is not useful, but it will be later.
+
+      Close the evaluation paper to complete the lesson.
+    """
+    
+    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @delayDuration: -> @uiRevealDelayDuration
+    
+    @activeConditions: ->
+      return unless super arguments...
+      
+      return unless asset = @getActiveAsset()
+      return unless bitmap = asset.bitmap()
+      return if bitmap.properties.pixelArtEvaluation.pixelPerfectLines.doubles.count
+      return if bitmap.properties.pixelArtEvaluation.pixelPerfectLines.corners.count
+      
+      true
+    
+    @priority: -> 2
+    
+    @initialize()
 
   class @CleanDoubles extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.CleanDoubles"
@@ -116,7 +144,11 @@ class LineArtCleanup.Instructions
     
     displaySide: ->
       return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      
+      # Note: In case the user undoes the steps to where the pixel art evaluation property is not present anymore, the
+      # view will not display anymore, so we just show this instruction at the bottom even without the view being
+      # present.
+      return InstructionsSystem.DisplaySide.Bottom unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
     
@@ -132,6 +164,6 @@ class LineArtCleanup.Instructions
     
     displaySide: ->
       return unless drawingEditor = @getEditor()
-      pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      return InstructionsSystem.DisplaySide.Bottom unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom

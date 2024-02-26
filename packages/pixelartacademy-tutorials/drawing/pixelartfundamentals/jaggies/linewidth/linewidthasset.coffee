@@ -66,35 +66,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.LineWidth ext
               x: 44.5, y: 44.5, origin: Markup.TextOriginPosition.BottomRight
             value: "Wide (2-pixel) lines"
             
-      markup
-      
-  class @Width1 extends @StepInstruction
-    @id: -> "#{Asset.id()}.Width1"
-    @stepNumber: -> 1
-    
-    @message: -> """
-      The typical line in pixel art is 1 pixel wide, but we can only perfectly achieve it with horizontals and verticals.
-    """
-
-    @initialize()
-
-  class @Width1Thin extends @StepInstruction
-    @id: -> "#{Asset.id()}.Width1Thin"
-    @stepNumber: -> 2
-    
-    @message: -> """
-      With diagonals, due to jaggies, the width along the line varies.
-      The thin 1-pixel line alternates from 1.4 px at its widest down to 0 px in the corners of the jaggies.
-    """
-    
-    @initialize()
-    
-    markup: ->
-      markup = super arguments...
-
-      return markup unless asset = @getActiveAsset()
-      return markup unless pixelArtEvaluation = asset.pixelArtEvaluation()
-      
+      # Add widths.
       markupStyle = Markup.defaultStyle()
       
       arrowBase =
@@ -106,32 +78,33 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.LineWidth ext
       
       width1X = 3.5
       width0XY = 11
-
+      
       endOffset = 0.1
       endOffsetZeroWidth = 0.2
       startOffset = 1.2
       startOffsetVertical = 1.6
       
-      markup.push
-        line: _.extend {}, arrowBase,
-          points: [
-            x: width1X, y: 23 + startOffsetVertical
-          ,
-            x: width1X, y: 23 + endOffset
-          ]
-      ,
-        line: _.extend {}, arrowBase,
-          points: [
-            x: width1X, y: 22 - startOffsetVertical
-          ,
-            x: width1X, y: 22 - endOffset
-          ]
-        text: _.extend {}, textBase,
-          position:
-            x: width1X, y: 22 - startOffsetVertical, origin: Markup.TextOriginPosition.BottomCenter
-          value: "1"
+      if 1 <= @constructor.stepNumber() <= 2 and pixelArtEvaluation.getLinesBetween({x: 3, y: 22}, {x: 14, y: 22}).length
+        markup.push
+          line: _.extend {}, arrowBase,
+            points: [
+              x: width1X, y: 23 + startOffsetVertical
+            ,
+              x: width1X, y: 23 + endOffset
+            ]
+        ,
+          line: _.extend {}, arrowBase,
+            points: [
+              x: width1X, y: 22 - startOffsetVertical
+            ,
+              x: width1X, y: 22 - endOffset
+            ]
+          text: _.extend {}, textBase,
+            position:
+              x: width1X, y: 22 - startOffsetVertical, origin: Markup.TextOriginPosition.BottomCenter
+            value: "1"
       
-      if pixelArtEvaluation.getLinesBetween([{x: 8, y: 8}, {x: 17, y: 17}])
+      if @constructor.stepNumber() is 2 and pixelArtEvaluation.getLinesBetween({x: 8, y: 8}, {x: 17, y: 17}).length
         markup.push
           line: _.extend {}, arrowBase,
             points: [
@@ -168,8 +141,29 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.LineWidth ext
             position:
               x: width0XY + startOffset, y: width0XY - startOffset, origin: Markup.TextOriginPosition.BottomLeft
             value: "0"
-      
+            
       markup
+      
+  class @Width1 extends @StepInstruction
+    @id: -> "#{Asset.id()}.Width1"
+    @stepNumber: -> 1
+    
+    @message: -> """
+      The typical line in pixel art is 1 pixel wide, but we can only perfectly achieve it with horizontals and verticals.
+    """
+
+    @initialize()
+
+  class @Width1Thin extends @StepInstruction
+    @id: -> "#{Asset.id()}.Width1Thin"
+    @stepNumber: -> 2
+    
+    @message: -> """
+      With diagonals, due to jaggies, the width along the line varies.
+      The thin 1-pixel line alternates from 1.4 px at its widest down to 0 px in the corners of the jaggies.
+    """
+    
+    @initialize()
     
   class @Width1Thick extends @StepInstruction
     @id: -> "#{Asset.id()}.Width1Thick"

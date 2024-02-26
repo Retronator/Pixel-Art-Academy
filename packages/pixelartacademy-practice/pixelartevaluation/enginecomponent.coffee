@@ -37,6 +37,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
 
   _render: (context, renderOptions) ->
     pixelArtEvaluation = @options.pixelArtEvaluation()
+    pixelArtEvaluationProperty = @options.pixelArtEvaluationProperty()
     
     displayedCriteria = @options.displayedCriteria()
     filterValue = @options.filterValue()
@@ -59,9 +60,6 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         lines.push line
         
         for part in line.parts
-          # Filter to evaluated property if needed.
-          continue if filterValue and part.evaluate()[filterValue.property]?.type isnt filterValue.value
-  
           lineParts.push part
     
     # Add markup for pixel-perfect lines.
@@ -69,15 +67,19 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
       for line in lines
         continue if focusedLines.length and line not in focusedLines
         
-        # Draw doubles and corners.
-        drawDoubles = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Doubles else true
-        drawCorners = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Corners else true
+        # Draw doubles and corners. Make sure these are booleans since they
+        # will otherwise default to true in the pixelPerfectLineErrors method.
+        drawDoubles = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Doubles else pixelArtEvaluationProperty.pixelPerfectLines?.doubles?
+        drawCorners = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Corners else pixelArtEvaluationProperty.pixelPerfectLines?.corners?
         
         markup.push Markup.PixelArt.pixelPerfectLineErrors(line, drawDoubles, drawCorners)...
         
     # Add markup for even diagonals.
     if PAE.Criteria.EvenDiagonals in displayedCriteria
       for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine
+        # Filter to evaluated property if needed.
+        continue if filterValue and linePart.evaluate()[filterValue.property].type isnt filterValue.value
+        
         if linePart in focusedLineParts
           markup.push Markup.PixelArt.straightLineBreakdown(linePart)...
           

@@ -199,7 +199,9 @@ class Jaggies2.Instructions
     @stepNumber: -> 9
     
     @message: -> """
-      Move the pixels here as well. This will be explored further in the tutorial on diagonals.
+      Move the pixels here as well.
+      You will get a different line, but artists often adjust angles to make lines with ideal jaggies.
+      This will be explored in the tutorial on diagonals.
     """
     
     @initialize()

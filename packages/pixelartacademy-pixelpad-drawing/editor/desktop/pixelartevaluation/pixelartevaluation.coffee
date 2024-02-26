@@ -89,6 +89,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
       
     @engineComponent = new PAE.EngineComponent
       pixelArtEvaluation: => @pixelArtEvaluation()
+      pixelArtEvaluationProperty: => @pixelArtEvaluationProperty()
       displayedCriteria: =>
         return [] unless @displayed()
         

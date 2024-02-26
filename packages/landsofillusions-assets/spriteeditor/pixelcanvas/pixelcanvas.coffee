@@ -229,7 +229,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   onDestroyed: ->
     super arguments...
   
-    @app.removeComponent @
+    # Note: The component can get destroyed before it is rendered, in which case app will not be retrieved yet.
+    @app?.removeComponent @
     
     @_resizeObserver?.disconnect()
     
