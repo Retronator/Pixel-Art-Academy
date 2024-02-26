@@ -248,6 +248,9 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
   onPointerDown: (event) ->
     super arguments...
+    
+    # Only react to the main button.
+    return if event.button
 
     # Register that the stroke has just started.
     @_strokeStarted = true

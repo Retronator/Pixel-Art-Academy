@@ -37,7 +37,7 @@ class AC.Keyboard
     event.metaKey or event.ctrlKey
 
   @isShortcutDown: (event, shortcut) ->
-    return unless shortcut
+    return unless shortcut and event.keyCode
 
     # Allow sending in multiple shortcuts.
     if _.isArray shortcut

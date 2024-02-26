@@ -138,6 +138,9 @@ Package.onUse(function(api) {
   api.addFile('control/keyboard');
   api.addFile('control/keyboardstate');
   api.addFile('control/keys');
+  api.addFile('control/pointer');
+  api.addFile('control/pointerstate');
+  api.addFile('control/buttons');
   api.addFile('control/discretewheeleventlistener');
 
   // Artificial Mirage

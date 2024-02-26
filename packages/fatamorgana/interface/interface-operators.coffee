@@ -58,6 +58,8 @@ class FM.Interface extends FM.Interface
 
     $(document).on 'keydown.fatamorgana-interface', (event) => @onKeyDown event
     $(document).on 'keyup.fatamorgana-interface', (event) => @onKeyUp event
+    $(document).on 'pointerdown.fatamorgana-interface', (event) => @onPointerDown event
+    $(document).on 'pointerup.fatamorgana-interface', (event) => @onPointerUp event
 
   onDestroyed: ->
     super arguments...
@@ -104,29 +106,41 @@ class FM.Interface extends FM.Interface
 
   onKeyDown: (event) ->
     return unless @active()
-
+    
     @activeTool()?.onKeyDown? event
     
+    @onInputDown event, AC.Keyboard
+  
+  onPointerDown: (event) ->
+    return unless @active()
+    
+    @activeTool()?.onPointerDown? event
+    
+    @onInputDown event, AC.Pointer
+
+  onInputDown: (event, inputClass) ->
     return unless @shortcutsActive()
 
-    key = event.which
-
     # TODO: Figure out when to prevent key repeating. It's not always desirable (undo/redo).
-    # return if key is @_activeKey
 
     # Find if the pressed key matches any of the tools' shortcuts.
-    targetTool = _.find @tools(), (tool) => AC.Keyboard.isShortcutDown event, @getShortcutForOperator tool
-    targetAction = _.find @actions(), (action) => AC.Keyboard.isShortcutDown event, @getShortcutForOperator action
+    targetTool = _.find @tools(), (tool) => inputClass.isShortcutDown event, @getShortcutForOperator tool
+    targetAction = _.find @actions(), (action) => inputClass.isShortcutDown event, @getShortcutForOperator action
 
     if targetTool
       # We want to store the previous tool if we're activating this tool with the hold key.
       targetToolShortcut = @getShortcutForOperator targetTool
+      
+      isHoldShortcutActive = (shortcut) =>
+        return true if event.keyCode and event.keyCode is shortcut.holdKey
+        return true if event.button and event.button is shortcut.holdButton
+        false
 
       if _.isArray targetToolShortcut
-        storePreviousTool = _.find targetToolShortcut, (shortcut) => key is shortcut.holdKey
+        storePreviousTool = _.find targetToolShortcut, isHoldShortcutActive
 
       else
-        storePreviousTool = key is targetToolShortcut.holdKey
+        storePreviousTool = isHoldShortcutActive targetToolShortcut
 
       @activateTool targetTool, storePreviousTool
       
@@ -140,15 +154,21 @@ class FM.Interface extends FM.Interface
       # Prevent other in-game key listeners to also fire.
       event.stopImmediatePropagation()
 
-    @_activeKey = key
-
   onKeyUp: (event) ->
     return unless @active()
 
     @activeTool()?.onKeyUp? event
-
+    
+    @onInputUp()
+    
+  onPointerUp: (event) ->
+    return unless @active()
+    
+    @activeTool()?.onPointerUp? event
+    
+    @onInputUp()
+    
+  onInputUp: (event) ->
     return unless @shortcutsActive()
 
     @restoreStoredTool()
-
-    @_activeKey = null
