@@ -307,14 +307,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
   events: ->
     super(arguments...).concat
-      'pointerdown .canvas': @onPointerDownCanvas
       'pointermove .canvas': @onPointerMoveCanvas
       'pointerenter .canvas': @onPointerEnterCanvas
       'pointerleave .canvas': @onPointerLeaveCanvas
       'dragstart .canvas': @onDragStartCanvas
-
-  onPointerDownCanvas: (event) ->
-    @interface.activeTool()?.onPointerDown? event if @interface.active()
 
   onPointerMoveCanvas: (event) ->
     @interface.activeTool()?.onPointerMove? event if @interface.active()

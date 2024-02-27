@@ -142,6 +142,10 @@ class FM.Interface extends FM.Interface
       else
         storePreviousTool = isHoldShortcutActive targetToolShortcut
 
+      if storePreviousTool
+        @_holdKey = event.keyCode
+        @_holdButton = event.button
+
       @activateTool targetTool, storePreviousTool
       
     if targetAction?.enabled()
@@ -159,16 +163,20 @@ class FM.Interface extends FM.Interface
 
     @activeTool()?.onKeyUp? event
     
-    @onInputUp()
+    @onInputUp event
     
   onPointerUp: (event) ->
     return unless @active()
     
     @activeTool()?.onPointerUp? event
     
-    @onInputUp()
+    @onInputUp event
     
   onInputUp: (event) ->
     return unless @shortcutsActive()
+    return unless @_holdKey is event.keyCode or @_holdButton is event.button
 
     @restoreStoredTool()
+
+    @_holdKey = null
+    @_holdButton = null
