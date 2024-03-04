@@ -76,7 +76,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       
       _.every [
         asset.completed
-        consistentLineWidth.individualConsistency.score >= 0.8 or consistentLineWidth.globalConsistency.score >= 0.8
+        consistentLineWidth.individualConsistency?.score >= 0.8 or consistentLineWidth.globalConsistency?.score >= 0.8
       ]
   
   @addDrawLineArtAsset: (id) ->
