@@ -135,7 +135,7 @@ class PAA.PixelPad.OS extends LOI.Component
       # Create pixel scaling display.
       @display = new Artificial.Mirage.Display
         safeAreaWidth: 320
-        safeAreaHeight: 240
+        safeAreaHeight: 241
         minScale: 2
 
     else
