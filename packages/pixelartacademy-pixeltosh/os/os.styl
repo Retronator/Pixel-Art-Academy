@@ -1,0 +1,26 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os
+  position relative
+  height 100%
+  background-image image('/pixelartacademy/pixeltosh/os/dither-screen.png')
+  color atariGray(7)
+  geneva-mini()
+  overflow hidden
+  cursor none
+
+  .cursor
+    position absolute
+    top 10rem
+    left 10rem
+
+    &::after
+      content ''
+      position absolute
+
+    &.default::after
+      left -1rem
+      top -1rem
+      width 10rem
+      height 14rem
+      background-image image('/pixelartacademy/pixeltosh/os/cursors/arrow.png')

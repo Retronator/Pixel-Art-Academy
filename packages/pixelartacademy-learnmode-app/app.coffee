@@ -1,7 +1,8 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 AB = Artificial.Base
-LM = PixelArtAcademy.LearnMode
+PAA = PixelArtAcademy
+LM = PAA.LearnMode
 LOI = LandsOfIllusions
 
 # This is the web app that runs all Retronator websites.
@@ -26,6 +27,7 @@ class LM.App extends Artificial.Base.App
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
     new LOI.Assets
+    new PAA.Pixeltosh
   
     # We manually add the Learn Mode route without a domain to point to Learn Mode
     # so we can access it without etc.hosts modifications on standalone clients.
