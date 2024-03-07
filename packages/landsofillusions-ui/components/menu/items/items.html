@@ -29,14 +29,7 @@
         {{#if accountVisible}}
           <li class="menu-item"><span class="account actionable">Account</span></li>
         {{/if}}
-        <li class="menu-item"><span class="fullscreen actionable">
-          Fullscreen:
-          {{#if isFullscreen}}
-            on
-          {{else}}
-            off
-          {{/if}}
-        </span></li>
+        {{> LandsOfIllusions.Components.Menu.Items.Fullscreen}}
         <li class="menu-item"><span class="settings actionable">Settings</span></li>
         {{#if pressVisible}}
           <li class="menu-item">
@@ -80,6 +73,7 @@
     {{#if inDisplay}}
       <ul class="display menu">
         {{> LandsOfIllusions.Components.Menu.Items.GraphicsScale}}
+        {{> LandsOfIllusions.Components.Menu.Items.CRTEmulation}}
         <li class="menu-item"><span class="smooth-shading actionable">
           Smooth shading: {{#if smoothShading}}on{{else}}off{{/if}}
         </span></li>
@@ -104,6 +98,17 @@
   </div>
 </template>
 
+<template name="LandsOfIllusions.Components.Menu.Items.Fullscreen">
+  <li class="menu-item"><span class="fullscreen actionable">
+    Fullscreen:
+    {{#if isFullscreen}}
+      on
+    {{else}}
+      off
+    {{/if}}
+  </span></li>
+</template>
+
 <template name="LandsOfIllusions.Components.Menu.Items.GraphicsScale">
   <li class="graphics-scale menu-item">
     Pixel scale:
@@ -117,6 +122,12 @@
     {{/if}}
     <button class="next-button">▶</button>
   </li>
+</template>
+
+<template name="LandsOfIllusions.Components.Menu.Items.CRTEmulation">
+  <li class="menu-item"><span class="crt-emulation actionable">
+    CRT emulation: {{#if crtEmulation}}on{{else}}off{{/if}}
+  </span></li>
 </template>
 
 <template name="LandsOfIllusions.Components.Menu.Items.VolumeControls">

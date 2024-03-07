@@ -11,6 +11,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
   @sections: -> []
 
   @scenes: -> [
+    @Apps
     @TutorialsDrawing
     @ChallengesDrawing
   ]

@@ -13,3 +13,6 @@ class PAA.Pixeltosh.Computer extends LOI.Component
   
   constructor: (@os) ->
     super arguments...
+  
+  crtEmulationClass: ->
+    'crt-emulation' if LOI.settings.graphics.crtEmulation.value()

@@ -19,15 +19,20 @@
     width 322rem
     height 216rem
     background atariGray(0)
-    filter blur(0.2rem) brightness(1.2) contrast(2) blur(0.2rem)
 
-    &::after
-      content ''
-      absolute-cover()
-      pointer-events none
-      background-image image('/pixelartacademy/pixeltosh/computer/scanline.png')
-      background-size 1rem 1rem
-      image-rendering auto
+    &.crt-emulation
+      filter blur(0.2rem) brightness(1.2) contrast(2) blur(0.2rem)
+
+      &::after
+        content ''
+        absolute-cover()
+        pointer-events none
+        background-image image('/pixelartacademy/pixeltosh/computer/scanline.png')
+        background-size 1rem 1rem
+        image-rendering auto
+
+    &:not(.crt-emulation)
+      filter brightness(0.88)
 
     .os
       position absolute

@@ -11,6 +11,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:fatamorgana');
   api.use('retronator:pixelartacademy');
 
   api.export('PixelArtAcademy');
@@ -23,7 +24,8 @@ Package.onUse(function(api) {
 
   api.addComponent('computer..');
   api.addComponent('os..');
-  api.addComponent('os/cursor..');
+  api.addFile('os/interface..');
+  api.addComponent('os/interface/cursor..');
 
   api.addFile('pages..');
   api.addComponent('pages/pixeltosh..');

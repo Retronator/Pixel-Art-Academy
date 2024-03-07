@@ -27,6 +27,8 @@ class FM.Interface extends AM.Component
   #     windows: array of floating windows
   #       order: the ordering of the floating area
   #       contentComponentId: ID of the content component
+  #     overlays: array of overlays that appear above dialogs
+  #       type: type of the overlay area
   # shortcuts
   #   currentMappingId: the mapping currently active
   #   {mappingId}:
@@ -212,6 +214,16 @@ class FM.Interface extends AM.Component
     # Create child data objects to send as data.
     for window, index in windows
       childData = windowsData.child index
+      childData._id = index
+      childData
+  
+  overlays: ->
+    overlaysData = @currentLayoutData().child 'overlays'
+    return unless overlays = overlaysData.value()
+    
+    # Create child data objects to send as data.
+    for overlay, index in overlays
+      childData = overlaysData.child index
       childData._id = index
       childData
 

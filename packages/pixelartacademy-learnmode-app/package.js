@@ -35,6 +35,7 @@ Package.onUse(function(api) {
 
   api.use('retronator:pixelartacademy-pixelpad');
   api.use('retronator:pixelartacademy-pixelpad-pico8');
+  api.use('retronator:pixelartacademy-pixelpad-pixeltosh');
   api.use('retronator:pixelartacademy-pixelpad-drawing');
   api.use('retronator:pixelartacademy-pixelpad-studyplan');
   api.use('retronator:pixelartacademy-pixelpad-todo');

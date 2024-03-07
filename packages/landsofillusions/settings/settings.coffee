@@ -73,6 +73,7 @@ class LOI.Settings
       anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings
       smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
       smoothShadingQuantizationLevels: new @constructor.Field 24, 'graphics.smoothShadingQuantizationLevels', @persistSettings
+      crtEmulation: new @constructor.Field true, 'graphics.crtEmulation', @persistSettings
 
     audioDefault = if AB.ApplicationEnvironment.isBrowser then @constructor.Audio.Enabled.Fullscreen else @constructor.Audio.Enabled.On
     

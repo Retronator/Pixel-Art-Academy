@@ -12,10 +12,8 @@ class PAA.Pixeltosh.OS extends LOI.Component
     variables:
       startup: AEc.ValueTypes.Trigger
 
-  constructor: ->
+  onCreated: ->
     super arguments...
-    
-    @cursor = new ReactiveField null
     
     @programLocation = new PAA.Pixeltosh.Programs
     
@@ -53,12 +51,27 @@ class PAA.Pixeltosh.OS extends LOI.Component
 
         @_programs[programClass.id()]
         
-  onCreated: ->
-    super arguments...
+    @loadedPrograms = new ReactiveField []
+    
+    @activeProgram = new ComputedField =>
+      _.last @loadedPrograms()
     
     @display = @callAncestorWith 'display'
     
-    @cursor new @constructor.Cursor @
+    @interface = new @constructor.Interface @
+    
+    @cursor = new ComputedField =>
+      @interface.getView PAA.Pixeltosh.OS.Interface.Cursor
+    
+  loadProgram: (program) ->
+    loadedPrograms = @loadedPrograms()
+    loadedPrograms.push program
+    Tracker.nonreactive => @loadedPrograms loadedPrograms
+    
+  unloadProgram: (program) ->
+    loadedPrograms = @loadedPrograms()
+    loadedPrograms.pull program
+    Tracker.nonreactive => @loadedPrograms loadedPrograms
 
   events: ->
     super(arguments...).concat
