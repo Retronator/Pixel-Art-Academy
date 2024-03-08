@@ -4,7 +4,7 @@
       {{> Template.dynamic template=type}}
     {{/if}}
     {{#if contentComponentId}}
-      {{> Template.dynamic template=contentComponentId data=componentData}}
+      {{> renderContentComponent componentData}}
     {{/if}}
   </div>
 </template>

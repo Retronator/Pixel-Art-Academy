@@ -14,6 +14,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     @Apps
     @TutorialsDrawing
     @ChallengesDrawing
+    @PixeltoshPrograms
   ]
 
   @courses: -> [

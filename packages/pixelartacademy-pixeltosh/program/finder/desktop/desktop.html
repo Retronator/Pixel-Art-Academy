@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Finder.Desktop">
+  <div class="pixelartacademy-pixeltosh-programs-finder-desktop">
+    <ul class="programs">
+      {{#each programs}}
+        <li class="program">
+          <button class="program-button">
+            <img class="icon" src="{{image iconUrl}}"/>
+            <span class="name">{{fullName}}</span>
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

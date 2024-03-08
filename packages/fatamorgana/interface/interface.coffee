@@ -19,16 +19,18 @@ class FM.Interface extends AM.Component
   #   {layoutId}:
   #     name: name of the layout
   #     applicationArea: hierarchy of docked areas
-  #       type: type of the layout area
+  #       type: type of the layout area (unless contentComponentId is specified)
+  #       contentComponentId: ID of the terminal singleton component (unless type is specified)
   #       content
-  #         type
+  #         type or contentComponentId
   #           ...
   #       ...
   #     windows: array of floating windows
-  #       order: the ordering of the floating area
-  #       contentComponentId: ID of the content component
+  #       order: the ordering of the floating area (low is on the bottom, high is on top)
+  #       alwaysOnTop: whether to sort this window above the windows that are not on top
+  #       type or contentComponentId: ID of the content view
   #     overlays: array of overlays that appear above dialogs
-  #       type: type of the overlay area
+  #       type or contentComponentId: ID of the content view
   # shortcuts
   #   currentMappingId: the mapping currently active
   #   {mappingId}:
@@ -70,6 +72,7 @@ class FM.Interface extends AM.Component
     @currentShortcutsMapping = new ComputedField =>
       @data.child("shortcuts.#{@currentShortcutsMappingId()}.mapping").value()
 
+    @_components = []
     @componentsData = @data.child 'components'
     @filesData = @data.child 'files'
     @componentsForFilesData = @data.child 'componentsForFiles'
@@ -103,6 +106,15 @@ class FM.Interface extends AM.Component
     super arguments...
 
     @data.destroy()
+    
+  getComponent: (componentClassOrId) ->
+    componentId = componentClassOrId.id?() or componentClassOrId
+    
+    unless @_components[componentId]
+      componentClass = AM.Component.getClassForName componentId
+      Tracker.nonreactive => @_components[componentId] = new componentClass @
+    
+    @_components[componentId]
 
   getComponentData: (componentClassOrId) ->
     componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
@@ -204,17 +216,30 @@ class FM.Interface extends AM.Component
     dialogs = @dialogs()
     _.pull dialogs, dialog
     @dialogs dialogs
+    
+  addWindow: (window) ->
+    windowsData = @currentLayoutData().child 'windows'
+
+    windows = windowsData.value() or []
+    windows.push window
+
+    windowsData.value windows
 
   windows: ->
     windowsData = @currentLayoutData().child 'windows'
-    return unless windows = _.cloneDeep windowsData.value()
-
-    _.orderBy windows, 'order'
-
+    return unless windows = windowsData.value()
+    
+    windowIndices = for window, index in windows
+      index: index
+      alwaysOnTop: window.alwaysOnTop or false
+      order: window.order or 0
+    
+    sortedWindowIndices = _.orderBy windowIndices, ['alwaysOnTop', 'order']
+    
     # Create child data objects to send as data.
-    for window, index in windows
-      childData = windowsData.child index
-      childData._id = index
+    for windowIndex in sortedWindowIndices
+      childData = windowsData.child windowIndex.index
+      childData._id = windowIndex.index
       childData
   
   overlays: ->

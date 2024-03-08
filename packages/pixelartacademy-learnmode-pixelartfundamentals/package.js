@@ -28,6 +28,7 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/tutorialsdrawing');
   api.addFile('fundamentals/scenes/challengesdrawing');
   api.addFile('fundamentals/scenes/apps');
+  api.addFile('fundamentals/scenes/pixeltoshprograms');
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');

@@ -5,23 +5,41 @@ PAA = PixelArtAcademy
 
 class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Finder'
+  @register @id()
 
   @version: -> '0.1.0'
-
-  @register @id()
-  template: -> @constructor.id()
 
   @fullName: -> "Finder"
   @description: ->
     "
       The file system manager of Pixeltosh.
     "
+    
+  @programSlug: -> 'finder'
 
   @initialize()
   
-  template: -> @id()
+  load: ->
+    @os.addWindow contentComponentId: @constructor.Desktop.id()
+    
+  menuItems: -> [
+    caption: ''
+    items: []
+  ,
+    caption: 'File'
+    items: []
+  ,
+    caption: 'Edit'
+    items: []
+  ,
+    caption: 'View'
+    items: []
+  ,
+    caption: 'Special'
+    items: []
+  ]
   
-  apps: ->
+  programs: ->
     # Show all programs except the finder.
     _.without @os.currentPrograms(), @
 

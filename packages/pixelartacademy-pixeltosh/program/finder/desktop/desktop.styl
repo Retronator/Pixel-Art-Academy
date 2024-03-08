@@ -1,19 +1,26 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-.pixelartacademy-pixeltosh-programs-finder.program
+.pixelartacademy-pixeltosh-programs-finder-desktop
+  fixed-cover()
+  top 14rem
+
   .programs
+    display flex
+    absolute-cover()
+    flex-flow column wrap-reverse
+    align-items flex-start
     list-style none
+    margin 0
     padding 0
-    margin 10rem 5rem
 
     .program
-      margin-bottom 10rem
+      max-width 64rem
+      margin 10rem
 
       .program-button
         font inherit
         background none
         border none
-        max-width 64rem
         padding 0
 
         .icon
@@ -23,5 +30,8 @@
           height 20rem
 
         .name
-          padding 2rem
+          display inline-block
+          max-width 64rem
+          padding 1rem 1rem 1rem 2rem
           background white
+          overflow-wrap break-word

@@ -14,32 +14,20 @@ class PAA.Pixeltosh.OS.Interface extends FM.Interface
     
     menu =
       type: FM.Menu.id()
-      items: [
-        caption: ''
-        items: []
-      ,
-        caption: 'File'
-        items: []
-      ,
-        caption: 'Edit'
-        items: []
-      ,
-        caption: 'View'
-        items: []
-      ,
-        caption: 'Special'
-        items: []
-      ]
+      left: 0
+      top: 0
+      right: 0
+      height: 0
+      order: 0
+      items: []
     
     layouts =
       currentLayoutId: 'main'
       main:
         name: 'Main'
-        applicationArea:
-          type: FM.SplitView.id()
-          fixed: true
-          mainArea: menu
-          dockSide: FM.SplitView.DockSide.Top
+        windows: [
+          menu
+        ]
         overlays: [
           type: PAA.Pixeltosh.OS.Interface.Cursor.id()
         ]

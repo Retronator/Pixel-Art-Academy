@@ -18,9 +18,14 @@ Package.onUse(function(api) {
 
   api.addFile('pixeltosh');
 
-  // HACK: We store programs in a folder called program since programs gets ignored by Meteor for legacy reasons.
-  api.addFile('program/programs');
   api.addFile('program..');
+  api.addFile('program/view');
+
+  // HACK: We store programs in program since programs gets ignored by Meteor for legacy reasons.
+  api.addFile('program/programs');
+
+  api.addFile('program/finder..');
+  api.addComponent('program/finder/desktop..');
 
   api.addComponent('computer..');
   api.addComponent('os..');

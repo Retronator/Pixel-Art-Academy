@@ -34,27 +34,24 @@ class PAA.Pixeltosh.OS extends LOI.Component
     # Instantiates and returns all programs that are available to listen to commands.
     @currentPrograms = new ComputedField =>
       # When running in the adventure interface, get programs from the situation.
-      if currentProgramsSituation
+      if LOI.adventure
         return unless currentProgramsSituation = @currentProgramsSituation()
 
-        programClasses = currentProgramsSituation.things()
+        programClasses = _.clone currentProgramsSituation.things()
+        
+        # Finder is always available in adventure interface.
+        programClasses.push PAA.Pixeltosh.Programs.Finder
         
       else
         # Only load the program referenced by the URL slug.
         programClasses = []
 
-      for programClass in programClasses
-        # We create the instance in a non-reactive context so that
-        # reruns of this autorun don't invalidate instance's autoruns.
-        Tracker.nonreactive =>
-          @_programs[programClass.id()] ?= new programClass @
-
-        @_programs[programClass.id()]
-        
+      @getProgram programClass for programClass in programClasses
+      
     @loadedPrograms = new ReactiveField []
     
-    @activeProgram = new ComputedField =>
-      _.last @loadedPrograms()
+    @activeView = new ReactiveField null, (a, b) => a is b
+    @activeProgram = new ComputedField => @activeView()?.program
     
     @display = @callAncestorWith 'display'
     
@@ -62,17 +59,69 @@ class PAA.Pixeltosh.OS extends LOI.Component
     
     @cursor = new ComputedField =>
       @interface.getView PAA.Pixeltosh.OS.Interface.Cursor
+      
+    # Note: We perform the rest of initialization on rendered when the interface is already created.
+    
+  onRendered: ->
+    super arguments...
+
+    # Start in Finder in the adventure interface.
+    if LOI.adventure
+      @loadProgram @getProgram PAA.Pixeltosh.Programs.Finder
+      
+    # Reactively load the menu of the active program.
+    @autorun (computation) =>
+      activeMenuItems = @activeProgram()?.menuItems()
+
+      menuData = @interface.data.child 'layouts.main.windows.0'
+      menuData.set 'height', if activeMenuItems then 14 else 0
+      menuData.set 'items', activeMenuItems or []
+  
+  getProgram: (programClass) ->
+    Tracker.nonreactive => @_programs[programClass.id()] ?= new programClass @
+    @_programs[programClass.id()]
     
   loadProgram: (program) ->
-    loadedPrograms = @loadedPrograms()
-    loadedPrograms.push program
-    Tracker.nonreactive => @loadedPrograms loadedPrograms
+    Tracker.nonreactive =>
+      loadedPrograms = @loadedPrograms()
+      loadedPrograms.push program
+      @loadedPrograms loadedPrograms
+      program.load()
     
   unloadProgram: (program) ->
-    loadedPrograms = @loadedPrograms()
-    loadedPrograms.pull program
-    Tracker.nonreactive => @loadedPrograms loadedPrograms
+    Tracker.nonreactive =>
+      loadedPrograms = @loadedPrograms()
+      loadedPrograms.pull program
+      @loadedPrograms loadedPrograms
+    
+  addWindow: (window) ->
+    @interface.addWindow _.extend {}, window,
+      order: @_getMaxWindowOrder() + 1
+      
+    # Activate the view of the window.
+    return unless window.contentComponentId
+    viewClass = AM.Component.getClassForName window.contentComponentId
+    Tracker.afterFlush =>
+      @activateView @interface.getView viewClass
+  
+  activateView: (view) ->
+    return if view is @activeView()
+    
+    @activeView view
+    
+    if view.constructor.activateBringsWindowToTop()
+      addressParts = view.data().options.address.split '.'
+      @interface.currentLayoutData().set "windows.#{addressParts[3]}.order", @_getMaxWindowOrder() + 1
+  
+  _getMaxWindowOrder: ->
+    windows = @interface.currentLayoutData().get 'windows'
+    normalWindows = _.filter windows, (window) => not window.alwaysOnTop
+    sortedWindows = _.sortBy normalWindows, 'order'
+    _.last(sortedWindows)?.order or 0
 
+  menuVisibleClass: ->
+    'menu-visible' if @activeMenuItems()
+    
   events: ->
     super(arguments...).concat
       'pointermove .pixelartacademy-pixeltosh-os': @onPointerMovePixeltoshOS
