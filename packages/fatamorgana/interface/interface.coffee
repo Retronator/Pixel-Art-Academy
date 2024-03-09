@@ -72,7 +72,6 @@ class FM.Interface extends AM.Component
     @currentShortcutsMapping = new ComputedField =>
       @data.child("shortcuts.#{@currentShortcutsMappingId()}.mapping").value()
 
-    @_components = []
     @componentsData = @data.child 'components'
     @filesData = @data.child 'files'
     @componentsForFilesData = @data.child 'componentsForFiles'
@@ -106,15 +105,6 @@ class FM.Interface extends AM.Component
     super arguments...
 
     @data.destroy()
-    
-  getComponent: (componentClassOrId) ->
-    componentId = componentClassOrId.id?() or componentClassOrId
-    
-    unless @_components[componentId]
-      componentClass = AM.Component.getClassForName componentId
-      Tracker.nonreactive => @_components[componentId] = new componentClass @
-    
-    @_components[componentId]
 
   getComponentData: (componentClassOrId) ->
     componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
@@ -224,6 +214,14 @@ class FM.Interface extends AM.Component
     windows.push window
 
     windowsData.value windows
+    
+  removeWindow: (index) ->
+    windowsData = @currentLayoutData().child 'windows'
+    
+    windows = windowsData.value() or []
+    windows.splice index, 1
+    
+    windowsData.value windows
 
   windows: ->
     windowsData = @currentLayoutData().child 'windows'
@@ -238,9 +236,7 @@ class FM.Interface extends AM.Component
     
     # Create child data objects to send as data.
     for windowIndex in sortedWindowIndices
-      childData = windowsData.child windowIndex.index
-      childData._id = windowIndex.index
-      childData
+      windowsData.child windowIndex.index
   
   overlays: ->
     overlaysData = @currentLayoutData().child 'overlays'

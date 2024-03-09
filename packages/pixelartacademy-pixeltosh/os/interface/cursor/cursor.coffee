@@ -26,11 +26,17 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     originPosition = @$origin.offset()
     displayScale = @display.scale()
     
-    @coordinates
+    @_updateCoordinatesThrottled ?= _.throttle (coordinates) =>
+      @coordinates coordinates
+    ,
+      33
+    
+    @_updateCoordinatesThrottled
       x: Math.floor (event.pageX - originPosition.left) / displayScale
       y: Math.floor (event.pageY - originPosition.top) / displayScale
     
   resetCoordinates: ->
+    @_updateCoordinatesThrottled.flush()
     @coordinates null
   
   cursorStyle: ->

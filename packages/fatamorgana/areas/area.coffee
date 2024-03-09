@@ -40,18 +40,6 @@ class FM.Area extends AM.Component
       style[property] = "#{value}rem"
 
     style
-
-  renderContentComponent: ->
-    # Code adapted from the AM.Render component.
-    component = @interface.getComponent @contentComponentId()
-    return null unless component
-    
-    if component._blazeTemplate and not component.isDestroyed()
-      return null if component.isRendered() and (component.parentComponent() isnt @)
-      
-      return component._blazeTemplate
-    
-    component._blazeTemplate = component.renderComponent? @currentComponent()
   
   componentData: ->
     # We allow sending custom component data for particular instances (such as for dialogs).

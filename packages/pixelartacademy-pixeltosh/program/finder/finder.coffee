@@ -20,7 +20,7 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
   @initialize()
   
   load: ->
-    @os.addWindow contentComponentId: @constructor.Desktop.id()
+    @os.addWindow @constructor.Desktop.createInterfaceData()
     
   menuItems: -> [
     caption: ''

@@ -25,10 +25,8 @@ class LM.Intro extends LOI.Adventure.Episode
   
   @initialize()
 
-  pico8Enabled: ->
-    tutorial = @getChapter LM.Intro.Tutorial
-    pixelArtSoftwareGoal = tutorial.getGoal LM.Intro.Tutorial.Goals.PixelArtSoftware
-    pixelArtSoftwareGoal.completed()
+  @pico8Enabled: ->
+    PAA.Learning.Goal.getAdventureInstanceForId(LM.Intro.Tutorial.Goals.PixelArtSoftware.id())?.completed()
 
 if Meteor.isServer
   LOI.initializePackage

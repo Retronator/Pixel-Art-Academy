@@ -15,6 +15,9 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
   @startSection: -> @Start
   
   @initialize()
+  
+  @pinballEnabled: ->
+    PAA.Learning.Task.getAdventureInstanceForId(LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.id())?.completed()
 
 if Meteor.isServer
   LOI.initializePackage

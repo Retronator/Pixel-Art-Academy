@@ -50,8 +50,8 @@ class PAA.Pixeltosh.OS extends LOI.Component
       
     @loadedPrograms = new ReactiveField []
     
-    @activeView = new ReactiveField null, (a, b) => a is b
-    @activeProgram = new ComputedField => @activeView()?.program
+    @activeViewAddress = new ReactiveField null
+    @activeProgram = new ReactiveField null, (a, b) => a is b
     
     @display = @callAncestorWith 'display'
     
@@ -59,6 +59,9 @@ class PAA.Pixeltosh.OS extends LOI.Component
     
     @cursor = new ComputedField =>
       @interface.getView PAA.Pixeltosh.OS.Interface.Cursor
+      
+    if LOI.adventure
+      @fileSystem = new @constructor.FileSystem os: @
       
     # Note: We perform the rest of initialization on rendered when the interface is already created.
     
@@ -76,10 +79,16 @@ class PAA.Pixeltosh.OS extends LOI.Component
       menuData = @interface.data.child 'layouts.main.windows.0'
       menuData.set 'height', if activeMenuItems then 14 else 0
       menuData.set 'items', activeMenuItems or []
+      
+  onDestroyed: ->
+    super arguments...
+    
+    @fileSystem?.destroy()
   
-  getProgram: (programClass) ->
-    Tracker.nonreactive => @_programs[programClass.id()] ?= new programClass @
-    @_programs[programClass.id()]
+  getProgram: (programClassOrId) ->
+    [programId, programClass] = _.thingIdAndClass programClassOrId
+    Tracker.nonreactive => @_programs[programId] ?= new programClass @
+    @_programs[programId]
     
   loadProgram: (program) ->
     Tracker.nonreactive =>
@@ -95,23 +104,47 @@ class PAA.Pixeltosh.OS extends LOI.Component
       @loadedPrograms loadedPrograms
     
   addWindow: (window) ->
+    windows = @interface.currentLayoutData().get 'windows'
+    newWindowIndex = windows.length
+    newWindowDataAddress = "layouts.main.windows.#{newWindowIndex}"
+    
     @interface.addWindow _.extend {}, window,
       order: @_getMaxWindowOrder() + 1
       
-    # Activate the view of the window.
-    return unless window.contentComponentId
-    viewClass = AM.Component.getClassForName window.contentComponentId
-    Tracker.afterFlush =>
-      @activateView @interface.getView viewClass
-  
+    # Activate the view of the window after it is rendered.
+    @autorun (computation) =>
+      programViews = @allChildComponentsOfType PAA.Pixeltosh.Program.View
+      
+      windowView = _.find programViews, (programView) =>
+        programView.data().options.address is newWindowDataAddress
+      
+      return unless windowView
+      computation.stop()
+      
+      @activateView windowView
+      
   activateView: (view) ->
-    return if view is @activeView()
+    @activeProgram view.program()
     
-    @activeView view
+    viewData = view.data()
+    return if @activeViewAddress() is viewData.options.address
+    @activeViewAddress viewData.options.address
     
-    if view.constructor.activateBringsWindowToTop()
+    if viewData.get('activateBringsWindowToTop') ? true
       addressParts = view.data().options.address.split '.'
-      @interface.currentLayoutData().set "windows.#{addressParts[3]}.order", @_getMaxWindowOrder() + 1
+      windowIndex = addressParts[3]
+      @interface.currentLayoutData().set "windows.#{windowIndex}.order", @_getMaxWindowOrder() + 1
+  
+  removeView: (view) ->
+    viewData = view.data()
+    addressParts = view.data().options.address.split '.'
+    windowIndex = addressParts[3]
+    
+    @interface.removeWindow windowIndex
+  
+  isViewActive: (view) ->
+    viewData = view.data()
+    viewData.options.address is @activeViewAddress()
   
   _getMaxWindowOrder: ->
     windows = @interface.currentLayoutData().get 'windows'

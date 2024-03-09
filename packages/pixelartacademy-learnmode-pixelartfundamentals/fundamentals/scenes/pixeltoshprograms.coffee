@@ -10,5 +10,5 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshPrograms extends LOI.Adventu
   @initialize()
   
   things: -> [
-    PAA.Pixeltosh.Programs.Pinball if PAA.Learning.Task.getAdventureInstanceForId(LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.id())?.completed()
+    PAA.Pixeltosh.Programs.Pinball if LM.PixelArtFundamentals.pinballEnabled()
   ]

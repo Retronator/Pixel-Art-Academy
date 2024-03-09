@@ -14,4 +14,6 @@ class PAA.Pixeltosh.Program extends LOI.Adventure.Thing
   constructor: (@os) ->
     super arguments...
     
+  load: -> # Override to perform any logic on startup.
+  
   menuItems: -> # Override to supply the data used to display the menu when this program is active.

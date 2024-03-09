@@ -19,6 +19,7 @@ class PAA.Pixeltosh.OS.Interface extends FM.Interface
       right: 0
       height: 0
       order: 0
+      alwaysOnTop: true
       items: []
     
     layouts =

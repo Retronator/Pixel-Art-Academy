@@ -19,18 +19,29 @@ Package.onUse(function(api) {
   api.addFile('pixeltosh');
 
   api.addFile('program..');
-  api.addFile('program/view');
+  api.addComponent('program/view..');
 
   // HACK: We store programs in program since programs gets ignored by Meteor for legacy reasons.
   api.addFile('program/programs');
 
   api.addFile('program/finder..');
+  api.addComponent('program/finder/files..');
   api.addComponent('program/finder/desktop..');
+  api.addComponent('program/finder/folder..');
 
   api.addComponent('computer..');
   api.addComponent('os..');
+
+  api.addFile('os/filesystem..');
+  api.addFile('os/filesystem/file');
+  api.addFile('os/filesystem/filetypes..');
+  api.addFile('os/filesystem/filetypes/disk');
+  api.addFile('os/filesystem/filetypes/folder');
+
   api.addFile('os/interface..');
   api.addComponent('os/interface/cursor..');
+  api.addComponent('os/interface/titlebar..');
+  api.addComponent('os/interface/window..');
 
   api.addFile('pages..');
   api.addComponent('pages/pixeltosh..');
