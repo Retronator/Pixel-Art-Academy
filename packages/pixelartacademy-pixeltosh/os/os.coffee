@@ -50,7 +50,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
       
     @loadedPrograms = new ReactiveField []
     
-    @activeViewAddress = new ReactiveField null
+    @activeWindowId = new ReactiveField null
     @activeProgram = new ReactiveField null, (a, b) => a is b
     
     @display = @callAncestorWith 'display'
@@ -76,7 +76,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
     @autorun (computation) =>
       activeMenuItems = @activeProgram()?.menuItems()
 
-      menuData = @interface.data.child 'layouts.main.windows.0'
+      menuData = @interface.data.child "layouts.main.windows.#{@constructor.Interface.menuId}"
       menuData.set 'height', if activeMenuItems then 14 else 0
       menuData.set 'items', activeMenuItems or []
       
@@ -95,60 +95,70 @@ class PAA.Pixeltosh.OS extends LOI.Component
       loadedPrograms = @loadedPrograms()
       loadedPrograms.push program
       @loadedPrograms loadedPrograms
+
+      @activeProgram program
       program.load()
     
   unloadProgram: (program) ->
     Tracker.nonreactive =>
       loadedPrograms = @loadedPrograms()
-      loadedPrograms.pull program
+      _.pull loadedPrograms, program
       @loadedPrograms loadedPrograms
-    
-  addWindow: (window) ->
-    windows = @interface.currentLayoutData().get 'windows'
-    newWindowIndex = windows.length
-    newWindowDataAddress = "layouts.main.windows.#{newWindowIndex}"
-    
-    @interface.addWindow _.extend {}, window,
+
+      if @activeProgram() is program
+        @activeProgram _.last loadedPrograms
+      
+      # Remove all the windows that belonged to this program.
+      programId = program.id()
+      windows = @interface.currentLayoutData().get 'windows'
+      @removeWindow windowId for windowId, window of windows when window.programId is programId
+  
+  activateProgram: (program) ->
+    @activeProgram program
+  
+  addWindow: (windowData) ->
+    windowId = @interface.addWindow _.extend {}, windowData,
       order: @_getMaxWindowOrder() + 1
-      
-    # Activate the view of the window after it is rendered.
-    @autorun (computation) =>
-      programViews = @allChildComponentsOfType PAA.Pixeltosh.Program.View
-      
-      windowView = _.find programViews, (programView) =>
-        programView.data().options.address is newWindowDataAddress
-      
-      return unless windowView
-      computation.stop()
-      
-      @activateView windowView
-      
-  activateView: (view) ->
-    @activeProgram view.program()
     
-    viewData = view.data()
-    return if @activeViewAddress() is viewData.options.address
-    @activeViewAddress viewData.options.address
+    @activateWindow windowId
     
-    if viewData.get('activateBringsWindowToTop') ? true
-      addressParts = view.data().options.address.split '.'
-      windowIndex = addressParts[3]
-      @interface.currentLayoutData().set "windows.#{windowIndex}.order", @_getMaxWindowOrder() + 1
+    # Return the window ID.
+    windowId
+    
+  removeWindow: (windowId) ->
+    @interface.removeWindow windowId
+    
+    @activeWindowId null if @activeWindowId() is windowId
+    
+  activateWindow: (windowId) ->
+    @activeWindowId windowId
+    
+    # Activating a window also activates its program.
+    programView = await @getProgramViewForWindowIdAsync windowId
+    
+    # Make sure the data of this view is still there (or the program will be empty).
+    @activateProgram program if program = programView.program()
+    
+    # See if we should also bring the window to top.
+    @bringWindowToTop windowId if programView.activateBringsWindowToTop()
   
-  removeView: (view) ->
-    viewData = view.data()
-    addressParts = view.data().options.address.split '.'
-    windowIndex = addressParts[3]
+  bringWindowToTop: (windowId) ->
+    @interface.currentLayoutData().set "windows.#{windowId}.order", @_getMaxWindowOrder() + 1
     
-    @interface.removeWindow windowIndex
-  
-  isViewActive: (view) ->
-    viewData = view.data()
-    viewData.options.address is @activeViewAddress()
+  getProgramViewForWindowId: (windowId) ->
+    return unless window = @interface.getWindow windowId
+    window.childComponentsOfType(PAA.Pixeltosh.Program.View)[0]
+    
+  getProgramViewForWindowIdAsync: (windowId) ->
+    new Promise (resolve) =>
+      Tracker.autorun (computation) =>
+        return unless programView = @getProgramViewForWindowId windowId
+        computation.stop()
+        resolve programView
   
   _getMaxWindowOrder: ->
     windows = @interface.currentLayoutData().get 'windows'
-    normalWindows = _.filter windows, (window) => not window.alwaysOnTop
+    normalWindows = _.filter _.values(windows), (window) => not window.alwaysOnTop
     sortedWindows = _.sortBy normalWindows, 'order'
     _.last(sortedWindows)?.order or 0
 

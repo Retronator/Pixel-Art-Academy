@@ -74,6 +74,7 @@
       <ul class="display menu">
         {{> LandsOfIllusions.Components.Menu.Items.GraphicsScale}}
         {{> LandsOfIllusions.Components.Menu.Items.CRTEmulation}}
+        {{> LandsOfIllusions.Components.Menu.Items.SlowCPUEmulation}}
         <li class="menu-item"><span class="smooth-shading actionable">
           Smooth shading: {{#if smoothShading}}on{{else}}off{{/if}}
         </span></li>
@@ -127,6 +128,12 @@
 <template name="LandsOfIllusions.Components.Menu.Items.CRTEmulation">
   <li class="menu-item"><span class="crt-emulation actionable">
     CRT emulation: {{#if crtEmulation}}on{{else}}off{{/if}}
+  </span></li>
+</template>
+
+<template name="LandsOfIllusions.Components.Menu.Items.SlowCPUEmulation">
+  <li class="menu-item"><span class="slow-cpu-emulation actionable">
+    Slow CPU emulation: {{#if slowCPUEmulation}}on{{else}}off{{/if}}
   </span></li>
 </template>
 

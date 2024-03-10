@@ -74,6 +74,7 @@ class LOI.Settings
       smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
       smoothShadingQuantizationLevels: new @constructor.Field 24, 'graphics.smoothShadingQuantizationLevels', @persistSettings
       crtEmulation: new @constructor.Field true, 'graphics.crtEmulation', @persistSettings
+      slowCPUEmulation: new @constructor.Field true, 'graphics.slowCPUEmulation', @persistSettings
 
     audioDefault = if AB.ApplicationEnvironment.isBrowser then @constructor.Audio.Enabled.Fullscreen else @constructor.Audio.Enabled.On
     

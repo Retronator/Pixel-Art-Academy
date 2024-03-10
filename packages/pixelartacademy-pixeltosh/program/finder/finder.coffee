@@ -19,6 +19,17 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
 
   @initialize()
   
+  constructor: ->
+    super arguments...
+    
+    @openFolders = {}
+    
+    @selectedPath = new ReactiveField null
+    
+    @selectedFile = new ComputedField =>
+      return unless selectedPath = @selectedPath()
+      @os.fileSystem.getFileForPath selectedPath
+  
   load: ->
     @os.addWindow @constructor.Desktop.createInterfaceData()
     
@@ -27,26 +38,33 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
     items: []
   ,
     caption: 'File'
-    items: []
-  ,
-    caption: 'Edit'
-    items: []
-  ,
-    caption: 'View'
-    items: []
-  ,
-    caption: 'Special'
-    items: []
+    items: [
+      PAA.Pixeltosh.OS.Interface.Actions.Open.id()
+      null
+      PAA.Pixeltosh.OS.Interface.Actions.Close.id()
+      PAA.Pixeltosh.OS.Interface.Actions.CloseAll.id()
+    ]
   ]
   
-  programs: ->
-    # Show all programs except the finder.
-    _.without @os.currentPrograms(), @
-
-  events: ->
-    super(arguments...).concat
-      'click .program-button': @onClickProgramButton
+  openFolder: (folder) ->
+    # See if this folder is already open and we can simply activate it.
+    path = folder.path()
+    
+    if openFolder = @openFolders[path]
+      @os.activateWindow openFolder.windowId
+      return
+    
+    # We need to open the folder in a new window.
+    @os.addWindow PAA.Pixeltosh.Programs.Finder.Folder.createInterfaceData folder
   
-  onClickProgram: (event) ->
-    program = @currentData()
-    @os.loadProgram program
+  registerFolderWindow: (path, windowId) ->
+    @openFolders[path] = {windowId}
+  
+  deregisterFolderWindow: (path) ->
+    delete @openFolders[path]
+  
+  selectPath: (path) ->
+    @selectedPath path
+    
+  deselect: ->
+    @selectedPath null

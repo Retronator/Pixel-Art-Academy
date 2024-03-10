@@ -106,6 +106,9 @@ class LOI.Components.Menu.Items extends LOI.Component
   crtEmulation: ->
     LOI.settings.graphics.crtEmulation.value()
 
+  slowCPUEmulation: ->
+    LOI.settings.graphics.slowCPUEmulation.value()
+
   smoothShading: ->
     LOI.settings.graphics.smoothShading.value()
 
@@ -153,6 +156,7 @@ class LOI.Components.Menu.Items extends LOI.Component
       'click .display .graphics-scale .previous-button': @onClickDisplayGraphicsScalePreviousButton
       'click .display .graphics-scale .next-button': @onClickDisplayGraphicsScaleNextButton
       'click .display .crt-emulation': @onClickDisplayCRTEmulation
+      'click .display .slow-cpu-emulation': @onClickDisplaySlowCPUEmulation
       'click .display .smooth-shading': @onClickDisplaySmoothShading
     
       # Audio
@@ -308,6 +312,10 @@ class LOI.Components.Menu.Items extends LOI.Component
   onClickDisplayCRTEmulation: (event) ->
     crtEmulationValue = LOI.settings.graphics.crtEmulation.value
     crtEmulationValue not crtEmulationValue()
+  
+  onClickDisplaySlowCPUEmulation: (event) ->
+    slowCPUEmulationValue = LOI.settings.graphics.slowCPUEmulation.value
+    slowCPUEmulationValue not slowCPUEmulationValue()
     
   onClickDisplaySmoothShading: (event) ->
     smoothShadingValue = LOI.settings.graphics.smoothShading.value

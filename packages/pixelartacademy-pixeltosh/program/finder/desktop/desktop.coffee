@@ -11,6 +11,7 @@ class PAA.Pixeltosh.Programs.Finder.Desktop extends LOI.View
     type: PAA.Pixeltosh.Program.View.id()
     programId: PAA.Pixeltosh.Programs.Finder.id()
     activateBringsWindowToTop: false
+    activateProgramOnly: true
     top: 14
     left: 0
     right: 0
@@ -22,6 +23,7 @@ class PAA.Pixeltosh.Programs.Finder.Desktop extends LOI.View
     super arguments...
     
     @os = @interface.parent
+    @finder = @os.getProgram PAA.Pixeltosh.Programs.Finder
 
   files: ->
     # Show all files at the root folder.
@@ -44,8 +46,15 @@ class PAA.Pixeltosh.Programs.Finder.Desktop extends LOI.View
         rootFolderNames.push rootFolderName unless rootFolderName in rootFolderNames or rootFolderName in diskNames
       
     rootFolders = for rootFolderName in rootFolderNames
-      new PAA.Pixeltosh.OS.FileSystem.File
-        path: rootFolderName
-        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Folder
+      @os.fileSystem.getFolderForPath rootFolderName
     
     [rootFiles..., rootFolders...]
+    
+  events: ->
+    super(arguments...).concat
+      'pointerdown .pixelartacademy-pixeltosh-programs-finder-desktop': @onPointerDownDesktop
+  
+  onPointerDownDesktop: (event) ->
+    return if $(event.target).closest('.file-button').length
+    
+    @finder.deselect()

@@ -25,11 +25,13 @@ class FM.Interface extends AM.Component
   #         type or contentComponentId
   #           ...
   #       ...
-  #     windows: array of floating windows
+  #     windows: map of floating windows
+  #       id: unique ID of the window
   #       order: the ordering of the floating area (low is on the bottom, high is on top)
   #       alwaysOnTop: whether to sort this window above the windows that are not on top
   #       type or contentComponentId: ID of the content view
-  #     overlays: array of overlays that appear above dialogs
+  #     overlays: map of overlays that appear above dialogs
+  #       id: unique ID of the overlay
   #       type or contentComponentId: ID of the content view
   # shortcuts
   #   currentMappingId: the mapping currently active
@@ -155,6 +157,9 @@ class FM.Interface extends AM.Component
   getView: (viewClass) ->
     @allChildComponentsOfType(viewClass)[0]
     
+  getWindow: (windowId) ->
+    _.find @allChildComponentsOfType(FataMorgana.FloatingArea), (area) => area.data().get('id') is windowId
+    
   getHelper: (helperClassOrId) ->
     helperId = helperClassOrId.id?() or helperClassOrId
 
@@ -210,16 +215,19 @@ class FM.Interface extends AM.Component
   addWindow: (window) ->
     windowsData = @currentLayoutData().child 'windows'
 
-    windows = windowsData.value() or []
-    windows.push window
+    windows = windowsData.value() or {}
+    window.id ?= Random.id()
+    windows[window.id] = window
 
     windowsData.value windows
     
-  removeWindow: (index) ->
+    window.id
+    
+  removeWindow: (id) ->
     windowsData = @currentLayoutData().child 'windows'
     
-    windows = windowsData.value() or []
-    windows.splice index, 1
+    windows = windowsData.value() or {}
+    delete windows[id]
     
     windowsData.value windows
 
@@ -227,26 +235,23 @@ class FM.Interface extends AM.Component
     windowsData = @currentLayoutData().child 'windows'
     return unless windows = windowsData.value()
     
-    windowIndices = for window, index in windows
-      index: index
-      alwaysOnTop: window.alwaysOnTop or false
-      order: window.order or 0
-    
-    sortedWindowIndices = _.orderBy windowIndices, ['alwaysOnTop', 'order']
+    sortedWindows = _.orderBy _.values(windows), ['alwaysOnTop', 'order']
     
     # Create child data objects to send as data.
-    for windowIndex in sortedWindowIndices
-      windowsData.child windowIndex.index
+    for window in sortedWindows
+      windowData = windowsData.child window.id
+      windowData._id = window.id
+      windowData
   
   overlays: ->
     overlaysData = @currentLayoutData().child 'overlays'
     return unless overlays = overlaysData.value()
     
     # Create child data objects to send as data.
-    for overlay, index in overlays
-      childData = overlaysData.child index
-      childData._id = index
-      childData
+    for id, overlay of overlays
+      overlayData = overlaysData.child id
+      overlayData._id = id
+      overlayData
 
   # HACK: If we do this access directly in the template, the desktop build breaks since @
   # gets assigned to Interface in Tool classes for what must be an incredibly obscure reason.

@@ -14,4 +14,4 @@ class PAA.Pixeltosh.OS.Interface.TitleBar extends FM.View
   
   activeClass: ->
     view = @ancestorComponentOfType PAA.Pixeltosh.Program.View
-    'active' if @os.isViewActive view
+    'active' if view.active()

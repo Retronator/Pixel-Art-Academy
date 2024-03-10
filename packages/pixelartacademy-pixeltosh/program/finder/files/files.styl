@@ -1,7 +1,8 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixeltosh-programs-finder-files
-  margin 5rem
+  padding 5rem
+  height 100%
 
   .files
     display flex
@@ -12,7 +13,8 @@
     padding 0
 
     .file
-      max-width 64rem
+      &.selected
+       filter invert()
 
       .file-button
         font inherit
@@ -28,7 +30,6 @@
 
         .name
           display inline-block
-          max-width 64rem
-          padding 1rem 1rem 1rem 2rem
+          padding 1rem 1rem 0 2rem
           background white
           overflow-wrap break-word

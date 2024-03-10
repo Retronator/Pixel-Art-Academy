@@ -43,6 +43,13 @@ Package.onUse(function(api) {
   api.addComponent('os/interface/titlebar..');
   api.addComponent('os/interface/window..');
 
+  api.addFile('os/interface/actions..');
+  api.addFile('os/interface/actions/action');
+  api.addFile('os/interface/actions/open');
+  api.addFile('os/interface/actions/close');
+  api.addFile('os/interface/actions/closeall');
+  api.addFile('os/interface/actions/quit');
+
   api.addFile('pages..');
   api.addComponent('pages/pixeltosh..');
 });

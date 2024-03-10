@@ -81,12 +81,15 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     $document = $(document)
     $interface = @$('.pixelartacademy-pixeltosh-os-interface-window').closest('.fatamorgana-interface')
     
+    # Create a throttled delta update function to emulate a slow CPU.
+    delay = if LOI.settings.graphics.slowCPUEmulation.value() then 75 else 0
+    
     $interface.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', _.throttle (event) =>
       @windowMoveDelta
         x: Math.round (event.pageX - @_dragStartX) / scale
         y: Math.max @_minDeltaY, Math.round (event.pageY - @_dragStartY) / scale
     ,
-      75
+      delay
 
     $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
       # End drag mode.
@@ -115,5 +118,4 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     $element?.off '.pixelartacademy-pixeltosh-os-interface-window' for $element in $elements
   
   onClickCloseButton: (event) ->
-    programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
-    @os.removeView programView
+    @interface.getOperator(PAA.Pixeltosh.OS.Interface.Actions.Close).execute()

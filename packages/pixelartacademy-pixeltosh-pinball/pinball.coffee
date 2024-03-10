@@ -20,15 +20,18 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   load: ->
     @os.addWindow
       contentComponentId: PAA.Pixeltosh.Programs.Pinball.Playfield.id()
+      programId: PAA.Pixeltosh.Programs.Pinball.id()
       left: 0
       top: 14
       right: 0
       bottom: 0
-      
+  
   menuItems: -> [
     caption: ''
     items: []
   ,
     caption: 'File'
-    items: []
+    items: [
+      PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
+    ]
   ]

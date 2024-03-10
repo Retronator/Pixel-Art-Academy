@@ -17,6 +17,15 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     
     @display = @callAncestorWith 'display'
     
+    # Create a throttled coordinates update function to emulate a slow CPU.
+    @autorun (computation) =>
+      delay = if LOI.settings.graphics.slowCPUEmulation.value() then 33 else 0
+      
+      @_updateCoordinatesThrottled = _.throttle (coordinates) =>
+        @coordinates coordinates
+      ,
+        delay
+    
   onRendered: ->
     super arguments...
     
@@ -25,11 +34,6 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
   updateCoordinates: (event) ->
     originPosition = @$origin.offset()
     displayScale = @display.scale()
-    
-    @_updateCoordinatesThrottled ?= _.throttle (coordinates) =>
-      @coordinates coordinates
-    ,
-      33
     
     @_updateCoordinatesThrottled
       x: Math.floor (event.pageX - originPosition.left) / displayScale

@@ -33,18 +33,31 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     super arguments...
     
     @os = @interface.parent
+    @finder = @os.getProgram PAA.Pixeltosh.Programs.Finder
     
-    @window = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
-    @window.moved.addHandler @, @onWindowMoved
+    @interfaceWindow = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
+    @interfaceWindow.moved.addHandler @, @onWindowMoved
     
     @folderPath = =>
       folderData = @data()
       folderData.get 'path'
     
+    @programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
+    @windowId = @programView.windowId()
+    
+    @autorun (computation) =>
+      if @_currentFolderPath
+        @finder.deregisterFolderWindowForPath @_currentFolderPath
+      
+      if @_currentFolderPath = @folderPath()
+        @finder.registerFolderWindow @_currentFolderPath, @windowId
+    
   onDestroyed: ->
     super arguments...
     
-    @window.moved.removeHandler @, @onWindowMoved
+    @finder.deregisterFolderWindow @_currentFolderPath if @_currentFolderPath
+    
+    @interfaceWindow.moved.removeHandler @, @onWindowMoved
   
   files: ->
     folderPath = @folderPath()
@@ -70,9 +83,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
         folderNames.push subfolderName unless subfolderName in folderNames
       
     folders = for folderName in folderNames
-      new PAA.Pixeltosh.OS.FileSystem.File
-        path: "#{folderPath}/#{folderName}"
-        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Folder
+      @os.fileSystem.getFolderForPath "#{folderPath}/#{folderName}"
     
     [files..., folders...]
 
@@ -86,3 +97,12 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
       window: newPosition
     
     PAA.Pixeltosh.OS.FileSystem.state 'folders', folders
+
+  events: ->
+    super(arguments...).concat
+      'pointerdown .pixelartacademy-pixeltosh-programs-finder-folder': @onPointerDownFolder
+  
+  onPointerDownFolder: (event) ->
+    return if $(event.target).closest('.file-button').length
+    
+    @finder.selectPath @folderPath()

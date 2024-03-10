@@ -11,18 +11,20 @@ class PAA.Pixeltosh.Programs.Finder.Files extends AM.Component
     super arguments...
     
     @os = @ancestorComponentOfType PAA.Pixeltosh.OS
+    @finder = @os.getProgram PAA.Pixeltosh.Programs.Finder
+  
+  selectedClass: ->
+    file = @currentData()
+    'selected' if @finder.selectedPath() is file.path()
 
   events: ->
     super(arguments...).concat
-      'click .file-button': @onClickFileButton
-  
-  onClickFileButton: (event) ->
+      'pointerdown .file-button': @onPointerDownFileButton
+      'dblclick .file-button': @onDoubleClickFileButton
+ 
+  onPointerDownFileButton: (event) ->
     file = @currentData()
-    fileType = file.type()
-    
-    if fileType instanceof PAA.Pixeltosh.Program
-      program = @os.getProgram fileType
-      @os.loadProgram program
-
-    else if fileType in [PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk, PAA.Pixeltosh.OS.FileSystem.FileTypes.Folder]
-      @os.addWindow PAA.Pixeltosh.Programs.Finder.Folder.createInterfaceData file
+    @finder.selectPath file.path()
+  
+  onDoubleClickFileButton: (event) ->
+    @os.interface.getOperator(PAA.Pixeltosh.OS.Interface.Actions.Open).execute()
