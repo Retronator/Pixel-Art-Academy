@@ -19,5 +19,8 @@ Package.onUse(function(api) {
 
   api.addFile('pinball');
 
-  api.addComponent('playfield..');
+  api.addFile('interface..');
+  api.addComponent('interface/playfield..');
+  api.addComponent('interface/backbox..');
+  api.addComponent('interface/instructions..');
 });
