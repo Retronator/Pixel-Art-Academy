@@ -15,7 +15,7 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
       The file system manager of Pixeltosh.
     "
     
-  @programSlug: -> 'finder'
+  @slug: -> 'finder'
 
   @initialize()
   

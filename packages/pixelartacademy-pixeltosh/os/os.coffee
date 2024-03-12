@@ -68,9 +68,16 @@ class PAA.Pixeltosh.OS extends LOI.Component
   onRendered: ->
     super arguments...
 
-    # Start in Finder in the adventure interface.
+    # Load the starting program.
     if LOI.adventure
-      @loadProgram @getProgram PAA.Pixeltosh.Programs.Finder
+      # Start in Finder by default.
+      programSlug = AB.Router.getParameter('parameter3') or 'finder'
+      
+    else
+      programSlug = AB.Router.getParameter('programSlug')
+      
+    if programClass = PAA.Pixeltosh.Program.getClassForSlug programSlug
+      @loadProgram @getProgram programClass
       
     # Reactively load the menu of the active program.
     @autorun (computation) =>
@@ -112,6 +119,8 @@ class PAA.Pixeltosh.OS extends LOI.Component
       programId = program.id()
       windows = @interface.currentLayoutData().get 'windows'
       @removeWindow windowId for windowId, window of windows when window.programId is programId
+      
+      program.unload()
   
   activateProgram: (program) ->
     @activeProgram program

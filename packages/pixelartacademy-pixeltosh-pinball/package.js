@@ -18,6 +18,11 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('pinball');
+  api.addFile('scenemanager');
+  api.addFile('cameramanager');
+  api.addFile('renderermanager');
+  api.addFile('physicsmanager');
+  api.addFile('mouse');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');
