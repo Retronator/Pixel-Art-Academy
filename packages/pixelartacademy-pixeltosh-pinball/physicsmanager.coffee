@@ -14,7 +14,10 @@ class Pinball.PhysicsManager
     @overlappingPairCache = new Ammo.btDbvtBroadphase
     @solver = new Ammo.btSequentialImpulseConstraintSolver
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @overlappingPairCache, @solver, @collisionConfiguration
-    @dynamicsWorld.setGravity new Ammo.btVector3 0, -9.81, 0
+    
+    gravity = new Ammo.btVector3 0, -9.81, 0
+    gravity = gravity.rotate new Ammo.btVector3(1, 0, 0), -Pinball.SceneManager.shortPlayfieldPitchDegrees / 180 * Math.PI
+    @dynamicsWorld.setGravity gravity
 
     @simulationTimestep = 1 / 300
     @maxSimulationStepsPerFrame = 0.1 / @simulationTimestep

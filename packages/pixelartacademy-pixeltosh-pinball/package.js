@@ -24,6 +24,16 @@ Package.onUse(function(api) {
   api.addFile('physicsmanager');
   api.addFile('mouse');
 
+  api.addFile('part..');
+  api.addFile('part/avatar..');
+  api.addFile('part/avatar/sphere');
+  api.addFile('part/avatar/box');
+  api.addFile('part/avatar/cylinder');
+
+  api.addFile('parts..');
+  api.addFile('parts/ball');
+  api.addFile('parts/cube');
+
   api.addFile('interface..');
   api.addComponent('interface/playfield..');
   api.addComponent('interface/backbox..');

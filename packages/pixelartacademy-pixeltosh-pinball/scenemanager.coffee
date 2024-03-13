@@ -8,6 +8,8 @@ class Pinball.SceneManager
   @playfieldWidth = 1 / 2 # m
   @shortPlayfieldHeight = 5 / 9 # m
   @standardPlayfieldHeight = 1 # m
+  @shortPlayfieldPitchDegrees = 3.5 # degrees
+  @standardPlayfieldPitchDegrees = 6.5 # degrees
 
   constructor: (@pinball) ->
     @scene = new THREE.Scene()
@@ -24,27 +26,12 @@ class Pinball.SceneManager
     @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
 
-    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(@constructor.playfieldWidth, @constructor.shortPlayfieldHeight), new THREE.MeshLambertMaterial
-      color: 0xaaaaaa
+    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(@constructor.playfieldWidth, @constructor.shortPlayfieldHeight), new THREE.MeshLambertMaterial color: 0xffffff
     @ground.position.set @constructor.playfieldWidth / 2, 0, @constructor.shortPlayfieldHeight / 2
     @ground.receiveShadow = true
     @ground.rotation.x = -Math.PI / 2
     @scene.add @ground
     
-    pixelSize = Pinball.CameraManager.pixelSize
-    
-    sphereRadius = 0.0135
-    @sphere = new THREE.Mesh new THREE.SphereGeometry(sphereRadius), new THREE.MeshLambertMaterial
-      color: 0xaa0000
-    
-    @sphere.receiveShadow = true
-    @sphere.castShadow = true
-    @sphere.position.set pixelSize * 30, sphereRadius, pixelSize * 30
-    @scene.add @sphere
-    
-    @sphere = new THREE.Mesh new THREE.SphereGeometry(0.25), new THREE.MeshLambertMaterial
-      color: 0x00aa00
-
     @_parts = []
     @parts = new ReactiveField @_parts
 
@@ -99,42 +86,21 @@ class Pinball.SceneManager
 
     @_partsById[partData.id] = part
 
-    # Initialize the avatar and wait for it to complete.
-    part.avatar.initialize()
+    # Update parts array.
+    @_parts.push part
+    @parts @_parts
 
-    Tracker.autorun (computation) =>
-      return unless part.avatar.initialized()
-      computation.stop()
+    # Set physics state.
+    physicsObject = part.avatar.getPhysicsObject()
+    physicsObject.setDesignPosition partData.position if partData.position
+    physicsObject.setRotation partData.rotationQuaternion if partData.rotationQuaternion
 
-      # Do not complete initialization if it was canceled.
-      return if part._initializationCanceled
-
-      # Update parts array.
-      @_parts.push part
-      @parts @_parts
-
-      # Set physics state.
-      physicsObject = part.avatar.getPhysicsObject()
-      physicsObject.setPosition partData.position if partData.position
-      physicsObject.setRotation partData.rotationQuaternion if partData.rotationQuaternion
-
-      # Add render object to the scene.
-      renderObject = part.avatar.getRenderObject()
-      @scene.add renderObject
+    # Add render object to the scene.
+    renderObject = part.avatar.getRenderObject()
+    @scene.add renderObject
 
   _removePartWithId: (partId) ->
     part = _.find @_parts, (part) => part._id is partId
-
-    unless part
-      # If we couldn't find the part it's probably still loading.
-      if @_partsById[partId]
-        @_partsById[partId]._initializationCanceled = true
-        @_partsById[partId].destroy()
-
-      else
-        console.error "Playfield part to be removed hasn't been added.", partId
-
-      return
 
     # Update parts array.
     _.pull @_parts, part

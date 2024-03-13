@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class PAA.Pixeltosh.Programs.Pinball.Interface.Instructions extends LOI.View
+class Pinball.Interface.Instructions extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Instructions'
   @register @id()

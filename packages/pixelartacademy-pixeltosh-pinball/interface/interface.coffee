@@ -1,7 +1,8 @@
 FM = FataMorgana
 PAA = PixelArtAcademy
+Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class PAA.Pixeltosh.Programs.Pinball.Interface
+class Pinball.Interface
   @createInterfaceData: ->
     type: PAA.Pixeltosh.Program.View.id()
     programId: PAA.Pixeltosh.Programs.Pinball.id()

@@ -1,7 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class PAA.Pixeltosh.Programs.Pinball.Interface.Playfield extends LOI.View
+class Pinball.Interface.Playfield extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Playfield'
   @register @id()
   
@@ -9,7 +10,7 @@ class PAA.Pixeltosh.Programs.Pinball.Interface.Playfield extends LOI.View
     super arguments...
     
     @os = @interface.parent
-    @pinball = @os.getProgram PAA.Pixeltosh.Programs.Pinball
+    @pinball = @os.getProgram Pinball
 
   onRendered: ->
     super arguments...

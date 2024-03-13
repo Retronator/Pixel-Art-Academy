@@ -33,7 +33,19 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager = new ReactiveField null
     @mouse = new ReactiveField null
     
-    @partsData = @state.field 'parts', default: []
+    @partsData = new ReactiveField [
+      type: @constructor.Parts.Ball.id()
+      id: Random.id()
+      position:
+        x: Pinball.CameraManager.pixelSize * 30
+        y: Pinball.CameraManager.pixelSize * 30
+    ,
+      type: @constructor.Parts.Cube.id()
+      id: Random.id()
+      position:
+        x: Pinball.CameraManager.pixelSize * 30
+        y: Pinball.CameraManager.pixelSize * 150
+    ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
     
