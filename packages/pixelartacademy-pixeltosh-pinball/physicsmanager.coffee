@@ -41,33 +41,26 @@ class Pinball.PhysicsManager
     ,
       new Ammo.btBoxShape new Ammo.btVector3(10, 0.5, 10), 0
 
-    @ground.setRestitution 0.6
-    @ground.setFriction 0.7
-    @ground.setRollingFriction 0.05
+    # We set coefficients for the ground (wood) colliding with the ball (steel bearing).
+    @ground.setRestitution 0.6 # steel ball bearing on concrete, golf ball on wood
+    @ground.setFriction 0.4 # steel on wood (0.2–0.6)
+    @ground.setRollingFriction 0.01 # steel bearing on wood
 
     @dynamicsWorld.addRigidBody @ground
 
     # Add playfield parts.
-    @parts = new AE.ReactiveArray =>
-      @pinball.sceneManager()?.parts()
+    @partPhysicsObjects = new AE.ReactiveArray =>
+      physicsObject for part in @pinball.sceneManager()?.parts() when physicsObject = part.avatar.getPhysicsObject()
     ,
-      added: (part) =>
-        physicsObject = part.avatar.getPhysicsObject()
-
-        # Set constants for improved stability.
-        physicsObject.body.setDamping @linearDamping, @angularDamping
-        physicsObject.body.setSleepingThresholds @linearSleepingThreshold, @angularSleepingThreshold
-        physicsObject.body.setContactProcessingThreshold @contactProcessingThreshold
-
+      added: (physicsObject) =>
         # Add the part to the simulation.
         @dynamicsWorld.addRigidBody physicsObject.body
 
-      removed: (part) =>
-        physicsObject = part.avatar.getPhysicsObject()
+      removed: (physicsObject) =>
         @dynamicsWorld.removeRigidBody physicsObject.body
 
   destroy: ->
-    @parts.stop()
+    @partPhysicsObjects.stop()
 
     Ammo.destroy @dynamicsWorld
     Ammo.destroy @solver
@@ -79,15 +72,15 @@ class Pinball.PhysicsManager
     return unless appTime.elapsedAppTime
 
     @dynamicsWorld.stepSimulation appTime.elapsedAppTime, @maxSimulationStepsPerFrame, @simulationTimestep
+    
+    quantizePosition = @pinball.cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @pinball.debugPhysics()
+    quantizePositionAmount = if quantizePosition then Pinball.CameraManager.orthographicPixelSize else 0
 
-    @_updatePart part for part in @parts()
+    @_updateRenderObject physicsObject, quantizePositionAmount for physicsObject in @partPhysicsObjects()
 
-  _updatePart: (part) ->
-    renderObject = part.avatar.getRenderObject()
-    physicsObject = part.avatar.getPhysicsObject()
-
+  _updateRenderObject: (physicsObject, quantizePositionAmount) ->
     # Transfer transforms from physics to render objects.
-    physicsObject.motionState.getWorldTransform _transform
+    renderObject = physicsObject.avatar.getRenderObject()
 
-    renderObject.position.setFromBulletVector3 _transform.getOrigin()
-    renderObject.quaternion.setFromBulletQuaternion _transform.getRotation()
+    physicsObject.motionState.getWorldTransform _transform
+    renderObject.updateFromPhysics _transform, quantizePositionAmount

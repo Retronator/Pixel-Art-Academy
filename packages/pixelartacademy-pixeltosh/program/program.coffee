@@ -31,3 +31,5 @@ class PAA.Pixeltosh.Program extends LOI.Adventure.Thing
   unload: -> # Override to perform any cleanup.
   
   menuItems: -> # Override to supply the data used to display the menu when this program is active.
+
+  shortcuts: -> # Override to supply shortcuts to use when this program is active.

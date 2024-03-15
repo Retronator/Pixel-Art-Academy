@@ -11,9 +11,9 @@ class Pinball.Mouse
     @viewportCoordinates = new ReactiveField null, EJSON.equals
 
   onMouseMove: (event) ->
-    @$playfield ?= @pinball.os.$('.pixelartacademy-pixeltosh-programs-pinball-interface-playfield')
+    $playfield = @pinball.os.$('.pixelartacademy-pixeltosh-programs-pinball-interface-playfield')
 
-    origin = @$playfield.offset()
+    origin = $playfield.offset()
 
     windowCoordinates =
       x: event.pageX - origin.left
@@ -22,8 +22,8 @@ class Pinball.Mouse
     @windowCoordinates windowCoordinates
 
     viewportCoordinates =
-      x: windowCoordinates.x / @$playfield.width() * 2 - 1
-      y: 1 - windowCoordinates.y / @$playfield.height() * 2
+      x: windowCoordinates.x / $playfield.width() * 2 - 1
+      y: 1 - windowCoordinates.y / $playfield.height() * 2
 
     @viewportCoordinates viewportCoordinates
 

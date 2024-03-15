@@ -26,16 +26,21 @@ Package.onUse(function(api) {
 
   api.addFile('part..');
   api.addFile('part/avatar..');
+  api.addFile('part/avatar/shape');
   api.addFile('part/avatar/sphere');
-  api.addFile('part/avatar/box');
-  api.addFile('part/avatar/cylinder');
+  api.addFile('part/avatar/extrusion');
 
   api.addFile('parts..');
   api.addFile('parts/ball');
-  api.addFile('parts/cube');
+  api.addFile('parts/wall');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');
   api.addComponent('interface/backbox..');
   api.addComponent('interface/instructions..');
+
+  api.addFile('interface/actions..');
+  api.addFile('interface/actions/action');
+  api.addFile('interface/actions/camera');
+  api.addFile('interface/actions/toggledebugphysics');
 });

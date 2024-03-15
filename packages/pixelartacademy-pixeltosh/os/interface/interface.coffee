@@ -15,12 +15,13 @@ class PAA.Pixeltosh.OS.Interface extends FM.Interface
     super parent,
       load: =>
         localInterfaceDataField()
-      
       save: (address, value) =>
         localInterfaceData = localInterfaceDataField()
         _.nestedProperty localInterfaceData, address, value
         localInterfaceDataField localInterfaceData
 
+    active = true
+    
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
   
     components = {}
@@ -54,4 +55,4 @@ class PAA.Pixeltosh.OS.Interface extends FM.Interface
       default:
         mapping: {}
         
-    localInterfaceDataField {activeToolId, components, layouts, shortcuts}
+    localInterfaceDataField {active, activeToolId, components, layouts, shortcuts}

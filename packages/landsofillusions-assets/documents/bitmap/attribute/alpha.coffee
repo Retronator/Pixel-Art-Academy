@@ -6,11 +6,13 @@ class LOI.Assets.Bitmap.Attribute.Alpha extends LOI.Assets.Bitmap.Attribute
   @elementsPerPixel = 1
 
   getPixel: (x, y) ->
-    index = @getPixelIndex x, y
-
+    @getPixelAtIndex @getPixelIndex x, y
+    
+  getPixelAtIndex: (index) ->
     @array[index] / 255
 
   setPixel: (x, y, value) ->
-    index = @getPixelIndex x, y
-
+    @setPixelAtIndex @getPixelIndex x, y
+    
+  setPixelAtIndex: (index, value) ->
     @array[index] = value * 255

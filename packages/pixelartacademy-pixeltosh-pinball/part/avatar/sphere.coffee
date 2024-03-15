@@ -5,14 +5,22 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar
+class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
+  @detectShape: (pixelArtEvaluation) ->
+    # We can have a sphere shape if we detect a circle.
+    return unless circle = @_detectCircle pixelArtEvaluation
+    
+    new @ circle.position, circle.radius * Pinball.CameraManager.orthographicPixelSize
+  
+  constructor: (@bitmapOrigin, @radius) ->
+    super arguments...
+    
   collisionShapeMargin: -> null
 
-  createGeometry: ->
-    new THREE.SphereBufferGeometry @properties.radius, 32, 32
+  createPhysicsDebugGeometry: ->
+    new THREE.SphereBufferGeometry @radius, 8, 4
 
   createCollisionShape: ->
-    new Ammo.btSphereShape @properties.radius
+    new Ammo.btSphereShape @radius
     
-  yPosition: ->
-    @properties.radius
+  yPosition: -> @radius

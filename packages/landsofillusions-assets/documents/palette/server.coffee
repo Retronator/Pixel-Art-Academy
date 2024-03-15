@@ -16,7 +16,7 @@ LOI.Assets.Palette.addIfNeeded = (palette) ->
         
     return unless changed
   
-  LOI.Assets.Palette.documents.upsert name: palette.name, $set: palette
+  LOI.Assets.Palette.documents.upsert {name: palette.name}, {$set: palette}
 
 # Export all palette documents.
 AM.DatabaseContent.addToExport ->

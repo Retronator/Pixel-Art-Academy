@@ -8,7 +8,7 @@ class Pinball.SceneManager
   @playfieldWidth = 1 / 2 # m
   @shortPlayfieldHeight = 5 / 9 # m
   @standardPlayfieldHeight = 1 # m
-  @shortPlayfieldPitchDegrees = 3.5 # degrees
+  @shortPlayfieldPitchDegrees = 6.5 # degrees
   @standardPlayfieldPitchDegrees = 6.5 # degrees
 
   constructor: (@pinball) ->
@@ -47,7 +47,7 @@ class Pinball.SceneManager
 
       @startingPartsHaveBeenInitialized true
 
-    # Instantiate still life parts based on the data.
+    # Instantiate playfield parts based on the data.
     @pinball.autorun =>
       remainingPartIds = (part._id for part in @_parts)
 
@@ -65,12 +65,23 @@ class Pinball.SceneManager
       # Any leftover remaining parts have been removed.
       for partId in remainingPartIds
         @_removePartWithId partId
+        
+    # Add render objects to the scene.
+    @renderObjects = new AE.ReactiveArray =>
+      renderObject for part in @parts() when renderObject = part.avatar.getRenderObject()
+    ,
+      added: (renderObject) =>
+        @scene.add renderObject
+      
+      removed: (renderObject) =>
+        @scene.remove renderObject
 
     @ready = new ComputedField =>
       # Scene is ready when all starting parts have been initialized.
       @startingPartsHaveBeenInitialized()
     
   destroy: ->
+    @renderObjects.stop()
     part.destroy() for part in @_parts
 
   _addPart: (partData) ->
@@ -85,19 +96,13 @@ class Pinball.SceneManager
       part = partClass.getCopyForId partData.id
 
     @_partsById[partData.id] = part
+    
+    # Initialize the avatar.
+    part.avatar.initialize partData
 
     # Update parts array.
     @_parts.push part
     @parts @_parts
-
-    # Set physics state.
-    physicsObject = part.avatar.getPhysicsObject()
-    physicsObject.setDesignPosition partData.position if partData.position
-    physicsObject.setRotation partData.rotationQuaternion if partData.rotationQuaternion
-
-    # Add render object to the scene.
-    renderObject = part.avatar.getRenderObject()
-    @scene.add renderObject
 
   _removePartWithId: (partId) ->
     part = _.find @_parts, (part) => part._id is partId
@@ -106,6 +111,5 @@ class Pinball.SceneManager
     _.pull @_parts, part
     @parts @_parts
 
-    # Remove render object from the scene.
-    @scene.remove part.avatar.getRenderObject()
+    # Destroy the part.
     part.destroy()

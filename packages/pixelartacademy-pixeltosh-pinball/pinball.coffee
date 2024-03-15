@@ -37,22 +37,24 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       type: @constructor.Parts.Ball.id()
       id: Random.id()
       position:
-        x: Pinball.CameraManager.pixelSize * 30
-        y: Pinball.CameraManager.pixelSize * 30
+        x: Pinball.CameraManager.orthographicPixelSize * 30
+        y: Pinball.CameraManager.orthographicPixelSize * 5
     ,
-      type: @constructor.Parts.Cube.id()
+      type: @constructor.Parts.Wall.id()
       id: Random.id()
       position:
-        x: Pinball.CameraManager.pixelSize * 30
-        y: Pinball.CameraManager.pixelSize * 150
+        x: Pinball.CameraManager.orthographicPixelSize
+        y: Pinball.CameraManager.orthographicPixelSize
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
     
     @sceneImage = new ReactiveField null
-  
+    
+    @debugPhysics = new ReactiveField false
+    
   load: ->
-    @os.addWindow @constructor.Interface.createInterfaceData()
+    @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
     
     @app = @os.ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
@@ -64,9 +66,19 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager new @constructor.PhysicsManager @
     @mouse new @constructor.Mouse @
     
+    @hoveredPart = new ReactiveField null
+    
     @sceneImage new AM.PixelImage
       display: @os.display
       image: @rendererManager().renderer.domElement
+    
+    # Reactively change the interface layout.
+    @autorun (computation) =>
+      return unless window = @os.interface.getWindow @windowId
+      window.data().set 'contentArea', @constructor.Interface.createContentAreaData @
+      
+    # Subscribe to the black palette.
+    @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
   unload: ->
     @app.removeComponent @
@@ -81,6 +93,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager null
     @mouse null
     @sceneImage null
+    
+    @_macintoshPaletteSubscription.stop()
   
   update: (appTime) ->
     # Wait until the scene is initialized.
@@ -109,7 +123,6 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       if intersectionPoint = _cursorIntersectionPoints[0]
         # Update cursor to this intersection.
         @cursorPosition intersectionPoint.point
-        sceneManager.cursor.position.copy intersectionPoint.point
 
         # See if this mesh is part of a playfield part.
         searchObject = intersectionPoint.object
@@ -126,12 +139,6 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   draw: (appTime) ->
     @rendererManager()?.draw appTime
     
-  menuItems: -> [
-    caption: ''
-    items: []
-  ,
-    caption: 'File'
-    items: [
-      PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
-    ]
-  ]
+  menuItems: -> @constructor.Interface.createMenuItems()
+  
+  shortcuts: -> @constructor.Interface.createShortcuts()

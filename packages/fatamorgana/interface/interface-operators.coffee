@@ -19,7 +19,7 @@ class FM.Interface extends FM.Interface
 
     @operators = new ComputedField =>
       operatorIds = FM.Operator.getIds()
-      currentOperatorIds = @_collectOperatorIds @currentApplicationAreaData().value(), operatorIds
+      currentOperatorIds = @_collectOperatorIds @currentLayoutData().value(), operatorIds
 
       @_getOperatorInstance operatorId for operatorId in currentOperatorIds
 

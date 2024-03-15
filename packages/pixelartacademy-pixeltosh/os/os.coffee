@@ -50,6 +50,13 @@ class PAA.Pixeltosh.OS extends LOI.Component
       
     @loadedPrograms = new ReactiveField []
     
+    @autorun (computation) =>
+      for program in @loadedPrograms()
+        continue unless shortcuts = program.shortcuts()
+        @interface.data.child('shortcuts').set _.snakeCase(program.id()),
+          name: program.fullName()
+          mapping: shortcuts
+    
     @activeWindowId = new ReactiveField null
     @activeProgram = new ReactiveField null, (a, b) => a is b
     
@@ -103,8 +110,8 @@ class PAA.Pixeltosh.OS extends LOI.Component
       loadedPrograms.push program
       @loadedPrograms loadedPrograms
 
-      @activeProgram program
       program.load()
+      @activateProgram program
     
   unloadProgram: (program) ->
     Tracker.nonreactive =>
@@ -124,6 +131,8 @@ class PAA.Pixeltosh.OS extends LOI.Component
   
   activateProgram: (program) ->
     @activeProgram program
+    
+    @interface.currentShortcutsMappingId _.snakeCase program.id()
   
   addWindow: (windowData) ->
     windowId = @interface.addWindow _.extend {}, windowData,
