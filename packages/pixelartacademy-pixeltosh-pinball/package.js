@@ -22,17 +22,21 @@ Package.onUse(function(api) {
   api.addFile('cameramanager');
   api.addFile('renderermanager');
   api.addFile('physicsmanager');
+  api.addFile('inputmanager');
   api.addFile('mouse');
 
   api.addFile('part..');
   api.addFile('part/avatar..');
   api.addFile('part/avatar/shape');
   api.addFile('part/avatar/sphere');
+  api.addFile('part/avatar/box');
   api.addFile('part/avatar/extrusion');
+  api.addFile('part/avatar/convexextrusion');
 
   api.addFile('parts..');
   api.addFile('parts/ball');
   api.addFile('parts/wall');
+  api.addFile('parts/plunger');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');

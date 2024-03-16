@@ -8,6 +8,26 @@ if Meteor.isClient
   _transform = new Ammo.btTransform
 
 class Pinball.PhysicsManager
+  @RestitutionConstants =
+    HardSurface: 0.6 # steel ball bearing on concrete, golf ball on wood
+  
+  @FrictionConstants =
+    Wood: 0.4 # steel-wood (0.2–0.6)
+    Plastic: 0.2 # plastic-metal (0.1–0.3)
+  
+  @RollingFrictionConstants =
+    Coarse: 0.02 # 1-inch steel bearing on P80 emery paper (0.01–0.02)
+    Smooth: 0.01 # 1-inch steel bearing on P80 emery paper (0.005–0.01)
+  
+  @CollisionGroups =
+    Balls: 1
+    BallGuides: 2
+    Actuators: 4
+  
+  @simulationTimestep = 1 / 300
+  @maxSimulationStepsPerFrame = 0.1 / @simulationTimestep
+  @continuousCollisionDetectionThreshold = 1e-7
+  
   constructor: (@pinball) ->
     @collisionConfiguration = new Ammo.btDefaultCollisionConfiguration
     @dispatcher = new Ammo.btCollisionDispatcher @collisionConfiguration
@@ -19,45 +39,52 @@ class Pinball.PhysicsManager
     gravity = gravity.rotate new Ammo.btVector3(1, 0, 0), -Pinball.SceneManager.shortPlayfieldPitchDegrees / 180 * Math.PI
     @dynamicsWorld.setGravity gravity
 
-    @simulationTimestep = 1 / 300
-    @maxSimulationStepsPerFrame = 0.1 / @simulationTimestep
-
-    # Adjust constants for improved stability.
-    @linearDamping = 0.0001
-    @angularDamping = 0.0001
-    @linearSleepingThreshold = 1
-    @angularSleepingThreshold = 1
-    @contactProcessingThreshold = 0.01
-
-    @surroundingGasDensity = 1.225 # Kg / m³
-
-    @minSpeedSquaredToApplyDrag = 1e-3
-
-    @_previousCursorPosition = new THREE.Vector3
-
     # Add ground of wooden material.
     @ground = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
-      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3(0, -0.5, 0)
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(0, -1, 0)
     ,
-      new Ammo.btBoxShape new Ammo.btVector3(10, 0.5, 10), 0
+      new Ammo.btBoxShape new Ammo.btVector3(10, 1, 10), 0
 
     # We set coefficients for the ground (wood) colliding with the ball (steel bearing).
-    @ground.setRestitution 0.6 # steel ball bearing on concrete, golf ball on wood
-    @ground.setFriction 0.4 # steel on wood (0.2–0.6)
-    @ground.setRollingFriction 0.01 # steel bearing on wood
+    @ground.setRestitution @constructor.RestitutionConstants.HardSurface
+    @ground.setFriction @constructor.FrictionConstants.Wood
+    @ground.setRollingFriction @constructor.RollingFrictionConstants.Coarse
 
     @dynamicsWorld.addRigidBody @ground
-
+    
+    # Add safety walls.
+    @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(-1, 0, 0)
+    ,
+      new Ammo.btBoxShape new Ammo.btVector3(1, 10, 10), 0
+    
+    @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(Pinball.SceneManager.playfieldWidth + 1, 0, 0)
+    ,
+      new Ammo.btBoxShape new Ammo.btVector3(1, 10, 10), 0
+    
+    @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(0, 0, -1)
+    ,
+      new Ammo.btBoxShape new Ammo.btVector3(10, 10, 1), 0
+    
+    @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(0, 0, Pinball.SceneManager.shortPlayfieldHeight + 1)
+    ,
+      new Ammo.btBoxShape new Ammo.btVector3(10, 10, 1), 0
+    
     # Add playfield parts.
     @partPhysicsObjects = new AE.ReactiveArray =>
       physicsObject for part in @pinball.sceneManager()?.parts() when physicsObject = part.avatar.getPhysicsObject()
     ,
       added: (physicsObject) =>
         # Add the part to the simulation.
-        @dynamicsWorld.addRigidBody physicsObject.body
+        @dynamicsWorld.addRigidBody physicsObject.body, physicsObject.avatar.properties.collisionGroup, physicsObject.avatar.properties.collisionMask
+        physicsObject.avatar.part.onAddedToDynamicsWorld @dynamicsWorld
 
       removed: (physicsObject) =>
         @dynamicsWorld.removeRigidBody physicsObject.body
+        physicsObject.avatar.part.onRemovedFromDynamicsWorld @dynamicsWorld
 
   destroy: ->
     @partPhysicsObjects.stop()

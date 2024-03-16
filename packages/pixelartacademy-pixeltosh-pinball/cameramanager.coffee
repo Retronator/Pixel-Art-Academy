@@ -21,7 +21,7 @@ class Pinball.CameraManager
     @_orthographicCamera.position.set halfWidth, 1, halfHeight
     @_orthographicCamera.rotation.set -Math.PI / 2, 0, 0
     
-    @_perspectiveCamera = new THREE.PerspectiveCamera 60, Pinball.RendererManager.perspectiveAspectRatio, 0.1, 10
+    @_perspectiveCamera = new THREE.PerspectiveCamera 60, Pinball.RendererManager.perspectiveAspectRatio, 0.01, 10
     
     @camera = new AE.ReactiveWrapper null
     
@@ -35,8 +35,8 @@ class Pinball.CameraManager
     
     # Update camera position when properties change.
     @_properties = new ReactiveField
-      azimuthalAngle: AR.Degrees 180
-      polarAngle: AR.Degrees 80
+      azimuthalAngle: AR.Degrees 90
+      polarAngle: AR.Degrees 45
       radialDistance: Pinball.SceneManager.shortPlayfieldHeight
     
     @pinball.autorun =>

@@ -22,5 +22,8 @@ class Pinball.Parts.Wall extends Pinball.Part
     new Pinball.Part.Avatar @,
       mass: 0
       height: 0.05
-      restitution: 0.9
-      friction: 0.01
+      restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
+      friction: Pinball.PhysicsManager.FrictionConstants.Wood
+      rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
+      collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
+      collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls

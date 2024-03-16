@@ -15,7 +15,11 @@ class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
   constructor: (@bitmapOrigin, @radius) ->
     super arguments...
     
+    @continuousCollisionDetectionRadius = @radius
+    
   collisionShapeMargin: -> null
+  
+  constrainRotationToPlayfieldPlane: -> false
 
   createPhysicsDebugGeometry: ->
     new THREE.SphereBufferGeometry @radius, 8, 4

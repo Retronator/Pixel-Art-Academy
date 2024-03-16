@@ -26,7 +26,15 @@ class Pinball.Part extends LOI.Adventure.Item
       # Reactively load the bitmap asset.
       @autorun (computation) =>
         @bitmap null
-      
+        
+  onAddedToDynamicsWorld: (dynamicsWorld) ->
+    # Override if the part needs to perform any logic after its physics object was added to the dynamics world.
+  
+  onRemovedFromDynamicsWorld: (dynamicsWorld) ->
+    # Override to perform any cleanup after the physics object was removed from the dynamics world.
+  
+  update: (appTime) -> # Override if the part needs to perform any update logic.
+  
   _loadImageAssets: (imageUrls) ->
     # Load all the images.
     imagePromises = for imageUrl in imageUrls

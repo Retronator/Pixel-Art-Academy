@@ -53,7 +53,7 @@ class LOI.Engine.Debug.DummySceneItem
       @collisionShape = @createCollisionShape()
       @collisionShape.calculateLocalInertia @mass, @localInertia
 
-      transform = new Ammo.btTransform Ammo.btQuaternion.identity, @parentItem.position.toBulletVector3()
+      transform = new Ammo.btTransform Ammo.btQuaternion.identity(), @parentItem.position.toBulletVector3()
       @motionState = new Ammo.btDefaultMotionState transform
 
       rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia

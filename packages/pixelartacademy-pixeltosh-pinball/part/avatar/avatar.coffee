@@ -8,7 +8,7 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
-  constructor: (part, @properties = {}) ->
+  constructor: (part, @properties) ->
     super part.constructor
 
     @part = part
@@ -33,6 +33,8 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       Tracker.nonreactive =>
         @_renderObject()?.destroy()
         @_physicsObject()?.destroy()
+        @_renderObject null
+        @_physicsObject null
         
         for shapeClass in @part.constructor.avatarShapes()
           if shape = shapeClass.detectShape pixelArtEvaluation, @properties
@@ -42,6 +44,8 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
             physicsObject.setDesignPosition partData.position if partData.position
             physicsObject.setRotation partData.rotationQuaternion if partData.rotationQuaternion
             @_physicsObject physicsObject
+
+            break
   
   getRenderObject: -> @_renderObject()
   getPhysicsObject: -> @_physicsObject()
@@ -58,11 +62,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       @physicsDebugGeometry?.dispose()
       @physicsDebugGeometry = @shape.createPhysicsDebugGeometry()
 
-      @remove @physicsDebugMesh if @physicsDebugMesh
-
       @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, @physicsDebugMaterial
-      @physicsDebugMesh.receiveShadow = true
-      @physicsDebugMesh.castShadow = true
       @physicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
       
       @add @physicsDebugMesh
@@ -75,17 +75,19 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       pixelSize = Pinball.CameraManager.orthographicPixelSize
       @geometry = new THREE.PlaneGeometry pixelSize * (@bitmap.bounds.width + 2), pixelSize * (@bitmap.bounds.height + 2)
       
-      @mesh = new THREE.Mesh @geometry, @material
-      @mesh.rotation.x = -Math.PI / 2
-      @mesh.receiveShadow = true
-      @mesh.castShadow = true
-      @mesh.layers.set Pinball.RendererManager.RenderLayers.Main
+      @bitmapPlane = new THREE.Mesh @geometry, @material
+      @bitmapPlane.rotation.x = -Math.PI / 2
+      @bitmapPlane.receiveShadow = true
+      @bitmapPlane.castShadow = true
+      @bitmapPlane.layers.set Pinball.RendererManager.RenderLayers.Main
       
       # Offset the mesh so that the shape origin on the bitmap will appear at the render object's position.
       pixelSize = Pinball.CameraManager.orthographicPixelSize
-      @mesh.position.x = (@bitmap.bounds.width / 2 - @shape.bitmapOrigin.x) * pixelSize
-      @mesh.position.z = (@bitmap.bounds.height / 2 - @shape.bitmapOrigin.y) * pixelSize
+      @bitmapPlane.position.x = (@bitmap.bounds.width / 2 - @shape.bitmapOrigin.x) * pixelSize
+      @bitmapPlane.position.z = (@bitmap.bounds.height / 2 - @shape.bitmapOrigin.y) * pixelSize
       
+      @mesh = new THREE.Object3D
+      @mesh.add @bitmapPlane
       @add @mesh
       
       pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @bitmap
@@ -124,7 +126,11 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
         @position.x = (integerScreenX + @shape.bitmapOrigin.x) * quantizePositionAmount
         @position.z = (integerScreenY + @shape.bitmapOrigin.y) * quantizePositionAmount
         
-      @physicsDebugMesh.quaternion.setFromBulletQuaternion transform.getRotation()
+      rotation = transform.getRotation()
+      @physicsDebugMesh.quaternion.setFromBulletQuaternion rotation
+
+      # When the shape is constrained to the playfield plane, we can also rotate the bitmap.
+      @mesh.quaternion.setFromBulletQuaternion rotation if @shape.constrainRotationToPlayfieldPlane()
     
     renderReflections: (renderer, scene) ->
       unless @cubeCamera
@@ -152,11 +158,11 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     constructor: (@avatar, @shape) ->
       super arguments...
 
-      transform = new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3
+      transform = new Ammo.btTransform Ammo.btQuaternion.identity(), Ammo.btVector3.zero()
       @motionState = new Ammo.btDefaultMotionState transform
 
-      @mass = @avatar.properties.mass ? 1
-      @localInertia = new Ammo.btVector3 0, 0, 0
+      @mass = @avatar.properties.mass ? 0
+      @localInertia = Ammo.btVector3.zero()
       
       @collisionShape = @shape.createCollisionShape()
       margin = @shape.collisionShapeMargin()
@@ -165,6 +171,12 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
 
       bodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
       @body = new Ammo.btRigidBody bodyInfo
+      
+      if @avatar.properties.continuousCollisionDetection and @shape.continuousCollisionDetectionRadius
+        @body.setCcdSweptSphereRadius @shape.continuousCollisionDetectionRadius
+        @body.setCcdMotionThreshold Pinball.PhysicsManager.continuousCollisionDetectionThreshold
+      
+      @body.setAngularFactor new Ammo.btVector3 0, 1, 0 if @shape.constrainRotationToPlayfieldPlane()
 
       # Default body will be elastic and frictionless.
       @body.setRestitution @avatar.properties.restitution ? 1

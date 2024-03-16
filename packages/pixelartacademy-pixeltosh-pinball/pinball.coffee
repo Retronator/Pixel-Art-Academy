@@ -31,20 +31,29 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @sceneManager = new ReactiveField null
     @cameraManager = new ReactiveField null
     @physicsManager = new ReactiveField null
+    @inputManager = new ReactiveField null
     @mouse = new ReactiveField null
+    
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
     
     @partsData = new ReactiveField [
       type: @constructor.Parts.Ball.id()
       id: Random.id()
       position:
-        x: Pinball.CameraManager.orthographicPixelSize * 30
-        y: Pinball.CameraManager.orthographicPixelSize * 5
+        x: 173 * pixelSize
+        y: 100 * pixelSize
     ,
       type: @constructor.Parts.Wall.id()
       id: Random.id()
       position:
-        x: Pinball.CameraManager.orthographicPixelSize
-        y: Pinball.CameraManager.orthographicPixelSize
+        x: 0
+        y: 0
+    ,
+      type: @constructor.Parts.Plunger.id()
+      id: Random.id()
+      position:
+        x: 173.5 * pixelSize
+        y: (197 - 30) * pixelSize
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
@@ -64,6 +73,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @cameraManager new @constructor.CameraManager @
     @rendererManager new @constructor.RendererManager @
     @physicsManager new @constructor.PhysicsManager @
+    @inputManager new @constructor.InputManager @
     @mouse new @constructor.Mouse @
     
     @hoveredPart = new ReactiveField null
@@ -135,6 +145,9 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
           searchObject = searchObject.parent
 
       @hoveredPart hoveredPart
+      
+    # Update the parts.
+    part.update appTime for part in sceneManager.parts()
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime

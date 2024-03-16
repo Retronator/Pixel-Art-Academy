@@ -22,7 +22,7 @@ class LOI.HumanAvatar.PhysicsObject extends AR.PhysicsObject
 
     renderObject = @humanAvatar.getRenderObject()
     
-    capsuleTransform = new Ammo.btTransform Ammo.btQuaternion.identity, renderObject.position.toBulletVector3()
+    capsuleTransform = new Ammo.btTransform Ammo.btQuaternion.identity(), renderObject.position.toBulletVector3()
     @motionState = new Ammo.btDefaultMotionState capsuleTransform
 
     @rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia

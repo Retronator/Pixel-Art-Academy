@@ -20,3 +20,5 @@ Ammo.btVector3::copy = (source) ->
 # Create a new vector from a plain object.
 Ammo.btVector3.fromObject = (object) ->
   return new Ammo.btVector3 object.x, object.y, object.z
+  
+Ammo.btVector3.zero = -> new Ammo.btVector3 0, 0, 0
