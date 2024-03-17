@@ -7,18 +7,22 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
+  @centerOfMassHeightPercentage = 0.1
+
   @detectShape: (pixelArtEvaluation, properties) ->
     return unless pixelArtEvaluation.layers[0].cores.length
     
-    centerOfMass = @_calculateCenterOfMass pixelArtEvaluation
-    
-    new @ centerOfMass, pixelArtEvaluation.layers[0].cores
+    new @ pixelArtEvaluation
 
-  constructor: (@bitmapOrigin, @cores) ->
+  constructor: (@pixelArtEvaluation) ->
     super arguments...
+    
+    @bitmapOrigin = @constructor._calculateCenterOfMass @pixelArtEvaluation
+    
+    @cores = @pixelArtEvaluation.layers[0].cores
 
     @lines = []
-    boundingRectangle = null
+    @bitmapBoundingRectangle = null
 
     for core in @cores
       for line in core.outlines
@@ -30,23 +34,23 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
         
         newBoundingRectangle = @constructor._getBoundingRectangleOfPoints points
         
-        if boundingRectangle
-          boundingRectangle.union newBoundingRectangle
+        if @bitmapBoundingRectangle
+          @bitmapBoundingRectangle.union newBoundingRectangle
           
         else
-          boundingRectangle = newBoundingRectangle
+          @bitmapBoundingRectangle = newBoundingRectangle
         
         @lines.push points
-        
-    boundsWidth = boundingRectangle.width() + 1
-    boundsHeight = boundingRectangle.height() + 1
     
-    pixelSize = Pinball.CameraManager.orthographicPixelSize
-    @height = pixelSize * Math.min boundsWidth, boundsHeight
+    @bitmapBoundingRectangle = @bitmapBoundingRectangle.extrude 0, 1, 1, 0
 
-    centerOfMassHeightPercentage = 0.1
-    @topY = @height * (1 - centerOfMassHeightPercentage)
-    @bottomY = -@height * centerOfMassHeightPercentage
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
+    @width = @bitmapBoundingRectangle.width() * pixelSize
+    @depth = @bitmapBoundingRectangle.height() * pixelSize
+    @height = Math.min(@bitmapBoundingRectangle.width(), @bitmapBoundingRectangle.height()) * pixelSize
+    
+    @topY = @height * (1 - @constructor.centerOfMassHeightPercentage)
+    @bottomY = -@height * @constructor.centerOfMassHeightPercentage
   
   createPhysicsDebugGeometry: ->
     geometryData = @constructor._createExtrudedVerticesAndIndices @lines, @topY, @bottomY

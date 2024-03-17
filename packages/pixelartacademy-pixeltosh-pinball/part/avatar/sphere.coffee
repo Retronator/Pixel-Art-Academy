@@ -10,10 +10,13 @@ class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
     # We can have a sphere shape if we detect a circle.
     return unless circle = @_detectCircle pixelArtEvaluation
     
-    new @ circle.position, circle.radius * Pinball.CameraManager.orthographicPixelSize
+    new @ pixelArtEvaluation, circle
   
-  constructor: (@bitmapOrigin, @radius) ->
+  constructor: (@pixelArtEvaluation, circle) ->
     super arguments...
+    
+    @bitmapOrigin = circle.position
+    @radius = circle.radius * Pinball.CameraManager.orthographicPixelSize
     
     @continuousCollisionDetectionRadius = @radius
     

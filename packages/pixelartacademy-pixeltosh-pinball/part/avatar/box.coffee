@@ -9,19 +9,10 @@ class Pinball.Part.Avatar.Box extends Pinball.Part.Avatar.Shape
   @detectShape: (pixelArtEvaluation, properties) ->
     return unless pixelArtEvaluation.layers[0].points.length
     
-    boundingRectangle = @_getBoundingRectangleOfPoints(pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
-    
-    new @ boundingRectangle, properties
+    new @ pixelArtEvaluation, properties
   
-  constructor: (@boundingRectangle, @properties) ->
+  constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
-    
-    @bitmapOrigin = @boundingRectangle.center()
-    
-    pixelSize = Pinball.CameraManager.orthographicPixelSize
-    
-    @width = @boundingRectangle.width() * pixelSize
-    @depth = @boundingRectangle.height() * pixelSize
     
   collisionShapeMargin: -> null
   

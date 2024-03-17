@@ -53,7 +53,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       id: Random.id()
       position:
         x: 173.5 * pixelSize
-        y: (197 - 30) * pixelSize
+        y: 190 * pixelSize
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals

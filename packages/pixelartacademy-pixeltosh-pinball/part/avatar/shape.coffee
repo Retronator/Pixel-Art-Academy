@@ -123,6 +123,15 @@ class Pinball.Part.Avatar.Shape
     
     {vertices, indices}
   
+  constructor: (@pixelArtEvaluation) ->
+    @bitmapBoundingRectangle = @constructor._getBoundingRectangleOfPoints(@pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
+    @bitmapOrigin = @bitmapBoundingRectangle.center()
+    
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
+    
+    @width = @bitmapBoundingRectangle.width() * pixelSize
+    @depth = @bitmapBoundingRectangle.height() * pixelSize
+    
   collisionShapeMargin: -> @constructor.roughEdgeMargin
   
   constrainRotationToPlayfieldPlane: -> true # Override if the object should rotate freely.

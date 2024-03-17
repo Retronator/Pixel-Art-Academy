@@ -10,21 +10,22 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.Shape
   @detectShape: (pixelArtEvaluation, properties) ->
     return unless pixelArtEvaluation.layers[0].cores.length
     
-    new @ pixelArtEvaluation.layers[0].cores, properties
+    new @ pixelArtEvaluation, properties
 
-  constructor: (@cores, @properties) ->
+  constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
     
     @bitmapOrigin = x: 0, y: 0
+    cores = @pixelArtEvaluation.layers[0].cores
 
-    @lines = []
+    lines = []
 
-    for core in @cores
+    for core in cores
       for line in core.outlines
         points = @constructor._getLinePoints line
-        @lines.push points
+        lines.push points
     
-    @geometryData = @constructor._createExtrudedVerticesAndIndices @lines, 0, -@properties.height
+    @geometryData = @constructor._createExtrudedVerticesAndIndices lines, 0, -@properties.height
     
   createPhysicsDebugGeometry: ->
     geometry = new THREE.BufferGeometry
