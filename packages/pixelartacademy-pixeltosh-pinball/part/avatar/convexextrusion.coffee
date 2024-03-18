@@ -12,12 +12,12 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
   @detectShape: (pixelArtEvaluation, properties) ->
     return unless pixelArtEvaluation.layers[0].cores.length
     
-    new @ pixelArtEvaluation
+    new @ pixelArtEvaluation, properties
 
-  constructor: (@pixelArtEvaluation) ->
+  constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
     
-    @bitmapOrigin = @constructor._calculateCenterOfMass @pixelArtEvaluation
+    @bitmapOrigin = @constructor._calculateCenterOfMass @pixelArtEvaluation unless @properties.bitmapOrigin
     
     @cores = @pixelArtEvaluation.layers[0].cores
 
@@ -30,6 +30,7 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
         
         for point in points
           point.x -= @bitmapOrigin.x
+          point.x *= -1 if @properties.flipped
           point.y -= @bitmapOrigin.y
         
         newBoundingRectangle = @constructor._getBoundingRectangleOfPoints points

@@ -17,13 +17,12 @@ class Pinball.Parts.Wall extends Pinball.Part
   ]
   
   @initialize()
-
-  createAvatar: ->
-    new Pinball.Part.Avatar @,
-      mass: 0
-      height: 0.03
-      restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
-      friction: Pinball.PhysicsManager.FrictionConstants.Wood
-      rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
-      collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
-      collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
+  
+  createAvatarProperties: ->
+    mass: 0
+    height: 0.03
+    restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
+    friction: Pinball.PhysicsManager.FrictionConstants.Wood
+    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
+    collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
+    collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls

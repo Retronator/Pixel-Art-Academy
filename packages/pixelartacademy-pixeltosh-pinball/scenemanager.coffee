@@ -86,19 +86,12 @@ class Pinball.SceneManager
 
   _addPart: (partData) ->
     partClass = _.thingClass partData.type
-
-    if partData.type is partData.id
-      # If no special ID is given, we have a unique part.
-      part = new partClass
-
-    else
-      # Otherwise we need to get the specific copy for the ID.
-      part = partClass.getCopyForId partData.id
+    part = new partClass @pinball, => partData
 
     @_partsById[partData.id] = part
     
     # Initialize the avatar.
-    part.avatar.initialize partData
+    part.avatar.initialize()
 
     # Update parts array.
     @_parts.push part

@@ -11,7 +11,7 @@ class Pinball.Part extends LOI.Adventure.Item
   
   @avatarShapes: -> throw new AE.NotImplementedException  "A playfield part must specify which shapes it can have in order of preference."
   
-  constructor: ->
+  constructor: (@pinball, @data) ->
     super arguments...
     
     # Load the bitmap asset.
@@ -27,6 +27,14 @@ class Pinball.Part extends LOI.Adventure.Item
       @autorun (computation) =>
         @bitmap null
         
+    @avatarProperties = new ComputedField =>
+      _.extend {}, @data(), @createAvatarProperties()
+  
+  createAvatar: ->
+    new Pinball.Part.Avatar @
+  
+  createAvatarProperties: -> {} # Override to supply additional properties to the avatar.
+  
   onAddedToDynamicsWorld: (dynamicsWorld) ->
     # Override if the part needs to perform any logic after its physics object was added to the dynamics world.
   

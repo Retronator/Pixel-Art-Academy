@@ -29,27 +29,23 @@ class Pinball.Parts.Plunger extends Pinball.Part
     @active = false
     @moving = false
     @displacement = 0
-
-  createAvatar: ->
-    new Pinball.Part.Avatar @,
-      mass: 0
-      height: 0.03
-      restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
-      friction: Pinball.PhysicsManager.FrictionConstants.Plastic
-      rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
-      collisionGroup: Pinball.PhysicsManager.CollisionGroups.Actuators
-      collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
+  
+  createAvatarProperties: ->
+    mass: 0
+    height: 0.03
+    restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
+    friction: Pinball.PhysicsManager.FrictionConstants.Plastic
+    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
+    collisionGroup: Pinball.PhysicsManager.CollisionGroups.Actuators
+    collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
   
   onAddedToDynamicsWorld: (@dynamicsWorld) ->
-    # Create a constraint at the plunger origin.
+    # Plunger is a player-controlled kinematic object.
     physicsObject = @avatar.getPhysicsObject()
     @origin = physicsObject.getPosition()
     
     physicsObject.body.setCollisionFlags physicsObject.body.getCollisionFlags() | Ammo.btCollisionObject.CollisionFlags.KinematicObject
     physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
-  
-  onRemovedFromDynamicsWorld: (dynamicsWorld) ->
-    @dynamicsWorld.removeConstraint @constraint
     
   activate: ->
     @active = true

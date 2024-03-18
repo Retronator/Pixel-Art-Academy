@@ -125,9 +125,9 @@ class Pinball.Part.Avatar.Shape
     
     {vertices, indices}
   
-  constructor: (@pixelArtEvaluation) ->
+  constructor: (@pixelArtEvaluation, @properties) ->
     @bitmapBoundingRectangle = @constructor._getBoundingRectangleOfPoints(@pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
-    @bitmapOrigin = @bitmapBoundingRectangle.center()
+    @bitmapOrigin = @properties.bitmapOrigin or @bitmapBoundingRectangle.center()
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     

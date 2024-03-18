@@ -37,6 +37,7 @@ Package.onUse(function(api) {
   api.addFile('parts/ball');
   api.addFile('parts/wall');
   api.addFile('parts/plunger');
+  api.addFile('parts/flipper');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');

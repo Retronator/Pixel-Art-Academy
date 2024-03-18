@@ -6,13 +6,13 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
-  @detectShape: (pixelArtEvaluation) ->
+  @detectShape: (pixelArtEvaluation, properties) ->
     # We can have a sphere shape if we detect a circle.
     return unless circle = @_detectCircle pixelArtEvaluation
     
-    new @ pixelArtEvaluation, circle
+    new @ pixelArtEvaluation, properties, circle
   
-  constructor: (@pixelArtEvaluation, circle) ->
+  constructor: (@pixelArtEvaluation, @properties, circle) ->
     super arguments...
     
     @bitmapOrigin = circle.position

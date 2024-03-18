@@ -35,8 +35,8 @@ class Pinball.InputManager
   
   _keyCodeToControl: (code) ->
     switch code
-      when 'ShiftLeft', 'ControlLeft', 'AltLeft', 'MetaLeft', 'ArrowLeft' then @constructor.Controls.LeftFlipper
-      when 'ShiftRight', 'ControlRight', 'AltRight', 'MetaRight', 'ArrowRight', 'NumpadEnter' then @constructor.Controls.RightFlipper
+      when 'ShiftLeft', 'ControlLeft', 'AltLeft', 'ArrowLeft' then @constructor.Controls.LeftFlipper
+      when 'ShiftRight', 'ControlRight', 'AltRight', 'ArrowRight', 'NumpadEnter' then @constructor.Controls.RightFlipper
       when 'ArrowDown', 'Space', 'Enter' then @constructor.Controls.Plunger
       else
         null
@@ -46,4 +46,6 @@ class Pinball.InputManager
     
     _.filter parts, (part) =>
       return true if control is @constructor.Controls.Plunger and part instanceof Pinball.Parts.Plunger
+      return true if control is @constructor.Controls.LeftFlipper and part instanceof Pinball.Parts.Flipper and not part.data().flipped
+      return true if control is @constructor.Controls.RightFlipper and part instanceof Pinball.Parts.Flipper and part.data().flipped
       false

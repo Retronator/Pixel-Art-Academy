@@ -19,13 +19,12 @@ class Pinball.Parts.Ball extends Pinball.Part
   ]
   
   @initialize()
-
-  createAvatar: ->
-    new Pinball.Part.Avatar @,
-      mass: 0.086 # kg
-      restitution: Pinball.PhysicsManager.BallConstants.Restitution
-      friction: Pinball.PhysicsManager.BallConstants.Friction
-      rollingFriction: Pinball.PhysicsManager.BallConstants.RollingFriction
-      collisionGroup: CollisionGroups.Balls
-      collisionMask: CollisionGroups.Balls | CollisionGroups.BallGuides | CollisionGroups.Actuators
-      continuousCollisionDetection: true
+  
+  createAvatarProperties: ->
+    mass: 0.086 # kg
+    restitution: Pinball.PhysicsManager.BallConstants.Restitution
+    friction: Pinball.PhysicsManager.BallConstants.Friction
+    rollingFriction: Pinball.PhysicsManager.BallConstants.RollingFriction
+    collisionGroup: CollisionGroups.Balls
+    collisionMask: CollisionGroups.Balls | CollisionGroups.BallGuides | CollisionGroups.Actuators
+    continuousCollisionDetection: true

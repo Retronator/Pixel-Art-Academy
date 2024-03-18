@@ -84,7 +84,7 @@ class Pinball.PhysicsManager
     ,
       added: (physicsObject) =>
         # Add the part to the simulation.
-        @dynamicsWorld.addRigidBody physicsObject.body, physicsObject.avatar.properties.collisionGroup, physicsObject.avatar.properties.collisionMask
+        @dynamicsWorld.addRigidBody physicsObject.body, physicsObject.properties.collisionGroup, physicsObject.properties.collisionMask
         physicsObject.avatar.part.onAddedToDynamicsWorld @dynamicsWorld
 
       removed: (physicsObject) =>

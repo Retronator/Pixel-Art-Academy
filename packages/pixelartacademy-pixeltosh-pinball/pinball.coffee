@@ -56,6 +56,21 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       position:
         x: 173.5 * pixelSize
         y: 189.5 * pixelSize
+    ,
+      type: @constructor.Parts.Flipper.id()
+      id: Random.id()
+      position:
+        x: 54.5 * pixelSize
+        y: 169.5 * pixelSize
+      maxAngleDegrees: -40
+    ,
+      type: @constructor.Parts.Flipper.id()
+      id: Random.id()
+      position:
+        x: 91.5 * pixelSize
+        y: 169.5 * pixelSize
+      flipped: true
+      maxAngleDegrees: 40
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
@@ -63,6 +78,9 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @sceneImage = new ReactiveField null
     
     @debugPhysics = @state.field 'debugPhysics', default: false
+    
+  getPartData: (partId) ->
+    _.find @partsData(), (partData) => partData.id is partId
     
   load: ->
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
