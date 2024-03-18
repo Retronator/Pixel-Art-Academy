@@ -29,7 +29,7 @@ class Pinball.PhysicsManager
     BallGuides: 2
     Actuators: 4
   
-  @simulationTimestep = 1 / 300
+  @simulationTimestep = 1 / 1000
   @maxSimulationStepsPerFrame = 0.1 / @simulationTimestep
   @continuousCollisionDetectionThreshold = 1e-7
   

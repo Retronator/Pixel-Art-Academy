@@ -33,7 +33,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
   createAvatar: ->
     new Pinball.Part.Avatar @,
       mass: 0
-      height: 0.05
+      height: 0.03
       restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
       friction: Pinball.PhysicsManager.FrictionConstants.Plastic
       rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth

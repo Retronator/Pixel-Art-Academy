@@ -27,6 +27,8 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.Shape
     
     @geometryData = @constructor._createExtrudedVerticesAndIndices lines, 0, -@properties.height
     
+  collisionShapeMargin: -> null
+  
   createPhysicsDebugGeometry: ->
     geometry = new THREE.BufferGeometry
     geometry.setAttribute 'position', new THREE.BufferAttribute @geometryData.vertices, 3
