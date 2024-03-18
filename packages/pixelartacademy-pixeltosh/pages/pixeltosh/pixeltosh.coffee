@@ -17,6 +17,8 @@ class PAA.Pixeltosh.Pages.Pixeltosh extends AM.Component
       safeAreaWidth: 320
       safeAreaHeight: 241
       minScale: 2
+      
+    @adventure = new PAA.Pixeltosh.Adventure
 
     @os = new PAA.Pixeltosh.OS
 
@@ -25,3 +27,8 @@ class PAA.Pixeltosh.Pages.Pixeltosh extends AM.Component
       return unless projectId = AB.Router.getParameter 'projectId'
       
       @os.loadProject slug, projectId
+
+  onDestroyed: ->
+    super arguments...
+    
+    @adventure.destroy()

@@ -13,13 +13,15 @@ class Pinball.Parts.Plunger extends Pinball.Part
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/plunger.png'
   
   @avatarShapes: -> [
-    Pinball.Part.Avatar.ConvexExtrusion
+    Pinball.Part.Avatar.Box
   ]
   
   @initialize()
   
   @pullingSpeed = 0.05 # m / s
-  @releaseSpeed = 0.75 # m / s
+  @releaseSpeed = 1.5 # m / s
+  
+  @maxDisplacementRatio = 0.8
   
   constructor: ->
     super arguments...
@@ -44,6 +46,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
     @origin = physicsObject.getPosition()
     
     physicsObject.body.setCollisionFlags physicsObject.body.getCollisionFlags() | Ammo.btCollisionObject.CollisionFlags.KinematicObject
+    physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
   
   onRemovedFromDynamicsWorld: (dynamicsWorld) ->
     @dynamicsWorld.removeConstraint @constraint
@@ -53,32 +56,41 @@ class Pinball.Parts.Plunger extends Pinball.Part
     @moving = true
     
     physicsObject = @avatar.getPhysicsObject()
-    physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
-    
-    @handConstraint = new Ammo.btPoint2PointConstraint physicsObject.body, Ammo.btVector3.zero()
-    @dynamicsWorld.addConstraint @handConstraint
-    
     @displacement = physicsObject.getPosition().z - @origin.z
   
   deactivate: ->
     @active = false
     
-  update: (appTime) ->
+    physicsObject = @avatar.getPhysicsObject()
+    @_releaseSpeed = -@constructor.releaseSpeed * @displacement / physicsObject.shape.depth
+    
+  fixedUpdate: (elapsed) ->
     return unless @moving
     
     physicsObject = @avatar.getPhysicsObject()
-
+    maxDisplacement = physicsObject.shape.depth * @constructor.maxDisplacementRatio
+    
     if @active
-      distance = @constructor.pullingSpeed * appTime.elapsedAppTime
-      @displacement = Math.min @displacement + distance, physicsObject.shape.depth
-      
+      if @displacement >= maxDisplacement
+        # We reached maximum displacement, stop.
+        @displacement = maxDisplacement
+        speed = 0
+        
+      else
+        # Keep pulling the plunger.
+        speed = @constructor.pullingSpeed
+    
     else
-      distance = @constructor.releaseSpeed * appTime.elapsedAppTime * @displacement / physicsObject.shape.depth
-      @displacement = Math.max @displacement - distance, 0
-      
-      if @displacement < Pinball.CameraManager.orthographicPixelSize
+      if @displacement < 0
+        # We reached the origin.
         @moving = false
         @displacement = 0
-        physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.WantsDeactivation
+        speed = 0
+        
+      else
+        # Keep releasing the plunger.
+        speed = @_releaseSpeed
     
+    distance = speed * elapsed
+    @displacement += distance
     physicsObject.setPosition x: @origin.x, y: @origin.y, z: @origin.z + @displacement

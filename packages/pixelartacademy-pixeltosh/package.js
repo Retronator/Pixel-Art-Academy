@@ -18,6 +18,8 @@ Package.onUse(function(api) {
 
   api.addFile('pixeltosh');
 
+  api.addFile('adventure..');
+
   api.addFile('program..');
   api.addComponent('program/view..');
 

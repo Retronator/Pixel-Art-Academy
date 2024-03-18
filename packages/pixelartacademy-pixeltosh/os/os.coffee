@@ -17,16 +17,14 @@ class PAA.Pixeltosh.OS extends LOI.Component
     
     @programLocation = new PAA.Pixeltosh.Programs
     
-    if LOI.adventure
-      # Prepare for loading available programs based on gameplay.
-      @currentProgramsSituation = new ComputedField =>
-        options =
-          timelineId: LOI.adventure.currentTimelineId()
-          location: @programLocation
-  
-        return unless options.timelineId and options.location
-  
-        new LOI.Adventure.Situation options
+    @currentProgramsSituation = new ComputedField =>
+      options =
+        timelineId: LOI.adventure.currentTimelineId()
+        location: @programLocation
+
+      return unless options.timelineId and options.location
+
+      new LOI.Adventure.Situation options
   
     # We use caches to avoid reconstruction.
     @_programs = {}
@@ -34,17 +32,12 @@ class PAA.Pixeltosh.OS extends LOI.Component
     # Instantiates and returns all programs that are available to listen to commands.
     @currentPrograms = new ComputedField =>
       # When running in the adventure interface, get programs from the situation.
-      if LOI.adventure
-        return unless currentProgramsSituation = @currentProgramsSituation()
+      return unless currentProgramsSituation = @currentProgramsSituation()
 
-        programClasses = _.clone currentProgramsSituation.things()
-        
-        # Finder is always available in adventure interface.
-        programClasses.push PAA.Pixeltosh.Programs.Finder
-        
-      else
-        # Only load the program referenced by the URL slug.
-        programClasses = []
+      programClasses = _.clone currentProgramsSituation.things()
+      
+      # Finder is always available.
+      programClasses.push PAA.Pixeltosh.Programs.Finder
 
       @getProgram programClass for programClass in programClasses
       
@@ -67,22 +60,16 @@ class PAA.Pixeltosh.OS extends LOI.Component
     @cursor = new ComputedField =>
       @interface.getView PAA.Pixeltosh.OS.Interface.Cursor
       
-    if LOI.adventure
-      @fileSystem = new @constructor.FileSystem os: @
-      
+    @fileSystem = new @constructor.FileSystem os: @
+    
     # Note: We perform the rest of initialization on rendered when the interface is already created.
     
   onRendered: ->
     super arguments...
 
     # Load the starting program.
-    if LOI.adventure
-      # Start in Finder by default.
-      programSlug = AB.Router.getParameter('parameter3') or 'finder'
-      
-    else
-      programSlug = AB.Router.getParameter('programSlug')
-      
+    programSlug = AB.Router.getParameter('programSlug') or AB.Router.getParameter('parameter3') or 'finder'
+    
     if programClass = PAA.Pixeltosh.Program.getClassForSlug programSlug
       @loadProgram @getProgram programClass
       

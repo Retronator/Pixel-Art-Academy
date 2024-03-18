@@ -13,7 +13,8 @@ Npm.depends({
   'quill': '1.3.7',
   "velocity-animate": "1.5.2",
   'showdown': '1.9.1',
-  'lodash': '4.17.21'
+  'lodash': '4.17.21',
+  'poly-decomp': '0.3.0'
 });
 
 Package.onUse(function(api) {
@@ -335,6 +336,12 @@ Package.onUse(function(api) {
   api.addFile('pyramid/interpolation/cachedfunction2d');
 
   api.addFileWithGlsl('pyramid/octahedronmap..');
+
+  api.addFile('pyramid/boundingrectangle');
+
+  api.addFile('pyramid/polygon');
+  api.addFile('pyramid/polygonboundary');
+  api.addFile('pyramid/polygonwithholes');
 
   // Artificial Reality
 

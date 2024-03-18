@@ -12,7 +12,7 @@ class Pinball.CameraManager
   @orthographicPixelSize = 0.5 / 180 # m/px
   
   constructor: (@pinball) ->
-    @displayType = new ReactiveField @constructor.DisplayTypes.Orthographic
+    @displayType = @pinball.state.field 'cameraDisplayType', default: @constructor.DisplayTypes.Orthographic
     
     halfWidth = Pinball.SceneManager.playfieldWidth / 2
     halfHeight = halfWidth / Pinball.RendererManager.orthographicAspectRatio

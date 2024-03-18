@@ -61,3 +61,10 @@ class AR.PhysicsObject
   setFixedRotation: (value = true) ->
     @hasFixedRotation = value
     @body.setAngularFactor if value then 0 else 1
+
+  getLinearVelocity: ->
+    @body.getLinearVelocity().toObject()
+    
+  setLinearVelocity: (velocity) ->
+    @_vector3.copy velocity
+    @body.setLinearVelocity @_vector3

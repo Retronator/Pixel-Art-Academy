@@ -56,6 +56,8 @@ class Pinball.Part.Avatar.Shape
         
         for point in part.displayPoints[1..]
           points.push point.position
+          
+    points.splice points.length - 1, 1 if line.isClosed
     
     points
     

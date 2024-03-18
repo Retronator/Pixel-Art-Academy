@@ -62,7 +62,7 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
     geometry
 
   createCollisionShape: ->
-    @convexHullShape = new Ammo.btConvexHullShape()
+    convexHullShape = new Ammo.btConvexHullShape()
     hullPoint = Ammo.btVector3.zero()
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
@@ -72,12 +72,12 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
         hullPoint.setX (point.x + 0.5) * pixelSize
         hullPoint.setY @topY
         hullPoint.setZ (point.y + 0.5) * pixelSize
-        @convexHullShape.addPoint hullPoint
+        convexHullShape.addPoint hullPoint
         
         hullPoint.setY -@bottomY
-        recalculateLocalAABB = pointIndex is line.length - 1
-        @convexHullShape.addPoint hullPoint, recalculateLocalAABB
-    
-    @convexHullShape
+        convexHullShape.addPoint hullPoint
+        
+    convexHullShape.recalcLocalAabb()
+    convexHullShape
 
   yPosition: -> -@bottomY

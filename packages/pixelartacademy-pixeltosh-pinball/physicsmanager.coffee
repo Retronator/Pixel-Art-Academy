@@ -8,12 +8,17 @@ if Meteor.isClient
   _transform = new Ammo.btTransform
 
 class Pinball.PhysicsManager
+  @BallConstants =
+    Restitution: 0.6
+    Friction: 1
+    RollingFriction: 0
+  
   @RestitutionConstants =
-    HardSurface: 0.6 # steel ball bearing on concrete, golf ball on wood
+    HardSurface: 0.6 / @BallConstants.Restitution # steel ball bearing on concrete, golf ball on wood
   
   @FrictionConstants =
-    Wood: 0.4 # steel-wood (0.2–0.6)
-    Plastic: 0.2 # plastic-metal (0.1–0.3)
+    Wood: 0.4 / @BallConstants.Friction # steel-wood (0.2–0.6)
+    Plastic: 0.2 / @BallConstants.Friction # plastic-metal (0.1–0.3)
   
   @RollingFrictionConstants =
     Coarse: 0.02 # 1-inch steel bearing on P80 emery paper (0.01–0.02)
@@ -97,8 +102,12 @@ class Pinball.PhysicsManager
 
   update: (appTime) ->
     return unless appTime.elapsedAppTime
+    
+    stepCount = Math.min @constructor.maxSimulationStepsPerFrame, Math.ceil appTime.elapsedAppTime / @constructor.simulationTimestep
 
-    @dynamicsWorld.stepSimulation appTime.elapsedAppTime, @maxSimulationStepsPerFrame, @simulationTimestep
+    for step in [0...stepCount]
+      @dynamicsWorld.stepSimulation @constructor.simulationTimestep, 1, @constructor.simulationTimestep
+      @pinball.fixedUpdate @constructor.simulationTimestep
     
     quantizePosition = @pinball.cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @pinball.debugPhysics()
     quantizePositionAmount = if quantizePosition then Pinball.CameraManager.orthographicPixelSize else 0

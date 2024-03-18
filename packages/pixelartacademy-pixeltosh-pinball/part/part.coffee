@@ -35,6 +35,8 @@ class Pinball.Part extends LOI.Adventure.Item
   
   update: (appTime) -> # Override if the part needs to perform any update logic.
   
+  fixedUpdate: (elapsed) -> # Override if the part needs to perform any update logic.
+  
   _loadImageAssets: (imageUrls) ->
     # Load all the images.
     imagePromises = for imageUrl in imageUrls

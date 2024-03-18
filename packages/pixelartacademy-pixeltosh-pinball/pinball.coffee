@@ -8,6 +8,8 @@ _cursorRaycaster = new THREE.Raycaster
 _cursorPosition = new THREE.Vector3
 
 class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
+  # cameraDisplayType: enum whether the camera should be perspective or orthographic
+  # debugPhysics: boolean whether to show debug view of the playfield
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball'
   @register @id()
   
@@ -53,14 +55,14 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       id: Random.id()
       position:
         x: 173.5 * pixelSize
-        y: 190 * pixelSize
+        y: 189.5 * pixelSize
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
     
     @sceneImage = new ReactiveField null
     
-    @debugPhysics = new ReactiveField false
+    @debugPhysics = @state.field 'debugPhysics', default: false
     
   load: ->
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
@@ -148,6 +150,10 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       
     # Update the parts.
     part.update appTime for part in sceneManager.parts()
+    
+  fixedUpdate: (elapsed) ->
+    sceneManager = @sceneManager()
+    part.fixedUpdate elapsed for part in sceneManager.parts()
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime
