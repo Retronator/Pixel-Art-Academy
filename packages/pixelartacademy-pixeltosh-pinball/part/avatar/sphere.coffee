@@ -22,8 +22,6 @@ class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
     
   collisionShapeMargin: -> null
   
-  constrainRotationToPlayfieldPlane: -> false
-
   createPhysicsDebugGeometry: ->
     new THREE.SphereBufferGeometry @radius, 8, 4
 

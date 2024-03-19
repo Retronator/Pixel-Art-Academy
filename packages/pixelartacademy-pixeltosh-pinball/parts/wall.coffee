@@ -20,6 +20,9 @@ class Pinball.Parts.Wall extends Pinball.Part
   
   createAvatarProperties: ->
     mass: 0
+    bitmapOrigin:
+      x: 0
+      y: 0
     height: 0.03
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood

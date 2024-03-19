@@ -13,7 +13,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/plunger.png'
   
   @avatarShapes: -> [
-    Pinball.Part.Avatar.Box
+    Pinball.Part.Avatar.Extrusion
   ]
   
   @initialize()

@@ -7,6 +7,9 @@ PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
+_rotation = new THREE.Quaternion
+_rotationAngles = new THREE.Euler
+
 class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
   constructor: (part) ->
     super part.constructor
@@ -53,6 +56,8 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
   getPhysicsObject: -> @_physicsObject()
 
   class @RenderObject extends AS.RenderObject
+    @rotationAxis = new THREE.Vector3 0, -1, 0
+  
     constructor: (@avatar, @properties, @shape, @bitmap) ->
       super arguments...
       
@@ -73,6 +78,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       @material = new THREE.MeshLambertMaterial
         color: 0xffffff
         alphaTest: 0.5
+        side: THREE.DoubleSide
         
       pixelSize = Pinball.CameraManager.orthographicPixelSize
       @geometry = new THREE.PlaneGeometry pixelSize * (@bitmap.bounds.width + 2), pixelSize * (@bitmap.bounds.height + 2)
@@ -134,8 +140,25 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       rotation = transform.getRotation()
       @physicsDebugMesh.quaternion.setFromBulletQuaternion rotation
 
-      # When the shape is constrained to the playfield plane, we can also rotate the bitmap.
-      @mesh.quaternion.setFromBulletQuaternion rotation if @shape.constrainRotationToPlayfieldPlane()
+      # Rotate the bitmap only around the Y axis.
+      _rotation.setFromBulletQuaternion rotation
+      _rotationAngles.setFromQuaternion _rotation
+      
+      # Note: We divide by 1.9 so that when an object is resting at
+      # 90 degrees, we don't flip between sides due to instabilities.
+      if Math.abs(_rotationAngles.z) > Math.PI / 1.9
+        _rotationAngles.z = Math.sign(_rotationAngles.z) * Math.PI
+        
+      else
+        _rotationAngles.z = 0
+        
+      if Math.abs(_rotationAngles.x) > Math.PI / 1.9
+        _rotationAngles.x = Math.sign(_rotationAngles.x) * Math.PI
+      
+      else
+        _rotationAngles.x = 0
+      
+      @mesh.quaternion.setFromEuler _rotationAngles
     
     renderReflections: (renderer, scene) ->
       unless @cubeCamera
@@ -180,8 +203,6 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       if @properties.continuousCollisionDetection and @shape.continuousCollisionDetectionRadius
         @body.setCcdSweptSphereRadius @shape.continuousCollisionDetectionRadius
         @body.setCcdMotionThreshold Pinball.PhysicsManager.continuousCollisionDetectionThreshold
-      
-      @body.setAngularFactor new Ammo.btVector3 0, 1, 0 if @shape.constrainRotationToPlayfieldPlane()
 
       # Default body will be elastic and frictionless.
       @body.setRestitution @properties.restitution ? 1

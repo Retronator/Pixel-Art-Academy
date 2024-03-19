@@ -14,7 +14,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
   
   @avatarShapes: -> [
-    Pinball.Part.Avatar.ConvexExtrusion
+    Pinball.Part.Avatar.Extrusion
   ]
   
   @initialize()

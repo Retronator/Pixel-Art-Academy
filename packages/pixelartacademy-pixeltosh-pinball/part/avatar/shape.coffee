@@ -133,10 +133,9 @@ class Pinball.Part.Avatar.Shape
     
     @width = @bitmapBoundingRectangle.width() * pixelSize
     @depth = @bitmapBoundingRectangle.height() * pixelSize
+    @height = @properties.height or Math.min @width, @depth
     
   collisionShapeMargin: -> @constructor.roughEdgeMargin
-  
-  constrainRotationToPlayfieldPlane: -> true # Override if the object should rotate freely.
   
   createPhysicsDebugGeometry: ->
     throw new AE.NotImplementedException "Part must provide a geometry for debugging physics."

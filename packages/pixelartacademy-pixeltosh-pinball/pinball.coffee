@@ -60,17 +60,17 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       type: @constructor.Parts.Flipper.id()
       id: Random.id()
       position:
-        x: 54.5 * pixelSize
-        y: 169.5 * pixelSize
-      maxAngleDegrees: -40
+        x: 66.5 * pixelSize
+        y: 176.5 * pixelSize
+      maxAngleDegrees: -39.5
     ,
       type: @constructor.Parts.Flipper.id()
       id: Random.id()
       position:
-        x: 91.5 * pixelSize
-        y: 169.5 * pixelSize
+        x: 103.5 * pixelSize
+        y: 176.5 * pixelSize
       flipped: true
-      maxAngleDegrees: 40
+      maxAngleDegrees: 39.5
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals

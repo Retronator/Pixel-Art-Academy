@@ -11,15 +11,10 @@ class Pinball.Part.Avatar.Box extends Pinball.Part.Avatar.Shape
     
     new @ pixelArtEvaluation, properties
   
-  constructor: (@pixelArtEvaluation, @properties) ->
-    super arguments...
-    
-  collisionShapeMargin: -> null
-  
   createPhysicsDebugGeometry: ->
-    new THREE.BoxBufferGeometry @width, @properties.height, @depth
+    new THREE.BoxBufferGeometry @width, @height, @depth
 
   createCollisionShape: ->
-    new Ammo.btBoxShape new Ammo.btVector3 @width / 2, @properties.height / 2, @depth / 2
+    new Ammo.btBoxShape new Ammo.btVector3 @width / 2, @height / 2, @depth / 2
 
-  yPosition: -> @properties.height / 2
+  yPosition: -> @height / 2

@@ -15,17 +15,20 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.Shape
   constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
     
-    @bitmapOrigin = x: 0, y: 0
-    cores = @pixelArtEvaluation.layers[0].cores
-
     lines = []
 
-    for core in cores
+    for core in @pixelArtEvaluation.layers[0].cores
       for line in core.outlines
         points = @constructor._getLinePoints line
+        
+        for point in points
+          point.x -= @bitmapOrigin.x
+          point.x *= -1 if @properties.flipped
+          point.y -= @bitmapOrigin.y
+          
         lines.push points
     
-    @geometryData = @constructor._createExtrudedVerticesAndIndices lines, 0, -@properties.height
+    @geometryData = @constructor._createExtrudedVerticesAndIndices lines, 0, -@height
     
   collisionShapeMargin: -> null
   
@@ -51,4 +54,4 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.Shape
     
     new Ammo.btBvhTriangleMeshShape triangleMesh
 
-  yPosition: -> @properties.height
+  yPosition: -> @height
