@@ -46,7 +46,14 @@ class Pinball.Parts.Plunger extends Pinball.Part
     
     physicsObject.body.setCollisionFlags physicsObject.body.getCollisionFlags() | Ammo.btCollisionObject.CollisionFlags.KinematicObject
     physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
+  
+  reset: ->
+    super arguments...
     
+    @active = false
+    @moving = false
+    @displacement = 0
+  
   activate: ->
     @active = true
     @moving = true

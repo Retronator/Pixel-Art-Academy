@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AS = Artificial.Spectrum
+AP = Artificial.Pyramid
 AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -135,6 +136,8 @@ class Pinball.Part.Avatar.Shape
     @depth = @bitmapBoundingRectangle.height() * pixelSize
     @height = @properties.height or Math.min @width, @depth
     
+  fixedBitmapRotation: -> false # Override if the bitmap should not rotate with the physics object.
+  
   collisionShapeMargin: -> @constructor.roughEdgeMargin
   
   createPhysicsDebugGeometry: ->
@@ -145,3 +148,14 @@ class Pinball.Part.Avatar.Shape
   
   yPosition: ->
     throw new AE.NotImplementedException "Part must specify at which y coordinate it should appear."
+    
+  getBoundingRectangle: ->
+    bitmapBoundingRectangle = @bitmapBoundingRectangle.toObject()
+    
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
+    minX = bitmapBoundingRectangle.left * pixelSize
+    maxX = bitmapBoundingRectangle.right * pixelSize
+    minY = bitmapBoundingRectangle.top * pixelSize
+    maxY = bitmapBoundingRectangle.bottom * pixelSize
+    
+    new AP.BoundingRectangle minX, maxX, minY, maxY

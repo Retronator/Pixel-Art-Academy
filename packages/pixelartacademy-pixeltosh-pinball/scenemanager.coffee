@@ -25,12 +25,6 @@ class Pinball.SceneManager
     @directionalLight.shadow.mapSize.width = 4096
     @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
-
-    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(@constructor.playfieldWidth, @constructor.shortPlayfieldHeight), new THREE.MeshLambertMaterial color: 0xffffff
-    @ground.position.set @constructor.playfieldWidth / 2, 0, @constructor.shortPlayfieldHeight / 2
-    @ground.receiveShadow = true
-    @ground.rotation.x = -Math.PI / 2
-    @scene.add @ground
     
     @_parts = []
     @parts = new ReactiveField @_parts

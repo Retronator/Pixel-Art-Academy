@@ -68,3 +68,7 @@ class AR.PhysicsObject
   setLinearVelocity: (velocity) ->
     @_vector3.copy velocity
     @body.setLinearVelocity @_vector3
+  
+  setAngularVelocity: (angularVelocity) ->
+    @_quaternion.copy angularVelocity
+    @body.setAngularVelocity @_quaternion

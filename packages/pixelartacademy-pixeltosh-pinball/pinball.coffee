@@ -43,13 +43,19 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       id: Random.id()
       position:
         x: 173 * pixelSize
+        y: 175 * pixelSize
+    ,
+      type: @constructor.Parts.Playfield.id()
+      id: Random.id()
+      position:
+        x: 90 * pixelSize
         y: 100 * pixelSize
     ,
       type: @constructor.Parts.Wall.id()
       id: Random.id()
       position:
-        x: 0
-        y: 0
+        x: 90 * pixelSize
+        y: 100 * pixelSize
     ,
       type: @constructor.Parts.Plunger.id()
       id: Random.id()
@@ -71,6 +77,12 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
         y: 176.5 * pixelSize
       flipped: true
       maxAngleDegrees: 39.5
+    ,
+      type: @constructor.Parts.GobbleHole.id()
+      id: Random.id()
+      position:
+        x: 85 * pixelSize
+        y: 90 * pixelSize
     ]
     
     @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
@@ -79,8 +91,17 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @debugPhysics = @state.field 'debugPhysics', default: false
     
-  getPartData: (partId) ->
-    _.find @partsData(), (partData) => partData.id is partId
+    @inPlay = false
+    
+  play: ->
+    if @inPlay
+      @reset()
+      
+    else
+      @inPlay = true
+      
+  reset: ->
+    part.reset() for part in @sceneManager().parts()
     
   load: ->
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
@@ -130,7 +151,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     # Wait until the scene is initialized.
     sceneManager = @sceneManager()
 
-    if sceneManager.ready()
+    if sceneManager.ready() and @inPlay
       # Update physics.
       physicsManager = @physicsManager()
       physicsManager.update appTime

@@ -4,9 +4,6 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-if Meteor.isClient
-  _transform = new Ammo.btTransform
-
 class Pinball.PhysicsManager
   @BallConstants =
     Restitution: 0.6
@@ -43,19 +40,6 @@ class Pinball.PhysicsManager
     gravity = new Ammo.btVector3 0, -9.81, 0
     gravity = gravity.rotate new Ammo.btVector3(1, 0, 0), -Pinball.SceneManager.shortPlayfieldPitchDegrees / 180 * Math.PI
     @dynamicsWorld.setGravity gravity
-
-    # Add ground of wooden material.
-    @ground = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
-      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(0, -1, 0)
-    ,
-      new Ammo.btBoxShape new Ammo.btVector3(10, 1, 10), 0
-
-    # We set coefficients for the ground (wood) colliding with the ball (steel bearing).
-    @ground.setRestitution @constructor.RestitutionConstants.HardSurface
-    @ground.setFriction @constructor.FrictionConstants.Wood
-    @ground.setRollingFriction @constructor.RollingFrictionConstants.Coarse
-
-    @dynamicsWorld.addRigidBody @ground
     
     # Add safety walls.
     @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
@@ -108,15 +92,7 @@ class Pinball.PhysicsManager
     for step in [0...stepCount]
       @dynamicsWorld.stepSimulation @constructor.simulationTimestep, 1, @constructor.simulationTimestep
       @pinball.fixedUpdate @constructor.simulationTimestep
-    
-    quantizePosition = @pinball.cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @pinball.debugPhysics()
-    quantizePositionAmount = if quantizePosition then Pinball.CameraManager.orthographicPixelSize else 0
-
-    @_updateRenderObject physicsObject, quantizePositionAmount for physicsObject in @partPhysicsObjects()
-
-  _updateRenderObject: (physicsObject, quantizePositionAmount) ->
-    # Transfer transforms from physics to render objects.
-    renderObject = physicsObject.avatar.getRenderObject()
-
-    physicsObject.motionState.getWorldTransform _transform
-    renderObject.updateFromPhysics _transform, quantizePositionAmount
+      
+    for physicsObject in @partPhysicsObjects()
+      renderObject = physicsObject.avatar.getRenderObject()
+      renderObject.updateFromPhysicsObject physicsObject

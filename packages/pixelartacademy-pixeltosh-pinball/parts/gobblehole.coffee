@@ -2,15 +2,15 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Parts.Wall extends Pinball.Part
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Wall'
-  @fullName: -> "wall"
+class Pinball.Parts.GobbleHole extends Pinball.Part
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.GobbleHole'
+  @fullName: -> "gobble hole"
   @description: ->
     "
-      The edge of the playfield.
+      A hole in the playfield that ends the current ball.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
+  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Extrusion
@@ -26,3 +26,5 @@ class Pinball.Parts.Wall extends Pinball.Part
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
+
+  playfieldHoleRectangle: -> @avatar.shape()?.getBoundingRectangle()

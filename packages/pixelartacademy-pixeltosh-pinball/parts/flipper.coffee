@@ -50,6 +50,13 @@ class Pinball.Parts.Flipper extends Pinball.Part
     physicsObject.body.setCollisionFlags physicsObject.body.getCollisionFlags() | Ammo.btCollisionObject.CollisionFlags.KinematicObject
     physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
     
+  reset: ->
+    super arguments...
+    
+    @active = false
+    @moving = false
+    @displacementAngle = 0
+    
   activate: ->
     @active = true
     @moving = true

@@ -19,7 +19,9 @@ class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
     @radius = circle.radius * Pinball.CameraManager.orthographicPixelSize
     
     @continuousCollisionDetectionRadius = @radius
-    
+  
+  fixedBitmapRotation: -> true
+  
   collisionShapeMargin: -> null
   
   createPhysicsDebugGeometry: ->

@@ -11,6 +11,8 @@ class Pinball.Part extends LOI.Adventure.Item
   
   @avatarShapes: -> throw new AE.NotImplementedException  "A playfield part must specify which shapes it can have in order of preference."
   
+  @avatarClass: -> Pinball.Part.Avatar # Override if the part requires a custom avatar.
+  
   constructor: (@pinball, @data) ->
     super arguments...
     
@@ -31,9 +33,14 @@ class Pinball.Part extends LOI.Adventure.Item
       _.extend {}, @data(), @createAvatarProperties()
   
   createAvatar: ->
-    new Pinball.Part.Avatar @
+    avatarClass = @constructor.avatarClass()
+    new avatarClass @
   
   createAvatarProperties: -> {} # Override to supply additional properties to the avatar.
+  
+  playfieldHoleRectangle: ->
+    # Override to return the bounding rectangle of this part if it creates a hole in the playfield.
+    null
   
   onAddedToDynamicsWorld: (dynamicsWorld) ->
     # Override if the part needs to perform any logic after its physics object was added to the dynamics world.
@@ -44,6 +51,9 @@ class Pinball.Part extends LOI.Adventure.Item
   update: (appTime) -> # Override if the part needs to perform any update logic.
   
   fixedUpdate: (elapsed) -> # Override if the part needs to perform any update logic.
+  
+  reset: ->
+    @avatar.reset()
   
   _loadImageAssets: (imageUrls) ->
     # Load all the images.

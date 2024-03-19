@@ -11,6 +11,8 @@ class Pinball.Interface
     ,
       caption: 'File'
       items: [
+        Pinball.Interface.Actions.Play.id()
+        null
         PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
       ]
     ,
@@ -24,6 +26,7 @@ class Pinball.Interface
     ]
     
   @createShortcuts: ->
+    "#{Pinball.Interface.Actions.Play.id()}": key: AC.Keys.p
     "#{Pinball.Interface.Actions.OrthographicCamera.id()}": key: AC.Keys[2]
     "#{Pinball.Interface.Actions.PerspectiveCamera.id()}": key: AC.Keys[3]
     "#{Pinball.Interface.Actions.ToggleDebugPhysics.id()}": commandOrControl: true, key: AC.Keys.d

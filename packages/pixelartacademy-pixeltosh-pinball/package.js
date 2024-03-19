@@ -30,6 +30,7 @@ Package.onUse(function(api) {
   api.addFile('part/avatar/shape');
   api.addFile('part/avatar/sphere');
   api.addFile('part/avatar/box');
+  api.addFile('part/avatar/trianglemesh');
   api.addFile('part/avatar/extrusion');
   api.addFile('part/avatar/convexextrusion');
 
@@ -38,6 +39,8 @@ Package.onUse(function(api) {
   api.addFile('parts/wall');
   api.addFile('parts/plunger');
   api.addFile('parts/flipper');
+  api.addFile('parts/gobblehole');
+  api.addFile('parts/playfield');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');
@@ -48,4 +51,5 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/action');
   api.addFile('interface/actions/camera');
   api.addFile('interface/actions/toggledebugphysics');
+  api.addFile('interface/actions/play');
 });
