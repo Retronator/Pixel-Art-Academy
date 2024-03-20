@@ -1,9 +1,14 @@
 AP = Artificial.Pyramid
 
 class AP.PolygonWithHoles
-  constructor: (@boundaries) ->
-    externalBoundary = _.maxBy @boundaries, (boundary) => boundary.getBoundingRectangle().area
-    internalBoundaries = _.without @boundaries, externalBoundary
+  constructor: (boundariesOrExternalBoundary, internalBoundaries) ->
+    if _.isArray boundariesOrExternalBoundary
+      boundaries = boundariesOrExternalBoundary
+      externalBoundary = _.maxBy boundaries, (boundary) => boundary.getBoundingRectangle().area
+      internalBoundaries = _.without boundaries, externalBoundary
+      
+    else
+      externalBoundary = boundariesOrExternalBoundary
     
     # To make the area of the polygon be on the left of the boundaries, we
     # make the external boundary counter-clockwise and internal ones clockwise.

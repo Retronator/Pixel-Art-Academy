@@ -87,8 +87,8 @@ class Pinball.Part.Avatar.Shape
   @_createExtrudedVerticesAndIndices: (lines, topY, bottomY) ->
     pointsCount = _.sumBy lines, 'length'
     
-    vertices = new Float32Array pointsCount * 6
-    indices = new Uint32Array pointsCount * 6
+    vertexBufferArray = new Float32Array pointsCount * 6
+    indexBufferArray = new Uint32Array pointsCount * 6
     
     lineStartVertexIndex = 0
     currentIndex = 0
@@ -101,22 +101,22 @@ class Pinball.Part.Avatar.Shape
       for point, pointIndex in line
         x = (point.x + 0.5) * pixelSize
         y = (point.y + 0.5) * pixelSize
-        vertices[bottomVertexIndex * 3] = x
-        vertices[bottomVertexIndex * 3 + 1] = topY
-        vertices[bottomVertexIndex * 3 + 2] = y
-        vertices[topVertexIndex * 3] = x
-        vertices[topVertexIndex * 3 + 1] = bottomY
-        vertices[topVertexIndex * 3 + 2] = y
+        vertexBufferArray[bottomVertexIndex * 3] = x
+        vertexBufferArray[bottomVertexIndex * 3 + 1] = topY
+        vertexBufferArray[bottomVertexIndex * 3 + 2] = y
+        vertexBufferArray[topVertexIndex * 3] = x
+        vertexBufferArray[topVertexIndex * 3 + 1] = bottomY
+        vertexBufferArray[topVertexIndex * 3 + 2] = y
         
         nextBottomVertexIndex = if pointIndex is line.length - 1 then lineStartVertexIndex else bottomVertexIndex + 2
         nextTopVertexIndex = nextBottomVertexIndex + 1
         
-        indices[currentIndex] = nextBottomVertexIndex
-        indices[currentIndex + 1] = bottomVertexIndex
-        indices[currentIndex + 2] = nextTopVertexIndex
-        indices[currentIndex + 3] = topVertexIndex
-        indices[currentIndex + 4] = nextTopVertexIndex
-        indices[currentIndex + 5] = bottomVertexIndex
+        indexBufferArray[currentIndex] = nextBottomVertexIndex
+        indexBufferArray[currentIndex + 1] = bottomVertexIndex
+        indexBufferArray[currentIndex + 2] = nextTopVertexIndex
+        indexBufferArray[currentIndex + 3] = topVertexIndex
+        indexBufferArray[currentIndex + 4] = nextTopVertexIndex
+        indexBufferArray[currentIndex + 5] = bottomVertexIndex
         
         bottomVertexIndex += 2
         topVertexIndex += 2
@@ -124,16 +124,31 @@ class Pinball.Part.Avatar.Shape
       
       lineStartVertexIndex += line.length * 2
     
-    {vertices, indices}
-  
-  constructor: (@pixelArtEvaluation, @properties) ->
-    @bitmapBoundingRectangle = @constructor._getBoundingRectangleOfPoints(@pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
-    @bitmapOrigin = @properties.bitmapOrigin or @bitmapBoundingRectangle.center()
+    {vertexBufferArray, indexBufferArray}
+    
+  @_createPolygonVerticesAndIndices: (polygon, y) ->
+    vertexBufferArray = new Float32Array polygon.vertices.length * 3
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     
-    @width = @bitmapBoundingRectangle.width() * pixelSize
-    @depth = @bitmapBoundingRectangle.height() * pixelSize
+    for vertex, vertexIndex in polygon.vertices
+      offset = vertexIndex * 3
+      vertexBufferArray[offset] = (vertex.x + 0.5) * pixelSize
+      vertexBufferArray[offset + 1] = y
+      vertexBufferArray[offset + 2] = (vertex.y + 0.5) * pixelSize
+    
+    indexBufferArray = polygon.triangulate()
+    
+    {vertexBufferArray, indexBufferArray}
+
+  constructor: (@pixelArtEvaluation, @properties) ->
+    @bitmapRectangle = @constructor._getBoundingRectangleOfPoints(@pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
+    @bitmapOrigin = @properties.bitmapOrigin or @bitmapRectangle.center()
+    
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
+    
+    @width = @bitmapRectangle.width() * pixelSize
+    @depth = @bitmapRectangle.height() * pixelSize
     @height = @properties.height or Math.min @width, @depth
     
   fixedBitmapRotation: -> false # Override if the bitmap should not rotate with the physics object.
@@ -150,12 +165,23 @@ class Pinball.Part.Avatar.Shape
     throw new AE.NotImplementedException "Part must specify at which y coordinate it should appear."
     
   getBoundingRectangle: ->
-    bitmapBoundingRectangle = @bitmapBoundingRectangle.toObject()
+    bitmapBoundingRectangle = @bitmapRectangle.toObject()
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
-    minX = bitmapBoundingRectangle.left * pixelSize
-    maxX = bitmapBoundingRectangle.right * pixelSize
-    minY = bitmapBoundingRectangle.top * pixelSize
-    maxY = bitmapBoundingRectangle.bottom * pixelSize
+    minX = (bitmapBoundingRectangle.left - @bitmapOrigin.x) * pixelSize
+    maxX = (bitmapBoundingRectangle.right - @bitmapOrigin.x) * pixelSize
+    minY = (bitmapBoundingRectangle.top - @bitmapOrigin.y) * pixelSize
+    maxY = (bitmapBoundingRectangle.bottom - @bitmapOrigin.y) * pixelSize
     
     new AP.BoundingRectangle minX, maxX, minY, maxY
+  
+  getHoleBoundaries: ->
+    return unless @holeBoundaries
+    
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
+
+    for holeBoundary in @holeBoundaries
+      vertices = for vertex in holeBoundary.vertices
+        new THREE.Vector2().copy(vertex).add(x: 0.5, y:0.5).multiplyScalar pixelSize
+        
+      new AP.PolygonBoundary vertices

@@ -103,6 +103,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three/matrices');
   api.addFile('everywhere/three/object3d');
   api.addFile('everywhere/three/line2');
+  api.addFile('everywhere/three/triangle2');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');

@@ -38,8 +38,8 @@ class Pinball.Part extends LOI.Adventure.Item
   
   createAvatarProperties: -> {} # Override to supply additional properties to the avatar.
   
-  playfieldHoleRectangle: ->
-    # Override to return the bounding rectangle of this part if it creates a hole in the playfield.
+  playfieldHoleBoundaries: ->
+    # Override to return an array of polygon boundaries of this part if it creates holes in the playfield.
     null
   
   onAddedToDynamicsWorld: (dynamicsWorld) ->

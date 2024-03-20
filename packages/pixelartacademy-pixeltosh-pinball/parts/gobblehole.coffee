@@ -13,7 +13,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Part
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
   
   @avatarShapes: -> [
-    Pinball.Part.Avatar.Extrusion
+    Pinball.Part.Avatar.Depression
   ]
   
   @initialize()
@@ -26,5 +26,5 @@ class Pinball.Parts.GobbleHole extends Pinball.Part
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
-
-  playfieldHoleRectangle: -> @avatar.shape()?.getBoundingRectangle()
+  
+  playfieldHoleBoundaries: -> @avatar.getHoleBoundaries()

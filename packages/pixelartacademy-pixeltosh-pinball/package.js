@@ -27,12 +27,15 @@ Package.onUse(function(api) {
 
   api.addFile('part..');
   api.addFile('part/avatar..');
+  api.addFile('part/avatar/renderobject');
+  api.addFile('part/avatar/physicsobject');
   api.addFile('part/avatar/shape');
   api.addFile('part/avatar/sphere');
   api.addFile('part/avatar/box');
   api.addFile('part/avatar/trianglemesh');
   api.addFile('part/avatar/extrusion');
   api.addFile('part/avatar/convexextrusion');
+  api.addFile('part/avatar/depression');
 
   api.addFile('parts..');
   api.addFile('parts/ball');

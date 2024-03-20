@@ -4,6 +4,22 @@ class AP.PolygonBoundary
   @Orientation:
     Clockwise: 'Clockwise'
     CounterClockwise: 'CounterClockwise'
+    
+  @getSectionOrientation: (vertexA, vertexB, vertexC) ->
+    # det(O) = (xB-xA)(yC-yA)-(xC-xA)(yB-yA)
+    xA = vertexA.x
+    yA = vertexA.y
+    xB = vertexB.x
+    yB = vertexB.y
+    xC = vertexC.x
+    yC = vertexC.y
+    determinant = (xB - xA) * (yC - yA) - (xC - xA) * (yB - yA)
+    
+    if determinant < 0
+      @Orientation.Clockwise
+    
+    else
+      @Orientation.CounterClockwise
   
   constructor: (@vertices) ->
     @sideCount = @vertices.length
@@ -31,21 +47,7 @@ class AP.PolygonBoundary
     previousVertex = @getVertexAtIndex minVertexIndex - 1
     nextVertex = @getVertexAtIndex minVertexIndex + 1
 
-    # det(O) = (xB-xA)(yC-yA)-(xC-xA)(yB-yA)
-    xA = previousVertex.x
-    yA = previousVertex.y
-    xB = minVertex.x
-    yB = minVertex.y
-    xC = nextVertex.x
-    yC = nextVertex.y
-    determinant = (xB - xA) * (yC - yA) - (xC - xA) * (yB - yA)
-    
-    if determinant < 0
-      @_orientation = @constructor.Orientation.Clockwise
-      
-    else
-      @_orientation = @constructor.Orientation.CounterClockwise
-    
+    @_orientation = @constructor.getSectionOrientation previousVertex, minVertex, nextVertex
     @_orientation
     
   getPolygonBoundaryWithOrientation: (orientation) ->

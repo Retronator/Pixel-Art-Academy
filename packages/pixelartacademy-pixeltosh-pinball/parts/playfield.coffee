@@ -1,3 +1,4 @@
+AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
@@ -19,7 +20,7 @@ class Pinball.Parts.Playfield extends Pinball.Part
   
   createAvatarProperties: ->
     mass: 0
-    height: 0.1
+    height: 0.05
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
@@ -34,10 +35,18 @@ class Pinball.Parts.Playfield extends Pinball.Part
         pixelArtEvaluation = new PAE bitmap
         
         # See which parts require holes in the playfield.
-        holes = []
+        holeBoundaries = []
+        boundingRectangles = []
         
         for part in @part.pinball.sceneManager().parts()
-          holes.push hole if hole = part.playfieldHoleRectangle()
+          holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
+          boundingRectangles.push boundingRectangle if boundingRectangle = part.avatar.getBoundingRectangle()
+          
+        # Playfield should be slightly larger than all the parts so that it contains all parts as holes.
+        playfieldBoundingRectangle = AP.BoundingRectangle.union boundingRectangles
+        extrusion = 0.01
+        playfieldBoundingRectangle = playfieldBoundingRectangle.getExtrudedBoundingRectangle extrusion, extrusion, extrusion, extrusion
+        playfieldBoundary = playfieldBoundingRectangle.getBoundary()
         
         Tracker.nonreactive =>
           @_renderObject()?.destroy()
@@ -45,34 +54,26 @@ class Pinball.Parts.Playfield extends Pinball.Part
           @_renderObject null
           @_physicsObject null
           
-          shape = new @constructor.Shape pixelArtEvaluation, properties, holes
+          shape = new @constructor.Shape pixelArtEvaluation, properties, playfieldBoundary, holeBoundaries
           @_createObjectsWithShape properties, shape, bitmap
       
     class @Shape extends Pinball.Part.Avatar.TriangleMesh
-      constructor: (@pixelArtEvaluation, @properties, @holes) ->
+      constructor: (@pixelArtEvaluation, @properties, playfieldBoundary, holeBoundaries) ->
         super arguments...
         
-        vertices = new Float32Array 4 * 3
-        indices = new Uint32Array 2 * 3
+        playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
+        playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
         
-        pixelSize = Pinball.CameraManager.orthographicPixelSize
+        vertexBufferArray = new Float32Array playfieldPolygon.vertices.length * 3
         
-        vertices[0] = -90 * pixelSize
-        vertices[2] = -100 * pixelSize
-        vertices[3] = 90 * pixelSize
-        vertices[5] = -100 * pixelSize
-        vertices[6] = -90 * pixelSize
-        vertices[8] = 100 * pixelSize
-        vertices[9] = 90 * pixelSize
-        vertices[11] = 100 * pixelSize
+        for vertex, vertexIndex in playfieldPolygon.vertices
+          offset = vertexIndex * 3
+          vertexBufferArray[offset] = vertex.x - @properties.position.x
+          vertexBufferArray[offset + 1] = @properties.height
+          vertexBufferArray[offset + 2] = vertex.y - @properties.position.y
+    
+        indexBufferArray = playfieldPolygon.triangulate()
         
-        indices[0] = 0
-        indices[1] = 1
-        indices[2] = 2
-        indices[3] = 2
-        indices[4] = 1
-        indices[5] = 3
+        @geometryData = {vertexBufferArray, indexBufferArray}
         
-        @geometryData = {vertices, indices}
-        
-      yPosition: -> 0
+      yPosition: -> -@properties.height
