@@ -2,4 +2,43 @@
 
 .pixelartacademy-pixeltosh-programs-pinball-interface-parts
   height 100%
+  padding 10rem
   background white
+  thintel()
+
+  .parts
+    display flex
+    list-style none
+    padding 0
+    margin 0
+    flex-wrap wrap
+    align-items flex-end
+
+    .part
+      position relative
+      margin 0 10rem 10rem 0
+
+      &:hover
+        .description
+          display block
+
+      .image
+        text-align center
+        padding 3rem
+
+      .name
+        text-transform uppercase
+
+      .description
+        display none
+        position absolute
+        z-index 1
+        left 50%
+        top 100%
+        width 100rem
+        transform translateX(-50%)
+        padding 3rem
+        border 1rem solid black
+        background white
+        text-align center
+        pointer-events none

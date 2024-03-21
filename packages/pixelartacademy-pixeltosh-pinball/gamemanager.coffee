@@ -12,9 +12,15 @@ class Pinball.GameManager
   
   constructor: (@pinball) ->
     @mode = new ReactiveField @constructor.Modes.Edit
+
     @remainingBallsCount = new ReactiveField 0
+    @ballNumber = new ReactiveField 0
+    @score = new ReactiveField 0
     
     @balls = new ReactiveField []
+    
+    @liveBalls = new ComputedField =>
+      _.filter @balls(), (ball) => ball.state() is Pinball.Ball.States.Live
 
   edit: ->
     return unless @startMode @constructor.Modes.Edit
@@ -43,6 +49,7 @@ class Pinball.GameManager
       
       when @constructor.Modes.Play
         @remainingBallsCount 2
+        @score 0
         @startSimulation()
   
   startSimulation: ->
@@ -55,6 +62,8 @@ class Pinball.GameManager
   _destroyBalls: ->
     ball.destroy() for ball in @balls()
     @balls []
+    
+    @ballNumber 0
   
   simulationActive: -> @mode() in [@constructor.Modes.Test, @constructor.Modes.Play]
 
@@ -64,6 +73,8 @@ class Pinball.GameManager
     balls = @balls()
     balls.push ballSpawner.spawnBall()
     @balls balls
+    
+    @ballNumber @ballNumber() + 1
   
   endBall: (ball) ->
     # Optionally remove the ball from the playfield.
@@ -80,3 +91,9 @@ class Pinball.GameManager
     else if @mode() is @constructor.Modes.Test
       # Test mode exists to edit mode automatically.
       @edit()
+      
+  isGameOver: ->
+    @remainingBallsCount() is 0 and @liveBalls().length is 0
+    
+  addScore: (score) ->
+    @score @score() + score

@@ -1,5 +1,15 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Parts">
   <div class="pixelartacademy-pixeltosh-programs-pinball-interface-parts">
-    Parts
+    <ul class="parts">
+      {{#each parts}}
+        <li class="part">
+          <div class="image">
+            {{> LandsOfIllusions.Assets.Components.BitmapImage args bitmapImageOptions}}
+          </div>
+          <div class="name">{{fullName}}</div>
+          <div class="description">{{description}}</div>
+        </li>
+      {{/each}}
+    </ul>
   </div>
 </template>

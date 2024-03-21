@@ -14,8 +14,14 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
     super arguments...
 
     @bitmapData = new ComputedField =>
-      return unless bitmapId = @options.bitmapId()
-      LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+      if @options.bitmapId
+        LOI.Assets.Bitmap.versionedDocuments.getDocumentForId @options.bitmapId()
+        
+      else if @options.bitmap
+        @options.bitmap()
+        
+      else
+        throw new AE.ArgumentException "Bitmap image must be provided with a way to get bitmap data."
 
     @bitmap = new LOI.Assets.Engine.PixelImage.Bitmap
       asset: @bitmapData

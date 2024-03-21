@@ -26,4 +26,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
   
   onBallEnter: (ball) ->
     ball.die()
-    @pinball.gameManager().endBall()
+    
+    gameManager = @pinball.gameManager()
+    gameManager.addScore @data().score
+    gameManager.endBall()

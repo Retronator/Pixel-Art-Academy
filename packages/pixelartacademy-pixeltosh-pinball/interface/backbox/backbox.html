@@ -1,5 +1,12 @@
 <template name="PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Backbox">
   <div class="pixelartacademy-pixeltosh-programs-pinball-interface-backbox">
-    Backbox
+    {{#with pinball.gameManager}}
+      {{#if isGameOver}}
+        <p>GAME OVER</p>
+      {{else}}
+        <p>Ball: {{ballNumber}}</p>
+      {{/if}}
+      <p>Score: {{score}}</p>
+    {{/with}}
   </div>
 </template>

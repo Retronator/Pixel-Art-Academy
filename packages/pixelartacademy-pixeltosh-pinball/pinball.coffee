@@ -84,6 +84,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       position:
         x: 85 * pixelSize
         y: 90 * pixelSize
+      score: 1000
     ,
       type: @constructor.Parts.Trough.id()
       id: Random.id()
