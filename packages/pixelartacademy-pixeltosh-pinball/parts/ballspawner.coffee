@@ -3,8 +3,8 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 CollisionGroups = Pinball.PhysicsManager.CollisionGroups
 
-class Pinball.Parts.Ball extends Pinball.Part
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Ball'
+class Pinball.Parts.BallSpawner extends Pinball.Part
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.BallSpawner'
   @fullName: -> "ball"
   @description: ->
     "
@@ -28,3 +28,6 @@ class Pinball.Parts.Ball extends Pinball.Part
     collisionGroup: CollisionGroups.Balls
     collisionMask: CollisionGroups.Balls | CollisionGroups.BallGuides | CollisionGroups.Actuators
     continuousCollisionDetection: true
+
+  spawnBall: ->
+    new Pinball.Ball @pinball, @

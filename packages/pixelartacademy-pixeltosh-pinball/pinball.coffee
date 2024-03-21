@@ -34,16 +34,17 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @cameraManager = new ReactiveField null
     @physicsManager = new ReactiveField null
     @inputManager = new ReactiveField null
+    @gameManager = new ReactiveField null
     @mouse = new ReactiveField null
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     
     @partsData = new ReactiveField [
-      type: @constructor.Parts.Ball.id()
+      type: @constructor.Parts.BallSpawner.id()
       id: Random.id()
       position:
-        x: 173 * pixelSize
-        y: 175 * pixelSize
+        x: 173.5 * pixelSize
+        y: 175.5 * pixelSize
     ,
       type: @constructor.Parts.Playfield.id()
       id: Random.id()
@@ -91,18 +92,6 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @debugPhysics = @state.field 'debugPhysics', default: false
     
-    @inPlay = false
-    
-  play: ->
-    if @inPlay
-      @reset()
-      
-    else
-      @inPlay = true
-      
-  reset: ->
-    part.reset() for part in @sceneManager().parts()
-    
   load: ->
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
     
@@ -115,6 +104,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @rendererManager new @constructor.RendererManager @
     @physicsManager new @constructor.PhysicsManager @
     @inputManager new @constructor.InputManager @
+    @gameManager new @constructor.GameManager @
     @mouse new @constructor.Mouse @
     
     @hoveredPart = new ReactiveField null
@@ -134,14 +124,16 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   unload: ->
     @app.removeComponent @
     
-    @rendererManager()?.destroy()
     @sceneManager()?.destroy()
+    @rendererManager()?.destroy()
     @physicsManager()?.destroy()
     
     @sceneManager null
     @cameraManager null
     @rendererManager null
     @physicsManager null
+    @inputManager null
+    @gameManager null
     @mouse null
     @sceneImage null
     
@@ -150,11 +142,29 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   update: (appTime) ->
     # Wait until the scene is initialized.
     sceneManager = @sceneManager()
+    gameManager = @gameManager()
 
-    if sceneManager.ready() and @inPlay
+    if sceneManager.ready() and gameManager.simulationActive()
       # Update physics.
       physicsManager = @physicsManager()
       physicsManager.update appTime
+      
+      # Quantize position when in normal view.
+      if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
+        pixelSize = Pinball.CameraManager.orthographicPixelSize
+        
+        for renderObject in sceneManager.renderObjects()
+          originScreenX = renderObject.position.x / pixelSize
+          originScreenY = renderObject.position.z / pixelSize
+          
+          screenX = originScreenX - renderObject.shape.bitmapOrigin.x
+          screenY = originScreenY - renderObject.shape.bitmapOrigin.y
+          
+          integerScreenX = Math.round screenX
+          integerScreenY = Math.round screenY
+          
+          renderObject.position.x = (integerScreenX + renderObject.shape.bitmapOrigin.x) * pixelSize
+          renderObject.position.z = (integerScreenY + renderObject.shape.bitmapOrigin.y) * pixelSize
       
     # Update the cursor.
     if viewportCoordinates = @mouse().viewportCoordinates()
@@ -188,11 +198,11 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       @hoveredPart hoveredPart
       
     # Update the parts.
-    part.update appTime for part in sceneManager.parts()
+    entity.update? appTime for entity in sceneManager.entities()
     
   fixedUpdate: (elapsed) ->
     sceneManager = @sceneManager()
-    part.fixedUpdate elapsed for part in sceneManager.parts()
+    entity.fixedUpdate? elapsed for entity in sceneManager.entities()
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime

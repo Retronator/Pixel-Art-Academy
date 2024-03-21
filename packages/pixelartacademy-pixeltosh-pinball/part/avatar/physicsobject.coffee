@@ -8,7 +8,7 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar.PhysicsObject extends AR.PhysicsObject
-  constructor: (@avatar, @properties, @shape) ->
+  constructor: (@entity, @properties, @shape, @existingResources) ->
     super arguments...
 
     transform = new Ammo.btTransform Ammo.btQuaternion.identity(), Ammo.btVector3.zero()
@@ -17,13 +17,18 @@ class Pinball.Part.Avatar.PhysicsObject extends AR.PhysicsObject
     @mass = @properties.mass ? 0
     @localInertia = Ammo.btVector3.zero()
     
-    @collisionShape = @shape.createCollisionShape()
-    margin = @shape.collisionShapeMargin()
-    @collisionShape.setMargin margin if margin?
+    if @existingResources?.collisionShape
+      @collisionShape = @existingResources.collisionShape
+      
+    else
+      @collisionShape = @shape.createCollisionShape()
+      margin = @shape.collisionShapeMargin()
+      @collisionShape.setMargin margin if margin?
+    
     @collisionShape.calculateLocalInertia @mass, @localInertia
-
     bodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
     @body = new Ammo.btRigidBody bodyInfo
+    @body.physicsObject = @
     
     if @properties.continuousCollisionDetection and @shape.continuousCollisionDetectionRadius
       @body.setCcdSweptSphereRadius @shape.continuousCollisionDetectionRadius

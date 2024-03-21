@@ -60,9 +60,24 @@ class Pinball.SceneManager
       for partId in remainingPartIds
         @_removePartWithId partId
         
+    @entities = new ComputedField =>
+      return [] unless gameManager = @pinball.gameManager()
+      simulationActive = gameManager.simulationActive()
+      
+      entities = []
+      
+      for part in @parts()
+        continue if part instanceof Pinball.Parts.BallSpawner and simulationActive
+        entities.push part
+      
+      if simulationActive
+        entities.push gameManager.balls()...
+      
+      entities
+      
     # Add render objects to the scene.
     @renderObjects = new AE.ReactiveArray =>
-      renderObject for part in @parts() when renderObject = part.avatar.getRenderObject()
+      renderObject for entity in @entities() when renderObject = entity.getRenderObject()
     ,
       added: (renderObject) =>
         @scene.add renderObject

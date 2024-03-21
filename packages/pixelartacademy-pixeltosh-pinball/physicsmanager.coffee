@@ -11,6 +11,7 @@ class Pinball.PhysicsManager
     RollingFriction: 0
   
   @RestitutionConstants =
+    Rubber: 0.9 / @BallConstants.Restitution
     HardSurface: 0.6 / @BallConstants.Restitution # steel ball bearing on concrete, golf ball on wood
   
   @FrictionConstants =
@@ -33,9 +34,9 @@ class Pinball.PhysicsManager
   constructor: (@pinball) ->
     @collisionConfiguration = new Ammo.btDefaultCollisionConfiguration
     @dispatcher = new Ammo.btCollisionDispatcher @collisionConfiguration
-    @overlappingPairCache = new Ammo.btDbvtBroadphase
+    @broadphase = new Ammo.btDbvtBroadphase
     @solver = new Ammo.btSequentialImpulseConstraintSolver
-    @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @overlappingPairCache, @solver, @collisionConfiguration
+    @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @broadphase, @solver, @collisionConfiguration
     
     gravity = new Ammo.btVector3 0, -9.81, 0
     gravity = gravity.rotate new Ammo.btVector3(1, 0, 0), -Pinball.SceneManager.shortPlayfieldPitchDegrees / 180 * Math.PI
@@ -63,20 +64,20 @@ class Pinball.PhysicsManager
       new Ammo.btBoxShape new Ammo.btVector3(10, 10, 1), 0
     
     # Add playfield parts.
-    @partPhysicsObjects = new AE.ReactiveArray =>
-      physicsObject for part in @pinball.sceneManager()?.parts() when physicsObject = part.avatar.getPhysicsObject()
+    @physicsObjects = new AE.ReactiveArray =>
+      physicsObject for entity in @pinball.sceneManager()?.entities() when physicsObject = entity.getPhysicsObject()
     ,
       added: (physicsObject) =>
         # Add the part to the simulation.
         @dynamicsWorld.addRigidBody physicsObject.body, physicsObject.properties.collisionGroup, physicsObject.properties.collisionMask
-        physicsObject.avatar.part.onAddedToDynamicsWorld @dynamicsWorld
+        physicsObject.entity.onAddedToDynamicsWorld? @dynamicsWorld
 
       removed: (physicsObject) =>
         @dynamicsWorld.removeRigidBody physicsObject.body
-        physicsObject.avatar.part.onRemovedFromDynamicsWorld @dynamicsWorld
+        physicsObject.entity.onRemovedFromDynamicsWorld? @dynamicsWorld
 
   destroy: ->
-    @partPhysicsObjects.stop()
+    @physicsObjects.stop()
 
     Ammo.destroy @dynamicsWorld
     Ammo.destroy @solver
@@ -93,6 +94,6 @@ class Pinball.PhysicsManager
       @dynamicsWorld.stepSimulation @constructor.simulationTimestep, 1, @constructor.simulationTimestep
       @pinball.fixedUpdate @constructor.simulationTimestep
       
-    for physicsObject in @partPhysicsObjects()
-      renderObject = physicsObject.avatar.getRenderObject()
+    for physicsObject in @physicsObjects()
+      renderObject = physicsObject.entity.getRenderObject()
       renderObject.updateFromPhysicsObject physicsObject

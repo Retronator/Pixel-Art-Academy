@@ -354,6 +354,7 @@ Package.onUse(function(api) {
   api.addClientFile('reality/ammo..');
 
   api.addFile('reality/physicsobject');
+  api.addFile('reality/trigger');
 
   api.addClientFile('reality/ammo/vectors');
   api.addClientFile('reality/ammo/quaternion');

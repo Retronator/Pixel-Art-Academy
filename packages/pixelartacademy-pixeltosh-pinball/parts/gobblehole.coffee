@@ -1,3 +1,4 @@
+AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
@@ -18,6 +19,19 @@ class Pinball.Parts.GobbleHole extends Pinball.Part
   
   @initialize()
   
+  constructor: ->
+    super arguments...
+    
+    @trigger = new AR.Trigger
+      onEnter: (rigidBody) =>
+        return unless rigidBody.physicsObject.entity instanceof Pinball.Ball
+
+        ball = rigidBody.physicsObject.entity
+        return if ball.state() is Pinball.Ball.States.Dead
+        
+        ball.die()
+        @pinball.gameManager().endBall()
+        
   createAvatarProperties: ->
     mass: 0
     height: 0.03
@@ -28,3 +42,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Part
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
   
   playfieldHoleBoundaries: -> @avatar.getHoleBoundaries()
+
+  update: ->
+    return unless physicsObject = @avatar.getPhysicsObject()
+    @trigger.test physicsObject.body, @pinball.physicsManager().dynamicsWorld

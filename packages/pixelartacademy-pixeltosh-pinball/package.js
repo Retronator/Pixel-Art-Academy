@@ -23,7 +23,9 @@ Package.onUse(function(api) {
   api.addFile('renderermanager');
   api.addFile('physicsmanager');
   api.addFile('inputmanager');
+  api.addFile('gamemanager');
   api.addFile('mouse');
+  api.addFile('ball');
 
   api.addFile('part..');
   api.addFile('part/avatar..');
@@ -38,7 +40,7 @@ Package.onUse(function(api) {
   api.addFile('part/avatar/depression');
 
   api.addFile('parts..');
-  api.addFile('parts/ball');
+  api.addFile('parts/ballspawner');
   api.addFile('parts/wall');
   api.addFile('parts/plunger');
   api.addFile('parts/flipper');
@@ -49,10 +51,12 @@ Package.onUse(function(api) {
   api.addComponent('interface/playfield..');
   api.addComponent('interface/backbox..');
   api.addComponent('interface/instructions..');
+  api.addComponent('interface/parts..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');
   api.addFile('interface/actions/camera');
   api.addFile('interface/actions/toggledebugphysics');
-  api.addFile('interface/actions/play');
+  api.addFile('interface/actions/modes');
+  api.addFile('interface/actions/reset');
 });

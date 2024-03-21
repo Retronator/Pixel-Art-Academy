@@ -48,8 +48,8 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
           break
           
   _createObjectsWithShape: (properties, shape, bitmap) ->
-    @_renderObject new @constructor.RenderObject @, properties, shape, bitmap
-    @_physicsObject new @constructor.PhysicsObject @, properties, shape
+    @_renderObject new @constructor.RenderObject @part, properties, shape, bitmap
+    @_physicsObject new @constructor.PhysicsObject @part, properties, shape
     
     @reset()
   

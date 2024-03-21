@@ -19,7 +19,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
   
   @initialize()
   
-  @angularSpeed = 30 # rad / s
+  @angularSpeed = 35 # rad / s
   
   @rotationAxis = new THREE.Vector3 0, -1, 0
   
@@ -36,7 +36,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     bitmapOrigin:
       x: 3.5
       y: 3.5
-    restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
+    restitution: Pinball.PhysicsManager.RestitutionConstants.Rubber
     friction: Pinball.PhysicsManager.FrictionConstants.Plastic
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.Actuators

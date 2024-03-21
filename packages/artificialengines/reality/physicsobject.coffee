@@ -5,6 +5,8 @@ class AR.PhysicsObject
     # Provides support for autorun calls that stop when physics object is destroyed.
     @_autorunHandles = []
 
+    # HACK: It seems we cannot initialize these outside of the class
+    # since Ammo doesn't seem to be fully initialized yet in this package.
     @_transform = new Ammo.btTransform
     @_vector3 = new Ammo.btVector3
     @_quaternion = new Ammo.btQuaternion

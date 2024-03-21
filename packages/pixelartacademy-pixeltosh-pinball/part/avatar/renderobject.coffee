@@ -15,33 +15,46 @@ if Meteor.isClient
 
 class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   @rotationAxis = new THREE.Vector3 0, -1, 0
+  
+  @physicsDebugMaterial = new THREE.MeshLambertMaterial
+    color: 0xff0000
+    wireframe: true
 
-  constructor: (@avatar, @properties, @shape, @bitmap) ->
+  constructor: (@entity, @properties, @shape, @bitmap, @existingResources) ->
     super arguments...
     
-    @pinball = @avatar.part.pinball
-    
     # Create the physics debug mesh.
-    @physicsDebugMaterial = new THREE.MeshLambertMaterial
-      color: 0xff0000
-      wireframe: true
-    
     @physicsDebugGeometry?.dispose()
-    @physicsDebugGeometry = @shape.createPhysicsDebugGeometry()
+    @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or @shape.createPhysicsDebugGeometry()
 
-    @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, @physicsDebugMaterial
+    @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, @constructor.physicsDebugMaterial
     @physicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
     
     @add @physicsDebugMesh
     
     # Create the main mesh and render its texture.
-    @material = new THREE.MeshLambertMaterial
-      color: 0xffffff
-      alphaTest: 0.5
-      side: THREE.DoubleSide
+    if @existingResources?.material
+      @material = @existingResources.material
+      
+    else
+      @material = new THREE.MeshLambertMaterial
+        color: 0xffffff
+        alphaTest: 0.5
+        side: THREE.DoubleSide
+      
+      pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @bitmap
+      
+      originalCanvas = pixelImage.getCanvas()
+      expandedCanvas = new AM.Canvas originalCanvas.width + 2, originalCanvas.height + 2
+      expandedCanvas.context.drawImage originalCanvas, 1, 1
+      scaledCanvas = AS.Hqx.scale expandedCanvas, 4, AS.Hqx.Modes.NoBlending, false, true
+      
+      @material.map = new THREE.CanvasTexture scaledCanvas
+      @material.map.minFilter = THREE.NearestFilter
+      @material.map.magFilter = THREE.NearestFilter
       
     pixelSize = Pinball.CameraManager.orthographicPixelSize
-    @geometry = new THREE.PlaneGeometry pixelSize * (@bitmap.bounds.width + 2), pixelSize * (@bitmap.bounds.height + 2)
+    @geometry = @existingResources?.geometry or new THREE.PlaneGeometry pixelSize * (@bitmap.bounds.width + 2), pixelSize * (@bitmap.bounds.height + 2)
     
     @bitmapPlane = new THREE.Mesh @geometry, @material
     @bitmapPlane.rotation.x = -Math.PI / 2
@@ -60,47 +73,23 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     @mesh = new THREE.Object3D
     @mesh.add @bitmapPlane
     @add @mesh
-    
-    pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @bitmap
-    
-    originalCanvas = pixelImage.getCanvas()
-    expandedCanvas = new AM.Canvas originalCanvas.width + 2, originalCanvas.height + 2
-    expandedCanvas.context.drawImage originalCanvas, 1, 1
-    scaledCanvas = AS.Hqx.scale expandedCanvas, 4, AS.Hqx.Modes.NoBlending, false, true
-    
-    @material.map = new THREE.CanvasTexture scaledCanvas
-    @material.map.minFilter = THREE.NearestFilter
-    @material.map.magFilter = THREE.NearestFilter
   
   destroy: ->
     super arguments...
     
-    @physicsDebugMaterial.dispose()
+    return if @existingResources
+
     @physicsDebugGeometry.dispose()
-    
     @material.dispose()
     @geometry.dispose()
-  
+    
+  clone: ->
+    new @constructor @part, @properties, @shape, @bitmap, @
+    
   updateFromPhysicsObject: (physicsObject) ->
     physicsObject.motionState.getWorldTransform _transform
     @position.setFromBulletVector3 _transform.getOrigin()
     
-    quantizePosition = @pinball.cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @pinball.debugPhysics()
-    quantizePositionAmount = if quantizePosition then Pinball.CameraManager.orthographicPixelSize else 0
-    
-    if quantizePositionAmount
-      originScreenX = @position.x / quantizePositionAmount
-      originScreenY = @position.z / quantizePositionAmount
-      
-      screenX = originScreenX - @shape.bitmapOrigin.x
-      screenY = originScreenY - @shape.bitmapOrigin.y
-      
-      integerScreenX = Math.round screenX
-      integerScreenY = Math.round screenY
-      
-      @position.x = (integerScreenX + @shape.bitmapOrigin.x) * quantizePositionAmount
-      @position.z = (integerScreenY + @shape.bitmapOrigin.y) * quantizePositionAmount
-      
     rotation = _transform.getRotation()
     @physicsDebugMesh.quaternion.setFromBulletQuaternion rotation
 
