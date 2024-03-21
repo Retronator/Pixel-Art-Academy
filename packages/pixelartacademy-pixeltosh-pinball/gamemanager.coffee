@@ -65,10 +65,18 @@ class Pinball.GameManager
     balls.push ballSpawner.spawnBall()
     @balls balls
   
-  endBall: ->
+  endBall: (ball) ->
+    # Optionally remove the ball from the playfield.
+    if ball
+      balls = @balls()
+      _.pull balls, ball
+      @balls balls
+    
+    # See if we have any remaining balls.
     if remainingBallsCount = @remainingBallsCount()
       @remainingBallsCount remainingBallsCount - 1
       @spawnBall()
       
     else if @mode() is @constructor.Modes.Test
+      # Test mode exists to edit mode automatically.
       @edit()

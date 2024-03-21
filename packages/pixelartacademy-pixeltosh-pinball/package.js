@@ -38,14 +38,17 @@ Package.onUse(function(api) {
   api.addFile('part/avatar/extrusion');
   api.addFile('part/avatar/convexextrusion');
   api.addFile('part/avatar/depression');
+  api.addFile('part/avatar/silhouette');
 
   api.addFile('parts..');
   api.addFile('parts/ballspawner');
   api.addFile('parts/wall');
   api.addFile('parts/plunger');
   api.addFile('parts/flipper');
+  api.addFile('parts/hole');
   api.addFile('parts/gobblehole');
   api.addFile('parts/playfield');
+  api.addFile('parts/trough');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');

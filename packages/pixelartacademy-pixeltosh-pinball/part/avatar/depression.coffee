@@ -24,13 +24,7 @@ class Pinball.Part.Avatar.Depression extends Pinball.Part.Avatar.TriangleMesh
       wallLines = []
       
       for line in core.outlines
-        points = @constructor._getLinePoints line
-        
-        for point in points
-          point.x -= @bitmapOrigin.x
-          point.x *= -1 if @properties.flipped
-          point.y -= @bitmapOrigin.y
-          
+        points = @_getLinePoints line
         wallLines.push points
         boundaries.push new AP.PolygonBoundary points
       
@@ -45,28 +39,7 @@ class Pinball.Part.Avatar.Depression extends Pinball.Part.Avatar.TriangleMesh
       
       bottomPolygon = polygon.getPolygonWithoutHoles()
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices bottomPolygon, 0
-      
-    # Merge all geometries.
-    vertexCount = _.sumBy individualGeometryData, (geometryData) => geometryData.vertexBufferArray.length
-    indexCount = _.sumBy individualGeometryData, (geometryData) => geometryData.indexBufferArray.length
     
-    vertexBufferArray = new Float32Array vertexCount
-    indexBufferArray = new Uint32Array indexCount
-    vertexOffset = 0
-    indexOffset = 0
-    
-    for geometryData in individualGeometryData
-      vertexBufferOffset = vertexOffset * 3
-      for vertexCoordinate, vertexCoordinateIndex in geometryData.vertexBufferArray
-        vertexBufferArray[vertexBufferOffset + vertexCoordinateIndex] = vertexCoordinate
-        
-      for localVertexIndex, indexOfIndex in geometryData.indexBufferArray
-        globalVertexIndex = localVertexIndex + vertexOffset
-        indexBufferArray[indexOffset + indexOfIndex] = globalVertexIndex
-        
-      vertexOffset += geometryData.vertexBufferArray.length / 3
-      indexOffset += geometryData.indexBufferArray.length
-      
-    @geometryData = {vertexBufferArray, indexBufferArray}
+    @geometryData = @constructor._mergeGeometryData individualGeometryData
 
   yPosition: -> -@height

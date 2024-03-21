@@ -95,7 +95,8 @@ class Pinball.SceneManager
 
   _addPart: (partData) ->
     partClass = _.thingClass partData.type
-    part = new partClass @pinball, => partData
+    part = Tracker.nonreactive =>
+      new partClass @pinball, => partData
 
     @_partsById[partData.id] = part
     

@@ -21,14 +21,7 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
 
     for core in @pixelArtEvaluation.layers[0].cores
       for line in core.outlines
-        points = @constructor._getLinePoints line
-        
-        for point in points
-          point.x -= @bitmapOrigin.x
-          point.x *= -1 if @properties.flipped
-          point.y -= @bitmapOrigin.y
-        
-        @lines.push points
+        @lines.push @_getLinePoints line
 
     @topY = @height / 2
     @bottomY = -@height / 2

@@ -44,24 +44,6 @@ class Pinball.Part.Avatar.Shape
     position: center
     radius: radius
     
-  @_getLinePoints: (line) ->
-    points = []
-    
-    for part in line.parts
-      if part instanceof PAE.Line.Part.StraightLine
-        points.push part.displayLine2.start unless points.length
-        points.push part.displayLine2.end
-      
-      if part instanceof PAE.Line.Part.Curve
-        points.push part.displayPoints[0].position unless points.length
-        
-        for point in part.displayPoints[1..]
-          points.push point.position
-          
-    points.splice points.length - 1, 1 if line.isClosed
-    
-    points
-    
   @_getBoundingRectangleOfPoints: (points) ->
     bounds =
       left: Number.POSITIVE_INFINITY
@@ -140,6 +122,29 @@ class Pinball.Part.Avatar.Shape
     indexBufferArray = polygon.triangulate()
     
     {vertexBufferArray, indexBufferArray}
+    
+  @_mergeGeometryData: (individualGeometryData) ->
+    vertexCount = _.sumBy individualGeometryData, (geometryData) => geometryData.vertexBufferArray.length
+    indexCount = _.sumBy individualGeometryData, (geometryData) => geometryData.indexBufferArray.length
+    
+    vertexBufferArray = new Float32Array vertexCount
+    indexBufferArray = new Uint32Array indexCount
+    vertexOffset = 0
+    indexOffset = 0
+    
+    for geometryData in individualGeometryData
+      vertexBufferOffset = vertexOffset * 3
+      for vertexCoordinate, vertexCoordinateIndex in geometryData.vertexBufferArray
+        vertexBufferArray[vertexBufferOffset + vertexCoordinateIndex] = vertexCoordinate
+        
+      for localVertexIndex, indexOfIndex in geometryData.indexBufferArray
+        globalVertexIndex = localVertexIndex + vertexOffset
+        indexBufferArray[indexOffset + indexOfIndex] = globalVertexIndex
+        
+      vertexOffset += geometryData.vertexBufferArray.length / 3
+      indexOffset += geometryData.indexBufferArray.length
+      
+    {vertexBufferArray, indexBufferArray}
 
   constructor: (@pixelArtEvaluation, @properties) ->
     @bitmapRectangle = @constructor._getBoundingRectangleOfPoints(@pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
@@ -150,6 +155,27 @@ class Pinball.Part.Avatar.Shape
     @width = @bitmapRectangle.width() * pixelSize
     @depth = @bitmapRectangle.height() * pixelSize
     @height = @properties.height or Math.min @width, @depth
+  
+  _getLinePoints: (line) ->
+    points = []
+    
+    for part in line.parts
+      if part instanceof PAE.Line.Part.StraightLine
+        points.push part.displayLine2.start unless points.length
+        points.push part.displayLine2.end
+      
+      if part instanceof PAE.Line.Part.Curve
+        points.push part.displayPoints[0].position unless points.length
+        
+        for point in part.displayPoints[1..]
+          points.push point.position
+    
+    points.splice points.length - 1, 1 if line.isClosed
+    
+    for point in points
+      localPoint = new THREE.Vector2 point.x - @bitmapOrigin.x, point.y - @bitmapOrigin.y
+      localPoint.x *= -1 if @properties.flipped
+      localPoint
     
   fixedBitmapRotation: -> false # Override if the bitmap should not rotate with the physics object.
   

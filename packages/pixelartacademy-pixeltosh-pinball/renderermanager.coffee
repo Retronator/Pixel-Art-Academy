@@ -25,7 +25,7 @@ class Pinball.RendererManager
       powerPreference: 'high-performance'
 
     @renderer.shadowMap.enabled = true
-    @renderer.setClearColor new THREE.Color 0x00ffff
+    @renderer.setClearColor new THREE.Color 0xffffff
 
     @pinball.autorun =>
       scale = if @pinball.debugPhysics() then @pinball.os.display.scale() * 2 else 1

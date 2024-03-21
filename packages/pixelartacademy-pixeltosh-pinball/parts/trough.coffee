@@ -3,15 +3,17 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.GobbleHole'
-  @fullName: -> "gobble hole"
+class Pinball.Parts.Trough extends Pinball.Parts.Hole
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Trough'
+  @fullName: -> "ball trough"
   @description: ->
     "
-      A hole in the playfield that ends the current ball.
+      A hole in the playfield that collects and ends the current ball.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
+  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/trough.png'
+  
+  @triggerYPositionRatio: -> 1
   
   @initialize()
   
@@ -23,7 +25,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
-  
+
   onBallEnter: (ball) ->
     ball.die()
-    @pinball.gameManager().endBall()
+    @pinball.gameManager().endBall ball
