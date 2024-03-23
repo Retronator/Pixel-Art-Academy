@@ -13,10 +13,24 @@
     &::after
       content ''
       position absolute
-
-    .fatamorgana-interface.arrow &::after
       left -1rem
       top -1rem
       width 10rem
       height 14rem
       background-image image('/pixelartacademy/pixeltosh/os/cursors/arrow.png')
+
+    &.grab
+      &::after
+        left -6rem
+        top -7rem
+        width 11rem
+        height 13rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/grab.png')
+
+    &.grabbing
+      &::after
+        left -5rem
+        top -3rem
+        width 10rem
+        height 9rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/grabbing.png')

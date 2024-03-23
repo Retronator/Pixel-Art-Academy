@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 AR = Artificial.Reality
+AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
@@ -15,12 +16,24 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
   constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
     
-    lines = []
-
-    for core in @pixelArtEvaluation.layers[0].cores
-      for line in core.outlines
-        lines.push @_getLinePoints line
+    individualGeometryData = []
     
-    @geometryData = @constructor._createExtrudedVerticesAndIndices lines, 0, -@height
+    for core in @pixelArtEvaluation.layers[0].cores
+      boundaries = []
+      wallLines = []
+      
+      for line in core.outlines
+        points = @_getLinePoints line
+        wallLines.push points
+        boundaries.push new AP.PolygonBoundary points
+      
+      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices wallLines, 0, -@height
+      
+      polygon = new AP.PolygonWithHoles boundaries
+      
+      topPolygon = polygon.getPolygonWithoutHoles()
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygon, 0
+    
+    @geometryData = @constructor._mergeGeometryData individualGeometryData
 
   yPosition: -> @height

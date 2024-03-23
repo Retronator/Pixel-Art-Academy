@@ -1,11 +1,22 @@
 AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 AR = Artificial.Reality
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part extends LOI.Adventure.Item
+  @_partClasses = {}
+
+  @initialize: ->
+    super arguments...
+    
+    @_partClasses[@id()] = @
+  
+  @getPartClasses: -> _.values @_partClasses
+  @getSelectablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable()
+  
   @assetID: -> # Override if this part's asset comes from the project.
   @imageUrl: -> # Override if this part's asset comes from static images.
   
@@ -13,7 +24,9 @@ class Pinball.Part extends LOI.Adventure.Item
   
   @avatarClass: -> Pinball.Part.Avatar # Override if the part requires a custom avatar.
   
-  constructor: (@pinball, @data) ->
+  @selectable: -> true # Override if this part can't be selected.
+  
+  constructor: (@pinball, @playfieldPartId) ->
     super arguments...
     
     # Load the bitmap asset.
@@ -28,15 +41,45 @@ class Pinball.Part extends LOI.Adventure.Item
       # Reactively load the bitmap asset.
       @autorun (computation) =>
         @bitmap null
-        
-    @avatarProperties = new ComputedField =>
-      _.extend {}, @data(), @createAvatarProperties()
+
+    # Create reactive data for the part.
+    @data = new ComputedField =>
+      _.extend @defaultData(), @pinball.getPartData @playfieldPartId
+    ,
+      EJSON.equals
+    
+    @shapeProperties = new ComputedField =>
+      _.defaults {}, _.pick(@data(), ['flipped']), @constants()
+    ,
+      EJSON.equals
+    
+    @physicsProperties = new ComputedField =>
+      _.defaults {}, _.pick(@data(), ['restitution', 'friction', 'rollingFriction']), @constants()
+    ,
+      EJSON.equals
+      
+    @_temporaryPosition = new ReactiveField null
+    
+  shape: -> @avatar.shape()
+  texture: -> @avatar.texture()
+  pixelArtEvaluation: -> @avatar.pixelArtEvaluation()
+  
+  setTemporaryPosition: (position) ->
+    @_temporaryPosition position
+    @avatar.reset()
+    
+  position: ->
+    @_temporaryPosition() or @data()?.position
+    
+  rotation: ->
+    new THREE.Quaternion
   
   createAvatar: ->
     avatarClass = @constructor.avatarClass()
     new avatarClass @
   
-  createAvatarProperties: -> {} # Override to supply additional properties to the avatar.
+  defaultData: -> {} # Override to supply default data.
+  constants: -> {} # Override to supply additional properties to the avatar.
   
   getRenderObject: -> @avatar.getRenderObject()
   getPhysicsObject: -> @avatar.getPhysicsObject()

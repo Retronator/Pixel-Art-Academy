@@ -20,59 +20,68 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     color: 0xff0000
     wireframe: true
 
-  constructor: (@entity, @properties, @shape, @bitmap, @existingResources) ->
+  constructor: (@entity, @existingResources) ->
     super arguments...
     
+    @ready = new ReactiveField false
+    
     # Create the physics debug mesh.
-    @physicsDebugGeometry?.dispose()
-    @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or @shape.createPhysicsDebugGeometry()
-
-    @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, @constructor.physicsDebugMaterial
-    @physicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
-    
-    @add @physicsDebugMesh
-    
-    # Create the main mesh and render its texture.
-    if @existingResources?.material
-      @material = @existingResources.material
+    @autorun (computation) =>
+      return unless shape = @entity.shape()
       
-    else
-      @material = new THREE.MeshLambertMaterial
-        color: 0xffffff
-        alphaTest: 0.5
-        side: THREE.DoubleSide
+      @physicsDebugGeometry?.dispose()
+      @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or shape.createPhysicsDebugGeometry()
       
-      pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @bitmap
+      @remove @physicsDebugMesh if @physicsDebugMesh
+      @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, @constructor.physicsDebugMaterial
+      @physicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
       
-      originalCanvas = pixelImage.getCanvas()
-      expandedCanvas = new AM.Canvas originalCanvas.width + 2, originalCanvas.height + 2
-      expandedCanvas.context.drawImage originalCanvas, 1, 1
-      scaledCanvas = AS.Hqx.scale expandedCanvas, 4, AS.Hqx.Modes.NoBlending, false, true
+      @add @physicsDebugMesh
+    
+    # Create the main mesh.
+    @flipped = new ComputedField => @entity.shapeProperties().flipped
+    
+    @autorun (computation) =>
+      return unless shape = @entity.shape()
+      bitmap = @entity.bitmap()
       
-      @material.map = new THREE.CanvasTexture scaledCanvas
-      @material.map.minFilter = THREE.NearestFilter
-      @material.map.magFilter = THREE.NearestFilter
+      if @existingResources?.material
+        @material = @existingResources.material
+        
+      else
+        @material?.dispose()
+        @material = new THREE.MeshLambertMaterial
+          color: 0xffffff
+          alphaTest: 0.5
+          side: THREE.DoubleSide
+          map: @entity.texture()
+          
+      pixelSize = Pinball.CameraManager.orthographicPixelSize
+      @geometry?.dispose()
+      @geometry = @existingResources?.geometry or new THREE.PlaneGeometry pixelSize * (bitmap.bounds.width + 2), pixelSize * (bitmap.bounds.height + 2)
       
-    pixelSize = Pinball.CameraManager.orthographicPixelSize
-    @geometry = @existingResources?.geometry or new THREE.PlaneGeometry pixelSize * (@bitmap.bounds.width + 2), pixelSize * (@bitmap.bounds.height + 2)
-    
-    @bitmapPlane = new THREE.Mesh @geometry, @material
-    @bitmapPlane.rotation.x = -Math.PI / 2
-    @bitmapPlane.scale.x = -1 if @properties.flipped
-    @bitmapPlane.receiveShadow = true
-    @bitmapPlane.castShadow = true
-    @bitmapPlane.layers.set Pinball.RendererManager.RenderLayers.Main
-    
-    # Offset the mesh so that the shape origin on the bitmap will appear at the render object's position.
-    pixelSize = Pinball.CameraManager.orthographicPixelSize
-    
-    @bitmapPlane.position.x = (@bitmap.bounds.width / 2 - @shape.bitmapOrigin.x) * pixelSize
-    @bitmapPlane.position.x *= -1 if @properties.flipped
-    @bitmapPlane.position.z = (@bitmap.bounds.height / 2 - @shape.bitmapOrigin.y) * pixelSize
-    
-    @mesh = new THREE.Object3D
-    @mesh.add @bitmapPlane
-    @add @mesh
+      flipped = @flipped()
+      
+      @bitmapPlane = new THREE.Mesh @geometry, @material
+      @bitmapPlane.rotation.x = -Math.PI / 2
+      @bitmapPlane.scale.x = -1 if flipped
+      @bitmapPlane.receiveShadow = true
+      @bitmapPlane.castShadow = true
+      @bitmapPlane.layers.set Pinball.RendererManager.RenderLayers.Main
+      
+      # Offset the mesh so that the shape origin on the bitmap will appear at the render object's position.
+      pixelSize = Pinball.CameraManager.orthographicPixelSize
+      
+      @bitmapPlane.position.x = (bitmap.bounds.width / 2 - shape.bitmapOrigin.x) * pixelSize
+      @bitmapPlane.position.x *= -1 if flipped
+      @bitmapPlane.position.z = (bitmap.bounds.height / 2 - shape.bitmapOrigin.y) * pixelSize
+      
+      @remove @mesh if @mesh
+      @mesh = new THREE.Object3D
+      @mesh.add @bitmapPlane
+      @add @mesh
+      
+      @ready true
   
   destroy: ->
     super arguments...
@@ -84,16 +93,17 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     @geometry.dispose()
     
   clone: ->
-    new @constructor @part, @properties, @shape, @bitmap, @
+    new @constructor @part, @
     
   updateFromPhysicsObject: (physicsObject) ->
+    return unless shape = @entity.shape()
     physicsObject.motionState.getWorldTransform _transform
     @position.setFromBulletVector3 _transform.getOrigin()
     
     rotation = _transform.getRotation()
     @physicsDebugMesh.quaternion.setFromBulletQuaternion rotation
 
-    unless @shape.fixedBitmapRotation()
+    unless shape.fixedBitmapRotation()
       # Rotate the bitmap only around the Y axis.
       _rotation.setFromBulletQuaternion rotation
       _rotationAngles.setFromQuaternion _rotation

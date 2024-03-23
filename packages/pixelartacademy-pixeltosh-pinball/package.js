@@ -13,17 +13,23 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:fatamorgana');
   api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-pixeltosh');
 
   api.export('PixelArtAcademy');
 
   api.addFile('pinball');
+  api.addFile('assets');
+  api.addFile('project');
+  api.addFile('project-startend');
+
   api.addFile('scenemanager');
   api.addFile('cameramanager');
   api.addFile('renderermanager');
   api.addFile('physicsmanager');
   api.addFile('inputmanager');
   api.addFile('gamemanager');
+  api.addFile('editormanager');
   api.addFile('mouse');
   api.addFile('ball');
 

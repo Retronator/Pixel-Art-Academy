@@ -16,10 +16,11 @@ class Pinball.Parts.Playfield extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
+  @selectable: -> false
+  
   @initialize()
   
-  createAvatarProperties: ->
-    mass: 0
+  constants: ->
     height: 0.05
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
@@ -29,36 +30,43 @@ class Pinball.Parts.Playfield extends Pinball.Part
     
   class @Avatar extends Pinball.Part.Avatar
     initialize: ->
-      @part.autorun =>
-        return unless properties = @part.avatarProperties()
-        return unless bitmap = @part.bitmap()
-        pixelArtEvaluation = new PAE bitmap
-        
-        # See which parts require holes in the playfield.
-        holeBoundaries = []
+      @playfieldPosition = new ComputedField =>
+        @part.data()?.position
+      ,
+        EJSON.equals
+      
+      # Playfield should be slightly larger than all the parts so that it contains all parts as holes.
+      @playfieldBoundingRectangle = new ComputedField =>
         boundingRectangles = []
-        
-        for part in @part.pinball.sceneManager().parts()
-          holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
+      
+        for part in @part.pinball.sceneManager().parts() when part isnt @part
           boundingRectangles.push boundingRectangle if boundingRectangle = part.avatar.getBoundingRectangle()
           
-        # Playfield should be slightly larger than all the parts so that it contains all parts as holes.
+        return unless boundingRectangles.length
+        
         playfieldBoundingRectangle = AP.BoundingRectangle.union boundingRectangles
         extrusion = 0.01
-        playfieldBoundingRectangle = playfieldBoundingRectangle.getExtrudedBoundingRectangle extrusion, extrusion, extrusion, extrusion
-        playfieldBoundary = playfieldBoundingRectangle.getBoundary()
+        playfieldBoundingRectangle.getExtrudedBoundingRectangle extrusion, extrusion, extrusion, extrusion
+      ,
+        EJSON.equals
         
-        Tracker.nonreactive =>
-          @_renderObject()?.destroy()
-          @_physicsObject()?.destroy()
-          @_renderObject null
-          @_physicsObject null
-          
-          shape = new @constructor.Shape pixelArtEvaluation, properties, playfieldBoundary, holeBoundaries
-          @_createObjectsWithShape properties, shape, bitmap
+      super arguments...
+    
+    _createShape: ->
+      return unless pixelArtEvaluation = @part.pixelArtEvaluation()
+      return unless playfieldPosition = @playfieldPosition()
+      return unless playfieldBoundary = @playfieldBoundingRectangle()?.getBoundary()
+      
+      # See which parts require holes in the playfield.
+      holeBoundaries = []
+      
+      for part in @part.pinball.sceneManager().parts() when part isnt @part
+        holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
+      
+      new @constructor.Shape pixelArtEvaluation, @part.shapeProperties(), playfieldPosition, playfieldBoundary, holeBoundaries
       
     class @Shape extends Pinball.Part.Avatar.TriangleMesh
-      constructor: (@pixelArtEvaluation, @properties, playfieldBoundary, holeBoundaries) ->
+      constructor: (@pixelArtEvaluation, @properties, playfieldPosition, playfieldBoundary, holeBoundaries) ->
         super arguments...
         
         playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
@@ -68,9 +76,9 @@ class Pinball.Parts.Playfield extends Pinball.Part
         
         for vertex, vertexIndex in playfieldPolygon.vertices
           offset = vertexIndex * 3
-          vertexBufferArray[offset] = vertex.x - @properties.position.x
+          vertexBufferArray[offset] = vertex.x - playfieldPosition.x
           vertexBufferArray[offset + 1] = @properties.height
-          vertexBufferArray[offset + 2] = vertex.y - @properties.position.y
+          vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.y
     
         indexBufferArray = playfieldPolygon.triangulate()
         

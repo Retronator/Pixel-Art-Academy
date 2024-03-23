@@ -22,12 +22,6 @@ class PAA.Pixeltosh.Pages.Pixeltosh extends AM.Component
 
     @os = new PAA.Pixeltosh.OS
 
-    @autorun (computation) =>
-      return unless slug = AB.Router.getParameter 'programSlug'
-      return unless projectId = AB.Router.getParameter 'projectId'
-      
-      @os.loadProject slug, projectId
-
   onDestroyed: ->
     super arguments...
     

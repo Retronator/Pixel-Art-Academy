@@ -16,10 +16,11 @@ class Pinball.Parts.Wall extends Pinball.Part
     Pinball.Part.Avatar.Extrusion
   ]
   
+  @selectable: -> false
+  
   @initialize()
   
-  createAvatarProperties: ->
-    mass: 0
+  constants: ->
     height: 0.03
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood

@@ -20,8 +20,7 @@ class Pinball.Parts.BallSpawner extends Pinball.Part
   
   @initialize()
   
-  createAvatarProperties: ->
-    mass: 0.086 # kg
+  constants: ->
     restitution: Pinball.PhysicsManager.BallConstants.Restitution
     friction: Pinball.PhysicsManager.BallConstants.Friction
     rollingFriction: Pinball.PhysicsManager.BallConstants.RollingFriction

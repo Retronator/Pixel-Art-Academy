@@ -17,8 +17,7 @@ class Pinball.Parts.Trough extends Pinball.Parts.Hole
   
   @initialize()
   
-  createAvatarProperties: ->
-    mass: 0
+  constants: ->
     height: 0.03
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
@@ -28,4 +27,4 @@ class Pinball.Parts.Trough extends Pinball.Parts.Hole
 
   onBallEnter: (ball) ->
     ball.die()
-    @pinball.gameManager().endBall ball
+    @pinball.gameManager().removeBall ball

@@ -68,7 +68,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
     super arguments...
 
     # Load the starting program.
-    programSlug = AB.Router.getParameter('programSlug') or AB.Router.getParameter('parameter3') or 'finder'
+    programSlug = AB.Router.getParameter('programSlug') or AB.Router.getParameter('parameter3') or PAA.Pixeltosh.Programs.Finder.slug()
     
     if programClass = PAA.Pixeltosh.Program.getClassForSlug programSlug
       @loadProgram @getProgram programClass
@@ -84,6 +84,10 @@ class PAA.Pixeltosh.OS extends LOI.Component
   onDestroyed: ->
     super arguments...
     
+    for programId, program of @_programs[programId]
+      program.unload()
+      program.destroy()
+    
     @fileSystem?.destroy()
   
   getProgram: (programClassOrId) ->
@@ -91,13 +95,13 @@ class PAA.Pixeltosh.OS extends LOI.Component
     Tracker.nonreactive => @_programs[programId] ?= new programClass @
     @_programs[programId]
     
-  loadProgram: (program) ->
+  loadProgram: (program, file) ->
     Tracker.nonreactive =>
       loadedPrograms = @loadedPrograms()
       loadedPrograms.push program
       @loadedPrograms loadedPrograms
 
-      program.load()
+      program.load file
       @activateProgram program
     
   unloadProgram: (program) ->
@@ -107,7 +111,7 @@ class PAA.Pixeltosh.OS extends LOI.Component
       @loadedPrograms loadedPrograms
 
       if @activeProgram() is program
-        @activeProgram _.last loadedPrograms
+        @activateProgram _.last loadedPrograms
       
       # Remove all the windows that belonged to this program.
       programId = program.id()
@@ -174,9 +178,17 @@ class PAA.Pixeltosh.OS extends LOI.Component
     super(arguments...).concat
       'pointermove .pixelartacademy-pixeltosh-os': @onPointerMovePixeltoshOS
       'pointerleave .pixelartacademy-pixeltosh-os': @onPointerLeavePixeltoshOS
+      'pointerenter *[data-cursor]': @onPointerEnterDataCursor
+      'pointerleave *[data-cursor]': @onPointerLeaveDataCursor
   
   onPointerMovePixeltoshOS: (event) ->
     @cursor().updateCoordinates event
     
   onPointerLeavePixeltoshOS: (event) ->
     @cursor().resetCoordinates()
+  
+  onPointerEnterDataCursor: (event) ->
+    @cursor().setClass $(event.target).data('cursor')
+  
+  onPointerLeaveDataCursor: (event) ->
+    @cursor().setClass null

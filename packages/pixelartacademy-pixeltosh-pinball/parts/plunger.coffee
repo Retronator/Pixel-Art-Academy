@@ -30,8 +30,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
     @moving = false
     @displacement = 0
   
-  createAvatarProperties: ->
-    mass: 0
+  constants: ->
     height: 0.03
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Plastic
@@ -64,14 +63,13 @@ class Pinball.Parts.Plunger extends Pinball.Part
   deactivate: ->
     @active = false
     
-    physicsObject = @avatar.getPhysicsObject()
-    @_releaseSpeed = -@constructor.releaseSpeed * @displacement / physicsObject.shape.depth
+    @_releaseSpeed = -@constructor.releaseSpeed * @displacement / @shape().depth
     
   fixedUpdate: (elapsed) ->
     return unless @moving
     
     physicsObject = @avatar.getPhysicsObject()
-    maxDisplacement = physicsObject.shape.depth * @constructor.maxDisplacementRatio
+    maxDisplacement = @shape().depth * @constructor.maxDisplacementRatio
     
     if @active
       if @displacement >= maxDisplacement

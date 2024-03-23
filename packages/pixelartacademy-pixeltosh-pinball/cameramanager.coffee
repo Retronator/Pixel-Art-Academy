@@ -84,7 +84,7 @@ class Pinball.CameraManager
     @rotatingCamera true
 
     # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on 'mouseup.pixelartacademy-pixeltosh-programs-pinball-cameramanager', =>
+    $(document).on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-cameramanager', =>
       $(document).off '.pixelartacademy-pixeltosh-programs-pinball-cameramanager'
 
       @rotatingCamera false
@@ -93,3 +93,9 @@ class Pinball.CameraManager
     properties = @_properties()
     properties.radialDistance = _.clamp properties.radialDistance * factor, 0.1, 10
     @_properties properties
+    
+  transformWindowToPlayfield: (windowCoordinates) ->
+    scale = @pinball.os.display.scale()
+    
+    x: windowCoordinates.x / scale * @constructor.orthographicPixelSize
+    y: windowCoordinates.y / scale * @constructor.orthographicPixelSize

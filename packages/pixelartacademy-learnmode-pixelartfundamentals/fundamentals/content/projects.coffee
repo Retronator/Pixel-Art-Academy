@@ -7,9 +7,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.F
   @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects'
   @displayName: -> "Projects"
   @contents: -> [
-    @Invaders
+    @PinballCreationKit
     @PixelSuiteIcons
-    @PinballCreator
+    @Invaders
     @BlockBreaker
     @Chess
   ]
@@ -85,11 +85,57 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.F
       @displayName: -> "Calendar"
       @initialize()
   
-  class @PinballCreator extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreator'
-    @displayName: -> "Pinball creator"
+  class @PinballCreationKit extends LM.Content
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit'
+    @displayName: -> "Pinball Creation Kit"
+    
+    @unlockInstructions: -> "Complete the Smooth curves challenge to start creating your own pinball machine."
+    
+    @contents: -> [
+      @Ball
+      @Playfield
+    ]
+    
     @initialize()
-  
+    
+    constructor: ->
+      super arguments...
+      
+      @progress = new LM.Content.Progress.ContentProgress
+        content: @
+        units: "pinball parts"
+    
+    status: -> if LM.PixelArtFundamentals.pinballEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+    
+    class @Part extends LM.Content
+      @asset = null # Override which project asset this sprite is.
+      
+      @displayName: -> @asset.displayName()
+      
+      constructor: ->
+        super arguments...
+        
+        @progress = new LM.Content.Progress.ProjectAssetProgress
+          content: @
+          project: PAA.Pixeltosh.Programs.Pinball.Project
+          asset: @constructor.asset
+      
+      status: -> LM.Content.Status.Unlocked
+    
+    class @Ball extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit.Ball'
+      
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Ball
+      
+      @initialize()
+    
+    class @Playfield extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit.Playfield'
+      
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Playfield
+      
+      @initialize()
+      
   class @BlockBreaker extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.BlockBreaker'
     @displayName: -> "Block breaker"

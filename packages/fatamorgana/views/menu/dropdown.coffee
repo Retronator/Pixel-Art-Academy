@@ -21,7 +21,7 @@ class FM.Menu.Dropdown extends FM.View
 
   activeClass: ->
     action = @currentData()
-    'active' if action.active?()
+    'active' if action?.active?()
 
   shortcut: ->
     action = @currentData()

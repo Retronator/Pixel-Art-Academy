@@ -152,6 +152,8 @@ class PAA.Learning.Goal
     paths
 
   @getAdventureInstanceForId: (goalId) ->
+    return unless LOI.adventureInitialized()
+    
     for episode in LOI.adventure.episodes()
       for chapter in episode.chapters
         for goal in chapter.goals

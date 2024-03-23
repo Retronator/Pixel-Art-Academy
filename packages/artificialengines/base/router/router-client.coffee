@@ -105,6 +105,8 @@ class AB.Router extends AB.Router
       window.location = url
 
     else
+      return if window.location.pathname is url
+      
       # We're staying on the current host, so we can do a soft url change.
       historyFunction = if options.createHistory then 'pushState' else 'replaceState'
 

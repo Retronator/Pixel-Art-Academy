@@ -78,6 +78,8 @@ class PAA.Learning.Task
         IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
 
   @getAdventureInstanceForId: (taskId) ->
+    return unless LOI.adventureInitialized()
+    
     for episode in LOI.adventure.episodes()
       for chapter in episode.chapters
         for task in chapter.tasks

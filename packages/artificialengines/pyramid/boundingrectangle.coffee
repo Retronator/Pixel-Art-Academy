@@ -10,6 +10,8 @@ class AP.BoundingRectangle
     new @ minX, maxX, minY, maxY
     
   @union: (boundingRectangles) ->
+    return null unless boundingRectangles.length
+    
     minX = _.minBy(boundingRectangles, 'minX').minX
     maxX = _.maxBy(boundingRectangles, 'maxX').maxX
     minY = _.minBy(boundingRectangles, 'minY').minY

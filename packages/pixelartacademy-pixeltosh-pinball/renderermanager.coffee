@@ -30,7 +30,7 @@ class Pinball.RendererManager
     @pinball.autorun =>
       scale = if @pinball.debugPhysics() then @pinball.os.display.scale() * 2 else 1
       
-      switch @pinball.cameraManager().displayType()
+      switch @pinball.cameraManager()?.displayType()
         when Pinball.CameraManager.DisplayTypes.Orthographic
           @renderer.setSize @constructor.orthographicWidth * scale, @constructor.height * scale
           

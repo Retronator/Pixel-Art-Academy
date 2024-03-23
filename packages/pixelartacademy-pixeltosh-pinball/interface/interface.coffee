@@ -47,7 +47,7 @@ class Pinball.Interface
     bottom: 0
     
   @createContentAreaData: (pinball) ->
-    switch pinball.cameraManager().displayType()
+    switch pinball.cameraManager()?.displayType()
       when Pinball.CameraManager.DisplayTypes.Orthographic
         switch pinball.gameManager().mode()
           when Pinball.GameManager.Modes.Edit, Pinball.GameManager.Modes.Test

@@ -1,6 +1,7 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixeltosh-programs-pinball-interface-parts
+  position relative
   height 100%
   padding 10rem
   background white
@@ -17,10 +18,6 @@
     .part
       position relative
       margin 0 10rem 10rem 0
-
-      &:hover
-        .description
-          display block
 
       .image
         text-align center
@@ -42,3 +39,15 @@
         background white
         text-align center
         pointer-events none
+
+  .playfield-overlay
+    position absolute
+    left -180rem
+    top 0
+
+    .selection
+      position absolute
+
+      &.visible
+        border-image image('/pixelartacademy/pixeltosh/os/dither-border-white.png') 1 / 1rem repeat
+        mix-blend-mode difference

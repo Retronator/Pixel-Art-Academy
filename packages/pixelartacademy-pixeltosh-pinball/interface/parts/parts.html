@@ -11,5 +11,10 @@
         </li>
       {{/each}}
     </ul>
+    <div class="hovered-part">Hovered part: {{hoveredPart.fullName}}</div>
+    <div class="hovered-part">Selected part: {{selectedPart.fullName}}</div>
+    <div class="playfield-overlay">
+      <div class="selection {{selectionVisibleClass}}" data-cursor="grab" {{style selectionStyle}}></div>
+    </div>
   </div>
 </template>

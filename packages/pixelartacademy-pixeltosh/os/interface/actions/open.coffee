@@ -28,3 +28,7 @@ class PAA.Pixeltosh.OS.Interface.Actions.Open extends PAA.Pixeltosh.OS.Interface
     
     else if fileType in [PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk, PAA.Pixeltosh.OS.FileSystem.FileTypes.Folder]
       @finder.openFolder file
+      
+    else if programClass = fileType.program?()
+      program = @os.getProgram programClass
+      @os.loadProgram program, file

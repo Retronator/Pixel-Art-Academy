@@ -4,7 +4,7 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Mouse
   constructor: (@pinball) ->
-    # The mouse coordinate relative to the playfield view in native window (browser) pixels.
+    # The mouse coordinates relative to the playfield view in native window (browser) pixels.
     @windowCoordinates = new ReactiveField null, EJSON.equals
 
     # The floating point value where the mouse is in viewport [-1, 1] coordinates.

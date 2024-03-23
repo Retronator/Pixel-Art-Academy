@@ -15,8 +15,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
   
   @initialize()
   
-  createAvatarProperties: ->
-    mass: 0
+  constants: ->
     height: 0.03
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
@@ -27,6 +26,5 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
   onBallEnter: (ball) ->
     ball.die()
     
-    gameManager = @pinball.gameManager()
-    gameManager.addScore @data().score
-    gameManager.endBall()
+    return unless score = @data().score
+    @pinball.gameManager().addScore score

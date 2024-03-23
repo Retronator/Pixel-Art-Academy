@@ -23,15 +23,17 @@ class Pinball.Parts.Flipper extends Pinball.Part
   
   @rotationAxis = new THREE.Vector3 0, -1, 0
   
-  constructor: (@pinball, @properties) ->
+  constructor: ->
     super arguments...
     
     @active = false
     @moving = false
     @displacementAngle = 0
   
-  createAvatarProperties: ->
-    mass: 0
+  defaultData: ->
+    maxAngleDegrees: 39.5
+  
+  constants: ->
     height: 0.03
     bitmapOrigin:
       x: 3.5
@@ -74,14 +76,13 @@ class Pinball.Parts.Flipper extends Pinball.Part
     return unless @moving
     
     maxDisplacement = AR.Conversions.degreesToRadians @data().maxAngleDegrees
-    displacementSign = Math.sign maxDisplacement
-    positiveMaxDisplacement = maxDisplacement * displacementSign
+    displacementSign = if @data().flipped then 1 else -1
     positiveDisplacement = @displacementAngle * displacementSign
     
     if @active
-      if positiveDisplacement >= positiveMaxDisplacement
+      if positiveDisplacement >= maxDisplacement
         # We reached maximum displacement, stop.
-        @displacementAngle = maxDisplacement
+        @displacementAngle = maxDisplacement * displacementSign
         angularSpeed = 0
         
       else

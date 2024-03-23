@@ -24,6 +24,13 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
       type: PAA.Pixeltosh.Programs.Pinball
       disk: @_pinballDisk
     
+    @_pinballMachine ?= new PAA.Pixeltosh.OS.FileSystem.File
+      id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
+      path: 'Pinball Creation Kit/Pinball Machine'
+      type: PAA.Pixeltosh.Programs.Pinball.Project
+      disk: @_pinballDisk
+      data: => PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+    
     @_pinballDemoMachines ?= new PAA.Pixeltosh.OS.FileSystem.File
       id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.DemoMachines"
       path: 'Pinball Creation Kit/Demo Machines'
@@ -35,5 +42,6 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
     [
       @_pinballDisk if pinballEnabled
       @_pinballProgram if pinballEnabled
+      @_pinballMachine if pinballEnabled
       @_pinballDemoMachines if pinballEnabled
     ]

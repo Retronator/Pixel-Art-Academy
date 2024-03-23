@@ -19,25 +19,49 @@ class Pinball.Interface.Playfield extends LOI.View
 
   events: ->
     super(arguments...).concat
-      'mousedown': @onMouseDown
-      'mousemove': @onMouseMove
-      'mouseleave .pixelartacademy-pixeltosh-programs-pinball-interface-playfield': @onMouseLeavePlayfield
-      'wheel': @onMouseWheel
+      'pointerdown': @onPointerDown
+      'pointermove': @onPointerMove
+      'pointerleave .pixelartacademy-pixeltosh-programs-pinball-interface-playfield': @onPointerLeavePlayfield
+      'wheel': @onPointerWheel
       'contextmenu': @onContextMenu
 
-  onMouseDown: (event) ->
+  onPointerDown: (event) ->
     # Prevent browser select/dragging behavior.
     event.preventDefault()
 
-    @pinball.cameraManager().startRotateCamera event.coordinates
+    cameraManager = @pinball.cameraManager()
+    
+    switch cameraManager.displayType()
+      when Pinball.CameraManager.DisplayTypes.Orthographic
+        editorManager = @pinball.editorManager()
+        editorManager.select()
+        
+        if selectedPart = editorManager.selectedPart()
+          # See if the player releases the mouse button, otherwise also start dragging.
+          $document = $(document)
+          
+          stopListening = =>
+            $document.off '.pixelartacademy-pixeltosh-programs-pinball-interface-playfield'
+            
+          $document.on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-interface-playfield', =>
+            Meteor.clearTimeout @_dragTimeout
+            stopListening()
+            
+          $document.on 'pointermove.pixelartacademy-pixeltosh-programs-pinball-interface-playfield', =>
+            Meteor.clearTimeout @_dragTimeout
+            stopListening()
+            editorManager.startDrag selectedPart
+    
+      when Pinball.CameraManager.DisplayTypes.Perspective
+        cameraManager.startRotateCamera event.coordinates
 
-  onMouseMove: (event) ->
+  onPointerMove: (event) ->
     @pinball.mouse().onMouseMove event
 
-  onMouseLeavePlayfield: (event) ->
+  onPointerLeavePlayfield: (event) ->
     @pinball.mouse().onMouseLeave event
 
-  onMouseWheel: (event) ->
+  onPointerWheel: (event) ->
     @pinball.cameraManager().changeDistanceByFactor 1.005 ** event.originalEvent.deltaY
 
   onContextMenu: (event) ->

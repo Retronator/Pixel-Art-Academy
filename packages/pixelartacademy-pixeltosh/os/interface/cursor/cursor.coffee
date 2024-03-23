@@ -11,6 +11,9 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     
     # The pixel coordinate is the display coordinate rounded to a whole integer.
     @coordinates = new ReactiveField null, EJSON.equals
+    
+    @class = new ReactiveField null
+    @_desiredClass = null
 
   onCreated: ->
     super arguments...
@@ -30,6 +33,19 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     super arguments...
     
     @$origin = @$('.pixelartacademy-pixeltosh-os-interface-cursor')
+    
+  setClass: (cursorClass) ->
+    @_desiredClass = cursorClass
+    
+    return if @class() is 'grabbing'
+    
+    @class cursorClass
+    
+  startGrabbing: ->
+    @class 'grabbing'
+    
+  endGrabbing: ->
+    @class @_desiredClass
     
   updateCoordinates: (event) ->
     originPosition = @$origin.offset()

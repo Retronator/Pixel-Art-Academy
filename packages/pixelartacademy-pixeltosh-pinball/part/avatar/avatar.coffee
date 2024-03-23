@@ -15,64 +15,85 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     
     @shape = new ReactiveField null
     
-    @_renderObject = new ReactiveField null
-    @_physicsObject = new ReactiveField null
-    
   destroy: ->
     super arguments...
-
-    @_renderObject()?.destroy()
-    @_physicsObject()?.destroy()
+    
+    @_texture?.dispose()
+    @_renderObject?.destroy()
+    @_physicsObject?.destroy()
   
   # Note: We initialize the avatar separately since the construction happens
   # already in the thing's constructor and we don't have any extra fields available.
   initialize: ->
-    @part.autorun =>
-      return unless properties = @part.avatarProperties()
-      
-      # Analyze the bitmap to determine the shape of the part.
-      return unless bitmap = @part.bitmap()
-      pixelArtEvaluation = new PAE bitmap
-  
-      Tracker.nonreactive =>
-        @_renderObject()?.destroy()
-        @_physicsObject()?.destroy()
-        @_renderObject null
-        @_physicsObject null
-        
-        for shapeClass in @part.constructor.avatarShapes()
-          continue unless shape = shapeClass.detectShape pixelArtEvaluation, properties
-          @shape shape
-          
-          @_createObjectsWithShape properties, shape, bitmap
-          break
-          
-  _createObjectsWithShape: (properties, shape, bitmap) ->
-    @_renderObject new @constructor.RenderObject @part, properties, shape, bitmap
-    @_physicsObject new @constructor.PhysicsObject @part, properties, shape
+    @_renderObject = new @constructor.RenderObject @part
+    @_physicsObject = new @constructor.PhysicsObject @part
     
-    @reset()
+    # Create the upscaled texture.
+    pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @part.bitmap()
+    
+    @texture = new ComputedField =>
+      return unless originalCanvas = pixelImage.getCanvas()
+      
+      expandedCanvas = new AM.Canvas originalCanvas.width + 2, originalCanvas.height + 2
+      expandedCanvas.context.drawImage originalCanvas, 1, 1
+      scaledCanvas = AS.Hqx.scale expandedCanvas, 4, AS.Hqx.Modes.NoBlending, false, true
+      
+      @_texture?.dispose()
+      @_texture = new THREE.CanvasTexture scaledCanvas
+      @_texture.minFilter = THREE.NearestFilter
+      @_texture.magFilter = THREE.NearestFilter
+      @_texture
+    
+    # Analyze pixel art.
+    @pixelArtEvaluation = new ComputedField =>
+      return unless bitmap = @part.bitmap()
+      @_pixelArtEvaluation?.destroy()
+      @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
+    
+    @part.autorun =>
+      shape = @_createShape()
+      @shape shape
+      
+      if shape
+        Tracker.afterFlush => @reset()
   
-  getRenderObject: -> @_renderObject()
-  getPhysicsObject: -> @_physicsObject()
+  _createShape: ->
+    # Analyze the bitmap to determine the shape of the part.
+    return unless pixelArtEvaluation = @part.pixelArtEvaluation()
+    shapeProperties = @part.shapeProperties()
+    
+    for shapeClass in @part.constructor.avatarShapes()
+      return shape if shape = shapeClass.detectShape pixelArtEvaluation, shapeProperties
+      
+    null
+    
+  getRenderObject: ->
+    return unless @_renderObject.ready()
+    @_renderObject
+  
+  getPhysicsObject: ->
+    return unless @_physicsObject.ready()
+    @_physicsObject
   
   reset: ->
-    physicsObject = @_physicsObject()
-    physicsObject.reset()
-    @_renderObject().updateFromPhysicsObject physicsObject
+    @_physicsObject.reset()
+    @_renderObject.updateFromPhysicsObject @_physicsObject
     
   getBoundingRectangle: ->
     return unless shape = @shape()
-    return unless properties = @part.avatarProperties()
+    # We want to rely only on the project position (to avoid recomputation during dragging).
+    #return unless position = @part.data()?.position
+    return unless position = @part.position()
     
-    shape.getBoundingRectangle().getOffsetBoundingRectangle properties.position.x, properties.position.y
+    shape.getBoundingRectangle().getOffsetBoundingRectangle position.x, position.y
   
   getHoleBoundaries: ->
     return unless holeBoundaries = @shape()?.getHoleBoundaries()
-    return unless properties = @part.avatarProperties()
+    #return unless position = @part.data()?.position
+    return unless position = @part.position()
     
     for holeBoundary in holeBoundaries
       for vertex in holeBoundary.vertices
-        vertex.add properties.position
+        vertex.add position
         
     holeBoundaries

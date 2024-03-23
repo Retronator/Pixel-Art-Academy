@@ -1,11 +1,12 @@
 AE = Artificial.Everywhere
+AB = Artificial.Base
 AM = Artificial.Mirage
 FM = FataMorgana
 PAA = PixelArtAcademy
+LM = PixelArtAcademy.LearnMode
 
-_cursorIntersectionPoints = []
 _cursorRaycaster = new THREE.Raycaster
-_cursorPosition = new THREE.Vector3
+_rayEnd = new THREE.Vector3
 
 class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   # cameraDisplayType: enum whether the camera should be perspective or orthographic
@@ -35,76 +36,45 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager = new ReactiveField null
     @inputManager = new ReactiveField null
     @gameManager = new ReactiveField null
+    @editorManager = new ReactiveField null
     @mouse = new ReactiveField null
     
-    pixelSize = Pinball.CameraManager.orthographicPixelSize
+    @openedFile = new ReactiveField null
     
-    @partsData = new ReactiveField [
-      type: @constructor.Parts.BallSpawner.id()
-      id: Random.id()
-      position:
-        x: 173.5 * pixelSize
-        y: 175.5 * pixelSize
-    ,
-      type: @constructor.Parts.Playfield.id()
-      id: Random.id()
-      position:
-        x: 90 * pixelSize
-        y: 100 * pixelSize
-    ,
-      type: @constructor.Parts.Wall.id()
-      id: Random.id()
-      position:
-        x: 90 * pixelSize
-        y: 100 * pixelSize
-    ,
-      type: @constructor.Parts.Plunger.id()
-      id: Random.id()
-      position:
-        x: 173.5 * pixelSize
-        y: 189.5 * pixelSize
-    ,
-      type: @constructor.Parts.Flipper.id()
-      id: Random.id()
-      position:
-        x: 66.5 * pixelSize
-        y: 176.5 * pixelSize
-      maxAngleDegrees: -39.5
-    ,
-      type: @constructor.Parts.Flipper.id()
-      id: Random.id()
-      position:
-        x: 103.5 * pixelSize
-        y: 176.5 * pixelSize
-      flipped: true
-      maxAngleDegrees: 39.5
-    ,
-      type: @constructor.Parts.GobbleHole.id()
-      id: Random.id()
-      position:
-        x: 85 * pixelSize
-        y: 90 * pixelSize
-      score: 1000
-    ,
-      type: @constructor.Parts.Trough.id()
-      id: Random.id()
-      position:
-        x: 85 * pixelSize
-        y: 197 * pixelSize
-    ]
-    
-    @cursorPosition = new ReactiveField new THREE.Vector3(), EJSON.equals
-    
-    @sceneImage = new ReactiveField null
+    @projectId = new AE.LiveComputedField =>
+      return unless file = @openedFile()
+      file.data()
+      
+    @partsData = new AE.LiveComputedField =>
+      return unless projectId = @projectId()
+      return unless project = PAA.Practice.Project.documents.findOne projectId
+      project.playfield
     
     @debugPhysics = @state.field 'debugPhysics', default: false
+  
+    @sceneImage = new ReactiveField null
     
-  load: ->
+  destroy: ->
+    super arguments...
+    
+    @partsData.stop()
+    @projectId.stop()
+    
+  getPartData: (playfieldPartId) ->
+    @partsData()?[playfieldPartId]
+  
+  load: (file) ->
+    file ?= new PAA.Pixeltosh.OS.FileSystem.File
+      id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
+      data: => AB.Router.getParameter('projectId') or AB.Router.getParameter('parameter4') or @constructor.Project.state('activeProjectId')
+    
+    @openFile file
+    
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
     
     @app = @os.ancestorComponentOfType Artificial.Base.App
     @app.addComponent @
-
+    
     # Initialize components.
     @sceneManager new @constructor.SceneManager @
     @cameraManager new @constructor.CameraManager @
@@ -112,9 +82,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager new @constructor.PhysicsManager @
     @inputManager new @constructor.InputManager @
     @gameManager new @constructor.GameManager @
+    @editorManager new @constructor.EditorManager @
     @mouse new @constructor.Mouse @
-    
-    @hoveredPart = new ReactiveField null
     
     @sceneImage new AM.PixelImage
       display: @os.display
@@ -141,69 +110,60 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager null
     @inputManager null
     @gameManager null
+    @editorManager null
     @mouse null
     @sceneImage null
     
     @_macintoshPaletteSubscription.stop()
+    
+  openFile: (file) ->
+    @openedFile file
+    
+    # Progress gameplay.
+    if file.id() is "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
+      LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', true
   
   update: (appTime) ->
-    # Wait until the scene is initialized.
     sceneManager = @sceneManager()
-    gameManager = @gameManager()
+    physicsManager = @physicsManager()
 
-    if sceneManager.ready() and gameManager.simulationActive()
-      # Update physics.
-      physicsManager = @physicsManager()
-      physicsManager.update appTime
+    # Update physics.
+    physicsManager.update appTime
+    
+    # Quantize position when in normal view.
+    if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
+      pixelSize = Pinball.CameraManager.orthographicPixelSize
       
-      # Quantize position when in normal view.
-      if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
-        pixelSize = Pinball.CameraManager.orthographicPixelSize
+      for renderObject in sceneManager.renderObjects()
+        shape = renderObject.entity.shape()
+
+        originScreenX = renderObject.position.x / pixelSize
+        originScreenY = renderObject.position.z / pixelSize
         
-        for renderObject in sceneManager.renderObjects()
-          originScreenX = renderObject.position.x / pixelSize
-          originScreenY = renderObject.position.z / pixelSize
-          
-          screenX = originScreenX - renderObject.shape.bitmapOrigin.x
-          screenY = originScreenY - renderObject.shape.bitmapOrigin.y
-          
-          integerScreenX = Math.round screenX
-          integerScreenY = Math.round screenY
-          
-          renderObject.position.x = (integerScreenX + renderObject.shape.bitmapOrigin.x) * pixelSize
-          renderObject.position.z = (integerScreenY + renderObject.shape.bitmapOrigin.y) * pixelSize
+        screenX = originScreenX - shape.bitmapOrigin.x
+        screenY = originScreenY - shape.bitmapOrigin.y
+        
+        integerScreenX = Math.round screenX
+        integerScreenY = Math.round screenY
+        
+        renderObject.position.x = (integerScreenX + shape.bitmapOrigin.x) * pixelSize
+        renderObject.position.z = (integerScreenY + shape.bitmapOrigin.y) * pixelSize
       
-    # Update the cursor.
+    # Update the hovered part.
+    hoveredPart = null
+    
     if viewportCoordinates = @mouse().viewportCoordinates()
-      scene = sceneManager.scene
       camera = @cameraManager().camera()
 
       # Update the raycaster.
       _cursorRaycaster.setFromCamera viewportCoordinates, camera
-
-      # We need to find out what we're hovering over.
-      hoveredPart = null
-
-      # Update intersection points.
-      _cursorIntersectionPoints.length = 0
-      _cursorRaycaster.intersectObjects scene.children, true, _cursorIntersectionPoints
-
-      if intersectionPoint = _cursorIntersectionPoints[0]
-        # Update cursor to this intersection.
-        @cursorPosition intersectionPoint.point
-
-        # See if this mesh is part of a playfield part.
-        searchObject = intersectionPoint.object
-
-        while searchObject
-          if searchObject.avatar?.thing
-            hoveredPart = searchObject.avatar.thing
-            break
-
-          searchObject = searchObject.parent
-
-      @hoveredPart hoveredPart
+      _cursorRaycaster.ray.at camera.far, _rayEnd
       
+      hoveredEntity = physicsManager.intersectObject _cursorRaycaster.ray.origin, _rayEnd
+      hoveredPart = hoveredEntity if hoveredEntity instanceof @constructor.Part
+    
+    @editorManager().hoveredPart hoveredPart
+    
     # Update the parts.
     entity.update? appTime for entity in sceneManager.entities()
     

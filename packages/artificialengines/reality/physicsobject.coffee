@@ -10,6 +10,8 @@ class AR.PhysicsObject
     @_transform = new Ammo.btTransform
     @_vector3 = new Ammo.btVector3
     @_quaternion = new Ammo.btQuaternion
+    @_min = new Ammo.btVector3
+    @_max = new Ammo.btVector3
 
   destroy: ->
     handle.stop() for handle in @_autorunHandles
@@ -74,3 +76,12 @@ class AR.PhysicsObject
   setAngularVelocity: (angularVelocity) ->
     @_quaternion.copy angularVelocity
     @body.setAngularVelocity @_quaternion
+    
+  getBoundingBox: (box) ->
+    box ?= new THREE.Box3
+    
+    @body.getAabb @_min, @_max
+    box.min.setFromBulletVector3 @_min
+    box.max.setFromBulletVector3 @_max
+    
+    box

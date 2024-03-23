@@ -27,3 +27,5 @@ class PAA.Pixeltosh.OS.FileSystem.File
   type: -> @options.type
   
   iconUrl: -> @type().iconUrl()
+  
+  data: -> @options.data?()

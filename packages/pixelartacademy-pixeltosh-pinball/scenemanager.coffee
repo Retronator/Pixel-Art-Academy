@@ -29,36 +29,24 @@ class Pinball.SceneManager
     @_parts = []
     @parts = new ReactiveField @_parts
 
-    @_partsById = {}
-
-    @startingPartsHaveBeenInitialized = new ReactiveField false
-
-    # Notify when all starting parts have been initialized.
-    @pinball.autorun (computation) =>
-      # Wait until all parts in the data have been added.
-      return unless @pinball.partsData()?.length is @parts().length
-      computation.stop()
-
-      @startingPartsHaveBeenInitialized true
-
     # Instantiate playfield parts based on the data.
     @pinball.autorun =>
-      remainingPartIds = (part._id for part in @_parts)
+      remainingPlayfieldPartIds = (part.playfieldPartId for part in @_parts)
 
       return unless newPartsData = @pinball.partsData()
 
-      for newPartData in newPartsData
-        if newPartData.id in remainingPartIds
+      for newPlayfieldPartId, newPartData of newPartsData
+        if newPlayfieldPartId in remainingPlayfieldPartIds
           # Part has already been instantiated.
-          _.pull remainingPartIds, newPartData.id
+          _.pull remainingPlayfieldPartIds, newPlayfieldPartId
 
         else
           # This is a new part. Instantiate it and add it to the scene.
-          @_addPart newPartData
+          Tracker.nonreactive => @_addPart newPlayfieldPartId, newPartData
 
       # Any leftover remaining parts have been removed.
-      for partId in remainingPartIds
-        @_removePartWithId partId
+      for newPlayfieldPartId in remainingPlayfieldPartIds
+        Tracker.nonreactive => @_removePartWithId newPlayfieldPartId
         
     @entities = new ComputedField =>
       return [] unless gameManager = @pinball.gameManager()
@@ -84,22 +72,18 @@ class Pinball.SceneManager
       
       removed: (renderObject) =>
         @scene.remove renderObject
-
-    @ready = new ComputedField =>
-      # Scene is ready when all starting parts have been initialized.
-      @startingPartsHaveBeenInitialized()
     
   destroy: ->
     @renderObjects.stop()
     part.destroy() for part in @_parts
-
-  _addPart: (partData) ->
-    partClass = _.thingClass partData.type
-    part = Tracker.nonreactive =>
-      new partClass @pinball, => partData
-
-    @_partsById[partData.id] = part
     
+  getPart: (playfieldPartId) ->
+    _.find @parts(), (part) => part.playfieldPartId is playfieldPartId
+
+  _addPart: (playfieldPartId, partData) ->
+    partClass = _.thingClass partData.type
+    part = new partClass @pinball, playfieldPartId
+
     # Initialize the avatar.
     part.avatar.initialize()
 
@@ -107,12 +91,13 @@ class Pinball.SceneManager
     @_parts.push part
     @parts @_parts
 
-  _removePartWithId: (partId) ->
-    part = _.find @_parts, (part) => part._id is partId
+  _removePartWithId: (playfieldPartId) ->
+    part = _.find @_parts, (part) => part.playfieldPartId is playfieldPartId
 
     # Update parts array.
     _.pull @_parts, part
     @parts @_parts
 
-    # Destroy the part.
-    part.destroy()
+    Tracker.afterFlush =>
+      # Destroy the part.
+      part.destroy()
