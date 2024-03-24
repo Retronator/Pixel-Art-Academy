@@ -68,6 +68,23 @@ class THREE.Line2
     new @constructor().copy @
     
   intersect: (line, target) ->
+    distanceFromStart = @intersectionDistanceFromStart line
+    return false if distanceFromStart is false
+    
+    _line1Position.copy @start
+    @delta(_line1Direction)
+    _line1Direction.normalize()
+    target.copy(_line1Direction).multiplyScalar(distanceFromStart).add _line1Position
+    
+    true
+  
+  intersects: (line) ->
+    distanceFromStart = @intersectionDistanceFromStart line
+    return false if distanceFromStart is false
+    
+    0 <= distanceFromStart <= @distance()
+  
+  intersectionDistanceFromStart: (line) ->
     _line1Position.copy @start
     @delta(_line1Direction)
     _line1Direction.normalize()
@@ -81,10 +98,4 @@ class THREE.Line2
     return false if Math.abs(directionCross) < Number.EPSILON
     
     _positionDifference.subVectors _line2Position, _line1Position
-    t = _positionDifference.cross(_line2Direction) / directionCross
-    target.copy(_line1Direction).multiplyScalar(t).add _line1Position
-    
-    true
-  
-  intersectLines: (a, b, target) ->
-    @copy(a).intersect(b, target)
+    _positionDifference.cross(_line2Direction) / directionCross

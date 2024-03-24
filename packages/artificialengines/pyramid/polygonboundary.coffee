@@ -26,6 +26,13 @@ class AP.PolygonBoundary
   
   getVertexAtIndex: (index) ->
     return @vertices[_.modulo index, @vertices.length]
+    
+  isVertexAtIndexReflex: (index) ->
+    previousVertex = @getVertexAtIndex index - 1
+    vertex = @getVertexAtIndex index
+    nextVertex = @getVertexAtIndex index + 1
+    
+    @getOrientation() isnt @constructor.getSectionOrientation previousVertex, vertex, nextVertex
 
   getOrientation: ->
     return @_orientation if @_orientation
@@ -39,7 +46,7 @@ class AP.PolygonBoundary
         minVertex = vertex
         minVertexIndex = index
         
-      else if vertex.x is minVertex.y and vertex.y < minVertex.y
+      else if vertex.x is minVertex.x and vertex.y < minVertex.y
         minVertex = vertex
         minVertexIndex = index
     
@@ -51,11 +58,10 @@ class AP.PolygonBoundary
     @_orientation
     
   getPolygonBoundaryWithOrientation: (orientation) ->
-    if orientation is @getOrientation()
-      new @constructor _.clone @vertices
-      
-    else
-      new @constructor _.reverse @vertices
+    vertices = _.clone @vertices
+    _.reverse vertices unless orientation is @getOrientation()
+   
+    new @constructor vertices
 
   getBoundingRectangle: ->
     AP.BoundingRectangle.fromVertices @vertices

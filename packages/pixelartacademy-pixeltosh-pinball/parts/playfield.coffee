@@ -60,7 +60,7 @@ class Pinball.Parts.Playfield extends Pinball.Part
       # See which parts require holes in the playfield.
       holeBoundaries = []
       
-      for part in @part.pinball.sceneManager().parts() when part isnt @part
+      for part in @part.pinball.sceneManager().parts()
         holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
       
       new @constructor.Shape pixelArtEvaluation, @part.shapeProperties(), playfieldPosition, playfieldBoundary, holeBoundaries

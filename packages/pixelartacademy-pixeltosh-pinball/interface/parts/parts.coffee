@@ -6,7 +6,6 @@ _boundingBox = new THREE.Box3
 
 class Pinball.Interface.Parts extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Parts'
-  @register @id()
   
   onCreated: ->
     super arguments...

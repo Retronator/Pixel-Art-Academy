@@ -61,6 +61,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/backbox..');
   api.addComponent('interface/instructions..');
   api.addComponent('interface/parts..');
+  api.addFile('interface/parts/parts-polygondebug');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');
