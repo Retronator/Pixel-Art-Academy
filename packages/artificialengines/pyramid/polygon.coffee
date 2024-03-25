@@ -3,9 +3,6 @@ AP = Artificial.Pyramid
 
 ConvexDecomposition = require 'poly-decomp'
 
-_delta = new THREE.Vector2
-_normal = new THREE.Vector2
-
 class AP.Polygon
   constructor: (boundaryOrVertices) ->
     if boundaryOrVertices instanceof AP.PolygonBoundary
@@ -33,36 +30,6 @@ class AP.Polygon
       polygons.push new AP.Polygon points
       
     polygons
-    
-  getInsetPolygon: (distance) ->
-    clockwiseVertices = @boundary.getPolygonBoundaryWithOrientation(AP.PolygonBoundary.Orientation.Clockwise).vertices
-    
-    lines = for startVertex, vertexIndex in clockwiseVertices
-      endVertex = clockwiseVertices[_.modulo vertexIndex + 1, clockwiseVertices.length]
-      new THREE.Line2 new THREE.Vector2().copy(startVertex), new THREE.Vector2().copy(endVertex)
-      
-    # Inset all lines to the right.
-    for line in lines
-      line.delta _delta
-      _normal.x = _delta.y
-      _normal.y = -_delta.x
-      _normal.normalize().multiplyScalar distance
-      line.start.add _normal
-      line.end.add _normal
-      
-    # Create new vertices by intersecting the lines.
-    insetVertices = for line, lineIndex in lines
-      previousLine = lines[_.modulo lineIndex - 1, lines.length]
-      insetVertex = new THREE.Vector2
-      
-      unless line.intersect previousLine, insetVertex
-        insetVertex.copy line.start
-        
-      insetVertex
-      
-    _.reverse insetVertices unless @boundary.getOrientation() is AP.PolygonBoundary.Orientation.Clockwise
-    
-    new AP.Polygon insetVertices
   
   triangulate: ->
     trianglesCount = @vertices.length - 2
@@ -76,8 +43,10 @@ class AP.Polygon
     while vertices.length > 3
       # Remove a triangle on the inside that doesn't cross a boundary.
       triangleRemoved = false
+      randomOffset = Math.floor Math.random() * vertices.length
       
-      for remainingVertexIndex in [0...vertices.length]
+      for index in [0...vertices.length]
+        remainingVertexIndex = _.modulo index + randomOffset, vertices.length
         previousRemainingVertexIndex = _.modulo remainingVertexIndex - 1, vertices.length
         nextRemainingVertexIndex = _.modulo remainingVertexIndex + 1, vertices.length
         

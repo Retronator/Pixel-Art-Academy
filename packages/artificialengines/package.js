@@ -344,6 +344,8 @@ Package.onUse(function(api) {
   api.addFile('pyramid/polygonboundary');
   api.addFile('pyramid/polygonwithholes');
 
+  api.addFile('pyramid/beziercurve');
+
   // Artificial Reality
 
   api.addFile('reality/reality-constants');

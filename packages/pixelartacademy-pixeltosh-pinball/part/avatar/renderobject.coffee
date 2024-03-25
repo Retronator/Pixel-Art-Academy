@@ -58,6 +58,7 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
           
       pixelSize = Pinball.CameraManager.orthographicPixelSize
       @geometry?.dispose()
+      # Note: Our texture has an extra padding of 1px around the bitmap so we need the plane to be 2px larger.
       @geometry = @existingResources?.geometry or new THREE.PlaneGeometry pixelSize * (bitmap.bounds.width + 2), pixelSize * (bitmap.bounds.height + 2)
       
       flipped = @flipped()
@@ -70,8 +71,6 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
       @bitmapPlane.layers.set Pinball.RendererManager.RenderLayers.Main
       
       # Offset the mesh so that the shape origin on the bitmap will appear at the render object's position.
-      pixelSize = Pinball.CameraManager.orthographicPixelSize
-      
       @bitmapPlane.position.x = (bitmap.bounds.width / 2 - shape.bitmapOrigin.x) * pixelSize
       @bitmapPlane.position.x *= -1 if flipped
       @bitmapPlane.position.z = (bitmap.bounds.height / 2 - shape.bitmapOrigin.y) * pixelSize

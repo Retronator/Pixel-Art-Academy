@@ -51,6 +51,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       project.playfield
     
     @debugPhysics = @state.field 'debugPhysics', default: false
+    @slowMotion = @state.field 'slowMotion', default: false
   
     @sceneImage = new ReactiveField null
     
@@ -132,22 +133,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     # Quantize position when in normal view.
     if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
-      pixelSize = Pinball.CameraManager.orthographicPixelSize
-      
       for renderObject in sceneManager.renderObjects()
-        shape = renderObject.entity.shape()
-
-        originScreenX = renderObject.position.x / pixelSize
-        originScreenY = renderObject.position.z / pixelSize
-        
-        screenX = originScreenX - shape.bitmapOrigin.x
-        screenY = originScreenY - shape.bitmapOrigin.y
-        
-        integerScreenX = Math.round screenX
-        integerScreenY = Math.round screenY
-        
-        renderObject.position.x = (integerScreenX + shape.bitmapOrigin.x) * pixelSize
-        renderObject.position.z = (integerScreenY + shape.bitmapOrigin.y) * pixelSize
+        @constructor.CameraManager.snapShapeToPixelPosition renderObject.entity.shape(), renderObject.position
       
     # Update the hovered part.
     hoveredPart = null

@@ -26,6 +26,7 @@ class Pinball.Interface
         Pinball.Interface.Actions.PerspectiveCamera.id()
         null
         Pinball.Interface.Actions.ToggleDebugPhysics.id()
+        Pinball.Interface.Actions.ToggleSlowMotion.id()
       ]
     ]
     
@@ -37,6 +38,7 @@ class Pinball.Interface
     "#{Pinball.Interface.Actions.OrthographicCamera.id()}": key: AC.Keys[2]
     "#{Pinball.Interface.Actions.PerspectiveCamera.id()}": key: AC.Keys[3]
     "#{Pinball.Interface.Actions.ToggleDebugPhysics.id()}": commandOrControl: true, key: AC.Keys.d
+    "#{Pinball.Interface.Actions.ToggleSlowMotion.id()}": key: AC.Keys.s
     
   @createInterfaceData: ->
     type: PAA.Pixeltosh.Program.View.id()

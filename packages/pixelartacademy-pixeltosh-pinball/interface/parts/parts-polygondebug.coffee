@@ -3,12 +3,17 @@ AM = Artificial.Mirage
 AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+PAE = PAA.Practice.PixelArtEvaluation
+
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Interface.Parts extends Pinball.Interface.Parts
   @register @id()
   
   @polygonDebug = false
+
+  @debugPlayfield = false
+  @debugExtrusions = false
   
   onCreated: ->
     super arguments...
@@ -44,60 +49,111 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
       @polygonDebugCanvas.height = $polygonDebug.height() * devicePixelRatio
       
       parts = @pinball.sceneManager().parts()
-      return unless playfield = _.find parts, (part) => part instanceof Pinball.Parts.Playfield
       
       context.setTransform 1, 0, 0, 1, 0, 0
       context.clearRect 0, 0, @polygonDebugCanvas.width, @polygonDebugCanvas.height
+      
+      scale = 1
     
-      scale = @polygonDebugCanvas.width / 0.53
-      context.scale scale, scale
-      context.translate 0.015, 0.015
-
-      drawPolygon = (style, lineWidth, polygon) =>
+      drawPolygon = (style, lineWidth, polygon, closed) =>
         context.strokeStyle = style
         context.lineWidth = lineWidth / scale
         
         context.beginPath()
         
-        lastVertex = _.last polygon.vertices
-        context.moveTo lastVertex.x, lastVertex.y
+        if closed
+          startVertex = _.last polygon.vertices
+          
+        else
+          startVertex = polygon.vertices[0]
+
+        context.moveTo startVertex.x, startVertex.y
         
         for vertex in polygon.vertices
           context.lineTo vertex.x, vertex.y
           
         context.stroke()
+        
+      if @constructor.debugPlayfield
+        scale = @polygonDebugCanvas.width / 0.53
+        context.setTransform 1, 0, 0, 1, 0, 0
+        context.scale scale, scale
+        context.translate 0.015, 0.015
       
-      holeBoundaries = []
-      
-      for part in parts
-        holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
+        return unless playfield = _.find parts, (part) => part instanceof Pinball.Parts.Playfield
+        
+        holeBoundaries = []
+        
+        for part in parts
+          holeBoundaries.push partHoleBoundaries... if partHoleBoundaries = part.playfieldHoleBoundaries()
+  
+        for holeBoundary in holeBoundaries
+          drawPolygon 'yellow', 8, holeBoundary, true
+          
+        return unless playfield.avatar.shape()
+        return unless playfieldBoundary = playfield.avatar.playfieldBoundingRectangle()?.getBoundary()
+        
+        playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
+        playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
+        
+        insetPolygonBoundary = playfieldPolygon.boundary.getInsetPolygonBoundary 0.002
+        
+        drawPolygon 'blue', 2, insetPolygonBoundary, true
+        
+        indexBufferArray = playfieldPolygon.triangulate()
+        
+        trianglesDrawCount = @polygonDebugTrianglesDrawCount()
+        
+        for indexOfIndex in [0...indexBufferArray.length] by 3
+          return unless trianglesDrawCount
+          trianglesDrawCount--
+  
+          drawPolygon 'green', 1, vertices: [
+            insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex]]
+            insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex + 1]]
+            insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex + 2]]
+          ], true
+          
+      if @constructor.debugExtrusions
+        scale = @polygonDebugCanvas.width / 180
+        pixelSize = Pinball.CameraManager.orthographicPixelSize
+        curvePointsCount = Pinball.Part.Avatar.Shape.curveExtraPointsCount + 1
 
-      for holeBoundary in holeBoundaries
-        drawPolygon 'yellow', 8, holeBoundary
-      
-      return unless playfield.avatar.shape()
-      return unless playfieldBoundary = playfield.avatar.playfieldBoundingRectangle()?.getBoundary()
-      
-      playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
-      playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
-      
-      insetPolygon = playfieldPolygon.getInsetPolygon 0.002
-      
-      drawPolygon 'blue', 2, insetPolygon
-      
-      indexBufferArray = playfieldPolygon.triangulate()
-      
-      trianglesDrawCount = @polygonDebugTrianglesDrawCount()
-      
-      for indexOfIndex in [0...indexBufferArray.length] by 3
-        return unless trianglesDrawCount
-        trianglesDrawCount--
+        for part in parts
+          continue unless shape = part.shape()
+          continue unless shape instanceof Pinball.Part.Avatar.Extrusion
+          
+          context.setTransform 1, 0, 0, 1, 0, 0
+          context.scale scale, scale
+          position = part.position()
+          context.translate position.x / pixelSize, position.y / pixelSize
+          
+          if shape.properties.flipped
+            context.scale -1, 1
+            
+          context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
+          
+          for line in shape.pixelArtEvaluation.layers[0].lines
+            for linePart in line.parts
+              if linePart instanceof PAE.Line.Part.StraightLine
+                drawPolygon 'gold', 4, vertices: [
+                    linePart.displayLine2.start
+                    linePart.displayLine2.end
+                  ]
+                  
+              if linePart instanceof PAE.Line.Part.Curve
+                previousPoint = linePart.displayPoints[0]
+                vertices = [
+                  previousPoint.position
+                ]
+                
+                for point in linePart.displayPoints[1...]
+                  for curvePointIndex in [1..curvePointsCount]
+                    vertices.push AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, curvePointIndex / curvePointsCount
 
-        drawPolygon 'green', 1, vertices: [
-          insetPolygon.vertices[indexBufferArray[indexOfIndex]]
-          insetPolygon.vertices[indexBufferArray[indexOfIndex + 1]]
-          insetPolygon.vertices[indexBufferArray[indexOfIndex + 2]]
-        ]
+                  previousPoint = point
+                  
+                drawPolygon 'limegreen', 4, {vertices}
   
   onDestroyed: ->
     super arguments...

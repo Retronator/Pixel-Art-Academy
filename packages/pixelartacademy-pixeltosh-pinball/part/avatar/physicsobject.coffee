@@ -37,17 +37,15 @@ class Pinball.Part.Avatar.PhysicsObject extends AR.PhysicsObject
       Tracker.nonreactive => @reset()
       @ready true
     
-    # Default body will be elastic and frictionless.
-    @restitution = new ComputedField => @entity.physicsProperties().restitution ? 1
-    @friction = new ComputedField => @entity.physicsProperties().friction ? 0
-    @rollingFriction = new ComputedField => @entity.physicsProperties().rollingFriction ? 0
-    
     # Update dynamic properties.
     @autorun (computation) =>
       return unless @ready()
-      @body.setRestitution @restitution()
-      @body.setFriction @friction()
-      @body.setRollingFriction @rollingFriction()
+      properties = @entity.physicsProperties()
+
+      # Default body will be elastic and frictionless.
+      @body.setRestitution properties.restitution  ? 1
+      @body.setFriction properties.friction ? 0
+      @body.setRollingFriction properties.rollingFriction ? 0
       
     # Update shape.
     @autorun (computation) =>

@@ -82,15 +82,13 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
   getBoundingRectangle: ->
     return unless shape = @shape()
     # We want to rely only on the project position (to avoid recomputation during dragging).
-    #return unless position = @part.data()?.position
-    return unless position = @part.position()
+    return unless position = @part.data()?.position
     
     shape.getBoundingRectangle().getOffsetBoundingRectangle position.x, position.y
   
   getHoleBoundaries: ->
     return unless holeBoundaries = @shape()?.getHoleBoundaries()
-    #return unless position = @part.data()?.position
-    return unless position = @part.position()
+    return unless position = @part.data()?.position
     
     for holeBoundary in holeBoundaries
       for vertex in holeBoundary.vertices

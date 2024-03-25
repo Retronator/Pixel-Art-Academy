@@ -1,5 +1,8 @@
 AP = Artificial.Pyramid
 
+_delta = new THREE.Vector2
+_normal = new THREE.Vector2
+
 class AP.PolygonBoundary
   @Orientation:
     Clockwise: 'Clockwise'
@@ -65,3 +68,31 @@ class AP.PolygonBoundary
 
   getBoundingRectangle: ->
     AP.BoundingRectangle.fromVertices @vertices
+    
+  getInsetPolygonBoundary: (distance) ->
+    clockwiseVertices = @getPolygonBoundaryWithOrientation(AP.PolygonBoundary.Orientation.Clockwise).vertices
+    
+    lines = for startVertex, vertexIndex in clockwiseVertices
+      endVertex = clockwiseVertices[_.modulo vertexIndex + 1, clockwiseVertices.length]
+      new THREE.Line2 new THREE.Vector2().copy(startVertex), new THREE.Vector2().copy(endVertex)
+    
+    # Inset all lines to the right.
+    for line in lines
+      line.getNormal true, _normal
+      _normal.multiplyScalar distance
+      line.start.add _normal
+      line.end.add _normal
+    
+    # Create new vertices by intersecting the lines.
+    insetVertices = for line, lineIndex in lines
+      previousLine = lines[_.modulo lineIndex - 1, lines.length]
+      insetVertex = new THREE.Vector2
+      
+      unless line.intersect previousLine, insetVertex
+        insetVertex.copy line.start
+      
+      insetVertex
+    
+    _.reverse insetVertices unless @getOrientation() is AP.PolygonBoundary.Orientation.Clockwise
+    
+    new AP.PolygonBoundary insetVertices

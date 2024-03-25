@@ -11,6 +11,19 @@ class Pinball.CameraManager
   
   @orthographicPixelSize = 0.5 / 180 # m/px
   
+  @snapShapeToPixelPosition: (shape, position) ->
+    originScreenX = position.x / @orthographicPixelSize
+    originScreenY = position.z / @orthographicPixelSize
+    
+    screenX = originScreenX - shape.bitmapOrigin.x
+    screenY = originScreenY - shape.bitmapOrigin.y
+    
+    integerScreenX = Math.round screenX
+    integerScreenY = Math.round screenY
+    
+    position.x = (integerScreenX + shape.bitmapOrigin.x) * @orthographicPixelSize
+    position.z = (integerScreenY + shape.bitmapOrigin.y) * @orthographicPixelSize
+  
   constructor: (@pinball) ->
     @displayType = @pinball.state.field 'cameraDisplayType', default: @constructor.DisplayTypes.Orthographic
     

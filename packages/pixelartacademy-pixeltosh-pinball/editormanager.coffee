@@ -42,10 +42,13 @@ class Pinball.EditorManager
       
       pixelSize = Pinball.CameraManager.orthographicPixelSize
       
-      @startDrag part,
-        startPosition:
-          x: topLeftPosition.x + shape.bitmapOrigin.x * pixelSize
-          y: topLeftPosition.y + shape.bitmapOrigin.y * pixelSize
+      startPosition =
+        x: topLeftPosition.x + shape.bitmapOrigin.x * pixelSize
+        y: topLeftPosition.y + shape.bitmapOrigin.y * pixelSize
+      
+      Pinball.CameraManager.snapShapeToPixelPosition shape, startPosition
+      
+      @startDrag part, {startPosition}
 
   startDrag: (part, options) ->
     return if @draggingPart() is part
@@ -77,9 +80,11 @@ class Pinball.EditorManager
     $document.on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-editormanager', =>
       osCursor.endGrabbing()
 
-      # See if the new position is inside the playfield.
+      # Snap new position to pixels.
       newPosition = part.position()
-
+      Pinball.CameraManager.snapShapeToPixelPosition part.shape(), newPosition
+      
+      # See if the new position is inside the playfield.
       if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.y < Pinball.SceneManager.shortPlayfieldHeight
         @_updatePart part, position: newPosition
         

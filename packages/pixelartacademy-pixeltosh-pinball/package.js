@@ -67,6 +67,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/action');
   api.addFile('interface/actions/camera');
   api.addFile('interface/actions/toggledebugphysics');
+  api.addFile('interface/actions/toggleslowmotion');
   api.addFile('interface/actions/modes');
   api.addFile('interface/actions/reset');
 });

@@ -39,8 +39,8 @@ class Pinball.Parts.Flipper extends Pinball.Part
       x: 3.5
       y: 3.5
     restitution: Pinball.PhysicsManager.RestitutionConstants.Rubber
-    friction: Pinball.PhysicsManager.FrictionConstants.Plastic
-    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
+    friction: Pinball.PhysicsManager.FrictionConstants.Rubber
+    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Rubber
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.Actuators
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
 

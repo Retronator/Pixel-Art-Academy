@@ -13,6 +13,9 @@ _.mixin
   # Calculates the absolute smallest angle between two angles.
   angleDistance: (a, b) ->
     Math.abs _.angleDifference a, b
+    
+  angleBetweenPoints: (vertex, side1, side2) ->
+    _.angleDistance Math.atan2(side1.y - vertex.y, side1.x - vertex.x), Math.atan2(side2.y - vertex.y, side2.x - vertex.x)
 
   # Calculates the largest positive integer that divides each of the integers (without a remainder).
   greatestCommonDivisor: (a, b) ->

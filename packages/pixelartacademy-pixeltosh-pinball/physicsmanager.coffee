@@ -20,10 +20,12 @@ class Pinball.PhysicsManager
     HardSurface: 0.6 / @BallConstants.Restitution # steel ball bearing on concrete, golf ball on wood
   
   @FrictionConstants =
+    Rubber: 1
     Wood: 0.4 / @BallConstants.Friction # steel-wood (0.2–0.6)
     Plastic: 0.2 / @BallConstants.Friction # plastic-metal (0.1–0.3)
   
   @RollingFrictionConstants =
+    Rubber: 0.1
     Coarse: 0.02 # 1-inch steel bearing on P80 emery paper (0.01–0.02)
     Smooth: 0.01 # 1-inch steel bearing on P80 emery paper (0.005–0.01)
   
@@ -113,6 +115,9 @@ class Pinball.PhysicsManager
     return unless appTime.elapsedAppTime
     
     stepCount = Math.min @constructor.maxSimulationStepsPerFrame, Math.ceil appTime.elapsedAppTime / @constructor.simulationTimestep
+    
+    if @pinball.slowMotion()
+      stepCount = Math.ceil stepCount / 100
 
     for step in [0...stepCount]
       @dynamicsWorld.stepSimulation @constructor.simulationTimestep, 1, @constructor.simulationTimestep

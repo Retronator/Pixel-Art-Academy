@@ -18,6 +18,8 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
     
     individualGeometryData = []
     
+    @boundaries = []
+    
     for core in @pixelArtEvaluation.layers[0].cores
       boundaries = []
       wallLines = []
@@ -33,6 +35,7 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
       
       topPolygon = polygon.getPolygonWithoutHoles()
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygon, 0
+      @boundaries.push boundaries...
     
     @geometryData = @constructor._mergeGeometryData individualGeometryData
 

@@ -8,7 +8,8 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar.Shape
-  @roughEdgeMargin: 0.002 # m
+  @roughEdgeMargin = 0.002 # m
+  @curveExtraPointsCount = 2
   
   @detectShape: (pixelArtEvaluation, properties) -> throw new AE.NotImplementedException "A part shape must create a shape instance if it can be detected."
   
@@ -81,8 +82,8 @@ class Pinball.Part.Avatar.Shape
       topVertexIndex = bottomVertexIndex + 1
       
       for point, pointIndex in line
-        x = (point.x + 0.5) * pixelSize
-        y = (point.y + 0.5) * pixelSize
+        x = point.x * pixelSize
+        y = point.y * pixelSize
         vertexBufferArray[bottomVertexIndex * 3] = x
         vertexBufferArray[bottomVertexIndex * 3 + 1] = topY
         vertexBufferArray[bottomVertexIndex * 3 + 2] = y
@@ -115,9 +116,9 @@ class Pinball.Part.Avatar.Shape
     
     for vertex, vertexIndex in polygon.vertices
       offset = vertexIndex * 3
-      vertexBufferArray[offset] = (vertex.x + 0.5) * pixelSize
+      vertexBufferArray[offset] = vertex.x * pixelSize
       vertexBufferArray[offset + 1] = y
-      vertexBufferArray[offset + 2] = (vertex.y + 0.5) * pixelSize
+      vertexBufferArray[offset + 2] = vertex.y * pixelSize
     
     indexBufferArray = polygon.triangulate()
     
@@ -159,6 +160,8 @@ class Pinball.Part.Avatar.Shape
   _getLinePoints: (line) ->
     points = []
     
+    curvePointsCount = @constructor.curveExtraPointsCount + 1
+    
     for part in line.parts
       if part instanceof PAE.Line.Part.StraightLine
         points.push part.displayLine2.start unless points.length
@@ -166,14 +169,18 @@ class Pinball.Part.Avatar.Shape
       
       if part instanceof PAE.Line.Part.Curve
         points.push part.displayPoints[0].position unless points.length
+        previousPoint = part.displayPoints[0]
         
         for point in part.displayPoints[1..]
-          points.push point.position
+          for curvePointIndex in [1..curvePointsCount]
+            points.push AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, curvePointIndex / curvePointsCount
+          
+          previousPoint = point
     
     points.splice points.length - 1, 1 if line.isClosed
     
     for point in points
-      localPoint = new THREE.Vector2 point.x - @bitmapOrigin.x, point.y - @bitmapOrigin.y
+      localPoint = new THREE.Vector2 point.x - @bitmapOrigin.x + 0.5, point.y - @bitmapOrigin.y + 0.5
       localPoint.x *= -1 if @properties.flipped
       localPoint
     
@@ -208,6 +215,6 @@ class Pinball.Part.Avatar.Shape
 
     for holeBoundary in @holeBoundaries
       vertices = for vertex in holeBoundary.vertices
-        new THREE.Vector2().copy(vertex).add(x: 0.5, y:0.5).multiplyScalar pixelSize
+        new THREE.Vector2().copy(vertex).multiplyScalar pixelSize
         
       new AP.PolygonBoundary vertices
