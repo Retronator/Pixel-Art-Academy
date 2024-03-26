@@ -111,4 +111,4 @@ class Pinball.CameraManager
     scale = @pinball.os.display.scale()
     
     x: windowCoordinates.x / scale * @constructor.orthographicPixelSize
-    y: windowCoordinates.y / scale * @constructor.orthographicPixelSize
+    z: windowCoordinates.y / scale * @constructor.orthographicPixelSize

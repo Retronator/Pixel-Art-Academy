@@ -20,6 +20,11 @@ class Pinball.Interface
         PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
       ]
     ,
+      caption: 'Edit'
+      items: [
+        Pinball.Interface.Actions.Flip.id()
+      ]
+    ,
       caption: 'View'
       items: [
         Pinball.Interface.Actions.OrthographicCamera.id()
@@ -35,9 +40,10 @@ class Pinball.Interface
     "#{Pinball.Interface.Actions.Test.id()}": key: AC.Keys.t
     "#{Pinball.Interface.Actions.Play.id()}": key: AC.Keys.p
     "#{Pinball.Interface.Actions.Reset.id()}": key: AC.Keys.r
+    "#{Pinball.Interface.Actions.Flip.id()}": commandOrControl: true, key: AC.Keys.f
     "#{Pinball.Interface.Actions.OrthographicCamera.id()}": key: AC.Keys[2]
     "#{Pinball.Interface.Actions.PerspectiveCamera.id()}": key: AC.Keys[3]
-    "#{Pinball.Interface.Actions.ToggleDebugPhysics.id()}": commandOrControl: true, key: AC.Keys.d
+    "#{Pinball.Interface.Actions.ToggleDebugPhysics.id()}": key: AC.Keys.d
     "#{Pinball.Interface.Actions.ToggleSlowMotion.id()}": key: AC.Keys.s
     
   @createInterfaceData: ->

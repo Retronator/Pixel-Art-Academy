@@ -16,6 +16,18 @@ class Pinball.Interface.Parts extends LOI.View
     @parts = for partClass in Pinball.Part.getSelectablePartClasses()
       new partClass @pinball
       
+    @selectedPartChanged = new Tracker.Dependency
+    
+    @autorun (computation) =>
+      return unless selectedPart = @selectedPart()
+      selectedPart.data()
+      selectedPart.position()
+      
+      # Let the physics engine update its bounding box.
+      await _.waitForNextAnimationFrame()
+      
+      @selectedPartChanged.changed()
+      
   onDestroyed: ->
     super arguments...
     
@@ -36,9 +48,9 @@ class Pinball.Interface.Parts extends LOI.View
     'visible' if @selectedPart() and not @pinball.editorManager().draggingPart()
     
   selectionStyle: ->
-    # Depend on the selected part's position.
+    # Depend on the selected part's changes.
     return unless selectedPart = @selectedPart()
-    selectedPart.position()
+    @selectedPartChanged.depend()
 
     # Get the bounding box from the physics object.
     return unless physicsObject = selectedPart.avatar.getPhysicsObject()
@@ -66,7 +78,8 @@ class Pinball.Interface.Parts extends LOI.View
     super(arguments...).concat
       'pointermove': @onPointerMove
       'pointerdown .part': @onPointerDownPart
-      'pointerdown .selection': @onPointerDownSelection
+      'pointerdown .drag-area': @onPointerDownDragArea
+      'click .flip-button': @onClickFlipButton
       
   onPointerMove: (event) ->
     @pinball.mouse().onMouseMove event
@@ -77,5 +90,9 @@ class Pinball.Interface.Parts extends LOI.View
       type: part.id()
       element: event.target
   
-  onPointerDownSelection: (event) ->
+  onPointerDownDragArea: (event) ->
     @pinball.editorManager().startDrag @selectedPart()
+  
+  onClickFlipButton: (event) ->
+    flip = @interface.getOperator Pinball.Interface.Actions.Flip
+    flip.execute()

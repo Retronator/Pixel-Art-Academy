@@ -13,7 +13,7 @@ class Pinball.Interface.Actions.Mode extends Pinball.Interface.Actions.Action
   
   enabled: -> true
   
-  active: -> @pinball.gameManager().mode() is @constructor.mode()
+  active: -> @pinball.gameManager()?.mode() is @constructor.mode()
   
   execute: ->
     @pinball.gameManager()[_.toLower @constructor.mode()]()

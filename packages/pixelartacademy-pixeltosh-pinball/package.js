@@ -70,4 +70,5 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/toggleslowmotion');
   api.addFile('interface/actions/modes');
   api.addFile('interface/actions/reset');
+  api.addFile('interface/actions/flip');
 });

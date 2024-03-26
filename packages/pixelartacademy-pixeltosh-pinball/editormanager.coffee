@@ -44,11 +44,16 @@ class Pinball.EditorManager
       
       startPosition =
         x: topLeftPosition.x + shape.bitmapOrigin.x * pixelSize
-        y: topLeftPosition.y + shape.bitmapOrigin.y * pixelSize
+        z: topLeftPosition.z + shape.bitmapOrigin.y * pixelSize
       
       Pinball.CameraManager.snapShapeToPixelPosition shape, startPosition
       
       @startDrag part, {startPosition}
+
+      @selectedPart part
+      
+  updateSelectedPart: (difference) ->
+    @_updatePart @selectedPart(), difference
 
   startDrag: (part, options) ->
     return if @draggingPart() is part
@@ -72,7 +77,7 @@ class Pinball.EditorManager
       
       part.setTemporaryPosition
         x: startPosition.x + (coordinates.x - startCoordinates.x) * pixelSize
-        y: startPosition.y + (coordinates.y - startCoordinates.y) * pixelSize
+        z: startPosition.z + (coordinates.y - startCoordinates.y) * pixelSize
     ,
       delay
 
@@ -85,7 +90,7 @@ class Pinball.EditorManager
       Pinball.CameraManager.snapShapeToPixelPosition part.shape(), newPosition
       
       # See if the new position is inside the playfield.
-      if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.y < Pinball.SceneManager.shortPlayfieldHeight
+      if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.z < Pinball.SceneManager.shortPlayfieldHeight
         @_updatePart part, position: newPosition
         
         # Wait until the new position has updated on the document, before removing the temporary override.

@@ -83,7 +83,7 @@ class Pinball.Part.Avatar.PhysicsObject extends AR.PhysicsObject
     @setPosition
       x: position.x
       y: shape.yPosition()
-      z: position.y
+      z: position.z
     
     @setRotation rotation
     

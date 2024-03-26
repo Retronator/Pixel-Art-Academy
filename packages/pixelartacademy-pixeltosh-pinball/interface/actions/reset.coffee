@@ -12,7 +12,7 @@ class Pinball.Interface.Actions.Reset extends Pinball.Interface.Actions.Action
   
   @initialize()
   
-  enabled: -> @pinball.gameManager().mode() in [Pinball.GameManager.Modes.Test, Pinball.GameManager.Modes.Play]
+  enabled: -> @pinball.gameManager()?.mode() in [Pinball.GameManager.Modes.Test, Pinball.GameManager.Modes.Play]
   
   execute: ->
     @pinball.gameManager().reset()

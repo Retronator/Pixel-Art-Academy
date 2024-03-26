@@ -84,7 +84,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     # We want to rely only on the project position (to avoid recomputation during dragging).
     return unless position = @part.data()?.position
     
-    shape.getBoundingRectangle().getOffsetBoundingRectangle position.x, position.y
+    shape.getBoundingRectangle().getOffsetBoundingRectangle position.x, position.z
   
   getHoleBoundaries: ->
     return unless holeBoundaries = @shape()?.getHoleBoundaries()
@@ -92,6 +92,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     
     for holeBoundary in holeBoundaries
       for vertex in holeBoundary.vertices
-        vertex.add position
+        vertex.x += position.x
+        vertex.y += position.z
         
     holeBoundaries

@@ -37,9 +37,11 @@ class Pinball.Parts.Playfield extends Pinball.Part
       
       # Playfield should be slightly larger than all the parts so that it contains all parts as holes.
       @playfieldBoundingRectangle = new ComputedField =>
+        return unless sceneManager = @part.pinball.sceneManager()
+        
         boundingRectangles = []
       
-        for part in @part.pinball.sceneManager().parts() when part isnt @part
+        for part in sceneManager.parts() when part isnt @part
           boundingRectangles.push boundingRectangle if boundingRectangle = part.avatar.getBoundingRectangle()
           
         return unless boundingRectangles.length
@@ -78,7 +80,7 @@ class Pinball.Parts.Playfield extends Pinball.Part
           offset = vertexIndex * 3
           vertexBufferArray[offset] = vertex.x - playfieldPosition.x
           vertexBufferArray[offset + 1] = @properties.height
-          vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.y
+          vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
     
         indexBufferArray = playfieldPolygon.triangulate()
         

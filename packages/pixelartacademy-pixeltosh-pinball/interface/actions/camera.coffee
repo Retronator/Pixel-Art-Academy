@@ -9,7 +9,7 @@ class CameraDisplayType extends Pinball.Interface.Actions.Action
   
   enabled: -> true
   
-  active: -> @pinball.cameraManager().displayType() is @constructor.cameraDisplayType()
+  active: -> @pinball.cameraManager()?.displayType() is @constructor.cameraDisplayType()
   
   execute: ->
     @pinball.cameraManager().displayType @constructor.cameraDisplayType()

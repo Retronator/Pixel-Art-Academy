@@ -52,6 +52,23 @@
         border-image image('/pixelartacademy/pixeltosh/os/dither-border-white.png') 1 / 1rem repeat
         mix-blend-mode difference
 
+      .drag-area
+        absolute-cover()
+
+      .flip-button
+        position absolute
+        left 0
+        right 0
+        height 10rem
+        border none
+        background none
+
+        &.above
+          bottom 100%
+
+        &.below
+          top 100%
+
     .polygon-debug
       position absolute
       left 0
