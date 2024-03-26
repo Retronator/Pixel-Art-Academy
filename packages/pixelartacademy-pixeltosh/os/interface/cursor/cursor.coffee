@@ -41,10 +41,10 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     
     @class cursorClass
     
-  startGrabbing: ->
-    @class 'grabbing'
+  forceClass: (className) ->
+    @class className
     
-  endGrabbing: ->
+  endClassForcing: ->
     @class @_desiredClass
     
   updateCoordinates: (event) ->

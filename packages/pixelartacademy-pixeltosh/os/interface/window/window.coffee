@@ -75,7 +75,7 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     
     # Calculate maximum Y offset (resulting top has to be 14 or more).
     windowData = @windowData()
-    @_minDeltaY = 14 - windowData.get 'top'
+    @_minDeltaY = PAA.Pixeltosh.OS.Interface.menuHeight - windowData.get 'top'
 
     # Wire dragging handlers.
     $document = $(document)

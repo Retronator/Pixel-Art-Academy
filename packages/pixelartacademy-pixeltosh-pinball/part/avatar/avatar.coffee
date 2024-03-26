@@ -76,6 +76,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     @_physicsObject
   
   reset: ->
+    return unless @_physicsObject?.ready()
     @_physicsObject.reset()
     @_renderObject.updateFromPhysicsObject @_physicsObject
     
@@ -89,9 +90,13 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
   getHoleBoundaries: ->
     return unless holeBoundaries = @shape()?.getHoleBoundaries()
     return unless position = @part.data()?.position
+    # We want to rely only on the project rotation (to avoid recomputation during rotating).
+    rotationAngle = @part.data()?.rotationAngle or 0
+    zero = new THREE.Vector2
     
     for holeBoundary in holeBoundaries
       for vertex in holeBoundary.vertices
+        vertex.rotateAround zero, -rotationAngle
         vertex.x += position.x
         vertex.y += position.z
         

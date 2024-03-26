@@ -22,7 +22,10 @@ class Pinball.Interface
     ,
       caption: 'Edit'
       items: [
+        Pinball.Interface.Actions.Delete.id()
         Pinball.Interface.Actions.Flip.id()
+        Pinball.Interface.Actions.RotateClockwise.id()
+        Pinball.Interface.Actions.RotateCounterClockwise.id()
       ]
     ,
       caption: 'View'
@@ -40,7 +43,10 @@ class Pinball.Interface
     "#{Pinball.Interface.Actions.Test.id()}": key: AC.Keys.t
     "#{Pinball.Interface.Actions.Play.id()}": key: AC.Keys.p
     "#{Pinball.Interface.Actions.Reset.id()}": key: AC.Keys.r
+    "#{Pinball.Interface.Actions.Delete.id()}": [{key: AC.Keys.delete}, {key: AC.Keys.backspace}]
     "#{Pinball.Interface.Actions.Flip.id()}": commandOrControl: true, key: AC.Keys.f
+    "#{Pinball.Interface.Actions.RotateClockwise.id()}": commandOrControl: true, key: AC.Keys.r
+    "#{Pinball.Interface.Actions.RotateCounterClockwise.id()}": commandOrControl: true, shift: true, key: AC.Keys.r
     "#{Pinball.Interface.Actions.OrthographicCamera.id()}": key: AC.Keys[2]
     "#{Pinball.Interface.Actions.PerspectiveCamera.id()}": key: AC.Keys[3]
     "#{Pinball.Interface.Actions.ToggleDebugPhysics.id()}": key: AC.Keys.d

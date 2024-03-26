@@ -21,7 +21,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
   
   @angularSpeed = 35 # rad / s
   
-  @rotationAxis = new THREE.Vector3 0, -1, 0
+  @rotationAxis = new THREE.Vector3 0, 1, 0
   
   constructor: ->
     super arguments...
@@ -76,7 +76,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     return unless @moving
     
     maxDisplacement = AR.Conversions.degreesToRadians @data().maxAngleDegrees
-    displacementSign = if @data().flipped then 1 else -1
+    displacementSign = if @data().flipped then -1 else 1
     positiveDisplacement = @displacementAngle * displacementSign
     
     if @active
@@ -103,7 +103,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     angleChange = angularSpeed * elapsed
     @displacementAngle += angleChange
     
-    rotation = new THREE.Quaternion().setFromAxisAngle @constructor.rotationAxis, @displacementAngle
+    rotation = new THREE.Quaternion().setFromAxisAngle @constructor.rotationAxis, @rotationAngle() + @displacementAngle
     
     physicsObject = @avatar.getPhysicsObject()
     physicsObject.setRotation rotation

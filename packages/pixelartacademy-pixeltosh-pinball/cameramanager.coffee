@@ -112,3 +112,7 @@ class Pinball.CameraManager
     
     x: windowCoordinates.x / scale * @constructor.orthographicPixelSize
     z: windowCoordinates.y / scale * @constructor.orthographicPixelSize
+  
+  transformPlayfieldToDisplay: (playfieldCoordinates) ->
+    x: playfieldCoordinates.x / @constructor.orthographicPixelSize
+    y: playfieldCoordinates.z / @constructor.orthographicPixelSize

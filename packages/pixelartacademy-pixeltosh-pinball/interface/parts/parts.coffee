@@ -45,7 +45,7 @@ class Pinball.Interface.Parts extends LOI.View
     @pinball.editorManager()?.selectedPart()
     
   selectionVisibleClass: ->
-    'visible' if @selectedPart() and not @pinball.editorManager().draggingPart()
+    'visible' if @selectedPart() and not @pinball.editorManager().editing()
     
   selectionStyle: ->
     # Depend on the selected part's changes.
@@ -79,6 +79,7 @@ class Pinball.Interface.Parts extends LOI.View
       'pointermove': @onPointerMove
       'pointerdown .part': @onPointerDownPart
       'pointerdown .drag-area': @onPointerDownDragArea
+      'pointerdown .rotate-area': @onPointerDownRotateArea
       'click .flip-button': @onClickFlipButton
       
   onPointerMove: (event) ->
@@ -92,6 +93,9 @@ class Pinball.Interface.Parts extends LOI.View
   
   onPointerDownDragArea: (event) ->
     @pinball.editorManager().startDrag @selectedPart()
+    
+  onPointerDownRotateArea: (event) ->
+    @pinball.editorManager().startRotate @selectedPart()
   
   onClickFlipButton: (event) ->
     flip = @interface.getOperator Pinball.Interface.Actions.Flip

@@ -15,6 +15,7 @@ class Pinball.InputManager
       Plunger: false
     
     $(document).on 'keydown.pixelartacademy-pixeltosh-programs-pinball-inputmanager', (event) =>
+      return if @_ignoreKeys event
       return unless control = @_keyCodeToControl event.code
       return if @controlActive[control]
 
@@ -23,6 +24,7 @@ class Pinball.InputManager
       part.activate() for part in @_getParts control
       
     $(document).on 'keyup.pixelartacademy-pixeltosh-programs-pinball-inputmanager', (event) =>
+      return if @_ignoreKeys event
       return unless control = @_keyCodeToControl event.code
       return unless @controlActive[control]
 
@@ -33,6 +35,16 @@ class Pinball.InputManager
   destroy: ->
     $(document).off 'keydown.pixelartacademy-pixeltosh-programs-pinball-inputmanager'
   
+  _ignoreKeys: (event) ->
+    # Outside of edit mode, no ignoring is needed.
+    return unless @pinball.gameManager().mode() is Pinball.GameManager.Modes.Edit
+    
+    # Ignore keys while editing.
+    return true if @pinball.editorManager().editing()
+    
+    # Ignore command/control keys to allow for shortcut presses.
+    event.metaKey or event.ctrlKey
+    
   _keyCodeToControl: (code) ->
     switch code
       when 'ShiftLeft', 'ControlLeft', 'AltLeft', 'ArrowLeft' then @constructor.Controls.LeftFlipper

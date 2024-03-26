@@ -18,17 +18,8 @@ class Pinball.Interface.Actions.Flip extends Pinball.Interface.Actions.Action
     editorManager = @pinball.editorManager()
     selectedPart = editorManager.selectedPart()
     flipped = selectedPart.data().flipped
-    position = _.clone selectedPart.position()
-    bitmap = selectedPart.bitmap()
-    shape = selectedPart.shape()
-    
-    pixelSize = Pinball.CameraManager.orthographicPixelSize
-    originOffset = -(bitmap.bounds.width / 2 - shape.bitmapOrigin.x) * pixelSize
-    originOffset *= -1 if flipped
-    
-    position.x -= 2 * originOffset
-    Pinball.CameraManager.snapShapeToPixelPosition shape, position
+    rotationAngle = selectedPart.rotationAngle()
 
     editorManager.updateSelectedPart
       flipped: not flipped
-      position: position
+      rotationAngle: -rotationAngle

@@ -5,6 +5,13 @@ _.mixin
   modulo: (dividend, divisor) ->
     dividend - divisor * Math.floor(dividend / divisor)
     
+  # Brings angle into the -PI – +PI range.
+  normalizeAngle: (angle) ->
+    angle = angle % (2 * Math.PI)
+    angle -= 2 * Math.PI if angle > Math.PI
+    angle += 2 * Math.PI if angle < -Math.PI
+    angle
+  
   # Calculates the angle difference from a to b in the smallest direction.
   angleDifference: (a, b) ->
     difference = a - b

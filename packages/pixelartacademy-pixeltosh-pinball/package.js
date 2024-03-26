@@ -30,6 +30,8 @@ Package.onUse(function(api) {
   api.addFile('inputmanager');
   api.addFile('gamemanager');
   api.addFile('editormanager');
+  api.addFile('editormanager-startdrag');
+  api.addFile('editormanager-startrotate');
   api.addFile('mouse');
   api.addFile('ball');
 
@@ -71,4 +73,6 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/modes');
   api.addFile('interface/actions/reset');
   api.addFile('interface/actions/flip');
+  api.addFile('interface/actions/rotate');
+  api.addFile('interface/actions/delete');
 });

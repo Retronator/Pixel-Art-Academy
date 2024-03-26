@@ -4,11 +4,11 @@
   position absolute
   left 0
   top 0
-  z-index 100
   pointer-events none
 
   .cursor
     position absolute
+    z-index 100
 
     &::after
       content ''
@@ -42,3 +42,43 @@
         width 15rem
         height 14rem
         background-image image('/pixelartacademy/pixeltosh/os/cursors/flip-horizontal.png')
+
+    &.w-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -2rem
+        top -7rem
+        width 5rem
+        height 14rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-west.png')
+
+    &.e-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -2rem
+        top -7rem
+        width 5rem
+        height 14rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-east.png')
+
+    &.n-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -7rem
+        top -2rem
+        width 14rem
+        height 5rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-north.png')
+
+    &.s-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -7rem
+        top -2rem
+        width 14rem
+        height 5rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-south.png')

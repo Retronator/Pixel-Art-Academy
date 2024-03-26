@@ -8,6 +8,7 @@ FM = FataMorgana
 
 class PAA.Pixeltosh.OS.Interface extends FM.Interface
   @menuId = _.snakeCase 'PixelArtAcademy.Pixeltosh.OS.Interface.Menu'
+  @menuHeight = 14
   
   constructor: (parent) ->
     localInterfaceDataField = new ReactiveField null

@@ -59,6 +59,12 @@ class Pinball.Part extends LOI.Adventure.Item
       EJSON.equals
       
     @_temporaryPosition = new ReactiveField null
+    @_temporaryRotationAngle = new ReactiveField null
+    
+    # Reset the part whenever data changes.
+    @autorun (computation) =>
+      @data()
+      @reset()
     
   shape: -> @avatar.shape()
   texture: -> @avatar.texture()
@@ -71,8 +77,15 @@ class Pinball.Part extends LOI.Adventure.Item
   position: ->
     @_temporaryPosition() or @data()?.position
     
+  setTemporaryRotationAngle: (angle) ->
+    @_temporaryRotationAngle angle
+    @avatar.reset()
+    
+  rotationAngle: ->
+    @_temporaryRotationAngle() ? @data()?.rotationAngle ? 0
+    
   rotation: ->
-    new THREE.Quaternion
+    new THREE.Quaternion().setFromEuler new THREE.Euler 0, @rotationAngle(), 0
   
   createAvatar: ->
     avatarClass = @constructor.avatarClass()
