@@ -2,12 +2,12 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Parts.Wall extends Pinball.Part
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Wall'
-  @fullName: -> "wall"
+class Pinball.Parts.Walls extends Pinball.Part
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Walls'
+  @fullName: -> "walls"
   @description: ->
     "
-      The edge of the playfield.
+      The edges of the playfield.
     "
     
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'

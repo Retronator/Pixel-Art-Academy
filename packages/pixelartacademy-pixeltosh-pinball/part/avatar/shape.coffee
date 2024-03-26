@@ -14,26 +14,43 @@ class Pinball.Part.Avatar.Shape
   @detectShape: (pixelArtEvaluation, properties) -> throw new AE.NotImplementedException "A part shape must create a shape instance if it can be detected."
   
   @_detectCircle: (pixelArtEvaluation) ->
-    # We must have only one core and line.
     layer = pixelArtEvaluation.layers[0]
-    return unless layer.cores.length is 1 and layer.lines.length is 1
-    
-    # Some parts of the line must be curves.
-    line = layer.lines[0]
-    return unless _.some line.pointPartIsCurve
-    
-    # See if points of the line form a circle.
-    center = new THREE.Vector2
-    center.add point for point in line.points
-    center.multiplyScalar 1 / line.points.length
-    
-    distancesFromCenter = for point in line.points
-      center.distanceTo point
+
+    # If we have no cores, try to detect if points themselves form a circle.
+    if layer.cores.length is 0
+      points = layer.points
+      allowInsidePoints = true
       
-    radius = _.sum(distancesFromCenter) / distancesFromCenter.length
+    else
+      # Otherwise, we must have only one core and line.
+      return unless layer.cores.length is 1 and layer.lines.length is 1
+      
+      # Some parts of the line must be curves.
+      line = layer.lines[0]
+      return unless _.some line.pointPartIsCurve
+      
+      points = line.points
+    
+    # See if points form a circle.
+    center = new THREE.Vector2
+    center.add point for point in points
+    center.multiplyScalar 1 / points.length
+    
+    distancesFromCenter = for point in points
+      center.distanceTo point
+
+    if allowInsidePoints
+      radius = _.max distancesFromCenter
+
+    else
+      radius = _.sum(distancesFromCenter) / distancesFromCenter.length
 
     deviationsFromRadius = for distanceFromCenter in distancesFromCenter
-      Math.abs distanceFromCenter - radius
+      if allowInsidePoints
+        Math.max 0, distanceFromCenter - radius
+        
+      else
+        Math.abs distanceFromCenter - radius
       
     # We allow for a half a pixel deviation from the radius (this makes a 5x5 square fall outside the range).
     return if _.max(deviationsFromRadius) > 0.5

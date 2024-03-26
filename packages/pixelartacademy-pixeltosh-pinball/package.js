@@ -42,6 +42,7 @@ Package.onUse(function(api) {
   api.addFile('part/avatar/shape');
   api.addFile('part/avatar/sphere');
   api.addFile('part/avatar/box');
+  api.addFile('part/avatar/cylinder');
   api.addFile('part/avatar/trianglemesh');
   api.addFile('part/avatar/extrusion');
   api.addFile('part/avatar/convexextrusion');
@@ -50,13 +51,15 @@ Package.onUse(function(api) {
 
   api.addFile('parts..');
   api.addFile('parts/ballspawner');
-  api.addFile('parts/wall');
+  api.addFile('parts/walls');
+  api.addFile('parts/pins');
   api.addFile('parts/plunger');
   api.addFile('parts/flipper');
   api.addFile('parts/hole');
   api.addFile('parts/gobblehole');
   api.addFile('parts/playfield');
   api.addFile('parts/trough');
+  api.addFile('parts/pin');
 
   api.addFile('interface..');
   api.addComponent('interface/playfield..');

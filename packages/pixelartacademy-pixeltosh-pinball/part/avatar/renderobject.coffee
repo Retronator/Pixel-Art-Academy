@@ -38,6 +38,10 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
       
       @add @physicsDebugMesh
     
+    if @entity.constants().hidden
+      @ready true
+      return
+
     # Create the main mesh.
     @flipped = new ComputedField => @entity.shapeProperties().flipped
     
@@ -102,26 +106,27 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     rotation = _transform.getRotation()
     @physicsDebugMesh.quaternion.setFromBulletQuaternion rotation
 
-    unless shape.fixedBitmapRotation()
-      # Rotate the bitmap only around the Y axis.
-      _rotation.setFromBulletQuaternion rotation
-      _rotationAngles.setFromQuaternion _rotation
+    return if shape.fixedBitmapRotation() or not @mesh
+    
+    # Rotate the bitmap only around the Y axis.
+    _rotation.setFromBulletQuaternion rotation
+    _rotationAngles.setFromQuaternion _rotation
+    
+    # Note: We divide by 1.9 so that when an object is resting at
+    # 90 degrees, we don't flip between sides due to instabilities.
+    if Math.abs(_rotationAngles.z) > Math.PI / 1.9
+      _rotationAngles.z = Math.sign(_rotationAngles.z) * Math.PI
       
-      # Note: We divide by 1.9 so that when an object is resting at
-      # 90 degrees, we don't flip between sides due to instabilities.
-      if Math.abs(_rotationAngles.z) > Math.PI / 1.9
-        _rotationAngles.z = Math.sign(_rotationAngles.z) * Math.PI
-        
-      else
-        _rotationAngles.z = 0
-        
-      if Math.abs(_rotationAngles.x) > Math.PI / 1.9
-        _rotationAngles.x = Math.sign(_rotationAngles.x) * Math.PI
+    else
+      _rotationAngles.z = 0
       
-      else
-        _rotationAngles.x = 0
-      
-      @mesh.quaternion.setFromEuler _rotationAngles
+    if Math.abs(_rotationAngles.x) > Math.PI / 1.9
+      _rotationAngles.x = Math.sign(_rotationAngles.x) * Math.PI
+    
+    else
+      _rotationAngles.x = 0
+    
+    @mesh.quaternion.setFromEuler _rotationAngles
   
   renderReflections: (renderer, scene) ->
     unless @cubeCamera

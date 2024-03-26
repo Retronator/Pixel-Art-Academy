@@ -6,6 +6,8 @@ _boundingBox = new THREE.Box3
 
 class Pinball.Interface.Parts extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Parts'
+
+  @minSelectionSize = 16
   
   onCreated: ->
     super arguments...
@@ -68,6 +70,14 @@ class Pinball.Interface.Parts extends LOI.View
     height = bottom - top
     width++ if width % 2
     height++ if height % 2
+    
+    if width < @constructor.minSelectionSize
+      left += (width - @constructor.minSelectionSize) / 2
+      width = @constructor.minSelectionSize
+      
+    if height < @constructor.minSelectionSize
+      top += (height - @constructor.minSelectionSize) / 2
+      height = @constructor.minSelectionSize
     
     left: "#{left}rem"
     top: "#{top}rem"

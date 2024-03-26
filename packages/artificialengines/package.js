@@ -97,6 +97,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three..');
   api.addGlsl('everywhere/three..');
   api.addClientFile('everywhere/three/loaders');
+  api.addClientFile('everywhere/three/utils');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
   api.addFile('everywhere/three/quaternion');

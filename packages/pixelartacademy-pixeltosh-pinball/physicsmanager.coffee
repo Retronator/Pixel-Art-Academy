@@ -23,6 +23,7 @@ class Pinball.PhysicsManager
     Rubber: 1
     Wood: 0.4 / @BallConstants.Friction # steel-wood (0.2–0.6)
     Plastic: 0.2 / @BallConstants.Friction # plastic-metal (0.1–0.3)
+    Metal: 0.3 / @BallConstants.Friction # steel-steel (0.1–0.5)
   
   @RollingFrictionConstants =
     Rubber: 0.1

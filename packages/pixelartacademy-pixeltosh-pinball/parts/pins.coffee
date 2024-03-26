@@ -1,0 +1,71 @@
+LOI = LandsOfIllusions
+PAA = PixelArtAcademy
+Pinball = PAA.Pixeltosh.Programs.Pinball
+
+class Pinball.Parts.Pins extends Pinball.Part
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Pins'
+  @fullName: -> "pins"
+  @description: ->
+    "
+      The pins in pinball, small metal pins that modify the ball's trajectory.
+    "
+    
+  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
+  
+  @avatarClass: -> @Avatar
+  
+  @selectable: -> false
+  
+  @initialize()
+  
+  constants: ->
+    height: 0.03
+    restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
+    friction: Pinball.PhysicsManager.FrictionConstants.Metal
+    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
+    collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
+    collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
+    hidden: true
+    
+  class @Avatar extends Pinball.Part.Avatar
+    _createShape: ->
+      return unless pixelArtEvaluation = @part.pixelArtEvaluation()
+      
+      new @constructor.Shape pixelArtEvaluation, @part.shapeProperties()
+      
+    class @Shape extends Pinball.Part.Avatar.Shape
+      constructor: (@pixelArtEvaluation, @properties) ->
+        super arguments...
+        
+        pixelSize = Pinball.CameraManager.orthographicPixelSize
+        
+        @pins = for point in @pixelArtEvaluation.layers[0].points when not point.neighbors.length
+          x: (point.x + 0.5 - @bitmapOrigin.x) * pixelSize
+          z: (point.y + 0.5 - @bitmapOrigin.y) * pixelSize
+          radius: point.radius * pixelSize * Pinball.Parts.Pin.radiusRatio
+        
+      createPhysicsDebugGeometry: ->
+        cylinders = for pin in @pins
+          cylinder = new THREE.CylinderBufferGeometry pin.radius, pin.radius, @height
+          
+          positionAttribute = cylinder.getAttribute 'position'
+          for index in [0...positionAttribute.array.length] by 3
+            positionAttribute.array[index] += pin.x
+            positionAttribute.array[index + 2] += pin.z
+            
+          cylinder
+          
+        THREE.BufferGeometryUtils.mergeBufferGeometries cylinders
+      
+      createCollisionShape: ->
+        collisionShape = new Ammo.btCompoundShape
+
+        for pin in @pins
+          cylinder = new Ammo.btCylinderShape new Ammo.btVector3 pin.radius, @height / 2, pin.radius
+          transform = new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(pin.x, 0, pin.z)
+          
+          collisionShape.addChildShape transform, cylinder
+        
+        collisionShape
+        
+      yPosition: -> @height / 2

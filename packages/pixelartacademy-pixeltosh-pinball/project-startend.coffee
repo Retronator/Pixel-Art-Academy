@@ -40,7 +40,12 @@ class Pinball.Project extends Pinball.Project
                 x: 90 * pixelSize
                 z: 100 * pixelSize
             "#{Random.id()}":
-              type: Pinball.Parts.Wall.id()
+              type: Pinball.Parts.Walls.id()
+              position:
+                x: 90 * pixelSize
+                z: 100 * pixelSize
+            "#{Random.id()}":
+              type: Pinball.Parts.Pins.id()
               position:
                 x: 90 * pixelSize
                 z: 100 * pixelSize

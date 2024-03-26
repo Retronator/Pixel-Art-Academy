@@ -14,6 +14,7 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     
     @class = new ReactiveField null
     @_desiredClass = null
+    @_classIsForced = false
 
   onCreated: ->
     super arguments...
@@ -37,15 +38,17 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
   setClass: (cursorClass) ->
     @_desiredClass = cursorClass
     
-    return if @class() is 'grabbing'
+    return if @_classIsForced
     
     @class cursorClass
     
   forceClass: (className) ->
     @class className
+    @_classIsForced = true
     
   endClassForcing: ->
     @class @_desiredClass
+    @_classIsForced = false
     
   updateCoordinates: (event) ->
     originPosition = @$origin.offset()

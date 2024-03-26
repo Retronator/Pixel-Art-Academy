@@ -79,11 +79,11 @@ class Pinball.Parts.Playfield extends Pinball.Part
         for vertex, vertexIndex in playfieldPolygon.vertices
           offset = vertexIndex * 3
           vertexBufferArray[offset] = vertex.x - playfieldPosition.x
-          vertexBufferArray[offset + 1] = @properties.height
+          vertexBufferArray[offset + 1] = @height
           vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
     
         indexBufferArray = playfieldPolygon.triangulate()
         
         @geometryData = {vertexBufferArray, indexBufferArray}
         
-      yPosition: -> -@properties.height
+      yPosition: -> -@height
