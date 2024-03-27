@@ -12,8 +12,9 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
   
   @polygonDebug = false
 
-  @debugPlayfield = false
-  @debugExtrusions = false
+  @debugPlayfieldTriangulation = false
+  @debugWallsTriangulation = false
+  @debugExtrusionLines = false
   
   onCreated: ->
     super arguments...
@@ -53,6 +54,7 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
       context.setTransform 1, 0, 0, 1, 0, 0
       context.clearRect 0, 0, @polygonDebugCanvas.width, @polygonDebugCanvas.height
       
+      pixelSize = Pinball.CameraManager.orthographicPixelSize
       scale = 1
     
       drawPolygon = (style, lineWidth, polygon, closed) =>
@@ -74,7 +76,7 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
           
         context.stroke()
         
-      if @constructor.debugPlayfield
+      if @constructor.debugPlayfieldTriangulation
         scale = @polygonDebugCanvas.width / 0.53
         context.setTransform 1, 0, 0, 1, 0, 0
         context.scale scale, scale
@@ -105,7 +107,7 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
         trianglesDrawCount = @polygonDebugTrianglesDrawCount()
         
         for indexOfIndex in [0...indexBufferArray.length] by 3
-          return unless trianglesDrawCount
+          break unless trianglesDrawCount
           trianglesDrawCount--
   
           drawPolygon 'green', 1, vertices: [
@@ -114,9 +116,37 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
             insetPolygonBoundary.vertices[indexBufferArray[indexOfIndex + 2]]
           ], true
           
-      if @constructor.debugExtrusions
+      if @constructor.debugWallsTriangulation
+        return unless walls = _.find parts, (part) => part instanceof Pinball.Parts.Walls
+        return unless shape = walls.avatar.shape()
+        
         scale = @polygonDebugCanvas.width / 180
-        pixelSize = Pinball.CameraManager.orthographicPixelSize
+        context.setTransform 1, 0, 0, 1, 0, 0
+        context.scale scale, scale
+        position = walls.position()
+        context.translate position.x / pixelSize, position.z / pixelSize
+        
+        for boundary in shape.boundaries
+          wallsPolygon = new AP.Polygon boundary
+          indexBufferArray = wallsPolygon.triangulate()
+          color = if indexBufferArray.error then 'red' else 'blue'
+
+          drawPolygon color, 8, boundary, true
+
+          trianglesDrawCount = @polygonDebugTrianglesDrawCount()
+          
+          for indexOfIndex in [0...indexBufferArray.length] by 3
+            break unless trianglesDrawCount
+            trianglesDrawCount--
+    
+            drawPolygon 'gray', 1, vertices: [
+              wallsPolygon.vertices[indexBufferArray[indexOfIndex]]
+              wallsPolygon.vertices[indexBufferArray[indexOfIndex + 1]]
+              wallsPolygon.vertices[indexBufferArray[indexOfIndex + 2]]
+            ], true
+
+      if @constructor.debugExtrusionLines
+        scale = @polygonDebugCanvas.width / 180
         curvePointsCount = Pinball.Part.Avatar.Shape.curveExtraPointsCount + 1
 
         for part in parts
@@ -126,7 +156,7 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
           context.setTransform 1, 0, 0, 1, 0, 0
           context.scale scale, scale
           position = part.position()
-          context.translate position.x / pixelSize, position.y / pixelSize
+          context.translate position.x / pixelSize, position.z / pixelSize
           
           if shape.properties.flipped
             context.scale -1, 1

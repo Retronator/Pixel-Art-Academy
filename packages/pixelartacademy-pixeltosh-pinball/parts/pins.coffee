@@ -31,15 +31,18 @@ class Pinball.Parts.Pins extends Pinball.Part
     _createShape: ->
       return unless pixelArtEvaluation = @part.pixelArtEvaluation()
       
-      new @constructor.Shape pixelArtEvaluation, @part.shapeProperties()
+      points = _.filter pixelArtEvaluation.layers[0].points, (point) => not point.neighbors.length
+      return unless points.length
+      
+      new @constructor.Shape pixelArtEvaluation, @part.shapeProperties(), points
       
     class @Shape extends Pinball.Part.Avatar.Shape
-      constructor: (@pixelArtEvaluation, @properties) ->
+      constructor: (@pixelArtEvaluation, @properties, points) ->
         super arguments...
         
         pixelSize = Pinball.CameraManager.orthographicPixelSize
         
-        @pins = for point in @pixelArtEvaluation.layers[0].points when not point.neighbors.length
+        @pins = for point in points
           x: (point.x + 0.5 - @bitmapOrigin.x) * pixelSize
           z: (point.y + 0.5 - @bitmapOrigin.y) * pixelSize
           radius: point.radius * pixelSize * Pinball.Parts.Pin.radiusRatio

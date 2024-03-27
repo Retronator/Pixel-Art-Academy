@@ -20,13 +20,13 @@ class Pinball.PhysicsManager
     HardSurface: 0.6 / @BallConstants.Restitution # steel ball bearing on concrete, golf ball on wood
   
   @FrictionConstants =
-    Rubber: 1
+    Rubber: 0.9
     Wood: 0.4 / @BallConstants.Friction # steel-wood (0.2–0.6)
     Plastic: 0.2 / @BallConstants.Friction # plastic-metal (0.1–0.3)
     Metal: 0.3 / @BallConstants.Friction # steel-steel (0.1–0.5)
   
   @RollingFrictionConstants =
-    Rubber: 0.1
+    Rubber: 0.05
     Coarse: 0.02 # 1-inch steel bearing on P80 emery paper (0.01–0.02)
     Smooth: 0.01 # 1-inch steel bearing on P80 emery paper (0.005–0.01)
   

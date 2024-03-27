@@ -94,12 +94,20 @@ PAE.Line::_createParts = ->
         else
           segmentRangeIndex++
           
-      # Rotate the parts until the first one is the one starting at this starting segment.
       if @isClosed
-        normalizedStartSegmentIndex = _.modulo startSegmentIndex, @edgeSegments.length
+        # Rotate the parts until the first one is the earliest one in the sequence.
+        lastSegmentRangeEnd = -1
         
-        while potentialStraightLineSegmentRanges[0].end < normalizedStartSegmentIndex
-          potentialStraightLineSegmentRanges.push potentialStraightLineSegmentRanges.shift()
+        for segmentRange, segmentRangeIndex in potentialStraightLineSegmentRanges
+          if segmentRange.start is lastSegmentRangeEnd + 1
+            lastSegmentRangeEnd = segmentRange.end
+            continue
+          
+          # We found the gap, so this segment range must be the starting one.
+          for shiftIndex in [0...segmentRangeIndex]
+            potentialStraightLineSegmentRanges.push potentialStraightLineSegmentRanges.shift()
+            
+          break
           
       for segmentRange in potentialStraightLineSegmentRanges
         @parts.push new PAE.Line.Part.StraightLine @, segmentRange.start, segmentRange.end
