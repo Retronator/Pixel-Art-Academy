@@ -25,6 +25,7 @@ class Pinball.RendererManager
       powerPreference: 'high-performance'
 
     @renderer.shadowMap.enabled = true
+    @renderer.shadowMap.type = THREE.PCFSoftShadowMap
     @renderer.setClearColor new THREE.Color 0xffffff
 
     @pinball.autorun =>
@@ -49,6 +50,6 @@ class Pinball.RendererManager
     camera = @pinball.cameraManager().camera()
 
     camera.layers.set @constructor.RenderLayers.Main
-    camera.layers.enable @constructor.RenderLayers.PhysicsDebug if @pinball.debugPhysics()
+    camera.layers.set @constructor.RenderLayers.PhysicsDebug if @pinball.debugPhysics()
     
     @renderer.render scene, camera

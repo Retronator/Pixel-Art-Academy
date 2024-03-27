@@ -15,6 +15,7 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
   @debugPlayfieldTriangulation = false
   @debugWallsTriangulation = false
   @debugExtrusionLines = false
+  @debugWireBallGuideLines = false
   
   onCreated: ->
     super arguments...
@@ -144,10 +145,33 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
               wallsPolygon.vertices[indexBufferArray[indexOfIndex + 1]]
               wallsPolygon.vertices[indexBufferArray[indexOfIndex + 2]]
             ], true
-
+        
+      curvePointsCount = Pinball.Part.Avatar.Shape.curveExtraPointsCount + 1
+      
+      drawLine = (line) =>
+        for linePart in line.parts
+          if linePart instanceof PAE.Line.Part.StraightLine
+            drawPolygon 'gold', 4, vertices: [
+              linePart.displayLine2.start
+              linePart.displayLine2.end
+            ]
+          
+          if linePart instanceof PAE.Line.Part.Curve
+            previousPoint = linePart.displayPoints[0]
+            vertices = [
+              previousPoint.position
+            ]
+            
+            for point in linePart.displayPoints[1...]
+              for curvePointIndex in [1..curvePointsCount]
+                vertices.push AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, curvePointIndex / curvePointsCount
+              
+              previousPoint = point
+            
+            drawPolygon 'limegreen', 4, {vertices}
+            
       if @constructor.debugExtrusionLines
         scale = @polygonDebugCanvas.width / 180
-        curvePointsCount = Pinball.Part.Avatar.Shape.curveExtraPointsCount + 1
 
         for part in parts
           continue unless shape = part.shape()
@@ -163,27 +187,22 @@ class Pinball.Interface.Parts extends Pinball.Interface.Parts
             
           context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
           
-          for line in shape.pixelArtEvaluation.layers[0].lines
-            for linePart in line.parts
-              if linePart instanceof PAE.Line.Part.StraightLine
-                drawPolygon 'gold', 4, vertices: [
-                    linePart.displayLine2.start
-                    linePart.displayLine2.end
-                  ]
-                  
-              if linePart instanceof PAE.Line.Part.Curve
-                previousPoint = linePart.displayPoints[0]
-                vertices = [
-                  previousPoint.position
-                ]
-                
-                for point in linePart.displayPoints[1...]
-                  for curvePointIndex in [1..curvePointsCount]
-                    vertices.push AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, curvePointIndex / curvePointsCount
-
-                  previousPoint = point
-                  
-                drawPolygon 'limegreen', 4, {vertices}
+          drawLine line for line in shape.pixelArtEvaluation.layers[0].lines
+          
+      if @constructor.debugWireBallGuideLines
+        return unless wireBallGuides = _.find parts, (part) => part instanceof Pinball.Parts.WireBallGuides
+        return unless shape = wireBallGuides.avatar.shape()
+        
+        scale = @polygonDebugCanvas.width / 180
+        curvePointsCount = Pinball.Part.Avatar.Shape.curveExtraPointsCount + 1
+        
+        context.setTransform 1, 0, 0, 1, 0, 0
+        context.scale scale, scale
+        position = wireBallGuides.position()
+        context.translate position.x / pixelSize, position.z / pixelSize
+        context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
+        
+        drawLine line for line in shape.pixelArtEvaluation.layers[0].lines when not line.core
   
   onDestroyed: ->
     super arguments...

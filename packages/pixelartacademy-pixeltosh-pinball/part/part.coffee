@@ -49,7 +49,7 @@ class Pinball.Part extends LOI.Adventure.Item
       EJSON.equals
     
     @shapeProperties = new ComputedField =>
-      _.defaults {}, _.pick(@data(), ['flipped']), @constants()
+      _.defaults {}, _.pick(@data(), ['flipped']), @extraShapeProperties(), @constants()
     ,
       EJSON.equals
     
@@ -92,7 +92,8 @@ class Pinball.Part extends LOI.Adventure.Item
     new avatarClass @
   
   defaultData: -> {} # Override to supply default data.
-  constants: -> {} # Override to supply additional properties to the avatar.
+  constants: -> {} # Override to supply constant properties to the avatar.
+  extraShapeProperties: -> {} # Override to supply additional properties to the shape.
   
   getRenderObject: -> @avatar.getRenderObject()
   getPhysicsObject: -> @avatar.getPhysicsObject()

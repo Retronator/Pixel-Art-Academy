@@ -10,6 +10,7 @@ class Pinball.Part.Avatar.TriangleMesh extends Pinball.Part.Avatar.Shape
   createPhysicsDebugGeometry: ->
     geometry = new THREE.BufferGeometry
     geometry.setAttribute 'position', new THREE.BufferAttribute @geometryData.vertexBufferArray, 3
+    geometry.setAttribute 'normal', new THREE.BufferAttribute @geometryData.normalArray, 3
     geometry.setIndex new THREE.BufferAttribute @geometryData.indexBufferArray, 1
     geometry.computeBoundingBox()
     geometry

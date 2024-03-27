@@ -16,14 +16,14 @@ if Meteor.isClient
 class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   @rotationAxis = new THREE.Vector3 0, -1, 0
   
-  @physicsDebugMaterial = new THREE.MeshLambertMaterial
-    color: 0xff0000
-    wireframe: true
+  @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0x202020
 
   constructor: (@entity, @existingResources) ->
     super arguments...
     
     @ready = new ReactiveField false
+    
+    constants = @entity.constants()
     
     # Create the physics debug mesh.
     @autorun (computation) =>
@@ -33,8 +33,10 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
       @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or shape.createPhysicsDebugGeometry()
       
       @remove @physicsDebugMesh if @physicsDebugMesh
-      @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, @constructor.physicsDebugMaterial
+      @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, constants.physicsDebugMaterial or @constructor.physicsDebugMaterial
       @physicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
+      @physicsDebugMesh.receiveShadow = true
+      @physicsDebugMesh.castShadow = true
       
       @add @physicsDebugMesh
     

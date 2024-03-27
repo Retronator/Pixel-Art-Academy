@@ -84,15 +84,18 @@ class Pinball.Part.Avatar.Shape
     center.multiplyScalar 1 / points.length
     center
     
-  @_createExtrudedVerticesAndIndices: (lines, topY, bottomY) ->
+  @_createExtrudedVerticesAndIndices: (lines, topY, bottomY, flipped = false) ->
     pointsCount = _.sumBy lines, 'length'
     
     vertexBufferArray = new Float32Array pointsCount * 6
+    normalArray = new Float32Array pointsCount * 6
     indexBufferArray = new Uint32Array pointsCount * 6
     
     lineStartVertexIndex = 0
     currentIndex = 0
     pixelSize = Pinball.CameraManager.orthographicPixelSize
+    
+    normalSign = if flipped then -1 else 1
     
     for line in lines
       bottomVertexIndex = lineStartVertexIndex
@@ -107,6 +110,11 @@ class Pinball.Part.Avatar.Shape
         vertexBufferArray[topVertexIndex * 3] = x
         vertexBufferArray[topVertexIndex * 3 + 1] = bottomY
         vertexBufferArray[topVertexIndex * 3 + 2] = y
+        
+        normalArray[bottomVertexIndex * 3] = -point.tangent.y * normalSign
+        normalArray[bottomVertexIndex * 3 + 2] = point.tangent.x * normalSign
+        normalArray[topVertexIndex * 3] = -point.tangent.y * normalSign
+        normalArray[topVertexIndex * 3 + 2] = point.tangent.x * normalSign
         
         nextBottomVertexIndex = if pointIndex is line.length - 1 then lineStartVertexIndex else bottomVertexIndex + 2
         nextTopVertexIndex = nextBottomVertexIndex + 1
@@ -124,10 +132,11 @@ class Pinball.Part.Avatar.Shape
       
       lineStartVertexIndex += line.length * 2
     
-    {vertexBufferArray, indexBufferArray}
+    {vertexBufferArray, normalArray, indexBufferArray}
     
   @_createPolygonVerticesAndIndices: (polygon, y) ->
     vertexBufferArray = new Float32Array polygon.vertices.length * 3
+    normalArray = new Float32Array polygon.vertices.length * 3
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     
@@ -136,16 +145,96 @@ class Pinball.Part.Avatar.Shape
       vertexBufferArray[offset] = vertex.x * pixelSize
       vertexBufferArray[offset + 1] = y
       vertexBufferArray[offset + 2] = vertex.y * pixelSize
+      
+      normalArray[offset + 1] = 1
     
     indexBufferArray = polygon.triangulate()
+    _.reverse indexBufferArray
     
-    {vertexBufferArray, indexBufferArray}
+    {vertexBufferArray, normalArray, indexBufferArray}
+  
+  @_createLineVerticesAndIndices: (points, radialSegmentsCount, joinDistance) ->
+    positions = []
+    radii = []
+    tangents = []
+    normals = []
+    binormals = []
+    
+    for point in points
+      if point.outgoingTangent
+        position1 = new THREE.Vector3().copy(point.tangent).multiplyScalar(-joinDistance).add point.position
+        position2 = new THREE.Vector3().copy(point.outgoingTangent).multiplyScalar(joinDistance).add point.position
+        positions.push position1, position2
+        tangents.push point.tangent, point.outgoingTangent
+        normals.push point.normal, point.outgoingNormal or point.normal
+        binormals.push new THREE.Vector3().crossVectors(point.tangent, point.normal), new THREE.Vector3().crossVectors(point.outgoingTangent, point.outgoingNormal or point.normal)
+        radii.push point.radius, point.radius
+      
+      else
+        positions.push point.position
+        tangents.push point.tangent
+        normals.push point.normal
+        binormals.push new THREE.Vector3().crossVectors point.tangent, point.normal
+        radii.push point.radius
+    
+    vertexBufferArray = new Float32Array positions.length * radialSegmentsCount * 3
+    normalArray = new Float32Array positions.length * radialSegmentsCount * 3
+    currentVertexIndex = 0
+    currentVertexBufferOffset = 0
+  
+    for position, segmentIndex in positions
+      normal = normals[segmentIndex]
+      binormal = binormals[segmentIndex]
+      radius = radii[segmentIndex]
+      
+      for radialSegmentIndex in [0...radialSegmentsCount]
+        circleRatio = radialSegmentIndex / radialSegmentsCount * Math.PI * 2
+        circleRatioSin = Math.sin circleRatio
+        circleRatioCos = Math.cos circleRatio
+        
+        normalX = circleRatioCos * normal.x + circleRatioSin * binormal.x
+        normalY = circleRatioCos * normal.y + circleRatioSin * binormal.y
+        normalZ = circleRatioCos * normal.z + circleRatioSin * binormal.z
+        normalArray[currentVertexBufferOffset] = normalX
+        normalArray[currentVertexBufferOffset + 1] = normalY
+        normalArray[currentVertexBufferOffset + 2] = normalZ
+        
+        vertexBufferArray[currentVertexBufferOffset] = position.x + radius * normalX
+        vertexBufferArray[currentVertexBufferOffset + 1] = position.y + radius * normalY
+        vertexBufferArray[currentVertexBufferOffset + 2] = position.z + radius * normalZ
+        currentVertexBufferOffset += 3
+        currentVertexIndex++
+        
+    indexBufferArray = new Uint32Array (positions.length - 1) * radialSegmentsCount * 6
+    currentIndex = 0
+    
+    for segmentIndex in [0...positions.length]
+      segmentStartVertexIndex = segmentIndex * radialSegmentsCount
+
+      for radialSegmentIndexA in [0...radialSegmentsCount]
+        radialSegmentIndexB = (radialSegmentIndexA + 1) % radialSegmentsCount
+        
+        quadStartVertexIndexA = segmentStartVertexIndex + radialSegmentIndexA
+        quadStartVertexIndexB = segmentStartVertexIndex + radialSegmentIndexB
+        quadEndVertexIndexA = quadStartVertexIndexA + radialSegmentsCount
+        quadEndVertexIndexB = quadStartVertexIndexB + radialSegmentsCount
+        
+        indexBufferArray[currentIndex] = quadEndVertexIndexA
+        indexBufferArray[currentIndex + 1] = quadStartVertexIndexA
+        indexBufferArray[currentIndex + 2] = quadStartVertexIndexB
+        indexBufferArray[currentIndex + 3] = quadEndVertexIndexA
+        indexBufferArray[currentIndex + 4] = quadStartVertexIndexB
+        indexBufferArray[currentIndex + 5] = quadEndVertexIndexB
+        currentIndex += 6
+    
+    {vertexBufferArray, normalArray, indexBufferArray}
     
   @_mergeGeometryData: (individualGeometryData) ->
     vertexCount = _.sumBy individualGeometryData, (geometryData) => geometryData.vertexBufferArray.length
     indexCount = _.sumBy individualGeometryData, (geometryData) => geometryData.indexBufferArray.length
     
     vertexBufferArray = new Float32Array vertexCount
+    normalArray = new Float32Array vertexCount
     indexBufferArray = new Uint32Array indexCount
     vertexOffset = 0
     indexOffset = 0
@@ -154,6 +243,7 @@ class Pinball.Part.Avatar.Shape
       vertexBufferOffset = vertexOffset * 3
       for vertexCoordinate, vertexCoordinateIndex in geometryData.vertexBufferArray
         vertexBufferArray[vertexBufferOffset + vertexCoordinateIndex] = vertexCoordinate
+        normalArray[vertexBufferOffset + vertexCoordinateIndex] = geometryData.normalArray[vertexCoordinateIndex]
         
       for localVertexIndex, indexOfIndex in geometryData.indexBufferArray
         globalVertexIndex = localVertexIndex + vertexOffset
@@ -162,7 +252,7 @@ class Pinball.Part.Avatar.Shape
       vertexOffset += geometryData.vertexBufferArray.length / 3
       indexOffset += geometryData.indexBufferArray.length
       
-    {vertexBufferArray, indexBufferArray}
+    {vertexBufferArray, normalArray, indexBufferArray}
 
   constructor: (@pixelArtEvaluation, @properties) ->
     @bitmapRectangle = @constructor._getBoundingRectangleOfPoints(@pixelArtEvaluation.layers[0].points).extrude 0, 1, 1, 0
@@ -174,32 +264,55 @@ class Pinball.Part.Avatar.Shape
     @depth = @bitmapRectangle.height() * pixelSize
     @height = @properties.height or Math.min @width, @depth
   
-  _getLinePoints: (line) ->
+  _getLinePoints: (line, removeLastClosedPoint = true) ->
     points = []
+    
+    addPoint = (coordinates, tangent, radius) =>
+      coordinates = new THREE.Vector2 coordinates.x - @bitmapOrigin.x + 0.5, coordinates.y - @bitmapOrigin.y + 0.5
+      tangent = new THREE.Vector2().copy tangent
+      points.push _.extend coordinates, {tangent, radius}
     
     curvePointsCount = @constructor.curveExtraPointsCount + 1
     
     for part in line.parts
       if part instanceof PAE.Line.Part.StraightLine
-        points.push part.displayLine2.start unless points.length
-        points.push part.displayLine2.end
+        tangent = new THREE.Vector2()
+        part.displayLine2.delta tangent
+        tangent.normalize()
+        
+        if points.length
+          lastPoint = _.last points
+          lastPoint.outgoingTangent = tangent.clone() unless Math.abs(tangent.x - lastPoint.tangent.x) < Number.EPSILON and Math.abs(tangent.y - lastPoint.tangent.y) < Number.EPSILON
+        
+        else
+          addPoint part.displayLine2.start, tangent, part.points[0].radius
+        
+        addPoint part.displayLine2.end, tangent, _.last(part.points).radius
       
       if part instanceof PAE.Line.Part.Curve
-        points.push part.displayPoints[0].position unless points.length
+        addPoint part.displayPoints[0].position, part.displayPoints[0].tangent, part.points[0].radius unless points.length
         previousPoint = part.displayPoints[0]
         
         for point in part.displayPoints[1..]
           for curvePointIndex in [1..curvePointsCount]
-            points.push AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, curvePointIndex / curvePointsCount
+            parameter = curvePointIndex / curvePointsCount
+            position = AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, parameter
+            tangent = new THREE.Vector2().lerpVectors previousPoint.tangent, point.tangent, parameter
+            samplePointIndex = Math.round (part.points.length - 1) * parameter
+            radius = part.points[samplePointIndex].radius
+            addPoint position, tangent, radius
           
           previousPoint = point
     
-    points.splice points.length - 1, 1 if line.isClosed
+    points.splice points.length - 1, 1 if line.isClosed and removeLastClosedPoint
     
-    for point in points
-      localPoint = new THREE.Vector2 point.x - @bitmapOrigin.x + 0.5, point.y - @bitmapOrigin.y + 0.5
-      localPoint.x *= -1 if @properties.flipped
-      localPoint
+    if @properties.flipped
+      for point in points
+        point.x *= -1
+        point.tangent.x *= -1
+        point.outgoingTangent?.x *= -1
+      
+    points
     
   fixedBitmapRotation: -> false # Override if the bitmap should not rotate with the physics object.
   

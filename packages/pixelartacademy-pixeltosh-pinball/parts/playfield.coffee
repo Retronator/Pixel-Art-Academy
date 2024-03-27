@@ -20,6 +20,8 @@ class Pinball.Parts.Playfield extends Pinball.Part
   
   @initialize()
   
+  @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0xffffff
+  
   constants: ->
     height: 0.05
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
@@ -27,6 +29,7 @@ class Pinball.Parts.Playfield extends Pinball.Part
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
+    physicsDebugMaterial: @constructor.physicsDebugMaterial
     
   class @Avatar extends Pinball.Part.Avatar
     initialize: ->
@@ -75,15 +78,18 @@ class Pinball.Parts.Playfield extends Pinball.Part
         playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
         
         vertexBufferArray = new Float32Array playfieldPolygon.vertices.length * 3
+        normalArray = new Float32Array playfieldPolygon.vertices.length * 3
         
         for vertex, vertexIndex in playfieldPolygon.vertices
           offset = vertexIndex * 3
           vertexBufferArray[offset] = vertex.x - playfieldPosition.x
           vertexBufferArray[offset + 1] = @height
           vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
+          normalArray[offset + 1] = 1
     
         indexBufferArray = playfieldPolygon.triangulate()
+        _.reverse indexBufferArray
         
-        @geometryData = {vertexBufferArray, indexBufferArray}
+        @geometryData = {vertexBufferArray, normalArray, indexBufferArray}
         
       yPosition: -> -@height

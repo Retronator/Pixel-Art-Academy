@@ -52,6 +52,7 @@ Package.onUse(function(api) {
   api.addFile('parts..');
   api.addFile('parts/ballspawner');
   api.addFile('parts/walls');
+  api.addFile('parts/wireballguides');
   api.addFile('parts/pins');
   api.addFile('parts/plunger');
   api.addFile('parts/flipper');

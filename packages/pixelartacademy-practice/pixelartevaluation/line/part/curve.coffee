@@ -70,7 +70,7 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
   
   _createDisplayPoint: (position) ->
     position: position
-    normal: new THREE.Vector2
+    tangent: new THREE.Vector2
     controlPoints:
       before: new THREE.Vector2
       after: new THREE.Vector2
@@ -81,34 +81,34 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
       previousPoint = if @isClosed then @displayPoints[_.modulo index - 1, @displayPoints.length] else @displayPoints[index - 1]
       nextPoint = if @isClosed then @displayPoints[_.modulo index + 1, @displayPoints.length] else @displayPoints[index + 1]
       
-      # Calculate the normal.
+      # Calculate the tangent.
       unless previousPoint
         if @previousPart and not @previousPart.endsOnACorner()
-          @previousPart.line2.delta point.normal
+          @previousPart.line2.delta point.tangent
         
         else
-          point.normal.subVectors nextPoint.position, point.position
+          point.tangent.subVectors nextPoint.position, point.position
           
       else unless nextPoint
         if @nextPart and not @nextPart.startsOnACorner()
-          @nextPart.line2.delta point.normal
+          @nextPart.line2.delta point.tangent
         
         else
-          point.normal.subVectors point.position, previousPoint.position
+          point.tangent.subVectors point.position, previousPoint.position
           
       else
-        point.normal.subVectors nextPoint.position, previousPoint.position
+        point.tangent.subVectors nextPoint.position, previousPoint.position
         
-      point.normal.normalize()
+      point.tangent.normalize()
       
       # Calculate control points.
       if previousPoint
         distance = point.position.distanceTo previousPoint.position
-        point.controlPoints.before.copy(point.normal).multiplyScalar(-distance / 3).add point.position
+        point.controlPoints.before.copy(point.tangent).multiplyScalar(-distance / 3).add point.position
         
       if nextPoint
         distance = point.position.distanceTo nextPoint.position
-        point.controlPoints.after.copy(point.normal).multiplyScalar(distance / 3).add point.position
+        point.controlPoints.after.copy(point.tangent).multiplyScalar(distance / 3).add point.position
         
     # Explicit return to prevent result collection.
     null
@@ -138,7 +138,3 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
     return null unless @isClosed or @startSegmentIndex <= index <= @endSegmentIndex
 
     @line.getEdgeSegment index
-
-  evaluate: ->
-    # TODO
-    {}

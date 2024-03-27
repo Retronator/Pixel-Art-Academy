@@ -18,13 +18,36 @@ class Pinball.SceneManager
     # Create lighting.
     @ambientLight = new THREE.AmbientLight
     @scene.add @ambientLight
+    
+    @debugAmbientLight = new THREE.AmbientLight
+    @debugAmbientLight.intensity = 0.5
+    @debugAmbientLight.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
+    @scene.add @debugAmbientLight
 
-    @directionalLight = new THREE.DirectionalLight
-    @directionalLight.position.set -0.25, 1, -0.5
-    @directionalLight.castShadow = true
-    @directionalLight.shadow.mapSize.width = 4096
-    @directionalLight.shadow.mapSize.height = 4096
-    @scene.add @directionalLight
+    @debugDirectionalLight = new THREE.DirectionalLight
+    @debugDirectionalLight.intensity = 0.5
+    @debugDirectionalLight.position.set -0.25, 1, -0.5
+    @debugDirectionalLight.castShadow = true
+    @debugDirectionalLight.shadow.mapSize.x = 4096
+    @debugDirectionalLight.shadow.mapSize.y = 4096
+    @debugDirectionalLight.shadow.camera.left = -1
+    @debugDirectionalLight.shadow.camera.right = 1
+    @debugDirectionalLight.shadow.camera.top = 1
+    @debugDirectionalLight.shadow.camera.bottom = -1
+    @debugDirectionalLight.shadow.camera.far = 2
+    @debugDirectionalLight.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
+    @scene.add @debugDirectionalLight
+    
+    @debugPointLight = new THREE.PointLight
+    @debugPointLight.intensity = 0.5
+    @debugPointLight.position.set @constructor.playfieldWidth / 2, 0.3, @constructor.shortPlayfieldHeight / 2
+    @debugPointLight.castShadow = true
+    @debugPointLight.shadow.mapSize.x = 4096
+    @debugPointLight.shadow.mapSize.y = 4096
+    @debugPointLight.shadow.camera.near = 0.1
+    @debugPointLight.shadow.camera.far = 0.5
+    @debugPointLight.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
+    @scene.add @debugPointLight
     
     @_parts = []
     @parts = new ReactiveField @_parts
@@ -72,10 +95,17 @@ class Pinball.SceneManager
       
       removed: (renderObject) =>
         @scene.remove renderObject
+        
+    # Detect ball Y coordinate.
+    @_ballSpawner = new Pinball.Parts.BallSpawner @pinball
+    @_ballSpawner.avatar.initialize()
+
+    @ballYPosition = new ComputedField => @_ballSpawner.shape()?.yPosition() or 0
     
   destroy: ->
     @renderObjects.stop()
     part.destroy() for part in @_parts
+    @_ballSpawner.destroy()
     
   getPart: (playfieldPartId) ->
     _.find @parts(), (part) => part.playfieldPartId is playfieldPartId

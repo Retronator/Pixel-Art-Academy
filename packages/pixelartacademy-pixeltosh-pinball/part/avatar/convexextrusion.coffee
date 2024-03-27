@@ -27,7 +27,7 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
     @bottomY = -@height / 2
   
   createPhysicsDebugGeometry: ->
-    geometryData = @constructor._createExtrudedVerticesAndIndices @lines, @topY, @bottomY
+    geometryData = @constructor._createExtrudedVerticesAndIndices @lines, @topY, @bottomY, @properties.flipped
 
     geometry = new THREE.BufferGeometry
     geometry.setAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3

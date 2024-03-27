@@ -29,7 +29,9 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
         wallLines.push points
         boundaries.push new AP.PolygonBoundary points
       
-      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices wallLines, 0, -@height
+      geometryData = @constructor._createExtrudedVerticesAndIndices wallLines, 0, -@height, @properties.flipped
+      _.reverse geometryData.indexBufferArray if @properties.flipped
+      individualGeometryData.push geometryData
       
       polygon = new AP.PolygonWithHoles boundaries
       

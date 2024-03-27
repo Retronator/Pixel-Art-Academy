@@ -22,7 +22,7 @@ class Pinball.Parts.Pins extends Pinball.Part
     height: 0.03
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Metal
-    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
+    rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
     hidden: true

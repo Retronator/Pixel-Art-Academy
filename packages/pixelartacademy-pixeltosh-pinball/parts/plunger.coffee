@@ -31,7 +31,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
     @displacement = 0
   
   constants: ->
-    height: 0.03
+    height: 0.02
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Plastic
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth

@@ -28,7 +28,9 @@ class Pinball.Part.Avatar.Depression extends Pinball.Part.Avatar.TriangleMesh
         wallLines.push points
         boundaries.push new AP.PolygonBoundary points
       
-      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices wallLines, @height, 0
+      geometryData = @constructor._createExtrudedVerticesAndIndices wallLines, @height, 0, not @properties.flipped
+      _.reverse geometryData.indexBufferArray unless @properties.flipped
+      individualGeometryData.push geometryData
       
       polygon = new AP.PolygonWithHoles boundaries
       @holeBoundaries.push polygon.externalBoundary
