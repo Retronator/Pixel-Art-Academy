@@ -16,6 +16,7 @@ class Pinball.Part extends LOI.Adventure.Item
   
   @getPartClasses: -> _.values @_partClasses
   @getSelectablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable()
+  @getPlaceablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable() and partClass.editable()
   
   @assetID: -> # Override if this part's asset comes from the project.
   @imageUrl: -> # Override if this part's asset comes from static images.
@@ -25,6 +26,8 @@ class Pinball.Part extends LOI.Adventure.Item
   @avatarClass: -> Pinball.Part.Avatar # Override if the part requires a custom avatar.
   
   @selectable: -> true # Override if this part can't be selected.
+  
+  @editable: -> true # Override if this part should not show the selection overlay UI.
   
   constructor: (@pinball, @playfieldPartId) ->
     super arguments...
@@ -44,7 +47,12 @@ class Pinball.Part extends LOI.Adventure.Item
 
     # Create reactive data for the part.
     @data = new ComputedField =>
-      _.extend @defaultData(), @pinball.getPartData @playfieldPartId
+      data = _.clone @pinball.getPartData(@playfieldPartId) or {}
+      
+      for property, setting of @settings() when setting.default?
+        data[property] ?= setting.default
+        
+      data
     ,
       EJSON.equals
     
@@ -91,7 +99,7 @@ class Pinball.Part extends LOI.Adventure.Item
     avatarClass = @constructor.avatarClass()
     new avatarClass @
   
-  defaultData: -> {} # Override to supply default data.
+  settings: -> {} # Override to supply which settings the player can change for this part.
   constants: -> {} # Override to supply constant properties to the avatar.
   extraShapeProperties: -> {} # Override to supply additional properties to the shape.
   

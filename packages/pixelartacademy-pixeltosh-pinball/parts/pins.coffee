@@ -14,7 +14,7 @@ class Pinball.Parts.Pins extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
-  @selectable: -> false
+  @editable: -> false
   
   @initialize()
   

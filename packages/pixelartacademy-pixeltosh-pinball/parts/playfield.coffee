@@ -5,6 +5,7 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Parts.Playfield extends Pinball.Part
+  # angleDegrees: the tilt of the playfield affecting the direction of gravity
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Playfield'
   @fullName: -> "playfield"
   @description: ->
@@ -16,12 +17,22 @@ class Pinball.Parts.Playfield extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
-  @selectable: -> false
+  @editable: -> false
   
   @initialize()
   
   @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0xffffff
   
+  settings: ->
+    angleDegrees:
+      name: "Angle"
+      unit: "°"
+      type: Pinball.Interface.Settings.Number.id()
+      min: 0
+      max: 90
+      step: 0.5
+      default: 6.5
+      
   constants: ->
     height: 0.05
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface

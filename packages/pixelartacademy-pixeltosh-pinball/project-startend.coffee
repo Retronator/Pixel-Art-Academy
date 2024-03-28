@@ -73,17 +73,17 @@ class Pinball.Project extends Pinball.Project
               flipped: true
               maxAngleDegrees: 39.5
             "#{Random.id()}":
-              type: Pinball.Parts.GobbleHole.id()
-              position:
-                x: 85 * pixelSize
-                z: 90 * pixelSize
-              score: 1000
-            "#{Random.id()}":
               type: Pinball.Parts.Trough.id()
               position:
                 x: 85 * pixelSize
                 z: 197 * pixelSize
-
+            "#{Random.id()}":
+              type: Pinball.Parts.BallSpawner.id()
+              position:
+                x: 124.5 * pixelSize
+                z: 67.5 * pixelSize
+              captive: true
+              
         # Write the project ID into profile's game state.
         Pinball.Project.state 'activeProjectId', projectId
 

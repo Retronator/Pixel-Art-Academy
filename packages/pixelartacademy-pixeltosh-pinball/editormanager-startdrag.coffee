@@ -45,7 +45,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
     if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.z < Pinball.SceneManager.shortPlayfieldHeight
       # Snap new position to pixels.
       Pinball.CameraManager.snapShapeToPixelPosition part.shape(), newPosition
-      @_updatePart part, position: newPosition
+      @updatePart part, position: newPosition
       
       # Wait until the new position has updated on the document, before removing the temporary override.
       Tracker.autorun (computation) =>
@@ -54,7 +54,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
         part.setTemporaryPosition null
         
     else
-      @_removePart part
+      @removePart part
       @selectedPart null
       
     $interface.off '.pixelartacademy-pixeltosh-programs-pinball-editormanager'

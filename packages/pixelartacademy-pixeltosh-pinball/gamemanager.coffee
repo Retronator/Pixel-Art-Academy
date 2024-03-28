@@ -68,7 +68,7 @@ class Pinball.GameManager
   
   startSimulation: ->
     @_destroyBalls()
-    @spawnBalls()
+    @spawnBalls true
   
   endSimulation: ->
     @_destroyBalls()
@@ -84,9 +84,15 @@ class Pinball.GameManager
   
   simulationActive: -> @mode() in [@constructor.Modes.Test, @constructor.Modes.Play]
 
-  spawnBalls: ->
+  spawnBalls: (gameStart) ->
     balls = @balls()
-    balls.push part.spawnBall() for part in @pinball.sceneManager().parts() when part instanceof Pinball.Parts.BallSpawner
+    
+    for part in @pinball.sceneManager().parts() when part instanceof Pinball.Parts.BallSpawner
+      ballSpawner = part
+      continue if ballSpawner.data().captive and not gameStart
+
+      balls.push ballSpawner.spawnBall()
+
     @balls balls
     
     @ballNumber @ballNumber() + 1

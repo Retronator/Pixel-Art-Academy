@@ -4,6 +4,8 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Parts.Flipper extends Pinball.Part
+  # maxAngleDegrees: the amount the flipper displaces when engaged
+  # angularSpeedDegrees: the amount of degrees per second the flipper rotates at
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Flipper'
   @fullName: -> "flipper"
   @description: ->
@@ -19,8 +21,6 @@ class Pinball.Parts.Flipper extends Pinball.Part
   
   @initialize()
   
-  @angularSpeed = 35 # rad / s
-  
   @rotationAxis = new THREE.Vector3 0, 1, 0
   
   constructor: ->
@@ -32,6 +32,24 @@ class Pinball.Parts.Flipper extends Pinball.Part
   
   defaultData: ->
     maxAngleDegrees: 39.5
+    
+  settings: ->
+    maxAngleDegrees:
+      name: 'Angle range'
+      unit: "°"
+      type: Pinball.Interface.Settings.Number.id()
+      min: 1
+      max: 180
+      step: 1
+      default: 45
+    angularSpeedDegrees:
+      name: 'Speed'
+      unit: "°/s"
+      type: Pinball.Interface.Settings.Number.id()
+      min: 100
+      max: 4000
+      step: 100
+      default: 2000
   
   constants: ->
     bitmapOrigin:
@@ -77,9 +95,13 @@ class Pinball.Parts.Flipper extends Pinball.Part
   fixedUpdate: (elapsed) ->
     return unless @moving
     
-    maxDisplacement = AR.Conversions.degreesToRadians @data().maxAngleDegrees
+    data = @data()
+    
+    maxDisplacement = AR.Conversions.degreesToRadians data.maxAngleDegrees
     displacementSign = if @data().flipped then -1 else 1
     positiveDisplacement = @displacementAngle * displacementSign
+    
+    angularSpeed = AR.Conversions.degreesToRadians data.angularSpeedDegrees
     
     if @active
       if positiveDisplacement >= maxDisplacement
@@ -89,7 +111,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
         
       else
         # Keep activating the flipper.
-        angularSpeed = @constructor.angularSpeed * displacementSign
+        angularSpeed = angularSpeed * displacementSign
     
     else
       if positiveDisplacement < 0
@@ -100,7 +122,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
         
       else
         # Keep deactivating the flipper.
-        angularSpeed = -@constructor.angularSpeed * displacementSign
+        angularSpeed = -angularSpeed * displacementSign
     
     angleChange = angularSpeed * elapsed
     @displacementAngle += angleChange

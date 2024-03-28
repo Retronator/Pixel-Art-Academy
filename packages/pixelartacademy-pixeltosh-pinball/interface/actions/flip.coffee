@@ -12,7 +12,7 @@ class Pinball.Interface.Actions.Flip extends Pinball.Interface.Actions.Action
   
   @initialize()
   
-  enabled: -> @pinball.editorManager()?.selectedPart()
+  enabled: -> @pinball.editorManager()?.selectedPart()?.constructor.editable()
   
   execute: ->
     editorManager = @pinball.editorManager()

@@ -7,7 +7,7 @@ PAE = PAA.Practice.PixelArtEvaluation
 
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Interface.Parts extends Pinball.Interface.Parts
+class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
   @register @id()
   
   @polygonDebug = false

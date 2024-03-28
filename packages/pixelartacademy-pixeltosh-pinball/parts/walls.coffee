@@ -16,7 +16,7 @@ class Pinball.Parts.Walls extends Pinball.Part
     Pinball.Part.Avatar.Extrusion
   ]
   
-  @selectable: -> false
+  @editable: -> false
   
   @initialize()
   

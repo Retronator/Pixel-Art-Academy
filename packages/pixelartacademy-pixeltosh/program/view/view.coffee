@@ -27,6 +27,9 @@ class PAA.Pixeltosh.Program.View extends LOI.View
     return unless programId = @programId()
     @os.getProgram programId
   
+  programClass: ->
+    @program()?.constructor.slug()
+  
   activateBringsWindowToTop: ->
     return unless viewData = @data()
     viewData.get('activateBringsWindowToTop') ? true

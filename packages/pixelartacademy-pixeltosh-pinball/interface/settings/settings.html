@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Settings">
+  <div class="pixelartacademy-pixeltosh-programs-pinball-interface-settings">
+    <div class="name">{{selectedPart.fullName}}</div>
+    <div class="description">{{selectedPart.description}}</div>
+    <ul class="settings">
+      {{#each settings}}
+        <li class="setting">
+          <div class="name">{{setting.name}}</div>
+          {{> Template.dynamic template=setting.type}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

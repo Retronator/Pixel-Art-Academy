@@ -8,8 +8,6 @@ class Pinball.SceneManager
   @playfieldWidth = 1 / 2 # m
   @shortPlayfieldHeight = 5 / 9 # m
   @standardPlayfieldHeight = 1 # m
-  @shortPlayfieldPitchDegrees = 6.5 # degrees
-  @standardPlayfieldPitchDegrees = 6.5 # degrees
 
   constructor: (@pinball) ->
     @scene = new THREE.Scene()
@@ -115,6 +113,9 @@ class Pinball.SceneManager
     
   getPart: (playfieldPartId) ->
     _.find @parts(), (part) => part.playfieldPartId is playfieldPartId
+
+  getPartOfType: (partType) ->
+    _.find @parts(), (part) => part instanceof partType
 
   _addPart: (playfieldPartId, partData) ->
     partClass = _.thingClass partData.type

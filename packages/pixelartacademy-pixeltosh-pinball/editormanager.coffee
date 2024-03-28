@@ -30,10 +30,13 @@ class Pinball.EditorManager
       x: elementOffset.left - playfieldOffset.left
       y: elementOffset.top - playfieldOffset.top
     
-    part = type: options.type
+    projectId = @pinball.projectId()
+    playfieldPartId = Random.id()
     
-    # Add the node in the database.
-    playfieldPartId = @_addPart part
+    PAA.Practice.Project.documents.update projectId,
+      $set:
+        "playfield.#{playfieldPartId}":
+          type: options.type
     
     Tracker.autorun (computation) =>
       return unless part = @pinball.sceneManager().getPart playfieldPartId
@@ -51,25 +54,8 @@ class Pinball.EditorManager
       @startDrag part, {startPosition}
 
       @selectedPart part
-      
-  updateSelectedPart: (difference) ->
-    @_updatePart @selectedPart(), difference
-    
-  removeSelectedPart: ->
-    @_removePart @selectedPart()
-    @selectedPart null
 
-  _addPart: (partData) ->
-    projectId = @pinball.projectId()
-    playfieldPartId = Random.id()
-    
-    PAA.Practice.Project.documents.update projectId,
-      $set:
-        "playfield.#{playfieldPartId}": partData
-    
-    playfieldPartId
-
-  _updatePart: (part, difference) ->
+  updatePart: (part, difference) ->
     projectId = @pinball.projectId()
     partData = _.cloneDeep part.data()
     _.applyObjectDifference partData, difference
@@ -78,9 +64,16 @@ class Pinball.EditorManager
       $set:
         "playfield.#{part.playfieldPartId}": partData
     
-  _removePart: (part) ->
+  removePart: (part) ->
     projectId = @pinball.projectId()
     
     PAA.Practice.Project.documents.update projectId,
       $unset:
         "playfield.#{part.playfieldPartId}": true
+  
+  updateSelectedPart: (difference) ->
+    @updatePart @selectedPart(), difference
+  
+  removeSelectedPart: ->
+    @removePart @selectedPart()
+    @selectedPart null

@@ -92,7 +92,7 @@ Pinball.EditorManager::startRotate = (part) ->
     osCursor.endClassForcing()
     
     newRotationAngle = part.rotationAngle()
-    @_updatePart part, rotationAngle: newRotationAngle
+    @updatePart part, rotationAngle: newRotationAngle
     
     # Wait until the new position has updated on the document, before removing the temporary override.
     Tracker.autorun (computation) =>

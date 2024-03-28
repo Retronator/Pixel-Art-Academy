@@ -17,7 +17,7 @@ class Pinball.Parts.WireBallGuides extends Pinball.Part
   
   @avatarClass: -> @Avatar
   
-  @selectable: -> false
+  @editable: -> false
   
   @initialize()
   

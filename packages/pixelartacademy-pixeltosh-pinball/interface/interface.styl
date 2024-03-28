@@ -1,0 +1,33 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-program-view.pinball
+  .fatamorgana-tabbedview
+    height 100%
+    border-left 1rem solid black
+
+    .tabs
+      display flex
+      border-bottom 1rem solid black
+      background image('/pixelartacademy/pixeltosh/os/dither.png') 1rem 0 / 2rem 2rem
+
+      .tab
+        margin 1rem 1rem 0
+        padding 0 2rem
+        border 1rem solid black
+        border-bottom none
+        background white
+
+        &.active
+          position relative
+
+          &::after
+            content ''
+            position absolute
+            bottom -1rem
+            left 0
+            right 0
+            height 1rem
+            background white
+
+    .active-tab
+      height 100%

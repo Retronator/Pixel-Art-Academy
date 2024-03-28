@@ -4,11 +4,12 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 CollisionGroups = Pinball.PhysicsManager.CollisionGroups
 
 class Pinball.Parts.BallSpawner extends Pinball.Part
+  # captive: boolean whether the spawned ball is captive
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.BallSpawner'
   @fullName: -> "ball"
   @description: ->
     "
-      Marks the place where the ball will spawn.
+      Marks the place where a ball will spawn.
     "
     
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ball.png'
@@ -20,6 +21,11 @@ class Pinball.Parts.BallSpawner extends Pinball.Part
   
   @initialize()
   
+  settings: ->
+    captive:
+      name: 'Captive ball'
+      type: Pinball.Interface.Settings.Boolean.id()
+      
   constants: ->
     restitution: Pinball.PhysicsManager.BallConstants.Restitution
     friction: Pinball.PhysicsManager.BallConstants.Friction
@@ -29,4 +35,6 @@ class Pinball.Parts.BallSpawner extends Pinball.Part
     continuousCollisionDetection: true
 
   spawnBall: ->
-    new Pinball.Ball @pinball, @
+    ball = new Pinball.Ball @pinball, @
+    ball.state Pinball.Ball.States.Captive if @data().captive
+    ball

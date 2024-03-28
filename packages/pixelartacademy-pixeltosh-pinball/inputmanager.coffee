@@ -36,6 +36,9 @@ class Pinball.InputManager
     $(document).off 'keydown.pixelartacademy-pixeltosh-programs-pinball-inputmanager'
   
   _ignoreKeys: (event) ->
+    # Ignore keys when input is focused.
+    return true if @pinball.os.interface.inputFocused()
+    
     # Outside of edit mode, no ignoring is needed.
     return unless @pinball.gameManager().mode() is Pinball.GameManager.Modes.Edit
     

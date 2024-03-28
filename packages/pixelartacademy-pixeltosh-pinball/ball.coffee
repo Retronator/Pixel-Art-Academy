@@ -5,6 +5,7 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 class Pinball.Ball
   @States =
     Live: 'Live'
+    Captive: 'Captive'
     Dead: 'Dead'
     
   constructor: (@pinball, @ballSpawner) ->

@@ -62,12 +62,15 @@ Package.onUse(function(api) {
   api.addFile('parts/trough');
   api.addFile('parts/pin');
 
-  api.addFile('interface..');
+  api.addStyledFile('interface..');
   api.addComponent('interface/playfield..');
+  api.addFile('interface/playfield/playfield-polygondebug');
   api.addComponent('interface/backbox..');
   api.addComponent('interface/instructions..');
   api.addComponent('interface/parts..');
-  api.addFile('interface/parts/parts-polygondebug');
+  api.addComponent('interface/settings..');
+  api.addComponent('interface/settings/number..');
+  api.addComponent('interface/settings/boolean..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');

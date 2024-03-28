@@ -4,6 +4,11 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Interface
+  @Layouts:
+    Editor: 'Editor'
+    OrthographicPlay: 'OrthographicPlay'
+    PerspectivePlay: 'PerspectivePlay'
+  
   @createMenuItems: ->
     [
       caption: ''
@@ -60,36 +65,55 @@ class Pinball.Interface
     right: 0
     bottom: 0
     
-  @createContentAreaData: (pinball) ->
+  @determineLayout: (pinball) ->
     switch pinball.cameraManager()?.displayType()
       when Pinball.CameraManager.DisplayTypes.Orthographic
-        switch pinball.gameManager().mode()
+        switch pinball.gameManager()?.mode()
           when Pinball.GameManager.Modes.Edit, Pinball.GameManager.Modes.Test
-            type: FM.SplitView.id()
-            fixed: true
-            dockSide: FM.SplitView.DockSide.Left
-            mainArea:
-              contentComponentId: @Playfield.id()
-              width: 180
-            remainingArea:
-              contentComponentId: @Parts.id()
-          
+            @Layouts.Editor
+            
           when Pinball.GameManager.Modes.Play
-            type: FM.SplitView.id()
-            fixed: true
-            dockSide: FM.SplitView.DockSide.Left
-            mainArea:
-              contentComponentId: @Playfield.id()
-              width: 180
-            remainingArea:
-              type: FM.SplitView.id()
-              fixed: true
-              dockSide: FM.SplitView.DockSide.Top
-              mainArea:
-                contentComponentId: @Backbox.id()
-                height: 140
-              remainingArea:
-                contentComponentId: @Instructions.id()
-        
+            @Layouts.OrthographicPlay
+      
       when Pinball.CameraManager.DisplayTypes.Perspective
+        @Layouts.PerspectivePlay
+    
+  @createLayoutsData: ->
+    "#{@Layouts.Editor}":
+      type: FM.SplitView.id()
+      fixed: true
+      dockSide: FM.SplitView.DockSide.Left
+      mainArea:
         contentComponentId: @Playfield.id()
+        width: 180
+      remainingArea:
+        type: FM.TabbedView.id()
+        tabs: [
+          name: 'Parts'
+          contentComponentId: @Parts.id()
+        ,
+          name: 'Settings'
+          contentComponentId: @Settings.id()
+          active: true
+        ]
+        allowClosing: false
+        
+    "#{@Layouts.OrthographicPlay}":
+      type: FM.SplitView.id()
+      fixed: true
+      dockSide: FM.SplitView.DockSide.Left
+      mainArea:
+        contentComponentId: @Playfield.id()
+        width: 180
+      remainingArea:
+        type: FM.SplitView.id()
+        fixed: true
+        dockSide: FM.SplitView.DockSide.Top
+        mainArea:
+          contentComponentId: @Backbox.id()
+          height: 140
+        remainingArea:
+          contentComponentId: @Instructions.id()
+
+    "#{@Layouts.PerspectivePlay}":
+      contentComponentId: @Playfield.id()

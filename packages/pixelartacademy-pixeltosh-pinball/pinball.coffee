@@ -91,9 +91,11 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       image: @rendererManager().renderer.domElement
     
     # Reactively change the interface layout.
+    layouts = @constructor.Interface.createLayoutsData @
+    
     @autorun (computation) =>
       return unless window = @os.interface.getWindow @windowId
-      window.data().set 'contentArea', @constructor.Interface.createContentAreaData @
+      window.data().set 'contentArea', layouts[@constructor.Interface.determineLayout @]
       
     # Subscribe to the black palette.
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh

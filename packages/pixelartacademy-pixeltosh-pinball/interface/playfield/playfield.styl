@@ -1,9 +1,65 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixeltosh-programs-pinball-interface-playfield
+  position relative
   height 100%
   background white
 
   canvas
     width 100% !important
     height 100% !important
+
+  .overlay
+    position absolute
+    left 0
+    top 0
+
+    .selection
+      display none
+      position absolute
+      border-image image('/pixelartacademy/pixeltosh/os/dither-border-white.png') 1 / 1rem repeat
+      mix-blend-mode difference
+
+      &.visible
+        display block
+
+      .drag-area
+        absolute-cover()
+
+      .rotate-area
+        position absolute
+        top 0
+        bottom 0
+        width 10rem
+
+        &.left
+          right 100%
+
+        &.right
+          left: 100%
+
+      .flip-button
+        position absolute
+        left 0
+        right 0
+        height 10rem
+        border none
+        background none
+
+        &.above
+          bottom 100%
+
+        &.below
+          top 100%
+
+    .polygon-debug
+      position absolute
+      left 0
+      top 0
+      width 180rem
+      height 200rem
+      pointer-events none
+
+      canvas
+        width 100%
+        height 100%

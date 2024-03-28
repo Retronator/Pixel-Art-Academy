@@ -46,10 +46,6 @@ class Pinball.PhysicsManager
     @solver = new Ammo.btSequentialImpulseConstraintSolver
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @broadphase, @solver, @collisionConfiguration
     
-    gravity = new Ammo.btVector3 0, -9.81, 0
-    gravity = gravity.rotate new Ammo.btVector3(1, 0, 0), -Pinball.SceneManager.shortPlayfieldPitchDegrees / 180 * Math.PI
-    @dynamicsWorld.setGravity gravity
-    
     # Add safety walls.
     @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
       new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(-1, 0, 0)
@@ -84,7 +80,16 @@ class Pinball.PhysicsManager
       removed: (physicsObject) =>
         @dynamicsWorld.removeRigidBody physicsObject.body
         physicsObject.entity.onRemovedFromDynamicsWorld? @dynamicsWorld
-
+        
+    # Adjust gravity.
+    @pinball.autorun (computation) =>
+      return unless playfield = @pinball.sceneManager()?.getPartOfType Pinball.Parts.Playfield
+      angleDegrees = playfield.data().angleDegrees
+      
+      gravity = new Ammo.btVector3 0, -9.81, 0
+      gravity = gravity.rotate new Ammo.btVector3(1, 0, 0), AR.Conversions.degreesToRadians -angleDegrees
+      @dynamicsWorld.setGravity gravity
+  
   destroy: ->
     @physicsObjects.stop()
 
