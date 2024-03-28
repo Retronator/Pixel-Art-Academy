@@ -98,14 +98,20 @@ class Pinball.SceneManager
         
     # Detect ball Y coordinate.
     @_ballSpawner = new Pinball.Parts.BallSpawner @pinball
-    @_ballSpawner.avatar.initialize()
 
-    @ballYPosition = new ComputedField => @_ballSpawner.shape()?.yPosition() or 0
+    @ballYPosition = new AE.LiveComputedField =>
+      return unless bitmap = @_ballSpawner.bitmap()
+      pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
+      shape = Pinball.Part.Avatar.Sphere.detectShape pixelArtEvaluation, {}
+      pixelArtEvaluation.destroy()
+      shape?.yPosition() or 0.0135
     
   destroy: ->
     @renderObjects.stop()
     part.destroy() for part in @_parts
     @_ballSpawner.destroy()
+    @_ballSpawnerPixelArtEvaluation.destroy()
+    @ballYPosition.stop()
     
   getPart: (playfieldPartId) ->
     _.find @parts(), (part) => part.playfieldPartId is playfieldPartId
