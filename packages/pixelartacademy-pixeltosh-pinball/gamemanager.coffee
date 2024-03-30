@@ -111,5 +111,5 @@ class Pinball.GameManager
   isGameOver: ->
     @remainingBallsCount() is 0 and @liveBalls().length is 0
     
-  addScore: (score) ->
+  addPoints: (score) ->
     @score @score() + score

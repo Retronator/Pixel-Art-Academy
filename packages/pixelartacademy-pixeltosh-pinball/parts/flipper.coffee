@@ -3,6 +3,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
+_rotationQuaternion = new THREE.Quaternion
+
 class Pinball.Parts.Flipper extends Pinball.Part
   # maxAngleDegrees: the amount the flipper displaces when engaged
   # angularSpeedDegrees: the amount of degrees per second the flipper rotates at
@@ -127,7 +129,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     angleChange = angularSpeed * elapsed
     @displacementAngle += angleChange
     
-    rotationQuaternion = new THREE.Quaternion().setFromAxisAngle @constructor.rotationAxis, @rotationAngle() + @displacementAngle
+    _rotationQuaternion.setFromAxisAngle @constructor.rotationAxis, @rotationAngle() + @displacementAngle
     
     physicsObject = @avatar.getPhysicsObject()
-    physicsObject.setRotationQuaternion rotationQuaternion
+    physicsObject.setRotationQuaternion _rotationQuaternion

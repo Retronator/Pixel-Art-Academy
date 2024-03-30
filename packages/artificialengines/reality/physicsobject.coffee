@@ -27,16 +27,11 @@ class AR.PhysicsObject
     @collisionShape?.calculateLocalInertia @mass, @localInertia
     @body?.setMassProps @mass, @localInertia
 
-  getPosition: ->
+  getPosition: (result) ->
+    result ?= new THREE.Vector3
     @motionState.getWorldTransform @_transform
-    @_transform.getOrigin().toObject()
-
-  getPositionTo: (target) ->
-    @motionState.getWorldTransform @_transform
-    origin = @_transform.getOrigin()
-    target.x = origin.x()
-    target.y = origin.y()
-    target.z = origin.z()
+    result.setFromBulletVector3 @_transform.getOrigin()
+    result
 
   setPosition: (position) ->
     @motionState.getWorldTransform @_transform
@@ -48,9 +43,11 @@ class AR.PhysicsObject
     # Also set it directly on body if it's not a kinematic object.
     @body.setWorldTransform @_transform unless @body.isKinematicObject()
 
-  getRotationQuaternion: ->
+  getRotationQuaternion: (result) ->
+    result ?= new THREE.Quaternion
     @motionState.getWorldTransform @_transform
-    @_transform.getRotation().toObject()
+    result.setFromBulletQuaternion @_transform.getRotation()
+    result
 
   setRotationQuaternion: (rotationQuaternion) ->
     @motionState.getWorldTransform @_transform
@@ -66,8 +63,10 @@ class AR.PhysicsObject
     @hasFixedRotation = value
     @body.setAngularFactor if value then 0 else 1
 
-  getLinearVelocity: ->
-    @body.getLinearVelocity().toObject()
+  getLinearVelocity: (result) ->
+    result ?= new THREE.Vector3
+    result.setFromBulletVector3 @body.getLinearVelocity()
+    result
     
   setLinearVelocity: (velocity) ->
     @_vector3.copy velocity
@@ -77,11 +76,11 @@ class AR.PhysicsObject
     @_quaternion.copy angularVelocity
     @body.setAngularVelocity @_quaternion
     
-  getBoundingBox: (box) ->
-    box ?= new THREE.Box3
+  getBoundingBox: (result) ->
+    result ?= new THREE.Box3
     
     @body.getAabb @_min, @_max
-    box.min.setFromBulletVector3 @_min
-    box.max.setFromBulletVector3 @_max
+    result.min.setFromBulletVector3 @_min
+    result.max.setFromBulletVector3 @_max
     
-    box
+    result

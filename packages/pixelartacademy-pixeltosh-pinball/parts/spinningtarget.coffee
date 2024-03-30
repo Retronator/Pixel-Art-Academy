@@ -3,6 +3,9 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 CollisionGroups = Pinball.PhysicsManager.CollisionGroups
 
+_rotationQuaternion = new THREE.Quaternion
+_rotationAngles = new THREE.Euler
+
 class Pinball.Parts.SpinningTarget extends Pinball.Part
   # captive: boolean whether the spawned ball is captive
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.SpinningTarget'
@@ -21,13 +24,15 @@ class Pinball.Parts.SpinningTarget extends Pinball.Part
   @initialize()
   
   settings: ->
-    score:
-      name: 'Score'
+    points:
+      name: 'Points'
       type: Pinball.Interface.Settings.Number.id()
+      default: 100
       
   constants: ->
     mass: 0.0002
-    height: Pinball.CameraManager.orthographicPixelSize
+    height: 0.001
+    meshHeight: Pinball.CameraManager.orthographicPixelSize
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Metal
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
@@ -35,7 +40,7 @@ class Pinball.Parts.SpinningTarget extends Pinball.Part
     collisionMask: CollisionGroups.Balls
 
   extraShapeProperties: ->
-    axisY: @pinball.sceneManager().ballYPosition() * 2 + Pinball.CameraManager.orthographicPixelSize * 1.5
+    axisY: @pinball.sceneManager().ballYPosition() * 2 + 0.002
     
   initialize: ->
     super arguments...
@@ -68,6 +73,8 @@ class Pinball.Parts.SpinningTarget extends Pinball.Part
     # Recreate the constraint if needed.
     @_createConstraint() if @constraint
     
+    @_toBaseRotationQuaternion = @rotationQuaternion().invert()
+    
   _createConstraint: ->
     @_dynamicsWorld.removeConstraint @constraint if @constraint
     
@@ -88,6 +95,24 @@ class Pinball.Parts.SpinningTarget extends Pinball.Part
     @constraint.setAngularUpperLimit new Ammo.btVector3 Math.PI, 0, 0
     
     @_dynamicsWorld.addConstraint @constraint
+    
+  update: (elapsed) ->
+    return unless physicsObject = @avatar.getPhysicsObject()
+
+    # Get rotation relative to the base.
+    physicsObject.getRotationQuaternion _rotationQuaternion
+    _rotationQuaternion.premultiply @_toBaseRotationQuaternion
+    _rotationAngles.setFromQuaternion _rotationQuaternion, 'YXZ'
+    
+    # See if we're in the scoring region (base of the spinner turned to top).
+    distanceFromTop = Math.abs _rotationAngles.x + Math.PI / 2
+    inScoringRegion = distanceFromTop < 0.5
+
+    # Add points when entering the scoring region.
+    if inScoringRegion and not @_wasInScoringRegion
+      @pinball.gameManager().addPoints points if points = @data().points
+    
+    @_wasInScoringRegion = inScoringRegion
     
   class @Shape extends Pinball.Part.Avatar.ConvexExtrusion
     _calculateBitmapOrigin: ->

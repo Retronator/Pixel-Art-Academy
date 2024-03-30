@@ -83,7 +83,7 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
             @geometry = new THREE.PlaneGeometry pixelSize * (bitmap.bounds.width + 2), pixelSize * (bitmap.bounds.height + 2)
             
           when Pinball.Part.Avatar.Shape.MeshStyles.Extrusion
-            @geometry = @constructor._createExtrusionGeometry texture, shape.height
+            @geometry = @constructor._createExtrusionGeometry texture, constants.meshHeight ? shape.height
       
       flipped = @flipped()
       

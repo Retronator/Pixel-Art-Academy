@@ -15,6 +15,12 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
   
   @initialize()
   
+  settings: ->
+    points:
+      name: 'Points'
+      type: Pinball.Interface.Settings.Number.id()
+      default: 1000
+      
   constants: ->
     height: 0.02
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
@@ -27,5 +33,5 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
   onBallEnter: (ball) ->
     ball.die()
     
-    return unless score = @data().score
-    @pinball.gameManager().addScore score
+    return unless points = @data().points
+    @pinball.gameManager().addPoints points
