@@ -62,7 +62,9 @@ Package.onUse(function(api) {
   api.addFile('parts/playfield');
   api.addFile('parts/trough');
   api.addFile('parts/pin');
+  api.addFile('parts/dynamicpart');
   api.addFile('parts/spinningtarget');
+  api.addFile('parts/gate');
 
   api.addStyledFile('interface..');
   api.addComponent('interface/playfield..');

@@ -18,9 +18,6 @@ class Pinball.Parts.Plunger extends Pinball.Part
   
   @initialize()
   
-  @pullingSpeed = 0.05 # m / s
-  @releaseSpeed = 1.5 # m / s
-  
   @maxDisplacementRatio = 0.8
   
   constructor: ->
@@ -30,6 +27,24 @@ class Pinball.Parts.Plunger extends Pinball.Part
     @moving = false
     @displacement = 0
   
+  settings: ->
+    pullingSpeed:
+      name: 'Pulling speed'
+      unit: "m/s"
+      type: Pinball.Interface.Settings.Number.id()
+      min: 0.01
+      max: 0.5
+      step: 0.01
+      default: 0.05
+    releaseSpeed:
+      name: 'Release speed'
+      unit: "m/s"
+      type: Pinball.Interface.Settings.Number.id()
+      min: 0.1
+      max: 5
+      step: 0.1
+      default: 1.5
+      
   constants: ->
     height: 0.02
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
@@ -63,7 +78,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
   deactivate: ->
     @active = false
     
-    @_releaseSpeed = -@constructor.releaseSpeed * @displacement / @shape().depth
+    @_releaseSpeed = -@data().releaseSpeed * @displacement / @shape().depth
     
   fixedUpdate: (elapsed) ->
     return unless @moving
@@ -79,7 +94,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
         
       else
         # Keep pulling the plunger.
-        speed = @constructor.pullingSpeed
+        speed = @data().pullingSpeed
     
     else
       if @displacement < 0

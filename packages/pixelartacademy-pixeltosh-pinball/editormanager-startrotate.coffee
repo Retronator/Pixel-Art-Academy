@@ -58,7 +58,7 @@ Pinball.EditorManager::startRotate = (part) ->
     newAngle = _.normalizeAngle startRotationAngle + (startCursorAngle - cursorAngle)
     
     # Apply angle snapping.
-    if event.ctrlKey
+    unless event.shiftKey
       minDistance = Number.POSITIVE_INFINITY
       snappedAngle = null
       
