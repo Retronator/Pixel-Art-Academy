@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AS = Artificial.Spectrum
 AR = Artificial.Reality
+AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
@@ -15,23 +16,39 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
   constructor: (@pixelArtEvaluation, @properties) ->
     super arguments...
     
-    @bitmapOrigin = @constructor._calculateCenterOfMass @pixelArtEvaluation unless @properties.bitmapOrigin
+    @bitmapOrigin = @_calculateBitmapOrigin() unless @properties.bitmapOrigin
     
-    @lines = []
-
-    for core in @pixelArtEvaluation.layers[0].cores
-      for line in core.outlines
-        @lines.push @_getLinePoints line
-
     @topY = @height / 2
     @bottomY = -@height / 2
+    
+    @boundaries = []
+    individualGeometryData = []
+    
+    for core in @pixelArtEvaluation.layers[0].cores
+      boundaries = []
+      
+      for line in core.outlines
+        points = @_getLinePoints line
+        boundaries.push new AP.PolygonBoundary points
+      
+      @boundaries.push boundaries...
+      
+      polygon = new AP.PolygonWithHoles boundaries
+      polygonWithoutHoles = polygon.getPolygonWithoutHoles()
+      
+      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries,  @bottomY, @topY, @properties.flipped
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, @bottomY, -1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, @topY, 1
+    
+    @geometryData = @constructor._mergeGeometryData individualGeometryData
+
+  _calculateBitmapOrigin: -> @constructor._calculateCenterOfMass @pixelArtEvaluation
   
   createPhysicsDebugGeometry: ->
-    geometryData = @constructor._createExtrudedVerticesAndIndices @lines, @topY, @bottomY, @properties.flipped
-
     geometry = new THREE.BufferGeometry
-    geometry.setAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
-    geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
+    geometry.setAttribute 'position', new THREE.BufferAttribute @geometryData.vertexBufferArray, 3
+    geometry.setAttribute 'normal', new THREE.BufferAttribute @geometryData.normalArray, 3
+    geometry.setIndex new THREE.BufferAttribute @geometryData.indexBufferArray, 1
     geometry.computeBoundingBox()
     geometry
 
@@ -41,15 +58,15 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
     
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     
-    for line in @lines
-      for point, pointIndex in line
-        hullPoint.setX (point.x + 0.5) * pixelSize
+    for boundary in @boundaries
+      for vertex in boundary.vertices
+        hullPoint.setX vertex.x * pixelSize
         hullPoint.setY @topY
-        hullPoint.setZ (point.y + 0.5) * pixelSize
-        convexHullShape.addPoint hullPoint
+        hullPoint.setZ vertex.y * pixelSize
+        convexHullShape.addPoint hullPoint, false
         
         hullPoint.setY @bottomY
-        convexHullShape.addPoint hullPoint
+        convexHullShape.addPoint hullPoint, false
         
     convexHullShape.recalcLocalAabb()
     convexHullShape

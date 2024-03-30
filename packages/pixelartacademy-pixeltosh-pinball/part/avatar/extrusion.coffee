@@ -22,22 +22,19 @@ class Pinball.Part.Avatar.Extrusion extends Pinball.Part.Avatar.TriangleMesh
     
     for core in @pixelArtEvaluation.layers[0].cores
       boundaries = []
-      wallLines = []
       
       for line in core.outlines
         points = @_getLinePoints line
-        wallLines.push points
         boundaries.push new AP.PolygonBoundary points
       
-      geometryData = @constructor._createExtrudedVerticesAndIndices wallLines, 0, -@height, @properties.flipped
-      _.reverse geometryData.indexBufferArray if @properties.flipped
-      individualGeometryData.push geometryData
-      
-      polygon = new AP.PolygonWithHoles boundaries
-      
-      topPolygon = polygon.getPolygonWithoutHoles()
-      individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygon, 0
       @boundaries.push boundaries...
+
+      polygon = new AP.PolygonWithHoles boundaries
+      polygonWithoutHoles = polygon.getPolygonWithoutHoles()
+
+      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries,  -@height, 0, @properties.flipped
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, 0, 1
+      individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, -@height, -1
     
     @geometryData = @constructor._mergeGeometryData individualGeometryData
 

@@ -8,6 +8,8 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
+  @hqxScale = 4
+  
   constructor: (part) ->
     super part.constructor
 
@@ -36,7 +38,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       
       expandedCanvas = new AM.Canvas originalCanvas.width + 2, originalCanvas.height + 2
       expandedCanvas.context.drawImage originalCanvas, 1, 1
-      scaledCanvas = AS.Hqx.scale expandedCanvas, 4, AS.Hqx.Modes.NoBlending, false, true
+      scaledCanvas = AS.Hqx.scale expandedCanvas, @constructor.hqxScale, AS.Hqx.Modes.NoBlending, false, true
       
       @_texture?.dispose()
       @_texture = new THREE.CanvasTexture scaledCanvas

@@ -91,10 +91,10 @@ class Pinball.Interface
         tabs: [
           name: 'Parts'
           contentComponentId: @Parts.id()
+          active: true
         ,
           name: 'Settings'
           contentComponentId: @Settings.id()
-          active: true
         ]
         allowClosing: false
         

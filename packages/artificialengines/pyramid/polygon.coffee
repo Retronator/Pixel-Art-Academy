@@ -10,14 +10,15 @@ class AP.Polygon
       
     else
       @boundary = new AP.PolygonBoundary boundaryOrVertices
-
+      
+    @boundary = @boundary.getBoundaryWithOrientation AP.PolygonBoundary.Orientations.CounterClockwise
     @vertices = @boundary.vertices
 
   getConvexPolygons: (quickDecomposition = true) ->
     polygons = []
     
     # Convert points to an array of arrays for convex decomposition.
-    pointsArray = for vertex in @boundary.getPolygonBoundaryWithOrientation(AP.PolygonBoundary.Orientation.CounterClockwise).vertices
+    pointsArray = for vertex in @boundary.vertices
       [vertex.x, vertex.y]
     
     method = if quickDecomposition then 'quickDecomp' else 'decomp'
@@ -33,12 +34,12 @@ class AP.Polygon
   
   triangulate: ->
     trianglesCount = @vertices.length - 2
-    
     indices = new Uint32Array trianglesCount * 3
-    currentIndicesIndex = 0
     
-    vertices = @boundary.getPolygonBoundaryWithOrientation(AP.PolygonBoundary.Orientation.CounterClockwise).vertices
+    vertices = _.clone @boundary.vertices
     vertexIndices = [0...vertices.length]
+
+    currentIndicesIndex = 0
     
     while vertices.length > 3
       # Remove a triangle on the inside that doesn't cross a boundary.
@@ -55,7 +56,7 @@ class AP.Polygon
         nextRemainingVertex = vertices[nextRemainingVertexIndex]
 
         # A triangle on the inside will have counter-clockwise orientation.
-        continue if AP.PolygonBoundary.getSectionOrientation(previousRemainingVertex, remainingVertex, nextRemainingVertex) is AP.PolygonBoundary.Orientation.Clockwise
+        continue if AP.PolygonBoundary.getSectionOrientation(previousRemainingVertex, remainingVertex, nextRemainingVertex) is AP.PolygonBoundary.Orientations.Clockwise
         
         # Triangle must not include any other vertices.
         containsOtherVertex = false

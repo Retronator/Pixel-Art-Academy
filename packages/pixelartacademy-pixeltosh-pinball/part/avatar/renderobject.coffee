@@ -7,7 +7,7 @@ PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-_rotation = new THREE.Quaternion
+_rotationQuaternion = new THREE.Quaternion
 _rotationAngles = new THREE.Euler
 
 if Meteor.isClient
@@ -25,6 +25,12 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     
     constants = @entity.constants()
     
+    @perpendicularRotationOrigin = new THREE.Object3D
+    @add @perpendicularRotationOrigin
+    
+    @freeRotationOrigin = new THREE.Object3D
+    @add @freeRotationOrigin
+    
     # Create the physics debug mesh.
     @autorun (computation) =>
       return unless shape = @entity.shape()
@@ -32,13 +38,13 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
       @physicsDebugGeometry?.dispose()
       @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or shape.createPhysicsDebugGeometry()
       
-      @remove @physicsDebugMesh if @physicsDebugMesh
+      @physicsDebugMesh?.removeFromParent()
       @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, constants.physicsDebugMaterial or @constructor.physicsDebugMaterial
       @physicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
       @physicsDebugMesh.receiveShadow = true
       @physicsDebugMesh.castShadow = true
       
-      @add @physicsDebugMesh
+      @freeRotationOrigin.add @physicsDebugMesh
     
     if @entity.constants().hidden
       @ready true
@@ -50,41 +56,60 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     @autorun (computation) =>
       return unless shape = @entity.shape()
       bitmap = @entity.bitmap()
+      texture = @entity.texture()
       
       if @existingResources?.material
         @material = @existingResources.material
         
       else
         @material?.dispose()
-        @material = new THREE.MeshLambertMaterial
+        @material = new THREE.MeshBasicMaterial
           color: 0xffffff
           alphaTest: 0.5
           side: THREE.DoubleSide
-          map: @entity.texture()
+          map: texture
           
       pixelSize = Pinball.CameraManager.orthographicPixelSize
-      @geometry?.dispose()
+
       # Note: Our texture has an extra padding of 1px around the bitmap so we need the plane to be 2px larger.
-      @geometry = @existingResources?.geometry or new THREE.PlaneGeometry pixelSize * (bitmap.bounds.width + 2), pixelSize * (bitmap.bounds.height + 2)
+      if @existingResources?.geometry
+        @geometry = @existingResources?.geometry
+        
+      else
+        @geometry?.dispose()
+        
+        switch shape.meshStyle()
+          when Pinball.Part.Avatar.Shape.MeshStyles.Plane
+            @geometry = new THREE.PlaneGeometry pixelSize * (bitmap.bounds.width + 2), pixelSize * (bitmap.bounds.height + 2)
+            
+          when Pinball.Part.Avatar.Shape.MeshStyles.Extrusion
+            @geometry = @constructor._createExtrusionGeometry texture, shape.height
       
       flipped = @flipped()
       
-      @bitmapPlane = new THREE.Mesh @geometry, @material
-      @bitmapPlane.rotation.x = -Math.PI / 2
-      @bitmapPlane.scale.x = -1 if flipped
-      @bitmapPlane.receiveShadow = true
-      @bitmapPlane.castShadow = true
-      @bitmapPlane.layers.set Pinball.RendererManager.RenderLayers.Main
+      @bitmapMesh = new THREE.Mesh @geometry, @material
+      @bitmapMesh.rotation.x = -Math.PI / 2
+      @bitmapMesh.scale.x = -1 if flipped
+      @bitmapMesh.receiveShadow = true
+      @bitmapMesh.castShadow = true
+      @bitmapMesh.layers.set Pinball.RendererManager.RenderLayers.Main
       
       # Offset the mesh so that the shape origin on the bitmap will appear at the render object's position.
-      @bitmapPlane.position.x = (bitmap.bounds.width / 2 - shape.bitmapOrigin.x) * pixelSize
-      @bitmapPlane.position.x *= -1 if flipped
-      @bitmapPlane.position.z = (bitmap.bounds.height / 2 - shape.bitmapOrigin.y) * pixelSize
+      @bitmapMesh.position.x = (bitmap.bounds.width / 2 - shape.bitmapOrigin.x) * pixelSize
+      @bitmapMesh.position.x *= -1 if flipped
+      @bitmapMesh.position.z = (bitmap.bounds.height / 2 - shape.bitmapOrigin.y) * pixelSize
       
-      @remove @mesh if @mesh
+      @mesh?.removeFromParent()
       @mesh = new THREE.Object3D
-      @mesh.add @bitmapPlane
-      @add @mesh
+      @mesh.add @bitmapMesh
+      
+      switch shape.rotationStyle()
+        when Pinball.Part.Avatar.Shape.RotationStyles.Fixed
+          @add @mesh
+        when Pinball.Part.Avatar.Shape.RotationStyles.Perpendicular
+          @perpendicularRotationOrigin.add @mesh
+        when Pinball.Part.Avatar.Shape.RotationStyles.Free
+          @freeRotationOrigin.add @mesh
       
       @ready true
   
@@ -100,19 +125,27 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   clone: ->
     new @constructor @part, @
     
+  getRotationQuaternionForSnapping: ->
+    return @quaternion unless shape = @entity.shape()
+    
+    switch shape.rotationStyle()
+      when Pinball.Part.Avatar.Shape.RotationStyles.Fixed
+        @quaternion
+      when Pinball.Part.Avatar.Shape.RotationStyles.Perpendicular
+        @perpendicularRotationOrigin.quaternion
+      when Pinball.Part.Avatar.Shape.RotationStyles.Free
+        @freeRotationOrigin.quaternion
+    
   updateFromPhysicsObject: (physicsObject) ->
-    return unless shape = @entity.shape()
     physicsObject.motionState.getWorldTransform _transform
     @position.setFromBulletVector3 _transform.getOrigin()
     
-    rotation = _transform.getRotation()
-    @physicsDebugMesh.quaternion.setFromBulletQuaternion rotation
-
-    return if shape.fixedBitmapRotation() or not @mesh
+    rotationQuaternion = _transform.getRotation()
+    @freeRotationOrigin.quaternion.setFromBulletQuaternion rotationQuaternion
     
-    # Rotate the bitmap only around the Y axis.
-    _rotation.setFromBulletQuaternion rotation
-    _rotationAngles.setFromQuaternion _rotation
+    # For the perpendicular rotation origin, rotate the object only around the Y axis.
+    _rotationQuaternion.setFromBulletQuaternion rotationQuaternion
+    _rotationAngles.setFromQuaternion _rotationQuaternion
     
     # Note: We divide by 1.9 so that when an object is resting at
     # 90 degrees, we don't flip between sides due to instabilities.
@@ -128,8 +161,8 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     else
       _rotationAngles.x = 0
     
-    @mesh.quaternion.setFromEuler _rotationAngles
-  
+    @perpendicularRotationOrigin.quaternion.setFromEuler _rotationAngles
+    
   renderReflections: (renderer, scene) ->
     unless @cubeCamera
       @cubeCameraRenderTarget = new THREE.WebGLCubeRenderTarget 256,

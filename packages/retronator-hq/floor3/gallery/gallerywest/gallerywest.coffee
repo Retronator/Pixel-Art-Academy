@@ -129,7 +129,7 @@ class HQ.GalleryWest extends LOI.Adventure.Location
             height = (@halfSize.y + extrude) * 2
             depth = (@halfSize.z + extrude) * 2
 
-            new THREE.BoxBufferGeometry width, height, depth
+            new THREE.BoxGeometry width, height, depth
 
           createCollisionShape: ->
             new Ammo.btBoxShape new Ammo.btVector3 @halfSize.x, @halfSize.y, @halfSize.z

@@ -38,6 +38,7 @@ Package.onUse(function(api) {
   api.addFile('part..');
   api.addFile('part/avatar..');
   api.addFile('part/avatar/renderobject');
+  api.addFile('part/avatar/renderobject-createextrusiongeometry');
   api.addFile('part/avatar/physicsobject');
   api.addFile('part/avatar/shape');
   api.addFile('part/avatar/sphere');
@@ -61,6 +62,7 @@ Package.onUse(function(api) {
   api.addFile('parts/playfield');
   api.addFile('parts/trough');
   api.addFile('parts/pin');
+  api.addFile('parts/spinningtarget');
 
   api.addStyledFile('interface..');
   api.addComponent('interface/playfield..');

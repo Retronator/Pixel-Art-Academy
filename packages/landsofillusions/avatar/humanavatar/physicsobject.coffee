@@ -56,15 +56,15 @@ class LOI.HumanAvatar.PhysicsObject extends AR.PhysicsObject
     capsuleInnerHeight = @capsuleInnerHeight - 2 * occupationMargin
     renderRadius = capsuleRadius + (options.extrude or 0)
 
-    debugMesh = new THREE.Mesh new THREE.SphereBufferGeometry(renderRadius, 4, 3, 0, Math.PI * 2, 0, Math.PI / 2), options.material
+    debugMesh = new THREE.Mesh new THREE.SphereGeometry(renderRadius, 4, 3, 0, Math.PI * 2, 0, Math.PI / 2), options.material
     debugMesh.position.y = capsuleRadius + capsuleInnerHeight
     debugObject.add debugMesh
 
-    debugMesh = new THREE.Mesh new THREE.CylinderBufferGeometry(renderRadius, renderRadius, capsuleInnerHeight, 4, 2, true), options.material
+    debugMesh = new THREE.Mesh new THREE.CylinderGeometry(renderRadius, renderRadius, capsuleInnerHeight, 4, 2, true), options.material
     debugMesh.position.y = @capsuleHeight / 2
     debugObject.add debugMesh
 
-    debugMesh = new THREE.Mesh new THREE.SphereBufferGeometry(renderRadius, 4, 3, 0, Math.PI * 2, Math.PI / 2, Math.PI), options.material
+    debugMesh = new THREE.Mesh new THREE.SphereGeometry(renderRadius, 4, 3, 0, Math.PI * 2, Math.PI / 2, Math.PI), options.material
     debugMesh.position.y = capsuleRadius
     debugObject.add debugMesh
 

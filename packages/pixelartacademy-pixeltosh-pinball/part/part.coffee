@@ -92,7 +92,7 @@ class Pinball.Part extends LOI.Adventure.Item
   rotationAngle: ->
     @_temporaryRotationAngle() ? @data()?.rotationAngle ? 0
     
-  rotation: ->
+  rotationQuaternion: ->
     new THREE.Quaternion().setFromEuler new THREE.Euler 0, @rotationAngle(), 0
   
   createAvatar: ->
@@ -110,6 +110,9 @@ class Pinball.Part extends LOI.Adventure.Item
     # Override to return an array of polygon boundaries of this part if it creates holes in the playfield.
     null
   
+  initialize: ->
+    @avatar.initialize()
+    
   reset: ->
     @avatar.reset()
   

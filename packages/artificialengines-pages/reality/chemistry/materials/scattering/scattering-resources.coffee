@@ -46,7 +46,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
 
       _resources.rayInitializationScene?.dispose()
       _resources.rayInitializationScene = new THREE.Scene()
-      _resources.rayInitializationScene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), _resources.rayInitializationMaterial
+      _resources.rayInitializationScene.add new THREE.Mesh new THREE.PlaneGeometry(2, 2), _resources.rayInitializationMaterial
 
       # Create ray properties texture.
       _resources.rayPropertiesData = new Float32Array raysCount * 8
@@ -65,7 +65,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
 
       _resources.rayMarchingScene?.dispose()
       _resources.rayMarchingScene = new THREE.Scene()
-      _resources.rayMarchingScene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), _resources.rayMarchingMaterial
+      _resources.rayMarchingScene.add new THREE.Mesh new THREE.PlaneGeometry(2, 2), _resources.rayMarchingMaterial
 
       # Prepare for ray splitting.
       _resources.raySplittingMaterial?.dispose()
@@ -78,7 +78,7 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
 
       _resources.raySplittingScene?.dispose()
       _resources.raySplittingScene = new THREE.Scene()
-      _resources.raySplittingScene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), _resources.raySplittingMaterial
+      _resources.raySplittingScene.add new THREE.Mesh new THREE.PlaneGeometry(2, 2), _resources.raySplittingMaterial
 
       # Prepare ray lines for rendering.
       _resources.raysGeometry?.dispose()
@@ -140,6 +140,6 @@ class AR.Pages.Chemistry.Materials.Scattering extends AR.Pages.Chemistry.Materia
 
       _resources.displayScene?.dispose()
       _resources.displayScene = new THREE.Scene()
-      _resources.displayScene.add new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), _resources.displayMaterial
+      _resources.displayScene.add new THREE.Mesh new THREE.PlaneGeometry(2, 2), _resources.displayMaterial
 
       _resources

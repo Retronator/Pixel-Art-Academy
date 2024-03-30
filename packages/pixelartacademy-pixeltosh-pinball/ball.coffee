@@ -37,7 +37,7 @@ class Pinball.Ball
   texture: -> @ballSpawner.texture()
   shape: -> @ballSpawner.shape()
   position: -> @ballSpawner.position()
-  rotation: -> @ballSpawner.rotation()
+  rotationQuaternion: -> @ballSpawner.rotationQuaternion()
   physicsProperties: -> @ballSpawner.physicsProperties()
   shapeProperties: -> @ballSpawner.shapeProperties()
   

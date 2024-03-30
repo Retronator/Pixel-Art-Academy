@@ -48,11 +48,11 @@ class AR.PhysicsObject
     # Also set it directly on body if it's not a kinematic object.
     @body.setWorldTransform @_transform unless @body.isKinematicObject()
 
-  getRotation: ->
+  getRotationQuaternion: ->
     @motionState.getWorldTransform @_transform
     @_transform.getRotation().toObject()
 
-  setRotation: (rotationQuaternion) ->
+  setRotationQuaternion: (rotationQuaternion) ->
     @motionState.getWorldTransform @_transform
 
     @_quaternion.copy rotationQuaternion

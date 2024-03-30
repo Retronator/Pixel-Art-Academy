@@ -49,7 +49,7 @@ class Pinball.EditorManager
         x: topLeftPosition.x + shape.bitmapOrigin.x * pixelSize
         z: topLeftPosition.z + shape.bitmapOrigin.y * pixelSize
       
-      Pinball.CameraManager.snapShapeToPixelPosition shape, startPosition
+      Pinball.CameraManager.snapShapeToPixelPosition shape, startPosition, new THREE.Quaternion
       
       @startDrag part, {startPosition}
 

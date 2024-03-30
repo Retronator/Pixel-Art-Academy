@@ -27,7 +27,7 @@ class LOI.Engine.RadianceState.Probe
     @octahedronMap = @octahedronMapRenderTarget.texture
 
     @octahedronMapMaterial = new @OctahedronMapMaterial
-    octahedronMapQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(2, 2), @octahedronMapMaterial
+    octahedronMapQuad = new THREE.Mesh new THREE.PlaneGeometry(2, 2), @octahedronMapMaterial
 
     @octahedronMapScene = new THREE.Scene()
     @octahedronMapScene.add octahedronMapQuad

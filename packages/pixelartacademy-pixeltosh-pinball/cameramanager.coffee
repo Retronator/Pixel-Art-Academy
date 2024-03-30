@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
+_translationToRotationOrigin = new THREE.Vector3
+
 class Pinball.CameraManager
   @DisplayTypes:
     Orthographic: 'Orthographic'
@@ -11,18 +13,27 @@ class Pinball.CameraManager
   
   @orthographicPixelSize = 0.5 / 180 # m/px
   
-  @snapShapeToPixelPosition: (shape, position) ->
-    originScreenX = position.x / @orthographicPixelSize
-    originScreenY = position.z / @orthographicPixelSize
+  @snapShapeToPixelPosition: (shape, position, rotationQuaternion) ->
+    bitmapRotationOriginX =  0.5 + Math.floor shape.bitmapOrigin.x
+    bitmapRotationOriginY =  0.5 + Math.floor shape.bitmapOrigin.y
     
-    screenX = originScreenX - shape.bitmapOrigin.x
-    screenY = originScreenY - shape.bitmapOrigin.y
+    _translationToRotationOrigin.x = (bitmapRotationOriginX - shape.bitmapOrigin.x) * @orthographicPixelSize
+    _translationToRotationOrigin.y = 0
+    _translationToRotationOrigin.z = (bitmapRotationOriginY - shape.bitmapOrigin.y) * @orthographicPixelSize
     
-    integerScreenX = Math.round screenX
-    integerScreenY = Math.round screenY
+    _translationToRotationOrigin.applyQuaternion rotationQuaternion
     
-    position.x = (integerScreenX + shape.bitmapOrigin.x) * @orthographicPixelSize
-    position.z = (integerScreenY + shape.bitmapOrigin.y) * @orthographicPixelSize
+    rotationOriginX = position.x + _translationToRotationOrigin.x
+    rotationOriginZ = position.z + _translationToRotationOrigin.z
+    
+    rotationOriginScreenX = rotationOriginX / @orthographicPixelSize
+    rotationOriginScreenY = rotationOriginZ / @orthographicPixelSize
+    
+    pixelCenterScreenX = Math.round(rotationOriginScreenX - 0.5) + 0.5
+    pixelCenterScreenY = Math.round(rotationOriginScreenY - 0.5) + 0.5
+    
+    position.x += (pixelCenterScreenX - rotationOriginScreenX) * @orthographicPixelSize
+    position.z += (pixelCenterScreenY - rotationOriginScreenY) * @orthographicPixelSize
   
   constructor: (@pinball) ->
     @displayType = @pinball.state.field 'cameraDisplayType', default: @constructor.DisplayTypes.Orthographic

@@ -20,12 +20,12 @@ class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
     
     @continuousCollisionDetectionRadius = @radius
   
-  fixedBitmapRotation: -> true
+  rotationStyle: -> @constructor.RotationStyles.Fixed
   
   collisionShapeMargin: -> null
   
   createPhysicsDebugGeometry: ->
-    new THREE.SphereBufferGeometry @radius, 8, 4
+    new THREE.SphereGeometry @radius, 8, 4
 
   createCollisionShape: ->
     new Ammo.btSphereShape @radius

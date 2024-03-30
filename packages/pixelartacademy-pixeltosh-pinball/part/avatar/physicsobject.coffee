@@ -78,14 +78,14 @@ class Pinball.Part.Avatar.PhysicsObject extends AR.PhysicsObject
   reset: ->
     return unless shape = @entity.shape()
     return unless position = @entity.position()
-    return unless rotation = @entity.rotation()
+    return unless rotationQuaternion = @entity.rotationQuaternion()
     
     @setPosition
       x: position.x
       y: shape.yPosition()
       z: position.z
     
-    @setRotation rotation
+    @setRotationQuaternion rotationQuaternion
     
     @setLinearVelocity new THREE.Vector3
     @setAngularVelocity new THREE.Quaternion

@@ -44,7 +44,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       color: 0xffffff
       envMap: LOI.Engine.RadianceState.Probe.cubeCamera.renderTarget.texture
 
-    radianceDebugSphere = new THREE.Mesh new THREE.SphereBufferGeometry(0.5, 32, 32), radianceDebugSphereMaterial
+    radianceDebugSphere = new THREE.Mesh new THREE.SphereGeometry(0.5, 32, 32), radianceDebugSphereMaterial
     radianceDebugSphere.layers.set 4
     scene.add radianceDebugSphere
 
@@ -53,7 +53,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       map: LOI.Engine.RadianceState.Probe.octahedronMap
       side: THREE.DoubleSide
 
-    radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneBufferGeometry(0.5, 1), radianceDebugProbeOctahedronMapMaterial
+    radianceDebugProbeOctahedronMap = new THREE.Mesh new THREE.PlaneGeometry(0.5, 1), radianceDebugProbeOctahedronMapMaterial
     radianceDebugProbeOctahedronMap.position.x = 1
     radianceDebugProbeOctahedronMap.rotation.x = Math.PI
     radianceDebugProbeOctahedronMap.layers.set 4

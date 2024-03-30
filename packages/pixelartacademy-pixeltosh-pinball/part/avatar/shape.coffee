@@ -8,6 +8,15 @@ PAE = PAA.Practice.PixelArtEvaluation
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Part.Avatar.Shape
+  @RotationStyles:
+    Fixed: 'Fixed'
+    Perpendicular: 'Perpendicular'
+    Free: 'Free'
+  
+  @MeshStyles:
+    Plane: 'Plane'
+    Extrusion: 'Extrusion'
+  
   @roughEdgeMargin = 0.002 # m
   @curveExtraPointsCount = 2
   
@@ -77,33 +86,36 @@ class Pinball.Part.Avatar.Shape
     new AE.Rectangle bounds
 
   @_calculateCenterOfMass: (pixelArtEvaluation) ->
-    points = pixelArtEvaluation.layers[0].points
+    pixels = pixelArtEvaluation.layers[0].pixels
     center = new THREE.Vector2
     
-    center.add point for point in points
-    center.multiplyScalar 1 / points.length
+    center.add pixel for pixel in pixels
+    center.multiplyScalar 1 / pixels.length
+
+    center.x += 0.5
+    center.y += 0.5
     center
     
-  @_createExtrudedVerticesAndIndices: (lines, topY, bottomY, flipped = false) ->
-    pointsCount = _.sumBy lines, 'length'
+  @_createExtrudedVerticesAndIndices: (polygonBoundaries, bottomY, topY, flipped = false) ->
+    vertexCount = _.sumBy polygonBoundaries, (polygonBoundary) => polygonBoundary.vertices.length
     
-    vertexBufferArray = new Float32Array pointsCount * 6
-    normalArray = new Float32Array pointsCount * 6
-    indexBufferArray = new Uint32Array pointsCount * 6
+    vertexBufferArray = new Float32Array vertexCount * 6
+    normalArray = new Float32Array vertexCount * 6
+    indexBufferArray = new Uint32Array vertexCount * 6
     
-    lineStartVertexIndex = 0
+    boundaryStartVertexIndex = 0
     currentIndex = 0
     pixelSize = Pinball.CameraManager.orthographicPixelSize
     
     normalSign = if flipped then -1 else 1
     
-    for line in lines
-      bottomVertexIndex = lineStartVertexIndex
+    for polygonBoundary in polygonBoundaries
+      bottomVertexIndex = boundaryStartVertexIndex
       topVertexIndex = bottomVertexIndex + 1
       
-      for point, pointIndex in line
-        x = point.x * pixelSize
-        y = point.y * pixelSize
+      for vertex, vertexIndex in polygonBoundary.vertices
+        x = vertex.x * pixelSize
+        y = vertex.y * pixelSize
         vertexBufferArray[bottomVertexIndex * 3] = x
         vertexBufferArray[bottomVertexIndex * 3 + 1] = topY
         vertexBufferArray[bottomVertexIndex * 3 + 2] = y
@@ -111,30 +123,30 @@ class Pinball.Part.Avatar.Shape
         vertexBufferArray[topVertexIndex * 3 + 1] = bottomY
         vertexBufferArray[topVertexIndex * 3 + 2] = y
         
-        normalArray[bottomVertexIndex * 3] = -point.tangent.y * normalSign
-        normalArray[bottomVertexIndex * 3 + 2] = point.tangent.x * normalSign
-        normalArray[topVertexIndex * 3] = -point.tangent.y * normalSign
-        normalArray[topVertexIndex * 3 + 2] = point.tangent.x * normalSign
+        normalArray[bottomVertexIndex * 3] = -vertex.tangent.y * normalSign
+        normalArray[bottomVertexIndex * 3 + 2] = vertex.tangent.x * normalSign
+        normalArray[topVertexIndex * 3] = -vertex.tangent.y * normalSign
+        normalArray[topVertexIndex * 3 + 2] = vertex.tangent.x * normalSign
         
-        nextBottomVertexIndex = if pointIndex is line.length - 1 then lineStartVertexIndex else bottomVertexIndex + 2
+        nextBottomVertexIndex = if vertexIndex is polygonBoundary.vertices.length - 1 then boundaryStartVertexIndex else bottomVertexIndex + 2
         nextTopVertexIndex = nextBottomVertexIndex + 1
         
-        indexBufferArray[currentIndex] = nextBottomVertexIndex
-        indexBufferArray[currentIndex + 1] = bottomVertexIndex
+        indexBufferArray[currentIndex] = bottomVertexIndex
+        indexBufferArray[currentIndex + 1] = nextBottomVertexIndex
         indexBufferArray[currentIndex + 2] = nextTopVertexIndex
-        indexBufferArray[currentIndex + 3] = topVertexIndex
-        indexBufferArray[currentIndex + 4] = nextTopVertexIndex
+        indexBufferArray[currentIndex + 3] = nextTopVertexIndex
+        indexBufferArray[currentIndex + 4] = topVertexIndex
         indexBufferArray[currentIndex + 5] = bottomVertexIndex
         
         bottomVertexIndex += 2
         topVertexIndex += 2
         currentIndex += 6
       
-      lineStartVertexIndex += line.length * 2
+      boundaryStartVertexIndex += polygonBoundary.vertices.length * 2
     
     {vertexBufferArray, normalArray, indexBufferArray}
     
-  @_createPolygonVerticesAndIndices: (polygon, y) ->
+  @_createPolygonVerticesAndIndices: (polygon, y, normalY) ->
     vertexBufferArray = new Float32Array polygon.vertices.length * 3
     normalArray = new Float32Array polygon.vertices.length * 3
     
@@ -146,10 +158,10 @@ class Pinball.Part.Avatar.Shape
       vertexBufferArray[offset + 1] = y
       vertexBufferArray[offset + 2] = vertex.y * pixelSize
       
-      normalArray[offset + 1] = 1
+      normalArray[offset + 1] = normalY
     
     indexBufferArray = polygon.triangulate()
-    _.reverse indexBufferArray
+    _.reverse indexBufferArray unless normalY < 0
     
     {vertexBufferArray, normalArray, indexBufferArray}
   
@@ -314,7 +326,11 @@ class Pinball.Part.Avatar.Shape
       
     points
     
-  fixedBitmapRotation: -> false # Override if the bitmap should not rotate with the physics object.
+  positionSnapping: -> true # Override if the shape prohibits snapping of position to pixels.
+  
+  rotationStyle: -> @constructor.RotationStyles.Perpendicular
+  
+  meshStyle: -> @constructor.MeshStyles.Plane
   
   collisionShapeMargin: -> @constructor.roughEdgeMargin
   

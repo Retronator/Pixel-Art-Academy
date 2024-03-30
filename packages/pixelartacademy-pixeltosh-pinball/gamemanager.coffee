@@ -69,9 +69,13 @@ class Pinball.GameManager
   startSimulation: ->
     @_destroyBalls()
     @spawnBalls true
+    
+    part.onSimulationStarted?() for part in @pinball.sceneManager().parts()
   
   endSimulation: ->
     @_destroyBalls()
+
+    part.onSimulationEnded?() for part in @pinball.sceneManager().parts()
   
   _destroyBalls: ->
     balls = @balls()

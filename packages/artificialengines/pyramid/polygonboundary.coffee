@@ -4,7 +4,7 @@ _delta = new THREE.Vector2
 _normal = new THREE.Vector2
 
 class AP.PolygonBoundary
-  @Orientation:
+  @Orientations:
     Clockwise: 'Clockwise'
     CounterClockwise: 'CounterClockwise'
     
@@ -19,10 +19,10 @@ class AP.PolygonBoundary
     determinant = (xB - xA) * (yC - yA) - (xC - xA) * (yB - yA)
     
     if determinant < 0
-      @Orientation.Clockwise
+      @Orientations.Clockwise
     
     else
-      @Orientation.CounterClockwise
+      @Orientations.CounterClockwise
   
   constructor: (@vertices) ->
     @sideCount = @vertices.length
@@ -60,17 +60,23 @@ class AP.PolygonBoundary
     @_orientation = @constructor.getSectionOrientation previousVertex, minVertex, nextVertex
     @_orientation
     
-  getPolygonBoundaryWithOrientation: (orientation) ->
+  getBoundaryWithOrientation: (orientation) ->
     vertices = _.clone @vertices
     _.reverse vertices unless orientation is @getOrientation()
    
+    new @constructor vertices
+    
+  getBoundaryWithInvertedOrientation: ->
+    vertices = _.clone @vertices
+    _.reverse vertices
+    
     new @constructor vertices
 
   getBoundingRectangle: ->
     AP.BoundingRectangle.fromVertices @vertices
     
   getInsetPolygonBoundary: (distance) ->
-    clockwiseVertices = @getPolygonBoundaryWithOrientation(AP.PolygonBoundary.Orientation.Clockwise).vertices
+    clockwiseVertices = @getBoundaryWithOrientation(AP.PolygonBoundary.Orientations.Clockwise).vertices
     
     lines = for startVertex, vertexIndex in clockwiseVertices
       endVertex = clockwiseVertices[_.modulo vertexIndex + 1, clockwiseVertices.length]
@@ -93,6 +99,6 @@ class AP.PolygonBoundary
       
       insetVertex
     
-    _.reverse insetVertices unless @getOrientation() is AP.PolygonBoundary.Orientation.Clockwise
+    _.reverse insetVertices unless @getOrientation() is AP.PolygonBoundary.Orientations.Clockwise
     
     new AP.PolygonBoundary insetVertices

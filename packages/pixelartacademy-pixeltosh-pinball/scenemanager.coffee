@@ -26,13 +26,15 @@ class Pinball.SceneManager
     @debugDirectionalLight.intensity = 0.5
     @debugDirectionalLight.position.set -0.25, 1, -0.5
     @debugDirectionalLight.castShadow = true
+    @debugDirectionalLight.shadow.normalBias = -0.0001
     @debugDirectionalLight.shadow.mapSize.x = 4096
     @debugDirectionalLight.shadow.mapSize.y = 4096
-    @debugDirectionalLight.shadow.camera.left = -1
-    @debugDirectionalLight.shadow.camera.right = 1
-    @debugDirectionalLight.shadow.camera.top = 1
-    @debugDirectionalLight.shadow.camera.bottom = -1
-    @debugDirectionalLight.shadow.camera.far = 2
+    @debugDirectionalLight.shadow.camera.left = -0.75
+    @debugDirectionalLight.shadow.camera.right = 0.75
+    @debugDirectionalLight.shadow.camera.top = 0.75
+    @debugDirectionalLight.shadow.camera.bottom = -0.75
+    @debugDirectionalLight.shadow.camera.near = 0.5
+    @debugDirectionalLight.shadow.camera.far = 1.5
     @debugDirectionalLight.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
     @scene.add @debugDirectionalLight
     
@@ -121,8 +123,8 @@ class Pinball.SceneManager
     partClass = _.thingClass partData.type
     part = new partClass @pinball, playfieldPartId
 
-    # Initialize the avatar.
-    part.avatar.initialize()
+    # Do any extra initialization logic (after the avatar is created in the constructor).
+    part.initialize()
 
     # Update parts array.
     @_parts.push part

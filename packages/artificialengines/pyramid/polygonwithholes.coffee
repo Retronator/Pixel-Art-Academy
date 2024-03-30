@@ -19,8 +19,9 @@ class AP.PolygonWithHoles
     
     # To make the area of the polygon be on the left of the boundaries, we
     # make the external boundary counter-clockwise and internal ones clockwise.
-    @externalBoundary = externalBoundary.getPolygonBoundaryWithOrientation AP.PolygonBoundary.Orientation.CounterClockwise
-    @internalBoundaries = (internalBoundary.getPolygonBoundaryWithOrientation AP.PolygonBoundary.Orientation.Clockwise for internalBoundary in internalBoundaries)
+    @externalBoundary = externalBoundary.getBoundaryWithOrientation AP.PolygonBoundary.Orientations.CounterClockwise
+    @internalBoundaries = (internalBoundary.getBoundaryWithOrientation AP.PolygonBoundary.Orientations.Clockwise for internalBoundary in internalBoundaries)
+    @boundaries = [@externalBoundary, @internalBoundaries...]
 
   getPolygonWithoutHoles: ->
     remainingInternalBoundaries = _.clone @internalBoundaries

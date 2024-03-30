@@ -20,12 +20,12 @@ class Pinball.Part.Avatar.Cylinder extends Pinball.Part.Avatar.Shape
     
     @continuousCollisionDetectionRadius = @radius
   
-  fixedBitmapRotation: -> true
+  rotationStyle: -> @constructor.RotationStyles.Fixed
   
   collisionShapeMargin: -> null
   
   createPhysicsDebugGeometry: ->
-    new THREE.CylinderBufferGeometry @radius, @radius, @height
+    new THREE.CylinderGeometry @radius, @radius, @height
 
   createCollisionShape: ->
     new Ammo.btCylinderShape new Ammo.btVector3 @radius, @height / 2, @radius

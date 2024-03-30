@@ -85,8 +85,8 @@ class Pinball.Parts.Flipper extends Pinball.Part
     
     physicsObject = @avatar.getPhysicsObject()
     
-    rotation = THREE.Quaternion.fromObject physicsObject.getRotation()
-    rotationAngles = new THREE.Euler().setFromQuaternion rotation
+    rotationQuaternion = THREE.Quaternion.fromObject physicsObject.getRotationQuaternion()
+    rotationAngles = new THREE.Euler().setFromQuaternion rotationQuaternion
     @displacementAngle = rotationAngles.y
   
   deactivate: ->
@@ -127,7 +127,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     angleChange = angularSpeed * elapsed
     @displacementAngle += angleChange
     
-    rotation = new THREE.Quaternion().setFromAxisAngle @constructor.rotationAxis, @rotationAngle() + @displacementAngle
+    rotationQuaternion = new THREE.Quaternion().setFromAxisAngle @constructor.rotationAxis, @rotationAngle() + @displacementAngle
     
     physicsObject = @avatar.getPhysicsObject()
-    physicsObject.setRotation rotation
+    physicsObject.setRotationQuaternion rotationQuaternion

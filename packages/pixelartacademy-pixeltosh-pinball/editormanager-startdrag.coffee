@@ -13,7 +13,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
   # Show the grabbing cursor or none if the part is smaller than the hand.
   bitmap = part.bitmap()
   largestDimension = Math.max bitmap.bounds.width, bitmap.bounds.height
-  osCursor.forceClass if largestDimension > 10 then 'grabbing' else 'none'
+  osCursor.forceClass if largestDimension > 15 then 'grabbing' else 'none'
   
   startCoordinates = osCursor.coordinates()
   startPosition = options?.startPosition or part.data().position
@@ -44,7 +44,8 @@ Pinball.EditorManager::startDrag = (part, options) ->
     # See if the new position is inside the playfield.
     if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.z < Pinball.SceneManager.shortPlayfieldHeight
       # Snap new position to pixels.
-      Pinball.CameraManager.snapShapeToPixelPosition part.shape(), newPosition
+      rotationQuaternion = part.rotationQuaternion()
+      Pinball.CameraManager.snapShapeToPixelPosition part.shape(), newPosition, rotationQuaternion
       @updatePart part, position: newPosition
       
       # Wait until the new position has updated on the document, before removing the temporary override.

@@ -9,7 +9,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.Box extends PAA.Items.StillLifeItems.
 
   createGeometry: ->
     size = @avatar.properties.size
-    new THREE.BoxBufferGeometry size.x, size.y, size.z
+    new THREE.BoxGeometry size.x, size.y, size.z
 
   createCollisionShape: ->
     size = @avatar.properties.size

@@ -49,7 +49,7 @@ class Pinball.Parts.Pins extends Pinball.Part
         
       createPhysicsDebugGeometry: ->
         cylinders = for pin in @pins
-          cylinder = new THREE.CylinderBufferGeometry pin.radius, pin.radius, @height
+          cylinder = new THREE.BufferGeometry pin.radius, pin.radius, @height
           
           positionAttribute = cylinder.getAttribute 'position'
           for index in [0...positionAttribute.array.length] by 3

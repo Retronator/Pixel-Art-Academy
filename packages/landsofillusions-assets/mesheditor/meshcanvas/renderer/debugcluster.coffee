@@ -8,7 +8,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.DebugCluster
     scene = new THREE.Scene()
     @scene = new AE.ReactiveWrapper scene
 
-    @clusterImage = new THREE.Mesh new THREE.PlaneBufferGeometry()
+    @clusterImage = new THREE.Mesh new THREE.PlaneGeometry()
     @clusterImage.material.side = THREE.DoubleSide
     @clusterImage.material.transparent = true
     scene.add @clusterImage

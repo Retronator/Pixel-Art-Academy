@@ -137,7 +137,9 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
       for renderObject in sceneManager.renderObjects()
         continue unless shape = renderObject.entity.shape()
-        @constructor.CameraManager.snapShapeToPixelPosition shape, renderObject.position
+        continue unless shape.positionSnapping()
+        
+        @constructor.CameraManager.snapShapeToPixelPosition shape, renderObject.position, renderObject.getRotationQuaternionForSnapping()
       
     # Update the hovered part.
     hoveredPart = null

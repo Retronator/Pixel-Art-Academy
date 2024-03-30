@@ -11,7 +11,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.Cylinder extends PAA.Items.StillLifeI
 
   createGeometry: ->
     properties = @avatar.properties
-    new THREE.CylinderBufferGeometry properties.radius, properties.radius, properties.height, 32
+    new THREE.CylinderGeometry properties.radius, properties.radius, properties.height, 32
 
   createCollisionShape: ->
     properties = @avatar.properties
