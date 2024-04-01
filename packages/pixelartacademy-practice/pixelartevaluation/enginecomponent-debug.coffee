@@ -149,7 +149,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
     context.beginPath()
     
     points = curve.displayPoints
-    getPoint = (index) => if curve.isClosed then points[_.modulo index, points.length - 1] else points[index]
+    getPoint = (index) => if curve.isClosed then points[_.modulo index, points.length] else points[index]
     
     context.moveTo points[0].position.x, points[0].position.y
     

@@ -2,6 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
+_displacedPosition = new THREE.Vector3
+
 class Pinball.Parts.Plunger extends Pinball.Part
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Plunger'
   @fullName: -> "plunger"
@@ -19,13 +21,6 @@ class Pinball.Parts.Plunger extends Pinball.Part
   @initialize()
   
   @maxDisplacementRatio = 0.8
-  
-  constructor: ->
-    super arguments...
-    
-    @active = false
-    @moving = false
-    @displacement = 0
   
   settings: ->
     pullingSpeed:
@@ -53,7 +48,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.Actuators
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
   
-  onAddedToDynamicsWorld: (@dynamicsWorld) ->
+  onAddedToDynamicsWorld: (dynamicsWorld) ->
     # Plunger is a player-controlled kinematic object.
     physicsObject = @avatar.getPhysicsObject()
     @origin = physicsObject.getPosition()
@@ -63,6 +58,9 @@ class Pinball.Parts.Plunger extends Pinball.Part
   
   reset: ->
     super arguments...
+    
+    if physicsObject = @avatar.getPhysicsObject()
+      @origin = physicsObject.getPosition()
     
     @active = false
     @moving = false
@@ -109,4 +107,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
     
     distance = speed * elapsed
     @displacement += distance
-    physicsObject.setPosition x: @origin.x, y: @origin.y, z: @origin.z + @displacement
+    
+    _displacedPosition.copy @origin
+    _displacedPosition.z += @displacement
+    physicsObject.setPosition _displacedPosition

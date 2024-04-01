@@ -70,11 +70,11 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     null
     
   getRenderObject: ->
-    return unless @_renderObject.ready()
+    return unless @_renderObject?.ready()
     @_renderObject
   
   getPhysicsObject: ->
-    return unless @_physicsObject.ready()
+    return unless @_physicsObject?.ready()
     @_physicsObject
   
   reset: ->

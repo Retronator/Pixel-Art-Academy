@@ -117,10 +117,10 @@ class Pinball.Part.Avatar.Shape
         x = vertex.x * pixelSize
         y = vertex.y * pixelSize
         vertexBufferArray[bottomVertexIndex * 3] = x
-        vertexBufferArray[bottomVertexIndex * 3 + 1] = topY
+        vertexBufferArray[bottomVertexIndex * 3 + 1] = bottomY
         vertexBufferArray[bottomVertexIndex * 3 + 2] = y
         vertexBufferArray[topVertexIndex * 3] = x
-        vertexBufferArray[topVertexIndex * 3 + 1] = bottomY
+        vertexBufferArray[topVertexIndex * 3 + 1] = topY
         vertexBufferArray[topVertexIndex * 3 + 2] = y
         
         normalArray[bottomVertexIndex * 3] = -vertex.tangent.y * normalSign
@@ -131,11 +131,11 @@ class Pinball.Part.Avatar.Shape
         nextBottomVertexIndex = if vertexIndex is polygonBoundary.vertices.length - 1 then boundaryStartVertexIndex else bottomVertexIndex + 2
         nextTopVertexIndex = nextBottomVertexIndex + 1
         
-        indexBufferArray[currentIndex] = bottomVertexIndex
-        indexBufferArray[currentIndex + 1] = nextBottomVertexIndex
+        indexBufferArray[currentIndex] = nextBottomVertexIndex
+        indexBufferArray[currentIndex + 1] = bottomVertexIndex
         indexBufferArray[currentIndex + 2] = nextTopVertexIndex
-        indexBufferArray[currentIndex + 3] = nextTopVertexIndex
-        indexBufferArray[currentIndex + 4] = topVertexIndex
+        indexBufferArray[currentIndex + 3] = topVertexIndex
+        indexBufferArray[currentIndex + 4] = nextTopVertexIndex
         indexBufferArray[currentIndex + 5] = bottomVertexIndex
         
         bottomVertexIndex += 2
@@ -143,6 +143,61 @@ class Pinball.Part.Avatar.Shape
         currentIndex += 6
       
       boundaryStartVertexIndex += polygonBoundary.vertices.length * 2
+    
+    {vertexBufferArray, normalArray, indexBufferArray}
+  
+  @_createTaperedVerticesAndIndices: (bottomPolygonBoundaries, topPolygonBoundaries, bottomY, topY, flipped = false) ->
+    vertexCount = _.sumBy bottomPolygonBoundaries, (polygonBoundary) => polygonBoundary.vertices.length
+    
+    vertexBufferArray = new Float32Array vertexCount * 6
+    normalArray = new Float32Array vertexCount * 6
+    indexBufferArray = new Uint32Array vertexCount * 6
+    
+    boundaryStartVertexIndex = 0
+    currentIndex = 0
+    pixelSize = Pinball.CameraManager.orthographicPixelSize
+    
+    normalSign = if flipped then -1 else 1
+    
+    for polygonBoundaryIndex in [0...bottomPolygonBoundaries.length]
+      bottomPolygonBoundary = bottomPolygonBoundaries[polygonBoundaryIndex]
+      topPolygonBoundary = topPolygonBoundaries[polygonBoundaryIndex]
+      
+      bottomVertexIndex = boundaryStartVertexIndex
+      topVertexIndex = bottomVertexIndex + 1
+      
+      for vertexIndex in [0...bottomPolygonBoundary.vertices.length]
+        bottomVertex = bottomPolygonBoundary.vertices[vertexIndex]
+        topVertex = topPolygonBoundary.vertices[vertexIndex]
+        tangent = bottomVertex.tangent or topVertex.tangent
+        
+        vertexBufferArray[bottomVertexIndex * 3] = bottomVertex.x * pixelSize
+        vertexBufferArray[bottomVertexIndex * 3 + 1] = bottomY
+        vertexBufferArray[bottomVertexIndex * 3 + 2] = bottomVertex.y * pixelSize
+        vertexBufferArray[topVertexIndex * 3] = topVertex.x * pixelSize
+        vertexBufferArray[topVertexIndex * 3 + 1] = topY
+        vertexBufferArray[topVertexIndex * 3 + 2] = topVertex.y * pixelSize
+        
+        normalArray[bottomVertexIndex * 3] = -tangent.y * normalSign
+        normalArray[bottomVertexIndex * 3 + 2] = tangent.x * normalSign
+        normalArray[topVertexIndex * 3] = -tangent.y * normalSign
+        normalArray[topVertexIndex * 3 + 2] = tangent.x * normalSign
+        
+        nextBottomVertexIndex = if vertexIndex is bottomPolygonBoundary.vertices.length - 1 then boundaryStartVertexIndex else bottomVertexIndex + 2
+        nextTopVertexIndex = nextBottomVertexIndex + 1
+        
+        indexBufferArray[currentIndex] = nextBottomVertexIndex
+        indexBufferArray[currentIndex + 1] = bottomVertexIndex
+        indexBufferArray[currentIndex + 2] = nextTopVertexIndex
+        indexBufferArray[currentIndex + 3] = topVertexIndex
+        indexBufferArray[currentIndex + 4] = nextTopVertexIndex
+        indexBufferArray[currentIndex + 5] = bottomVertexIndex
+        
+        bottomVertexIndex += 2
+        topVertexIndex += 2
+        currentIndex += 6
+      
+      boundaryStartVertexIndex += bottomPolygonBoundary.vertices.length * 2
     
     {vertexBufferArray, normalArray, indexBufferArray}
     
@@ -160,7 +215,8 @@ class Pinball.Part.Avatar.Shape
       
       normalArray[offset + 1] = normalY
     
-    indexBufferArray = polygon.triangulate()
+    indexBufferArray = polygon.triangulate true
+    console.warn "Shape was not able to be triangulated fully.", polygon if indexBufferArray.error
     _.reverse indexBufferArray unless normalY < 0
     
     {vertexBufferArray, normalArray, indexBufferArray}
@@ -305,7 +361,11 @@ class Pinball.Part.Avatar.Shape
         addPoint part.displayPoints[0].position, part.displayPoints[0].tangent, part.points[0].radius unless points.length
         previousPoint = part.displayPoints[0]
         
-        for point in part.displayPoints[1..]
+        lastPointIndex = part.displayPoints.length - if part.isClosed then 0 else 1
+        
+        for pointIndex in [1..lastPointIndex]
+          point = part.displayPoints[_.modulo pointIndex, part.displayPoints.length]
+          
           for curvePointIndex in [1..curvePointsCount]
             parameter = curvePointIndex / curvePointsCount
             position = AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, parameter
@@ -340,9 +400,8 @@ class Pinball.Part.Avatar.Shape
   createCollisionShape: ->
     throw new AE.NotImplementedException "Part must provide a collision shape."
   
-  yPosition: ->
-    throw new AE.NotImplementedException "Part must specify at which y coordinate it should appear."
-    
+  positionY: -> @properties.positionY # Override to determine the position from the shape itself.
+  
   getBoundingRectangle: ->
     bitmapBoundingRectangle = @bitmapRectangle.toObject()
     

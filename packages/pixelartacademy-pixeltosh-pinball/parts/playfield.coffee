@@ -103,4 +103,4 @@ class Pinball.Parts.Playfield extends Pinball.Part
         
         @geometryData = {vertexBufferArray, normalArray, indexBufferArray}
         
-      yPosition: -> -@height
+      positionY: -> -@height

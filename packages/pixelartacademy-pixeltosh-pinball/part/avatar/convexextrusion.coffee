@@ -71,4 +71,4 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
     convexHullShape.recalcLocalAabb()
     convexHullShape
 
-  yPosition: -> -@bottomY
+  positionY: -> @properties.positionY or -@bottomY

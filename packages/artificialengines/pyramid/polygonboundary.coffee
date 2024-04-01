@@ -2,6 +2,8 @@ AP = Artificial.Pyramid
 
 _delta = new THREE.Vector2
 _normal = new THREE.Vector2
+_line = new THREE.Line2
+_otherLine = new THREE.Line2
 
 class AP.PolygonBoundary
   @Orientations:
@@ -29,6 +31,12 @@ class AP.PolygonBoundary
   
   getVertexAtIndex: (index) ->
     return @vertices[_.modulo index, @vertices.length]
+    
+  getLineAtIndex: (index, result) ->
+    result ?= new THREE.Line2
+    result.start.copy @getVertexAtIndex index
+    result.end.copy @getVertexAtIndex index + 1
+    result
     
   isVertexAtIndexReflex: (index) ->
     previousVertex = @getVertexAtIndex index - 1
@@ -60,6 +68,17 @@ class AP.PolygonBoundary
     @_orientation = @constructor.getSectionOrientation previousVertex, minVertex, nextVertex
     @_orientation
     
+  isSelfIntersecting: ->
+    for index in [0...@vertices.length - 1]
+      @getLineAtIndex index, _line
+      
+      for otherIndex in [index + 2...@vertices.length]
+        @getLineAtIndex index, _otherLine
+        
+        return true if _line.intersects _otherLine
+        
+    false
+  
   getBoundaryWithOrientation: (orientation) ->
     vertices = _.clone @vertices
     _.reverse vertices unless orientation is @getOrientation()

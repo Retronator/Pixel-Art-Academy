@@ -45,4 +45,4 @@ class Pinball.Part.Avatar.Depression extends Pinball.Part.Avatar.TriangleMesh
     
     @geometryData = @constructor._mergeGeometryData individualGeometryData
 
-  yPosition: -> -@height
+  positionY: -> @properties.positionY or -@height

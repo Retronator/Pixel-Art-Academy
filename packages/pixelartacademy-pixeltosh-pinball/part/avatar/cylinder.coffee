@@ -30,4 +30,4 @@ class Pinball.Part.Avatar.Cylinder extends Pinball.Part.Avatar.Shape
   createCollisionShape: ->
     new Ammo.btCylinderShape new Ammo.btVector3 @radius, @height / 2, @radius
     
-  yPosition: -> @height / 2
+  positionY: -> @properties.positionY or @height / 2

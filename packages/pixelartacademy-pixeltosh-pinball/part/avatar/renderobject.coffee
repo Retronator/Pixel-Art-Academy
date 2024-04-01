@@ -118,9 +118,9 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
     
     return if @existingResources
 
-    @physicsDebugGeometry.dispose()
-    @material.dispose()
-    @geometry.dispose()
+    @physicsDebugGeometry?.dispose()
+    @material?.dispose()
+    @geometry?.dispose()
     
   clone: ->
     new @constructor @part, @

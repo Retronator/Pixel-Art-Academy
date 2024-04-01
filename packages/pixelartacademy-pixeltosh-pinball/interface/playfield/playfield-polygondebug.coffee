@@ -15,6 +15,7 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
   @debugPlayfieldTriangulation = false
   @debugWallsTriangulation = false
   @debugExtrusionLines = false
+  @debugBumper = false
   @debugWireBallGuideLines = false
   
   onCreated: ->
@@ -77,6 +78,12 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
           
         context.stroke()
         
+      drawPoint = (point, radius, style) =>
+        context.beginPath()
+        context.arc point.x, point.y, radius, 0, 2 * Math.PI
+        context.fillStyle = style
+        context.fill()
+        
       if @constructor.debugPlayfieldTriangulation
         scale = @polygonDebugCanvas.width / 0.53
         context.setTransform 1, 0, 0, 1, 0, 0
@@ -129,7 +136,7 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         
         for boundary in shape.boundaries
           wallsPolygon = new AP.Polygon boundary
-          indexBufferArray = wallsPolygon.triangulate()
+          indexBufferArray = wallsPolygon.triangulate true
           color = if indexBufferArray.error then 'red' else 'blue'
 
           drawPolygon color, 8, boundary, true
@@ -157,12 +164,20 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
             ]
           
           if linePart instanceof PAE.Line.Part.Curve
-            previousPoint = linePart.displayPoints[0]
+            points = linePart.displayPoints
+            
+            for point in points
+              drawPoint point, 0.5, 'limegreen'
+
+            previousPoint = points[0]
             vertices = [
               previousPoint.position
             ]
             
-            for point in linePart.displayPoints[1...]
+            endPointIndex = points.length - if linePart.isClosed then 0 else 1
+            
+            for pointIndex in [1..endPointIndex]
+              point = points[_.modulo pointIndex, points.length]
               for curvePointIndex in [1..curvePointsCount]
                 vertices.push AP.BezierCurve.getPointOnCubicBezierCurve previousPoint.position, previousPoint.controlPoints.after, point.controlPoints.before, point.position, curvePointIndex / curvePointsCount
               
@@ -188,7 +203,63 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
           context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
           
           drawLine line for line in shape.pixelArtEvaluation.layers[0].lines
+      
+      if @constructor.debugBumper
+        return unless bumper = _.find parts, (part) => part instanceof Pinball.Parts.Bumper
+        return unless shape = bumper.ringShape()
+        
+        displayWidth = shape.bitmapRectangle.width() * 1.2
+        displayHeight = displayWidth / 180 * 200
+        scale = @polygonDebugCanvas.width / displayWidth
+      
+        context.setTransform 1, 0, 0, 1, 0, 0
+        context.scale scale, scale
+        
+        if shape.properties.flipped
+          context.scale -1, 1
+
+        context.translate displayWidth / 2, displayHeight / 2
+        
+        for boundary, boundaryIndex in shape.boundaries
+          drawPolygon 'green', 8, boundary, true
+
+          taperedBoundary = shape.taperedBoundaries[boundaryIndex]
           
+          context.strokeStyle = 'purple'
+          context.lineWidth = 4 / scale
+          
+          context.beginPath()
+
+          for vertex, vertexIndex in boundary.vertices
+            taperedVertex = taperedBoundary.vertices[vertexIndex]
+            
+            context.moveTo vertex.x, vertex.y
+            context.lineTo taperedVertex.x, taperedVertex.y
+          
+          context.stroke()
+
+        for boundary in shape.taperedBoundaries
+          taperedPolygon = new AP.Polygon boundary
+          indexBufferArray = taperedPolygon.triangulate true
+          color = if indexBufferArray.error then 'red' else 'blue'
+          
+          drawPolygon color, 8, boundary, true
+          
+          trianglesDrawCount = @polygonDebugTrianglesDrawCount()
+          
+          for indexOfIndex in [0...indexBufferArray.length] by 3
+            break unless trianglesDrawCount
+            trianglesDrawCount--
+            
+            drawPolygon 'gray', 1, vertices: [
+              taperedPolygon.vertices[indexBufferArray[indexOfIndex]]
+              taperedPolygon.vertices[indexBufferArray[indexOfIndex + 1]]
+              taperedPolygon.vertices[indexBufferArray[indexOfIndex + 2]]
+            ], true
+            
+        context.translate -shape.bitmapOrigin.x + 0.5, -shape.bitmapOrigin.y + 0.5
+        drawLine line for line in shape.pixelArtEvaluation.layers[0].lines
+        
       if @constructor.debugWireBallGuideLines
         return unless wireBallGuides = _.find parts, (part) => part instanceof Pinball.Parts.WireBallGuides
         return unless shape = wireBallGuides.avatar.shape()

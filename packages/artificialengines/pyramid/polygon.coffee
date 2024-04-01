@@ -32,7 +32,7 @@ class AP.Polygon
       
     polygons
   
-  triangulate: ->
+  triangulate: (allowInvalid) ->
     trianglesCount = @vertices.length - 2
     indices = new Uint32Array trianglesCount * 3
     
@@ -89,7 +89,12 @@ class AP.Polygon
       continue if triangleRemoved
       
       # Looks like no triangle was removed, something must be wrong.
-      throw new AE.InvalidOperationException "The polygon was not able to be triangulated."
+      if allowInvalid
+        indices.error = true
+        return indices
+        
+      else
+        throw new AE.InvalidOperationException "The polygon was not able to be triangulated."
       
     # Fill the last triangle.
     indices[currentIndicesIndex + remainingVertexIndex] = vertexIndices[remainingVertexIndex] for remainingVertexIndex in [0..2]

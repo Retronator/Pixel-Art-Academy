@@ -17,4 +17,4 @@ class Pinball.Part.Avatar.Box extends Pinball.Part.Avatar.Shape
   createCollisionShape: ->
     new Ammo.btBoxShape new Ammo.btVector3 @width / 2, @height / 2, @depth / 2
 
-  yPosition: -> @height / 2
+  positionY: -> @properties.positionY or @height / 2

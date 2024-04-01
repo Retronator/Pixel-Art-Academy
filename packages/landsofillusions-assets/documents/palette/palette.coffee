@@ -50,7 +50,7 @@ class LOI.Assets.Palette extends AM.Document
     return unless ramp?.shades.length
 
     # Shade can over/underflow and we just clamp it to last available value.
-    shadeIndex = THREE.Math.clamp shadeIndex, 0, ramp.shades.length - 1
+    shadeIndex = THREE.MathUtils.clamp shadeIndex, 0, ramp.shades.length - 1
     colorData = ramp.shades[shadeIndex]
 
     THREE.Color.fromObject colorData

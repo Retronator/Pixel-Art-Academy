@@ -71,4 +71,4 @@ class Pinball.Parts.Pins extends Pinball.Part
         
         collisionShape
         
-      yPosition: -> @height / 2
+      positionY: -> @height / 2

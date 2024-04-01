@@ -107,7 +107,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
           
           if goalPixel.paletteColor
             shades = palette.ramps[goalPixel.paletteColor.ramp].shades
-            shadeIndex = THREE.Math.clamp goalPixel.paletteColor.shade, 0, shades.length - 1
+            shadeIndex = THREE.MathUtils.clamp goalPixel.paletteColor.shade, 0, shades.length - 1
             color = shades[shadeIndex]
   
           else if goalPixel.directColor

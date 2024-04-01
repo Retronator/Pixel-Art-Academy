@@ -64,7 +64,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
     
   extraShapeProperties: ->
-    height: @pinball.sceneManager().ballYPosition() * 2
+    height: @pinball.sceneManager().ballPositionY() * 2
 
   onAddedToDynamicsWorld: (@dynamicsWorld) ->
     # Flipper is a player-controlled kinematic object.

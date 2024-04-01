@@ -9,7 +9,7 @@ class Pinball.Parts.Hole extends Pinball.Part
     Pinball.Part.Avatar.Depression
   ]
   
-  @triggerYPositionRatio: -> 0.5 # Override to position the trigger elsewhere (1 is top, 0 is bottom).
+  @triggerPositionYRatio: -> 0.5 # Override to position the trigger elsewhere (1 is top, 0 is bottom).
   
   constructor: ->
     super arguments...
@@ -27,7 +27,7 @@ class Pinball.Parts.Hole extends Pinball.Part
       return unless shape = @avatar.shape()
       
       triggerShape = Pinball.Part.Avatar.Silhouette.detectShape shape.pixelArtEvaluation,
-        height: shape.height * @constructor.triggerYPositionRatio()
+        yOffset: shape.height * @constructor.triggerPositionYRatio()
         
       triggerCollider = new Ammo.btGhostObject
       triggerCollider.setCollisionShape triggerShape.createCollisionShape()

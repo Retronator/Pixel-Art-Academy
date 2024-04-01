@@ -101,7 +101,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
       value = 0
 
     # Prepare the color.
-    color[element] = THREE.Math.lerp darkColor[element], lightColor[element], value for element in [0..2]
+    color[element] = THREE.MathUtils.lerp darkColor[element], lightColor[element], value for element in [0..2]
 
     # Draw the curve.
     curveIndex = 0

@@ -38,7 +38,7 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
       segment = @line.getEdgeSegment segmentIndex
       
       # Exclude side-step segments from generating curve points, except at end points.
-      continue unless segment.pointSegmentsCount or segmentIndex in [@startSegmentIndex, @endSegmentIndex]
+      continue unless segment.pointSegmentsCount or segmentIndex in [@startSegmentIndex, @endSegmentIndex] and not @isClosed
       
       startPointIndex = segment.startPointIndex
       endPointIndex = segment.endPointIndex
@@ -56,9 +56,6 @@ class PAE.Line.Part.Curve extends PAE.Line.Part
           else 0.5
         
       @displayPoints.push @_createDisplayPoint new THREE.Vector2().lerpVectors startPoint, endPoint, segmentParameter
-      
-    if @isClosed and (@displayPoints[0].x isnt @displayPoints[@displayPoints.length - 1].x or @displayPoints[0].y isnt @displayPoints[@displayPoints.length - 1].y)
-      @displayPoints.push @displayPoints[0]
     
     if @displayPoints.length is 2
       @displayPoints.splice 1, 0, @_createDisplayPoint new THREE.Vector2().copy @line.getCentralSegmentPosition @startSegmentIndex, @endSegmentIndex

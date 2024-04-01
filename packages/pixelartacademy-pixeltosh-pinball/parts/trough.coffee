@@ -13,7 +13,7 @@ class Pinball.Parts.Trough extends Pinball.Parts.Hole
     
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/trough.png'
   
-  @triggerYPositionRatio: -> 1
+  @triggerPositionYRatio: -> 1
   
   @initialize()
   

@@ -30,4 +30,4 @@ class Pinball.Part.Avatar.Sphere extends Pinball.Part.Avatar.Shape
   createCollisionShape: ->
     new Ammo.btSphereShape @radius
     
-  yPosition: -> @radius
+  positionY: -> @properties.positionY or @radius
