@@ -10,9 +10,6 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 _rotationQuaternion = new THREE.Quaternion
 _rotationAngles = new THREE.Euler
 
-if Meteor.isClient
-  _transform = new Ammo.btTransform
-
 class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   @rotationAxis = new THREE.Vector3 0, -1, 0
   
@@ -20,6 +17,10 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
 
   constructor: (@entity, @existingResources) ->
     super arguments...
+    
+    # Note, we create temporary Ammo objects in the constructor instead
+    # of the file closure for compatibility with the desktop build.
+    @_transform = new Ammo.btTransform
     
     @ready = new ReactiveField false
     
@@ -137,10 +138,10 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
         @freeRotationOrigin.quaternion
     
   updateFromPhysicsObject: (physicsObject) ->
-    physicsObject.motionState.getWorldTransform _transform
-    @position.setFromBulletVector3 _transform.getOrigin()
+    physicsObject.motionState.getWorldTransform @_transform
+    @position.setFromBulletVector3 @_transform.getOrigin()
     
-    rotationQuaternion = _transform.getRotation()
+    rotationQuaternion = @_transform.getRotation()
     @freeRotationOrigin.quaternion.setFromBulletQuaternion rotationQuaternion
     
     # For the perpendicular rotation origin, rotate the object only around the Y axis.

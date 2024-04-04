@@ -43,7 +43,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
       min: 1
       max: 180
       step: 1
-      default: 45
+      default: 39.5
     angularSpeedDegrees:
       name: 'Speed'
       unit: "°/s"

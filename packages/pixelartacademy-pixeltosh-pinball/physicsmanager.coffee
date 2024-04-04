@@ -4,11 +4,6 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-if Meteor.isClient
-  _rayOrigin = new Ammo.btVector3
-  _rayDestination = new Ammo.btVector3
-  _closestRayResultCallback = new Ammo.ClosestRayResultCallback _rayOrigin, _rayDestination
-
 class Pinball.PhysicsManager
   @BallConstants =
     Restitution: 0.6
@@ -40,6 +35,12 @@ class Pinball.PhysicsManager
   @continuousCollisionDetectionThreshold = 1e-7
   
   constructor: (@pinball) ->
+    # Note, we create temporary Ammo objects in the constructor instead
+    # of the file closure for compatibility with the desktop build.
+    @_rayOrigin = new Ammo.btVector3
+    @_rayDestination = new Ammo.btVector3
+    @_closestRayResultCallback = new Ammo.ClosestRayResultCallback @_rayOrigin, @_rayDestination
+    
     @collisionConfiguration = new Ammo.btDefaultCollisionConfiguration
     @dispatcher = new Ammo.btCollisionDispatcher @collisionConfiguration
     @broadphase = new Ammo.btDbvtBroadphase
@@ -100,21 +101,21 @@ class Pinball.PhysicsManager
     Ammo.destroy @collisionConfiguration
   
   intersectObject: (start, end) ->
-    rayCallback = Ammo.castObject _closestRayResultCallback, Ammo.RayResultCallback
+    rayCallback = Ammo.castObject @_closestRayResultCallback, Ammo.RayResultCallback
     rayCallback.set_m_closestHitFraction 1
     rayCallback.set_m_collisionObject null
     
-    _rayOrigin.copy start
-    _rayDestination.copy end
+    @_rayOrigin.copy start
+    @_rayDestination.copy end
     
-    _closestRayResultCallback.get_m_rayFromWorld().setValue start.x, start.y, start.z
-    _closestRayResultCallback.get_m_rayToWorld().setValue end.x, end.y, end.z
+    @_closestRayResultCallback.get_m_rayFromWorld().setValue start.x, start.y, start.z
+    @_closestRayResultCallback.get_m_rayToWorld().setValue end.x, end.y, end.z
     
-    @dynamicsWorld.rayTest _rayOrigin, _rayDestination, _closestRayResultCallback
+    @dynamicsWorld.rayTest @_rayOrigin, @_rayDestination, @_closestRayResultCallback
     
-    return unless _closestRayResultCallback.hasHit()
+    return unless @_closestRayResultCallback.hasHit()
     
-    rigidBody = Ammo.castObject _closestRayResultCallback.m_collisionObject, Ammo.btRigidBody
+    rigidBody = Ammo.castObject @_closestRayResultCallback.m_collisionObject, Ammo.btRigidBody
     rigidBody.physicsObject?.entity
     
   update: (appTime) ->

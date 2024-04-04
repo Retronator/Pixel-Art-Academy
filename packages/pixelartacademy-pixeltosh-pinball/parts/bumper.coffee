@@ -145,14 +145,14 @@ class Pinball.Parts.Bumper extends Pinball.Part
       name: 'Kick speed'
       unit: "m/s"
       type: Pinball.Interface.Settings.Number.id()
-      min: 0.01
+      min: 0.1
       max: 0.5
       step: 0.01
-      default: 0.1
+      default: 0.3
     points:
       name: 'Points'
       type: Pinball.Interface.Settings.Number.id()
-      default: 0
+      default: 10
       
   constants: ->
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
