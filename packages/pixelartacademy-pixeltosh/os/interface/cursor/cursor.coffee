@@ -12,10 +12,11 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
     # The pixel coordinate is the display coordinate rounded to a whole integer.
     @coordinates = new ReactiveField null, EJSON.equals
     
-    @class = new ReactiveField null
-    @_desiredClass = null
-    @_classIsForced = false
-
+    @desiredClasses = new ReactiveField [
+      className: null
+      requester: @
+    ]
+    
   onCreated: ->
     super arguments...
     
@@ -30,26 +31,40 @@ class PAA.Pixeltosh.OS.Interface.Cursor extends FM.View
       ,
         delay
     
+    @class = new ComputedField => _.last(@desiredClasses()).className
+    
   onRendered: ->
     super arguments...
     
     @$origin = @$('.pixelartacademy-pixeltosh-os-interface-cursor')
     
-  setClass: (cursorClass) ->
-    @_desiredClass = cursorClass
+  setClass: (className) ->
+    desiredClasses = Tracker.nonreactive => @desiredClasses()
+    desiredClasses[0].className = className
+    @desiredClasses desiredClasses
     
-    return if @_classIsForced
+  requestClass: (className, requester) ->
+    desiredClasses = Tracker.nonreactive => @desiredClasses()
+
+    # Remove any existing requests for this class/requester and put the new one to the top.
+    _.remove desiredClasses, (desiredClass) => desiredClass.className is className and desiredClass.requester is requester
+    desiredClasses.push {className, requester}
+
+    @desiredClasses desiredClasses
     
-    @class cursorClass
-    
-  forceClass: (className) ->
-    @class className
-    @_classIsForced = true
-    
-  endClassForcing: ->
-    @class @_desiredClass
-    @_classIsForced = false
-    
+  endClassRequest: (className, requester) ->
+    desiredClasses = Tracker.nonreactive => @desiredClasses()
+    _.remove desiredClasses, (desiredClass) => desiredClass.className is className and desiredClass.requester is requester
+    @desiredClasses desiredClasses
+  
+  endClassRequests: (requester) ->
+    desiredClasses = Tracker.nonreactive => @desiredClasses()
+    _.remove desiredClasses, (desiredClass) => desiredClass.requester is requester
+    @desiredClasses desiredClasses
+  
+  wait: (requester) -> @requestClass 'wait', requester
+  endWait: (requester) -> @endClassRequest 'wait', requester
+  
   updateCoordinates: (event) ->
     originPosition = @$origin.offset()
     displayScale = @display.scale()

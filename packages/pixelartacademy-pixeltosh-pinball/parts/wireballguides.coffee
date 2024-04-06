@@ -30,7 +30,9 @@ class Pinball.Parts.WireBallGuides extends Pinball.Part
     hidden: true
     
   extraShapeProperties: ->
-    height: @pinball.sceneManager().ballPositionY() + @constructor.Avatar.Shape.joinDistance
+    return unless sceneManager = @pinball.sceneManager()
+    
+    height: sceneManager.ballPositionY() + @constructor.Avatar.Shape.joinDistance
     
   class @Avatar extends Pinball.Part.Avatar
     _createShape: ->

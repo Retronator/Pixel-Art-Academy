@@ -53,7 +53,7 @@ Pinball.EditorManager::startRotate = (part) ->
       when cursorAngle < -Math.PI / 4 then 'n-rotate'
       else 'e-rotate'
       
-    osCursor.forceClass cursorClass
+    osCursor.requestClass cursorClass, @
     
     newAngle = _.normalizeAngle startRotationAngle + (startCursorAngle - cursorAngle)
     
@@ -89,7 +89,7 @@ Pinball.EditorManager::startRotate = (part) ->
 
   # Wire end of rotating on pointer up anywhere in the window.
   $document.on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-editormanager', =>
-    osCursor.endClassForcing()
+    osCursor.endClassRequests @
     
     newRotationAngle = part.rotationAngle()
     @updatePart part, rotationAngle: newRotationAngle

@@ -7,3 +7,9 @@ THREE.Object3D::getAllObjectsInSubtree = ->
     add child for child of item.children
 
   objects
+
+THREE.Object3D::removeFromParent = ->
+  if parent = @parent
+    parent.remove @
+  
+  @

@@ -37,7 +37,7 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
       return unless shape = @entity.shape()
       
       @physicsDebugGeometry?.dispose()
-      @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or shape.createPhysicsDebugGeometry()
+      return unless @physicsDebugGeometry = @existingResources?.physicsDebugGeometry or shape.createPhysicsDebugGeometry()
       
       @physicsDebugMesh?.removeFromParent()
       @physicsDebugMesh = new THREE.Mesh @physicsDebugGeometry, constants.physicsDebugMaterial or @constructor.physicsDebugMaterial
@@ -52,12 +52,12 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
       return
 
     # Create the main mesh.
-    @flipped = new ComputedField => @entity.shapeProperties().flipped
+    @flipped = new AE.LiveComputedField => @entity.shapeProperties().flipped
     
     @autorun (computation) =>
       return unless shape = @entity.shape()
-      bitmap = @entity.bitmap()
-      texture = @entity.texture()
+      return unless bitmap = @entity.bitmap()
+      return unless texture = @entity.texture()
       
       if @existingResources?.material
         @material = @existingResources.material
@@ -116,6 +116,8 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   
   destroy: ->
     super arguments...
+    
+    @flipped?.stop()
     
     return if @existingResources
 

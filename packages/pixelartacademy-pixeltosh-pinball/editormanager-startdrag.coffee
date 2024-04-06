@@ -13,7 +13,8 @@ Pinball.EditorManager::startDrag = (part, options) ->
   # Show the grabbing cursor or none if the part is smaller than the hand.
   bitmap = part.bitmap()
   largestDimension = Math.max bitmap.bounds.width, bitmap.bounds.height
-  osCursor.forceClass if largestDimension > 15 then 'grabbing' else 'none'
+  cursorClass = if largestDimension > 15 then 'grabbing' else 'none'
+  osCursor.requestClass cursorClass, @
   
   startCoordinates = osCursor.coordinates()
   startPosition = options?.startPosition or part.data().position
@@ -37,7 +38,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
 
   # Wire end of dragging on pointer up anywhere in the window.
   $document.on 'pointerup.pixelartacademy-pixeltosh-programs-pinball-editormanager', =>
-    osCursor.endClassForcing()
+    osCursor.endClassRequests @
 
     newPosition = part.position()
     

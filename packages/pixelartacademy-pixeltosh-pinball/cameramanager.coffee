@@ -49,7 +49,7 @@ class Pinball.CameraManager
     
     @camera = new AE.ReactiveWrapper null
     
-    @pinball.autorun =>
+    @_cameraAutorun = @pinball.autorun =>
       switch @displayType()
         when @constructor.DisplayTypes.Orthographic
           @camera @_orthographicCamera
@@ -63,7 +63,7 @@ class Pinball.CameraManager
       polarAngle: AR.Degrees 45
       radialDistance: Pinball.SceneManager.shortPlayfieldHeight
     
-    @pinball.autorun =>
+    @_cameraRotationAutorun = @pinball.autorun =>
       properties = @_properties()
       r = properties.radialDistance
       ɸ = properties.azimuthalAngle
@@ -81,7 +81,7 @@ class Pinball.CameraManager
       
     @rotatingCamera = new ReactiveField false
     
-    @pinball.autorun =>
+    @_cameraPropertiesAutorun = @pinball.autorun =>
       return unless @rotatingCamera()
       return unless newViewportCoordinates = @pinball.mouse().viewportCoordinates()
 
@@ -99,6 +99,11 @@ class Pinball.CameraManager
           radialDistance: oldProperties.radialDistance
 
         @_properties newProperties
+        
+  destroy: ->
+    @_cameraAutorun.stop()
+    @_cameraRotationAutorun.stop()
+    @_cameraPropertiesAutorun.stop()
 
   startRotateCamera: ->
     # Dragging of blueprint needs to be handled in display coordinates since the canvas ones should technically stay

@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AP = Artificial.Pyramid
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -43,14 +44,20 @@ class Pinball.Parts.Playfield extends Pinball.Part
     physicsDebugMaterial: @constructor.physicsDebugMaterial
     
   class @Avatar extends Pinball.Part.Avatar
+    destroy: ->
+      super arguments...
+      
+      @playfieldPosition?.stop()
+      @playfieldBoundingRectangle?.stop()
+      
     initialize: ->
-      @playfieldPosition = new ComputedField =>
+      @playfieldPosition = new AE.LiveComputedField =>
         @part.data()?.position
       ,
         EJSON.equals
       
       # Playfield should be slightly larger than all the parts so that it contains all parts as holes.
-      @playfieldBoundingRectangle = new ComputedField =>
+      @playfieldBoundingRectangle = new AE.LiveComputedField =>
         return unless sceneManager = @part.pinball.sceneManager()
         
         boundingRectangles = []

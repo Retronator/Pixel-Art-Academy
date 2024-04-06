@@ -37,6 +37,7 @@ class Pinball.EditorManager
       $set:
         "playfield.#{playfieldPartId}":
           type: options.type
+        lastEditTime: new Date
     
     Tracker.autorun (computation) =>
       return unless part = @pinball.sceneManager().getPart playfieldPartId
@@ -63,11 +64,14 @@ class Pinball.EditorManager
     PAA.Practice.Project.documents.update projectId,
       $set:
         "playfield.#{part.playfieldPartId}": partData
+        lastEditTime: new Date
     
   removePart: (part) ->
     projectId = @pinball.projectId()
     
     PAA.Practice.Project.documents.update projectId,
+      $set:
+        lastEditTime: new Date
       $unset:
         "playfield.#{part.playfieldPartId}": true
   

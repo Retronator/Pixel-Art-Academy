@@ -9,13 +9,13 @@ class LOI.Assets.Engine.PixelImage.Bitmap extends LOI.Assets.Engine.PixelImage
   constructor: (@options) ->
     super arguments...
     
-    @ready = new ComputedField =>
-      return unless bitmapData = @options.asset()
-      return unless (bitmapData.layers?.length or bitmapData.layerGroups?.length) and bitmapData.bounds
-      return unless bitmapData.customPalette or bitmapData.allPalettesAvailable() or @options.visualizeNormals?()
+  ready: ->
+    return unless bitmapData = @options.asset()
+    return unless (bitmapData.layers?.length or bitmapData.layerGroups?.length) and bitmapData.bounds
+    return unless bitmapData.customPalette or bitmapData.allPalettesAvailable() or @options.visualizeNormals?()
 
-      true
-    
+    true
+  
   _render: (renderOptions) ->
     return unless bitmapData = @options.asset()
     return unless bitmapData instanceof LOI.Assets.Bitmap

@@ -17,43 +17,43 @@ class Pinball.Part.Avatar.TaperedExtrusion extends Pinball.Part.Avatar.TriangleM
     super arguments...
     
     individualGeometryData = []
-    taperDistance = @properties.taperDistance / Pinball.CameraManager.orthographicPixelSize
+    taperDistanceTop = @properties.taperDistanceTop / Pinball.CameraManager.orthographicPixelSize
+    taperDistanceBottom = @properties.taperDistanceBottom / Pinball.CameraManager.orthographicPixelSize
     
     @boundaries = []
-    @taperedBoundaries = []
+    @taperedBoundariesTop = []
+    @taperedBoundariesBottom = []
     
     for core in @pixelArtEvaluation.layers[0].cores
       boundaries = []
-      taperedBoundaries = []
+      taperedBoundariesTop = []
+      taperedBoundariesBottom = []
       
       for line in core.outlines
         points = @_getLinePoints line
         boundary = new AP.PolygonBoundary points
-        taperedBoundary = boundary.getInsetPolygonBoundary taperDistance
         boundaries.push boundary
-        taperedBoundaries.push taperedBoundary
+
+        taperedBoundaryTop = boundary.getInsetPolygonBoundary taperDistanceTop
+        taperedBoundariesTop.push taperedBoundaryTop
+
+        taperedBoundaryBottom = boundary.getInsetPolygonBoundary taperDistanceBottom
+        taperedBoundariesBottom.push taperedBoundaryBottom
+        
+        for point, pointIndex in points
+          for taperedBoundary in [taperedBoundaryTop, taperedBoundaryBottom]
+            taperedBoundary.vertices[pointIndex].tangent = point.tangent
       
       @boundaries.push boundaries...
-      @taperedBoundaries.push taperedBoundaries...
+      @taperedBoundariesTop.push taperedBoundariesTop...
+      @taperedBoundariesBottom.push taperedBoundariesBottom...
 
-      polygon = new AP.PolygonWithHoles boundaries
-      polygonWithoutHoles = polygon.getPolygonWithoutHoles()
+      topPolygon = new AP.PolygonWithHoles taperedBoundariesTop
+      topPolygonWithoutHoles = topPolygon.getPolygonWithoutHoles()
       
-      taperedPolygon = new AP.PolygonWithHoles taperedBoundaries
-      taperedPolygonWithoutHoles = taperedPolygon.getPolygonWithoutHoles()
+      bottomPolygon = new AP.PolygonWithHoles taperedBoundariesBottom
+      bottomPolygonWithoutHoles = bottomPolygon.getPolygonWithoutHoles()
       
-      if @properties.taperTop
-        topPolygon = taperedPolygon
-        topPolygonWithoutHoles = taperedPolygonWithoutHoles
-        bottomPolygon = polygon
-        bottomPolygonWithoutHoles = polygonWithoutHoles
-        
-      else
-        topPolygon = polygon
-        topPolygonWithoutHoles = polygonWithoutHoles
-        bottomPolygon = taperedPolygon
-        bottomPolygonWithoutHoles = taperedPolygonWithoutHoles
-        
       individualGeometryData.push @constructor._createTaperedVerticesAndIndices bottomPolygon.boundaries, topPolygon.boundaries,  -@height, 0, @properties.flipped
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, 0, 1
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices bottomPolygonWithoutHoles, -@height, -1

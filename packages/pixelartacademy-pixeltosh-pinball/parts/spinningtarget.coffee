@@ -39,7 +39,9 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
     collisionMask: CollisionGroups.Balls
 
   extraShapeProperties: ->
-    axisY: @pinball.sceneManager().ballPositionY() * 2 + 0.002
+    return unless sceneManager = @pinball.sceneManager()
+    
+    axisY: sceneManager.ballPositionY() * 2 + 0.002
     
   onAddedToDynamicsWorld: (@_dynamicsWorld) ->
     super arguments...

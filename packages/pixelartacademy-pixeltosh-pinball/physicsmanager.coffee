@@ -83,7 +83,7 @@ class Pinball.PhysicsManager
         physicsObject.entity.onRemovedFromDynamicsWorld? @dynamicsWorld
         
     # Adjust gravity.
-    @pinball.autorun (computation) =>
+    @_gravityAutorun = @pinball.autorun (computation) =>
       return unless playfield = @pinball.sceneManager()?.getPartOfType Pinball.Parts.Playfield
       angleDegrees = playfield.data().angleDegrees
       
@@ -93,6 +93,7 @@ class Pinball.PhysicsManager
   
   destroy: ->
     @physicsObjects.stop()
+    @_gravityAutorun.stop()
 
     Ammo.destroy @dynamicsWorld
     Ammo.destroy @solver
@@ -131,5 +132,8 @@ class Pinball.PhysicsManager
       @pinball.fixedUpdate @constructor.simulationTimestep
       
     for physicsObject in @physicsObjects()
-      renderObject = physicsObject.entity.getRenderObject()
+      continue unless renderObject = physicsObject.entity.getRenderObject()
       renderObject.updateFromPhysicsObject physicsObject
+    
+    # Explicit return to avoid result collection.
+    return

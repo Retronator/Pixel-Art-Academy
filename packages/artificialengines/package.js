@@ -5,7 +5,7 @@ Package.describe({
 
 Npm.depends({
   'path-to-regexp': '2.1.0',
-  'three': '0.163.0',
+  'three': '0.126.1',
   'canvas': '2.6.1',
   'pako': '1.0.8',
   'bson': '4.0.2',

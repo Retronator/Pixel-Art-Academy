@@ -30,11 +30,6 @@ class Pinball.Project extends Pinball.Project
           assets: []
           playfield:
             "#{Random.id()}":
-              type: Pinball.Parts.BallSpawner.id()
-              position:
-                x: 173.5 * pixelSize
-                z: 175.5 * pixelSize
-            "#{Random.id()}":
               type: Pinball.Parts.Playfield.id()
               position:
                 x: 90 * pixelSize
@@ -54,35 +49,6 @@ class Pinball.Project extends Pinball.Project
               position:
                 x: 90 * pixelSize
                 z: 100 * pixelSize
-            "#{Random.id()}":
-              type: Pinball.Parts.Plunger.id()
-              position:
-                x: 173.5 * pixelSize
-                z: 189.5 * pixelSize
-            "#{Random.id()}":
-              type: Pinball.Parts.Flipper.id()
-              position:
-                x: 66.5 * pixelSize
-                z: 176.5 * pixelSize
-              maxAngleDegrees: 39.5
-            "#{Random.id()}":
-              type: Pinball.Parts.Flipper.id()
-              position:
-                x: 103.5 * pixelSize
-                z: 176.5 * pixelSize
-              flipped: true
-              maxAngleDegrees: 39.5
-            "#{Random.id()}":
-              type: Pinball.Parts.Trough.id()
-              position:
-                x: 85 * pixelSize
-                z: 197 * pixelSize
-            "#{Random.id()}":
-              type: Pinball.Parts.BallSpawner.id()
-              position:
-                x: 124.5 * pixelSize
-                z: 67.5 * pixelSize
-              captive: true
               
         # Write the project ID into profile's game state.
         Pinball.Project.state 'activeProjectId', projectId

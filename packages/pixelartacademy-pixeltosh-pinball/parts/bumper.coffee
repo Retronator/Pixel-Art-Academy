@@ -18,7 +18,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
   
   @avatarShapes: -> [
-    Pinball.Part.Avatar.Extrusion
+    @Shape
   ]
   
   @initialize()
@@ -28,6 +28,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
   constructor: ->
     super arguments...
     
+    # Add trigger for lowering the ring.
     @trigger = new AR.Trigger
       onEnter: (rigidBody) =>
         return unless rigidBody.physicsObject?.entity instanceof Pinball.Ball
@@ -48,25 +49,13 @@ class Pinball.Parts.Bumper extends Pinball.Part
       triggerCollider.setCollisionShape triggerShape.createCollisionShape()
       triggerCollider
       
-    @ringShape = new AE.LiveComputedField =>
-      return unless shape = @avatar.shape()
-      properties = @extraShapeProperties()
-      ballPositionY = @pinball.sceneManager().ballPositionY()
-      
-      Pinball.Part.Avatar.TaperedExtrusion.detectShape shape.pixelArtEvaluation,
-        height: ballPositionY
-        taperDistance: ballPositionY
-        flipped: properties.flipped
-        positionY: ballPositionY * 3
-    
-    # Add active bumper ring.
     @triggerPhysicsDebugMesh = new AE.LiveComputedField (computation) =>
       return unless triggerShape = @triggerShape()
       return unless renderObject = @getRenderObject()
       
       @_triggerPhysicsDebugGeometry?.dispose()
       @_triggerPhysicsDebugMesh?.removeFromParent()
-
+      
       return unless @data().active
       
       @_triggerPhysicsDebugGeometry = triggerShape.createPhysicsDebugGeometry()
@@ -79,6 +68,19 @@ class Pinball.Parts.Bumper extends Pinball.Part
       renderObject.perpendicularRotationOrigin.add @_triggerPhysicsDebugMesh
       
       @_triggerPhysicsDebugMesh
+
+    # Add active bumper ring.
+    @ringShape = new AE.LiveComputedField =>
+      return unless shape = @avatar.shape()
+      properties = @extraShapeProperties()
+      ballPositionY = @pinball.sceneManager().ballPositionY()
+      
+      Pinball.Part.Avatar.TaperedExtrusion.detectShape shape.pixelArtEvaluation,
+        height: ballPositionY
+        taperDistanceTop: 0
+        taperDistanceBottom: ballPositionY
+        flipped: properties.flipped
+        positionY: ballPositionY * 3
     
     @ringPhysicsDebugMesh = new AE.LiveComputedField (computation) =>
       return unless ringShape = @ringShape()
@@ -162,10 +164,11 @@ class Pinball.Parts.Bumper extends Pinball.Part
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
   
   extraShapeProperties: ->
-    ballPositionY = @pinball.sceneManager().ballPositionY()
+    return unless sceneManager = @pinball.sceneManager()
+    ballPositionY = sceneManager.ballPositionY()
     
     positionY: ballPositionY * 4
-    height: ballPositionY
+    ballPositionY: ballPositionY
     
   getPhysicsObject: ->
     # To ensure the ring physics object is ready when the main
@@ -255,3 +258,50 @@ class Pinball.Parts.Bumper extends Pinball.Part
     _displacedRingPosition.copy @ringOrigin
     _displacedRingPosition.y -= @displacement
     ringPhysicsObject.setPosition _displacedRingPosition
+
+  class @Shape extends Pinball.Part.Avatar.TriangleMesh
+    @detectShape: (pixelArtEvaluation, properties) ->
+      return unless pixelArtEvaluation.layers[0].cores.length
+      
+      new @ pixelArtEvaluation, properties
+      
+    constructor: (@pixelArtEvaluation, @properties) ->
+      super arguments...
+      
+      individualGeometryData = []
+      ballPositionY = @properties.ballPositionY
+      towerTaperDistance = 1.5 * ballPositionY / Pinball.CameraManager.orthographicPixelSize
+      
+      @topBoundaries = []
+      @towerBoundaries = []
+      
+      for core in @pixelArtEvaluation.layers[0].cores
+        topBoundaries = []
+        towerBoundaries = []
+        
+        for line in core.outlines
+          points = @_getLinePoints line
+          topBoundary = new AP.PolygonBoundary points
+          topBoundaries.push topBoundary
+          
+          towerBoundary = topBoundary.getInsetPolygonBoundary towerTaperDistance
+          towerBoundaries.push towerBoundary
+          
+          for point, pointIndex in points
+            towerBoundary.vertices[pointIndex].tangent = point.tangent
+        
+        @topBoundaries.push topBoundaries...
+        @towerBoundaries.push towerBoundaries...
+        
+        topPolygon = new AP.PolygonWithHoles topBoundaries
+        topPolygonWithoutHoles = topPolygon.getPolygonWithoutHoles()
+        individualGeometryData.push @constructor._createExtrudedVerticesAndIndices topPolygon.boundaries,  -ballPositionY, 0, @properties.flipped
+        individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, 0, 1
+        individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, -ballPositionY, -1
+        
+        towerPolygon = new AP.PolygonWithHoles towerBoundaries
+        individualGeometryData.push @constructor._createExtrudedVerticesAndIndices towerPolygon.boundaries,  -ballPositionY * 4, -ballPositionY, @properties.flipped
+        
+      @geometryData = @constructor._mergeGeometryData individualGeometryData
+    
+    positionY: -> @properties.positionY

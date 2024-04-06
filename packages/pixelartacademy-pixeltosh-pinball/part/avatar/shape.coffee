@@ -169,7 +169,6 @@ class Pinball.Part.Avatar.Shape
       for vertexIndex in [0...bottomPolygonBoundary.vertices.length]
         bottomVertex = bottomPolygonBoundary.vertices[vertexIndex]
         topVertex = topPolygonBoundary.vertices[vertexIndex]
-        tangent = bottomVertex.tangent or topVertex.tangent
         
         vertexBufferArray[bottomVertexIndex * 3] = bottomVertex.x * pixelSize
         vertexBufferArray[bottomVertexIndex * 3 + 1] = bottomY
@@ -178,10 +177,10 @@ class Pinball.Part.Avatar.Shape
         vertexBufferArray[topVertexIndex * 3 + 1] = topY
         vertexBufferArray[topVertexIndex * 3 + 2] = topVertex.y * pixelSize
         
-        normalArray[bottomVertexIndex * 3] = -tangent.y * normalSign
-        normalArray[bottomVertexIndex * 3 + 2] = tangent.x * normalSign
-        normalArray[topVertexIndex * 3] = -tangent.y * normalSign
-        normalArray[topVertexIndex * 3 + 2] = tangent.x * normalSign
+        normalArray[bottomVertexIndex * 3] = -bottomVertex.tangent.y * normalSign
+        normalArray[bottomVertexIndex * 3 + 2] = bottomVertex.tangent.x * normalSign
+        normalArray[topVertexIndex * 3] = -topVertex.tangent.y * normalSign
+        normalArray[topVertexIndex * 3 + 2] = topVertex.tangent.x * normalSign
         
         nextBottomVertexIndex = if vertexIndex is bottomPolygonBoundary.vertices.length - 1 then boundaryStartVertexIndex else bottomVertexIndex + 2
         nextTopVertexIndex = nextBottomVertexIndex + 1

@@ -39,13 +39,8 @@ class Pinball.SceneManager
     @scene.add @debugDirectionalLight
     
     @debugPointLight = new THREE.PointLight
-    @debugPointLight.intensity = 0.5
+    @debugPointLight.intensity = 0.3
     @debugPointLight.position.set @constructor.playfieldWidth / 2, 0.3, @constructor.shortPlayfieldHeight / 2
-    @debugPointLight.castShadow = true
-    @debugPointLight.shadow.mapSize.x = 4096
-    @debugPointLight.shadow.mapSize.y = 4096
-    @debugPointLight.shadow.camera.near = 0.1
-    @debugPointLight.shadow.camera.far = 0.5
     @debugPointLight.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
     @scene.add @debugPointLight
     
@@ -53,7 +48,7 @@ class Pinball.SceneManager
     @parts = new ReactiveField @_parts
 
     # Instantiate playfield parts based on the data.
-    @pinball.autorun =>
+    @_partsAutorun = @pinball.autorun =>
       remainingPlayfieldPartIds = (part.playfieldPartId for part in @_parts)
 
       return unless newPartsData = @pinball.partsData()
@@ -71,7 +66,7 @@ class Pinball.SceneManager
       for newPlayfieldPartId in remainingPlayfieldPartIds
         Tracker.nonreactive => @_removePartWithId newPlayfieldPartId
         
-    @entities = new ComputedField =>
+    @entities = new AE.LiveComputedField =>
       return [] unless gameManager = @pinball.gameManager()
       simulationActive = gameManager.simulationActive()
       
@@ -105,13 +100,22 @@ class Pinball.SceneManager
       shape = Pinball.Part.Avatar.Sphere.detectShape pixelArtEvaluation, {}
       pixelArtEvaluation.destroy()
       shape?.positionY() or 0.0135
+
+    @ready = new AE.LiveComputedField =>
+      parts = @parts()
+      return unless partsData = @pinball.partsData()
+      return unless _.keys(partsData).length is parts.length
+      _.every parts, (part) => part.ready()
     
   destroy: ->
+    @_partsAutorun.stop()
+    
+    @entities.stop()
     @renderObjects.stop()
     part.destroy() for part in @_parts
     @_ballSpawner.destroy()
-    @_ballSpawnerPixelArtEvaluation.destroy()
     @ballPositionY.stop()
+    @ready.stop()
     
   getPart: (playfieldPartId) ->
     _.find @parts(), (part) => part.playfieldPartId is playfieldPartId

@@ -31,9 +31,6 @@ class Pinball.Parts.Flipper extends Pinball.Part
     @active = false
     @moving = false
     @displacementAngle = 0
-  
-  defaultData: ->
-    maxAngleDegrees: 39.5
     
   settings: ->
     maxAngleDegrees:
@@ -64,7 +61,9 @@ class Pinball.Parts.Flipper extends Pinball.Part
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
     
   extraShapeProperties: ->
-    height: @pinball.sceneManager().ballPositionY() * 2
+    return unless sceneManager = @pinball.sceneManager()
+    
+    height: sceneManager.ballPositionY() * 2
 
   onAddedToDynamicsWorld: (@dynamicsWorld) ->
     # Flipper is a player-controlled kinematic object.

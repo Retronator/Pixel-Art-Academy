@@ -32,7 +32,6 @@ class Pinball.Parts.Pins extends Pinball.Part
       return unless pixelArtEvaluation = @part.pixelArtEvaluation()
       
       points = _.filter pixelArtEvaluation.layers[0].points, (point) => not point.neighbors.length
-      return unless points.length
       
       new @constructor.Shape pixelArtEvaluation, @part.shapeProperties(), points
       
@@ -48,6 +47,8 @@ class Pinball.Parts.Pins extends Pinball.Part
           radius: point.radius * pixelSize * Pinball.Parts.Pin.radiusRatio
         
       createPhysicsDebugGeometry: ->
+        return unless @pins.length
+        
         cylinders = for pin in @pins
           cylinder = new THREE.BufferGeometry pin.radius, pin.radius, @height
           

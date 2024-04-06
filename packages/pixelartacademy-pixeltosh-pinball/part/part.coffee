@@ -46,22 +46,22 @@ class Pinball.Part extends LOI.Adventure.Item
         @bitmap null
 
     # Create reactive data for the part.
-    @data = new ComputedField =>
+    @data = new AE.LiveComputedField =>
       data = _.clone @pinball.getPartData(@playfieldPartId) or {}
       
       for property, setting of @settings() when setting.default?
         data[property] ?= setting.default
         
-      data
+      _.defaults data, @defaultData()
     ,
       EJSON.equals
     
-    @shapeProperties = new ComputedField =>
+    @shapeProperties = new AE.LiveComputedField =>
       _.defaults {}, _.pick(@data(), ['flipped']), @extraShapeProperties(), @constants()
     ,
       EJSON.equals
     
-    @physicsProperties = new ComputedField =>
+    @physicsProperties = new AE.LiveComputedField =>
       _.defaults {}, _.pick(@data(), ['restitution', 'friction', 'rollingFriction']), @constants()
     ,
       EJSON.equals
@@ -73,7 +73,16 @@ class Pinball.Part extends LOI.Adventure.Item
     @autorun (computation) =>
       @data()
       @reset()
+      
+  destroy: ->
+    super arguments...
     
+    @data.stop()
+    @shapeProperties.stop()
+    @physicsProperties.stop()
+    
+  ready: -> @getRenderObject() and @getPhysicsObject() and @shape()
+  
   shape: -> @avatar.shape()
   texture: -> @avatar.texture()
   pixelArtEvaluation: -> @avatar.pixelArtEvaluation()
@@ -100,6 +109,7 @@ class Pinball.Part extends LOI.Adventure.Item
     new avatarClass @
   
   settings: -> {} # Override to supply which settings the player can change for this part.
+  defaultData: -> {} # Override to supply defaults for the data (not defined through the settings).
   constants: -> {} # Override to supply constant properties to the avatar.
   extraShapeProperties: -> {} # Override to supply additional properties to the shape.
   

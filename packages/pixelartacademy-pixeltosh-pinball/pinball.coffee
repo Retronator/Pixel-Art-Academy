@@ -65,6 +65,18 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @partsData()?[playfieldPartId]
   
   load: (file) ->
+    super arguments...
+    
+    # Reactively set the waiting cursor.
+    @autorun (computation) =>
+      osCursor = @os.cursor()
+      
+      unless @sceneManager()?.ready() or not @loaded()
+        osCursor.wait @
+    
+      else
+        osCursor.endWait @
+    
     file ?= new PAA.Pixeltosh.OS.FileSystem.File
       id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
       data: => AB.Router.getParameter('projectId') or AB.Router.getParameter('parameter4') or @constructor.Project.state('activeProjectId')
@@ -101,11 +113,15 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
   unload: ->
+    super arguments...
+    
     @app.removeComponent @
     
     @sceneManager()?.destroy()
+    @cameraManager()?.destroy()
     @rendererManager()?.destroy()
     @physicsManager()?.destroy()
+    @gameManager()?.destroy()
     
     @sceneManager null
     @cameraManager null
@@ -119,6 +135,8 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @_macintoshPaletteSubscription.stop()
     
+    @os.cursor().endWait()
+    
   openFile: (file) ->
     @openedFile file
     
@@ -127,13 +145,13 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', true
   
   update: (appTime) ->
-    sceneManager = @sceneManager()
-    physicsManager = @physicsManager()
-
     # Update physics.
+    return unless physicsManager = @physicsManager()
     physicsManager.update appTime
     
     # Quantize position when in normal view.
+    sceneManager = @sceneManager()
+    
     if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
       for renderObject in sceneManager.renderObjects()
         continue unless shape = renderObject.entity.shape()

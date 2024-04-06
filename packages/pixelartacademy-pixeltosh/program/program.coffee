@@ -23,12 +23,18 @@ class PAA.Pixeltosh.Program extends LOI.Adventure.Thing
 
   constructor: (@os) ->
     super arguments...
+    
+    @loaded = new ReactiveField()
   
   iconUrl: -> @constructor.iconUrl()
   
-  load: -> # Override to perform any logic on startup.
+  load: ->
+    # Extend to perform any logic on startup.
+    @loaded true
   
-  unload: -> # Override to perform any cleanup.
+  unload: ->
+    # Extend to perform any cleanup.
+    @loaded false
   
   menuItems: -> [] # Override to supply the data used to display the menu when this program is active.
 

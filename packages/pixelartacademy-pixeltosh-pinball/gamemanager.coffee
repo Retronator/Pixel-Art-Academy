@@ -19,11 +19,11 @@ class Pinball.GameManager
     
     @balls = new ReactiveField []
     
-    @liveBalls = new ComputedField =>
+    @liveBalls = new AE.LiveComputedField =>
       _.filter @balls(), (ball) => ball.state() is Pinball.Ball.States.Live
       
     # Handle running out of live balls.
-    @pinball.autorun =>
+    @_ballsAutorun = @pinball.autorun =>
       return unless @simulationActive()
       return if @liveBalls().length
   
@@ -35,6 +35,10 @@ class Pinball.GameManager
       else if @mode() is @constructor.Modes.Test
         # Test mode always spawns extra balls.
         @spawnBalls()
+        
+  destroy: ->
+    @liveBalls.stop()
+    @_ballsAutorun.stop()
 
   edit: ->
     return unless @startMode @constructor.Modes.Edit

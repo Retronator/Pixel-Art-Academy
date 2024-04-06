@@ -20,6 +20,9 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
   destroy: ->
     super arguments...
     
+    @texture?.stop()
+    @pixelArtEvaluation?.stop()
+
     @_texture?.dispose()
     @_renderObject?.destroy()
     @_physicsObject?.destroy()
@@ -31,10 +34,10 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     @_physicsObject = new @constructor.PhysicsObject @part
     
     # Create the upscaled texture.
-    pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @part.bitmap()
+    @pixelImage = new LOI.Assets.Engine.PixelImage.Bitmap asset: => @part.bitmap()
     
-    @texture = new ComputedField =>
-      return unless originalCanvas = pixelImage.getCanvas()
+    @texture = new AE.LiveComputedField =>
+      return unless originalCanvas = @pixelImage.getCanvas()
       
       expandedCanvas = new AM.Canvas originalCanvas.width + 2, originalCanvas.height + 2
       expandedCanvas.context.drawImage originalCanvas, 1, 1
@@ -47,7 +50,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       @_texture
     
     # Analyze pixel art.
-    @pixelArtEvaluation = new ComputedField =>
+    @pixelArtEvaluation = new AE.LiveComputedField =>
       return unless bitmap = @part.bitmap()
       @_pixelArtEvaluation?.destroy()
       @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap

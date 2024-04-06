@@ -28,7 +28,7 @@ class Pinball.RendererManager
     @renderer.shadowMap.type = THREE.PCFSoftShadowMap
     @renderer.setClearColor new THREE.Color 0xffffff
 
-    @pinball.autorun =>
+    @_sizeAutorun = @pinball.autorun =>
       scale = if @pinball.debugPhysics() then @pinball.os.display.scale() * 2 else 1
       
       switch @pinball.cameraManager()?.displayType()
@@ -39,6 +39,7 @@ class Pinball.RendererManager
           @renderer.setSize @constructor.perspectiveWidth * scale, @constructor.height * scale
   
   destroy: ->
+    @_sizeAutorun.stop()
     @renderer.dispose()
 
   draw: (appTime) ->
