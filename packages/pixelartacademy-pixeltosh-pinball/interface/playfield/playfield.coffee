@@ -40,7 +40,7 @@ class Pinball.Interface.Playfield extends LOI.View
 
   selectionVisibleClass: ->
     return unless selectedPart = @selectedPart()
-    'visible' if selectedPart.constructor.editable() and not @pinball.editorManager()?.editing()
+    'visible' if selectedPart.constructor.editable()
     
   selectionStyle: ->
     # Depend on the selected part's changes.
@@ -76,6 +76,18 @@ class Pinball.Interface.Playfield extends LOI.View
     top: "#{top}rem"
     width: "#{width}rem"
     height: "#{height}rem"
+    
+  partVisibleClass: ->
+    # Only show selected part when dragging it over the parts.
+    return unless selectedPart = @selectedPart()
+    
+    'visible' if selectedPart.position()?.x > Pinball.SceneManager.playfieldWidth
+  
+  controlsVisibleClass: ->
+    'visible' unless @pinball.editorManager()?.editing()
+    
+  selectedPartBitmapImageOptions: ->
+    bitmap: => @selectedPart()?.bitmap()
     
   events: ->
     super(arguments...).concat
