@@ -6,8 +6,9 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.SceneManager
   @playfieldWidth = 1 / 2 # m
-  @shortPlayfieldHeight = 5 / 9 # m
-  @standardPlayfieldHeight = 1 # m
+  @shortPlayfieldDepth = 5 / 9 # m
+  @standardPlayfieldDepth = 1 # m
+  @playfieldHeight = 0.05 # m
 
   constructor: (@pinball) ->
     @scene = new THREE.Scene()
@@ -40,7 +41,7 @@ class Pinball.SceneManager
     
     @debugPointLight = new THREE.PointLight
     @debugPointLight.intensity = 0.3
-    @debugPointLight.position.set @constructor.playfieldWidth / 2, 0.3, @constructor.shortPlayfieldHeight / 2
+    @debugPointLight.position.set @constructor.playfieldWidth / 2, 0.3, @constructor.shortPlayfieldDepth / 2
     @debugPointLight.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
     @scene.add @debugPointLight
     

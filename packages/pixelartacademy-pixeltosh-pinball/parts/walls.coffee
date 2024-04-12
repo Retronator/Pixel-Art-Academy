@@ -21,7 +21,7 @@ class Pinball.Parts.Walls extends Pinball.Part
   @initialize()
   
   constants: ->
-    height: 0.02
+    height: Pinball.SceneManager.playfieldHeight
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse

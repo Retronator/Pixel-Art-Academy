@@ -61,7 +61,7 @@ class Pinball.CameraManager
     @_properties = new ReactiveField
       azimuthalAngle: AR.Degrees 90
       polarAngle: AR.Degrees 45
-      radialDistance: Pinball.SceneManager.shortPlayfieldHeight
+      radialDistance: Pinball.SceneManager.shortPlayfieldDepth
     
     @_cameraRotationAutorun = @pinball.autorun =>
       properties = @_properties()
@@ -72,7 +72,7 @@ class Pinball.CameraManager
       @_perspectiveCamera.position.copy
         x: r * Math.sin(θ) * Math.cos(ɸ) + Pinball.SceneManager.playfieldWidth / 2
         y: r * Math.cos(θ)
-        z: r * Math.sin(θ) * Math.sin(ɸ) + Pinball.SceneManager.shortPlayfieldHeight / 2
+        z: r * Math.sin(θ) * Math.sin(ɸ) + Pinball.SceneManager.shortPlayfieldDepth / 2
       
       # Update rotation to look at the center.
       @_perspectiveCamera.rotation.set -Math.PI / 2 + θ, Math.PI / 2 - ɸ, 0, 'YXZ'

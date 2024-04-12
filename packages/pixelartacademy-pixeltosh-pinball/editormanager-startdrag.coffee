@@ -43,7 +43,7 @@ Pinball.EditorManager::startDrag = (part, options) ->
     newPosition = part.position()
     
     # See if the new position is inside the playfield.
-    if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.z < Pinball.SceneManager.shortPlayfieldHeight
+    if newPosition and 0 < newPosition.x < Pinball.SceneManager.playfieldWidth and 0 < newPosition.z < Pinball.SceneManager.shortPlayfieldDepth
       # Snap new position to pixels.
       rotationQuaternion = part.rotationQuaternion()
       Pinball.CameraManager.snapShapeToPixelPosition part.shape(), newPosition, rotationQuaternion

@@ -7,7 +7,7 @@ class Pinball.Parts.Pins extends Pinball.Part
   @fullName: -> "pins"
   @description: ->
     "
-      The pins in pinball, small metal pins that modify the ball's trajectory.
+      The pins in pinball, small metal pins that change the ball's trajectory.
     "
     
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'

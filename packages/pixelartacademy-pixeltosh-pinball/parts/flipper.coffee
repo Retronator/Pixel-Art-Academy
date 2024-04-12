@@ -12,7 +12,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
   @fullName: -> "flipper"
   @description: ->
     "
-      A tapered bat that lets the player control the ball.
+      A bat that lets the player control the ball.
     "
     
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
@@ -52,8 +52,8 @@ class Pinball.Parts.Flipper extends Pinball.Part
   
   constants: ->
     bitmapOrigin:
-      x: 3.5
-      y: 3.5
+      x: 6.5
+      y: 6.5
     restitution: Pinball.PhysicsManager.RestitutionConstants.Rubber
     friction: Pinball.PhysicsManager.FrictionConstants.Rubber
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Rubber

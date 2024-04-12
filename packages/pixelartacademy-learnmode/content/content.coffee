@@ -45,6 +45,7 @@ class LM.Content
 
   # Override to provide any children content classes that are part of this content.
   @contents: -> []
+  @availableContents: -> content for content in @contents() when LM.Content.Tags.Future not in content.tags()
 
   @initialize: ->
     # Store content class by ID.
@@ -115,6 +116,7 @@ class LM.Content
     AB.translation @_translationSubscription, 'unlockInstructions'
 
   contents: -> @_contents
+  availableContents: -> content for content in @_contents when LM.Content.Tags.Future not in content.tags()
 
   allContents: -> _.flatten [@, (content.allContents() for content in @_contents)...]
 

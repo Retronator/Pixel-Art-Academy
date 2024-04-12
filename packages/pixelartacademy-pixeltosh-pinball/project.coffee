@@ -41,4 +41,4 @@ class Pinball.Project extends PAA.Practice.Project.Thing
     
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals
-    chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit
+    chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball

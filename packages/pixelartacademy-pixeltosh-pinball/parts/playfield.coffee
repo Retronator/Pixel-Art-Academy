@@ -11,7 +11,7 @@ class Pinball.Parts.Playfield extends Pinball.Part
   @fullName: -> "playfield"
   @description: ->
     "
-      The surface of the pinball table on which different parts are placed.
+      The surface of the pinball machine on which different parts are placed.
     "
     
   @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/playfield.png'

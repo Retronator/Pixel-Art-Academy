@@ -3,17 +3,29 @@ LM = PixelArtAcademy.LearnMode
 
 PixelArtSoftware = PAA.Challenges.Drawing.PixelArtSoftware
 
-class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.FutureContent
+class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
   @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects'
   @displayName: -> "Projects"
+  @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
-    @PinballCreationKit
+    @Pinball
     @PixelSuiteIcons
     @Invaders
     @BlockBreaker
     @Chess
   ]
   @initialize()
+
+  constructor: ->
+    super arguments...
+    
+    @progress = new LM.Content.Progress.ContentProgress
+      content: @
+      weight: 2
+      totalUnits: "artworks"
+      totalRecursive: true
+      
+  status: -> LM.Content.Status.Unlocked
 
   class @Invaders extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Invaders'
@@ -85,15 +97,22 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.F
       @displayName: -> "Calendar"
       @initialize()
   
-  class @PinballCreationKit extends LM.Content
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit'
-    @displayName: -> "Pinball Creation Kit"
+  class @Pinball extends LM.Content
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball'
+    @displayName: -> "Pinball"
+    @tags: -> [LM.Content.Tags.WIP]
     
-    @unlockInstructions: -> "Complete the Smooth curves challenge to start creating your own pinball machine."
+    @unlockInstructions: -> "Complete the Smooth curves challenge to start the Pinball project."
     
     @contents: -> [
       @Ball
       @Playfield
+      @GobbleHole
+      @BallTrough
+      @Bumper
+      @Gate
+      @Flipper
+      @SpinningTarget
     ]
     
     @initialize()
@@ -123,17 +142,59 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content.F
       status: -> LM.Content.Status.Unlocked
     
     class @Ball extends @Part
-      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit.Ball'
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.Ball'
       
       @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Ball
       
       @initialize()
     
     class @Playfield extends @Part
-      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PinballCreationKit.Playfield'
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.Playfield'
       
       @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Playfield
       
+      @initialize()
+
+    class @GobbleHole extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.GobbleHole'
+
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.GobbleHole
+
+      @initialize()
+
+    class @BallTrough extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.BallTrough'
+
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.BallTrough
+
+      @initialize()
+
+    class @Bumper extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.Bumper'
+
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Bumper
+
+      @initialize()
+
+    class @Gate extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.Gate'
+
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Gate
+
+      @initialize()
+
+    class @Flipper extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.Flipper'
+
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.Flipper
+
+      @initialize()
+
+    class @SpinningTarget extends @Part
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball.SpinningTarget'
+
+      @asset = PAA.Pixeltosh.Programs.Pinball.Assets.SpinningTarget
+
       @initialize()
       
   class @BlockBreaker extends LM.Content.FutureContent

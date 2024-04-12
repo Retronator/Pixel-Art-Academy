@@ -17,8 +17,9 @@ class LM.PixelArtFundamentals.Fundamentals.Workbench extends LOI.Adventure.Scene
   things: ->
     things = []
     
-    pinballPlayTask = PAA.Learning.Task.getAdventureInstanceForId LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.Play
-    pinballProjectEnabled = pinballPlayTask.completed()
+    # Pinball project appears after Pinball Creation Kit was run for the first time.
+    openPinballMachineTask = PAA.Learning.Task.getAdventureInstanceForId LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.OpenPinballMachine.id()
+    pinballProjectEnabled = openPinballMachineTask.completed()
     activePinballProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
 
     if pinballProjectEnabled and activePinballProjectId

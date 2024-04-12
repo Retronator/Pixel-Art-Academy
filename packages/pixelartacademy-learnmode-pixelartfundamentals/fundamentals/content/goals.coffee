@@ -8,6 +8,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
   @contents: -> [
     @ElementsOfArt
     @Jaggies
+    @Pinball
   ]
   @initialize()
   
@@ -36,3 +37,14 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies
     @tags: -> [LM.Content.Tags.WIP]
     @initialize()
+  
+  class @Pinball extends LM.Content.GoalContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Pinball'
+    @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Pinball
+    @tags: -> [LM.Content.Tags.WIP]
+    
+    @unlockInstructions: -> "Complete the Smooth curves challenge to start creating your own pinball machine."
+  
+    @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.pinballEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked

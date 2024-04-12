@@ -7,56 +7,56 @@ class LM.Content.Progress.ContentProgress extends LM.Content.Progress
   constructor: (@options) ->
     super arguments...
 
-    @_weights = (content.progress.weight() for content in @content.contents())
+    @_weights = (content.progress.weight() for content in @content.availableContents())
 
   completed: ->
-    _.every (content.completed() for content in @content.contents())
+    _.every (content.completed() for content in @content.availableContents())
 
   # Total units
 
   unitsCount: ->
     if @options.recursive or @options.totalRecursive
-      _.sum (content.progress.unitsCount?() for content in @content.contents())
+      _.sum (content.progress.unitsCount?() for content in @content.availableContents())
 
     else
-      @content.contents().length
+      @content.availableContents().length
 
   completedUnitsCount: ->
     if @options.recursive or @options.totalRecursive
-      _.sum (content.progress.completedUnitsCount?() for content in @content.contents())
+      _.sum (content.progress.completedUnitsCount?() for content in @content.availableContents())
 
     else
-      _.filter(@content.contents(), (content) => content.completed()).length
+      _.filter(@content.availableContents(), (content) => content.completed()).length
 
   completedRatio: ->
     if @options.recursive or @options.totalRecursive
       @completedUnitsCount() / @unitsCount()
 
     else
-      @_weightedAverage (content.completedRatio() or 0 for content in @content.contents())
+      @_weightedAverage (content.completedRatio() or 0 for content in @content.availableContents())
 
   # Required units
 
   requiredUnitsCount: ->
     if @options.recursive or @options.requiredRecursive
-      _.sum (content.progress.requiredUnitsCount?() for content in @content.contents())
+      _.sum (content.progress.requiredUnitsCount?() for content in @content.availableContents())
 
     else
-      @content.contents().length
+      @content.availableContents().length
 
   requiredCompletedUnitsCount: ->
     if @options.recursive or @options.requiredRecursive
-      _.sum (content.progress.requiredCompletedUnitsCount?() for content in @content.contents())
+      _.sum (content.progress.requiredCompletedUnitsCount?() for content in @content.availableContents())
 
     else
-      _.filter(@content.contents(), (content) => content.completed()).length
+      _.filter(@content.availableContents(), (content) => content.completed()).length
 
   requiredCompletedRatio: ->
     if @options.recursive or @options.requiredRecursive
       @requiredCompletedUnitsCount() / @requiredUnitsCount()
 
     else
-      @_weightedAverage (content.requiredCompletedRatio() or 0 for content in @content.contents())
+      @_weightedAverage (content.requiredCompletedRatio() or 0 for content in @content.availableContents())
 
   _weightedAverage: (values) ->
     totalWeight = 0
