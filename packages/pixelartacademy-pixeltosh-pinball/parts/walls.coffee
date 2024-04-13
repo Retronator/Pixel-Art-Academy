@@ -10,7 +10,7 @@ class Pinball.Parts.Walls extends Pinball.Part
       The edges of the playfield.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Extrusion

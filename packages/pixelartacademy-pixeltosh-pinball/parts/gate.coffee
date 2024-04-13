@@ -11,7 +11,7 @@ class Pinball.Parts.Gate extends Pinball.Parts.DynamicPart
       A rotating piece that lets the ball go through in only one direction.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gate.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gate.png'
   
   @avatarShapes: -> [
     @Shape

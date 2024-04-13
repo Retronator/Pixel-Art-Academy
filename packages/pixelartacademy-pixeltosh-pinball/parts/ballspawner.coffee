@@ -12,7 +12,7 @@ class Pinball.Parts.BallSpawner extends Pinball.Part
       Marks the place where a ball will spawn.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ball.png'
+  @assetId: -> Pinball.Assets.Ball.id()
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Sphere

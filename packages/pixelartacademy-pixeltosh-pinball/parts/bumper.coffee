@@ -15,7 +15,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
       A mushroom-shaped target. An active bumper kicks the ball away when hit.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
   
   @avatarShapes: -> [
     @Shape

@@ -28,16 +28,31 @@ class Pinball.Project extends PAA.Practice.Project.Thing
   constructor: ->
     super arguments...
 
-    @assets = new ComputedField =>
-      [
-        new Pinball.Assets.Ball @
-        new Pinball.Assets.Playfield @
-      ]
-    ,
-      true
+    @_assets = {}
+    @_assetsUpdatedDependency = new Tracker.Dependency()
+    
+    @autorun (computation) =>
+      activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+      project = PAA.Practice.Project.documents.findOne activeProjectId
+      
+      for asset in project.assets when not @_assets[asset.id]
+        assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+        @_assets[asset.id] = Tracker.nonreactive => new assetClass @
+        
+      for assetId, asset of @_assets when not _.find project.assets, (projectAsset) => projectAsset.id is assetId
+        asset.destroy()
+        delete @_assets[assetId]
+      
+      @_assetsUpdatedDependency.changed()
 
   destroy: ->
-    @assets.stop()
+    super arguments...
+    
+    asset.destroy() for assetId, asset of @_assets
+    
+  assets: ->
+    @_assetsUpdatedDependency.depend()
+    _.values @_assets
     
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals

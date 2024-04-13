@@ -11,7 +11,7 @@ class Pinball.Parts.Pin extends Pinball.Part
       The pin in pinball, a small metal pin that changes the ball's trajectory.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/pin.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/pin.png'
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Cylinder

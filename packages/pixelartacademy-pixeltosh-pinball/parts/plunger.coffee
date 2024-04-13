@@ -11,8 +11,8 @@ class Pinball.Parts.Plunger extends Pinball.Part
     "
       A player-controlled, spring-loaded rod that allows the player to send the ball into the game.
     "
-    
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/plunger.png'
+  
+  @assetId: -> Pinball.Assets.Plunger.id()
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Extrusion

@@ -11,7 +11,7 @@ class Pinball.Parts.Trough extends Pinball.Parts.Hole
       A hole in the playfield that collects and ends the current ball.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/trough.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/trough.png'
   
   @triggerPositionYRatio: -> 1
   

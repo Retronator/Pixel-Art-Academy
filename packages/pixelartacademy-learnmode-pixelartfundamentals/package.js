@@ -12,6 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy-pixeltosh-pinball');
   api.use('retronator:pixelartacademy-learnmode');
 
   api.export('PixelArtAcademy');
@@ -35,7 +36,10 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');
   api.addFile('fundamentals/goals/jaggies');
-  api.addFile('fundamentals/goals/pinball');
+
+  api.addFile('fundamentals/goals/pinball..');
+  api.addFile('fundamentals/goals/pinball/assetstask');
+  api.addFile('fundamentals/goals/pinball/tasks');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');

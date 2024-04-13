@@ -15,7 +15,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
       A bat that lets the player control the ball.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Extrusion

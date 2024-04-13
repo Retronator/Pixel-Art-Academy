@@ -18,6 +18,24 @@ class Pinball.Assets
     @fixedDimensions: -> width: 10, height: 10
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ball.png'
+    
+    @initialize()
+  
+  class @Plunger extends PAA.Practice.Project.Asset.Bitmap
+    @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Plunger'
+    
+    @displayName: -> "Plunger"
+    
+    @description: -> """
+        A spring-loaded rod that pushes the ball along the shooting lane.
+      """
+    
+    @fixedDimensions: -> width: 15, height: 30
+    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
+    
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/plunger.png'
+    
     @initialize()
   
   class @Playfield extends PAA.Practice.Project.Asset.Bitmap

@@ -69,7 +69,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     # Reactively set the waiting cursor.
     @autorun (computation) =>
-      osCursor = @os.cursor()
+      return unless osCursor = @os.cursor()
       
       unless @sceneManager()?.ready() or not @loaded()
         osCursor.wait @
@@ -109,7 +109,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       return unless window = @os.interface.getWindow @windowId
       window.data().set 'contentArea', layouts[@constructor.Interface.determineLayout @]
       
-    # Subscribe to the black palette.
+    # Subscribe to the macintosh palette.
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
   unload: ->

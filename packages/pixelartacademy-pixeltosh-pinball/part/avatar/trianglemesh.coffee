@@ -16,6 +16,8 @@ class Pinball.Part.Avatar.TriangleMesh extends Pinball.Part.Avatar.Shape
     geometry
 
   createCollisionShape: ->
+    return new Ammo.btCompoundShape unless @geometryData.vertexBufferArray.length
+    
     triangleMesh = new Ammo.btTriangleMesh()
     
     vertexBufferArray = @geometryData.vertexBufferArray

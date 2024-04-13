@@ -64,7 +64,7 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
   
   _createShape: ->
     # Analyze the bitmap to determine the shape of the part.
-    return unless pixelArtEvaluation = @part.pixelArtEvaluation()
+    return unless pixelArtEvaluation = @pixelArtEvaluation()
     shapeProperties = @part.shapeProperties()
     
     for shapeClass in @part.constructor.avatarShapes()

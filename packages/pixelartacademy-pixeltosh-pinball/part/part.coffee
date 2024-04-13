@@ -18,8 +18,8 @@ class Pinball.Part extends LOI.Adventure.Item
   @getSelectablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable()
   @getPlaceablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable() and partClass.editable()
   
-  @assetID: -> # Override if this part's asset comes from the project.
-  @imageUrl: -> # Override if this part's asset comes from static images.
+  @assetId: -> # Override if this part's asset comes from the project.
+  @imageUrls: -> # Override if this part's asset comes from static images.
   
   @avatarShapes: -> throw new AE.NotImplementedException  "A playfield part must specify which shapes it can have in order of preference."
   
@@ -35,15 +35,18 @@ class Pinball.Part extends LOI.Adventure.Item
     # Load the bitmap asset.
     @bitmap = new ReactiveField null
     
-    if imageUrls = @constructor.imageUrl()
+    if imageUrls = @constructor.imageUrls()
       # Load static images and create a bitmap out of them.
       imageUrls = [imageUrls] unless _.isArray imageUrls
       @_loadImageAssets imageUrls
       
-    else if assetId = @constructor.assetID()
+    else if assetId = @constructor.assetId()
       # Reactively load the bitmap asset.
       @autorun (computation) =>
-        @bitmap null
+        activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+        project = PAA.Practice.Project.documents.findOne activeProjectId
+        asset = _.find project.assets, (asset) => asset.id is assetId
+        @bitmap LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId
 
     # Create reactive data for the part.
     @data = new AE.LiveComputedField =>
@@ -81,7 +84,7 @@ class Pinball.Part extends LOI.Adventure.Item
     @shapeProperties.stop()
     @physicsProperties.stop()
     
-  ready: -> @getRenderObject() and @getPhysicsObject() and @shape()
+  ready: -> @getRenderObject() and @getPhysicsObject() and @pixelArtEvaluation()
   
   shape: -> @avatar.shape()
   texture: -> @avatar.texture()
@@ -139,10 +142,11 @@ class Pinball.Part extends LOI.Adventure.Item
         # Initiate the loading.
         image.src = Meteor.absoluteUrl imageUrl
         
-    # Load the black palette.
+    # Load the macintosh palette.
     macintoshPalette = await new Promise (resolve) =>
       Tracker.autorun (computation) =>
         return unless palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Macintosh
+        computation.stop()
         resolve palette
 
     # Create a bitmap out of the images.

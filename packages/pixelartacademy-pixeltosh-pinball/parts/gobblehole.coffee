@@ -11,7 +11,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
       A hole in the playfield that ends the current ball.
     "
     
-  @imageUrl: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
+  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
   
   @initialize()
   
