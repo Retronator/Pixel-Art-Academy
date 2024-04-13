@@ -114,3 +114,6 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
             color = goalPixel.directColor
 
           @_drawPixelHint context, x, y, color
+    
+    # Explicit return to avoid result collection.
+    return
