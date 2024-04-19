@@ -155,11 +155,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.content')
-    @_resizeObserver = new ResizeObserver =>
-      @contentHeight @content$.outerHeight()
+    @autorun (computation) =>
+      @_resizeObserver?.disconnect()
+      return unless @paperDisplayed()
+
+      await _.waitForFlush()
     
-    @_resizeObserver.observe @content$[0]
+      @content$ = @$('.content')
+      @_resizeObserver = new ResizeObserver =>
+        @contentHeight @content$.outerHeight()
+      
+      @_resizeObserver.observe @content$[0]
     
   onDestroyed: ->
     super arguments...
@@ -227,6 +233,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
   activeClass: ->
     'active' if @active()
     
+  paperDisplayed: -> @pixelArtEvaluationProperty()
+  
   contentPlaceholderStyle: ->
     height: "#{@contentHeight()}px"
     

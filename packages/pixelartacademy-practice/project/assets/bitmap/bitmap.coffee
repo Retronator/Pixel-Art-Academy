@@ -42,6 +42,10 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     # Override to provide a different brief component.
     @BriefComponent
 
+  # Override if the asset requires a pixel art evaluation analysis.
+  # You can return an object to be sent as options to the constructor.
+  @pixelArtEvaluation: -> false
+  
   @initialize: ->
     super arguments...
 
@@ -83,12 +87,68 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     if restrictedPaletteName = @constructor.restrictedPaletteName()
       LOI.Assets.Palette.forName.subscribeContent restrictedPaletteName
 
+    # Prepare lazy initialization.
+    @initialized = new ReactiveField false
+
+    # Allow dereived classes to finish constructing.
+    Meteor.setTimeout =>
+      @_initializingAutorun = Tracker.autorun (computation) =>
+        return unless @initializingConditions()
+        computation.stop()
+        Tracker.nonreactive => @initialize()
+
   destroy: ->
     super arguments...
 
     @bitmapId.stop()
     @bitmap.stop()
     @versionedBitmap.stop()
+    
+    @_initializingAutorun.stop()
+    @_pixelArtEvaluation?.destroy()
+    
+  initializingConditions: ->
+    # Wait with initalizing until we've selected the asset as the active one in the editor.
+    @_isActiveInEditor false
+  
+  _isActiveInEditor: (requiresDrawingActive) ->
+    return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+    return unless editor.isCreated()
+    return unless asset = editor.activeAsset()
+    return unless asset instanceof @constructor
+    return if requiresDrawingActive and not editor.drawingActive()
+    true
+  
+  initialize: ->
+    return if @_initializing
+    @_initializing = true
+    @_initialize()
+
+  # Override to provide extra initialization functionality.
+  _initialize: ->
+    # Create additional helpers.
+    if pixelArtEvaluation = @constructor.pixelArtEvaluation()
+      pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
+      
+      @pixelArtEvaluationInstance = new ComputedField =>
+        return unless bitmap = @versionedBitmap()
+        @_pixelArtEvaluation?.destroy()
+        @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap, pixelArtEvaluationOptions
+      
+      @pixelArtEvaluation = new ComputedField =>
+        return unless pixelArtEvaluationInstance = @pixelArtEvaluationInstance()
+        pixelArtEvaluationInstance.depend()
+        pixelArtEvaluationInstance
+        
+    Meteor.setTimeout => @initialized true
+  
+  _afterInitialization: (action) ->
+    @initialize()
+    
+    Tracker.autorun (computation) =>
+      return unless @initialized()
+      computation.stop()
+      action()
 
   urlParameter: -> @bitmapId()
   

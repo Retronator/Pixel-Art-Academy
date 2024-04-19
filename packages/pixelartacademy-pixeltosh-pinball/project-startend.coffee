@@ -49,8 +49,33 @@ class Pinball.Project extends Pinball.Project
               position:
                 x: 90 * pixelSize
                 z: 100 * pixelSize
-              
+            "#{Random.id()}":
+              type: "PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.BallSpawner"
+              position:
+                x: 173.5 * pixelSize
+                z: 156.5 * pixelSize
+            "#{Random.id()}":
+              type: "PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Plunger"
+              position:
+                x: 173.5 * pixelSize
+                z: 189.5 * pixelSize
+        
         # Write the project ID into profile's game state.
         Pinball.Project.state 'activeProjectId', projectId
 
         resolve()
+  
+  @end: ->
+    # Make sure the player has an active project.
+    projectId = Pinball.Project.state 'activeProjectId'
+    throw new AE.InvalidOperationException "Profile does not have an active Pinball project." unless projectId
+    
+    # End the project.
+    endTime = new Date()
+    projectId = PAA.Practice.Project.documents.update projectId,
+      $set:
+        endTime: endTime
+        lastEditTime: endTime
+    
+    # Remove project ID from profile's game state.
+    Pinball.Project.state 'activeProjectId', null

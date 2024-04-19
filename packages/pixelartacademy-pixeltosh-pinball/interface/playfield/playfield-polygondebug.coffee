@@ -26,7 +26,7 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
     @polygonDebugCanvas = new AM.Canvas
     @polygonDebugTrianglesDrawCount = new ReactiveField -1
     
-    $(document).on 'keydown.pixelartacademy-pixeltosh-programs-pinball-interface-parts', (event) =>
+    $(document).on 'keydown.pixelartacademy-pixeltosh-programs-pinball-interface-playfield-polygondebug', (event) =>
       switch event.which
         when AC.Keys.period then delta = 1
         when AC.Keys.comma then delta = -1
@@ -208,7 +208,7 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
         return unless bumper = _.find parts, (part) => part instanceof Pinball.Parts.Bumper
         return unless shape = bumper.ringShape()
         
-        displayWidth = shape.bitmapRectangle.width() * 1.2
+        displayWidth = shape.bitmapRectangle.width() * 1.5
         displayHeight = displayWidth / 180 * 200
         scale = @polygonDebugCanvas.width / displayWidth
       
@@ -220,30 +220,30 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
 
         context.translate displayWidth / 2, displayHeight / 2
         
-        for boundary, boundaryIndex in shape.boundaries
-          drawPolygon 'green', 8, boundary, true
+        for taperedBoundaryTop, boundaryIndex in shape.taperedBoundariesTop
+          drawPolygon 'green', 8, taperedBoundaryTop, true
 
-          taperedBoundary = shape.taperedBoundaries[boundaryIndex]
+          taperedBoundaryBottom = shape.taperedBoundariesBottom[boundaryIndex]
           
           context.strokeStyle = 'purple'
           context.lineWidth = 4 / scale
           
           context.beginPath()
 
-          for vertex, vertexIndex in boundary.vertices
-            taperedVertex = taperedBoundary.vertices[vertexIndex]
+          for taperedVertexTop, vertexIndex in taperedBoundaryTop.vertices
+            taperedVertexBottom = taperedBoundaryBottom.vertices[vertexIndex]
             
-            context.moveTo vertex.x, vertex.y
-            context.lineTo taperedVertex.x, taperedVertex.y
+            context.moveTo taperedVertexTop.x, taperedVertexTop.y
+            context.lineTo taperedVertexBottom.x, taperedVertexBottom.y
           
           context.stroke()
 
-        for boundary in shape.taperedBoundaries
-          taperedPolygon = new AP.Polygon boundary
+        for taperedBoundaryBottom in shape.taperedBoundariesBottom
+          taperedPolygon = new AP.Polygon taperedBoundaryBottom
           indexBufferArray = taperedPolygon.triangulate true
           color = if indexBufferArray.error then 'red' else 'blue'
           
-          drawPolygon color, 8, boundary, true
+          drawPolygon color, 8, taperedBoundaryBottom, true
           
           trianglesDrawCount = @polygonDebugTrianglesDrawCount()
           
@@ -280,4 +280,4 @@ class Pinball.Interface.Playfield extends Pinball.Interface.Playfield
     
     return unless @constructor.polygonDebug
 
-    $(document).off '.pixelartacademy-pixeltosh-programs-pinball-interface-parts'
+    $(document).off '.pixelartacademy-pixeltosh-programs-pinball-interface-playfield-polygondebug'

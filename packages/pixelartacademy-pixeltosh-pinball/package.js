@@ -61,7 +61,7 @@ Package.onUse(function(api) {
   api.addFile('parts/hole');
   api.addFile('parts/gobblehole');
   api.addFile('parts/playfield');
-  api.addFile('parts/trough');
+  api.addFile('parts/balltrough');
   api.addFile('parts/pin');
   api.addFile('parts/dynamicpart');
   api.addFile('parts/spinningtarget');

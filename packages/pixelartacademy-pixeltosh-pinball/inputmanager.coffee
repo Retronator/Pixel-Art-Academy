@@ -33,14 +33,14 @@ class Pinball.InputManager
       part.deactivate() for part in @_getParts control
       
   destroy: ->
-    $(document).off 'keydown.pixelartacademy-pixeltosh-programs-pinball-inputmanager'
+    $(document).off '.pixelartacademy-pixeltosh-programs-pinball-inputmanager'
   
   _ignoreKeys: (event) ->
     # Ignore keys when input is focused.
     return true if @pinball.os.interface.inputFocused()
     
     # Outside of edit mode, no ignoring is needed.
-    return unless @pinball.gameManager().mode() is Pinball.GameManager.Modes.Edit
+    return unless @pinball.gameManager()?.mode() is Pinball.GameManager.Modes.Edit
     
     # Ignore keys while editing.
     return true if @pinball.editorManager().editing()
@@ -50,8 +50,8 @@ class Pinball.InputManager
     
   _keyCodeToControl: (code) ->
     switch code
-      when 'ShiftLeft', 'ControlLeft', 'AltLeft', 'ArrowLeft' then @constructor.Controls.LeftFlipper
-      when 'ShiftRight', 'ControlRight', 'AltRight', 'ArrowRight', 'NumpadEnter' then @constructor.Controls.RightFlipper
+      when 'ShiftLeft', 'ControlLeft', 'ArrowLeft' then @constructor.Controls.LeftFlipper
+      when 'ShiftRight', 'ControlRight', 'ArrowRight', 'NumpadEnter' then @constructor.Controls.RightFlipper
       when 'ArrowDown', 'Space', 'Enter' then @constructor.Controls.Plunger
       else
         null

@@ -14,13 +14,15 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
       A metal plate that spins when the ball hits its lower half.
     "
     
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/spinningtarget.png'
+  @assetId: -> Pinball.Assets.SpinningTarget.id()
   
   @avatarShapes: -> [
     @Shape
   ]
   
   @initialize()
+  
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawSpinningTarget
   
   settings: ->
     points:

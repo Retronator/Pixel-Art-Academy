@@ -3,7 +3,9 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
-class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.AssetsTask extends PAA.Learning.Task.Automatic
+Goal = LM.PixelArtFundamentals.Fundamentals.Goals.Pinball
+
+class Goal.AssetsTask extends Goal.Task
   @unlockedAssets: -> throw new AE.NotImplementedException "Asset task must return an array of assets it unlocks."
   
   @onActive: ->
@@ -11,19 +13,23 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.AssetsTask extends PAA.
     activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
     project = PAA.Practice.Project.documents.findOne activeProjectId
     
+    newAssets = []
+    
     for unlockedAsset in @unlockedAssets()
       unlockedAssetId = unlockedAsset.id()
       continue if _.find project.assets, (asset) => asset.id is unlockedAssetId
 
-      do (unlockedAsset) =>
-        bitmapId = await @_createAssetBitmap unlockedAsset
-        
-        PAA.Practice.Project.documents.update activeProjectId,
-          $push:
-            assets:
-              id: unlockedAsset.id()
-              type: unlockedAsset.type()
-              bitmapId: bitmapId
+      bitmapId = await @_createAssetBitmap unlockedAsset
+      
+      newAssets.push
+        id: unlockedAsset.id()
+        type: unlockedAsset.type()
+        bitmapId: bitmapId
+    
+    PAA.Practice.Project.documents.update activeProjectId,
+      $push:
+        assets:
+          $each: newAssets
           
   @_createAssetBitmap: (asset) ->
     new Promise (resolve, reject) =>
@@ -84,3 +90,16 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.AssetsTask extends PAA.
           layer.toPlainObject()
         
         resolve LOI.Assets.Bitmap.documents.insert bitmapData
+  
+  @completedConditions: ->
+    return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+    return unless project = PAA.Practice.Project.documents.findOne activeProjectId
+
+    # The player must have drawn the first of the unlocked assets.
+    requiredAssetId = @unlockedAssets()[0].id()
+    
+    return unless asset = _.find project.assets, (asset) => asset.id is requiredAssetId
+    return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
+    
+    # We know the player has changed the bitmap if the history position is not zero.
+    bitmap.historyPosition

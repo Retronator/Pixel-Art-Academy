@@ -21,6 +21,8 @@ class Pinball.Parts.BallSpawner extends Pinball.Part
   
   @initialize()
   
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawBall
+  
   settings: ->
     captive:
       name: 'Captive ball'

@@ -37,6 +37,8 @@ Pinball.EditorManager::startRotate = (part) ->
   startCoordinates = osCursor.coordinates()
   startCursorAngle = Math.atan2 startCoordinates.y - rotationAxis.y, startCoordinates.x - rotationAxis.x
   startRotationAngle = part.rotationAngle()
+  startPosition = part.position()
+  partShape = part.shape()
   
   # Wire rotating handlers.
   $document = $(document)
@@ -71,7 +73,13 @@ Pinball.EditorManager::startRotate = (part) ->
       
       newAngle = snappedAngle
     
+    # Snap position to pixels with the new rotation angle.
+    newPosition = _.clone startPosition
+    rotationQuaternion = new THREE.Quaternion().setFromEuler new THREE.Euler 0, newAngle, 0
+    Pinball.CameraManager.snapShapeToPixelPosition partShape, newPosition, rotationQuaternion
+    
     part.setTemporaryRotationAngle newAngle
+    part.setTemporaryPosition newPosition
   
   # Create a throttled delta update function to emulate a slow CPU.
   delay = if LOI.settings.graphics.slowCPUEmulation.value() then 75 else 0
@@ -92,13 +100,17 @@ Pinball.EditorManager::startRotate = (part) ->
     osCursor.endClassRequests @
     
     newRotationAngle = part.rotationAngle()
-    @updatePart part, rotationAngle: newRotationAngle
+    
+    @updatePart part,
+      rotationAngle: newRotationAngle
+      position: part.position()
     
     # Wait until the new position has updated on the document, before removing the temporary override.
     Tracker.autorun (computation) =>
       return unless EJSON.equals part.data().rotationAngle, newRotationAngle
       computation.stop()
       part.setTemporaryRotationAngle null
+      part.setTemporaryPosition null
       
     $interface.off '.pixelartacademy-pixeltosh-programs-pinball-editormanager'
     $document.off '.pixelartacademy-pixeltosh-programs-pinball-editormanager'

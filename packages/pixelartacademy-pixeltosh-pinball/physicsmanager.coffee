@@ -63,11 +63,6 @@ class Pinball.PhysicsManager
     ,
       new Ammo.btBoxShape new Ammo.btVector3(10, 10, 1), 0
     
-    @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
-      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(0, 0, Pinball.SceneManager.shortPlayfieldDepth + 1)
-    ,
-      new Ammo.btBoxShape new Ammo.btVector3(10, 10, 1), 0
-    
     # Add glass.
     @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
       new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(Pinball.SceneManager.playfieldWidth / 2, Pinball.SceneManager.playfieldHeight + 1, Pinball.SceneManager.shortPlayfieldDepth / 2)

@@ -16,7 +16,7 @@ class Pinball.Part extends LOI.Adventure.Item
   
   @getPartClasses: -> _.values @_partClasses
   @getSelectablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable()
-  @getPlaceablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable() and partClass.editable()
+  @getPlaceablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.placeable()
   
   @assetId: -> # Override if this part's asset comes from the project.
   @imageUrls: -> # Override if this part's asset comes from static images.
@@ -27,13 +27,17 @@ class Pinball.Part extends LOI.Adventure.Item
   
   @selectable: -> true # Override if this part can't be selected.
   
-  @editable: -> true # Override if this part should not show the selection overlay UI.
+  @placeableRequiredTask: -> null # Override if this part becomes placeable after completing a certain task.
+  
+  @placeable: ->
+    return unless placeableRequiredTask = @placeableRequiredTask()
+    placeableRequiredTask.getAdventureInstance()?.completed()
   
   constructor: (@pinball, @playfieldPartId) ->
     super arguments...
     
     # Load the bitmap asset.
-    @bitmap = new ReactiveField null
+    @bitmap = new ReactiveField null, (a, b) => a is b
     
     if imageUrls = @constructor.imageUrls()
       # Load static images and create a bitmap out of them.
@@ -43,10 +47,18 @@ class Pinball.Part extends LOI.Adventure.Item
     else if assetId = @constructor.assetId()
       # Reactively load the bitmap asset.
       @autorun (computation) =>
-        activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
-        project = PAA.Practice.Project.documents.findOne activeProjectId
-        asset = _.find project.assets, (asset) => asset.id is assetId
-        @bitmap LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId
+        return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+        return unless project = PAA.Practice.Project.documents.findOne activeProjectId
+        
+        if asset = _.find project.assets, (asset) => asset.id is assetId
+          @bitmap LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId, false
+          
+        else
+          # Asset hasn't been added to the project yet, fallback to the default images.
+          assetClass = PAA.Practice.Project.Asset.getClassForId assetId
+          imageUrls = assetClass.imageUrls()
+          imageUrls = [imageUrls] unless _.isArray imageUrls
+          @_loadImageAssets imageUrls
 
     # Create reactive data for the part.
     @data = new AE.LiveComputedField =>
@@ -60,12 +72,12 @@ class Pinball.Part extends LOI.Adventure.Item
       EJSON.equals
     
     @shapeProperties = new AE.LiveComputedField =>
-      _.defaults {}, _.pick(@data(), ['flipped']), @extraShapeProperties(), @constants()
+      _.defaults {}, _.pick(@data(), @shapeDataPropertyNames()), @extraShapeProperties(), @constants()
     ,
       EJSON.equals
     
     @physicsProperties = new AE.LiveComputedField =>
-      _.defaults {}, _.pick(@data(), ['restitution', 'friction', 'rollingFriction']), @constants()
+      _.defaults {}, _.pick(@data(), @physicsDataPropertyNames()), @extraPhysicsProperties(), @constants()
     ,
       EJSON.equals
       
@@ -84,6 +96,9 @@ class Pinball.Part extends LOI.Adventure.Item
     @shapeProperties.stop()
     @physicsProperties.stop()
     
+  shapeDataPropertyNames: -> ['flipped']
+  physicsDataPropertyNames: -> ['restitution', 'friction', 'rollingFriction']
+  
   ready: -> @getRenderObject() and @getPhysicsObject() and @pixelArtEvaluation()
   
   shape: -> @avatar.shape()
@@ -115,6 +130,7 @@ class Pinball.Part extends LOI.Adventure.Item
   defaultData: -> {} # Override to supply defaults for the data (not defined through the settings).
   constants: -> {} # Override to supply constant properties to the avatar.
   extraShapeProperties: -> {} # Override to supply additional properties to the shape.
+  extraPhysicsProperties: -> {} # Override to supply additional properties to the physics object.
   
   getRenderObject: -> @avatar.getRenderObject()
   getPhysicsObject: -> @avatar.getPhysicsObject()

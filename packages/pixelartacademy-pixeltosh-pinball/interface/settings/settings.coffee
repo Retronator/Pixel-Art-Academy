@@ -25,3 +25,10 @@ class Pinball.Interface.Settings extends LOI.View
           load: => selectedPart.data()?[property]
           save: (value) =>
             @pinball.editorManager().updatePart selectedPart, "#{property}": value
+  
+  settingsDisplayed: ->
+    setting = @currentData().setting
+    return true unless setting.enabledCondition
+    
+    data = @selectedPart().data()
+    setting.enabledCondition data

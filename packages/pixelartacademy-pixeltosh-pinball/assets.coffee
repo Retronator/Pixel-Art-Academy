@@ -11,11 +11,11 @@ class Pinball.Assets
     @displayName: -> "Ball"
     
     @description: -> """
-        A ball that bounces around the pinball playfield.
-        Must be shaped as a circle to indicate a sphere that can roll around.
-      """
+      A ball that bounces around the pinball playfield.
+      Must be shaped as a circle to indicate a sphere that can roll around.
+    """
     
-    @fixedDimensions: -> width: 10, height: 10
+    @fixedDimensions: -> width: 7, height: 7
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ball.png'
@@ -28,8 +28,8 @@ class Pinball.Assets
     @displayName: -> "Plunger"
     
     @description: -> """
-        A spring-loaded rod that pushes the ball along the shooting lane.
-      """
+      A spring-loaded rod that pushes the ball along the shooter lane.
+    """
     
     @fixedDimensions: -> width: 15, height: 30
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
@@ -44,14 +44,15 @@ class Pinball.Assets
     @displayName: -> "Playfield"
     
     @description: -> """
-        The pinball machine surface with walls and ball guides.
-        Painted parts of your drawing (black or white) will obstruct the ball, unpainted (erased) will let the ball roll freely.
-        Big areas become walls, lines indicate wire guides, 1 or 2 pixel dots turn into pins.
-      """
+      The pinball machine surface with walls and ball guides.
+      Painted parts of your drawing (black or white) will obstruct the ball, unpainted (erased) will let the ball roll freely.
+    """
 
     @fixedDimensions: -> width: 180, height: 200
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
-
+    
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
+    
     @initialize()
 
   class @GobbleHole extends PAA.Practice.Project.Asset.Bitmap
@@ -60,14 +61,16 @@ class Pinball.Assets
     @displayName: -> "Gobble hole"
 
     @description: -> """
-        A hole in the playfield that scores points if the ball falls in.
-        Use a black outline and any color on the inside.
-        You can make it any shape, as big or small as you want. Just make it bigger than the ball.
-      """
+      A hole in the playfield that scores points if the ball falls in.
+      Use a black outline and any color on the inside.
+      You can make it any shape, as big or small as you want.
+    """
 
     @fixedDimensions: -> width: 50, height: 50
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
-
+  
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
+    
     @initialize()
 
   class @BallTrough extends PAA.Practice.Project.Asset.Bitmap
@@ -76,13 +79,15 @@ class Pinball.Assets
     @displayName: -> "Ball trough"
 
     @description: -> """
-        A hole that ends the ball without gaining points.
-        Like the gobble hole, it can be any shape.
-      """
+      A hole that ends the ball without gaining points.
+      Like the gobble hole, it can be any shape.
+    """
 
     @fixedDimensions: -> width: 100, height: 50
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
 
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/balltrough.png'
+    
     @initialize()
 
   class @Bumper extends PAA.Practice.Project.Asset.Bitmap
@@ -91,13 +96,21 @@ class Pinball.Assets
     @displayName: -> "Bumper"
 
     @description: -> """
-        Draw the top of a mushroom-shaped target. It works best as a circle.
-      """
+      Draw the top of a mushroom-shaped target. It works best as a circle.
+    """
     
     @fixedDimensions: -> width: 30, height: 30
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
+    
+    @pixelArtEvaluation: -> true
+    
     @initialize()
+    
+    @properties: ->
+      pixelArtScaling: true
+      pixelArtEvaluation: {}
 
   class @Gate extends PAA.Practice.Project.Asset.Bitmap
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Gate'
@@ -105,13 +118,15 @@ class Pinball.Assets
     @displayName: -> "Gate"
 
     @description: -> """
-        A flap door or wire barrier that will rotate around the top.
-        Draw it in front view, big enough to obstruct the ball.
-      """
+      A flap door or wire barrier that will rotate around the top.
+      Draw it in front view, big enough to obstruct the ball.
+    """
 
     @fixedDimensions: -> width: 20, height: 20
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
-
+    
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gate.png'
+    
     @initialize()
 
   class @Flipper extends PAA.Practice.Project.Asset.Bitmap
@@ -120,13 +135,15 @@ class Pinball.Assets
     @displayName: -> "Flipper"
 
     @description: -> """
-        The most iconic part of pinball! Draw the left flipper in its resting state.
-        It will rotate around the 7th pixel counted diagonally from the top-left corner.
-      """
+      The most iconic part of pinball! Draw the left flipper in its resting state.
+      It will rotate around the 7th pixel counted diagonally from the top-left corner.
+    """
 
     @fixedDimensions: -> width: 30, height: 30
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
-
+    
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
+    
     @initialize()
 
   class @SpinningTarget extends PAA.Practice.Project.Asset.Bitmap
@@ -135,10 +152,12 @@ class Pinball.Assets
     @displayName: -> "Spinning target"
 
     @description: -> """
-        A metal plate that spins around the center of the drawing when the ball passes through.
-      """
+      A metal plate that spins around the center of the drawing when the ball passes through.
+    """
 
     @fixedDimensions: -> width: 20, height: 20
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
-
+    
+    @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/spinningtarget.png'
+    
     @initialize()

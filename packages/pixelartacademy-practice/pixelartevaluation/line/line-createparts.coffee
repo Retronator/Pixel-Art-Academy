@@ -64,7 +64,12 @@ PAE.Line::_createParts = ->
       
       # Remove segments that aren't in the straight-line window.
       for part, partIndex in potentialStraightLineParts
-        startPointIndex = _.modulo Math.max(part.startPointIndex, normalizedStartPointIndex - 1), @points.length
+        if part.endPointIndex > part.startPointIndex
+          startPointIndex = _.modulo Math.max(part.startPointIndex, normalizedStartPointIndex - 1), @points.length
+          
+        else
+          startPointIndex = _.modulo normalizedStartPointIndex - 1, @points.length
+
         endPointIndex = _.modulo Math.min(part.endPointIndex, normalizedPointIndex + 1), @points.length
         
         start = part.startSegmentIndex
@@ -72,6 +77,13 @@ PAE.Line::_createParts = ->
         
         start++ while not @_edgeSegmentOverlaysPointRange start, startPointIndex, endPointIndex
         end-- while not @_edgeSegmentOverlaysPointRange end, startPointIndex, endPointIndex
+        
+        # Prevent the same segment range to be added twice due to wrap around in closed lines.
+        if start >= @edgeSegments.length
+          start %= @edgeSegments.length
+          end %= @edgeSegments.length
+          
+        continue if _.find potentialStraightLineSegmentRanges, (segmentRange) => segmentRange.start is start and segmentRange.end is end
         
         potentialStraightLineSegmentRanges.push {start, end}
       

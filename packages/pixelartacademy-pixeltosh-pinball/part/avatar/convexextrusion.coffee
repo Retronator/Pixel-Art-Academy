@@ -36,7 +36,7 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
       polygon = new AP.PolygonWithHoles boundaries
       polygonWithoutHoles = polygon.getPolygonWithoutHoles()
       
-      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries,  @bottomY, @topY, @properties.flipped
+      individualGeometryData.push @constructor._createExtrudedVerticesAndIndices polygon.boundaries, @bottomY, @topY, @properties.flipped
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, @bottomY, -1
       individualGeometryData.push @constructor._createPolygonVerticesAndIndices polygonWithoutHoles, @topY, 1
     
@@ -71,4 +71,4 @@ class Pinball.Part.Avatar.ConvexExtrusion extends Pinball.Part.Avatar.Shape
     convexHullShape.recalcLocalAabb()
     convexHullShape
 
-  positionY: -> @properties.positionY or -@bottomY
+  positionY: -> @properties.positionY or (-@bottomY + 2 * @collisionShapeMargin())

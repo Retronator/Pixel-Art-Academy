@@ -50,10 +50,15 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       @_texture
     
     # Analyze pixel art.
-    @pixelArtEvaluation = new AE.LiveComputedField =>
+    @pixelArtEvaluationInstance = new ComputedField =>
       return unless bitmap = @part.bitmap()
       @_pixelArtEvaluation?.destroy()
       @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
+    
+    @pixelArtEvaluation = new ComputedField =>
+      return unless pixelArtEvaluationInstance = @pixelArtEvaluationInstance()
+      pixelArtEvaluationInstance.depend()
+      pixelArtEvaluationInstance
     
     @part.autorun =>
       shape = @_createShape()

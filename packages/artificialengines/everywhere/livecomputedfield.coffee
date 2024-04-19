@@ -32,6 +32,9 @@ class AE.LiveComputedField
     getter.stop = ->
       autorunHandle?.stop()
       autorunHandle = null
+      
+    getter.onInvalidate = (callback) ->
+      autorunHandle.onInvalidate callback
 
     # Sometimes you want to force recomputation of the new value before the global Tracker flush is done.
     # This is a noop if autorun was not invalidated.

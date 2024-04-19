@@ -4,10 +4,12 @@
     <div class="description">{{selectedPart.description}}</div>
     <ul class="settings">
       {{#each settings}}
+        {{#if settingsDisplayed}}
         <li class="setting">
           <div class="name">{{setting.name}}</div>
           {{> Template.dynamic template=setting.type}}
         </li>
+        {{/if}}
       {{/each}}
     </ul>
   </div>

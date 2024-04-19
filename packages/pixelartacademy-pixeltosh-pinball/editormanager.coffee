@@ -23,12 +23,15 @@ class Pinball.EditorManager
     
   addPart: (options) ->
     # Calculate target element's position in the playfield.
-    elementOffset = $(options.element).offset()
+    $element = $(options.element)
+    elementOffset = $element.offset()
     playfieldOffset = $('.pixelartacademy-pixeltosh-programs-pinball-interface-playfield').offset()
     
-    topLeftPosition = @pinball.cameraManager().transformWindowToPlayfield
-      x: elementOffset.left - playfieldOffset.left
-      y: elementOffset.top - playfieldOffset.top
+    # Place the new part in the center of the element from the parts view.
+    # TODO: Take into account that the origin is not always in the center of the element.
+    startPosition = @pinball.cameraManager().transformWindowToPlayfield
+      x: elementOffset.left - playfieldOffset.left + $element.outerWidth() / 2
+      y: elementOffset.top - playfieldOffset.top + $element.outerHeight() / 2
     
     projectId = @pinball.projectId()
     playfieldPartId = Random.id()
@@ -43,12 +46,6 @@ class Pinball.EditorManager
       return unless part = @pinball.sceneManager().getPart playfieldPartId
       return unless shape = part.shape()
       computation.stop()
-      
-      pixelSize = Pinball.CameraManager.orthographicPixelSize
-      
-      startPosition =
-        x: topLeftPosition.x + shape.bitmapOrigin.x * pixelSize
-        z: topLeftPosition.z + shape.bitmapOrigin.y * pixelSize
       
       Pinball.CameraManager.snapShapeToPixelPosition shape, startPosition, new THREE.Quaternion
       

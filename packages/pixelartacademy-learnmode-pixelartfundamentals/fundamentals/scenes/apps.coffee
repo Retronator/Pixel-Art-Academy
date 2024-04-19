@@ -10,5 +10,5 @@ class LM.PixelArtFundamentals.Fundamentals.Apps extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Apps.Pixeltosh if PAA.Learning.Task.getAdventureInstanceForId(LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.id())?.completed()
+    PAA.PixelPad.Apps.Pixeltosh if LM.PixelArtFundamentals.pinballEnabled()
   ]

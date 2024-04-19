@@ -17,8 +17,16 @@ Pinball.EditorManager::startDrag = (part, options) ->
   osCursor.requestClass cursorClass, @
   
   startCoordinates = osCursor.coordinates()
-  startPosition = options?.startPosition or part.data().position
   
+  if options?.startPosition
+    startPosition = options.startPosition
+    
+    # Immediately set the temporary position since the part's data won't have it yet.
+    part.setTemporaryPosition startPosition
+  
+  else
+    startPosition = part.data().position
+    
   # Wire dragging handlers.
   $document = $(document)
   $interface = $('.pixelartacademy-pixeltosh-program-view').closest('.fatamorgana-interface')

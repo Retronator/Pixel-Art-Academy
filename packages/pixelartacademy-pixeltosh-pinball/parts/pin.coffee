@@ -20,6 +20,8 @@ class Pinball.Parts.Pin extends Pinball.Part
   
   @initialize()
   
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.PlayGobbleHole
+  
   @radiusRatio = 0.5
   
   constants: ->

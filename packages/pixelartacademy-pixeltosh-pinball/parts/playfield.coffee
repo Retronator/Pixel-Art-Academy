@@ -14,11 +14,9 @@ class Pinball.Parts.Playfield extends Pinball.Part
       The surface of the pinball machine on which different parts are placed.
     "
     
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/playfield.png'
+  @assetId: -> Pinball.Assets.Playfield.id()
   
   @avatarClass: -> @Avatar
-  
-  @editable: -> false
   
   @initialize()
   

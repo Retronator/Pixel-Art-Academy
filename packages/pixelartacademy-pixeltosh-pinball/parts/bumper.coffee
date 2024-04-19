@@ -15,7 +15,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
       A mushroom-shaped target. An active bumper kicks the ball away when hit.
     "
     
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
+  @assetId: -> Pinball.Assets.Bumper.id()
   
   @avatarShapes: -> [
     @Shape
@@ -23,44 +23,69 @@ class Pinball.Parts.Bumper extends Pinball.Part
   
   @initialize()
   
-  @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0xaaaaaa
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawBumper
+  
+  @ringTriggerDebugMaterial = new THREE.MeshStandardMaterial color: 0xaa6666
+  @ringDebugMaterial = new THREE.MeshStandardMaterial color: 0x66aaaa
   
   constructor: ->
     super arguments...
     
-    # Add trigger for lowering the ring.
     @trigger = new AR.Trigger
       onEnter: (rigidBody) =>
         return unless rigidBody.physicsObject?.entity instanceof Pinball.Ball
         
         @onBallEnter()
         
-    @triggerShape = new AE.LiveComputedField =>
+    # Add passive bumper trigger for gaining points.
+    @towerTriggerShape = new AE.LiveComputedField =>
+      return if @data().active
+      return unless shape = @avatar.shape()
+      
+      properties = @extraShapeProperties()
+      ballPositionY = @pinball.sceneManager().ballPositionY()
+      
+      Pinball.Part.Avatar.Extrusion.detectShape shape.pixelArtEvaluation,
+        height: ballPositionY * 3
+        flipped: properties.flipped
+        positionY: ballPositionY * 3
+        
+    @towerTriggerCollider = new AE.LiveComputedField =>
+      return if @data().active
+      return unless triggerShape = @towerTriggerShape()
+      
+      triggerCollider = new Ammo.btGhostObject
+      triggerCollider.setCollisionShape triggerShape.createCollisionShape()
+      triggerCollider
+      
+    # Add active bumper trigger for lowering the ring.
+    @ringTriggerShape = new AE.LiveComputedField =>
+      return unless @data().active
       return unless shape = @avatar.shape()
       properties = @extraShapeProperties()
       
       Pinball.Part.Avatar.Silhouette.detectShape shape.pixelArtEvaluation,
         yOffset: -properties.positionY + 0.001
     
-    @triggerCollider = new AE.LiveComputedField =>
-      return unless triggerShape = @triggerShape()
+    @ringTriggerCollider = new AE.LiveComputedField =>
+      return unless @data().active
+      return unless triggerShape = @ringTriggerShape()
       
       triggerCollider = new Ammo.btGhostObject
       triggerCollider.setCollisionShape triggerShape.createCollisionShape()
       triggerCollider
       
-    @triggerPhysicsDebugMesh = new AE.LiveComputedField (computation) =>
-      return unless triggerShape = @triggerShape()
-      return unless renderObject = @getRenderObject()
-      
+    @ringTriggerPhysicsDebugMesh = new AE.LiveComputedField (computation) =>
       @_triggerPhysicsDebugGeometry?.dispose()
       @_triggerPhysicsDebugMesh?.removeFromParent()
       
       return unless @data().active
+      return unless triggerShape = @ringTriggerShape()
+      return unless renderObject = @getRenderObject()
       
       @_triggerPhysicsDebugGeometry = triggerShape.createPhysicsDebugGeometry()
       
-      @_triggerPhysicsDebugMesh = new THREE.Mesh @_triggerPhysicsDebugGeometry, @constructor.physicsDebugMaterial
+      @_triggerPhysicsDebugMesh = new THREE.Mesh @_triggerPhysicsDebugGeometry, @constructor.triggerDebugMaterial
       @_triggerPhysicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
       @_triggerPhysicsDebugMesh.receiveShadow = true
       @_triggerPhysicsDebugMesh.castShadow = true
@@ -71,7 +96,9 @@ class Pinball.Parts.Bumper extends Pinball.Part
 
     # Add active bumper ring.
     @ringShape = new AE.LiveComputedField =>
+      return unless @data().active
       return unless shape = @avatar.shape()
+
       properties = @extraShapeProperties()
       ballPositionY = @pinball.sceneManager().ballPositionY()
       
@@ -83,17 +110,16 @@ class Pinball.Parts.Bumper extends Pinball.Part
         positionY: ballPositionY * 3
     
     @ringPhysicsDebugMesh = new AE.LiveComputedField (computation) =>
-      return unless ringShape = @ringShape()
-      return unless renderObject = @getRenderObject()
-      
       @_ringPhysicsDebugGeometry?.dispose()
       @_ringPhysicsDebugMesh?.removeFromParent()
       
       return unless @data().active
+      return unless ringShape = @ringShape()
+      return unless renderObject = @getRenderObject()
       
       @_ringPhysicsDebugGeometry = ringShape.createPhysicsDebugGeometry()
       
-      @_ringPhysicsDebugMesh = new THREE.Mesh @_ringPhysicsDebugGeometry, @constructor.physicsDebugMaterial
+      @_ringPhysicsDebugMesh = new THREE.Mesh @_ringPhysicsDebugGeometry, @constructor.ringDebugMaterial
       @_ringPhysicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
       @_ringPhysicsDebugMesh.receiveShadow = true
       @_ringPhysicsDebugMesh.castShadow = true
@@ -103,8 +129,12 @@ class Pinball.Parts.Bumper extends Pinball.Part
       @_ringPhysicsDebugMesh
       
     @ringPhysicsObject = new AE.LiveComputedField (computation) =>
-      @_ringPhysicsObject?.destroy()
-
+      if @_ringPhysicsObject
+        @_removeRingRigidBody()
+        @_ringPhysicsObject?.destroy()
+        @_ringPhysicsObject = null
+      
+      return unless @data().active
       return unless ringShape = @ringShape()
       
       constants =
@@ -121,14 +151,20 @@ class Pinball.Parts.Bumper extends Pinball.Part
         position: => @position()
         rotationQuaternion: => @rotationQuaternion()
       
+      @_ringPhysicsObject.body.setCollisionFlags @_ringPhysicsObject.body.getCollisionFlags() | Ammo.btCollisionObject.CollisionFlags.KinematicObject
+      @_ringPhysicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
+      
       @_ringPhysicsObject
   
   destroy: ->
     super arguments...
     
-    @triggerShape.stop()
-    @triggerCollider.stop()
-    @triggerPhysicsDebugMesh.stop()
+    @towerTriggerShape.stop()
+    @towerTriggerCollider.stop()
+  
+    @ringTriggerShape.stop()
+    @ringTriggerCollider.stop()
+    @ringTriggerPhysicsDebugMesh.stop()
     
     @ringShape.stop()
     @ringPhysicsDebugMesh.stop()
@@ -137,12 +173,24 @@ class Pinball.Parts.Bumper extends Pinball.Part
     @_triggerPhysicsDebugGeometry?.dispose()
     @_ringPhysicsDebugGeometry?.dispose()
     @_ringPhysicsObject?.destroy()
+    
+    @_activeBumperPartsAutorun?.stop()
+    @_removeRingRigidBody()
   
   settings: ->
     active:
       name: 'Active'
       type: Pinball.Interface.Settings.Boolean.id()
-      default: true
+      default: false
+      enabledCondition: (data) => LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawLowerThird.getAdventureInstance()?.completed()
+    passiveRestitution:
+      name: 'Bounciness'
+      type: Pinball.Interface.Settings.Number.id()
+      min: 0
+      max: 1
+      step: 0.1
+      default: 1
+      enabledCondition: (data) => not data.active
     kickSpeed:
       name: 'Kick speed'
       unit: "m/s"
@@ -151,6 +199,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
       max: 0.5
       step: 0.01
       default: 0.3
+      enabledCondition: (data) => data.active
     points:
       name: 'Points'
       type: Pinball.Interface.Settings.Number.id()
@@ -162,6 +211,9 @@ class Pinball.Parts.Bumper extends Pinball.Part
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Smooth
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.BallGuides
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
+    
+  shapeDataPropertyNames: ->
+    super(arguments...).concat ['active']
   
   extraShapeProperties: ->
     return unless sceneManager = @pinball.sceneManager()
@@ -170,24 +222,44 @@ class Pinball.Parts.Bumper extends Pinball.Part
     positionY: ballPositionY * 4
     ballPositionY: ballPositionY
     
+  extraPhysicsProperties: ->
+    data = @data()
+    constants = @constants()
+    
+    restitution: if data.active then constants.restitution else data.passiveRestitution / Pinball.PhysicsManager.BallConstants.Restitution
+    
   getPhysicsObject: ->
-    # To ensure the ring physics object is ready when the main
-    # one is inserted to the dynamics world, we depend on it here.
-    return unless @ringPhysicsObject()
+    if @data().active
+      # To ensure the ring physics object is ready when the main
+      # one is inserted to the dynamics world, we depend on it here.
+      return unless @ringPhysicsObject()
     
     super arguments...
     
-  onAddedToDynamicsWorld: (dynamicsWorld) ->
-    ringPhysicsObject = @ringPhysicsObject()
-    constants = ringPhysicsObject.entity.constants()
-    dynamicsWorld.addRigidBody ringPhysicsObject.body, constants.collisionGroup, constants.collisionMask
-
-    ringPhysicsObject.body.setCollisionFlags ringPhysicsObject.body.getCollisionFlags() | Ammo.btCollisionObject.CollisionFlags.KinematicObject
-    ringPhysicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
+  onAddedToDynamicsWorld: (@_dynamicsWorld) ->
+    # Reactively add active bumper parts.
+    Tracker.nonreactive =>
+      @_activeBumperPartsAutorun = Tracker.autorun =>
+        @_removeRingRigidBody()
+        
+        return unless ringPhysicsObject = @ringPhysicsObject()
+        
+        @_ringRigidBody = ringPhysicsObject.body
+        
+        constants = @constants()
+        @_dynamicsWorld.addRigidBody @_ringRigidBody, constants.collisionGroup, constants.collisionMask
     
   onRemovedFromDynamicsWorld: (dynamicsWorld) ->
-    ringPhysicsObject = @ringPhysicsObject()
-    dynamicsWorld.removeRigidBody ringPhysicsObject.body
+    @_activeBumperPartsAutorun?.stop()
+    @_activeBumperPartsAutorun = null
+    @_removeRingRigidBody()
+    @_dynamicsWorld = null
+  
+  _removeRingRigidBody: ->
+    return unless @_ringRigidBody and @_dynamicsWorld
+    
+    @_dynamicsWorld.removeRigidBody @_ringRigidBody
+    @_ringRigidBody = null
   
   reset: ->
     super arguments...
@@ -207,23 +279,28 @@ class Pinball.Parts.Bumper extends Pinball.Part
   
   update: ->
     return unless physicsObject = @getPhysicsObject()
-    return unless triggerCollider = @triggerCollider()
-    return unless ringPhysicsObject = @ringPhysicsObject()
-    return unless ringPhysicsDebugMesh = @ringPhysicsDebugMesh()
     
+    if @data().active
+      return unless triggerCollider = @ringTriggerCollider()
+      
+      # Align the ring's debug mesh to its physics object.
+      return unless ringPhysicsObject = @ringPhysicsObject()
+      return unless ringPhysicsDebugMesh = @ringPhysicsDebugMesh()
+      
+      renderObject = @getRenderObject()
+      
+      ringPhysicsObject.getPosition _displacedRingPosition
+      _displacedRingPosition.sub renderObject.position
+      
+      ringPhysicsDebugMesh.position.copy _displacedRingPosition
+      
+    else
+      return unless triggerCollider = @towerTriggerCollider()
+      
     # Query the trigger.
     triggerCollider.setWorldTransform physicsObject.body.getWorldTransform()
-    
     @trigger.test triggerCollider, @pinball.physicsManager().dynamicsWorld
-    
-    # Align the ring's debug mesh to its physics object.
-    renderObject = @getRenderObject()
-    
-    ringPhysicsObject.getPosition _displacedRingPosition
-    _displacedRingPosition.sub renderObject.position
-    
-    ringPhysicsDebugMesh.position.copy _displacedRingPosition
-    
+  
   fixedUpdate: (elapsed) ->
     return unless @moving
     return unless ringPhysicsObject = @ringPhysicsObject()
@@ -270,7 +347,14 @@ class Pinball.Parts.Bumper extends Pinball.Part
       
       individualGeometryData = []
       ballPositionY = @properties.ballPositionY
-      towerTaperDistance = 1.5 * ballPositionY / Pinball.CameraManager.orthographicPixelSize
+      
+      ballRadiusBitmap = ballPositionY / Pinball.CameraManager.orthographicPixelSize
+      
+      if @properties.active
+        towerTaperDistance = 1.5 * ballRadiusBitmap
+        
+      else
+        towerTaperDistance = 0.5 * ballRadiusBitmap
       
       @topBoundaries = []
       @towerBoundaries = []

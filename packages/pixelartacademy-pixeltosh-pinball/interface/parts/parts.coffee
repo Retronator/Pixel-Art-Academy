@@ -24,13 +24,14 @@ class Pinball.Interface.Parts extends LOI.View
     part = @currentData()
     
     bitmap: part.bitmap
+    autoCrop: true
     
   events: ->
     super(arguments...).concat
-      'pointerdown .part': @onPointerDownPart
+      'pointerdown .part .image': @onPointerDownPartImage
     
-  onPointerDownPart: (event) ->
+  onPointerDownPartImage: (event) ->
     part = @currentData()
     @pinball.editorManager().addPart
       type: part.id()
-      element: event.target
+      element: event.currentTarget

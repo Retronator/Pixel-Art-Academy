@@ -2,6 +2,8 @@ LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
 
 class LM.PixelArtFundamentals extends LOI.Adventure.Episode
+  # unlocked: boolean whether this episode's content is instantly available
+  # pinballUnlocked: boolean whether the pinball project is instantly available
   @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals'
 
   @fullName: -> "Pixel art fundamentals"
@@ -17,6 +19,9 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
   @initialize()
   
   @pinballEnabled: ->
+    # Allow cheating.
+    return true if LM.PixelArtFundamentals.state 'pinballUnlocked'
+    
     PAA.Learning.Task.getAdventureInstanceForId(LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.id())?.completed()
 
 if Meteor.isServer

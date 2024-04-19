@@ -37,7 +37,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
  
     # Update step areas and resize the bitmap accordingly if needed.
     @_chosenReferencesAutorun = Tracker.autorun (computation) =>
-      return unless @initialized()
+      return unless @initialized() and @resourcesReady()
       return unless displayedReferenceUrlChoices = @displayedReferenceUrlChoices()
       
       Tracker.nonreactive => Tracker.afterFlush =>

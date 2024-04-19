@@ -24,7 +24,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
       @drawLines = new ReactiveField false
       @drawLineParts = new ReactiveField false
       @drawPotentialParts = new ReactiveField false
-      @drawcurvatureCurveParts = new ReactiveField false
+      @drawCurvatureCurveParts = new ReactiveField false
       @drawSegmentCorners = new ReactiveField false
   
       $(document).on 'keydown', (event) =>
@@ -34,7 +34,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
           when AC.Keys['3'] then field = @drawLines
           when AC.Keys['4'] then field = @drawLineParts
           when AC.Keys['5'] then field = @drawPotentialParts
-          when AC.Keys['6'] then field = @drawcurvatureCurveParts
+          when AC.Keys['6'] then field = @drawCurvatureCurveParts
           when AC.Keys['7'] then field = @drawSegmentCorners
           
         field not field() if field
@@ -77,7 +77,7 @@ class PAE.EngineComponent extends PAE.EngineComponent
         # Draw line parts.
         linePartsProperty = 'parts'
         linePartsProperty = 'potentialParts' if @drawPotentialParts?()
-        linePartsProperty = 'curvatureCurveParts' if @drawcurvatureCurveParts?()
+        linePartsProperty = 'curvatureCurveParts' if @drawCurvatureCurveParts?()
         
         for line in layer.lines
           for part in line[linePartsProperty]

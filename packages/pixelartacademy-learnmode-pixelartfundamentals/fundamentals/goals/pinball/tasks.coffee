@@ -6,7 +6,7 @@ LM = PixelArtAcademy.LearnMode
 Goal = LM.PixelArtFundamentals.Fundamentals.Goals.Pinball
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Goal.OpenPinballMachine extends PAA.Learning.Task.Automatic
+class Goal.OpenPinballMachine extends Goal.Task
   @id: -> "#{Goal.id()}.OpenPinballMachine"
   @goal: -> Goal
 
@@ -23,6 +23,11 @@ class Goal.OpenPinballMachine extends PAA.Learning.Task.Automatic
   @initialize()
 
   @completedConditions: -> LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine'
+  
+  reset: ->
+    super arguments...
+    
+    LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', false
   
 class Goal.DrawBall extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawBall"
@@ -43,9 +48,7 @@ class Goal.DrawBall extends Goal.AssetsTask
     Pinball.Assets.Plunger
   ]
 
-  @completedConditions: ->
-  
-class Goal.PlayBall extends PAA.Learning.Task.Automatic
+class Goal.PlayBall extends Goal.Task
   @id: -> "#{Goal.id()}.PlayBall"
   @goal: -> Goal
 
@@ -60,8 +63,17 @@ class Goal.PlayBall extends PAA.Learning.Task.Automatic
   @initialize()
 
   @completedConditions: ->
+    return unless ballTravelExtents = Pinball.state 'ballTravelExtents'
+    
+    # The ball must have reached into the top third.
+    ballTravelExtents.z.min < Pinball.SceneManager.shortPlayfieldDepth / 3
+    
+  reset: ->
+    super arguments...
+    
+    Pinball.resetBallExtents()
   
-class Goal.DrawPlayfield extends PAA.Learning.Task.Automatic
+class Goal.DrawPlayfield extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawPlayfield"
   @goal: -> Goal
 
@@ -74,10 +86,19 @@ class Goal.DrawPlayfield extends PAA.Learning.Task.Automatic
   @predecessors: -> [Goal.PlayBall]
 
   @initialize()
-
-  @completedConditions: ->
   
-class Goal.PlayPlayfield extends PAA.Learning.Task.Automatic
+  @onActive: ->
+    super arguments...
+    
+    # Make sure we get a fresh start on the extents in case the ball bounced out of the shooter lane by chance.
+    # We do this in this step instead of the next since completedConditions can otherwise run before onActive.
+    Pinball.resetBallExtents()
+  
+  @unlockedAssets: -> [
+    Pinball.Assets.Playfield
+  ]
+  
+class Goal.PlayPlayfield extends Goal.Task
   @id: -> "#{Goal.id()}.PlayPlayfield"
   @goal: -> Goal
 
@@ -92,8 +113,17 @@ class Goal.PlayPlayfield extends PAA.Learning.Task.Automatic
   @initialize()
 
   @completedConditions: ->
+    return unless ballTravelExtents = Pinball.state 'ballTravelExtents'
+    
+    # The ball must have reached into the left third.
+    ballTravelExtents.x.min < Pinball.SceneManager.playfieldWidth / 3
   
-class Goal.DrawGobbleHole extends PAA.Learning.Task.Automatic
+  reset: ->
+    super arguments...
+    
+    Pinball.resetBallExtents()
+    
+class Goal.DrawGobbleHole extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawGobbleHole"
   @goal: -> Goal
 
@@ -106,10 +136,12 @@ class Goal.DrawGobbleHole extends PAA.Learning.Task.Automatic
   @predecessors: -> [Goal.PlayPlayfield]
 
   @initialize()
-
-  @completedConditions: ->
   
-class Goal.PlayGobbleHole extends PAA.Learning.Task.Automatic
+  @unlockedAssets: -> [
+    Pinball.Assets.GobbleHole
+  ]
+  
+class Goal.PlayGobbleHole extends Goal.Task
   @id: -> "#{Goal.id()}.PlayGobbleHole"
   @goal: -> Goal
 
@@ -124,17 +156,23 @@ class Goal.PlayGobbleHole extends PAA.Learning.Task.Automatic
   @initialize()
 
   @completedConditions: ->
-
-class Goal.AddPins extends PAA.Learning.Task.Automatic
+    @playfieldHasPart(Pinball.Parts.GobbleHole) and Pinball.state 'highScore'
+  
+  reset: ->
+    super arguments...
+    
+    LM.PixelArtFundamentals.Fundamentals.state 'highScore', 0
+    
+class Goal.AddPins extends Goal.Task
   @id: -> "#{Goal.id()}.AddPins"
   @goal: -> Goal
   
   @directive: -> "Add pins"
   
   @instructions: -> """
-    You can add pins to your playfield in two ways to make the ball's trajectory more interesting.
-    In Edit mode, drag individual pins onto the playfield.
-    Alternatively, draw 1×1 or 2×2 pixel dots directly on the playfield sprite.
+    Add pins to your playfield to make the ball's trajectory more interesting.
+    You can do this in two ways. In Edit mode, drag individual pins onto the playfield.
+    Alternatively, draw 1×1 or 2×2 pixel dots directly on the Playfield sprite.
   """
   
   @predecessors: -> [Goal.PlayGobbleHole]
@@ -142,8 +180,24 @@ class Goal.AddPins extends PAA.Learning.Task.Automatic
   @initialize()
   
   @completedConditions: ->
+    return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+    return unless project = PAA.Practice.Project.documents.findOne activeProjectId
 
-class Goal.DrawBallTrough extends PAA.Learning.Task.Automatic
+    # See if there are any pin parts on the playfield.
+    for playfieldPartId, partData of project.playfield
+      return true if partData.type is Pinball.Parts.Pin.id()
+      
+    # Alternatively, pins could be drawn as isolated points on the playfield bitmap.
+    return unless playfieldAsset = _.find project.assets, (asset) => asset.id is Pinball.Assets.Playfield.id()
+    return unless playfieldBitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId playfieldAsset.bitmapId
+    
+    pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation playfieldBitmap
+    isolatedPointFound = _.find pixelArtEvaluation.layers[0].points, (point) => not point.neighbors.length
+    pixelArtEvaluation.destroy()
+    
+    isolatedPointFound
+
+class Goal.DrawBallTrough extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawBallTrough"
   @goal: -> Goal
 
@@ -154,13 +208,15 @@ class Goal.DrawBallTrough extends PAA.Learning.Task.Automatic
     You can use it as an additional hole shape that usually appears at the bottom of the playfield.
   """
   
-  @predecessors: -> [Goal.AddPins]
+  @predecessors: -> [Goal.PlayGobbleHole]
 
   @initialize()
-
-  @completedConditions: ->
   
-class Goal.PlayBallTrough extends PAA.Learning.Task.Automatic
+  @unlockedAssets: -> [
+    Pinball.Assets.BallTrough
+  ]
+  
+class Goal.PlayBallTrough extends Goal.Task
   @id: -> "#{Goal.id()}.PlayBallTrough"
   @goal: -> Goal
 
@@ -175,73 +231,82 @@ class Goal.PlayBallTrough extends PAA.Learning.Task.Automatic
 
   @initialize()
 
-  @completedConditions: ->
+  @completedConditions: -> @playfieldHasPart Pinball.Parts.BallTrough
   
-class Goal.DrawBumper extends PAA.Learning.Task.Automatic
+class Goal.DrawBumper extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawBumper"
   @goal: -> Goal
 
   @directive: -> "Draw a bumper"
 
   @instructions: -> """
-    Draw a design for the Bumper sprite. A spring will be placed along the outline to bounce the ball away strongly.
+    Draw a design for the Bumper sprite. A spring will be placed along the outline to bounce the ball away.
   """
   
-  @predecessors: -> [Goal.PlayBallTrough]
+  @predecessors: -> [
+    Goal.AddPins
+    Goal.PlayBallTrough
+  ]
 
   @initialize()
-
-  @completedConditions: ->
   
-class Goal.PlayBumper extends PAA.Learning.Task.Automatic
+  @unlockedAssets: -> [
+    Pinball.Assets.Bumper
+  ]
+  
+class Goal.PlayBumper extends Goal.Task
   @id: -> "#{Goal.id()}.PlayBumper"
   @goal: -> Goal
 
   @directive: -> "Place bumpers on the playfield"
 
   @instructions: -> """
+    Make some space on the playfield by removing parts if needed.
+    Place multiple bumpers and adjust the bounciness of their springs on the Settings tab.
   """
   
   @predecessors: -> [Goal.DrawBumper]
 
   @initialize()
 
-  @completedConditions: ->
+  @completedConditions: -> @playfieldHasPart Pinball.Parts.Bumper
   
-class Goal.DrawGate extends PAA.Learning.Task.Automatic
+class Goal.DrawGate extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawGate"
   @goal: -> Goal
 
   @directive: -> "Draw a gate"
 
   @instructions: -> """
-    To prevent the ball from returning to the shooting late, we'll need a gate.
+    To prevent the ball from returning to the shooter late, we'll need a gate.
     In the Pinball project, modify the Gate sprite as desired.
   """
   
   @predecessors: -> [Goal.PlayBumper]
 
   @initialize()
-
-  @completedConditions: ->
   
-class Goal.PlayGate extends PAA.Learning.Task.Automatic
+  @unlockedAssets: -> [
+    Pinball.Assets.Gate
+  ]
+  
+class Goal.PlayGate extends Goal.Task
   @id: -> "#{Goal.id()}.PlayGate"
   @goal: -> Goal
 
-  @directive: -> "Add a gate to the shooting lane"
+  @directive: -> "Add a gate to the shooter lane"
 
   @instructions: -> """
-    Place the gate at the exit of the shooting lane and rotate it so the ball can go out but not in.
+    Place the gate at the exit of the shooter lane and rotate it so the ball can go out but not in.
   """
   
   @predecessors: -> [Goal.DrawGate]
 
   @initialize()
 
-  @completedConditions: ->
+  @completedConditions: -> @playfieldHasPart Pinball.Parts.Gate
   
-class Goal.RemoveGobbleHoles extends PAA.Learning.Task.Automatic
+class Goal.RemoveGobbleHoles extends Goal.Task
   @id: -> "#{Goal.id()}.RemoveGobbleHoles"
   @goal: -> Goal
 
@@ -256,9 +321,9 @@ class Goal.RemoveGobbleHoles extends PAA.Learning.Task.Automatic
 
   @initialize()
 
-  @completedConditions: ->
+  @completedConditions: -> not @playfieldHasPart Pinball.Parts.GobbleHole
   
-class Goal.DrawFlipper extends PAA.Learning.Task.Automatic
+class Goal.DrawFlipper extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawFlipper"
   @goal: -> Goal
 
@@ -271,10 +336,12 @@ class Goal.DrawFlipper extends PAA.Learning.Task.Automatic
   @predecessors: -> [Goal.RemoveGobbleHoles]
 
   @initialize()
-
-  @completedConditions: ->
   
-class Goal.PlayFlipper extends PAA.Learning.Task.Automatic
+  @unlockedAssets: -> [
+    Pinball.Assets.Flipper
+  ]
+  
+class Goal.PlayFlipper extends Goal.Task
   @id: -> "#{Goal.id()}.PlayFlipper"
   @goal: -> Goal
 
@@ -282,15 +349,16 @@ class Goal.PlayFlipper extends PAA.Learning.Task.Automatic
 
   @instructions: -> """
     Add two flippers at the bottom of the playfield. Use the flip edit option to turn the left flipper into a right one.
+    On the Settings tab, adjust the angle range to suit your flipper.
   """
   
   @predecessors: -> [Goal.DrawFlipper]
 
   @initialize()
 
-  @completedConditions: ->
+  @completedConditions: -> @playfieldHasPart Pinball.Parts.Flipper
   
-class Goal.DrawLowerThird extends PAA.Learning.Task.Automatic
+class Goal.DrawLowerThird extends Goal.RedrawPlayfieldTask
   @id: -> "#{Goal.id()}.DrawLowerThird"
   @goal: -> Goal
 
@@ -299,32 +367,14 @@ class Goal.DrawLowerThird extends PAA.Learning.Task.Automatic
   @instructions: -> """
     With flippers in your arsenal, draw a more modern layout for the lower third of your playfield.
     A typical arrangement has outer and inner lanes, as well as slingshots.
+    Edit the Playfield sprite until you are happy with how the design plays.
   """
   
   @predecessors: -> [Goal.PlayFlipper]
 
   @initialize()
 
-  @completedConditions: ->
-  
-class Goal.DrawUpperThird extends PAA.Learning.Task.Automatic
-  @id: -> "#{Goal.id()}.DrawUpperThird"
-  @goal: -> Goal
-
-  @directive: -> "Streamline the upper third"
-
-  @instructions: -> """
-    Your flippers can bounce the ball with great speeds back to the top.
-    On your Playfield sprite, draw smooth curves to create lanes along which the ball can travel and return to the flippers.
-  """
-  
-  @predecessors: -> [Goal.DrawLowerThird]
-
-  @initialize()
-
-  @completedConditions: ->
-
-class Goal.ActiveBumpers extends PAA.Learning.Task.Automatic
+class Goal.ActiveBumpers extends Goal.Task
   @id: -> "#{Goal.id()}.ActiveBumpers"
   @goal: -> Goal
   
@@ -341,8 +391,32 @@ class Goal.ActiveBumpers extends PAA.Learning.Task.Automatic
   @initialize()
   
   @completedConditions: ->
+    # Find a bumper with active set to true.
+    return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+    return unless project = PAA.Practice.Project.documents.findOne activeProjectId
+    
+    for playfieldPartId, partData of project.playfield
+      return true if partData.type is Pinball.Parts.Bumper.id() and partData.active
+    
+    false
 
-class Goal.DrawSpinningTarget extends PAA.Learning.Task.Automatic
+class Goal.DrawUpperThird extends Goal.RedrawPlayfieldTask
+  @id: -> "#{Goal.id()}.DrawUpperThird"
+  @goal: -> Goal
+  
+  @directive: -> "Streamline the upper third"
+  
+  @instructions: -> """
+    On your Playfield sprite, use smooth curves to draw lanes along which the ball can travel across the upper part of the playfield.
+    Aim the lane entrances and exits in the direction of the flippers.
+    The upper third also usually provides a place for multiple bumpers to kick the ball between them.
+  """
+  
+  @predecessors: -> [Goal.DrawLowerThird]
+  
+  @initialize()
+
+class Goal.DrawSpinningTarget extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawSpinningTarget"
   @goal: -> Goal
   
@@ -356,9 +430,11 @@ class Goal.DrawSpinningTarget extends PAA.Learning.Task.Automatic
 
   @initialize()
   
-  @completedConditions: ->
+  @unlockedAssets: -> [
+    Pinball.Assets.SpinningTarget
+  ]
 
-class Goal.PlaySpinningTarget extends PAA.Learning.Task.Automatic
+class Goal.PlaySpinningTarget extends Goal.Task
   @id: -> "#{Goal.id()}.PlaySpinningTarget"
   @goal: -> Goal
   
@@ -373,4 +449,4 @@ class Goal.PlaySpinningTarget extends PAA.Learning.Task.Automatic
 
   @initialize()
   
-  @completedConditions: ->
+  @completedConditions: -> @playfieldHasPart Pinball.Parts.SpinningTarget

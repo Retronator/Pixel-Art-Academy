@@ -9,12 +9,10 @@ class Pinball.Parts.Pins extends Pinball.Part
     "
       The pins in pinball, small metal pins that change the ball's trajectory.
     "
-    
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
+  
+  @assetId: -> Pinball.Assets.Playfield.id()
   
   @avatarClass: -> @Avatar
-  
-  @editable: -> false
   
   @initialize()
   
@@ -50,7 +48,7 @@ class Pinball.Parts.Pins extends Pinball.Part
         return unless @pins.length
         
         cylinders = for pin in @pins
-          cylinder = new THREE.BufferGeometry pin.radius, pin.radius, @height
+          cylinder = new THREE.CylinderGeometry pin.radius, pin.radius, @height
           
           positionAttribute = cylinder.getAttribute 'position'
           for index in [0...positionAttribute.array.length] by 3

@@ -22,9 +22,13 @@ class Pinball.Interface.Actions.Edit extends Pinball.Interface.Actions.Mode
   @mode: -> Pinball.GameManager.Modes.Edit
   @initialize()
   
+  enabled: -> @pinball.editModeUnlocked()
+  
 class Pinball.Interface.Actions.Test extends Pinball.Interface.Actions.Mode
   @mode: -> Pinball.GameManager.Modes.Test
   @initialize()
+  
+  enabled: -> @pinball.editModeUnlocked()
   
 class Pinball.Interface.Actions.Play extends Pinball.Interface.Actions.Mode
   @mode: -> Pinball.GameManager.Modes.Play

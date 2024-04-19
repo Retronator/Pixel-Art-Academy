@@ -11,6 +11,10 @@ _rayEnd = new THREE.Vector3
 class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   # cameraDisplayType: enum whether the camera should be perspective or orthographic
   # debugPhysics: boolean whether to show debug view of the playfield
+  # ballTravelExtents: how far any ball has traveled, used for task completion
+  #   x, y, z:
+  #     min, max: the minimum and maximum value in the given axis
+  # highScore: the highest amount of points scored in a single game
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball'
   @register @id()
   
@@ -25,6 +29,12 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   @slug: -> 'pinball'
   
   @initialize()
+  
+  @resetBallExtents: ->
+    @state 'ballTravelExtents',
+      x: {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
+      y: {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
+      z: {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
   
   constructor: ->
     super arguments...
@@ -112,6 +122,11 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     # Subscribe to the macintosh palette.
     @_macintoshPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
+    # Track how far the player has pushed the ball for progression purposes.
+    unless @_ballTravelExtents = @state 'ballTravelExtents'
+      @constructor.resetBallExtents()
+      @_ballTravelExtents = @state 'ballTravelExtents'
+      
   unload: ->
     super arguments...
     
@@ -121,6 +136,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @cameraManager()?.destroy()
     @rendererManager()?.destroy()
     @physicsManager()?.destroy()
+    @inputManager()?.destroy()
     @gameManager()?.destroy()
     
     @sceneManager null
@@ -135,7 +151,9 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @_macintoshPaletteSubscription.stop()
     
-    @os.cursor().endWait()
+    @os.cursor()?.endWait()
+    
+    @state 'ballTravelExtents', @_ballTravelExtents
     
   openFile: (file) ->
     @openedFile file
@@ -143,16 +161,22 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     # Progress gameplay.
     if file.id() is "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
       LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', true
-  
+      
+  editModeUnlocked: ->
+    LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawGobbleHole.getAdventureInstance().completed()
+    
   update: (appTime) ->
     # Update physics.
     return unless physicsManager = @physicsManager()
     physicsManager.update appTime
     
-    # Quantize position when in normal view.
+    gameManager = @gameManager()
     sceneManager = @sceneManager()
+    cameraManager = @cameraManager()
+    editorManager = @editorManager()
     
-    if @cameraManager().displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
+    # Quantize position when in normal view.
+    if cameraManager.displayType() is Pinball.CameraManager.DisplayTypes.Orthographic and not @debugPhysics()
       for renderObject in sceneManager.renderObjects()
         continue unless shape = renderObject.entity.shape()
         continue unless shape.positionSnapping()
@@ -163,7 +187,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     hoveredPart = null
     
     if viewportCoordinates = @mouse().viewportCoordinates()
-      camera = @cameraManager().camera()
+      camera = cameraManager.camera()
 
       # Update the raycaster.
       _cursorRaycaster.setFromCamera viewportCoordinates, camera
@@ -172,10 +196,26 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       hoveredEntity = physicsManager.intersectObject _cursorRaycaster.ray.origin, _rayEnd
       hoveredPart = hoveredEntity if hoveredEntity instanceof @constructor.Part
     
-    @editorManager().hoveredPart hoveredPart
+    editorManager.hoveredPart hoveredPart
     
     # Update the parts.
-    entity.update? appTime for entity in sceneManager.entities()
+    entities = sceneManager.entities()
+    entity.update? appTime for entity in entities
+    
+    # Update ball extents and kill balls that go outside the playfield.
+    for entity in entities when entity instanceof Pinball.Ball
+      ball = entity
+      ballRenderObject = ball.getRenderObject()
+      @_ballTravelExtents.x.min = Math.min @_ballTravelExtents.x.min, ballRenderObject.position.x
+      @_ballTravelExtents.x.max = Math.max @_ballTravelExtents.x.max, ballRenderObject.position.x
+      @_ballTravelExtents.y.min = Math.min @_ballTravelExtents.y.min, ballRenderObject.position.y
+      @_ballTravelExtents.y.max = Math.max @_ballTravelExtents.y.max, ballRenderObject.position.y
+      @_ballTravelExtents.z.min = Math.min @_ballTravelExtents.z.min, ballRenderObject.position.z
+      @_ballTravelExtents.z.max = Math.max @_ballTravelExtents.z.max, ballRenderObject.position.z
+      
+      if ballRenderObject.position.y < -1
+        ball.die()
+        gameManager.removeBall ball
     
   fixedUpdate: (elapsed) ->
     sceneManager = @sceneManager()

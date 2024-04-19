@@ -3,19 +3,21 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
-class Pinball.Parts.Trough extends Pinball.Parts.Hole
-  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Trough'
+class Pinball.Parts.BallTrough extends Pinball.Parts.Hole
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.BallTrough'
   @fullName: -> "ball trough"
   @description: ->
     "
       A hole in the playfield that collects and ends the current ball.
     "
     
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/trough.png'
+  @assetId: -> Pinball.Assets.BallTrough.id()
   
   @triggerPositionYRatio: -> 1
   
   @initialize()
+  
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawBallTrough
   
   constants: ->
     height: 0.01

@@ -22,6 +22,9 @@ class Pinball.Interface.Playfield extends LOI.View
     
     @autorun (computation) =>
       return unless selectedPart = @selectedPart()
+      return unless selectedPart.ready()
+
+      # Update when data or position change.
       selectedPart.data()
       selectedPart.position()
       
@@ -40,7 +43,7 @@ class Pinball.Interface.Playfield extends LOI.View
 
   selectionVisibleClass: ->
     return unless selectedPart = @selectedPart()
-    'visible' if selectedPart.constructor.editable()
+    'visible' if selectedPart.constructor.placeable()
     
   selectionStyle: ->
     # Depend on the selected part's changes.
@@ -112,7 +115,7 @@ class Pinball.Interface.Playfield extends LOI.View
         
         selectedPart = editorManager.selectedPart()
 
-        if selectedPart?.constructor.editable()
+        if selectedPart?.constructor.placeable()
           # See if the player releases the mouse button, otherwise also start dragging.
           $document = $(document)
           

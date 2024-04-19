@@ -10,7 +10,7 @@ class Rotate extends Pinball.Interface.Actions.Action
   
   @sign: -> throw new AE.NotImplementedException "Rotate action has to specify the sign of rotation."
   
-  enabled: -> @pinball.editorManager()?.selectedPart()?.constructor.editable()
+  enabled: -> @pinball.editorManager()?.selectedPart()?.constructor.placeable()
   
   execute: ->
     editorManager = @pinball.editorManager()

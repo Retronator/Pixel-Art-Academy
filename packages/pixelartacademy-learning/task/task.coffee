@@ -95,6 +95,8 @@ class PAA.Learning.Task
 
     console.warn "Unknown task requested.", taskId
     null
+  
+  @getAdventureInstance: -> @getAdventureInstanceForId @id()
 
   constructor: (@options = {}) ->
     @goal = @options.goal
@@ -170,3 +172,8 @@ class PAA.Learning.Task
 
     # All requirements to be active have been met.
     true
+    
+  reset: ->
+    PAA.Learning.Task.Entry.documents.remove
+      taskId: @id()
+      profileId: @options.profileId()

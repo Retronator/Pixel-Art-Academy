@@ -84,9 +84,8 @@ class PAA.Pixeltosh.OS extends LOI.Component
   onDestroyed: ->
     super arguments...
     
-    for programId, program of @_programs
-      program.unload()
-      program.destroy()
+    program.unload() for program in @loadedPrograms()
+    program.destroy() for programId, program of @_programs
     
     @fileSystem?.destroy()
   

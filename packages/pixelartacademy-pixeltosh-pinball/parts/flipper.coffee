@@ -15,13 +15,15 @@ class Pinball.Parts.Flipper extends Pinball.Part
       A bat that lets the player control the ball.
     "
     
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
+  @assetId: -> Pinball.Assets.Flipper.id()
   
   @avatarShapes: -> [
     Pinball.Part.Avatar.Extrusion
   ]
   
   @initialize()
+  
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawFlipper
   
   @rotationAxis = new THREE.Vector3 0, 1, 0
   
@@ -40,7 +42,7 @@ class Pinball.Parts.Flipper extends Pinball.Part
       min: 1
       max: 180
       step: 1
-      default: 39.5
+      default: 45
     angularSpeedDegrees:
       name: 'Speed'
       unit: "°/s"

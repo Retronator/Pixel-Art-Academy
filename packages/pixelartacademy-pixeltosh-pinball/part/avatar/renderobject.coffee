@@ -13,7 +13,7 @@ _rotationAngles = new THREE.Euler
 class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   @rotationAxis = new THREE.Vector3 0, -1, 0
   
-  @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0x202020
+  @physicsDebugMaterial = new THREE.MeshStandardMaterial color: 0x444444
 
   constructor: (@entity, @existingResources) ->
     super arguments...

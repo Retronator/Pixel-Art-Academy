@@ -12,12 +12,10 @@ class Pinball.Parts.WireBallGuides extends Pinball.Part
     "
       Thin wires that guide the ball along lanes.
     "
-    
-  @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
+  
+  @assetId: -> Pinball.Assets.Playfield.id()
   
   @avatarClass: -> @Avatar
-  
-  @editable: -> false
   
   @initialize()
   

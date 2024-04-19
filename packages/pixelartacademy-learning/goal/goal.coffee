@@ -168,6 +168,8 @@ class PAA.Learning.Goal
     console.warn "Unknown goal requested.", goalId
     null
 
+  @getAdventureInstance: -> @getAdventureInstanceForId @id()
+  
   constructor: (@options = {}) ->
     # By default the task is related to the current profile.
     @options.profileId ?= => LOI.adventure.profileId()
@@ -208,3 +210,6 @@ class PAA.Learning.Goal
   # The goal is completed when at least one of the final tasks has been reached.
   completed: ->
     _.some _.map @finalTasks(), (task) -> task.completed()
+
+  reset: ->
+    task.reset() for task in @_tasks

@@ -12,7 +12,7 @@ class Pinball.Interface.Actions.Delete extends Pinball.Interface.Actions.Action
   
   @initialize()
   
-  enabled: -> @pinball.editorManager()?.selectedPart()?.constructor.editable()
+  enabled: -> @pinball.editorManager()?.selectedPart()?.constructor.placeable()
   
   execute: ->
     @pinball.editorManager().removeSelectedPart()

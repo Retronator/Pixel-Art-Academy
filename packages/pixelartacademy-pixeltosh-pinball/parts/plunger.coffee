@@ -20,6 +20,8 @@ class Pinball.Parts.Plunger extends Pinball.Part
   
   @initialize()
   
+  @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawBall
+  
   @maxDisplacementRatio = 0.8
   
   settings: ->

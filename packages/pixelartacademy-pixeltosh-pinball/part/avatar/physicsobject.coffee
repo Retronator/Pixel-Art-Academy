@@ -43,7 +43,7 @@ class Pinball.Part.Avatar.PhysicsObject extends AR.PhysicsObject
       properties = @entity.physicsProperties()
 
       # Default body will be elastic and frictionless.
-      @body.setRestitution properties.restitution  ? 1
+      @body.setRestitution properties.restitution ? 1
       @body.setFriction properties.friction ? 0
       @body.setRollingFriction properties.rollingFriction ? 0
       
