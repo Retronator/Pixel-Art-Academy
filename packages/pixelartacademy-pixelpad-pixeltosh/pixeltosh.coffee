@@ -21,6 +21,13 @@ class PAA.PixelPad.Apps.Pixeltosh extends PAA.PixelPad.App
     "
 
   @initialize()
+  
+  @getOS: ->
+    return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+    return unless currentApp = pixelPad.os.currentApp()
+    return unless currentApp instanceof @
+    pixeltosh = currentApp
+    pixeltosh.os()
 
   constructor: ->
     super arguments...

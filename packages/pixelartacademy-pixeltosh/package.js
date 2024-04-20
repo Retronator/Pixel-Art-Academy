@@ -54,4 +54,7 @@ Package.onUse(function(api) {
 
   api.addFile('pages..');
   api.addComponent('pages/pixeltosh..');
+
+  api.addComponent('instructions..');
+  api.addFile('instructions/instruction');
 });

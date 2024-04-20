@@ -47,7 +47,29 @@ class Goal.DrawBall extends Goal.AssetsTask
     Pinball.Assets.Ball
     Pinball.Assets.Plunger
   ]
-
+  
+  Task = @
+  
+  class @RedrawBall extends PAA.PixelPad.Systems.Instructions.Instruction
+    @id: -> "#{Task.id()}.RedrawBall"
+    
+    @message: -> """
+      Oh no! It looks like the ball is a cube! Change it to a sphere in the Drawing app so it will roll.
+    """
+    
+    @activeConditions: ->
+      return unless Task.getAdventureInstance().active()
+      
+      # Show when we're in the Pinball program.
+      return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
+      os.activeProgram() instanceof PAA.Pixeltosh.Programs.Pinball
+    
+    @delayDuration: -> 5
+    
+    @initialize()
+    
+    faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo
+    
 class Goal.PlayBall extends Goal.Task
   @id: -> "#{Goal.id()}.PlayBall"
   @goal: -> Goal

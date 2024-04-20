@@ -11,5 +11,5 @@ class LM.Intro.Systems extends LOI.Adventure.Scene
   
   things: -> [
     PAA.PixelPad.Systems.ToDo
-    PAA.Tutorials.Drawing.Instructions.Desktop
+    PAA.Tutorials.Drawing.Instructions.Desktop if PAA.PixelPad.Apps.Drawing.Editor.getEditor() instanceof PAA.PixelPad.Apps.Drawing.Editor.Desktop
   ]

@@ -67,7 +67,7 @@ class Pinball.GameManager
   reset: ->
     # Wait for scene manager to be ready so that all parts are available.
     Tracker.autorun (computation) =>
-      sceneManager = @pinball.sceneManager()
+      return unless sceneManager = @pinball.sceneManager()
       return unless sceneManager.ready()
       computation.stop()
       
