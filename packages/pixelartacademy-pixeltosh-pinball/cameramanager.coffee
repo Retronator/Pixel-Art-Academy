@@ -12,8 +12,9 @@ class Pinball.CameraManager
     Perspective: 'Perspective'
   
   @orthographicPixelSize = 0.5 / 180 # m/px
+  @significantPositionDeviation = @orthographicPixelSize * 0.6
   
-  @snapShapeToPixelPosition: (shape, position, rotationQuaternion) ->
+  @snapShapeToPixelPosition: (shape, position, rotationQuaternion, lastPosition) ->
     bitmapRotationOriginX =  0.5 + Math.floor shape.bitmapOrigin.x
     bitmapRotationOriginY =  0.5 + Math.floor shape.bitmapOrigin.y
     
@@ -32,8 +33,19 @@ class Pinball.CameraManager
     pixelCenterScreenX = Math.round(rotationOriginScreenX - 0.5) + 0.5
     pixelCenterScreenY = Math.round(rotationOriginScreenY - 0.5) + 0.5
     
-    position.x += (pixelCenterScreenX - rotationOriginScreenX) * @orthographicPixelSize
-    position.z += (pixelCenterScreenY - rotationOriginScreenY) * @orthographicPixelSize
+    # If last (snapped) position is specified, make sure the change would
+    # be significant enough, so we prevent alternating when at the edge of the pixels.
+    if lastPosition and Math.abs(lastPosition.x - position.x) < @significantPositionDeviation
+      position.x = lastPosition.x
+      
+    else
+      position.x += (pixelCenterScreenX - rotationOriginScreenX) * @orthographicPixelSize
+
+    if lastPosition and Math.abs(lastPosition.z - position.z) < @significantPositionDeviation
+      position.z = lastPosition.z
+      
+    else
+      position.z += (pixelCenterScreenY - rotationOriginScreenY) * @orthographicPixelSize
   
   constructor: (@pinball) ->
     @displayType = @pinball.state.field 'cameraDisplayType', default: @constructor.DisplayTypes.Orthographic

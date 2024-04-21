@@ -28,7 +28,7 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
     if instruction = @targetDisplayedInstruction()
       return instruction.faceClass()
     
-    os = PAA.PixelPad.Apps.Pixeltosh.getOS()
+    return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
     return unless os.isCreated()
     return unless osCursor = os.cursor()
     return unless coordinates = osCursor.coordinates()

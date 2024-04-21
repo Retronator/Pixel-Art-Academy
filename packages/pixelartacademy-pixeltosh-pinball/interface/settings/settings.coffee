@@ -12,9 +12,16 @@ class Pinball.Interface.Settings extends LOI.View
     @os = @interface.parent
     @pinball = @os.getProgram Pinball
     
-    @selectedPart = new ComputedField =>
-      return selectedPart if selectedPart = @pinball.editorManager()?.selectedPart()
-      @pinball.sceneManager()?.getPartOfType Pinball.Parts.Playfield
+    @selectedPart = new ReactiveField null
+    
+    @autorun (computation) =>
+      selectedPart = @pinball.editorManager()?.selectedPart() or @pinball.sceneManager()?.getPartOfType Pinball.Parts.Playfield
+      
+      # Blur the current editable input to save any edits before we render a different part.
+      document.activeElement?.blur()
+      
+      Meteor.setTimeout =>
+        @selectedPart selectedPart
       
     @settings = new ComputedField =>
       return unless selectedPart = @selectedPart()

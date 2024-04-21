@@ -24,7 +24,6 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
       default: 1000
       
   constants: ->
-    height: 0.02
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
@@ -32,6 +31,11 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
     physicsDebugMaterial: Pinball.Parts.Playfield.physicsDebugMaterial
   
+  extraShapeProperties: ->
+    return unless sceneManager = @pinball.sceneManager()
+    
+    height: sceneManager.ballPositionY() * 4
+    
   onBallEnter: (ball) ->
     ball.die()
     

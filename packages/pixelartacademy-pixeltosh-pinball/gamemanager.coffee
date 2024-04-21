@@ -82,7 +82,8 @@ class Pinball.GameManager
           @startSimulation()
         
         when @constructor.Modes.Play
-          @remainingBallsCount 2
+          playfield = @pinball.sceneManager().getPartOfType Pinball.Parts.Playfield
+          @remainingBallsCount playfield.data().ballsPerPlay - 1
           @score 0
           @startSimulation()
     

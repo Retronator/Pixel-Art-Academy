@@ -315,11 +315,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         components: [PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents.id()]
         scrollToZoom: animate: duration: 0.2
+
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
       
     views = [
       type: FM.Menu.id()
       items: [
         PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
       ]
     ,
       type: FM.Toolbox.id()
@@ -357,6 +362,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           ]
           
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+          
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
     ,
       @getShortcuts()
 

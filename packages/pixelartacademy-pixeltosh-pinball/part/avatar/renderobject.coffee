@@ -18,6 +18,8 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
   constructor: (@entity, @existingResources) ->
     super arguments...
     
+    @lastPosition = new THREE.Vector3
+    
     # Note, we create temporary Ammo objects in the constructor instead
     # of the file closure for compatibility with the desktop build.
     @_transform = new Ammo.btTransform
@@ -140,6 +142,8 @@ class Pinball.Part.Avatar.RenderObject extends AS.RenderObject
         @freeRotationOrigin.quaternion
     
   updateFromPhysicsObject: (physicsObject) ->
+    @lastPosition.copy @position
+    
     physicsObject.motionState.getWorldTransform @_transform
     @position.setFromBulletVector3 @_transform.getOrigin()
     

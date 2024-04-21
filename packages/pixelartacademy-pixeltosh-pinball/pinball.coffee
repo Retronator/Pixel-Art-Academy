@@ -181,7 +181,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
         continue unless shape = renderObject.entity.shape()
         continue unless shape.positionSnapping()
         
-        @constructor.CameraManager.snapShapeToPixelPosition shape, renderObject.position, renderObject.getRotationQuaternionForSnapping()
+        @constructor.CameraManager.snapShapeToPixelPosition shape, renderObject.position, renderObject.getRotationQuaternionForSnapping(), renderObject.lastPosition
       
     # Update the hovered part.
     hoveredPart = null

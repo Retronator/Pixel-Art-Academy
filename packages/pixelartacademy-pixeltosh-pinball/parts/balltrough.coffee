@@ -20,7 +20,6 @@ class Pinball.Parts.BallTrough extends Pinball.Parts.Hole
   @placeableRequiredTask: -> LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawBallTrough
   
   constants: ->
-    height: 0.01
     restitution: Pinball.PhysicsManager.RestitutionConstants.HardSurface
     friction: Pinball.PhysicsManager.FrictionConstants.Wood
     rollingFriction: Pinball.PhysicsManager.RollingFrictionConstants.Coarse
@@ -28,6 +27,15 @@ class Pinball.Parts.BallTrough extends Pinball.Parts.Hole
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
     physicsDebugMaterial: Pinball.Parts.Playfield.physicsDebugMaterial
 
+  extraShapeProperties: ->
+    return unless sceneManager = @pinball.sceneManager()
+    
+    height: sceneManager.ballPositionY() * 2
+    
   onBallEnter: (ball) ->
     ball.die()
-    @pinball.gameManager().removeBall ball
+    
+    Meteor.setTimeout =>
+      @pinball.gameManager().removeBall ball
+    ,
+      1000

@@ -370,7 +370,7 @@ class Goal.PlayFlipper extends Goal.Task
   @directive: -> "Play with flippers"
 
   @instructions: -> """
-    Add two flippers at the bottom of the playfield. Use the flip edit option to turn the left flipper into a right one.
+    Add two flippers at the bottom of the playfield. Use the Edit menu to flip a left flipper into a right one.
     On the Settings tab, adjust the angle range to suit your flipper.
   """
   
@@ -378,7 +378,21 @@ class Goal.PlayFlipper extends Goal.Task
 
   @initialize()
 
-  @completedConditions: -> @playfieldHasPart Pinball.Parts.Flipper
+  @completedConditions: ->
+    return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
+    return unless project = PAA.Practice.Project.documents.findOne activeProjectId
+    
+    leftFound = false
+    rightFound = false
+    
+    for playfieldPartId, partData of project.playfield when partData.type is Pinball.Parts.Flipper.id()
+      if partData.flipped
+        rightFound = true
+        
+      else
+        leftFound = true
+    
+    leftFound and rightFound
   
 class Goal.DrawLowerThird extends Goal.RedrawPlayfieldTask
   @id: -> "#{Goal.id()}.DrawLowerThird"

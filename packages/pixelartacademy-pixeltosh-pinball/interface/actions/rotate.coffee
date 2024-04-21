@@ -16,8 +16,16 @@ class Rotate extends Pinball.Interface.Actions.Action
     editorManager = @pinball.editorManager()
     selectedPart = editorManager.selectedPart()
     rotationAngle = selectedPart.rotationAngle()
+    
+    newRotationAngle = rotationAngle + @constructor.rotationAmount * @constructor.sign()
 
-    editorManager.updateSelectedPart rotationAngle: rotationAngle + @constructor.rotationAmount * @constructor.sign()
+    newPosition = _.clone selectedPart.position()
+    rotationQuaternion = new THREE.Quaternion().setFromEuler new THREE.Euler 0, newRotationAngle, 0
+    Pinball.CameraManager.snapShapeToPixelPosition selectedPart.shape(), newPosition, rotationQuaternion
+    
+    editorManager.updateSelectedPart
+      rotationAngle: newRotationAngle
+      position: newPosition
 
 class Pinball.Interface.Actions.RotateClockwise extends Rotate
   @id: -> "PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Actions.RotateClockwise"

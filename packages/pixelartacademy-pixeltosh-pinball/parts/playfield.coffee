@@ -31,6 +31,13 @@ class Pinball.Parts.Playfield extends Pinball.Part
       max: 90
       step: 0.5
       default: 6.5
+    ballsPerPlay:
+      name: "Balls per play"
+      type: Pinball.Interface.Settings.Number.id()
+      min: 1
+      max: 10
+      step: 1
+      default: 3
       
   constants: ->
     height: 0.05

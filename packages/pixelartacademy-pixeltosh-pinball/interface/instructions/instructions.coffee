@@ -12,6 +12,10 @@ class Pinball.Interface.Instructions extends LOI.View
     @os = @interface.parent
     @pinball = @os.getProgram Pinball
     
+  ballsPerPlay: ->
+    return unless playfield = @pinball.sceneManager()?.getPartOfType Pinball.Parts.Playfield
+    playfield.data().ballsPerPlay
+    
   hasPlunger: -> @_hasPart Pinball.Parts.Plunger
   hasFlipper: -> @_hasPart Pinball.Parts.Flipper
   
