@@ -12,24 +12,25 @@ class Goal.AssetsTask extends Goal.Task
     # Add assets to the project if needed.
     activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
     project = PAA.Practice.Project.documents.findOne activeProjectId
-    
-    newAssets = []
-    
-    for unlockedAsset in @unlockedAssets()
+
+    createAssetBitmapPromises = for unlockedAsset in @unlockedAssets()
       unlockedAssetId = unlockedAsset.id()
       continue if _.find project.assets, (asset) => asset.id is unlockedAssetId
 
-      bitmapId = await @_createAssetBitmap unlockedAsset
-      
-      newAssets.push
-        id: unlockedAsset.id()
-        type: unlockedAsset.type()
-        bitmapId: bitmapId
+      do (unlockedAsset) =>
+        new Promise (resolve) =>
+          bitmapId = await @_createAssetBitmap unlockedAsset
+          
+          resolve
+            id: unlockedAsset.id()
+            type: unlockedAsset.type()
+            bitmapId: bitmapId
     
-    PAA.Practice.Project.documents.update activeProjectId,
-      $push:
-        assets:
-          $each: newAssets
+    Promise.all(createAssetBitmapPromises).then (newAssets) =>
+      PAA.Practice.Project.documents.update activeProjectId,
+        $push:
+          assets:
+            $each: newAssets
           
   @_createAssetBitmap: (asset) ->
     new Promise (resolve, reject) =>

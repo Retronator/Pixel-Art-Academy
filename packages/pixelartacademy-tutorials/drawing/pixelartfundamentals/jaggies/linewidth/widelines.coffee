@@ -56,3 +56,14 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.WideLines ext
     """
 
     @initialize()
+
+  class @ColoredLines extends @StepInstruction
+    @id: -> "#{Asset.id()}.ColoredLines"
+    @stepNumber: -> 2
+    
+    @message: -> """
+      The art style of Die in the Dungeon also employs shaded outlines, which will be further explored in art direction lessons.
+      Recolor the outlines as required.
+    """
+    
+    @initialize()

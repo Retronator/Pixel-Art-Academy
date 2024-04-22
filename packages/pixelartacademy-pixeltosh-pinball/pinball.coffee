@@ -31,11 +31,15 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   @initialize()
   
   @resetBallExtents: ->
-    @state 'ballTravelExtents',
+    ballExtents =
       x: {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
       y: {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
       z: {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY}
-  
+    
+    @state 'ballTravelExtents', ballExtents
+    
+    ballExtents
+    
   constructor: ->
     super arguments...
     
@@ -124,8 +128,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     # Track how far the player has pushed the ball for progression purposes.
     unless @_ballTravelExtents = @state 'ballTravelExtents'
-      @constructor.resetBallExtents()
-      @_ballTravelExtents = @state 'ballTravelExtents'
+      @_ballTravelExtents = @constructor.resetBallExtents()
       
   unload: ->
     super arguments...

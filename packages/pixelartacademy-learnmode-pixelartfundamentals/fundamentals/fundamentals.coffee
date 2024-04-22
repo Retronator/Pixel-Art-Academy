@@ -1,3 +1,4 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
@@ -31,6 +32,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     
     # Create the pinball project when the application is enabled.
     @_createPinballProjectAutorun = Tracker.autorun (computation) =>
+      return unless AM.Document.Persistence.profileReady()
       return unless LM.PixelArtFundamentals.pinballEnabled()
       return if PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
       
