@@ -47,21 +47,18 @@ balloonResizeDuration = 0.5s
 
   .speech-balloon
     position absolute
-    right 13rem
-    bottom 36rem
-    width 0
-    height 0
+    right 7rem
+    bottom 28rem
     visibility hidden
-    border-image image('/pixelartacademy/pixeltosh/instructions/speechballoon.png') 6 / 6rem / 5rem
-    background atariGray(7)
+    border 5rem solid transparent
+    border-image image('/pixelartacademy/pixeltosh/instructions/speechballoon.png') 6 / 6rem / 1rem
     text-align center
-    transition all balloonResizeDuration cubic-bezier(0, 0, 0, 1)
 
     &::after
       content ''
       position absolute
-      right 0
-      bottom -13rem
+      right -1rem
+      bottom -14rem
       width 9rem
       height 9rem
       background-image image('/pixelartacademy/pixeltosh/instructions/speechballoon-tail.png')
@@ -74,7 +71,11 @@ balloonResizeDuration = 0.5s
           visibility visible
 
     .content-area
+      width 0
+      height 0
       overflow hidden
+      transition all balloonResizeDuration cubic-bezier(0, 0, 0, 1)
+      background atariGray(7)
 
       .content
         width 120rem

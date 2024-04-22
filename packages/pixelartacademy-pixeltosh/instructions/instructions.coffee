@@ -35,7 +35,7 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
     
     if coordinates.y < 180 then 'smirk-up' else 'smirk-down'
   
-  speechBalloonStyle: ->
+  contentAreaStyle: ->
     height = @contentHeight()
     width = if height then @contentWidth() else 0
     
