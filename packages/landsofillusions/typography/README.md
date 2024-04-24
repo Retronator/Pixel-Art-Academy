@@ -1,4 +1,4 @@
-# Lands of Illusions
+# Retronator Identity
 
 ## Typography
 
@@ -23,10 +23,22 @@ The project is using these fonts:
 - **Academy** by Matej Jan (www.retronator.com)
 
   Custom, headline font used by Retropolis Academy of Art
-  
+
 - **Daily** by Matej Jan (www.retronator.com)
 
   Custom, body font of Retronator Daily blog
+
+- **Small Print** by Matej Jan (www.retronator.com)
+
+  Custom, 5px tall, mostly 3px wide miniature version of Daily
+
+- **Illegible** by Matej Jan (www.retronator.com)
+
+  Custom, 3px tall, designed to not be legible as to detract from reading tiny text
+
+- **Lines** by Matej Jan (www.retronator.com)
+
+  Custom, 2px tall, abstractly represents lines of text
 
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
@@ -37,18 +49,14 @@ The project is using these fonts:
 - **Uni 05** by Craig Kroeger (www.miniml.com)
 
   Available free under license at http://www.miniml.com/fonts/license/index.html (attribution)
-  
+
 - **ZX Spectrum** by Darko Stanicic
 
-  Released as Healthware. 
-  
+  Released as Healthware.
+
 - **Thintel** by Sam Keddy (http://samkeddy.com/fonts/)
 
   Attribution 4.0 International License
-
-- **PixelPlay** by Aleksander Shevchuk (https://www.behance.net/shevchuk)
-
-  Uploaded as Freeware (no license)
 
 - **Typecast** by Font End Dev (https://fontenddev.com)
 
