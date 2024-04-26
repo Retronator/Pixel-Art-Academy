@@ -27,4 +27,5 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterFullGame extends RS.Items.Bundl
         CatalogKeys.PixelArtAcademy.Kickstarter.YellowKeycard
         CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
         CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+        CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
       ]

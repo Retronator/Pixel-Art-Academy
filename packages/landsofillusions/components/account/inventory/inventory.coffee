@@ -29,13 +29,13 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
 
     # Split items between two pages.
     @pageItems = new ComputedField =>
-      firstPage = [[], [], []]
-      secondPage = [[], [], []]
+      firstPage = [[], [], [], []]
+      secondPage = [[], [], [], []]
 
       pageItemLimit = 9
       itemCount = 0
 
-      for items, bracketIndex in [@pixelArtAcademyItems(), @rewardItems(), @accessItems()]
+      for items, bracketIndex in [@pixelArtAcademyItems(), @rewardItems(), @accessItems(), @itemKeys()]
         for item in items
           targetPage = if itemCount > pageItemLimit then secondPage else firstPage
 
@@ -45,6 +45,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
       [firstPage, secondPage]
 
     @selectedItem = new ReactiveField null
+    @selectedItemKeyCode = new ReactiveField null
 
   items: ->
     return [] unless items = Retronator.user()?.items
@@ -122,6 +123,18 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
       selectedItems.push item if item.catalogKey in accessKeys
 
     selectedItems
+  
+  itemKeys: ->
+    items = @items()
+    selectedItems = []
+    
+    # Add all the Steam keys.
+    steamLearnModeKeys = _.values RS.Items.CatalogKeys.PixelArtAcademy.Steam.LearnMode
+    
+    for item in items
+      selectedItems.push item if item.catalogKey in steamLearnModeKeys
+    
+    selectedItems
 
   displayedPixelArtAcademyItems: ->
     pageIndex = if @otherSide() then 1 else 0
@@ -134,13 +147,20 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   displayedAccessItems: ->
     pageIndex = if @otherSide() then 1 else 0
     @pageItems()[pageIndex][2]
-
+  
+  displayedItemKeys: ->
+    pageIndex = if @otherSide() then 1 else 0
+    @pageItems()[pageIndex][3]
+    
   showMoreRewards: ->
     not @otherSide() and @pageItems()[1][1].length
 
   showMoreAccess: ->
     not @otherSide() and @pageItems()[1][2].length
 
+  showMoreItemKeys: ->
+    not @otherSide() and @pageItems()[1][3].length
+    
   name: ->
     item = @currentData()
     return "" unless item.name
@@ -198,6 +218,13 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   showTurn: ->
     pageItems = @pageItems()[1]
     _.sum (group.length for group in pageItems)
+  
+  selectedItemKeyClass: ->
+    'item-key' if @selectedItemIsItemKey()
+    
+  selectedItemIsItemKey: ->
+    selectedCatalogKey = @selectedItem().catalogKey
+    _.find @itemKeys(), (itemKeyItem) => itemKeyItem.catalogKey is selectedCatalogKey
     
   events: ->
     super(arguments...).concat
@@ -216,8 +243,19 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     item = @currentData()
 
     @selectedItem item
+    @selectedItemKeyCode null
+    
+    if _.find @itemKeys(), (itemKeyItem) => itemKeyItem.catalogKey is item.catalogKey
+      RS.Item.Key.retrieve item.catalogKey, (error, result) =>
+        if error
+          console.error error
+          return
+        
+        @selectedItemKeyCode result
 
   onClick: (event) ->
-    return if $(event.target).closest('.item .name').length
+    $target = $(event.target)
+    return if $target.closest('.item .name').length
+    return if $target.closest('.selected-item.item-key').length and not $target.closest('.unload-info').length
 
     @selectedItem null

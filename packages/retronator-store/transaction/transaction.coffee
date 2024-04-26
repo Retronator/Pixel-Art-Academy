@@ -28,6 +28,11 @@ class RS.Transaction extends AM.Document
   #     transaction: the transaction where this gift was claimed
   #       _id
   #       ownerDisplayName
+  # keys: array of item keys claimed in this transaction
+  #   _id
+  #   item:
+  #     _id
+  #     catalogKey
   # payments: array of payments used in this transaction
   #   _id
   #   type
@@ -71,6 +76,7 @@ class RS.Transaction extends AM.Document
         givenGift:
           transaction: Document.ReferenceField 'self', ['ownerDisplayName'], false
       ]
+      keys: [Document.ReferenceField RS.Item.Key, ['item'], true, 'transaction', ['ownerDisplayName']]
       payments: [Document.ReferenceField RS.Payment, ['type', 'amount', 'authorizedOnly', 'invalid', 'storeCreditAmount']]
       ownerDisplayName: Document.GeneratedField 'self', ['user', 'email', 'twitter'], (fields) ->
         displayName = fields.user?.displayName

@@ -42,6 +42,17 @@
         {{/if}}
       </ul>
     {{/if}}
+    {{#if displayedItemKeys}}
+      <p class="category">Product keys</p>
+      <ul class="items">
+        {{#each displayedItemKeys}}
+          {{> LandsOfIllusions.Components.Account.Inventory.item}}
+        {{/each}}
+        {{#if showMoreAccess}}
+          <li class="more">...</li>
+        {{/if}}
+      </ul>
+    {{/if}}
     <img class="clamp" src="{{image '/landsofillusions/components/account/wide-clamp-right.png'}}" />
     {{#unless otherSide}}
       <div class="keycard {{keycardClass}}">
@@ -60,10 +71,19 @@
     {{/if}}
     {{#if selectedItem}}
       {{#with selectedItem}}
-        <div class="selected-item">
+        <div class="selected-item {{selectedItemKeyClass}}">
           <div class="content">
             <div class="unload-info"></div>
             <p>{{> t9n description}}</p>
+            {{#if selectedItemIsItemKey}}
+              <p class="item-key-code">
+                {{#if selectedItemKeyCode}}
+                  {{selectedItemKeyCode}}
+                {{else}}
+                  Retrieving …
+                {{/if}}
+              </p>
+            {{/if}}
           </div>
         </div>
       {{/with}}
