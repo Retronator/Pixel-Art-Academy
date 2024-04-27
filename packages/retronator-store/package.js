@@ -23,6 +23,7 @@ Package.onUse(function(api) {
 
   api.use('chfritz:easycron');
   api.use('peerlibrary:xml2js');
+  api.use('jparker:crypto-aes');
 
   api.export('Retronator');
 
@@ -155,4 +156,7 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('pages/admin/payments..');
   api.addServerFile('pages/admin/payments/subscriptions');
+
+  api.addUnstyledComponent('pages/admin/importitemkeys..');
+  api.addServerFile('pages/admin/importitemkeys/methods-server');
 });
