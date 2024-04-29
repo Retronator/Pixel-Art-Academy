@@ -42,13 +42,13 @@
         {{/if}}
       </ul>
     {{/if}}
-    {{#if displayedItemKeys}}
+    {{#if displayedItemKeyItems}}
       <p class="category">Product keys</p>
       <ul class="items">
-        {{#each displayedItemKeys}}
+        {{#each displayedItemKeyItems}}
           {{> LandsOfIllusions.Components.Account.Inventory.item}}
         {{/each}}
-        {{#if showMoreAccess}}
+        {{#if showMoreItemKeyItems}}
           <li class="more">...</li>
         {{/if}}
       </ul>
