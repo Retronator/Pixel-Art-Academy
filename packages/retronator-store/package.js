@@ -157,6 +157,6 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('pages/admin/payments..');
   api.addServerFile('pages/admin/payments/subscriptions');
 
-  api.addUnstyledComponent('pages/admin/importitemkeys..');
-  api.addServerFile('pages/admin/importitemkeys/methods-server');
+  api.addUnstyledComponent('pages/admin/itemkeys..');
+  api.addServerFile('pages/admin/itemkeys/methods-server');
 });

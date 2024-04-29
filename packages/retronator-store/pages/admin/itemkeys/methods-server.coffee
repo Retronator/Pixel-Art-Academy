@@ -47,3 +47,31 @@ Meteor.methods
       keysCount++
 
     console.log "Successfully imported", keysCount, "item keys."
+    
+  'Retronator.Store.itemKeysOverview': ->
+    RA.authorizeAdmin()
+    
+    itemKeysOverview = []
+    
+    items = RS.Item.documents.fetch()
+    
+    for item in items
+      itemKeysCursor = RS.Item.Key.documents.find
+        'item._id': item._id
+        
+      if totalCount = itemKeysCursor.count()
+        claimedCount = RS.Item.Key.documents.find(
+          'item._id': item._id
+          transaction: $exists: true
+        ).count()
+        
+        availableCount = RS.Item.Key.documents.find(
+          'item._id': item._id
+          transaction: $exists: false
+        ).count()
+        
+        console.warn "Claimed and available counts for #{item.catalogKey} don't add up. #{claimedCount} + #{availableCount} != #{totalCount}" unless claimedCount + availableCount is totalCount
+      
+        itemKeysOverview.push {catalogKey: item.catalogKey, totalCount, claimedCount, availableCount}
+    
+    itemKeysOverview

@@ -1,5 +1,6 @@
-<template name="Retronator.Store.Pages.Admin.ImportItemKeys">
-  <h1>Import item keys</h1>
+<template name="Retronator.Store.Pages.Admin.ItemKeys">
+  <h1>Item keys</h1>
+  <h2>Import</h2>
   <form class="upload-form">
     <p>Select a text file to import</p>
     <input class="text-file" type="file" accept="text/plain"/>
@@ -15,4 +16,17 @@
     <input class="passphrase" type="password"/>
     <div><button>Upload</button></div>
   </form>
+  <h2>Overview</h2>
+  <ul>
+    {{#each itemKeysOverview}}
+      <li>
+        <strong>{{catalogKey}}</strong>
+        <table>
+          <tr><td>Total</td><td>{{totalCount}}</td></tr>
+          <tr><td>Claimed</td><td>{{claimedCount}}</td></tr>
+          <tr><td>Available</td><td>{{availableCount}}</td></tr>
+        </table>
+      </li>
+    {{/each}}
+  </ul>
 </template>

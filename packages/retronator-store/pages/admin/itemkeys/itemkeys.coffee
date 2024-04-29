@@ -2,11 +2,16 @@ AM = Artificial.Mirage
 AB = Artificial.Babel
 RS = Retronator.Store
 
-class RS.Pages.Admin.ImportItemKeys extends AM.Component
-  @register 'Retronator.Store.Pages.Admin.ImportItemKeys'
+class RS.Pages.Admin.ItemKeys extends AM.Component
+  @register 'Retronator.Store.Pages.Admin.ItemKeys'
 
   onCreated: ->
     RS.Item.all.subscribe @
+    
+    @itemKeysOverview = new ReactiveField []
+    
+    Meteor.call 'Retronator.Store.itemKeysOverview', (error, result) =>
+      @itemKeysOverview result
     
   items: ->
     RS.Item.documents.fetch
