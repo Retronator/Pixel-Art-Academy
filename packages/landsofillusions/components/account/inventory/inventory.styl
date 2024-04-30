@@ -53,8 +53,10 @@
     height 77rem
     padding 5rem 12rem 0 6rem
     background-image image('/landsofillusions/components/account/postit.png')
-    cursor pointer
     text-transform initial
+
+    &:not(.item-key)
+      cursor pointer
 
     .content
       transform rotate(-5deg)
@@ -67,7 +69,7 @@
       overflow-y auto
 
       p
-        margin 0
+        margin-top 0
 
       .unload-info
         float right
@@ -81,6 +83,7 @@
         background none
         color atariYellow(4)
         adventure()
+        cursor pointer
 
         &::before
           content 'X'
@@ -90,6 +93,9 @@
           outline none
           color atariYellow(3)
 
+      .item-key-code
+        cursor text
+        word-break break-all
 
   .category
     margin-bottom 0

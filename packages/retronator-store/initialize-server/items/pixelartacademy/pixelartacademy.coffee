@@ -87,3 +87,17 @@ Document.startup ->
     catalogKey: CatalogKeys.PixelArtAcademy.Kickstarter.ArtworkShipping
     name: "Artwork Shipping"
     description: "Shipping cost for sending the physical artwork in the US."
+  
+  # STEAM
+  
+  RS.Item.create
+    catalogKey: CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
+    name: "Pixel Art Academy: Learn Mode - Steam key"
+    description: "Get the downloadable version of Learn Mode on Steam."
+    isKey: true
+  
+  RS.Item.create
+    catalogKey: CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
+    name: "Pixel Art Academy: Learn Mode - pre-release Steam key"
+    description: "Get the downloadable version of Learn Mode on Steam before its release."
+    isKey: true

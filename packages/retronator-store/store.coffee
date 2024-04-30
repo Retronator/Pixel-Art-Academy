@@ -7,5 +7,7 @@ class Retronator.Store
     Retronator.App.addAdminPage '/admin/store/vat', @constructor.Pages.Admin.Vat
     Retronator.App.addAdminPage '/admin/store/transactions', @constructor.Pages.Admin.Transactions
     Retronator.App.addAdminPage '/admin/store/payments', @constructor.Pages.Admin.Payments
+    Retronator.App.addAdminPage '/admin/store/item-keys', @constructor.Pages.Admin.ItemKeys
 
     Retronator.App.addPublicPage 'retronator.com/store/invoice/:accessSecret', @constructor.Pages.Invoice
+    Retronator.App.addPublicPage 'retronator.com/store/keyclaim', @constructor.Pages.EmailItemKeys

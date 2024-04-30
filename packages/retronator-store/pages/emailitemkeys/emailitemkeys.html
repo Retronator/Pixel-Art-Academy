@@ -1,0 +1,26 @@
+<template name="Retronator.Store.Pages.EmailItemKeys">
+  <style>
+    html {
+      font-size: {{display.scale}}px;
+      background: #002c5c;
+    }
+  </style>
+  {{> Render display}}
+  <div class="retronator-store-pages-emailitemkeys">
+    <div class="retro"></div>
+    {{#if submitted}}
+      <p>Thank you! If I have your email in my records, you will receive a reply with your key codes.</p>
+      <p>Reach out to <a href="mailto:hi@retronator.com">hi@retronator.com</a> if you encounter any problems or bigger delays.</p>
+    {{else}}
+      <p>Enter the email you used when purchasing any Retronator products, and I'll email you any keys you are eligible for.</p>
+      <form class="claim-form">
+        <input class="claim-email" type="email" placeholder="your email"/> <button>Claim</button>
+      </form>
+      <p class="smallprint">
+        If you don't have access to the email you used anymore, send a message to
+        <a href="mailto:hi@retronator.com">hi@retronator.com</a> and let me know your old email, so I can transfer your
+        past purchases to your new email.
+      </p>
+    {{/if}}
+  </div>
+</template>

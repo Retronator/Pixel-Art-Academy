@@ -16,6 +16,7 @@ class RS.Item extends AM.Document
   #   _id
   #   catalogKey
   # isGiftable: can this item be purchased for someone else
+  # isKey: can keys be claimed for this item
   # {extraData}: any extra data set for the item
   @Meta
     name: @id()
@@ -65,6 +66,23 @@ class RS.Item extends AM.Document
     namespace = "Retronator.Store.Items.#{catalogKey}"
     AB.createTranslation namespace, key, defaultText
 
+  @getAllIncludedItemIds: (item) ->
+    itemIds = []
+
+    addItem = (item) =>
+      return unless item = RS.Item.documents.findOne item?._id
+
+      # Add the item to the ids.
+      itemIds = _.union itemIds, [item._id]
+
+      if item.items
+        # This is a bundle. Add all items of the bundle as well.
+        addItem bundleItem for bundleItem in item.items
+
+    addItem item
+    
+    itemIds
+    
   validateEligibility: ->
     # Override this with custom logic that tests whether the current user is eligible to buy this.
     # By default only items with a price can be bought to prevent malicious purchases.

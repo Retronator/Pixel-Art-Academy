@@ -30,4 +30,5 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterAlphaAccess extends RS.Items.Bu
         CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
         CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
         CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+        CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
       ]

@@ -23,6 +23,7 @@ Package.onUse(function(api) {
 
   api.use('chfritz:easycron');
   api.use('peerlibrary:xml2js');
+  api.use('jparker:crypto-aes');
 
   api.export('Retronator');
 
@@ -30,17 +31,20 @@ Package.onUse(function(api) {
 
   // User
 
-  api.addFile('user/user');
+  api.addFile('user..');
   api.addFile('user/methods');
   api.addServerFile('user/subscriptions');
   api.addServerFile('user/topsupporters');
 
   // Item
 
-  api.addFile('item/item');
+  api.addFile('item..');
   api.addServerFile('item/subscriptions');
 
   api.addServerFile('item/migrations/0000-renamecollection');
+
+  api.addFile('item/key..');
+  api.addServerFile('item/key/methods-server');
 
   // VAT
 
@@ -53,7 +57,7 @@ Package.onUse(function(api) {
 
   // Payment
 
-  api.addFile('payment/payment');
+  api.addFile('payment..');
   api.addServerFile('payment/subscriptions');
 
   api.addServerFile('payment/migrations/0000-renamecollection');
@@ -62,14 +66,14 @@ Package.onUse(function(api) {
 
   // Payment method
 
-  api.addFile('paymentmethod/paymentmethod');
+  api.addFile('paymentmethod..');
   api.addServerFile('paymentmethod/subscriptions');
 
   api.addServerFile('paymentmethod/methods-server/stripe');
 
   // Transaction
 
-  api.addFile('transaction/transaction');
+  api.addFile('transaction..');
   api.addServerFile('transaction/subscriptions');
   api.addServerFile('transaction/toprecent-server');
 
@@ -82,12 +86,12 @@ Package.onUse(function(api) {
   api.addServerFile('transaction/migrations/0000-renamecollection');
   api.addServerFile('transaction/migrations/0001-invalid');
 
-  api.addFile('shoppingcart/shoppingcart');
+  api.addFile('shoppingcart..');
 
   // Add item document types. They need to be available on server and client for casting purposes.
-  api.addFile('items/items');
+  api.addFile('items..');
   api.addFile('items/catalogkeys');
-  api.addFile('items/bundles/bundles');
+  api.addFile('items/bundles..');
 
   api.addFile('items/bundles/pixelartacademy/kickstarter/tier');
   api.addFile('items/bundles/pixelartacademy/kickstarter/alphaaccess');
@@ -130,6 +134,7 @@ Package.onUse(function(api) {
   // Pages
   api.addFile('pages..');
   api.addComponent('pages/invoice..');
+  api.addComponent('pages/emailitemkeys..');
 
   api.addUnstyledComponent('pages/admin..');
 
@@ -152,4 +157,7 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('pages/admin/payments..');
   api.addServerFile('pages/admin/payments/subscriptions');
+
+  api.addUnstyledComponent('pages/admin/itemkeys..');
+  api.addServerFile('pages/admin/itemkeys/methods-server');
 });

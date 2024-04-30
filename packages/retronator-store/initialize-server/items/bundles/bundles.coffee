@@ -19,6 +19,7 @@ Document.startup ->
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
+      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -32,6 +33,7 @@ Document.startup ->
       CatalogKeys.PixelArtAcademy.FreshmanYear
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
+      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -47,6 +49,7 @@ Document.startup ->
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
       CatalogKeys.Retropolis.NightlifePass
+      CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
     ]
 
   RS.Items.Bundles.PixelArtAcademyPreOrderAvatarEditorUpgrade.create()
@@ -78,6 +81,7 @@ Document.startup ->
       CatalogKeys.PixelArtAcademy.Kickstarter.GreenKeycard
       CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Items.Bundles.PixelArtAcademyKickstarterFullGame.create()
@@ -201,6 +205,7 @@ Document.startup ->
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
+      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -212,6 +217,7 @@ Document.startup ->
       CatalogKeys.PixelArtAcademy.FreshmanYear
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
+      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -268,6 +274,7 @@ kickstarterAlphaItemsWith = (extraItems) ->
     CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
     CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
     CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+    CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
   ].concat extraItems
 
 complimentaryAlphaItemsWithRetropolisItems = (keycardColor) ->
@@ -276,6 +283,7 @@ complimentaryAlphaItemsWithRetropolisItems = (keycardColor) ->
     CatalogKeys.PixelArtAcademy.AlphaAccess
     CatalogKeys.PixelArtAcademy.FreshmanYear
     CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+    CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
   ]
 
   retropolisItems = [

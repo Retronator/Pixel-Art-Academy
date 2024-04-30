@@ -26,4 +26,5 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterBasicGame extends RS.Items.Bund
         CatalogKeys.PixelArtAcademy.SeniorYear
         CatalogKeys.PixelArtAcademy.Kickstarter.WhiteKeycard
         CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
+        #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
       ]
