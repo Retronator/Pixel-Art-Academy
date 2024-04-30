@@ -54,9 +54,10 @@ Document.startup ->
   # PADB.PixelDailies.processTweetHistory()
 
   # Gather new tweets every hour. Do it 10 minutes after so that the new theme is captured as soon as possible.
-  new Cron =>
-    console.log "Fetching 200 latest Pixel Dailies tweets."
-    PADB.PixelDailies.processTweetHistory
-      count: 200
-  ,
-    minute: 10
+  # EDIT: Free Twitter (X) API does not allow access to tweets anymore so we don't run this service.
+  # new Cron =>
+  #   console.log "Fetching 200 latest Pixel Dailies tweets."
+  #   PADB.PixelDailies.processTweetHistory
+  #     count: 200
+  # ,
+  #   minute: 10
