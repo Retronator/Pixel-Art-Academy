@@ -134,6 +134,7 @@ Package.onUse(function(api) {
   // Pages
   api.addFile('pages..');
   api.addComponent('pages/invoice..');
+  api.addComponent('pages/emailitemkeys..');
 
   api.addUnstyledComponent('pages/admin..');
 

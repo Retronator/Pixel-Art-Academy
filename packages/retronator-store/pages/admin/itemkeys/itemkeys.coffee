@@ -15,7 +15,7 @@ class RS.Pages.Admin.ItemKeys extends AM.Component
     
   items: ->
     RS.Item.documents.fetch
-      catalogKey: /key/i
+      isKey: true
 
   events: ->
     super(arguments...).concat

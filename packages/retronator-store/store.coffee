@@ -10,3 +10,4 @@ class Retronator.Store
     Retronator.App.addAdminPage '/admin/store/item-keys', @constructor.Pages.Admin.ItemKeys
 
     Retronator.App.addPublicPage 'retronator.com/store/invoice/:accessSecret', @constructor.Pages.Invoice
+    Retronator.App.addPublicPage 'retronator.com/store/keyclaim', @constructor.Pages.EmailItemKeys

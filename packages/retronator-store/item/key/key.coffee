@@ -17,3 +17,4 @@ class RS.Item.Key extends AM.Document
       item: Document.ReferenceField RS.Item, ['catalogKey']
       
   @retrieveForItem: @method 'retrieveForItem'
+  @emailKeys: @method 'emailKeys'

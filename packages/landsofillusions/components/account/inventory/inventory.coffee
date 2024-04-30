@@ -189,7 +189,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     name = name.replace "Pixel Art Academy ", ""
     name = name.replace "Lands of Illusions - ", ""
 
-    name
+    _.upperFirst name
 
   keycardClass: ->
     return unless user = Retronator.user()
