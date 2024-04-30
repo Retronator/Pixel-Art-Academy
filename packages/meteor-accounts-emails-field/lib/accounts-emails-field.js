@@ -214,4 +214,4 @@ AccountsEmailsField = {
 
 
 // Set up an index on registered_emails
-Meteor.users._ensureIndex('registered_emails.address');
+Meteor.users.createIndex('registered_emails.address');
