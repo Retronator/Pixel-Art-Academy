@@ -16,7 +16,7 @@ RS.Item.Key.retrieveForItem.method (itemId) ->
   console.log "User", user.displayName, "is retrieving a key for", item.catalogKey, "…"
   
   # See if this user already has a transaction with a key claim for this item.
-  transactions = RS.Transaction.getValidTransactionsForUser @
+  transactions = RS.Transaction.getValidTransactionsForUser user
   
   claimTransaction = _.find transactions, (transaction) -> _.find transaction.itemKeys, (itemKey) -> itemKey.item._id is item._id
   
