@@ -98,7 +98,7 @@ class LOI.Components.Menu extends AM.Component
     'visible' if @customShowMenu() or not @visible()
 
   audioEnabledClass: ->
-    'audio-enabled' if LOI.adventure.interface.audioManager.enabled()
+    'audio-enabled' if LOI.adventure.audioManager.enabled()
 
   events: ->
     super(arguments...).concat
@@ -109,7 +109,7 @@ class LOI.Components.Menu extends AM.Component
     @showMenu()
 
   onClickToggleAudioButton: (event) ->
-    if LOI.adventure.interface.audioManager.enabled()
+    if LOI.adventure.audioManager.enabled()
       value = LOI.Settings.Audio.Enabled.Off
 
     else

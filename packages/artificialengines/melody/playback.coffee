@@ -2,19 +2,21 @@ AMe = Artificial.Melody
 AEc = Artificial.Echo
 
 class AMe.Playback
-  constructor: (@audioManager, @composition, @outputMixerName) ->
+  constructor: (@audioManager, @composition) ->
   
   destroy: ->
     @stop()
   
   ready: ->
     @audioManager.context()
+  
+  getSourceNode: -> @_output
 
   start: ->
     @stop()
     
     @_context = @audioManager.context()
-    @_output = AEc.Node.Mixer.getOutputNodeForName @outputMixerName, @_context
+    @_output ?= new GainNode @_context
     @_currentSectionDepenency = new Tracker.Dependency
     
     @currentSection = @composition.initialSection

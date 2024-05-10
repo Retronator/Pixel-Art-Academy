@@ -121,7 +121,7 @@ class LOI.Components.LoadGame extends LOI.Component
       @audio.load false
     
     # When the audio is on, make loading last a while to hear the sweet floppy drive sounds.
-    await _.waitForSeconds 2.5 if LOI.adventure.interface.audioManager.enabled()
+    await _.waitForSeconds 2.5 if LOI.adventure.audioManager.enabled()
     
     await loadPromise
     @loadingProfileId null

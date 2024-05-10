@@ -46,7 +46,7 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
     
     # Create the PICO-8 device once audio context is available, so we can route it through the location mixer.
     @autorun (computation) =>
-      return unless audioContext = LOI.adventure.interface.audioManager.context()
+      return unless audioContext = LOI.adventure.audioManager.context()
       computation.stop()
       
       audioOutputNode = AEc.Node.Mixer.getOutputNodeForName 'location', audioContext

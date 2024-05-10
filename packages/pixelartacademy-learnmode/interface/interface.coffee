@@ -54,12 +54,8 @@ class LM.Interface extends LOI.Interface
     
     @waiting = new ReactiveField true
     
-    @audioManager = new LOI.Interface.Components.AudioManager
-    
-    LOI.Assets.Engine.Audio.initialize @audioManager
-    
     # Manually load Audio since audio manager wasn't available when calling super.
-    @constructor.Audio.load @audioManager
+    @constructor.Audio.load LOI.adventure.audioManager
     
     # Mute in-game audio in the menus, except in the audio section. We have an additional extended silence during
     # quitting when the game transitions from the play to the main menu location and audio would still be played as the

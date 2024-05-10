@@ -36,6 +36,8 @@ class LOI.Adventure extends LOI.Adventure
     @app.addComponent @
 
     $('html').addClass('adventure')
+    
+    @_initializeAudio()
 
     @interface = new (@constructor.interfaceClass())
     @director = new LOI.Director

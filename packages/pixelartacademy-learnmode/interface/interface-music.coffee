@@ -10,7 +10,7 @@ class LM.Interface extends LM.Interface
     super arguments...
     
     # Create the Learn Mode composition.
-    @musicComposition = new AMe.Composition @audioManager
+    @musicComposition = new AMe.Composition LOI.adventure.audioManager
     
     # Intro
     
@@ -133,7 +133,7 @@ class LM.Interface extends LM.Interface
           trigger: @audio[sectionNameB]
         
     # Play the composition every time we enter play.
-    @musicPlayback = new AMe.Playback @audioManager, @musicComposition, 'in-game music'
+    @musicPlayback = new AMe.Playback LOI.adventure.audioManager, @musicComposition
     
     @inGameMusicPlaying = new ComputedField =>
       return unless @musicComposition.ready()
@@ -145,13 +145,13 @@ class LM.Interface extends LM.Interface
       if @inGameMusicPlaying()
         # Start the music after a short amount of silence.
         @_musicStartTimeout ?= Meteor.setTimeout =>
-          @musicPlayback.start()
+          LOI.adventure.music.startPlayback @musicPlayback
           @_musicStartTimeout = null
         ,
           2000
         
       else
-        @musicPlayback.stop()
+        LOI.adventure.music.stopPlayback() if LOI.adventure.music.currentPlaybackChannel()?.playback is @musicPlayback
       
     # Trigger events.
     @autorun (computation) =>

@@ -16,11 +16,10 @@ class PAA.Pixeltosh.Adventure extends LOI.Adventure
     @_autorunHandles = []
     
     @interface =
-      audioManager: new LOI.Interface.Components.AudioManager
       listeners: => []
       reset: =>
     
-    LOI.Assets.Engine.Audio.initialize @interface.audioManager
+    @_initializeAudio()
     
     @director = new LOI.Director
     
@@ -42,8 +41,6 @@ class PAA.Pixeltosh.Adventure extends LOI.Adventure
   
   destroy: ->
     handle.stop() for handle in @_autorunHandles
-    
-    @interface.audioManager.destroy()
 
   usesLocalState: -> true
   
