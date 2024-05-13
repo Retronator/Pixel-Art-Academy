@@ -14,10 +14,13 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixeltosh-pinball');
   api.use('retronator:pixelartacademy-learnmode');
+  api.use('retronator:pixelartacademy-pixelpad-music');
 
   api.export('PixelArtAcademy');
 
   api.addFile('pixelartfundamentals');
+
+  api.addFile('scenes/systems');
 
   // Start
 

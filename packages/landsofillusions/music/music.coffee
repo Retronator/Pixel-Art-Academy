@@ -17,25 +17,25 @@ class LOI.Music
         @currentPlaybackChannel new @constructor.PlaybackChannel @
         @nextPlaybackChannel new @constructor.PlaybackChannel @
     
+    @enabled = new AE.LiveComputedField =>
+      # Music can't be enabled unless the audio manager context is running.
+      return false unless @audioManager.running()
+      
+      # Music should be enabled in the audio settings screen (to respond quickly to changes of music volume).
+      return true if LOI.adventure.inAudioMenu()
+      
+      # Music is enabled if music volume is not zero.
+      LOI.settings.audio.musicVolume.value() > 0
+      
   destroy: ->
     @_createChannelsAutorun.stop()
     
     @currentPlaybackChannel().destroy()
     @nextPlaybackChannel().destroy()
-  
-  enabled: ->
-    # Music can't be enabled unless the audio manager context is running.
-    return unless @audioManager.running()
     
-    # Music should be enabled in the audio settings screen (to respond quickly to changes of music volume).
-    return true if LOI.adventure.inAudioMenu()
-    
-    # Music is enabled if music volume is not zero.
-    LOI.settings.audio.musicVolume.value() > 0
+    @enabled.stop()
   
   ready: -> @audioManager.context() and @currentPlaybackChannel().ready()
-
-  currentTime: -> @currentPlaybackChannel().currentTime()
 
   startPlayback: (playback, fadeIn) ->
     currentPlaybackChannel = @currentPlaybackChannel()
@@ -67,6 +67,12 @@ class LOI.Music
   resume: (fadeIn) ->
     @currentPlaybackChannel().pause fadeIn
     @nextPlaybackChannel().pause fadeIn
+  
+  isPlayingPlayback: (playback) ->
+    currentPlaybackChannel = @currentPlaybackChannel()
+    nextPlaybackChannel = @nextPlaybackChannel()
+    
+    currentPlaybackChannel.playback is playback or nextPlaybackChannel.playback is playback
   
   update: (appTime) ->
     return unless currentPlaybackChannel = @currentPlaybackChannel()

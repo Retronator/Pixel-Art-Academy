@@ -12,7 +12,9 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
     @Fundamentals
   ]
 
-  @scenes: -> []
+  @scenes: -> [
+    @Systems
+  ]
   
   @startSection: -> @Start
   

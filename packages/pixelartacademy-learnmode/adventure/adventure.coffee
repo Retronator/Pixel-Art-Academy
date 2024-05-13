@@ -70,7 +70,7 @@ class LM.Adventure extends PAA.Adventure
     
   inAudioMenu: ->
     if LOI.adventure.menu.visible()
-      value = not LOI.adventure.menu.items.inAudio()
+      LOI.adventure.menu.items.inAudio()
       
-    else if @audio.focusPoint.value() is @constructor.FocusPoints.MainMenu
-      value = not LOI.adventure.currentLocation()?.menuItems?.inAudio()
+    else if @interface.audio.focusPoint.value() is LM.Interface.FocusPoints.MainMenu
+      LOI.adventure.currentLocation()?.menuItems?.inAudio()

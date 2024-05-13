@@ -13,8 +13,6 @@ class LOI.Music.PlaybackChannel
   destroy: ->
   
   ready: ->
-
-  currentTime: -> @playback?.currentTime()
   
   playing: ->
   
@@ -25,9 +23,11 @@ class LOI.Music.PlaybackChannel
       @gainNode.connect @_output
     
     @playback = playback
-    playback.start()
+
     source = playback.getSourceNode()
     source.connect @gainNode
+    
+    playback.start()
     
     @resume fadeIn
     

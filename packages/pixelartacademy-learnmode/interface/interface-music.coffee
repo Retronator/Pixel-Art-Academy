@@ -132,14 +132,15 @@ class LM.Interface extends LM.Interface
           nextSection: sectionB
           trigger: @audio[sectionNameB]
         
-    # Play the composition every time we enter play.
+    # Play the composition every time we enter play, if the music system isn't playing a track of its own.
     @musicPlayback = new AMe.Playback LOI.adventure.audioManager, @musicComposition
     
     @inGameMusicPlaying = new ComputedField =>
       return unless @musicComposition.ready()
       return unless @musicPlayback.ready()
       return unless LOI.adventure.ready()
-      LOI.adventure.currentLocationId() is LM.Locations.Play.id()
+      return unless LOI.adventure.currentLocationId() is LM.Locations.Play.id()
+      not PAA.PixelPad.Systems.Music.state 'playing'
 
     @autorun (computation) =>
       if @inGameMusicPlaying()

@@ -90,5 +90,8 @@ class LOI.Adventure extends LOI.Adventure
     $('html').removeClass('adventure')
 
   endRun: ->
+    # Update any lazy fields.
+    @gameState.updated()
+    
     # Flush persistent document updates when the page is about to unload.
-    AMu.Document.Persistence.flushUpdates()
+    AMu.Document.Persistence.flushChanges()

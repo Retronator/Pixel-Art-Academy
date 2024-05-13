@@ -10,18 +10,23 @@ class AMe.Playback
   ready: ->
     @audioManager.context()
   
-  getSourceNode: -> @_output
+  getSourceNode: ->
+    return @_output if @_output
+    
+    @_context = @audioManager.context()
+    @_output = new GainNode @_context
 
   start: ->
     @stop()
     
     @_context = @audioManager.context()
-    @_output ?= new GainNode @_context
+
+    output = @getSourceNode()
     @_currentSectionDepenency = new Tracker.Dependency
     
     @currentSection = @composition.initialSection
     @_currentSectionStartTime = @_context.currentTime
-    @_currentSectionHandle = @currentSection.schedule @_currentSectionStartTime, @_output
+    @_currentSectionHandle = @currentSection.schedule @_currentSectionStartTime, output
     
     @_scheduleNextSection @_getAutomaticNextSection @composition.initialSection
     
@@ -66,7 +71,9 @@ class AMe.Playback
     
     @nextSection = section
     @_nextSectionStartTime = @_currentSectionStartTime + @currentSection.duration
-    @_nextSectionHandle = @nextSection.schedule @_nextSectionStartTime, @_output
+    output = @getSourceNode()
+    
+    @_nextSectionHandle = @nextSection.schedule @_nextSectionStartTime, output
   
     # Schedule handling of the next section for the case when no transitions get triggered.
     @_scheduleNextSectionHandling()
