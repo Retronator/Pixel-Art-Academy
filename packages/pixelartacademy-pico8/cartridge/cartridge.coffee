@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
-class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
+class PAA.Pico8.Cartridge extends LOI.Adventure.Thing
   @fullName: -> null # Cartridges get named directly from the artwork by default.
 
   @gameSlug: -> throw new AE.NotImplementedException "A cartridge must provide the game slug."

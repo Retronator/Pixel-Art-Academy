@@ -18,4 +18,8 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addComponent('system/music');
+
+  api.addComponent('app/music');
+  api.addComponent('app/drawer..');
+  api.addComponent('app/player..');
 });

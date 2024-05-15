@@ -18,9 +18,11 @@ Package.onUse(function(api) {
 
   api.addFile('music');
   api.addFile('track');
+  api.addFile('tapes');
 
   api.addFile('tape..');
   api.addServerFile('tape/tape-server-databasecontent');
   api.addFile('tape/subscriptions');
-  api.addServerFile('tape/initialize-server');
+
+  api.addServerFile('initialize-server');
 });

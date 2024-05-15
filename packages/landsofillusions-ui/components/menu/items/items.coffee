@@ -94,6 +94,9 @@ class LOI.Components.Menu.Items extends LOI.Component
   audioEnabled: ->
     LOI.settings.audio.enabled.value()
     
+  mainVolume: ->
+    LOI.settings.audio.mainVolume.value()
+    
   soundVolume: ->
     LOI.settings.audio.soundVolume.value()
 
@@ -161,6 +164,7 @@ class LOI.Components.Menu.Items extends LOI.Component
     
       # Audio
       'click .audio .enabled': @onClickAudioEnabled
+      'input .audio .main-volume': @onInputAudioMainVolume
       'input .audio .sound-volume': @onInputAudioSoundVolume
       'input .audio .ambient-volume': @onInputAudioAmbientVolume
       'input .audio .music-volume': @onInputAudioMusicVolume
@@ -277,6 +281,9 @@ class LOI.Components.Menu.Items extends LOI.Component
         value = LOI.Settings.Audio.Enabled.Off
 
     LOI.settings.audio.enabled.value value
+    
+  onInputAudioMainVolume: (event) ->
+    @_changeVolume 'main', event
     
   onInputAudioSoundVolume: (event) ->
     @_changeVolume 'sound', event

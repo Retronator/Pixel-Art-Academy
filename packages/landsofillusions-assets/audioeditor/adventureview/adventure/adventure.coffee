@@ -13,9 +13,10 @@ class LOI.Assets.AudioEditor.AdventureView.Adventure extends AM.Component
   onCreated: ->
     super arguments...
   
+    @audioManager = new LOI.Interface.Components.AudioManager
+
     @interface =
       illustrationSize: new AE.Rectangle 0, 0, 0, 0
-      audioManager: new LOI.Interface.Components.AudioManager
 
     @currentLocationId = new ComputedField =>
       @adventureView.locationId()

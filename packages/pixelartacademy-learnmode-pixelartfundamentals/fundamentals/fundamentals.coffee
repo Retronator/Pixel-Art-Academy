@@ -19,6 +19,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     @PixeltoshPrograms
     @PixeltoshFiles
     @Workbench
+    @MusicTapes
   ]
 
   @courses: -> [

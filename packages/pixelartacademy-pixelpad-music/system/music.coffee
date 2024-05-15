@@ -47,8 +47,8 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     # Subscribe to the tape from both the content (local tapes) and server (extra tapes).
     @autorun (computation) =>
       return unless tapeId = @state 'tapeId'
+      PAA.Music.Tape.forId.subscribeContent @, tapeId
       PAA.Music.Tape.forId.subscribe @, tapeId
-      #PAA.Music.Tape.forId.subscribeContent @, tapeId
 
     @tape = new ComputedField =>
       return unless tapeId = @state 'tapeId'
@@ -124,10 +124,16 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     @audio.seeking false
   
   setTape: (tape) ->
-    @state 'tapeId', tape._id
-    @state 'sideIndex', 0
-    @state 'trackIndex', 0
-    @state 'currentTime', 0
+    if tape
+      @state 'tapeId', tape._id
+      @state 'sideIndex', 0
+      @state 'trackIndex', 0
+      @state 'currentTime', 0
+      @tapeProgress 0
+      
+    else
+      @stop()
+      @state 'tapeId', null
     
   setTrack: (sideIndex, trackIndex) ->
     @state 'sideIndex', sideIndex
@@ -136,12 +142,12 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     
   play: ->
     Tracker.nonreactive =>
-      LOI.adventure.music.startPlayback @_currentTrack
+      LOI.adventure.music.startPlayback @_currentTrack, 0, LM.Interface.MusicFadeDurations.DynamicSoundtrackToMusicAppFadeOut
       @state 'playing', true
     
   stop: ->
     Tracker.nonreactive =>
-      LOI.adventure.music.stopPlayback @_currentTrack
+      LOI.adventure.music.stopPlayback() if LOI.adventure.music.isPlayingPlayback @_currentTrack
       @state 'playing', false
 
   update: (appTime) ->

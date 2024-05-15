@@ -6,6 +6,13 @@ LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
 
 class LM.Interface extends LM.Interface
+  @MusicFadeDurations =
+    InGameMusicModeOffFadeOut: 5
+    InGameMusicModeOffFadeIn: 3
+    MenuFadeOut: 0.5
+    MenuFadeIn: 3
+    DynamicSoundtrackToMusicAppFadeOut: 1
+  
   onCreated: ->
     super arguments...
     
@@ -132,28 +139,40 @@ class LM.Interface extends LM.Interface
           nextSection: sectionB
           trigger: @audio[sectionNameB]
         
-    # Play the composition every time we enter play, if the music system isn't playing a track of its own.
+    # Play the composition when we are in play, unless the music system is playing a track or we're in the music app.
     @musicPlayback = new AMe.Playback LOI.adventure.audioManager, @musicComposition
     
-    @inGameMusicPlaying = new ComputedField =>
+    @dynamicSoundtrackPlaying = new ComputedField =>
       return unless @musicComposition.ready()
       return unless @musicPlayback.ready()
       return unless LOI.adventure.ready()
-      return unless LOI.adventure.currentLocationId() is LM.Locations.Play.id()
-      not PAA.PixelPad.Systems.Music.state 'playing'
+      return false unless LOI.adventure.currentLocationId() is LM.Locations.Play.id()
+      return false if PAA.PixelPad.Systems.Music.state 'playing'
+      return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+      return unless currentApp = pixelPad.os.currentApp()
+      currentApp not instanceof PAA.PixelPad.Apps.Music
 
     @autorun (computation) =>
-      if @inGameMusicPlaying()
-        # Start the music after a short amount of silence.
-        @_musicStartTimeout ?= Meteor.setTimeout =>
-          LOI.adventure.music.startPlayback @musicPlayback
-          @_musicStartTimeout = null
-        ,
-          2000
-        
-      else
-        LOI.adventure.music.stopPlayback() if LOI.adventure.music.currentPlaybackChannel()?.playback is @musicPlayback
+      dynamicSoundtrackPlaying = @dynamicSoundtrackPlaying()
+      return unless dynamicSoundtrackPlaying?
       
+      Tracker.nonreactive =>
+        if dynamicSoundtrackPlaying
+          if LOI.adventure.music.isPlayingPlayback @musicPlayback
+            LOI.adventure.music.resume @constructor.MusicFadeDurations.InGameMusicModeOffFadeIn
+          
+          else
+            # Start the music after a short amount of silence.
+            @_musicStartTimeout ?= Meteor.setTimeout =>
+              LOI.adventure.music.startPlayback @musicPlayback
+              @_musicStartTimeout = null
+            ,
+              2000
+          
+        else
+          Meteor.clearTimeout @_musicStartTimeout
+          LOI.adventure.music.pause @constructor.MusicFadeDurations.InGameMusicModeOffFadeOut if LOI.adventure.music.isPlayingPlayback @musicPlayback
+        
     # Trigger events.
     @autorun (computation) =>
       # When no app is opened, reset the music to default.
@@ -204,20 +223,28 @@ class LM.Interface extends LM.Interface
     # Control how to play the in-game music.
     @autorun (computation) =>
       pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
-      value = pixelPad?.os.currentApp()?.inGameMusicMode?()
+      inGameMusicMode = pixelPad?.os.currentApp()?.inGameMusicMode?()
       
-      unless value is @constructor.InGameMusicMode.Off
+      unless inGameMusicMode is @constructor.InGameMusicMode.Off
         switch LOI.settings.audio.inGameMusicOutput.value()
-          when LOI.Settings.Audio.InGameMusicOutput.InLocation then value = @constructor.InGameMusicMode.InLocation
-          when LOI.Settings.Audio.InGameMusicOutput.Direct then value = @constructor.InGameMusicMode.Direct
+          when LOI.Settings.Audio.InGameMusicOutput.InLocation then inGameMusicMode = @constructor.InGameMusicMode.InLocation
+          when LOI.Settings.Audio.InGameMusicOutput.Direct then inGameMusicMode = @constructor.InGameMusicMode.Direct
       
-      # We need separate booleans for whether the music is playing instead of an enum and how it's playing so that the effects don't change
-      @audio.inGameMusic value isnt @constructor.InGameMusicMode.Off
-      @audio.inGameMusicInLocation value is @constructor.InGameMusicMode.InLocation unless value is @constructor.InGameMusicMode.Off
+      @audio.inGameMusicInLocation inGameMusicMode is @constructor.InGameMusicMode.InLocation unless inGameMusicMode is @constructor.InGameMusicMode.Off
       
-    # Play the dynamic soundtrack when no custom music is playing.
+    # Pause music when apps require it to be off.
+    @inGameMusicModeOff = new ComputedField =>
+      pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+      pixelPad?.os.currentApp()?.inGameMusicMode?() is @constructor.InGameMusicMode.Off
+      
     @autorun (computation) =>
-      @audio.dynamicSoundtrack true
+      inGameMusicModeOff = @inGameMusicModeOff()
+      
+      if inGameMusicModeOff
+        LOI.adventure.music.pause @constructor.MusicFadeDurations.InGameMusicModeOffFadeOut
+        
+      else
+        LOI.adventure.music.resume @constructor.MusicFadeDurations.InGameMusicModeOffFadeIn
 
   onDestroyed: ->
     super arguments...

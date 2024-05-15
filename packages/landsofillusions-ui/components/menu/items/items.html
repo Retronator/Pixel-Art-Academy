@@ -139,6 +139,9 @@
 
 <template name="LandsOfIllusions.Components.Menu.Items.VolumeControls">
   <li class="menu-item">
+    Main volume: <input class="main-volume" type="range" min="0" max="1" step="0.05" value="{{mainVolume}}"/>
+  </li>
+  <li class="menu-item">
     Sounds: <input class="sound-volume" type="range" min="0" max="1" step="0.05" value="{{soundVolume}}"/>
   </li>
   <li class="menu-item">

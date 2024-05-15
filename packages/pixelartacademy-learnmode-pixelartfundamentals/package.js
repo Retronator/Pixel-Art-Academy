@@ -20,6 +20,7 @@ Package.onUse(function(api) {
 
   api.addFile('pixelartfundamentals');
 
+  api.addFile('scenes/apps');
   api.addFile('scenes/systems');
 
   // Start
@@ -35,6 +36,7 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/pixeltoshprograms');
   api.addFile('fundamentals/scenes/pixeltoshfiles');
   api.addFile('fundamentals/scenes/workbench');
+  api.addFile('fundamentals/scenes/musictapes');
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');

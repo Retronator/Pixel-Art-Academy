@@ -30,10 +30,10 @@ Package.onUse(function(api) {
   api.addFile('pico8');
   api.addFile('devkit');
   api.addFile('fanzine');
+  api.addFile('cartridges');
 
-  api.addFile('cartridges..');
-  api.addFile('cartridges/cartridge');
-  api.addServerFile('cartridges/server');
+  api.addFile('cartridge..');
+  api.addServerFile('cartridge/server');
 
   api.addFile('game..');
   api.addFile('game/game-cartridgeimage');

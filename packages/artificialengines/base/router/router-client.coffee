@@ -47,9 +47,10 @@ class AB.Router extends AB.Router
     @goToRoute @currentRouteName(), parameters, options
 
   @changeParameters: (parameters, options) ->
-    parameters = _.extend {}, @currentParameters(), parameters
-    @setParameters parameters, options
-  
+    Tracker.nonreactive =>
+      parameters = _.extend {}, @currentParameters(), parameters
+      @setParameters parameters, options
+    
   @changeParameter: (parameter, value, options) ->
     @changeParameters "#{parameter}": value, options
 

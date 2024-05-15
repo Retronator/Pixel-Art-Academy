@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridges.Cartridge
+class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridge
   # highScore: the top result the player has achieved
   @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake'
   
