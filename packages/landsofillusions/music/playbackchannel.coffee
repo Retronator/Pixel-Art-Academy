@@ -40,8 +40,7 @@ class LOI.Music.PlaybackChannel
       
       @playback playback
   
-      source = playback.getSourceNode()
-      source.connect @gainNode
+      playback.connect @gainNode
       
       @gainNode.gain.cancelScheduledValues context.currentTime
       @gainNode.gain.value = 0
@@ -138,11 +137,9 @@ class LOI.Music.PlaybackChannel
       
       if @_stoppingTime and currentTime > @_stoppingTime
         playback = @playback()
-        
-        source = playback.getSourceNode()
-        source.disconnect @gainNode
+        playback.stop()
+        playback.disconnect()
     
         @_stoppingTime = null
         
-        playback.stop()
         @playback null

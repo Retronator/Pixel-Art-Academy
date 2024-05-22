@@ -22,4 +22,6 @@ Package.onUse(function(api) {
   api.addComponent('app/music');
   api.addComponent('app/drawer..');
   api.addComponent('app/player..');
+  api.addComponent('app/player/counter..');
+  api.addComponent('app/player/counter/digit..');
 });

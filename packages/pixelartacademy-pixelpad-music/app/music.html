@@ -1,6 +1,49 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Music">
-  <div class="pixelartacademy-pixelpad-apps-music app {{tapeActiveClass}}">
-    {{> Render drawer}}
-    {{> Render player}}
+  <div class="pixelartacademy-pixelpad-apps-music app">
+    <div class="origin">
+      {{> Render drawer}}
+      {{> Render player}}
+      <div class="selected-tape {{selectedTapeActiveClass}} {{selectedTapeLoadedClass}} tape-design {{displayedTape.styleClass}}">
+        <div class="case">
+          <div class="outer"></div>
+          <div class="lid">
+            <div class="closed cover">
+              <div class="inlay">
+                {{> PixelArtAcademy.PixelPad.Apps.Music.Inlay displayedTape}}
+              </div>
+            </div>
+            <div class="open">
+              <div class="under"></div>
+              <div class="cassette">
+                <div class="shell">
+                  <div class="side">{{cassetteSideLetter}}</div>
+                  <div class="label">{{cassetteLabel}}</div>
+                </div>
+              </div>
+              <div class="over"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</template>
+
+<template name="PixelArtAcademy.PixelPad.Apps.Music.Inlay">
+  <div class="title">{{title}}</div>
+  <ol class="sides">
+    {{#each getSidesWithTapeProgress}}
+      <li class="side">
+        <div class="title">{{title}}</div>
+        <ol class="tracks">
+          {{#each tracks}}
+            <li class="track">
+              <div class="title">{{title}}</div>
+              <div class="tape-progress">{{roundNumber tapeProgress}}</div>
+            </li>
+          {{/each}}
+        </ol>
+      </li>
+    {{/each}}
+  </ol>
 </template>

@@ -16,30 +16,47 @@ class PAA.PixelPad.Apps.Music.Player extends LOI.Component
   constructor: (@music) ->
     super arguments...
     
-  onCreated: ->
-    super arguments...
+  trayOpenClass: ->
+    'open' unless @music.loadedTape()
+    
+  playActiveClass: ->
+    'active' if PAA.PixelPad.Systems.Music.state 'playing'
+    
+  tapeDisplayedClass: ->
+    'displayed' if @music.loadedTape()
 
   events: ->
     super(arguments...).concat
-      'click .play-button': @onClickPlayButton
-      'click .stop-button': @onClickStopButton
-      'click .eject-button': @onClickEjectButton
+      'pointerdown .play.button': @onPointerDownPlayButton
+      'pointerdown .stop.button': @onPointerDownStopButton
+      'pointerdown .eject.button': @onPointerDownEjectButton
+      'pointerdown .rewind.button': @onPointerDownRewindButton
+      'pointerdown .fast-forward.button': @onPointerDownFastForwardButton
+      'click .inlay .track': @onClickInlayTrack
 
-  onClickPlayButton: (event) ->
+  onPointerDownPlayButton: (event) ->
     @music.system().play()
     
     @audio.buttonPress()
   
-  onClickStopButton: (event) ->
+  onPointerDownStopButton: (event) ->
     @music.system().stop()
     
     @audio.buttonPress()
   
-  onClickEjectButton: (event) ->
-    @music.system().setTape null
+  onPointerDownEjectButton: (event) ->
+    @music.unloadTape()
     
-    AB.Router.changeParameters
-      parameter3: null
-      parameter4: null
+  onPointerDownRewindButton: (event) ->
+    @music.system().rewindOrPreviousTrack()
+  
+  onPointerDownFastForwardButton: (event) ->
+    @music.system().nextTrack()
+  
+  onClickInlayTrack: (event) ->
+    track = @currentData()
+    tape = @music.displayedTape()
     
-    @audio.buttonPress()
+    for side, sideIndex in tape.sides
+      for sideTrack, trackIndex in side.tracks when track.url is sideTrack.url
+        @music.system().setTrack sideIndex, trackIndex

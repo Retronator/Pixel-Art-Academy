@@ -1,9 +1,34 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Music.Player">
   <div class="pixelartacademy-pixelpad-apps-music-player">
     <div class="player">
-      <button class="play-button">Play</button>
-      <button class="stop-button">Stop</button>
-      <button class="eject-button">Eject</button>
+      <div class="controls">
+        <div class="counter">
+          {{> PixelArtAcademy.PixelPad.Apps.Music.Player.Counter}}
+        </div>
+        <div class="label">Cassette player</div>
+        <div class="buttons">
+          <button class="rewind button {{rewindActiveClass}}">Rwnd</button>
+          <button class="fast-forward button {{fastForwardActiveClass}}">FFwd</button>
+          <button class="play button {{playActiveClass}}">Play</button>
+          <button class="stop button">Stop</button>
+          <button class="eject button">Eject</button>
+        </div>
+      </div>
+      <div class="tray {{trayOpenClass}}">
+        <div class="auto-stop">Auto stop</div>
+      </div>
+    </div>
+    <div class="tape-design {{tapeDisplayedClass}} {{music.displayedTape.styleClass}}">
+      <div class="case">
+        <div class="outer"></div>
+        <div class="lid">
+          <div class="closed">
+            <div class="inlay">
+              {{> PixelArtAcademy.PixelPad.Apps.Music.Inlay music.displayedTape}}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

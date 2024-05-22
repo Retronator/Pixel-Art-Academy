@@ -24,10 +24,6 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     "
 
   @initialize()
-  
-  @durationToTapeProgress: (duration) ->
-    # Make it so that the progress is slowly slowing down and reaches 999 at around 60 minutes.
-    duration ** 0.97 / 3
  
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
@@ -61,24 +57,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
       return unless tape = @tape()
       tape?.sides[@state 'sideIndex']?.tracks[@state 'trackIndex']
       
-    @sides = new ComputedField =>
-      return unless tape = @tape()
-      
-      for side in tape.sides
-        startTime = 0
-        
-        tracks = for info, trackIndex in side.tracks
-          track =
-            index: trackIndex
-            info: info
-            startTime: startTime
-            
-          startTime += track.info.duration
-          
-          track
-          
-        title: side.title
-        tracks: tracks
+    @sides = new ComputedField => @tape()?.getSidesWithTapeProgress()
     
     # Tape progress tracks the dimensionless progress along this side of the tape.
     @tapeProgress = new ReactiveField 0
@@ -87,8 +66,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     
     # Create track based on current indices.
     @autorun (computation) =>
-      @_currentTrack?.destroy()
-      @_currentTrack = null
+      @_destroyCurrentTrack()
 
       return unless LOI.adventure.music.enabled()
       return unless tape = @tape()
@@ -110,7 +88,8 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
 
         @_startTime = sides[sideIndex].tracks[trackIndex].startTime
         
-        @play() if @state 'playing'
+        if @state 'playing'
+          LOI.adventure.music.startPlayback @_currentTrack, 0, LM.Interface.MusicFadeDurations.DynamicSoundtrackToMusicAppFadeOut
 
   onDestroyed: ->
     super arguments...
@@ -122,39 +101,54 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     # Disable any ongoing audio.
     @audio.playing false
     @audio.seeking false
+    
+  _destroyCurrentTrack: ->
+    @_currentTrack?.destroy()
+    @_currentTrack = null
   
   setTape: (tape) ->
-    if tape
-      @state 'tapeId', tape._id
-      @state 'sideIndex', 0
-      @state 'trackIndex', 0
-      @state 'currentTime', 0
-      @tapeProgress 0
-      
-    else
-      @stop()
-      @state 'tapeId', null
+    @_destroyCurrentTrack()
+
+    Tracker.nonreactive =>
+      if tape
+        @state 'tapeId', tape._id
+        @state 'sideIndex', 0
+        @state 'trackIndex', 0
+        @state 'currentTime', 0
+        @tapeProgress 0
+        
+      else
+        @stop()
+        @state 'tapeId', null
     
   setTrack: (sideIndex, trackIndex) ->
-    @state 'sideIndex', sideIndex
-    @state 'trackIndex', trackIndex
-    @state 'currentTime', 0
+    Tracker.nonreactive =>
+      @state 'currentTime', 0
+
+      # If the track is already set, just reset the time.
+      if sideIndex is @state('sideIndex') and trackIndex is @state('trackIndex')
+        @_currentTrack?.setCurrentTime 0
+        return
+      
+      @_destroyCurrentTrack()
+    
+      @state 'sideIndex', sideIndex
+      @state 'trackIndex', trackIndex
     
   play: ->
     Tracker.nonreactive =>
-      LOI.adventure.music.startPlayback @_currentTrack, 0, LM.Interface.MusicFadeDurations.DynamicSoundtrackToMusicAppFadeOut
+      return if @state 'playing'
+      
+      LOI.adventure.music.startPlayback @_currentTrack, 0, LM.Interface.MusicFadeDurations.DynamicSoundtrackToMusicAppFadeOut if @_currentTrack
       @state 'playing', true
     
   stop: ->
     Tracker.nonreactive =>
-      LOI.adventure.music.stopPlayback() if LOI.adventure.music.isPlayingPlayback @_currentTrack
+      LOI.adventure.music.stopPlayback() if @_currentTrack and LOI.adventure.music.isPlayingPlayback @_currentTrack
       @state 'playing', false
-
-  update: (appTime) ->
-    return unless @_currentTrack
-    return unless @state 'playing'
-    
-    if @_currentTrack.ended()
+      
+  nextTrack: ->
+    Tracker.nonreactive =>
       # Go to the next track if possible.
       sides = @sides()
       sideIndex = @state 'sideIndex'
@@ -174,11 +168,43 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
           
         else
           # We reached the end of the tape, stop playing.
-          @state 'playing', false
+          @stop()
+    
+  rewindOrPreviousTrack: ->
+    Tracker.nonreactive =>
+      # Rewind if possible.
+      currentTime = @state 'currentTime'
+      @state 'currentTime', 0
+      @_currentTrack.setCurrentTime 0
+      return if currentTime > 1
+      
+      # Go to the previous track if possible.
+      sides = @sides()
+      sideIndex = @state 'sideIndex'
+      trackIndex = @state 'trackIndex'
+      
+      trackIndex--
+      
+      if sides[sideIndex].tracks[trackIndex]
+        @setTrack sideIndex, trackIndex
+      
+      else
+        # Go to the previous side if possible.
+        sideIndex--
+        
+        if sides[sideIndex]
+          @setTrack sideIndex, sides[sideIndex].tracks.length - 1
+    
+  update: (appTime) ->
+    return unless @_currentTrack
+    return unless @state 'playing'
+    
+    if @_currentTrack.ended()
+      @nextTrack()
       
     else
       currentTime = @_currentTrack.currentTime()
       @currentTime currentTime
 
       tapeProgressDuration = @_startTime + currentTime
-      @tapeProgress @constructor.durationToTapeProgress tapeProgressDuration
+      @tapeProgress PAA.Music.Tape.durationToTapeProgress tapeProgressDuration

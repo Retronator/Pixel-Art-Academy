@@ -6,22 +6,31 @@ class AMe.Playback
   
   destroy: ->
     @stop()
+    @_output?.disconnect()
+    @_output = null
   
   ready: ->
     @audioManager.context()
   
-  getSourceNode: ->
+  _getSourceNode: ->
     return @_output if @_output
     
     @_context = @audioManager.context()
     @_output = new GainNode @_context
+    
+  connect: (node) ->
+    sourceNode = @_getSourceNode()
+    sourceNode.connect node
+    
+  disconnect: ->
+    @_output?.disconnect()
 
   start: ->
     @stop()
     
     @_context = @audioManager.context()
 
-    output = @getSourceNode()
+    output = @_getSourceNode()
     @_currentSectionDepenency = new Tracker.Dependency
     
     @currentSection = @composition.initialSection
@@ -71,7 +80,7 @@ class AMe.Playback
     
     @nextSection = section
     @_nextSectionStartTime = @_currentSectionStartTime + @currentSection.duration
-    output = @getSourceNode()
+    output = @_getSourceNode()
     
     @_nextSectionHandle = @nextSection.schedule @_nextSectionStartTime, output
   

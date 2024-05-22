@@ -13,6 +13,7 @@ class PAA.Music.Track
   destroy: ->
     @stop()
     @_output?.disconnect()
+    @_output = null
   
   title: -> @_title
   
@@ -27,12 +28,19 @@ class PAA.Music.Track
   
   ended: -> @_audioElement.ended
   
-  getSourceNode: ->
+  _getSourceNode: ->
     return @_output if @_output
     
     @_context = @audioManager.context()
     @_output = new MediaElementAudioSourceNode @_context,
       mediaElement: @_audioElement
+      
+  connect: (node) ->
+    sourceNode = @_getSourceNode()
+    sourceNode.connect node
+    
+  disconnect: ->
+    @_output?.disconnect()
 
   start: ->
     @_audioElement.play()

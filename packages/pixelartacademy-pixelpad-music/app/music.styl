@@ -1,4 +1,312 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
+plasticOpacity = 0.3
+
 .pixelartacademy-pixelpad-apps-music
-  // TODO
+  position absolute
+  left 50%
+  top 50%
+
+  .origin
+    position absolute
+
+    .selected-tape
+      position absolute
+      z-index 3
+      left -75rem
+      top -51rem
+      opacity 0
+      visibility hidden
+      transform scale(0.8)
+      transition all 0.2s
+      cursor pointer
+
+      &.active
+        opacity 1
+        transition all 0.2s, left 1s
+        visibility visible
+        transform scale(1)
+
+      &.loaded
+        .case .lid .open .cassette .shell
+          left 5rem
+          top 7rem
+          width 137rem
+          height 89rem
+          background-position 0 0
+
+      .case
+        absolute-cover()
+        perspective 600rem
+
+        &:not(.open):hover
+          .lid
+            transform rotateX(10deg)
+            top -2rem
+
+        &.open
+          .lid
+            transform rotateX(180deg)
+            transition all 0.2s
+
+        &.unloading
+          .outer
+            visibility hidden
+
+          .lid .open
+            .under
+            .over
+              visibility hidden
+
+        .outer
+          z-index 1
+
+        .lid
+          z-index 2
+          transform-origin 0 10rem
+          transform-style preserve-3d
+          transition all 0.1s
+
+          .closed
+          .open
+            backface-visibility hidden
+
+          .open
+            position absolute
+            top -3rem
+            left 1rem
+            width 147rem
+            height 97rem
+            transform rotateX(180deg)
+
+            .under
+              position absolute
+              left 6rem
+              bottom 2rem
+              width 135rem
+              height 93rem
+
+              &::after
+                content ''
+                position absolute
+                left -2rem
+                bottom -1rem
+                width 139rem
+                height 96rem
+                background-image image('/pixelartacademy/pixelpad/apps/music/case-big-lid-open-plastic-under.png')
+                opacity plasticOpacity
+
+            .cassette
+              position absolute
+
+              .shell
+                position absolute
+                left 3rem
+                top 7rem
+                width 141rem
+                height 87rem
+                background-size 141rem 176rem
+                background-position 0 -89rem
+
+            .over
+              position absolute
+              left 2rem
+              bottom 1rem
+              width 143rem
+              height 29rem
+
+              &::after
+                content ''
+                position absolute
+                left -2rem
+                bottom -1rem
+                width 147rem
+                height 35rem
+                background-image image('/pixelartacademy/pixelpad/apps/music/case-big-lid-open-plastic-over.png')
+                opacity plasticOpacity
+
+  .tape-design
+    width 149rem
+    height 103rem
+
+    &.c60 .case .lid
+      .closed .inlay
+          background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-c60.png')
+
+      .open
+        .cassette .shell
+          background-image image('/pixelartacademy/pixelpad/apps/music/cassette-c60.png')
+
+        .over
+          background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-open-c60.png')
+
+    &.c90 .case .lid
+      .closed .inlay
+        background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-c90.png')
+
+      .open
+        .cassette .shell
+          background-image image('/pixelartacademy/pixelpad/apps/music/cassette-c90.png')
+
+        .over
+          background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-open-c90.png')
+
+    &.c120 .case .lid
+      .closed .inlay
+        background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-c120.png')
+
+      .open
+        .cassette .shell
+          background-image image('/pixelartacademy/pixelpad/apps/music/cassette-c120.png')
+
+        .over
+          background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-open-c120.png')
+
+    &.c60
+    &.c90
+    &.c120
+      &.loaded
+        .case .lid .open .cassette .shell
+          .side
+            left 14rem
+            top 15rem
+
+          .label
+            left 30rem
+            top 13.5rem
+            transform initial
+
+      .case
+        .lid
+          .closed
+            .inlay
+              color atariCyan(2)
+
+              > .title
+                padding 5rem 13rem 3rem 8rem
+                daily()
+                text-transform uppercase
+
+              .sides
+                display flex
+                list-style none
+                position absolute
+                top 16rem
+                left 0
+                margin 0
+                padding 0
+                small-print()
+
+                .side
+                  position relative
+                  width 70rem
+                  height 83rem
+
+                  &:nth-child(2)
+                    > .title
+                      width 46rem
+
+                  > .title
+                    position absolute
+                    bottom 74rem
+                    left 12rem
+                    width 57rem
+                    text-transform uppercase
+
+                  .tracks
+                    list-style none
+                    position absolute
+                    left 2rem
+                    top 11rem
+                    width 68rem
+                    padding 0
+                    margin 0
+
+                    .track
+                      display flex
+                      align-items flex-end
+
+                      .title
+                        width 55rem
+                        padding 0 1rem
+
+                      .tape-progress
+                        padding-left 1rem
+
+          .open
+            .under
+              background-image image('/pixelartacademy/pixelpad/apps/music/case-big-inlay-open-under.png')
+
+            .cassette
+              .side
+                position absolute
+                left 16rem
+                top 13rem
+                width 12rem
+                typecast()
+                line-height 8rem
+                font-weight bold
+                color atariGray(5)
+                text-align center
+
+              .label
+                position absolute
+                left 32rem
+                top 11.5rem
+                width 92rem
+                height 12.5rem
+                padding 0 1rem
+                small-print()
+                line-height 6rem
+                color atariCyan(2)
+                text-transform uppercase
+                transform scaleY(0.8333)
+                overflow hidden
+
+      &.single-row .case .lid .closed .inlay .sides .side .tracks .track .title
+        height 7rem
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+
+      &.double-column .case .lid .closed .inlay .sides .side .tracks
+        display flex
+        height 70rem
+        flex-direction column
+        flex-wrap wrap
+        align-content space-between
+
+        .track
+          width 28rem
+
+          .title
+            width 15rem
+
+    .case
+      .outer
+        absolute-cover()
+        background-image image('/pixelartacademy/pixelpad/apps/music/case-big-outer.png')
+
+      .lid
+        position absolute
+        top 0
+
+        .closed
+          position absolute
+          left 2rem
+          top 0
+          width 145rem
+          height 103rem
+
+          &::before
+            content ''
+            absolute-cover()
+            background-image image('/pixelartacademy/pixelpad/apps/music/case-big-lid-closed.png')
+            opacity plasticOpacity
+
+          .inlay
+            position absolute
+            left 2rem
+            top 2rem
+            width 141rem
+            height 99rem

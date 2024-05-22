@@ -4,20 +4,29 @@ PAA = PixelArtAcademy
 
 class PAA.Music.Tape extends AM.Document
   @id: -> 'PixelArtAcademy.Music.Tape'
-  # title: the name of this tape
+  # title: optional name of this tape
   # artist: the author's name
   # slug: auto-generated URL identifier of the tape
+  # styleClass: class name added to the tape for styling purposes
   # sides: array with 1 or 2 sides
-  #   title: optional title of this side of the tape
+  #   title: optional name of this side of the tape
   #   tracks: an array of tracks on this side
-  #     title
-  #     duration
-  #     url
+  #     title: name of the track
+  #     duration: length of the track in seconds
+  #     url: location of the audio file to be played for this track
   @Meta
     name: @id()
     fields: =>
-      slug: Document.GeneratedField 'self', ['title', 'artist'], (tape) ->
-        slug = _.kebabCase "#{tape.artist} #{tape.title}"
+      slug: Document.GeneratedField 'self', ['title', 'artist', 'sides'], (tape) ->
+        parts = [tape.artist]
+        
+        if tape.title
+          parts.push tape.title
+          
+        else
+          parts.push side.title for side in tape.sides
+
+        slug = _.kebabCase parts.join ' '
         [tape._id, slug]
       
   @enableDatabaseContent()
@@ -26,3 +35,22 @@ class PAA.Music.Tape extends AM.Document
   
   @all = @subscription 'all'
   @forId = @subscription 'forId'
+  
+  @durationToTapeProgress: (duration) ->
+    # Make it so that the progress is slowly slowing down and reaches 999 at around 60 minutes.
+    duration ** 0.97 / 3
+  
+  getSidesWithTapeProgress: ->
+    # Calculate start times and tape progress markers.
+    for side in @sides
+      startTime = 0
+      
+      title: side.title
+      tracks: for track in side.tracks
+        trackWithTapeProgress = _.extend {}, track,
+          startTime: startTime
+          tapeProgress: @constructor.durationToTapeProgress startTime
+        
+        startTime += Math.ceil track.duration
+
+        trackWithTapeProgress

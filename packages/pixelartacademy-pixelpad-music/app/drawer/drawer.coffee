@@ -13,13 +13,12 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
       drawerOpen: AEc.ValueTypes.Trigger
       caseOpen: AEc.ValueTypes.Trigger
       caseClose: AEc.ValueTypes.Trigger
-      tapeSelect: AEc.ValueTypes.Trigger
       
   constructor: (@music) ->
     super arguments...
 
     @opened = new ReactiveField false
-    @selectedTape = new ReactiveField null
+    @hoveredTape = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -44,15 +43,6 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
         PAA.Music.Tape.documents.findOne tapeSelector
         
       _.without tapes, undefined
-      
-    # Select tape based on URL parameter.
-    @autorun (computation) =>
-      if tapeSlug = AB.Router.getParameter 'parameter3'
-        @selectedTape PAA.Music.Tape.documents.findOne slug: tapeSlug
-      
-      else
-        @audio.caseClose() if Tracker.nonreactive => @selectedTape()
-        @selectedTape null
 
   onRendered: ->
     super arguments...
@@ -70,40 +60,51 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
   openedClass: ->
     'opened' if @opened()
 
-  coveredClass: ->
-    'covered' if @music.tape()
-
-  activeClass: ->
-    'active' if @selectedTape()
-
-  selectedClass: ->
+  tapeSelectedClass: ->
     tape = @currentData()
 
-    'selected' if tape._id is @selectedTape()?._id
-
+    'selected' if tape._id is @music.selectedTape()?._id
+  
+  tapeHoveredClass: ->
+    tape = @currentData()
+  
+    'hovered' if tape._id is @hoveredTape()?._id
+  
   events: ->
     super(arguments...).concat
       'click': @onClick
       'click .tape': @onClickTape
-      'click .selected-tape': @onClickSelectedTape
+      'mouseenter .tape': @onMouseEnterTape
+      'mouseleave .tape': @onMouseLeaveTape
 
   onClick: (event) ->
-    return if @music.tape()
-    return unless @selectedTape()
+    return if @music.loadedTape()
+    return unless @music.selectedTape()
 
     $target = $(event.target)
     return if $target.closest('.selected-tape').length
+    return if $target.closest('.tape').length
 
     @deselectTape()
 
   onClickTape: (event) ->
     tape = @currentData()
+    
+    if AB.Router.getParameter 'parameter3'
+      AB.Router.changeParameter 'parameter3', null
+      await _.waitForSeconds 0.2
+      
     AB.Router.changeParameter 'parameter3', tape.slug
-    
-    @audio.caseOpen()
+
+    # Start tape on side A at the beginning.
+    PAA.PixelPad.Systems.Music.state 'sideIndex', 0
+    PAA.PixelPad.Systems.Music.state 'trackIndex', 0
+    PAA.PixelPad.Systems.Music.state 'currentTime', 0
   
-  onClickSelectedTape: (event) ->
-    AB.Router.changeParameter 'parameter4', 'play'
-    @music.system().setTape @selectedTape()
+  onMouseEnterTape: (event) ->
+    tape = @currentData()
     
-    @audio.tapeSelect()
+    @hoveredTape tape
+  
+  onMouseLeaveTape: (event) ->
+    @hoveredTape null
