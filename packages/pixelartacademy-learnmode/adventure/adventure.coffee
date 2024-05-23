@@ -69,6 +69,8 @@ class LM.Adventure extends PAA.Adventure
     super arguments...
     
   inAudioMenu: ->
+    return unless LOI.adventureInitialized()
+    
     if LOI.adventure.menu.visible()
       LOI.adventure.menu.items.inAudio()
       

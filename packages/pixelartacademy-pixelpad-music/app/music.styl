@@ -23,17 +23,23 @@ plasticOpacity = 0.3
 
       &.active
         opacity 1
-        transition all 0.2s, left 1s
         visibility visible
         transform scale(1)
 
       &.loaded
-        .case .lid .open .cassette .shell
-          left 5rem
-          top 7rem
-          width 137rem
-          height 89rem
-          background-position 0 0
+        .case .lid
+          // Prevent animation when tape starts as loaded.
+          transition none !important
+
+          .open .cassette .shell
+            left 5rem
+            top 7rem
+            width 137rem
+            height 89rem
+            background-position 0 0
+
+            .spools
+              display block
 
       .case
         absolute-cover()
@@ -65,6 +71,7 @@ plasticOpacity = 0.3
           z-index 2
           transform-origin 0 10rem
           transform-style preserve-3d
+          transform rotateX(0)
           transition all 0.1s
 
           .closed
@@ -108,6 +115,22 @@ plasticOpacity = 0.3
                 background-size 141rem 176rem
                 background-position 0 -89rem
 
+                .spools
+                  display none
+
+                  .spool
+                    position absolute
+                    top 34rem
+                    width 14rem
+                    height 14rem
+                    background image('/pixelartacademy/pixelpad/apps/music/cassette-spool-rotation.png') 0 0 / 84rem 14rem
+
+                    &.left
+                      left 32rem
+
+                    &.right
+                      left 91rem
+
             .over
               position absolute
               left 2rem
@@ -124,6 +147,10 @@ plasticOpacity = 0.3
                 height 35rem
                 background-image image('/pixelartacademy/pixelpad/apps/music/case-big-lid-open-plastic-over.png')
                 opacity plasticOpacity
+
+          .closed
+            // HACK: We need this for backface visibility to apply on desktop.
+            transform rotateX(0)
 
   .tape-design
     width 149rem

@@ -4,13 +4,34 @@ Document.startup ->
   return if Meteor.settings.startEmpty
 
   addTape = (tape) ->
-    PAA.Music.Tape.documents.upsert
-      title: tape.title
-      artist: tape.artist
-    ,
-      $set:
-        tape
+    # See if we already have this tape.
+    slug = PAA.Music.Tape.createSlug tape
+
+    if existingTape = PAA.Music.Tape.documents.findOne {slug}
+      # See if any of the fields have changed.
+      changed = false
       
+      for property, value of tape
+        unless EJSON.equals value, existingTape[property]
+          changed = true
+          break
+          
+      return unless changed
+    
+      # Update last edit time as well.
+      tape.lastEditTime = new Date
+      
+      PAA.Music.Tape.documents.update existingTape._id,
+        $set: tape
+    
+    else
+      # This tape is not yet present.
+      PAA.Music.Tape.documents.upsert
+        title: tape.title
+        artist: tape.artist
+      ,
+        $set: tape
+        
   duration = (minutes, seconds) -> minutes * 60 + seconds
 
   addTape
@@ -53,86 +74,86 @@ Document.startup ->
       tracks: [
         title: 'Salt Water'
         duration: duration 3, 46
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 01 Salt Water.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 01 Salt Water.mp3'
       ,
         title: 'Hot Chocolate'
         duration: duration 3, 41
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 02 Hot Chocolate.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 02 Hot Chocolate.mp3'
       ,
         title: 'Galápagos Penguin'
         duration: duration 4, 8
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 03 Galápagos Penguin.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 03 Galapagos Penguin.mp3'
       ,
         title: 'An Old Computer Game You Can Barely Remember'
         duration: duration 3, 19
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 04 An Old Computer Game You Can Barely Remember.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 04 An Old Computer Game You Can Barely Remember.mp3'
       ,
         title: 'Moments of Microsleep'
         duration: duration 2, 59
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 05 Moments of Microsleep.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 05 Moments of Microsleep.mp3'
       ,
         title: 'Drizzle'
         duration: duration 3, 40
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 06 Drizzle.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 06 Drizzle.mp3'
       ,
         title: 'The Water\'s Warm, The Air Is Cool (feat. Kissonance)'
         duration: duration 4, 27
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 07 The Water\'s Warm, The Air Is Cool (feat. Kissonance).mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 07 The Waters Warm, The Air Is Cool (feat. Kissonance).mp3'
       ,
         title: 'Nostalgia'
         duration: duration 3, 12
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 08 Nostalgia.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 08 Nostalgia.mp3'
       ,
         title: 'From the Sauna to the Snow'
         duration: duration 3, 32
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 09 From the Sauna to the Snow.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 09 From the Sauna to the Snow.mp3'
       ,
         title: 'Thank You'
         duration: duration 4, 10
-        url: '/pixelartacademy/music/glaciære - shower/glaciære - shower - 10 Thank You.mp3'
+        url: '/pixelartacademy/music/glaciaere - shower/glaciaere - shower - 10 Thank You.mp3'
       ]
     ,
       title: 'two months of moments'
       tracks: [
         title: 'Into the Maelstrom'
         duration: duration 3, 57
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 01 Into the Maelstrom.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 01 Into the Maelstrom.mp3'
       ,
         title: 'Be Still My Heart'
         duration: duration 5, 30
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 02 Be Still My Heart.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 02 Be Still My Heart.mp3'
       ,
         title: 'Bittersweet'
         duration: duration 3, 5
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 03 Bittersweet.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 03 Bittersweet.mp3'
       ,
         title: 'Stars Forced To Shine'
         duration: duration 3, 38
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 04 Stars Forced To Shine.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 04 Stars Forced To Shine.mp3'
       ,
         title: 'What You Felt Deep Inside'
         duration: duration 3, 16
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 05 What You Felt Deep Inside.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 05 What You Felt Deep Inside.mp3'
       ,
         title: 'When Your Eyes Meet From Across the Bar'
         duration: duration 2, 15
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 06 When Your Eyes Meet From Across the Bar.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 06 When Your Eyes Meet From Across the Bar.mp3'
       ,
         title: 'Confidence, Baby'
         duration: duration 3, 36
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 07 Confidence, Baby.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 07 Confidence, Baby.mp3'
       ,
         title: 'The Sun Is Rising'
         duration: duration 4, 10
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 08 The Sun Is Rising.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 08 The Sun Is Rising.mp3'
       ,
         title: 'Blue Raspberry Flavoured Lip Gloss'
         duration: duration 4, 24
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 09 Blue Raspberry Flavoured Lip Gloss.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 09 Blue Raspberry Flavoured Lip Gloss.mp3'
       ,
         title: 'The Next Lips That Touch Mine'
         duration: duration 4, 54
-        url: '/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 10 The Next Lips That Touch Mine.mp3'
+        url: '/pixelartacademy/music/glaciaere - two months of moments/glaciaere - two months of moments - 10 The Next Lips That Touch Mine.mp3'
       ,
       ]
     ]
@@ -303,7 +324,7 @@ Document.startup ->
       ,
         title: 'Someone Else\'s Memories'
         duration: duration 3, 44
-        url: '/pixelartacademy/music/Revolution Void - The Politics of Desire/03 Revolution Void - Someone Else\'s Memories.mp3'
+        url: '/pixelartacademy/music/Revolution Void - The Politics of Desire/03 Revolution Void - Someone Elses Memories.mp3'
       ,
         title: 'Tree Tenants'
         duration: duration 4, 50
@@ -479,7 +500,7 @@ Document.startup ->
       ,
         title: 'It Can\'t Be Bargained With'
         duration: duration 3, 5
-        url: '/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 05 It Can\'t Be Bargained With.mp3'
+        url: '/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 05 It Cant Be Bargained With.mp3'
       ,
         title: 'Cracked Streets And Broken Windows'
         duration: duration 3, 57

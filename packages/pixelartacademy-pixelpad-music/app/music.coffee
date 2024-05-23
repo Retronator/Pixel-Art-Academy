@@ -36,6 +36,9 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     Left:
       Case: 0
       Player: -78
+  
+  @spoolRotationSpeedLeft = 20 # frames / second
+  @spoolRotationSpeedRight = 15 # frames / second
 
   constructor: ->
     super arguments...
@@ -47,6 +50,9 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
 
   onCreated: ->
     super arguments...
+    
+    @app = @ancestorComponentOfType AB.App
+    @app.addComponent @
     
     @system = new ComputedField =>
       return unless LOI.adventure.ready()
@@ -114,6 +120,10 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     @$origin = @$ '.origin'
     @$case = @$ '.selected-tape .case'
     @$cassette = @$ '.selected-tape .cassette'
+    @$cassetteSpoolLeft = @$ '.selected-tape .cassette .spool.left'
+    @$cassetteSpoolRight = @$ '.selected-tape .cassette .spool.right'
+    
+    @_resetSpoolRotation()
     
     # If we have a tape inserted, start at the player.
     @autorun (computation) =>
@@ -136,9 +146,31 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
         @$cassette.css
           left: "#{@constructor.CassettePositions.Left.Case}rem"
           top: "#{@constructor.CassettePositions.Top.Case}rem"
-        
+          
+  onDestroyed: ->
+    super arguments...
+    
+    @app.removeComponent @
+    
+  _resetSpoolRotation: ->
+    @spoolRotationLeft = 0
+    @spoolFrameIndexLeft = 0
+    @spoolRotationRight = 3
+    @spoolFrameIndexRight = 3
+    @_updateSpoolFrames()
+    
+  _updateSpoolFrames: ->
+    @_updateSpoolFrame @$cassetteSpoolLeft, @spoolFrameIndexLeft
+    @_updateSpoolFrame @$cassetteSpoolRight, @spoolFrameIndexRight
+    
+  _updateSpoolFrame: ($spool, frameIndex) ->
+    $spool.css
+      backgroundPositionX: "#{frameIndex * 14}rem"
+      
   loadSelectedTape: ->
     @animating true
+    
+    @_resetSpoolRotation()
     
     @$case.addClass 'open'
     
@@ -270,6 +302,22 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     # Inform that we've handled the back button.
     true
   
+  update: (appTime) ->
+    return unless LOI.adventure.music.enabled()
+    return unless PAA.PixelPad.Systems.Music.state 'playing'
+    
+    @spoolRotationLeft += @constructor.spoolRotationSpeedLeft * appTime.elapsedAppTime
+    newSpoolFrameIndexLeft = Math.floor(@spoolRotationLeft) % 6
+    unless newSpoolFrameIndexLeft is @spoolFrameIndexLeft
+      @spoolFrameIndexLeft = newSpoolFrameIndexLeft
+      @_updateSpoolFrame @$cassetteSpoolLeft, @spoolFrameIndexLeft
+    
+    @spoolRotationRight += @constructor.spoolRotationSpeedRight * appTime.elapsedAppTime
+    newSpoolFrameIndexRight = Math.floor(@spoolRotationRight) % 6
+    unless newSpoolFrameIndexRight is @spoolFrameIndexRight
+      @spoolFrameIndexRight = newSpoolFrameIndexRight
+      @_updateSpoolFrame @$cassetteSpoolRight, @spoolFrameIndexRight
+    
   events: ->
     super(arguments...).concat
       'click .selected-tape': @onClickSelectedTape

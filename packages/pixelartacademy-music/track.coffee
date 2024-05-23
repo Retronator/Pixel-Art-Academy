@@ -3,13 +3,28 @@ PAA = PixelArtAcademy
 
 class PAA.Music.Track
   constructor: (@audioManager, @_title, @_artist, @url) ->
-    @_audioElement = new Audio @url
+    @_audioElement = new Audio
     
     @canPlayThrough = new ReactiveField false
     
     @_audioElement.oncanplaythrough = =>
       @canPlayThrough true
   
+    # HACK: Load through a request so that it works on desktop, otherwise no valid source is found.
+    request = new XMLHttpRequest
+    request.open 'GET', @url, true
+    request.responseType = 'arraybuffer'
+
+    request.onload = =>
+      # Make sure the URL points to an audio MIME type.
+      contentType = request.getResponseHeader 'content-type'
+      return unless _.startsWith contentType, 'audio'
+      
+      blob = new Blob [request.response], type: contentType
+      @_audioElement.src = URL.createObjectURL blob
+      
+    request.send()
+    
   destroy: ->
     @stop()
     @_output?.disconnect()

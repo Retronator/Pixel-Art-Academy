@@ -17,19 +17,21 @@ class PAA.Music.Tape extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      slug: Document.GeneratedField 'self', ['title', 'artist', 'sides'], (tape) ->
-        parts = [tape.artist]
-        
-        if tape.title
-          parts.push tape.title
-          
-        else
-          parts.push side.title for side in tape.sides
-
-        slug = _.kebabCase parts.join ' '
-        [tape._id, slug]
+      slug: Document.GeneratedField 'self', ['title', 'artist', 'sides'], (tape) =>
+        [tape._id, @createSlug tape]
       
   @enableDatabaseContent()
+  
+  @createSlug: (tape) ->
+    parts = [tape.artist]
+    
+    if tape.title
+      parts.push tape.title
+    
+    else
+      parts.push side.title for side in tape.sides
+    
+    _.kebabCase parts.join ' '
   
   # Subscriptions
   
