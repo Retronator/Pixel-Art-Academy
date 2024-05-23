@@ -47,3 +47,9 @@ class PAA.Music.Track
     
   stop: ->
     @_audioElement.pause()
+    
+  pause: ->
+    @_audioElement.pause()
+
+  resume: ->
+    @_audioElement.play()

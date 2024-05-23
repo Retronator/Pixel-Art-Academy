@@ -99,10 +99,9 @@ class LOI.Music.PlaybackChannel
       @gainNode.gain.setValueAtTime 0, currentTime
   
   resume: (fadeIn = 0) ->
-    unless @_ready
-      @_onReadyPaused = false
-      return
-      
+    @_onReadyPaused = false
+    return unless @_ready
+    
     playback = @playback()
     return unless playback
     return if @_stoppingTime

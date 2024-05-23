@@ -6,13 +6,6 @@ LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
 
 class LM.Interface extends LM.Interface
-  @MusicFadeDurations =
-    InGameMusicModeOffFadeOut: 5
-    InGameMusicModeOffFadeIn: 3
-    MenuFadeOut: 0.5
-    MenuFadeIn: 3
-    DynamicSoundtrackToMusicAppFadeOut: 1
-  
   onCreated: ->
     super arguments...
     
@@ -159,7 +152,7 @@ class LM.Interface extends LM.Interface
       Tracker.nonreactive =>
         if dynamicSoundtrackPlaying
           if LOI.adventure.music.isPlayingPlayback @musicPlayback
-            LOI.adventure.music.resume @constructor.MusicFadeDurations.InGameMusicModeOffFadeIn
+            LOI.adventure.music.resume PAA.Music.FadeDurations.InGameMusicModeOffFadeIn
           
           else
             # Start the music after a short amount of silence.
@@ -167,12 +160,19 @@ class LM.Interface extends LM.Interface
               LOI.adventure.music.startPlayback @musicPlayback
               @_musicStartTimeout = null
             ,
-              2000
+              PAA.Music.StartTimeoutDuration * 1000
           
-        else
+        else if LOI.adventure.music.isPlayingPlayback @musicPlayback
           Meteor.clearTimeout @_musicStartTimeout
-          LOI.adventure.music.pause @constructor.MusicFadeDurations.InGameMusicModeOffFadeOut if LOI.adventure.music.isPlayingPlayback @musicPlayback
-        
+  
+          if LOI.adventure.currentLocationId() is LM.Locations.Play.id()
+            # While in play, we only need to pause the music so it can continue while being temporarily disabled.
+            LOI.adventure.music.pause PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
+            
+          else
+            # Outside of play we completely stop the music so it gets restarted the next time around.
+            LOI.adventure.music.stopPlayback PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
+      
     # Trigger events.
     @autorun (computation) =>
       # When no app is opened, reset the music to default.
@@ -238,14 +238,20 @@ class LM.Interface extends LM.Interface
       pixelPad?.os.currentApp()?.inGameMusicMode?() is @constructor.InGameMusicMode.Off
       
     @autorun (computation) =>
-      inGameMusicModeOff = @inGameMusicModeOff()
-      
-      if inGameMusicModeOff
-        LOI.adventure.music.pause @constructor.MusicFadeDurations.InGameMusicModeOffFadeOut
+      if @inGameMusicModeOff()
+        LOI.adventure.music.pause PAA.Music.FadeDurations.InGameMusicModeOffFadeOut
         
       else
-        LOI.adventure.music.resume @constructor.MusicFadeDurations.InGameMusicModeOffFadeIn
-
+        LOI.adventure.music.resume PAA.Music.FadeDurations.InGameMusicModeOffFadeIn
+        
+    # Pause music in the menus, except on the audio screen.
+    @autorun (computation) =>
+      if @audioOffInMenus()
+        LOI.adventure.music.pause PAA.Music.FadeDurations.MenuFadeOut
+      
+      else
+        LOI.adventure.music.resume PAA.Music.FadeDurations.MenuFadeIn
+      
   onDestroyed: ->
     super arguments...
     

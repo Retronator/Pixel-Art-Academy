@@ -56,22 +56,23 @@ class LM.Interface extends LOI.Interface
     @constructor.Audio.load LOI.adventure.audioManager
     
     # Play ambient in play mode, but not in the menus, except in the audio section. We have an additional extended
-    # silence during quitting when the game transitions from the play to the main menu location and audio would still be played as the
-    # adventure menu fades out before location switch.
+    # silence during quitting when the game transitions from the play to the main menu location and audio would still
+    # be played as the adventure menu fades out before location switch.
     @quitting = new ReactiveField false
     
-    @autorun (computation) =>
+    @audioOffInMenus = new ComputedField =>
       if @audio.focusPoint.value() is @constructor.FocusPoints.Play
         if LOI.adventure.menu.visible()
-          playAmbient = LOI.adventure.menu.items.inAudio()
+          not LOI.adventure.menu.items.inAudio()
           
         else
-          playAmbient = not @quitting()
+          @quitting()
       
       else
-        playAmbient = LOI.adventure.currentLocation()?.menuItems?.inAudio()
-      
-      @audio.playAmbient playAmbient
+        not LOI.adventure.currentLocation()?.menuItems?.inAudio()
+    
+    @autorun (computation) =>
+      @audio.playAmbient not @audioOffInMenus()
     
   onRendered: ->
     super arguments...

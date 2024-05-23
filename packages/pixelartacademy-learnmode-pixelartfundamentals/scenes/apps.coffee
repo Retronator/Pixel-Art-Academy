@@ -10,5 +10,5 @@ class LM.PixelArtFundamentals.Apps extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Apps.Music
+    PAA.PixelPad.Apps.Music if LM.PixelArtFundamentals.Start.finished()
   ]

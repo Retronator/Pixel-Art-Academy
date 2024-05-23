@@ -53,10 +53,6 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     # Current time tracks the current song's progress in seconds. We use lazy updates to minimize state reactivity.
     @currentTime = @state.field 'currentTime', lazyUpdates: true
     
-    @currentTrackInfo = new ComputedField =>
-      return unless tape = @tape()
-      tape?.sides[@state 'sideIndex']?.tracks[@state 'trackIndex']
-      
     @sides = new ComputedField => @tape()?.getSidesWithTapeProgress()
     
     # Tape progress tracks the dimensionless progress along this side of the tape.
@@ -67,6 +63,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     # Create track based on current indices.
     @autorun (computation) =>
       @_destroyCurrentTrack()
+      Meteor.clearTimeout @_musicStartTimeout
 
       return unless LOI.adventure.music.enabled()
       return unless tape = @tape()
@@ -89,7 +86,15 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
         @_startTime = sides[sideIndex].tracks[trackIndex].startTime
         
         if @state 'playing'
-          LOI.adventure.music.startPlayback @_currentTrack, 0, LM.Interface.MusicFadeDurations.DynamicSoundtrackToMusicAppFadeOut
+          # If the song was already playing and it's not at the start, we must fade into it after the starting delay.
+          if currentTime
+            @_musicStartTimeout = Meteor.setTimeout =>
+              LOI.adventure.music.startPlayback @_currentTrack, PAA.Music.FadeDurations.PrePlayingMusicOnLoadFadeIn
+            ,
+              PAA.Music.StartTimeoutDuration * 1000
+            
+          else
+            LOI.adventure.music.startPlayback @_currentTrack, 0, PAA.Music.FadeDurations.DynamicSoundtrackToMusicAppFadeOut
 
   onDestroyed: ->
     super arguments...
@@ -97,6 +102,8 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     @app.removeComponent @
     
     @_currentTrack?.destroy()
+    
+    Meteor.clearTimeout @_musicStartTimeout
 
     # Disable any ongoing audio.
     @audio.playing false
@@ -139,7 +146,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
     Tracker.nonreactive =>
       return if @state 'playing'
       
-      LOI.adventure.music.startPlayback @_currentTrack, 0, LM.Interface.MusicFadeDurations.DynamicSoundtrackToMusicAppFadeOut if @_currentTrack
+      LOI.adventure.music.startPlayback @_currentTrack, 0, PAA.Music.FadeDurations.DynamicSoundtrackToMusicAppFadeOut if @_currentTrack
       @state 'playing', true
     
   stop: ->

@@ -5,7 +5,12 @@ PAA = PixelArtAcademy
 Pinball = PAA.Pixeltosh.Programs.Pinball
 
 class Pinball.Assets
-  class @Ball extends PAA.Practice.Project.Asset.Bitmap
+  class @Asset extends PAA.Practice.Project.Asset.Bitmap
+    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
+    
+    backgroundColor: -> new THREE.Color '#a6cafe'
+    
+  class @Ball extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Ball'
     
     @displayName: -> "Ball"
@@ -16,13 +21,12 @@ class Pinball.Assets
     """
     
     @fixedDimensions: -> width: 7, height: 7
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ball.png'
     
     @initialize()
   
-  class @Plunger extends PAA.Practice.Project.Asset.Bitmap
+  class @Plunger extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Plunger'
     
     @displayName: -> "Plunger"
@@ -32,13 +36,12 @@ class Pinball.Assets
     """
     
     @fixedDimensions: -> width: 15, height: 30
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/plunger.png'
     
     @initialize()
   
-  class @Playfield extends PAA.Practice.Project.Asset.Bitmap
+  class @Playfield extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Playfield'
     
     @displayName: -> "Playfield"
@@ -49,13 +52,12 @@ class Pinball.Assets
     """
 
     @fixedDimensions: -> width: 180, height: 200
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
     
     @initialize()
 
-  class @GobbleHole extends PAA.Practice.Project.Asset.Bitmap
+  class @GobbleHole extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.GobbleHole'
 
     @displayName: -> "Gobble hole"
@@ -67,13 +69,12 @@ class Pinball.Assets
     """
 
     @fixedDimensions: -> width: 50, height: 50
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
   
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
     
     @initialize()
 
-  class @BallTrough extends PAA.Practice.Project.Asset.Bitmap
+  class @BallTrough extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.BallTrough'
 
     @displayName: -> "Ball trough"
@@ -84,13 +85,12 @@ class Pinball.Assets
     """
 
     @fixedDimensions: -> width: 100, height: 50
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
 
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/balltrough.png'
     
     @initialize()
 
-  class @Bumper extends PAA.Practice.Project.Asset.Bitmap
+  class @Bumper extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Bumper'
 
     @displayName: -> "Bumper"
@@ -100,7 +100,6 @@ class Pinball.Assets
     """
     
     @fixedDimensions: -> width: 30, height: 30
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
     
@@ -112,7 +111,7 @@ class Pinball.Assets
       pixelArtScaling: true
       pixelArtEvaluation: {}
 
-  class @Gate extends PAA.Practice.Project.Asset.Bitmap
+  class @Gate extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Gate'
 
     @displayName: -> "Gate"
@@ -123,13 +122,12 @@ class Pinball.Assets
     """
 
     @fixedDimensions: -> width: 20, height: 20
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gate.png'
     
     @initialize()
 
-  class @Flipper extends PAA.Practice.Project.Asset.Bitmap
+  class @Flipper extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Flipper'
 
     @displayName: -> "Flipper"
@@ -140,13 +138,12 @@ class Pinball.Assets
     """
 
     @fixedDimensions: -> width: 30, height: 30
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/flipper.png'
     
     @initialize()
 
-  class @SpinningTarget extends PAA.Practice.Project.Asset.Bitmap
+  class @SpinningTarget extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.SpinningTarget'
 
     @displayName: -> "Spinning target"
@@ -156,7 +153,6 @@ class Pinball.Assets
     """
 
     @fixedDimensions: -> width: 20, height: 20
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/spinningtarget.png'
     

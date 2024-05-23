@@ -51,7 +51,11 @@ class LOI.Music
       @nextPlaybackChannel.resume fadeIn
   
   isPlayingPlayback: (playback) ->
-    @currentPlaybackChannel.playback() is playback or @nextPlaybackChannel.playback() is playback
+    if nextPlayback = @nextPlaybackChannel.playback()
+      nextPlayback is playback
+    
+    else
+      @currentPlaybackChannel.playback() is playback
   
   update: (appTime) ->
     @currentPlaybackChannel.update appTime

@@ -79,7 +79,7 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
         @setFixedPixelPadSize 330, 204
 
       else
-        @setFixedPixelPadSize 380, 300
+        @setFixedPixelPadSize 380, 260
         
     # Set parameters if music system has an active tape.
     @autorun (computation) =>
