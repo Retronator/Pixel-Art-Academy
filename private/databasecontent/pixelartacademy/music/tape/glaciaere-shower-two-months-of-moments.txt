@@ -1,0 +1,27 @@
+shower / two months of moments by glaciære
+
+SIDE A: shower
+Salt Water
+Hot Chocolate
+Galápagos Penguin
+An Old Computer Game You Can Barely Remember
+Moments of Microsleep
+Drizzle
+The Water's Warm, The Air Is Cool (feat. Kissonance)
+Nostalgia
+From the Sauna to the Snow
+Thank You
+
+SIDE B: two months of moments
+Into the Maelstrom
+Be Still My Heart
+Bittersweet
+Stars Forced To Shine
+What You Felt Deep Inside
+When Your Eyes Meet From Across the Bar
+Confidence, Baby
+The Sun Is Rising
+Blue Raspberry Flavoured Lip Gloss
+The Next Lips That Touch Mine
+
+{"_id":"aa4sjxvDPHEqYnYai","artist":"glaciære","sides":[{"title":"shower","tracks":[{"title":"Salt Water","duration":226,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 01 Salt Water.mp3"},{"title":"Hot Chocolate","duration":221,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 02 Hot Chocolate.mp3"},{"title":"Galápagos Penguin","duration":248,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 03 Galápagos Penguin.mp3"},{"title":"An Old Computer Game You Can Barely Remember","duration":199,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 04 An Old Computer Game You Can Barely Remember.mp3"},{"title":"Moments of Microsleep","duration":179,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 05 Moments of Microsleep.mp3"},{"title":"Drizzle","duration":220,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 06 Drizzle.mp3"},{"title":"The Water's Warm, The Air Is Cool (feat. Kissonance)","duration":267,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 07 The Water's Warm, The Air Is Cool (feat. Kissonance).mp3"},{"title":"Nostalgia","duration":192,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 08 Nostalgia.mp3"},{"title":"From the Sauna to the Snow","duration":212,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 09 From the Sauna to the Snow.mp3"},{"title":"Thank You","duration":250,"url":"/pixelartacademy/music/glaciære - shower/glaciære - shower - 10 Thank You.mp3"}]},{"title":"two months of moments","tracks":[{"title":"Into the Maelstrom","duration":237,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 01 Into the Maelstrom.mp3"},{"title":"Be Still My Heart","duration":330,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 02 Be Still My Heart.mp3"},{"title":"Bittersweet","duration":185,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 03 Bittersweet.mp3"},{"title":"Stars Forced To Shine","duration":218,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 04 Stars Forced To Shine.mp3"},{"title":"What You Felt Deep Inside","duration":196,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 05 What You Felt Deep Inside.mp3"},{"title":"When Your Eyes Meet From Across the Bar","duration":135,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 06 When Your Eyes Meet From Across the Bar.mp3"},{"title":"Confidence, Baby","duration":216,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 07 Confidence, Baby.mp3"},{"title":"The Sun Is Rising","duration":250,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 08 The Sun Is Rising.mp3"},{"title":"Blue Raspberry Flavoured Lip Gloss","duration":264,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 09 Blue Raspberry Flavoured Lip Gloss.mp3"},{"title":"The Next Lips That Touch Mine","duration":294,"url":"/pixelartacademy/music/glaciære - two months of moments/glaciære - two months of moments - 10 The Next Lips That Touch Mine.mp3"}]}],"styleClass":"c90 single-row","_schema":"1.0.0","slug":"glaciaere-shower-two-months-of-moments","lastEditTime":{"$date":1716446312249}}

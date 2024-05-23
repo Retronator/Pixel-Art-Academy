@@ -1,0 +1,23 @@
+Stellar Descent by State Azure
+
+SIDE A
+Stellar Drift
+Archetype
+Etheric Labyrinth
+Serpentine
+The Roche Limit
+A Function of Time
+Fractal Life
+The Tesseract
+
+SIDE B
+Star Cascade
+Tarantula
+Procyon Sphere
+Domain of the Resonant Heart
+Sublunar
+Heliopulse
+Chase the Earth
+Whispers of Stars
+
+{"_id":"xCYw4cMm7PHDgTiE9","artist":"State Azure","title":"Stellar Descent","sides":[{"tracks":[{"title":"Stellar Drift","duration":292,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 01 Stellar Drift.mp3"},{"title":"Archetype","duration":355,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 02 Archetype.mp3"},{"title":"Etheric Labyrinth","duration":504,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 03 Etheric Labyrinth.mp3"},{"title":"Serpentine","duration":503,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 04 Serpentine.mp3"},{"title":"The Roche Limit","duration":409,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 05 The Roche Limit.mp3"},{"title":"A Function of Time","duration":448,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 06 A Function of Time.mp3"},{"title":"Fractal Life","duration":337,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 07 Fractal Life.mp3"},{"title":"The Tesseract","duration":434,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 08 The Tesseract.mp3"}]},{"tracks":[{"title":"Star Cascade","duration":304,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 09 Star Cascade.mp3"},{"title":"Tarantula","duration":398,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 10 Tarantula.mp3"},{"title":"Procyon Sphere","duration":366,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 11 Procyon Sphere.mp3"},{"title":"Domain of the Resonant Heart","duration":377,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 12 Domain of the Resonant Heart.mp3"},{"title":"Sublunar","duration":408,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 13 Sublunar.mp3"},{"title":"Heliopulse","duration":431,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 14 Heliopulse.mp3"},{"title":"Chase the Earth","duration":366,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 15 Chase the Earth.mp3"},{"title":"Whispers of Stars","duration":407,"url":"/pixelartacademy/music/State Azure - Stellar Descent/State Azure - Stellar Descent - 16 Whispers of Stars.mp3"}]}],"styleClass":"c120 single-row","_schema":"1.0.0","slug":"state-azure-stellar-descent","lastEditTime":{"$date":1716446312261}}

@@ -1,0 +1,42 @@
+Resting State by HOME
+
+SIDE A
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+
+SIDE B
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+
+{"_id":"HET94D8Xwi22d9PfS","artist":"HOME","title":"Resting State","sides":[{"tracks":[{"title":"1","duration":82,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 01 1.mp3"},{"title":"2","duration":107,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 02 2.mp3"},{"title":"3","duration":56,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 03 3.mp3"},{"title":"4","duration":81,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 04 4.mp3"},{"title":"5","duration":77,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 05 5.mp3"},{"title":"6","duration":82,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 06 6.mp3"},{"title":"7","duration":86,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 07 7.mp3"},{"title":"8","duration":197,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 08 8.mp3"},{"title":"9","duration":175,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 09 9.mp3"},{"title":"10","duration":84,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 10 10.mp3"},{"title":"11","duration":97,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 11 11.mp3"},{"title":"12","duration":138,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 12 12.mp3"},{"title":"13","duration":73,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 13 13.mp3"},{"title":"14","duration":81,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 14 14.mp3"},{"title":"15","duration":99,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 15 15.mp3"},{"title":"16","duration":32,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 16 16.mp3"},{"title":"17","duration":91,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 17 17.mp3"}]},{"tracks":[{"title":"18","duration":93,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 18 18.mp3"},{"title":"19","duration":85,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 19 19.mp3"},{"title":"20","duration":93,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 20 20.mp3"},{"title":"21","duration":131,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 21 21.mp3"},{"title":"22","duration":85,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 22 22.mp3"},{"title":"23","duration":113,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 23 23.mp3"},{"title":"24","duration":93,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 24 24.mp3"},{"title":"25","duration":54,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 25 25.mp3"},{"title":"26","duration":58,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 26 26.mp3"},{"title":"27","duration":56,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 27 27.mp3"},{"title":"28","duration":27,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 28 28.mp3"},{"title":"29","duration":97,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 29 29.mp3"},{"title":"30","duration":105,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 30 30.mp3"},{"title":"31","duration":51,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 31 31.mp3"},{"title":"32","duration":112,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 32 32.mp3"},{"title":"33","duration":112,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 33 33.mp3"},{"title":"34","duration":98,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 34 34.mp3"},{"title":"35","duration":130,"url":"/pixelartacademy/music/HOME - Resting State/HOME - Resting State - 35 35.mp3"}]}],"styleClass":"c60 double-column","_schema":"1.0.0","slug":"home-resting-state","lastEditTime":{"$date":1716446312251}}

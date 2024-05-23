@@ -22,17 +22,21 @@ class PAA.Music.Tape extends PAA.Music.Tape
     @lastEditTime ?= new Date()
 
     # The content is a list of all the tracks plus the JSON information.
-    content = ""
-    content += "#{title} by #{author}\n\n"
+    if @title
+      content = @title
+      
+    else
+      content = "#{@sides[0].title} / #{@sides[1].title}"
+      
+    content += " by #{@artist}\n\n"
     
-    for side in [@sideA, @sideB]
-      content += "Side #{if side is @sideA then "A" else "B"}"
+    for side, sideIndex in @sides
+      content += "SIDE #{if sideIndex is 0 then "A" else "B"}"
       content += ": #{side.title}" if side.title
       content += "\n"
       
-      for artwork in side.artworks
-        artwork.refresh()
-        content += "#{artwork.title}\n"
+      for track in side.tracks
+        content += "#{track.title}\n"
       
       content += "\n"
 
