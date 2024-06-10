@@ -13,7 +13,7 @@ Package.describe({
 Npm.depends({
   'pngjs': '2.3.0',
   'fast-png': '4.0.1',
-  'canvas': '2.6.1'
+  'canvas': '2.11.2'
 });
 
 Package.onUse(function(api) {

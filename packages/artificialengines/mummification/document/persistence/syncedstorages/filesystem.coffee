@@ -25,12 +25,18 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     # Send all profiles to persistence.
     profileJsons = await Desktop.call 'filesystem', 'getProfiles', @storagePath
     
-    profiles = for profileJson in profileJsons
-      profile = EJSON.parse profileJson
-      
-      @lastEditTimes[Persistence.Profile.id()][profile._id] = profile.lastEditTime
-
-      profile
+    profiles = []
+    
+    for profileJson in profileJsons
+      try
+        profile = EJSON.parse profileJson
+        
+        @lastEditTimes[Persistence.Profile.id()][profile._id] = profile.lastEditTime
+  
+        profiles.push profile
+        
+      catch error
+        console.error "Error parsing profile JSON.", error, profileJson
     
     Persistence.addProfiles @constructor.id(), profiles
   
@@ -51,9 +57,13 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
         @lastEditTimes[documentClassId] ?= {}
         
         for documentJson in documentJsons
-          document = EJSON.parse documentJson
-          documents[documentClassId][document._id] = "#{syncedStorageId}": document
-          @lastEditTimes[documentClassId][document._id] = document.lastEditTime
+          try
+            document = EJSON.parse documentJson
+            documents[documentClassId][document._id] = "#{syncedStorageId}": document
+            @lastEditTimes[documentClassId][document._id] = document.lastEditTime
+        
+          catch error
+            console.error "Error parsing document JSON.", error, documentJson
       
       resolve documents
 

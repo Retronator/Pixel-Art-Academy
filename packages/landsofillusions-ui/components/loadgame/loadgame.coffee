@@ -113,7 +113,10 @@ class LOI.Components.LoadGame extends LOI.Component
     @loadingTextVisible true
     
     loadPromise = LOI.adventure.loadGame(profile._id).catch (error) =>
-      LOI.adventure.showDialogMessage "Unfortunately the disk seems to be corrupt. #{error.reason}"
+      LOI.adventure.showDialogMessage """
+        Unfortunately the disk seems to be corrupt. It's almost certainly my fault, I'm sorry!
+        If you report this bug, this could be of help: #{error.reason}
+      """
       
       @loadingVisible false
       @loadingTextVisible false

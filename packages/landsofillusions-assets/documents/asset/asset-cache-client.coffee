@@ -14,6 +14,10 @@ class LOI.Assets.Asset extends AM.Document
 
     Meteor.startup =>
       HTTP.get @cacheUrl(), (error, response) =>
+        unless _.startsWith response.headers['content-type'], 'application/json'
+          console.log "Invalid asset cache", @ if LOI.debug
+          return
+        
         assets = JSON.parse response.content
 
         # Convert plain objects into assets.

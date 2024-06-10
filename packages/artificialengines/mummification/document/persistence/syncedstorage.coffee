@@ -18,7 +18,7 @@ class Persistence.SyncedStorage
 
   loadDocumentsForProfileId: (profileId) ->
     @loadDocumentsForProfileIdInternal(profileId).then (documents) =>
-      if @options.incrementalSave
+      if @options.differentialSave
         @_documentsCache[document._id] = _.cloneDeep document for document in documents
     
       documents
@@ -49,7 +49,7 @@ class Persistence.SyncedStorage
   removed: (document) ->
     @removedInternal document
     
-    delete @_documentsCache[document._id] if @options.incrementalSave
+    delete @_documentsCache[document._id] if @options.differentialSave
     
   flushChanges: ->
     changedPromises = []
