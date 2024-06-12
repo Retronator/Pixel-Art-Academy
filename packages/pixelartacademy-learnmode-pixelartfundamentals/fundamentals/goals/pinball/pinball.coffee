@@ -45,7 +45,9 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
     super arguments...
     
     PAA.Pixeltosh.Programs.Pinball.Project.end()
-    
+
+  Goal = @
+  
   class @Task extends PAA.Learning.Task.Automatic
     @playfieldHasPart: (partClass) ->
       return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
@@ -55,6 +57,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
         return true if partData.type is partClass.id()
       
       false
+    
+    activeNotificationId: -> Goal.WIPNotification.id()
 
   class @RedrawPlayfieldTask extends @Task
     onActive: ->
@@ -75,3 +79,16 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
       
       # Wait until the history position has changed.
       bitmap.historyPosition isnt @_historyPositionOnActive
+  
+  class @WIPNotification extends PAA.PixelPad.Systems.Notifications.Notification
+    @id: -> "#{Goal.id()}.WIPNotification"
+    
+    @message: -> """
+      The Pinball project is still a work in progress. I plan to add better instructions and the editor has many rough edges.
+
+      I wish I had time to put in more playfield parts as well, but at least I hope to fix major bugs before the Early Access release.
+    """
+    
+    @displayStyle: -> @DisplayStyles.IfIdle
+    
+    @initialize()

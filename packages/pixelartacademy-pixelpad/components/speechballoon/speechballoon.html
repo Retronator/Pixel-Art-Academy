@@ -1,0 +1,14 @@
+<template name="PixelArtAcademy.PixelPad.Components.SpeechBalloon">
+  <div class="pixelartacademy-pixelpad-components-speechballoon">
+    <div class="speech-balloon {{displayedClass}}">
+      <div class="content-area" {{style contentAreaStyle}}>
+        <div class="content" {{style contentStyle}}>
+          {{#Markdown}}{{text}}{{/Markdown}}
+        </div>
+      </div>
+    </div>
+    <div class="content-measuring" {{style contentMeasuringStyle}}>
+      {{#Markdown}}{{options.text}}{{/Markdown}}
+    </div>
+  </div>
+</template>

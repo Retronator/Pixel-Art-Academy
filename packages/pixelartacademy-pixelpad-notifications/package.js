@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-pixelpad-todo',
+  name: 'retronator:pixelartacademy-pixelpad-notifications',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -13,10 +13,10 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelpad');
-  api.use('retronator:pixelartacademy-learning');
-  api.use('retronator:pixelartacademy-pixelpad-notifications');
 
   api.export('PixelArtAcademy');
 
-  api.addComponent('todo');
+  api.addComponent('notifications');
+  api.addFile('notification');
+  api.addFile('provider');
 });

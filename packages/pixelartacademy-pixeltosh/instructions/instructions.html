@@ -1,12 +1,6 @@
 <template name="PixelArtAcademy.Pixeltosh.Instructions">
   <div class="pixelartacademy-pixeltosh-instructions">
     <div class="retro {{faceClass}}"></div>
-    <div class="speech-balloon {{displayStateClass}}">
-      <div class="content-area" {{style contentAreaStyle}}>
-        <div class="content">
-          {{> Render displayedInstruction}}
-        </div>
-      </div>
-    </div>
+    {{> PixelArtAcademy.PixelPad.Components.SpeechBalloon args speechBalloonOptions}}
   </div>
 </template>

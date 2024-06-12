@@ -1,0 +1,58 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+balloonResizeDuration = 0.3s
+
+.pixelartacademy-pixelpad-components-speechballoon
+  .speech-balloon
+    position absolute
+    right 0
+    bottom 0
+    border 5rem solid transparent
+    border-image image('/pixelartacademy/pixelpad/components/speechballoon/speechballoon.png') 6 / 6rem
+    text-align center
+    visibility hidden
+    opacity 0
+    transition visibility 0s step-end balloonResizeDuration, opacity 0.1s ease-in-out (balloonResizeDuration - 0.1s)
+
+    &::after
+      content ''
+      position absolute
+      right -1rem
+      bottom -13rem
+      width 9rem
+      height 9rem
+      background-image image('/pixelartacademy/pixelpad/components/speechballoon/speechballoon-tail.png')
+      visibility hidden
+
+    &.displayed
+      visibility visible
+      opacity 1
+      transition all 0s
+
+      &::after
+        visibility visible
+
+      .content-area
+        .content
+          visibility visible
+          transition visibility 0s step-end balloonResizeDuration
+
+    .content-area
+      overflow hidden
+      transition all balloonResizeDuration cubic-bezier(0, 0, 0, 1)
+      background atariGray(7)
+
+      .content
+        visibility hidden
+
+  .content-measuring
+    position absolute
+    visibility hidden
+
+  .speech-balloon .content
+  .content-measuring
+    p
+      margin 0 0 5rem
+
+      &:last-child
+        margin-bottom 0

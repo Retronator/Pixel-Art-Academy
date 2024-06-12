@@ -1,7 +1,5 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-balloonResizeDuration = 0.5s
-
 .pixelartacademy-pixeltosh-instructions
   position absolute
   right 0
@@ -45,45 +43,12 @@ balloonResizeDuration = 0.5s
       height 6rem
       background-image image('/pixelartacademy/pixeltosh/instructions/retro-ohno.png')
 
-  .speech-balloon
+  .pixelartacademy-pixelpad-components-speechballoon
     position absolute
     right 7rem
     bottom 28rem
-    visibility hidden
-    border 5rem solid transparent
-    border-image image('/pixelartacademy/pixeltosh/instructions/speechballoon.png') 6 / 6rem
-    text-align center
+    pointer-events none
 
-    &::after
-      content ''
-      position absolute
-      right -1rem
-      bottom -13rem
-      width 9rem
-      height 9rem
-      background-image image('/pixelartacademy/pixeltosh/instructions/speechballoon-tail.png')
-
-    &.open
-      visibility visible
-
-      .content-area
-        .content
-          visibility visible
-
-    .content-area
-      width 0
-      height 0
-      overflow hidden
-      transition all balloonResizeDuration cubic-bezier(0, 0, 0, 1)
-      background atariGray(7)
-
-      .content
-        width 120rem
-        visibility hidden
-        transition visibility balloonResizeDuration balloonResizeDuration
-
-        p
-          margin 0 0 5rem
-
-          &:last-child
-            margin-bottom 0
+    .content-measuring
+      min-width auto !important
+      width 120rem

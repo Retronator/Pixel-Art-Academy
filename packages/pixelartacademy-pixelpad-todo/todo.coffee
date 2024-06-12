@@ -48,6 +48,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     super arguments...
     
     @mouseHovering = new ReactiveField false
+    @openButtonHovering = new ReactiveField false
     
     @selectedTask = new ReactiveField null
     @contentHeight = new ReactiveField 0
@@ -92,7 +93,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.content')
+    @content$ = @$('.page .content')
     @_resizeObserver = new ResizeObserver =>
       @previousContentHeight @contentHeight()
       @contentHeight @content$.outerHeight()
@@ -274,8 +275,26 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     # Inform that we've handled the back button.
     true
     
+  isActive: ->
+    @animating() or @displayState() is @constructor.DisplayState.Open
+    
+  waitUntilInactive: ->
+    new Promise (resolve, reject) =>
+      Tracker.autorun (computation) =>
+        return if @isActive()
+        computation.stop()
+        resolve()
+  
+  notifications: -> @os.getSystem PAA.PixelPad.Systems.Notifications
+
   displayStateClass: ->
     _.kebabCase @displayState()
+    
+  openButtonHoveredClass: ->
+    'open-button-hovered' if @openButtonHovering()
+    
+  selectedTaskVisibleClass: ->
+    'selected-task-visible' if @selectedTask()
   
   notepadStyle: ->
     switch @displayState()
@@ -283,7 +302,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         top = "calc(-#{@contentHeight()}px - #{@bindingHeight}rem)"
         
       when @constructor.DisplayState.Closed
-        top = "-#{@bindingHeight - 1}rem"
+        top = "-#{@bindingHeight + if @openButtonHovering() then 3 else -1}rem"
         
       else
         top = "#{@hideTop}rem"
@@ -307,7 +326,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       'click': @onClick
       'mouseenter .pixelartacademy-pixelpad-systems-todo': @onMouseEnterToDo
       'mouseleave .pixelartacademy-pixelpad-systems-todo': @onMouseLeaveToDo
-      'click .binding': @onClickBinding
+      'mouseenter .open-button': @onMouseEnterOpenButton
+      'mouseleave .open-button': @onMouseLeaveOpenButton
+      'click .open-button': @onClickOpenButton
       'click .task': @onClickTask
       'click .back-button': @onClickBackButton
     
@@ -320,7 +341,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   onMouseLeaveToDo: (event) ->
     @mouseHovering false
 
-  onClickBinding: (event) ->
+  onMouseEnterOpenButton: (event) ->
+    @openButtonHovering true
+  
+  onMouseLeaveOpenButton: (event) ->
+    @openButtonHovering false
+  
+  onClickOpenButton: ->
     defaultDisplayState = @defaultDisplayState()
     
     if defaultDisplayState is @constructor.DisplayState.Hidden
@@ -348,4 +375,3 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
   _updateNotepadPan: ->
     @audio.notepadPan AEc.getPanForElement @$('.notepad')[0]
-

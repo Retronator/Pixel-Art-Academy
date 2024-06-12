@@ -24,6 +24,7 @@ Package.onUse(function(api) {
   api.addFile('components..');
 
   api.addComponent('components/shortcutstable..');
+  api.addComponent('components/speechballoon..');
 
   api.addFile('components/mixins..');
   api.addFile('components/mixins/pageturner');

@@ -53,6 +53,11 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
       @audio.drawerOpen()
     ,
       500
+    
+  onDestroyed: ->
+    super arguments...
+    
+    @tapesLocation.destroy()
 
   deselectTape: ->
     AB.Router.changeParameter 'parameter3', null

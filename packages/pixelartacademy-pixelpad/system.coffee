@@ -9,3 +9,7 @@ class PAA.PixelPad.System extends LOI.Adventure.Item
   allowsShortcutsTable: ->
     # Override if the system interferes with displaying the shortcuts table.
     true
+  
+  dontRender: ->
+    # Override if the system will be rendered manually.
+    false

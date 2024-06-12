@@ -57,6 +57,23 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
 
     completedConditions: ->
       @_instructionsWereOpenedAndClosed()
+    
+    activeNotificationId: -> @constructor.ActiveNotification.id()
+    
+    Task = @
+    
+    class @ActiveNotification extends PAA.PixelPad.Systems.Notifications.Notification
+      @id: -> "#{Task.id()}.ActiveNotification"
+      
+      @message: -> """
+        Click on the notebook below to see your to-do tasks.
+        
+        And click on me anytime to hear my thoughts!
+      """
+      
+      @priority: -> 1
+      
+      @initialize()
       
   @tasks: -> [
     @OpenInstructions

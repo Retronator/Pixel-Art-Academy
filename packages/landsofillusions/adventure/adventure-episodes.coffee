@@ -114,3 +114,6 @@ class LOI.Adventure extends LOI.Adventure
 
   getCurrentChapter: (chapterClass) ->
     _.find @currentChapters(), (chapter) => chapter instanceof chapterClass
+
+  getCurrentScene: (sceneClass) ->
+    _.find @currentScenes(), (scene) => scene instanceof sceneClass

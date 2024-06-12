@@ -45,23 +45,34 @@
     &.closed
       transition-timing-function cubic-bezier(.17,1.02,.84,1)
 
-    &.closed:hover
-      top -17rem !important
-
     &.open:hover
       .binding
         .close-hint
           visibility visible
 
+    &.open-button-hovered
+      .binding
+        .close-hint
+          color atariGray(1)
+
+    &.selected-task-visible
+      .open-button
+        display none
+
+    .open-button
+      position absolute
+      z-index 3
+      left 0
+      top 0
+      width 100%
+      height 17rem
+      border none
+      background none
+
     .binding
       position relative
       height 14rem
       background-image image('/pixelartacademy/pixelpad/systems/todo/binding-back.png')
-      cursor pointer
-
-      &:hover
-        .close-hint
-          color atariGray(1)
 
       &::before
       &::after
@@ -118,15 +129,6 @@
           right -3rem
           width 17rem
           background-image image('/pixelartacademy/pixelpad/systems/todo/turnedpage-right.png')
-
-      .retro
-        position absolute
-        z-index 1
-        right 15rem
-        top -29rem
-        width 25rem
-        height 38rem
-        background image('/pixelartacademy/pixelpad/systems/todo/retro.png') 0 0 / 51rem 38rem
 
     .page
       position relative

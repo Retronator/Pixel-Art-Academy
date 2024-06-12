@@ -117,6 +117,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @completedConditions: ->
       PAA.Challenges.Drawing.PixelArtLineArt.completedPixelPerfectLines()
   
+    activeNotificationId: -> Goal.WIPNotification.id()
+  
   class @EvenDiagonals extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.EvenDiagonals'
     @goal: -> Goal
@@ -141,6 +143,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @completedConditions: ->
       PAA.Challenges.Drawing.PixelArtLineArt.completedEvenDiagonals()
   
+    activeNotificationId: -> Goal.WIPNotification.id()
+
   class @SmoothCurves extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves'
     @goal: -> Goal
@@ -165,6 +169,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @completedConditions: ->
       PAA.Challenges.Drawing.PixelArtLineArt.completedSmoothCurves()
   
+    activeNotificationId: -> Goal.WIPNotification.id()
+  
   class @ConsistentLineWidth extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.ConsistentLineWidth'
     @goal: -> Goal
@@ -188,6 +194,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @completedConditions: ->
       PAA.Challenges.Drawing.PixelArtLineArt.completedConsistentLineWidth()
+    
+    activeNotificationId: -> Goal.WIPNotification.id()
   
   @tasks: -> [
     @Lines
@@ -208,3 +216,16 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
   ]
 
   @initialize()
+  
+  class @WIPNotification extends PAA.PixelPad.Systems.Notifications.Notification
+    @id: -> "#{Goal.id()}.WIPNotification"
+    
+    @message: -> """
+      Pixel art evaluation is being continually improved and is a bit of an experimental feature.
+      
+      Don't take its scores too seriously and trust your artistic judgment over directly following it.
+    """
+    
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @initialize()

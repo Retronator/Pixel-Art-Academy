@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pixeltosh-pinball');
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-pixelpad-music');
+  api.use('retronator:pixelartacademy-pixelpad-notifications');
 
   api.export('PixelArtAcademy');
 
