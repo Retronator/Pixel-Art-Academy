@@ -29,7 +29,25 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @completedConditions: ->
       PAA.Tutorials.Drawing.ElementsOfArt.Line.completed()
+      
+    activeNotificationId: -> @constructor.Notification.id()
+    
+    Task = @
+    
+    class @Notification extends PAA.PixelPad.Systems.Notifications.Notification
+      @id: -> "#{Task.id()}.Notification"
+      
+      @message: -> """
+        There will be more elements of art added during Early Access.
 
+        Until then, focus just on the lines.
+        This will build your foundation before tackling harder elements such as values and colors.
+      """
+      
+      @displayStyle: -> @DisplayStyles.IfIdle
+      
+      @initialize()
+      
   @tasks: -> [
     @Line
   ]
