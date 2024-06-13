@@ -92,6 +92,9 @@ class LM.Notifications
         
         @priority: -> -1
         
+        @retroClassesDisplayed: ->
+          face: PAA.PixelPad.Systems.Notifications.Retro.FaceClasses.Peaceful
+        
         @initialize()
         
         LM.RandomNotificationsProvider.registerNotificationClass @

@@ -21,6 +21,7 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
   
   @Retro =
     HeadClasses:
+      Headphones: 'headphones'
       HardHat: 'hardhat'
       HardHatPuffed: 'hardhat-puffed'
 
@@ -31,6 +32,7 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     
     BodyClasses:
       Wrench: 'wrench'
+      Walkman: 'walkman'
       
   onCreated: ->
     super arguments...
@@ -66,7 +68,7 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
       face: null
       body: null
     
-    @retroEyesDirectionClass = new ReactiveField 'bottom-left'
+    @retroEyesDirection = new ReactiveField 'bottom-left'
     
     @homeScreenActive = new ComputedField =>
       not @os.currentAppUrl() and not LOI.adventure.modalDialogs().length
@@ -156,6 +158,9 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     $(document).on 'click.pixelartacademy-pixelpad-systems-notifications', (event) =>
       return if $(event.target).closest('.retro').length
       
+      # Prevent immediate closing.
+      return if Date.now() - @_displayTimeMilliseconds < 1000
+      
       @closeDisplayedNotification()
       
     # Track eyes when active.
@@ -169,7 +174,7 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
           verticalClass = if event.pageY > faceOffset.top then 'bottom' else 'top'
           horizontalClass = if event.pageX > faceOffset.left then 'right' else 'left'
           
-          @retroEyesDirectionClass "#{verticalClass}-#{horizontalClass}"
+          @retroEyesDirection "#{verticalClass}-#{horizontalClass}"
       
       else
         $(document).off 'pointermove.pixelartacademy-pixelpad-systems-notifications'
@@ -204,6 +209,8 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     
   _displayNotification: (notification) ->
     @displayedNotification notification
+    
+    @_displayTimeMilliseconds = Date.now()
     
     # Set new retro.
     retroClasses = @retroClasses()
@@ -253,15 +260,26 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     # Main class changes to lifted when a task's details are displayed.
     'lifted' if @_tasksDisplayed()
   
-  retroHeadClass: -> @_getRetroClass 'head'
+  retroHeadClass: ->
+    return requestedHeadClass if requestedHeadClass = @_getRetroClass 'head'
+    
+    # If the music is playing, put on headphones.
+    'headphones' if PAA.PixelPad.Systems.Music.state 'playing'
   
   retroFaceClass: ->
-    # The face is as desired when a notification is displayed.
+    # The face is as desired when a notification is displayed, or a smirk when not.
     return requestedFaceClass if requestedFaceClass = @_getRetroClass 'face'
+    return 'smirk' if @displayedNotification()
 
     # By default the face is peaceful if there are no unread notifications, smirk otherwise.
     importantNotifications = _.filter @unreadNotifications(), (notification) => notification.displayStyle() isnt @constructor.Notification.DisplayStyles.OnDemand
     if importantNotifications.length then 'smirk' else 'peaceful'
+    
+  retroEyesDirectionClass: ->
+    # The eyes should be looking at the speech-balloon when a notification is displayed.
+    return 'top-left' if @displayedNotification()
+    
+    @retroEyesDirection()
   
   retroBodyClass: -> @_getRetroClass 'body'
   

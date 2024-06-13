@@ -36,22 +36,22 @@ cursor(type)
       cursor url('/interface/cursors/3x/text.png?0.1.1') 3 0, text
 
   else if type is wait
-    cursor url('/interface/cursors/2x/wait.png') 24 20, text
+    cursor url('/interface/cursors/2x/wait.png') 24 20, wait
 
     html.scale-3-or-up &
-      cursor url('/interface/cursors/3x/wait.png') 36 20, text
+      cursor url('/interface/cursors/3x/wait.png') 36 20, wait
 
   else if type is grab
-    cursor url('/interface/cursors/2x/grab.png') 6 4, pointer
+    cursor url('/interface/cursors/2x/grab.png') 6 4, grab
 
     html.scale-3-or-up &
-      cursor url('/interface/cursors/3x/grab.png') 9 6, pointer
+      cursor url('/interface/cursors/3x/grab.png') 9 6, grab
 
   else if type is grabbing
-    cursor url('/interface/cursors/2x/grabbing.png') 6 4, pointer
+    cursor url('/interface/cursors/2x/grabbing.png') 6 4, grabbing
 
     html.scale-3-or-up &
-      cursor url('/interface/cursors/3x/grabbing.png') 9 6, pointer
+      cursor url('/interface/cursors/3x/grabbing.png') 9 6, grabbing
 
   else if type is nwse-resize
     cursor url('/interface/cursors/2x/nwse-resize.png') 16 13, nwse-resize
@@ -78,16 +78,16 @@ cursor(type)
       cursor url('/interface/cursors/3x/ew-resize.png') 21 12, ew-resize
 
   else if type is e-resize
-    cursor url('/interface/cursors/2x/e-resize.png') 16 9, ew-resize
+    cursor url('/interface/cursors/2x/e-resize.png') 16 9, e-resize
 
     html.scale-3-or-up &
-      cursor url('/interface/cursors/3x/e-resize.png') 21 12, ew-resize
+      cursor url('/interface/cursors/3x/e-resize.png') 21 12, e-resize
 
   else if type is w-resize
-    cursor url('/interface/cursors/2x/w-resize.png') 16 9, ew-resize
+    cursor url('/interface/cursors/2x/w-resize.png') 16 9, w-resize
 
     html.scale-3-or-up &
-      cursor url('/interface/cursors/3x/w-resize.png') 21 12, ew-resize
+      cursor url('/interface/cursors/3x/w-resize.png') 21 12, w-resize
 
   else if type is zoom-in
     cursor url('/interface/cursors/2x/zoom-in.png') 14 10, zoom-in
@@ -100,6 +100,12 @@ cursor(type)
 
     html.scale-3-or-up &
       cursor url('/interface/cursors/3x/move.png') 27 27, move
+
+  else if type is talk
+    cursor url('/interface/cursors/2x/talk.png') 6 36, pointer
+
+    html.scale-3-or-up &
+      cursor url('/interface/cursors/3x/talk.png') 9 54, pointer
 
   else
     cursor arguments
