@@ -91,4 +91,12 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Pinball extends PAA.Learning.Go
     
     @displayStyle: -> @DisplayStyles.IfIdle
     
+    @retroClasses: ->
+      head: PAA.PixelPad.Systems.Notifications.Retro.HeadClasses.HardHat
+      body: PAA.PixelPad.Systems.Notifications.Retro.BodyClasses.Wrench
+    
+    @retroClassesDisplayed: ->
+      head: PAA.PixelPad.Systems.Notifications.Retro.HeadClasses.HardHatPuffed
+      face: PAA.PixelPad.Systems.Notifications.Retro.FaceClasses.Yikes
+    
     @initialize()

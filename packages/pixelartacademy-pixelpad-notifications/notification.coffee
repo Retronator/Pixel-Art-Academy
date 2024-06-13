@@ -18,6 +18,18 @@ class PAA.PixelPad.Systems.Notifications.Notification
     
   @message: -> null
   
+  @retroClasses: ->
+    # Override to request different retro classes.
+    head: null
+    face: null
+    body: null
+  
+  @retroClassesDisplayed: ->
+    # Override to request different retro classes when the notification is displayed.
+    head: null
+    face: null
+    body: null
+  
   @priority: -> 0
   
   @displayStyle: ->
@@ -53,6 +65,9 @@ class PAA.PixelPad.Systems.Notifications.Notification
 
   message: -> AB.translate(@_translationSubscription, 'message').text
   messageTranslation: -> AB.translation @_translationSubscription, 'message'
+  
+  retroClasses: -> @constructor.retroClasses()
+  retroClassesDisplayed: -> @constructor.retroClassesDisplayed()
   
   priority: -> @constructor.priority()
   displayStyle: -> @constructor.displayStyle()

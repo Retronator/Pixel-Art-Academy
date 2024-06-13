@@ -2,18 +2,124 @@
 
 .pixelartacademy-pixelpad-systems-notifications
   position absolute
+  right 27rem
+  top 0
   z-index 2
-  right 15rem
-  top -29rem
 
   .retro
-    width 25rem
-    height 38rem
-    background image('/pixelartacademy/pixelpad/systems/todo/retro.png') 0 0 / 51rem 38rem
+    position absolute
     cursor wait
+
+    &.lifted
+      top -2rem
+
+    .head
+      position absolute
+      z-index 2
+      left -13rem
+      top -29rem
+      width 23rem
+      height 20rem
+      background-image image('/pixelartacademy/pixelpad/notifications/retro-head.png')
+
+      &.hardhat
+      &.hardhat-puffed
+        top -36rem
+        width 27rem
+        height 26rem
+
+        .face-origin
+          left 17rem
+          top 19rem
+
+      &.hardhat
+        left -14rem
+        background-image image('/pixelartacademy/pixelpad/notifications/retro-head-hardhat.png')
+
+      &.hardhat-puffed
+        left -15rem
+        background-image image('/pixelartacademy/pixelpad/notifications/retro-head-hardhat-puffed.png')
+
+      .face-origin
+        position absolute
+        left 16rem
+        top 12rem
+
+        .face
+          position absolute
+
+          &.peaceful
+            left -5rem
+            top -2rem
+            width 9rem
+            height 5rem
+            background-image image('/pixelartacademy/pixelpad/notifications/retro-face-peaceful.png')
+
+          &.smirk
+            left -5rem
+            top -3rem
+            width 8rem
+            height 6rem
+            background-image image('/pixelartacademy/pixelpad/notifications/retro-face-smirk.png')
+
+            &.top-left::after
+              top 1rem
+
+            &.top-right::after
+              left 2rem
+              top 1rem
+
+            &.bottom-right::after
+              left 2rem
+
+            &::after
+              content ''
+              position absolute
+              left 1rem
+              top 2rem
+              width 6rem
+              height 1rem
+              background-image image('/pixelartacademy/pixelpad/notifications/retro-face-smirk-eyes.png')
+
+          &.yikes
+            left -4rem
+            top -4rem
+            width 7rem
+            height 7rem
+            background-image image('/pixelartacademy/pixelpad/notifications/retro-face-yikes.png')
+
+    .body
+      position absolute
+      z-index 1
+      left -12rem
+      top -10rem
+      width 24rem
+      height 9rem
+      background-image image('/pixelartacademy/pixelpad/notifications/retro-body.png')
+
+      &.wrench
+        left -21rem
+        top -17rem
+        width 43rem
+        height 16rem
+        background-image image('/pixelartacademy/pixelpad/notifications/retro-body-wrench.png')
+
+    .legs
+      position absolute
+      left -10rem
+      top -4rem
+      width 21rem
+      height 13rem
+      background-image image('/pixelartacademy/pixelpad/notifications/retro-legs.png')
+
+      &.lifted
+        left -12rem
+        width 25rem
+        height 12rem
+        background-image image('/pixelartacademy/pixelpad/notifications/retro-legs-lifted.png')
 
   .pixelartacademy-pixelpad-components-speechballoon
     position absolute
-    right 25rem
-    bottom 42rem
+    right 12rem
+    bottom 33rem
     cursor pointer

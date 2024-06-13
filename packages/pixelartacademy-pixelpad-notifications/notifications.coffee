@@ -19,6 +19,19 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
   
   @initialize()
   
+  @Retro =
+    HeadClasses:
+      HardHat: 'hardhat'
+      HardHatPuffed: 'hardhat-puffed'
+
+    FaceClasses:
+      Peaceful: 'peaceful'
+      Smirk: 'smirk'
+      Yikes: 'yikes'
+    
+    BodyClasses:
+      Wrench: 'wrench'
+      
   onCreated: ->
     super arguments...
   
@@ -48,7 +61,15 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     @displayedNotification = new ReactiveField null
     @readNotifications = new ReactiveField []
     
-    @homeScreenActive = new ComputedField => not @os.currentAppUrl()
+    @retroClasses = new ReactiveField
+      head: null
+      face: null
+      body: null
+    
+    @retroEyesDirectionClass = new ReactiveField 'bottom-left'
+    
+    @homeScreenActive = new ComputedField =>
+      not @os.currentAppUrl() and not LOI.adventure.modalDialogs().length
     
     # Whenever available notifications change, add the new ones to unread.
     @autorun (computation) =>
@@ -68,6 +89,21 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
           unreadNotifications.push notification
         
         @unreadNotifications unreadNotifications
+        
+        # Set initial retro classes from unread notifications.
+        sortedUnreadNotifications = _.sortBy unreadNotifications, (notification) => notification.priority()
+        
+        existingRetroClasses = @retroClasses()
+        retroClasses = {}
+        
+        for notification in sortedUnreadNotifications
+          for property, className of notification.retroClasses() when className
+            retroClasses[property] = className
+          
+        for property, className of existingRetroClasses
+          retroClasses[property] ?= className
+        
+        @retroClasses retroClasses unless EJSON.equals existingRetroClasses, retroClasses
     
     # Listen for the home app to be displayed and display a notification.
     @autorun (computation) =>
@@ -121,6 +157,22 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
       return if $(event.target).closest('.retro').length
       
       @closeDisplayedNotification()
+      
+    # Track eyes when active.
+    $faceOrigin = @$('.face-origin')
+    
+    @autorun (computation) =>
+      if @homeScreenActive()
+        $(document).on 'pointermove.pixelartacademy-pixelpad-systems-notifications', (event) =>
+          faceOffset = $faceOrigin.offset()
+          
+          verticalClass = if event.pageY > faceOffset.top then 'bottom' else 'top'
+          horizontalClass = if event.pageX > faceOffset.left then 'right' else 'left'
+          
+          @retroEyesDirectionClass "#{verticalClass}-#{horizontalClass}"
+      
+      else
+        $(document).off 'pointermove.pixelartacademy-pixelpad-systems-notifications'
 
   onDestroyed: ->
     super arguments...
@@ -146,9 +198,21 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     _.pull unreadNotifications, topNotification
     @unreadNotifications unreadNotifications
 
-    @displayedNotification topNotification
+    @_displayNotification topNotification
 
     true
+    
+  _displayNotification: (notification) ->
+    @displayedNotification notification
+    
+    # Set new retro.
+    retroClasses = @retroClasses()
+    newRetroClasses = notification.retroClasses()
+    
+    for property, className of newRetroClasses when className
+      retroClasses[property] = className
+    
+    @retroClasses retroClasses unless EJSON.equals retroClasses, newRetroClasses
   
   displayNewNotification: ->
     notificationWasDisplayed = @displayedNotification()
@@ -173,7 +237,7 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     _.pull readNotifications, oldestNotification
     @readNotifications readNotifications
     
-    @displayedNotification oldestNotification
+    @_displayNotification oldestNotification
     
     true
   
@@ -184,6 +248,33 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     displayedNotification.updateLastDisplayedTime()
     @displayedNotification null
     readNotifications.push displayedNotification
+  
+  retroMainClass: ->
+    # Main class changes to lifted when a task's details are displayed.
+    'lifted' if @_tasksDisplayed()
+  
+  retroHeadClass: -> @_getRetroClass 'head'
+  
+  retroFaceClass: ->
+    # The face is as desired when a notification is displayed.
+    return requestedFaceClass if requestedFaceClass = @_getRetroClass 'face'
+
+    # By default the face is peaceful if there are no unread notifications, smirk otherwise.
+    importantNotifications = _.filter @unreadNotifications(), (notification) => notification.displayStyle() isnt @constructor.Notification.DisplayStyles.OnDemand
+    if importantNotifications.length then 'smirk' else 'peaceful'
+  
+  retroBodyClass: -> @_getRetroClass 'body'
+  
+  _getRetroClass: (property) ->
+    @displayedNotification()?.retroClassesDisplayed()[property] ? @retroClasses()[property]
+  
+  retroLegsClass: ->
+    # Legs change to lifted when a task's details are displayed.
+    'lifted' if @_tasksDisplayed()
+    
+  _tasksDisplayed: ->
+    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
+    toDo.isActive() and toDo.selectedTask()
     
   speechBalloonOptions: ->
     text: => @displayedNotification()?.message()

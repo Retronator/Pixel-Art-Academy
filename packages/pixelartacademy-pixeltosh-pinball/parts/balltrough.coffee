@@ -30,7 +30,7 @@ class Pinball.Parts.BallTrough extends Pinball.Parts.Hole
   extraShapeProperties: ->
     return unless sceneManager = @pinball.sceneManager()
     
-    height: sceneManager.ballPositionY() * 2
+    height: sceneManager.ballPositionY() * 4
     
   onBallEnter: (ball) ->
     ball.die()

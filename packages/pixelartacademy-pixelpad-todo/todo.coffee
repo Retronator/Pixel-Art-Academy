@@ -39,7 +39,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     super arguments...
     
     @bindingHeight = 14
-    @hideTop = 30
+    @hideTop = 40
     
     @waitBetweenAnimationsDuration = 0.1
     @animationStepDuration = 0.02
@@ -276,7 +276,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     true
     
   isActive: ->
-    @animating() or @displayState() is @constructor.DisplayState.Open
+    @isRendered() and @animating() or @displayState() is @constructor.DisplayState.Open
     
   waitUntilInactive: ->
     new Promise (resolve, reject) =>

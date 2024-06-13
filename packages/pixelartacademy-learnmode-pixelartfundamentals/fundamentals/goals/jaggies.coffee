@@ -228,4 +228,12 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @displayStyle: -> @DisplayStyles.Always
     
+    @retroClasses: ->
+      head: PAA.PixelPad.Systems.Notifications.Retro.HeadClasses.HardHat
+      body: PAA.PixelPad.Systems.Notifications.Retro.BodyClasses.Wrench
+    
+    @retroClassesDisplayed: ->
+      head: PAA.PixelPad.Systems.Notifications.Retro.HeadClasses.HardHatPuffed
+      face: PAA.PixelPad.Systems.Notifications.Retro.FaceClasses.Yikes
+    
     @initialize()
