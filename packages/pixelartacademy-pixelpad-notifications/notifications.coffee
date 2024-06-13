@@ -227,6 +227,13 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     # Close existing notifications.
     @closeDisplayedNotification()
     
+    # Close to-do if active.
+    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
+    
+    if toDo.isActive()
+      toDo.close()
+      await toDo.waitUntilInactive()
+    
     # Try to display any unread notifications, from most to least important.
     return if @_displayUnreadNotificationWithDisplayStyle @constructor.Notification.DisplayStyles.Always
     return if @_displayUnreadNotificationWithDisplayStyle @constructor.Notification.DisplayStyles.IfIdle

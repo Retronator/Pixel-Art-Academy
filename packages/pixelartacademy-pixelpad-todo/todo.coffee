@@ -83,12 +83,28 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @completedTasks = new ReactiveField []
     
     @autorun (computation) =>
-      activeTasksToBeDisplayed = Tracker.nonreactive => @activeTasksToBeDisplayed()
-      displayedActiveTasks = Tracker.nonreactive => @displayedActiveTasks()
+      activeTasks = @activeTasks()
       
-      activeTasksToBeDisplayed.push task for task in @activeTasks() when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
-      
-      @activeTasksToBeDisplayed activeTasksToBeDisplayed
+      Tracker.nonreactive =>
+        activeTasksToBeDisplayed = @activeTasksToBeDisplayed()
+        displayedActiveTasks = @displayedActiveTasks()
+        completedTasks = @completedTasks()
+        
+        activeTasksToBeDisplayed.push task for task in activeTasks when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
+        
+        @activeTasksToBeDisplayed activeTasksToBeDisplayed
+        
+        # Remove completed tasks so that the total shown tasks is not above 10 if possible.
+        tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
+        removeCount = tasksCount - 10
+        return unless removeCount > 0
+        
+        removedTasks = completedTasks.splice 0, removeCount
+        @completedTasks completedTasks
+        
+        # Also remove them from the displayed list.
+        for task in removedTasks
+          @$("[data-task-id='#{task.id()}']").remove()
 
   onRendered: ->
     super arguments...
@@ -266,7 +282,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   allowsShortcutsTable: -> false
   
   onBackButton: ->
-    # If we have an animation waiting to happen, we want the back button to return us to the main menu.
+    # If we have an animation waiting to happen, we want any presses on the back button
+    # to return us to the main menu so that the to-do tasks can be visually updated.
     return unless @_animationAvailable()
     
     parameter1 = AB.Router.getParameter 'parameter1'
@@ -284,6 +301,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         return if @isActive()
         computation.stop()
         resolve()
+        
+  close: -> @manualDisplayState null
   
   notifications: -> @os.getSystem PAA.PixelPad.Systems.Notifications
 
