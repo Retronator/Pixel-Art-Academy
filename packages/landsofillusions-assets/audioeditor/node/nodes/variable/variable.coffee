@@ -53,6 +53,8 @@ class LOI.Assets.AudioEditor.Node.Variable extends AM.Component
       
       new @constructor.TestValue variable
     
+  variableIsTrigger: -> @variable()?.valueType is AEc.ValueTypes.Trigger
+  
   events: ->
     super(arguments...).concat
       'click .trigger-button': @onClickTriggerButton

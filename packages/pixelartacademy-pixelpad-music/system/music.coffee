@@ -27,10 +27,6 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
  
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
-      openDoor: AEc.ValueTypes.Trigger
-      closeDoor: AEc.ValueTypes.Trigger
-      insertTape: AEc.ValueTypes.Trigger
-      removeTape: AEc.ValueTypes.Trigger
       playing: AEc.ValueTypes.Boolean
       seeking: AEc.ValueTypes.Boolean
   
@@ -78,7 +74,7 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
       Tracker.nonreactive =>
         trackInfo = tape.sides[sideIndex].tracks[trackIndex]
         
-        @_currentTrack = new PAA.Music.Track LOI.adventure.audioManager, trackInfo.title, tape.artist, trackInfo.url
+        @_currentTrack = new PAA.Music.Track LOI.adventure.audioManager, trackInfo.title, tape.artist, trackInfo.url, tape.gain
 
         currentTime = @currentTime()
         @_currentTrack.setCurrentTime currentTime if currentTime
@@ -96,6 +92,10 @@ class PAA.PixelPad.Systems.Music extends PAA.PixelPad.System
           else
             LOI.adventure.music.startPlayback @_currentTrack, 0, PAA.Music.FadeDurations.DynamicSoundtrackToMusicAppFadeOut
 
+    # Sync audio variables.
+    @autorun (computation) =>
+      @audio.playing @state 'playing'
+      
   onDestroyed: ->
     super arguments...
     

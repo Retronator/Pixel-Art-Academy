@@ -12,7 +12,7 @@
       <li class="parameter test-value">
         <div class="name">test value</div>
         <label class="value">
-          {{#if $is variable.valueType 'Trigger'}}
+          {{#if variableIsTrigger}}
             <button class="trigger-button">Trigger</button>
           {{else}}
             {{> Render testValueComponent}}<span class="checkmark"></span>

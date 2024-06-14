@@ -38,6 +38,7 @@ Document.startup ->
     artist: 'Extent of the Jam'
     title: 'musicdisk01'
     styleClass: 'c60'
+    gain: 1.6
     sides: [
       tracks: [
         title: 'Xcessiv'
@@ -69,6 +70,7 @@ Document.startup ->
   addTape
     artist: 'glaciære'
     styleClass: 'c90 single-row'
+    gain: 1.1
     sides: [
       title: 'shower'
       tracks: [
@@ -162,6 +164,7 @@ Document.startup ->
     artist: 'HOME'
     title: 'Resting State'
     styleClass: 'c60 double-column'
+    gain: 1.1
     sides: [
       tracks: [
         title: '1'
@@ -312,6 +315,7 @@ Document.startup ->
     artist: 'Revolution Void'
     title: 'The Politics of Desire'
     styleClass: 'c60'
+    gain: 1.1
     sides: [
       tracks: [
         title: 'Line of Flight'
@@ -364,6 +368,7 @@ Document.startup ->
     artist: 'Shnabubula'
     title: 'Finding the Groove'
     styleClass: 'c60'
+    gain: 2.4
     sides: [
       tracks: [
         title: 'Welcome to Retropolis'
@@ -406,6 +411,7 @@ Document.startup ->
     artist: 'State Azure'
     title: 'Stellar Descent'
     styleClass: 'c120 single-row'
+    gain: 0.9
     sides: [
       tracks: [
         title: 'Stellar Drift'
@@ -479,6 +485,7 @@ Document.startup ->
   addTape
     artist: 'Three Chain Links'
     styleClass: 'c60 single-row'
+    gain: 0.8
     sides: [
       title: 'The Happiest Days Of Our Lives'
       tracks: [

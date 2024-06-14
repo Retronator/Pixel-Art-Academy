@@ -150,8 +150,8 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     @id: -> "#{MusicTapes.id()}.ThreeChainLinks"
     
     @message: -> """
-      I got even more music for you, two albums from Three Chain Links
-      who makes cool stuff inspired by the 80s and old video games.
+      I got even more music for you, two albums from Three Chain Links.
+      He makes cool stuff inspired by the 80s and old video games.
     """
     
     @initialize()

@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Music.Track
-  constructor: (@audioManager, @_title, @_artist, @url) ->
+  constructor: (@audioManager, @_title, @_artist, @url, @gain = 1) ->
     @_audioElement = new Audio
     
     @canPlayThrough = new ReactiveField false
@@ -27,7 +27,9 @@ class PAA.Music.Track
     
   destroy: ->
     @stop()
+    @_source?.disconnect()
     @_output?.disconnect()
+    @_source = null
     @_output = null
   
   title: -> @_title
@@ -47,9 +49,12 @@ class PAA.Music.Track
     return @_output if @_output
     
     @_context = @audioManager.context()
-    @_output = new MediaElementAudioSourceNode @_context,
-      mediaElement: @_audioElement
-      
+    @_source = new MediaElementAudioSourceNode @_context, mediaElement: @_audioElement
+    @_output = new GainNode @_context, gain: @gain
+    @_source.connect @_output
+    
+    @_output
+    
   connect: (node) ->
     sourceNode = @_getSourceNode()
     sourceNode.connect node

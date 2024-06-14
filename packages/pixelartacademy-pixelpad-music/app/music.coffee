@@ -31,7 +31,7 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     Top:
       Case: 0
       OutsideCase: -30
-      OutsidePlayer: -162
+      OutsidePlayer: -170
       Player: -255
     Left:
       Case: 0
@@ -39,6 +39,16 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
   
   @spoolRotationSpeedLeft = 20 # frames / second
   @spoolRotationSpeedRight = 15 # frames / second
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      caseOpen: AEc.ValueTypes.Trigger
+      caseClose: AEc.ValueTypes.Trigger
+      tapeLoad: AEc.ValueTypes.Trigger
+      tapeUnload: AEc.ValueTypes.Trigger
+      trayClose: AEc.ValueTypes.Trigger
+      trayOpen: AEc.ValueTypes.Trigger
+      trayPan: AEc.ValueTypes.Number
 
   constructor: ->
     super arguments...
@@ -117,11 +127,11 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
   onRendered: ->
     super arguments...
     
-    @$origin = @$ '.origin'
-    @$case = @$ '.selected-tape .case'
-    @$cassette = @$ '.selected-tape .cassette'
-    @$cassetteSpoolLeft = @$ '.selected-tape .cassette .spool.left'
-    @$cassetteSpoolRight = @$ '.selected-tape .cassette .spool.right'
+    @$origin = @$('.origin')
+    @$case = @$('.selected-tape .case')
+    @$cassette = @$('.selected-tape .cassette')
+    @$cassetteSpoolLeft = @$('.selected-tape .cassette .spool.left')
+    @$cassetteSpoolRight = @$('.selected-tape .cassette .spool.right')
     
     @_resetSpoolRotation()
     
@@ -147,6 +157,9 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
           left: "#{@constructor.CassettePositions.Left.Case}rem"
           top: "#{@constructor.CassettePositions.Top.Case}rem"
           
+    $playerTray = @$('.player .tray')
+    @audio.trayPan AEc.getPanForElement $playerTray[0]
+  
   onDestroyed: ->
     super arguments...
     
@@ -169,6 +182,7 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
       
   loadSelectedTape: ->
     @animating true
+    @audio.tapeLoad()
     
     @_resetSpoolRotation()
     
@@ -180,18 +194,18 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
       top: ["#{@constructor.CassettePositions.Top.OutsideCase}rem", 'ease-in', "#{@constructor.CassettePositions.Top.Case}rem"]
     ,
       duration: 200
-      delay: 200
+      delay: 300
     
     @$cassette.velocity
-      left: ["#{@constructor.CassettePositions.Left.Player}rem", 'ease-in-out', "#{@constructor.CassettePositions.Left.Drawer}rem"]
-      top: ["#{@constructor.CassettePositions.Top.OutsidePlayer}rem", 'linear', "#{@constructor.CassettePositions.Top.OutsideCase}rem"]
+      left: ["#{@constructor.CassettePositions.Left.Player}rem", 'ease-out', "#{@constructor.CassettePositions.Left.Drawer}rem"]
+      top: ["#{@constructor.CassettePositions.Top.OutsidePlayer}rem", 'ease-out', "#{@constructor.CassettePositions.Top.OutsideCase}rem"]
     ,
       duration: 800
       
     @$cassette.velocity
-      top: ["#{@constructor.CassettePositions.Top.Player}rem", 'ease-out', "#{@constructor.CassettePositions.Top.OutsidePlayer}rem"]
+      top: ["#{@constructor.CassettePositions.Top.Player}rem", 'ease-in-out', "#{@constructor.CassettePositions.Top.OutsidePlayer}rem"]
     ,
-      duration: 500
+      duration: 800
     
     # Move camera from drawer to player.
     
@@ -208,12 +222,14 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     
     @pixelPadSizeToPlayer true
     
-    await _.waitForSeconds 1.5
+    await _.waitForSeconds 2
     
     # Set the tape to complete the animation.
     
     AB.Router.changeParameter 'parameter4', 'play'
     @system().setTape @selectedTape()
+    
+    @audio.trayClose()
     
     @animating false
     
@@ -223,11 +239,16 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     # Remove the tape, which opens the tray.
     
     @system().setTape null
+    @audio.trayOpen()
     
     @$case.addClass 'unloading'
     
+    await _.waitForSeconds 0.3
+  
     # Move cassette tape out of the player.
     
+    @audio.tapeUnload()
+
     @$cassette.velocity
       top: "#{@constructor.CassettePositions.Top.OutsidePlayer}rem"
     ,
@@ -251,7 +272,10 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
     await _.waitForSeconds 1
 
     # Deselect the tape and reset CSS.
-    
+    @drawer().deselectTape()
+
+    # Note that deselectTape only resets the 3rd parameter and we need to disable play as well.
+    # We need to change both at once however, since the change isn't yet propagated.
     AB.Router.changeParameters
       parameter3: null
       parameter4: null
@@ -321,9 +345,23 @@ class PAA.PixelPad.Apps.Music extends PAA.PixelPad.App
   events: ->
     super(arguments...).concat
       'click .selected-tape': @onClickSelectedTape
+      'pointerenter .selected-tape .lid': @onPointerEnterSelectedTapeLid
+      'pointerleave .selected-tape .lid': @onPointerLeaveSelectedTapeLid
   
   onClickSelectedTape: (event) ->
     return if @animating()
     return if @loadedTape()
     
     @loadSelectedTape()
+    
+  onPointerEnterSelectedTapeLid: (event) ->
+    # Only do hover sounds when closed.
+    return if $(event.target).closest('.case.open').length
+    
+    @audio.caseOpen()
+  
+  onPointerLeaveSelectedTapeLid: (event) ->
+    # Only do hover sounds when closed.
+    return if $(event.target).closest('.case.open').length
+    
+    @audio.caseClose()

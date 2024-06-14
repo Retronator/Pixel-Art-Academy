@@ -8,6 +8,7 @@ class PAA.Music.Tape extends AM.Document
   # artist: the author's name
   # slug: auto-generated URL identifier of the tape
   # styleClass: class name added to the tape for styling purposes
+  # gain: specify to adjust volume of the tape, 1 by default
   # sides: array with 1 or 2 sides
   #   title: optional name of this side of the tape
   #   tracks: an array of tracks on this side
