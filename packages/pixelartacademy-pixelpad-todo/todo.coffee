@@ -94,9 +94,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         
         @activeTasksToBeDisplayed activeTasksToBeDisplayed
         
-        # Remove completed tasks so that the total shown tasks is not above 10 if possible.
+        # Remove completed tasks so that the total shown tasks is not above 9 if possible.
         tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
-        removeCount = tasksCount - 10
+        removeCount = tasksCount - 9
         return unless removeCount > 0
         
         removedTasks = completedTasks.splice 0, removeCount
