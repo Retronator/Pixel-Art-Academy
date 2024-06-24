@@ -81,7 +81,7 @@ Document.startup ->
       CatalogKeys.PixelArtAcademy.Kickstarter.GreenKeycard
       CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
-      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
+      CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
     ]
 
   RS.Items.Bundles.PixelArtAcademyKickstarterFullGame.create()
