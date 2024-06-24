@@ -44,9 +44,9 @@ RS.Transaction.emailCustomer = ({customer, payments, shoppingCart, taxInfo, invo
                       Matej 'Retro' Jan // Retronator"
   
   email.addParagraph "p.s. If you run into any trouble, the fastest way to talk to me is on Discord.
-                      You can join the server I'm on at the link below, and don't forget to choose the Pixel Art Academy role in the lobby:"
+                      You can join the server I'm on at the link below."
 
-  email.addLinkParagraph 'https://discord.gg/d6V8Say', "Indie Games House Discord"
+  email.addLinkParagraph 'https://discord.gg/mngNfvTwG6', "Retronator Discord"
 
   email.addParagraph "p.p.s. Don't miss the ever-growing library of learning resources and activities in the in-game
                       Study Guide. It's a great way to continue your learning journey once you're finished with

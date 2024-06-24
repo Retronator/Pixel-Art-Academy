@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'validate-vat': '0.5.1'
+  'validate-vat': '0.9.0'
 });
 
 Package.onUse(function(api) {
