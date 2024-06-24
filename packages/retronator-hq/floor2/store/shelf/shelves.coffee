@@ -15,7 +15,7 @@ class HQ.Store.Shelves extends LOI.Adventure.Item
 
   @description: ->
     "
-      The shelf dedicated to PICO-8.
+      The shelves holding various items sold in the Retronator store.
     "
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/floor2/store/shelf/shelves.script'

@@ -5,7 +5,7 @@ Retronator.Store.Vat.Rates =
     cz: 0.21
     dk: 0.25
     de: 0.19
-    ee: 0.20
+    ee: 0.22
     ie: 0.23
     gr: 0.24
     es: 0.21
