@@ -27,24 +27,29 @@
       <div class="content">
         <div class="adventure mode item">
           <h2 class="title">Adventure Mode</h2>
-          <div class="status">Open alpha</div>
+          <div class="status-area">
+            <span class="status">Open alpha</span>
+          </div>
+          <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/adventuremode-icon.png'}}"/>
           <div class="description">
-            <p>
+            <p class="main">
               The idea that started it all, play an adventure game and travel to the island of Retropolis where you will
               develop your skills as an art student.
             </p>
-            <p>
-              This is a highly ambitious project, 7 years in the making with many more to come to realize the full
-              vision. Currently, the first chapter—Admission Week—is available as an open alpha to anyone who pre-orders
-              the game. It is played directly in the browser through a text interface, with ambitions to become a
-              point-and-click adventure one day.
-            </p>
-            <p>
+            <div class="action-link-area">
               <a class="action-link" href="{{routerPath 'PixelArtAcademy.Adventure' parameter1='adventure-mode'}}" target="_blank">
                 Play in browser
               </a>
+            </div>
+            <p class="details">
+              This is a highly ambitious project, 7 years in the making with many more to come to realize the full
+              vision. Currently, the first chapter—
+              <a href="https://www.youtube.com/watch?v=ztEcSEoNlkg" target="_blank">Admission Week</a>
+              —is available as an open alpha to anyone who pre-orders
+              the game. It is played directly in the browser through a text interface, with ambitions to become a
+              point-and-click adventure one day.
             </p>
-            <p>
+            <p class="purchasing">
               Purchasing Adventure Mode happens in-game as part of the gameplay. It costs $10–$40 and will include a
               Steam key for Learn Mode as well (upon release or immediately if you choose Alpha Access).
             </p>
@@ -52,25 +57,27 @@
         </div>
         <div class="learn mode item">
           <h2 class="title">Learn Mode</h2>
-          <div class="status">Steam Early Access</div>
+          <div class="status-area">
+            <span class="status">Steam Early Access</span>
+          </div>
+          <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/learnmode-icon.png'}}"/>
           <div class="description">
-            <p>
+            <p class="main">
               In Learn Mode, you jump straight into Pixel Art Academy's interactive tutorials for the fastest way of
-              becoming a pixel artist. Put theory into practice with drawing challenges and unleash your creativity on
-              projects where you make art for video games.
+              becoming a pixel artist.
             </p>
-            <p>
+            <div class="action-link-area">
+              <a class="action-link" href="https://store.steampowered.com/app/2330360/Pixel_Art_Academy_Learn_Mode" target="_blank">
+                Wishlist on Steam
+              </a>
+            </div>
+            <p class="details">
               Given how long the full development of Adventure Mode will take, I wanted to take the already finished
               learning parts and offer them as a standalone, downloadable game. Learn Mode enables me to create more
               educational content quickly and will be the first to get new updates before they are eventually integrated
               into Adventure Mode.
             </p>
-            <p>
-              <a class="action-link" href="https://store.steampowered.com/app/2330360/Pixel_Art_Academy_Learn_Mode">
-                Wishlist on Steam
-              </a>
-            </p>
-            <p>
+            <p class="purchasing">
               You will also get Learn Mode when purchasing Adventure Mode so consider if that option works better for you
               than purchasing directly on Steam.
             </p>
@@ -81,20 +88,26 @@
     <div class="study-guide section">
       <div class="content item">
         <h2 class="title">Study Guide</h2>
-        <div class="status">Free</div>
+        <div class="status-area">
+          <div class="status">Free</div>
+        </div>
+        <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/studyguide-icon.png'}}"/>
         <div class="description">
           <p>
-            I believe education should be freely available to everyone so I am committed to releasing all learning content developed for Pixel Art Academy as open educational resources.
+            The <a href="{{routerPath 'Retropolis.AcademyOfArt'}}">Retropolis Academy of Art</a>
+            Study Guide provides free written articles on the topics covered by the game.
           </p>
-          <p>
-            The Retropolis Academy of Art Study Guide provides free written articles on the topics covered by the game. If you aren't able to purchase the game, that shouldn't be a barrier to learning.
-          </p>
-          <p>
-            <a class="action-link" href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home'}}" target="_blank">
+          <div class="action-link-area">
+            <a class="action-link" href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home'}}">
               Read in browser
             </a>
+          </div>
+          <p class="details">
+            I believe education should be freely available to everyone so I am committed to releasing all learning
+            content developed for Pixel Art Academy as open educational resources. If you aren't able to purchase the
+            game, that shouldn't be a barrier to learning.
           </p>
-          <p>
+          <p class="purchasing">
             The game is also <a href="https://github.com/retronator/Pixel-Art-Academy" target="_blank">open source</a> if you want to give building it a go yourself.
           </p>
         </div>
@@ -103,71 +116,99 @@
     <div class="development-story section">
       <div class="content">
         <h2 class="title">Development story</h2>
-        <p>
-          The idea for a pixel art game about learning pixel art started in 2015 as I was applying to the Learning,
-          Design, and Technology Master's degree at the Stanford Graduate School of Education. Following a successful
-          Kickstarter, I graduated with the project's design in 2016 and started full-time development.
-        </p>
-        <p>
-          During my research, I realized it's not just access to learning materials that is holding people back from
-          realizing their aspirations. Especially for adults, committing and following through is hard when our time
-          competes with other forms of entertainment and life's challenges. My thesis was that if we become invested in
-          our learning as easily as we do with other video games, this would help people improve their skills without
-          much effort. I set out to develop a rich world where you create your character and acquire skills as well as
-          learn how to learn.
-        </p>
-        <p>
-          Text adventure in 5 years video
-        </p>
-        <p>
-          However, this proved to be a monumental task as a mostly solo developer. I had to learn a lot myself about how
-          to focus the production while also navigating a part-time job running a physical school for game development.
-          Even though the game had many alpha releases along the way and the players could see the potential, the full
-          vision was too far away for sustainable development.
-        </p>
-        <p>
-          7 years into development, I took a step back to see how things could have been done better if I had the chance
-          to do it all over again. I concluded that I should have developed the free learning materials first, the
-          interactive tutorials second, and the story-rich world around it last. While I couldn't rewind time, I did
-          change course there and then. The game was split into the free Study Guide, the focused Learn Mode, and the
-          overarching Adventure Mode.
-        </p>
-        <p>
-          Educational game in 9 years video
-        </p>
-        <p>
-          After 1 and a half years of working on the standalone, downloadable version of Pixel Art Academy, Learn Mode is
-          ready to enter Early Access on Steam. It took many turns to get here but I did my best with the knowledge I
-          had at the time, and most importantly I never gave up.
-        </p>
-        <p>
-          In many ways, the Early Access release of Learn Mode is just the start. The development continues with adding
-          new content for the full release, covering all pixel art fundamentals and the 7 elements of art. I'm sure it
-          will take a couple of more wrong turns to get there, but hopefully all the right ones too.
-        </p>
-        <h3>Friends I made along the way</h3>
-        <p>
-          While almost everything in the game is designed, drawn, and coded by me, the game would not be as great if I
-          didn't have help along the way.
-        </p>
-        <p>
-          The original soundtrack for the game is being composed by
-          <a class="friend" href="https://annaeichenauermusic.com" target="_blank">Anna Eicheneur</a>.
-          The title/Kickstarter theme was done by
-          <a class="friend" href="https://c-jeff.bandcamp.com" target="_blank">C-jeff</a>.
-          Some more friends donated their old music albums.
-          <a class="friend" href="https://x.com/SarahBurrough" target="_blank">Burra</a> helped with outreach in the
-          early days, as did
-          <a class="friend" href="http://objectsforheads.com" target="_blank">objectsforheads</a> with coding. Many of my
-          friends at
-          <a class="friend" href="https://www.spelkollektivet.com" target="_blank">Spelkollektivet</a> and others helped
-          playtest the game. I use open-source libraries and frameworks as well as Creative Commons music and references.
-          The game features many artists and video games without whose inspiration I wouldn't be writing this today.
-        </p>
-        <p>
-          A big thank you to everyone who contributed to the game in any way, and to you, reading this now. I encourage
-          you to check the full credits in the game itself.
-        </p>
+        <div class="paragraphs-block">
+          <p>
+            The idea for a pixel art game about learning pixel art started in 2015 as I was applying to the
+            <a href="https://ed.stanford.edu/ldt" target="_blank">Learning, Design, and Technology</a>
+            Master's degree program at the Stanford Graduate School of Education. Following a successful
+            <a href="https://www.kickstarter.com/projects/retronator/retronator-pixel-art-academy/description" target="_blank">Kickstarter campaign</a>,
+            I completed the game's initial design and prototype as my graduation project and started full-time development
+            at the end of 2016.
+          </p>
+          <p>
+            During my research, I realized it's not just access to learning materials that is holding people back from
+            realizing their aspirations. Especially for adults, committing and following through is hard when our time
+            competes with other forms of entertainment and life's challenges. My thesis was that if we become invested in
+            our learning as easily as we do with other video games, this would help people improve their skills without
+            much effort. I set out to develop a rich world where you create your character and acquire skills as well as
+            learn how to learn.
+          </p>
+        </div>
+        <div class="trailer-area">
+          <iframe class="trailer" src="https://www.youtube-nocookie.com/embed/SbwWfpACvIw?si=fPgTfriWrGmOvti1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="paragraphs-block">
+          <p>
+            However, this proved to be a monumental task as a mostly solo developer. I had to learn a lot myself about how
+            to focus the production while also navigating a part-time job running a physical school for game development.
+            Even though the game had many alpha releases along the way and the players could see the potential, the full
+            vision was too far away for sustainable development.
+          </p>
+          <p>
+            7 years into development, I took a step back to see how things could have been done better if I had the chance
+            to do it all over again. I concluded that I should have developed the free learning materials first, the
+            interactive tutorials second, and the story-rich world around it last. While I couldn't rewind time, I did
+            change course there and then. The game was split into the free Study Guide, the focused Learn Mode, and the
+            overarching Adventure Mode.
+          </p>
+          <p>
+            After 1 and a half years of working on the standalone, downloadable version of Pixel Art Academy, Learn Mode is
+            ready to enter Early Access on Steam. It took many turns to get here but I did my best with the knowledge I
+            had at the time, and most importantly I never gave up.
+          </p>
+          <p>
+            In many ways, the Early Access release of Learn Mode is just the start. The development continues with adding
+            new content for the full release, covering all pixel art fundamentals and the 7 elements of art. I'm sure it
+            will take a couple of more wrong turns to get there, but hopefully all the right ones too.
+          </p>
+        </div>
+        <div class="friends">
+          <h3 class="subtitle">Friends I made along the way</h3>
+          <p>
+            While almost everything in the game is designed, drawn, and coded by me, the game would not be as great if I
+            didn't have help along the way.
+          </p>
+          <ul>
+            <li>
+              <a class="friend" href="https://annaeichenauermusic.com" target="_blank">Anna Eicheneur</a>
+              is composing the original soundtrack for the game.
+            </li>
+            <li>
+              <a class="friend" href="https://c-jeff.bandcamp.com" target="_blank">C-jeff</a>
+              wrote the title/Kickstarter theme.
+            </li>
+            <li>
+              <a class="friend" href="https://shnabubula.bandcamp.com" target="_blank">Shnabubula</a>,
+              <a class="friend" href="https://extentofthejam.bandcamp.com" target="_blank">Extent of the Jam</a>, and
+              <a class="friend" href="https://leemajik.bandcamp.com" target="_blank">Leemajik</a>
+              donated their back catalog albums.
+            </li>
+            <li>
+              <a class="friend" href="https://x.com/SarahBurrough" target="_blank">Burra</a> helped with outreach in the
+              early days, as did objectsforheads with coding.
+            </li>
+            <li>
+              Many of my friends at
+              <a class="friend" href="https://www.spelkollektivet.com" target="_blank">Spelkollektivet</a>
+              and others helped playtest the game.
+            </li>
+            <li>
+              <a class="friend" href="https://www.kickstarter.com/projects/retronator/retronator-pixel-art-academy/description" target="_blank">Kickstarter backers</a> and
+              <a class="friend" href="https://www.patreon.com/retro" target="_blank">Patreon supporters</a>
+              have been a source of unwavering love for the project.
+            </li>
+            <li>
+              I use open-source libraries and frameworks as well as additional Creative Commons music, sound effects, typography, and references.
+            </li>
+            <li>
+              The game features many artists and video games without whose inspiration I wouldn't be writing this today.
+            </li>
+          </ul>
+          <p>
+            A big thank you to everyone who contributed to the game in any way, and to you, reading this now. I encourage
+            you to check the full credits in the game itself.
+          </p>
+        </div>
       </div>
     </div>
     <div class="follow section">

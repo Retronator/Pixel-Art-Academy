@@ -2,11 +2,12 @@
 
 .pixelartacademy-landingpage-pages-about
   position relative
-  adventure()
+  daily()
   background atariGray(4)
   min-width 320rem
   max-width 480rem
   margin 0 auto
+  overflow-x hidden
 
   *
     pixel-image-rendering()
@@ -19,8 +20,9 @@
       margin 0 auto
 
   .header
-    position relative
+    position absolute
     z-index 1
+    width 100%
 
     .content
       position relative
@@ -77,10 +79,283 @@
   .scene
     position relative
     left calc(50% - 240rem)
-    margin-top -50rem
     width 480rem
-    height 270rem
+    height 300rem
 
     .illustration
       width 100%
       height 100%
+
+  .item
+    padding 0 10rem
+    min-width 140rem
+
+    .title
+      acme-9()
+      text-transform uppercase
+      text-align center
+
+    .status-area
+      text-align center
+
+      .status
+        display inline-block
+        position relative
+        text-transform uppercase
+        padding 1rem 1rem 1rem 2rem
+
+        &::before
+        &::after
+          content ''
+          absolute-cover()
+          border 1rem solid
+
+        &::before
+          top -1rem
+          bottom -1rem
+          border-left none
+          border-right none
+
+        &::after
+          left -1rem
+          right -1rem
+          border-top none
+          border-bottom none
+
+    .icon
+      display block
+      width 50rem
+      margin 15rem auto 5rem
+
+    .action-link-area
+      position relative
+      z-index 1
+      text-align center
+      padding 5rem 0 10rem
+      text-transform uppercase
+
+      .action-link
+        display inline-block
+        position relative
+        padding 3rem 10rem 7rem
+        text-decoration none
+        white-space nowrap
+        color atariGray(0)
+
+        &::before
+          content ''
+          absolute-cover()
+          z-index -1
+          background atariGreen(5)
+          border-bottom 3rem solid atariGreen(2)
+
+        &:hover::before
+          background: atariGreen(6)
+
+        &:active
+          padding-top 6rem
+          padding-bottom 4rem
+
+          &::before
+            border-bottom none
+            top 3rem
+
+    .description
+      .main
+        text-align center
+
+        a
+          padding-bottom 1rem
+
+      .details
+        adventure()
+
+      .purchasing
+        position relative
+        small-print()
+        padding-left 6rem
+
+        &::before
+          content '*'
+          position absolute
+          left 0
+
+        a
+          padding-bottom 1rem
+
+      p
+        a
+          position relative
+          display inline-block
+          text-decoration none
+
+          &::after
+            content ''
+            display block
+            absolute-cover()
+            right 1rem
+            border-bottom 1rem solid
+
+          &:hover
+            &::after
+              display none
+  .modes
+    background-color atariCyan(0)
+    color atariGray(5)
+
+    .content
+      position relative
+      display flex
+      width 100%
+      justify-content space-evenly
+
+      .mode
+        width 40%
+
+        &.adventure
+          .status-area
+            .status
+              background atariOrange(1)
+              color atariYellow(5)
+
+              &::before
+              &::after
+                border-color atariOrange(2)
+
+              .description
+                background atariOrange(0)
+
+        &.learn
+          .status-area
+            .status
+              background atariGreen(1)
+              color atariGreen(6)
+
+              &::before
+              &::after
+                border-color atariGreen(2)
+
+              .description
+                background atariGreen(0)
+
+      .description
+        .details
+          color atariGray(4)
+
+        .purchasing
+          color atariGray(3)
+
+        p
+          a
+            border-bottom-color color atariGray(4)
+
+            &:hover
+              background atariGray(4)
+              color atariGray(0)
+
+  .study-guide
+    background-color atariCyan(1)
+    color atariGray(5)
+
+    .content
+      width 60%
+
+      .status-area
+        .status
+          background atariAqua(1)
+          color atariGreen(6)
+
+          &::before
+          &::after
+            border-color atariAqua(2)
+
+      .description
+        .purchasing
+          color atariGray(4)
+
+          p
+            a
+              border-bottom-color color atariGray(4)
+
+              &:hover
+                background atariGray(4)
+                color atariGray(0)
+
+        p
+          a
+            padding-bottom 1rem
+            border-bottom-color color atariGray(5)
+
+            &:hover
+              background atariGray(5)
+              color atariGray(0)
+
+  .development-story
+    background image('/pixelartacademy/landingpage/pages/about/hapunui.png') center bottom / 480rem 288rem atariCyan(6) no-repeat
+    line-height 10rem
+
+    .content
+      .title
+        kyrou-9()
+
+      p
+      ul
+        color atariCyan(1)
+
+      ul
+        list-style square
+        padding-left 6rem
+
+        li
+          margin-bottom 4rem
+          padding-left 1rem
+
+      a
+        position relative
+        display inline-block
+        text-decoration none
+
+        &::after
+          content ''
+          display block
+          absolute-cover()
+          right 1rem
+          border-bottom 1rem solid atariCyan(1)
+
+        &:hover
+          background atariCyan(1)
+          color atariGray(7)
+
+          &::after
+            display none
+
+      .paragraphs-block
+        margin 10rem 0
+        column-count 2
+        column-gap 20rem
+        column-rule 1rem solid atariCyan(2)
+
+        p:first-child
+          margin-top 0
+
+      .trailer-area
+        .trailer
+          display block
+          background atariGray(0)
+          padding 5rem
+          width 250rem
+          height 145rem
+          margin 0 auto
+
+      .friends
+        padding 10rem
+        margin-bottom 10rem
+        background alpha(atariGray(7), 0.8)
+        border 2rem solid atariCyan(4)
+
+        .subtitle
+          kyrou-7()
+          margin-top 0
+
+        p:last-child
+          margin-bottom 0
