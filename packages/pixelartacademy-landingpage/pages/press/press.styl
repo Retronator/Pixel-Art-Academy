@@ -1,4 +1,44 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-landingpage-pages-press
-  // Nothing so far.
+  .features
+    color atariGray(5)
+
+    li
+      margin-bottom 5rem
+
+  .links
+    a
+      text-decoration none
+
+  .videos
+    iframe
+      width 210rem
+      height 118rem
+
+  .images
+    .row
+      display flex
+
+    .image-link
+      text-decoration none
+      background none
+
+  .credits
+    a
+      text-decoration none
+      color atariGray(4)
+
+      &:hover
+        color atariGray(0)
+
+  .others
+    position relative
+    padding-left 6rem
+    small-print()
+    color atariGray(4)
+
+    &::before
+      content '*'
+      position absolute
+      left 0

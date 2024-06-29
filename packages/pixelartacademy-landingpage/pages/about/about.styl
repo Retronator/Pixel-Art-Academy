@@ -1,5 +1,22 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
+solid-line-link(normalColor, hoverColor)
+  position relative
+  text-decoration-thickness 1rem
+  text-underline-offset 1rem
+  color normalColor
+
+  &:hover
+    background normalColor
+    color hoverColor
+    text-decoration-color normalColor
+
+follow-color(hue, shade)
+  color hue(shade)
+
+  &:hover
+    color hue(shade+1)
+
 .pixelartacademy-landingpage-pages-about
   position relative
   daily()
@@ -27,7 +44,7 @@
     .content
       position relative
       text-align center
-      margin 10rem auto
+      margin 4rem auto
 
       .title
         margin 0
@@ -51,7 +68,7 @@
       .retro
         position absolute
         top -2rem
-        right 48rem
+        right 38rem
         width 25rem
         z-index 2
 
@@ -80,7 +97,7 @@
     position relative
     left calc(50% - 240rem)
     width 480rem
-    height 300rem
+    height 280rem
 
     .illustration
       width 100%
@@ -131,7 +148,7 @@
       position relative
       z-index 1
       text-align center
-      padding 5rem 0 10rem
+      padding 5rem 0 7rem
       text-transform uppercase
 
       .action-link
@@ -140,7 +157,7 @@
         padding 3rem 10rem 7rem
         text-decoration none
         white-space nowrap
-        color atariGray(0)
+        color atariGreen(0)
 
         &::before
           content ''
@@ -149,8 +166,11 @@
           background atariGreen(5)
           border-bottom 3rem solid atariGreen(2)
 
-        &:hover::before
-          background: atariGreen(6)
+        &:hover
+          color atariGreen(1)
+
+          &::before
+            background: atariGreen(6)
 
         &:active
           padding-top 6rem
@@ -163,9 +183,6 @@
     .description
       .main
         text-align center
-
-        a
-          padding-bottom 1rem
 
       .details
         adventure()
@@ -180,25 +197,6 @@
           position absolute
           left 0
 
-        a
-          padding-bottom 1rem
-
-      p
-        a
-          position relative
-          display inline-block
-          text-decoration none
-
-          &::after
-            content ''
-            display block
-            absolute-cover()
-            right 1rem
-            border-bottom 1rem solid
-
-          &:hover
-            &::after
-              display none
   .modes
     background-color atariCyan(0)
     color atariGray(5)
@@ -222,9 +220,6 @@
               &::after
                 border-color atariOrange(2)
 
-              .description
-                background atariOrange(0)
-
         &.learn
           .status-area
             .status
@@ -235,9 +230,6 @@
               &::after
                 border-color atariGreen(2)
 
-              .description
-                background atariGreen(0)
-
       .description
         .details
           color atariGray(4)
@@ -247,11 +239,7 @@
 
         p
           a
-            border-bottom-color color atariGray(4)
-
-            &:hover
-              background atariGray(4)
-              color atariGray(0)
+            solid-line-link(atariGray(4), atariCyan(0))
 
   .study-guide
     background-color atariCyan(1)
@@ -273,22 +261,8 @@
         .purchasing
           color atariGray(4)
 
-          p
-            a
-              border-bottom-color color atariGray(4)
-
-              &:hover
-                background atariGray(4)
-                color atariGray(0)
-
-        p
           a
-            padding-bottom 1rem
-            border-bottom-color color atariGray(5)
-
-            &:hover
-              background atariGray(5)
-              color atariGray(0)
+            solid-line-link(atariGray(4), atariCyan(1))
 
   .development-story
     background image('/pixelartacademy/landingpage/pages/about/hapunui.png') center bottom / 480rem 288rem atariCyan(6) no-repeat
@@ -311,23 +285,7 @@
           padding-left 1rem
 
       a
-        position relative
-        display inline-block
-        text-decoration none
-
-        &::after
-          content ''
-          display block
-          absolute-cover()
-          right 1rem
-          border-bottom 1rem solid atariCyan(1)
-
-        &:hover
-          background atariCyan(1)
-          color atariGray(7)
-
-          &::after
-            display none
+        solid-line-link(atariCyan(1), atariGray(7))
 
       .paragraphs-block
         margin 10rem 0
@@ -356,6 +314,84 @@
         .subtitle
           kyrou-7()
           margin-top 0
+          color atariCyan(0)
 
         p:last-child
           margin-bottom 0
+
+  .follow
+    background-color atariAqua(0)
+    color atariAqua(5)
+
+    .content
+      .title
+        kyrou-9()
+        color atariGray(7)
+
+      .follow-links
+        display flex
+        list-style none
+        margin 15rem 0
+        padding 0
+        justify-content space-evenly
+
+        .follow-link
+          display inline-block
+          text-align center
+          text-decoration none
+          vertical-align middle
+
+          &.discord
+            follow-color(atariBlue, 5)
+
+          &.youtube
+            follow-color(atariRed, 4)
+
+          &.twitch
+            follow-color(atariPurple, 4)
+
+          &.patreon
+            follow-color(atariPeach, 5)
+
+          &.tiktok
+            follow-color(atariCyan, 5)
+
+          &.x
+            follow-color(atariGray, 4)
+
+          &:hover
+            .icon
+              animation bounce 1s step-start 0s infinite
+
+          .icon
+            position relative
+            width 24rem
+
+          .name
+            display block
+            text-transform uppercase
+
+      .press-kit
+        line-height 10rem
+
+        a
+          solid-line-link(atariAqua(7), atariAqua(0))
+
+  .small-print
+    background-color atariGray(0)
+    color atariGray(2)
+    small-print()
+    text-align center
+    line-height 9rem
+
+    a
+      solid-line-link(atariGray(2), atariGray(0))
+
+    .copyleft
+      display inline-block
+      adventure()
+      transform scaleX(-1) translate(1rem, 0)
+
+@keyframes bounce
+  50%
+    top -5rem

@@ -23,7 +23,7 @@ class PixelArtAcademy.LandingPage.Pages.About extends AM.Component
     # Create pixel scaling display.
     @display = new AM.Display
       safeAreaWidth: 320
-      safeAreaHeight: 240
+      safeAreaHeight: 241
       minScale: 2
       
     # Add 2x scale class to html so we can scale cursors.
