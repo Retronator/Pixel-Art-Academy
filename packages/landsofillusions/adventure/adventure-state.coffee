@@ -472,7 +472,7 @@ class LOI.Adventure extends LOI.Adventure
         return if options.callback?()
 
         # Do a hard reload of the root URL.
-        window.location = '/'
+        window.location = '/adventure-mode'
 
   clearLocalStorageGameStateParts: ->
     # Clear character selection and situation. We use undefined to remove the fields from local storage.

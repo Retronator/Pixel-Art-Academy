@@ -2,20 +2,270 @@
   <style>
     html {
       font-size: {{display.scale}}px;
-    }
-
-    html, body, .retronator-app {
-      padding: 0;
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
       background: black;
     }
   </style>
+
   {{> Render display}}
 
   <div class="pixelartacademy-landingpage-pages-about">
-    {{> Retronator.HQ.Items.Prospectus.Content}}
+    <div class="header section">
+      <div class="content">
+        <h1 class="title">
+          <span class="retronator">Retronator</span>
+          <span class="pixel-art-academy">Pixel Art Academy</span>
+        </h1>
+        <div class="by">by Matej 'Retro' Jan</div>
+        <img class="retro" src="{{image '/pixelartacademy/landingpage/locations/retropolis/retro.png'}}"/>
+        <div class="divider"></div>
+      </div>
+    </div>
+    <div class="scene">
+      <img class="learn-mode illustration" src="{{image '/pixelartacademy/landingpage/pages/about/learnmode.gif'}}"/>
+    </div>
+    <div class="modes section">
+      <div class="content">
+        <div class="adventure mode item">
+          <h2 class="title">Adventure Mode</h2>
+          <div class="status-area">
+            <span class="status">Open alpha</span>
+          </div>
+          <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/adventuremode-icon.png'}}"/>
+          <div class="description">
+            <p class="main">
+              The idea that started it all, play an adventure game and travel to the island of Retropolis where you will
+              develop your skills as an art student.
+            </p>
+            <div class="action-link-area">
+              <a class="action-link" href="{{routerPath 'PixelArtAcademy.Adventure' parameter1='adventure-mode'}}">
+                Play in browser
+              </a>
+            </div>
+            <p class="details">
+              This is a highly ambitious project, 7 years in the making with many more to come to realize the full
+              vision. Currently, the first chapter—<a href="https://www.youtube.com/watch?v=ztEcSEoNlkg" target="_blank">Admission Week</a>—is
+              available as an open alpha to anyone who pre-orders
+              the game. It is played directly in the browser through a text interface, with ambitions to become a
+              point-and-click adventure one day.
+            </p>
+            <p class="purchasing">
+              Purchasing Adventure Mode happens in-game as part of the gameplay. It costs $10–$40 and will include a
+              Steam key for Learn Mode (upon Learn Mode release or immediately if you choose Alpha Access).
+            </p>
+          </div>
+        </div>
+        <div class="learn mode item">
+          <h2 class="title">Learn Mode</h2>
+          <div class="status-area">
+            <span class="status">Steam Early Access</span>
+          </div>
+          <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/learnmode-icon.png'}}"/>
+          <div class="description">
+            <p class="main">
+              In Learn Mode, you jump straight into Pixel Art Academy's interactive tutorials for the fastest way of
+              becoming a pixel artist.
+            </p>
+            <div class="action-link-area">
+              <a class="action-link" href="https://store.steampowered.com/app/2330360/Pixel_Art_Academy_Learn_Mode" target="_blank">
+                Wishlist on Steam
+              </a>
+            </div>
+            <p class="details">
+              Given how long the full development of Adventure Mode will take, I wanted to take the already finished
+              learning parts and offer them as a standalone, downloadable game. Learn Mode enables me to create more
+              educational content quickly and will be the first to get new updates before they are eventually integrated
+              into Adventure Mode.
+            </p>
+            <p class="purchasing">
+              Learn Mode is included when purchasing Adventure Mode so consider if that option works better for you
+              than purchasing directly on Steam.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="study-guide section">
+      <div class="content item">
+        <h2 class="title">Study Guide</h2>
+        <div class="status-area">
+          <div class="status">Free</div>
+        </div>
+        <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/studyguide-icon.png'}}"/>
+        <div class="description">
+          <p>
+            The Retropolis Academy of Art Study Guide provides written articles on the topics covered by the game.
+          </p>
+          <div class="action-link-area">
+            <a class="action-link" href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home'}}">
+              Read in browser
+            </a>
+          </div>
+          <p class="details">
+            I believe education should be freely available to everyone, so I am committed to releasing all learning
+            content developed for Pixel Art Academy as open educational resources. If you aren't able to purchase the
+            game, that shouldn't be a barrier to learning.
+          </p>
+          <p class="purchasing">
+            The game is also <a href="https://github.com/retronator/Pixel-Art-Academy" target="_blank">open source</a> if you want to give building it a go yourself.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="development-story section">
+      <div class="content">
+        <h2 class="title">Development story</h2>
+        <div class="paragraphs-block">
+          <p>
+            The idea for a pixel art game about learning how to draw started in 2015 as I was applying to the
+            <a href="https://ed.stanford.edu/ldt" target="_blank">Learning, Design, and Technology</a>
+            Master's degree program at the Stanford Graduate School of Education. Following a successful
+            <a href="https://www.kickstarter.com/projects/retronator/retronator-pixel-art-academy/description" target="_blank">Kickstarter campaign</a>,
+            I completed the game's initial design and prototype as my graduation project and started full-time development
+            at the end of 2016.
+          </p>
+          <p>
+            During my research, I realized it's not just access to learning materials that is holding people back from
+            realizing their aspirations. Especially for adults, committing and following through with their plans is
+            hard when our time competes with other forms of entertainment and life's challenges. My thesis was that if
+            we can become invested in our learning as easily as we do in video games, it would help people improve their
+            skills with less effort. This led me to focus on developing a rich world where you create your character and
+            shape their story as you learn alongside them.
+          </p>
+        </div>
+        <div class="trailer-area">
+          <iframe class="trailer" src="https://www.youtube-nocookie.com/embed/SbwWfpACvIw?si=fPgTfriWrGmOvti1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="paragraphs-block">
+          <p>
+            However, this proved to be a monumental task as a mostly solo developer. I had to learn a lot about how
+            to focus the production while also navigating a part-time job running a physical school for game development.
+            Even though the game had many alpha releases along the way and the players could see the potential, the full
+            vision was too far away for sustainable development.
+          </p>
+          <p>
+            7 years in, I took a step back to see how things could have been done better if I had the chance
+            to do it all over again. I concluded that I should have developed the free learning materials first, the
+            interactive tutorials second, and the story-rich world last. While I couldn't rewind time, I
+            changed course there and then. The game was split into the free
+            <a href="{{routerPath 'PixelArtAcademy.StudyGuide.Pages.Home'}}" target="_blank">Study Guide</a>,
+            the focused
+            <a href="https://store.steampowered.com/app/2330360/Pixel_Art_Academy_Learn_Mode" target="_blank">Learn Mode</a>,
+            and the overarching
+            <a href="{{routerPath 'PixelArtAcademy.Adventure' parameter1='adventure-mode'}}" target="_blank">Adventure Mode</a>.
+          </p>
+          <p>
+            After 1½ years of working on the standalone, downloadable Pixel Art Academy: Learn Mode, it is now ready to
+            enter Early Access on Steam. It took many turns to get here but I did my best with the knowledge I had at
+            the time, and most importantly, never gave up.
+          </p>
+          <p>
+            In many ways, the Early Access release of Learn Mode is just the beginning. The development continues with adding
+            new content for the full release, covering all pixel art fundamentals and the 7 elements of art. I'm sure I
+            will take a couple of more wrong turns to get there, but hopefully all the right ones too.
+          </p>
+        </div>
+        <div class="friends">
+          <h3 class="subtitle">Friends I made along the way</h3>
+          <p>
+            While almost everything in the game is designed, drawn, and coded by me, the game would not be as good if I
+            didn't have help along the way.
+          </p>
+          <ul>
+            <li>
+              <a class="friend" href="https://annaeichenauermusic.com" target="_blank">Anna Eichenauer</a>
+              is composing the original soundtrack.
+            </li>
+            <li>
+              <a class="friend" href="https://c-jeff.bandcamp.com" target="_blank">C-jeff</a>
+              wrote the title/Kickstarter theme.
+            </li>
+            <li>
+              <a class="friend" href="https://shnabubula.bandcamp.com" target="_blank">Shnabubula</a>,
+              <a class="friend" href="https://extentofthejam.bandcamp.com" target="_blank">Extent of the Jam</a>, and
+              <a class="friend" href="https://leemajik.bandcamp.com" target="_blank">Leemajik</a>
+              donated their back catalog albums.
+            </li>
+            <li>
+              <a class="friend" href="https://x.com/SarahBurrough" target="_blank">Burra</a> helped with outreach in the
+              early days, as did objectsforheads with coding.
+            </li>
+            <li>
+              Many of my friends at
+              <a class="friend" href="https://www.spelkollektivet.com" target="_blank">Spelkollektivet</a>
+              and others helped playtest the game.
+            </li>
+            <li>
+              <a class="friend" href="https://www.kickstarter.com/projects/retronator/retronator-pixel-art-academy/description" target="_blank">Kickstarter backers</a> and
+              <a class="friend" href="https://www.patreon.com/retro" target="_blank">Patreon supporters</a>
+              have been a source of unwavering love for the project.
+            </li>
+            <li>
+              I use open-source libraries and frameworks as well as additional Creative Commons music, sound effects, typography, and references.
+            </li>
+            <li>
+              The game features many artists and video games without whose inspiration I wouldn't be writing this today.
+            </li>
+          </ul>
+          <p>
+            A big thank you to everyone who contributed to the game in any way, and to you, reading this now. I encourage
+            you to check the full credits in the game itself.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="follow section">
+      <div class="content">
+        <h2 class="title">Follow the development</h2>
+        <ul class="follow-links">
+          <li class="follow-link-area">
+            <a class="follow-link patreon" href="https://www.patreon.com/retro" target="_blank">
+              <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/patreon.png'}}"/>
+              <span class="name">Patreon</span>
+            </a>
+          </li>
+          <li class="follow-link-area">
+            <a class="follow-link youtube" href="https://www.youtube.com/retronator48k" target="_blank">
+              <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/youtube.png'}}"/>
+              <span class="name">YouTube</span>
+            </a>
+          </li>
+          <li class="follow-link-area">
+            <a class="follow-link twitch" href="https://www.twitch.tv/retronator" target="_blank">
+              <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/twitch.png'}}"/>
+              <span class="name">Twitch</span>
+            </a>
+          </li>
+          <li class="follow-link-area">
+            <a class="follow-link discord" href="https://discord.gg/mngNfvTwG6" target="_blank">
+              <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/discord.png'}}"/>
+              <span class="name">Discord</span>
+            </a>
+          </li>
+          <li class="follow-link-area">
+            <a class="follow-link tiktok" href="https://www.tiktok.com/@retronator" target="_blank">
+              <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/tiktok.png'}}"/>
+              <span class="name">TikTok</span>
+            </a>
+          </li>
+          <li class="follow-link-area">
+            <a class="follow-link x" href="https://x.com/PixelArtAcademy" target="_blank">
+              <img class="icon" src="{{image '/pixelartacademy/landingpage/pages/about/x.png'}}"/>
+              <span class="name">Twitter</span>
+            </a>
+          </li>
+        </ul>
+        <p class="press-kit">
+          Want to write about the game or make a video?<br/>
+          Check out the
+          <a class="press-kit-link" href="{{routerPath 'PixelArtAcademy.LandingPage.Pages.Press'}}" target="_black">Press kit</a>
+          and ask for a pre-release Steam key.
+        </p>
+      </div>
+    </div>
+    <div class="small-print section">
+      By using this website you agree to the
+      <a class="smallprint-link" href="{{routerPath 'PixelArtAcademy.LandingPage.Pages.Smallprint'}}" target="_blank">terms of service</a>.<br/>
+      <a href="https://github.com/Retronator/Pixel-Art-Academy" target="_blank">Copyleft</a> <span class="copyleft">©</span> Retronator
+    </div>
   </div>
 </template>

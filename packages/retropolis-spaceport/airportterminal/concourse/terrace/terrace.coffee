@@ -49,7 +49,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       totalAppTime: 0
 
   url: ->
-    if @isLandingPage() then '' else 'spaceport/terrace'
+    if @isLandingPage() then 'adventure-mode' else 'spaceport/terrace'
 
   things: -> [
     @constructor.Retropolis

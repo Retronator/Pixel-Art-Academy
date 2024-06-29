@@ -1,29 +1,397 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
+solid-line-link(normalColor, hoverColor)
+  position relative
+  text-decoration-thickness 1rem
+  text-underline-offset 1rem
+  color normalColor
+
+  &:hover
+    background normalColor
+    color hoverColor
+    text-decoration-color normalColor
+
+follow-color(hue, shade)
+  color hue(shade)
+
+  &:hover
+    color hue(shade+1)
+
 .pixelartacademy-landingpage-pages-about
-  height 100%
-  min-width 640px
-  adventure()
-  line-height 8rem
+  position relative
+  daily()
+  background atariGray(4)
+  min-width 320rem
+  max-width 480rem
+  margin 0 auto
+  overflow-x hidden
 
   *
     pixel-image-rendering()
 
-  .retronator-hq-items-prospectus-content
-    height 100%
+  .section
+    padding 10rem
 
-    .main-wrapper
+    .content
+      width 300rem
+      margin 0 auto
+
+  .header
+    position absolute
+    z-index 1
+    width 100%
+
+    .content
+      position relative
+      text-align center
+      margin 4rem auto
+
+      .title
+        margin 0
+        line-height initial
+
+        .retronator
+          display block
+          retrotype()
+
+        .pixel-art-academy
+          display block
+          position relative
+          margin-top -2rem
+          font-weight bold
+          acme-9()
+
+      .by
+        adventure()
+        line-height initial
+
+      .retro
+        position absolute
+        top -2rem
+        right 38rem
+        width 25rem
+        z-index 2
+
+      .divider
+        position absolute
+        left 20rem
+        right 20rem
+        top 26rem
+        z-index 1
+
+        &::before
+        &::after
+          content ''
+          position absolute
+          border-bottom 1rem solid atariGray(0)
+
+        &::before
+          left -10rem
+          right 76rem
+
+        &::after
+          left 193rem
+          right -10rem
+
+  .scene
+    position relative
+    left calc(50% - 240rem)
+    width 480rem
+    height 280rem
+
+    .illustration
+      width 100%
       height 100%
 
-    nav
-      position fixed
+  .item
+    padding 0 10rem
+    min-width 140rem
 
-    @media only screen and (max-width: 400px)
-      .size1of3
-        width 100%
-        margin 0 auto
-        max-width 150rem
-        float initial
+    .title
+      acme-9()
+      text-transform uppercase
+      text-align center
 
-    .payment-form-screen
-      position fixed
+    .status-area
+      text-align center
+
+      .status
+        display inline-block
+        position relative
+        text-transform uppercase
+        padding 1rem 1rem 1rem 2rem
+
+        &::before
+        &::after
+          content ''
+          absolute-cover()
+          border 1rem solid
+
+        &::before
+          top -1rem
+          bottom -1rem
+          border-left none
+          border-right none
+
+        &::after
+          left -1rem
+          right -1rem
+          border-top none
+          border-bottom none
+
+    .icon
+      display block
+      width 50rem
+      margin 15rem auto 5rem
+
+    .action-link-area
+      position relative
+      z-index 1
+      text-align center
+      padding 5rem 0 7rem
+      text-transform uppercase
+
+      .action-link
+        display inline-block
+        position relative
+        padding 3rem 10rem 7rem
+        text-decoration none
+        white-space nowrap
+        color atariGreen(0)
+
+        &::before
+          content ''
+          absolute-cover()
+          z-index -1
+          background atariGreen(5)
+          border-bottom 3rem solid atariGreen(2)
+
+        &:hover
+          color atariGreen(1)
+
+          &::before
+            background: atariGreen(6)
+
+        &:active
+          padding-top 6rem
+          padding-bottom 4rem
+
+          &::before
+            border-bottom none
+            top 3rem
+
+    .description
+      .main
+        text-align center
+
+      .details
+        adventure()
+
+      .purchasing
+        position relative
+        small-print()
+        padding-left 6rem
+
+        &::before
+          content '*'
+          position absolute
+          left 0
+
+  .modes
+    background-color atariCyan(0)
+    color atariGray(5)
+
+    .content
+      position relative
+      display flex
+      width 100%
+      justify-content space-evenly
+
+      .mode
+        width 40%
+
+        &.adventure
+          .status-area
+            .status
+              background atariOrange(1)
+              color atariYellow(5)
+
+              &::before
+              &::after
+                border-color atariOrange(2)
+
+        &.learn
+          .status-area
+            .status
+              background atariGreen(1)
+              color atariGreen(6)
+
+              &::before
+              &::after
+                border-color atariGreen(2)
+
+      .description
+        .details
+          color atariGray(4)
+
+        .purchasing
+          color atariGray(3)
+
+        p
+          a
+            solid-line-link(atariGray(4), atariCyan(0))
+
+  .study-guide
+    background-color atariCyan(1)
+    color atariGray(5)
+
+    .content
+      width 60%
+
+      .status-area
+        .status
+          background atariAqua(1)
+          color atariGreen(6)
+
+          &::before
+          &::after
+            border-color atariAqua(2)
+
+      .description
+        .purchasing
+          color atariGray(4)
+
+          a
+            solid-line-link(atariGray(4), atariCyan(1))
+
+  .development-story
+    background image('/pixelartacademy/landingpage/pages/about/hapunui.png') center bottom / 480rem 288rem atariCyan(6) no-repeat
+    line-height 10rem
+
+    .content
+      .title
+        kyrou-9()
+
+      p
+      ul
+        color atariCyan(1)
+
+      ul
+        list-style square
+        padding-left 6rem
+
+        li
+          margin-bottom 4rem
+          padding-left 1rem
+
+      a
+        solid-line-link(atariCyan(1), atariGray(7))
+
+      .paragraphs-block
+        margin 10rem 0
+        column-count 2
+        column-gap 20rem
+        column-rule 1rem solid atariCyan(2)
+
+        p:first-child
+          margin-top 0
+
+      .trailer-area
+        .trailer
+          display block
+          background atariGray(0)
+          padding 5rem
+          width 250rem
+          height 145rem
+          margin 0 auto
+
+      .friends
+        padding 10rem
+        margin-bottom 10rem
+        background alpha(atariGray(7), 0.8)
+        border 2rem solid atariCyan(4)
+
+        .subtitle
+          kyrou-7()
+          margin-top 0
+          color atariCyan(0)
+
+        p:last-child
+          margin-bottom 0
+
+  .follow
+    background-color atariAqua(0)
+    color atariAqua(5)
+
+    .content
+      .title
+        kyrou-9()
+        color atariGray(7)
+
+      .follow-links
+        display flex
+        list-style none
+        margin 15rem 0
+        padding 0
+        justify-content space-evenly
+
+        .follow-link
+          display inline-block
+          text-align center
+          text-decoration none
+          vertical-align middle
+
+          &.discord
+            follow-color(atariBlue, 5)
+
+          &.youtube
+            follow-color(atariRed, 4)
+
+          &.twitch
+            follow-color(atariPurple, 4)
+
+          &.patreon
+            follow-color(atariPeach, 5)
+
+          &.tiktok
+            follow-color(atariCyan, 5)
+
+          &.x
+            follow-color(atariGray, 4)
+
+          &:hover
+            .icon
+              animation bounce 1s step-start 0s infinite
+
+          .icon
+            position relative
+            width 24rem
+
+          .name
+            display block
+            text-transform uppercase
+
+      .press-kit
+        line-height 10rem
+
+        a
+          solid-line-link(atariAqua(7), atariAqua(0))
+
+  .small-print
+    background-color atariGray(0)
+    color atariGray(2)
+    small-print()
+    text-align center
+    line-height 9rem
+
+    a
+      solid-line-link(atariGray(2), atariGray(0))
+
+    .copyleft
+      display inline-block
+      adventure()
+      transform scaleX(-1) translate(1rem, 0)
+
+@keyframes bounce
+  50%
+    top -5rem
