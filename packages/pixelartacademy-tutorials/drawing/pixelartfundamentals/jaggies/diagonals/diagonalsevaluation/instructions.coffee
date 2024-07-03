@@ -11,6 +11,43 @@ InstructionsSystem = PAA.PixelPad.Systems.Instructions
 DiagonalsEvaluation = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEvaluation
 
 class DiagonalsEvaluation.Instructions
+  class @PixelPerfectInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{DiagonalsEvaluation.id()}.PixelPerfectInstruction"
+    @assetClass: -> DiagonalsEvaluation
+    
+    @message: -> """
+      Make sure your lines are pixel-perfect (they shouldn't have doubles).
+    """
+    
+    @getPixelArtEvaluation: ->
+      return unless drawingEditor = @getEditor()
+      drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      
+    @activeConditions: ->
+      # Only show this tip when the evaluation paper is open.
+      return unless pixelArtEvaluation = @getPixelArtEvaluation()
+      return unless pixelArtEvaluation.active()
+      
+      return unless asset = @getActiveAsset()
+      
+      return unless pixelArtEvaluation = asset.pixelArtEvaluation()
+
+      for line in pixelArtEvaluation.layers[0].lines
+        # The line must not have any doubles.
+        lineEvaluation = line.evaluate()
+        return true if lineEvaluation.doubles.count
+
+      false
+    
+    @priority: -> 1
+    
+    @initialize()
+    
+    displaySide: ->
+      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+  
   class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> DiagonalsEvaluation
 
@@ -221,7 +258,7 @@ class DiagonalsEvaluation.Instructions
     @stepNumber: -> 9
     
     @message: -> """
-      The percentage score for this line is higher than for the previous one because the segments are longer, which makes alternating less noticeable.
+      The percentage score for this line (83%) is higher than for the previous one (75%) because the segments are longer, which makes alternating less noticeable.
     """
     
     @initialize()

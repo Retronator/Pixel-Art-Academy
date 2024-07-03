@@ -2,7 +2,6 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Markup = PAA.Practice.Helpers.Drawing.Markup
-Atari2600 = LOI.Assets.Palette.Atari2600
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles"
@@ -60,10 +59,39 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.Circles extends 
     @message: -> """
       The smallest circle we can draw is simply a pixel.
     """
-    
 
     @initialize()
   
+    markup: ->
+      markup = super arguments...
+      
+      markupStyle = Markup.defaultStyle()
+      
+      arrowBase =
+        arrow:
+          end: true
+        style: markupStyle
+      
+      textBase = Markup.textBase()
+      
+      markup.push
+        line: _.extend {}, arrowBase,
+          points: [
+            x: 8.5, y: 7
+          ,
+            x: 5.5, y: 5.5, bezierControlPoints: [
+              x: 7, y: 7
+            ,
+              x: 5.75, y: 5.75
+            ]
+          ]
+        text: _.extend {}, textBase,
+          position:
+            x: 9.5, y: 7, origin: Markup.TextOriginPosition.MiddleLeft
+          value: "start\nhere"
+          
+      markup
+      
   class @Size2 extends @StepInstruction
     @id: -> "#{Asset.id()}.Size2"
     @stepNumber: -> 2

@@ -82,7 +82,17 @@ class DiagonalsEvaluation.Steps
   class @LineOfType extends @LineEvaluationStep
     @type: -> throw new AE.NotImplementedException "A line of type step must provide the type needed for completion."
     
+    # Prevent new doubles to backtrack steps.
+    @preserveCompleted: -> true
+    
     completed: ->
+      # Make sure no doubles are in the lines.
+      return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
+      for line in pixelArtEvaluation.layers[0].lines
+        # The line must not have any doubles.
+        lineEvaluation = line.evaluate()
+        return false if lineEvaluation.doubles.count
+      
       # Ensure ideal results by also requiring matching ends.
       return unless lineEvaluation = @getLineEvaluation()
       return unless lineEvaluation.endSegments.type is StraightLine.EndSegments.Matching

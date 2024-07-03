@@ -99,7 +99,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.PixelPerfectLines'
     @goal: -> Goal
     
-    @directive: -> "Draw a sprite with pixel-perfect lines"
+    @directive: -> "Draw fan art with pixel-perfect lines"
     
     @instructions: -> """
       In the Drawing app, choose a reference in the Pixel art line art challenge.
@@ -123,7 +123,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.EvenDiagonals'
     @goal: -> Goal
     
-    @directive: -> "Draw a sprite with even diagonals"
+    @directive: -> "Draw fan art with even diagonals"
     
     @instructions: -> """
       In the Drawing app, choose a reference in the Pixel art line art challenge.
@@ -149,7 +149,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves'
     @goal: -> Goal
     
-    @directive: -> "Draw a sprite with smooth curves"
+    @directive: -> "Draw fan art with smooth curves"
     
     @instructions: -> """
       In the Drawing app, choose a reference in the Pixel art line art challenge.
@@ -175,7 +175,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Jaggies.ConsistentLineWidth'
     @goal: -> Goal
     
-    @directive: -> "Draw a sprite with a consistent line width style"
+    @directive: -> "Draw fan art with a consistent line width style"
     
     @instructions: -> """
       In the Drawing app, choose a reference in the Pixel art line art challenge.
@@ -199,12 +199,12 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
   
   @tasks: -> [
     @Lines
-    @Diagonals
-    @Curves
-    @LineWidth
     @PixelPerfectLines
+    @Diagonals
     @EvenDiagonals
+    @Curves
     @SmoothCurves
+    @LineWidth
     @ConsistentLineWidth
   ]
 
@@ -223,7 +223,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     @message: -> """
       Pixel art evaluation is being continually improved and is a bit of an experimental feature.
       
-      Don't take its scores too seriously and trust your artistic judgment over directly following it.
+      Don't take its scores too seriously. Trust your artistic judgment over directly following it.
     """
     
     @displayStyle: -> @DisplayStyles.Always

@@ -83,7 +83,9 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
       _.difference potentialNotificationIds, displayedNotificationIds
       
   class @Notification extends PAA.PixelPad.Systems.Notifications.Notification
-    @displayStyle: -> @DisplayStyles.IfIdle
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @priority: -> -1
     
     @retroClasses: ->
       body: PAA.PixelPad.Systems.Notifications.Retro.BodyClasses.Walkman

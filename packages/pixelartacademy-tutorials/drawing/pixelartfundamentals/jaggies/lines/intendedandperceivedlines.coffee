@@ -53,7 +53,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
     
     @message: -> """
       When lines don't align with the grid, the resulting shape doesn't match exactly.
-      Instead of a single line at an angle, we end up with multiple squares aligned to the grid.
+      Instead of a single line at an angle, we end up with multiple rectangles aligned to the grid.
     """
     
     @initialize()
