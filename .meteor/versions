@@ -92,7 +92,6 @@ peerlibrary:blocking@0.6.0
 peerlibrary:check-extension@0.7.0
 peerlibrary:computed-field@0.10.0
 peerlibrary:data-lookup@0.3.0
-peerlibrary:directcollection@0.9.0
 peerlibrary:fiber-utils@0.10.0
 peerlibrary:reactive-field@0.6.0
 peerlibrary:server-autorun@0.8.0

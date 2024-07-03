@@ -47,6 +47,7 @@ Package.onUse(function(api) {
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
     'retronator:directcollection',
+    'meteorhacks:picker',
     'meteorhacks:inject-initial',
 
     // Custom API extensions

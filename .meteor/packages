@@ -22,20 +22,4 @@ coffeescript@2.4.1
 communitypackages:meteor-desktop-bundler@=3.2.0
 communitypackages:meteor-desktop-watcher@=3.2.0
 
-meteorhacks:picker
-meteorhacks:inject-initial
-
-peerlibrary:reactive-field
-peerlibrary:computed-field
-peerlibrary:check-extension
-peerlibrary:server-autorun
-peerlibrary:directcollection
-
-retronator:peerdb
-retronator:peerdb-migrations
-retronator:blaze-components
-retronator:blaze-common-component
-
-retronator:artificialengines
-
 retronator:pixelartacademy-learnmode-app

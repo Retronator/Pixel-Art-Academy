@@ -1,6 +1,8 @@
 AM = Artificial.Mummification
 
 Document.startup ->
+  AM.DatabaseContent.setAssets Meteor._mainAssets
+  
   # Don't import if we're starting empty.
   return if Meteor.settings.startEmpty
 
