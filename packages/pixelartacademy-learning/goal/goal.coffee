@@ -170,6 +170,8 @@ class PAA.Learning.Goal
 
   @getAdventureInstance: -> @getAdventureInstanceForId @id()
   
+  @reset: -> @getAdventureInstance().reset()
+  
   constructor: (@options = {}) ->
     # By default the task is related to the current profile.
     @options.profileId ?= => LOI.adventure.profileId()

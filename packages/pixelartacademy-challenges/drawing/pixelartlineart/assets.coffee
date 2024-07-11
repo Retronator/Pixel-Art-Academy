@@ -25,13 +25,12 @@ assets =
       Fan art study based on Sonic the Hedgehog 3 (Sega, 1994).
     """
     
-  TetrisGameBoy:
-    dimensions: -> width: 180, height: 200
-    imageName: -> 'tetrisgameboy'
+  Zaxxon:
+    dimensions: -> width: 70, height: 45
+    imageName: -> 'zaxxon'
     bitmapInfo: -> """
-      Fan art study based on Tetris (Game Boy, Nintendo, 1989).
+      Fan art study based on Zaxxon (SEGA, 1982).
     """
-    binderScale: 0.5
   
   Rayman:
     dimensions: -> width: 65, height: 100
@@ -68,6 +67,14 @@ assets =
       Fan art study based on Day of the Tentacle (Peter Chan, LucasArts, 1993).
     """
   
+  TetrisGameBoy:
+    dimensions: -> width: 180, height: 200
+    imageName: -> 'tetrisgameboy'
+    bitmapInfo: -> """
+      Fan art study based on Tetris (Game Boy, Nintendo, 1989).
+    """
+    binderScale: 0.5
+    
 for assetId, asset of assets
   do (assetId, asset) ->
     class DrawLineArt[assetId] extends DrawLineArt

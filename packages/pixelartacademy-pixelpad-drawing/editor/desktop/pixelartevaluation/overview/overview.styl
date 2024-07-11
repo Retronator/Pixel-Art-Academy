@@ -4,18 +4,21 @@
 
 .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation-overview
   .title
+    margin-top 2rem
+    padding-bottom 1rem !important
     text-transform uppercase
+    border-bottom none !important
 
     &::after
       content ''
       display block
-      margin 5rem 0 3rem
-      height 1rem
+      margin 4rem 0 0
+      height 4rem
       border-top 2rem solid printColor
       border-bottom 1rem solid printColor
 
   .evaluation-breakdown
-    margin-bottom 6rem
+    margin-bottom 6rem !important
 
     .criterion
       .name-area
@@ -65,6 +68,7 @@
     .final-score-row
       td
         &::after
+          height 3rem
           bottom -4rem
           border-top 1rem solid printColor
           border-bottom 1rem solid printColor
@@ -88,6 +92,7 @@
     height 12rem
     padding 2rem 2rem 2rem 4rem
     daily()
+    line-height 7rem
     color penColor
     text-align center
     background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/pixelartevaluation/gradecircle.png')

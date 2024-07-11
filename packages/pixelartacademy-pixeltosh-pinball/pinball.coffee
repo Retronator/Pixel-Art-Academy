@@ -11,6 +11,8 @@ _rayEnd = new THREE.Vector3
 class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   # cameraDisplayType: enum whether the camera should be perspective or orthographic
   # debugPhysics: boolean whether to show debug view of the playfield
+  # slowMotion: boolean whether to progress the simulation in slow motion
+  # displayWalls: boolean whether to display the walls part
   # ballTravelExtents: how far any ball has traveled, used for task completion
   #   x, y, z:
   #     min, max: the minimum and maximum value in the given axis
@@ -66,6 +68,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     
     @debugPhysics = @state.field 'debugPhysics', default: false
     @slowMotion = @state.field 'slowMotion', default: false
+    @displayWalls = @state.field 'displayWalls', default: true
   
     @sceneImage = new ReactiveField null
     

@@ -8,7 +8,7 @@ class Pinball.Assets
   class @Asset extends PAA.Practice.Project.Asset.Bitmap
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Macintosh
     
-    backgroundColor: -> new THREE.Color '#a6cafe'
+    @backgroundColor: -> new THREE.Color '#edddb5'
     
   class @Ball extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Ball'

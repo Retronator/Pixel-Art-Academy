@@ -114,11 +114,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
     
     @autorun (computation) =>
-      # Show pixel art evaluation if the document has it or the asset requires it.
+      # Show pixel art evaluation if the document has it.
       documentHasPixelArtEvaluation = @displayedAsset()?.document()?.properties?.pixelArtEvaluation
-      assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation()
       
-      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
+      # Show pixel art evaluation if the asset requires it.
+      assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation()
+
+      # Show pixel art evaluation if it was unlocked.
+      pixelArtEvaluationUnlocked = PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria')?.length
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation or pixelArtEvaluationUnlocked
 
     # Reactively add tools and actions.
     toolRequirements =

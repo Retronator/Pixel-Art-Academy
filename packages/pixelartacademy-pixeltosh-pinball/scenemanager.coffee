@@ -75,6 +75,11 @@ class Pinball.SceneManager
       
       for part in @parts()
         continue if part instanceof Pinball.Parts.BallSpawner and simulationActive
+        
+        unless @pinball.displayWalls() or simulationActive
+          continue if part instanceof Pinball.Parts.Walls
+          continue if part instanceof Pinball.Parts.Playfield
+        
         entities.push part
       
       if simulationActive

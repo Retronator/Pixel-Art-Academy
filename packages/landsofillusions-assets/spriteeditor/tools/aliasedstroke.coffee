@@ -251,6 +251,9 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     
     # Only react to the main button.
     return if event.button
+    
+    # Only react when the pointer has a valid position.
+    return unless @editor()?.pointer().canvasCoordinate()
 
     # Register that the stroke has just started.
     @_strokeStarted = true

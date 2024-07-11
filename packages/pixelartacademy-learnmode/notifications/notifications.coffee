@@ -4,6 +4,26 @@ LM = PixelArtAcademy.LearnMode
 class LM.Notifications
   # Conditional notifications
   
+  class @MoreElementsOfArt extends PAA.PixelPad.Systems.Notifications.Notification
+    @id: -> "PixelArtAcademy.LearnMode.Notifications.MoreElementsOfArt"
+    
+    @message: -> """
+        There will be more elements of art added during Early Access.
+
+        Until then, focus just on the lines.
+        This will build your foundation before tackling harder elements such as values and colors.
+      """
+    
+    @displayStyle: -> @DisplayStyles.IfIdle
+    
+    @condition: ->
+      # Show when some of the Elements of art: line tasks are completed.
+      PAA.Tutorials.Drawing.ElementsOfArt.Line.completedAssetsCount() > 0
+    
+    @initialize()
+    
+    LM.ConditionalNotificationsProvider.registerNotificationClass @
+
   class @TheEnd extends LM.ConditionalNotificationsProvider.ConditionalNotification
     @id: -> "PixelArtAcademy.LearnMode.Notifications.TheEnd"
     
