@@ -120,10 +120,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       # Show pixel art evaluation if the asset requires it.
       assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation()
 
-      # Show pixel art evaluation if it was unlocked.
-      pixelArtEvaluationUnlocked = PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria')?.length
+      # TODO: Show pixel art evaluation if the asset allows it and it was unlocked.
       
-      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation or pixelArtEvaluationUnlocked
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
 
     # Reactively add tools and actions.
     toolRequirements =

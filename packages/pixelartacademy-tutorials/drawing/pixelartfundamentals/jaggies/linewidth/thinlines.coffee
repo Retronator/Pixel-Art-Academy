@@ -33,13 +33,18 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.ThinLines ext
   initializeSteps: ->
     super arguments...
     
-    # The first step should show invalid pixels even where the colors will add them later.
+    # The steps should show invalid pixels even where the colors will add them later.
     stepArea = @stepAreas()[0]
     steps = stepArea.steps()
     
     steps[0].options.canCompleteWithExtraPixels = true
     steps[1].options.hasPixelsWhenInactive = false
+    steps[1].options.canCompleteWithExtraPixels = true
     steps[2].options.hasPixelsWhenInactive = false
+    
+    # Once you complete the steps, don't return to it if you accidentally recolor some of its pixels later.
+    steps[0].options.preserveCompleted = true
+    steps[1].options.preserveCompleted = true
   
   Asset = @
   
@@ -118,4 +123,3 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.ThinLines ext
       PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
     
     @initialize()
-    
