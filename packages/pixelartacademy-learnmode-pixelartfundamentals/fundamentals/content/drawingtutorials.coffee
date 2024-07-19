@@ -99,25 +99,21 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
   class @PixelArtLines extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLines'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
-    @tags: -> [LM.Content.Tags.WIP]
     @initialize()
     
   class @PixelArtDiagonals extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtDiagonals'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
-    @tags: -> [LM.Content.Tags.WIP]
     @initialize()
   
   class @PixelArtCurves extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtCurves'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
-    @tags: -> [LM.Content.Tags.WIP]
     @initialize()
   
   class @PixelArtLineWidth extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLineWidth'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
-    @tags: -> [LM.Content.Tags.WIP]
     @initialize()
     
   class @AntiAliasing extends LM.Content.FutureContent

@@ -10,6 +10,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
   @contents: -> [
     @Pinball
     @PixelSuiteIcons
+    @Maze
     @Invaders
     @BlockBreaker
     @Chess
@@ -205,4 +206,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
   class @Chess extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess'
     @displayName: -> "Chess"
+    @initialize()
+  
+  class @Maze extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Maze'
+    @displayName: -> "Maze"
     @initialize()

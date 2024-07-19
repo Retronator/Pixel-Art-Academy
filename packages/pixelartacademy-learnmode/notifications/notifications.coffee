@@ -8,7 +8,7 @@ class LM.Notifications
     @id: -> "PixelArtAcademy.LearnMode.Notifications.MoreElementsOfArt"
     
     @message: -> """
-        There will be more elements of art added during Early Access.
+        I'm planning to add more elements of art during Early Access.
 
         Until then, focus just on the lines.
         This will build your foundation before tackling harder elements such as values and colors.
