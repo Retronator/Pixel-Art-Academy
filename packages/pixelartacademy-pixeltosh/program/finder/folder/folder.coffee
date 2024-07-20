@@ -8,11 +8,21 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Finder.Folder'
   @register @id()
   
-  @createInterfaceData: (folder) ->
-    folderPath = folder.path()
+  @createInterfaceData: (folderFile, parentFolderView) ->
+    folderPath = folderFile.path()
     folders = PAA.Pixeltosh.OS.FileSystem.state('folders') or {}
     
-    window = _.defaults folders[folderPath]?.window or {},
+    unless window = folders[folderPath]?.window
+      if parentFolderView
+        parentData = parentFolderView.data()
+        window =
+          left: parentData.get('left') + 10
+          top: parentData.get('top') + 10
+      
+      else
+        window = {}
+      
+    _.defaults window,
       left: 50
       top: 50
       width: 150
@@ -24,7 +34,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
       contentArea:
         type: PAA.Pixeltosh.OS.Interface.Window.id()
         title:
-          text: folder.name()
+          text: folderFile.name()
         contentArea:
           type: @id()
           path: folderPath
@@ -47,7 +57,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     
     @autorun (computation) =>
       if @_currentFolderPath
-        @finder.deregisterFolderWindowForPath @_currentFolderPath
+        @finder.deregisterFolderWindow @_currentFolderPath
       
       if @_currentFolderPath = @folderPath()
         @finder.registerFolderWindow @_currentFolderPath, @windowId

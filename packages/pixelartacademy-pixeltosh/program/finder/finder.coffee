@@ -46,16 +46,21 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
     ]
   ]
   
-  openFolder: (folder) ->
+  openFolder: (folderFile) ->
     # See if this folder is already open and we can simply activate it.
-    path = folder.path()
+    path = folderFile.path()
     
     if openFolder = @openFolders[path]
       @os.activateWindow openFolder.windowId
       return
     
+    parentPath = folderFile.parentPath()
+  
+    if @openFolders[parentPath]
+      parentFolderView = @os.interface.getWindow @openFolders[parentPath].windowId
+    
     # We need to open the folder in a new window.
-    @os.addWindow PAA.Pixeltosh.Programs.Finder.Folder.createInterfaceData folder
+    @os.addWindow PAA.Pixeltosh.Programs.Finder.Folder.createInterfaceData folderFile, parentFolderView
   
   registerFolderWindow: (path, windowId) ->
     @openFolders[path] = {windowId}

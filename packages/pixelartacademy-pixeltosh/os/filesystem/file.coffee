@@ -22,6 +22,8 @@ class PAA.Pixeltosh.OS.FileSystem.File
     
     {path, folders, filename}
     
+  parentPath: -> @pathParts().path
+  
   name: -> @pathParts().filename
   
   type: -> @options.type
