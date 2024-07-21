@@ -30,6 +30,7 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     name: @id()
 
   @enableVersioning()
+  @enableDatabaseContent()
 
   @className = 'Bitmap'
 
@@ -38,6 +39,8 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
     Normal: "Normal"
 
   @toPlainObject: (bitmap) ->
+    bitmap.initialize() unless bitmap._initialized
+    
     plainObject = LOI.Assets.VisualAsset.toPlainObject bitmap
     plainObject.layerGroups = (layerGroup.toPlainObject() for layerGroup in bitmap.layerGroups) if bitmap.layourGroups
     plainObject.layers = (layer.toPlainObject() for layer in bitmap.layers) if bitmap.layers
@@ -142,3 +145,12 @@ class LOI.Assets.Bitmap extends LOI.Assets.VisualAsset
         return pixel if pixel
 
     null
+
+  # Database content
+  
+  getPreviewImage: ->
+    engineBitmap = new LOI.Assets.Engine.PixelImage.Bitmap
+      asset: => @
+    
+    engineBitmap.getCanvas
+      lightDirection: new THREE.Vector3 0, 0, -1

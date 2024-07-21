@@ -10,7 +10,7 @@ class LOI.Assets
   @addToExport: (path) ->
     @exportPaths.push path
 
-    for assetClassName in ['Sprite', 'Mesh', 'Audio']
+    for assetClassName in ['Sprite', 'Bitmap', 'Mesh', 'Audio']
       do (assetClassName) ->
         AM.DatabaseContent.addToExport ->
           LOI.Assets[assetClassName].documents.fetch name: ///^#{path}///

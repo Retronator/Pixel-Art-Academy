@@ -47,8 +47,7 @@ class Pinball.Part extends LOI.Adventure.Item
     else if assetId = @constructor.assetId()
       # Reactively load the bitmap asset.
       @autorun (computation) =>
-        return unless activeProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
-        return unless project = PAA.Practice.Project.documents.findOne activeProjectId
+        return unless project = PAA.Practice.Project.documents.findOne @pinball.projectId()
         
         if asset = _.find project.assets, (asset) => asset.id is assetId
           @bitmap LOI.Assets.Bitmap.versionedDocuments.getDocumentForId asset?.bitmapId, false

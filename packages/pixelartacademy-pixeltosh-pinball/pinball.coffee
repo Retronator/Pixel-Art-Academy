@@ -61,6 +61,16 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
       return unless file = @openedFile()
       file.data()
       
+    # Try to load the project from content in case it's not the player's project.
+    @autorun (computation) =>
+      return unless projectId = @projectId()
+      PAA.Practice.Project.forId.subscribeContent projectId
+    
+    @autorun (computation) =>
+      return unless projectId = @projectId()
+      return unless PAA.Practice.Project.documents.findOne projectId
+      PAA.Practice.Project.assetsForProjectId.subscribeContent projectId
+    
     @partsData = new AE.LiveComputedField =>
       return unless projectId = @projectId()
       return unless project = PAA.Practice.Project.documents.findOne projectId

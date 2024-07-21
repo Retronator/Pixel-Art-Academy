@@ -57,11 +57,11 @@ class AM.DatabaseContent extends AM.DatabaseContent
       @_subscriptions[name][subscriptionId]?.stop()
     
   @_subscribeToDocuments: (handler, parameters ...) ->
-    subscribedDocuments = {}
-    
-    cursors = handler parameters...
+    return {} unless cursors = handler parameters...
     cursors = [cursors] unless _.isArray cursors
 
+    subscribedDocuments = {}
+    
     for cursor in cursors
       cursor.forEach (informationDocument) =>
         subscribedDocuments[informationDocument._documentClassId] ?= []

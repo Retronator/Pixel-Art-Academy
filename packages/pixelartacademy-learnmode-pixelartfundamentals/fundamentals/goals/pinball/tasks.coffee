@@ -13,7 +13,7 @@ class Goal.OpenPinballMachine extends Goal.Task
   @directive: -> "Open your pinball machine"
 
   @instructions: -> """
-    In the Pixeltosh app, open the Pinball Creation Kit drive and open the Pinball Machine file.
+    In the Pixeltosh app, open the Pinball Creation Kit drive and open the My Pinball Machine file.
   """
 
   @interests: -> ['pinball', 'gaming']
@@ -60,9 +60,11 @@ class Goal.DrawBall extends Goal.AssetsTask
     @activeConditions: ->
       return unless Task.getAdventureInstance().active()
       
-      # Show when we're in the Pinball program.
+      # Show when we're in the active Pinball program.
       return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
-      os.activeProgram() instanceof PAA.Pixeltosh.Programs.Pinball
+      program = os.activeProgram()
+      return unless program instanceof PAA.Pixeltosh.Programs.Pinball
+      program.projectId() is PAA.Pixeltosh.Programs.Pinball.state 'activeProjectId'
     
     @delayDuration: -> 5
     

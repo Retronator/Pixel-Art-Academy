@@ -16,6 +16,7 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:retronator-accounts');
   api.use('retronator:landsofillusions-assets');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learning');
@@ -47,6 +48,9 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('pages/admin..');
   api.addUnstyledComponent('pages/admin/scripts..');
   api.addServerFile('pages/admin/scripts/methods-server/convertcheckins');
+
+  api.addUnstyledComponent('pages/admin/projects..');
+  api.addServerFile('pages/admin/projects/methods-server');
 
   // Check-ins (legacy)
 
@@ -80,7 +84,9 @@ Package.onUse(function(api) {
   // Project
 
   api.addFile('project..');
-  api.addServerFile('project/subscriptions');
+  api.addServerFile('project/project-server-databasecontent');
+  api.addFile('project/subscriptions');
+  api.addServerFile('project/subscriptions-server');
 
   api.addFile('project/thing');
   api.addFile('project/workbench');

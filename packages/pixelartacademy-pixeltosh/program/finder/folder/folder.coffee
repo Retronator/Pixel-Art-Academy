@@ -25,7 +25,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     _.defaults window,
       left: 50
       top: 50
-      width: 150
+      width: 200
       height: 100
     
     _.extend window,

@@ -47,6 +47,8 @@ class AM.Document.Persistence
     @_syncedStoragesById[syncedStorage.id()] = syncedStorage
     @_syncedStoragesDependency.changed()
     
+  @hasSyncedStorage: (syncedStorageId) -> @_syncedStoragesById[syncedStorageId]
+    
   @ready: ->
     @_syncedStoragesDependency.depend()
     
@@ -89,6 +91,8 @@ class AM.Document.Persistence
         syncedStorage.loadDocumentsForProfileId profileId
     
       Promise.all(loadPromises).then (loadDocumentsResults) =>
+        console.log "Loaded document results", loadDocumentsResults if @debug
+        
         documentClonesByClassIdAndId = {}
         _.merge documentClonesByClassIdAndId, loadDocumentsResults...
   

@@ -26,16 +26,17 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
     
     @_pinballMachine ?= new PAA.Pixeltosh.OS.FileSystem.File
       id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
-      path: 'Pinball Creation Kit/Pinball Machine'
+      path: 'Pinball Creation Kit/My Pinball Machine'
       type: PAA.Pixeltosh.Programs.Pinball.Project
       disk: @_pinballDisk
       data: => PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
     
-    @_pinballDemoMachines ?= new PAA.Pixeltosh.OS.FileSystem.File
-      id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.DemoMachines"
-      path: 'Pinball Creation Kit/Demo Machines'
-      type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Folder
+    @_moonShot ?= new PAA.Pixeltosh.OS.FileSystem.File
+      id: "#{PAA.Pixeltosh.Programs.Pinball.id()}.DemoMachines.MoonShot"
+      path: 'Pinball Creation Kit/Demo Machines/Moon Shot'
+      type: PAA.Pixeltosh.Programs.Pinball.Project
       disk: @_pinballDisk
+      data: => 'ewzE9QPCPPLnxHvpi'
     
     pinballEnabled = LM.PixelArtFundamentals.pinballEnabled()
     
@@ -43,5 +44,5 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
       @_pinballDisk if pinballEnabled
       @_pinballProgram if pinballEnabled
       @_pinballMachine if pinballEnabled
-      @_pinballDemoMachines if pinballEnabled
+      @_moonShot if pinballEnabled
     ]
