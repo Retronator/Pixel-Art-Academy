@@ -8,22 +8,22 @@ Document.startup ->
 
   RS.Item.create
     catalogKey: RS.Items.CatalogKeys.Retropolis.DayPass
-    name: "Retropolis — Day Pass"
+    name: "Retropolis - Day Pass"
     description: "Access to non-essential day-time locations like video game arcades."
 
   RS.Item.create
     catalogKey: RS.Items.CatalogKeys.Retropolis.NightlifePass
-    name: "Retropolis — Nightlife Pass"
+    name: "Retropolis - Nightlife Pass"
     description: "Access to bars and clubs for chilling out, off-topic chatter and meeting new people."
 
   RS.Item.create
     catalogKey: RS.Items.CatalogKeys.Retropolis.IdeaGardenAccess
-    name: "Retronator HQ — Idea Garden"
+    name: "Retronator HQ - Idea Garden"
     description: "Visit Retronator HQ with its Idea Garden where you can explore designs of new features."
 
   RS.Item.create
     catalogKey: RS.Items.CatalogKeys.Retropolis.SecretLabAccess
-    name: "Retronator HQ — Secret Lab"
+    name: "Retronator HQ - Secret Lab"
     description: "Visit the laboratories in Retronator HQ and be the first to test early prototypes and experimental features."
 
   RS.Item.create

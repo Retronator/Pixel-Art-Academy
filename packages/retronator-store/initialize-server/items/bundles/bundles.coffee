@@ -19,7 +19,7 @@ Document.startup ->
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
-      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
+      CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -33,7 +33,7 @@ Document.startup ->
       CatalogKeys.PixelArtAcademy.FreshmanYear
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
-      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
+      CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -205,7 +205,7 @@ Document.startup ->
     items: [
       CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
-      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
+      CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
@@ -217,7 +217,7 @@ Document.startup ->
       CatalogKeys.PixelArtAcademy.FreshmanYear
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
-      #CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
+      CatalogKeys.PixelArtAcademy.Steam.LearnMode.DefaultReleaseKey
     ]
 
   RS.Item.create
