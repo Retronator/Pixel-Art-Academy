@@ -1,1 +1,4 @@
 local
+desktop-build
+version.desktop
+.desktop_node_modules
