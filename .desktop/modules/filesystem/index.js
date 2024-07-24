@@ -30,7 +30,14 @@ export default class FileSystem {
     this.writeOperationsByFilePath = {}
 
     this.module.on('writeFile', (event, fetchId, filePath, fileData) => {
-      this.log.verbose('writeFile received', filePath);
+      this.log.verbose('writeFile received', filePath, fileData.length);
+      try {
+        JSON.parse(fileData);
+      } catch (error) {
+        this.log.error('Invalid JSON content');
+        this.module.respond('writeFile', fetchId, new Error('Invalid JSON content'));
+        return;
+      }
       this.writeOperationsByFilePath[filePath] ??= []
       this.writeOperationsByFilePath[filePath].push({fetchId, fileData});
       // If we have just this file waiting to be written, start the write chain of operations.
@@ -73,9 +80,12 @@ export default class FileSystem {
       this.module.respond('getProfiles', fetchId, profileJsons);
     });
 
-    this.module.on('getProfileDocuments', async (event, fetchId, rootDirectoryPath) => {
+    this.module.on('getProfileDocuments', async (event, fetchId, rootDirectoryPath, backupDirectoryPath) => {
       this.log.verbose('getProfileDocuments received', rootDirectoryPath);
       const documentJsons = {};
+
+      const backupTimestamp = new Date().toISOString().replaceAll(':','-');
+      const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
 
       // Scan the root directory for subdirectories, whose names correspond to class names.
       const rootDirectory = await fs.promises.opendir(rootDirectoryPath);
@@ -87,13 +97,22 @@ export default class FileSystem {
 
         // Scan the directory for files, whose names correspond to document IDs.
         const classDirectoryPath = path.join(rootDirectoryPath, className);
+        const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
+
         const classDirectory = await fs.promises.opendir(classDirectoryPath);
         for await (const classDirectoryEntry of classDirectory) {
           if (!classDirectoryEntry.isFile()) continue;
 
+          // Only parse json files (ignore backups).
+          if (!classDirectoryEntry.name.endsWith('json')) continue;
+
           const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
           const fileJson = await fs.promises.readFile(filePath, {encoding: 'utf8'})
           documentJsons[className].push(fileJson);
+
+          // Create a backup of the file.
+          const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
+          await fs.promises.cp(filePath, backupFilePath);
         }
       }
 
@@ -106,13 +125,22 @@ export default class FileSystem {
     let fetchId = firstWriteOperation.fetchId
     let fileData = firstWriteOperation.fileData
 
+    fs.cp(filePath, `${filePath}.backup`, error => {
+      if (error) {
+        this.log.verbose("File does not exist yet, backup copy not made.", filePath);
+      }
+    });
+
     fs.writeFile(filePath, fileData, error => {
       if (error?.code === 'ENOENT') {
+        this.log.verbose("Directory path does not exist, creating directories for", filePath);
         const directoryPath = path.dirname(filePath);
         fs.mkdir(directoryPath, {recursive: true}, error => {
           if (error) {
+            this.log.error('mkdir error', directoryPath, error);
             this.endWriteFile(filePath, fetchId, error);
           } else {
+            this.log.verbose("Directories made, retrying write", filePath);
             fs.writeFile(filePath, fileData, error => {
               this.endWriteFile(filePath, fetchId, error);
             });
@@ -125,6 +153,9 @@ export default class FileSystem {
   }
 
   endWriteFile(filePath, fetchId, error) {
+    if (error) {
+      this.log.error('writeFile error', filePath, error);
+    }
     this.module.respond('writeFile', fetchId, error);
     this.moveToNextFile(filePath);
   }

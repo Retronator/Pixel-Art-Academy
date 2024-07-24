@@ -9,7 +9,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   constructor: (@options) ->
     super arguments...
 
-    throw new AE.ArgumentNullException 'Relative directory path must be provided.' unless @options?.relativeDirectoryPath?
+    throw new AE.ArgumentNullException 'Relative directory paths must be provided.' unless @options?.relativeDirectoryPath? and @options.relativeBackupDirectoryPath?
   
     @_ready = new ReactiveField false
 
@@ -18,6 +18,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   initialize: ->
     applicationPaths = await Desktop.call 'filesystem', 'getApplicationPaths'
     @storagePath = "#{applicationPaths.userData}/#{@options.relativeDirectoryPath}"
+    @backupPath = "#{applicationPaths.userData}/#{@options.relativeBackupDirectoryPath}"
 
     @lastEditTimes =
       "#{Persistence.Profile.id()}": {}
@@ -50,7 +51,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     new Promise (resolve) =>
       documents = {}
       
-      profileDocumentJsons = await Desktop.call 'filesystem', 'getProfileDocuments', "#{@storagePath}/#{profileId}"
+      profileDocumentJsons = await Desktop.call 'filesystem', 'getProfileDocuments', "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
       
       for documentClassId, documentJsons of profileDocumentJsons when documentClassId isnt Persistence.Profile.id()
         documents[documentClassId] = {}
@@ -82,8 +83,16 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     path = @_getDocumentPath document
     documentJson = EJSON.stringify document.getSourceData()
     error = await Desktop.call 'filesystem', 'writeFile', path, documentJson
-    throw new AE.ExternalException "Writing document to the file system failed.", path, error if error
     
+    if error
+      LOI.adventure.showDialogMessage """
+        Unfortunately something went wrong with auto-saving the game. It's probably my fault, I'll need to fix this!
+        Please restart the game to avoid losing any game progress.
+        If you report this bug, this could be of help: #{error.message}
+      """
+      
+      throw new AE.ExternalException "Writing document to the file system failed.", path, error
+      
     @lastEditTimes[documentClassId][document._id] = document.lastEditTime
 
   _getDocumentPath: (document) ->
