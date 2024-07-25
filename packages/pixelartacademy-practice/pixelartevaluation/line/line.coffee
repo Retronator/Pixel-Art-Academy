@@ -8,6 +8,7 @@ class PAE.Line
     Thick: 'Thick'
     Wide: 'Wide'
     Varying: 'Varying'
+    Outline: 'Outline'
   
   @WidthConsistency:
     Consistent: 'Consistent'
@@ -80,6 +81,10 @@ class PAE.Line
     
     @_doubles = []
     
+    # Doubles can only exist on lines with varying width.
+    width = @_analyzeWidth()
+    return @_doubles unless width.type is @constructor.WidthType.Varying
+    
     # Doubles are all pixels on axis-aligned side steps.
     for edgeSegment in @edgeSegments when edgeSegment.isSideStep and edgeSegment.edge.isAxisAligned
       for pointIndex in [edgeSegment.startPointIndex, edgeSegment.endPointIndex]
@@ -126,6 +131,13 @@ class PAE.Line
         @_corners.push pixel unless pixel in @_corners
         
     @_corners
+    
+  getInnerPoints: ->
+    return @_innerPoints if @_innerPoints
+    
+    @_innerPoints = _.filter @points, (point) -> point.neighbors.length is 2
+    
+    @_innerPoints
     
   getPartsForPixel: (pixel) ->
     part for part in @parts when part.hasPixel pixel

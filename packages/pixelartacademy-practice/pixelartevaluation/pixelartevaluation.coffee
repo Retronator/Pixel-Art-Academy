@@ -77,9 +77,6 @@ class PAA.Practice.PixelArtEvaluation
       AbruptSegmentLengthChanges: 0.34
       StraightParts: 0.33
       InflectionPoints: 0.33
-    ConsistentLineWidth:
-      IndividualConsistency: 0.5
-      GlobalConsistency: 0.5
       
   @_lastId = 0
 
@@ -354,6 +351,7 @@ class PAA.Practice.PixelArtEvaluation
           for line in layer.lines
             lineEvaluation = line.evaluate()
             widthType = lineEvaluation.width.type
+            continue if widthType is @constructor.Line.WidthType.Outline
             
             weight = Math.sqrt line.points.length
             totalWeight += weight
@@ -374,7 +372,7 @@ class PAA.Practice.PixelArtEvaluation
           @_evaluation.consistentLineWidth.individualConsistency.score = null
           @_evaluation.consistentLineWidth.globalConsistency.score = null
       
-      evaluation.consistentLineWidth = @_calculateWeightedEvaluation @constructor.Subcriteria.ConsistentLineWidth, @constructor.SubcriteriaWeights.ConsistentLineWidth, pixelArtEvaluationProperty.consistentLineWidth, @_evaluation.consistentLineWidth
+      evaluation.consistentLineWidth = @_calculateMaximumEvaluation @constructor.Subcriteria.ConsistentLineWidth, pixelArtEvaluationProperty.consistentLineWidth, @_evaluation.consistentLineWidth
       
       if evaluation.consistentLineWidth.score
         finalScore += evaluation.consistentLineWidth.score
@@ -411,6 +409,25 @@ class PAA.Practice.PixelArtEvaluation
     
     weightedEvaluation
   
+  _calculateMaximumEvaluation: (subcriteria, enabledProperties, evaluation) ->
+    maximumEvaluation = score: 0
+    
+    # Choose only enabled subcriteria.
+    subcriteriaInfo = for subcriterion of subcriteria
+      subcriterionProperty = _.lowerFirst subcriterion
+      continue unless enabledProperties[subcriterionProperty]
+      
+      property: subcriterionProperty
+      score: evaluation[subcriterionProperty].score or 0
+    
+    for subcriterionInfo in subcriteriaInfo
+      maximumEvaluation[subcriterionInfo.property] = evaluation[subcriterionInfo.property]
+      maximumEvaluation.score = Math.max maximumEvaluation.score, subcriterionInfo.score
+    
+    maximumEvaluation.score = null unless subcriteriaInfo.length
+    
+    maximumEvaluation
+    
   onOperationExecuted: (document, operation, changedFields) ->
     return unless document._id is @bitmap._id
     return unless operation instanceof LOI.Assets.Bitmap.Operations.ChangePixels

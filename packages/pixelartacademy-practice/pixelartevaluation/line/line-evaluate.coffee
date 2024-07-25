@@ -47,8 +47,12 @@ PAE.Line::_analyzeCorners = ->
   pixels: corners
 
 PAE.Line::_analyzeWidth = ->
+  # Outlines don't have a width.
+  if @core
+    return type: @constructor.WidthType.Outline, score: 1
+  
   # Analyze single and double points.
-  radiusCounts = _.countBy @points, 'radius'
+  radiusCounts = _.countBy @getInnerPoints(), 'radius'
   singleCount = radiusCounts[0.5] or 0
   doubleCount = radiusCounts[1] or 0
   
@@ -71,13 +75,22 @@ PAE.Line::_analyzeWidth = ->
     # Varying width type should have the score of 0.9 (B) or less.
     return type: @constructor.WidthType.Varying, score: score * 0.9
     
-  type: if thinCount then @constructor.WidthType.Thin else @constructor.WidthType.Thick
+  type: if thickCount then @constructor.WidthType.Thick else @constructor.WidthType.Thin
   score: 1
 
 PAE.Line::_analyzeCurveSmoothness = ->
-  # Nothing to do if we don't have curved parts.
-  curveParts = _.filter @parts, (part) => part instanceof @constructor.Part.Curve
-  return unless curveParts.length
+  # Nothing to do if curved parts are in the minority.
+  curvePartsLength = 0
+  straightPartsLength = 0
+  
+  for part in @parts
+    if part instanceof @constructor.Part.Curve
+      curvePartsLength += part.points.length
+      
+    else
+      straightPartsLength += part.points.length
+  
+  return unless curvePartsLength > straightPartsLength
   
   # Calculate abrupt segment length changes score.
   pointSegmentLengthChangesCount = 0
@@ -86,6 +99,8 @@ PAE.Line::_analyzeCurveSmoothness = ->
   abruptPointSegmentLengthChangesCounts =
     minor: 0
     major: 0
+  
+  curveParts = _.filter @parts, (part) => part instanceof @constructor.Part.Curve
   
   for curvePart in curveParts
     {pointSegmentLengthChanges} = curvePart.evaluate()

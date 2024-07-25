@@ -40,8 +40,27 @@ PAE.Point.optimizeNeighbors = (points) ->
         
       break unless eliminated
       
+  # Eliminate non-outline connections between junctions (3 or more neighbors), since it's hard to determine meaningful
+  # connectivity in that case. We need to first collect all connections and not remove them as we go along since that
+  # would change their number of neighbors.
+  eliminatedConnections = []
+  
+  for rootPoint in points when rootPoint.neighbors.length >= 3 and not rootPoint.getOutlinePixel()
+    for neighbor in rootPoint.neighbors when neighbor.neighbors.length >= 3
+      eliminatedConnections.push [rootPoint, neighbor]
+  
+  # Eliminate core extensions (short lines sticking out of cores, which should
+  # be part of core outlines if we had better filtering when eliminating triangles).
+  for rootPoint in points when rootPoint.getOutlinePixel()
+    for neighbor in rootPoint.neighbors when neighbor.neighbors.length is 1
+      eliminatedConnections.push [rootPoint, neighbor]
+  
+  for [neighborA, neighborB] in eliminatedConnections
+    neighborA._disconnectNeighbor neighborB
+    neighborB._disconnectNeighbor neighborA
+  
+  # On outlines, make sure there are exactly two neighbors for each outline.
   for rootPoint in points
-    # On outlines, make sure there are exactly two neighbors for each outline.
     continue unless outlinePixel = rootPoint.getOutlinePixel()
   
     for outlineCore, index in outlinePixel.outlineCores
