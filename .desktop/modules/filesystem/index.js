@@ -30,7 +30,7 @@ export default class FileSystem {
     this.writeOperationsByFilePath = {}
 
     this.module.on('writeFile', (event, fetchId, filePath, fileData) => {
-      this.log.verbose('writeFile received', filePath, fileData.length);
+      this.log.verbose('writeFile received', filePath, fileData.length, fetchId);
       try {
         JSON.parse(fileData);
       } catch (error) {
@@ -47,7 +47,7 @@ export default class FileSystem {
     });
 
     this.module.on('deleteFile', (event, fetchId, filePath) => {
-      this.log.verbose('deleteFile received', filePath);
+      this.log.verbose('deleteFile received', filePath, fetchId);
       fs.unlink(filePath, (error) => {
         this.module.respond('deleteFile', fetchId, error);
       })
@@ -125,36 +125,40 @@ export default class FileSystem {
     let fetchId = firstWriteOperation.fetchId
     let fileData = firstWriteOperation.fileData
 
+    this.log.verbose("writeFile processing for", filePath, fetchId);
+
     fs.cp(filePath, `${filePath}.backup`, error => {
       if (error) {
-        this.log.verbose("File does not exist yet, backup copy not made.", filePath);
+        this.log.verbose("File does not exist yet, backup copy not made.", filePath, fetchId);
       }
-    });
 
-    fs.writeFile(filePath, fileData, error => {
-      if (error?.code === 'ENOENT') {
-        this.log.verbose("Directory path does not exist, creating directories for", filePath);
-        const directoryPath = path.dirname(filePath);
-        fs.mkdir(directoryPath, {recursive: true}, error => {
-          if (error) {
-            this.log.error('mkdir error', directoryPath, error);
-            this.endWriteFile(filePath, fetchId, error);
-          } else {
-            this.log.verbose("Directories made, retrying write", filePath);
-            fs.writeFile(filePath, fileData, error => {
+      fs.writeFile(filePath, fileData, error => {
+        if (error?.code === 'ENOENT') {
+          this.log.verbose("Directory path does not exist, creating directories for", filePath);
+          const directoryPath = path.dirname(filePath);
+          fs.mkdir(directoryPath, {recursive: true}, error => {
+            if (error) {
+              this.log.error('mkdir error', directoryPath, error);
               this.endWriteFile(filePath, fetchId, error);
-            });
-          }
-        });
-      } else {
-        this.endWriteFile(filePath, fetchId, error);
-      }
-    })
+            } else {
+              this.log.verbose("Directories made, retrying write", filePath);
+              fs.writeFile(filePath, fileData, error => {
+                this.endWriteFile(filePath, fetchId, error);
+              });
+            }
+          });
+        } else {
+          this.endWriteFile(filePath, fetchId, error);
+        }
+      });
+    });
   }
 
   endWriteFile(filePath, fetchId, error) {
     if (error) {
-      this.log.error('writeFile error', filePath, error);
+      this.log.error('writeFile error.', filePath, error, fetchId);
+    } else {
+      this.log.verbose("writeFile succeeded.", filePath, fetchId);
     }
     this.module.respond('writeFile', fetchId, error);
     this.moveToNextFile(filePath);
