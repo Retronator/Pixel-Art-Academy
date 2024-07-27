@@ -97,22 +97,31 @@ class Pinball.Parts.Playfield extends Pinball.Part
       constructor: (@pixelArtEvaluation, @properties, playfieldPosition, playfieldBoundary, holeBoundaries) ->
         super arguments...
         
-        playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
-        playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
-        
-        vertexBufferArray = new Float32Array playfieldPolygon.vertices.length * 3
-        normalArray = new Float32Array playfieldPolygon.vertices.length * 3
-        
-        for vertex, vertexIndex in playfieldPolygon.vertices
-          offset = vertexIndex * 3
-          vertexBufferArray[offset] = vertex.x - playfieldPosition.x
-          vertexBufferArray[offset + 1] = @height
-          vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
-          normalArray[offset + 1] = 1
-    
-        indexBufferArray = playfieldPolygon.triangulate()
-        _.reverse indexBufferArray
-        
+        try
+          playfieldPolygon = new AP.PolygonWithHoles playfieldBoundary, holeBoundaries
+          playfieldPolygon = playfieldPolygon.getPolygonWithoutHoles()
+          
+          vertexBufferArray = new Float32Array playfieldPolygon.vertices.length * 3
+          normalArray = new Float32Array playfieldPolygon.vertices.length * 3
+          
+          for vertex, vertexIndex in playfieldPolygon.vertices
+            offset = vertexIndex * 3
+            vertexBufferArray[offset] = vertex.x - playfieldPosition.x
+            vertexBufferArray[offset + 1] = @height
+            vertexBufferArray[offset + 2] = vertex.y - playfieldPosition.z
+            normalArray[offset + 1] = 1
+      
+          indexBufferArray = playfieldPolygon.triangulate()
+          _.reverse indexBufferArray
+          
+        catch error
+          console.warn error
+          
+          # Remove the playfield so that any corrections are easier to be made.
+          vertexBufferArray = new Float32Array 0
+          normalArray = new Float32Array 0
+          indexBufferArray = new Uint32Array 0
+          
         @geometryData = {vertexBufferArray, normalArray, indexBufferArray}
         
       positionY: -> -@height

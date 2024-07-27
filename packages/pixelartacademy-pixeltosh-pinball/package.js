@@ -22,6 +22,7 @@ Package.onUse(function(api) {
   api.addFile('assets');
   api.addFile('project');
   api.addFile('project-startend');
+  api.addFile('instructions');
 
   api.addFile('scenemanager');
   api.addFile('cameramanager');
