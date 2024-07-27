@@ -2,20 +2,23 @@ AE = Artificial.Everywhere
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
-PAE.Line::evaluate = ->
+PAE.Line::evaluate = (pixelArtEvaluationProperty) ->
   return @_evaluation if @_evaluation
   
-  doubles = @_analyzeDoubles()
-  corners = @_analyzeCorners()
-  width = @_analyzeWidth()
-  curveSmoothness = @_analyzeCurveSmoothness()
+  doubles = @_analyzeDoubles pixelArtEvaluationProperty
+  corners = @_analyzeCorners pixelArtEvaluationProperty
+  width = @_analyzeWidth pixelArtEvaluationProperty
+  curveSmoothness = @_analyzeCurveSmoothness pixelArtEvaluationProperty
   
   @_evaluation = {width, doubles, corners, curveSmoothness}
   
   @_evaluation
   
-PAE.Line::_analyzeDoubles = ->
-  doubles = @getDoubles()
+PAE.Line::_analyzeDoubles = (pixelArtEvaluationProperty) ->
+  doubles = @getDoubles pixelArtEvaluationProperty
+
+  # Nothing to do if there are no doubles (non-varying width lines).
+  return {score: 1, count: 0, pixels: []} unless doubles.length
   
   # Side-steps need to be diagonals instead of axis-aligned.
   sideStepsCount = 0
@@ -31,8 +34,8 @@ PAE.Line::_analyzeDoubles = ->
   count: doubles.length
   pixels: doubles
 
-PAE.Line::_analyzeCorners = ->
-  corners = @getCorners()
+PAE.Line::_analyzeCorners = (pixelArtEvaluationProperty) ->
+  corners = @getCorners pixelArtEvaluationProperty
 
   # Count how many total transitions there were on this line so we can compare how many of these are corners.
   transitionsCount = 0
@@ -46,7 +49,7 @@ PAE.Line::_analyzeCorners = ->
   count: corners.length
   pixels: corners
 
-PAE.Line::_analyzeWidth = ->
+PAE.Line::_analyzeWidth = (pixelArtEvaluationProperty) ->
   # Outlines don't have a width.
   if @core
     return type: @constructor.WidthType.Outline, score: 1
@@ -78,7 +81,7 @@ PAE.Line::_analyzeWidth = ->
   type: if thickCount then @constructor.WidthType.Thick else @constructor.WidthType.Thin
   score: 1
 
-PAE.Line::_analyzeCurveSmoothness = ->
+PAE.Line::_analyzeCurveSmoothness = (pixelArtEvaluationProperty) ->
   # Nothing to do if curved parts are in the minority.
   curvePartsLength = 0
   straightPartsLength = 0
@@ -124,7 +127,6 @@ PAE.Line::_analyzeCurveSmoothness = ->
 
   # Calculate straight parts score.
   straightParts = _.filter @parts, (part) => part instanceof @constructor.Part.StraightLine
-  endingParts = if @isClosed then [] else [_.first(@parts), _.last(@parts)]
   
   straightPartsCounts =
     middle: 0
@@ -132,10 +134,10 @@ PAE.Line::_analyzeCurveSmoothness = ->
   
   for straightPart in straightParts
     # End straight lines are less problematic.
-    if straightPart in endingParts
+    if straightPart.isAtTheEndOfCurvedPart()
       straightPartsCounts.end++
       
-    else
+    else if straightPart.isInTheMiddleOfACurvedPart()
       straightPartsCounts.middle++
 
   # Count how many straight points there are on the line. Note that we can't do this by finding how many
@@ -182,7 +184,7 @@ PAE.Line::_analyzeCurveSmoothness = ->
     straightPartsScore = 1
   
   # Calculate inflection points score.
-  inflectionPoints = @_analyzeInflectionPoints()
+  inflectionPoints = @_analyzeInflectionPoints pixelArtEvaluationProperty
   
   inflectionPointCounts =
     isolated: 0
@@ -220,7 +222,7 @@ PAE.Line::_analyzeCurveSmoothness = ->
     counts: inflectionPointCounts
     points: inflectionPoints
 
-PAE.Line::_analyzeInflectionPoints = ->
+PAE.Line::_analyzeInflectionPoints = (pixelArtEvaluationProperty) ->
   inflectionPoints = []
   
   for inflectionPoint, inflectionPointIndex in @inflectionPoints

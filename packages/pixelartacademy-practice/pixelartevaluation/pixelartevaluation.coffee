@@ -10,6 +10,7 @@ class PAA.Practice.PixelArtEvaluation
   #   corners:
   #     score: float between 0 and 1 with this criterion evaluation
   #     count: how many pixels have two or more direct neighbors
+  #     ignoreStraightLineCorners: boolean, whether to filter out corners appearing at edges of straight line parts
   # evenDiagonals
   #   score: float between 0 and 1 with this criterion's weighted average
   #   segmentLengths:
@@ -189,7 +190,7 @@ class PAA.Practice.PixelArtEvaluation
 
         for layer in @layers
           for line in layer.lines
-            lineEvaluation = line.evaluate()
+            lineEvaluation = line.evaluate pixelArtEvaluationProperty
             
             # We collect doubles separately so we can count them all at once to avoid them accounted multiple times.
             for pixel in lineEvaluation.doubles.pixels
@@ -346,26 +347,36 @@ class PAA.Practice.PixelArtEvaluation
               varying: 0
         
         totalWeight = 0
+        outlinesCount = 0
         
         for layer in @layers
           for line in layer.lines
             lineEvaluation = line.evaluate()
             widthType = lineEvaluation.width.type
-            continue if widthType is @constructor.Line.WidthType.Outline
             
             weight = Math.sqrt line.points.length
             totalWeight += weight
             
             @_evaluation.consistentLineWidth.individualConsistency.score += lineEvaluation.width.score * weight
             @_evaluation.consistentLineWidth.individualConsistency.counts[if widthType is @constructor.Line.WidthType.Varying then 'varying' else 'consistent']++
-            @_evaluation.consistentLineWidth.globalConsistency.counts[_.lowerFirst lineEvaluation.width.type]++
+
+            if widthType is @constructor.Line.WidthType.Outline
+              outlinesCount++
+              
+            else
+              @_evaluation.consistentLineWidth.globalConsistency.counts[_.lowerFirst lineEvaluation.width.type]++
           
         if totalWeight
           @_evaluation.consistentLineWidth.individualConsistency.score /= totalWeight
           
           # Calculate global consistency score by using the share the most common type has.
           largestTypeCount = _.max _.values @_evaluation.consistentLineWidth.globalConsistency.counts
-          @_evaluation.consistentLineWidth.globalConsistency.score = largestTypeCount / layer.lines.length
+          
+          if largestTypeCount
+            @_evaluation.consistentLineWidth.globalConsistency.score = largestTypeCount / (layer.lines.length - outlinesCount)
+            
+          else
+            @_evaluation.consistentLineWidth.globalConsistency.score = 1
           
         else
           # There were no lines to be evaluated, so the category doesn't have a meaning.
@@ -411,20 +422,20 @@ class PAA.Practice.PixelArtEvaluation
   
   _calculateMaximumEvaluation: (subcriteria, enabledProperties, evaluation) ->
     maximumEvaluation = score: 0
+    scoreSet = false
     
     # Choose only enabled subcriteria.
-    subcriteriaInfo = for subcriterion of subcriteria
+    for subcriterion of subcriteria
       subcriterionProperty = _.lowerFirst subcriterion
       continue unless enabledProperties[subcriterionProperty]
       
-      property: subcriterionProperty
-      score: evaluation[subcriterionProperty].score or 0
+      maximumEvaluation[subcriterionProperty] = evaluation[subcriterionProperty]
+      
+      if evaluation[subcriterionProperty].score
+        maximumEvaluation.score = Math.max maximumEvaluation.score, evaluation[subcriterionProperty].score
+        scoreSet = true
     
-    for subcriterionInfo in subcriteriaInfo
-      maximumEvaluation[subcriterionInfo.property] = evaluation[subcriterionInfo.property]
-      maximumEvaluation.score = Math.max maximumEvaluation.score, subcriterionInfo.score
-    
-    maximumEvaluation.score = null unless subcriteriaInfo.length
+    maximumEvaluation.score = null unless scoreSet
     
     maximumEvaluation
     

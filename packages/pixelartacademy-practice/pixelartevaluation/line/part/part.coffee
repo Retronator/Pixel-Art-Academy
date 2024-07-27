@@ -59,9 +59,8 @@ class PAE.Line.Part
     # Extend to adjust display points.
     
   startsOnACorner: ->
-    return true unless preStartSegment = @line.getEdgeSegment @startSegmentIndex - 1
-    
-    preStartSegment.corner.after
+    startSegment = @line.getEdgeSegment @startSegmentIndex
+    startSegment.corner.before
   
   endsOnACorner: ->
     endSegment = @line.getEdgeSegment @endSegmentIndex

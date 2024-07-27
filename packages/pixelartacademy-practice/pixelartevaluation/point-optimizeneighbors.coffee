@@ -40,6 +40,10 @@ PAE.Point.optimizeNeighbors = (points) ->
         
       break unless eliminated
       
+  # Store all neighbors for certain analyses that require full connectivity.
+  for point in points
+    point.allNeighbors = _.clone point.neighbors
+  
   # Eliminate non-outline connections between junctions (3 or more neighbors), since it's hard to determine meaningful
   # connectivity in that case. We need to first collect all connections and not remove them as we go along since that
   # would change their number of neighbors.

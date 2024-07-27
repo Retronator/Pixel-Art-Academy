@@ -72,7 +72,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         drawDoubles = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Doubles else pixelArtEvaluationProperty.pixelPerfectLines?.doubles?
         drawCorners = if filterValue then filterValue is PAE.Subcriteria.PixelPerfectLines.Corners else pixelArtEvaluationProperty.pixelPerfectLines?.corners?
         
-        markup.push Markup.PixelArt.pixelPerfectLineErrors(line, drawDoubles, drawCorners)...
+        markup.push Markup.PixelArt.pixelPerfectLineErrors(line, drawDoubles, drawCorners, pixelArtEvaluationProperty)...
         
     # Add markup for even diagonals.
     if PAE.Criteria.EvenDiagonals in displayedCriteria
@@ -150,14 +150,20 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         unless filterValue in straightPartsFilters
           betterStyle = Markup.betterStyle()
           
-          for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve and linePart.line not in focusedLines
+          for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
+            # If we're focusing on a line, skip drawing others.
+            continue if focusedLines.length and linePart.line not in focusedLines
+            
             perceivedLineMarkup = Markup.PixelArt.perceivedCurve linePart
             perceivedLineMarkup.line.style = betterStyle
             markup.push perceivedLineMarkup
             
         # Draw straight parts unless they're already drawn.
         unless PAE.Criteria.EvenDiagonals in displayedCriteria
-          for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine and linePart.line not in focusedLines
+          for linePart in lineParts when linePart instanceof PAE.Line.Part.StraightLine
+            # If we're focusing on a line, skip drawing others.
+            continue if focusedLines.length and linePart.line not in focusedLines
+            
             # Draw lines without curves with minimal lines.
             {curveSmoothness} = linePart.line.evaluate()
             unless curveSmoothness
@@ -168,12 +174,16 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               
             perceivedLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
             
-            # Straight lines at the start/end are better than in between.
-            if linePart in [_.first(linePart.line.parts), _.last(linePart.line.parts)]
+            # Straight lines are less problematic when between corners.
+            if linePart.isBetweenStraightParts()
+              perceivedLineMarkup.line.style = betterStyle
+              continue if filterValue in straightPartsFilters
+            
+            if linePart.isAtTheEndOfCurvedPart()
               perceivedLineMarkup.line.style = mediocreStyle
               continue if filterValue is PAE.Line.Part.Curve.StraightParts.Middle
               
-            else
+            else if linePart.isInTheMiddleOfACurvedPart()
               perceivedLineMarkup.line.style = worseStyle
               continue if filterValue is PAE.Line.Part.Curve.StraightParts.End
             
@@ -200,6 +210,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
       # Draw inflection points.
       unless filterValue and filterValue not in inflectionPointsFilterValues
         for line in lines
+          # If we're focusing on a line, skip drawing others.
+          continue if focusedLines.length and line not in focusedLines
+          
           {curveSmoothness} = line.evaluate()
           
           # Ignore lines without curves.

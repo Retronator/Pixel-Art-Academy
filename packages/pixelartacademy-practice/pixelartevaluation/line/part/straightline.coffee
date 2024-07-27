@@ -42,3 +42,15 @@ class PAE.Line.Part.StraightLine extends PAE.Line.Part
       
       else
         @nextPart.projectToLine @nextPart.startPointIndex, @, @displayLine2.end
+
+  isBetweenStraightParts: ->
+    # Straight part is between other straight parts if it starts and ends on a corner.
+    @startsOnACorner() and @endsOnACorner()
+  
+  isAtTheEndOfCurvedPart: ->
+    # Straight part is at the end if they start or end with a corner, but not both.
+    (@startsOnACorner() or @endsOnACorner()) and not @isBetweenStraightParts()
+  
+  isInTheMiddleOfACurvedPart: ->
+    # Straight parts are in the middle if they don't start or end on a corner.
+    not (@startsOnACorner() or @endsOnACorner())

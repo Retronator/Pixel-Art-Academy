@@ -53,6 +53,9 @@ PAE.Line::classifyLineParts = ->
         curveClockwise:
           before: null
           after: null
+        corner:
+          before: false
+          after: false
         
     currentEdgeSegment.count++
     currentEdgeSegment.endPointIndex++
@@ -118,8 +121,6 @@ PAE.Line::classifyLineParts = ->
     edgeSegment.curveClockwise.after = edgeSegment.clockwise.after
     edgeSegmentAfter?.curveClockwise.before = edgeSegmentAfter.clockwise.before
     
-    edgeSegment.corner = after: false
-    
   # Detect corners.
   for edgeSegment, edgeSegmentIndex in @edgeSegments
     continue unless edgeSegmentAfter = @getEdgeSegment edgeSegmentIndex + 1
@@ -135,6 +136,12 @@ PAE.Line::classifyLineParts = ->
       edgeSegmentIsLong = edgeSegment.pointSegmentLength >= minPointLength or edgeSegment.pointSegmentsCount >= minPointLength
       edgeSegmentAfterIsLong = edgeSegmentAfter.pointSegmentLength >= minPointLength or edgeSegmentAfter.pointSegmentsCount >= minPointLength
       edgeSegment.corner.after = edgeSegmentIsLong and edgeSegmentAfterIsLong
+
+    edgeSegmentAfter.corner.before = edgeSegment.corner.after
+    
+  unless @isClosed
+    _.first(@edgeSegments).corner.before = true
+    _.last(@edgeSegments).corner.after = true
   
   # Detect side-step segments.
   for edgeSegment, edgeSegmentIndex in @edgeSegments when edgeSegment.edge.isAxisAligned
@@ -161,7 +168,9 @@ PAE.Line::classifyLineParts = ->
     
     # Side-step segments can't be corners.
     edgeSegment.corner.after = false
+    edgeSegmentAfter.corner.before = false
     edgeSegmentAfter.corner.after = false
+    edgeSegmentAfter2.corner.before = false
     
   # Create line parts.
   @_detectStraightLineParts()

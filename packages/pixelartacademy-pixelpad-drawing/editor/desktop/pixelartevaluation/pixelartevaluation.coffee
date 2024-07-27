@@ -147,7 +147,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         # See if there was any change from the current data.
         return if _.objectContains asset.properties.pixelArtEvaluation, evaluation
         
-        pixelArtEvaluationProperty = _.extend {}, asset.properties.pixelArtEvaluation, evaluation
+        pixelArtEvaluationProperty = _.merge {}, asset.properties.pixelArtEvaluation, evaluation
       
         updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtEvaluation', pixelArtEvaluationProperty
         asset.executeAction updatePropertyAction, true

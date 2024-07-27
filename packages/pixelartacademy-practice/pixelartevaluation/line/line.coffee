@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AP = Artificial.Program
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
@@ -62,7 +63,10 @@ class PAE.Line
     @_jaggies = []
     cornerPoints = @getCornerPoints()
     
-    for point in @points[1...@points.length] when point not in cornerPoints
+    # Ignore end points if the line is not closed.
+    points = if @isClosed then @points else @points[1...@points.length - 1]
+    
+    for point in points when point not in cornerPoints
       for pixel in point.pixels
         if @_isJaggyInCorner(pixel, -1, -1) or @_isJaggyInCorner(pixel, -1, 1) or @_isJaggyInCorner(pixel, 1, -1) or @_isJaggyInCorner(pixel, 1, 1)
           @_jaggies.push pixel unless pixel in @_jaggies
@@ -76,35 +80,50 @@ class PAE.Line
     return if @layer.getPixel pixel.x + dx, pixel.y
     true
     
-  getDoubles: (countPointsWithMultiplePixels = false) ->
-    return @_doubles if @_doubles
+  getDoubles: (pixelArtEvaluationProperty) ->
+    options = _.defaults {}, pixelArtEvaluationProperty?.pixelPerfectLines?.doubles,
+      countAllLineWidthTypes: false
+      countPointsWithMultiplePixels: false
+      
+    optionsHash = AP.HashFunctions.getObjectHash options, AP.HashFunctions.circularShift5
     
-    @_doubles = []
+    @_doubles ?= {}
+    return @_doubles[optionsHash] if @_doubles[optionsHash]
     
-    # Doubles can only exist on lines with varying width.
-    width = @_analyzeWidth()
-    return @_doubles unless width.type is @constructor.WidthType.Varying
+    @_doubles[optionsHash] = []
     
-    # Doubles are all pixels on axis-aligned side steps.
+    unless options.countAllLineWidthTypes
+      # We should only count doubles on lines with varying width.
+      width = @_analyzeWidth pixelArtEvaluationProperty
+      return @_doubles[optionsHash] unless width.type is @constructor.WidthType.Varying
+    
+    # Doubles are all pixels on single-width (thick line) axis-aligned side steps.
     for edgeSegment in @edgeSegments when edgeSegment.isSideStep and edgeSegment.edge.isAxisAligned
       for pointIndex in [edgeSegment.startPointIndex, edgeSegment.endPointIndex]
         point = @getPoint pointIndex
         continue unless point.pixels.length is 1
 
-        @_doubles.push point.pixels[0] unless point.pixels[0] in @_doubles
+        @_doubles[optionsHash].push point.pixels[0] unless point.pixels[0] in @_doubles[optionsHash]
         
-    if countPointsWithMultiplePixels
+    if options.countPointsWithMultiplePixels
       # Doubles are all pixels on points with multiple pixels.
       for point in @points when point.pixels.length > 1
         for pixel in point.pixels
-          @_doubles.push pixel unless pixel in @_doubles
+          @_doubles[optionsHash].push pixel unless pixel in @_doubles
     
-    @_doubles
+    @_doubles[optionsHash]
     
-  getCorners: ->
-    return @_corners if @_corners
+  getCorners: (pixelArtEvaluationProperty) ->
+    # Corners at straight line parts are ignored by default.
+    options = _.defaults {}, pixelArtEvaluationProperty?.pixelPerfectLines?.corners,
+      ignoreStraightLineCorners: true
+      
+    optionsHash = AP.HashFunctions.getObjectHash options, AP.HashFunctions.circularShift5
     
-    @_corners = []
+    @_corners ?= {}
+    return @_corners[optionsHash] if @_corners[optionsHash]
+    
+    @_corners[optionsHash] = []
     
     # Corners are pixels at the point between two consecutive axis-aligned edge segments that are not a side-step.
     for edgeSegment, edgeSegmentIndex in @edgeSegments when not edgeSegment.isSideStep
@@ -120,17 +139,21 @@ class PAE.Line
         point = @getPoint edgeSegment.endPointIndex + pointIndexOffset
         # Note: We want to check for multiple neighbors and not lines
         # to catch places where double lines connect to outlines.
-        if point.neighbors.length > 2
+        if point.allNeighbors.length > 2
           foundIntersection = true
           break
 
       continue if foundIntersection
       
+      if options.ignoreStraightLineCorners
+        # Ignore corners between straight lines, we will assume they are intentional.
+        continue unless @isPointPartCurve(edgeSegment.endPointIndex) and @isPointPartCurve(edgeSegment.endPointIndex - 1) and @isPointPartCurve(edgeSegment.endPointIndex + 1)
+      
       point = @getPoint edgeSegment.endPointIndex
       for pixel in point.pixels
-        @_corners.push pixel unless pixel in @_corners
+        @_corners[optionsHash].push pixel unless pixel in @_corners
         
-    @_corners
+    @_corners[optionsHash]
     
   getInnerPoints: ->
     return @_innerPoints if @_innerPoints

@@ -33,6 +33,33 @@ PAE.Line.Part.StraightLine::_analyzeSegments = ->
     @pointSegmentLengthFrequency[pointSegmentLength] ?= 0
     @pointSegmentLengthFrequency[pointSegmentLength] += segment.pointSegmentsCount
     
+  # See if the end points are junctions and it would be better not to use them.
+  startSegment = @line.getEdgeSegment @startSegmentIndex
+  startPoint = @line.getPoint startSegment.startPointIndex
+  currentStartPointSegmentLength = startSegment.pointSegmentLength
+
+  if currentStartPointSegmentLength > 1 and startPoint.allNeighbors.length > 2
+    alternativeStartPointSegmentLength = currentStartPointSegmentLength - 1
+    
+    if @pointSegmentLengthFrequency[alternativeStartPointSegmentLength] > @pointSegmentLengthFrequency[currentStartPointSegmentLength]
+      @pointSegmentLengths[0] = alternativeStartPointSegmentLength
+      @pointSegmentLengthFrequency[alternativeStartPointSegmentLength]++
+      @pointSegmentLengthFrequency[currentStartPointSegmentLength]--
+      delete @pointSegmentLengthFrequency[currentStartPointSegmentLength] unless @pointSegmentLengthFrequency[alternativeStartPointSegmentLength]
+  
+  endSegment = @line.getEdgeSegment @endSegmentIndex
+  endPoint = @line.getPoint endSegment.endPointIndex
+  currentEndPointSegmentLength = endSegment.pointSegmentLength
+
+  if currentEndPointSegmentLength > 1 and endPoint.allNeighbors.length > 2
+    alternativeEndPointSegmentLength = currentEndPointSegmentLength - 1
+    
+    if @pointSegmentLengthFrequency[alternativeEndPointSegmentLength] > @pointSegmentLengthFrequency[currentEndPointSegmentLength]
+      @pointSegmentLengths[@pointSegmentLengths.length - 1] = alternativeEndPointSegmentLength
+      @pointSegmentLengthFrequency[alternativeEndPointSegmentLength]++
+      @pointSegmentLengthFrequency[currentEndPointSegmentLength]--
+      delete @pointSegmentLengthFrequency[currentEndPointSegmentLength] unless @pointSegmentLengthFrequency[currentEndPointSegmentLength]
+      
   @startPointSegmentLength = null
   @endPointSegmentLength = null
   

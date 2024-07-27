@@ -37,8 +37,11 @@ class Jaggies2.Instructions
       markup = []
       lines = pixelArtEvaluation.getLinesAt point.x, point.y
       
+      return unless asset = @getActiveAsset()
+      pixelArtEvaluationProperty = asset.bitmap().properties.pixelArtEvaluation
+      
       for line in lines
-        markup.push Markup.PixelArt.pixelPerfectLineErrors(line)...
+        markup.push Markup.PixelArt.pixelPerfectLineErrors(line, true, true, pixelArtEvaluationProperty)...
       
       markup
     

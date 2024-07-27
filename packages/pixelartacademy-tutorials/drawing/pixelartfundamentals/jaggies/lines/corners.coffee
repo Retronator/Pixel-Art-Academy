@@ -43,7 +43,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
       allowedCriteria: [PAE.Criteria.PixelPerfectLines]
       pixelPerfectLines:
         doubles: {}
-        corners: {}
+        corners:
+          ignoreStraightLineCorners: false
   
   @initialize()
   

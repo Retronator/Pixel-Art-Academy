@@ -30,12 +30,12 @@ class Markup.PixelArt
     UpLeft: 'UpLeft'
     Left: 'Left'
   
-  @pixelPerfectLineErrors: (line, doubles = true, corners = true) ->
+  @pixelPerfectLineErrors: (line, doubles = true, corners = true, pixelArtEvaluationProperty = null) ->
     markup = []
     
     pixelPerfectLineErrors = []
-    pixelPerfectLineErrors.push line.getDoubles()... if doubles
-    pixelPerfectLineErrors.push line.getCorners()... if corners
+    pixelPerfectLineErrors.push line.getDoubles(pixelArtEvaluationProperty)... if doubles
+    pixelPerfectLineErrors.push line.getCorners(pixelArtEvaluationProperty)... if corners
     
     pixelPerfectErrorBase = style: Markup.errorStyle()
     
@@ -318,7 +318,11 @@ class Markup.PixelArt
         if nextOffsetDirection = texts[nextIndex].offsetDirection
           break
           
-      if previousOffsetDirection is nextOffsetDirection
+      unless previousOffsetDirection or nextOffsetDirection
+        # We couldn't find any direction preference, default to up.
+        text.offsetDirection = @OffsetDirections.Up
+        
+      else if previousOffsetDirection is nextOffsetDirection
         # Preserve direction in between segments with the same direction.
         text.offsetDirection = previousOffsetDirection
         

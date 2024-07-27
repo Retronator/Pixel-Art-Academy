@@ -33,8 +33,11 @@ class LineArtCleanup.Steps
       pixelArtEvaluation =
         allowedCriteria: [PAE.Criteria.PixelPerfectLines]
         pixelPerfectLines:
-          doubles: {}
-          corners: {}
+          doubles:
+            countAllLineWidthTypes: true
+            countPointsWithMultiplePixels: true
+          corners:
+            ignoreStraightLineCorners: false
       
       updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'pixelArtEvaluation', pixelArtEvaluation
       
@@ -108,5 +111,6 @@ class LineArtCleanup.Steps
       return unless line = pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
       
       # The line must not have any doubles or corners.
-      lineEvaluation = line.evaluate()
+      pixelArtEvaluationProperty = @tutorialBitmap.bitmap().properties.pixelArtEvaluation
+      lineEvaluation = line.evaluate pixelArtEvaluationProperty
       not lineEvaluation.doubles.count and not lineEvaluation.corners.count

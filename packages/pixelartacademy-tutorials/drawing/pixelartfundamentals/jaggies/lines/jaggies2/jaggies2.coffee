@@ -39,6 +39,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
   @markup: -> true
   @pixelArtEvaluation: -> partialUpdates: true
   
+  @properties: ->
+    pixelArtScaling: true
+    pixelArtEvaluation:
+      pixelPerfectLines:
+        doubles:
+          countAllLineWidthTypes: true
+  
   @initialize()
   
   initializeSteps: ->
