@@ -37,11 +37,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies2 extends 
       goalPixels: new @Resource.ImagePixels "#{path}-5-goal.png"
     
   @markup: -> true
-  @pixelArtEvaluation: -> partialUpdates: true
+  @pixelArtEvaluation: ->
+    partialUpdates: true
   
   @properties: ->
     pixelArtScaling: true
     pixelArtEvaluation:
+      displayed: false
       pixelPerfectLines:
         doubles:
           countAllLineWidthTypes: true

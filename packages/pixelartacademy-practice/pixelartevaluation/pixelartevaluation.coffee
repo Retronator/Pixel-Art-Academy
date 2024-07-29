@@ -85,7 +85,7 @@ class PAA.Practice.PixelArtEvaluation
     @_lastId++
     @_lastId
   
-  @getLetterGrade = (score, plusMinus = false) ->
+  @getLetterGrade: (score, plusMinus = false) ->
     scoreOutOf10 = score * 10
     
     letterBracket = Math.min 9, Math.floor scoreOutOf10
