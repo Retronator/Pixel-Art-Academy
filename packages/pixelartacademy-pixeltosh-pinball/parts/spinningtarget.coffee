@@ -18,6 +18,7 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
   
   @avatarShapes: -> [
     @Shape
+    Pinball.Part.Avatar.Box
   ]
   
   @initialize()

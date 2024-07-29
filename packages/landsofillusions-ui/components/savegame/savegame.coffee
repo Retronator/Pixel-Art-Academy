@@ -75,7 +75,7 @@ class LOI.Components.SaveGame extends LOI.Component
         displayName: @newSaveGameName()
         lastEditTime: new Date
 
-    LOI.adventure.showDialogMessage "Your game is now auto-saving to this disk.", =>
+    LOI.adventure.showDialogMessage "Your game will be automatically saving to this disk.", =>
       @audio.save false
       
       @callFirstWith null, 'deactivate'
@@ -90,6 +90,11 @@ class LOI.Components.SaveGame extends LOI.Component
 
       @type = AM.DataInputComponent.Types.TextArea
       @propertyName = 'newSaveGameName'
+      
+    onRendered: ->
+      super arguments...
+      
+      @$('textarea').focus()
 
     placeholder: ->
       "Enter name"

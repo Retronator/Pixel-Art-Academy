@@ -102,24 +102,43 @@ class Markup.EngineComponent
         else
           lineHeight = textSize * 1.2
           
+        textPosition = _.clone text.position
+        
+        # Adjust for right-based origin to have an extra pixel space.
+        if _.endsWith textPosition.origin, 'Right'
+          textPosition.x += scaledDisplayPixelSize
+          
         if text.outline
+          # Adjust position to accommodate for the outline.
+          if _.endsWith textPosition.origin, 'Left'
+            textPosition.x += scaledDisplayPixelSize
+            
+          if _.endsWith textPosition.origin, 'Right'
+            textPosition.x -= scaledDisplayPixelSize
+          
+          if _.startsWith textPosition.origin, 'Top'
+            textPosition.y += scaledDisplayPixelSize
+          
+          if _.startsWith textPosition.origin, 'Bottom'
+            textPosition.y -= scaledDisplayPixelSize
+          
           context.fillStyle = text.outline.style
           
           outlineWidth = text.outline.width or 1
-          outlinePosition = _.clone text.position
+          outlinePosition = _.clone textPosition
           
           context.beginPath()
           
           for offsetX in [-outlineWidth..outlineWidth]
             for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
-              outlinePosition.x = text.position.x + offsetX * scaledDisplayPixelSize
-              outlinePosition.y = text.position.y + offsetY * scaledDisplayPixelSize
+              outlinePosition.x = textPosition.x + offsetX * scaledDisplayPixelSize
+              outlinePosition.y = textPosition.y + offsetY * scaledDisplayPixelSize
               @_drawText context, text.value, outlinePosition, lineHeight, text.align
               
           context.fill()
         
         context.fillStyle = text.style
-        @_drawText context, text.value, text.position, lineHeight, text.align
+        @_drawText context, text.value, textPosition, lineHeight, text.align
       
     context.restore()
 

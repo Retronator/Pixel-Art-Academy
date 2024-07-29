@@ -170,6 +170,10 @@ class PAA.Pixeltosh.OS extends LOI.Component
     sortedWindows = _.sortBy normalWindows, 'order'
     _.last(sortedWindows)?.order or 0
 
+  onBackButton: ->
+    # Relay to the active program.
+    @activeProgram()?.onBackButton?()
+    
   menuVisibleClass: ->
     'menu-visible' if @activeMenuItems()
     

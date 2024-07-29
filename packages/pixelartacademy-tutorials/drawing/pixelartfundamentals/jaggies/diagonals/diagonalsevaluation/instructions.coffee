@@ -55,7 +55,7 @@ class DiagonalsEvaluation.Instructions
     @uiRevealDelayDuration = 3
     
     # The amount of time before we show instructions when a new line is introduced.
-    @newLineDelayDuration = 3
+    @newLineDelayDuration = 5
     
     @closeOutsideEvaluationPaper: -> false
     

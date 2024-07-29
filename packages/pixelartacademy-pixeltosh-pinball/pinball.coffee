@@ -178,6 +178,16 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     if file.id() is "#{PAA.Pixeltosh.Programs.Pinball.id()}.PinballMachine"
       LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine', true
       
+  onBackButton: ->
+    # Pressing escape returns to edit mode if edit is unlocked.
+    gameManager = @gameManager()
+
+    if gameManager.mode() isnt @constructor.GameManager.Modes.Edit and @editModeUnlocked()
+      gameManager.edit()
+      
+      # Inform that we've handled the back button.
+      true
+    
   editModeUnlocked: ->
     LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.DrawGobbleHole.getAdventureInstance().completed()
     

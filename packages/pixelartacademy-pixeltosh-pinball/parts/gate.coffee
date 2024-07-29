@@ -15,6 +15,7 @@ class Pinball.Parts.Gate extends Pinball.Parts.DynamicPart
   
   @avatarShapes: -> [
     @Shape
+    Pinball.Part.Avatar.Box
   ]
   
   @initialize()

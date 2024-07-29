@@ -56,3 +56,7 @@ class PAA.PixelPad.Apps.Pixeltosh extends PAA.PixelPad.App
   inGameMusicMode: ->
     # Turn off music when using the Pixeltosh.
     LM.Interface.InGameMusicMode.InLocation
+  
+  onBackButton: ->
+    # Relay to the OS.
+    @os().onBackButton()

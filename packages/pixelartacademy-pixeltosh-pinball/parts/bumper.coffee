@@ -10,10 +10,18 @@ _displacedRingPosition = new THREE.Vector3
 class Pinball.Parts.Bumper extends Pinball.Part
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Bumper'
   @fullName: -> "bumper"
-  @description: ->
-    "
-      A mushroom-shaped target. An active bumper kicks the ball away when hit.
-    "
+  @description: -> "A target that scores points when hit."
+  
+  @translations: ->
+    passiveActive: "A passive bumper just bounces away the ball, while an active one kicks it away with force."
+  
+  description: ->
+    description = super arguments...
+    activeEnabled = @settings().active.enabledCondition @data()
+    return description unless activeEnabled
+    return description unless translations = @translations()
+    
+    "#{description} #{translations.passiveActive}"
     
   @assetId: -> Pinball.Assets.Bumper.id()
   

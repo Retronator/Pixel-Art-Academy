@@ -302,7 +302,7 @@ class Goal.DrawGate extends Goal.AssetsTask
   @directive: -> "Draw a gate"
 
   @instructions: -> """
-    To prevent the ball from returning to the shooter late, we'll need a gate.
+    To prevent the ball from returning to the shooter lane, we'll need a gate.
     In the Pinball project, modify the Gate sprite as desired.
   """
   

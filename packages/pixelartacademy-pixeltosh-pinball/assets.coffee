@@ -96,7 +96,7 @@ class Pinball.Assets
     @displayName: -> "Bumper"
 
     @description: -> """
-      Draw the top of a mushroom-shaped target. It works best as a circle.
+      Draw the top of a target that bounces the ball. It works best as a circle.
     """
     
     @fixedDimensions: -> width: 30, height: 30
@@ -117,7 +117,7 @@ class Pinball.Assets
     @displayName: -> "Gate"
 
     @description: -> """
-      A flap door or wire barrier that will rotate around the top.
+      A flap door that rotates around the top.
       Draw it in front view, big enough to obstruct the ball.
     """
 
@@ -149,7 +149,7 @@ class Pinball.Assets
     @displayName: -> "Spinning target"
 
     @description: -> """
-      A metal plate that spins around the center of the drawing when the ball passes through.
+      A metal plate that spins when the ball passes through.
     """
 
     @fixedDimensions: -> width: 20, height: 20
