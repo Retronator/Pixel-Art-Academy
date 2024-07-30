@@ -78,8 +78,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
         if assetData.bounds
           # The center of the image should be in the origin.
           originDataField.value
-            x: (assetData.bounds.left + assetData.bounds.right) / 2
-            y: (assetData.bounds.top + assetData.bounds.bottom) / 2
+            x: (assetData.bounds.left + assetData.bounds.right + 1) / 2
+            y: (assetData.bounds.top + assetData.bounds.bottom + 1) / 2
           
         else
           originDataField.value x: 0, y: 0

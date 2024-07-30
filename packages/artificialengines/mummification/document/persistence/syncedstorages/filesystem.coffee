@@ -92,7 +92,8 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       """
       
       throw new AE.ExternalException "Writing document to the file system failed.", path, error
-      
+    
+    @lastEditTimes[documentClassId] ?= {}
     @lastEditTimes[documentClassId][document._id] = document.lastEditTime
 
   _getDocumentPath: (document) ->

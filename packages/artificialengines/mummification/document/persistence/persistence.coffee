@@ -23,7 +23,7 @@ class AM.Document.Persistence
   @profileReady = new ReactiveField false
   
   Meteor.startup =>
-    @_activeProfile = new ComputedField =>
+    @activeProfile = new ComputedField =>
       @Profile.documents.findOne @_activeProfileId()
     ,
       true
@@ -191,7 +191,7 @@ class AM.Document.Persistence
     Promise.all flushUpdatesPromises
     
   @addSyncingToProfile: (syncedStorageId) ->
-    profile = @_activeProfile()
+    profile = @activeProfile()
     throw new AE.InvalidOperationException "There is no loaded profile to add syncing to." unless profile
   
     throw new AE.ArgumentException "The profile is already syncing with this synced storage." if profile.syncedStorages.syncedStorageId
@@ -239,7 +239,7 @@ class AM.Document.Persistence
     # before that happens.
     return unless document.profileId and document.profileId is @_activeProfileId()
     
-    return unless activeProfile = @_activeProfile()
+    return unless activeProfile = @activeProfile()
     
     promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when activeProfile.syncedStorages[syncedStorageId]
       syncedStorage[methodName] document
