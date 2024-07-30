@@ -28,11 +28,9 @@ class LM.Notifications
     @id: -> "PixelArtAcademy.LearnMode.Notifications.TheEnd"
     
     @message: -> """
-      You completed all the tasks there are in the game so far!
-      I hope you had fun and learned something along the way.
+      You completed all the tasks there are in the demo, thank you for playing!
       
-      While the game is in Early Access, the goal is to continually add new content.
-      Follow the game to learn when an updated build goes live!
+      I hope you liked the experience. If you did, wishlist the game to be notified when the game launches into Early Access on August 5.
     """
     
     @priority: -> 2
