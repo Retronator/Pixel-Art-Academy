@@ -83,6 +83,8 @@ class LOI.Adventure extends LOI.Adventure
           @loadingStoredProfile false
 
   startNewGame: ->
+    await @_unloadProfileIfLoaded()
+    
     # Create a fresh profile and reset the game.
     Persistence.createProfile().then (profileId) =>
       # Create a new game state.
@@ -93,6 +95,8 @@ class LOI.Adventure extends LOI.Adventure
       @_changeProfileId profileId
   
   loadGame: (profileId) ->
+    await @_unloadProfileIfLoaded()
+
     # Load the game profile from persistence and activate it if it loaded OK.
     Persistence.loadProfile(profileId).then =>
       # Ensure we received a valid game state.
@@ -102,6 +106,19 @@ class LOI.Adventure extends LOI.Adventure
       @_changeProfileId profileId
       
     , (conflictResolution) => # TODO
+    
+  _unloadProfileIfLoaded: ->
+    if Persistence.activeProfile()
+      # Something must have gone wrong with UI flows if there is a profile loaded before trying to load a new one.
+      console.error "Profile was already loaded when trying to load another one."
+      
+      # We want to prevent the player to getting soft-locked however, so we simply unload it here.
+      new Promise (resolve, reject) =>
+        @quitGame callback: =>
+          resolve()
+          
+          # Notify that we've handled the quitting procedure.
+          true
     
   _changeProfileId: (profileId) ->
     # Reset the interface.

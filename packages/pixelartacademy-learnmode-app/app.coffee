@@ -27,6 +27,8 @@ class LM.App extends Artificial.Base.App
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
     new LOI.Assets
+    new PAA.Pixeltosh
+    new PAA.Practice
   
     # We manually add the Learn Mode route without a domain to point to Learn Mode
     # so we can access it without etc.hosts modifications on standalone clients.
