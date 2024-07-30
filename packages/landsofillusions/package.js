@@ -13,7 +13,7 @@ Package.describe({
 Npm.depends({
   'delaunator': '3.0.2',
   'barycentric': '1.0.1',
-  'canvas': '2.6.1',
+  'canvas': '2.11.2',
   'pngjs': '2.3.0',
   's3-streaming-upload': '0.2.3',
   'fast-png': '4.0.1',
@@ -350,6 +350,7 @@ Package.onUse(function(api) {
   // Adventure
 
   api.addComponent('adventure..');
+  api.addFile('adventure/adventure-audio');
   api.addFile('adventure/adventure-routing');
   api.addFile('adventure/adventure-state');
   api.addFile('adventure/adventure-memories');
@@ -601,4 +602,9 @@ Package.onUse(function(api) {
   api.addFile('engine/world/navigator..');
   api.addFile('engine/world/navigator/spaceoccupation..');
   api.addFile('engine/world/navigator/spaceoccupation/placeholder');
+
+  // Music
+
+  api.addFile('music..');
+  api.addFile('music/playbackchannel');
 });

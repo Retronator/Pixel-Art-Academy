@@ -10,8 +10,8 @@ class TutorialBitmap.Step
   # remember the completed state of this step instead of asking to reconfirm it.
   @preserveCompleted: -> false
 
-  # Override to false (or provide through options) if the hint drawing should not be called after the step is completed.
-  @drawHintsAfterCompleted: -> true
+  # Override to true (or provide through options) if the hint drawing should be called after the step is completed.
+  @drawHintsAfterCompleted: -> false
 
   # Override to true (or provide through options) if the step can be completed even if extra pixels are present.
   @canCompleteWithExtraPixels: -> false
@@ -29,7 +29,7 @@ class TutorialBitmap.Step
     true
   
   # Override if the step requires pixels for its completion (so other steps don't consider them to be invalid).
-  hasPixel: -> false
+  hasPixel: (absoluteX, absoluteY) -> false
   
   solve: -> throw new AE.NotImplementedException "A step has to provide a method to solve itself to a completed state."
   
@@ -106,5 +106,5 @@ class TutorialBitmap.Step
       context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_pixelHintOpacity})"
       context.fillRect absoluteX, absoluteY, @_pixelHintSize, @_pixelHintSize
     
-    else
+    else unless @_pixelHintOpacity < 1
       context.clearRect absoluteX, absoluteY, @_pixelHintSize, @_pixelHintSize

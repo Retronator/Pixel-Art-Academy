@@ -13,7 +13,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
     """
 
   @fixedDimensions: -> width: 64, height: 40
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |                    0000
@@ -139,6 +139,6 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.Zoom extends PAA.Practice.Tuto
       @_initialScale = pixelCanvasEditor.camera().scale()
   
     completedConditions: ->
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
       @_initialScale isnt pixelCanvasEditor.camera().scale()

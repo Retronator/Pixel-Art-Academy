@@ -33,7 +33,7 @@ class PAA.StillLifeStand.PhysicsManager
 
     # Add ground of wooden material.
     @ground = new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
-      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity, new Ammo.btVector3(0, -0.5, 0)
+      new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(0, -0.5, 0)
     ,
       new Ammo.btBoxShape new Ammo.btVector3(500, 0.5, 500), 0
 

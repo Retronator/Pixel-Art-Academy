@@ -13,7 +13,7 @@ Package.describe({
 Npm.depends({
   'pngjs': '2.3.0',
   'fast-png': '4.0.1',
-  'canvas': '2.6.1'
+  'canvas': '2.11.2'
 });
 
 Package.onUse(function(api) {
@@ -30,10 +30,10 @@ Package.onUse(function(api) {
   api.addFile('pico8');
   api.addFile('devkit');
   api.addFile('fanzine');
+  api.addFile('cartridges');
 
-  api.addFile('cartridges..');
-  api.addFile('cartridges/cartridge');
-  api.addServerFile('cartridges/server');
+  api.addFile('cartridge..');
+  api.addServerFile('cartridge/server');
 
   api.addFile('game..');
   api.addFile('game/game-cartridgeimage');

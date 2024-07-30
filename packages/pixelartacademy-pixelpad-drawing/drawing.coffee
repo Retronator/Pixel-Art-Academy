@@ -120,10 +120,14 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     
     if @editor()?.active() then LM.Interface.InGameMusicMode.InLocation else LM.Interface.InGameMusicMode.Direct
 
-  activeAssetClass: ->
+  activeAsset: ->
     portfolio = @portfolio()
+    return unless portfolio.isCreated()
+    
+    portfolio.activeAsset()
 
-    'active-asset' if portfolio.isCreated() and portfolio.activeAsset()
+  activeAssetClass: ->
+    'active-asset' if @activeAsset()
 
   editorActiveClass: ->
     'editor-active' if @editor().active()

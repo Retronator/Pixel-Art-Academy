@@ -7,6 +7,9 @@ _line2Position = new THREE.Vector2
 _line2Direction = new THREE.Vector2
 _positionDifference = new THREE.Vector2
 
+_delta = new THREE.Vector2
+_normal = new THREE.Vector2
+
 class THREE.Line2
   constructor: (@start, @end) ->
     @start ?= new THREE.Vector2
@@ -67,13 +70,34 @@ class THREE.Line2
   clone: ->
     new @constructor().copy @
     
-  intersect: (line, target) ->
+  intersect: (extendedLine, target) ->
+    # Note: We treat both lines as extended lines (going into infinity).
+    distanceFromStart = @intersectionDistanceFromStart extendedLine
+    return false if distanceFromStart is false
+    
+    _line1Position.copy @start
+    @delta(_line1Direction)
+    _line1Direction.normalize()
+    target.copy(_line1Direction).multiplyScalar(distanceFromStart).add _line1Position
+    
+    true
+  
+  intersects: (line) ->
+    @intersectsExtendedLine(line) and line.intersectsExtendedLine(@)
+    
+  intersectsExtendedLine: (extendedLine) ->
+    distanceFromStart = @intersectionDistanceFromStart extendedLine
+    return false if distanceFromStart is false
+    
+    Number.EPSILON < distanceFromStart < @distance() - Number.EPSILON
+  
+  intersectionDistanceFromStart: (extendedLine) ->
     _line1Position.copy @start
     @delta(_line1Direction)
     _line1Direction.normalize()
     
-    _line2Position.copy line.start
-    line.delta(_line2Direction)
+    _line2Position.copy extendedLine.start
+    extendedLine.delta(_line2Direction)
     _line2Direction.normalize()
     
     # There is no intersection if lines are parallel (cross product of direction vectors is zero).
@@ -81,10 +105,35 @@ class THREE.Line2
     return false if Math.abs(directionCross) < Number.EPSILON
     
     _positionDifference.subVectors _line2Position, _line1Position
-    t = _positionDifference.cross(_line2Direction) / directionCross
-    target.copy(_line1Direction).multiplyScalar(t).add _line1Position
+    _positionDifference.cross(_line2Direction) / directionCross
     
-    true
-  
-  intersectLines: (a, b, target) ->
-    @copy(a).intersect(b, target)
+  getNormal: (right, result) ->
+    result ?= new THREE.Vector2
+    @delta _delta
+    
+    if right
+      result.x = _delta.y
+      result.y = -_delta.x
+    else
+      result.x = -_delta.y
+      result.y = _delta.x
+    
+    result.normalize()
+    result
+    
+  getSignedDistanceFromLine: (point) ->
+    # Positive distance is to the right of the line.
+    @getNormal true, _normal
+    distanceToLine = _normal.dot @start
+    distanceToPoint = _normal.dot point
+    
+    distanceToPoint - distanceToLine
+    
+  getDistanceFromLine: (point) ->
+    Math.abs @getSignedDistanceFromLine()
+    
+  isPointInRightHalfPlane: (point) ->
+    @getSignedDistanceFromLine(point) > 0
+
+  isPointInLeftHalfPlane: (point) ->
+    @getSignedDistanceFromLine(point) < 0

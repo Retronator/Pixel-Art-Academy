@@ -10,6 +10,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     super arguments...
     
     @options.drawHintsForGoalPixels ?= true
+    @options.hasPixelsWhenInactive ?= true
     
     goalPixelsResource = @options.goalPixels
     
@@ -36,18 +37,13 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()
     
-    if backgroundColor = @tutorialBitmap.getBackgroundColor()
-      backgroundPixel =
-        directColor: backgroundColor
-        color: THREE.Color.fromObject backgroundColor
-
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         # See if we require a pixel here.
-        continue unless goalPixel = @goalPixelsMap[x]?[y] or backgroundPixel
+        continue unless goalPixel = @goalPixelsMap[x]?[y]
 
         # We do require a pixel here so check if we have it in the bitmap.
-        return false unless pixel = bitmapLayer.getPixel(@stepArea.bounds.x + x, @stepArea.bounds.y + y) or backgroundPixel
+        return false unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
         # If either of the pixels has a direct color, we need to translate the other one too.
         if pixel.paletteColor and goalPixel.paletteColor
@@ -59,7 +55,13 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
 
     true
 
-  hasPixel: (x, y) -> @goalPixelsMap[@stepArea.bounds.x + x]?[@stepArea.bounds.y + y]?
+  hasPixel: (absoluteX, absoluteY) ->
+    return unless @options.hasPixelsWhenInactive or @isActiveStepInArea()
+    
+    relativeX = absoluteX - @stepArea.bounds.x
+    relativeY = absoluteY - @stepArea.bounds.y
+
+    @goalPixelsMap[relativeX]?[relativeY]?
 
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
@@ -89,7 +91,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         # Do we have a pixel here?
         absoluteX = x + @stepArea.bounds.x
         absoluteY = y + @stepArea.bounds.y
-        pixel = bitmap.findPixelAtAbsoluteCoordinates absoluteX, absoluteY
+        pixel = bitmap.getPixelForLayerAtAbsoluteCoordinates 0, absoluteX, absoluteY
         
         # Do we need a pixel here?
         anyPixel = @stepArea.hasGoalPixel x, y
@@ -105,10 +107,13 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
           
           if goalPixel.paletteColor
             shades = palette.ramps[goalPixel.paletteColor.ramp].shades
-            shadeIndex = THREE.Math.clamp goalPixel.paletteColor.shade, 0, shades.length - 1
+            shadeIndex = THREE.MathUtils.clamp goalPixel.paletteColor.shade, 0, shades.length - 1
             color = shades[shadeIndex]
   
           else if goalPixel.directColor
             color = goalPixel.directColor
 
           @_drawPixelHint context, x, y, color
+    
+    # Explicit return to avoid result collection.
+    return

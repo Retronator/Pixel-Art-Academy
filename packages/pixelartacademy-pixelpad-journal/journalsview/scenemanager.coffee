@@ -73,7 +73,7 @@ class PAA.PixelPad.Apps.Journal.JournalsView.SceneManager
     scene.add new THREE.HemisphereLight 0xbbddee, 0x6688dd, 0.8
 
     # Create other scene meshes.
-    plane = new THREE.Mesh new THREE.PlaneBufferGeometry(10000, 10000, 1, 1), new THREE.MeshPhongMaterial color: 0x666666
+    plane = new THREE.Mesh new THREE.PlaneGeometry(10000, 10000, 1, 1), new THREE.MeshPhongMaterial color: 0x666666
     plane.position.set 0, 0, -4900
     plane.rotation.x = -Math.PI / 2
     plane.receiveShadow = true

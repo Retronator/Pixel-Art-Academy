@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
 FM = FataMorgana
 

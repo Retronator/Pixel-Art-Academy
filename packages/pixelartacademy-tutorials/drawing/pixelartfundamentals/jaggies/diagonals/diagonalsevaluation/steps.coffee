@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-PAG = PAA.Practice.PixelArtEvaluation
-StraightLine = PAG.Line.Part.StraightLine
+PAE = PAA.Practice.PixelArtEvaluation
+StraightLine = PAE.Line.Part.StraightLine
 DiagonalsEvaluation = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEvaluation
 
 class DiagonalsEvaluation.Steps
@@ -11,7 +11,7 @@ class DiagonalsEvaluation.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       pixelArtEvaluation.active()
     
@@ -19,12 +19,12 @@ class DiagonalsEvaluation.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluation.activeCriterion() is PAG.Criteria.EvenDiagonals
+      pixelArtEvaluation.activeCriterion() is PAE.Criteria.EvenDiagonals
     
   class @HoverOverTheDiagonal extends TutorialBitmap.EphemeralStep
-    @timeToHover = 2
+    @timeToHover = 1.2
     
     constructor: ->
       super arguments...
@@ -51,6 +51,7 @@ class DiagonalsEvaluation.Steps
       Meteor.clearTimeout @_countTimeout
 
     countTime: ->
+      Meteor.clearTimeout @_countTimeout
       @_countTimeout = Meteor.setTimeout =>
         @timeHovered += 0.1
         
@@ -63,8 +64,6 @@ class DiagonalsEvaluation.Steps
         100
       
   class @LineEvaluationStep extends TutorialBitmap.PathStep
-    @drawHintsAfterCompleted: -> false
-  
     getLineEvaluation: ->
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
       
@@ -83,7 +82,17 @@ class DiagonalsEvaluation.Steps
   class @LineOfType extends @LineEvaluationStep
     @type: -> throw new AE.NotImplementedException "A line of type step must provide the type needed for completion."
     
+    # Prevent new doubles to backtrack steps.
+    @preserveCompleted: -> true
+    
     completed: ->
+      # Make sure no doubles are in the lines.
+      return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
+      for line in pixelArtEvaluation.layers[0].lines
+        # The line must not have any doubles.
+        lineEvaluation = line.evaluate()
+        return false if lineEvaluation.doubles.count
+      
       # Ensure ideal results by also requiring matching ends.
       return unless lineEvaluation = @getLineEvaluation()
       return unless lineEvaluation.endSegments.type is StraightLine.EndSegments.Matching
@@ -97,7 +106,7 @@ class DiagonalsEvaluation.Steps
     completed: ->
       return true if super arguments...
       
-      drawingEditor = @getEditor()
+      return unless drawingEditor = @getEditor()
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       active = pixelArtEvaluation.active()
       

@@ -17,6 +17,11 @@
       &.closed:hover
         top -17rem !important
 
+      .header
+        &::before
+          // HACK: prevent a tiny line to appear due to anti-aliasing.
+          bottom -2rem
+
       .container
         .content
           padding-bottom 1em
@@ -32,7 +37,7 @@
 
       .container
         &::before
-          background repeating-linear-gradient(to top, atariCyan(5), atariCyan(5) 1rem, atariGray(5) 1rem, atariGray(5) 9rem)
+          background-position bottom
 
         .gutter
           &::before
@@ -108,9 +113,10 @@
         content ''
         display block
         absolute-cover()
+        top 1rem
         z-index 12
         left 19rem
-        background repeating-linear-gradient(atariGray(5), atariGray(5) 8rem, atariCyan(5) 8rem, atariCyan(5) 9rem)
+        background image('/pixelartacademy/tutorials/drawing/instructions/desktop/lines.png') 0 -1rem / 1rem 27rem
 
       .gutter
         position absolute

@@ -56,6 +56,8 @@ class PAA.Learning.Task
   # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
   @groupNumber: -> 0
   
+  @onActive: -> # Override to perform an action when the task has evaluated to active.
+  
   @onActiveDisplayed: -> # Override to perform an action when the task has been displayed as active to the player.
   
   @onCompletedDisplayed: -> # Override to perform an action when the task has been displayed as completed to the player.
@@ -78,6 +80,8 @@ class PAA.Learning.Task
         IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
 
   @getAdventureInstanceForId: (taskId) ->
+    return unless LOI.adventureInitialized()
+    
     for episode in LOI.adventure.episodes()
       for chapter in episode.chapters
         for task in chapter.tasks
@@ -91,6 +95,10 @@ class PAA.Learning.Task
 
     console.warn "Unknown task requested.", taskId
     null
+  
+  @getAdventureInstance: -> @getAdventureInstanceForId @id()
+
+  @reset: -> @getAdventureInstance().reset()
 
   constructor: (@options = {}) ->
     @goal = @options.goal
@@ -119,6 +127,7 @@ class PAA.Learning.Task
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
   
+  onActive: -> @constructor.onActive()
   onActiveDisplayed: -> @constructor.onActiveDisplayed()
   onCompletedDisplayed: -> @constructor.onCompletedDisplayed()
 
@@ -165,3 +174,8 @@ class PAA.Learning.Task
 
     # All requirements to be active have been met.
     true
+    
+  reset: ->
+    PAA.Learning.Task.Entry.documents.remove
+      taskId: @id()
+      profileId: @options.profileId()

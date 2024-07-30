@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview extends LOI.View
@@ -12,26 +12,30 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
   @register @id()
   
   @CriteriaNames:
-    ConsistentLineWidth: "Consistent line width"
+    PixelPerfectLines: "Pixel-perfect lines"
     EvenDiagonals: "Even diagonals"
     SmoothCurves: "Smooth curves"
+    ConsistentLineWidth: "Consistent line width"
   
   onCreated: ->
     super arguments...
     
     @pixelArtEvaluation = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
     
-    @editable = new ComputedField => @pixelArtEvaluation.pixelArtEvaluationProperty()?.editable
+    @editable = new ComputedField => @pixelArtEvaluation.editable()
+    @unlockable = new ComputedField => @pixelArtEvaluation.pixelArtEvaluationProperty()?.unlockable
     
     @criteria = new ComputedField =>
       return unless pixelArtEvaluationProperty = @pixelArtEvaluation.pixelArtEvaluationProperty()
-      editable = @editable()
-      
       criteria = []
       
       pixelArtEvaluationCriteria = pixelArtEvaluationProperty.allowedCriteria or PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria') or []
       
-      for criterion of PAG.Criteria
+      if @unlockable()
+        # Note: We need to use concat since we don't want to modify the array we got from the state.
+        pixelArtEvaluationCriteria = pixelArtEvaluationCriteria.concat PAA.Practice.Project.Asset.Bitmap.state('unlockablePixelArtEvaluationCriteria') or []
+      
+      for criterion of PAE.Criteria
         criterionProperty = _.lowerFirst criterion
         
         # Show only existing criteria when not editable (and unlocked otherwise so we can toggle them on and off).
@@ -53,7 +57,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview exten
     @pixelArtEvaluation.pixelArtEvaluationProperty()?.score?
     
   letterGrade: ->
-    PAG.getLetterGrade @pixelArtEvaluation.pixelArtEvaluationProperty().score
+    PAE.getLetterGrade @pixelArtEvaluation.pixelArtEvaluationProperty().score
 
   events: ->
     super(arguments...).concat

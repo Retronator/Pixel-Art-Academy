@@ -1,0 +1,37 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/pixelartevaluation/pixelartevaluation.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation-smoothcurves
+  .evaluation-breakdown
+    .criterion
+    .category
+      .name-area
+        small-print()
+        line-height 5rem
+
+      .score
+      .count
+        width 25rem
+        adventure()
+        line-height 5rem
+        color penColor
+        text-align center
+        padding 1rem 2rem 0 3rem
+        cursor zoom-in
+
+    .criterion
+      td
+        padding-top 5rem !important
+
+      .name-area
+        text-transform uppercase
+
+    .category
+      td.required
+        &::after
+          display none
+
+      .name-area
+        .name::before
+          content '— '

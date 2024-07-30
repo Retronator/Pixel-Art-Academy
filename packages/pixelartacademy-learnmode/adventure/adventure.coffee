@@ -67,3 +67,12 @@ class LM.Adventure extends PAA.Adventure
     return if LOI.adventure.interface.waiting()
     
     super arguments...
+    
+  inAudioMenu: ->
+    return unless LOI.adventureInitialized()
+    
+    if LOI.adventure.menu.visible()
+      LOI.adventure.menu.items.inAudio()
+      
+    else if @interface.audio.focusPoint.value() is LM.Interface.FocusPoints.MainMenu
+      LOI.adventure.currentLocation()?.menuItems?.inAudio()

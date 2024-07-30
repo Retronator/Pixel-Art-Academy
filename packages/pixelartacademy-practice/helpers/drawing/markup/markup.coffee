@@ -3,6 +3,8 @@ PAA = PixelArtAcademy
 
 Atari2600 = LOI.Assets.Palette.Atari2600
 
+_offsetDirection = new THREE.Vector2
+
 class PAA.Practice.Helpers.Drawing.Markup
   @TextOriginPosition =
     TopLeft: 'TopLeft'
@@ -69,3 +71,29 @@ class PAA.Practice.Helpers.Drawing.Markup
     return "N/A" unless value?
     
     "#{Math.floor value * 100}%"
+  
+  @offsetPoints: (points, amount) ->
+    offsetPoints = _.cloneDeep points
+    
+    for point, pointIndex in points
+      previousPointForDirection = points[pointIndex - 1] or point
+      nextPointForDirection = points[pointIndex + 1] or point
+      
+      _offsetDirection.x = previousPointForDirection.y - nextPointForDirection.y
+      _offsetDirection.y = nextPointForDirection.x - previousPointForDirection.x
+      _offsetDirection.normalize().multiplyScalar amount
+      
+      offsetPoint = offsetPoints[pointIndex]
+      offsetPoint.x += _offsetDirection.x
+      offsetPoint.y += _offsetDirection.y
+      
+      if offsetPoint.bezierControlPoints
+        offsetPoint.bezierControlPoints[1].x += _offsetDirection.x
+        offsetPoint.bezierControlPoints[1].y += _offsetDirection.y
+      
+      nextOffsetPoint = offsetPoints[pointIndex + 1]
+      if nextOffsetPoint?.bezierControlPoints
+        nextOffsetPoint.bezierControlPoints[0].x += _offsetDirection.x
+        nextOffsetPoint.bezierControlPoints[0].y += _offsetDirection.y
+    
+    offsetPoints

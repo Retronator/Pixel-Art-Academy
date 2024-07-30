@@ -1,0 +1,26 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-window
+  display flex
+  position relative
+  flex-direction column
+  height 100%
+  border 1rem solid black
+  background-color white
+  box-shadow 2rem 2rem 0 -1rem black
+
+  .content
+    flex-grow 1
+
+  .move-indicator
+    display none
+    position absolute
+    border 1rem solid white
+    border-image image('/pixelartacademy/pixeltosh/os/dither-border-white.png') 1 / 1rem repeat
+    mix-blend-mode difference
+
+    &.visible
+      display block
+
+    &.alternative-dither
+      border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-alternative.png')

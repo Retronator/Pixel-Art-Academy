@@ -1,0 +1,15 @@
+Finding the Groove by Shnabubula
+
+SIDE A
+Welcome to Retropolis
+Game and Chill
+Skyline Drive
+The Brothers Smith
+
+SIDE B
+Neon Rainbow Sunset Horizon
+Longing for the City
+Pink Man Strut
+Peralta
+
+{"_id":"rjWH3d78Hryauw6Mv","title":"Finding the Groove","artist":"Shnabubula","sides":[{"tracks":[{"title":"Welcome to Retropolis","duration":402,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 01 Welcome to Retropolis.mp3"},{"title":"Game and Chill","duration":419,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 02 Game and Chill.mp3"},{"title":"Skyline Drive","duration":452,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 03 Skyline Drive.mp3"},{"title":"The Brothers Smith","duration":362,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 04 The Brothers Smith.mp3"}]},{"tracks":[{"title":"Neon Rainbow Sunset Horizon","duration":275,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 05 Neon Rainbow Sunset Horizon.mp3"},{"title":"Longing for the City","duration":461,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 06 Longing for the City.mp3"},{"title":"Pink Man Strut","duration":285,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 07 Pink Man Strut.mp3"},{"title":"Peralta","duration":484,"url":"/pixelartacademy/music/Shnabubula - Piano Storybook Vol. 3- Finding the Groove/Shnabubula - Piano Storybook Vol. 3- Finding the Groove - 08 Peralta.mp3"}]}],"styleClass":"c60","_schema":"1.0.0","slug":"shnabubula-finding-the-groove","lastEditTime":{"$date":1718376999170},"gain":2.4}

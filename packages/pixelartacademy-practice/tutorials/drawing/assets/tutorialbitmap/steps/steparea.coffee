@@ -57,14 +57,23 @@ class TutorialBitmap.StepArea
   
       false
       
-    @completed = new AE.LiveComputedField =>
+    @completed = new ReactiveField false
+    
+    @_progressAutorun = Tracker.autorun (autorun) =>
       # Don't recompute when loading/unloading.
-      return unless Tracker.nonreactive => @tutorialBitmap.data()
+      return unless assets = @tutorialBitmap.tutorial.state 'assets'
+      return unless asset = _.find assets, (asset) => asset.id is @tutorialBitmap.id()
+      
+      # Don't recompute when resetting.
+      return if @tutorialBitmap.resetting()
       
       steps = @steps()
       return unless steps.length
       
-      activeStepIndex = Tracker.nonreactive => @activeStepIndex()
+      # Note, we do not want to read the active step index from the computed field since it will
+      # need time to recalculate. We want to rely on the object we're also changing (the asset data).
+      activeStepIndex = asset.stepAreas?[@stepAreaIndex]?.activeStepIndex
+      
       completedSteps = 0
       
       for step, stepIndex in steps
@@ -74,17 +83,32 @@ class TutorialBitmap.StepArea
         else
           break
       
-      # As a side effect, update which one is the current step to draw.
-      Tracker.nonreactive => @_updateActiveStepIndex Math.min completedSteps, steps.length - 1
+      # The asset is completed if all steps are completed and we have no extra pixels.
+      @completed completedSteps is steps.length and not @hasExtraPixels()
       
-      # Note: We shouldn't quit early because of extra pixels, since we wouldn't update
-      # active step index otherwise, so we do it here at the end as a final condition.
-      completedSteps is steps.length and not @hasExtraPixels()
+      # See if we progressed (the active step index has changed).
+      newActiveStepIndex = Math.min completedSteps, steps.length - 1
+      return if activeStepIndex is newActiveStepIndex
+
+      Tracker.nonreactive =>
+        # Activate the step when progressing to it.
+        if newActiveStepIndex > activeStepIndex or not activeStepIndex
+          step = @steps()[newActiveStepIndex]
+          # To preserve steps completed before migration to step areas, only activate steps that aren't completed.
+          # We assume that a step would not be returning true for completed if it hasn't been activated yet.
+          step.activate() unless step.completed()
+        
+        # Update the index in the asset.
+        asset.stepAreas ?= []
+        asset.stepAreas[@stepAreaIndex] ?= {}
+        asset.stepAreas[@stepAreaIndex].activeStepIndex = newActiveStepIndex
+        
+        @tutorialBitmap.tutorial.state 'assets', assets
 
   destroy: ->
     @hasExtraPixels.stop()
     @hasMissingPixels.stop()
-    @completed.stop()
+    @_progressAutorun.stop()
     
   addStep: (step, stepIndex) ->
     steps = @steps()
@@ -103,35 +127,9 @@ class TutorialBitmap.StepArea
   reset: ->
     step.reset() for step in @steps()
   
-  hasGoalPixel: (x, y) ->
+  hasGoalPixel: (absoluteX, absoluteY) ->
     # Check if any of the steps require a pixel at these absolute bitmap coordinates.
     for step in @steps()
-      return true if step.hasPixel x, y
+      return true if step.hasPixel absoluteX, absoluteY
     
     false
-    
-  _updateActiveStepIndex: (index) ->
-    # Note, we do not want to read the active step index from the computed field since it will
-    # need time to recalculate. We want to rely on the object we're also changing (the asset data).
-    assets = @tutorialBitmap.tutorial.state 'assets'
-    asset = _.find assets, (asset) => asset.id is @tutorialBitmap.id()
-
-    activeStepIndex = asset.stepAreas?[@stepAreaIndex]?.activeStepIndex
-    return if activeStepIndex is index
-    
-    # Activate the step when progressing to it.
-    if index > activeStepIndex or not activeStepIndex
-      step = @steps()[index]
-      # To preserve steps completed before migration to step areas, only activate steps that aren't completed.
-      # We assume that a step would not be returning true for completed if it hasn't been activated yet.
-      step.activate() unless step.completed()
-    
-    # Update the index in the asset.
-    asset.stepAreas ?= []
-    asset.stepAreas[@stepAreaIndex] ?= {}
-    asset.stepAreas[@stepAreaIndex].activeStepIndex = index
-    
-    @tutorialBitmap.tutorial.state 'assets', assets
-    
-    assets =  @tutorialBitmap.tutorial.state 'assets'
-    asset = _.find assets, (asset) => asset.id is @tutorialBitmap.id()

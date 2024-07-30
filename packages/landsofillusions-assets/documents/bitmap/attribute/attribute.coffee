@@ -40,13 +40,17 @@ class LOI.Assets.Bitmap.Attribute
     @array = new @constructor.arrayClass @area.pixelsData, offset, length
 
   getPixel: (x, y) ->
+    @getPixelAtIndex @getPixelIndex x, y
+    
+  getPixelAtIndex: (index) ->
     # Override for attributes that use more than one element per pixel.
-    index = @getPixelIndex x, y
     @array[index]
 
   setPixel: (x, y, value) ->
+    @setPixelAtIndex @getPixelIndex(x, y), value
+    
+  setPixelAtIndex: (index, value) ->
     # Override for attributes that use more than one element per pixel.
-    index = @getPixelIndex(x, y)
     @array[index] = value
 
   clearPixel: (x, y) ->

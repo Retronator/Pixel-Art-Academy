@@ -1,0 +1,95 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-cursor
+  position absolute
+  left 0
+  top 0
+  pointer-events none
+
+  .cursor
+    position absolute
+    z-index 100
+
+    &::after
+      content ''
+      position absolute
+      left -1rem
+      top -1rem
+      width 10rem
+      height 14rem
+      background-image image('/pixelartacademy/pixeltosh/os/cursors/arrow.png')
+
+    &.none
+      display none
+
+    &.wait
+      &::after
+        left -4rem
+        top -6rem
+        width 9rem
+        height 12rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/wait.png')
+
+    &.grab
+      &::after
+        left -6rem
+        top -7rem
+        width 11rem
+        height 13rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/grab.png')
+
+    &.grabbing
+      &::after
+        left -5rem
+        top -3rem
+        width 10rem
+        height 9rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/grabbing.png')
+
+    &.flip-horizontal
+      &::after
+        left -8rem
+        top -7rem
+        width 15rem
+        height 14rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/flip-horizontal.png')
+
+    &.w-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -2rem
+        top -7rem
+        width 5rem
+        height 14rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-west.png')
+
+    &.e-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -2rem
+        top -7rem
+        width 5rem
+        height 14rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-east.png')
+
+    &.n-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -7rem
+        top -2rem
+        width 14rem
+        height 5rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-north.png')
+
+    &.s-rotate
+      mix-blend-mode difference
+
+      &::after
+        left -7rem
+        top -2rem
+        width 14rem
+        height 5rem
+        background-image image('/pixelartacademy/pixeltosh/os/cursors/rotate-south.png')

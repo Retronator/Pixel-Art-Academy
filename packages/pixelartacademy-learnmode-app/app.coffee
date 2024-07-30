@@ -1,7 +1,8 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 AB = Artificial.Base
-LM = PixelArtAcademy.LearnMode
+PAA = PixelArtAcademy
+LM = PAA.LearnMode
 LOI = LandsOfIllusions
 
 # This is the web app that runs all Retronator websites.
@@ -11,7 +12,7 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '1.1.0'
+  @version: -> '1.2.0'
   
   buildName: -> 'Learn Mode demo'
 

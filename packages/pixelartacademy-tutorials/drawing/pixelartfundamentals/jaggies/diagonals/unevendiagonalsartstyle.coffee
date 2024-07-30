@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonalsArtStyle extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagonalsArtStyle"
@@ -39,7 +39,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
     pixelArtScaling: true
     pixelArtEvaluation:
       editable: true
-      allowedCriteria: [PAG.Criteria.EvenDiagonals]
+      allowedCriteria: [PAE.Criteria.EvenDiagonals]
       evenDiagonals:
         segmentLengths: {}
   
@@ -142,15 +142,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.UnevenDiagona
       
       drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
-      pixelCanvas.triggerSmoothMovement()
       
       camera = pixelCanvas.camera()
       
-      originDataField = camera.originData()
-      originDataField.value x: 28, y: 16
-
-      scaleDataField = camera.scaleData()
-      scaleDataField.value 5
+      camera.translateTo {x: 28, y: 16}, 1
+      camera.scaleTo 5, 1
 
     markup: ->
       return [] unless asset = @getActiveAsset()

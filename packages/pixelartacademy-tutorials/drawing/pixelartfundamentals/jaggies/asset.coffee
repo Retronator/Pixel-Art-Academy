@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   
   @minClipboardScale: -> 2
   

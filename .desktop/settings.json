@@ -1,6 +1,6 @@
 {
     "name": "Pixel Art Academy Learn Mode",
-    "version": "0.11.0",
+    "version": "0.21.1",
     "devTools": false,
     "devtron": true,
     "desktopHCP": true,
@@ -25,13 +25,13 @@
     "uglify": true,
     "plugins": {},
     "devDependencies": {
-        "electron": "11.5.0"
+        "electron": "17.4.11"
     },
     "packageJsonFields": {
         "author": "Retronator",
         "private": true,
         "devDependencies": {
-            "electron": "11.5.0"
+            "electron": "17.4.11"
         }
     },
     "builderOptions": {
@@ -74,11 +74,12 @@
         "appCategoryType": "public.app-category.education",
         "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Matej Jan, Retronator",
         "overwrite": true,
-        "electronVersion": "11.5.0",
+        "electronVersion": "17.4.11",
         "platform": "darwin, win32, linux",
         "osxSign": {
             "hardenedRuntime": true,
-            "entitlements": ".desktop/entitlements.plist"
+            "entitlements": ".desktop/entitlements.plist",
+            "entitlements-inherit": ".desktop/entitlements.plist"
         }
     }
 }

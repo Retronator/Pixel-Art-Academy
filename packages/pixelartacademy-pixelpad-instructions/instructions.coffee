@@ -28,6 +28,9 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     
     @mouseHovering = new ReactiveField false
     
+    @contentWidth = new ReactiveField 0
+    @previousContentWidth = new ReactiveField 0
+    
     @contentHeight = new ReactiveField 0
     @previousContentHeight = new ReactiveField 0
   
@@ -67,6 +70,9 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     
     @content$ = @$('.content')
     @_resizeObserver = new ResizeObserver =>
+      @previousContentWidth @contentWidth()
+      @contentWidth @content$.outerWidth()
+
       @previousContentHeight @contentHeight()
       @contentHeight @content$.outerHeight()
     

@@ -5,6 +5,13 @@ _.mixin
   modulo: (dividend, divisor) ->
     dividend - divisor * Math.floor(dividend / divisor)
     
+  # Brings angle into the -PI – +PI range.
+  normalizeAngle: (angle) ->
+    angle = angle % (2 * Math.PI)
+    angle -= 2 * Math.PI if angle > Math.PI
+    angle += 2 * Math.PI if angle < -Math.PI
+    angle
+  
   # Calculates the angle difference from a to b in the smallest direction.
   angleDifference: (a, b) ->
     difference = a - b
@@ -13,6 +20,9 @@ _.mixin
   # Calculates the absolute smallest angle between two angles.
   angleDistance: (a, b) ->
     Math.abs _.angleDifference a, b
+    
+  angleBetweenPoints: (vertex, side1, side2) ->
+    _.angleDistance Math.atan2(side1.y - vertex.y, side1.x - vertex.x), Math.atan2(side2.y - vertex.y, side2.x - vertex.x)
 
   # Calculates the largest positive integer that divides each of the integers (without a remainder).
   greatestCommonDivisor: (a, b) ->

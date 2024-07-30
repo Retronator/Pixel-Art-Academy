@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 Document.startup ->
   return if Meteor.settings.startEmpty
 
-  pico8PaletteName = LOI.Assets.Palette.SystemPaletteNames.pico8
+  pico8PaletteName = LOI.Assets.Palette.SystemPaletteNames.Pico8
 
   pico8PaletteRaw =
     """

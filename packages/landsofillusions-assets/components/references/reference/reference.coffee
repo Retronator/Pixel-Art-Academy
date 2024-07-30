@@ -264,11 +264,12 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
   onPointerMove: (event) ->
     return if @resizingScale()?
+    return unless firstNode = @firstNode()
 
     draggingScale = @references.draggingScale()
     displayScale = @display.scale() * draggingScale
 
-    offset = $(@firstNode()).offset()
+    offset = $(firstNode).offset()
 
     x = (event.clientX - offset.left) / displayScale
     y = (event.clientY - offset.top) / displayScale

@@ -43,12 +43,12 @@ class LOI.StateObject
 
     stateObject.clear = ->
       # Set this state node to an empty object.
-      _.nestedProperty LOI.adventure.gameState(), options.address.string(), {}
+      _.nestedProperty LOI.adventure[options.stateType](), options.address.string(), {}
       LOI.adventure.gameState.updated()
 
     # Sets the whole state object.
     stateObject.set = (newState) ->
-      _.nestedProperty LOI.adventure.gameState(), options.address.string(), newState
+      _.nestedProperty LOI.adventure[options.stateType](), options.address.string(), newState
       LOI.adventure.gameState.updated()
 
     stateObject.destroy = ->

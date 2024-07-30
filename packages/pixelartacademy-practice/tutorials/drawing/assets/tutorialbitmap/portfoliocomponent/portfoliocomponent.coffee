@@ -10,5 +10,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.PortfolioComponent ex
   
   letterGrade: ->
     return unless pixelArtEvaluation = @tutorialBitmap.bitmap()?.properties?.pixelArtEvaluation
+    return if pixelArtEvaluation.displayed is false
     return unless pixelArtEvaluation.score?
     PAA.Practice.PixelArtEvaluation.getLetterGrade pixelArtEvaluation.score

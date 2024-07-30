@@ -12,14 +12,7 @@
           <li class="menu-item"><span class="load actionable">Load game</span></li>
         {{/if}}
         {{#if isBrowser}}
-          <li class="menu-item"><span class="fullscreen actionable">
-            Fullscreen:
-            {{#if isFullscreen}}
-              on
-            {{else}}
-              off
-            {{/if}}
-          </span></li>
+          {{> LandsOfIllusions.Components.Menu.Items.Fullscreen}}
         {{/if}}
         {{#if progressVisible}}
           <li class="menu-item"><span class="progress actionable">Progress</span></li>
@@ -55,16 +48,11 @@
     {{#if inDisplay}}
       <ul class="display menu">
         {{#unless isBrowser}}
-          <li class="menu-item"><span class="fullscreen actionable">
-              Fullscreen:
-            {{#if isFullscreen}}
-              on
-            {{else}}
-              off
-            {{/if}}
-            </span></li>
+          {{> LandsOfIllusions.Components.Menu.Items.Fullscreen}}
         {{/unless}}
         {{> LandsOfIllusions.Components.Menu.Items.GraphicsScale}}
+        {{> LandsOfIllusions.Components.Menu.Items.CRTEmulation}}
+        {{> LandsOfIllusions.Components.Menu.Items.SlowCPUEmulation}}
         <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
       </ul>
     {{/if}}

@@ -71,3 +71,5 @@ class LOI.Adventure extends AM.Component
 
   showDescription: (thing) ->
     @interface.showDescription thing
+    
+  update: ->

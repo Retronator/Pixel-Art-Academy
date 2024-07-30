@@ -1,10 +1,10 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Line.Part
+class PAE.Line.Part
   constructor: (@line, @startSegmentIndex, @endSegmentIndex, @startPointIndex, @endPointIndex) ->
-    @id = Random.id()
+    @id = PAE.nextId()
     
     @startPointIndex ?= @line.getEdgeSegment(@startSegmentIndex).startPointIndex
     @endPointIndex ?= @line.getEdgeSegment(@endSegmentIndex).endPointIndex
@@ -59,9 +59,8 @@ class PAG.Line.Part
     # Extend to adjust display points.
     
   startsOnACorner: ->
-    return true unless preStartSegment = @line.getEdgeSegment @startSegmentIndex - 1
-    
-    preStartSegment.corner.after
+    startSegment = @line.getEdgeSegment @startSegmentIndex
+    startSegment.corner.before
   
   endsOnACorner: ->
     endSegment = @line.getEdgeSegment @endSegmentIndex

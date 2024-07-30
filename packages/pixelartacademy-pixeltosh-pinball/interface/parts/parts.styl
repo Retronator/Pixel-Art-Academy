@@ -1,0 +1,46 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-pinball-interface-parts
+  absolute-cover()
+  background white
+  thintel()
+  overflow hidden
+
+  .parts-area
+    width calc(100% + 50px)
+    height 100%
+    overflow-y scroll
+    padding-right 50px
+
+    .parts
+      display flex
+      list-style none
+      padding 10rem
+      margin 0
+      flex-wrap wrap
+      align-items flex-end
+      gap 10rem
+
+      .part
+        position relative
+
+        .image
+          text-align center
+          padding 3rem
+
+        .name
+          text-transform uppercase
+
+        .description
+          display none
+          position absolute
+          z-index 1
+          left 50%
+          top 100%
+          width 100rem
+          transform translateX(-50%)
+          padding 3rem
+          border 1rem solid black
+          background white
+          text-align center
+          pointer-events none

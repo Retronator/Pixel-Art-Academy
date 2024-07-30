@@ -18,6 +18,10 @@ class AM.DatabaseContent.ContentCollection extends AM.Collection
       @documentClass.serverDocuments = @documentClass.documents
       @documentClass.documents = new AM.Collection null, transform: (document) => new documentClass document
 
+      # We need to be responsible for transferring server documents into the accessible (local) collection.
+      # Otherwise we can count on the persistence system that it's doing its own synchronization.
+      @_handleServerDocuments = true
+    
     # Observe changes to information documents.
     @find({}).observe
       added: (document) => @_handleDocument document._id
@@ -62,7 +66,7 @@ class AM.DatabaseContent.ContentCollection extends AM.Collection
     informationDocument = @findOne documentId
     
     # We should always upsert the server document (it has priority since it's changeable).
-    if serverDocument
+    if @_handleServerDocuments and serverDocument
       @documentClass.documents.upsert serverDocument._id, serverDocument
       
       # See if this document is part of database content and was inserted from there.
@@ -78,7 +82,7 @@ class AM.DatabaseContent.ContentCollection extends AM.Collection
     # See if we need to remove the document.
     if document
       # We should clean up the server document if it was removed.
-      unless informationDocument?._localInsert
+      if @_handleServerDocuments and not informationDocument?._localInsert
         # If this document is part of database content and subscriptions
         # still require it, we should replace it with that.
         if informationDocument?._subscriptionsCount > 0

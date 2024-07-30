@@ -64,7 +64,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
 
     @audioManager = new ComputedField =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
-      adventureViews[0]?.adventure.interface.audioManager
+      adventureViews[0]?.adventure.audioManager
 
     @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>

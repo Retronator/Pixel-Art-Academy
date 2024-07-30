@@ -114,8 +114,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8.id(), pico8Cartridge
     
     @autorun (computation) =>
-      pixelArtEvaluation = @displayedAsset()?.document()?.properties?.pixelArtEvaluation
-      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), pixelArtEvaluation
+      # Show pixel art evaluation if the document has it.
+      documentHasPixelArtEvaluation = @displayedAsset()?.document()?.properties?.pixelArtEvaluation
+      
+      # Show pixel art evaluation if the asset requires it.
+      assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation()
+
+      # TODO: Show pixel art evaluation if the asset allows it and it was unlocked.
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
 
     # Reactively add tools and actions.
     toolRequirements =
@@ -155,8 +162,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       Tracker.nonreactive => applicationAreaData.set "views.#{testPaperViewIndex}.actions", actions
 
     zoomActionRequirements =
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
+      "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": PAA.Practice.Software.Tools.ToolKeys.Zoom
 
     @autorun (computation) =>
       return unless @interface.isCreated()
@@ -311,12 +318,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     components =
       "#{_.snakeCase PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas.id()}":
         components: [PAA.PixelPad.Apps.Drawing.Editor.PixelCanvasComponents.id()]
-        scrollToZoom: true
+        scrollToZoom: animate: duration: 0.2
+
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
       
     views = [
       type: FM.Menu.id()
       items: [
         PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+        LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
       ]
     ,
       type: FM.Toolbox.id()
@@ -342,7 +354,21 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": [
+            {commandOrControl: true, key: AC.Keys.equalSign}
+            {key: AC.Keys.numPlus}
+            {commandOrControl: true, key: AC.Keys.numPlus}
+          ]
+          "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": [
+            {commandOrControl: true, key: AC.Keys.dash}
+            {key: AC.Keys.numMinus}
+            {commandOrControl: true, key: AC.Keys.numMinus}
+          ]
+          
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
+          
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
     ,
       @getShortcuts()
 

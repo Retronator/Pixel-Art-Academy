@@ -1,2 +1,2 @@
-// Initialize loading of database content from the main assets (private) directory.
-Artificial.Mummification.DatabaseContent.setAssets(Assets);
+// HACK: Store the main Assets object so that packages (specifically DatabaseContent) can access it.
+Meteor._mainAssets = Assets;

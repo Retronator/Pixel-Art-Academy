@@ -14,7 +14,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
     @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
     @assetClass: -> Asset
     
@@ -25,7 +25,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @resetDelayOnOperationExecuted: -> true
     
-  class @FirstWay extends @InstructionStep
+  class @FirstWay extends @StepInstruction
     @id: -> "#{Asset.id()}.FirstWay"
     @stepNumber: -> 1
     
@@ -36,7 +36,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @initialize()
   
-  class @SecondWay extends @InstructionStep
+  class @SecondWay extends @StepInstruction
     @id: -> "#{Asset.id()}.SecondWay"
     @stepNumber: -> 2
     
@@ -47,7 +47,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @initialize()
   
-  class @ThirdWay extends @InstructionStep
+  class @ThirdWay extends @StepInstruction
     @id: -> "#{Asset.id()}.ThirdWay"
     @stepNumber: -> 3
     
@@ -58,7 +58,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Line.CurvedLines extends PAA.Tutorials
     
     @initialize()
   
-  class @AnyWay extends @InstructionStep
+  class @AnyWay extends @StepInstruction
     @id: -> "#{Asset.id()}.AnyWay"
     @stepNumber: -> 4
     

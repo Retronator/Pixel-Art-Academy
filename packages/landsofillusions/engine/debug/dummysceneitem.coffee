@@ -53,7 +53,7 @@ class LOI.Engine.Debug.DummySceneItem
       @collisionShape = @createCollisionShape()
       @collisionShape.calculateLocalInertia @mass, @localInertia
 
-      transform = new Ammo.btTransform Ammo.btQuaternion.identity, @parentItem.position.toBulletVector3()
+      transform = new Ammo.btTransform Ammo.btQuaternion.identity(), @parentItem.position.toBulletVector3()
       @motionState = new Ammo.btDefaultMotionState transform
 
       rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
@@ -76,7 +76,7 @@ class LOI.Engine.Debug.DummySceneItem.Ball extends LOI.Engine.Debug.DummySceneIt
   createGeometry: (options = {}) ->
     segments = if options.debug then 8 else 32
     radius = @radius + (options.occupationMargin or 0) + (options.extrude or 0)
-    new THREE.SphereBufferGeometry radius, segments, segments
+    new THREE.SphereGeometry radius, segments, segments
 
   createCollisionShape: (options = {}) ->
     radius = @radius + (options.occupationMargin or 0)
@@ -89,7 +89,7 @@ class LOI.Engine.Debug.DummySceneItem.Box extends LOI.Engine.Debug.DummySceneIte
 
   createGeometry: (options = {}) ->
     size = (@halfSize + (options.occupationMargin or 0) + (options.extrude or 0)) * 2
-    new THREE.BoxBufferGeometry size, size, size
+    new THREE.BoxGeometry size, size, size
 
   createCollisionShape: (options = {}) ->
     halfSize = @halfSize + (options.occupationMargin or 0)

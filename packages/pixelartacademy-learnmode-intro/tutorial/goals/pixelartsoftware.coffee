@@ -98,6 +98,21 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @completedConditions: ->
       PAA.Challenges.Drawing.PixelArtSoftware.completed()
+    
+    activeNotificationId: -> @constructor.ActiveNotification.id()
+    
+    Task = @
+    
+    class @ActiveNotification extends PAA.PixelPad.Systems.Notifications.Notification
+      @id: -> "#{Task.id()}.ActiveNotification"
+      
+      @message: -> """
+        Note that you can complete to-do tasks in any order you want!
+      """
+      
+      @displayStyle: -> @DisplayStyles.Always
+      
+      @initialize()
 
   @tasks: -> [
     @Basics

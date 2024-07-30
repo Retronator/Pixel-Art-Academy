@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAG = PAA.Practice.PixelArtEvaluation
-StraightLine = PAG.Line.Part.StraightLine
+PAE = PAA.Practice.PixelArtEvaluation
+StraightLine = PAE.Line.Part.StraightLine
 
 # Note: We can't call this Instructions since we introduce a namespace class called that below.
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
@@ -11,32 +11,51 @@ InstructionsSystem = PAA.PixelPad.Systems.Instructions
 DiagonalsEvaluation = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEvaluation
 
 class DiagonalsEvaluation.Instructions
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @PixelPerfectInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{DiagonalsEvaluation.id()}.PixelPerfectInstruction"
+    @assetClass: -> DiagonalsEvaluation
+    
+    @message: -> """
+      Make sure your lines are pixel-perfect (they shouldn't have doubles).
+    """
+    
+    @getPixelArtEvaluation: ->
+      return unless drawingEditor = @getEditor()
+      drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      
+    @activeConditions: ->
+      # Only show this tip when the evaluation paper is open.
+      return unless pixelArtEvaluation = @getPixelArtEvaluation()
+      return unless pixelArtEvaluation.active()
+      
+      return unless asset = @getActiveAsset()
+      
+      return unless pixelArtEvaluation = asset.pixelArtEvaluation()
+
+      for line in pixelArtEvaluation.layers[0].lines
+        # The line must not have any doubles.
+        lineEvaluation = line.evaluate()
+        return true if lineEvaluation.doubles.count
+
+      false
+    
+    @priority: -> 1
+    
+    @initialize()
+    
+    displaySide: ->
+      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+  
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> DiagonalsEvaluation
 
     # The amount of time before we show instructions to the user after a new UI element is introduced.
     @uiRevealDelayDuration = 3
     
     # The amount of time before we show instructions when a new line is introduced.
-    @newLineDelayDuration = 3
-    
-    @activeStepNumber: ->
-      return unless asset = @getActiveAsset()
-      asset.stepAreas()[0].activeStepIndex() + 1
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      stepNumbers = @stepNumbers?() or [@stepNumber()]
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0].activeStepIndex() + 1 in stepNumbers
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
+    @newLineDelayDuration = 5
     
     @closeOutsideEvaluationPaper: -> false
     
@@ -54,19 +73,12 @@ class DiagonalsEvaluation.Instructions
       
       if pixelArtEvaluation.active() then PAA.PixelPad.Systems.Instructions.DisplayState.Open else PAA.PixelPad.Systems.Instructions.DisplayState.Closed
     
-    getTutorialStep: (stepNumber) ->
-      return unless asset = @getActiveAsset()
-
-      stepNumber ?= @constructor.stepNumber()
-
-      asset.stepAreas()[0].steps()[stepNumber - 1]
-    
     displaySide: ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
 
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
       
-    openEvaluationPaper: (focusPoint, scale, criterion = PAG.Criteria.EvenDiagonals) ->
+    openEvaluationPaper: (focusPoint, scale, criterion = PAE.Criteria.EvenDiagonals) ->
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
       pixelArtEvaluation.activate criterion
       
@@ -74,27 +86,21 @@ class DiagonalsEvaluation.Instructions
       
       drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
-      pixelCanvas.triggerSmoothMovement()
       
       camera = pixelCanvas.camera()
 
       if focusPoint
-        originDataField = camera.originData()
-        originDataField.value focusPoint
+        camera.translateTo focusPoint, 1
         
       if scale
-        scaleDataField = camera.scaleData()
-        scaleDataField.value scale
+        camera.scaleTo scale, 1
         
     centerFocus: ->
       drawingEditor = @getEditor()
       pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
-      pixelCanvas.triggerSmoothMovement()
       
       camera = pixelCanvas.camera()
-      
-      originDataField = camera.originData()
-      originDataField.value x: 15, y: 14.5
+      camera.translateTo {x: 15, y: 14.5}, 1
       
     getLinePartForStep: (stepNumber) ->
       return unless asset = @getActiveAsset()
@@ -112,7 +118,7 @@ class DiagonalsEvaluation.Instructions
       
       Markup.PixelArt.straightLineBreakdown linePart
   
-  class @EvaluationPaper extends @InstructionStep
+  class @EvaluationPaper extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.EvaluationPaper"
     @stepNumbers: -> [1, 2]
     
@@ -122,7 +128,7 @@ class DiagonalsEvaluation.Instructions
     
     @initialize()
   
-  class @Criterion extends @InstructionStep
+  class @Criterion extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Criterion"
     @stepNumber: -> 3
     
@@ -134,7 +140,7 @@ class DiagonalsEvaluation.Instructions
     
     @initialize()
   
-  class @Broken extends @InstructionStep
+  class @Broken extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Broken"
     @stepNumber: -> 4
     
@@ -152,7 +158,7 @@ class DiagonalsEvaluation.Instructions
       super arguments...
       @openEvaluationPaper {x: 15, y: 18}, 4
   
-  class @NotBrokenAlternative extends @InstructionStep
+  class @NotBrokenAlternative extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.NotBrokenAlternative"
     @stepNumber: -> 4
     
@@ -166,7 +172,7 @@ class DiagonalsEvaluation.Instructions
       # See if we have an alternative diagonal to begin with.
       return unless bitmap = @getActiveAsset().bitmap()
       
-      bitmap.properties.pixelArtEvaluation.evenDiagonals.segmentLengths.linePartCounts.broken is 0
+      bitmap.properties.pixelArtEvaluation.evenDiagonals.segmentLengths.counts.broken is 0
     
     @delayDuration: -> @uiRevealDelayDuration
     
@@ -178,7 +184,7 @@ class DiagonalsEvaluation.Instructions
       super arguments...
       @openEvaluationPaper {x: 15, y: 18}, 4
   
-  class @Alternating extends @InstructionStep
+  class @Alternating extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Alternating"
     @stepNumber: -> 5
     
@@ -190,7 +196,7 @@ class DiagonalsEvaluation.Instructions
     
     @initialize()
   
-  class @Alternating23 extends @InstructionStep
+  class @Alternating23 extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Alternating23"
     @stepNumber: -> 6
     
@@ -207,7 +213,7 @@ class DiagonalsEvaluation.Instructions
     
     markup: -> @getLineBreakdownMarkup 1
   
-  class @ContinueLine2 extends @InstructionStep
+  class @ContinueLine2 extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.ContinueLine2"
     @stepNumber: -> 7
     
@@ -223,7 +229,7 @@ class DiagonalsEvaluation.Instructions
       super arguments...
       @centerFocus()
     
-  class @Alternating25 extends @InstructionStep
+  class @Alternating25 extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Alternating25"
     @stepNumber: -> 8
     
@@ -247,12 +253,12 @@ class DiagonalsEvaluation.Instructions
       
       @getLineBreakdownMarkup 7
   
-  class @Alternating25Fixed extends @InstructionStep
+  class @Alternating25Fixed extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Alternating24Fixed"
     @stepNumber: -> 9
     
     @message: -> """
-      The percentage score for this line is higher than for the previous one because the segments are longer, which makes alternating less noticeable.
+      The percentage score for this line (83%) is higher than for the previous one (75%) because the segments are longer, which makes alternating less noticeable.
     """
     
     @initialize()
@@ -264,7 +270,7 @@ class DiagonalsEvaluation.Instructions
     markup: ->
       [@getLineBreakdownMarkup(1)..., @getLineBreakdownMarkup(7)...]
   
-  class @ContinueLine3 extends @InstructionStep
+  class @ContinueLine3 extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.ContinueLine3"
     @stepNumber: -> 10
     
@@ -280,7 +286,7 @@ class DiagonalsEvaluation.Instructions
       super arguments...
       @centerFocus()
   
-  class @Alternating29 extends @InstructionStep
+  class @Alternating29 extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Alternating29"
     @stepNumber: -> 11
     
@@ -292,7 +298,7 @@ class DiagonalsEvaluation.Instructions
     
     @initialize()
   
-  class @Ends extends @InstructionStep
+  class @Ends extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Ends"
     @stepNumber: -> 12
     
@@ -312,7 +318,7 @@ class DiagonalsEvaluation.Instructions
     markup: ->
       [@getLineBreakdownMarkup(1)..., @getLineBreakdownMarkup(7)..., @getLineBreakdownMarkup(11)...]
   
-  class @ContinueLine4 extends @InstructionStep
+  class @ContinueLine4 extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.ContinueLine4"
     @stepNumber: -> 13
     
@@ -326,7 +332,7 @@ class DiagonalsEvaluation.Instructions
       super arguments...
       @centerFocus()
       
-  class @Highlight extends @InstructionStep
+  class @Highlight extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Highlight"
     @stepNumbers: -> [14, 15]
     
@@ -353,7 +359,7 @@ class DiagonalsEvaluation.Instructions
       
       Markup.PixelArt.evaluatedSegmentCornerLines linePart
     
-  class @Complete extends @InstructionStep
+  class @Complete extends @StepInstruction
     @id: -> "#{DiagonalsEvaluation.id()}.Complete"
     
     @message: -> """

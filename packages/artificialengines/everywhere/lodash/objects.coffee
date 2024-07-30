@@ -41,9 +41,11 @@ _.mixin
       if changed then arrayDifference else unchangedObject
 
     else
-      # Other value types can be compared directly. Note that we want to return the clone of b so we
-      # get a completely new version in case we're setting a reference type that might change later.
-      if a is b then unchangedObject else EJSON.clone b
+      # Other value types can be compared directly.
+      # Note: We want to use EJSON.equals instead of comparing a to b directly since EJSON.equals equates NaN to true.
+      # Note: We want to return the clone of b so we get a completely new
+      # version in case we're setting a reference type that might change later.
+      if EJSON.equals a, b then unchangedObject else EJSON.clone b
       
   # Changes source to get the values from difference (or remove them where undefined).
   applyObjectDifference: (source, difference) ->
@@ -84,4 +86,5 @@ _.mixin
       true
 
     else
-      a is b
+      # Note: We want to use EJSON.equals instead of comparing a to b directly since EJSON.equals equates NaN to true.
+      EJSON.equals a, b

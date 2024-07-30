@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mummification
 Persistence = AM.Document.Persistence
 LOI = LandsOfIllusions
@@ -18,6 +19,14 @@ class PAA.Chapter extends LOI.Adventure.Chapter
 
     # We can count on the same profile ID since chapters get recreated when profile changes.
     profileId = LOI.adventure.profileId()
+    
+    # Notify tasks when they activate.
+    @_activeTasks = new AE.ReactiveArray =>
+      return [] unless Persistence.profileReady()
+      _.filter @tasks, (task) => task.active()
+    ,
+      added: (task) =>
+        Tracker.nonreactive => task.onActive()
 
     # Listen to all active automatic tasks.
     @_automaticTasksAutorun = Tracker.autorun (computation) =>
@@ -30,7 +39,8 @@ class PAA.Chapter extends LOI.Adventure.Chapter
 
   destroy: ->
     super arguments...
-
+    
+    @_activeTasks.stop()
     @_automaticTasksAutorun.stop()
     goal.destroy() for goal in @goals
 

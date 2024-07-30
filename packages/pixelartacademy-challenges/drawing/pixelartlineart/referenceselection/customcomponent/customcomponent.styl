@@ -1,0 +1,164 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-challenges-drawing-pixelartlineArt-referenceselection-customcomponent
+  absolute-cover()
+  background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem !important
+  opacity 0
+  visibility hidden
+  transition all 0.4s
+
+  &.active
+    opacity 1
+    visibility visible
+    transition all 0.6s 0.2s
+
+  .prompt
+    position absolute
+    left 50rem
+    right 50rem
+    top 15rem
+    kyrou-9()
+    font-weight bold
+    text-align center
+    pixel-text-outline(atariBrown(0))
+
+  .binder-area
+    &.displayed
+      .binder-closed
+        top calc(50% - 90rem)
+        transition-delay 0.5s
+        transition-timing-function ease-out
+
+    &.open
+      .binder-closed
+        visibility hidden
+
+      .binder-open
+        visibility visible
+
+    .binder-closed
+      position absolute
+      left calc(50% - 76rem)
+      top 100%
+      width 183rem
+      height 207rem
+      background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/binder-closed.png')
+      transition top 1s ease-in
+
+      .label
+        position absolute
+        left 69rem
+        top 50rem
+        width 66rem
+        text-align center
+        freehand()
+        color atariCyan(1)
+
+      .open-hint
+        position absolute
+        right 5rem
+        bottom 8rem
+        small-print()
+        color atariGray(2)
+
+    .binder-open
+      position absolute
+      z-index 1
+      left calc(50% - 270rem)
+      top calc(50% - 88rem)
+      width 375rem
+      height 202rem
+      background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/binder-open.png')
+      visibility hidden
+
+      &.selected
+        .references
+          .reference
+            cursor auto
+
+      &::after
+        content ''
+        position absolute
+        left 170rem
+        top 23rem
+        width 30rem
+        height 157rem
+        background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/binder-open-rings.png')
+
+      .references
+        position absolute
+        left 202rem
+        top 8rem
+        height 185rem
+
+        &.flipped
+          left 176rem
+          transform scaleX(-1)
+
+          .reference
+            width 139rem
+
+            .image
+              filter contrast(5%) brightness(150%)
+
+        .reference
+          position absolute
+          height 100%
+          cursor pointer
+
+          &:hover
+            .image
+              transform translateY(-2rem)
+
+          &.selected
+            .image
+              transition-duration 1s
+              transition-timing-function cubic-bezier(0.6, 0.4, 0.8, -0.4)
+              transform translateY(-100vh)
+
+          &::before
+            content ''
+            position absolute
+            left -9rem
+            top 0
+            width 9rem
+            height 100%
+            background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/sheet-border.png')
+
+          .image
+            position absolute
+            transition transform 0.1s
+            image-rendering auto
+            object-fit contain
+
+          .cover
+            absolute-cover()
+            background image('/pixelartacademy/challenges/drawing/pixelartlineart/sheet-transparent.png') 0 0 / 2rem 185rem
+            opacity 25%
+
+            &::after
+              content ''
+              position absolute
+              right -2rem
+              top 0
+              bottom 0
+              width 2rem
+              background-image image('/pixelartacademy/challenges/drawing/pixelartlineart/sheet-transparent-edge.png')
+
+  .navigation-button
+    position absolute
+    z-index 2
+    top 0
+    bottom 0
+    background none
+    border none
+
+    &.previous-reference
+      left 0
+      right calc(50% + 66rem)
+      cursor w-resize
+
+    &.next-reference
+      left calc(50% + 66rem)
+      right 0
+      cursor e-resize

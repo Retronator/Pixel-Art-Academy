@@ -1,11 +1,14 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
-class PAG.Point
-  @getSharedOutline: (pointA, pointB) ->
-    for line in pointA.lines
-      return line if line in pointB.lines and line.core
+class PAE.Point
+  @getSharedOutlineCore: (pointA, pointB) ->
+    return unless outlinePixelA = pointA.getOutlinePixel()
+    return unless outlinePixelB = pointB.getOutlinePixel()
+    
+    for outlineCore in outlinePixelA.outlineCores
+      return outlineCore if outlineCore in outlinePixelB.outlineCores
       
     null
     
@@ -35,7 +38,7 @@ class PAG.Point
       line.end.y = pointB.y - pointB.radius
       
   constructor: (@layer) ->
-    @id = Random.id()
+    @id = PAE.nextId()
     
     @neighbors = []
     @lines = []
@@ -49,6 +52,13 @@ class PAG.Point
     pixel.unassignPoint @ for pixel in @pixels
     line.unassignPoint @ for line in @lines
     neighbor._disconnectNeighbor @ for neighbor in @neighbors
+
+  getOutlines: ->
+    line for line in @lines when line.core
+    
+  getOutlinePixel: ->
+    return unless @pixels.length is 1 and @pixels[0].outlineCores.length
+    @pixels[0]
   
   assignLine: (line) ->
     throw new AE.ArgumentException "The line is already assigned to this point.", line if line in @lines
@@ -92,45 +102,6 @@ class PAG.Point
           @_connectNeighbor point
           point._connectNeighbor @
           
-  optimizeNeighbors: ->
-    # Eliminate triangles by removing the longer sides.
-    loop
-      eliminated = false
-      
-      for neighborA in @neighbors
-        distanceA = @_distanceTo neighborA
-  
-        for neighborB in @neighbors when neighborB isnt neighborA and neighborB in neighborA.neighbors
-          distanceB = @_distanceTo neighborB
-          distanceC = neighborA._distanceTo neighborB
-          
-          if distanceC > distanceA and distanceC > distanceB
-            eliminatingPointA = neighborA
-            eliminatingPointB = neighborB
-            outsidePoint = @
-            
-          else
-            eliminatingPointA = @
-            eliminatingPointB = if distanceA > distanceB then neighborA else neighborB
-            outsidePoint = if eliminatingPointB is neighborA then neighborB else neighborA
-          
-          # Do not remove outline edges if that would break the outline (the outside point is not on the outline).
-          sharedOutline = @constructor.getSharedOutline eliminatingPointA, eliminatingPointB
-          continue if sharedOutline and sharedOutline not in outsidePoint.lines
-          
-          eliminatingPointA._disconnectNeighbor eliminatingPointB
-          eliminatingPointB._disconnectNeighbor eliminatingPointA
-          
-          eliminated = true
-          break
-          
-        break if eliminated
-        
-      break unless eliminated
-      
-    # TODO: Remove inner core edges.
-    # for line in @lines when line.core
-    
   _connectNeighbor: (neighbor) ->
     @neighbors.push neighbor unless neighbor in @neighbors
     

@@ -68,7 +68,7 @@ class LOI.Assets.MeshEditor.Thumbnail.Picture
           shade = paletteColorMap.data[paletteColorMapIndex + 1]
 
         continue unless shades = palette.ramps[ramp]?.shades
-        shadeIndex = THREE.Math.clamp shade, 0, shades.length - 1
+        shadeIndex = THREE.MathUtils.clamp shade, 0, shades.length - 1
         directColor = shades[shadeIndex]
 
         unless directColor

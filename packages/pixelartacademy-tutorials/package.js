@@ -27,6 +27,8 @@ Package.onUse(function(api) {
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
   api.addFile('drawing/instructions/generalinstruction')
+  api.addFile('drawing/instructions/completeinstruction')
+  api.addFile('drawing/instructions/stepinstruction')
 
   api.addComponent('drawing/instructions/desktop..');
 
@@ -85,8 +87,17 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/asset');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/lines..');
-  api.addFile('drawing/pixelartfundamentals/jaggies/lines/asset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/intendedandperceivedlines');
   api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/corners');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/lineartcleanup/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/lines/jaggies2/instructions');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals..');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/evendiagonals');
@@ -97,4 +108,20 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation..');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/smoothcurves');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/circles');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/longcurves');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/instructions');
+
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/linewidthasset');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thinlines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thicklines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
+  api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
 });

@@ -112,7 +112,7 @@ class AM.Component extends CommonComponent
     components = []
     current = @
 
-    while parent = current.componentParent()
+    while parent = current.parentComponent()
       components.push parent
       current = parent
 

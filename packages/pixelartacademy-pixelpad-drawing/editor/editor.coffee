@@ -203,20 +203,10 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
       mapping:
         "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
         "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
-        "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space
+        "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space, holdButton: AC.Buttons.auxiliary
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
         "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z}]
-        "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [
-          {commandOrControl: true, key: AC.Keys.equalSign}
-          {key: AC.Keys.numPlus}
-          {commandOrControl: true, key: AC.Keys.numPlus}
-        ]
-        "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [
-          {commandOrControl: true, key: AC.Keys.dash}
-          {key: AC.Keys.numMinus}
-          {commandOrControl: true, key: AC.Keys.numMinus}
-        ]
       
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'

@@ -11,7 +11,9 @@ class LM.Adventure extends LM.Adventure
 
   getLocalSyncedStorage: ->
     if Meteor.isDesktop
-      new Persistence.SyncedStorages.FileSystem relativeDirectoryPath: 'saves'
+      new Persistence.SyncedStorages.FileSystem
+        relativeDirectoryPath: 'saves'
+        relativeBackupDirectoryPath: 'save backups'
 
     else
       super arguments...

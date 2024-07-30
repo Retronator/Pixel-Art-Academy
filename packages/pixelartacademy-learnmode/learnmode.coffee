@@ -14,3 +14,6 @@ if Meteor.isServer
   
   # Export assets in the pixelartacademy folder.
   LOI.Assets.addToExport 'pixelartacademy'
+
+if Meteor.isClient
+  window.LM = PixelArtAcademy.LearnMode

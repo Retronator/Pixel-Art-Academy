@@ -15,7 +15,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
     """
 
   @fixedDimensions: -> width: 12, height: 8
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |

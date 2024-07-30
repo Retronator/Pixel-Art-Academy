@@ -23,4 +23,4 @@ Ammo.btQuaternion::copy = (source) ->
 Ammo.btQuaternion.fromObject = (object) ->
   return new Ammo.btQuaternion object.x, object.y, object.z, object.w
 
-Ammo.btQuaternion.identity = new Ammo.btQuaternion 0, 0, 0, 1
+Ammo.btQuaternion.identity = -> new Ammo.btQuaternion 0, 0, 0, 1

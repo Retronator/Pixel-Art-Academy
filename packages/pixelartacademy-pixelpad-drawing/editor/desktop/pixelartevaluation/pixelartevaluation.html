@@ -1,15 +1,26 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation">
   <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation table-item {{activeClass}}">
-    <div class="paper">
-      <div class="content-placeholder" {{style contentPlaceholderStyle}}></div>
-      <div class="content">
-        {{#unless activeCriterion}}
-          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview}}
-        {{/unless}}
-        {{#if $is activeCriterion 'EvenDiagonals'}}
-          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals}}
-        {{/if}}
+    {{#if paperDisplayed}}
+      <div class="paper">
+        <div class="content-placeholder" {{style contentPlaceholderStyle}}></div>
+        <div class="content">
+          {{#unless activeCriterion}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.Overview}}
+          {{/unless}}
+          {{#if $is activeCriterion 'PixelPerfectLines'}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.PixelPerfectLines}}
+          {{/if}}
+          {{#if $is activeCriterion 'EvenDiagonals'}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.EvenDiagonals}}
+          {{/if}}
+          {{#if $is activeCriterion 'SmoothCurves'}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.SmoothCurves}}
+          {{/if}}
+          {{#if $is activeCriterion 'ConsistentLineWidth'}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.ConsistentLineWidth}}
+          {{/if}}
+        </div>
       </div>
-    </div>
+    {{/if}}
   </div>
 </template>

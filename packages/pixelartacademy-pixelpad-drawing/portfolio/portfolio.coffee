@@ -35,6 +35,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       assetHover:
         valueType: AEc.ValueTypes.Trigger
         throttle: 100
+      assetPan:
+        valueType: AEc.ValueTypes.Number
         
   constructor: (@drawing) ->
     super arguments...
@@ -291,6 +293,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     assetData = @currentData()
     @hoveredAsset assetData
     @lastHoveredAsset assetData
+    
+    @audio.assetPan AEc.getPanForElement event.target
     @_assetHoverUnlessFirst assetData
 
   onMouseLeaveAsset: (event) ->
@@ -329,10 +333,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     if event.which is AC.Keys.f2
       return unless asset = @activeAsset()?.asset
       
+      return unless stepArea = asset.stepAreas?()[0]
+      activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+      
+      activeStep.solve()
+      event.preventDefault()
+      
+    else if event.which is AC.Keys.f3
+      return unless asset = @activeAsset()?.asset
+      
       asset.solveAndComplete?()
       event.preventDefault()
     
-    else if event.which is AC.Keys.f3
+    else if event.which is AC.Keys.f4
       console.log "Cheating commences …"
       
       return unless activeGroup = @activeGroup()

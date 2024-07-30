@@ -32,9 +32,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   # Override if the asset requires display of markup.
   @markup: -> false
 
-  # Override if the asset requires a pixel art evaluation analysis.
-  @pixelArtEvaluation: -> false
-
   # Override to provide bitmap properties that need to be set on the asset.
   @properties: -> null
   
@@ -50,6 +47,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
     # Create bitmap automatically if it is not present.
     @_createBitmapAutorun = Tracker.autorun (computation) =>
+      # Note: We need to read the assets from the assetsData property instead of directly from the state since this
+      # needs to work even when assets array is not even yet present in the state. The assetsData method ensures at
+      # least an empty array is sent as soon as the state is ready.
       return unless assets = @tutorial.assetsData()
       computation.stop()
 
@@ -58,9 +58,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
 
       # We need to create the asset with the bitmap.
       Tracker.nonreactive => @constructor.create LOI.adventure.profileId(), @tutorial, @id()
-    
-    # Prepare lazy initialization.
-    @initialized = new ReactiveField false
     
     @completed = new AE.LiveComputedField =>
       # Read completed state from the stored assets field unless we're in the editor.
@@ -77,15 +74,9 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return false unless stepArea.completed()
       
       true
-    
-    @_initializingAutorun = Tracker.autorun (computation) =>
-      # Initialize uncompleted artworks immediately so their starting steps can place any pixels.
-      # Otherwise wait till we've selected the asset as the active one in the editor.
-      return unless @tutorial.state 'assets'
-      return unless @_isActiveInEditor(false) or not @completed()
-      computation.stop()
-      Tracker.nonreactive => @initialize()
       
+    @resetting = new ReactiveField false
+    
   destroy: ->
     super arguments...
     
@@ -101,23 +92,19 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     if @stepAreas
       stepArea.destroy() for stepArea in @stepAreas()
     
-    @_pixelArtEvaluation?.destroy()
+  initializingConditions: ->
+    # Initialize uncompleted artworks immediately so their starting steps can place any pixels.
+    # Otherwise wait till we've selected the asset as the active one in the editor.
+    return unless @tutorial.state 'assets'
+    return true unless @completed()
     
-  _isActiveInEditor: (drawingActive) ->
-    return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
-    return unless editor.isCreated()
-    return unless asset = editor.activeAsset()
-    return unless asset instanceof @constructor
-    return if drawingActive and not editor.drawingActive()
-    true
+    super arguments...
+    
+  debugResourceLoading: -> false
 
-  initialize: ->
-    return if @_initializing
-    @_initializing = true
-    @_initialize()
-    
-  # Override to provide extra initialization functionality.
   _initialize: ->
+    super arguments...
+    
     # Fetch palette.
     @palette = new ComputedField => @customPalette() or @restrictedPalette()
     @hasPalette = new ComputedField => @constructor.customPalette() or @constructor.customPaletteImageUrl() or @constructor.restrictedPaletteName()
@@ -144,19 +131,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     if @constructor.markup()
       @instructionsMarkupEngineComponent = new PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent
-    
-    # Create additional helpers.
-    if @constructor.pixelArtEvaluation()
-      @pixelArtEvaluationInstance = new ComputedField =>
-        return unless bitmap = @versionedBitmap()
-        @_pixelArtEvaluation?.destroy()
-        @_pixelArtEvaluation = new PAA.Practice.PixelArtEvaluation bitmap
-        
-      @pixelArtEvaluation = new ComputedField =>
-        return unless pixelArtEvaluation = @pixelArtEvaluationInstance()
-        pixelArtEvaluation.depend()
-        pixelArtEvaluation
-       
+      
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
       # Make sure we have the game state loaded. This can become null when switching between characters.
@@ -189,23 +164,30 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     # Create resources.
     @resources = @constructor.createResources()
     
-    resourcesReady = (resources) ->
+    @resourcesReady = new ReactiveField false
+    
+    resourcesReadyRecursive = (resources) =>
+      if @debugResourceLoading()
+        console.log "Resource ready?", resources, resources.ready() if resources.ready
+        
       return resources.ready() if resources.ready
       
       if _.isArray resources
         for resource in resources
-          return false unless resourcesReady resource
+          return false unless resourcesReadyRecursive resource
       
       else if _.isObject resources
         for name, resource of resources
-          return false unless resourcesReady resource
+          return false unless resourcesReadyRecursive resource
       
       true
       
     @_loadResourcesAutorun = Tracker.autorun (computation) =>
       # Wait until all resources have loaded.
-      return unless resourcesReady @resources
-
+      return unless resourcesReadyRecursive @resources
+      
+      @resourcesReady true
+      
       # Wait until the declared palette (and default for background colors) have loaded.
       return if @hasPalette() and not @palette()
       LOI.Assets.Palette.defaultPalette()
@@ -216,9 +198,30 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       computation.stop()
       
       # Resources are loaded, create tutorial steps.
-      @initializeSteps()
+      Tracker.nonreactive => @initializeSteps()
       
-      @initialized true
+  reset: ->
+    # Nothing to reset if we haven't initialized yet (resetting will be called when first creating the bitmap).
+    return unless @initialized()
+    
+    # Prevent recomputation of completed states while resetting.
+    @resetting true
+    
+    # Reset all steps.
+    stepArea.reset() for stepArea in @stepAreas()
+    
+    # Remove any asset data.
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    if assetData = _.find assetsData, (assetData) => assetData.id is assetId
+      assetData.stepAreas = []
+      assetData.completed = false
+      
+      @tutorial.state 'assets', assetsData
+    
+    # Unlock recomputation after changes have been applied.
+    Tracker.afterFlush => @resetting false
   
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()
@@ -274,14 +277,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       asset = _.find assets, (asset) => asset.id is @id()
       asset.completed = true
       @tutorial.state 'assets', assets
-    
-  _afterInitialization: (action) ->
-    @initialize()
-    
-    Tracker.autorun (computation) =>
-      return unless @initialized()
-      computation.stop()
-      action()
   
   hasGoalPixel: (x, y) ->
     return unless @initialized()

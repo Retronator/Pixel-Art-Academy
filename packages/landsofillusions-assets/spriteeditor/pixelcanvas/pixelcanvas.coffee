@@ -7,7 +7,9 @@ LOI = LandsOfIllusions
 class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
   # smoothScrolling: boolean whether you can scroll to pan and zoom with a smooth, 2D input device
-  # scrollToZoom: boolean whether you can change zoom levels by scrolling
+  # scrollToZoom: object enabling change in zoom levels by scrolling
+  #   animate: object whether the change in zoom levels should be animated
+  #     duration: how long should the animation be in seconds
   # components: array of helper IDs that should be drawn to context
   # displayMode: how to display the canvas relative to the pixel canvas
   # borderWidth: how many pixels to add as a border around the image in framed and full modes
@@ -184,38 +186,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
       drawComponents
 
-    # Reactively redraw the canvas when the active tool is not requesting realtime updating.
-    @autorun =>
-      return if @interface.activeTool()?.realtimeUpdating?()
-
-      @_redraw()
-  
-    # Register with the app to support updates.
-    @app = @ancestorComponentWith 'addComponent'
-    @app.addComponent @
-    
-  _redraw: ->
-    return unless context = @context()
-    canvas = @canvas()
-  
-    camera = @camera()
-  
-    context.setTransform 1, 0, 0, 1, 0, 0
-    context.clearRect 0, 0, canvas.width, canvas.height
-  
-    camera.applyTransformToCanvas()
-  
-    lightDirection = @lightDirectionHelper()
-    shadingEnabled = @shadingEnabled()
-    
-    @_drawToContextOptions.lightDirection = if shadingEnabled then lightDirection() else null
-    @_drawToContextOptions.camera = camera
-  
-    for component in @drawComponents()
-      continue unless component
-    
-      component.drawToContext context, @_drawToContextOptions
-
   onRendered: ->
     super arguments...
 
@@ -237,6 +207,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     # Reactively resize the canvas.
     @autorun (computation) =>
       @_resizeCanvas()
+    
+    # Reactively redraw the canvas when the active tool is not requesting realtime updating.
+    @autorun =>
+      return if @interface.activeTool()?.realtimeUpdating?()
+      
+      @_redraw()
   
     @_resizeObserver.observe $pixelCanvas[0]
 
@@ -246,11 +222,20 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     $(document).on 'pointerup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerUp? event if @interface.active()
     $(document).on 'pointerleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerLeaveWindow? event if @interface.active()
     
+    # Register with the app to support updates.
+    @app = @ancestorComponentWith 'addComponent'
+    @app.addComponent @
+    
   onDestroyed: ->
     super arguments...
   
-    @app.removeComponent @
+    # Note: The component can get destroyed before it is rendered, in which case app will not be retrieved yet.
+    @app?.removeComponent @
     
+    @_resizeObserver?.disconnect()
+    
+    $(document).off '.landsofillusions-assets-spriteeditor-pixelcanvas'
+  
   _resizeCanvas: ->
     camera = @camera()
     newSize =
@@ -265,17 +250,32 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     for key, value of newSize when canvas[key] isnt value
       canvas[key] = value
       changedCanvasSize = true
-  
+    
     # Redraw the image to prevent flickering since the reactive routine won't kick in until the next frame.
-    @_redraw() if changedCanvasSize
+    @_redraw() if changedCanvasSize and not @interface.activeTool()?.realtimeUpdating?()
+    
+  _redraw: ->
+    context = @context()
+    canvas = @canvas()
+    
+    camera = @camera()
+    
+    context.setTransform 1, 0, 0, 1, 0, 0
+    context.clearRect 0, 0, canvas.width, canvas.height
+    
+    camera.applyTransformToCanvas()
+    
+    lightDirection = @lightDirectionHelper()
+    shadingEnabled = @shadingEnabled()
+    
+    @_drawToContextOptions.lightDirection = if shadingEnabled then lightDirection() else null
+    @_drawToContextOptions.camera = camera
+    
+    for component in @drawComponents()
+      continue unless component
+      
+      component.drawToContext context, @_drawToContextOptions
 
-  onDestroyed: ->
-    super arguments...
-  
-    @_resizeObserver?.disconnect()
-
-    $(document).off '.landsofillusions-assets-spriteeditor-pixelcanvas'
-  
   drawingAreaStyle: ->
     style = @camera().drawingAreaWindowBounds.toDimensions()
     
@@ -307,14 +307,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
   events: ->
     super(arguments...).concat
-      'pointerdown .canvas': @onPointerDownCanvas
       'pointermove .canvas': @onPointerMoveCanvas
       'pointerenter .canvas': @onPointerEnterCanvas
       'pointerleave .canvas': @onPointerLeaveCanvas
       'dragstart .canvas': @onDragStartCanvas
-
-  onPointerDownCanvas: (event) ->
-    @interface.activeTool()?.onPointerDown? event if @interface.active()
 
   onPointerMoveCanvas: (event) ->
     @interface.activeTool()?.onPointerMove? event if @interface.active()

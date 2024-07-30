@@ -1,0 +1,21 @@
+The Happiest Days Of Our Lives / Interface by Three Chain Links
+
+SIDE A: The Happiest Days Of Our Lives
+Happiest Days
+Drive Fast
+Gray Is The Sky
+The City, It Speaks To Me
+It Can't Be Bargained With
+Cracked Streets And Broken Windows
+Dance Harder
+Heavy Traffic
+
+SIDE B: Interface
+Interface
+Resetting the grid
+Giving the cables life
+Rewiring the mainframe
+Reformatting in progress
+Operating system load complete
+
+{"_id":"B692m434Zea4mwyFZ","artist":"Three Chain Links","sides":[{"title":"The Happiest Days Of Our Lives","tracks":[{"title":"Happiest Days","duration":230,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 01 Happiest Days.mp3"},{"title":"Drive Fast","duration":181,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 02 Drive Fast.mp3"},{"title":"Gray Is The Sky","duration":187,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 03 Gray Is The Sky.mp3"},{"title":"The City, It Speaks To Me","duration":194,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 04 The City, It Speaks To Me.mp3"},{"title":"It Can't Be Bargained With","duration":185,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 05 It Cant Be Bargained With.mp3"},{"title":"Cracked Streets And Broken Windows","duration":237,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 06 Cracked Streets And Broken Windows.mp3"},{"title":"Dance Harder","duration":213,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 07 Dance Harder.mp3"},{"title":"Heavy Traffic","duration":208,"url":"/pixelartacademy/music/Three Chain Links - The Happiest Days Of Our Lives/Three Chain Links - The Happiest Days Of Our Lives - 08 Heavy Traffic.mp3"}]},{"title":"Interface","tracks":[{"title":"Interface","duration":260,"url":"/pixelartacademy/music/Three Chain Links - Interface/Three Chain Links - Interface - 01 Interface.mp3"},{"title":"Resetting the grid","duration":197,"url":"/pixelartacademy/music/Three Chain Links - Interface/Three Chain Links - Interface - 02 Resetting the grid.mp3"},{"title":"Giving the cables life","duration":116,"url":"/pixelartacademy/music/Three Chain Links - Interface/Three Chain Links - Interface - 03 Giving the cables life.mp3"},{"title":"Rewiring the mainframe","duration":173,"url":"/pixelartacademy/music/Three Chain Links - Interface/Three Chain Links - Interface - 04 Rewiring the mainframe.mp3"},{"title":"Reformatting in progress","duration":158,"url":"/pixelartacademy/music/Three Chain Links - Interface/Three Chain Links - Interface - 05 Reformatting in progress.mp3"},{"title":"Operating system load complete","duration":132,"url":"/pixelartacademy/music/Three Chain Links - Interface/Three Chain Links - Interface - 06 Operating system load complete.mp3"}]}],"styleClass":"c60 single-row","_schema":"1.0.0","slug":"three-chain-links-the-happiest-days-of-our-lives-interface","lastEditTime":{"$date":1718377999524},"gain":0.8}

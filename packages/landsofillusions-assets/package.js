@@ -17,7 +17,7 @@ Npm.depends({
   'bresenham-zingl': '0.1.1',
   'pako': '1.0.8',
   'ml-regression-theil-sen': '1.0.0',
-  'canvas': '2.6.1'
+  'canvas': '2.11.2'
 });
 
 Package.onUse(function(api) {
@@ -53,6 +53,7 @@ Package.onUse(function(api) {
   api.addServerFile('documents/palette/palettes-server/pico8');
   api.addServerFile('documents/palette/palettes-server/black');
   api.addServerFile('documents/palette/palettes-server/zxspectrum');
+  api.addServerFile('documents/palette/palettes-server/macintosh');
 
   api.addClientFile('documents/asset/asset-cache-client');
   api.addServerFile('documents/asset/asset-cache-server');

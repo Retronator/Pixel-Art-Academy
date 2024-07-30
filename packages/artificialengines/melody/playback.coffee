@@ -2,24 +2,40 @@ AMe = Artificial.Melody
 AEc = Artificial.Echo
 
 class AMe.Playback
-  constructor: (@audioManager, @composition, @outputMixerName) ->
+  constructor: (@audioManager, @composition) ->
   
   destroy: ->
     @stop()
+    @_output?.disconnect()
+    @_output = null
   
   ready: ->
     @audioManager.context()
+  
+  _getSourceNode: ->
+    return @_output if @_output
+    
+    @_context = @audioManager.context()
+    @_output = new GainNode @_context
+    
+  connect: (node) ->
+    sourceNode = @_getSourceNode()
+    sourceNode.connect node
+    
+  disconnect: ->
+    @_output?.disconnect()
 
   start: ->
     @stop()
     
     @_context = @audioManager.context()
-    @_output = AEc.Node.Mixer.getOutputNodeForName @outputMixerName, @_context
+
+    output = @_getSourceNode()
     @_currentSectionDepenency = new Tracker.Dependency
     
     @currentSection = @composition.initialSection
     @_currentSectionStartTime = @_context.currentTime
-    @_currentSectionHandle = @currentSection.schedule @_currentSectionStartTime, @_output
+    @_currentSectionHandle = @currentSection.schedule @_currentSectionStartTime, output
     
     @_scheduleNextSection @_getAutomaticNextSection @composition.initialSection
     
@@ -64,7 +80,9 @@ class AMe.Playback
     
     @nextSection = section
     @_nextSectionStartTime = @_currentSectionStartTime + @currentSection.duration
-    @_nextSectionHandle = @nextSection.schedule @_nextSectionStartTime, @_output
+    output = @_getSourceNode()
+    
+    @_nextSectionHandle = @nextSection.schedule @_nextSectionStartTime, output
   
     # Schedule handling of the next section for the case when no transitions get triggered.
     @_scheduleNextSectionHandling()

@@ -25,38 +25,68 @@ class Markup.EngineComponent
       if pixel = element.pixel
         context.fillStyle = pixel.style
         context.fillRect pixel.x, pixel.y, 1, 1
+        
+      if point = element.point
+        radius = scaledDisplayPixelSize * (point.radius or 0.5)
+        context.fillStyle = point.style
+        context.beginPath()
+        context.arc point.x, point.y, radius, 0, 2 * Math.PI
+        context.fill()
       
       if line = element.line
         context.strokeStyle = line.style
+        context.lineCap = line.cap
         context.lineWidth = scaledDisplayPixelSize * (line.width or 1)
 
         # Allow for 'hairline' width (as small as possible).
         context.lineWidth = pixelSize if line.width is 0
         
+        # Allow for width defined in absolute pixel units.
+        context.lineWidth = line.absoluteWidth if line.absoluteWidth
+        
         context.beginPath()
-      
-        context.moveTo line.points[0].x, line.points[0].y
         
-        for point in line.points[1..]
-          if controlPoints = point.bezierControlPoints
-            context.bezierCurveTo controlPoints[0].x, controlPoints[0].y, controlPoints[1].x, controlPoints[1].y, point.x, point.y
-            
-          else
-            context.lineTo point.x, point.y
-      
-        context.stroke()
-        
-        if line.arrow
-          if line.arrow.end
-            endPoint = line.points[line.points.length - 1]
-            
-            if endPoint.bezierControlPoints
-              startPoint = endPoint.bezierControlPoints[1]
+        if line.points
+          context.moveTo line.points[0].x, line.points[0].y
+          
+          for point in line.points[1..]
+            if controlPoints = point.bezierControlPoints
+              context.bezierCurveTo controlPoints[0].x, controlPoints[0].y, controlPoints[1].x, controlPoints[1].y, point.x, point.y
               
             else
-              startPoint = line.points[line.points.length - 2]
+              context.lineTo point.x, point.y
+        
+          context.stroke()
+          
+          if line.arrow
+            if line.arrow.start
+              endPoint = line.points[0]
               
-            @_drawArrow context, startPoint, endPoint
+              if line.points[1].bezierControlPoints
+                startPoint = line.points[1].bezierControlPoints[0]
+              
+              else
+                startPoint = line.points[1]
+                
+              @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+            
+            if line.arrow.end
+              endPoint = line.points[line.points.length - 1]
+              
+              if endPoint.bezierControlPoints
+                startPoint = endPoint.bezierControlPoints[1]
+                
+              else
+                startPoint = line.points[line.points.length - 2]
+              
+              @_drawArrow context, startPoint, endPoint, line.arrow.width, line.arrow.length
+            
+        if line.arc
+          startAngle = line.arc.startAngle or 0
+          endAngle = line.arc.endAngle or Math.PI * 2
+
+          context.arc line.arc.x, line.arc.y, line.arc.radius, startAngle, endAngle
+          context.stroke()
         
       if text = element.text
         if text.backgroundStyle
@@ -72,28 +102,47 @@ class Markup.EngineComponent
         else
           lineHeight = textSize * 1.2
           
+        textPosition = _.clone text.position
+        
+        # Adjust for right-based origin to have an extra pixel space.
+        if _.endsWith textPosition.origin, 'Right'
+          textPosition.x += scaledDisplayPixelSize
+          
         if text.outline
+          # Adjust position to accommodate for the outline.
+          if _.endsWith textPosition.origin, 'Left'
+            textPosition.x += scaledDisplayPixelSize
+            
+          if _.endsWith textPosition.origin, 'Right'
+            textPosition.x -= scaledDisplayPixelSize
+          
+          if _.startsWith textPosition.origin, 'Top'
+            textPosition.y += scaledDisplayPixelSize
+          
+          if _.startsWith textPosition.origin, 'Bottom'
+            textPosition.y -= scaledDisplayPixelSize
+          
           context.fillStyle = text.outline.style
           
           outlineWidth = text.outline.width or 1
-          outlinePosition = _.clone text.position
+          outlinePosition = _.clone textPosition
           
           context.beginPath()
           
           for offsetX in [-outlineWidth..outlineWidth]
             for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
-              outlinePosition.x = text.position.x + offsetX * scaledDisplayPixelSize
-              outlinePosition.y = text.position.y + offsetY * scaledDisplayPixelSize
+              outlinePosition.x = textPosition.x + offsetX * scaledDisplayPixelSize
+              outlinePosition.y = textPosition.y + offsetY * scaledDisplayPixelSize
               @_drawText context, text.value, outlinePosition, lineHeight, text.align
               
           context.fill()
         
         context.fillStyle = text.style
-        @_drawText context, text.value, text.position, lineHeight, text.align
+        @_drawText context, text.value, textPosition, lineHeight, text.align
       
     context.restore()
 
-  _drawArrow: (context, start, end, length) ->
+  _drawArrow: (context, start, end, width = 1, length = 0.5) ->
     _normal.subVectors end, start
     
     context.save()
@@ -101,11 +150,9 @@ class Markup.EngineComponent
     context.translate end.x, end.y
     context.rotate _normal.angle() + Math.PI
     
-    length = 0.5
-    
-    context.moveTo length, length
+    context.moveTo length, width / 2
     context.lineTo 0, 0
-    context.lineTo length, -length
+    context.lineTo length, -width / 2
     
     context.stroke()
     

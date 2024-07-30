@@ -16,6 +16,7 @@ class LOI.Settings
       Dynamic: 'Dynamic'
       Direct: 'Direct'
     
+    mainVolume: new AEc.Variable "#{@id()}.audio.mainVolume", AEc.ValueTypes.Number
     soundVolume: new AEc.Variable "#{@id()}.audio.soundVolume", AEc.ValueTypes.Number
     ambientVolume: new AEc.Variable "#{@id()}.audio.ambientVolume", AEc.ValueTypes.Number
     musicVolume: new AEc.Variable "#{@id()}.audio.musicVolume", AEc.ValueTypes.Number
@@ -73,19 +74,22 @@ class LOI.Settings
       anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings
       smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
       smoothShadingQuantizationLevels: new @constructor.Field 24, 'graphics.smoothShadingQuantizationLevels', @persistSettings
+      crtEmulation: new @constructor.Field true, 'graphics.crtEmulation', @persistSettings
+      slowCPUEmulation: new @constructor.Field true, 'graphics.slowCPUEmulation', @persistSettings
 
     audioDefault = if AB.ApplicationEnvironment.isBrowser then @constructor.Audio.Enabled.Fullscreen else @constructor.Audio.Enabled.On
     
     @audio =
       enabled: new @constructor.Field audioDefault, 'audio.enabled', @persistSettings
       inGameMusicOutput: new @constructor.Field @constructor.Audio.InGameMusicOutput.Dynamic, 'audio.inGameMusicOutput', @persistSettings
+      mainVolume: new @constructor.Field 1, 'audio.mainVolume', @persistSettings
       soundVolume: new @constructor.Field 1, 'audio.soundVolume', @persistSettings
       ambientVolume: new @constructor.Field 1, 'audio.ambientVolume', @persistSettings
       musicVolume: new @constructor.Field 1, 'audio.musicVolume', @persistSettings
       
     # Update audio variables.
     Tracker.autorun =>
-      for audioTypeName in ['sound', 'ambient', 'music']
+      for audioTypeName in ['main', 'sound', 'ambient', 'music']
         variableName = "#{audioTypeName}Volume"
         @constructor.Audio[variableName] @audio[variableName].value()
 

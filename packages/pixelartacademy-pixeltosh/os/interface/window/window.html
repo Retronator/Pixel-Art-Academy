@@ -1,0 +1,11 @@
+<template name="PixelArtAcademy.Pixeltosh.OS.Interface.Window">
+  <div class="pixelartacademy-pixeltosh-os-interface-window">
+    <div class="title-bar">
+      {{> PixelArtAcademy.Pixeltosh.OS.Interface.TitleBar child 'title'}}
+    </div>
+    <div class="content">
+      {{> FataMorgana.DockedArea child 'contentArea'}}
+    </div>
+    <div class="move-indicator {{moveIndicatorVisibleClass}} {{moveIndicatorAlternativeDitherClass}}" {{style moveIndicatorStyle}}></div>
+  </div>
+</template>

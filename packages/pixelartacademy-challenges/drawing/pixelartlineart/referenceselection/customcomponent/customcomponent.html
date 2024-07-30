@@ -1,0 +1,40 @@
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent">
+  <div class="pixelartacademy-challenges-drawing-pixelartlineArt-referenceselection-customcomponent {{activeClass}}">
+    {{#if binderVisible}}
+      <div class="prompt">{{> t10e "Choose a reference"}}</div>
+      <div class="binder-area {{binderDisplayedClass}} {{binderOpenClass}}">
+        <div class="binder-closed">
+          <div class="label">{{> t10e "References"}}</div>
+          <div class="open-hint">{{> t10e "open here"}}</div>
+        </div>
+        <div class="binder-open {{binderReferenceSelectedClass}}">
+          <div class="references flipped">
+            {{#each previousReferences}}
+              {{> PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference}}
+            {{/each}}
+          </div>
+          <div class="references">
+            {{#each nextReferences}}
+              {{> PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
+      {{#if canMoveBack}}
+        {{! HACK: Electron Chrome doesn't support absolute positioning of buttons with left + right combo so we turn them into divs.}}
+        {{! TODO: Change back to a button when Electron is upgraded.}}
+        <div class="navigation-button previous-reference"></div>
+      {{/if}}
+      {{#if canMoveForward}}
+        <div class="navigation-button next-reference"></div>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtLineArt.ReferenceSelection.CustomComponent.Reference">
+  <div class="reference {{referenceSelectedClass}}" {{style referenceStyle}}>
+    <img class="image" src="{{imageUrl}}" {{style imageStyle}}/>
+    <div class="cover"></div>
+  </div>
+</template>

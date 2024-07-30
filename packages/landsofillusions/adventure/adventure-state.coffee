@@ -132,6 +132,9 @@ class LOI.Adventure extends LOI.Adventure
     @_storeProfileId()
 
   quitGame: (options = {}) ->
+    # Update any lazy fields.
+    @gameState.updated()
+    
     @profileId null
     @_clearStoredProfileId()
   

@@ -79,8 +79,9 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
     @_activeAutorun = Tracker.autorun (computation) =>
       active = @activeConditions()
       
-      @onActivate() if active and not @_wasActive
-      @onDeactivate() if @_wasActive and not active
+      Tracker.nonreactive =>
+        @onActivate() if active and not @_wasActive
+        @onDeactivate() if @_wasActive and not active
       
       @_wasActive = active
 

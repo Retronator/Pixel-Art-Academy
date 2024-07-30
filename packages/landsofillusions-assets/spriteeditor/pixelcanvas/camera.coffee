@@ -36,6 +36,20 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       EJSON.equals
     
     @zoomLevelsHelper = @pixelCanvas.interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
+    
+    # Dummy DOM element to run velocity on.
+    @$animate = $('<div>')
+    @_animating = false
+    
+    # Scale that we're currently at or animating towards.
+    @targetScale = new ReactiveField @scale()
+    
+    # Automatically update to current scale when not animating.
+    @pixelCanvas.autorun =>
+      scale = @scale()
+      return if @_animating
+      
+      @targetScale scale
 
     # Calculate various bounds. Canvas bounds are relative to the asset origin.
     @assetCanvasBounds = new AE.Rectangle()
@@ -84,18 +98,16 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         @renderableAreaCanvasBounds.extrude borderWidth, borderWidth if borderWidth
       
       else
-        # Renderable area is larger than the pixel canvas to prevent the canvas being cut-off during transitions.
         pixelCanvasWindowSize = @pixelCanvas.windowSize()
         effectiveScale = @effectiveScale()
         width = pixelCanvasWindowSize.width / effectiveScale
         height = pixelCanvasWindowSize.height / effectiveScale
         origin = @origin()
     
-        extrudeFactor = 3
-        @renderableAreaCanvasBounds.width width * extrudeFactor
-        @renderableAreaCanvasBounds.height height * extrudeFactor
-        @renderableAreaCanvasBounds.x origin.x - width
-        @renderableAreaCanvasBounds.y origin.y - height
+        @renderableAreaCanvasBounds.width width
+        @renderableAreaCanvasBounds.height height
+        @renderableAreaCanvasBounds.x origin.x - width / 2
+        @renderableAreaCanvasBounds.y origin.y - height / 2
 
       # Viewport bounds are the intersection of the pixel canvas bounds and the drawing area bounds.
       @viewportCanvasBounds.copy(@renderableAreaCanvasBounds).intersect @drawingAreaCanvasBounds
@@ -220,7 +232,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         
   _onScrollToZoom: (sign) ->
     zoomLevels = @zoomLevelsHelper()
-    percentage = @scale() * 100
+    percentage = @targetScale() * 100
     
     newZoomLevel = null
     
@@ -238,13 +250,65 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
           newZoomLevel = zoomLevel
           break
           
-    @setScale newZoomLevel / 100 if newZoomLevel
+    return unless newZoomLevel
+    newScale = newZoomLevel / 100
+    
+    scrollToZoom = @scrollToZoom()
+    
+    if scrollToZoom.animate
+      @scaleTo newScale, scrollToZoom.animate.duration
+      
+    else
+      @setScale newScale
   
   setScale: (scale) ->
     @scaleData().value scale
 
   setOrigin: (origin) ->
     @originData().value origin
+    
+  scaleTo: (scale, duration) ->
+    scaleData = @scaleData()
+    currentScale = @targetScale()
+    
+    @targetScale scale
+    @_animating = true
+    
+    @$animate.velocity('stop', 'scale').velocity
+      tween: [scale, currentScale]
+    ,
+      duration: duration * 1000
+      easing: 'ease'
+      queue: 'scale'
+      progress: (elements, complete, remaining, current, tweenValue) =>
+        # HACK: For some reason, progress is called twice, once with tweenValue set to null.
+        return unless tweenValue
+
+        scaleData.value tweenValue
+      complete: =>
+        @_animating = false
+    
+    @$animate.dequeue('scale')
+  
+  translateTo: (origin, duration) ->
+    originData = @originData()
+    currentOrigin = _.clone originData.value()
+    
+    @$animate.velocity('stop', 'origin').velocity
+      tween: [1, 0]
+    ,
+      duration: duration * 1000
+      easing: 'ease'
+      queue: 'origin'
+      progress: (elements, complete, remaining, current, tweenValue) =>
+        # HACK: For some reason, progress is called twice, once with tweenValue set to null.
+        return unless tweenValue
+
+        originData.value
+          x: THREE.MathUtils.lerp currentOrigin.x, origin.x, tweenValue
+          y: THREE.MathUtils.lerp currentOrigin.y, origin.y, tweenValue
+    
+    @$animate.dequeue('origin')
 
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()

@@ -13,7 +13,7 @@ class LOI.Assets.Components.PixelCanvas.Grid
 
     # Determine grid opacity (scale < 2: 0, scale > 32: 0.3)
     gridOpacity = (scale - 2) / 100
-    gridOpacity = THREE.Math.clamp gridOpacity, 0, 0.3
+    gridOpacity = THREE.MathUtils.clamp gridOpacity, 0, 0.3
 
     return unless gridOpacity > 0
 

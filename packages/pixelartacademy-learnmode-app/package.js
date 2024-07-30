@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:pixelartacademy-learnmode-app',
-  version: '1.1.0',
+  version: '1.2.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -31,9 +31,12 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-tutorials');
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
+  api.use('retronator:pixelartacademy-pixeltosh');
+  api.use('retronator:pixelartacademy-pixeltosh-pinball');
 
   api.use('retronator:pixelartacademy-pixelpad');
   api.use('retronator:pixelartacademy-pixelpad-pico8');
+  api.use('retronator:pixelartacademy-pixelpad-pixeltosh');
   api.use('retronator:pixelartacademy-pixelpad-drawing');
   api.use('retronator:pixelartacademy-pixelpad-studyplan');
   api.use('retronator:pixelartacademy-pixelpad-todo');

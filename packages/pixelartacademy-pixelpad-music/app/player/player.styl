@@ -1,0 +1,152 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-music-player
+  position absolute
+  width 330rem
+  height 204rem
+  left -165rem
+  top -402rem
+
+  &::after
+    content ''
+    position absolute
+    z-index 1
+    top 1rem
+    right 2rem
+    width 365rem
+    height 210rem
+    background-image image('/pixelartacademy/pixelpad/apps/music/player-shadow.png')
+    mix-blend-mode multiply
+
+  .player
+    absolute-cover()
+
+    .controls
+      absolute-cover()
+      z-index 2
+      background-image image('/pixelartacademy/pixelpad/apps/music/player.png')
+
+      .label
+        position absolute
+        left 21rem
+        top 132rem
+        width 130rem
+        text-transform uppercase
+        small-print()
+        color atariGreen(5)
+        text-align center
+
+      .buttons
+        display flex
+        position absolute
+        left 21rem
+        top 142rem
+        width 130rem
+
+        .button
+          display flex
+          width 26rem
+          height 55rem
+          padding 0
+          border none
+          background image('/pixelartacademy/pixelpad/apps/music/player-button.png') 0 16rem / 52rem 37rem no-repeat
+          small-print()
+          color atariGray(4)
+          flex-direction column
+          align-items center
+          cursor pointer
+
+          &:active
+          &.active
+            background-position-x -26rem
+
+          &::after
+            content ''
+            height 3rem
+            margin-top 1rem
+
+          &.play::after
+            width 4rem
+            background-image image('/pixelartacademy/pixelpad/apps/music/player-symbol-play.png')
+
+          &.stop::after
+            width 3rem
+            background-image image('/pixelartacademy/pixelpad/apps/music/player-symbol-stop.png')
+
+          &.eject::after
+            width 5rem
+            background-image image('/pixelartacademy/pixelpad/apps/music/player-symbol-eject.png')
+
+          &.rewind::after
+            width 9rem
+            background-image image('/pixelartacademy/pixelpad/apps/music/player-symbol-rewind.png')
+
+          &.fast-forward::after
+            width 9rem
+            background-image image('/pixelartacademy/pixelpad/apps/music/player-symbol-fastforward.png')
+
+    .tray
+      position absolute
+      z-index 4
+      left 17rem
+      top 26rem
+      width 139rem
+      height 94rem
+      background image('/pixelartacademy/pixelpad/apps/music/player-tray.png') 0 0 / 282rem 94rem no-repeat
+
+      &.open
+        left 15rem
+        top 25rem
+        width 143rem
+        height 87rem
+        background-position-x -139rem
+
+        .auto-stop
+          top 73rem
+
+      .auto-stop
+        position absolute
+        left 0
+        right 0
+        top 80rem
+        small-print()
+        color atariGray(4)
+        text-transform uppercase
+        text-align center
+
+  .tape-design
+    position absolute
+    left 380rem
+    top 32rem
+    transition left 2s step-end
+
+    &.displayed
+      left 179rem
+      transition left 2s ease-out 0.2s
+
+    &::before
+      content ''
+      position absolute
+      z-index 2
+      left -18rem
+      top 2rem
+      width 166rem
+      height 109rem
+      background-image image('/pixelartacademy/pixelpad/apps/music/player-tape-shadow.png')
+      mix-blend-mode darken
+
+    .case
+      absolute-cover()
+      z-index 3
+
+      .lid
+        .closed
+          .inlay
+            .sides
+              .side
+                .tracks
+                  .track
+                    cursor pointer
+
+                    &:hover
+                      background atariGray(4)

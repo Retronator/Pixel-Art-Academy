@@ -1,5 +1,6 @@
 AB = Artificial.Base
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
@@ -35,6 +36,8 @@ class LOI.Adventure extends LOI.Adventure
     @app.addComponent @
 
     $('html').addClass('adventure')
+    
+    @_initializeAudio()
 
     @interface = new (@constructor.interfaceClass())
     @director = new LOI.Director
@@ -87,5 +90,8 @@ class LOI.Adventure extends LOI.Adventure
     $('html').removeClass('adventure')
 
   endRun: ->
+    # Update any lazy fields.
+    @gameState.updated()
+    
     # Flush persistent document updates when the page is about to unload.
-    Persistence.flushUpdates()
+    AMu.Document.Persistence.flushChanges()

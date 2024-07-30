@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridges.Cartridge
+class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridge
   # highScore: the top result the player has achieved
   @id: -> 'PixelArtAcademy.Pico8.Cartridges.Snake'
   
@@ -31,7 +31,7 @@ class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridges.Cartridge
     """
     
     @fixedDimensions: -> width: 8, height: 8
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     @backgroundColor: ->
       paletteColor:
         ramp: 10
@@ -49,7 +49,7 @@ class PAA.Pico8.Cartridges.Snake extends PAA.Pico8.Cartridges.Cartridge
     """
     
     @fixedDimensions: -> width: 8, height: 8
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     @backgroundColor: ->
       paletteColor:
         ramp: 10

@@ -16,6 +16,7 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:retronator-accounts');
   api.use('retronator:landsofillusions-assets');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learning');
@@ -47,6 +48,9 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('pages/admin..');
   api.addUnstyledComponent('pages/admin/scripts..');
   api.addServerFile('pages/admin/scripts/methods-server/convertcheckins');
+
+  api.addUnstyledComponent('pages/admin/projects..');
+  api.addServerFile('pages/admin/projects/methods-server');
 
   // Check-ins (legacy)
 
@@ -80,7 +84,9 @@ Package.onUse(function(api) {
   // Project
 
   api.addFile('project..');
-  api.addServerFile('project/subscriptions');
+  api.addServerFile('project/project-server-databasecontent');
+  api.addFile('project/subscriptions');
+  api.addServerFile('project/subscriptions-server');
 
   api.addFile('project/thing');
   api.addFile('project/workbench');
@@ -147,13 +153,25 @@ Package.onUse(function(api) {
   api.addFile('pixelartevaluation/core')
   api.addFile('pixelartevaluation/pixel')
   api.addFile('pixelartevaluation/point')
-  api.addFile('pixelartevaluation/enginecomponent')
-  api.addFile('pixelartevaluation/enginecomponent-debug')
+  api.addFile('pixelartevaluation/point-optimizeneighbors')
 
   api.addFile('pixelartevaluation/line..')
+  api.addFile('pixelartevaluation/line/line-addoutlinepoints')
+  api.addFile('pixelartevaluation/line/line-classifylineparts')
+  api.addFile('pixelartevaluation/line/line-detectstraightlineparts')
+  api.addFile('pixelartevaluation/line/line-detectcurveparts')
+  api.addFile('pixelartevaluation/line/line-createparts')
+  api.addFile('pixelartevaluation/line/line-analyzecurvature')
+  api.addFile('pixelartevaluation/line/line-evaluate')
   api.addFile('pixelartevaluation/line/part..')
   api.addFile('pixelartevaluation/line/part/straightline')
+  api.addFile('pixelartevaluation/line/part/straightline-evaluate')
   api.addFile('pixelartevaluation/line/part/straightline-getsegmentcorners')
   api.addFile('pixelartevaluation/line/part/curve')
+  api.addFile('pixelartevaluation/line/part/curve-evaluate')
   api.addFile('pixelartevaluation/line/part/curve-calculatepointconfidence')
+
+  // Engine component requires lines to be defined.
+  api.addFile('pixelartevaluation/enginecomponent')
+  api.addFile('pixelartevaluation/enginecomponent-debug')
 });

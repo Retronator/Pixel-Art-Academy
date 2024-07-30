@@ -11,7 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill extends PAA.Practice.
     """
 
   @fixedDimensions: -> width: 13, height: 9
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
 
   @bitmapString: -> """
       |      0

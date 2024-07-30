@@ -62,7 +62,10 @@ Package.onUse(function(api) {
 
   api.addComponent('editor/desktop/pixelartevaluation..');
   api.addComponent('editor/desktop/pixelartevaluation/overview..');
+  api.addComponent('editor/desktop/pixelartevaluation/pixelperfectlines..');
   api.addComponent('editor/desktop/pixelartevaluation/evendiagonals..');
+  api.addComponent('editor/desktop/pixelartevaluation/smoothcurves..');
+  api.addComponent('editor/desktop/pixelartevaluation/consistentlinewidth..');
 
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');
@@ -70,6 +73,7 @@ Package.onUse(function(api) {
 
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');
+  api.addFile('editor/desktop/actions/zoom');
 
   api.addComponent('editor/easel..');
   api.addComponent('editor/easel/layout..');

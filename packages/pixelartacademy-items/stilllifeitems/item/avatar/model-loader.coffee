@@ -142,7 +142,7 @@ class PAA.Items.StillLifeItems.Item.Avatar.Model.Loader
   @_createConvexHullShape: (mesh, calculateTransform) ->
     if calculateTransform
       center = mesh.geometry.boundingSphere.center
-      transform = new Ammo.btTransform Ammo.btQuaternion.identity, center.toBulletVector3()
+      transform = new Ammo.btTransform Ammo.btQuaternion.identity(), center.toBulletVector3()
 
     vertexArray = mesh.geometry.attributes.position.array
     shape = new Ammo.btConvexHullShape

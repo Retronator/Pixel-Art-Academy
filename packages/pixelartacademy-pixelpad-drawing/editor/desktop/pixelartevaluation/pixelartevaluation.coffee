@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 FM = FataMorgana
 
-PAG = PAA.Practice.PixelArtEvaluation
+PAE = PAA.Practice.PixelArtEvaluation
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation'
@@ -51,9 +51,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @pixelArtEvaluation = new ComputedField =>
       return unless bitmap = @bitmapObject()
       @_pixelArtEvaluation?.destroy()
-      @_pixelArtEvaluation = new PAG bitmap
+      @_pixelArtEvaluation = new PAE bitmap
       
-    @hoveredCategoryValue = new ReactiveField null
+    @hoveredFilterValue = new ReactiveField null
 
     @hoveredPixel = new ComputedField =>
       pixelCanvas = @interface.getEditorForActiveFile()
@@ -78,13 +78,18 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @pixelArtEvaluationProperty = new ComputedField =>
       @bitmap()?.properties?.pixelArtEvaluation
     
+    @editable = new ComputedField =>
+      return unless pixelArtEvaluationProperty = @pixelArtEvaluationProperty()
+      pixelArtEvaluationProperty.editable or pixelArtEvaluationProperty.unlockable
+    
     @enabledCriteria = new ComputedField =>
       return [] unless pixelArtEvaluationProperty = @pixelArtEvaluationProperty()
       
-      criterion for criterion of PAG.Criteria when pixelArtEvaluationProperty[_.lowerFirst criterion]
+      criterion for criterion of PAE.Criteria when pixelArtEvaluationProperty[_.lowerFirst criterion]
       
-    @engineComponent = new PAG.EngineComponent
+    @engineComponent = new PAE.EngineComponent
       pixelArtEvaluation: => @pixelArtEvaluation()
+      pixelArtEvaluationProperty: => @pixelArtEvaluationProperty()
       displayedCriteria: =>
         return [] unless @displayed()
         
@@ -94,7 +99,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         else
           @enabledCriteria()
         
-      filterToCategoryValue: => if @displayed() then @hoveredCategoryValue() else null
+      filterValue: => if @displayed() then @hoveredFilterValue() else null
       focusedPixel: => if @displayed() then @hoveredPixel() else null
     
     # Automatically enter focused mode when active.
@@ -142,7 +147,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         # See if there was any change from the current data.
         return if _.objectContains asset.properties.pixelArtEvaluation, evaluation
         
-        pixelArtEvaluationProperty = _.extend {}, asset.properties.pixelArtEvaluation, evaluation
+        pixelArtEvaluationProperty = _.merge {}, asset.properties.pixelArtEvaluation, evaluation
       
         updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), asset, 'pixelArtEvaluation', pixelArtEvaluationProperty
         asset.executeAction updatePropertyAction, true
@@ -150,11 +155,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.content')
-    @_resizeObserver = new ResizeObserver =>
-      @contentHeight @content$.outerHeight()
+    @autorun (computation) =>
+      @_resizeObserver?.disconnect()
+      return unless @paperDisplayed()
+
+      await _.waitForFlush()
     
-    @_resizeObserver.observe @content$[0]
+      @content$ = @$('.content')
+      @_resizeObserver = new ResizeObserver =>
+        @contentHeight @content$.outerHeight()
+      
+      @_resizeObserver.observe @content$[0]
     
   onDestroyed: ->
     super arguments...
@@ -177,11 +188,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
   activate: (criterion = null) ->
     @_changeActive true
     @activeCriterion criterion
-    @audio.open()
     
   deactivate: ->
     @_changeActive false
-    @audio.close()
     
   # Use this to change the criterion when already active.
   setCriterion: (criterion) ->
@@ -195,10 +204,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     @_wasActive = value
     
     return unless @isRendered()
-
+    
+    if value
+      @audio.open()
+    
+    else
+      @audio.close()
+    
     Tracker.nonreactive =>
       editor = @interface.getEditorForActiveFile()
-      editor.triggerSmoothMovement()
 
       camera = editor.camera()
       scale = camera.effectiveScale()
@@ -210,13 +224,20 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
       originDataField = camera.originData()
       origin = originDataField.value()
       
-      originDataField.value
+      camera.translateTo
         x: origin.x
         y: origin.y + originDeltaY
+      ,
+        1
 
   activeClass: ->
     'active' if @active()
     
+  paperDisplayed: ->
+    # Display the paper if the property is defined and we're not explicitely told to not display it.
+    property = @pixelArtEvaluationProperty()
+    property and property.displayed isnt false
+  
   contentPlaceholderStyle: ->
     height: "#{@contentHeight()}px"
     
@@ -270,8 +291,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         # Enable all subcriteria if they exist.
         criterionData = {}
         
-        if PAG.Subcriteria[criterion.id]
-          for subcriterion of PAG.Subcriteria[criterion.id]
+        if PAE.Subcriteria[criterion.id]
+          for subcriterion of PAE.Subcriteria[criterion.id]
             criterionData[_.lowerFirst subcriterion] = {}
         
         _.nestedProperty pixelArtEvaluationProperty, criterion.propertyPath, criterionData
@@ -284,7 +305,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
           found = false
           criterionProperty = _.lowerFirst criterion.parentId
 
-          for subcriterion of PAG.Subcriteria[criterion.parentId]
+          for subcriterion of PAE.Subcriteria[criterion.parentId]
             found = true if pixelArtEvaluationProperty[criterionProperty][_.lowerFirst subcriterion]
             
           unless found

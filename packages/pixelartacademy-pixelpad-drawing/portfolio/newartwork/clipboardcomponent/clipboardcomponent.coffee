@@ -15,9 +15,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     super arguments...
     
     @paletteNames = [
-      LOI.Assets.Palette.SystemPaletteNames.pico8
-      LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
-      LOI.Assets.Palette.SystemPaletteNames.black
+      LOI.Assets.Palette.SystemPaletteNames.Pico8
+      LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
+      LOI.Assets.Palette.SystemPaletteNames.Black
     ]
     
     for paletteName in @paletteNames

@@ -1,10 +1,11 @@
 <template name="PixelArtAcademy.PixelPad.Systems.ToDo">
   <div class="pixelartacademy-pixelpad-systems-todo system {{taskSelectedClass}}">
-    <div class="notepad {{displayStateClass}}" {{style notepadStyle}}>
+    <div class="notepad {{displayStateClass}} {{openButtonHoveredClass}} {{selectedTaskVisibleClass}}" {{style notepadStyle}}>
+      {{> Render notifications}}
+      <button class="open-button"></button>
       <div class="binding">
         <div class="close-hint">x</div>
         <div class="turned-page"></div>
-        <div class="retro"></div>
       </div>
       <div class="page" {{style pageStyle}}>
         <div class="sideline"></div>

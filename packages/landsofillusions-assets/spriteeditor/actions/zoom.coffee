@@ -11,7 +11,7 @@ class Zoom extends FM.Action
     @zoomLevels = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
 
     @zoomPercentage = new ComputedField =>
-      @interface.getEditorForActiveFile()?.camera()?.scale() * 100
+      @interface.getEditorForActiveFile()?.camera()?.targetScale() * 100
 
   execute: ->
     return unless newZoomLevel = @newZoomLevel()

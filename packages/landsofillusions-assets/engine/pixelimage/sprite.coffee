@@ -4,13 +4,13 @@ class LOI.Assets.Engine.PixelImage.Sprite extends LOI.Assets.Engine.PixelImage
   constructor: (@options) ->
     super arguments...
     
-    @ready = new ComputedField =>
-      return unless spriteData = @options.asset()
-      return unless spriteData.layers?.length and spriteData.bounds
-      return unless spriteData.customPalette or spriteData.allPalettesAvailable() or @options.visualizeNormals?()
+  ready: ->
+    return unless spriteData = @options.asset()
+    return unless spriteData.layers?.length and spriteData.bounds
+    return unless spriteData.customPalette or spriteData.allPalettesAvailable() or @options.visualizeNormals?()
 
-      true
-      
+    true
+    
   drawToContext: (context, renderOptions = {}) ->
     # HACK: Request sprite data already at the top since otherwise ready sometimes doesn't get recomputed in time.
     @options.asset()

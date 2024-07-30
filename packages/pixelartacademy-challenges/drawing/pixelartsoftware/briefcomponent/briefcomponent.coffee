@@ -144,7 +144,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent exten
     # Make sure bitmap is not in upload mode.
     @bitmap.uploadMode false
 
-    # Don't show missing pixels.
-    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo x: -1, y: -1
+    # Show hints for all pixels.
+    @bitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo null
 
     super arguments...

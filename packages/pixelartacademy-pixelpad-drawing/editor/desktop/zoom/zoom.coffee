@@ -26,7 +26,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Zoom extends LOI.View
       (a, b) => a is b
 
     @zoomPercentage = new ComputedField =>
-      @interface.getEditorForActiveFile()?.camera()?.scale() * 100
+      @interface.getEditorForActiveFile()?.camera()?.targetScale() * 100
 
     @zoomInPressed = new ReactiveField false
     @zoomOutPressed = new ReactiveField false
@@ -58,7 +58,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Zoom extends LOI.View
 
     try
       zoom = parseInt $(event.target).val()
-      @interface.getEditorForActiveFile()?.camera()?.setScale zoom / 100
+      @interface.getEditorForActiveFile()?.camera()?.scaleTo zoom / 100, 0.2
       
   onPointerDownZoomIn: (event) ->
     @_triggerAudio event, true
@@ -67,11 +67,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Zoom extends LOI.View
     @_triggerAudio event, true
 
   onClickZoomIn: (event) ->
-    @interface.getOperator(LOI.Assets.SpriteEditor.Actions.ZoomIn).execute()
+    @interface.getOperator(PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn).execute()
     @_triggerAudio event, false
 
   onClickZoomOut: (event) ->
-    @interface.getOperator(LOI.Assets.SpriteEditor.Actions.ZoomOut).execute()
+    @interface.getOperator(PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut).execute()
     @_triggerAudio event, false
     
   _triggerAudio: (event, buttonPressed) ->

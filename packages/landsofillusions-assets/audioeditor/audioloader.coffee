@@ -32,7 +32,7 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
     
     @_audioCreateAutorun = Tracker.autorun (computation) =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
-      return unless context = adventureViews[0]?.adventure.interface.audioManager.context()
+      return unless context = adventureViews[0]?.adventure.audioManager.context()
       computation.stop()
 
       @audio Tracker.nonreactive => new AEc.Audio @fileId, context, @audioNodes

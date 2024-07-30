@@ -4,7 +4,7 @@ AB = Artificial.Babel
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
+class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection extends PAA.Challenges.Drawing.ReferenceSelection
   @id: -> "PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.ReferenceSelection"
 
   @displayName: -> "Choose a sprite to copy"
@@ -14,38 +14,12 @@ class PAA.Challenges.Drawing.PixelArtSoftware.ReferenceSelection extends PAA.Pix
     existing game sprite.
   """
   
-  @initialize: ->
-    # On the server, create this asset's translated names.
-    if Meteor.isServer
-      Document.startup =>
-        return if Meteor.settings.startEmpty
-      
-        translationNamespace = @id()
-        AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'description']
+  @portfolioComponentClass: -> @PortfolioComponent
+  @customComponentClass: -> @CustomComponent
   
   @initialize()
   
-  constructor: ->
-    super arguments...
-    
-    # Subscribe to this asset's translations.
-    translationNamespace = @id()
-    @_translationSubscription = AB.subscribeNamespace translationNamespace
-    
-    @portfolioComponent = new @constructor.PortfolioComponent @
-    @customComponent = new @constructor.CustomComponent @
+  urlParameter: -> 'select-pixel-art-software-reference'
   
-  urlParameter: -> 'select-reference'
-  
-  id: -> @constructor.id()
-
-  displayName: -> AB.translate(@_translationSubscription, 'displayName').text
-  displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
-
-  description: -> AB.translate(@_translationSubscription, 'description').text
-  descriptionTranslation: -> AB.translation @_translationSubscription, 'description'
-
   width: -> 31
   height: -> 48
-  
-  ready: -> true

@@ -3,6 +3,12 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+  # Override to create a step for each path in the svg.
+  @breakPathsIntoSteps: -> false
+  
+  # Override to set the default whether created steps draw hints after completion.
+  @drawHintsAfterCompleted: -> null
+
   initializeSteps: ->
     fixedDimensions = @constructor.fixedDimensions()
     
@@ -14,19 +20,19 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     if @resources.goalPixels or @resources.svgPaths or @resources.steps
       stepArea = new @constructor.StepArea @, stepAreaBounds
-      @_createSteps stepArea, @resources
+      @initializeStepsInAreaWithResources stepArea, @resources
       
-  _createSteps: (stepArea, stepResource) ->
+  initializeStepsInAreaWithResources: (stepArea, stepResources) ->
     drawHintsAfterCompleted = @constructor.drawHintsAfterCompleted()
     
-    if stepResource.goalPixels
+    if stepResources.goalPixels
       new @constructor.PixelsStep @, stepArea,
-        startPixels: stepResource.startPixels
-        goalPixels: stepResource.goalPixels
+        startPixels: stepResources.startPixels
+        goalPixels: stepResources.goalPixels
         drawHintsAfterCompleted: drawHintsAfterCompleted
         
-    if stepResource.svgPaths
-      svgPaths = stepResource.svgPaths.svgPaths()
+    if stepResources.svgPaths
+      svgPaths = stepResources.svgPaths.svgPaths()
       
       if @constructor.breakPathsIntoSteps()
         for svgPath, index in svgPaths
@@ -41,5 +47,5 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           svgPaths: svgPaths
           drawHintsAfterCompleted: drawHintsAfterCompleted
     
-    if stepResource.steps
-      @_createSteps stepArea, step for step in stepResource.steps
+    if stepResources.steps
+      @initializeStepsInAreaWithResources stepArea, step for step in stepResources.steps

@@ -5,7 +5,9 @@ TextOriginPosition = PAA.Practice.Helpers.Drawing.Markup.TextOriginPosition
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Asset
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
+  @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies"
+  
   @displayName: -> "Jaggies"
   
   @description: -> """
@@ -14,6 +16,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
   
   @fixedDimensions: -> width: 41, height: 21
   
+  @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/jaggies.svg"
+  @breakPathsIntoSteps: -> true
+  
   @markup: -> true
   @pixelArtEvaluation: -> true
   
@@ -21,55 +26,36 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
-    @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0]?.activeStepIndex() is @stepNumber() - 1
-      
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
-    
-  class @Aligned extends @InstructionStep
+  class @Aligned extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Aligned"
+    @assetClass: -> Asset
     @stepNumber: -> 1
     
     @message: -> """
-      Pixel art is drawn on a raster grid. When we draw lines that align with the grid, the result perfectly matches the intended shapes.
+      Many things in your drawings will align with the grid. Pixels can perfectly match such shapes.
     """
     
     @initialize()
   
-  class @NonAligned extends @InstructionStep
+  class @NonAligned extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.NonAligned"
+    @assetClass: -> Asset
     @stepNumber: -> 2
     
     @message: -> """
-      When lines don't align with the grid, such as with diagonals and curves, they become jagged—spiky and sharp.
-      These stair-like deformations are called 'jaggies' and contribute to the blocky appearance of pixel art.
+      With diagonals and curves, what should be straight and smooth appears jagged—spiky and sharp.
+      These stair-like deformations (unintended jagged edges) are called 'jaggies' and contribute to the blocky appearance of pixel art.
     """
     
     @initialize()
   
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
     @id: -> "#{Asset.id()}.Complete"
     @assetClass: -> Asset
     
     @activeDisplayState: ->
       # We only have markup without a message.
       PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
-
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show when the asset is completed.
-      asset.completed()
     
     @initialize()
     
@@ -169,11 +155,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
             x: 4.5, y: 9.5, origin: TextOriginPosition.BottomCenter
           value: "not a jaggy\n(sharp corner)"
       
-      # Add intended lines.
-      intendedLineBase = Markup.PixelArt.intendedLineBase()
+      # Add perceived lines.
+      perceivedLineBase = Markup.PixelArt.perceivedLineBase()
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 18.5, y: 16.5
           ,
@@ -195,7 +181,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 16.5, y: 14.5
           ,
@@ -221,7 +207,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 13.5, y: 6.25
           ,
@@ -233,7 +219,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Jaggies extends P
           ]
       
       markup.push
-        line: _.extend {}, intendedLineBase,
+        line: _.extend {}, perceivedLineBase,
           points: [
             x: 7.5, y: 16
           ,

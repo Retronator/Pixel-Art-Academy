@@ -87,7 +87,7 @@ class LOI.Assets.Editor.Materials extends FM.View
     return unless shades = palette.ramps[ramp]?.shades
 
     maxShade = shades.length - 1
-    shade = THREE.Math.clamp colorData.shade or 0, 0, maxShade
+    shade = THREE.MathUtils.clamp colorData.shade or 0, 0, maxShade
     color = THREE.Color.fromObject shades[shade]
 
     backgroundColor: "##{color.getHexString()}"

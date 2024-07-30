@@ -26,29 +26,14 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
     
     # Allow steps to complete with extra pixels so that we can show only line ends, but continue with a line drawn.
     stepArea = @stepAreas()[0]
+    steps = stepArea.steps()
     
-    for step in stepArea.steps()
-      step.options.canCompleteWithExtraPixels = true
+    steps[0].options.canCompleteWithExtraPixels = true
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumbers: -> throw new AE.NotImplementedException "Instruction step must provide the step numbers."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      stepNumbers = @stepNumbers()
-      stepNumbers = [stepNumbers] unless _.isArray stepNumbers
-      
-      # Show with the correct step.
-      return unless asset.stepAreas()[0].activeStepIndex() + 1 in stepNumbers
-
-      # Show until the asset is completed.
-      not asset.completed()
-    
-    @resetDelayOnOperationExecuted: -> true
     
     markup: ->
       return unless asset = @getActiveAsset()
@@ -71,9 +56,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
           
       markup
    
-  class @DrawLine extends @InstructionStep
+  class @DrawLine extends @StepInstruction
     @id: -> "#{Asset.id()}.DrawLine"
-    @stepNumbers: -> 1
+    @stepNumber: -> 1
     
     @message: -> """
       Connect the two dots with a line using the pencil's line-drawing capability (shift + click).
@@ -81,9 +66,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
     
     @initialize()
   
-  class @Cleanup extends @InstructionStep
+  class @Cleanup extends @StepInstruction
     @id: -> "#{Asset.id()}.Cleanup"
-    @stepNumbers: -> 2
+    @stepNumber: -> 2
     
     @message: -> """
       The most common algorithm used for drawing lines in raster art (Bresenham's line algorithm) doesn't create even
@@ -93,7 +78,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.ConstrainingA
     
     @initialize()
   
-  class @ConstrainAngle extends @InstructionStep
+  class @ConstrainAngle extends @StepInstruction
     @id: -> "#{Asset.id()}.ConstrainAngle"
     @stepNumbers: -> [3, 4]
     

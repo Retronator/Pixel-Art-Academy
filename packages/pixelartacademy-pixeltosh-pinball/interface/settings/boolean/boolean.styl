@@ -1,0 +1,20 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-pinball-interface-settings-boolean
+  position relative
+
+  input
+    display none
+
+    & + .checkmark
+      display inline-block
+      border 1rem solid black
+      width 9rem
+      height 9rem
+      padding 0 1rem
+      line-height 7rem
+      cursor pointer
+
+    &:checked + .checkmark::before
+      content '×'
+      font-weight bold

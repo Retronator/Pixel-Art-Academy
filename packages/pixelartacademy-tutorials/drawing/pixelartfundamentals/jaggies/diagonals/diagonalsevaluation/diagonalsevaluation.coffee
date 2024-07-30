@@ -3,8 +3,8 @@ PAA = PixelArtAcademy
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAG = PAA.Practice.PixelArtEvaluation
-StraightLine = PAG.Line.Part.StraightLine
+PAE = PAA.Practice.PixelArtEvaluation
+StraightLine = PAE.Line.Part.StraightLine
 
 # Note: We can't call this Instructions since we introduce a namespace class called that below.
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
@@ -22,7 +22,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEval
   
   @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation.svg"
   @breakPathsIntoSteps: -> true
-  @drawHintsAfterCompleted: -> false
   
   @markup: -> true
   @pixelArtEvaluation: -> true
@@ -30,6 +29,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEval
   @properties: ->
     pixelArtScaling: true
     pixelArtEvaluation:
+      allowedCriteria: [PAE.Criteria.EvenDiagonals]
       evenDiagonals:
         segmentLengths: {}
   
@@ -43,7 +43,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.DiagonalsEval
     pathSteps = _.clone stepArea.steps()
     
     for pathStep in pathSteps
-      pathStep.options.drawHintsAfterCompleted = false
       pathStep.options.preserveCompleted = true
     
     # Step index 0 is the first path.

@@ -12,9 +12,7 @@ class LM.Interface extends LOI.Interface
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
       focusPoint: AEc.ValueTypes.String
-      dynamicSoundtrack: AEc.ValueTypes.Boolean
-      muteInGameAudio: AEc.ValueTypes.Boolean
-      inGameMusic: AEc.ValueTypes.Boolean
+      playAmbient: AEc.ValueTypes.Boolean
       inGameMusicInLocation: AEc.ValueTypes.Boolean
       homeScreen: AEc.ValueTypes.Trigger
       tutorialStart: AEc.ValueTypes.Trigger
@@ -54,29 +52,27 @@ class LM.Interface extends LOI.Interface
     
     @waiting = new ReactiveField true
     
-    @audioManager = new LOI.Interface.Components.AudioManager
-    
-    LOI.Assets.Engine.Audio.initialize @audioManager
-    
     # Manually load Audio since audio manager wasn't available when calling super.
-    @constructor.Audio.load @audioManager
+    @constructor.Audio.load LOI.adventure.audioManager
     
-    # Mute in-game audio in the menus, except in the audio section. We have an additional extended silence during
-    # quitting when the game transitions from the play to the main menu location and audio would still be played as the
-    # adventure menu fades out before location switch.
+    # Play ambient in play mode, but not in the menus, except in the audio section. We have an additional extended
+    # silence during quitting when the game transitions from the play to the main menu location and audio would still
+    # be played as the adventure menu fades out before location switch.
     @quitting = new ReactiveField false
     
-    @autorun (computation) =>
-      if LOI.adventure.menu.visible()
-        value = not LOI.adventure.menu.items.inAudio()
+    @audioOffInMenus = new ComputedField =>
+      if @audio.focusPoint.value() is @constructor.FocusPoints.Play
+        if LOI.adventure.menu.visible()
+          not LOI.adventure.menu.items.inAudio()
+          
+        else
+          @quitting()
       
-      else if @audio.focusPoint.value() is @constructor.FocusPoints.MainMenu
-        value = not LOI.adventure.currentLocation()?.menuItems?.inAudio()
-        
       else
-        value = @quitting()
-      
-      @audio.muteInGameAudio value
+        not LOI.adventure.currentLocation()?.menuItems?.inAudio()
+    
+    @autorun (computation) =>
+      @audio.playAmbient not @audioOffInMenus()
     
   onRendered: ->
     super arguments...

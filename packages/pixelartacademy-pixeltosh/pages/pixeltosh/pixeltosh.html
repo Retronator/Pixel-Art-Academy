@@ -1,0 +1,16 @@
+<template name="PixelArtAcademy.Pixeltosh.Pages.Pixeltosh">
+  <style>
+    html {
+      background: black;
+      font-size: {{display.scale}}px;
+    }
+  </style>
+  {{> Render display}}
+  <div class="pixelartacademy-pixeltosh-pages-pixeltosh">
+    {{#LandsOfIllusions.Components.Overlay}}
+      <div class="pixeltosh-safe-area">
+        {{> PixelArtAcademy.Pixeltosh.Computer args os}}
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

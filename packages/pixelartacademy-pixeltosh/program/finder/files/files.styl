@@ -1,0 +1,36 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-finder-files
+  padding 5rem
+  height 100%
+
+  .files
+    display flex
+    height 100%
+    align-items flex-start
+    list-style none
+    margin 0
+    padding 0
+    gap 4rem
+
+    .file
+      &.selected
+       filter invert()
+
+      .file-button
+        font inherit
+        background none
+        border none
+        padding 0
+
+        .icon
+          display block
+          margin 0 auto 2rem
+          width 20rem
+          height 20rem
+
+        .name
+          display inline-block
+          padding 1rem 1rem 0 2rem
+          background white
+          overflow-wrap break-word

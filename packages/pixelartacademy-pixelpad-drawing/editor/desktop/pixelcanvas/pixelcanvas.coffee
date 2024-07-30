@@ -8,11 +8,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas'
   @register @id()
 
-  constructor: ->
-    super arguments...
-    
-    @smoothMovement = new ReactiveField false
-  
   onCreated: ->
     super arguments...
     
@@ -88,23 +83,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
           
         else
           originDataField.value x: 0, y: 0
-
-  triggerSmoothMovement: ->
-    @smoothMovement true
-    
-    Meteor.clearTimeout @_smoothMovementTimeout
-
-    @_smoothMovementTimeout = Meteor.setTimeout =>
-      @smoothMovement false
-    ,
-      1000
     
   hiddenClass: ->
     # Don't show the asset when clipboard is on the second page.
     'hidden' if @clipboardComponent()?.secondPageActive?()
-    
-  smoothMovementClass: ->
-    'smooth-movement' if @smoothMovement()
     
   drawingAreaStyle: ->
     # Allow to be updated externally.
@@ -196,5 +178,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelCanvas extends LOI.Assets.Sp
   letterGrade: ->
     return unless displayedAsset = @desktop.displayedAsset()
     return unless pixelArtEvaluation = displayedAsset.document()?.properties?.pixelArtEvaluation
+    return if pixelArtEvaluation.displayed is false
     return unless pixelArtEvaluation.score?
     PAG.getLetterGrade pixelArtEvaluation.score

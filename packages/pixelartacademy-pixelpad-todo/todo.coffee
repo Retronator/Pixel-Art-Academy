@@ -39,7 +39,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     super arguments...
     
     @bindingHeight = 14
-    @hideTop = 30
+    @hideTop = 40
     
     @waitBetweenAnimationsDuration = 0.1
     @animationStepDuration = 0.02
@@ -48,6 +48,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     super arguments...
     
     @mouseHovering = new ReactiveField false
+    @openButtonHovering = new ReactiveField false
     
     @selectedTask = new ReactiveField null
     @contentHeight = new ReactiveField 0
@@ -82,17 +83,33 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @completedTasks = new ReactiveField []
     
     @autorun (computation) =>
-      activeTasksToBeDisplayed = Tracker.nonreactive => @activeTasksToBeDisplayed()
-      displayedActiveTasks = Tracker.nonreactive => @displayedActiveTasks()
+      activeTasks = @activeTasks()
       
-      activeTasksToBeDisplayed.push task for task in @activeTasks() when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
-      
-      @activeTasksToBeDisplayed activeTasksToBeDisplayed
+      Tracker.nonreactive =>
+        activeTasksToBeDisplayed = @activeTasksToBeDisplayed()
+        displayedActiveTasks = @displayedActiveTasks()
+        completedTasks = @completedTasks()
+        
+        activeTasksToBeDisplayed.push task for task in activeTasks when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
+        
+        @activeTasksToBeDisplayed activeTasksToBeDisplayed
+        
+        # Remove completed tasks so that the total shown tasks is not above 9 if possible.
+        tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
+        removeCount = tasksCount - 9
+        return unless removeCount > 0
+        
+        removedTasks = completedTasks.splice 0, removeCount
+        @completedTasks completedTasks
+        
+        # Also remove them from the displayed list.
+        for task in removedTasks
+          @$("[data-task-id='#{task.id()}']").remove()
 
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.content')
+    @content$ = @$('.page .content')
     @_resizeObserver = new ResizeObserver =>
       @previousContentHeight @contentHeight()
       @contentHeight @content$.outerHeight()
@@ -265,7 +282,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   allowsShortcutsTable: -> false
   
   onBackButton: ->
-    # If we have an animation waiting to happen, we want the back button to return us to the main menu.
+    # If we have an animation waiting to happen, we want any presses on the back button
+    # to return us to the main menu so that the to-do tasks can be visually updated.
     return unless @_animationAvailable()
     
     parameter1 = AB.Router.getParameter 'parameter1'
@@ -274,8 +292,28 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     # Inform that we've handled the back button.
     true
     
+  isActive: ->
+    @isRendered() and @animating() or @displayState() is @constructor.DisplayState.Open
+    
+  waitUntilInactive: ->
+    new Promise (resolve, reject) =>
+      Tracker.autorun (computation) =>
+        return if @isActive()
+        computation.stop()
+        resolve()
+        
+  close: -> @manualDisplayState null
+  
+  notifications: -> @os.getSystem PAA.PixelPad.Systems.Notifications
+
   displayStateClass: ->
     _.kebabCase @displayState()
+    
+  openButtonHoveredClass: ->
+    'open-button-hovered' if @openButtonHovering()
+    
+  selectedTaskVisibleClass: ->
+    'selected-task-visible' if @selectedTask()
   
   notepadStyle: ->
     switch @displayState()
@@ -283,7 +321,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         top = "calc(-#{@contentHeight()}px - #{@bindingHeight}rem)"
         
       when @constructor.DisplayState.Closed
-        top = "-#{@bindingHeight - 1}rem"
+        top = "-#{@bindingHeight + if @openButtonHovering() then 3 else -1}rem"
         
       else
         top = "#{@hideTop}rem"
@@ -307,7 +345,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       'click': @onClick
       'mouseenter .pixelartacademy-pixelpad-systems-todo': @onMouseEnterToDo
       'mouseleave .pixelartacademy-pixelpad-systems-todo': @onMouseLeaveToDo
-      'click .binding': @onClickBinding
+      'mouseenter .open-button': @onMouseEnterOpenButton
+      'mouseleave .open-button': @onMouseLeaveOpenButton
+      'click .open-button': @onClickOpenButton
       'click .task': @onClickTask
       'click .back-button': @onClickBackButton
     
@@ -320,7 +360,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   onMouseLeaveToDo: (event) ->
     @mouseHovering false
 
-  onClickBinding: (event) ->
+  onMouseEnterOpenButton: (event) ->
+    @openButtonHovering true
+  
+  onMouseLeaveOpenButton: (event) ->
+    @openButtonHovering false
+  
+  onClickOpenButton: ->
     defaultDisplayState = @defaultDisplayState()
     
     if defaultDisplayState is @constructor.DisplayState.Hidden
@@ -348,4 +394,3 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
   _updateNotepadPan: ->
     @audio.notepadPan AEc.getPanForElement @$('.notepad')[0]
-

@@ -196,7 +196,7 @@ class LOI.Assets.Engine.PixelImage
       paletteColor = renderOptions.silhouette
 
       return unless shades = @_palette.ramps[paletteColor.ramp]?.shades
-      shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
+      shadeIndex = THREE.MathUtils.clamp paletteColor.shade, 0, shades.length - 1
       destinationColor = shades[shadeIndex]
 
     else
@@ -213,7 +213,7 @@ class LOI.Assets.Engine.PixelImage
 
       if paletteColor
         return unless shades = @_palette.ramps[paletteColor.ramp]?.shades
-        shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
+        shadeIndex = THREE.MathUtils.clamp paletteColor.shade, 0, shades.length - 1
         directColor = shades[shadeIndex]
 
       unless directColor
@@ -241,7 +241,7 @@ class LOI.Assets.Engine.PixelImage
         else
           _normal.set 0, 0, 1
 
-        normalLightProduct = THREE.Math.clamp _normal.dot(@_inverseLightDirection), 0, 1
+        normalLightProduct = THREE.MathUtils.clamp _normal.dot(@_inverseLightDirection), 0, 1
 
         lightDiffuseCoefficient = 0.6
         materialDiffuseCoefficient = 1
@@ -273,14 +273,14 @@ class LOI.Assets.Engine.PixelImage
           _averageNormal.normalize()
           _averageNormal.x *= -1 if @_flippedHorizontal
 
-          averageNormalLightProduct = THREE.Math.clamp _averageNormal.dot(@_inverseLightDirection), 0, 1
+          averageNormalLightProduct = THREE.MathUtils.clamp _averageNormal.dot(@_inverseLightDirection), 0, 1
 
           # Calculate the perfectly reflected ray.
           reflection = _averageNormal.clone().multiplyScalar(2 * averageNormalLightProduct).sub @_inverseLightDirection
 
           # We assume the inverse view direction to be (0, 0, 1).
           # Dot product is then the equivalent of the z coordinate.
-          reflectionViewProduct = THREE.Math.clamp reflection.z, 0, 1
+          reflectionViewProduct = THREE.MathUtils.clamp reflection.z, 0, 1
 
           lightFactor = Math.pow(reflectionViewProduct, shininess) * lightSpecularCoefficient * materialSpecularCoefficient
           _lightColor.set(0xffffff).multiplyScalar lightFactor

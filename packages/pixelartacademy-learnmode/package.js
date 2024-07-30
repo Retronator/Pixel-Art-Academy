@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-pixelpad-notifications');
 
   api.export('PixelArtAcademy');
 
@@ -41,6 +42,7 @@ Package.onUse(function(api) {
   api.addFile('content/progress/contentprogress');
   api.addFile('content/progress/goalprogress');
   api.addFile('content/progress/taskprogress');
+  api.addFile('content/progress/projectassetprogress');
   api.addFile('content/progress/entry');
 
   api.addFile('menu..');
@@ -59,6 +61,11 @@ Package.onUse(function(api) {
   api.addFile('locations/play..');
 
   api.addFile('pixelpad..');
+
+  api.addFile('notifications/randomnotificationsprovider')
+  api.addFile('notifications/conditionalnotificationsprovider')
+  api.addFile('notifications/tasknotificationsprovider')
+  api.addFile('notifications..')
 
   api.addFile('demo..');
   api.addComponent('demo/ending..');

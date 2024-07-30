@@ -60,19 +60,10 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
       constructor: ->
         super arguments...
 
-        @progress = new LM.Content.Progress.ManualProgress
+        @progress = new LM.Content.Progress.ProjectAssetProgress
           content: @
-          completed: =>
-            return unless projectId = PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
-            return unless project = PAA.Practice.Project.documents.findOne projectId
-
-            return unless asset = _.find project.assets, (asset) => asset.id is @constructor.asset.id()
-            return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
-
-            # We know the player has changed the bitmap if the history position is not zero.
-            return unless bitmap.historyPosition
-
-            true
+          project: PAA.Pico8.Cartridges.Snake.Project
+          asset: @constructor.asset
 
       status: -> LM.Content.Status.Unlocked
 

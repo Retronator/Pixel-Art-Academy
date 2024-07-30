@@ -39,6 +39,7 @@ class LM.Content.Course
 
   # Override to provide content classes that are included in this course.
   @contents: -> []
+  @availableContents: -> content for content in @contents() when LM.Content.Tags.Future not in content.tags()
 
   @initialize: ->
     # Store course class by ID.
@@ -90,6 +91,7 @@ class LM.Content.Course
   tags: -> @constructor.tags()
 
   contents: -> @_contents
+  availableContents: -> content for content in @_contents when LM.Content.Tags.Future not in content.tags()
 
   allContents: -> _.flatten (content.allContents() for content in @_contents)
 

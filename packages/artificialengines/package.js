@@ -6,14 +6,15 @@ Package.describe({
 Npm.depends({
   'path-to-regexp': '2.1.0',
   'three': '0.126.1',
-  'canvas': '2.6.1',
+  'canvas': '2.11.2',
   'pako': '1.0.8',
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0',
   'quill': '1.3.7',
   "velocity-animate": "1.5.2",
   'showdown': '1.9.1',
-  'lodash': '4.17.21'
+  'lodash': '4.17.21',
+  'poly-decomp': '0.3.0'
 });
 
 Package.onUse(function(api) {
@@ -46,6 +47,7 @@ Package.onUse(function(api) {
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
     'retronator:directcollection',
+    'meteorhacks:picker',
     'meteorhacks:inject-initial',
 
     // Custom API extensions
@@ -96,12 +98,14 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three..');
   api.addGlsl('everywhere/three..');
   api.addClientFile('everywhere/three/loaders');
+  api.addClientFile('everywhere/three/utils');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
   api.addFile('everywhere/three/quaternion');
   api.addFile('everywhere/three/matrices');
   api.addFile('everywhere/three/object3d');
   api.addFile('everywhere/three/line2');
+  api.addFile('everywhere/three/triangle2');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');
@@ -138,6 +142,9 @@ Package.onUse(function(api) {
   api.addFile('control/keyboard');
   api.addFile('control/keyboardstate');
   api.addFile('control/keys');
+  api.addFile('control/pointer');
+  api.addFile('control/pointerstate');
+  api.addFile('control/buttons');
   api.addFile('control/discretewheeleventlistener');
 
   // Artificial Mirage
@@ -333,6 +340,14 @@ Package.onUse(function(api) {
 
   api.addFileWithGlsl('pyramid/octahedronmap..');
 
+  api.addFile('pyramid/boundingrectangle');
+
+  api.addFile('pyramid/polygon');
+  api.addFile('pyramid/polygonboundary');
+  api.addFile('pyramid/polygonwithholes');
+
+  api.addFile('pyramid/beziercurve');
+
   // Artificial Reality
 
   api.addFile('reality/reality-constants');
@@ -343,6 +358,7 @@ Package.onUse(function(api) {
   api.addClientFile('reality/ammo..');
 
   api.addFile('reality/physicsobject');
+  api.addFile('reality/trigger');
 
   api.addClientFile('reality/ammo/vectors');
   api.addClientFile('reality/ammo/quaternion');

@@ -94,6 +94,9 @@ class LOI.Components.Menu.Items extends LOI.Component
   audioEnabled: ->
     LOI.settings.audio.enabled.value()
     
+  mainVolume: ->
+    LOI.settings.audio.mainVolume.value()
+    
   soundVolume: ->
     LOI.settings.audio.soundVolume.value()
 
@@ -102,6 +105,12 @@ class LOI.Components.Menu.Items extends LOI.Component
   
   musicVolume: ->
     LOI.settings.audio.musicVolume.value()
+
+  crtEmulation: ->
+    LOI.settings.graphics.crtEmulation.value()
+
+  slowCPUEmulation: ->
+    LOI.settings.graphics.slowCPUEmulation.value()
 
   smoothShading: ->
     LOI.settings.graphics.smoothShading.value()
@@ -149,10 +158,13 @@ class LOI.Components.Menu.Items extends LOI.Component
       # Display
       'click .display .graphics-scale .previous-button': @onClickDisplayGraphicsScalePreviousButton
       'click .display .graphics-scale .next-button': @onClickDisplayGraphicsScaleNextButton
+      'click .display .crt-emulation': @onClickDisplayCRTEmulation
+      'click .display .slow-cpu-emulation': @onClickDisplaySlowCPUEmulation
       'click .display .smooth-shading': @onClickDisplaySmoothShading
     
       # Audio
       'click .audio .enabled': @onClickAudioEnabled
+      'input .audio .main-volume': @onInputAudioMainVolume
       'input .audio .sound-volume': @onInputAudioSoundVolume
       'input .audio .ambient-volume': @onInputAudioAmbientVolume
       'input .audio .music-volume': @onInputAudioMusicVolume
@@ -270,6 +282,9 @@ class LOI.Components.Menu.Items extends LOI.Component
 
     LOI.settings.audio.enabled.value value
     
+  onInputAudioMainVolume: (event) ->
+    @_changeVolume 'main', event
+    
   onInputAudioSoundVolume: (event) ->
     @_changeVolume 'sound', event
     
@@ -301,6 +316,14 @@ class LOI.Components.Menu.Items extends LOI.Component
     LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
 
+  onClickDisplayCRTEmulation: (event) ->
+    crtEmulationValue = LOI.settings.graphics.crtEmulation.value
+    crtEmulationValue not crtEmulationValue()
+  
+  onClickDisplaySlowCPUEmulation: (event) ->
+    slowCPUEmulationValue = LOI.settings.graphics.slowCPUEmulation.value
+    slowCPUEmulationValue not slowCPUEmulationValue()
+    
   onClickDisplaySmoothShading: (event) ->
     smoothShadingValue = LOI.settings.graphics.smoothShading.value
     smoothShadingValue not smoothShadingValue()

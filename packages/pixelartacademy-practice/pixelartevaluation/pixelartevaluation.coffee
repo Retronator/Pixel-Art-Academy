@@ -2,37 +2,90 @@ PAA = PixelArtAcademy
 
 class PAA.Practice.PixelArtEvaluation
   # score: float between 0 and 1 for the final average score
-  # consistentLineWidth:
+  # pixelPerfectLines:
   #   score: float between 0 and 1 with this criterion evaluation
+  #   doubles:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     count: how many pixels lie on axis-aligned side-steps or wide lines
+  #   corners:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     count: how many pixels have two or more direct neighbors
+  #     ignoreStraightLineCorners: boolean, whether to filter out corners appearing at edges of straight line parts
   # evenDiagonals
   #   score: float between 0 and 1 with this criterion's weighted average
   #   segmentLengths:
   #     score: float between 0 and 1 with this criterion evaluation
-  #     linePartCounts: object with counts of line parts with a certain segment lengths type
+  #     counts: object with counts of line parts with a certain segment lengths type
   #       even, alternating, broken: how many line parts has this type
   #   endSegments:
   #     score: float between 0 and 1 with this criterion evaluation
-  #     linePartCounts: object with counts of line parts with a certain end segments type
+  #     counts: object with counts of line parts with a certain end segments type
   #       matching, shorter: how many line parts has this type
   # smoothCurves: objects with different criteria evaluations
   #   score: float between 0 and 1 with this criterion evaluation
+  #   abruptSegmentLengthChanges:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of how many segment length changes are abrupt for each severity
+  #       minor, major: how many segment length changes of this severity there are
+  #   straightParts:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of line parts with a certain positioning in the curve
+  #       middle, end: how many line parts of this type there are
+  #   inflectionPoints:
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of how many inflection points appear on curves
+  #       isolated, sparse, dense: how many inflection points of this type there are
+  # consistentLineWidth:
+  #   score: float between 0 and 1 with this criterion evaluation
+  #   individualConsistency: float between 0 and 1 telling how much lines have the same width within themselves
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of how many lines have this width consistency
+  #       consistent, varied: how many lines of this severity there are
+  #   globalConsistency: float between 0 and 1 telling how much line types are consistent in the image
+  #     score: float between 0 and 1 with this criterion evaluation
+  #     counts: object with counts of lines with a certain width type
+  #       thin, thick, wide, varied: how many lines have this type of line width
 
   @Criteria =
-    ConsistentLineWidth: 'ConsistentLineWidth'
+    PixelPerfectLines: 'PixelPerfectLines'
     EvenDiagonals: 'EvenDiagonals'
     SmoothCurves: 'SmoothCurves'
+    ConsistentLineWidth: 'ConsistentLineWidth'
 
   @Subcriteria =
+    PixelPerfectLines:
+      Doubles: 'Doubles'
+      Corners: 'Corners'
     EvenDiagonals:
       SegmentLengths: 'SegmentLengths'
       EndSegments: 'EndSegments'
+    SmoothCurves:
+      AbruptSegmentLengthChanges: 'AbruptSegmentLengthChanges'
+      StraightParts: 'StraightParts'
+      InflectionPoints: 'InflectionPoints'
+    ConsistentLineWidth:
+      IndividualConsistency: 'IndividualConsistency'
+      GlobalConsistency: 'GlobalConsistency'
   
   @SubcriteriaWeights =
+    PixelPerfectLines:
+      Doubles: 0.75
+      Corners: 0.25
     EvenDiagonals:
       SegmentLengths: 0.75
       EndSegments: 0.25
+    SmoothCurves:
+      AbruptSegmentLengthChanges: 0.34
+      StraightParts: 0.33
+      InflectionPoints: 0.33
+      
+  @_lastId = 0
+
+  @nextId: ->
+    @_lastId++
+    @_lastId
   
-  @getLetterGrade = (score, plusMinus = false) ->
+  @getLetterGrade: (score, plusMinus = false) ->
     scoreOutOf10 = score * 10
     
     letterBracket = Math.min 9, Math.floor scoreOutOf10
@@ -48,7 +101,7 @@ class PAA.Practice.PixelArtEvaluation
     
     letterGrade
     
-  constructor: (@bitmap) ->
+  constructor: (@bitmap, @options = {}) ->
     @layers = []
     
     @_evaluationDependency = new Tracker.Dependency
@@ -58,10 +111,18 @@ class PAA.Practice.PixelArtEvaluation
       @_updateArea layerIndex for layerIndex in [0...@bitmap.layers.length]
     
     # Subscribe to changes.
-    LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.addHandler @, @onOperationsExecuted
+    if @options.partialUpdates
+      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, @onOperationExecuted
+      
+    else
+      LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.addHandler @, @onOperationsExecuted
 
   destroy: ->
-    LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.removeHandler @, @onOperationsExecuted
+    if @options.partialUpdates
+      LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandler @, @onOperationsExecuted
+      
+    else
+      LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.removeHandler @, @onOperationsExecuted
     
   depend: ->
     @_evaluationDependency.depend()
@@ -111,19 +172,70 @@ class PAA.Practice.PixelArtEvaluation
     finalScore = 0
     criteriaCount = 0
     
+    if pixelArtEvaluationProperty.pixelPerfectLines
+      # Compute evaluation if needed.
+      unless @_evaluation.pixelPerfectLines
+        @_evaluation.pixelPerfectLines =
+          doubles:
+            score: 0
+            count: 0
+          corners:
+            score: 0
+            count: 0
+            
+        # Compute average score, weighted by line length.
+        totalWeight = 0
+        
+        doubles = []
+
+        for layer in @layers
+          for line in layer.lines
+            lineEvaluation = line.evaluate pixelArtEvaluationProperty
+            
+            # We collect doubles separately so we can count them all at once to avoid them accounted multiple times.
+            for pixel in lineEvaluation.doubles.pixels
+              doubles.push pixel unless pixel in doubles
+            
+            # We use the square root of the length so that long lines can't hugely overtake the short ones.
+            weight = Math.sqrt line.points.length
+            totalWeight += weight
+            
+            for subcriterion of @constructor.Subcriteria.PixelPerfectLines
+              subcriterionProperty = _.lowerFirst subcriterion
+              @_evaluation.pixelPerfectLines[subcriterionProperty].score += lineEvaluation[subcriterionProperty].score * weight
+              @_evaluation.pixelPerfectLines[subcriterionProperty].count += lineEvaluation[subcriterionProperty].count
+            
+        @_evaluation.pixelPerfectLines.doubles.count = doubles.length
+        
+        for subcriterion of @constructor.Subcriteria.PixelPerfectLines
+          subcriterionProperty = _.lowerFirst subcriterion
+          
+          if totalWeight
+            @_evaluation.pixelPerfectLines[subcriterionProperty].score /= totalWeight
+            
+          else
+            # There were no lines to be evaluated, so the category doesn't have a meaning.
+            @_evaluation.pixelPerfectLines[subcriterionProperty].score = null
+    
+      evaluation.pixelPerfectLines = @_calculateWeightedEvaluation @constructor.Subcriteria.PixelPerfectLines, @constructor.SubcriteriaWeights.PixelPerfectLines, pixelArtEvaluationProperty.pixelPerfectLines, @_evaluation.pixelPerfectLines
+      
+      if evaluation.pixelPerfectLines.score
+        finalScore += evaluation.pixelPerfectLines.score
+        criteriaCount++
+        
     if pixelArtEvaluationProperty.evenDiagonals
       # Compute evaluation if needed.
       unless @_evaluation.evenDiagonals
         @_evaluation.evenDiagonals =
           segmentLengths:
             score: 0
-            linePartCounts:
+            counts:
               even: 0
               alternating: 0
               broken: 0
           endSegments:
             score: 0
-            linePartCounts:
+            counts:
               matching: 0
               shorter: 0
         
@@ -132,16 +244,18 @@ class PAA.Practice.PixelArtEvaluation
         for layer in @layers
           for line in layer.lines
             for linePart in line.parts when linePart instanceof @constructor.Line.Part.StraightLine
+              # Count only diagonals.
               linePartEvaluation = linePart.evaluate()
+              continue if linePartEvaluation.type is @constructor.Line.Part.StraightLine.Type.AxisAligned
+              
               weight = Math.sqrt linePart.points.length
+              totalWeight += weight
               
               for subcriterion of @constructor.Subcriteria.EvenDiagonals
                 subcriterionProperty = _.lowerFirst subcriterion
                 @_evaluation.evenDiagonals[subcriterionProperty].score += linePartEvaluation[subcriterionProperty].score * weight
-                @_evaluation.evenDiagonals[subcriterionProperty].linePartCounts[_.lowerFirst linePartEvaluation[subcriterionProperty].type]++
+                @_evaluation.evenDiagonals[subcriterionProperty].counts[_.lowerFirst linePartEvaluation[subcriterionProperty].type]++
               
-              totalWeight += weight
-          
         for subcriterion of @constructor.Subcriteria.EvenDiagonals
           subcriterionProperty = _.lowerFirst subcriterion
           
@@ -152,38 +266,184 @@ class PAA.Practice.PixelArtEvaluation
             # There were no lines to be evaluated, so the category doesn't have a meaning.
             @_evaluation.evenDiagonals[subcriterionProperty].score = null
       
-      evaluation.evenDiagonals = score: 0
+      evaluation.evenDiagonals = @_calculateWeightedEvaluation @constructor.Subcriteria.EvenDiagonals, @constructor.SubcriteriaWeights.EvenDiagonals, pixelArtEvaluationProperty.evenDiagonals, @_evaluation.evenDiagonals
       
-      # Choose only enabled subcriteria.
-      totalWeight = 0
-      
-      subcriteriaInfo = for subcriterion of @constructor.Subcriteria.EvenDiagonals
-        subcriterionProperty = _.lowerFirst subcriterion
-        continue unless pixelArtEvaluationProperty.evenDiagonals[subcriterionProperty]
-        
-        weight = if @_evaluation.evenDiagonals[subcriterionProperty].score? then @constructor.SubcriteriaWeights.EvenDiagonals[subcriterion] else 0
-        totalWeight += weight
-        
-        property: subcriterionProperty
-        score: @_evaluation.evenDiagonals[subcriterionProperty].score or 0
-        weight: weight
-        
-      for subcriterionInfo in subcriteriaInfo
-        evaluation.evenDiagonals[subcriterionInfo.property] = @_evaluation.evenDiagonals[subcriterionInfo.property]
-        evaluation.evenDiagonals.score += subcriterionInfo.score * subcriterionInfo.weight / totalWeight if totalWeight
-      
-      if totalWeight
+      if evaluation.evenDiagonals.score
         finalScore += evaluation.evenDiagonals.score
         criteriaCount++
-        
-      else
-        evaluation.evenDiagonals.score = null
       
+    if pixelArtEvaluationProperty.smoothCurves
+      # Compute evaluation if needed.
+      unless @_evaluation.smoothCurves
+        @_evaluation.smoothCurves =
+          abruptSegmentLengthChanges:
+            score: 0
+            counts:
+              minor: 0
+              major: 0
+          straightParts:
+            score: 0
+            counts:
+              middle: 0
+              end: 0
+          inflectionPoints:
+            score: 0
+            counts:
+              isolated: 0
+              sparse: 0
+              dense: 0
+            
+        # Compute average score, weighted by line length.
+        totalWeight = 0
+        
+        for layer in @layers
+          for line in layer.lines
+            lineEvaluation = line.evaluate()
+            continue unless lineEvaluation.curveSmoothness
+            
+            # We use the square root of the length so that long lines can't hugely overtake the short ones.
+            weight = Math.sqrt line.points.length
+            totalWeight += weight
+            
+            for subcriterion of @constructor.Subcriteria.SmoothCurves
+              subcriterionProperty = _.lowerFirst subcriterion
+              curveSmoothness = lineEvaluation.curveSmoothness[subcriterionProperty]
+              
+              @_evaluation.smoothCurves[subcriterionProperty].score += curveSmoothness.score * weight
+              
+              for category, linePartCount of curveSmoothness.counts
+                @_evaluation.smoothCurves[subcriterionProperty].counts[category] += linePartCount
+        
+        for subcriterion of @constructor.Subcriteria.SmoothCurves
+          subcriterionProperty = _.lowerFirst subcriterion
+          
+          if totalWeight
+            @_evaluation.smoothCurves[subcriterionProperty].score /= totalWeight
+            
+          else
+            # There were no curves to be evaluated, so the category doesn't have a meaning.
+            @_evaluation.smoothCurves[subcriterionProperty].score = null
+    
+      evaluation.smoothCurves = @_calculateWeightedEvaluation @constructor.Subcriteria.SmoothCurves, @constructor.SubcriteriaWeights.SmoothCurves, pixelArtEvaluationProperty.smoothCurves, @_evaluation.smoothCurves
+      
+      if evaluation.smoothCurves.score?
+        finalScore += evaluation.smoothCurves.score
+        criteriaCount++
+        
+    if pixelArtEvaluationProperty.consistentLineWidth
+      # Compute evaluation if needed.
+      unless @_evaluation.consistentLineWidth
+        @_evaluation.consistentLineWidth =
+          individualConsistency:
+            score: 0
+            counts:
+              consistent: 0
+              varying: 0
+          globalConsistency:
+            counts:
+              thin: 0
+              thick: 0
+              wide: 0
+              varying: 0
+        
+        totalWeight = 0
+        outlinesCount = 0
+        
+        for layer in @layers
+          for line in layer.lines
+            lineEvaluation = line.evaluate()
+            widthType = lineEvaluation.width.type
+            
+            weight = Math.sqrt line.points.length
+            totalWeight += weight
+            
+            @_evaluation.consistentLineWidth.individualConsistency.score += lineEvaluation.width.score * weight
+            @_evaluation.consistentLineWidth.individualConsistency.counts[if widthType is @constructor.Line.WidthType.Varying then 'varying' else 'consistent']++
+
+            if widthType is @constructor.Line.WidthType.Outline
+              outlinesCount++
+              
+            else
+              @_evaluation.consistentLineWidth.globalConsistency.counts[_.lowerFirst lineEvaluation.width.type]++
+          
+        if totalWeight
+          @_evaluation.consistentLineWidth.individualConsistency.score /= totalWeight
+          
+          # Calculate global consistency score by using the share the most common type has.
+          largestTypeCount = _.max _.values @_evaluation.consistentLineWidth.globalConsistency.counts
+          
+          if largestTypeCount
+            @_evaluation.consistentLineWidth.globalConsistency.score = largestTypeCount / (layer.lines.length - outlinesCount)
+            
+          else
+            @_evaluation.consistentLineWidth.globalConsistency.score = 1
+          
+        else
+          # There were no lines to be evaluated, so the category doesn't have a meaning.
+          @_evaluation.consistentLineWidth.individualConsistency.score = null
+          @_evaluation.consistentLineWidth.globalConsistency.score = null
+      
+      evaluation.consistentLineWidth = @_calculateMaximumEvaluation @constructor.Subcriteria.ConsistentLineWidth, pixelArtEvaluationProperty.consistentLineWidth, @_evaluation.consistentLineWidth
+      
+      if evaluation.consistentLineWidth.score
+        finalScore += evaluation.consistentLineWidth.score
+        criteriaCount++
+        
     finalScore /= criteriaCount if criteriaCount
     
     evaluation.score = if criteriaCount then finalScore else null
     
     evaluation
+    
+  _calculateWeightedEvaluation: (subcriteria, subcriteriaWeights, enabledProperties, evaluation) ->
+    weightedEvaluation = score: 0
+    
+    # Choose only enabled subcriteria.
+    totalWeight = 0
+    
+    subcriteriaInfo = for subcriterion of subcriteria
+      subcriterionProperty = _.lowerFirst subcriterion
+      continue unless enabledProperties[subcriterionProperty]
+      
+      weight = if evaluation[subcriterionProperty].score? then subcriteriaWeights[subcriterion] else 0
+      totalWeight += weight
+      
+      property: subcriterionProperty
+      score: evaluation[subcriterionProperty].score or 0
+      weight: weight
+    
+    for subcriterionInfo in subcriteriaInfo
+      weightedEvaluation[subcriterionInfo.property] = evaluation[subcriterionInfo.property]
+      weightedEvaluation.score += subcriterionInfo.score * subcriterionInfo.weight / totalWeight if totalWeight
+    
+    weightedEvaluation.score = null unless totalWeight
+    
+    weightedEvaluation
+  
+  _calculateMaximumEvaluation: (subcriteria, enabledProperties, evaluation) ->
+    maximumEvaluation = score: 0
+    scoreSet = false
+    
+    # Choose only enabled subcriteria.
+    for subcriterion of subcriteria
+      subcriterionProperty = _.lowerFirst subcriterion
+      continue unless enabledProperties[subcriterionProperty]
+      
+      maximumEvaluation[subcriterionProperty] = evaluation[subcriterionProperty]
+      
+      if evaluation[subcriterionProperty].score
+        maximumEvaluation.score = Math.max maximumEvaluation.score, evaluation[subcriterionProperty].score
+        scoreSet = true
+    
+    maximumEvaluation.score = null unless scoreSet
+    
+    maximumEvaluation
+    
+  onOperationExecuted: (document, operation, changedFields) ->
+    return unless document._id is @bitmap._id
+    return unless operation instanceof LOI.Assets.Bitmap.Operations.ChangePixels
+
+    @_updateArea operation.layerAddress[0], operation.bounds
     
   onOperationsExecuted: (document, operations, changedFields) ->
     return unless document._id is @bitmap._id

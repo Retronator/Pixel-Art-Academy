@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -6,11 +7,13 @@ PAA = PixelArtAcademy
 PAA.Practice.Project.forId.publish (projectId) ->
   check projectId, Match.DocumentId
 
-  PAA.Practice.Project.documents.find projectId
+  PAA.Practice.Project.getPublishingDocuments().find projectId
 
-# Get projects for a certain character.
-PAA.Practice.Project.forCharacterId.publish (characterId) ->
-  check characterId, Match.DocumentId
-
-  PAA.Practice.Project.documents.find
-    'characters._id': characterId
+# Get all the assets for a project.
+PAA.Practice.Project.assetsForProjectId.publish (projectId) ->
+  check projectId, Match.DocumentId
+  
+  project = PAA.Practice.Project.documents.findOne projectId
+  bitmapIds = (asset.bitmapId for asset in project.assets when asset.bitmapId)
+  
+  LOI.Assets.Bitmap.getPublishingDocuments().find _id: $in: bitmapIds

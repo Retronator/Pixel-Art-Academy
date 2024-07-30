@@ -19,7 +19,7 @@ class PAA.StillLifeStand.SceneManager
     @directionalLight.shadow.mapSize.height = 4096
     @scene.add @directionalLight
 
-    @ground = new THREE.Mesh new THREE.PlaneBufferGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
+    @ground = new THREE.Mesh new THREE.PlaneGeometry(1000, 1000), new THREE.MeshPhysicalMaterial
       color: 0xaaaaaa
       roughness: 1
       metalness: 0
@@ -82,10 +82,10 @@ class PAA.StillLifeStand.SceneManager
     # Create debug scene.
     @debugScene = new THREE.Scene
 
-    @cursor = new THREE.Mesh new THREE.SphereBufferGeometry(0.05), new THREE.MeshBasicMaterial color: 0xdddd00
+    @cursor = new THREE.Mesh new THREE.SphereGeometry(0.05), new THREE.MeshBasicMaterial color: 0xdddd00
     @debugScene.add @cursor
 
-    @skydomeReadColorQuad = new THREE.Mesh new THREE.PlaneBufferGeometry(), new THREE.MeshBasicMaterial
+    @skydomeReadColorQuad = new THREE.Mesh new THREE.PlaneGeometry(), new THREE.MeshBasicMaterial
       map: @skydome.readColorsRenderTarget.texture
 
     @skydomeReadColorQuad.position.y = 1
@@ -93,7 +93,7 @@ class PAA.StillLifeStand.SceneManager
     @debugScene.add @skydomeReadColorQuad
 
     # Create sun helper.
-    @sunHelper = new THREE.Mesh new THREE.SphereBufferGeometry(150)
+    @sunHelper = new THREE.Mesh new THREE.SphereGeometry(150)
     @sunHelper.visible = false
     @scene.add @sunHelper
 
@@ -135,7 +135,7 @@ class PAA.StillLifeStand.SceneManager
       # Set physics state.
       physicsObject = item.avatar.getPhysicsObject()
       physicsObject.setPosition itemData.position if itemData.position
-      physicsObject.setRotation itemData.rotationQuaternion if itemData.rotationQuaternion
+      physicsObject.setRotationQuaternion itemData.rotationQuaternion if itemData.rotationQuaternion
 
       # Add render object to the scene.
       @scene.add renderObject

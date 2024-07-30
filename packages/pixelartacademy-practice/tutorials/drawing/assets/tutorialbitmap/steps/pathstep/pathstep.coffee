@@ -15,35 +15,52 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
   constructor: ->
     super arguments...
     
+    @options.tolerance ?= 0
+    
     @paths = for svgPath in @options.svgPaths
-      new @constructor.Path @tutorialBitmap, svgPath, @stepArea.bounds
+      new @constructor.Path @tutorialBitmap, @, svgPath
+      
+    @_pixelsMap = new Uint8Array @stepArea.bounds.width * @stepArea.bounds.height
+    
+    width = @stepArea.bounds.width
+    height = @stepArea.bounds.height
+    
+    for x in [0...width]
+      for y in [0...height]
+        for path in @paths when path.hasPixel x, y
+          @_pixelsMap[x + y * width] = 1
   
   completed: ->
     return unless super arguments...
 
-    # Check that all paths have their pixels covered.
-    for path in @paths
-      return false unless path.completed()
+    # Check that all paths have their pixels covered. We check all paths instead of
+    # quitting early since paths also remember their completed state for drawing hints.
+    completed = true
     
-    true
-  
-  hasPixel: (x, y) ->
     for path in @paths
-      return true if path.hasPixel x, y
+      completed = false unless path.completed()
+    
+    completed
   
-    false
+  hasPixel: (absoluteX, absoluteY) ->
+    relativeX = absoluteX - @stepArea.bounds.x
+    relativeY = absoluteY - @stepArea.bounds.y
+    
+    @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] is 1
   
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
-    
+
     pixels = []
+    width = @stepArea.bounds.width
+    height = @stepArea.bounds.height
     
-    for x in [@stepArea.bounds.x...@stepArea.bounds.x + @stepArea.bounds.width]
-      for y in [@stepArea.bounds.y...@stepArea.bounds.y + @stepArea.bounds.height]
-        for path in @paths when path.hasPixel x, y
+    for x in [0...width]
+      for y in [0...height]
+        if @_pixelsMap[x + y * width]
           pixels.push
-            x: x
-            y: y
+            x: x + @stepArea.bounds.x
+            y: y + @stepArea.bounds.y
             paletteColor:
               ramp: 0
               shade: 0
@@ -53,6 +70,10 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
   
   drawUnderlyingHints: (context, renderOptions) ->
+    # Draw path to step area.
+    context.save()
+    context.translate @stepArea.bounds.x, @stepArea.bounds.y
+    
     if @constructor.debug
       # Draw the anti-aliased paths for debug purposes.
       context.globalAlpha = 0.5
@@ -68,14 +89,14 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     context.lineWidth = pixelSize
     
     pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
-    context.strokeStyle = "lch(50% 0 0 / #{pathOpacity})"
+    context.strokeStyle = "hsl(0 0% 50% / #{pathOpacity})"
+    context.fillStyle = "hsl(0 0% 50%)"
     
-    # Draw path to step area.
-    context.save()
     halfPixelSize = pixelSize / 2
-    context.translate @stepArea.bounds.x + halfPixelSize, @stepArea.bounds.y + halfPixelSize
     
-    context.stroke path.path for path in @paths
+    # Draw all the paths' hints.
+    context.translate halfPixelSize, halfPixelSize
+    path.drawUnderlyingHints context, renderOptions for path in @paths
 
     context.restore()
     
@@ -83,9 +104,14 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     @_preparePixelHintSize renderOptions
     
     # Erase dots at empty pixels.
+    bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
+    
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
-        continue if @stepArea.hasGoalPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
+        absoluteX = x + @stepArea.bounds.x
+        absoluteY = y + @stepArea.bounds.y
+        continue if @stepArea.hasGoalPixel absoluteX, absoluteY
+        continue unless bitmapLayer.getPixel absoluteX, absoluteY
         
         @_drawPixelHint context, x, y, null
     

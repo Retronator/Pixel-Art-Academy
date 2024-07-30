@@ -113,7 +113,11 @@ class LOI.Components.LoadGame extends LOI.Component
     @loadingTextVisible true
     
     loadPromise = LOI.adventure.loadGame(profile._id).catch (error) =>
-      LOI.adventure.showDialogMessage "Unfortunately the disk seems to be corrupt. #{error.reason}"
+      LOI.adventure.showDialogMessage """
+        Unfortunately the disk seems to be corrupt. It's almost certainly my fault, I'll need to fix this!
+        Backup of your save should have been created so it should be possible to recover some of your progress.
+        Let me know and I'll help. This info could also be useful: #{error.reason}
+      """
       
       @loadingVisible false
       @loadingTextVisible false
@@ -121,7 +125,7 @@ class LOI.Components.LoadGame extends LOI.Component
       @audio.load false
     
     # When the audio is on, make loading last a while to hear the sweet floppy drive sounds.
-    await _.waitForSeconds 2.5 if LOI.adventure.interface.audioManager.enabled()
+    await _.waitForSeconds 2.5 if LOI.adventure.audioManager.enabled()
     
     await loadPromise
     @loadingProfileId null

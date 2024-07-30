@@ -25,8 +25,10 @@ class LM.Menu.Progress extends AM.Component
   
   for url in [@inGameUrl(), @inPreviewUrl()]
     LOI.Adventure.registerDirectRoute "/#{url}", =>
-      progress = LOI.adventure.menu.items.progress
-      progress.show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is progress
+      # Route to progress unless progress is already shown. Note that a progress instance is created both from the main
+      # adventure menu items as well as from the Learn Mode main menu, which creates a variant of the menu for the
+      # landing page.
+      LOI.adventure.menu.items.progress.show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog instanceof LM.Menu.Progress
     
   template: -> @constructor.id()
   

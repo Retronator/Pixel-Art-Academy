@@ -24,17 +24,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
   
   Asset = @
   
-  class @InstructionStep extends PAA.Tutorials.Drawing.Instructions.Instruction
-    @stepNumber: -> throw new AE.NotImplementedException "Instruction step must provide the step number."
+  class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      
-      # Show with the correct step.
-      asset.stepAreas()[0].activeStepIndex() is @stepNumber() - 1
-    
-    @resetDelayOnOperationExecuted: -> true
     
     markup: ->
       # Write diagonal ratios next to lines.
@@ -54,24 +45,24 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
         
       markup
   
-  class @InstructionStepWithSegmentLines extends @InstructionStep
+  class @StepInstructionWithSegmentLines extends @StepInstruction
     markup: ->
       markup = super arguments...
       
       return markup unless asset = @getActiveAsset()
       return markup unless pixelArtEvaluation = asset.pixelArtEvaluation()
       
-      # Add intended lines for straight lines.
+      # Add perceived lines for straight lines.
       for line in pixelArtEvaluation.layers[0].lines
         continue unless line.parts.length is 1
         linePart = line.parts[0]
         continue unless linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine
         
-        markup.push Markup.PixelArt.intendedLine linePart
+        markup.push Markup.PixelArt.perceivedStraightLine linePart
 
       markup
       
-  class @Horizontal extends @InstructionStep
+  class @Horizontal extends @StepInstruction
     @id: -> "#{Asset.id()}.Aligned"
     @stepNumber: -> 1
     
@@ -81,7 +72,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     
     @initialize()
   
-  class @OneToOne extends @InstructionStep
+  class @OneToOne extends @StepInstruction
     @id: -> "#{Asset.id()}.OneToOne"
     @stepNumber: -> 2
     
@@ -91,7 +82,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     
     @initialize()
   
-  class @OneToTwo extends @InstructionStep
+  class @OneToTwo extends @StepInstruction
     @id: -> "#{Asset.id()}.OneToTwo"
     @stepNumber: -> 3
     
@@ -101,13 +92,21 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals.EvenDiagonals
     
     @initialize()
   
-  class @Even extends @InstructionStepWithSegmentLines
+  class @Even extends @StepInstructionWithSegmentLines
     @id: -> "#{Asset.id()}.Even"
     @stepNumber: -> 4
     
     @message: -> """
       Whenever we use the same number of pixels in each segment, we create even or 'perfect' diagonals.
-      These angles are considered perfect in pixel art because the corners of the segments exactly follow the intended line.
+      These angles are considered perfect in pixel art because the corners of the segments exactly follow the perceived lines.
     """
-    
+
+    # Note: We want this instruction to appear also when the asset
+    # is completed, which is why we're overriding this method.
+    @activeConditions: ->
+      # Show with the correct step.
+      return unless @activeStepNumber() in @stepNumbers()
+      
+      true
+      
     @initialize()

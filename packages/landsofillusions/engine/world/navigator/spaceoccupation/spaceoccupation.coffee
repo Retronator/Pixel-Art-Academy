@@ -47,11 +47,11 @@ class LOI.Engine.World.Navigator.SpaceOccupation
 
       for placeholder in @placeholders
         debugObject = _.find @debugObjects, (debugObject) => debugObject.placeholder is placeholder
-          
+        
         if debugObject
           # Debug object is still valid, just update its position.
           debugObject.position.copy placeholder.getPosition()
-          debugObject.quaternion.copy placeholder.getRotation()
+          debugObject.quaternion.copy placeholder.getRotationQuaternion()
 
         else
           # Debug object needs to be created.
@@ -83,7 +83,7 @@ class LOI.Engine.World.Navigator.SpaceOccupation
         placeholder.setMass 0
         physicsObject = physicalItem.getPhysicsObject()
         placeholder.setPosition physicsObject.targetPosition or physicsObject.getPosition()
-        placeholder.setRotation physicsObject.getRotation() unless physicsObject.hasFixedRotation
+        placeholder.setRotationQuaternion physicsObject.getRotationQuaternion() unless physicsObject.hasFixedRotation
 
     unless itemFound
       # Create a temporary placeholder for the item.

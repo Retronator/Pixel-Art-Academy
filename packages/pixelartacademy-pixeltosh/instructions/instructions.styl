@@ -1,0 +1,54 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-instructions
+  position absolute
+  right 0
+  bottom 0
+  adventure()
+  color atariGray(0)
+
+  .retro
+    position absolute
+    right -20rem
+    bottom -19rem
+    width 30rem
+    height 43rem
+    background-image image('/pixelartacademy/pixeltosh/instructions/retro.png')
+    pointer-events none
+
+    &::after
+      content ''
+      position absolute
+      left 6rem
+      top 10rem
+      width 9rem
+      height 5rem
+      background-image image('/pixelartacademy/pixeltosh/instructions/retro-peaceful.png')
+
+    &.smirk-up::after
+    &.smirk-down::after
+      top 9rem
+      width 8rem
+      height 6rem
+
+    &.smirk-up::after
+      background-image image('/pixelartacademy/pixeltosh/instructions/retro-smirk-up.png')
+
+    &.smirk-down::after
+      background-image image('/pixelartacademy/pixeltosh/instructions/retro-smirk-down.png')
+
+    &.ohno::after
+      top 9rem
+      width 7rem
+      height 6rem
+      background-image image('/pixelartacademy/pixeltosh/instructions/retro-ohno.png')
+
+  .pixelartacademy-pixelpad-components-speechballoon
+    position absolute
+    right 7rem
+    bottom 28rem
+    pointer-events none
+
+    .content-measuring
+      min-width auto !important
+      width 120rem

@@ -1,6 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+# Note: We don't have the PAE shorthand since helpers are included before pixel art evaluation.
+
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
@@ -23,11 +25,39 @@ _endPartCenter = new THREE.Vector2
 _textPosition = new THREE.Vector2
 
 class Markup.PixelArt
+  @OffsetDirections:
+    Up: 'Up'
+    UpLeft: 'UpLeft'
+    Left: 'Left'
+  
+  @pixelPerfectLineErrors: (line, doubles = true, corners = true, pixelArtEvaluationProperty = null) ->
+    markup = []
+    
+    pixelPerfectLineErrors = []
+    pixelPerfectLineErrors.push line.getDoubles(pixelArtEvaluationProperty)... if doubles
+    pixelPerfectLineErrors.push line.getCorners(pixelArtEvaluationProperty)... if corners
+    
+    pixelPerfectErrorBase = style: Markup.errorStyle()
+    
+    for error in pixelPerfectLineErrors
+      markup.push
+        pixel: _.extend {}, pixelPerfectErrorBase, _.pick error, 'x', 'y'
+        
+    markup
+  
   @intendedLineBase: ->
+    palette = LOI.palette()
+    lineColor = palette.color Atari2600.hues.gray, 4
+    
+    style: "##{lineColor.getHexString()}"
+    width: 0
+  
+  @perceivedLineBase: ->
     palette = LOI.palette()
     lineColor = palette.color Atari2600.hues.azure, 5
     
     style: "##{lineColor.getHexString()}"
+    cap: 'round'
   
   @diagonalRatioText: (straightLine) ->
     evaluation = straightLine.evaluate()
@@ -45,16 +75,80 @@ class Markup.PixelArt
     element = @diagonalRatioText straightLine
     element.text.style = @evaluatedSegmentLengthsStyle straightLine
     element
+    
+  # This line connects corners of line segments to perfectly match the actual pixels.
+  @segmentedPerceivedLine: (line) ->
+    # Add points at the extents of each edge segments.
+    points = [
+      line.getPoint line.edgeSegments[0].startPointIndex
+    ]
+    
+    for edgeSegment in line.edgeSegments
+      points.push line.getPoint edgeSegment.endPointIndex
+      
+    # Create modifiable points (offset to the center of the pixels).
+    points = for point in points
+      x: point.x + 0.5
+      y: point.y + 0.5
+      
+    # Move points of diagonal segments to the segment corners.
+    for edgeSegment, index in line.edgeSegments when not edgeSegment.edge.isAxisAligned
+      startToEndOffsetX = 0.5 * Math.sign points[index + 1].x - points[index].x
+      startToEndOffsetY = 0.5 * Math.sign points[index + 1].y - points[index].y
+      
+      if index > 0
+        points[index].x += startToEndOffsetX
+        points[index].y += startToEndOffsetY
+
+      if index < line.edgeSegments.length - 1
+        points[index + 1].x -= startToEndOffsetX
+        points[index + 1].y -= startToEndOffsetY
+    
+    line: _.extend @perceivedLineBase(), {points}
+    
+  # This line is a smooth interpretation of the perceived line based on line parts.
+  @perceivedLine: (line) ->
+    @perceivedLinePart linePart for linePart in line.parts
+    
+  @perceivedLinePart: (linePart) ->
+    switch
+      when linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine then @perceivedStraightLine linePart
+      when linePart instanceof PAA.Practice.PixelArtEvaluation.Line.Part.Curve then @perceivedCurve linePart
+      else null
   
-  @intendedLine: (straightLine) ->
-    line: _.extend @intendedLineBase(),
+  @perceivedStraightLine: (straightLine) ->
+    line: _.extend @perceivedLineBase(),
       points: [
         x: straightLine.displayLine2.start.x + 0.5, y: straightLine.displayLine2.start.y + 0.5
       ,
         x: straightLine.displayLine2.end.x + 0.5, y: straightLine.displayLine2.end.y + 0.5
       ]
+      
+  @perceivedCurve: (curve) ->
+    startPosition = curve.displayPoints[0].position
+    points = [x: startPosition.x + 0.5, y: startPosition.y + 0.5]
+
+    getCurvePoint = (index) => if curve.isClosed then curve.displayPoints[_.modulo index, curve.displayPoints.length - 1] else curve.displayPoints[index]
+    endIndex = if curve.isClosed then curve.displayPoints.length - 1 else curve.displayPoints.length - 2
+    
+    for pointIndex in [0..endIndex]
+      start = getCurvePoint pointIndex
+      end = getCurvePoint pointIndex + 1
+      
+      points.push
+        x: end.position.x + 0.5
+        y: end.position.y + 0.5
+        bezierControlPoints: [
+          x: start.controlPoints.after.x + 0.5
+          y: start.controlPoints.after.y + 0.5
+        ,
+          x: end.controlPoints.before.x + 0.5
+          y: end.controlPoints.before.y + 0.5
+        ]
+    
+    line: _.extend @perceivedLineBase(), {points}
   
-  @evaluatedIntendedLine: (straightLine) ->
+  @evaluatedPerceivedStraightLine: (straightLine) ->
     @_prepareLineParts straightLine
     
     evaluation = straightLine.evaluate()
@@ -146,7 +240,6 @@ class Markup.PixelArt
     markup
   
   @evaluatedSegmentLengthsStyle: (straightLine) ->
-    # Note: We don't have the PAG shorthand since helpers are included before pixel art evaluation.
     SegmentLengths = PAA.Practice.PixelArtEvaluation.Line.Part.StraightLine.SegmentLengths
     evaluation = straightLine.evaluate()
     
@@ -155,50 +248,42 @@ class Markup.PixelArt
       when SegmentLengths.Alternating then Markup.mediocreStyle()
       when SegmentLengths.Broken then Markup.worseStyle()
       
-  @segmentLengthTexts: (linePart) ->
+  @pointSegmentLengthTexts: (lineOrLinePart, options = {}) ->
     textBase = Markup.textBase()
     
-    markup = []
-
-    # Prepare to write text as soon as we know where to position the text.
-    numberAppearsAboveSegment = null
     texts = []
     
-    processTexts = ->
-      while text = texts.pop()
-        if numberAppearsAboveSegment
-          position = x: text.segmentCenter.x + 0.5, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomCenter
-          
-        else
-          position = x: text.segmentCenter.x, y: text.segmentCenter.y + 0.5, origin: Markup.TextOriginPosition.MiddleRight
-        
-        markup.push
-          text: _.extend {}, textBase,
-            position: position
-            value: "#{text.number}"
-    
-    addText = (segmentCenter, number) ->
-      texts.push {segmentCenter, number}
-      return unless numberAppearsAboveSegment?
+    if lineOrLinePart instanceof PAA.Practice.PixelArtEvaluation.Line
+      line = lineOrLinePart
+      startSegmentIndex = 0
+      endSegmentIndex = line.edgeSegments.length - 1
       
-      processTexts()
+    else
+      linePart = lineOrLinePart
+      line = linePart.line
+      startSegmentIndex = linePart.startSegmentIndex
+      endSegmentIndex = linePart.endSegmentIndex
       
-    for segmentIndex in [linePart.startSegmentIndex..linePart.endSegmentIndex]
-      segment = linePart.line.getEdgeSegment segmentIndex
+    for segmentIndex in [startSegmentIndex..endSegmentIndex]
+      segment = line.getEdgeSegment segmentIndex
       continue unless segment.pointSegmentsCount
       
       startPointIndex = segment.pointSegmentsStartPointIndex
       endPointIndex = segment.pointSegmentsEndPointIndex
       
-      startPointIndex = Math.max startPointIndex, linePart.startPointIndex if segmentIndex is linePart.startSegmentIndex
-      endPointIndex = Math.min endPointIndex, linePart.endPointIndex if segmentIndex is linePart.endSegmentIndex
+      if linePart
+        startPointIndex = Math.max startPointIndex, linePart.startPointIndex if segmentIndex is startSegmentIndex
+        endPointIndex = Math.min endPointIndex, linePart.endPointIndex if segmentIndex is endSegmentIndex
       
-      pointSegmentLength = if segmentIndex in [linePart.startSegmentIndex, linePart.endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+        pointSegmentLength = if segmentIndex in [startSegmentIndex, endSegmentIndex] then segment.externalPointSegmentLength else segment.pointSegmentLength
+        
+      else
+        pointSegmentLength = segment.pointSegmentLength
 
       if pointSegmentLength > 1
         # We have one long segment.
-        startPoint = linePart.line.getPoint startPointIndex
-        endPoint = linePart.line.getPoint endPointIndex
+        startPoint = line.getPoint startPointIndex
+        endPoint = line.getPoint endPointIndex
         
         numberAppearsAboveSegment = endPoint.x isnt startPoint.x
         
@@ -206,18 +291,108 @@ class Markup.PixelArt
           x: (startPoint.x + endPoint.x) / 2
           y: (startPoint.y + endPoint.y) / 2
         
-        addText segmentCenter, pointSegmentLength
+        texts.push
+          segmentCenter: segmentCenter
+          number: pointSegmentLength
+          offsetDirection: if numberAppearsAboveSegment then @OffsetDirections.Up else @OffsetDirections.Left
         
       else
         # We have multiple points.
         for pointIndex in [startPointIndex..endPointIndex]
-          point = linePart.line.getPoint pointIndex
-          addText point, 1
+          point = line.getPoint pointIndex
+          
+          texts.push
+            segmentCenter: point
+            number: 1
+            
+    # Determine positions for single segments.
+    for text, index in texts when not text.offsetDirection
+      previousOffsetDirection = null
+      nextOffsetDirection = null
       
-    # If we haven't figured out where to write the text yet, default to top.
-    if texts.length
-      numberAppearsAboveSegment = true
-      processTexts()
+      for previousIndex in [index - 1..0] by -1
+        if previousOffsetDirection = texts[previousIndex].offsetDirection
+          break
+          
+      for nextIndex in [index + 1...texts.length]
+        if nextOffsetDirection = texts[nextIndex].offsetDirection
+          break
+          
+      unless previousOffsetDirection or nextOffsetDirection
+        # We couldn't find any direction preference, default to up.
+        text.offsetDirection = @OffsetDirections.Up
+        
+      else if previousOffsetDirection is nextOffsetDirection
+        # Preserve direction in between segments with the same direction.
+        text.offsetDirection = previousOffsetDirection
+        
+      else unless previousOffsetDirection and nextOffsetDirection
+        # Use the only provided direction or default to up when no direction is set at all.
+        text.offsetDirection = previousOffsetDirection or nextOffsetDirection or @OffsetDirections.Up
+        
+      else
+        # Use diagonal offset to transition between different orientations when there is empty space up-left.
+        previousText = texts[index - 1]
+        previousTextIsInTheUpLeftArea = previousText.segmentCenter.x < text.segmentCenter.x and previousText.segmentCenter.y < text.segmentCenter.y
+        
+        nextText = texts[index + 1]
+        nextTextIsInTheUpLeftArea = nextText.segmentCenter.x < text.segmentCenter.x and nextText.segmentCenter.y < text.segmentCenter.y
+        
+        if previousTextIsInTheUpLeftArea or nextTextIsInTheUpLeftArea
+          text.offsetDirection = @OffsetDirections.Up
+        
+        else
+          text.offsetDirection = @OffsetDirections.UpLeft
+    
+    # Create markup for texts.
+    markup = []
+    
+    if options.abruptEvaluation
+      betterStyle = Markup.betterStyle()
+      mediocreStyle = Markup.mediocreStyle()
+      worseStyle = Markup.worseStyle()
+
+      {pointSegmentLengthChanges} = linePart.evaluate()
+    
+    AbruptSegmentLengthChanges = PAA.Practice.PixelArtEvaluation.Subcriteria.SmoothCurves.AbruptSegmentLengthChanges
+    MajorAbruptSegmentLengthChanges = PAA.Practice.PixelArtEvaluation.Line.Part.Curve.AbruptSegmentLengthChanges.Major
+    MinorAbruptSegmentLengthChanges = PAA.Practice.PixelArtEvaluation.Line.Part.Curve.AbruptSegmentLengthChanges.Minor
+
+    for text, pointSegmentIndex in texts
+      switch text.offsetDirection
+        when @OffsetDirections.Up
+          position = x: text.segmentCenter.x + 0.5, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomCenter
+        
+        when @OffsetDirections.UpLeft
+          position = x: text.segmentCenter.x, y: text.segmentCenter.y, origin: Markup.TextOriginPosition.BottomRight
+
+        when @OffsetDirections.Left
+          position = x: text.segmentCenter.x, y: text.segmentCenter.y + 0.5, origin: Markup.TextOriginPosition.MiddleRight
+      
+      element =
+        position: position
+        value: "#{text.number}"
+        
+      if options.abruptEvaluation
+        element.style = betterStyle
+        
+        abruptChangesAtIndex = _.filter pointSegmentLengthChanges.abruptPointSegmentLengthChanges, (change) => change.index in [pointSegmentIndex, pointSegmentIndex - 1]
+        
+        if biggestAbruptChange = _.maxBy abruptChangesAtIndex, (change) => change.abruptIncrease
+          if biggestAbruptChange.abruptIncrease >= PAA.Practice.PixelArtEvaluation.Line.Part.Curve.majorAbruptIncreaseThreshold
+            # This is a major abrupt change.
+            continue if options.abruptFilterValue and options.abruptFilterValue not in [AbruptSegmentLengthChanges, MajorAbruptSegmentLengthChanges]
+            element.style = worseStyle
+
+          else if biggestAbruptChange.abruptIncrease
+            # This is a minor abrupt change.
+            continue if options.abruptFilterValue and options.abruptFilterValue not in [AbruptSegmentLengthChanges, MinorAbruptSegmentLengthChanges]
+            element.style = mediocreStyle
+            
+        else
+          continue if options.abruptFilterValue
+        
+      markup.push text: _.defaults element, textBase
       
     markup
     
@@ -284,8 +459,8 @@ class Markup.PixelArt
   @straightLineBreakdown: (straightLine) ->
     markup = [
       @evaluatedDiagonalRatioText straightLine
-      @evaluatedIntendedLine(straightLine)...
-      @segmentLengthTexts(straightLine)...
+      @evaluatedPerceivedStraightLine(straightLine)...
+      @pointSegmentLengthTexts(straightLine)...
       @lineEvaluationPercentageTexts(straightLine)...
     ]
     

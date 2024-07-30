@@ -1,0 +1,21 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.Pinball.Interface.Playfield">
+  <div class="pixelartacademy-pixeltosh-programs-pinball-interface-playfield">
+    {{#if showOverlay}}
+      <div class="overlay">
+        <div class="selection {{selectionVisibleClass}}" {{style selectionStyle}}>
+          <div class="part {{partVisibleClass}}">
+            {{> LandsOfIllusions.Assets.Components.BitmapImage args selectedPartBitmapImageOptions}}
+          </div>
+          <div class="controls {{controlsVisibleClass}}">
+            <div class="drag-area" data-cursor="grab"></div>
+            <div class="rotate-area left" data-cursor="w-rotate"></div>
+            <div class="rotate-area right" data-cursor="e-rotate"></div>
+            <button class="flip-button above" data-cursor="flip-horizontal"></button>
+            <button class="flip-button below" data-cursor="flip-horizontal"></button>
+          </div>
+        </div>
+        <div class="polygon-debug"></div>
+      </div>
+    {{/if}}
+  </div>
+</template>

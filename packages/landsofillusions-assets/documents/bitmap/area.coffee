@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 Pako = require 'pako'
@@ -151,6 +152,43 @@ class LOI.Assets.Bitmap.Area
     # Optimization: Explicit return to not collect results of for loops.
     return
     
+  importImage: (image, palette) ->
+    canvas = new AM.ReadableCanvas image
+    imageData = canvas.getFullImageData()
+    
+    flagsAttribute = @attributes[LOI.Assets.Bitmap.Attribute.Ids.Flags]
+    directColorAttribute = @attributes[LOI.Assets.Bitmap.Attribute.Ids.DirectColor]
+    paletteColorAttribute = @attributes[LOI.Assets.Bitmap.Attribute.Ids.PaletteColor]
+    alphaAttribute = @attributes[LOI.Assets.Bitmap.Attribute.Ids.Alpha]
+    
+    directColor = r: 0, g: 0, b: 0
+    alpha = 0
+    
+    for x in [0...@width]
+      continue unless x < imageData.width
+
+      for y in [0...@height]
+        continue unless y < imageData.height
+        
+        imagePixelIndex = y * imageData.width + x
+        imagePixelOffset = imagePixelIndex * 4
+        directColor.r = imageData.data[imagePixelOffset] / 255
+        directColor.g = imageData.data[imagePixelOffset + 1] / 255
+        directColor.b = imageData.data[imagePixelOffset + 2] / 255
+        alpha = imageData.data[imagePixelOffset + 3] / 255
+        
+        if alpha
+          if directColorAttribute
+            flagsAttribute.setPixelFlag x, y, LOI.Assets.Bitmap.Attribute.DirectColor.flagValue
+            directColorAttribute.setPixel x, y, directColor
+            
+          else if paletteColorAttribute
+            flagsAttribute.setPixelFlag x, y, LOI.Assets.Bitmap.Attribute.PaletteColor.flagValue
+            paletteColorAttribute.setPixel x, y, palette.closestPaletteColor directColor.r, directColor.g, directColor.b
+            
+        if alphaAttribute
+          alphaAttribute.setPixel x, y, alpha
+  
   debugOutput: ->
     console.log "AREA #{@width}x#{@height}"
     
