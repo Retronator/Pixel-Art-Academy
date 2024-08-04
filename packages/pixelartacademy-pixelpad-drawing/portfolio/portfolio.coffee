@@ -330,7 +330,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     @drawing.state 'externalSoftware', program.value
   
   onKeyDown: (event) ->
-    if event.which is AC.Keys.f2
+    # To get into cheating mode, you have to have shift pressed (and alt released),
+    # to prevent accidental cheating when quitting on windows with alf-F4.
+    if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f2, shift: true}
       return unless asset = @activeAsset()?.asset
       
       return unless stepArea = asset.stepAreas?()[0]
@@ -339,13 +341,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       activeStep.solve()
       event.preventDefault()
       
-    else if event.which is AC.Keys.f3
+    else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f3, shift: true}
       return unless asset = @activeAsset()?.asset
       
       asset.solveAndComplete?()
       event.preventDefault()
     
-    else if event.which is AC.Keys.f4
+    else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f4, shift: true}
       console.log "Cheating commences …"
       
       return unless activeGroup = @activeGroup()
