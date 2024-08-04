@@ -383,7 +383,7 @@ assets =
     dimensions: -> width: 15, height: 19
     imageName: -> 'cbhm-courierofthecrypts'
     bitmapInfo: -> """
-      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com), WIP
+      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com), 2019
 
       Artist: Primož Vovk
     """
@@ -401,7 +401,7 @@ assets =
     dimensions: -> width: 9, height: 23
     imageName: -> 'cbhm-nykra'
     bitmapInfo: -> """
-      Artwork from [NYKRA](http://nykra.com), WIP
+      Artwork from [NYKRA: Before](http://nykra.com), 2021
 
       Artist: ENDESGA
     """
@@ -438,7 +438,7 @@ assets =
     dimensions: -> width: 30, height: 32
     imageName: -> 'cbem-intotherift'
     bitmapInfo: -> """
-      Artwork from [Into The Rift](http://www.starsoft.com/IntoTheRift/), WIP
+      Artwork from [Into The Rift](https://store.steampowered.com/app/1093810/Savior/), WIP
 
      Artist: Weston Tracy
     """
@@ -531,7 +531,7 @@ assets =
     dimensions: -> width: 31, height: 23
     imageName: -> 'cbom-virtuaverse'
     bitmapInfo: -> """
-      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), WIP
+      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), 2020
 
       Artist: Ra 'Valenberg' Mei
     """
