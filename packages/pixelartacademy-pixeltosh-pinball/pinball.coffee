@@ -154,6 +154,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @physicsManager()?.destroy()
     @inputManager()?.destroy()
     @gameManager()?.destroy()
+    @editorManager()?.destroy()
     
     @sceneManager null
     @cameraManager null

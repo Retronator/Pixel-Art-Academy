@@ -82,6 +82,7 @@ class Pinball.Parts.Playfield extends Pinball.Part
     
     _createShape: ->
       return unless pixelArtEvaluation = @part.pixelArtEvaluation()
+      return unless pixelArtEvaluation.layers[0].points.length
       return unless playfieldPosition = @playfieldPosition()
       return unless playfieldBoundary = @playfieldBoundingRectangle()?.getBoundary()
       

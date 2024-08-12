@@ -28,6 +28,8 @@ class Pinball.Part.Avatar.Shape
     # If we have no cores, try to detect if points themselves form a circle.
     if layer.cores.length is 0
       points = layer.points
+      return unless points.length
+
       allowInsidePoints = true
       
     else

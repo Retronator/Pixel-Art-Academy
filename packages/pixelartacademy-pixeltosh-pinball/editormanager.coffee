@@ -11,6 +11,32 @@ class Pinball.EditorManager
     @draggingPart = new ReactiveField null
     @rotatingPart = new ReactiveField null
     
+    # Whenever a new project is loaded, clean up any previous editor errors.
+    @previousProjectId = new ReactiveField null
+    
+    @_projectChangeAutorun = Tracker.autorun (computation) =>
+      return unless projectId = @pinball.projectId()
+      
+      Tracker.nonreactive =>
+        previousProjectId = @previousProjectId()
+        return if projectId is previousProjectId
+        
+        @_cleanupAutorun = Tracker.autorun (computation) =>
+          return unless project = PAA.Practice.Project.documents.findOne projectId
+          computation.stop()
+          
+          # Remove any invalid parts.
+          for partId, part of project.playfield
+            # A valid part has a known type and position.
+            continue if Pinball.Part.getClassForId(part.type) and part.position
+            
+            @removePartByPlayfieldId partId
+      
+  destroy: ->
+    @_projectChangeAutorun.stop()
+    @_cleanupAutorun?.stop()
+    @_addPartAutorun?.stop()
+    
   editing: -> @draggingPart() or @rotatingPart()
   
   select: ->
@@ -42,8 +68,8 @@ class Pinball.EditorManager
           type: options.type
         lastEditTime: new Date
     
-    Tracker.autorun (computation) =>
-      return unless part = @pinball.sceneManager().getPart playfieldPartId
+    @_addPartAutorun = Tracker.autorun (computation) =>
+      return unless part = @pinball.sceneManager()?.getPart playfieldPartId
       return unless shape = part.shape()
       computation.stop()
       
@@ -62,15 +88,17 @@ class Pinball.EditorManager
       $set:
         "playfield.#{part.playfieldPartId}": partData
         lastEditTime: new Date
-    
-  removePart: (part) ->
+
+  removePart: (part) -> @removePartByPlayfieldId part.playfieldPartId
+
+  removePartByPlayfieldId: (playfieldPartId) ->
     projectId = @pinball.projectId()
     
     PAA.Practice.Project.documents.update projectId,
       $set:
         lastEditTime: new Date
       $unset:
-        "playfield.#{part.playfieldPartId}": true
+        "playfield.#{playfieldPartId}": true
   
   updateSelectedPart: (difference) ->
     @updatePart @selectedPart(), difference

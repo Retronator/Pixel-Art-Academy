@@ -30,40 +30,81 @@ class Pinball.Instructions
     
     faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo
   
-  class @InvalidGate extends @Instruction
-    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Pinball.Instructions.InvalidGate"
+  class @InvalidPartInstruction extends @Instruction
+    @invalidPart: -> throw new AE.NotImplementedException "Invalid part instruction must determine the invalid part."
     
-    @message: -> """
-      Oh no, the gate seems to be invalid! Does it have at least a 3x3 area colored in?
-    """
-    
-    @activeConditions: ->
-      return unless pinball = @getPinball()
-      
-      # Show when the playfield doesn't have a valid shape.
-      return unless gate = pinball.sceneManager()?.getPartOfType Pinball.Parts.Gate
-      return unless shape = gate.shape()
-      shape not instanceof Pinball.Parts.Gate.Shape
-    
-    @initialize()
+    @activeConditions: -> @invalidPart()
     
     faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo
     
-  class @InvalidSpinningTarget extends @Instruction
-    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Pinball.Instructions.InvalidSpinningTarget"
-    
+    message: ->
+      templateMessage = super arguments...
+      
+      return unless invalidPart = @constructor.invalidPart()
+      
+      templateMessage.replace "%%partName%%", invalidPart.fullName()
+  
+  class @InvalidPartRequiringACore extends @InvalidPartInstruction
+    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Pinball.Instructions.InvalidPartRequiringACore"
+
     @message: -> """
-      Oh no, the spinner seems to be invalid! Does it have at least a 3x3 area colored in?
+      Oh no, the %%partName%% seems to be invalid! Does it have at least a 3x3 area colored in?
     """
     
-    @activeConditions: ->
+    @invalidPart: ->
       return unless pinball = @getPinball()
       
-      # Show when the playfield doesn't have a valid shape.
-      return unless spinningTarget = pinball.sceneManager()?.getPartOfType Pinball.Parts.SpinningTarget
-      return unless shape = spinningTarget.shape()
-      shape not instanceof Pinball.Parts.SpinningTarget.Shape
+      partClassesRequiringACore = [
+        Pinball.Parts.BallSpawner
+        Pinball.Parts.BallTrough
+        Pinball.Parts.Bumper
+        Pinball.Parts.Flipper
+        Pinball.Parts.Gate
+        Pinball.Parts.GobbleHole
+        Pinball.Parts.Plunger
+        Pinball.Parts.SpinningTarget
+      ]
+      
+      parts = []
+      
+      # If the parts view is open, we can determine if the part is OK before it is placed on the playfield.
+      if partsView = pinball.os.interface.getView Pinball.Interface.Parts
+        parts.push part for part in partsView.parts when part.constructor in partClassesRequiringACore
+      
+      # Even if the parts view is not open, make sure all parts
+      # have their shape (parts view might not even be unlocked yet).
+      for partClass in partClassesRequiringACore
+        continue unless part = pinball.sceneManager()?.getPartOfType partClass
+        parts.push part
+        
+      for part in parts
+        continue unless shape = part.shape()
+        return part if shape instanceof Pinball.Part.Avatar.Box
+        
+      null
+      
+    @initialize()
+  
+  class @InvalidPart extends @InvalidPartInstruction
+    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Pinball.Instructions.InvalidPart"
+    
+    @message: -> """
+      Oh no, the %%partName%% seems to be invalid! Did you draw anything for it?
+    """
+    
+    @invalidPart: ->
+      return unless pinball = @getPinball()
+     
+      parts = _.clone pinball.sceneManager().parts()
+      
+      # If the parts view is open, we can determine if the part is OK before it is placed on the playfield.
+      if partsView = pinball.os.interface.getView Pinball.Interface.Parts
+        parts.push partsView.parts...
+
+      for part in parts
+        continue unless part.pixelArtEvaluation()
+        return part unless part.shape()
+      
+      null
     
     @initialize()
-    
-    faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo

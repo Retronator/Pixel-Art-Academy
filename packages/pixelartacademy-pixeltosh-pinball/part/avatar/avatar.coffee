@@ -49,6 +49,10 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
       @_texture.magFilter = THREE.NearestFilter
       @_texture
     
+    @initializeShape()
+    
+  # Note: We separate shape initialization so we can call it when we only want to perform the shape analysis.
+  initializeShape: ->
     # Analyze pixel art.
     @pixelArtEvaluationInstance = new ComputedField =>
       return unless bitmap = @part.bitmap()
@@ -75,6 +79,10 @@ class Pinball.Part.Avatar extends LOI.Adventure.Thing.Avatar
     for shapeClass in @part.constructor.avatarShapes()
       return shape if shape = shapeClass.detectShape pixelArtEvaluation, shapeProperties
       
+    # No requested shape was able to be detected. Default to a box so that it has a physics presence and can be moved.
+    return shape if shape = Pinball.Part.Avatar.Box.detectShape pixelArtEvaluation, shapeProperties
+    
+    # Looks like the image is empty and no shape could have been created.
     null
     
   getRenderObject: ->

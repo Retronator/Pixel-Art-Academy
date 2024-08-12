@@ -17,6 +17,7 @@ class Pinball.Part extends LOI.Adventure.Item
   @getPartClasses: -> _.values @_partClasses
   @getSelectablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.selectable()
   @getPlaceablePartClasses: -> _.filter @getPartClasses(), (partClass) => partClass.placeable()
+  @getClassForId: (id) -> @_partClasses[id]
   
   @assetId: -> # Override if this part's asset comes from the project.
   @imageUrls: -> # Override if this part's asset comes from static images.

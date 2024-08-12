@@ -28,6 +28,7 @@ class Pinball.Parts.Pins extends Pinball.Part
   class @Avatar extends Pinball.Part.Avatar
     _createShape: ->
       return unless pixelArtEvaluation = @part.pixelArtEvaluation()
+      return unless pixelArtEvaluation.layers[0].points.length
       
       points = _.filter pixelArtEvaluation.layers[0].points, (point) => not point.neighbors.length
       

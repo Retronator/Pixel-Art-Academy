@@ -13,7 +13,9 @@ class Pinball.Interface.Parts extends LOI.View
     @pinball = @os.getProgram Pinball
     
     @parts = for partClass in Pinball.Part.getPlaceablePartClasses()
-      new partClass @pinball
+      part = new partClass @pinball
+      part.avatar.initializeShape()
+      part
       
   onDestroyed: ->
     super arguments...
@@ -32,6 +34,10 @@ class Pinball.Interface.Parts extends LOI.View
     
   onPointerDownPartImage: (event) ->
     part = @currentData()
+    
+    # Don't allow adding invalid parts.
+    return unless part.shape()
+    
     @pinball.editorManager().addPart
       type: part.id()
       element: event.currentTarget
