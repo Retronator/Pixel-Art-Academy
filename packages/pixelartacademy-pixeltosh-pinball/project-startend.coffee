@@ -50,12 +50,12 @@ class Pinball.Project extends Pinball.Project
                 x: 90 * pixelSize
                 z: 100 * pixelSize
             "#{Random.id()}":
-              type: "PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.BallSpawner"
+              type: Pinball.Parts.BallSpawner.id()
               position:
                 x: 173.5 * pixelSize
                 z: 156.5 * pixelSize
             "#{Random.id()}":
-              type: "PixelArtAcademy.Pixeltosh.Programs.Pinball.Parts.Plunger"
+              type: Pinball.Parts.Plunger.id()
               position:
                 x: 173.5 * pixelSize
                 z: 189.5 * pixelSize

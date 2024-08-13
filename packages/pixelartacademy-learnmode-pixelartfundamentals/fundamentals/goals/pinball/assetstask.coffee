@@ -26,11 +26,15 @@ class Goal.AssetsTask extends Goal.Task
             type: unlockedAsset.type()
             bitmapId: bitmapId
     
+    return unless createAssetBitmapPromises.length
+    
     Promise.all(createAssetBitmapPromises).then (newAssets) =>
       PAA.Practice.Project.documents.update activeProjectId,
         $push:
           assets:
             $each: newAssets
+        $set:
+          lastEditTime: new Date
           
   @_createAssetBitmap: (asset) ->
     new Promise (resolve, reject) =>
@@ -79,7 +83,6 @@ class Goal.AssetsTask extends Goal.Task
           palette:
             _id: macintoshPalette._id
         
-        # Create green snake body.
         bitmapData.layers = for imageResult in imageResults
           layer = new LOI.Assets.Bitmap.Layer bitmapData, bitmapData,
             bounds:

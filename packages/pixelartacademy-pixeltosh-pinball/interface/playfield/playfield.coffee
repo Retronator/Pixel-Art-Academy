@@ -110,6 +110,9 @@ class Pinball.Interface.Playfield extends LOI.View
     
     switch cameraManager.displayType()
       when Pinball.CameraManager.DisplayTypes.Orthographic
+        # Prevent selection in play mode.
+        return if @pinball.gameManager()?.mode() is Pinball.GameManager.Modes.Play
+
         editorManager = @pinball.editorManager()
         editorManager.select()
         
