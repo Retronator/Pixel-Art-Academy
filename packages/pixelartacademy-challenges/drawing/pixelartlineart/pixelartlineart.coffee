@@ -117,7 +117,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
         
       # See if the criteria actually changed.
       existingUnlockablePixelArtEvaluationCriteria = PAA.Practice.Project.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria'
-      return if _.union(unlockablePixelArtEvaluationCriteria, existingUnlockablePixelArtEvaluationCriteria).length is unlockablePixelArtEvaluationCriteria.length
+      return unless _.xor(unlockablePixelArtEvaluationCriteria, existingUnlockablePixelArtEvaluationCriteria).length
     
       PAA.Practice.Project.Asset.Bitmap.state 'unlockablePixelArtEvaluationCriteria', unlockablePixelArtEvaluationCriteria
     
@@ -138,7 +138,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       
       # See if the criteria actually changed.
       existingUnlockedPixelArtEvaluationCriteria = PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria'
-      return if _.union(unlockedPixelArtEvaluationCriteria, existingUnlockedPixelArtEvaluationCriteria).length is unlockedPixelArtEvaluationCriteria.length
+      return unless _.xor(unlockedPixelArtEvaluationCriteria, existingUnlockedPixelArtEvaluationCriteria).length
       
       PAA.Practice.Project.Asset.Bitmap.state 'unlockedPixelArtEvaluationCriteria', unlockedPixelArtEvaluationCriteria
 
