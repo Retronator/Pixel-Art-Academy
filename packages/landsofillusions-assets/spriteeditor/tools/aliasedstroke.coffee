@@ -82,8 +82,14 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
   onActivated: ->
     # Create a pixel coordinates array large enough to hold the entire stroke.
     return unless assetData = @editor()?.assetData()
-    _createPixelCoordinates assetData.bounds.width, assetData.bounds.height
-    _createStrokeMask assetData.bounds.width, assetData.bounds.height
+    
+    # Create stroke mask to match asset bounds.
+    @_recreateStrokeMaskAutorun = @autorun (computation) =>
+      return unless assetData = @editor()?.assetData()
+      return if assetData.bounds.width is _strokeMaskWidth and assetData.bounds.height is _strokeMaskHeight
+      
+      _createPixelCoordinates assetData.bounds.width, assetData.bounds.height
+      _createStrokeMask assetData.bounds.width, assetData.bounds.height
     
     @processStroke()
 
@@ -117,6 +123,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     @drawLine false
     @realtimeUpdating false
     
+    @_recreateStrokeMaskAutorun.stop()
     @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels [] if @_previewActive
