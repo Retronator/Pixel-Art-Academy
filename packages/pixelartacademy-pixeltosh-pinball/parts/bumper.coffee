@@ -93,7 +93,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
       
       @_triggerPhysicsDebugGeometry = triggerShape.createPhysicsDebugGeometry()
       
-      @_triggerPhysicsDebugMesh = new THREE.Mesh @_triggerPhysicsDebugGeometry, @constructor.triggerDebugMaterial
+      @_triggerPhysicsDebugMesh = new THREE.Mesh @_triggerPhysicsDebugGeometry, @constructor.ringTriggerDebugMaterial
       @_triggerPhysicsDebugMesh.layers.set Pinball.RendererManager.RenderLayers.PhysicsDebug
       @_triggerPhysicsDebugMesh.receiveShadow = true
       @_triggerPhysicsDebugMesh.castShadow = true
@@ -364,34 +364,26 @@ class Pinball.Parts.Bumper extends Pinball.Part
       else
         towerTaperDistance = 0.5 * ballRadiusBitmap
       
-      @topBoundaries = []
-      @towerBoundaries = []
-      
       for core in @pixelArtEvaluation.layers[0].cores
         topBoundaries = []
-        towerBoundaries = []
         
         for line in core.outlines
           points = @_getLinePoints line
           topBoundary = new AP.PolygonBoundary points
           topBoundaries.push topBoundary
           
-          towerBoundary = topBoundary.getInsetPolygonBoundary towerTaperDistance
-          towerBoundaries.push towerBoundary
-          
-          for point, pointIndex in points
-            towerBoundary.vertices[pointIndex].tangent = point.tangent
-        
-        @topBoundaries.push topBoundaries...
-        @towerBoundaries.push towerBoundaries...
-        
         topPolygon = new AP.PolygonWithHoles topBoundaries
         topPolygonWithoutHoles = topPolygon.getPolygonWithoutHoles()
         individualGeometryData.push @constructor._createExtrudedVerticesAndIndices topPolygon.boundaries,  -ballPositionY, 0, @properties.flipped
         individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, 0, 1
         individualGeometryData.push @constructor._createPolygonVerticesAndIndices topPolygonWithoutHoles, -ballPositionY, -1
         
-        towerPolygon = new AP.PolygonWithHoles towerBoundaries
+        towerPolygon = topPolygon.getInsetPolygon towerTaperDistance
+        
+        for boundary, boundaryIndex in topPolygon.boundaries
+          for vertex, vertexIndex in boundary.vertices
+            towerPolygon.boundaries[boundaryIndex].vertices[vertexIndex].tangent = vertex.tangent
+        
         individualGeometryData.push @constructor._createExtrudedVerticesAndIndices towerPolygon.boundaries,  -ballPositionY * 4, -ballPositionY, @properties.flipped
         
       @geometryData = @constructor._mergeGeometryData individualGeometryData
