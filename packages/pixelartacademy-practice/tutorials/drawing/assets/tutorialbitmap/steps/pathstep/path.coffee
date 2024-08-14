@@ -255,10 +255,10 @@ class TutorialBitmap.PathStep.Path
   
   drawUnderlyingHints: (context, renderOptions) ->
     # Determine if the path is even visible on the canvas.
-    visibleBoundsLeft = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.left(), @pathBounds.left
-    visibleBoundsRight = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.right(), @pathBounds.right
-    visibleBoundsTop = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.top(), @pathBounds.top
-    visibleBoundsBottom = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.bottom(), @pathBounds.bottom
+    visibleBoundsLeft = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.left(), @pathBounds.left + @pathStep.stepArea.bounds.x
+    visibleBoundsRight = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.right(), @pathBounds.right + @pathStep.stepArea.bounds.x
+    visibleBoundsTop = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.top(), @pathBounds.top + @pathStep.stepArea.bounds.y
+    visibleBoundsBottom = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.bottom(), @pathBounds.bottom + @pathStep.stepArea.bounds.y
     visibleBoundsWidth = visibleBoundsRight - visibleBoundsLeft + 1
     visibleBoundsHeight = visibleBoundsBottom - visibleBoundsTop + 1
     
