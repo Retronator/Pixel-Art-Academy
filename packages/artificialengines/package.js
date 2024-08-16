@@ -243,6 +243,7 @@ Package.onUse(function(api) {
   api.addClientFile('mummification/document/versioning/versioneddocumentloader-client');
   api.addFile('mummification/document/versioning/operation');
   api.addFile('mummification/document/versioning/action');
+  api.addFile('mummification/document/versioning/actionarchive');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');

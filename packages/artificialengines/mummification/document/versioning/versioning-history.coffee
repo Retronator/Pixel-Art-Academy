@@ -9,7 +9,7 @@ AM.Document.Versioning.undo = (versionedDocument, lastEditTime, undoTime) ->
   throw new AE.InvalidOperationException "There is nothing to undo." unless currentHistoryPosition
 
   newHistoryPosition = currentHistoryPosition - 1
-  actionToBeUndone = versionedDocument.history[newHistoryPosition]
+  actionToBeUndone = AM.Document.Versioning.getActionAtPosition versionedDocument, newHistoryPosition
 
   # Undo the action.
   @_moveInHistory versionedDocument, actionToBeUndone.backward, newHistoryPosition, undoTime
@@ -19,13 +19,27 @@ AM.Document.Versioning.redo = (versionedDocument, lastEditTime, redoTime) ->
 
   # Find history entry.
   currentHistoryPosition = versionedDocument.historyPosition
-  throw new AE.InvalidOperationException "There is nothing to redo." unless currentHistoryPosition < versionedDocument.history.length
+  actionToBeRedone = AM.Document.Versioning.getActionAtPosition versionedDocument, currentHistoryPosition
+  throw new AE.InvalidOperationException "There is nothing to redo." unless actionToBeRedone
 
   newHistoryPosition = currentHistoryPosition + 1
-  actionToBeRedone = versionedDocument.history[currentHistoryPosition]
 
   # Redo the action.
   @_moveInHistory versionedDocument, actionToBeRedone.forward, newHistoryPosition, redoTime
+  
+AM.Document.Versioning.getActionAtPosition = (versionedDocument, historyPosition) ->
+  # Legacy documents have history stored directly on them.
+  return versionedDocument.history[historyPosition] if versionedDocument.history?[historyPosition]
+  
+  # New documents have history in action archives.
+  actionArchive = AM.Document.Versioning.ActionArchive.documents.findOne
+    versionedDocumentId: versionedDocument._id
+    historyStart: $lte: historyPosition
+    historyEnd: $gte: historyPosition
+  
+  return unless actionArchive
+  
+  actionArchive.history[historyPosition - actionArchive.historyStart]
   
 AM.Document.Versioning._moveInHistory = (versionedDocument, operations, newHistoryPosition, newLastEditTime) ->
   changedFields = @executeOperations versionedDocument, operations
@@ -33,13 +47,20 @@ AM.Document.Versioning._moveInHistory = (versionedDocument, operations, newHisto
   # Update history.
   versionedDocument.lastEditTime = newLastEditTime
   versionedDocument.historyPosition = newHistoryPosition
-
+  
   # Create the modifier that will undo the change at this position.
   modifier =
     $set:
       historyPosition: newHistoryPosition
       lastEditTime: newLastEditTime
-
+  
+  # Migrate history if needed.
+  if versionedDocument.history
+    modifier.$unset = history: true
+  
+    # We create action archives on the client and let them sync to the server through persistence.
+    AM.Document.Versioning._migrateHistory versionedDocument if Meteor.isClient
+    
   # We also need to send the actual changes to the fields to the database.
   @_addChangedFieldsToModifier versionedDocument, changedFields, modifier
 
@@ -50,53 +71,33 @@ AM.Document.Versioning._moveInHistory = (versionedDocument, operations, newHisto
   versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, operations, changedFields if Meteor.isClient
 
 AM.Document.Versioning.clearHistory = (versionedDocument) ->
+  # Remove action archives.
+  AM.Document.Versioning.ActionArchive.documents.remove
+    versionedDocumentId: versionedDocument._id
+  
   # Reinstate initial history state.
-  _.assign versionedDocument,
-    historyStart: 0
-    historyPosition: 0
-    history: []
-    historyArchive: []
+  versionedDocument.historyPosition = 0
 
   # Update the database document.
   versionedDocument.constructor.documents.update versionedDocument._id,
     $set:
       lastEditTime: new Date
     $unset:
-      historyStart: 1
       historyPosition: 1
-      history: 1
-      historyArchive: 1
 
-AM.Document.Versioning.latestHistoryForId = (publishHandler, documentClass, id) ->
-  collectionName = documentClass.versionedDocuments.latestHistoryCollectionName
+AM.Document.Versioning._migrateHistory = (versionedDocument) ->
+  return unless versionedDocument.history
   
-  # Retrieve the latest version of the document with provided id.
-  documentClass.documents.find(
-    id
-  ,
-    fields:
-      lastEditTime: 1
-      historyPosition: 1
-      historyStart: 1
-      history: 1
-  ).observe
-    added: (document) =>
-      publishHandler.added collectionName, document._id, @_createLocalizedHistory document
-      publishHandler.ready()
-      
-    changed: (document) =>
-      publishHandler.changed collectionName, document._id, @_createLocalizedHistory document
-      
-    removed: (document) =>
-      publishHandler.removed collectionName, document._id
+  # Create action archives.
+  for historyStart in [0...versionedDocument.history.length] by AM.Document.Versioning.ActionArchive.maximumHistoryLength
+    historyEnd = Math.min(historyStart + AM.Document.Versioning.ActionArchive.maximumHistoryLength, versionedDocument.history.length) - 1
     
-AM.Document.Versioning._createLocalizedHistory = (document) ->
-  # TODO: Generate a localized history.
-  latestHistory = _.pick document, ['lastEditTime', 'historyPosition', 'historyStart', 'history']
+    AM.Document.Versioning.ActionArchive.documents.insert
+      profileId: versionedDocument.profileId
+      lastEditTime: versionedDocument.lastEditTime
+      versionedDocumentId: versionedDocument._id
+      historyStart: historyStart
+      historyEnd: historyEnd
+      history: versionedDocument.history[historyStart..historyEnd]
   
-  _.defaults latestHistory,
-    history: []
-    historyStart: 0
-    historyPosition: 0
-  
-  latestHistory
+  delete versionedDocument.history

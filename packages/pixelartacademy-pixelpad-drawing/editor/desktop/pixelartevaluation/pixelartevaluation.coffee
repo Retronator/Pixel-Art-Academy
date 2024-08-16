@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 AEc = Artificial.Echo
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -142,7 +143,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
         # Only update evaluation when we're at the end of history to prevent recalculation when undoing/redoing
         # (in case we change evaluation and this would cause new values—history is more important).
         asset = @interface.getLoaderForActiveFile()?.asset()
-        return unless asset.historyPosition is asset.history.length
+        historyLength = asset.history?.length or AMu.Document.Versioning.ActionArchive.getHistoryLengthForDocument asset._id
+        return unless asset.historyPosition is historyLength
 
         # See if there was any change from the current data.
         return if _.objectContains asset.properties.pixelArtEvaluation, evaluation

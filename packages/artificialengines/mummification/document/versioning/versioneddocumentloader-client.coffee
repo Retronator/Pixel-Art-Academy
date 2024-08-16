@@ -34,10 +34,7 @@ class AM.Document.Versioning.VersionedDocumentLoader
   
       # Apply defaults.
       _.defaults @_document,
-        historyStart: 0
         historyPosition: 0
-        history: []
-        historyArchive: []
       
       @_document.initialize?()
 

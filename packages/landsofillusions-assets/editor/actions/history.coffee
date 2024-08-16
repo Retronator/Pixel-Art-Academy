@@ -25,7 +25,11 @@ class LOI.Assets.Editor.Actions.Redo extends LOI.Assets.Editor.Actions.AssetActi
 
   enabled: ->
     return unless asset = @asset()
-    asset.historyPosition < asset.history?.length
+
+    # Determine history length from the document (legacy) or action archives.
+    historyLength = asset.history?.length or AM.Document.Versioning.ActionArchive.getHistoryLengthForDocument asset._id
+    
+    asset.historyPosition < historyLength
 
   execute: ->
     asset = @asset()

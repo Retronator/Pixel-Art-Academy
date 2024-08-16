@@ -59,6 +59,8 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
         addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer null, assetData, []
         action.append addLayerAction
 
+    fillActionsWereAdded = false
+    
     for xCoordinate in xCoordinates
       # Make sure we're filling inside of bounds.
       continue unless assetData.bounds.left <= xCoordinate <= assetData.bounds.right and assetData.bounds.top <= pixelCoordinate.y <= assetData.bounds.bottom
@@ -79,8 +81,9 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
         # Add the fill action.
         colorFillAction = new LOI.Assets.Bitmap.Actions.ColorFill @, assetData, layerAddress, pixel
         action.append colorFillAction
+        fillActionsWereAdded = true
 
-    if assetData instanceof LOI.Assets.Bitmap
+    if fillActionsWereAdded and assetData instanceof LOI.Assets.Bitmap
       # Optimize the operations (for the symmetry case) and execute the action.
       action.optimizeOperations assetData
       assetData.executeAction action

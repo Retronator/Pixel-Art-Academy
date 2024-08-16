@@ -1,3 +1,4 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PADB = PixelArtDatabase
 PAA = PixelArtAcademy
@@ -108,7 +109,11 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.References extends PAA.Practice
       
       scaleOperationsCount = 0
       
-      for action in bitmap.history
+      # Fetch history from the action archives if using them.
+      unless history = bitmap.history
+        history = AM.Document.Versioning.ActionArchive.getHistoryForDocument bitmap._id
+      
+      for action in history
         for operation in action.forward
           scaleOperationsCount++ if operation instanceof LOI.Assets.VisualAsset.Operations.UpdateReference and operation.changes.scale
   

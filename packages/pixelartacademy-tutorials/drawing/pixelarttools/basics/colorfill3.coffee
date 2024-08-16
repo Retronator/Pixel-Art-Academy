@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -94,7 +95,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill3 extends PAA.Practice
       return unless asset.hasExtraPixels()
   
       bitmap = asset.bitmap()
-      lastAction = bitmap.partialAction or bitmap.history[bitmap.historyPosition - 1]
+      return unless lastAction = bitmap.partialAction or AM.Document.Versioning.getActionAtPosition bitmap, bitmap.historyPosition - 1
       lastAction.operatorId is @toolId()
 
     onDisplayed: ->

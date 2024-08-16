@@ -4,15 +4,20 @@ AM = Artificial.Mummification
 AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action, actionTime, appendToLastAction = false) ->
   @_validateActionOrder versionedDocument, lastEditTime, actionTime
   
-  # Increase history position.
+  # Find last action if possible.
   currentHistoryPosition = versionedDocument.historyPosition or 0
-  lastAction = versionedDocument.history?[currentHistoryPosition - 1]
+  lastAction = AM.Document.Versioning.getActionAtPosition versionedDocument, currentHistoryPosition - 1
+
   appendToLastAction = false unless lastAction
   
+  # Increase history position.
   newHistoryPosition = currentHistoryPosition
   newHistoryPosition++ unless appendToLastAction
   
   if Meteor.isClient
+    # Migrate history if needed.
+    AM.Document.Versioning._migrateHistory versionedDocument if versionedDocument.history
+    
     # On the client we need to update both the live document (which we're receiving in the versioned document) as well
     # as the document from the persistence collection. First, execute the action on the live document, unless it
     # was already executed with partial actions.
@@ -26,15 +31,56 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   
     versionedDocument.lastEditTime = actionTime
     versionedDocument.historyPosition = newHistoryPosition
-    versionedDocument.history ?= []
-    versionedDocument.history.splice currentHistoryPosition if versionedDocument.history.length > currentHistoryPosition
     
-    if appendToLastAction
-      # Note: We have to call the static append since actions don't get deserialized to rich objects.
-      AM.Document.Versioning.Action.append lastAction, action
+    # Update the action archive. We do this on the client and let it sync to the server through persistence.
+    affectedActionArchives = AM.Document.Versioning.ActionArchive.documents.fetch
+      versionedDocumentId: versionedDocument._id
+      $or: [
+        historyEnd: $gte: currentHistoryPosition
+      ,
+        historyStart: $gt: currentHistoryPosition - AM.Document.Versioning.ActionArchive.maximumHistoryLength
+      ]
+      
+    targetActionArchive = null
+    
+    for actionArchive in affectedActionArchives
+      # See if this action archive should be changed.
+      targetActionArchive = actionArchive if actionArchive.historyStart <= currentHistoryPosition < actionArchive.historyStart + AM.Document.Versioning.ActionArchive.maximumHistoryLength
+
+      # Prune any archives that start after the current position.
+      AM.Document.Versioning.ActionArchive.documents.remove actionArchive._id if actionArchive.historyStart > currentHistoryPosition
+    
+    if targetActionArchive
+      # Change an existing action archive.
+      if appendToLastAction
+        # Note: We have to call the static append since actions don't get deserialized to rich objects.
+        AM.Document.Versioning.Action.append lastAction, action
+        actionStoredToHistory = lastAction
+        
+      else
+        actionStoredToHistory = action
+      
+      newHistoryPositionIndex = newHistoryPosition - targetActionArchive.historyStart
+      
+      AM.Document.Versioning.ActionArchive.documents.update targetActionArchive._id,
+        $set:
+          lastEditTime: actionTime
+          historyEnd: newHistoryPosition - 1
+        $push:
+          history:
+            $position: newHistoryPositionIndex - 1
+            $each: [actionStoredToHistory]
+            $slice: newHistoryPositionIndex
       
     else
-      versionedDocument.history.push action
+      # Create a new action archive.
+      AM.Document.Versioning.ActionArchive.documents.insert
+        profileId: versionedDocument.profileId
+        lastEditTime: actionTime
+        versionedDocumentId: versionedDocument._id
+        historyStart: currentHistoryPosition
+        historyEnd: currentHistoryPosition
+        history: [action]
     
     # Proceed by applying the changes to the persistent document.
     versionedDocument = versionedDocument.constructor.documents.findOne versionedDocument._id
@@ -42,20 +88,14 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   
   changedFields = @executeOperations versionedDocument, action.forward
 
-  # Change history. Store the new action's operations before they get
-  # potentially overwritten so we can report them in the event later.
-  executedOperations = action.forward
-  action = lastAction if appendToLastAction
-  
+  # Change history position.
   modifier =
     $set:
       historyPosition: newHistoryPosition
       lastEditTime: actionTime
-    $push:
-      history:
-        $position: newHistoryPosition - 1
-        $each: [action]
-        $slice: newHistoryPosition
+      
+  # Clean up history migration if needed.
+  modifier.$unset = history: true if versionedDocument.history
     
   # We also need to apply the actual changes to the fields.
   @_addChangedFieldsToModifier versionedDocument, changedFields, modifier
@@ -64,7 +104,7 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
   versionedDocument.constructor.documents.update versionedDocument._id, modifier
 
   # On the client, raise an event that changes were made.
-  versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, executedOperations, changedFields if Meteor.isClient
+  versionedDocument.constructor.versionedDocuments.operationsExecuted versionedDocument, action.forward, changedFields if Meteor.isClient
   
 AM.Document.Versioning._validateActionOrder = (versionedDocument, lastEditTime, newLastEditTime) ->
   # If we have no last edit time we use the creation time.
