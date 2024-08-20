@@ -75,7 +75,7 @@ class AM.Document.Persistence
         resolve profileId
   
   @loadProfile: (profileId) ->
-    console.log "Persistence loading profile", profileId if @debug
+    console.log "Persistence loading profile", profileId
     
     throw new AE.InvalidOperationException "A profile is already loaded. Unload it first before proceeding." if @_activeProfileId()
   
@@ -88,7 +88,9 @@ class AM.Document.Persistence
     # Fetch all profile documents from all storages and resolve conflicts.
     new Promise (resolve, reject) =>
       loadPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
-        syncedStorage.loadDocumentsForProfileId profileId
+        syncedStorage.loadDocumentsForProfileId(profileId).catch (error) =>
+          console.error "Loading documents from synced storage", syncedStorageId, "failed.", error
+          throw error
     
       Promise.all(loadPromises).then (loadDocumentsResults) =>
         console.log "Loaded document results", loadDocumentsResults if @debug
@@ -155,7 +157,16 @@ class AM.Document.Persistence
           @_endLoad documentsByClassIdAndId
           resolve()
 
+      , (error) =>
+        # Pass the error to the outer promise. Note that we cannot throw here as that would be a throw in the internal
+        # promise (the one started with the .all promise) and would simply result in a promise with an unhandled
+        # exception (since this internal promise is not returned/chained out of the outer promise to hook into its own
+        # catch blocks. Therefore we need to explicitly reject the outer promise.
+        reject error
+
   @_endLoad: (documentsByClassIdAndId) ->
+    console.log "Profile documents retrieved …"
+    
     # Insert all documents belonging to this profile.
     for documentClassId, documentsById of documentsByClassIdAndId
       documentClass = AM.Document.getClassForId documentClassId
@@ -166,6 +177,8 @@ class AM.Document.Persistence
     
       for documentId, document of documentsById
         documentClass.documents.insert document
+        
+    console.log "Profile documents inserted. Profile ready."
   
     @profileReady true
 
@@ -173,16 +186,22 @@ class AM.Document.Persistence
     profileId = @_activeProfileId()
     throw new AE.InvalidOperationException "There is no loaded profile to unload." unless profileId
   
+    console.log "Persistence unloading profile", profileId
+    
     @profileReady false
   
     @flushChanges().then =>
       # Deactivate the profile first so that removals will not be seen as active actions.
       @_activeProfileId null
+      
+      console.log "Persistence profile deactivated. Removing documents …", profileId
 
       # Remove all documents belonging to the active profile, except profiles.
       for documentClassId, documentClass of @_persistentDocumentClassesById when documentClassId isnt @Profile.id()
         documentClass.documents.remove {profileId}
 
+      console.log "Profile documents removed."
+  
   @flushChanges: ->
     # Flush any throttled changes.
     flushUpdatesPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById

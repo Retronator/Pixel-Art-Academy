@@ -40,12 +40,18 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
       ,
         historyStart: $gt: currentHistoryPosition - AM.Document.Versioning.ActionArchive.maximumHistoryLength
       ]
+    ,
+      sort:
+        historyEnd: -1
       
     targetActionArchive = null
     
     for actionArchive in affectedActionArchives
-      # See if this action archive should be changed.
-      targetActionArchive = actionArchive if actionArchive.historyStart <= currentHistoryPosition < actionArchive.historyStart + AM.Document.Versioning.ActionArchive.maximumHistoryLength
+      # See if this action archive should be changed. We traverse the action archives from latest to oldest so that the
+      # furthest archive always gets picked. This is important in case multiple archives would be candidates for
+      # extension, such as if we've increased the history limit.
+      unless targetActionArchive
+        targetActionArchive = actionArchive if actionArchive.historyStart <= currentHistoryPosition < actionArchive.historyStart + AM.Document.Versioning.ActionArchive.maximumHistoryLength
 
       # Prune any archives that start after the current position.
       AM.Document.Versioning.ActionArchive.documents.remove actionArchive._id if actionArchive.historyStart > currentHistoryPosition

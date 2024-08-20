@@ -22,6 +22,8 @@ class AM.Document.Versioning.ActionArchive extends AM.Document
   
   @enablePersistence()
   
+  # The history length is chosen small both so that it minimizes saving times
+  # on disk, but also for syncing history from the server (live updates).
   @maximumHistoryLength = 10
 
   @getHistoryForDocument: (versionedDocumentId) ->

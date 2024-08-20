@@ -28,7 +28,7 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
 
   ready: -> true
   
-  loadDocumentsForProfileId: (profileId) ->
+  loadDocumentsForProfileIdInternal: (profileId) ->
     syncedStorageId = @constructor.id()
     
     new Promise (resolve) =>

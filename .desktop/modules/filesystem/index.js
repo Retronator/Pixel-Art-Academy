@@ -81,42 +81,55 @@ export default class FileSystem {
     });
 
     this.module.on('getProfileDocuments', async (event, fetchId, rootDirectoryPath, backupDirectoryPath) => {
-      this.log.verbose('getProfileDocuments received', rootDirectoryPath);
-      const documentJsons = {};
+      try {
+        this.log.verbose('getProfileDocuments received', rootDirectoryPath);
+        const documentJsons = {};
 
-      const backupTimestamp = new Date().toISOString().replaceAll(':','-');
-      const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
+        const backupTimestamp = new Date().toISOString().replaceAll(':', '-');
+        const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
 
-      // Scan the root directory for subdirectories, whose names correspond to class names.
-      const rootDirectory = await fs.promises.opendir(rootDirectoryPath);
-      for await (const rootDirectoryEntry of rootDirectory) {
-        if (!rootDirectoryEntry.isDirectory()) continue;
+        // Scan the root directory for subdirectories, whose names correspond to class names.
+        const rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        this.log.verbose('Root directory opened.');
 
-        const className = rootDirectoryEntry.name;
-        documentJsons[className] = []
+        for await (const rootDirectoryEntry of rootDirectory) {
+          this.log.verbose('Processing directory entry', rootDirectoryEntry.name);
+          if (!rootDirectoryEntry.isDirectory()) continue;
 
-        // Scan the directory for files, whose names correspond to document IDs.
-        const classDirectoryPath = path.join(rootDirectoryPath, className);
-        const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
+          const className = rootDirectoryEntry.name;
+          documentJsons[className] = []
 
-        const classDirectory = await fs.promises.opendir(classDirectoryPath);
-        for await (const classDirectoryEntry of classDirectory) {
-          if (!classDirectoryEntry.isFile()) continue;
+          // Scan the directory for files, whose names correspond to document IDs.
+          const classDirectoryPath = path.join(rootDirectoryPath, className);
+          const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
 
-          // Only parse json files (ignore backups).
-          if (!classDirectoryEntry.name.endsWith('json')) continue;
+          this.log.verbose('Opening class directory', className);
+          const classDirectory = await fs.promises.opendir(classDirectoryPath);
+          this.log.verbose('Class directory opened.');
 
-          const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
-          const fileJson = await fs.promises.readFile(filePath, {encoding: 'utf8'})
-          documentJsons[className].push(fileJson);
+          for await (const classDirectoryEntry of classDirectory) {
+            if (!classDirectoryEntry.isFile()) continue;
 
-          // Create a backup of the file.
-          const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
-          await fs.promises.cp(filePath, backupFilePath);
+            // Only parse json files (ignore backups).
+            if (!classDirectoryEntry.name.endsWith('json')) continue;
+
+            const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
+            const fileJson = await fs.promises.readFile(filePath, {encoding: 'utf8'})
+            documentJsons[className].push(fileJson);
+
+            // Create a backup of the file.
+            const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
+            await fs.promises.cp(filePath, backupFilePath);
+          }
         }
-      }
 
-      this.module.respond('getProfileDocuments', fetchId, documentJsons);
+        this.log.verbose('getProfileDocuments processed');
+        this.module.respond('getProfileDocuments', fetchId, documentJsons);
+
+      } catch (error) {
+        this.log.error('getProfileDocuments encountered an error', error);
+        this.module.respond('getProfileDocuments', fetchId, null);
+      }
     });
   }
 
