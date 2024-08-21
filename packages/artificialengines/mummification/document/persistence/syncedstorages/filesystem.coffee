@@ -41,24 +41,29 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     
     Persistence.addProfiles @constructor.id(), profiles
   
+    # Listen to loading progress changes.
+    Desktop.on 'filesystem', 'getProfileDocumentsProgress', (event, progressValue) =>
+      @_onLoadProfileProgress progressValue
+  
     @_ready true
     
   ready: -> @_ready()
   
-  loadDocumentsForProfileIdInternal: (profileId) ->
+  loadDocumentsForProfileIdInternal: (profileId, options) ->
     console.log "File system synced storage is loading documents for profile", profileId
 
     syncedStorageId = @constructor.id()
   
     documents = {}
+    @_onLoadProfileProgress = options.onProgress
     
     try
-      unless profileDocumentJsons = await Desktop.fetch 'filesystem', 'getProfileDocuments', 30000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+      unless profileDocumentJsons = await Desktop.fetch 'filesystem', 'getProfileDocuments', 60000, "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
         throw new AE.IOException "Unable to get profile documents for ID #{profileId}."
         
     catch error
       if error is 'timeout'
-        throw new AE.IOException "Reading the save data for ID #{profileId} took longer than 30 seconds."
+        throw new AE.IOException "Reading the save data for ID #{profileId} took longer than 60 seconds."
         
       else
         throw new AE.IOException error

@@ -16,8 +16,8 @@ class Persistence.SyncedStorage
       
   ready: -> throw new AE.NotImplementedException "A synced storage must specify when it has supplied the profiles and is ready to provide documents."
 
-  loadDocumentsForProfileId: (profileId) ->
-    @loadDocumentsForProfileIdInternal(profileId).then (documents) =>
+  loadDocumentsForProfileId: (profileId, options) ->
+    @loadDocumentsForProfileIdInternal(profileId, options).then (documents) =>
       if @options.differentialSave
         @_documentsCache[document._id] = _.cloneDeep document for document in documents
     

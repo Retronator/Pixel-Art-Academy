@@ -28,13 +28,23 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
 
   ready: -> true
   
-  loadDocumentsForProfileIdInternal: (profileId) ->
+  loadDocumentsForProfileIdInternal: (profileId, options) ->
     syncedStorageId = @constructor.id()
     
     new Promise (resolve) =>
       documents = {}
   
-      for documentClassId, documentClassArea of @directory when documentClassId isnt Persistence.Profile.id()
+      # Count number of documents that need to be loaded.
+      persistenceProfileDocumentClassId = Persistence.Profile.id()
+      totalDocumentsCount = 0
+      loadedDocumentsCount = 0
+
+      for documentClassId, documentClassArea of @directory when documentClassId isnt persistenceProfileDocumentClassId
+        for documentId, entry of documentClassArea when entry.profileId is profileId
+          totalDocumentsCount++
+
+      # Perform the actual loading.
+      for documentClassId, documentClassArea of @directory when documentClassId isnt persistenceProfileDocumentClassId
         documents[documentClassId] = {}
         
         for documentId, entry of documentClassArea when entry.profileId is profileId
@@ -42,6 +52,9 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
           
           if documentJson and documentJson isnt 'undefined'
             documents[documentClassId][documentId] = "#{syncedStorageId}": EJSON.parse documentJson
+          
+          loadedDocumentsCount++
+          options.onProgress loadedDocumentsCount / totalDocumentsCount
       
       resolve documents
   

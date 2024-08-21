@@ -88,8 +88,29 @@ export default class FileSystem {
         const backupTimestamp = new Date().toISOString().replaceAll(':', '-');
         const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
 
+        // Count number of documents that need to be loaded.
+        this.log.verbose('Counting number of documents to be loaded …');
+        let totalDocumentsCount = 0;
+        let loadedDocumentsCount = 0;
+
+        let rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        for await (const rootDirectoryEntry of rootDirectory) {
+          if (!rootDirectoryEntry.isDirectory()) continue;
+
+          const className = rootDirectoryEntry.name;
+          const classDirectoryPath = path.join(rootDirectoryPath, className);
+          const classDirectory = await fs.promises.opendir(classDirectoryPath);
+
+          for await (const classDirectoryEntry of classDirectory) {
+            if (!classDirectoryEntry.isFile()) continue;
+            if (!classDirectoryEntry.name.endsWith('json')) continue;
+            totalDocumentsCount++;
+          }
+        }
+        this.log.verbose('Documents count:', totalDocumentsCount);
+
         // Scan the root directory for subdirectories, whose names correspond to class names.
-        const rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        rootDirectory = await fs.promises.opendir(rootDirectoryPath);
         this.log.verbose('Root directory opened.');
 
         for await (const rootDirectoryEntry of rootDirectory) {
@@ -120,6 +141,9 @@ export default class FileSystem {
             // Create a backup of the file.
             const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
             await fs.promises.cp(filePath, backupFilePath);
+
+            loadedDocumentsCount++;
+            this.module.send('getProfileDocumentsProgress', loadedDocumentsCount / totalDocumentsCount);
           }
         }
 

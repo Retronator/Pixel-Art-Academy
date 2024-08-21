@@ -18,6 +18,9 @@ class AM.Document.Persistence
   @_syncedStoragesById = {}
   @_syncedStoragesDependency = new Tracker.Dependency
 
+  @_profileLoadingPercentagesById = {}
+  @_profileLoadingPercentageDependency = new Tracker.Dependency
+  
   @_activeProfileId = new ReactiveField null
   
   @profileReady = new ReactiveField false
@@ -75,7 +78,7 @@ class AM.Document.Persistence
         resolve profileId
   
   @loadProfile: (profileId) ->
-    console.log "Persistence loading profile", profileId
+    console.log "Persistence loading profile", profileId if @debug
     
     throw new AE.InvalidOperationException "A profile is already loaded. Unload it first before proceeding." if @_activeProfileId()
   
@@ -88,10 +91,20 @@ class AM.Document.Persistence
     # Fetch all profile documents from all storages and resolve conflicts.
     new Promise (resolve, reject) =>
       loadPromises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
-        syncedStorage.loadDocumentsForProfileId(profileId).catch (error) =>
-          console.error "Loading documents from synced storage", syncedStorageId, "failed.", error
-          throw error
-    
+        do (syncedStorageId) =>
+          @_profileLoadingPercentagesById[syncedStorageId] = 0
+          
+          syncedStorage.loadDocumentsForProfileId(profileId,
+            onProgress: (progressValue) =>
+              @_profileLoadingPercentagesById[syncedStorageId] = progressValue * 100
+              @_profileLoadingPercentageDependency.changed()
+          
+          ).catch (error) =>
+            console.error "Loading documents from synced storage", syncedStorageId, "failed.", error
+            throw error
+      
+      @_profileLoadingPercentageDependency.changed()
+      
       Promise.all(loadPromises).then (loadDocumentsResults) =>
         console.log "Loaded document results", loadDocumentsResults if @debug
         
@@ -163,9 +176,19 @@ class AM.Document.Persistence
         # exception (since this internal promise is not returned/chained out of the outer promise to hook into its own
         # catch blocks. Therefore we need to explicitly reject the outer promise.
         reject error
+        
+  @profileLoadingPercentage: ->
+    @_profileLoadingPercentageDependency.depend()
+    
+    minimumLoadingPercentage = 100
+    
+    for syncedStorageId, loadingPercentage of @_profileLoadingPercentagesById
+      minimumLoadingPercentage = Math.min minimumLoadingPercentage, loadingPercentage
+      
+    minimumLoadingPercentage
 
   @_endLoad: (documentsByClassIdAndId) ->
-    console.log "Profile documents retrieved …"
+    console.log "Profile documents retrieved …" if @debug
     
     # Insert all documents belonging to this profile.
     for documentClassId, documentsById of documentsByClassIdAndId
@@ -178,7 +201,7 @@ class AM.Document.Persistence
       for documentId, document of documentsById
         documentClass.documents.insert document
         
-    console.log "Profile documents inserted. Profile ready."
+    console.log "Profile documents inserted. Profile ready." if @debug
   
     @profileReady true
 
@@ -186,7 +209,7 @@ class AM.Document.Persistence
     profileId = @_activeProfileId()
     throw new AE.InvalidOperationException "There is no loaded profile to unload." unless profileId
   
-    console.log "Persistence unloading profile", profileId
+    console.log "Persistence unloading profile", profileId if @debug
     
     @profileReady false
   
@@ -194,13 +217,13 @@ class AM.Document.Persistence
       # Deactivate the profile first so that removals will not be seen as active actions.
       @_activeProfileId null
       
-      console.log "Persistence profile deactivated. Removing documents …", profileId
+      console.log "Persistence profile deactivated. Removing documents …", profileId if @debug
 
       # Remove all documents belonging to the active profile, except profiles.
       for documentClassId, documentClass of @_persistentDocumentClassesById when documentClassId isnt @Profile.id()
         documentClass.documents.remove {profileId}
 
-      console.log "Profile documents removed."
+      console.log "Profile documents removed." if @debug
   
   @flushChanges: ->
     # Flush any throttled changes.

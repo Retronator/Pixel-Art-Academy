@@ -1,28 +1,33 @@
 <template name="LandsOfIllusions.Components.LoadGame">
   {{#unless deactivated}}
     <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem">
-      {{#unless loadingVisible}}
+      {{#if showBackButton}}
         {{> LandsOfIllusions.Components.BackButton}}
-      {{/unless}}
+      {{/if}}
       {{#LandsOfIllusions.Components.Overlay}}
-        <div class="title">Choose a save game</div>
-        <ul class="profiles" {{style profilesStyle}}>
-          {{#each profiles}}
-            <li class="profile {{activeClass}}">
-              <div class="floppy">
-                <div class="shutter"></div>
-                <div class="label">{{profileName}}</div>
-              </div>
-            </li>
-          {{/each}}
-        </ul>
-        <div class="controls">
-          <button class="previous-button action-button {{previousButtonVisibleClass}}" {{previousButtonDisabledAttribute}}>←</button>
-          <button class="next-button action-button {{nextButtonVisibleClass}}" {{nextButtonDisabledAttribute}}>→</button>
-        </div>
+        {{#unless autoLoadedProfileId}}
+          <div class="title">Choose a save game</div>
+          <ul class="profiles" {{style profilesStyle}}>
+            {{#each profiles}}
+              <li class="profile {{profileActiveClass}}" data-id="{{_id}}">
+                <div class="floppy">
+                  <div class="shutter"></div>
+                  <div class="label">{{profileName}}</div>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+          <div class="controls">
+            <button class="previous-button action-button {{previousButtonVisibleClass}}" {{previousButtonDisabledAttribute}}>←</button>
+            <button class="next-button action-button {{nextButtonVisibleClass}}" {{nextButtonDisabledAttribute}}>→</button>
+          </div>
+        {{/unless}}
         <div class="loading {{loadingVisibleClass}}">
           <div class="loading-text {{loadingTextVisibleClass}}">
             Loading …
+            {{#if showProfileLoadingPercentage}}
+              {{profileLoadingPercentage}}%
+            {{/if}}
           </div>
         </div>
       {{/LandsOfIllusions.Components.Overlay}}

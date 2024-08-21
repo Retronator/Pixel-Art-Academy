@@ -57,37 +57,12 @@ class LOI.Adventure extends LOI.Adventure
     @loadingStoredProfile = new ReactiveField false
     
     if storedProfileId = @_loadStoredProfileId()
-      console.log "Loading stored profile ID", storedProfileId
+      console.log "Loading stored profile ID", storedProfileId if LOI.debug or LOI.Adventure.debugState
       @loadingStoredProfile true
-      
-      # Wait until the profile becomes available (or another profile gets loaded).
-      @autorun (computation) =>
-        if profileId = @profileId()
-          console.log "Another profile was loaded", profileId
-          @loadingStoredProfile false
-          computation.stop()
-          return
-          
-        return unless Persistence.ready()
-        computation.stop()
-
-        if Persistence.Profile.documents.findOne storedProfileId
-          console.log "Stored profile was found! Loading it …"
-          
-          # The profile has been added from synced storage(s), so we can now load it.
-          @loadGame(storedProfileId).catch((error) =>
-            LOI.adventure.showDialogMessage """
-              Unfortunately, the last active save game was not able to be automatically loaded.
-              The game will now restart from the menu, but if the problem persists,
-              this info could be useful: #{error.reason}
-            """
-        
-          ).finally =>
-            @loadingStoredProfile false
-            
-        else
-          console.log "Stored profile was not provided by any of the synced storages."
-          @loadingStoredProfile false
+      @menu.loadGame.show(storedProfileId).catch((error) =>
+        console.error "The stored profile ID was not able to be loaded.", error
+        @_clearStoredProfileId()
+      ).finally => @loadingStoredProfile false
 
   startNewGame: ->
     await @_unloadProfileIfLoaded()
@@ -102,19 +77,19 @@ class LOI.Adventure extends LOI.Adventure
       @_changeProfileId profileId
   
   loadGame: (profileId) ->
-    console.log "Loading profile", profileId
+    console.log "Loading profile", profileId if LOI.debug or LOI.Adventure.debugState
     
     await @_unloadProfileIfLoaded()
 
     # Load the game profile from persistence and activate it if it loaded OK.
     Persistence.loadProfile(profileId).then =>
-      console.log "Persistence profile was loaded. Checking for game state …"
+      console.log "Persistence profile was loaded. Checking for game state …" if LOI.debug or LOI.Adventure.debugState
       
       # Ensure we received a valid game state.
       unless LOI.GameState.documents.findOne {profileId}
         return Persistence.unloadProfile().then => throw new AE.InvalidOperationException "Game state for profile #{profileId} was not found."
       
-      console.log "Game state was found."
+      console.log "Game state was found." if LOI.debug or LOI.Adventure.debugState
       
       @_changeProfileId profileId
     
@@ -156,7 +131,7 @@ class LOI.Adventure extends LOI.Adventure
     @profileId profileId
     @_storeProfileId()
     
-    console.log "Changed profile to", profileId
+    console.log "Changed profile to", profileId if LOI.debug or LOI.Adventure.debugState
 
   saveGame: (options) ->
     # Start syncing the profile to desired storages.
@@ -170,7 +145,7 @@ class LOI.Adventure extends LOI.Adventure
     @_storeProfileId()
 
   quitGame: (options = {}) ->
-    console.log "Quitting game."
+    console.log "Quitting game." if LOI.debug or LOI.Adventure.debugState
     
     # Update any lazy fields.
     @gameState.updated()
@@ -179,7 +154,7 @@ class LOI.Adventure extends LOI.Adventure
     @_clearStoredProfileId()
   
     Persistence.unloadProfile().then =>
-      console.log "Quit game unload profile succeeded."
+      console.log "Quit game unload profile succeeded." if LOI.debug or LOI.Adventure.debugState
       # Execute the callback if present and end if it has handled the redirect.
       return if options.callback?()
   

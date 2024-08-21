@@ -12,7 +12,7 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '0.22.1'
+  @version: -> '0.23.0'
   
   buildName: -> 'Learn Mode build'
 
