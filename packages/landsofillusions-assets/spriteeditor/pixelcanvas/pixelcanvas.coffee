@@ -215,12 +215,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @_redraw()
   
     @_resizeObserver.observe $pixelCanvas[0]
-
-    # React to keys and global pointer events.
-    $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event if @interface.active()
-    $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event if @interface.active()
-    $(document).on 'pointerup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerUp? event if @interface.active()
-    $(document).on 'pointerleave.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onPointerLeaveWindow? event if @interface.active()
     
     # Register with the app to support updates.
     @app = @ancestorComponentWith 'addComponent'
@@ -311,6 +305,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       'pointerenter .canvas': @onPointerEnterCanvas
       'pointerleave .canvas': @onPointerLeaveCanvas
       'dragstart .canvas': @onDragStartCanvas
+      'contextmenu .canvas': @onContextMenu
 
   onPointerMoveCanvas: (event) ->
     @interface.activeTool()?.onPointerMove? event if @interface.active()
@@ -323,3 +318,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
   onDragStartCanvas: (event) ->
     @interface.activeTool()?.onDragStart? event if @interface.active()
+  
+  onContextMenu: (event) ->
+    # Prevent context menu opening.
+    event.preventDefault()

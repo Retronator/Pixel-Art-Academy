@@ -28,13 +28,13 @@ class FM.Tool extends FM.Operator
     # Override to handle key releases.
 
   onPointerDown: (event) ->
-    switch event.originalEvent.button
+    switch event.button
       when 0 then @constructor.pointerState.mainButton = true
       when 1 then @constructor.pointerState.auxiliaryButton = true
       when 2 then @constructor.pointerState.secondaryButton = true
 
   onPointerUp: (event) ->
-    switch event.originalEvent.button
+    switch event.button
       when 0 then @constructor.pointerState.mainButton = false
       when 1 then @constructor.pointerState.auxiliaryButton = false
       when 2 then @constructor.pointerState.secondaryButton = false
