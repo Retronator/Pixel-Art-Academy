@@ -231,6 +231,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         y: oldOrigin.y + canvasDelta.y
         
   _onScrollToZoom: (sign) ->
+    # Don't scroll if ctrl is pressed (that changes brush size).
+    keyboardState = AC.Keyboard.getState()
+    return if keyboardState.isKeyDown AC.Keys.ctrl
+    
     zoomLevels = @zoomLevelsHelper()
     percentage = @targetScale() * 100
     

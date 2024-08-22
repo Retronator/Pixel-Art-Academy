@@ -181,7 +181,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.LineWidth ext
     
     @message: -> """
       Although less common, given enough space, 2-pixel lines also make an appearance.
-      Use the bracket keys [ and ] to increase or decrease your brush size.
+      Use the +/- keys or ctrl + mouse scroll to increase or decrease your brush size.
     """
     
     @initialize()

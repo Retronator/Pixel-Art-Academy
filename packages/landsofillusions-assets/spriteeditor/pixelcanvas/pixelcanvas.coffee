@@ -220,6 +220,17 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @app = @ancestorComponentWith 'addComponent'
     @app.addComponent @
     
+    # Change brush size with the wheel event.
+    new AC.DiscreteWheelEventListener
+      timeout: 0.2
+      $element: $pixelCanvas
+      callback: (sign) =>
+        keyboardState = AC.Keyboard.getState()
+        return unless keyboardState.isKeyDown AC.Keys.ctrl
+    
+        brushSizeHelper = @interface.getOperator if sign < 0 then LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease else LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease
+        brushSizeHelper?.execute()
+  
   onDestroyed: ->
     super arguments...
   

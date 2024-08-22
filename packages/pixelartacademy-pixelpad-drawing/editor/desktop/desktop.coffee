@@ -361,19 +361,25 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": [
             {commandOrControl: true, key: AC.Keys.equalSign}
-            {key: AC.Keys.numPlus}
+            {shift: true, commandOrControl: true, key: AC.Keys.equalSign}
             {commandOrControl: true, key: AC.Keys.numPlus}
           ]
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomOut.id()}": [
             {commandOrControl: true, key: AC.Keys.dash}
-            {key: AC.Keys.numMinus}
             {commandOrControl: true, key: AC.Keys.numMinus}
           ]
           
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.Focus.id()}": key: AC.Keys.f
           
-          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
-          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [
+            {key: AC.Keys.equalSign}
+            {shift: true, key: AC.Keys.equalSign}
+            {key: AC.Keys.numPlus}
+          ]
+          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [
+            {key: AC.Keys.dash}
+            {key: AC.Keys.numMinus}
+          ]
     ,
       @getShortcuts()
 
