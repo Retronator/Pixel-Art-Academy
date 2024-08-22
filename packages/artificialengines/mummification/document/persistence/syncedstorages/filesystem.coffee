@@ -50,7 +50,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
   ready: -> @_ready()
   
   loadDocumentsForProfileIdInternal: (profileId, options) ->
-    console.log "File system synced storage is loading documents for profile", profileId
+    console.log "File system synced storage is loading documents for profile", profileId if Persistence.debug
 
     syncedStorageId = @constructor.id()
   
@@ -68,10 +68,10 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       else
         throw new AE.IOException error
     
-    console.log "Documents retrieved. Parsing JSON …"
+    console.log "Documents retrieved. Parsing JSON …" if Persistence.debug
     
     for documentClassId, documentJsons of profileDocumentJsons when documentClassId isnt Persistence.Profile.id()
-      console.log "#{documentJsons.length} documents for class", documentClassId
+      console.log "#{documentJsons.length} documents for class", documentClassId if Persistence.debug
 
       documents[documentClassId] = {}
       @lastEditTimes[documentClassId] ?= {}
@@ -85,7 +85,7 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
         catch error
           console.error "Error parsing document JSON.", error, documentJson
     
-    console.log "Documents successfully parsed."
+    console.log "Documents successfully parsed." if Persistence.debug
     documents
 
   addedInternal: (document) -> @_add document

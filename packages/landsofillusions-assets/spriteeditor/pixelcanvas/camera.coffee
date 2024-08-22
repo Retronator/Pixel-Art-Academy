@@ -173,7 +173,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
         @_discreteWheelEventListener = new AC.DiscreteWheelEventListener
           callback: (sign) => @_onScrollToZoom sign
           timeout: 0.1
-          $element: $parent
+          element: $parent[0]
         
       else if @_discreteWheelEventListener and not scrollToZoom
         # Disable the wheel event.

@@ -223,7 +223,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     # Change brush size with the wheel event.
     new AC.DiscreteWheelEventListener
       timeout: 0.2
-      $element: $pixelCanvas
+      element: $pixelCanvas[0]
       callback: (sign) =>
         keyboardState = AC.Keyboard.getState()
         return unless keyboardState.isKeyDown AC.Keys.ctrl
