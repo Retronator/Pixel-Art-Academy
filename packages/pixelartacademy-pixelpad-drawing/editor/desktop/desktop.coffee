@@ -351,7 +351,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     shortcuts = _.defaultsDeep
       default:
         mapping:
-          "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": key: AC.Keys.e
+          "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": [
+            {key: AC.Keys.e}
+            {holdButton: AC.Buttons.secondary}
+            {holdButton: AC.Buttons.fifth}
+          ]
+          
           "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
           
           "#{PAA.PixelPad.Apps.Drawing.Editor.Desktop.Actions.ZoomIn.id()}": [

@@ -48,6 +48,10 @@ _addStrokeMask = (x, y) ->
   _strokeMask[x + y * _strokeMaskWidth] = 1
 
 class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEditor.Tools.Tool
+  @requiredButtonOnActivate: ->
+    # Override with the button (or an array of alternatives) that needs to be pressed to start the stroke on activate.
+    null
+  
   # TODO: cleanLine: boolean whether to maintain a clean line with consistent width
   # drawPreview: boolean whether to always draw preview of the pixels to be applied
   # fractionalPerfectLines: boolean whether to allow 3:2 and 5:2 lines
@@ -115,6 +119,15 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
         editor.operationPreview().pixels []
 
       @_previewActive = preview
+
+    # Also start the stroke if the required button is pressed.
+    requiredButton = @constructor.requiredButtonOnActivate()
+    return unless requiredButton
+    
+    requiredButtons = if _.isArray requiredButton then requiredButton else [requiredButton]
+    return unless _.some requiredButtons, (requiredButton) => AC.Pointer.getState().isButtonDown requiredButton
+  
+    @startStroke()
 
   onDeactivated: ->
     @finalizeStroke()
@@ -259,6 +272,9 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     # Only react to the main button.
     return if event.button
     
+    @startStroke()
+    
+  startStroke: ->
     # Only react when the pointer has a valid position.
     return unless @editor()?.pointer().canvasCoordinate()
 

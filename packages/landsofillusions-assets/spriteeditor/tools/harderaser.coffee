@@ -9,6 +9,8 @@ class LOI.Assets.SpriteEditor.Tools.HardEraser extends LOI.Assets.SpriteEditor.T
 
   @initialize()
   
+  @requiredButtonOnActivate: -> [AC.Buttons.secondary, AC.Buttons.fifth]
+  
   createPixelsFromStrokeMask: (assetData, strokeMask) ->
     # Set direct color to color of the background to fake erasing.
     # TODO: This only works in 3D Paint. It would require querying the pixel canvas what its background color is.
