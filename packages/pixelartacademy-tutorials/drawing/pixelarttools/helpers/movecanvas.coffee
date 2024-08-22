@@ -11,7 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
 
       Shortcut: H (hand)
 
-      Quick shortcut: space
+      Quick shortcuts: space or middle mouse button
     """
 
   @fixedDimensions: -> width: 256, height: 32
@@ -42,7 +42,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     @assetClass: -> Asset
     
     @message: -> """
-        Hold down the space bar to temporarily switch to the hand cursor.
+        Hold down the space bar or middle mouse button to temporarily switch to the hand cursor.
       """
     
     @activeConditions: ->
