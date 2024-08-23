@@ -64,6 +64,8 @@ class FM.Interface extends FM.Interface
 
   onDestroyed: ->
     super arguments...
+    
+    operator.destroy() for operatorId, operator of @_operatorInstances
 
     $(document).off '.fatamorgana-interface'
 

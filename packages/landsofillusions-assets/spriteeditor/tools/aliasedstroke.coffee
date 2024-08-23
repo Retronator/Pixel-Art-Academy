@@ -84,9 +84,6 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
       @lastPixelCoordinates null
 
   onActivated: ->
-    # Create a pixel coordinates array large enough to hold the entire stroke.
-    return unless assetData = @editor()?.assetData()
-    
     # Create stroke mask to match asset bounds.
     @_recreateStrokeMaskAutorun = @autorun (computation) =>
       return unless assetData = @editor()?.assetData()
