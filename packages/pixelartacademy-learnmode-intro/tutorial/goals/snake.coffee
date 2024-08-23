@@ -19,7 +19,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @instructions: -> """
       In the PICO-8 app, try out the game Snake. Notice the art assets included (green snake and brown food).
-      Score at least 5 points to continue.
+      Score some points to continue.
     """
 
     @interests: -> ['pico-8', 'gaming']
@@ -29,9 +29,9 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      # Require score of 5 or higher. Since we reset the high score when the
+      # Require score of 1 or higher. Since we reset the high score when the
       # snake project is created, we also keep this task completed based on that.
-      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5 or PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 1 or PAA.Pico8.Cartridges.Snake.Project.state 'activeProjectId'
 
   class @Draw extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.Snake.Draw'
@@ -72,7 +72,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @instructions: -> """
       With the game sprites replaced, run PICO-8 again and see how your art looks in the game. Do any updates until
-      you're happy. Score at least 10 points to complete the project.
+      you're happy. Score some more points to complete the project.
     """
 
     @interests: -> ['learn mode tutorial project']
@@ -82,7 +82,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      PAA.Pico8.Cartridges.Snake.state('highScore') >= 10
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 1
       
   @tasks: -> [
     @Play
