@@ -14,7 +14,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup ex
   @fixedDimensions: -> width: 40, height: 30
   
   @resources: ->
-    requiredPixels: new @Resource.ImagePixels "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/lineartcleanup.png"
+    requiredPath: new @Resource.SvgPaths "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/lineartcleanup.svg"
   
   @markup: -> true
   @pixelArtEvaluation: -> true
@@ -38,9 +38,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup ex
     stepArea = new @constructor.StepArea @, stepAreaBounds
     
     # Step 1 requires you to connect all the required pixels.
-    new @constructor.Steps.DrawLine @, stepArea,
-      goalPixels: @resources.requiredPixels
-      
+    svgPaths = @resources.requiredPath.svgPaths()
+    new @constructor.Steps.DrawLine @, stepArea, {svgPaths}
+    
     # Step 2 requires you to open the evaluation paper.
     new @constructor.Steps.OpenEvaluationPaper @, stepArea
     
@@ -54,5 +54,4 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup ex
     new @constructor.Steps.CloseEvaluationPaper @, stepArea
     
     # Step 6 requires you to clean up the line of all doubles.
-    new @constructor.Steps.CleanLine @, stepArea,
-      goalPixels: @resources.requiredPixels
+    new @constructor.Steps.CleanLine @, stepArea, {svgPaths}

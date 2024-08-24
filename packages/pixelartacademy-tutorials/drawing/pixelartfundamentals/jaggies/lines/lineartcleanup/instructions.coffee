@@ -18,8 +18,32 @@ class LineArtCleanup.Instructions
     @stepNumber: -> 1
     
     @message: -> """
-      Undesirable doubles are an issue when drawing lines freehand. Connect all the pixels by drawing a curve through them with a single, freehand stroke.
+      Undesirable doubles are an issue when drawing lines freehand.
+      For this lesson, draw the curve with a single, freehand stroke.
     """
+    
+    @initialize()
+  
+  class @DrawCurveFreehand extends @StepInstruction
+    @id: -> "#{LineArtCleanup.id()}.DrawCurveFreehand"
+    @stepNumber: -> 1
+    
+    @message: -> """
+      Hold up!
+
+      Please use a freehand stroke for this step.
+      Click on the start of the line and drag along the path in a fluid motion.
+    """
+    
+    @activeConditions: ->
+      return unless super arguments...
+      
+      # Show if you've already done a stroke and you're still in the first step.
+      return unless asset = @getActiveAsset()
+      return unless bitmap = asset.bitmap()
+      bitmap.historyPosition
+    
+    @priority: -> 1
     
     @initialize()
   
@@ -39,6 +63,7 @@ class LineArtCleanup.Instructions
     
     @message: -> """
       Lines are considered 'pixel-perfect' when they don't have any doubles or other corners.
+      
       Click on the Pixel-perfect lines criterion below to see individual problems.
     """
     

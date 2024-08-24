@@ -6,23 +6,23 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 LineArtCleanup = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup
 
 class LineArtCleanup.Steps
-  class @DrawLine extends TutorialBitmap.PixelsStep
+  class @DrawLine extends TutorialBitmap.PathStep
     @preserveCompleted: -> true
-
-    hasPixel: ->
-      # Allow drawing everywhere.
-      true
-      
+    
+    constructor: (tutorialBitmap, stepArea, options = {}) ->
+      options.tolerance = 2
+      super tutorialBitmap, stepArea, options
+    
     completed: ->
       return unless super arguments...
       
-      # Wait until the current stroke action has completed.
-      bitmap = @tutorialBitmap.bitmap()
-      return if bitmap.partialAction
+      # Wait until the line has stopped drawing, otherwise adding pixel art
+      # evaluation properties will happen in-between the stroke and get lost.
+      return if @tutorialBitmap.bitmap().partialAction
       
-      # There needs to be a line that goes through all goal pixels.
+      # There needs to be a line present.
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
-      pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
+      pixelArtEvaluation.layers[0].lines.length
       
   class @OpenEvaluationPaper extends TutorialBitmap.EphemeralStep
     activate: ->
@@ -102,15 +102,17 @@ class LineArtCleanup.Steps
       return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
       not pixelArtEvaluation.active()
 
-  class @CleanLine extends TutorialBitmap.PixelsStep
+  class @CleanLine extends @DrawLine
     completed: ->
       return unless super arguments...
       
-      # There needs to be a line that goes through all goal pixels.
+      # The lines must not have any doubles or corners.
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
-      return unless line = pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
-      
-      # The line must not have any doubles or corners.
+
       pixelArtEvaluationProperty = @tutorialBitmap.bitmap().properties.pixelArtEvaluation
-      lineEvaluation = line.evaluate pixelArtEvaluationProperty
-      not lineEvaluation.doubles.count and not lineEvaluation.corners.count
+      
+      for line in pixelArtEvaluation.layers[0].lines
+        lineEvaluation = line.evaluate pixelArtEvaluationProperty
+        return if lineEvaluation.doubles.count or lineEvaluation.corners.count
+        
+      true
