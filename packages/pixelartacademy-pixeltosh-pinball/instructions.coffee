@@ -30,6 +30,24 @@ class Pinball.Instructions
     
     faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo
   
+  class @FlatPlayfield extends @Instruction
+    @id: -> "PixelArtAcademy.Pixeltosh.Programs.Pinball.Instructions.FlatPlayfield"
+    
+    @message: -> """
+      Oh no, the playfield is flat! You have to angle it to more than 0 degrees in Settings.
+    """
+    
+    @activeConditions: ->
+      return unless pinball = @getPinball()
+      
+      # Show when the playfield's angle is 0.
+      return unless playfield = pinball.sceneManager()?.getPartOfType Pinball.Parts.Playfield
+      playfield.data().angleDegrees is 0
+    
+    @initialize()
+    
+    faceClass: -> PAA.Pixeltosh.Instructions.FaceClasses.OhNo
+  
   class @InvalidPartInstruction extends @Instruction
     @invalidPart: -> throw new AE.NotImplementedException "Invalid part instruction must determine the invalid part."
     

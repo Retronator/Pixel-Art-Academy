@@ -24,8 +24,6 @@ class Pinball.RendererManager
     @renderer = new THREE.WebGLRenderer
       powerPreference: 'high-performance'
 
-    @renderer.shadowMap.enabled = true
-    @renderer.shadowMap.type = THREE.PCFSoftShadowMap
     @renderer.setClearColor new THREE.Color 0xffffff
 
     @_sizeAutorun = @pinball.autorun =>
