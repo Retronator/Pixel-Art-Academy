@@ -21,12 +21,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.LineArtCleanup e
   
   @properties: ->
     pixelArtScaling: true
-    pixelArtEvaluation:
-      allowedCriteria: [PAE.Criteria.SmoothCurves]
-      smoothCurves:
-        abruptSegmentLengthChanges: {}
-        straightParts: {}
-        inflectionPoints: {}
     
   @initialize()
   
@@ -47,12 +41,15 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.LineArtCleanup e
     new @constructor.Steps.DrawLine @, stepArea,
       goalPixels: @resources.requiredPixels
     
-    # Step 2 requires you to open the smooth curves details page.
+    # Step 2 requires you to open the evaluation paper.
+    new @constructor.Steps.OpenEvaluationPaper @, stepArea
+    
+    # Step 3 requires you to open the smooth curves details page.
     new @constructor.Steps.OpenSmoothCurves @, stepArea
     
-    # Step 3 requires you to analyze the curve.
+    # Step 4 requires you to analyze the curve.
     new @constructor.Steps.AnalyzeTheCurve @, stepArea
     
-    # Step 4 requires you to smoothen the curve.
+    # Step 5 requires you to smoothen the curve.
     new @constructor.Steps.SmoothenTheCurve @, stepArea,
       goalPixels: @resources.requiredPixels

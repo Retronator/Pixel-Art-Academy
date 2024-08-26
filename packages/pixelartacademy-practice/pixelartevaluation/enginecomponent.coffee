@@ -100,7 +100,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         # When focusing on inflection points, we draw just the curvature curve parts.
         for line in lines
           # Ignore lines without curves.
-          {curveSmoothness} = line.evaluate()
+          {curveSmoothness} = line.evaluate pixelArtEvaluationProperty
           continue unless curveSmoothness?.inflectionPoints.points.length
           
           for curve in line.curvatureCurveParts
@@ -165,7 +165,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             continue if focusedLines.length and linePart.line not in focusedLines
             
             # Draw lines without curves with minimal lines.
-            {curveSmoothness} = linePart.line.evaluate()
+            {curveSmoothness} = linePart.line.evaluate pixelArtEvaluationProperty
             unless curveSmoothness
               straightLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
               straightLineMarkup.line.width = 0
@@ -213,7 +213,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           # If we're focusing on a line, skip drawing others.
           continue if focusedLines.length and line not in focusedLines
           
-          {curveSmoothness} = line.evaluate()
+          {curveSmoothness} = line.evaluate pixelArtEvaluationProperty
           
           # Ignore lines without curves.
           continue unless curveSmoothness
@@ -247,7 +247,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
       for line in lines
         continue if focusedLines.length and line not in focusedLines
         
-        lineEvaluation = line.evaluate()
+        lineEvaluation = line.evaluate pixelArtEvaluationProperty
         widthType = lineEvaluation.width.type
         
         # Apply filtering.

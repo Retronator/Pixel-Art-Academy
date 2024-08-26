@@ -1,9 +1,14 @@
 AE = Artificial.Everywhere
+AP = Artificial.Program
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
 PAE.Line::evaluate = (pixelArtEvaluationProperty) ->
-  return @_evaluation if @_evaluation
+  options = PAE._getEvaluationOptions pixelArtEvaluationProperty
+  optionsHash = AP.HashFunctions.getObjectHash options, AP.HashFunctions.circularShift5
+  
+  @_evaluation ?= {}
+  return @_evaluation[optionsHash] if @_evaluation[optionsHash]
   
   doubles = @_analyzeDoubles pixelArtEvaluationProperty
   corners = @_analyzeCorners pixelArtEvaluationProperty
@@ -82,6 +87,8 @@ PAE.Line::_analyzeWidth = (pixelArtEvaluationProperty) ->
   score: 1
 
 PAE.Line::_analyzeCurveSmoothness = (pixelArtEvaluationProperty) ->
+  options = PAE._getEvaluationOptions(pixelArtEvaluationProperty).smoothCurves
+  
   # Nothing to do if curved parts are in the minority.
   curvePartsLength = 0
   straightPartsLength = 0
@@ -93,7 +100,8 @@ PAE.Line::_analyzeCurveSmoothness = (pixelArtEvaluationProperty) ->
     else
       straightPartsLength += part.points.length
   
-  return unless curvePartsLength > straightPartsLength
+  if options.ignoreMostlyStraightLines
+    return unless curvePartsLength > straightPartsLength
   
   # Calculate abrupt segment length changes score.
   pointSegmentLengthChangesCount = 0

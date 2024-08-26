@@ -88,3 +88,24 @@ _.mixin
     else
       # Note: We want to use EJSON.equals instead of comparing a to b directly since EJSON.equals equates NaN to true.
       EJSON.equals a, b
+    
+  # Override existing values of a with values from b. This mutates a.
+  override: (a, b) ->
+    return unless b?
+    
+    for key of a when b[key]?
+      a[key] = b[key]
+      
+    a
+  
+  overrideDeep: (a, b) ->
+    return unless b?
+
+    for key, value of a when b[key]?
+      if _.isObject(value)
+        _.overrideDeep value, b[key]
+        
+      else
+        a[key] = b[key]
+      
+    a

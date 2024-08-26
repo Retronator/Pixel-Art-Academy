@@ -23,6 +23,27 @@ class LineArtCleanup.Steps
       # There needs to be a line that goes through all goal pixels.
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
       pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
+  
+  class @OpenEvaluationPaper extends TutorialBitmap.EphemeralStep
+    activate: ->
+      super arguments...
+      
+      bitmap = @tutorialBitmap.bitmap()
+      
+      pixelArtEvaluation =
+        allowedCriteria: [PAE.Criteria.SmoothCurves]
+        smoothCurves:
+          ignoreMostlyStraightLines: false
+          abruptSegmentLengthChanges: {}
+          straightParts: {}
+          inflectionPoints: {}
+      
+      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'pixelArtEvaluation', pixelArtEvaluation
+      
+      bitmap.executeAction updatePropertyAction
+    
+    completed: ->
+      return true if super arguments...
       
       # Pixel art evaluation paper needs to be open.
       return unless drawingEditor = @getEditor()
@@ -87,7 +108,8 @@ class LineArtCleanup.Steps
       return unless line = pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
       
       # All smooth curves criteria need to be at 0.9 or more (A level).
-      lineEvaluation = line.evaluate()
+      bitmap = @tutorialBitmap.bitmap()
+      lineEvaluation = line.evaluate bitmap.properties.pixelArtEvaluation
       for categoryName, categoryEvaluation of lineEvaluation.curveSmoothness
         return unless categoryEvaluation.score >= 0.9
         

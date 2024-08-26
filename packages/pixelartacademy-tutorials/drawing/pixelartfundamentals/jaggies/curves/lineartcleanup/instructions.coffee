@@ -41,7 +41,7 @@ class LineArtCleanup.Instructions
     @stepNumber: -> 1
     
     @message: -> """
-      Connect all the pixels by drawing a curve through them with a single, freehand stroke, and open the pixel art evaluation paper in the bottom-right corner.
+      Connect all the pixels by drawing a single curve through them.
     """
     
     @initialize()
@@ -51,12 +51,22 @@ class LineArtCleanup.Instructions
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
   
-  class @OpenSmoothCurves extends @StepInstruction
-    @id: -> "#{LineArtCleanup.id()}.OpenSmoothCurves"
+  class @OpenEvaluationPaper extends @StepInstruction
+    @id: -> "#{LineArtCleanup.id()}.OpenEvaluationPaper"
     @stepNumber: -> 2
     
     @message: -> """
-      You can now analyze your curves. Click on the Smooth curves criterion to continue.
+        You can now open the pixel art evaluation paper to get an analysis of your curves.
+      """
+    
+    @initialize()
+    
+  class @OpenSmoothCurves extends @StepInstruction
+    @id: -> "#{LineArtCleanup.id()}.OpenSmoothCurves"
+    @stepNumber: -> 3
+    
+    @message: -> """
+      Click on the Smooth curves criterion to continue.
     """
     
     @displaySide: -> InstructionsSystem.DisplaySide.Top
@@ -66,7 +76,7 @@ class LineArtCleanup.Instructions
     
   class @AnalyzeTheCurve extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.AnalyzeTheCurve"
-    @stepNumber: -> 3
+    @stepNumber: -> 4
     
     @message: -> """
       Smooth curves will have uniformly changing segment lengths, minimal straight parts, and as few changes of direction (inflection points) as possible.
@@ -84,7 +94,7 @@ class LineArtCleanup.Instructions
   
   class @SmoothenTheCurve extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.SmoothenTheCurve"
-    @stepNumber: -> 4
+    @stepNumber: -> 5
     
     @message: -> """
       Clean your line until all Smooth curves criteria are improved over 90%.
@@ -100,3 +110,21 @@ class LineArtCleanup.Instructions
       pixelArtEvaluation = @constructor.getPixelArtEvaluation()
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+
+  class @DrawOneCurve extends PAA.Tutorials.Drawing.Instructions.Instruction
+    @id: -> "#{LineArtCleanup.id()}.DrawOneCurve"
+    @assetClass: -> LineArtCleanup
+    
+    @message: -> """
+      Make sure there is only one curve that connects all the required pixels.
+    """
+    
+    @activeConditions: ->
+      # Show if there are multiple lines present.
+      return unless asset = @getActiveAsset()
+      return unless pixelArtEvaluation = asset.pixelArtEvaluation()
+      pixelArtEvaluation.layers[0].lines.length > 1
+    
+    @priority: -> 1
+    
+    @initialize()

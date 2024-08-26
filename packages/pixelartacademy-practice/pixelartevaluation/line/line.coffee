@@ -81,10 +81,7 @@ class PAE.Line
     true
     
   getDoubles: (pixelArtEvaluationProperty) ->
-    options = _.defaults {}, pixelArtEvaluationProperty?.pixelPerfectLines?.doubles,
-      countAllLineWidthTypes: false
-      countPointsWithMultiplePixels: false
-      
+    options = PAE._getEvaluationOptions(pixelArtEvaluationProperty).pixelPerfectLines.doubles
     optionsHash = AP.HashFunctions.getObjectHash options, AP.HashFunctions.circularShift5
     
     @_doubles ?= {}
@@ -114,10 +111,7 @@ class PAE.Line
     @_doubles[optionsHash]
     
   getCorners: (pixelArtEvaluationProperty) ->
-    # Corners at straight line parts are ignored by default.
-    options = _.defaults {}, pixelArtEvaluationProperty?.pixelPerfectLines?.corners,
-      ignoreStraightLineCorners: true
-      
+    options = PAE._getEvaluationOptions(pixelArtEvaluationProperty).pixelPerfectLines.corners
     optionsHash = AP.HashFunctions.getObjectHash options, AP.HashFunctions.circularShift5
     
     @_corners ?= {}

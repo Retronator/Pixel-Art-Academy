@@ -42,7 +42,11 @@ class LOI.Assets.Palette extends AM.Document
   @imageUrl = "/landsofillusions/assets/palette.png"
 
   @defaultPalette: ->
-    @documents.findOne name: @defaultPaletteName
+    return @_defaultPalette if @_defaultPalette
+
+    @_defaultPalette = @documents.findOne name: @defaultPaletteName
+    
+    @_defaultPalette
 
   color: (rampIndex, shadeIndex) ->
     # Ramp index must match exactly.
