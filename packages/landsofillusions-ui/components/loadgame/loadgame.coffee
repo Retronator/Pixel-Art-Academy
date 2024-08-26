@@ -63,6 +63,7 @@ class LOI.Components.LoadGame extends LOI.Component
               
           else
             console.log "Desired profile was not provided by any of the synced storages." if LOI.debug or LOI.Adventure.debugState
+            @callFirstWith null, 'deactivate'
             reject()
     
   loadProfile: (profileId, animate = true) ->
