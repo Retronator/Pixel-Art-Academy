@@ -120,8 +120,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           
           stepAreaInstance = new @constructor.StepArea @, stepAreaBounds
   
-          goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepArea.referenceUrl
-          @initializeStepsInAreaWithResources stepAreaInstance, goalChoice
+          if goalChoice = _.find goalChoices, (goalChoice) => goalChoice.referenceUrl is stepArea.referenceUrl
+            @initializeStepsInAreaWithResources stepAreaInstance, goalChoice
         
   destroy: ->
     super arguments...
