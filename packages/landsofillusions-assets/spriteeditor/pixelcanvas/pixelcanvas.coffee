@@ -53,7 +53,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @landmarks = new ReactiveField null
     @pixelGrid = new ReactiveField null
     @operationPreview = new ReactiveField null
-    @toolInfo = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @windowSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
@@ -135,7 +134,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @landmarks new @constructor.Landmarks @
     @pixelGrid new @constructor.PixelGrid @
     @operationPreview new @constructor.OperationPreview @
-    @toolInfo new @constructor.ToolInfo @
 
     # Prepare helpers.
     @fileIdForHelpers = new ComputedField =>
@@ -152,6 +150,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       landmarksHelperClass = @options?.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
       @interface.getHelperForFile landmarksHelperClass, @fileIdForHelpers()
 
+    @invertUIColorsData = new ComputedField =>
+      @interface.getActiveFileData()?.child 'invertUIColors'
+    
+    @invertUIColors = new ComputedField =>
+      @invertUIColorsData()?.value()
+      
     @shadingEnabled = new ComputedField =>
       @editorFileData()?.get('shadingEnabled') ? true
 
@@ -160,7 +164,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         drawComponents = _.clone @options.drawComponents()
 
       else
-        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
+        drawComponents = [@pixelImage(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks()]
         
       if componentIds = @components()
         for componentId in componentIds
@@ -301,6 +305,21 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     canvasWindowBounds.height = "#{canvasWindowBounds.height / drawingAreaWindowBounds.height * 100}%"
     
     canvasWindowBounds
+    
+  toolInfoInvertColorsClass: ->
+    'invert-colors' if @invertUIColors()
+  
+  toolInfoStyle: ->
+    return unless @toolInfoText()
+    
+    pointerPosition = @pointer().windowCoordinate()
+    
+    left: "calc(#{pointerPosition.x}px + 16rem)"
+    top: "#{pointerPosition.y}px"
+  
+  toolInfoText: ->
+    return unless @interface.active()
+    @interface.activeTool()?.infoText?()
 
   draw: (appTime) ->
     # Render the canvas each frame when the tool requests realtime updating.

@@ -346,7 +346,6 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/pixelcanvas/landmarks');
   api.addFile('spriteeditor/pixelcanvas/pixelgrid');
   api.addFile('spriteeditor/pixelcanvas/operationpreview');
-  api.addFile('spriteeditor/pixelcanvas/toolinfo');
 
   api.addComponent('spriteeditor/shadingsphere..');
   api.addFile('spriteeditor/shadingsphere/normalpicker');

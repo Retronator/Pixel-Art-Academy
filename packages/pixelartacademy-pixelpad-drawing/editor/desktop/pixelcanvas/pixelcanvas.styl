@@ -35,6 +35,15 @@
     canvas
       absolute-cover-size()
 
+  .tool-info
+    z-index 200
+    color atariGray(0)
+    pixel-text-outline(atariGray(6))
+
+    &.invert-colors
+      color atariGray(6)
+      pixel-text-outline(atariGray(0))
+
 .pixelartacademy-pixelpad-apps-drawing.editor-desktop
   &.active-asset:not(.editor-active)
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop
