@@ -91,7 +91,7 @@ _.mixin
     
   # Override existing values of a with values from b. This mutates a.
   override: (a, b) ->
-    return unless b?
+    return a unless b?
     
     for key of a when b[key]?
       a[key] = b[key]
@@ -99,7 +99,7 @@ _.mixin
     a
   
   overrideDeep: (a, b) ->
-    return unless b?
+    return a unless b?
 
     for key, value of a when b[key]?
       if _.isObject(value)
