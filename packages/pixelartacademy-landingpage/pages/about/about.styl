@@ -120,6 +120,7 @@ follow-color(hue, shade)
         position relative
         text-transform uppercase
         padding 1rem 1rem 1rem 2rem
+        text-decoration none
 
         &::before
         &::after
@@ -216,6 +217,14 @@ follow-color(hue, shade)
               background atariOrange(1)
               color atariYellow(5)
 
+              &:hover
+                background atariOrange(2)
+                color atariYellow(6)
+
+                &::before
+                &::after
+                  border-color atariOrange(3)
+
               &::before
               &::after
                 border-color atariOrange(2)
@@ -225,6 +234,14 @@ follow-color(hue, shade)
             .status
               background atariGreen(1)
               color atariGreen(6)
+
+              &:hover
+                background atariGreen(2)
+                color atariGreen(7)
+
+                &::before
+                &::after
+                  border-color atariGreen(3)
 
               &::before
               &::after

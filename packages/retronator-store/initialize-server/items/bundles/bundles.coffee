@@ -12,7 +12,7 @@ Document.startup ->
 
   RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
-    price: 10
+    price: 12
     discountedFrom: 15
     name: "Pixel Art Academy - Basic game pre-order"
     description: "Select from one of the pre-made characters and play through storylines, build your library of knowledge, complete assignments and track your art progress. First chapter of the game is now in open alpha and you can already test playing it. With a pre-order you secure the lower price."
