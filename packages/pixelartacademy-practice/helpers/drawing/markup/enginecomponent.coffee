@@ -10,30 +10,32 @@ class Markup.EngineComponent
   # (markup pixels will be scaled down when zoomed out more than this).
   @minimumZoomPercentage = 400 # %
   
-  constructor: (@options) ->
+  drawMarkup: (markup, context, properties) ->
+    # How big is an HTML canvas pixel relative to the unit of the context.
+    pixelSize = properties.pixelSize
   
-  drawMarkup: (markup, context, renderOptions = {}) ->
-    pixelSize = 1 / renderOptions.camera.effectiveScale()
-    displayScale = renderOptions.editor.display.scale()
-    displayPixelSize = pixelSize * displayScale
+    # How big is a game display pixel relative to the unit of the context.
+    displayPixelSize = properties.displayPixelSize
     
-    scaledDisplayPixelSize = Math.min 100 / @constructor.minimumZoomPercentage, displayPixelSize
+    minimumZoomPercentage = properties.minimumZoomPercentage ? @constructor.minimumZoomPercentage
+    
+    scaledDisplayPixelSize = Math.min 100 / minimumZoomPercentage, displayPixelSize
     
     context.save()
     
-    for element in markup
-      if pixel = element.pixel
+    for marking in markup
+      if pixel = marking.pixel
         context.fillStyle = pixel.style
         context.fillRect pixel.x, pixel.y, 1, 1
         
-      if point = element.point
+      if point = marking.point
         radius = scaledDisplayPixelSize * (point.radius or 0.5)
         context.fillStyle = point.style
         context.beginPath()
         context.arc point.x, point.y, radius, 0, 2 * Math.PI
         context.fill()
       
-      if line = element.line
+      if line = marking.line
         context.strokeStyle = line.style
         context.lineCap = line.cap
         context.lineWidth = scaledDisplayPixelSize * (line.width or 1)
@@ -88,13 +90,30 @@ class Markup.EngineComponent
           context.arc line.arc.x, line.arc.y, line.arc.radius, startAngle, endAngle
           context.stroke()
         
-      if text = element.text
+      if rectangle = marking.rectangle
+        if rectangle.fillStyle
+          context.fillStyle = rectangle.fillStyle
+          context.fillRect rectangle.x, rectangle.y, rectangle.width, rectangle.height
+        
+        if rectangle.strokeStyle
+          context.lineWidth = scaledDisplayPixelSize * (rectangle.strokeWidth or 1)
+          context.strokeStyle = rectangle.strokeStyle
+          
+          effectiveLineWidth = context.lineWidth / pixelSize
+          sharpPixelOffset = if effectiveLineWidth % 2 is 1 then 0.5 else 0
+          
+          sharpX = (Math.floor(rectangle.x / pixelSize) + sharpPixelOffset) * pixelSize
+          sharpY = (Math.floor(rectangle.y / pixelSize) + sharpPixelOffset) * pixelSize
+          
+          context.strokeRect sharpX, sharpY, rectangle.width, rectangle.height
+          
+      if text = marking.text
+        textSize = text.size * scaledDisplayPixelSize
+        context.font = "#{textSize}px #{text.font}"
+        
         if text.backgroundStyle
           context.fillStyle = text.backgroundStyle
           @_drawTextBackground context, text.value, text.position, lineHeight, text.backgroundPadding
-      
-        textSize = text.size * scaledDisplayPixelSize
-        context.font = "#{textSize}px #{text.font}"
         
         if text.lineHeight
           lineHeight = text.lineHeight * scaledDisplayPixelSize

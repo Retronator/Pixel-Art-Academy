@@ -269,7 +269,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     
     camera = @camera()
     
-    context.setTransform 1, 0, 0, 1, 0, 0
+    context.resetTransform()
     context.clearRect 0, 0, canvas.width, canvas.height
     
     camera.applyTransformToCanvas()

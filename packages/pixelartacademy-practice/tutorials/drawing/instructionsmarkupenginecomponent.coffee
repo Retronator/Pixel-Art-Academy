@@ -14,4 +14,6 @@ class PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent extends P
   drawToContext: (context, renderOptions = {}) ->
     return unless markup = @markup()
     
-    @drawMarkup markup, context, renderOptions
+    @drawMarkup markup, context,
+      pixelSize: 1 / renderOptions.camera.effectiveScale() * devicePixelRatio
+      displayPixelSize: 1 / renderOptions.camera.effectiveScale() * renderOptions.editor.display.scale()

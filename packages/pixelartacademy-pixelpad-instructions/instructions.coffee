@@ -65,6 +65,10 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     
     @displayedInstruction = new ReactiveField null
 
+    @interfaceMarkings = new ComputedField =>
+      return unless markup = @targetDisplayedInstruction()?.markup?()
+      marking.interface for marking in markup when marking.interface
+  
   onRendered: ->
     super arguments...
     

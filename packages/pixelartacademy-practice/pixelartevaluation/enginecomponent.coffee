@@ -19,7 +19,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
     Wide: 3
     Varying: 2
   
-  constructor: ->
+  constructor: (@options) ->
     super arguments...
     
     @ready = new ComputedField =>
@@ -271,7 +271,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           
         markup.push lineMarkup...
         
-    @drawMarkup markup, context, renderOptions
+    @drawMarkup markup, context,
+      pixelSize: 1 / renderOptions.camera.effectiveScale() * devicePixelRatio
+      displayPixelSize: 1 / renderOptions.camera.effectiveScale() * renderOptions.editor.display.scale()
 
   _addPixelToPath: (context, pixel) ->
     context.rect pixel.x - 0.5, pixel.y - 0.5, 1, 1

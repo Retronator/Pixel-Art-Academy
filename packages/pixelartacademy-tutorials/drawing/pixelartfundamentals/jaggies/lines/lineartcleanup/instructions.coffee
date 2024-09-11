@@ -2,6 +2,10 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
+Markup = PAA.Practice.Helpers.Drawing.Markup
+InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
+Atari2600 = LOI.Assets.Palette.Atari2600
+
 # Note: We can't call this Instructions since we introduce a namespace class called that below.
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
 LineArtCleanup = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup
@@ -55,6 +59,60 @@ class LineArtCleanup.Instructions
       You can now open the pixel art evaluation paper in the bottom-right corner to get an analysis of your line.
     """
     
+    markup: ->
+      markup = []
+      
+      arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
+      
+      markup.push
+        interface:
+          selector: '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation'
+          delay: 1
+          bounds:
+            x: -30
+            y: -40
+            width: 50
+            height: 40
+          markings: [
+            line: _.extend {}, arrowBase,
+              points: [
+                x: -6, y: -25
+              ,
+                x: 12, y: -8, bezierControlPoints: [
+                  x: -6, y: -12
+                ,
+                  x: 12, y: -20
+                ]
+              ]
+            text: _.extend {}, textBase,
+              position:
+                x: -6, y: -27, origin: Markup.TextOriginPosition.BottomCenter
+              value: "click here"
+          ]
+      
+      markup
+    
+    @initialize()
+  
+  class @ReopenEvaluationPaper extends @OpenEvaluationPaper
+    @id: -> "#{LineArtCleanup.id()}.ReopenEvaluationPaper"
+    @stepNumbers: -> [3, 4]
+    
+    @message: -> """
+      Open the pixel art evaluation paper in the bottom-right corner to continue.
+    """
+    
+    @activeConditions: ->
+      return unless super arguments...
+      
+      # Show if the pixel art evaluation paper is not open.
+      return unless drawingEditor = @getEditor()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      not pixelArtEvaluation.active()
+    
+    @priority: -> 1
+    
     @initialize()
     
   class @OpenPixelPerfectLines extends @StepInstruction
@@ -72,6 +130,70 @@ class LineArtCleanup.Instructions
     
     @initialize()
     
+    markup: ->
+      markup = []
+      
+      markupStyle = InterfaceMarking.defaultStyle()
+      arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
+      
+      markup.push
+        interface:
+          selector: '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation'
+          delay: 1
+          bounds:
+            x: -50
+            y: 0
+            width: 260
+            height: 50
+          markings: [
+            rectangle:
+              strokeStyle: markupStyle
+              x: 5.5
+              y: 36
+              width: 199
+              height: 13
+            line: _.extend {}, arrowBase,
+              points: [
+                x: -25, y: 25
+              ,
+                x: 2, y: 42, bezierControlPoints: [
+                  x: -25, y: 37
+                ,
+                  x: -8, y: 42
+                ]
+              ]
+            text: _.extend {}, textBase,
+              position:
+                x: -25, y: 23, origin: Markup.TextOriginPosition.BottomCenter
+              value: "click here"
+          ]
+      
+      markup
+  
+  class @ReopenPixelPerfectLines extends @OpenPixelPerfectLines
+    @id: -> "#{LineArtCleanup.id()}.ReopenPixelPerfectLines"
+    @stepNumber: -> 4
+    
+    @message: -> """
+      Click on the Pixel-perfect lines criterion below to continue.
+    """
+    
+    @delayDuration: -> 0
+
+    @activeConditions: ->
+      return unless super arguments...
+      
+      # Show if the pixel art evaluation paper is not on the pixel-perfect lines criterion.
+      return unless drawingEditor = @getEditor()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      return unless pixelArtEvaluation.active()
+      pixelArtEvaluation.activeCriterion() isnt PAE.Criteria.PixelPerfectLines
+    
+    @priority: -> 1
+    
+    @initialize()
+  
   class @HoverOverCriterion extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.HoverOverCriterion"
     @stepNumber: -> 4
@@ -84,6 +206,47 @@ class LineArtCleanup.Instructions
     @delayDuration: -> @uiRevealDelayDuration
     
     @initialize()
+    
+    markup: ->
+      markup = []
+      
+      markupStyle = InterfaceMarking.defaultStyle()
+      arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
+      
+      markup.push
+        interface:
+          selector: '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation'
+          delay: 1
+          bounds:
+            x: 170
+            y: 0
+            width: 80
+            height: 70
+          markings: [
+            rectangle:
+              strokeStyle: markupStyle
+              x: 181.5
+              y: 30
+              width: 20
+              height: 24
+            line: _.extend {}, arrowBase,
+              points: [
+                x: 235, y: 25
+              ,
+                x: 205, y: 42, bezierControlPoints: [
+                  x: 235, y: 37
+                ,
+                  x: 215, y: 42
+                ]
+              ]
+            text: _.extend {}, textBase,
+              position:
+                x: 235, y: 23, origin: Markup.TextOriginPosition.BottomCenter
+              value: "hover\nhere"
+          ]
+      
+      markup
     
   class @CloseEvaluationPaper extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.CloseEvaluationPaper"

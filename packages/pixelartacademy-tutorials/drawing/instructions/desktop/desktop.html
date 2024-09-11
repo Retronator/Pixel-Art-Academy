@@ -1,22 +1,27 @@
 <template name="PixelArtAcademy.Tutorials.Drawing.Instructions.Desktop">
-  <div class="pixelartacademy-tutorials-drawing-instructions-desktop system {{displaySideClass}}">
-    <div class="paper {{displayStateClass}}" {{style instructionsStyle}}>
-      {{#if $is displaySide 'Bottom'}}
-        <div class="header">
-          <div class="close-hint">x</div>
+  <div class="pixelartacademy-tutorials-drawing-instructions-desktop system">
+    <div class="instruction {{displaySideClass}}">
+      <div class="paper {{displayStateClass}}" {{style instructionsStyle}}>
+        {{#if $is displaySide 'Bottom'}}
+          <div class="header">
+            <div class="close-hint">x</div>
+          </div>
+        {{/if}}
+        <div class="container" {{style containerStyle}}>
+          <div class="gutter"></div>
+          <div class="content">
+            {{> Render displayedInstruction}}
+          </div>
         </div>
-      {{/if}}
-      <div class="container" {{style containerStyle}}>
-        <div class="gutter"></div>
-        <div class="content">
-          {{> Render displayedInstruction}}
-        </div>
+        {{#if $is displaySide 'Top'}}
+          <div class="header">
+            <div class="close-hint">x</div>
+          </div>
+        {{/if}}
       </div>
-      {{#if $is displaySide 'Top'}}
-        <div class="header">
-          <div class="close-hint">x</div>
-        </div>
-      {{/if}}
     </div>
+    {{#each interfaceMarkings}}
+      {{> PixelArtAcademy.PixelPad.Systems.Instructions.InterfaceMarking}}
+    {{/each}}
   </div>
 </template>
