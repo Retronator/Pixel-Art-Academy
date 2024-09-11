@@ -235,7 +235,7 @@ class PAA.Practice.PixelArtEvaluation
     
       evaluation.pixelPerfectLines = @_calculateWeightedEvaluation @constructor.Subcriteria.PixelPerfectLines, @constructor.SubcriteriaWeights.PixelPerfectLines, pixelArtEvaluationProperty.pixelPerfectLines, @_evaluation.pixelPerfectLines
       
-      if evaluation.pixelPerfectLines.score
+      if evaluation.pixelPerfectLines.score?
         finalScore += evaluation.pixelPerfectLines.score
         criteriaCount++
         
@@ -284,7 +284,7 @@ class PAA.Practice.PixelArtEvaluation
       
       evaluation.evenDiagonals = @_calculateWeightedEvaluation @constructor.Subcriteria.EvenDiagonals, @constructor.SubcriteriaWeights.EvenDiagonals, pixelArtEvaluationProperty.evenDiagonals, @_evaluation.evenDiagonals
       
-      if evaluation.evenDiagonals.score
+      if evaluation.evenDiagonals.score?
         finalScore += evaluation.evenDiagonals.score
         criteriaCount++
       
@@ -401,7 +401,7 @@ class PAA.Practice.PixelArtEvaluation
       
       evaluation.consistentLineWidth = @_calculateMaximumEvaluation @constructor.Subcriteria.ConsistentLineWidth, pixelArtEvaluationProperty.consistentLineWidth, @_evaluation.consistentLineWidth
       
-      if evaluation.consistentLineWidth.score
+      if evaluation.consistentLineWidth.score?
         finalScore += evaluation.consistentLineWidth.score
         criteriaCount++
         
