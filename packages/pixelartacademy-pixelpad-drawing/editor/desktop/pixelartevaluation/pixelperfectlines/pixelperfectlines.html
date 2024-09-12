@@ -12,7 +12,7 @@
         <th>Count</th>
       </tr>
       {{#each criteria}}
-        <tr class="criterion">
+        <tr class="criterion {{kebabCase this.id}}">
           {{#if editable}}
             <td class="required">
               <label class="checkmark-area">

@@ -130,46 +130,7 @@ class LineArtCleanup.Instructions
     
     @initialize()
     
-    markup: ->
-      markup = []
-      
-      markupStyle = InterfaceMarking.defaultStyle()
-      arrowBase = InterfaceMarking.arrowBase()
-      textBase = InterfaceMarking.textBase()
-      
-      markup.push
-        interface:
-          selector: '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation'
-          delay: 1
-          bounds:
-            x: -50
-            y: 0
-            width: 260
-            height: 50
-          markings: [
-            rectangle:
-              strokeStyle: markupStyle
-              x: 5.5
-              y: 36
-              width: 199
-              height: 13
-            line: _.extend {}, arrowBase,
-              points: [
-                x: -25, y: 25
-              ,
-                x: 2, y: 42, bezierControlPoints: [
-                  x: -25, y: 37
-                ,
-                  x: -8, y: 42
-                ]
-              ]
-            text: _.extend {}, textBase,
-              position:
-                x: -25, y: 23, origin: Markup.TextOriginPosition.BottomCenter
-              value: "click here"
-          ]
-      
-      markup
+    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereCriterionMarkup '.pixel-perfect-lines'
   
   class @ReopenPixelPerfectLines extends @OpenPixelPerfectLines
     @id: -> "#{LineArtCleanup.id()}.ReopenPixelPerfectLines"

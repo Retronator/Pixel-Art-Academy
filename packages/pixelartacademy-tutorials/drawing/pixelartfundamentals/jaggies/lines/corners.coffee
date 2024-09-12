@@ -1,11 +1,11 @@
-
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+PAE = PAA.Practice.PixelArtEvaluation
 
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 Markup = PAA.Practice.Helpers.Drawing.Markup
-PAE = PAA.Practice.PixelArtEvaluation
+InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
@@ -129,7 +129,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
     
     @message: -> """
       The definition of pixel-perfect lines doesn't allow for corners, so they are highlighted as an error.
-      However, the evaluation doesn't understand the context. Open the Pixel-perfect lines breakdown to continue.
+      However, the evaluation doesn't understand the context.
+      
+      Open the Pixel-perfect lines breakdown to continue.
     """
     
     @completedConditions: ->
@@ -150,6 +152,19 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
 
     @initialize()
     
+    onDisplayed: ->
+      super arguments...
+      
+      drawingEditor = @getEditor()
+      pixelCanvas = drawingEditor.interface.getEditorForActiveFile()
+      
+      camera = pixelCanvas.camera()
+      
+      camera.translateTo {x: 27, y: 12}, 1
+      camera.scaleTo 4, 1
+    
+    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereCriterionMarkup '.pixel-perfect-lines'
+  
   class @TurnOff extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.TurnOff"
     @assetClass: -> Asset
@@ -157,12 +172,52 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
     
     @message: -> """
       The evaluation paper can only show potential problems. Don't worry about the corners that are intentional.
-      You can even turn individual criteria off completely. Do that now by removing the checkmark next to the Corners criterion.
+      You can even turn individual criteria off completely.
+      
+      Do that now by removing the checkmark next to the Corners criterion.
     """
     
     @displaySide: -> PAA.PixelPad.Systems.Instructions.DisplaySide.Top
     
     @initialize()
+    
+    markup: ->
+      markupStyle = InterfaceMarking.defaultStyle()
+      arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
+      
+      [
+        interface:
+          selector: ".pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation .corners .checkmark-area"
+          delay: 1
+          bounds:
+            x: -50
+            y: -35
+            width: 70
+            height: 55
+          markings: [
+            rectangle:
+              strokeStyle: markupStyle
+              x: 2
+              y: 2
+              width: 13
+              height: 11
+            line: _.extend {}, arrowBase,
+              points: [
+                x: -32, y: -9
+              ,
+                x: -2, y: 7, bezierControlPoints: [
+                  x: -32, y: 3
+                ,
+                  x: -15, y: 7
+                ]
+              ]
+            text: _.extend {}, textBase,
+              position:
+                x: -32, y: -11, origin: Markup.TextOriginPosition.BottomCenter
+              value: "click here"
+          ]
+      ]
     
   class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
     @id: -> "#{Asset.id()}.Complete"

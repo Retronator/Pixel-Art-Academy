@@ -4,6 +4,9 @@ Template.registerHelper 'capitalize', (string) ->
 Template.registerHelper 'titleCase', (string) ->
   _.titleCase string if string
 
+Template.registerHelper 'kebabCase', (string) ->
+  _.kebabCase string if string
+
 Template.registerHelper 'toLower', (string) ->
   _.toLower string if string
 
