@@ -156,6 +156,13 @@ class PAE.Line
     
     @_innerPoints
     
+  getRightMostPoint: ->
+    rightMostPoint = @points[0]
+    
+    rightMostPoint = point for point in @points[1..] when point.x > rightMostPoint.x
+    
+    rightMostPoint
+  
   getPartsForPixel: (pixel) ->
     part for part in @parts when part.hasPixel pixel
     

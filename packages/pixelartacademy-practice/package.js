@@ -132,6 +132,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/steparea');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/step');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pixelsstep');
+  api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pixelswithpathsstep');
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/ephemeralstep');
 
   api.addFile('tutorials/drawing/assets/tutorialbitmap/steps/pathstep..');

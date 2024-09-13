@@ -114,6 +114,10 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/circles');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/longcurves');
 
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges/instructions');
+
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/instructions');

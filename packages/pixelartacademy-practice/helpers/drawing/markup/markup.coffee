@@ -67,6 +67,11 @@ class PAA.Practice.Helpers.Drawing.Markup
       style: @backgroundStyle()
     align: @TextAlign.Center
   
+  @arrowBase: ->
+    arrow:
+      end: true
+    style: @defaultStyle()
+
   @percentage: (value) ->
     return "N/A" unless value?
     

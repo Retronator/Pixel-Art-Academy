@@ -11,6 +11,37 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 class TutorialBitmap.PathStep extends TutorialBitmap.Step
   @debug = false
   
+  @drawUnderlyingHints: (context, renderOptions, stepArea, paths) ->
+    # Draw path to step area.
+    context.save()
+    context.translate stepArea.bounds.x, stepArea.bounds.y
+    
+    if @debug
+      # Draw the anti-aliased paths for debug purposes.
+      context.globalAlpha = 0.5
+      context.imageSmoothingEnabled = false
+      
+      for path in paths
+        context.drawImage path.canvas, 0, 0
+      
+      context.globalAlpha = 1
+
+    # Set line style.
+    pixelSize = 1 / renderOptions.camera.effectiveScale()
+    context.lineWidth = pixelSize
+    
+    pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
+    context.strokeStyle = "hsl(0 0% 50% / #{pathOpacity})"
+    context.fillStyle = "hsl(0 0% 50%)"
+    
+    halfPixelSize = pixelSize / 2
+    
+    # Draw all the paths' hints.
+    context.translate halfPixelSize, halfPixelSize
+    path.drawUnderlyingHints context, renderOptions for path in paths
+
+    context.restore()
+  
   # Note: We receive pure SVG paths through options since the SVG paths resource can be broken down into multiple steps.
   constructor: ->
     super arguments...
@@ -70,35 +101,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
   
   drawUnderlyingHints: (context, renderOptions) ->
-    # Draw path to step area.
-    context.save()
-    context.translate @stepArea.bounds.x, @stepArea.bounds.y
-    
-    if @constructor.debug
-      # Draw the anti-aliased paths for debug purposes.
-      context.globalAlpha = 0.5
-      context.imageSmoothingEnabled = false
-      
-      for path in @paths
-        context.drawImage path.canvas, 0, 0
-      
-      context.globalAlpha = 1
-
-    # Set line style.
-    pixelSize = 1 / renderOptions.camera.effectiveScale()
-    context.lineWidth = pixelSize
-    
-    pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
-    context.strokeStyle = "hsl(0 0% 50% / #{pathOpacity})"
-    context.fillStyle = "hsl(0 0% 50%)"
-    
-    halfPixelSize = pixelSize / 2
-    
-    # Draw all the paths' hints.
-    context.translate halfPixelSize, halfPixelSize
-    path.drawUnderlyingHints context, renderOptions for path in @paths
-
-    context.restore()
+    @constructor.drawUnderlyingHints context, renderOptions, @stepArea, @paths
     
   drawOverlaidHints: (context, renderOptions) ->
     @_preparePixelHintSize renderOptions

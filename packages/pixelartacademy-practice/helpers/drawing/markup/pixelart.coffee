@@ -149,7 +149,7 @@ class Markup.PixelArt
     line: _.extend @perceivedLineBase(), {points}
   
   @evaluatedPerceivedStraightLine: (straightLine) ->
-    @_prepareLineParts straightLine
+    @_prepareStraightLineParts straightLine
     
     evaluation = straightLine.evaluate()
     markup = []
@@ -173,7 +173,7 @@ class Markup.PixelArt
  
     markup
     
-  @_prepareLineParts: (straightLine) ->
+  @_prepareStraightLineParts: (straightLine) ->
     _start.copy(straightLine.displayLine2.start).add _evaluationToCanvasOffset
     _end.copy(straightLine.displayLine2.end).add _evaluationToCanvasOffset
     
@@ -396,8 +396,8 @@ class Markup.PixelArt
       
     markup
     
-  @lineEvaluationPercentageTexts: (straightLine) ->
-    @_prepareLineParts straightLine
+  @straightLineEvaluationPercentageTexts: (straightLine) ->
+    @_prepareStraightLineParts straightLine
     
     textBase = Markup.textBase()
     
@@ -461,7 +461,43 @@ class Markup.PixelArt
       @evaluatedDiagonalRatioText straightLine
       @evaluatedPerceivedStraightLine(straightLine)...
       @pointSegmentLengthTexts(straightLine)...
-      @lineEvaluationPercentageTexts(straightLine)...
+      @straightLineEvaluationPercentageTexts(straightLine)...
     ]
+    
+    markup
+
+  @curveSmoothnessEvaluationPercentageTexts: (line, subcriterions) ->
+    textBase = Markup.textBase()
+    
+    return [] unless curveSmoothness = line.evaluate()?.curveSmoothness
+    
+    score = 0
+    totalWeight = 0
+    
+    for subcriterion, weight of PAA.Practice.PixelArtEvaluation.SubcriteriaWeights.SmoothCurves when not subcriterions or subcriterion in subcriterions
+      subcriterionProperty = _.lowerFirst subcriterion
+      score += curveSmoothness[subcriterionProperty].score * weight
+      totalWeight += weight
+      
+    return [] unless totalWeight
+    
+    score /= totalWeight
+    
+    markup = []
+    
+    # Write the percentage to the right of the right-most pixel of the curve.
+    rightMostPoint = line.getRightMostPoint()
+
+    markup.push
+      text: _.extend {}, textBase,
+        position:
+          x: rightMostPoint.x + 1
+          y: rightMostPoint.y + 0.5
+          origin: Markup.TextOriginPosition.MiddleLeft
+        value: Markup.percentage score
+        style: switch
+          when score >= 0.9 then Markup.betterStyle()
+          when score >= 0.6 then Markup.mediocreStyle()
+          else Markup.worseStyle()
     
     markup

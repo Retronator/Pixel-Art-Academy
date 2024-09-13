@@ -65,6 +65,11 @@ class PAA.PixelPad.Systems.Instructions.InterfaceMarking extends AM.Component
       
       @_repositionTimeout = Meteor.setTimeout =>
         $target = $(markingData.selector)
+        
+        unless $target.length
+          console.warn "Marking selector #{markingData.selector} returned no elements."
+          return
+        
         targetOffset = $target.offset()
   
         $os = $('.pixelartacademy-pixelpad-os')

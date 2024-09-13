@@ -11,6 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves extends PAA.Prac
   
   @assets: -> [
     @SmoothCurves
+    @AbruptSegmentLengthChanges
     @LineArtCleanup
     @Circles
     @LongCurves

@@ -199,9 +199,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
             rectangle:
               strokeStyle: markupStyle
               x: 2
-              y: 2
+              y: 1.5
               width: 13
-              height: 11
+              height: 11.5
             line: _.extend {}, arrowBase,
               points: [
                 x: -32, y: -9

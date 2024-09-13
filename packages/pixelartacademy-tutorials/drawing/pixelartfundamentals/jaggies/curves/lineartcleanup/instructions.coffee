@@ -128,10 +128,10 @@ class LineArtCleanup.Instructions
           markings: [
             rectangle:
               strokeStyle: markupStyle
-              x: 178.5
+              x: 181.5
               y: 29
-              width: 23
-              height: 81
+              width: 20
+              height: 80
             line: _.extend {}, arrowBase,
               points: [
                 x: 235, y: 49
