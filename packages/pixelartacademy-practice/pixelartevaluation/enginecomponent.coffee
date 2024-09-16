@@ -261,7 +261,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           
           # If we're focusing on specific abrupt segment length changes, skip lines that don't have those changes.
           if filterValue in abruptSegmentLengthChangesSubcriteria
-            continue unless counts = line.evaluate()?.curveSmoothness.abruptSegmentLengthChanges.counts
+            continue unless counts = line.evaluate()?.curveSmoothness?.abruptSegmentLengthChanges.counts
             
             switch filterValue
               when PAE.Line.Part.Curve.AbruptSegmentLengthChanges.Major
@@ -272,7 +272,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           
           # If we're focusing on specific straight parts, skip lines that don't have those parts.
           if filterValue in straightPartsSubcriteria
-            continue unless counts = line.evaluate()?.curveSmoothness.straightParts.counts
+            continue unless counts = line.evaluate()?.curveSmoothness?.straightParts.counts
             
             switch filterValue
               when PAE.Line.Part.Curve.StraightParts.End
@@ -283,7 +283,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
           
           # If we're focusing on specific inflection points, skip lines that don't have those points.
           if filterValue in inflectionPointsSubcriteria
-            continue unless counts = line.evaluate()?.curveSmoothness.inflectionPoints.counts
+            continue unless counts = line.evaluate()?.curveSmoothness?.inflectionPoints.counts
             
             switch filterValue
               when PAE.Line.Part.Curve.InflectionPoints.Isolated

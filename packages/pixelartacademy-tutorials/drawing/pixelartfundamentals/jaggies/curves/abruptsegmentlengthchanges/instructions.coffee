@@ -356,7 +356,7 @@ class AbruptSegmentLengthChanges.Instructions
     @assetClass: -> AbruptSegmentLengthChanges
     
     @message: -> """
-      Good job! Know that having the smoothest possible curves is unnecessary if following precise shapes or placement is more important.
+      Good job! These curves are as smooth as it gets but know that having the smoothest possible curves can be unnecessary if following precise shapes or placement is more important.
       Use your artistic sense to choose whether the evaluation is appropriate for the needed curves.
     """
     

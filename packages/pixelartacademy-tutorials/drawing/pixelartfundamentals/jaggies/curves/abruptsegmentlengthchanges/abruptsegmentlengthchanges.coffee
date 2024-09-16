@@ -57,6 +57,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
       svgPaths: [svgPaths[2]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
+      canCompleteWithExtraPixels: false
     
     # Step 2 requires you to open the evaluation paper.
     new @constructor.Steps.OpenEvaluationPaper @, stepArea
@@ -73,6 +74,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
       svgPaths: [svgPaths[1]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
+      canCompleteWithExtraPixels: false
     
     # Step 6 requires you to open the evaluation paper.
     new @constructor.Steps.OpenEvaluationPaper @, stepArea
@@ -85,7 +87,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
     
     # Step 9 requires you to fix the line.
     new @constructor.Steps.FixCurve @, stepArea,
-      hintPixels: @resources.line2.hintPixels
+      previousPixels: @resources.line2.pixels
       goalPixels: @resources.line2.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
@@ -96,6 +98,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
       svgPaths: [svgPaths[0]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
+      canCompleteWithExtraPixels: false
       
     # Step 11 requires you to open the evaluation paper.
     new @constructor.Steps.OpenEvaluationPaper @, stepArea
@@ -108,5 +111,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
     
     # Step 14 requires you to fix the line.
     new @constructor.Steps.FixCurve @, stepArea,
-      hintPixels: @resources.line3.hintPixels
+      previousPixels: @resources.line3.pixels
       goalPixels: @resources.line3.goalPixels
+      hasPixelsWhenInactive: false

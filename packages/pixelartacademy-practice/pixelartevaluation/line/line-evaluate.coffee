@@ -15,9 +15,9 @@ PAE.Line::evaluate = (pixelArtEvaluationProperty) ->
   width = @_analyzeWidth pixelArtEvaluationProperty
   curveSmoothness = @_analyzeCurveSmoothness pixelArtEvaluationProperty
   
-  @_evaluation = {width, doubles, corners, curveSmoothness}
+  @_evaluation[optionsHash] = {width, doubles, corners, curveSmoothness}
   
-  @_evaluation
+  @_evaluation[optionsHash]
   
 PAE.Line::_analyzeDoubles = (pixelArtEvaluationProperty) ->
   doubles = @getDoubles pixelArtEvaluationProperty
