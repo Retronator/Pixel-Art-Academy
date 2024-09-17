@@ -118,6 +118,10 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges/instructions');
 
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts/instructions');
+
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/instructions');

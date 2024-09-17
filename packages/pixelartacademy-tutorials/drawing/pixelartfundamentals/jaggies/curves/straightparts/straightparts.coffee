@@ -2,21 +2,22 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
-  @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges"
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
+  @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts"
   
-  @displayName: -> "Abrupt segment length changes"
+  @displayName: -> "Straight parts"
   
   @description: -> """
-    Use pixel art evaluation to analyze when the lengths of curve segments change too quickly.
+    When drawing long curves, some parts can become straighter than necessary.
   """
   
-  @fixedDimensions: -> width: 30, height: 25
+  @fixedDimensions: -> width: 40, height: 28
   
   @resources: ->
-    path = '/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/curves/abruptsegmentlengthchanges'
+    path = '/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/curves/straightparts'
     
     line1:
+      pixels: new @Resource.ImagePixels "#{path}-1.png"
       goalPixels: new @Resource.ImagePixels "#{path}-1-goal.png"
     line2:
       pixels: new @Resource.ImagePixels "#{path}-2.png"
@@ -31,7 +32,12 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
   
   @properties: ->
     pixelArtScaling: true
-    
+    pixelArtEvaluation:
+      allowedCriteria: [PAE.Criteria.SmoothCurves]
+      smoothCurves:
+        ignoreMostlyStraightLines: false
+        straightParts: {}
+  
   @initialize()
   
   initializeSteps: ->
@@ -49,61 +55,48 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
     
     svgPaths = @resources.paths.svgPaths()
     
-    # Line 1: Step 1 requires you to draw the goal pixels based on the first path.
-    new @constructor.Steps.DrawLine @, stepArea,
-      goalPixels: @resources.line1.goalPixels
-      svgPaths: [svgPaths[2]]
+    # Step 1 requires you to draw the first path and open the smooth curves breakdown.
+    new @constructor.Steps.DrawAndAnalyze @, stepArea,
+      goalPixels: @resources.line1.pixels
+      svgPaths: [svgPaths[0]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
       canCompleteWithExtraPixels: false
     
-    # Step 2 requires you to open the evaluation paper.
-    new @constructor.Steps.OpenEvaluationPaper @, stepArea
-    
-    # Step 3 requires you to hover over the curve.
-    new @constructor.Steps.HoverOverTheCurve @, stepArea
-    
-    # Step 4 requires you to close the evaluation paper.
+    # Step 2 requires you to close the evaluation paper.
     new @constructor.Steps.CloseEvaluationPaper @, stepArea
-
-    # Step 5 requires you to draw the second path.
-    new @constructor.PixelsWithPathsStep @, stepArea,
+    
+    # Step 3 requires you to fix the line.
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+      previousPixels: @resources.line1.pixels
+      goalPixels: @resources.line1.goalPixels
+      preserveCompleted: true
+      hasPixelsWhenInactive: false
+      canCompleteWithExtraPixels: false
+    
+    # Step 4 requires you to draw the second path.
+    new @constructor.Steps.DrawAndAnalyze @, stepArea,
       goalPixels: @resources.line2.pixels
       svgPaths: [svgPaths[1]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
       canCompleteWithExtraPixels: false
     
-    # Step 6 requires you to open the evaluation paper.
-    new @constructor.Steps.OpenEvaluationPaper @, stepArea
-    
-    # Step 7 requires you to open the smooth curves breakdown.
-    new @constructor.Steps.OpenSmoothCurves @, stepArea
-    
-    # Step 8 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
-    
-    # Step 9 requires you to fix the line.
+    # Step 5 requires you to fix the line.
     new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
       previousPixels: @resources.line2.pixels
       goalPixels: @resources.line2.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
       
-    # Step 10 requires you to draw the third path.
-    new @constructor.PixelsWithPathsStep @, stepArea,
+    # Step 6 requires you to draw the third and fourth paths and open the smooth curves breakdown.
+    new @constructor.Steps.DrawAndAnalyze @, stepArea,
       goalPixels: @resources.line3.pixels
-      svgPaths: [svgPaths[0]]
+      svgPaths: [svgPaths[2], svgPaths[3]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
       canCompleteWithExtraPixels: false
       
-    # Step 11 requires you to open the evaluation paper.
-    new @constructor.Steps.OpenEvaluationPaper @, stepArea
-    
-    # Step 12 requires you to open the smooth curves breakdown.
-    new @constructor.Steps.OpenSmoothCurves @, stepArea
-    
     # Step 13 requires you to close the evaluation paper.
     new @constructor.Steps.CloseEvaluationPaper @, stepArea
     
