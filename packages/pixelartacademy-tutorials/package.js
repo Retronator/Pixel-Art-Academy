@@ -122,6 +122,10 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/straightparts/instructions');
 
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/inflectionpoints..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/inflectionpoints/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/curves/inflectionpoints/instructions');
+
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/lineartcleanup/instructions');

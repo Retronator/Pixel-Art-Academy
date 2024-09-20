@@ -33,6 +33,10 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
   completed: ->
     return unless super arguments...
     
+    # If a step doesn't have pixels when inactive, we have to make sure this step can
+    # first get active and report its pixels so that it can fail due to extra pixels.
+    return unless @options.hasPixelsWhenInactive or @stepArea.activeStepIndex()?
+    
     # Compare goal pixels with first bitmap layer.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()

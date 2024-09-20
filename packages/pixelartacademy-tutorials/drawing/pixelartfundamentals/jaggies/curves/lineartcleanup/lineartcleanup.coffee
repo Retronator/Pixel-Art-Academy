@@ -24,6 +24,14 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.LineArtCleanup e
     
   @initialize()
   
+  @_pixelPerfectLinesEvaluationProperty =
+    pixelPerfectLines:
+      doubles:
+        countAllLineWidthTypes: true
+        countPointsWithMultiplePixels: true
+      corners:
+        ignoreStraightLineCorners: false
+  
   initializeSteps: ->
     super arguments...
     

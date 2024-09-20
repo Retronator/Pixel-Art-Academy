@@ -19,9 +19,6 @@ class StraightParts.Instructions
     # The amount of time before we show instructions when a new line is introduced.
     @newLineDelayDuration = 5
     
-    # The length of the arrow to indicate a pixel move.
-    @movePixelArrowLength = 1.2
-    
     @getPixelArtEvaluation: ->
       drawingEditor = @getEditor()
       drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
@@ -41,6 +38,8 @@ class StraightParts.Instructions
       
       return [] if bitmap.findPixelAtAbsoluteCoordinates x + dx, y + dy
       
+      movePixelArrowLength = PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
+      
       [
         line:
           arrow:
@@ -51,7 +50,7 @@ class StraightParts.Instructions
           points: [
             x: x + 0.5, y: y + 0.5
           ,
-            x: x + 0.5 + @constructor.movePixelArrowLength * dx, y: y + 0.5 + @constructor.movePixelArrowLength * dy
+            x: x + 0.5 + movePixelArrowLength * dx, y: y + 0.5 + movePixelArrowLength * dy
           ]
       ]
       

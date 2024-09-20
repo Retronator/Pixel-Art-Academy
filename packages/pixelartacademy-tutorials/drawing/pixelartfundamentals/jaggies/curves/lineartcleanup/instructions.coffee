@@ -19,20 +19,52 @@ class LineArtCleanup.Instructions
       drawingEditor = @getEditor()
       drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
     
+    displaySide: ->
+      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      
+      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      
   class @DrawLine extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.DrawLine"
     @stepNumber: -> 1
     
     @message: -> """
-      Connect all the pixels by drawing a single curve through them.
+      Connect all the pixels by drawing a single pixel-perfect curve through them.
     """
     
     @initialize()
+  
+  class @CleanDoubleAndCorners extends @StepInstruction
+    @id: -> "#{LineArtCleanup.id()}.CleanDoubleAndCorners"
+    @stepNumber: -> 1
     
-    displaySide: ->
-      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+    @message: -> """
+      Make the line pixel-perfect (remove all doubles and corners).
+    """
+    
+    @priority: -> 2
+    
+    @initialize()
+    
+    activeConditions: ->
+      return unless super arguments...
       
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
+      # Show if there are corners and doubles and all dots are covered.
+      return unless asset = @getActiveAsset()
+      return unless pixelArtEvaluation = asset.pixelArtEvaluation()
+      
+      return unless step1 = @getTutorialStep 1
+      
+      bitmap = asset.bitmap()
+
+      for pixel in step1.goalPixels
+        return unless bitmap.getPixelForLayerAtCoordinates 0, pixel.x, pixel.y
+      
+      for line in pixelArtEvaluation.layers[0].lines
+        lineEvaluation = line.evaluate LineArtCleanup._pixelPerfectLinesEvaluationProperty
+        return true if lineEvaluation.doubles.count or lineEvaluation.corners.count
+        
+      false
   
   class @OpenEvaluationPaper extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.OpenEvaluationPaper"
@@ -72,7 +104,6 @@ class LineArtCleanup.Instructions
       Click on the Smooth curves criterion to continue.
     """
     
-    @displaySide: -> InstructionsSystem.DisplaySide.Top
     @delayDuration: -> @uiRevealDelayDuration
     
     @activeConditions: ->
@@ -95,7 +126,7 @@ class LineArtCleanup.Instructions
     @stepNumber: -> 4
     
     @message: -> """
-      Smooth curves will not have abrupt length changes, long straight parts, or frequent inflection points.
+      Smooth curves will not have abrupt length changes, straight parts, or frequent inflection points.
       
       Hover over various parts of the evaluation paper to analyze your curve.
     """
@@ -103,11 +134,6 @@ class LineArtCleanup.Instructions
     @delayDuration: -> @uiRevealDelayDuration
 
     @initialize()
-    
-    displaySide: ->
-      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
-      
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
     
     markup: ->
       markup = []
@@ -163,13 +189,8 @@ class LineArtCleanup.Instructions
     @resetDelayOnOperationExecuted: -> true
     
     @initialize()
-    
-    displaySide: ->
-      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
-      
-      if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
 
-  class @DrawOneCurve extends PAA.Tutorials.Drawing.Instructions.Instruction
+  class @DrawOneCurve extends @StepInstruction
     @id: -> "#{LineArtCleanup.id()}.DrawOneCurve"
     @assetClass: -> LineArtCleanup
     

@@ -55,9 +55,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
   class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Asset
     
-    # The length of the arrow to indicate a pixel move.
-    @movePixelArrowLength = 1.2
-    
     markup: ->
       return unless asset = @getActiveAsset()
       return unless pixelArtEvaluation = asset.pixelArtEvaluation()
@@ -121,6 +118,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
           width: 0.5
           length: 0.25
         style: markupStyle
+        
+      movePixelArrowLength = PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
       
       for arrow in arrows when not bitmap.findPixelAtAbsoluteCoordinates arrow.targetPixel.x, arrow.targetPixel.y
         fromPosition =
@@ -128,8 +127,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.SmoothCurves ext
           y: arrow.targetPixel.y - arrow.direction.y + 0.5
         
         toPosition =
-          x: fromPosition.x + arrow.direction.x * @constructor.movePixelArrowLength
-          y: fromPosition.y + arrow.direction.y * @constructor.movePixelArrowLength
+          x: fromPosition.x + arrow.direction.x * movePixelArrowLength
+          y: fromPosition.y + arrow.direction.y * movePixelArrowLength
         
         markup.push
           line: _.extend {}, arrowBase,

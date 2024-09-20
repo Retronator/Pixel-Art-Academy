@@ -51,7 +51,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.LineArtCleanup ex
     new @constructor.Steps.HoverOverCriterion @, stepArea
     
     # Step 5 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 6 requires you to clean up the line of all doubles.
     new @constructor.Steps.CleanLine @, stepArea, {svgPaths}

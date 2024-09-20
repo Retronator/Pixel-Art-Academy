@@ -22,9 +22,16 @@ class LineArtCleanup.Steps
       
       # There needs to be a line that goes through all goal pixels.
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
-      pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
+      return unless pixelArtEvaluation.getLinesBetween(@goalPixels...)[0]
+      
+      # The lines must not have any doubles or corners.
+      for line in pixelArtEvaluation.layers[0].lines
+        lineEvaluation = line.evaluate LineArtCleanup._pixelPerfectLinesEvaluationProperty
+        return if lineEvaluation.doubles.count or lineEvaluation.corners.count
+        
+      true
   
-  class @OpenEvaluationPaper extends TutorialBitmap.EphemeralStep
+  class @OpenEvaluationPaper extends PAA.Tutorials.Drawing.PixelArtFundamentals.OpenEvaluationPaper
     activate: ->
       super arguments...
       
@@ -41,14 +48,6 @@ class LineArtCleanup.Steps
       updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'pixelArtEvaluation', pixelArtEvaluation
       
       bitmap.executeAction updatePropertyAction
-    
-    completed: ->
-      return true if super arguments...
-      
-      # Pixel art evaluation paper needs to be open.
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluationView.active()
   
   class @OpenSmoothCurves extends TutorialBitmap.EphemeralStep
     completed: ->

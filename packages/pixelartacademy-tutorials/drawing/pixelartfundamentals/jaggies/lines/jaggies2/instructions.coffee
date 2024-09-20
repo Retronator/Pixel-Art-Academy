@@ -9,9 +9,6 @@ class Jaggies2.Instructions
   class @StepInstruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @assetClass: -> Jaggies2
     
-    # The length of the arrow to indicate a pixel move.
-    @movePixelArrowLength = 1.2
-    
     @resetCompletedConditions: ->
       not @getActiveAsset()
     
@@ -173,7 +170,7 @@ class Jaggies2.Instructions
             points: [
               x: 25.5, y: 7.5
             ,
-              x: 25.5, y: 7.5 - @constructor.movePixelArrowLength
+              x: 25.5, y: 7.5 - PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
             ]
         
       markup
@@ -237,7 +234,7 @@ class Jaggies2.Instructions
                 x: arrowData.x
                 y: arrowData.y
               ,
-                x: arrowData.x + arrowData.sign * @constructor.movePixelArrowLength
+                x: arrowData.x + arrowData.sign * PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
                 y: arrowData.y
               ]
             

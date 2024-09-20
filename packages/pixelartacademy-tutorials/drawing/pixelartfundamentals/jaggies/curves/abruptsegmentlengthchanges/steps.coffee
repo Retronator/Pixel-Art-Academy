@@ -14,7 +14,7 @@ class AbruptSegmentLengthChanges.Steps
       # evaluation properties will happen in-between the stroke and get lost.
       not @tutorialBitmap.bitmap().partialAction
       
-  class @OpenEvaluationPaper extends TutorialBitmap.EphemeralStep
+  class @OpenEvaluationPaper extends PAA.Tutorials.Drawing.PixelArtFundamentals.OpenEvaluationPaper
     activate: ->
       super arguments...
       
@@ -28,14 +28,6 @@ class AbruptSegmentLengthChanges.Steps
       updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'pixelArtEvaluation', pixelArtEvaluation
       
       bitmap.executeAction updatePropertyAction
-    
-    completed: ->
-      return true if super arguments...
-      
-      # Pixel art evaluation paper needs to be open.
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluationView.active()
   
   class @HoverOverTheCurve extends TutorialBitmap.EphemeralStep
     @timeToHover = 1.2
@@ -77,20 +69,3 @@ class AbruptSegmentLengthChanges.Steps
           @countTime()
       ,
         100
-  
-  class @CloseEvaluationPaper extends TutorialBitmap.EphemeralStep
-    completed: ->
-      return true if super arguments...
-      
-      # Pixel art evaluation paper must not be open.
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      not pixelArtEvaluationView.active()
-  
-  class @OpenSmoothCurves extends TutorialBitmap.EphemeralStep
-    completed: ->
-      return true if super arguments...
-      
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluation.activeCriterion() is PAE.Criteria.SmoothCurves

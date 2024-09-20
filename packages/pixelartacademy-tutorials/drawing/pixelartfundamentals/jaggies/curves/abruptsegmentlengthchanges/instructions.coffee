@@ -18,9 +18,6 @@ class AbruptSegmentLengthChanges.Instructions
     # The amount of time before we show instructions when a new line is introduced.
     @newLineDelayDuration = 5
     
-    # The length of the arrow to indicate a pixel move.
-    @movePixelArrowLength = 1.2
-    
     @getPixelArtEvaluation: ->
       drawingEditor = @getEditor()
       drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
@@ -45,7 +42,7 @@ class AbruptSegmentLengthChanges.Instructions
             points: [
               x: x + 0.5, y: y - 0.5
             ,
-              x: x + 0.5, y: y - 0.5 + @constructor.movePixelArrowLength
+              x: x + 0.5, y: y - 0.5 + PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
             ]
         
       markup
@@ -221,7 +218,7 @@ class AbruptSegmentLengthChanges.Instructions
     @message: -> """
       This curve's segments can be improved.
 
-      Click on the Smooth curves criteria to continue.
+      Click on the Smooth curves criterion to continue.
     """
     
     @initialize()
@@ -242,7 +239,7 @@ class AbruptSegmentLengthChanges.Instructions
     @stepNumbers: -> [8, 13]
     
     @message: -> """
-      Click on the Smooth curves criteria to continue.
+      Click on the Smooth curves criterion to continue.
     """
     
     @priority: -> 1
@@ -297,7 +294,7 @@ class AbruptSegmentLengthChanges.Instructions
     @stepNumber: -> 12
     
     @message: -> """
-      Click on the Smooth curves criteria to continue.
+      Click on the Smooth curves criterion to continue.
     """
     
     @initialize()

@@ -64,7 +64,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
       canCompleteWithExtraPixels: false
     
     # Step 2 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 3 requires you to fix the line.
     new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
@@ -98,7 +98,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
       canCompleteWithExtraPixels: false
       
     # Step 13 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 14 requires you to fix the line.
     new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,

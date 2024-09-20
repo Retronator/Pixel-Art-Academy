@@ -24,7 +24,7 @@ class LineArtCleanup.Steps
       return unless pixelArtEvaluation = @tutorialBitmap.pixelArtEvaluation()
       pixelArtEvaluation.layers[0].lines.length
       
-  class @OpenEvaluationPaper extends TutorialBitmap.EphemeralStep
+  class @OpenEvaluationPaper extends PAA.Tutorials.Drawing.PixelArtFundamentals.OpenEvaluationPaper
     activate: ->
       super arguments...
       
@@ -43,13 +43,6 @@ class LineArtCleanup.Steps
       
       bitmap.executeAction updatePropertyAction
     
-    completed: ->
-      return true if super arguments...
-      
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluation.active()
-  
   class @OpenPixelPerfectLines extends TutorialBitmap.EphemeralStep
     completed: ->
       return true if super arguments...
@@ -93,14 +86,6 @@ class LineArtCleanup.Steps
           @countTime()
       ,
         100
-      
-  class @CloseEvaluationPaper extends TutorialBitmap.EphemeralStep
-    completed: ->
-      return true if super arguments...
-      
-      return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      not pixelArtEvaluation.active()
 
   class @CleanLine extends @DrawLine
     completed: ->

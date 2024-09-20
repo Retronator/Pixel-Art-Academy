@@ -2,7 +2,9 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Asset
+PixelArtFundamentals = PAA.Tutorials.Drawing.PixelArtFundamentals
+
+class PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends PixelArtFundamentals.Jaggies.Asset
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges"
   
   @displayName: -> "Abrupt segment length changes"
@@ -64,7 +66,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
     new @constructor.Steps.HoverOverTheCurve @, stepArea
     
     # Step 4 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
+    new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
 
     # Step 5 requires you to draw the second path.
     new @constructor.PixelsWithPathsStep @, stepArea,
@@ -75,16 +77,17 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
       canCompleteWithExtraPixels: false
     
     # Step 6 requires you to open the evaluation paper.
-    new @constructor.Steps.OpenEvaluationPaper @, stepArea
+    new PixelArtFundamentals.OpenEvaluationPaper @, stepArea
     
     # Step 7 requires you to open the smooth curves breakdown.
-    new @constructor.Steps.OpenSmoothCurves @, stepArea
+    new PixelArtFundamentals.OpenEvaluationCriterion @, stepArea,
+      criterion: PAE.Criteria.SmoothCurves
     
     # Step 8 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
+    new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 9 requires you to fix the line.
-    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
       previousPixels: @resources.line2.pixels
       goalPixels: @resources.line2.goalPixels
       preserveCompleted: true
@@ -99,16 +102,17 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLen
       canCompleteWithExtraPixels: false
       
     # Step 11 requires you to open the evaluation paper.
-    new @constructor.Steps.OpenEvaluationPaper @, stepArea
+    new PixelArtFundamentals.OpenEvaluationPaper @, stepArea
     
     # Step 12 requires you to open the smooth curves breakdown.
-    new @constructor.Steps.OpenSmoothCurves @, stepArea
+    new PixelArtFundamentals.OpenEvaluationCriterion @, stepArea,
+      criterion: PAE.Criteria.SmoothCurves
     
     # Step 13 requires you to close the evaluation paper.
-    new @constructor.Steps.CloseEvaluationPaper @, stepArea
+    new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 14 requires you to fix the line.
-    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
       previousPixels: @resources.line3.pixels
       goalPixels: @resources.line3.goalPixels
       hasPixelsWhenInactive: false
