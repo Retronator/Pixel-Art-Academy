@@ -68,13 +68,12 @@ class PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends Pix
     # Step 4 requires you to close the evaluation paper.
     new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
 
-    # Step 5 requires you to draw the second path.
+    # Line 2: Step 5 requires you to draw the second path.
     new @constructor.PixelsWithPathsStep @, stepArea,
       goalPixels: @resources.line2.pixels
       svgPaths: [svgPaths[1]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
     
     # Step 6 requires you to open the evaluation paper.
     new PixelArtFundamentals.OpenEvaluationPaper @, stepArea
@@ -93,13 +92,12 @@ class PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends Pix
       preserveCompleted: true
       hasPixelsWhenInactive: false
       
-    # Step 10 requires you to draw the third path.
+    # Line 3: Step 10 requires you to draw the third path.
     new @constructor.PixelsWithPathsStep @, stepArea,
       goalPixels: @resources.line3.pixels
       svgPaths: [svgPaths[0]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
       
     # Step 11 requires you to open the evaluation paper.
     new PixelArtFundamentals.OpenEvaluationPaper @, stepArea

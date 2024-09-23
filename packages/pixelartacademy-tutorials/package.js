@@ -105,9 +105,9 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonals');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/unevendiagonalsartstyle');
 
-  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation..');
-  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/steps');
-  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/diagonalsevaluation/instructions');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths/steps');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths/instructions');
 
   api.addFile('drawing/pixelartfundamentals/jaggies/curves..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/smoothcurves');

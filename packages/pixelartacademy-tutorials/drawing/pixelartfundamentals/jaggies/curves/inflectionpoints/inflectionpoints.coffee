@@ -53,7 +53,6 @@ class PixelArtFundamentals.Jaggies.Curves.InflectionPoints extends PixelArtFunda
       goalPixels: @resources.pixelPerfect
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
       
     # Step 2 requires you to open the smooth curves breakdown.
     new PixelArtFundamentals.OpenEvaluationCriterion @, stepArea,

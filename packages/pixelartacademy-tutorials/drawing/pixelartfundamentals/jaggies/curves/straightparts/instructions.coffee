@@ -31,6 +31,11 @@ class StraightParts.Instructions
       
       camera.translateTo {x, y}, 1
       camera.scaleTo scale, 1
+    
+    openEvaluationPaper: (x, y, scale) ->
+      pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      pixelArtEvaluation.activate PAE.Criteria.SmoothCurves
+      @translateAndScaleTo x, y, scale
       
     movePixelMarkup: (x, y, dx, dy) ->
       return [] unless asset = @getActiveAsset()
@@ -93,6 +98,14 @@ class StraightParts.Instructions
     
     @initialize()
 
+    markup: ->
+      # Show only on the pixel art evaluation overview.
+      return [] unless pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      return [] unless pixelArtEvaluation.active()
+      return [] if pixelArtEvaluation.activeCriterion()
+      
+      PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereCriterionMarkup '.smooth-curves'
+  
   class @AnalyzeFirstLine extends @StepInstruction
     @id: -> "#{StraightParts.id()}.AnalyzeFirstLine"
     @stepNumber: -> 2
@@ -117,8 +130,8 @@ class StraightParts.Instructions
     @stepNumber: -> 3
     
     @message: -> """
-      The intended line doesn't have any straight parts and always curves.
-      However, the central segment in the pixel art version appears as a flat section due to its length.
+      There is a difference between the intended and perceived line.
+      Due to the length of the central segment, the pixel art line appears flat in the middle.
       We can push pixels outwards to fix this.
     """
     
@@ -207,7 +220,7 @@ class StraightParts.Instructions
     @stepNumber: -> 4
     
     @message: -> """
-      Draw the left curve by closely following the intended line and open the Smooth curves breakdown.
+      Draw the left curve by closely following the intended line.
     """
     
     @initialize()
@@ -217,7 +230,7 @@ class StraightParts.Instructions
     @stepNumber: -> 5
     
     @message: -> """
-      This time we can smoothen the line by shortening the long segment.
+      This time we can smoothen the line by shortening the long segment at the ends.
     """
     
     @initialize()
@@ -225,7 +238,7 @@ class StraightParts.Instructions
     onActivate: ->
       super arguments...
       
-      @translateAndScaleTo 20, 14, 4
+      @openEvaluationPaper 20, 14, 4
     
     markup: ->
       markup = []
@@ -241,8 +254,10 @@ class StraightParts.Instructions
     @id: -> "#{StraightParts.id()}.DrawThirdLine"
     @stepNumber: -> 6
     
+    @delayDuration: -> @defaultDelayDuration
+    
     @message: -> """
-      Draw the final curves and open the Smooth curves breakdown.
+      Draw the final curves.
     """
     
     @initialize()
@@ -261,7 +276,7 @@ class StraightParts.Instructions
     onActivate: ->
       super arguments...
       
-      @translateAndScaleTo 20, 14, 4
+      @openEvaluationPaper 20, 14, 4
     
   class @FixThirdLine extends @StepInstruction
     @id: -> "#{StraightParts.id()}.FixThirdLine"

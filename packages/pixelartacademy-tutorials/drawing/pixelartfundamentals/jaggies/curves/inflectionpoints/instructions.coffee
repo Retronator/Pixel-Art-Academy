@@ -91,12 +91,20 @@ class InflectionPoints.Instructions
     
     @initialize()
 
+    markup: ->
+      # Show only on the pixel art evaluation overview.
+      return [] unless pixelArtEvaluation = @constructor.getPixelArtEvaluation()
+      return [] unless pixelArtEvaluation.active()
+      return [] if pixelArtEvaluation.activeCriterion()
+      
+      PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereCriterionMarkup '.smooth-curves'
+      
   class @HoverInflectionPointsScore extends @StepInstruction
     @id: -> "#{InflectionPoints.id()}.HoverInflectionPointsScore"
     @stepNumber: -> 3
     
     @message: -> """
-      Hover over the inflection points score to see how the curve changes direction.
+      Hover over the inflection points score to see how the curve changes direction at inflection points.
     """
     
     @delayDuration: -> @uiRevealDelayDuration
@@ -154,7 +162,7 @@ class InflectionPoints.Instructions
     @stepNumber: -> 4
     
     @message: -> """
-      Wobbly lines keep changing direction so they end up with many inflection points close together.
+      Wobbly lines keep changing direction so they end up with many inflection points clumped together.
       
       Close the evaluation paper and improve the curve to only have a couple of isolated inflection points.
     """

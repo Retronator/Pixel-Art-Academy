@@ -72,15 +72,13 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
       goalPixels: @resources.line1.goalPixels
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
     
     # Step 4 requires you to draw the second path.
-    new @constructor.Steps.DrawAndAnalyze @, stepArea,
+    new @constructor.PixelsWithPathsStep @, stepArea,
       goalPixels: @resources.line2.pixels
       svgPaths: [svgPaths[1]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
     
     # Step 5 requires you to fix the line.
     new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
@@ -90,12 +88,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
       hasPixelsWhenInactive: false
       
     # Step 6 requires you to draw the third and fourth paths and open the smooth curves breakdown.
-    new @constructor.Steps.DrawAndAnalyze @, stepArea,
+    new @constructor.PixelsWithPathsStep @, stepArea,
       goalPixels: @resources.line3.pixels
       svgPaths: [svgPaths[2], svgPaths[3]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
       
     # Step 13 requires you to close the evaluation paper.
     new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea

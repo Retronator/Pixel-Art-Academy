@@ -31,7 +31,12 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals
     completed: ->
       return true if super arguments...
       
-      # Pixel art evaluation paper must not be open.
       return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      not pixelArtEvaluationView.active()
+      return unless pixelArtEvaluation = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      active = pixelArtEvaluation.active()
+      
+      return true if @_wasActive and not active
+      
+      @_wasActive = active
+      
+      false
