@@ -63,7 +63,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
     class @Line extends LM.Content.DrawingTutorialContent
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.ElementsOfArt.Line'
       @tutorialClass = PAA.Tutorials.Drawing.ElementsOfArt.Line
-      @tags: -> [LM.Content.Tags.WIP]
       @initialize()
       
     class @Shape extends LM.Content.FutureContent
