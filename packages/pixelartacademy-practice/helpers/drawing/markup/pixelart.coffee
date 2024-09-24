@@ -15,9 +15,6 @@ _centralPartEnd = new THREE.Vector2
 _normal = new THREE.Vector2
 _normalLeft = new THREE.Vector2
 _normalRight = new THREE.Vector2
-_startPart = new THREE.Vector2
-_centralPart = new THREE.Vector2
-_endPart = new THREE.Vector2
 _startPartCenter = new THREE.Vector2
 _centralPartCenter = new THREE.Vector2
 _endPartCenter = new THREE.Vector2
@@ -148,23 +145,25 @@ class Markup.PixelArt
     
     line: _.extend @perceivedLineBase(), {points}
   
-  @evaluatedPerceivedStraightLine: (straightLine) ->
-    @_prepareStraightLineParts straightLine
+  @evaluatedPerceivedStraightLine: (straightLine, pixelArtEvaluationProperty = null) ->
+    @_prepareStraightLineParts straightLine, pixelArtEvaluationProperty
     
     evaluation = straightLine.evaluate()
     markup = []
+    
+    evaluateEnds = pixelArtEvaluationProperty?.evenDiagonals?.endSegments
     
     if straightLine.startPointSegmentLength
       markup.push
         line:
           points: [_start.clone(), _centralPartStart.clone()]
-          style: if evaluation.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+          style: if evaluation.endSegments.startScore is 1 or not evaluateEnds then Markup.betterStyle() else Markup.worseStyle()
     
     if straightLine.endPointSegmentLength
       markup.push
         line:
           points: [_centralPartEnd.clone(), _end.clone()]
-          style: if evaluation.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+          style: if evaluation.endSegments.endScore is 1 or not evaluateEnds then Markup.betterStyle() else Markup.worseStyle()
       
     markup.push
       line:
@@ -173,7 +172,7 @@ class Markup.PixelArt
  
     markup
     
-  @_prepareStraightLineParts: (straightLine) ->
+  @_prepareStraightLineParts: (straightLine, pixelArtEvaluationProperty = null) ->
     _start.copy(straightLine.displayLine2.start).add _evaluationToCanvasOffset
     _end.copy(straightLine.displayLine2.end).add _evaluationToCanvasOffset
     
@@ -185,19 +184,31 @@ class Markup.PixelArt
     _normalRight.set _normal.y, -_normal.x
     _normalLeft.set -_normal.y, _normal.x
     
-    if straightLine.startPointSegmentLength
-      _startPart.copy(_normal).multiplyScalar Math.sqrt(1 + straightLine.startPointSegmentLength ** 2)
-      _centralPartStart.add _startPart
+    lineIsMoreHorizontal = Math.abs(_normal.x) > Math.abs(_normal.y)
     
-    if straightLine.endPointSegmentLength
-      _endPart.copy(_normal).multiplyScalar Math.sqrt(1 + straightLine.endPointSegmentLength ** 2)
-      _centralPartEnd.sub _endPart
-
-    _centralPart.subVectors _centralPartEnd, _centralPartStart
-
-    _startPartCenter.copy(_startPart).multiplyScalar(0.5).add _start
-    _centralPartCenter.copy(_centralPart).multiplyScalar(0.5).add _centralPartStart
-    _endPartCenter.copy(_endPart).multiplyScalar(0.5).add _centralPartEnd
+    if pixelArtEvaluationProperty?.evenDiagonals?.endSegments
+      if straightLine.startPointSegmentLength
+        # Place the central start in the corner between the first and second segment.
+        if lineIsMoreHorizontal
+          _centralPartStart.x += Math.sign(_normal.x) * straightLine.startPointSegmentLength
+          _centralPartStart.y += Math.sign(_normal.y)
+          
+        else
+          _centralPartStart.x += Math.sign(_normal.x)
+          _centralPartStart.y += Math.sign(_normal.y) * straightLine.startPointSegmentLength
+      
+      if straightLine.endPointSegmentLength
+        if lineIsMoreHorizontal
+          _centralPartEnd.x -= Math.sign(_normal.x) * straightLine.endPointSegmentLength
+          _centralPartEnd.y -= Math.sign(_normal.y)
+        
+        else
+          _centralPartEnd.x -= Math.sign(_normal.x)
+          _centralPartEnd.y -= Math.sign(_normal.y) * straightLine.endPointSegmentLength
+    
+    _startPartCenter.addVectors(_start, _centralPartStart).multiplyScalar 0.5
+    _centralPartCenter.addVectors(_centralPartStart, _centralPartEnd).multiplyScalar 0.5
+    _endPartCenter.addVectors(_centralPartEnd, _end).multiplyScalar 0.5
 
   @evaluatedSegmentCornerLines: (straightLine) ->
     evaluation = straightLine.evaluate()
@@ -396,8 +407,8 @@ class Markup.PixelArt
       
     markup
     
-  @straightLineEvaluationPercentageTexts: (straightLine) ->
-    @_prepareStraightLineParts straightLine
+  @straightLineEvaluationPercentageTexts: (straightLine, pixelArtEvaluationProperty = null) ->
+    @_prepareStraightLineParts straightLine, pixelArtEvaluationProperty
     
     textBase = Markup.textBase()
     
@@ -425,26 +436,27 @@ class Markup.PixelArt
     # Write percentages.
     distanceFromLine = 1
     
-    if straightLine.startPointSegmentLength
-      _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _startPartCenter
-      position = _.extend _textPosition.clone(), {origin}
+    unless pixelArtEvaluationProperty and not pixelArtEvaluationProperty.evenDiagonals?.endSegments
+      if straightLine.startPointSegmentLength
+        _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _startPartCenter
+        position = _.extend _textPosition.clone(), {origin}
+        
+        markup.push
+          text: _.extend {}, textBase,
+            position: position
+            value: Markup.percentage evaluation.endSegments.startScore
+            style: if evaluation.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
       
-      markup.push
-        text: _.extend {}, textBase,
-          position: position
-          value: Markup.percentage evaluation.endSegments.startScore
-          style: if evaluation.endSegments.startScore is 1 then Markup.betterStyle() else Markup.worseStyle()
-    
-    if straightLine.endPointSegmentLength
-      _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _endPartCenter
-      position = _.extend _textPosition.clone(), {origin}
-
-      markup.push
-        text: _.extend {}, textBase,
-          position: position
-          value: Markup.percentage evaluation.endSegments.endScore
-          style: if evaluation.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
-      
+      if straightLine.endPointSegmentLength
+        _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _endPartCenter
+        position = _.extend _textPosition.clone(), {origin}
+  
+        markup.push
+          text: _.extend {}, textBase,
+            position: position
+            value: Markup.percentage evaluation.endSegments.endScore
+            style: if evaluation.endSegments.endScore is 1 then Markup.betterStyle() else Markup.worseStyle()
+        
     _textPosition.copy(normal).multiplyScalar(distanceFromLine).add _centralPartCenter
     position = _.extend _textPosition.clone(), {origin}
 
@@ -456,12 +468,12 @@ class Markup.PixelArt
     
     markup
   
-  @straightLineBreakdown: (straightLine) ->
+  @straightLineBreakdown: (straightLine, pixelArtEvaluationProperty = null) ->
     markup = [
       @evaluatedDiagonalRatioText straightLine
-      @evaluatedPerceivedStraightLine(straightLine)...
+      @evaluatedPerceivedStraightLine(straightLine, pixelArtEvaluationProperty)...
       @pointSegmentLengthTexts(straightLine)...
-      @straightLineEvaluationPercentageTexts(straightLine)...
+      @straightLineEvaluationPercentageTexts(straightLine, pixelArtEvaluationProperty)...
     ]
     
     markup

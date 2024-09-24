@@ -153,26 +153,8 @@ class Jaggies2.Instructions
         
       markup = _.flatten markup
       
-      bitmap = asset.bitmap()
+      markup.push PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelMarkup(asset, 25, 7, 0, -1)...
       
-      unless bitmap.findPixelAtAbsoluteCoordinates 25, 6
-        markupStyle = Markup.errorStyle()
-        
-        arrowBase =
-          arrow:
-            end: true
-            width: 0.5
-            length: 0.25
-          style: markupStyle
-        
-        markup.push
-          line: _.extend {}, arrowBase,
-            points: [
-              x: 25.5, y: 7.5
-            ,
-              x: 25.5, y: 7.5 - PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
-            ]
-        
       markup
   
   class @Line5Draw extends @StepInstruction

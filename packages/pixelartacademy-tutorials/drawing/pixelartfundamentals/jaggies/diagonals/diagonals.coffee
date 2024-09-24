@@ -14,6 +14,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals extends PAA.P
     @ConstrainingAngles
     @UnevenDiagonals
     @SegmentLengths
+    @EndSegments
     @UnevenDiagonalsArtStyle
   ]
   

@@ -67,7 +67,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
     new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 3 requires you to fix the line.
-    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.FixLineStep @, stepArea,
       previousPixels: @resources.line1.pixels
       goalPixels: @resources.line1.goalPixels
       preserveCompleted: true
@@ -81,7 +81,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
       hasPixelsWhenInactive: false
     
     # Step 5 requires you to fix the line.
-    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.FixLineStep @, stepArea,
       previousPixels: @resources.line2.pixels
       goalPixels: @resources.line2.goalPixels
       preserveCompleted: true
@@ -98,7 +98,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
     new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 14 requires you to fix the line.
-    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.FixLineStep @, stepArea,
       previousPixels: @resources.line3.pixels
       goalPixels: @resources.line3.goalPixels
       hasPixelsWhenInactive: false

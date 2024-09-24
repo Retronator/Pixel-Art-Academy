@@ -65,7 +65,7 @@ class PixelArtFundamentals.Jaggies.Curves.InflectionPoints extends PixelArtFunda
     new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 5 requires you to fix the line.
-    new PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PixelArtFundamentals.Jaggies.FixLineStep @, stepArea,
       previousPixels: @resources.pixelPerfect
       goalPixels: @resources.smooth
       hasPixelsWhenInactive: false

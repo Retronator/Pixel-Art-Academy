@@ -86,7 +86,7 @@ class PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends Pix
     new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 9 requires you to fix the line.
-    new PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PixelArtFundamentals.Jaggies.FixLineStep @, stepArea,
       previousPixels: @resources.line2.pixels
       goalPixels: @resources.line2.goalPixels
       preserveCompleted: true
@@ -110,7 +110,7 @@ class PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends Pix
     new PixelArtFundamentals.CloseEvaluationPaper @, stepArea
     
     # Step 14 requires you to fix the line.
-    new PixelArtFundamentals.Jaggies.Curves.FixCurveStep @, stepArea,
+    new PixelArtFundamentals.Jaggies.FixLineStep @, stepArea,
       previousPixels: @resources.line3.pixels
       goalPixels: @resources.line3.goalPixels
       hasPixelsWhenInactive: false

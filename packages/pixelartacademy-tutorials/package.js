@@ -109,6 +109,9 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths/steps');
   api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/segmentlengths/instructions');
 
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/endsegments..');
+  api.addFile('drawing/pixelartfundamentals/jaggies/diagonals/endsegments/instructions');
+
   api.addFile('drawing/pixelartfundamentals/jaggies/curves..');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/smoothcurves');
   api.addFile('drawing/pixelartfundamentals/jaggies/curves/circles');

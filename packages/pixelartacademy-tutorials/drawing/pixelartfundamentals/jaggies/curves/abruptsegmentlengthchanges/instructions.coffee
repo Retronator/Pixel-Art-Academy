@@ -24,31 +24,10 @@ class AbruptSegmentLengthChanges.Instructions
   
     movePixelMarkup: (x, y) ->
       return [] unless asset = @getActiveAsset()
-      bitmap = asset.bitmap()
-      markup = []
+      PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelMarkup asset, x, y, 0, 1
       
-      unless bitmap.findPixelAtAbsoluteCoordinates x, y
-        markupStyle = Markup.errorStyle()
-        
-        arrowBase =
-          arrow:
-            end: true
-            width: 0.5
-            length: 0.25
-          style: markupStyle
-        
-        markup.push
-          line: _.extend {}, arrowBase,
-            points: [
-              x: x + 0.5, y: y - 0.5
-            ,
-              x: x + 0.5, y: y - 0.5 + PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
-            ]
-        
-      markup
-      
-    moveFirstPixelMarkup: -> @movePixelMarkup 9, 12
-    moveSecondPixelMarkup: -> @movePixelMarkup 11, 5
+    moveFirstPixelMarkup: -> @movePixelMarkup 9, 11
+    moveSecondPixelMarkup: -> @movePixelMarkup 11, 4
     
     categoryMarkup: (category) ->
       markupStyle = InterfaceMarking.defaultStyle()

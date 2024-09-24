@@ -39,25 +39,7 @@ class StraightParts.Instructions
       
     movePixelMarkup: (x, y, dx, dy) ->
       return [] unless asset = @getActiveAsset()
-      bitmap = asset.bitmap()
-      
-      return [] if bitmap.findPixelAtAbsoluteCoordinates x + dx, y + dy
-      
-      movePixelArrowLength = PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelArrowLength
-      
-      [
-        line:
-          arrow:
-            end: true
-            width: 0.5
-            length: 0.25
-          style: Markup.errorStyle()
-          points: [
-            x: x + 0.5, y: y + 0.5
-          ,
-            x: x + 0.5 + movePixelArrowLength * dx, y: y + 0.5 + movePixelArrowLength * dy
-          ]
-      ]
+      PAA.Tutorials.Drawing.PixelArtFundamentals.movePixelMarkup asset, x, y, dx, dy
       
     perceivedLinesMarkup: ->
       return [] unless asset = @getActiveAsset()
