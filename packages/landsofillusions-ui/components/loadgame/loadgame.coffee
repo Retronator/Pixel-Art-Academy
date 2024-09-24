@@ -46,11 +46,14 @@ class LOI.Components.LoadGame extends LOI.Component
     @autoLoadedProfileId autoLoadProfileId
     @firstProfileOffset 0
 
-    LOI.adventure.showActivatableModalDialog
-      dialog: @
-      dontRender: true
-
     if autoLoadProfileId
+      LOI.adventure.addModalDialog
+        dialog: @
+        dontRender: true
+      
+      # Wait for the dialog to be rendered before you activate it.
+      Tracker.afterFlush => @activatable.activate()
+      
       new Promise (resolve, reject) =>
         Tracker.autorun (computation) =>
           # Wait until persistence is ready so we have the profiles loaded.
@@ -59,12 +62,18 @@ class LOI.Components.LoadGame extends LOI.Component
   
           if Persistence.Profile.documents.findOne autoLoadProfileId
             @loadProfile(autoLoadProfileId, false).then =>
+              LOI.adventure.removeModalDialog @
               resolve()
               
           else
             console.log "Desired profile was not provided by any of the synced storages." if LOI.debug or LOI.Adventure.debugState
-            @callFirstWith null, 'deactivate'
+            LOI.adventure.removeModalDialog @
             reject()
+            
+    else
+      LOI.adventure.showActivatableModalDialog
+        dialog: @
+        dontRender: true
     
   loadProfile: (profileId, animate = true) ->
     @loadingProfileId profileId
@@ -88,7 +97,7 @@ class LOI.Components.LoadGame extends LOI.Component
           """
         
         , =>
-          @callFirstWith null, 'deactivate'
+          @activatable.deactivate()
       
       else
         LOI.adventure.showDialogMessage """
@@ -116,7 +125,7 @@ class LOI.Components.LoadGame extends LOI.Component
     @audio.load false
     @loadingTextVisible false
     
-    @callFirstWith null, 'deactivate' if LOI.adventure.profileId()
+    @activatable.deactivate() if LOI.adventure.profileId()
   
   onActivate: (finishedActivatingCallback) ->
     await _.waitForSeconds 0.5
