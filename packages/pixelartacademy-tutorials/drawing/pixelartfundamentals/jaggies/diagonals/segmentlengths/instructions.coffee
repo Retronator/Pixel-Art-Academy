@@ -141,6 +141,8 @@ class SegmentLengths.Instructions
     
     @initialize()
 
+    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereMarkup()
+  
   class @ReopenEvaluationPaper extends @StepInstruction
     @id: -> "#{SegmentLengths.id()}.ReopenEvaluationPaper"
     @stepNumbers: -> [3, 4]
@@ -385,7 +387,7 @@ class SegmentLengths.Instructions
     
     @message: -> """
       This diagonal consists of segments with lengths 2 and 3.
-      However, they are unnecessarily broken into groups (3-3-2-2) instead of alternating.
+      However, they are unnecessarily broken into groups (3-3 and 2-2) instead of alternating.
 
       See if you can fix this by using a 2-3-2-3-2-… pattern.
     """
@@ -477,12 +479,17 @@ class SegmentLengths.Instructions
 
   class @EvenUnevenComparison extends @StepInstruction
     @id: -> "#{SegmentLengths.id()}.EvenUnevenComparison"
-    @stepNumber: -> 14
     
     @message: -> """
       As segments get longer, the difference between uneven and even diagonals becomes negligible. Well done!
     """
     
+    @activeConditions: ->
+      return unless asset = @getActiveAsset()
+      
+      # Show when the asset is completed.
+      asset.completed()
+      
     @initialize()
     
     onActivate: ->
@@ -508,7 +515,12 @@ class SegmentLengths.Instructions
     @activeConditions: ->
       return unless asset = @getActiveAsset()
       
-      # Show when the asset is completed.
-      asset.completed()
+      # Show when the asset is completed and evaluation paper is closed.
+      return unless asset.completed()
+      
+      pixelArtEvaluation = @getPixelArtEvaluation()
+      not pixelArtEvaluation.active()
+      
+    @priority: -> 1
     
     @initialize()

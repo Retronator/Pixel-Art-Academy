@@ -81,10 +81,10 @@ class LM.Adventure extends PAA.Adventure
       
       if semver.lt acknowledgedNewLessonsVersion, lastNewLessonsVersion
         LOI.adventure.showDialogMessage """
-          New lessons have been added since you last played the game. If anything in the game seems missing,
+          New tutorial lessons have been added since you last played the game. If anything in the game seems missing,
           complete the new lessons first to get back to where you were.
 
-          Use the Progress screen in the Menu to see which lessons you're missing.
+          Use the Progress screen in the Menu to see which tutorials you're missing.
         """
         
         , =>

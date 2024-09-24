@@ -178,19 +178,21 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               continue
               
             perceivedLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
+            perceivedLineMarkup.line.style = betterStyle
             
-            # Straight lines are less problematic when between corners.
-            if linePart.isBetweenStraightParts()
-              perceivedLineMarkup.line.style = betterStyle
-              continue if filterValue in straightPartsFilterValues
-            
-            if linePart.isAtTheEndOfCurvedPart()
-              perceivedLineMarkup.line.style = mediocreStyle
-              continue if filterValue is PAE.Line.Part.Curve.StraightParts.Middle
+            # Change the style of straight lines if they are being evaluated.
+            if pixelArtEvaluationProperty.smoothCurves?.straightParts?
+              # Straight lines are less problematic when between corners.
+              if linePart.isBetweenStraightParts()
+                continue if filterValue in straightPartsFilterValues
               
-            else if linePart.isInTheMiddleOfACurvedPart()
-              perceivedLineMarkup.line.style = worseStyle
-              continue if filterValue is PAE.Line.Part.Curve.StraightParts.End
+              if linePart.isAtTheEndOfCurvedPart()
+                perceivedLineMarkup.line.style = mediocreStyle
+                continue if filterValue is PAE.Line.Part.Curve.StraightParts.Middle
+                
+              else if linePart.isInTheMiddleOfACurvedPart()
+                perceivedLineMarkup.line.style = worseStyle
+                continue if filterValue is PAE.Line.Part.Curve.StraightParts.End
             
             markup.push perceivedLineMarkup
       

@@ -98,6 +98,3 @@ class PixelArtFundamentals.Jaggies.Diagonals.SegmentLengths extends PixelArtFund
     # Step 13 requires this to be an even line.
     new @constructor.Steps.EvenLine @, stepArea,
       svgPaths: [svgPaths[5]]
-
-    # Step 14 requires you to close the evaluation paper.
-    new PixelArtFundamentals.CloseEvaluationPaper @, stepArea

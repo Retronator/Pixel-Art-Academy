@@ -71,6 +71,8 @@ class AbruptSegmentLengthChanges.Instructions
     
     @initialize()
   
+    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereMarkup()
+  
   class @ReopenEvaluationPaper extends @StepInstruction
     @id: -> "#{AbruptSegmentLengthChanges.id()}.ReopenEvaluationPaper"
     @stepNumbers: -> [3, 7, 8, 12]

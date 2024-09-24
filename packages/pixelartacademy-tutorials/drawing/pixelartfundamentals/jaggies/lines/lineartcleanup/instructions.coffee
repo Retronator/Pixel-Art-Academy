@@ -59,39 +59,7 @@ class LineArtCleanup.Instructions
       You can now open the pixel art evaluation paper in the bottom-right corner to get an analysis of your line.
     """
     
-    markup: ->
-      markup = []
-      
-      arrowBase = InterfaceMarking.arrowBase()
-      textBase = InterfaceMarking.textBase()
-      
-      markup.push
-        interface:
-          selector: '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation'
-          delay: 1
-          bounds:
-            x: -30
-            y: -40
-            width: 50
-            height: 40
-          markings: [
-            line: _.extend {}, arrowBase,
-              points: [
-                x: -6, y: -25
-              ,
-                x: 12, y: -8, bezierControlPoints: [
-                  x: -6, y: -12
-                ,
-                  x: 12, y: -20
-                ]
-              ]
-            text: _.extend {}, textBase,
-              position:
-                x: -6, y: -27, origin: Markup.TextOriginPosition.BottomCenter
-              value: "click here"
-          ]
-      
-      markup
+    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereMarkup()
     
     @initialize()
   
