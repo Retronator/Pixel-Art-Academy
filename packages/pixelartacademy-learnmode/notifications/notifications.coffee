@@ -45,8 +45,8 @@ class LM.Notifications
     @condition: ->
       # Show when no tasks are active.
       for chapter in LOI.adventure.currentChapters()
-        for task in chapter.tasks
-          return if task.active()
+        for course in chapter.courses
+          return unless course.completed()
           
       true
       

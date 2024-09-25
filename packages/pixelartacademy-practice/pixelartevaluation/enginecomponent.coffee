@@ -297,7 +297,7 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
               when PAE.Line.Part.Curve.InflectionPoints.Dense
                 continue unless counts.dense
 
-          markup.push Markup.PixelArt.curveSmoothnessEvaluationPercentageTexts(line, evaluatedSmoothCurvesSubcriterions)...
+          markup.push Markup.PixelArt.curveSmoothnessEvaluationPercentageTexts(line, evaluatedSmoothCurvesSubcriterions, pixelArtEvaluationProperty)...
           
     if PAE.Criteria.ConsistentLineWidth in displayedCriteria
       for line in lines

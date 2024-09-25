@@ -478,10 +478,10 @@ class Markup.PixelArt
     
     markup
 
-  @curveSmoothnessEvaluationPercentageTexts: (line, subcriterions) ->
+  @curveSmoothnessEvaluationPercentageTexts: (line, subcriterions, pixelArtEvaluationProperty) ->
     textBase = Markup.textBase()
     
-    return [] unless curveSmoothness = line.evaluate()?.curveSmoothness
+    return [] unless curveSmoothness = line.evaluate(pixelArtEvaluationProperty)?.curveSmoothness
     
     score = 0
     totalWeight = 0
