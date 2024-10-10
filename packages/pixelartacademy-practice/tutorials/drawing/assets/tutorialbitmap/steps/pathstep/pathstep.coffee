@@ -104,7 +104,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     @constructor.drawUnderlyingHints context, renderOptions, @stepArea, @paths
     
   drawOverlaidHints: (context, renderOptions) ->
-    @_preparePixelHintSize renderOptions
+    @_prepareColorHelp context, renderOptions
     
     # Erase dots at empty pixels.
     bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
@@ -116,7 +116,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
         continue if @stepArea.hasGoalPixel absoluteX, absoluteY
         continue unless bitmapLayer.getPixel absoluteX, absoluteY
         
-        @_drawPixelHint context, x, y, null
+        @_drawColorHelpForPixel context, x, y, null, null, null, renderOptions
     
     # Explicit return to avoid result collection.
     return

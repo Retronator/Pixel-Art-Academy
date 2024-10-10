@@ -8,12 +8,17 @@
           {{/if}}
           {{#each shades}}
             <div class="shade {{activeColorClass}}" {{style shadeStyle}}>
-              <div class="color" {{style colorStyle}}></div>
+              <div class="color" {{style colorStyle}}>
+                <span class="symbol" {{style colorSymbolStyle}}>{{symbol}}</span>
+              </div>
             </div>
           {{/each}}
         </div>
       {{/each}}
     </div>
+    {{#if showColorHelpButton}}
+      <button class="color-help-button">HELP</button>
+    {{/if}}
   </div>
 </template>
 

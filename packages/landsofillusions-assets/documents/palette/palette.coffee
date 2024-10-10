@@ -59,25 +59,14 @@ class LOI.Assets.Palette extends AM.Document
 
     THREE.Color.fromObject colorData
 
-  closestPaletteColor: (r, g, b, backgroundColor) ->
-    closestRamp = null
-    closestShade = null
-    smallestColorDistance = if backgroundColor then @_colorDistance backgroundColor, r, g, b else 3
+  exactPaletteColor: (color) ->
+    LOI.Assets.ColorHelper.exactPaletteColor @, color
     
-    for ramp, rampIndex in @ramps
-      for shade, shadeIndex in ramp.shades
-        distance = @_colorDistance shade, r, g, b
-        
-        if distance < smallestColorDistance
-          smallestColorDistance = distance
-          closestRamp = rampIndex
-          closestShade = shadeIndex
-
-    # Return nothing if the background color was closer to any of the palette colors.
-    return null unless closestRamp?
-
-    ramp: closestRamp
-    shade: closestShade
+  closestPaletteColor: (color, backgroundColor) ->
+    LOI.Assets.ColorHelper.closestPaletteColor @, color, backgroundColor
   
+  closestPaletteColorFromRGB: (r, g, b, backgroundColor) ->
+    LOI.Assets.ColorHelper.closestPaletteColorFromRGB @, r, g, b, backgroundColor
+    
   _colorDistance: (color, r, g, b) ->
     Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)

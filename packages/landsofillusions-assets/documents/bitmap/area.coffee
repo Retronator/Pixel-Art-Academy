@@ -184,7 +184,7 @@ class LOI.Assets.Bitmap.Area
             
           else if paletteColorAttribute
             flagsAttribute.setPixelFlag x, y, LOI.Assets.Bitmap.Attribute.PaletteColor.flagValue
-            paletteColorAttribute.setPixel x, y, palette.closestPaletteColor directColor.r, directColor.g, directColor.b
+            paletteColorAttribute.setPixel x, y, palette.closestPaletteColor directColor
             
         if alphaAttribute
           alphaAttribute.setPixel x, y, alpha

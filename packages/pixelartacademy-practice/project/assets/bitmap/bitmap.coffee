@@ -126,6 +126,8 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
   # Override to provide extra initialization functionality.
   _initialize: ->
+    @palette = new ComputedField => @customPalette() or @restrictedPalette()
+  
     # Create additional helpers.
     if pixelArtEvaluation = @constructor.pixelArtEvaluation()
       pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
@@ -175,7 +177,9 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     return unless backgroundColor = @constructor.backgroundColor()
 
     if paletteColor = backgroundColor.paletteColor
-      return unless palette = @restrictedPalette()
+      # We need to wait until we're initialized so that the palette field is ready.
+      return unless @initialized()
+      return unless palette = @palette()
       palette.color paletteColor.ramp, paletteColor.shade
 
     else

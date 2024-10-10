@@ -18,9 +18,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
   @minClipboardScale: -> null
   @maxClipboardScale: -> null
 
-  # Override to define a background color.
-  @backgroundColor: -> null
-
   # Override to define a palette.
   @restrictedPaletteName: -> null
   @customPaletteImageUrl: -> null
@@ -39,6 +36,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     super arguments...
     
     @initializeReferences()
+    
+  @_isPixelEmpty: (pixel, backgroundColor, palette) ->
+    # We're empty if we don't have a pixel.
+    return true unless pixel
+    
+    # We do have a pixel, so if there is no background color, it can't be empty.
+    return false unless backgroundColor
+    
+    # We have a pixel and a background color, the pixel is empty if it matches it.
+    LOI.Assets.ColorHelper.areAssetColorsEqual pixel, backgroundColor, palette
 
   constructor: ->
     super arguments...
@@ -106,7 +113,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     super arguments...
     
     # Fetch palette.
-    @palette = new ComputedField => @customPalette() or @restrictedPalette()
     @hasPalette = new ComputedField => @constructor.customPalette() or @constructor.customPaletteImageUrl() or @constructor.restrictedPaletteName()
     
     # Prepare steps.
@@ -230,15 +236,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
     # Return the step area index.
     stepAreas.length - 1
-    
-  getBackgroundColor: ->
-    return unless backgroundColor = @constructor.backgroundColor()
-    return unless @initialized()
-
-    if backgroundColor.paletteColor
-      backgroundColor = @palette().color backgroundColor.paletteColor.ramp, backgroundColor.paletteColor.shade
-    
-    backgroundColor
   
   editorDrawComponents: ->
     return [] unless @initialized()

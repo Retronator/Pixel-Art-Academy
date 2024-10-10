@@ -19,7 +19,7 @@ class TutorialBitmap.StepArea
     @hasExtraPixels = new AE.LiveComputedField =>
       return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
       return unless palette = @tutorialBitmap.palette()
-      backgroundColor = @tutorialBitmap.getBackgroundColor()
+      backgroundColor = @tutorialBitmap.backgroundColor()
       
       # See if there are any pixels in our area that don't belong to any step.
       for x in [@bounds.x...@bounds.x + @bounds.width]
@@ -28,7 +28,7 @@ class TutorialBitmap.StepArea
           continue unless pixel = bitmapLayer.getPixel x, y
           
           # Make sure the pixel doesn't match the background color.
-          continue if @_isPixelEmpty pixel, backgroundColor, palette
+          continue if TutorialBitmap._isPixelEmpty pixel, backgroundColor, palette
           
           # If we don't find a step that requires this pixel, we have an extra.
           return true unless @hasGoalPixel x, y
@@ -40,7 +40,7 @@ class TutorialBitmap.StepArea
       return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
       return unless palette = @tutorialBitmap.palette()
   
-      backgroundColor = @tutorialBitmap.getBackgroundColor()
+      backgroundColor = @tutorialBitmap.backgroundColor()
   
       for x in [@bounds.x...@bounds.x + @bounds.width]
         for y in [@bounds.y...@bounds.y + @bounds.height]
@@ -51,7 +51,7 @@ class TutorialBitmap.StepArea
           return true unless pixel = bitmapLayer.getPixel x, y
           
           # Make sure the pixel doesn't match the background color.
-          return true if @_isPixelEmpty pixel, backgroundColor, palette
+          return true if TutorialBitmap._isPixelEmpty pixel, backgroundColor, palette
   
       false
       
@@ -107,22 +107,6 @@ class TutorialBitmap.StepArea
     @hasExtraPixels.stop()
     @hasMissingPixels.stop()
     @_progressAutorun.stop()
-  
-  _isPixelEmpty: (pixel, backgroundColor, palette) ->
-    # We're empty if we don't have a pixel.
-    return true unless pixel
-    
-    # We do have a pixel, so if there is no background color, it can't be empty.
-    return false unless backgroundColor
-    
-    # We have a pixel and a background color, the pixel is empty if it matches it.
-    if pixel.paletteColor
-      pixelColor = palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
-    
-    else
-      pixelColor = THREE.Color.fromObject pixel.directColor
-    
-    pixelColor.equals backgroundColor
     
   addStep: (step, stepIndex) ->
     steps = @steps()

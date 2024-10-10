@@ -482,6 +482,8 @@ Package.onUse(function(api) {
   api.addFile('spectrum/color/cie1931/colormatchingfunctions/colormatchingfunctions-data');
   api.addFile('spectrum/color/cie1931/colormatchingfunctions/approximate');
 
+  api.addFile('spectrum/color/cielab..');
+
   api.addFile('spectrum/color/srgb..');
 
   // Artificial Echo

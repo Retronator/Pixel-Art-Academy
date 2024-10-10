@@ -79,7 +79,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies
         ]
     ]
 
-
   class @FixLineStep extends TutorialBitmap.PixelsStep
     constructor: ->
       super arguments...
@@ -96,7 +95,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies
         @previousPixelsMap[pixel.x][pixel.y] = pixel
       
     drawOverlaidHints: (context, renderOptions = {}) ->
-      @_preparePixelHintSize renderOptions
+      @_prepareColorHelp context, renderOptions
 
       bitmap = @tutorialBitmap.bitmap()
       palette = @tutorialBitmap.palette()
@@ -118,11 +117,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies
           
           # Clear hints at pixels that should be empty.
           if pixel and not goalPixel
-            @_drawPixelHint context, x, y, null
+            @_drawColorHelpForPixel context, x, y, null, null, true, renderOptions
             
           # Draw hints on drawn goal pixels.
           else if goalPixel and not pixel
-            @_drawPixelHint context, x, y, palette.ramps[0].shades[0]
+            @_drawColorHelpForPixel context, x, y, color: palette.ramps[0].shades[0], palette, false, renderOptions
       
       # Explicit return to avoid result collection.
       return

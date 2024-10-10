@@ -47,6 +47,7 @@ Package.onUse(function(api) {
   api.addFile('editor/editors');
   api.addFile('editor/assetloader');
   api.addFile('editor/pixelcanvascomponents');
+  api.addFile('editor/colorhelp');
 
   api.addFile('editor/tools..');
   api.addFile('editor/tools/movecanvas');

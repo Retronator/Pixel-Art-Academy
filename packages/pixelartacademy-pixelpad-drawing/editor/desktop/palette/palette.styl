@@ -10,6 +10,14 @@
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
     right 0
 
+  &:hover
+    .colors
+      .ramp
+        .shade
+          .color
+            .symbol
+              visibility visible
+
   &.swatches
     &::before
       content ''
@@ -76,6 +84,18 @@
             absolute-cover()
             z-index 13
 
+            .symbol
+              padding-left 1rem
+
+    .color-help-button
+      bottom 1rem
+      left 1rem
+      right 7rem
+      color atariGray(2)
+
+      &:hover
+        color atariGray(1)
+
     &.zx-spectrum
       .colors
         flex-direction row
@@ -119,7 +139,7 @@
       display flex
       position relative
       z-index 14
-      height 120rem
+      height 112rem
       flex-direction column
       flex-wrap wrap
 
@@ -153,6 +173,38 @@
           .color
             absolute-cover()
             z-index 3
+
+            .symbol
+              padding-left 2rem
+
+    .color-help-button
+      bottom 6rem
+      left 7rem
+      right 0
+      color atariGray(3)
+
+      &:hover
+        color atariGray(2)
+
+  .colors
+    .ramp
+      .shade
+        .color
+          display flex
+          justify-content center
+          align-items center
+
+          .symbol
+            adventure()
+            visibility hidden
+
+  .color-help-button
+    position absolute
+    z-index 14
+    padding 1rem
+    small-print()
+    background none
+    border none
 
 .pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette-trayramp
   absolute-cover()

@@ -33,6 +33,8 @@ Package.onUse(function(api) {
 
   api.addFile('assets');
 
+  api.addFile('colorhelper');
+
   api.addComponent('layout/layout');
 
   // Documents

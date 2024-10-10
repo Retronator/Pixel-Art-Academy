@@ -29,6 +29,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         
       else
         pixel.color = THREE.Color.fromObject pixel.directColor
+        pixel.paletteColor = palette.exactPaletteColor pixel.directColor
 
   completed: ->
     return unless super arguments...
@@ -83,41 +84,46 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
   
   drawOverlaidHints: (context, renderOptions = {}) ->
-    @_preparePixelHintSize renderOptions
+    @_prepareColorHelp context, renderOptions
     
-    drawMissingPixelsUpTo = @tutorialBitmap.hintsEngineComponents.overlaid.drawMissingPixelsUpTo()
+    displayColorHelpUpToPixelCoordinates = @tutorialBitmap.hintsEngineComponents.overlaid.displayColorHelpUpToPixelCoordinates()
+    displayAllColorErrors = @tutorialBitmap.hintsEngineComponents.overlaid.displayAllColorErrors()
     
     bitmap = @tutorialBitmap.bitmap()
     palette = @tutorialBitmap.palette()
     
+    backgroundColor = @tutorialBitmap.backgroundColor()
+
+    drawHintsForGoalPixels = @options.drawHintsForGoalPixels or displayAllColorErrors
+    
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
+        # Only display help to a certain point.
+        continue if displayColorHelpUpToPixelCoordinates and (y > displayColorHelpUpToPixelCoordinates.y or displayColorHelpUpToPixelCoordinates.y is y and x > displayColorHelpUpToPixelCoordinates.x)
+      
         # Do we have a pixel here?
         absoluteX = x + @stepArea.bounds.x
         absoluteY = y + @stepArea.bounds.y
         pixel = bitmap.getPixelForLayerAtAbsoluteCoordinates 0, absoluteX, absoluteY
         
+        # Make sure the pixel is not the same as the background color, otherwise it's the same as not having it.
+        pixel = null if backgroundColor and LOI.Assets.ColorHelper.areAssetColorsEqual pixel, backgroundColor, palette
+        
         # Do we need a pixel here?
-        anyPixel = @stepArea.hasGoalPixel x, y
         goalPixel = @goalPixelsMap[x]?[y]
         
+        # Nothing to do if the two pixels are the same.
+        continue if LOI.Assets.ColorHelper.areAssetColorsEqual pixel, goalPixel, palette, backgroundColor
+        
         # Clear hints at pixels that should be empty.
+        anyPixel = @stepArea.hasGoalPixel x, y
+
         if pixel and not anyPixel
-          @_drawPixelHint context, x, y, null
+          @_drawColorHelpForPixel context, x, y, null, null, true, renderOptions
           
         # Draw hints on drawn goal pixels and optionally all goal pixels.
-        else if goalPixel and (pixel or @options.drawHintsForGoalPixels)
-          continue if drawMissingPixelsUpTo and (y > drawMissingPixelsUpTo.y or drawMissingPixelsUpTo.y is y and x > drawMissingPixelsUpTo.x)
-          
-          if goalPixel.paletteColor
-            shades = palette.ramps[goalPixel.paletteColor.ramp].shades
-            shadeIndex = THREE.MathUtils.clamp goalPixel.paletteColor.shade, 0, shades.length - 1
-            color = shades[shadeIndex]
-  
-          else if goalPixel.directColor
-            color = goalPixel.directColor
-
-          @_drawPixelHint context, x, y, color
+        else if goalPixel and (pixel or drawHintsForGoalPixels)
+          @_drawColorHelpForPixel context, x, y, goalPixel, palette, pixel, renderOptions
     
     # Explicit return to avoid result collection.
     return
