@@ -50,6 +50,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.ColorHelp
     abcdefghijklmnopqrstuvwxyz
   """.match /[^\s]/g
     
-  @hintStyle: -> @state('hintStyle') or @HintStyle.Symbols
-  @errorStyle: -> @state 'errorStyle'
-  @colorNamesMode: -> @state('colorNames')?.mode
+  @hintStyle: -> @state('hintStyle') or @HintStyle.Dots
+  @errorStyle: -> @state('errorStyle') or null
+  @colorNamesMode: -> @state('colorNames')?.mode or null

@@ -1,6 +1,8 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 
+nullString = "_null"
+
 # Base class for an input component with easy setup for different mixins.
 class Artificial.Mirage.DataInputComponent extends AM.Component
   @Types:
@@ -11,6 +13,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     Checkbox: 'checkbox'
     Date: 'date'
     Range: 'range'
+    Radio: 'radio'
 
   template: ->
     'Artificial.Mirage.DataInputComponent'
@@ -29,7 +32,15 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     super arguments...
 
     # Set the value for the first time since some controls don't do it themselves.
-    @$('input').val @value()
+    switch @type
+      when @constructor.Types.Checkbox
+        @$('input').prop 'checked', @value()
+    
+      when @constructor.Types.Radio
+        @$("input[name=#{@name}][value=#{@value() ? nullString}]").prop 'checked', true
+    
+      else
+        @$('input').val @value()
 
   mixins: ->
     mixins = []
@@ -46,6 +57,9 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
 
   isCheckbox: ->
     @type is @constructor.Types.Checkbox
+    
+  isRadio: ->
+    @type is @constructor.Types.Radio
 
   load: ->
     throw new AE.NotImplementedException "You must implement the load method."
@@ -69,6 +83,15 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
   checkedAttribute: ->
     'checked' if @value()
 
+  checkedRadioAttribute: ->
+    option = @currentData()
+    selectedValue = @value()
+    
+    'checked' if option.value is selectedValue
+  
+  nullable: (value) ->
+    value ? nullString
+    
   events: -> [
     'change input, change textarea': @onChange
     'blur input, blur textarea': @onBlur
@@ -92,17 +115,24 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     @_processChange event
   
   _processChange: (event) ->
-    if @type is @constructor.Types.Checkbox
-      @save $(event.target).is(':checked')
-      return
+    switch @type
+      when @constructor.Types.Checkbox
+        @save $(event.target).is(':checked')
+        return
+        
+      when @constructor.Types.Radio
+        @save @_convertValue @$("input[name=#{@name}]:checked").val()
+        return
   
     @save @_convertValue $(event.target).val()
 
   onChangeSelect: (event) ->
     # Return the value of the option and the text.
-    @save $(event.target).val()
+    @save @_convertValue $(event.target).val()
 
   _convertValue: (value) ->
+    return null if value is nullString
+    
     # Do any conversions of type.
     switch @type
       when @constructor.Types.Number, @constructor.Types.Range

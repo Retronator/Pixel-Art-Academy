@@ -1,23 +1,30 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette">
-  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}}">
-    <div class="colors" {{style colorsStyle}}>
-      {{#each palette.ramps}}
-        <div class="ramp">
-          {{#if customPalette}}
-            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp}}
-          {{/if}}
-          {{#each shades}}
-            <div class="shade {{activeColorClass}}" {{style shadeStyle}}>
-              <div class="color" {{style colorStyle}}>
-                <span class="symbol" {{style colorSymbolStyle}}>{{symbol}}</span>
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette">
+    <div class="palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}} {{forceSymbolsVisibleClass}}">
+      <div class="colors" {{style colorsStyle}}>
+        {{#each palette.ramps}}
+          <div class="ramp">
+            {{#if customPalette}}
+              {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp}}
+            {{/if}}
+            {{#each shades}}
+              <div class="shade {{activeColorClass}}" {{style shadeStyle}}>
+                <div class="color" {{style colorStyle}}>
+                  {{#if showColorSymbol}}
+                    <span class="symbol" {{style colorSymbolStyle}}>{{symbol}}</span>
+                  {{/if}}
+                </div>
               </div>
-            </div>
-          {{/each}}
-        </div>
-      {{/each}}
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
+      {{#if showColorHelp}}
+        <button class="color-help-button">HELP</button>
+      {{/if}}
     </div>
-    {{#if showColorHelpButton}}
-      <button class="color-help-button">HELP</button>
+    {{#if showColorHelp}}
+      {{> Render colorHelp}}
     {{/if}}
   </div>
 </template>

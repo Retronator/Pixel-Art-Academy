@@ -51,6 +51,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
       return unless asset.initialized()
       asset.hintsEngineComponents.overlaid.displayAllColorErrors false
 
+    @colorHelp = new @constructor.ColorHelp @
+    
+  onBackButton: ->
+    return unless @colorHelp.visible()
+    
+    @colorHelp.visible false
+    
+    # Inform that we've handled the back button.
+    true
+    
   trayClass: ->
     'tray' if @customPalette()
 
@@ -62,6 +72,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
     _.kebabCase palette.name
 
+  forceSymbolsVisibleClass: ->
+    'force-symbols-visible' if @colorHelp.visible()
+    
   colorsStyle: ->
     # We only need to style the custom palette tray.
     return unless @customPalette()
@@ -103,12 +116,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
     super arguments...
   
+  showColorSymbol: ->
+    PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.hintStyle() is PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.HintStyle.Symbols
+  
   colorSymbolStyle: ->
     shade = @currentData()
     
     color: "##{shade.accentColor.getHexString()}"
   
-  showColorHelpButton: ->
+  showColorHelp: ->
     asset = @interface.getEditorForActiveFile().desktop.activeAsset()
     asset instanceof PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   
@@ -122,39 +138,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     @audio.changeColor()
     
   onClickColorHelpButton: (event) ->
-    tutorialBitmap = @interface.getEditorForActiveFile().desktop.activeAsset()
-    tutorialBitmap.hintsEngineComponents.overlaid.displayAllColorErrors true
-    
-    bitmapData = tutorialBitmap.bitmap()
-    
-    # Display all hints in 1 second.
-    pixelsCount = bitmapData.bounds.width * bitmapData.bounds.height
-    
-    if pixelsCount > 100
-      hintDisplayDelay = 1000 / bitmapData.bounds.height
-      
-    else
-      hintDisplayDelay = 1000 / pixelsCount
-    
-    displayHintsUpTo = (x, y) =>
-      x = bitmapData.bounds.right if pixelsCount > 100
-      tutorialBitmap.hintsEngineComponents.overlaid.displayColorHelpUpToPixelCoordinates {x, y}
-
-      # Move to next pixel.
-      x++
-
-      if x > bitmapData.bounds.right
-        x = bitmapData.bounds.left
-        y++
-        
-        return if y > bitmapData.bounds.bottom
-
-      Meteor.setTimeout =>
-        displayHintsUpTo x, y
-      ,
-        hintDisplayDelay
-    
-    displayHintsUpTo bitmapData.bounds.left, bitmapData.bounds.top
+    @colorHelp.visible not @colorHelp.visible()
     
   class @TrayRamp extends AM.Component
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp'

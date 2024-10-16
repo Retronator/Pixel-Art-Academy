@@ -8,13 +8,17 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 _topLeftCorner = x: 0, y: 0
 _bottomRightCorner = x: 0, y: 0
 
-_darkRed = "rgb(178, 60, 60)"
-_lightRed = "rgb(210, 112, 112)"
+_darkRedRGBString = "158, 32, 32"
+_lightRedRGBString = "254, 182, 182"
+_darkLightColorErrorLuminosityThreshold = 60
 
-_darkRedSemiTransparent = "rgba(178, 60, 60, 0.5)"
-_lightRedSemiTransparent = "rgba(210, 112, 112, 0.5)"
-_darkRedTransparent = "rgba(178, 60, 60, 0)"
-_lightRedTransparent = "rgba(210, 112, 112, 0)"
+_darkRed = "rgb(#{_darkRedRGBString})"
+_lightRed = "rgb(#{_lightRedRGBString})"
+
+_darkRedSemiTransparent = "rgba(#{_darkRedRGBString}, 1)"
+_lightRedSemiTransparent = "rgba(#{_lightRedRGBString}, 1)"
+_darkRedTransparent = "rgba(#{_darkRedRGBString}, 0)"
+_lightRedTransparent = "rgba(#{_lightRedRGBString}, 0)"
 
 class TutorialBitmap.Step
   # Override to true (or provide through options) if the step area should
@@ -28,6 +32,8 @@ class TutorialBitmap.Step
   @canCompleteWithExtraPixels: -> false
   
   @getEditor: -> PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+  
+  @_luminosityForRGB = {}
   
   constructor: (@tutorialBitmap, @stepArea, @options = {}) ->
     @stepArea.addStep @, @options.stepIndex
@@ -138,7 +144,20 @@ class TutorialBitmap.Step
     renderOptions.camera.roundCanvasToWindowPixel _bottomRightCorner, _bottomRightCorner
     
     color = LOI.Assets.ColorHelper.resolveAssetColor assetColor, palette if assetColor
-    errorColor = if color?.r < 0.75 then _lightRed else _darkRed
+    
+    if color
+      unless colorLuminosity = @constructor._luminosityForRGB[color.r]?[color.g]?[color.b]
+        colorLuminosity = THREE.Color.fromObject(color).getLCh().l
+        @constructor._luminosityForRGB[color.r] ?= {}
+        @constructor._luminosityForRGB[color.r][color.g] ?= {}
+        @constructor._luminosityForRGB[color.r][color.g][color.b] = colorLuminosity
+      
+      errorColorIsLight = colorLuminosity < _darkLightColorErrorLuminosityThreshold
+      
+    else
+      errorColorIsLight = true
+      
+    errorColor = if errorColorIsLight then _lightRed else _darkRed
     
     if error or @_displayAllColorErrors
       # Draw the error.
@@ -176,8 +195,8 @@ class TutorialBitmap.Step
       else if @_errorStyle is @_ColorHelp.ErrorStyle.HintGlow or @_displayAllColorErrors and not @_errorStyle
         # Draw a radial gradient from the center of the pixel.
         hintGlowErrorGradient = context.createRadialGradient absoluteX + 0.5, absoluteY + 0.5, 0, absoluteX + 0.5, absoluteY + 0.5, 0.7
-        hintGlowErrorGradient.addColorStop 0, if color?.r < 0.75 then _lightRedSemiTransparent else _darkRedSemiTransparent
-        hintGlowErrorGradient.addColorStop 1, if color?.r < 0.75 then _lightRedTransparent else _darkRedTransparent
+        hintGlowErrorGradient.addColorStop 0, if errorColorIsLight then _lightRedSemiTransparent else _darkRedSemiTransparent
+        hintGlowErrorGradient.addColorStop 1, if errorColorIsLight then _lightRedTransparent else _darkRedTransparent
         context.fillStyle = hintGlowErrorGradient
         context.fillRect absoluteX, absoluteY, 1, 1
 

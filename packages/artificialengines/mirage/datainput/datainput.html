@@ -7,15 +7,26 @@
     {{! Select }}
       <select {{customAttributes}}>
         {{#each options}}
-          <option value="{{this.value}}" {{selectedAttribute}}>{{name}}</option>
+          <option value="{{nullable this.value}}" {{selectedAttribute}}>{{this.name}}</option>
         {{/each}}
       </select>
     {{else}}
       {{#if isCheckbox}}
+        {{! Checkbox }}
         <input type="checkbox" {{checkedAttribute}} {{customAttributes}}/>
       {{else}}
-        {{! Other inputs }}
-        <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}" {{customAttributes}}/>
+        {{#if isRadio}}
+          {{! Radio }}
+          {{#each options}}
+            <label class="radio-area">
+              <input type="radio" name="{{name}}" value="{{nullable this.value}}" {{checkedRadioAttribute}} {{customAttributes}}/><span class="radio"></span>
+              {{this.name}}
+            </label>
+          {{/each}}
+        {{else}}
+          {{! Other inputs }}
+          <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}" {{customAttributes}}/>
+        {{/if}}
       {{/if}}
     {{/if}}
   {{/if}}

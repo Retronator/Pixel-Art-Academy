@@ -57,9 +57,11 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/pixelcanvas..');
   api.addComponent('editor/desktop/testpaper..');
   api.addComponent('editor/desktop/colorfill..');
-  api.addComponent('editor/desktop/palette..');
   api.addComponent('editor/desktop/zoom..');
   api.addComponent('editor/desktop/pico8..');
+
+  api.addComponent('editor/desktop/palette..');
+  api.addComponent('editor/desktop/palette/colorhelp..');
 
   api.addComponent('editor/desktop/pixelartevaluation..');
   api.addComponent('editor/desktop/pixelartevaluation/overview..');

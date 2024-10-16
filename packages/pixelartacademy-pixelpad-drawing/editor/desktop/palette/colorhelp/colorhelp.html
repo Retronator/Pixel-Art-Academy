@@ -1,0 +1,43 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.ColorHelp">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette-colorhelp {{visibleClass}}">
+    {{#if visible}}
+      <button class="close-button">x</button>
+    {{/if}}
+    <div class="title-area">
+      <div class="title">
+        Color Assistance Request Form
+      </div>
+    </div>
+    <ol class="help-types">
+      <li class="help-type one-time">
+        <span class="description">
+          Get one-time help
+        </span>
+        <label>
+          <div class="checkbox">
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.ColorHelp.OneTimeHelp}}<span class="checkmark"></span>
+          </div>
+          <span class="instruction">
+            Check here to show incorrect colors and missing pixels once
+          </span>
+        </label>
+        <div class="divider">
+          <hr/>
+          <span class="or">or</span>
+        </div>
+      </li>
+      <li class="help-type hint">
+        <span class="description">
+          Color hint style
+        </span>
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.ColorHelp.HintStyle}}
+      </li>
+      <li class="help-type error">
+        <span class="description">
+          Incorrect colors warning
+        </span>
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.ColorHelp.ErrorStyle}}
+      </li>
+    </ol>
+  </div>
+</template>
