@@ -16,6 +16,9 @@ class TutorialBitmap.StepArea
     @activeStepIndex = new ComputedField =>
       @data()?.activeStepIndex
       
+    @activeStep = new ComputedField =>
+      @steps()[@activeStepIndex()]
+      
     @hasExtraPixels = new AE.LiveComputedField =>
       return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
       return unless palette = @tutorialBitmap.palette()

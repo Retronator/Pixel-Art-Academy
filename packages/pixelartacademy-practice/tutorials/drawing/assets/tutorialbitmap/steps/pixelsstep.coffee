@@ -67,6 +67,22 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     relativeY = absoluteY - @stepArea.bounds.y
 
     @goalPixelsMap[relativeX]?[relativeY]?
+  
+  hasCorrectPixelColor: (absoluteX, absoluteY) ->
+    relativeX = absoluteX - @stepArea.bounds.x
+    relativeY = absoluteY - @stepArea.bounds.y
+    
+    # We can't determine correct pixel color if there is no goal pixel here.
+    return unless goalPixel = @goalPixelsMap[relativeX]?[relativeY]
+    
+    # We can't determine correct pixel color if there is no pixel here.
+    bitmap = @tutorialBitmap.bitmap()
+    return unless pixel = bitmap.getPixelForLayerAtAbsoluteCoordinates 0, absoluteX, absoluteY
+    
+    backgroundColor = @tutorialBitmap.backgroundColor()
+    palette = @tutorialBitmap.palette()
+    
+    LOI.Assets.ColorHelper.areAssetColorsEqual pixel, goalPixel, palette, backgroundColor
 
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
