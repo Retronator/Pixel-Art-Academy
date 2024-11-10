@@ -124,6 +124,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
 
+    @autorun (computation) =>
+      # Show publications if the asset requires it.
+      publications = @displayedAsset()?.constructor.publications?()
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications.id(), publications
+      
     # Reactively add tools and actions.
     toolRequirements =
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": PAA.Practice.Software.Tools.ToolKeys.Pencil

@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.Publication.Pages.Admin.Parts">
+  <style>
+    html {font-size: 2px;}
+  </style>
+  <div class="pixelartacademy-publication-pages-admin-parts pixelartacademy-pages-admin-components-adminpage">
+    <h3>{{capitalize options.pluralName}}</h3>
+    {{# if scriptsComponent}}
+      {{> Render scriptsComponent}}
+    {{/if}}
+    {{> Artificial.Mummification.Admin.Components.Index args options}}
+    {{#if document}}
+      <div class="document-area">
+        {{> documentPage document}}
+      </div>
+    {{/if}}
+  </div>
+</template>

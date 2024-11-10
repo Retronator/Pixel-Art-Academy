@@ -1,0 +1,30 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-publication-component
+  absolute-cover()
+  overflow hidden
+
+  &.enabled
+    .scroll-area
+      overflow-y scroll
+
+  .scroll-area
+    absolute-cover()
+    right -100px
+    padding-right 100px
+    overflow-y hidden
+
+    .publication-area
+      position relative
+      transition left 0.5s ease-out
+
+      .publication
+        absolute-cover-size()
+
+        &.cover
+          cursor pointer
+
+        &.table-of-contents
+          .content-items
+            .content-item
+              cursor pointer

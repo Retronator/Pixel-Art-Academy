@@ -55,6 +55,10 @@ class Pinball.Assets
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
     
+    @publications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
+
     @initialize()
 
   class @GobbleHole extends @Asset

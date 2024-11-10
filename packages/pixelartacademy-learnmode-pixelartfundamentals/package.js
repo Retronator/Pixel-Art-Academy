@@ -56,4 +56,6 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/content/projects');
   api.addFile('fundamentals/content/drawingeditors');
   api.addFile('fundamentals/content/storylines');
+
+  api.addStyle('fundamentals/publications/pinballmagazine..')
 });

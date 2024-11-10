@@ -1,0 +1,32 @@
+<template name="PixelArtAcademy.Publication.Component">
+  <div class="pixelartacademy-publication-component {{enabledClass}}">
+    <div class="scroll-area">
+      {{#with publication}}
+        <div class="publication-area" {{style publicationAreaStyle}}>
+          <div class="publication {{pageClass}} {{design.class}}" {{style publicationStyle}}>
+            <div class="content">
+              {{#if showArticle}}
+                {{#if activePart}}
+                  ACTIVE PART
+                {{else}}
+                  COVER
+                {{/if}}
+              {{else}}
+                {{#if hasTableOfContents}}
+                  TABLE OF CONTENTS
+                  <ol class="content-items">
+                    {{#each contentItems}}
+                      <li class="content-item">
+                        {{part._id}}
+                      </li>
+                    {{/each}}
+                  </ol>
+                {{/if}}
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      {{/with}}
+    </div>
+  </div>
+</template>

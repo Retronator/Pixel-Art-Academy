@@ -74,6 +74,8 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/references/displaycomponent..');
   api.addComponent('editor/desktop/references/displaycomponent/reference..');
 
+  api.addComponent('editor/desktop/publications..');
+
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');
   api.addFile('editor/desktop/actions/zoom');

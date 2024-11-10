@@ -24,12 +24,19 @@ class LM.App extends Artificial.Base.App
   constructor: ->
     super arguments...
   
+    # Wire the main admin pages.
+    Retronator.Admin.initialize()
+    
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
     new LOI.Assets
     new PAA.Pixeltosh
     new PAA.Practice
-  
+    new PAA.Publication
+    
+    # Initialize other routes.
+    PAA.Publication.initializeRouting()
+    
     # We manually add the Learn Mode route without a domain to point to Learn Mode
     # so we can access it without etc.hosts modifications on standalone clients.
     LM.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', LM.Adventure

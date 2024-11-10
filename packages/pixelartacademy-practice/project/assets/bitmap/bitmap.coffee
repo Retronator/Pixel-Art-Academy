@@ -104,7 +104,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @bitmap.stop()
     @versionedBitmap.stop()
     
-    @_initializingAutorun.stop()
+    @_initializingAutorun?.stop()
     @_pixelArtEvaluation?.destroy()
     
   initializingConditions: ->

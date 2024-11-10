@@ -1,0 +1,69 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-publications
+  absolute-cover-size()
+  top 50rem
+  z-index 14
+  pointer-events none
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active.focused-mode &.active
+    top 0
+
+  &.active
+    pointer-events auto
+
+  &:not(.active)
+    .publications
+      cursor pointer
+
+      &:hover
+        > .publication:last-child
+          .pixelartacademy-publication-component
+            transform translateY(-5rem)
+
+  .publications
+    top 0
+    padding 0
+    margin 0
+    list-style none
+    cursor default
+    transition top 0.2s
+
+    > .publication
+      position absolute
+      width 100%
+      height 200%
+      left 0
+      transition top 1s, left 0.5s
+
+      .pixelartacademy-publication-component
+        transition transform 0.2s
+
+        .scroll-area
+          &::before
+            content ''
+            display block
+            height 50%
+
+          .publication-area
+            margin 30rem auto
+            pointer-events auto
+
+  .publication-select-button
+    position absolute
+    top 0
+    bottom 0
+    cursor pointer
+    background none
+    border none
+    pointer-events auto
+
+    &.previous-publication-button
+      left 0
+      cursor w-resize
+
+    &.next-publication-button
+      right 0
+      cursor e-resize

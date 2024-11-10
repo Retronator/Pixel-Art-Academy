@@ -1,0 +1,36 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.publication.pinball-magazine
+  position relative
+  filter drop-shadow(-8rem 2rem 0 desktopShadowColor)
+  transition filter 0.5s ease-out
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop-publications.active &
+    filter drop-shadow(-24rem 6rem 0 desktopShadowColor)
+
+  &.cover
+    &::before
+      content ''
+      position absolute
+      inset -4rem 0 0
+
+    &.issue-1::before
+      background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/cover-1.png')
+
+  &.table-of-contents
+  &.content-part
+    &::before
+      content ''
+      position absolute
+      inset -5rem -296rem 0 -6rem
+
+  &.table-of-contents::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/contents-1.png')
+
+  &.content-part::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-1.png')
+
+  .content
+    position relative
+    z-index 1

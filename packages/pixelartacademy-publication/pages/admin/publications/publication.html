@@ -1,0 +1,31 @@
+<template name="PixelArtAcademy.Publication.Pages.Admin.Publications.Publication">
+  <div class="pixelartacademy-publication-pages-admin-publications-publication">
+    <h2>{{referenceId}}</h2>
+    <label class="reference-id">Reference ID: {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.ReferenceId}}</label>
+    <label class="reference-id">Cover: {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.CoverPart}}</label>
+    <div class="design section">Design:
+      <div class="size">Size:
+        <label class="width">Width: {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Design.Size.Width}}px (≤ 300)</label>
+        <label class="height">Height: {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Design.Size.Height}}px</label>
+      </div>
+      <label class="spread-pages-count">Pages per spread: {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Design.SpreadPagesCount}}</label>
+      <label class="class">Class: {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Design.Class}}</label>
+    </div>
+    <div class="contents section">Contents:
+      <ol class="content-items">
+        {{#each contentItems}}
+          <li class="content-item">
+            {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.Part}}
+            {{#if canMoveContentItemUp}}<button class="move-up-button">↑</button>{{/if}}
+            {{#if canMoveContentItemDown}}<button class="move-down-button">↓</button>{{/if}}
+            <button class="remove-button">x</button>
+          </li>
+        {{/each}}
+      </ol>
+      <div class="new-content-item">
+        {{> PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.NewContentItemPart}}
+        <button class="add-content-item-button">Add</button>
+      </div>
+    </div>
+  </div>
+</template>

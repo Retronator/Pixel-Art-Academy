@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:artificialengines-pages');
 
+  api.use('retronator:retronator-admin');
   api.use('retronator:retronator-accounts');
   api.use('retronator:retronator-store');
 
@@ -29,6 +30,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-studyguide');
   api.use('retronator:pixelartacademy-challenges');
   api.use('retronator:pixelartacademy-tutorials');
+  api.use('retronator:pixelartacademy-publication');
   api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pico8-snake');
   api.use('retronator:pixelartacademy-pixeltosh');
