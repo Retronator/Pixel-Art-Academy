@@ -92,6 +92,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
       return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
       return unless editor.drawingActive()
       return unless asset = editor.activeAsset()
+      return unless asset instanceof PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
       
       if availableKeys = asset.availableToolKeys?()
         return unless PAA.Practice.Software.Tools.ToolKeys.ColorSwatches in availableKeys
