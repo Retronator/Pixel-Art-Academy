@@ -5,12 +5,8 @@
         <div class="publication-area" {{style publicationAreaStyle}}>
           <div class="publication {{pageClass}} {{design.class}}" {{style publicationStyle}}>
             <div class="content">
-              {{#if showArticle}}
-                {{#if activePart}}
-                  ACTIVE PART
-                {{else}}
-                  COVER
-                {{/if}}
+              {{#with activeContentItem}}
+                {{> PixelArtAcademy.Publication.Component.Article}}
               {{else}}
                 {{#if hasTableOfContents}}
                   TABLE OF CONTENTS
@@ -22,7 +18,7 @@
                     {{/each}}
                   </ol>
                 {{/if}}
-              {{/if}}
+              {{/with}}
             </div>
           </div>
         </div>

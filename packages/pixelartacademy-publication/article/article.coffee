@@ -17,5 +17,5 @@ class PAA.Publication.Article
     'image'
     'video'
 
-    'figure'
+    'publication-figure'
   ]

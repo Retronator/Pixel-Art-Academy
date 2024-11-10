@@ -245,8 +245,12 @@ class PAA.Publication.Component extends AM.Component
       else
         'cover'
   
-  showArticle: ->
-    @activePartId() or not @opened()
+  activeContentItem: ->
+    if activePart = @activePart()
+      activePart
+    
+    else unless @opened()
+      @coverPart()
   
   hasTableOfContents: ->
     return unless publication = @publication()
