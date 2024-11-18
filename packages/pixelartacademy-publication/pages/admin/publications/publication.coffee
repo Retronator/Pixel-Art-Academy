@@ -85,9 +85,9 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
       
       @realtime = false
     
-    load: -> @currentData()?.referenceId
+    load: -> @data()?.referenceId
     save: (value) ->
-      publicationId = @currentData()._id
+      publicationId = @data()._id
       PAA.Publication.update publicationId, "referenceId": value
 
   class @PartSelect extends AM.DataInputComponent
@@ -108,24 +108,35 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
         name: part.referenceId
         value: part._id
 
-  class @CoverPart extends @PartSelect
-    @register "PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.CoverPart"
+  class @MainPart extends @PartSelect
+    @partPropertyName: -> throw new AE.NotImplementedException "Main part selection needs to provide the property name."
+    @removePartFunctionName: -> throw new AE.NotImplementedException "Main part selection needs to provide the function name for removing the property."
     
     options: ->
       options = super arguments...
       options.unshift name: '', value: null
       options
     
-    load: -> @currentData()?.referenceId
+    load: -> @data()?[@constructor.partPropertyName()]?._id
     save: (value) ->
-      publicationId = @currentData()._id
+      publicationId = @data()._id
 
       if value
-        PAA.Publication.update publicationId, "coverPart._id": value
+        PAA.Publication.update publicationId, "#{@constructor.partPropertyName()}._id": value
         
       else
-        PAA.Publication.removeCover publicationId
-      
+        PAA.Publication[@constructor.removePartFunctionName()] publicationId
+
+  class @CoverPart extends @MainPart
+    @register "PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.CoverPart"
+    @partPropertyName: -> 'coverPart'
+    @removePartFunctionName: -> 'removeCover'
+  
+  class @TableOfContentsPart extends @MainPart
+    @register "PixelArtAcademy.Publication.Pages.Admin.Publications.Publication.TableOfContentsPart"
+    @partPropertyName: -> 'tableOfContentsPart'
+    @removePartFunctionName: -> 'removeTableOfContents'
+
   class @Design
     class @Size
       class @Property extends AM.DataInputComponent
@@ -135,9 +146,9 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
           @type = AM.DataInputComponent.Types.Number
           @realtime = false
 
-        load: -> @currentData()?.design?.size?[@property]
+        load: -> @data()?.design?.size?[@property]
         save: (value) ->
-          publicationId = @currentData()._id
+          publicationId = @data()._id
           PAA.Publication.update publicationId, "design.size.#{@property}": value
 
       class @Width extends @Property
@@ -169,9 +180,9 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
         @customAttributes =
           min: 1
 
-      load: -> @currentData()?.design?.spreadPagesCount
+      load: -> @data()?.design?.spreadPagesCount
       save: (value) ->
-        publicationId = @currentData()._id
+        publicationId = @data()._id
         PAA.Publication.update publicationId, "design.spreadPagesCount": value
 
     class @Class extends AM.DataInputComponent
@@ -182,9 +193,9 @@ class PAA.Publication.Pages.Admin.Publications.Publication extends Artificial.Mu
 
         @realtime = false
 
-      load: -> @currentData()?.design?.class
+      load: -> @data()?.design?.class
       save: (value) ->
-        publicationId = @currentData()._id
+        publicationId = @data()._id
         PAA.Publication.update publicationId, "design.class": value
 
     class @Part extends Parent.PartSelect

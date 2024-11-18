@@ -1,4 +1,4 @@
-AB = Artificial.Base
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -15,6 +15,7 @@ PAA.Publication.Part.update.method (partId, data) ->
   check partId, Match.DocumentId
   check data,
     referenceId: Match.OptionalOrNull String
+    title: Match.OptionalOrNull String
 
   LOI.Authorize.admin()
 
@@ -35,6 +36,17 @@ PAA.Publication.Part.remove.method (partId) ->
   # Remove the part.
   PAA.Publication.Part.documents.remove partId
 
+PAA.Publication.Part.removeTitle.method (partId) ->
+  check partId, Match.DocumentId
+
+  LOI.Authorize.admin()
+
+  part = PAA.Publication.Part.documents.findOne partId
+  throw new AE.ArgumentException "Part does not exist." unless part
+
+  # Remove the title.
+  PAA.Publication.Part.documents.update partId, $unset: {title: true}
+  
 PAA.Publication.Part.updateArticle.method (partId, updateDeltaOperations) ->
   check partId, Match.DocumentId
   check updateDeltaOperations, Array

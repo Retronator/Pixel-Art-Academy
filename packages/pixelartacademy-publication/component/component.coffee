@@ -33,13 +33,13 @@ class PAA.Publication.Component extends AM.Component
       
       PAA.Publication.Part.documents.findOne publication.coverPart?._id
     
+    @tableOfContentsPart = new ComputedField =>
+      return unless publication = @publication()
+      
+      PAA.Publication.Part.documents.findOne publication.tableOfContentsPart?._id
+      
     @spreadPagesCount = new ComputedField =>
       @publication()?.design?.spreadPagesCount or 1
-      
-    @contentItems = new ComputedField =>
-      return [] unless publication = @publication()
-
-      _.sortBy publication.contents, 'order'
       
     @activePart = new ComputedField =>
       PAA.Publication.Part.documents.findOne @activePartId()
@@ -199,20 +199,6 @@ class PAA.Publication.Component extends AM.Component
   updatePagesCount: ->
     # Depend on manual update events.
     @manualContentUpdatedDependency.depend()
-    
-    if @activePartId()
-      @_updatePagesCountActivity()
-
-    else
-      # Depend on content items.
-      @contentItems()
-
-      @_updatePagesCountTableOfContents()
-
-  _updatePagesCountActivity: ->
-    @_updatePagesCountViaEndPage()
-
-  _updatePagesCountTableOfContents: ->
     @_updatePagesCountViaEndPage()
 
   _updatePagesCountViaEndPage: ->
@@ -249,13 +235,12 @@ class PAA.Publication.Component extends AM.Component
     if activePart = @activePart()
       activePart
     
-    else unless @opened()
-      @coverPart()
-  
-  hasTableOfContents: ->
-    return unless publication = @publication()
-    
-    publication.contents.length > 1
+    else
+      if @opened()
+        @tableOfContentsPart()
+      
+      else
+        @coverPart()
   
   publicationAreaStyle: ->
     return unless publication = @publication()

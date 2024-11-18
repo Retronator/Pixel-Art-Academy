@@ -15,6 +15,7 @@ PAA.Publication.update.method (publicationId, data) ->
   check data,
     referenceId: Match.OptionalOrNull String
     'coverPart._id': Match.OptionalOrNull Match.DocumentId
+    'tableOfContentsPart._id': Match.OptionalOrNull Match.DocumentId
     'design.size.width': Match.OptionalOrNull Match.IntegerMax 300
     'design.size.height': Match.OptionalOrNull Match.Integer
     'design.spreadPagesCount': Match.OptionalOrNull Match.PositiveInteger
@@ -38,6 +39,15 @@ PAA.Publication.removeCover.method (publicationId) ->
   PAA.Publication.documents.update publicationId,
     $unset:
       coverPart: 1
+
+PAA.Publication.removeTableOfContents.method (publicationId) ->
+  check publicationId, Match.DocumentId
+  
+  LOI.Authorize.admin()
+  
+  PAA.Publication.documents.update publicationId,
+    $unset:
+      tableOfContentsPart: 1
 
 PAA.Publication.remove.method (publicationId) ->
   check publicationId, Match.DocumentId

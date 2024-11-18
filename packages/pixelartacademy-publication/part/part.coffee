@@ -5,6 +5,7 @@ PAA = PixelArtAcademy
 class PAA.Publication.Part extends AM.Document
   @id: -> 'PixelArtAcademy.Publication.Part'
   # referenceId: custom ID to be used when referencing the part from code
+  # title: the title of the part (as it appears in the table of contents) or null if not named
   # [article]: array of delta operations for the article of this publication part
   #   insert: string or object to be inserted
   #     figure: a collection of visual elements with a caption
@@ -28,6 +29,8 @@ class PAA.Publication.Part extends AM.Document
   @insert = @method 'insert'
   @update = @method 'update'
   @remove = @method 'remove'
+  
+  @removeTitle = @method 'removeTitle'
 
   @updateArticle = @method 'updateArticle'
 

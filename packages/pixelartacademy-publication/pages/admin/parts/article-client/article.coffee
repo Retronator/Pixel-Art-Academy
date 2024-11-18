@@ -8,6 +8,7 @@ Quill = AM.Quill
 
 icons = Quill.import 'ui/icons'
 icons['publication-figure'] = 'FG'
+icons['publication-tableofcontents'] = 'ToC'
 
 class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
   @id: -> 'PixelArtAcademy.Publication.Pages.Admin.Parts.Part.Article'
@@ -46,10 +47,12 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
             [{'list': 'ordered'}, {'list': 'bullet'}]
             ['blockquote', 'code-block']
             ['image']
+            ['publication-tableofcontents']
             ['clean']
           ]
           handlers:
             image: (value) => @onQuillToolbarImageClick value
+            'publication-tableofcontents': (value) => @onQuillToolbarPublicationTableOfContentsClick value
 
     @quill quill
 
@@ -150,3 +153,8 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
       elements: (image: {url} for url in urls)
 
     quill.insertEmbed range.index, 'publication-figure', figure, Quill.sources.USER
+    
+  onQuillToolbarPublicationTableOfContentsClick: ->
+    quill = @quill()
+    range = quill.getSelection()
+    quill.insertEmbed range.index, 'publication-tableofcontents', {}, Quill.sources.USER

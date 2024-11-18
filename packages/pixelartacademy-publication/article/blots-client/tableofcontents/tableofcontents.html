@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.Publication.Article.TableOfContents">
+  {{#if publication}}
+    <ol class="table-of-contents">
+    {{#each contentItems}}
+      <li class="content-item">
+        {{part.title}}
+      </li>
+    {{/each}}
+    </ol>
+  {{else}}
+    Table of Contents
+  {{/if}}
+</template>

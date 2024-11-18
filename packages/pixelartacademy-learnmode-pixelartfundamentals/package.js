@@ -60,4 +60,7 @@ Package.onUse(function(api) {
 
   api.addFile('fundamentals/publications..')
   api.addStyledFile('fundamentals/publications/pinballmagazine..')
+  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-cover')
+  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-tableofcontents')
+  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-issue1')
 });

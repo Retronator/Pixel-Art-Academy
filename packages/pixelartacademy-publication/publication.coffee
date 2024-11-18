@@ -8,6 +8,9 @@ class PAA.Publication extends AM.Document
   # coverPart: a publication part document that represents the cover or null if no cover
   #   _id
   #   referenceId
+  # tableOfContentsPart: a publication part document that represents the table of contents or null if no contents
+  #   _id
+  #   referenceId
   # contents: an array of items that are in this book
   #   order: the position of this item in the contents
   #   part: a publication part document that represents this item
@@ -35,9 +38,11 @@ class PAA.Publication extends AM.Document
   # Methods
   @insert = @method 'insert'
   @update = @method 'update'
-  @removeCover = @method 'removeCover'
   @remove = @method 'remove'
-
+  
+  @removeCover = @method 'removeCover'
+  @removeTableOfContents = @method 'removeTableOfContents'
+  
   @addContentItem = @method 'addContentItem'
   @updateContentItem = @method 'updateContentItem'
   @removeContentItem = @method 'removeContentItem'

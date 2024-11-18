@@ -80,6 +80,10 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".html"]);
   };
+  api.constructor.prototype.addClientUnstyledComponent = function(path) {
+    path = expandPath(path);
+    this.addFiles([path + ".coffee", path + ".html"], ['client']);
+  };
   api.constructor.prototype.addThing = function(path, architecture) {
     path = expandPath(path);
     this.addFiles(path + ".coffee", architecture);

@@ -7,17 +7,6 @@
             <div class="content">
               {{#with activeContentItem}}
                 {{> PixelArtAcademy.Publication.Component.Article}}
-              {{else}}
-                {{#if hasTableOfContents}}
-                  TABLE OF CONTENTS
-                  <ol class="content-items">
-                    {{#each contentItems}}
-                      <li class="content-item">
-                        {{part._id}}
-                      </li>
-                    {{/each}}
-                  </ol>
-                {{/if}}
               {{/with}}
             </div>
           </div>

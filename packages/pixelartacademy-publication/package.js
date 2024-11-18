@@ -35,6 +35,7 @@ Package.onUse(function(api) {
 
   api.addClientFile('article/blots-client/header..');
   api.addClientFile('article/blots-client/customclass..');
+  api.addClientUnstyledComponent('article/blots-client/tableofcontents..');
 
   api.addClientComponent('article/blots-client/figure..');
   api.addClientComponent('article/blots-client/figure/image..');

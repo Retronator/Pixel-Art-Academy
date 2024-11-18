@@ -20,4 +20,5 @@ class PAA.Publication.Article
     'publication-figure'
     'publication-header-heading'
     'publication-customclass'
+    'publication-tableofcontents'
   ]

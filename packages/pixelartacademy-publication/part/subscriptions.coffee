@@ -15,6 +15,7 @@ PAA.Publication.Part.forPublication.publish (publicationId) ->
   partIds = for content in publication.contents then content.part._id
  
   partIds.push publication.coverPart._id if publication.coverPart
+  partIds.push publication.tableOfContentsPart._id if publication.tableOfContentsPart
 
   PAA.Publication.Part.getPublishingDocuments().find _id: $in: partIds,
 

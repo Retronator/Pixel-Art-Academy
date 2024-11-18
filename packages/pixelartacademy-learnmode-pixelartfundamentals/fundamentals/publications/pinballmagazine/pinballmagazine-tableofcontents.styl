@@ -1,0 +1,55 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.publication.pinball-magazine.table-of-contents
+  &::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/contents-1.png')
+
+  .content
+    .pixelartacademy-publication-article.ql-container
+      header
+        position absolute
+        left 0
+        bottom 193rem
+        background atariRed(1)
+
+        h1
+          serif-23()
+          text-transform uppercase
+          margin 10rem 10rem 2rem
+          color atariYellow(6)
+
+      .pixelartacademy-publication-article-tableofcontents
+        position absolute
+        left 10rem
+        top 210rem
+        width 10000rem
+        height 170rem
+        kyrou-9()
+        text-transform uppercase
+        color atariBrown(6)
+        column-width 140rem
+        column-gap 5rem
+        column-fill auto
+
+        .table-of-contents
+          list-style none
+          padding-left 20rem
+          counter-reset content-item-counter
+
+          .content-item
+            position relative
+            margin-bottom 20rem
+            counter-increment content-item-counter
+            cursor pointer
+
+            &:hover
+              color atariBrown(7)
+
+            &::before
+              content counter(content-item-counter) ". "
+              position absolute
+              top 0
+              left -20rem
+              font-weight bold
+              text-align left
