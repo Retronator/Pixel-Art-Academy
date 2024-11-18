@@ -16,21 +16,17 @@ class PAA.Publication.Component.Article extends AM.Component
   onCreated: ->
     super arguments...
 
-    @parentComponent = @ancestorComponentOfType PAA.StudyGuide.Pages.Home.Book
-    @publication = new ComputedField => @parentComponent.publication()
+    @publicationComponent = @ancestorComponentOfType PAA.Publication.Component
+    @publication = new ComputedField => @publicationComponent.publication()
 
     @quill = new AE.ReactiveWrapper null
-
-    # Subscribe to the article.
-    @autorun (computation) =>
-      PAA.Publication.Part.articleForActivityId.subscribe @, @activity()._id
 
   onRendered: ->
     super arguments...
 
     # Initialize quill.
     quill = new Quill @$('.contents')[0],
-      formats: PAA.StudyGuide.Article.quillFormats
+      formats: PAA.Publication.Article.quillFormats
       readOnly: true
 
     @quill quill
@@ -42,9 +38,9 @@ class PAA.Publication.Component.Article extends AM.Component
 
     # Update quill content.
     @autorun (computation) =>
-      return unless activity = @activity()
+      return unless part = @data()
 
-      quill.setContents activity.article, Quill.sources.API
+      quill.setContents part.article, Quill.sources.API
 
   contentUpdated: ->
-    @parentComponent.contentUpdated()
+    @publicationComponent.contentUpdated()

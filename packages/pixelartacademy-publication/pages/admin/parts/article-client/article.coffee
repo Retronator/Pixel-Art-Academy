@@ -34,20 +34,20 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
 
     # Initialize quill.
     quill = new Quill @$('.writing-area')[0],
-      scrollingContainer: document.documentElement
       theme: 'snow'
       formats: PAA.Publication.Article.quillFormats
       modules:
         toolbar:
           container: [
-              [{'header': [1, 2, 3, 4, false]}]
-              ['bold', 'italic', 'underline', 'strike', {'script': 'sub'}, {'script': 'super'}]
-              ['link', 'code']
-              [{'list': 'ordered'}, {'list': 'bullet'}]
-              ['blockquote', 'code-block']
-              ['image']
-              ['clean']
-            ]
+            [{'publication-header-heading': [1, 2, 3, false]}]
+            [{'header': [1, 2, 3, 4, false]}]
+            ['bold', 'italic', 'underline', 'strike', {'script': 'sub'}, {'script': 'super'}]
+            ['link', 'code']
+            [{'list': 'ordered'}, {'list': 'bullet'}]
+            ['blockquote', 'code-block']
+            ['image']
+            ['clean']
+          ]
           handlers:
             image: (value) => @onQuillToolbarImageClick value
 
@@ -62,13 +62,55 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
 
       # Update the article if this was a user update.
       if source is Quill.sources.USER
-        console.log "Updating article" if @constructor.debug
         part = @partComponent.data()
         PAA.Publication.Part.updateArticle part._id, delta.ops
 
     quill.on 'editor-change', =>
       # Trigger reactive updates.
       @quill.updated()
+      
+    # Add the custom class input.
+    customClassInput = document.createElement 'select'
+    noneOption = document.createElement 'option'
+    noneOption.text = 'No class'
+    noneOption.value = ''
+    customClassInput.appendChild noneOption
+    
+    for className in PAA.Publication.Article.CustomClass.getClasses()
+      option = document.createElement 'option'
+      option.text = _.startCase className
+      option.value = className
+      customClassInput.appendChild option
+    
+    # Handle input changes.
+    customClassInput.addEventListener 'change', (event) ->
+      value = event.target.value.trim() or false
+      quill.focus()
+      quill.format 'publication-customclass', value, Quill.sources.USER
+      
+    # Update custom class input based on the selected range.
+    quill.on 'editor-change', =>
+      [range] = quill.selection.getRange()
+      formats = if range? then quill.getFormat range else {}
+      
+      if className = formats['publication-customclass']
+        option = customClassInput.querySelector "option[value='#{className}']"
+        
+        unless option
+          option = document.createElement 'option'
+          option.text = _.startCase className
+          option.value = className
+          customClassInput.appendChild option
+      
+        option.selected = true
+        
+      else
+        customClassInput.value = ''
+        customClassInput.selectedIndex = 0
+    
+    # Add the input field to the toolbar.
+    toolbarContainer = quill.container.previousSibling
+    toolbarContainer.appendChild customClassInput
 
     # Update quill content.
     @autorun (computation) =>

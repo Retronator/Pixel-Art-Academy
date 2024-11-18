@@ -10,7 +10,7 @@ Npm.depends({
   'pako': '1.0.8',
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0',
-  'quill': '1.3.7',
+  'quill': '2.0.2',
   "velocity-animate": "1.5.2",
   'showdown': '1.9.1',
   'lodash': '4.17.21',

@@ -10,13 +10,81 @@
     filter drop-shadow(-24rem 6rem 0 desktopShadowColor)
 
   &.cover
+    text-shadow atariGray(0) -1rem 1rem
+
     &::before
       content ''
       position absolute
       inset -4rem 0 0
 
-    &.issue-1::before
-      background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/cover-1.png')
+    &.issue-1
+      &::before
+        background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/cover-1.png')
+
+      .content
+        .pixelartacademy-publication-article.ql-container
+          .pixelartacademy-publication-article-customclass-container
+            &:has(.pinballmagazine-cover-line)
+              right 0
+              text-align right
+
+            &:has(.pinballmagazine-cover-line-1)
+              right 124rem
+              top 112rem
+              width 100rem
+
+            &:has(.pinballmagazine-cover-line-2)
+              right 124rem
+              top 192rem
+              width 100rem
+
+            &:has(.pinballmagazine-cover-line-3)
+              right 11rem
+              top 309rem
+              width 100rem
+
+    .content
+      .pixelartacademy-publication-article.ql-container
+        text-align center
+
+        header
+          display inline-block
+          position relative
+
+          h1
+            margin 10rem 0 2rem
+            letter-spacing 1rem
+            serif-23()
+
+          h2
+          h3
+            margin 0
+            position absolute
+            bottom 0
+            small-print()
+
+          h2
+            left 0
+
+          h3
+            right 0
+            text-transform uppercase
+
+        .pixelartacademy-publication-article-customclass-container
+          &:has(.pinballmagazine-cover-line)
+            position absolute
+            text-transform uppercase
+            kyrou-9()
+            color atariGray(6)
+            line-height 12rem
+
+            p
+              margin 0
+
+            .pinballmagazine-cover-line
+              &:first-child
+                font-weight bold
+                color atariGray(7)
 
   &.table-of-contents
   &.content-part
@@ -34,3 +102,6 @@
   .content
     position relative
     z-index 1
+
+    .pixelartacademy-publication-article.ql-container
+      thintel()

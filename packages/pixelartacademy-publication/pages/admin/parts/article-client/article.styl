@@ -7,6 +7,23 @@
     z-index 1
     background white
 
+  .ql-picker.ql-publication-header-heading
+    width: 98px
+
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'Normal'
+
+    for num in (1..6)
+      .ql-picker-label[data-value=\"{num}\"]::before,
+      .ql-picker-item[data-value=\"{num}\"]::before
+        content: 'Header ' + num
+
+  .ql-picker.ql-publication-customclass
+    .ql-picker-label::before,
+    .ql-picker-item::before
+      content: 'None'
+
   .writing-area
     cursor text
     background atariGray(7)

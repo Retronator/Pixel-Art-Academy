@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '4.2.2'
+  'quill-delta': '5.1.0'
 });
 
 Package.onUse(function(api) {

@@ -16,6 +16,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-pixelpad-music');
   api.use('retronator:pixelartacademy-pixelpad-notifications');
+  api.use('retronator:pixelartacademy-publication');
 
   api.export('PixelArtAcademy');
 
@@ -57,5 +58,6 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/content/drawingeditors');
   api.addFile('fundamentals/content/storylines');
 
-  api.addStyle('fundamentals/publications/pinballmagazine..')
+  api.addFile('fundamentals/publications..')
+  api.addStyledFile('fundamentals/publications/pinballmagazine..')
 });

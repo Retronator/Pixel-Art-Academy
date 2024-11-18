@@ -18,4 +18,6 @@ class PAA.Publication.Article
     'video'
 
     'publication-figure'
+    'publication-header-heading'
+    'publication-customclass'
   ]

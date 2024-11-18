@@ -13,3 +13,10 @@ class PAA.Publication.Pages.Admin.Parts extends Artificial.Mummification.Admin.C
       nameField: 'referenceId'
       singularName: 'publication part'
       pluralName: 'publication parts'
+
+  events: ->
+    super(arguments...).concat
+      'input .preview-classes': @onInputPreviewClasses
+      
+  onInputPreviewClasses: (event) ->
+    @$('.publication')[0].className = "publication #{event.target.value}"

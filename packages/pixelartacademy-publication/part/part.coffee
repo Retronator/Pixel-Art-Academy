@@ -33,5 +33,5 @@ class PAA.Publication.Part extends AM.Document
 
   # Subscriptions
   @all = @subscription 'all'
-  @forPublication = @subscription 'forPublicationId'
-  @articleForPart = @subscription 'articleForPartId'
+  @forPublication = @subscription 'forPublication'
+  @articleForPart = @subscription 'articleForPart'

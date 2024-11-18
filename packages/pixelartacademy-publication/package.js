@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '4.2.2'
+  'quill-delta': '5.1.0'
 });
 
 Package.onUse(function(api) {
@@ -29,8 +29,12 @@ Package.onUse(function(api) {
   api.addFile('part/subscriptions');
 
   api.addComponent('component..');
+  api.addClientComponent('component/article-client/article');
 
   api.addFile('article..');
+
+  api.addClientFile('article/blots-client/header..');
+  api.addClientFile('article/blots-client/customclass..');
 
   api.addClientComponent('article/blots-client/figure..');
   api.addClientComponent('article/blots-client/figure/image..');
