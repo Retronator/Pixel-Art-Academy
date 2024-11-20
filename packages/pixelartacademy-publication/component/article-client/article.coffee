@@ -25,7 +25,7 @@ class PAA.Publication.Component.Article extends AM.Component
     super arguments...
 
     # Initialize quill.
-    quill = new Quill @$('.contents')[0],
+    quill = new Quill @$('.pixelartacademy-publication-article')[0],
       formats: PAA.Publication.Article.quillFormats
       readOnly: true
 

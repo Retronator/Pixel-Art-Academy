@@ -41,6 +41,15 @@ class PAA.Publication.Component extends AM.Component
     @spreadPagesCount = new ComputedField =>
       @publication()?.design?.spreadPagesCount or 1
       
+    @pageNumbers = new ComputedField =>
+      spreadPagesCount = @spreadPagesCount()
+      leftPageIndex= @leftPageIndex()
+      pagesCount = @pagesCount()
+      
+      for spreadPageIndex in [0...spreadPagesCount] when not pagesCount or leftPageIndex + spreadPageIndex < pagesCount
+        spreadNumber: spreadPageIndex + 1
+        totalNumber: leftPageIndex + spreadPageIndex + 1
+      
     @activePart = new ComputedField =>
       PAA.Publication.Part.documents.findOne @activePartId()
       

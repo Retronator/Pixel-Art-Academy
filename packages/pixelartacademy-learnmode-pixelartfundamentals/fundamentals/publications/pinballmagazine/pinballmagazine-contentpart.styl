@@ -1,0 +1,110 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+historyOfPinballColor(shade=0)
+  atariBrown(shade)
+
+running-footer-gradient(color)
+  linear-gradient(to left,
+    color 0,
+    color 5rem,
+    transparent 5rem,
+    transparent 7rem,
+    color 7rem,
+    color 17rem,
+    transparent 17rem,
+    transparent 19rem,
+    color 19rem
+  )
+
+.publication.pinball-magazine.content-part
+  &::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-1.png')
+
+  &.history-of-pinball
+    .running-header
+      &::before
+      &::after
+        content 'The History of Pinball'
+
+      &::before
+        background running-footer-gradient(historyOfPinballColor())
+
+      &::after
+        border-bottom-color historyOfPinballColor()
+        color historyOfPinballColor()
+
+  .running-header
+  .running-footer
+    position absolute
+    z-index 1
+    left 0
+    right 0
+    pixel-georgia()
+
+  .running-header
+    top 0
+    text-transform lowercase
+
+    &::before
+    &::after
+      position absolute
+      top 0
+      padding 10rem 20rem
+
+    &::before
+      left 0
+      color atariGray(6)
+      padding-right 39rem
+
+    &::after
+      right -100%
+      color atariGray(2)
+      border-bottom 2rem solid
+      padding-bottom 4rem
+
+  .running-footer
+    bottom 0
+    color atariGray(3)
+
+    .page-numbers
+      .page-number
+        position absolute
+        bottom 10rem
+
+        &.spread-page-1
+          left 20rem
+
+        &.spread-page-2
+          right calc(-100% + 20rem)
+
+  .pixelartacademy-publication-article.ql-container
+    color atariGray(0)
+    thintel()
+
+    &.ql-disabled
+      position absolute
+      left 20rem
+      top 40rem
+      width 10000rem
+      height 320rem
+      column-width 250rem
+      column-gap 40rem
+      column-fill auto
+
+    h1
+      talk-to-three-headed-monkey()
+      font-weight normal
+
+    h2
+      pixolde()
+      font-weight normal
+
+    .pinballmagazine-lead-paragraph
+      line-height 15rem
+
+      &::first-letter
+        float left
+        margin-right 2rem
+        serif-23()
+        line-height 30rem

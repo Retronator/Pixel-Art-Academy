@@ -59,3 +59,18 @@ class PAA.Publication.Pages.Admin.Parts.Part extends AM.Component
         
       else
         PAA.Publication.Part.removeTitle partId
+        
+  class @Design
+    class @Class extends AM.DataInputComponent
+      @register 'PixelArtAcademy.Publication.Pages.Admin.Parts.Part.Design.Class'
+      
+      constructor: ->
+        super arguments...
+        
+        @realtime = false
+      
+      load: -> @data()?.design?.class
+      save: (value) ->
+        partId = @data()._id
+        
+        PAA.Publication.Part.update partId, "design.class": value

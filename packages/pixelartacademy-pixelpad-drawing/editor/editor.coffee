@@ -206,7 +206,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space, holdButton: AC.Buttons.auxiliary
       
         "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-        "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, key: AC.Keys.z, shift: true, key: AC.Keys.z}]
+        "#{LOI.Assets.Editor.Actions.Redo.id()}": [{commandOrControl: true, key: AC.Keys.y}, {commandOrControl: true, shift: true, key: AC.Keys.z}]
       
   active: ->
     @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'

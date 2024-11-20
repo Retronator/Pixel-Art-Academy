@@ -3,11 +3,17 @@
     <div class="scroll-area">
       {{#with publication}}
         <div class="publication-area" {{style publicationAreaStyle}}>
-          <div class="publication {{pageClass}} {{design.class}}" {{style publicationStyle}}>
-            <div class="content">
-              {{#with activeContentItem}}
-                {{> PixelArtAcademy.Publication.Component.Article}}
-              {{/with}}
+          <div class="publication {{pageClass}} {{design.class}} {{activeContentItem.design.class}}" {{style publicationStyle}}>
+            <div class="running-header"></div>
+            {{#with activeContentItem}}
+              {{> PixelArtAcademy.Publication.Component.Article}}
+            {{/with}}
+            <div class="running-footer">
+              <div class="page-numbers">
+                {{#each pageNumbers}}
+                  <div class="page-number spread-page-{{spreadNumber}}">{{totalNumber}}{{#if pagesCount}}/{{pagesCount}}{{/if}}</div>
+                {{/each}}
+              </div>
             </div>
           </div>
         </div>

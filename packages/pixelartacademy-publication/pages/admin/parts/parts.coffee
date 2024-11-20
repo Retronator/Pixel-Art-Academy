@@ -19,4 +19,4 @@ class PAA.Publication.Pages.Admin.Parts extends Artificial.Mummification.Admin.C
       'input .preview-classes': @onInputPreviewClasses
       
   onInputPreviewClasses: (event) ->
-    @$('.publication')[0].className = "publication #{event.target.value}"
+    @$('.publication')[0].className = "publication #{event.target.value} #{document?.design?.class}"

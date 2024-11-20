@@ -6,6 +6,8 @@ class PAA.Publication.Part extends AM.Document
   @id: -> 'PixelArtAcademy.Publication.Part'
   # referenceId: custom ID to be used when referencing the part from code
   # title: the title of the part (as it appears in the table of contents) or null if not named
+  # design: object with properties that define the part's look
+  #   class: string of the CSS class (or classes) that define the look
   # [article]: array of delta operations for the article of this publication part
   #   insert: string or object to be inserted
   #     figure: a collection of visual elements with a caption

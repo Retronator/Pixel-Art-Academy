@@ -34,7 +34,7 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
     super arguments...
 
     # Initialize quill.
-    quill = new Quill @$('.writing-area')[0],
+    quill = new Quill @$('.pixelartacademy-publication-article')[0],
       theme: 'snow'
       formats: PAA.Publication.Article.quillFormats
       modules:

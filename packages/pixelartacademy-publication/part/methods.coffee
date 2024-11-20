@@ -16,6 +16,7 @@ PAA.Publication.Part.update.method (partId, data) ->
   check data,
     referenceId: Match.OptionalOrNull String
     title: Match.OptionalOrNull String
+    'design.class': Match.OptionalOrNull String
 
   LOI.Authorize.admin()
 

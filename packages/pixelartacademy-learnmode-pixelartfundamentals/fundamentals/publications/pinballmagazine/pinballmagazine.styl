@@ -9,6 +9,12 @@
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop-publications.active &
     filter drop-shadow(-24rem 6rem 0 desktopShadowColor)
 
+  &.cover
+  &.table-of-contents
+    .running-header
+    .running-footer
+      display none
+
   &.table-of-contents
   &.content-part
     &::before
@@ -16,12 +22,7 @@
       position absolute
       inset -5rem -296rem 0 -6rem
 
-  &.content-part::before
-    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-1.png')
-
-  .content
-    absolute-cover()
-    z-index 1
-
-    .pixelartacademy-publication-article.ql-container
-      thintel()
+  .pixelartacademy-publication-article.ql-container
+    &.ql-disabled
+      absolute-cover()
+      z-index 1
