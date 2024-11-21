@@ -18,4 +18,9 @@
     <div class="intro-fade {{introFadeCompleteClass}} {{introFadeFastClass}}"></div>
     <div class="waiting-overlay {{waitingOverlayVisibleClass}}"></div>
   </div>
+  {{#with focusedArtworks}}
+    <div class="focused-artworks">
+      {{> PixelArtDatabase.Components.Stream args artworksStreamOptions}}
+    </div>
+  {{/with}}
 </template>

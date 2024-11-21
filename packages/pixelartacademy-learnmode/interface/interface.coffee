@@ -1,3 +1,4 @@
+AC = Artificial.Control
 AE = Artificial.Everywhere
 AEc = Artificial.Echo
 AMe = Artificial.Melody
@@ -73,6 +74,9 @@ class LM.Interface extends LOI.Interface
     
     @autorun (computation) =>
       @audio.playAmbient not @audioOffInMenus()
+    
+    # Allow for focusing artworks.
+    @focusedArtworks = new ReactiveField null
     
   onRendered: ->
     super arguments...
@@ -167,6 +171,14 @@ class LM.Interface extends LOI.Interface
 
     @waiting false
     
+  focusArtworks: (artworks) ->
+    # Start display.
+    @focusedArtworks artworks
+
+  unfocusArtworks: ->
+    # Stop display.
+    @focusedArtworks null
+    
   introFadeCompleteClass: ->
     'complete' if @introFadeComplete()
   
@@ -175,3 +187,13 @@ class LM.Interface extends LOI.Interface
   
   waitingOverlayVisibleClass: ->
     'visible' if @waiting()
+    
+  artworksStreamOptions: ->
+    scrollParentSelector: '.focused-artworks'
+    
+  events: ->
+    super(arguments...).concat
+      'click .focused-artworks': @onClickFocusedArtworks
+  
+  onClickFocusedArtworks: (event) ->
+    @unfocusArtworks()

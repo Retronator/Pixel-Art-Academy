@@ -107,11 +107,6 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
       'click .move-element-up-button': @onClickMoveElementUpButton
       'click .move-element-down-button': @onClickMoveElementDownButton
       'click .remove-element-button': @onClickRemoveElementButton
-      'paste .caption': @onPasteCaption
-
-  onPasteCaption: (event) ->
-    # Don't allow the Quill clipboard to hijack paste into the figure caption.
-    event.stopPropagation()
 
   onClickAddElementButton: (event) ->
     $fileInput = $('<input type="file" multiple/>')
@@ -206,7 +201,6 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
 
       @type = AM.DataInputComponent.Types.TextArea
       @realtime = false
-      @autoResizeTextarea = true
 
     onCreated: ->
       super arguments...

@@ -5,56 +5,63 @@
   &::before
     background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/contents-1.png')
 
-  .pixelartacademy-publication-article.ql-container
-    &.ql-disabled
-      header
-        position absolute
-        left 0
-        bottom 193rem
+  .contents-area
+    text-shadow atariRed(0) -1rem 1rem
 
-      .pixelartacademy-publication-article-tableofcontents
-        position absolute
-        left 10rem
-        top 210rem
-        width 10000rem
-        height 170rem
-        column-width 140rem
-        column-gap 5rem
-        column-fill auto
-
-    header
-      background atariRed(1)
-
-      h1
-        serif-23()
-        text-transform uppercase
-        margin 10rem 10rem 2rem
-        color atariYellow(6)
-
-    .pixelartacademy-publication-article-tableofcontents
-      pixel-georgia()
-      line-height 13rem
-      text-transform uppercase
-      color atariBrown(6)
-
-      .table-of-contents
-        list-style none
-        padding-left 20rem
-        counter-reset content-item-counter
-
-        .content-item
-          position relative
-          margin-bottom 20rem
-          counter-increment content-item-counter
-          cursor pointer
-
-          &:hover
-            color atariBrown(7)
-
-          &::before
-            content counter(content-item-counter) ". "
+    &.read-only
+      .contents
+        .pixelartacademy-publication-article.ql-container
+          header
             position absolute
-            top 0
-            left -20rem
-            font-weight bold
-            text-align left
+            left 0
+            bottom 193rem
+
+          .pixelartacademy-publication-article-tableofcontents
+            position absolute
+            left 10rem
+            top 210rem
+            // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
+            width 1445rem
+            height 170rem
+            column-width 140rem
+            column-gap 5rem
+            column-fill auto
+
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        header
+          background atariRed(1)
+
+          h1
+            serif-23()
+            text-transform uppercase
+            margin 10rem 10rem 2rem
+            color atariYellow(6)
+
+        .pixelartacademy-publication-article-tableofcontents
+          pixel-georgia()
+          line-height 13rem
+          text-transform uppercase
+          color atariBrown(6)
+
+          .table-of-contents
+            list-style none
+            padding-left 20rem
+            counter-reset content-item-counter
+
+            .content-item
+              position relative
+              margin-bottom 20rem
+              counter-increment content-item-counter
+              cursor pointer
+
+              &:hover
+                color atariBrown(7)
+
+              &::before
+                content counter(content-item-counter) ". "
+                position absolute
+                top 0
+                left -20rem
+                font-weight bold
+                text-align left

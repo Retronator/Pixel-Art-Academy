@@ -26,3 +26,14 @@ class PAA.Publication.Article.TableOfContents extends AM.Quill.BlotComponent
   part: ->
     contentItem = @currentData()
     PAA.Publication.Part.documents.findOne contentItem.part._id
+
+  events: ->
+    super(arguments...).concat
+      'click .content-item': @onClickContentItem
+  
+  onClickContentItem: (event) ->
+    publicationComponent = @quillComponent().publicationComponent
+    
+    contentItem = @currentData()
+    publicationComponent.activePartId contentItem.part._id
+    publicationComponent.scrollToTop()

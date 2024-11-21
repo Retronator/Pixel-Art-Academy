@@ -8,11 +8,31 @@
     .scroll-area
       overflow-y scroll
 
+    .move-button
+      position absolute
+      z-index 2
+      top 0
+      bottom 0
+      background none
+      border none
+      transition background 0.2s, width 0.5s
+
+      &:hover
+        background rgba(atariGray(2), 0.3)
+
+      &.left
+        left 0
+        cursor w-resize
+
+      &.right
+        right 0
+        cursor e-resize
+
   .scroll-area
     absolute-cover()
     right -100px
     padding-right 100px
-    overflow-y hidden
+    overflow hidden
 
     .publication-area
       position relative

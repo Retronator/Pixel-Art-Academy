@@ -37,5 +37,25 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
       image: event.target
     ]
 
-    article = @figure.quillComponent()
-    article.publicationComponent.home.focusArtworks artworks
+    LOI.adventure.interface.focusArtworks artworks
+    
+  class @Url extends AM.DataInputComponent
+    @register 'PixelArtAcademy.Publication.Article.Figure.Image.Url'
+
+    constructor: ->
+      super arguments...
+
+      @realtime = false
+
+    onCreated: ->
+      super arguments...
+
+      @figure = @ancestorComponentOfType PAA.Publication.Article.Figure
+
+    load: ->
+      element = @data()
+      element.image.url
+      
+    save: (value) ->
+      element = @data()
+      @figure.updateElement element.index, url: value

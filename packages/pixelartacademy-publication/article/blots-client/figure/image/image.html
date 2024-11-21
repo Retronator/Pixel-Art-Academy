@@ -2,6 +2,9 @@
   <div class="pixelartacademy-publication-article-figure-image">
     {{#if imageSource}}
       <img class="image" src="{{imageSource}}" crossorigin="anonymous">
+      {{#unless figure.readOnly}}
+        {{> PixelArtAcademy.Publication.Article.Figure.Image.Url}}
+      {{/unless}}
     {{/if}}
     {{#if $or upload uploadError}}
       <div class="upload-info">

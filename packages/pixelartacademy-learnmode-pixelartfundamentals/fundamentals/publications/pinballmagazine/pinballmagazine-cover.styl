@@ -7,46 +7,48 @@
     position absolute
     inset -4rem 0 0
 
-  .pixelartacademy-publication-article.ql-container
+  .contents-area
     text-align center
     text-shadow atariGray(0) -1rem 1rem
 
-    header
-      display inline-block
-      position relative
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        header
+          display inline-block
+          position relative
 
-      h1
-        margin 10rem 0 2rem
-        letter-spacing 1rem
-        serif-23()
+          h1
+            margin 10rem 0 2rem
+            letter-spacing 1rem
+            serif-23()
 
-      h2
-      h3
-        margin 0
-        position absolute
-        bottom 0
-        small-print()
+          h2
+          h3
+            margin 0
+            position absolute
+            bottom 0
+            small-print()
 
-      h2
-        left 0
+          h2
+            left 0
 
-      h3
-        right 0
-        text-transform uppercase
+          h3
+            right 0
+            text-transform uppercase
 
-    .pixelartacademy-publication-article-customclass-container
-      &:has(.pinballmagazine-cover-line)
-        position absolute
-        text-transform uppercase
-        pixel-georgia()
-        color atariGray(6)
-        line-height 9rem
+        .pixelartacademy-publication-article-customclass-container
+          &:has(.pinballmagazine-cover-line)
+            position absolute
+            text-transform uppercase
+            pixel-georgia()
+            color atariGray(6)
+            line-height 10rem
 
-        p
-          margin 0 0 3rem
-          text-wrap balance
+            p
+              margin 0 0 4rem
+              text-wrap balance
 
-        .pinballmagazine-cover-line
-          &:first-child
-            font-weight bold
-            color atariGray(7)
+            .pinballmagazine-cover-line
+              &:first-child
+                font-weight bold
+                color atariGray(7)

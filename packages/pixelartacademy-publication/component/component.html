@@ -1,12 +1,23 @@
 <template name="PixelArtAcademy.Publication.Component">
   <div class="pixelartacademy-publication-component {{enabledClass}}">
+    {{#if canMoveLeft}}
+      <button class="move-button left" {{style moveButtonStyle}}></button>
+    {{/if}}
+    {{#if canMoveRight}}
+      <button class="move-button right" {{style moveButtonStyle}}></button>
+    {{/if}}
     <div class="scroll-area">
       {{#with publication}}
         <div class="publication-area" {{style publicationAreaStyle}}>
-          <div class="publication {{pageClass}} {{design.class}} {{activeContentItem.design.class}}" {{style publicationStyle}}>
+          <div class="publication {{pageClasses}} {{design.class}} {{activeContentItem.design.class}}" {{style publicationStyle}}>
             <div class="running-header"></div>
             {{#with activeContentItem}}
-              {{> PixelArtAcademy.Publication.Component.Article}}
+              <div class="read-only contents-area">
+                <div class="contents" {{style contentsStyle}}>
+                  {{> PixelArtAcademy.Publication.Component.Article}}
+                  <div class="end-page"></div>
+                </div>
+              </div>
             {{/with}}
             <div class="running-footer">
               <div class="page-numbers">

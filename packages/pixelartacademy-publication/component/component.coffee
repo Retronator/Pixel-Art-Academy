@@ -16,12 +16,18 @@ class PAA.Publication.Component extends AM.Component
   onCreated: ->
     super arguments...
     
+    @designConstants =
+      moveButtonExtraWidth: 10
+      
+    parentWithDisplay = @ancestorComponentWith 'display'
+    @display = parentWithDisplay.display
+    
     @autorun (computation) =>
       PAA.Publication.Part.forPublication.subscribeContent @, @publicationId
       PAA.Publication.Part.forPublication.subscribe @, @publicationId
     
     @leftPageIndex = new ReactiveField 0
-    @visiblePageIndex = new ReactiveField 1
+    @visiblePageIndex = new ReactiveField 0
     @pagesCount = new ReactiveField null
     @manualContentUpdatedDependency = new Tracker.Dependency
     
@@ -118,6 +124,8 @@ class PAA.Publication.Component extends AM.Component
   close: ->
     @opened false
     
+    @leftPageIndex 0
+    @visiblePageIndex 0
     @scrollToTop()
     
   back: ->
@@ -211,7 +219,6 @@ class PAA.Publication.Component extends AM.Component
     @_updatePagesCountViaEndPage()
 
   _updatePagesCountViaEndPage: ->
-    return # TODO
     return unless publication = @publication()
 
     scale = @display.scale()
@@ -229,16 +236,33 @@ class PAA.Publication.Component extends AM.Component
   enabledClass: ->
     'enabled' if @enabled()
   
-  pageClass: ->
+  canMoveLeft: ->
+    return unless @opened()
+    
+    @visiblePageIndex()
+
+  canMoveRight: ->
+    return unless @opened() and @pagesCount()
+
+    @visiblePageIndex() + 1 < @pagesCount()
+  
+  moveButtonStyle: ->
+    return unless publication = @publication()
+    
+    width: "calc(50% - #{publication.design.size.width / 2 - @designConstants.moveButtonExtraWidth}rem)"
+    
+  pageClasses: ->
     if @activePartId()
-      'content-part'
+      mainClass = 'content-part'
       
     else
       if @opened()
-        'table-of-contents'
+        mainClass = 'table-of-contents'
         
       else
-        'cover'
+        mainClass = 'cover'
+        
+    "#{mainClass} page-#{@leftPageIndex() + 1}"
   
   activeContentItem: ->
     if activePart = @activePart()
@@ -267,19 +291,29 @@ class PAA.Publication.Component extends AM.Component
   publicationStyle: ->
     return unless publication = @publication()
     
-    left: "#{if @opened() then -publication.design.size.width else 0}rem"
+    left: "#{if @opened() then -publication.design.size.width * (publication.design.spreadPagesCount - 1) else 0}rem"
+    
+  contentsStyle: ->
+    return unless publication = @publication()
+    leftPageIndex = @leftPageIndex()
+    
+    offset = -leftPageIndex * publication.design.size.width
+    
+    transform: "translateX(#{offset}rem)"
     
   events: ->
     super(arguments...).concat
       'click .cover': @onClickCover
-      'click .content-item': @onClickContentItem
+      'click .move-button.left': @onClickMoveButtonLeft
+      'click .move-button.right': @onClickMoveButtonRight
       
   onClickCover: ->
     return unless @enabled()
     
     @open()
     
-  onClickContentItem: (event) ->
-    contentItem = @currentData()
-    @activePartId contentItem.part._id
-    @scrollToTop()
+  onClickMoveButtonLeft: (event) ->
+    @previousPage()
+  
+  onClickMoveButtonRight: (event) ->
+    @nextPage()

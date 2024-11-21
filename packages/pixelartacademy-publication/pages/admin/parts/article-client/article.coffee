@@ -145,7 +145,7 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
     range = quill.getSelection()
     
     # Use the browser input dialog box to ask for a URL.
-    urls = prompt ('Insert comma-separated image URLs').split ','
+    urls = prompt('Insert comma-separated image URLs').split ','
 
     # Insert a figure with the images in a row.
     figure =

@@ -50,6 +50,12 @@ class AM.Quill.BlotComponent extends AM.Component
       @blotName = options.name
       @tagName = options.tag
       @className = options.class
+      
+      constructor: (parent, domNode) ->
+        super arguments...
+
+        for event in ['keydown', 'paste']
+          domNode.addEventListener event, (event) => event.stopPropagation()
 
       @create: (value) ->
         console.log "Creating blot", @blotName, value if AM.Quill.BlotComponent.debug

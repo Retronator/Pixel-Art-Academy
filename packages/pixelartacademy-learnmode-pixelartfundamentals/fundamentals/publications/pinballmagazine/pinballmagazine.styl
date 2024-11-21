@@ -22,7 +22,18 @@
       position absolute
       inset -5rem -296rem 0 -6rem
 
-  .pixelartacademy-publication-article.ql-container
-    &.ql-disabled
+    .contents-area.read-only
+      right -100%
+
+  &.content-part
+    &.history-of-pinball
+      &::before
+        background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-2.png')
+
+  .contents-area.read-only
+    absolute-cover()
+    z-index 1
+    overflow hidden
+
+    .contents
       absolute-cover()
-      z-index 1

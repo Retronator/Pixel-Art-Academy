@@ -1,5 +1,6 @@
 @import "{retronator:retronator-identity}/style/style.import"
 @import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "pinballmagazine.import"
 
 .publication.pinball-magazine.issue-1
   &.cover
@@ -28,8 +29,17 @@
 
   &.content-part
     &.history-of-pinball
-      &::before
-        background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/prewar-1.png')
+      &.page-1
+        &::before
+          background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/prewar-1.png')
+
+        .running-header::before
+          running-header-gradient(historyOfPinballColor())
+
+        .running-footer
+          .page-numbers
+            .page-number.spread-page-1
+              color atariGray(3)
 
       h1
       .pinballmagazine-lead-paragraph
