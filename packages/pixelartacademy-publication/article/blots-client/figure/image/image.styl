@@ -1,12 +1,53 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-publication-article-figure-image
+  position relative
   white-space normal
 
+  &:hover
+    z-index 1
+
+    .cutout
+      visibility visible
+
+  &.added-to-references
+    .added-to-references-info
+      visibility visible
+
   .image
+    position relative
+    z-index 1
     display block
     width 100%
     cursor zoom-in
+
+  .cutout
+    position absolute
+    inset -10rem
+    cursor cut
+    visibility hidden
+
+    &::before
+      content ''
+      position absolute
+      inset 7rem
+
+    .cut-icon
+      position absolute
+      z-index 2
+      top 1rem
+      right 20rem
+      width 16rem
+      height 13rem
+      cursor cut
+
+  .added-to-references-info
+    absolute-cover()
+    z-index 2
+    display flex
+    justify-content center
+    align-items center
+    visibility hidden
 
   input
     width 100%

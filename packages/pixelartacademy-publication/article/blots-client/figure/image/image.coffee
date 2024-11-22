@@ -13,6 +13,26 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
 
     @figure = @ancestorComponentOfType PAA.Publication.Article.Figure
 
+    @bitmap = new ComputedField =>
+      return unless LOI.adventure
+      return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+      return unless asset = editor.activeAsset()
+      return unless asset instanceof PAA.Practice.Project.Asset.Bitmap
+      asset
+
+    @addedToReferences = new ComputedField =>
+      return unless bitmap = @bitmap()
+      return unless references = bitmap.bitmap()?.references
+      
+      element = @data()
+      _.find references, (reference) => reference.image.url is element.image.url
+  
+  addedToReferencesClass: ->
+    'added-to-references' if @addedToReferences()
+    
+  canCut: ->
+    @figure.readOnly() and @bitmap()
+  
   imageSource: ->
     element = @data()
     element.image.url
@@ -21,6 +41,8 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
     super(arguments...).concat
       'load img': @onLoadImage
       'click img': @onClickImage
+      'click .cutout': @onClickCutout
+      'click .added-to-references-info': @onClickAddedToReferencesInfo
 
   onLoadImage: (event) ->
     image = event.target
@@ -38,6 +60,23 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
     ]
 
     LOI.adventure.interface.focusArtworks artworks
+    
+  onClickCutout: (event) ->
+    element = @data()
+    bitmap = @bitmap()
+    document = bitmap.bitmap()
+    
+    document.executeAction new LOI.Assets.VisualAsset.Actions.AddReferenceByUrl @constructor.id(), document, element.image.url,
+      position:
+        x: 100 * (Math.random() - 0.5)
+        y: 100 * (Math.random() - 0.5)
+        
+  onClickAddedToReferencesInfo: (event) ->
+    element = @data()
+    bitmap = @bitmap()
+    document = bitmap.bitmap()
+    
+    document.executeAction new LOI.Assets.VisualAsset.Actions.RemoveReferenceByUrl @constructor.id(), document, element.image.url
     
   class @Url extends AM.DataInputComponent
     @register 'PixelArtAcademy.Publication.Article.Figure.Image.Url'

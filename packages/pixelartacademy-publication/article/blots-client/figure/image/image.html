@@ -1,10 +1,21 @@
 <template name="PixelArtAcademy.Publication.Article.Figure.Image">
-  <div class="pixelartacademy-publication-article-figure-image">
+  <div class="pixelartacademy-publication-article-figure-image {{addedToReferencesClass}}">
     {{#if imageSource}}
-      <img class="image" src="{{imageSource}}" crossorigin="anonymous">
+      <img class="image" src="{{imageSource}}">
       {{#unless figure.readOnly}}
         {{> PixelArtAcademy.Publication.Article.Figure.Image.Url}}
       {{/unless}}
+    {{/if}}
+    {{#if canCut}}
+      {{#if addedToReferences}}
+        <div class="added-to-references-info">
+          Added to references
+        </div>
+      {{else}}
+        <div class="cutout">
+          <div class="cut-icon"></div>
+        </div>
+      {{/if}}
     {{/if}}
     {{#if $or upload uploadError}}
       <div class="upload-info">

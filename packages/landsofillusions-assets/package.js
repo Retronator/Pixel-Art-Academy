@@ -72,6 +72,7 @@ Package.onUse(function(api) {
   api.addServerFile('documents/visualasset/subscriptions');
   api.addFile('documents/visualasset/actions..');
   api.addFile('documents/visualasset/actions/addreferencebyurl');
+  api.addFile('documents/visualasset/actions/removereferencebyurl');
   api.addFile('documents/visualasset/actions/updatereference');
   api.addFile('documents/visualasset/actions/reorderreferencetotop');
   api.addFile('documents/visualasset/actions/updateproperty');

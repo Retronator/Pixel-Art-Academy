@@ -1,5 +1,6 @@
 @import "{retronator:retronator-identity}/style/style.import"
 @import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-publication}/style/style.import"
 @import "pinballmagazine.import"
 
 .publication.pinball-magazine.content-part
@@ -17,6 +18,13 @@
 
     .running-footer
       color atariGray(2)
+
+    .pixelartacademy-publication-article-figure-image
+      figure-image-cutout(atariGray(1), atariGray(2), gray-3)
+
+      &.added-to-references
+        img
+          opacity 0.1
 
   .running-header
   .running-footer
@@ -101,3 +109,10 @@
             margin-right 2rem
             serif-23()
             line-height 30rem
+
+        .pixelartacademy-publication-article-figure
+          geneva-mini()
+
+          .added-to-references-info
+            text-transform uppercase
+            color atariGray(1)
