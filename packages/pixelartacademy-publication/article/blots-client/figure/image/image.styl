@@ -30,23 +30,25 @@
     &::before
       content ''
       position absolute
-      inset 7rem
+      inset 6rem
 
     .cut-icon
       position absolute
       z-index 2
-      top 1rem
+      top 0
       right 20rem
       width 16rem
       height 13rem
       cursor cut
 
   .added-to-references-info
-    absolute-cover()
-    z-index 2
     display flex
+    absolute-cover()
     justify-content center
     align-items center
+    z-index 2
+    padding 5rem
+    text-align center
     visibility hidden
     cursor paste
 

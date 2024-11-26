@@ -111,11 +111,11 @@ class PAA.Publication.Component extends AM.Component
     
     return unless publication = @publication()
 
-    if publication.contents.length is 1
-      @activePartId publication.contents[0].part._id
+    if publication.tableOfContentsPart
+      @activePartId null
       
     else
-      @activePartId null
+      @activePartId publication.contents[0].part._id
       
     @leftPageIndex 0
     @visiblePageIndex 0
@@ -137,7 +137,7 @@ class PAA.Publication.Component extends AM.Component
     return if publication.contents.length is 1 and not publication.coverPart
     
     # Return to the table of contents or close the publication.
-    if @activePartId()
+    if @activePartId() and publication.tableOfContentsPart
       @goToTableOfContents()
     
     else

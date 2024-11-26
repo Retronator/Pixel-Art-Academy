@@ -1,21 +1,33 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-elementsGap = 2rem
-
 .pixelartacademy-publication-article-figure
   white-space normal
-  margin 15rem 0 20rem 0
+  margin 0
+  padding 7rem 0
   width 100%
   break-inside avoid
+
+  &:has(.float-left)
+  &:has(.float-right)
+    margin-top 0
+
+  &:has(.float-left)
+    float left
+    margin-right 10rem
+
+  &:has(.float-right)
+    float right
+    margin-left 10rem
+
+  &:has(.half-width)
+    width 50%
 
   .elements
     width 100%
 
     .elements-row
       display flex
-      list-style none
       width 100%
-      padding elementsGap 0 0 0
       margin 0
 
       &:first-child
@@ -23,19 +35,22 @@ elementsGap = 2rem
 
       .element
         position relative
-        padding-left elementsGap
         flex-basis 0
 
         &:first-child
           padding-left 0
 
+        &:only-child
+          flex-grow 1 !important
+
         .actions
           position absolute
+          z-index 1
           top 0
           right 0
 
   .caption
-    padding 3rem
+    padding 5rem 3rem 3rem
     text-align center
     line-height 8rem
 

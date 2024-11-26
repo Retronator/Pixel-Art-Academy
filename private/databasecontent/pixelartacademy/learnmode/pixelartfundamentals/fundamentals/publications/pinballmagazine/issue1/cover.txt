@@ -1,0 +1,17 @@
+PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.Cover
+Pinball Magazine
+Celebrating the Art and Legacy of Pinball
+Issue 1
+
+Parts in Details
+Gobble Holes
+Bumpers
+Pins
+
+The History of Pinball
+Prewar Machines
+
+DIY
+Your Own Prewar Machine
+
+{"_id":"gtacnBK2i3fwDwvfu","_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.Cover","article":[{"insert":"Pinball Magazine"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":"Celebrating the Art and Legacy of Pinball"},{"attributes":{"publication-header-heading":2},"insert":"\n"},{"insert":"Issue 1"},{"attributes":{"publication-header-heading":3},"insert":"\n"},{"insert":"\nParts in Details"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-1"},"insert":"\n"},{"insert":"Gobble Holes"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-1"},"insert":"\n"},{"insert":"Bumpers"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-1"},"insert":"\n"},{"insert":"Pins"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-1"},"insert":"\n"},{"insert":"\nThe History of Pinball"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-2"},"insert":"\n"},{"insert":"Prewar Machines"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-2"},"insert":"\n"},{"insert":"\nDIY"},{"attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-3"},"insert":"\n"},{"insert":"Your Own Prewar Machine"},{"insert":"\n","attributes":{"publication-customclass":"pinballmagazine-cover-line pinballmagazine-cover-line-3"}}],"lastEditTime":{"$date":1732654730143}}

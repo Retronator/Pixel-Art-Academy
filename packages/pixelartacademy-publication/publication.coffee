@@ -26,6 +26,7 @@ class PAA.Publication extends AM.Document
     name: @id()
     fields: =>
       coverPart: Document.ReferenceField @Part, ['referenceId']
+      tableOfContentsPart: Document.ReferenceField @Part, ['referenceId']
       contents: [
         part: Document.ReferenceField @Part, ['referenceId']
       ]
@@ -57,3 +58,11 @@ class PAA.Publication extends AM.Document
     Artificial.Pages.addAdminPage '/admin/publication', @Pages.Admin
     Artificial.Pages.addAdminPage '/admin/publication/parts/:documentId?', @Pages.Admin.Parts
     Artificial.Pages.addAdminPage '/admin/publication/publications/:documentId?', @Pages.Admin.Publications
+
+if Meteor.isServer
+  # Export all publications and parts.
+  AM.DatabaseContent.addToExport ->
+    [
+      PAA.Publication.documents.fetch(referenceId: $exists: true)...
+      PAA.Publication.Part.documents.fetch(referenceId: $exists: true)...
+    ]

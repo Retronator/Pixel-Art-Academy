@@ -7,15 +7,16 @@ figure-image-cutout-gradient(color)
   background-position 0 0, 0 0, 100% 0, 0 100%
   background-repeat no-repeat
 
-figure-image-cutout(cutColor, pasteColor, paperName)
-  scissorsImageUrl = '/pixelartacademy/publication/article/blots/figure/scissors-%s.png' % paperName
+figure-image-cutout(mainColor, fadeColor, inkPaperColorName)
+  scissorsImageUrl = '/pixelartacademy/publication/article/blots/figure/scissors-%s.png' % inkPaperColorName
 
   &.added-to-references
-    figure-image-cutout-gradient(pasteColor)
+    color mainColor
+    figure-image-cutout-gradient(fadeColor)
 
   .cutout
     &::before
-      figure-image-cutout-gradient(cutColor)
+      figure-image-cutout-gradient(mainColor)
 
     .cut-icon
       background url(scissorsImageUrl) 100% 100% / 100%

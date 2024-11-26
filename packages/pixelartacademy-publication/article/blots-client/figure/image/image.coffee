@@ -36,6 +36,10 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
   imageSource: ->
     element = @data()
     element.image.url
+  
+  imageCredit: ->
+    element = @data()
+    element.image.credit
 
   events: ->
     super(arguments...).concat
@@ -78,8 +82,8 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
     
     document.executeAction new LOI.Assets.VisualAsset.Actions.RemoveReferenceByUrl @constructor.id(), document, element.image.url
     
-  class @Url extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Publication.Article.Figure.Image.Url'
+  class @Property extends AM.DataInputComponent
+    @property: -> throw new AE.NotImplementedException "Property name must be provided."
 
     constructor: ->
       super arguments...
@@ -93,8 +97,16 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
 
     load: ->
       element = @data()
-      element.image.url
+      element.image[@constructor.property()]
       
     save: (value) ->
       element = @data()
-      @figure.updateElement element.index, url: value
+      @figure.updateElementProperty element.index, @constructor.property(), value
+  
+  class @Url extends @Property
+    @register 'PixelArtAcademy.Publication.Article.Figure.Image.Url'
+    @property: -> 'url'
+
+  class @Credit extends @Property
+    @register 'PixelArtAcademy.Publication.Article.Figure.Image.Credit'
+    @property: -> 'credit'

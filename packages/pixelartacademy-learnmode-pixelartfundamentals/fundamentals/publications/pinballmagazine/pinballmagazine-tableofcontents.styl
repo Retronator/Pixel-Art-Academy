@@ -1,9 +1,10 @@
 @import "{retronator:retronator-identity}/style/style.import"
 @import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "pinballmagazine.import"
 
 .publication.pinball-magazine.table-of-contents
   &::before
-    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/contents-1.png')
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/contents.png')
 
   .contents-area
     text-shadow atariRed(0) -1rem 1rem
@@ -29,6 +30,11 @@
 
     .contents
       .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-customclass-container:has(.pinballmagazine-lead-image-credit)
+          leadImageCreditRight()
+          top 3rem
+          left 477rem
+
         header
           background atariRed(1)
 

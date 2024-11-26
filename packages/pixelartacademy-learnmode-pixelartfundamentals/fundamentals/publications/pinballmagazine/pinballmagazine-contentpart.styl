@@ -4,10 +4,10 @@
 @import "pinballmagazine.import"
 
 .publication.pinball-magazine.content-part
-  &::before
-    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-1.png')
-
   &.history-of-pinball
+    &::before
+      background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-gray-3.png')
+
     .running-header
       &::before
       &::after
@@ -19,12 +19,45 @@
     .running-footer
       color atariGray(2)
 
-    .pixelartacademy-publication-article-figure-image
-      figure-image-cutout(atariGray(1), atariGray(2), gray-3)
+    .pixelartacademy-publication-article-figure
+      .elements
+        border 1rem solid atariGray(2)
 
-      &.added-to-references
-        img
-          opacity 0.1
+        .element
+          border 1rem solid atariGray(2)
+
+          .pixelartacademy-publication-article-figure-image
+            figure-image-cutout(atariGray(1), transparent, gray-1-gray-3)
+
+  &.parts-in-detail
+    &::before
+      background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-brown-6.png')
+
+    .running-header
+      &::before
+      &::after
+        content 'Parts in Detail'
+        border-bottom-color partsInDetailColor(2)
+        color partsInDetailColor(1)
+        filter drop-shadow(atariBrown(5) -1rem 1rem)
+
+    .running-footer
+      color partsInDetailColor(3)
+
+    .contents-area
+      .contents
+        .pixelartacademy-publication-article.ql-container
+          color partsInDetailColor()
+
+    .pixelartacademy-publication-article-figure
+      .elements
+        border 1rem solid atariOrange(2)
+
+        .element
+          border 1rem solid atariOrange(2)
+
+          .pixelartacademy-publication-article-figure-image
+            figure-image-cutout(atariOrange(2), transparent, orange-2-brown-6)
 
   .running-header
   .running-footer
@@ -35,7 +68,6 @@
 
   .running-header
     top 0
-    text-transform lowercase
     pixel-georgia()
     color atariGray(2)
 
@@ -90,7 +122,6 @@
         h1
           talk-to-three-headed-monkey()
           font-weight normal
-          text-shadow atariGray(0) -1rem 1rem
 
         h2
           pixolde()
@@ -102,7 +133,6 @@
 
         .pinballmagazine-lead-paragraph
           line-height 15rem
-          text-shadow atariGray(0) -1rem 1rem
 
           &::first-letter
             float left
@@ -111,8 +141,33 @@
             line-height 30rem
 
         .pixelartacademy-publication-article-figure
-          geneva-mini()
+          daily()
 
           .added-to-references-info
             text-transform uppercase
-            color atariGray(1)
+
+          .pixelartacademy-publication-article-figure-image
+            position relative
+
+            &:hover
+              z-index 2
+
+            &.added-to-references
+              border none
+
+              .image
+              .credit
+                opacity 0.1
+
+            .credit
+              position absolute
+              right 0
+              bottom 0
+              z-index 1
+              padding 1rem
+              text-align right
+              text-wrap balance
+              pointer-events none
+
+              &:before
+                content 'Image: '

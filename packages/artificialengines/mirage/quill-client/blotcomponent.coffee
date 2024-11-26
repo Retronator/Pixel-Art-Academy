@@ -54,7 +54,7 @@ class AM.Quill.BlotComponent extends AM.Component
       constructor: (parent, domNode) ->
         super arguments...
 
-        for event in ['keydown', 'paste']
+        for event in ['keydown', 'copy', 'paste']
           domNode.addEventListener event, (event) => event.stopPropagation()
 
       @create: (value) ->

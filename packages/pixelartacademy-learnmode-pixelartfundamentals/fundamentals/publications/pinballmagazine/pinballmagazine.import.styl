@@ -1,7 +1,10 @@
 historyOfPinballColor(shade=0)
   atariBrown(shade)
 
-running-header-gradient(color)
+partsInDetailColor(shade=0)
+  atariOrange(shade)
+
+running-header-gradient(color, shadow=atariGray(0))
   background linear-gradient(to left,
     color 0,
     color 5rem,
@@ -16,5 +19,16 @@ running-header-gradient(color)
   padding 10rem 39rem 10rem 20rem
   border-bottom none
   color atariGray(6)
-  text-shadow atariGray(0) -1rem 1rem
+  text-shadow shadow -1rem 1rem
   filter none
+
+leadImageCreditTop()
+  top -35rem
+
+leadImageCreditRight()
+  left 151rem
+  width 100rem
+  text-align right
+
+leadImageCreditBottom()
+  bottom -12rem

@@ -13,15 +13,18 @@ class PAA.Publication.Part extends AM.Document
   #     figure: a collection of visual elements with a caption
   #       layout: array of numbers controlling how many elements per row to show
   #       caption: the text written under the figure
+  #       class: string of the CSS class (or classes) that define the look of the figure
   #       [elements]: array of elements that make the figure
   #         artwork: an artwork from the pixel art database
   #           _id
   #
   #         image: an image without any semantic information
   #           url
+  #           credit: ad-hoc text crediting the image source
   #
   #         video: a video without any semantic information
   #           url
+  #           credit: ad-hoc text crediting the video source
   #
   #   attributes: object with formatting directives
   @Meta

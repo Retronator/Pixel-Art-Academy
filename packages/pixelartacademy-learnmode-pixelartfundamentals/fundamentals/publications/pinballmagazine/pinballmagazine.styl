@@ -22,18 +22,40 @@
       position absolute
       inset -5rem -296rem 0 -6rem
 
+    &::after
+      content ''
+      position absolute
+      inset -4rem -1rem 0 -1rem
+
     .contents-area.read-only
       right -100%
 
-  &.content-part
-    &.history-of-pinball
-      &::before
-        background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-2.png')
+  .contents-area
+    position relative
+    z-index 1
 
   .contents-area.read-only
     absolute-cover()
-    z-index 1
     overflow hidden
 
     .contents
       absolute-cover()
+
+      .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-figure .credit
+        .pixelartacademy-publication-article-customclass-container:has(.pinballmagazine-lead-image-credit)
+          small-print()
+          text-transform uppercase
+          color atariGray(7)
+          pixel-text-outline atariGray(0)
+          opacity 0.5
+
+        .pixelartacademy-publication-article-customclass-container
+          &:has(.pinballmagazine-lead-image-credit)
+            position absolute
+
+            p
+              margin 0
+
+              &:first-child::before
+                content 'image: '

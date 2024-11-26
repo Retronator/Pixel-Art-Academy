@@ -79,11 +79,11 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
     else
       @value figure
 
-  updateElement: (index, value) ->
+  updateElementProperty: (index, property, value) ->
     figure = @getFigure()
     element = figure.elements[index]
     elementType = _.keys(element)[0]
-    element[elementType] = value
+    element[elementType][property] = value
     @setFigure figure
 
   contentUpdated: ->
@@ -109,18 +109,14 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
       'click .remove-element-button': @onClickRemoveElementButton
 
   onClickAddElementButton: (event) ->
-    $fileInput = $('<input type="file" multiple/>')
+    # Use the browser input dialog box to ask for URLs.
+    urls = prompt('Insert comma-separated image URLs').split ','
 
-    $fileInput.on 'change', (event) =>
-      return unless files = $fileInput[0]?.files
-
-      # Insert a new image to the figure.
-      figure = @getFigure()
-      figure.elements.push image: {file} for file in files
-      figure.layout.push files.length
-      @setFigure figure
-
-    $fileInput.click()
+    # Insert new images to the figure.
+    figure = @getFigure()
+    figure.elements.push image: {url} for url in urls
+    figure.layout.push urls.length
+    @setFigure figure
 
   onClickMoveElementUpButton: (event) ->
     elementData = @currentData()
@@ -193,13 +189,12 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
 
       @figureComponent.setFigure figure
 
-  class @Caption extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Publication.Article.Figure.Caption'
-
+  class @Property extends AM.DataInputComponent
+    @property: -> throw new AE.NotImplementedException "Property name must be provided."
+    
     constructor: ->
       super arguments...
 
-      @type = AM.DataInputComponent.Types.TextArea
       @realtime = false
 
     onCreated: ->
@@ -209,9 +204,22 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
 
     load: ->
       figure = @figureComponent.getFigure()
-      figure.caption
+      figure[@constructor.property()]
 
     save: (value) ->
       figure = @figureComponent.value()
-      figure.caption = value
+      figure[@constructor.property()] = value
       @figureComponent.setFigure figure
+  
+  class @Caption extends @Property
+    @register 'PixelArtAcademy.Publication.Article.Figure.Caption'
+    @property: -> 'caption'
+    
+    constructor: ->
+      super arguments...
+      
+      @type = AM.DataInputComponent.Types.TextArea
+  
+  class @StyleClass extends @Property
+    @register 'PixelArtAcademy.Publication.Article.Figure.StyleClass'
+    @property: -> 'class'

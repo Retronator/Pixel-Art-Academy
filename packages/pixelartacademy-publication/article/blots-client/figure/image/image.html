@@ -2,9 +2,14 @@
   <div class="pixelartacademy-publication-article-figure-image {{addedToReferencesClass}}">
     {{#if imageSource}}
       <img class="image" src="{{imageSource}}">
-      {{#unless figure.readOnly}}
+      {{#if figure.readOnly}}
+        {{#if imageCredit}}
+          <div class="credit">{{imageCredit}}</div>
+        {{/if}}
+      {{else}}
         {{> PixelArtAcademy.Publication.Article.Figure.Image.Url}}
-      {{/unless}}
+        {{> PixelArtAcademy.Publication.Article.Figure.Image.Credit}}
+      {{/if}}
     {{/if}}
     {{#if canCut}}
       {{#if addedToReferences}}

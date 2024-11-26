@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.Publication.Article.Figure">
-  <div class="elements">
+  <div class="elements {{value.class}}">
     {{#each elementRows}}
       <div class="elements-row">
         {{#each elements}}
@@ -21,7 +21,8 @@
   </div>
   {{#unless readOnly}}
     <button class="add-element-button">+</button>
-    {{> PixelArtAcademy.Publication.Article.Figure.Layout}}
+    Layout: {{> PixelArtAcademy.Publication.Article.Figure.Layout}}
+    Style: {{> PixelArtAcademy.Publication.Article.Figure.StyleClass}}
   {{/unless}}
   {{#if readOnly}}
     {{#if value.caption}}
