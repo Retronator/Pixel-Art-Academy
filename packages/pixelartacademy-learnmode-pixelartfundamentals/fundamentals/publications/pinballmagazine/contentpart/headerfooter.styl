@@ -1,0 +1,59 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-publication}/style/style.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.pinball-magazine.content-part
+  &.history-of-pinball
+    .running-header
+      &::before
+      &::after
+        content 'The History of Pinball'
+
+  &.parts-in-detail
+    .running-header
+      &::before
+      &::after
+        content 'Parts in Detail'
+
+  .running-header
+  .running-footer
+    position absolute
+    z-index 1
+    left 0
+    right 0
+
+  .running-header
+    top 0
+    pixel-georgia()
+    color atariGray(2)
+
+    &::before
+    &::after
+      position absolute
+      top 0
+      padding 10rem 20rem 4rem
+      border-bottom-width 2rem
+      border-bottom-style solid
+
+    &::before
+      left 0
+
+    &::after
+      right -100%
+
+  .running-footer
+    bottom 0
+    color atariGray(3)
+    thintel()
+
+    .page-numbers
+      .page-number
+        position absolute
+        bottom 10rem
+
+        &.spread-page-1
+          left 20rem
+
+        &.spread-page-2
+          right calc(-100% + 20rem)

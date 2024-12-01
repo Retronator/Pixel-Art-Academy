@@ -1,0 +1,27 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.pinball-magazine.issue-1.cover
+  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/issues/1/cover.png')
+
+  .pixelartacademy-publication-article.ql-container
+    .pixelartacademy-publication-article-customclass-container
+      &:has(.pinballmagazine-cover-line)
+        right 0
+        text-align right
+
+      &:has(.pinballmagazine-cover-line-1)
+        right 124rem
+        top 117rem
+        width 100rem
+
+      &:has(.pinballmagazine-cover-line-2)
+        right 124rem
+        bottom 125rem
+        width 100rem
+
+      &:has(.pinballmagazine-cover-line-3)
+        right 11rem
+        top 313rem
+        width 100rem

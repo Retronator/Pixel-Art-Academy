@@ -1,0 +1,37 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-publication}/style/style.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.pinball-magazine.brown-0-gray-3
+  &::before
+    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/article-gray-3.png')
+
+  &.cover-image
+    .running-header::before
+      running-header-gradient(atariBrown(0))
+
+  .running-header
+    &::before
+    &::after
+      border-bottom-color atariBrown(1)
+      color atariBrown(0)
+      filter drop-shadow(atariGray(2) -1rem 1rem)
+
+  .running-footer
+    color atariGray(2)
+
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        color atariGray(0)
+
+  .pixelartacademy-publication-article-figure
+    .elements
+      border-color atariGray(2)
+
+      .element
+        border-color atariGray(2)
+
+        .pixelartacademy-publication-article-figure-image
+          figure-image-cutout(atariGray(1), transparent, gray-1-gray-3)

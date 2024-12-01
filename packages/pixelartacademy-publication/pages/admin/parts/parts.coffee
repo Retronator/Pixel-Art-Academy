@@ -10,7 +10,7 @@ class PAA.Publication.Pages.Admin.Parts extends Artificial.Mummification.Admin.C
     super
       documentClass: PAA.Publication.Part
       adminComponentClass: PAA.Publication.Pages.Admin.Parts.Part
-      nameField: 'referenceId'
+      nameField: 'title'
       singularName: 'publication part'
       pluralName: 'publication parts'
 

@@ -62,6 +62,17 @@ Package.onUse(function(api) {
   api.addStyledFile('fundamentals/publications/pinballmagazine..')
   api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-cover')
   api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-tableofcontents')
-  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-contentpart')
-  api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-issue1')
+
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/brown-0-gray-3')
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/orange-3-brown-6')
+  api.addStyle('fundamentals/publications/pinballmagazine/themes/red-1-red-1')
+
+  api.addStyle('fundamentals/publications/pinballmagazine/contentpart/contents')
+  api.addStyle('fundamentals/publications/pinballmagazine/contentpart/headerfooter')
+  api.addStyle('fundamentals/publications/pinballmagazine/contentpart/figure')
+
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/cover')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/prewarhistory')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/gobbleholes')
+  api.addStyle('fundamentals/publications/pinballmagazine/issues/1/bumpers')
 });

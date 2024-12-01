@@ -1,0 +1,21 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.pinball-magazine.issue-1.content-part.prewar-history
+  &.page-1
+    &::after
+      background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/issues/1/prewarmachines/cover.png')
+
+    .running-footer
+      .page-numbers
+        .page-number.spread-page-1
+          color atariGray(3)
+
+  h1
+  .pinballmagazine-lead-paragraph
+    color atariGray(6)
+    text-shadow atariGray(0) -1rem 1rem
+
+  h1
+    margin-top 185rem

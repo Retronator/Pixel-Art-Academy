@@ -76,12 +76,16 @@ class Pinball.Assets
   
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
     
+    @publications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
+    
     @initialize()
 
   class @BallTrough extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.BallTrough'
 
-    @displayName: -> "Ball trough"
+    @displayName: -> "Drain"
 
     @description: -> """
       A hole that ends the ball without gaining points.
@@ -91,6 +95,10 @@ class Pinball.Assets
     @fixedDimensions: -> width: 100, height: 50
 
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/balltrough.png'
+    
+    @publications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
     
     @initialize()
 
@@ -108,6 +116,10 @@ class Pinball.Assets
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/bumper.png'
     
     @pixelArtEvaluation: -> true
+    
+    @publications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
     
     @initialize()
     

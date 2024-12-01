@@ -1,0 +1,48 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-publication}/style/style.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.pinball-magazine.content-part
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        .pixelartacademy-publication-article-figure
+          daily()
+
+          .elements
+            border-width 1rem
+            border-style solid
+
+            .element
+              border-width 1rem
+              border-style solid
+
+              .pixelartacademy-publication-article-figure-image
+                position relative
+
+                &:hover
+                  z-index 2
+
+                &.added-to-references
+                  border none
+
+                  .image
+                  .credit
+                    opacity 0.1
+
+                .added-to-references-info
+                  text-transform uppercase
+
+                .credit
+                  position absolute
+                  right 0
+                  bottom 0
+                  z-index 1
+                  padding 1rem
+                  text-align right
+                  text-wrap balance
+                  pointer-events none
+
+                  &:before
+                    content 'Image: '

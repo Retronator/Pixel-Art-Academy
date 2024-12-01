@@ -2,7 +2,7 @@
 
 ## Pinball Magazine
 
-### Issue 1: Gobble Holes
+### Issue 1: Gobble holes
 
 ### Creative Commons images
 

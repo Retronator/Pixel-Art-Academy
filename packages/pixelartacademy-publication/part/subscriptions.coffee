@@ -12,6 +12,10 @@ PAA.Publication.Part.forPublication.publish (publicationId) ->
   check publicationId, Match.DocumentId
   
   return unless publication = PAA.Publication.getPublishingDocuments().findOne publicationId
+  
+  # Wait until the publication document gets substituted with the fully populated one.
+  return unless publication.contents
+
   partIds = for content in publication.contents then content.part._id
  
   partIds.push publication.coverPart._id if publication.coverPart

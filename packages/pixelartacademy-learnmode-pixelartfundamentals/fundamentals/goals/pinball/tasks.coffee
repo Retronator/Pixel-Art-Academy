@@ -225,10 +225,10 @@ class Goal.DrawBallTrough extends Goal.AssetsTask
   @id: -> "#{Goal.id()}.DrawBallTrough"
   @goal: -> Goal
 
-  @directive: -> "Draw the ball trough"
+  @directive: -> "Draw the drain"
 
   @instructions: -> """
-    Similar to the gobble hole, the ball trough is an opening that drains the ball, except it scores no points.
+    Similar to the gobble hole, the drain is an area that catches the ball, except it scores no points.
     You can use it as an additional hole shape that usually appears at the bottom of the playfield.
   """
   
@@ -244,11 +244,11 @@ class Goal.PlayBallTrough extends Goal.Task
   @id: -> "#{Goal.id()}.PlayBallTrough"
   @goal: -> Goal
 
-  @directive: -> "Add the ball trough"
+  @directive: -> "Add the drain"
 
   @instructions: -> """
-    Place the ball trough onto the playfield.
-    Additionally, you can redraw the playfield to guide the ball to the ball trough at the bottom.
+    Place the drain onto the playfield.
+    Additionally, you can redraw the playfield to guide the ball to the drain at the bottom.
   """
   
   @predecessors: -> [Goal.DrawBallTrough]
