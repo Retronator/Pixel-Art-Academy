@@ -8,7 +8,7 @@
 
 The following images are included or derived from images under their respective CC licenses.
 
-- drain.jpg: [James Bond pin ball machine, Tilt, City Arcade Birmingham, February 2023](https://commons.wikimedia.org/wiki/File:James_Bond_pin_ball_machine,_Tilt,_City_Arcade_Birmingham,_February_2023.jpg)
+- drain.jpg: [No Swan So Fine](https://commons.wikimedia.org/wiki/File:James_Bond_pin_ball_machine,_Tilt,_City_Arcade_Birmingham,_February_2023.jpg)
 
 ### Images used with permission
 
