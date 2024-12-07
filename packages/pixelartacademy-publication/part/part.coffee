@@ -4,6 +4,7 @@ PAA = PixelArtAcademy
 
 class PAA.Publication.Part extends AM.Document
   @id: -> 'PixelArtAcademy.Publication.Part'
+  # lastEditTime: the time the document was last edited
   # referenceId: custom ID to be used when referencing the part from code
   # title: the title of the part (as it appears in the table of contents) or null if not named
   # design: object with properties that define the part's look
@@ -29,6 +30,8 @@ class PAA.Publication.Part extends AM.Document
   #   attributes: object with formatting directives
   @Meta
     name: @id()
+    
+  @enableDatabaseContent()
 
   # Methods
   @insert = @method 'insert'

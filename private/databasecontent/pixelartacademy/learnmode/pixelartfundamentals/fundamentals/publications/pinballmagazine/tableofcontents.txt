@@ -1,7 +1,7 @@
-PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.TableOfContents
+Pinball Magazine Contents
 Bernie Kelm
 Pacific Pinball Museum
 Contents
 
 
-{"_id":"p6mmGAhWkZq3YDeGL","_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.TableOfContents","article":[{"insert":"Bernie Kelm"},{"attributes":{"publication-customclass":"pinballmagazine-lead-image-credit"},"insert":"\n"},{"insert":"Pacific Pinball Museum"},{"insert":"\n","attributes":{"publication-customclass":"pinballmagazine-lead-image-credit"}},{"insert":"Contents"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":{"publication-tableofcontents":{}}},{"insert":"\n"}],"lastEditTime":{"$date":1732654730154}}
+{"_id":"p6mmGAhWkZq3YDeGL","_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.TableOfContents","article":[{"insert":"Bernie Kelm"},{"attributes":{"publication-customclass":"pinballmagazine-lead-image-credit"},"insert":"\n"},{"insert":"Pacific Pinball Museum"},{"insert":"\n","attributes":{"publication-customclass":"pinballmagazine-lead-image-credit"}},{"insert":"Contents"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":{"publication-tableofcontents":{}}},{"insert":"\n"}],"lastEditTime":{"$date":1733604436891},"title":"Pinball Magazine Contents"}

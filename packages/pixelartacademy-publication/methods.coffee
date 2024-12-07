@@ -8,6 +8,7 @@ PAA.Publication.insert.method ->
 
   # Create the new publication.
   PAA.Publication.documents.insert
+    lastEditTime: new Date
     contents: []
 
 PAA.Publication.update.method (publicationId, data) ->
@@ -29,6 +30,7 @@ PAA.Publication.update.method (publicationId, data) ->
   throw new AE.ArgumentException "Publication does not exist." unless publication
 
   # Update the publication with new data.
+  data.lastEditTime = new Date
   PAA.Publication.documents.update publicationId, $set: data
   
 PAA.Publication.removeCover.method (publicationId) ->
@@ -37,6 +39,8 @@ PAA.Publication.removeCover.method (publicationId) ->
   LOI.Authorize.admin()
 
   PAA.Publication.documents.update publicationId,
+    $set:
+      lastEditTime: new Date
     $unset:
       coverPart: 1
 
@@ -46,6 +50,8 @@ PAA.Publication.removeTableOfContents.method (publicationId) ->
   LOI.Authorize.admin()
   
   PAA.Publication.documents.update publicationId,
+    $set:
+      lastEditTime: new Date
     $unset:
       tableOfContentsPart: 1
 
@@ -76,6 +82,8 @@ PAA.Publication.addContentItem.method (publicationId, partId) ->
   throw new AE.ArgumentException "Part does not exist." unless part
 
   PAA.Publication.documents.update publicationId,
+    $set:
+      lastEditTime: new Date
     $push:
       contents:
         part:
@@ -100,7 +108,8 @@ PAA.Publication.updateContentItem.method (publicationId, contentItemIndex, data)
     throw new AE.ArgumentException "Part does not exist." unless part
 
   # Prepend contents field to properties.
-  $set = {}
+  $set =
+    lastEditTime: new Date
 
   for property, value of data
     $set["contents.#{contentItemIndex}.#{property}"] = value
@@ -120,4 +129,6 @@ PAA.Publication.removeContentItem.method (publicationId, contentItemIndex) ->
   publication.contents.splice contentItemIndex, 1
 
   PAA.Publication.documents.update publicationId,
-    $set: contents: publication.contents
+    $set:
+      lastEditTime: new Date
+      contents: publication.contents

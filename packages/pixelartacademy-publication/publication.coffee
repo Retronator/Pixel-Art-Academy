@@ -4,6 +4,7 @@ PAA = PixelArtAcademy
 
 class PAA.Publication extends AM.Document
   @id: -> 'PixelArtAcademy.Publication'
+  # lastEditTime: the time the document was last edited
   # referenceId: custom ID to be used when referencing the publication from code
   # coverPart: a publication part document that represents the cover or null if no cover
   #   _id

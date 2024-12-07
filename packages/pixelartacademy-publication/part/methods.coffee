@@ -9,7 +9,8 @@ PAA.Publication.Part.insert.method ->
   LOI.Authorize.admin()
   
   # Create the new part.
-  PAA.Publication.Part.documents.insert {}
+  PAA.Publication.Part.documents.insert
+    lastEditTime: new Date
 
 PAA.Publication.Part.update.method (partId, data) ->
   check partId, Match.DocumentId
@@ -24,6 +25,7 @@ PAA.Publication.Part.update.method (partId, data) ->
   throw new AE.ArgumentException "Part does not exist." unless part
 
   # Update the part with new data.
+  data.lastEditTime = new Date
   PAA.Publication.Part.documents.update partId, $set: data
 
 PAA.Publication.Part.remove.method (partId) ->
@@ -46,7 +48,11 @@ PAA.Publication.Part.removeTitle.method (partId) ->
   throw new AE.ArgumentException "Part does not exist." unless part
 
   # Remove the title.
-  PAA.Publication.Part.documents.update partId, $unset: {title: true}
+  PAA.Publication.Part.documents.update partId,
+    $set:
+      lastEditTime: new Date
+    $unset:
+      title: true
   
 PAA.Publication.Part.updateArticle.method (partId, updateDeltaOperations) ->
   check partId, Match.DocumentId
@@ -64,3 +70,4 @@ PAA.Publication.Part.updateArticle.method (partId, updateDeltaOperations) ->
   PAA.Publication.Part.documents.update partId,
     $set:
       article: newContentDelta.ops
+      lastEditTime: new Date

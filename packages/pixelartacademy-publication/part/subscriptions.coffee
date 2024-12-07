@@ -11,7 +11,7 @@ PAA.Publication.Part.all.publish ->
 PAA.Publication.Part.forPublication.publish (publicationId) ->
   check publicationId, Match.DocumentId
   
-  return unless publication = PAA.Publication.getPublishingDocuments().findOne publicationId
+  return unless publication = PAA.Publication.getQueryDocuments().findOne publicationId
   
   # Wait until the publication document gets substituted with the fully populated one.
   return unless publication.contents
