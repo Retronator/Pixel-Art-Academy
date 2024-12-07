@@ -58,7 +58,7 @@ jparker:crypto-evpkdf@0.1.1
 jparker:crypto-md5@0.1.1
 jparker:crypto-mode@0.1.1
 jparker:crypto-padding@0.1.0
-jquery@1.11.11
+jquery@3.0.0
 launch-screen@2.0.0
 less@4.0.0
 localstorage@1.2.0

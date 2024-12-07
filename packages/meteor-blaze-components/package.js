@@ -33,7 +33,7 @@ Package.onUse(function (api) {
     'reactive-var',
     'ejson',
     'spacebars@1.0.15',
-    'jquery@1.11.11'
+    'jquery@1.11.11||3.0.0'
   ]);
 
   // If templating package is among dependencies, we want it to be loaded before
