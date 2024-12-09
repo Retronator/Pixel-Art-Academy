@@ -22,6 +22,17 @@ class PAA.Publication.Article.TableOfContents extends AM.Quill.BlotComponent
     @contentItems = new ComputedField =>
       return unless publication = @publication()
       _.sortBy publication.contents, 'order'
+      
+    @unlockedParts = new ComputedField =>
+      currentSituation = new LOI.Adventure.Situation
+        location: PAA.Publication.Part.Location
+      
+      currentSituation.things()
+  
+  unlockedClass: ->
+    contentItem = @currentData()
+    
+    'unlocked' if contentItem.part.referenceId in @unlockedParts()
 
   part: ->
     contentItem = @currentData()
@@ -32,8 +43,9 @@ class PAA.Publication.Article.TableOfContents extends AM.Quill.BlotComponent
       'click .content-item': @onClickContentItem
   
   onClickContentItem: (event) ->
-    publicationComponent = @quillComponent().publicationComponent
-    
     contentItem = @currentData()
+    return unless contentItem.part.referenceId in @unlockedParts()
+  
+    publicationComponent = @quillComponent().publicationComponent
     publicationComponent.activePartId contentItem.part._id
     publicationComponent.scrollToTop()

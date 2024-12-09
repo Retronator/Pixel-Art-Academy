@@ -10,6 +10,10 @@ class Pinball.Assets
     
     @backgroundColor: -> new THREE.Color '#edddb5'
     
+    @availablePublications: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
+    
   class @Ball extends @Asset
     @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Pinball.Ball'
     
@@ -55,8 +59,12 @@ class Pinball.Assets
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/ballguides.png'
     
-    @publications: -> [
+    @unlockedPublications: -> [
       'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    ]
+    
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.PrewarMachines'
     ]
 
     @initialize()
@@ -76,10 +84,10 @@ class Pinball.Assets
   
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gobblehole.png'
     
-    @publications: -> [
-      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.GobbleHoles'
     ]
-    
+  
     @initialize()
 
   class @BallTrough extends @Asset
@@ -95,10 +103,6 @@ class Pinball.Assets
     @fixedDimensions: -> width: 100, height: 50
 
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/balltrough.png'
-    
-    @publications: -> [
-      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
-    ]
     
     @initialize()
 
@@ -117,8 +121,8 @@ class Pinball.Assets
     
     @pixelArtEvaluation: -> true
     
-    @publications: -> [
-      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1'
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.Bumpers'
     ]
     
     @initialize()

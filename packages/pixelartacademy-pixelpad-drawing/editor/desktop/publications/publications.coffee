@@ -28,7 +28,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
     
     @publicationReferenceIds = new ComputedField =>
       return unless asset = @desktop.activeAsset()
-      asset.constructor.publications?()
+      return unless availablePublications = asset.constructor.availablePublications?()
+      
+      currentSituation = new LOI.Adventure.Situation
+        location: PAA.Publication.Location
+      
+      unlockedPublications = currentSituation.things()
+      
+      _.intersection availablePublications, unlockedPublications
     
     @autorun (computation) =>
       return unless publicationReferenceIds = @publicationReferenceIds()

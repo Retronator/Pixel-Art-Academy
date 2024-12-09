@@ -21,13 +21,14 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('publication');
-
   api.addFile('methods');
   api.addFile('subscriptions');
+  api.addFile('location');
 
   api.addFile('part..');
   api.addFile('part/methods');
   api.addFile('part/subscriptions');
+  api.addFile('part/location');
 
   // Note: We need to add the part and publication in reverse order due to the reference fields.
   api.addServerFile('part/part-server-databasecontent');

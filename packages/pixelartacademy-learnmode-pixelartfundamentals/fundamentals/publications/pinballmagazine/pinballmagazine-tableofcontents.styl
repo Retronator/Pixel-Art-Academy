@@ -59,7 +59,6 @@
               position relative
               margin-bottom 20rem
               counter-increment content-item-counter
-              cursor pointer
 
               &:hover
                 color atariBrown(7)
@@ -71,3 +70,16 @@
                 left -20rem
                 font-weight bold
                 text-align left
+
+              &.unlocked
+                cursor pointer
+
+              &:not(.unlocked)
+                color atariGray(3)
+
+                &::after
+                  content ''
+                  display inline-block
+                  width 7rem
+                  height 9rem
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/lock.png')

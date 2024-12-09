@@ -126,7 +126,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
 
     @autorun (computation) =>
       # Show publications if the asset requires it.
-      publications = @displayedAsset()?.constructor.publications?()
+      publications = @displayedAsset()?.constructor.availablePublications?()
       
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications.id(), publications
       

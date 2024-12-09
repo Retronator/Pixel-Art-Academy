@@ -39,6 +39,8 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/pixeltoshfiles');
   api.addFile('fundamentals/scenes/workbench');
   api.addFile('fundamentals/scenes/musictapes');
+  api.addFile('fundamentals/scenes/publications');
+  api.addFile('fundamentals/scenes/publicationparts');
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');
@@ -58,7 +60,6 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/content/drawingeditors');
   api.addFile('fundamentals/content/storylines');
 
-  api.addFile('fundamentals/publications..')
   api.addStyledFile('fundamentals/publications/pinballmagazine..')
   api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-cover')
   api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-tableofcontents')

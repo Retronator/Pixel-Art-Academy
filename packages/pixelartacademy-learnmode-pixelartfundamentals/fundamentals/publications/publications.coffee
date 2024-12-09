@@ -1,3 +1,1 @@
-LM = PixelArtAcademy.LearnMode
-
-class LM.PixelArtFundamentals.Fundamentals.Publications
+# Publications class is already added as a scene.
