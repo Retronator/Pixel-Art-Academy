@@ -91,12 +91,9 @@ PAE.Line::_createParts = ->
       segmentRangeIndex = 0
       
       while segmentRangeIndex < potentialStraightLineSegmentRanges.length
-        start = potentialStraightLineSegmentRanges[segmentRangeIndex].start
-        end = potentialStraightLineSegmentRanges[segmentRangeIndex].end
-        
         remove = false
         for segmentRange, otherSegmentRangeIndex in potentialStraightLineSegmentRanges when otherSegmentRangeIndex isnt segmentRangeIndex
-          if start >= segmentRange.start and end <= segmentRange.end
+          if @_segmentRangeIsIncludedInSegmentRange potentialStraightLineSegmentRanges[segmentRangeIndex], segmentRange
             remove = true
             break
             
@@ -131,6 +128,38 @@ PAE.Line::_createParts = ->
     
   for part, partIndex in @parts
     part.setNeighbors @getPart(partIndex - 1), @getPart(partIndex + 1)
+
+PAE.Line::_segmentRangeIsIncludedInSegmentRange = (segmentRange, otherSegmentRange) ->
+  if @isClosed
+    # Split segment ranges into parts that are before and after the wrap around.
+    segmentRangeParts = @_wrapSegmentRangeIntoParts segmentRange
+    otherSegmentRangeParts = @_wrapSegmentRangeIntoParts otherSegmentRange
+    
+    # For the segment range to be included in the other segment range, each of its
+    # parts need to be included in one of the parts of the other segment range.
+    for segmentRangePart in segmentRangeParts
+      return false unless _.find otherSegmentRangeParts, (otherSegmentRangePart) => @_normalizedSegmentRangeIsIncludedInSegmentRange segmentRangePart, otherSegmentRangePart
+      
+    true
+  
+  else
+    @_normalizedSegmentRangeIsIncludedInSegmentRange segmentRange, otherSegmentRange
+
+PAE.Line::_normalizedSegmentRangeIsIncludedInSegmentRange = (segmentRange, otherSegmentRange) ->
+    segmentRange.start >= otherSegmentRange.start and segmentRange.end <= otherSegmentRange.end
+
+PAE.Line::_wrapSegmentRangeIntoParts = (segmentRange) ->
+  if segmentRange.end >= @edgeSegments.length
+    [
+      start: segmentRange.start
+      end: @edgeSegments.length - 1
+    ,
+      start: 0
+      end: segmentRange.end - @edgeSegments.length
+    ]
+    
+  else
+    [segmentRange]
     
 PAE.Line::_edgeSegmentOverlaysPointRange = (segmentIndex, startPointIndex, endPointIndex) ->
   segment = @getEdgeSegment segmentIndex
