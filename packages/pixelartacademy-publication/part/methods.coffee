@@ -67,7 +67,7 @@ PAA.Publication.Part.updateArticle.method (partId, updateDeltaOperations) ->
   newContentDelta = contentDelta.compose updateDelta
 
   # Update the text.
-  PAA.Publication.Part.documents.update partId,
+  PAA.Publication.Part.getServerDocuments().update partId,
     $set:
       article: newContentDelta.ops
       lastEditTime: new Date

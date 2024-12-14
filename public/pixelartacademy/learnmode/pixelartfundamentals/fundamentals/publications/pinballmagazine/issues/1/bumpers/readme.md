@@ -10,10 +10,8 @@ The following images are included or derived from images in the public domain.
 
 - activebumper-patent-1.jpg: [Ball rolling game](https://patents.google.com/patent/US2219934)
 - activebumper-patent-2.jpg: [Pop bumper for pinball game](https://patents.google.com/patent/US5044635A)
-- bagatelle.jpg: [Improvement in Bagatelles](https://patents.google.com/patent/US115357A/en)
 - passivebumper-patent-1.jpg: [Contact Switch for Ball Rolling Games](https://patents.google.com/patent/US2109678)
 - passivebumper-patent-2.jpg: [Ball bumper](https://patents.google.com/patent/US2322091)
-- tivoli.jpg: [Claas Augner](https://commons.wikimedia.org/wiki/File:Tivoli_game_2009-08-23.jpg)
 
 ### Creative Commons images
 
@@ -30,6 +28,6 @@ The following images are included or derived from images under their respective 
 ### Images used with permission
 
 The following images are included or derived from images with permission from the authors.
-Any forks of this repository and other derivative works must obtain their own licenses to use these albums.
+Any forks of this repository and other derivative works must obtain their own licenses to use these images.
 
 - champion.jpg, sensation.jpg, sprint.jpg: [Jeff Frick / History of Pinball](http://www.historyofpinball.org)

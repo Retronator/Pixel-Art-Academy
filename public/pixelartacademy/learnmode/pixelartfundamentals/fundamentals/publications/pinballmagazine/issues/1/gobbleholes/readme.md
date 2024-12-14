@@ -13,6 +13,6 @@ The following images are included or derived from images under their respective 
 ### Images used with permission
 
 The following images are included or derived from images with permission from the authors.
-Any forks of this repository and other derivative works must obtain their own licenses to use these albums.
+Any forks of this repository and other derivative works must obtain their own licenses to use these images.
 
-- ballyhoo.jpg, cavalcade.jpg, cover.png, hollywood.jpg, juggleball.jpg, lightning.jpg, rambler.jpg: [Jeff Frick / History of Pinball](http://www.historyofpinball.org)
+- ballyhoo.jpg, cavalcade.jpg, cover.png, hollywood.jpg, jiggers.jpg, juggleball.jpg, lightning.jpg, rainbo.jpg, rambler.jpg, relay.jpg, westbound.jpg, wings.jpg: [Jeff Frick / History of Pinball](http://www.historyofpinball.org)

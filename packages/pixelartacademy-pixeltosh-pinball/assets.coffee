@@ -145,6 +145,10 @@ class Pinball.Assets
     
     @imageUrls: -> '/pixelartacademy/pixeltosh/programs/pinball/parts/gate.png'
     
+    @unlockedPublicationParts: -> [
+      'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Publications.PinballMagazine.Issue1.Gates'
+    ]
+    
     @initialize()
 
   class @Flipper extends @Asset

@@ -144,6 +144,15 @@ class AM.Document extends Document
       # On the client, when doing a publishing query, query the content documents.
       @contentDocuments
 
+  @getServerDocuments: ->
+    if Meteor.isServer
+      # On the server, server happens are simply the documents.
+      @documents
+      
+    else
+      # On the client, server documents (when database content is enabled) are in a separate collection.
+      @serverDocuments
+      
   # Casting functionality based on implementation by @mitar.
   cast: (typeFieldName = 'type') ->
     throw new AE.InvalidOperationException "Document doesn't have the type field '#{typeFieldName}'." unless @[typeFieldName]

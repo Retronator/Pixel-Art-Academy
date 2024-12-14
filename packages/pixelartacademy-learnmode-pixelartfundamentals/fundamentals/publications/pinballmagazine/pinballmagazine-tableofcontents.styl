@@ -23,7 +23,7 @@
             top 210rem
             // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
             width 1445rem
-            height 170rem
+            height 160rem
             column-width 140rem
             column-gap 5rem
             column-fill auto
@@ -52,13 +52,14 @@
 
           .table-of-contents
             list-style none
-            padding-left 20rem
+            padding 0 20rem
             counter-reset content-item-counter
 
             .content-item
               position relative
               margin-bottom 20rem
               counter-increment content-item-counter
+              break-inside avoid
 
               &:hover
                 color atariBrown(7)

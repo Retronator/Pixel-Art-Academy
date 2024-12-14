@@ -1,0 +1,28 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.pinball-magazine.issue-1.content-part.gates
+  &.page-1
+    &::after
+      background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/issues/1/gates/cover.png')
+      inset -4rem -1rem 222rem 0
+
+    .running-footer
+      .page-numbers
+        .page-number.spread-page-1
+          color atariGray(2)
+
+    .pixelartacademy-publication-article-customclass-container:has(.pinballmagazine-lead-image-credit)
+      leadImageCreditRight()
+      leadImageCreditTop()
+
+  h1
+    margin 84rem 0 16rem
+    padding-right 25%
+    color atariGray(6)
+    text-shadow atariGray(0) -1rem 1rem
+    text-wrap balance
+
+  .pixelartacademy-publication-article-customclass-container:has(.pinballmagazine-lead-paragraph)
+    color atariGray(5)
