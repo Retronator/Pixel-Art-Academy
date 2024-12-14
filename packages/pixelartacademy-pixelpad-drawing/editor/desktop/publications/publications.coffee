@@ -10,7 +10,17 @@ PAE = PAA.Practice.PixelArtEvaluation
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Publications'
   @register @id()
-    
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    # Loaded from the PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop namespace.
+    subNamespace: true
+    variables:
+      drag:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 100
+      lift: AEc.ValueTypes.Trigger
+      release: AEc.ValueTypes.Trigger
+
   constructor: ->
     super arguments...
 
@@ -92,7 +102,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
     currentPublication.component.back()
     
   activate: ->
+    return if @active()
+    
     @active true
+    
+    @audio.lift()
     
     @currentPublication().component.enable()
     
@@ -102,7 +116,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
       1000
     
   deactivate: ->
+    return unless @active()
+    
     @active false
+    
+    @audio.release()
     
     @currentPublication()?.component.disable()
     
@@ -161,7 +179,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
       'click .publication': @onClickPublication
       'click .previous-publication-button': @onClickPreviousPublicationButton
       'click .next-publication-button': @onClickNextPublicationButton
-  
+      'pointerenter .publications': @onPointerEnterPublications
+      'pointerleave .publications': @onPointerLeavePublications
+    
   onClickPublication: (event) ->
     return if @active()
 
@@ -178,3 +198,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
     return unless currentPublicationIndex < @publications().length
     
     @moveToPublicationIndex currentPublicationIndex + 1
+
+  onPointerEnterPublications: (event) ->
+    return if @active()
+    
+    @audio.drag()
+  
+  onPointerLeavePublications: (event) ->
+    return if @active()
+    
+    @audio.drag()

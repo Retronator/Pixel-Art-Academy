@@ -47,6 +47,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       pixelArtEvaluationDrag: AEc.ValueTypes.Boolean
       pixelArtEvaluationPan: AEc.ValueTypes.Number
       cursorPan: AEc.ValueTypes.Number
+      publicationsDrag: AEc.ValueTypes.Boolean
   
   @compressPan: (x) ->
     # Since desktop items go out of the screen, we don't want them to clamp to -1 and 1, but smoothly approach it.
@@ -128,7 +129,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       # Show publications if the asset requires it.
       publications = @displayedAsset()?.constructor.availablePublications?()
       
-      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications.id(), publications
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications.id(), publications?.length
       
     # Reactively add tools and actions.
     toolRequirements =
@@ -299,7 +300,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       @audio.zoomDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
       @audio.colorSwatchesDrag visible if incrementToolCount @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
       @audio.pico8Drag visible if incrementToolCount displayedAsset?.project?.pico8Cartridge?
-      @audio.pixelArtEvaluationDrag visible if incrementToolCount displayedAsset?.pixelArtEvaluation and not @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation)?.active()
+      
+      if pixelArtEvaluation = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+        @audio.pixelArtEvaluationDrag visible if incrementToolCount pixelArtEvaluation.paperDisplayed() and not pixelArtEvaluation.active()
+      
+      @audio.publicationsDrag visible if incrementToolCount displayedAsset?.constructor.availablePublications?().length and not @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications)?.active()
       
       @audio.toolsCount toolsCount
     ,
