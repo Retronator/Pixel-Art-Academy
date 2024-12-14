@@ -419,9 +419,10 @@ class Goal.ActiveBumpers extends Goal.Task
   @directive: -> "Give bumpers some kick"
   
   @instructions: -> """
-    On the Settings tab in the editor, you can now turn static bumpers into active ones.
-    They will forcefully kick the ball away from them, increasing the game's excitement.
-    If you want, use this opportunity to update the design of your bumper and refine the playfield to provide a place for multiple bumpers to kick the ball between them.
+    You can now turn static bumpers into active ones.
+    Select a bumper you placed on the playfield and click on the Settings tab in the editor.
+    Click on the active option to turn it into a bumper that will forcefully kick the ball away from it, increasing the game's excitement.
+    If you want, use this opportunity to update your bumper drawing as well.
   """
   
   @predecessors: -> [Goal.DrawUpperThird]
