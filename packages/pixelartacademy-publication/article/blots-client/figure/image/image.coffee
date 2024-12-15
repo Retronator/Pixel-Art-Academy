@@ -1,13 +1,21 @@
 AM = Artificial.Mirage
+AEc = Artificial.Echo
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Publication.Article.Figure.Image extends AM.Component
+class PAA.Publication.Article.Figure.Image extends LOI.Component
   @id: -> 'PixelArtAcademy.Publication.Article.Figure.Image'
   @version: -> '0.1.0'
 
   @register @id()
   template: -> @constructor.id()
 
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    subNamespace: true
+    variables:
+      cut: AEc.ValueTypes.Trigger
+      paste: AEc.ValueTypes.Trigger
+  
   onCreated: ->
     super arguments...
 
@@ -75,12 +83,16 @@ class PAA.Publication.Article.Figure.Image extends AM.Component
         x: 100 * (Math.random() - 0.5)
         y: 100 * (Math.random() - 0.5)
         
+    @audio.cut()
+        
   onClickAddedToReferencesInfo: (event) ->
     element = @data()
     bitmap = @bitmap()
     document = bitmap.bitmap()
     
     document.executeAction new LOI.Assets.VisualAsset.Actions.RemoveReferenceByUrl @constructor.id(), document, element.image.url
+    
+    @audio.paste()
     
   class @Property extends AM.DataInputComponent
     @property: -> throw new AE.NotImplementedException "Property name must be provided."

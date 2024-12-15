@@ -12,6 +12,9 @@ class PAA.Publication.Component.Article extends AM.Component
   @register @id()
 
   @version: -> '0.1.0'
+  
+  # Handle the audio namespace for all blobs.
+  @BlotsAudio = new LOI.Assets.Audio.Namespace 'PixelArtAcademy.Publication.Article'
 
   onCreated: ->
     super arguments...
@@ -20,6 +23,13 @@ class PAA.Publication.Component.Article extends AM.Component
     @publication = new ComputedField => @publicationComponent.publication()
 
     @quill = new AE.ReactiveWrapper null
+  
+    @constructor.BlotsAudio.load LOI.adventure.audioManager
+  
+  onDestroyed: ->
+    super arguments...
+    
+    @constructor.BlotsAudio.unload()
 
   onRendered: ->
     super arguments...
