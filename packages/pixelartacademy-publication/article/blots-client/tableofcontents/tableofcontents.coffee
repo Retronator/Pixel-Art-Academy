@@ -47,5 +47,4 @@ class PAA.Publication.Article.TableOfContents extends AM.Quill.BlotComponent
     return unless contentItem.part.referenceId in @unlockedParts()
   
     publicationComponent = @quillComponent().publicationComponent
-    publicationComponent.activePartId contentItem.part._id
-    publicationComponent.scrollToTop()
+    publicationComponent.goToPart contentItem.part._id

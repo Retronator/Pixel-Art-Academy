@@ -1,11 +1,22 @@
 AE = Artificial.Everywhere
+AEc = Artificial.Echo
 AM = Artificial.Mirage
 AB = Artificial.Babel
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Publication.Component extends AM.Component
-  @register 'PixelArtAcademy.Publication.Component'
-
+class PAA.Publication.Component extends LOI.Component
+  @id: -> 'PixelArtAcademy.Publication.Component'
+  @register @id()
+  
+  @Audio = new LOI.Assets.Audio.Namespace @id(),
+    variables:
+      open: AEc.ValueTypes.Trigger
+      close: AEc.ValueTypes.Trigger
+      turnPages: AEc.ValueTypes.Trigger
+      turnPage: AEc.ValueTypes.Trigger
+      movePage: AEc.ValueTypes.Trigger
+      
   constructor: (@publicationId) ->
     super arguments...
     
@@ -120,13 +131,17 @@ class PAA.Publication.Component extends AM.Component
     @leftPageIndex 0
     @visiblePageIndex 0
     @scrollToTop()
-      
+    
+    @audio.open()
+    
   close: ->
     @opened false
     
     @leftPageIndex 0
     @visiblePageIndex 0
     @scrollToTop()
+    
+    @audio.close()
     
   back: ->
     # You can't go back if you're not opened.
@@ -156,6 +171,15 @@ class PAA.Publication.Component extends AM.Component
 
     @scrollToTop()
 
+    @audio.turnPages()
+    
+  goToPart: (partId) ->
+    @activePartId partId
+    
+    @scrollToTop()
+    
+    @audio.turnPages()
+  
   canMoveLeft: ->
     # We can move left if we're not on the first page.
     @visiblePageIndex()
@@ -171,7 +195,14 @@ class PAA.Publication.Component extends AM.Component
     visiblePageIndex = @visiblePageIndex()
     
     spreadPagesCount = @spreadPagesCount()
-    leftPageIndex -= spreadPagesCount if leftPageIndex is visiblePageIndex
+
+    if leftPageIndex is visiblePageIndex
+      leftPageIndex -= spreadPagesCount
+      @audio.turnPage()
+      
+    else
+      @audio.movePage()
+    
     visiblePageIndex--
 
     @leftPageIndex leftPageIndex
@@ -186,7 +217,14 @@ class PAA.Publication.Component extends AM.Component
     visiblePageIndex = @visiblePageIndex()
     
     spreadPagesCount = @spreadPagesCount()
-    leftPageIndex += spreadPagesCount unless leftPageIndex is visiblePageIndex
+
+    unless leftPageIndex is visiblePageIndex
+      leftPageIndex += spreadPagesCount
+      @audio.turnPage()
+      
+    else
+      @audio.movePage()
+    
     visiblePageIndex++
 
     @leftPageIndex leftPageIndex
