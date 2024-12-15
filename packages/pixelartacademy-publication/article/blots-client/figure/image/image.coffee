@@ -15,6 +15,7 @@ class PAA.Publication.Article.Figure.Image extends LOI.Component
     variables:
       cut: AEc.ValueTypes.Trigger
       paste: AEc.ValueTypes.Trigger
+      pan: AEc.ValueTypes.Number
   
   onCreated: ->
     super arguments...
@@ -83,6 +84,7 @@ class PAA.Publication.Article.Figure.Image extends LOI.Component
         x: 100 * (Math.random() - 0.5)
         y: 100 * (Math.random() - 0.5)
         
+    @audio.pan AEc.getPanForPosition event.screenX
     @audio.cut()
         
   onClickAddedToReferencesInfo: (event) ->
@@ -92,6 +94,7 @@ class PAA.Publication.Article.Figure.Image extends LOI.Component
     
     document.executeAction new LOI.Assets.VisualAsset.Actions.RemoveReferenceByUrl @constructor.id(), document, element.image.url
     
+    @audio.pan AEc.getPanForPosition event.screenX
     @audio.paste()
     
   class @Property extends AM.DataInputComponent
