@@ -122,7 +122,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
     
     @audio.release()
     
-    @currentPublication()?.component.disable()
+    if currentPublicationComponent = @currentPublication()?.component
+      currentPublicationComponent.close()
+      currentPublicationComponent.disable()
     
     Meteor.clearTimeout @_activeDisplayedTimeout
     @activeDisplayed false

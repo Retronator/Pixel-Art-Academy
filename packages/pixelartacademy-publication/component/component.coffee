@@ -118,6 +118,8 @@ class PAA.Publication.Component extends LOI.Component
     @scrollToTop()
     
   open: ->
+    return if @opened()
+    
     @opened true
     
     return unless publication = @publication()
@@ -135,8 +137,11 @@ class PAA.Publication.Component extends LOI.Component
     @audio.open()
     
   close: ->
+    return unless @opened()
+    
     @opened false
     
+    @activePartId null
     @leftPageIndex 0
     @visiblePageIndex 0
     @scrollToTop()
@@ -240,7 +245,7 @@ class PAA.Publication.Component extends LOI.Component
 
     targetScrollTop = 0
 
-    $(".pixelartacademy-publication-component").velocity
+    $(".pixelartacademy-publication-component").velocity('stop').velocity
       tween: [targetScrollTop, currentScrollTop]
     ,
       duration: 500
