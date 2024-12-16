@@ -46,6 +46,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
       unlockedPublications = currentSituation.things()
       
       _.intersection availablePublications, unlockedPublications
+    ,
+      EJSON.equals
     
     @autorun (computation) =>
       return unless publicationReferenceIds = @publicationReferenceIds()
@@ -53,6 +55,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
       PAA.Publication.forReferenceIds.subscribe @, publicationReferenceIds
     
     @currentPublicationIndex = new ReactiveField 0
+    
+    @_publicationComponents = {}
     
     @publications = new ComputedField =>
       return unless publicationReferenceIds = @publicationReferenceIds()
@@ -67,10 +71,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
       activeOffset = 0
       
       for publication, index in publications when publication
+        @_publicationComponents[publication._id] ?= new PAA.Publication.Component publication._id
+        
         publicationInfo =
           publication: publication
           index: index
-          component: new PAA.Publication.Component publication._id
+          component: @_publicationComponents[publication._id]
           offset:
             x: randomOffset()
             y: randomOffset()
