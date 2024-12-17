@@ -59,6 +59,14 @@ class PAA.Publication extends AM.Document
     Artificial.Pages.addAdminPage '/admin/publication', @Pages.Admin
     Artificial.Pages.addAdminPage '/admin/publication/parts/:documentId?', @Pages.Admin.Parts
     Artificial.Pages.addAdminPage '/admin/publication/publications/:documentId?', @Pages.Admin.Publications
+  
+  hasUnreadUnlockedContents: (unlockedPartIds) ->
+    # Check if any of the content parts that are unlocked aren't marked as read in the game state.
+    for content in @contents when content.part.referenceId in unlockedPartIds
+      partState = PAA.Publication.Part.getStateForReferenceId content.part.referenceId
+      return true unless partState 'read'
+    
+    false
 
 if Meteor.isServer
   # Export all publications and parts.

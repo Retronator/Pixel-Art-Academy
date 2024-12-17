@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:fatamorgana');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelpad');
+  api.use('retronator:pixelartacademy-pixelpad-instructions');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartdatabase');
@@ -75,6 +76,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/references/displaycomponent/reference..');
 
   api.addComponent('editor/desktop/publications..');
+  api.addFile('editor/desktop/publications/newpartinstruction');
 
   api.addFile('editor/desktop/actions..');
   api.addFile('editor/desktop/actions/focus');

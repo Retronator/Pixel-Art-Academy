@@ -9,7 +9,7 @@
     "exposeLocalFilesystem": true,
     "window": {
         "minWidth": 640,
-        "minHeight": 480,
+        "minHeight": 510,
         "fullscreen": true,
         "autoHideMenuBar": true,
         "icon": "@assets/icons/learnmode-a.png",

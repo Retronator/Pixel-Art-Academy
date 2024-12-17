@@ -75,6 +75,14 @@
               &.unlocked
                 cursor pointer
 
+                &.unread
+                  &::after
+                    content ''
+                    display inline-block
+                    width 7rem
+                    height 10rem
+                    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/content-unlocked.png')
+
               &:not(.unlocked)
                 color atariGray(3)
 
@@ -83,4 +91,4 @@
                   display inline-block
                   width 7rem
                   height 9rem
-                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/lock.png')
+                  background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/content-locked.png')

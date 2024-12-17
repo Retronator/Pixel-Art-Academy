@@ -33,6 +33,13 @@ class PAA.Publication.Article.TableOfContents extends AM.Quill.BlotComponent
     contentItem = @currentData()
     
     'unlocked' if contentItem.part.referenceId in @unlockedParts()
+  
+  unreadClass: ->
+    contentItem = @currentData()
+    
+    partState = PAA.Publication.Part.getStateForReferenceId contentItem.part.referenceId
+    
+    'unread' unless partState 'read'
 
   part: ->
     contentItem = @currentData()

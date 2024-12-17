@@ -181,6 +181,11 @@ class PAA.Publication.Component extends LOI.Component
   goToPart: (partId) ->
     @activePartId partId
     
+    # Mark part as read.
+    part = PAA.Publication.Part.documents.findOne partId
+    partState = PAA.Publication.Part.getStateForReferenceId part.referenceId
+    partState 'read', true
+    
     @scrollToTop()
     
     @audio.turnPages()

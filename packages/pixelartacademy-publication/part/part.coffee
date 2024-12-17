@@ -46,3 +46,15 @@ class PAA.Publication.Part extends AM.Document
   @all = @subscription 'all'
   @forPublication = @subscription 'forPublication'
   @articleForPart = @subscription 'articleForPart'
+
+  # We want a state for tracking player's interaction with publication parts.
+  # publicationParts: an object with state for each publication part
+  #   {referenceId}:
+  #     read: boolean indicating if the part has been read
+  @stateAddress = new LOI.StateAddress "publicationParts"
+  @state = new LOI.StateObject address: @stateAddress
+  @_partStates = {}
+  
+  @getStateForReferenceId: (referenceId) ->
+    @_partStates[referenceId] ?= new LOI.StateObject address: @stateAddress.child referenceId
+    @_partStates[referenceId]
