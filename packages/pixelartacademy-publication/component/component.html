@@ -1,34 +1,36 @@
 <template name="PixelArtAcademy.Publication.Component">
   <div class="pixelartacademy-publication-component {{enabledClass}}">
-    {{#if canMoveLeft}}
-      <button class="move-button left" {{style moveButtonStyle}}></button>
-    {{/if}}
-    {{#if canMoveRight}}
-      <button class="move-button right" {{style moveButtonStyle}}></button>
-    {{/if}}
-    <div class="scroll-area">
-      {{#with publication}}
-        <div class="publication-area" {{style publicationAreaStyle}}>
-          <div class="publication {{pageClasses}} {{design.class}} {{activeContentItem.design.class}}" {{style publicationStyle}}>
-            <div class="running-header"></div>
-            {{#with activeContentItem}}
-              <div class="read-only contents-area">
-                <div class="contents" {{style contentsStyle}}>
-                  {{> PixelArtAcademy.Publication.Component.Article}}
-                  <div class="end-page"></div>
+    <div class="scroll-container">
+      <div class="scroll-content">
+        {{#if canMoveLeft}}
+          <button class="move-button left" {{style moveButtonStyle}}></button>
+        {{/if}}
+        {{#if canMoveRight}}
+          <button class="move-button right" {{style moveButtonStyle}}></button>
+        {{/if}}
+        {{#with publication}}
+          <div class="publication-area" {{style publicationAreaStyle}}>
+            <div class="publication {{pageClasses}} {{design.class}} {{activeContentItem.design.class}}" {{style publicationStyle}}>
+              <div class="running-header"></div>
+              {{#with activeContentItem}}
+                <div class="read-only contents-area">
+                  <div class="contents" {{style contentsStyle}}>
+                    {{> PixelArtAcademy.Publication.Component.Article}}
+                    <div class="end-page"></div>
+                  </div>
                 </div>
-              </div>
-            {{/with}}
-            <div class="running-footer">
-              <div class="page-numbers">
-                {{#each pageNumbers}}
-                  <div class="page-number spread-page-{{spreadNumber}}">{{totalNumber}}{{#if pagesCount}}/{{pagesCount}}{{/if}}</div>
-                {{/each}}
+              {{/with}}
+              <div class="running-footer">
+                <div class="page-numbers">
+                  {{#each pageNumbers}}
+                    <div class="page-number spread-page-{{spreadNumber}}">{{totalNumber}}{{#if pagesCount}}/{{pagesCount}}{{/if}}</div>
+                  {{/each}}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {{/with}}
+        {{/with}}
+      </div>
     </div>
   </div>
 </template>

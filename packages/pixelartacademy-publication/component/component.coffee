@@ -240,8 +240,8 @@ class PAA.Publication.Component extends LOI.Component
   scrollToTop: ->
     return unless @isRendered()
     
-    scrollArea = @$(".scroll-area")[0]
-    return unless currentScrollTop = scrollArea.scrollTop
+    scrollContainer = @$(".scroll-container")[0]
+    return unless currentScrollTop = scrollContainer.scrollTop
 
     targetScrollTop = 0
 
@@ -251,7 +251,7 @@ class PAA.Publication.Component extends LOI.Component
       duration: 500
       easing: 'ease-in-out'
       progress: (elements, complete, remaining, start, tweenValue) =>
-        scrollArea.scrollTop = tweenValue
+        scrollContainer.scrollTop = tweenValue
 
   contentUpdated: ->
     @manualContentUpdatedDependency.changed()

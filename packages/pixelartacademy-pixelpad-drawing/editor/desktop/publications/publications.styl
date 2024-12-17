@@ -41,15 +41,16 @@
       .pixelartacademy-publication-component
         transition transform 0.2s
 
-        .scroll-area
+        .scroll-container
           &::before
             content ''
             display block
             height 50%
 
-          .publication-area
-            margin 30rem auto
-            pointer-events auto
+          .scroll-content
+            .publication-area
+              margin 30rem auto
+              pointer-events auto
 
   .publication-select-button
     position absolute
