@@ -118,34 +118,39 @@ class LM.Interface extends LOI.Interface
       @studio.setFocus @constructor.Studio.FocusPoints.MainMenu
       @audio.focusPoint @constructor.FocusPoints.MainMenu
 
-  goToPlay: ->
+  goToPlay: (loadProfileId) ->
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeOut()
 
     @audio.focusPoint @constructor.FocusPoints.Play
     
     Meteor.setTimeout =>
+      # Move the focus point.
       await @studio.moveFocus
         focusPoint: @constructor.Studio.FocusPoints.Play
-        speedFactor: 1.5
-
-      # Show the save dialog if we're entering play without syncing.
-      unless LOI.adventure.profile().hasSyncing()
-        await LOI.adventure.menu.saveGame.show()
+        speedFactor: if loadProfileId then 2.5 else 1.5
         
-        # If the player decided to cancel, send them back to the menu.
-        unless LOI.adventure.profile().hasSyncing()
-          LOI.adventure.quitGame callback: =>
-            LOI.adventure.interface.goToMainMenu()
+      if loadProfileId
+        # Start loading the game after the animation has finished to prevent lag.
+        await LOI.adventure.menu.loadGame.show loadProfileId, false
+
+      else
+        # We are starting a new game, show the save dialog.
+        await LOI.adventure.menu.saveGame.show()
       
-            # Notify that we've handled the quitting sequence.
-            true
-            
-          return
+      # If the player decided to cancel or the load didn't succeed, send them back to the menu.
+      unless LOI.adventure.profile().hasSyncing()
+        LOI.adventure.quitGame callback: =>
+          LOI.adventure.interface.goToMainMenu()
+    
+          # Notify that we've handled the quitting sequence.
+          true
           
-        # We have a profile loaded with syncing, so we can safely continue to play.
-        LOI.adventure.goToLocation LM.Locations.Play
-        @_openPixelPad()
+        return
+          
+      # We have a profile loaded with syncing, so we can safely continue to play.
+      LOI.adventure.goToLocation LM.Locations.Play unless loadProfileId
+      @_openPixelPad()
     ,
       750
     
@@ -164,7 +169,7 @@ class LM.Interface extends LOI.Interface
     
     await @studio.moveFocus
       focusPoint: @constructor.Studio.FocusPoints.MainMenu
-      speedFactor: 1.5
+      speedFactor: 2
     
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeIn()

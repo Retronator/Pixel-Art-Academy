@@ -26,6 +26,7 @@ class LOI.Components.LoadGame extends LOI.Component
     
     @activatable = new LOI.Components.Mixins.Activatable
     @editEnabled = new ReactiveField false
+    @componentVisible = new ReactiveField false
     @loadingVisible = new ReactiveField false
     @loadingTextVisible = new ReactiveField false
     @loadingProfileId = new ReactiveField null
@@ -51,8 +52,9 @@ class LOI.Components.LoadGame extends LOI.Component
 
       @firstProfileOffset maxFirstProfileOffset
 
-  show: (autoLoadProfileId) ->
+  show: (autoLoadProfileId, componentVisible = true) ->
     @autoLoadedProfileId autoLoadProfileId
+    @componentVisible componentVisible
     @firstProfileOffset 0
 
     if autoLoadProfileId
@@ -70,7 +72,7 @@ class LOI.Components.LoadGame extends LOI.Component
           computation.stop()
   
           if Persistence.Profile.documents.findOne autoLoadProfileId
-            @loadProfile(autoLoadProfileId, false).then =>
+            @loadProfile(autoLoadProfileId, false, componentVisible).then =>
               LOI.adventure.removeModalDialog @
               resolve()
               
@@ -84,7 +86,7 @@ class LOI.Components.LoadGame extends LOI.Component
         dialog: @
         dontRender: true
     
-  loadProfile: (profileId, animate = true) ->
+  loadProfile: (profileId, animate = true, componentVisible = true) ->
     @loadingProfileId profileId
     @showProfileLoadingPercentage false
     
@@ -122,11 +124,11 @@ class LOI.Components.LoadGame extends LOI.Component
       
     # Now that the profile has started loading, see if you should show the loading
     # percentage if it seems the game will load for more than half a second.
-    await _.waitForSeconds 0.5
+    await _.waitForSeconds 0.5 if componentVisible
     @showProfileLoadingPercentage Persistence.profileLoadingPercentage() < 100
     
     # When the audio is on, make loading last a while to hear the sweet floppy drive sounds.
-    await _.waitForSeconds 2 if LOI.adventure.audioManager.enabled()
+    await _.waitForSeconds 2 if componentVisible and LOI.adventure.audioManager.enabled()
     
     await loadPromise
     @loadingProfileId null
@@ -144,6 +146,9 @@ class LOI.Components.LoadGame extends LOI.Component
     await _.waitForSeconds 0.5
     @loadingVisible false
     finishedDeactivatingCallback()
+    
+  visibleClass: ->
+    'visible' if @componentVisible()
 
   editEnabledClass: ->
     'edit-enabled' if @editEnabled()

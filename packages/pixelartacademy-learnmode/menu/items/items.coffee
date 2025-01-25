@@ -4,6 +4,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 LM = PixelArtAcademy.LearnMode
 
+Persistence = Artificial.Mummification.Document.Persistence
+
 class LM.Menu.Items extends LOI.Components.Menu.Items
   @register 'PixelArtAcademy.LearnMode.Menu.Items'
   template: -> 'PixelArtAcademy.LearnMode.Menu.Items'
@@ -27,6 +29,13 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
     
+  continueVisible: ->
+    # Continue is visible when we're not on the landing page and if there is a last loaded game.
+    return true unless @options.landingPage
+    
+    return unless profileId = localStorage.getItem LOI.adventure.constructor.lastLoadedProfileIdLocalStorageKey
+    Persistence.Profile.documents.findOne profileId
+  
   loadVisible: ->
     # Load game in Learn Mode is visible only on the landing page if there are any profiles to load.
     loadGame = LOI.adventure.menu.loadGame
@@ -67,7 +76,18 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
 
   onClickMainMenuContinue: (event) ->
-    LOI.adventure.menu.hideMenu()
+    LOI.adventure.interface.waiting true
+    
+    if @options.landingPage
+      # Load last loaded game.
+      return unless profileId = localStorage.getItem LOI.adventure.constructor.lastLoadedProfileIdLocalStorageKey
+      
+      console.log "Loading last loaded profile ID", profileId if LOI.debug
+      
+      await LOI.adventure.interface.goToPlay profileId
+    
+    else
+      LOI.adventure.menu.hideMenu()
   
   onClickMainMenuNew: (event) ->
     LOI.adventure.interface.waiting true

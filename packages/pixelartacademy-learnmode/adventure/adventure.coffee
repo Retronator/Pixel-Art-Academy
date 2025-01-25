@@ -31,6 +31,8 @@ class LM.Adventure extends PAA.Adventure
   
   @lastNewLessonsVersion: -> '0.25.0'
   
+  @lastLoadedProfileIdLocalStorageKey = 'LandsOfIllusions.Adventure.lastLoadedProfileId'
+  
   constructor: ->
     super arguments...
     
@@ -91,6 +93,16 @@ class LM.Adventure extends PAA.Adventure
           gameState.acknowledgedNewLessonsVersion = lastNewLessonsVersion
           LOI.adventure.gameState.updated()
 
+  quitGame: ->
+    # Store the last loaded profile so we can load it with the continue button.
+    profile = @profile()
+
+    # We need to make sure profile has syncing since we could be quitting a just started game that was not saved.
+    if profile.hasSyncing()
+      localStorage.setItem @constructor.lastLoadedProfileIdLocalStorageKey, profile._id
+  
+    super arguments...
+  
   showLoading: ->
     # Don't show the loading screen if the interface is already indicating we're waiting.
     return if LOI.adventure.interface.waiting()

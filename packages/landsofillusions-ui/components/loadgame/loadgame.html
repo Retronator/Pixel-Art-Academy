@@ -1,6 +1,6 @@
 <template name="LandsOfIllusions.Components.LoadGame">
   {{#unless deactivated}}
-    <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem {{editEnabledClass}}">
+    <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem {{editEnabledClass}} {{visibleClass}}">
       {{#if showBackButton}}
         {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
       {{/if}}
