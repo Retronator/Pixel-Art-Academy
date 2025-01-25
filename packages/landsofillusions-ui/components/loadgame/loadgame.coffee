@@ -255,3 +255,25 @@ class LOI.Components.LoadGame extends LOI.Component
         
         Persistence.removeProfile profile._id
         @editingProfileId null
+
+  # Components
+
+  class @SaveGameName extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Components.LoadGame.SaveGameName'
+
+    constructor: ->
+      super arguments...
+
+      @type = AM.DataInputComponent.Types.TextArea
+      @realtime = false
+      @placeholder = "Enter name"
+      @customAttributes =
+        maxlength: 12 * 3
+      
+    load: ->
+      profile = @currentData()
+      profile.displayName or profile._id
+      
+    save: (value) ->
+      profile = @currentData()
+      Persistence.renameProfile profile._id, value

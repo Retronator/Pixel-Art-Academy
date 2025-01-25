@@ -18,7 +18,9 @@
               <li class="profile {{profileActiveClass}}" data-id="{{_id}}">
                 <div class="floppy">
                   <div class="shutter"></div>
-                  <div class="label">{{profileName}}</div>
+                  <div class="label">{{#if editEnabled}}
+                      {{> LandsOfIllusions.Components.LoadGame.SaveGameName}}
+                    {{else}}{{profileName}}{{/if}}</div>
                 </div>
               </li>
             {{/each}}

@@ -77,14 +77,27 @@ class AM.Document.Persistence
       @loadProfile(profileId).then =>
         resolve profileId
         
+  @renameProfile: (profileId, displayName) ->
+    Persistence.Profile.documents.update profileId,
+      $set:
+        displayName: displayName
+        lastEditTime: new Date
+    
+    # We need to manually force updating of the profile in synced storages document since it might not be loaded.
+    profile = Persistence.Profile.documents.findOne profileId
+    
+    promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
+      syncedStorage.changed profile
+    
+    Promise.all promises
+  
   @removeProfile: (profileId) ->
     await @unloadProfile() if @_activeProfileId() is profileId
     
     profile = Persistence.Profile.documents.findOne profileId
     Persistence.Profile.documents.remove profileId
     
-    # We need to manually force removal of the profile document in synced storages since the usual
-    # mechanism intentionally leaves profile documents alone (to be able to load them again).
+    # We need to manually force removal of the profile document in synced storages since it is not loaded.
     promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
       syncedStorage.removed profile
     
