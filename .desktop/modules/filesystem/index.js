@@ -71,8 +71,7 @@ export default class FileSystem {
           const profileJson = await fs.promises.readFile(profileDocumentPath, {encoding: 'utf8'})
           profileJsons.push(profileJson);
           this.log.verbose("Found profile directory", profileId);
-        }
-        catch (e) {
+        } catch (e) {
           this.log.error("Invalid profile directory", profileId);
         }
       }
@@ -153,6 +152,69 @@ export default class FileSystem {
       } catch (error) {
         this.log.error('getProfileDocuments encountered an error', error);
         this.module.respond('getProfileDocuments', fetchId, null);
+      }
+    });
+
+    this.module.on('backupProfile', async (event, fetchId, rootDirectoryPath, backupDirectoryPath) => {
+      try {
+        this.log.verbose('backupProfile received', rootDirectoryPath);
+
+        const backupTimestamp = new Date().toISOString().replaceAll(':', '-');
+        const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
+
+        // Scan the root directory for subdirectories, whose names correspond to class names.
+        let rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        this.log.verbose('Root directory opened.');
+
+        for await (const rootDirectoryEntry of rootDirectory) {
+          this.log.verbose('Processing directory entry', rootDirectoryEntry.name);
+          if (!rootDirectoryEntry.isDirectory()) continue;
+
+          const className = rootDirectoryEntry.name;
+
+          // Scan the directory for files, whose names correspond to document IDs.
+          const classDirectoryPath = path.join(rootDirectoryPath, className);
+          const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
+
+          this.log.verbose('Opening class directory', className);
+          const classDirectory = await fs.promises.opendir(classDirectoryPath);
+          this.log.verbose('Class directory opened.');
+
+          for await (const classDirectoryEntry of classDirectory) {
+            if (!classDirectoryEntry.isFile()) continue;
+
+            // Only copy json files (ignore backups).
+            if (!classDirectoryEntry.name.endsWith('json')) continue;
+
+            // Create a backup of the file.
+            const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
+            const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
+            await fs.promises.cp(filePath, backupFilePath);
+          }
+        }
+
+        this.log.verbose('backupProfile processed');
+        this.module.respond('backupProfile', fetchId, true);
+
+      } catch (error) {
+        this.log.error('backupProfile encountered an error', error);
+        this.module.respond('backupProfile', fetchId, false);
+      }
+    });
+
+    this.module.on('removeProfile', async (event, fetchId, rootDirectoryPath) => {
+      try {
+        this.log.verbose('removeProfile received', rootDirectoryPath);
+
+        // Scan the root directory for subdirectories, whose names correspond to class names.
+        await fs.promises.rm(rootDirectoryPath, {recursive: true});
+        this.log.verbose('Profile directory removed.');
+
+        this.module.respond('removeProfile', fetchId, true);
+
+      } catch (error) {
+        this.log.error('removeProfile encountered an error', error);
+        this.module.respond('removeProfile', fetchId, false);
       }
     });
   }

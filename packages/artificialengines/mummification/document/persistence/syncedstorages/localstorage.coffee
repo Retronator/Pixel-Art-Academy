@@ -90,11 +90,23 @@ class Persistence.SyncedStorages.LocalStorage extends Persistence.SyncedStorage
     
   _delete: (document) ->
     new Promise (resolve) =>
-      localStorage.removeItem "#{@options.storageKey}.#{document._id}"
-  
-      delete @_getDirectoryAreaForDocument(document)[document._id]
-      @_saveDirectory()
+      if document instanceof Persistence.Profile
+        # Remove all the entries for this profile.
+        profileId = document._id
+        
+        for documentClassId, documentClassArea of @directory
+          for documentId, entry of documentClassArea when entry.profileId is profileId
+            localStorage.removeItem @_getDocumentStorageKey documentClassId, documentId
+            
+            delete @directory[documentClassId][documentId]
+      
+      else
+        localStorage.removeItem @_getDocumentStorageKey document
+    
+        delete @_getDirectoryAreaForDocument(document)[document._id]
 
+      @_saveDirectory()
+  
       resolve()
       
   _saveDirectory: ->

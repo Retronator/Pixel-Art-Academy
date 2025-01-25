@@ -124,5 +124,34 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
     "#{@storagePath}/#{profileId}/#{documentClassId}/#{documentId}.json"
 
   _delete: (document) ->
-    path = @_getDocumentPath document
-    Desktop.call 'filesystem', 'deleteFile', path
+    if document instanceof Persistence.Profile
+      # Profiles get backed up and their directory fully removed.
+      profileId = document._id
+      
+      try
+        unless backupSucceeded = await Desktop.call 'filesystem', 'backupProfile', "#{@storagePath}/#{profileId}", "#{@backupPath}/#{profileId}"
+          throw new AE.IOException "Unable to backup profile #{profileId}."
+      
+      catch error
+        LOI.adventure.showDialogMessage """
+          Removing a profile encountered an error during final backup.
+          If you report this bug, this could be of help: #{error.message}
+        """
+        
+        throw new AE.ExternalException "Backing up profile directory from the file system failed.", path, error
+      
+      try
+        unless removeSucceeded = await Desktop.call 'filesystem', 'removeProfile', "#{@storagePath}/#{profileId}"
+          throw new AE.IOException "Unable to remove profile #{profileId}."
+      
+      catch error
+        LOI.adventure.showDialogMessage """
+          Removing a profile encountered an error during directory removal.
+          If you report this bug, this could be of help: #{error.message}
+        """
+        
+        throw new AE.ExternalException "Removing the profile directory from the file system failed.", path, error
+    
+    else
+      path = @_getDocumentPath document
+      Desktop.call 'filesystem', 'deleteFile', path

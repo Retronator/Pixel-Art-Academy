@@ -76,6 +76,19 @@ class AM.Document.Persistence
       
       @loadProfile(profileId).then =>
         resolve profileId
+        
+  @removeProfile: (profileId) ->
+    await @unloadProfile() if @_activeProfileId() is profileId
+    
+    profile = Persistence.Profile.documents.findOne profileId
+    Persistence.Profile.documents.remove profileId
+    
+    # We need to manually force removal of the profile document in synced storages since the usual
+    # mechanism intentionally leaves profile documents alone (to be able to load them again).
+    promises = for syncedStorageId, syncedStorage of @_syncedStoragesById when profile.syncedStorages[syncedStorageId]
+      syncedStorage.removed profile
+    
+    Promise.all promises
   
   @loadProfile: (profileId) ->
     console.log "Persistence loading profile", profileId if @debug

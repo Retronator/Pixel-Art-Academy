@@ -25,9 +25,11 @@ class LOI.Components.LoadGame extends LOI.Component
     super arguments...
     
     @activatable = new LOI.Components.Mixins.Activatable
+    @editEnabled = new ReactiveField false
     @loadingVisible = new ReactiveField false
     @loadingTextVisible = new ReactiveField false
     @loadingProfileId = new ReactiveField null
+    @editingProfileId = new ReactiveField null
     @autoLoadedProfileId = new ReactiveField null
     @showProfileLoadingPercentage = new ReactiveField false
     
@@ -41,6 +43,13 @@ class LOI.Components.LoadGame extends LOI.Component
 
     @profiles = new ComputedField => Persistence.Profile.documents.fetch syncedStorages: $ne: {}
     @maxFirstProfileOffset = new ComputedField => @profiles().length - 4
+    
+    # Adjust profile offset if it falls out of bounds.
+    @autorun (computation) =>
+      maxFirstProfileOffset = @maxFirstProfileOffset()
+      return unless @firstProfileOffset() > maxFirstProfileOffset
+
+      @firstProfileOffset maxFirstProfileOffset
 
   show: (autoLoadProfileId) ->
     @autoLoadedProfileId autoLoadProfileId
@@ -136,8 +145,23 @@ class LOI.Components.LoadGame extends LOI.Component
     @loadingVisible false
     finishedDeactivatingCallback()
 
+  editEnabledClass: ->
+    'edit-enabled' if @editEnabled()
+  
   showBackButton: ->
     not (@loadingVisible() or @autoLoadedProfileId())
+  
+  backButtonCallback: ->
+    =>
+      if @editEnabled()
+        @editingProfileId null
+        @editEnabled false
+        
+        # Inform that we've handled the back button.
+        cancel: true
+        
+      else
+        @activatable.deactivate()
     
   profilesStyle: ->
     offset = @firstProfileOffset()
@@ -156,9 +180,17 @@ class LOI.Components.LoadGame extends LOI.Component
   previousButtonVisibleClass: ->
     'visible' if @maxFirstProfileOffset() > 0
 
+  editButtonVisibleClass: ->
+    'visible' if @profiles().length
+  
   profileActiveClass: ->
     profile = @currentData()
-    'active' if @loadingProfileId() is profile._id or LOI.adventure.profileId() is profile._id
+    
+    if @editEnabled()
+      'active' if @editingProfileId() is profile._id
+    
+    else
+      'active' if @loadingProfileId() is profile._id or LOI.adventure.profileId() is profile._id
 
   profileName: ->
     profile = @currentData()
@@ -178,10 +210,17 @@ class LOI.Components.LoadGame extends LOI.Component
       'click .profile': @onClickProfile
       'click .previous-button': @onClickPreviousButton
       'click .next-button': @onClickNextButton
+      'click .edit-button': @onClickEditButton
+      'click .remove-button': @onClickRemoveButton
 
   onClickProfile: (event) ->
     profile = @currentData()
-    @loadProfile profile._id
+    
+    if @editEnabled()
+      @editingProfileId profile._id
+      
+    else
+      @loadProfile profile._id
 
   onClickPreviousButton: (event) ->
     newIndex = Math.max 0, @firstProfileOffset() - 4
@@ -192,3 +231,27 @@ class LOI.Components.LoadGame extends LOI.Component
     newIndex = Math.min @maxFirstProfileOffset(), @firstProfileOffset() + 4
 
     @firstProfileOffset newIndex
+
+  onClickEditButton: (event) ->
+    @editEnabled not @editEnabled()
+    
+  onClickRemoveButton: (event) ->
+    profile = Persistence.Profile.documents.findOne @editingProfileId()
+    profileName = profile.displayName or profile._id
+    
+    dialog = new LOI.Components.Dialog
+      message: "Do you really want to remove the #{profileName} save game?"
+      buttons: [
+        text: "Remove"
+        value: true
+      ,
+        text: "Cancel"
+      ]
+    
+    LOI.adventure.showActivatableModalDialog
+      dialog: dialog
+      callback: =>
+        return unless dialog.result
+        
+        Persistence.removeProfile profile._id
+        @editingProfileId null
