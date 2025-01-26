@@ -67,7 +67,36 @@ class LOI.Interface extends LOI.Component
       console.log "Interface has detected new realtime script node:", scriptNode if LOI.debug
 
       Tracker.nonreactive => @_handleNode scriptNode, background: true, realtime: true
+      
+  onRendered: ->
+    super arguments...
+    
+    # Prevent the player from choosing a resolution that would exceed the safe area significantly.
+    @highestAvailableScale = new ComputedField =>
+      clientBounds = AM.Window.clientBounds()
+      
+      windowWidth = clientBounds.width()
+      safeAreaWidth = @display.safeAreaWidth()
+      highestHorizontalScale = Math.floor windowWidth / safeAreaWidth
 
+      windowHeight = clientBounds.height()
+      safeAreaHeight = @display.safeAreaHeight()
+      highestVerticalScale = Math.floor windowHeight / safeAreaHeight
+      
+      highestScale = Math.min highestHorizontalScale, highestVerticalScale
+      
+      Math.max 2, highestScale
+      
+    # Control the minimum scale so that display can scale down if necessary to show most of the UI.
+    @autorun (computation) =>
+      if maximumScale = LOI.settings.graphics.maximumScale.value()
+        minimumScale = _.clamp @highestAvailableScale(), 2, maximumScale
+        
+      else
+        minimumScale = 2
+        
+      LOI.settings.graphics.minimumScale.value minimumScale
+      
   _readyToProcessScriptNodes: ->
     # We want to wait until the interface is ready after the location change has been initiated.
     return unless @locationChangeReady()

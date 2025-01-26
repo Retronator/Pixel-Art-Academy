@@ -117,11 +117,13 @@
       <button class="previous-button">◀</button>
     {{/if}}
     {{#if graphicsMaximumScale}}
-      {{graphicsMaximumScale}}x
+      {{graphicsScale}}x
     {{else}}
       Auto
     {{/if}}
-    <button class="next-button">▶</button>
+    {{#if canIncreaseGraphicsScale}}
+      <button class="next-button">▶</button>
+    {{/if}}
   </li>
 </template>
 

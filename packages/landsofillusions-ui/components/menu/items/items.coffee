@@ -117,6 +117,12 @@ class LOI.Components.Menu.Items extends LOI.Component
 
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
+    
+  graphicsScale: ->
+    Math.min @graphicsMaximumScale() or 2, LOI.adventure.interface.highestAvailableScale()
+  
+  canIncreaseGraphicsScale: ->
+    @graphicsScale() < LOI.adventure.interface.highestAvailableScale()
 
   permissionsPersistSettings: ->
     @_permissionsValue LOI.settings.persistSettings
@@ -304,18 +310,16 @@ class LOI.Components.Menu.Items extends LOI.Component
     LOI.settings.audio["#{property}Volume"].value value
   
   onClickDisplayGraphicsScalePreviousButton: (event) ->
-    currentValue = LOI.settings.graphics.maximumScale.value()
+    currentValue = @graphicsScale()
     currentValue--
     currentValue = null if currentValue < 2
 
-    LOI.settings.graphics.minimumScale.value currentValue or 2
     LOI.settings.graphics.maximumScale.value currentValue
 
   onClickDisplayGraphicsScaleNextButton: (event) ->
-    currentValue = LOI.settings.graphics.maximumScale.value() or 1
+    currentValue = if LOI.settings.graphics.maximumScale.value() then @graphicsScale() else 1
     currentValue++
 
-    LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
 
   onClickDisplayCRTEmulation: (event) ->
