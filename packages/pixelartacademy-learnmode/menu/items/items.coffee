@@ -25,6 +25,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       # Listen to fullscreen changes.
       Desktop.on 'window', 'isFullscreen', (event, isFullscreen) =>
         @_isFullscreen isFullscreen
+        LOI.settings.graphics.preferFullscreen.value isFullscreen
       
       # Request initial value.
       Desktop.send 'window', 'isFullscreen'
@@ -75,10 +76,10 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .extras .credits': @onClickExtrasCredits
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
 
-  onClickMainMenuContinue: (event) ->
-    LOI.adventure.interface.waiting true
-    
+  onClickMainMenuContinue: (event) ->    
     if @options.landingPage
+      LOI.adventure.interface.startWaiting()
+
       # Load last loaded game.
       return unless profileId = localStorage.getItem LOI.adventure.constructor.lastLoadedProfileIdLocalStorageKey
       
@@ -90,7 +91,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       LOI.adventure.menu.hideMenu()
   
   onClickMainMenuNew: (event) ->
-    LOI.adventure.interface.waiting true
+    LOI.adventure.interface.startWaiting()
 
     LOI.adventure.startNewGame().then =>
       LOI.adventure.interface.goToPlay()
@@ -123,7 +124,7 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
           @_quitGame() if dialog.result
           
   _quitGame: ->
-    LOI.adventure.interface.waiting true
+    LOI.adventure.interface.startWaiting()
 
     LOI.adventure.menu.hideMenu()
     LOI.adventure.deactivateActiveItem()
@@ -150,12 +151,10 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       Desktop.send 'window', 'setFullscreen', fullscreen
       @_isFullscreen fullscreen
       
+      LOI.settings.graphics.preferFullscreen.value fullscreen
+      
     else
-      if AM.Window.isFullscreen()
-        AM.Window.exitFullscreen()
-    
-      else
-        AM.Window.enterFullscreen()
+      super arguments...
       
     # Do a late UI resize to accommodate any fullscreen transitions.
     Meteor.setTimeout =>

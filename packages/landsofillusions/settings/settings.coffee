@@ -69,6 +69,7 @@ class LOI.Settings
       @persistEditorsInterface.allow() unless @persistEditorsInterface.decided()
 
     @graphics =
+      preferFullscreen: new @constructor.Field true, 'graphics.preferFullscreen', @persistSettings
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings
       maximumScale: new @constructor.Field null, 'graphics.maximumScale', @persistSettings
       anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings

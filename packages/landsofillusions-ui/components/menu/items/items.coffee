@@ -228,9 +228,11 @@ class LOI.Components.Menu.Items extends LOI.Component
   onClickMainMenuFullscreen: (event) ->
     if AM.Window.isFullscreen()
       AM.Window.exitFullscreen()
+      LOI.settings.graphics.preferFullscreen.value false
 
     else
-      super arguments...
+      AM.Window.enterFullscreen()
+      LOI.settings.graphics.preferFullscreen.value true
 
   onClickMainMenuSettings: (event) ->
     @currentScreen @constructor.Screens.Settings

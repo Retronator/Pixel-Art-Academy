@@ -175,6 +175,9 @@ class LM.Interface extends LOI.Interface
     mainMenu.fadeIn()
 
     @waiting false
+  
+  startWaiting: ->
+    @waiting true
     
   focusArtworks: (artworks) ->
     # Start display.

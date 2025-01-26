@@ -55,11 +55,11 @@ export default class Desktop {
 
             // Report fullscreen events to our meteor app.
             window.on('enter-full-screen', () => {
-                windowModule.send('isFullscreen', window.isFullScreen());
+                windowModule.send('isFullscreen', true);
             });
 
             window.on('leave-full-screen', () => {
-                windowModule.send('isFullscreen', window.isFullScreen());
+                windowModule.send('isFullscreen', false);
             });
         });
     }
