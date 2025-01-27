@@ -3,8 +3,8 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Pixeltosh.OS.Interface.Actions.CloseAll extends PAA.Pixeltosh.OS.Interface.Actions.Action
-  @id: -> 'PixelArtAcademy.Pixeltosh.OS.Interface.Actions.CloseAll'
+class PAA.Pixeltosh.Programs.Finder.Actions.CloseAll extends PAA.Pixeltosh.OS.Interface.Actions.Action
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Finder.Actions.CloseAll'
   @displayName: -> "Close All"
 
   @initialize()

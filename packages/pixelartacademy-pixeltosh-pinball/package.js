@@ -78,6 +78,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/settings..');
   api.addComponent('interface/settings/number..');
   api.addComponent('interface/settings/boolean..');
+  api.addComponent('interface/about..');
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/action');
@@ -90,4 +91,5 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/flip');
   api.addFile('interface/actions/rotate');
   api.addFile('interface/actions/delete');
+  api.addFile('interface/actions/about');
 });

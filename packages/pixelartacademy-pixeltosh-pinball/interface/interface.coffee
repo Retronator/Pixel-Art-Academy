@@ -12,7 +12,9 @@ class Pinball.Interface
   @createMenuItems: ->
     [
       caption: ''
-      items: []
+      items: [
+        Pinball.Interface.Actions.About.id()
+      ]
     ,
       caption: 'File'
       items: [

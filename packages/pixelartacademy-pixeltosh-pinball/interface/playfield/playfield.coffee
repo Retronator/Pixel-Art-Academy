@@ -138,10 +138,10 @@ class Pinball.Interface.Playfield extends LOI.View
         cameraManager.startRotateCamera event.coordinates
 
   onPointerMove: (event) ->
-    @pinball.mouse().onMouseMove event
+    @pinball.mouse()?.onMouseMove event
 
   onPointerLeavePlayfield: (event) ->
-    @pinball.mouse().onMouseLeave event
+    @pinball.mouse()?.onMouseLeave event
 
   onPointerWheel: (event) ->
     @pinball.cameraManager().changeDistanceByFactor 1.005 ** event.originalEvent.deltaY
