@@ -55,6 +55,12 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
   
   inGameMusicOutput: ->
     LOI.settings.audio.inGameMusicOutput.value()
+
+  inLocationMusicVolumeDecrease: ->
+    1 - LOI.settings.audio.inLocationMusicVolume.value()
+    
+  inLocationMusicBandpassQ: ->
+    LOI.settings.audio.inLocationMusicBandpassQ.value()
   
   extrasVisible: ->
     # Extras are visible only on the landing page.
@@ -70,8 +76,20 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
       'click .main-menu .progress': @onClickMainMenuProgress
       'click .main-menu .extras': @onClickMainMenuExtras
       'click .main-menu .quit-to-menu': @onClickMainMenuQuitToMenu
+
+      # Display
       'click .display .fullscreen': @onClickDisplayFullscreen
+      
+      # Audio
       'click .audio .in-game-music': @onClickAudioInGameMusic
+      'click .audio .music-effects-settings': @onClickAudioMusicEffectsSettings
+      
+      # Music effects settings
+      'input .music-effects-settings .in-location-music-volume-decrease': @onInputMusicEffectsSettingsInLocationMusicVolumeDecrease
+      'input .music-effects-settings .in-location-music-bandpass-q': @onInputMusicEffectsSettingsInLocationMusicBandpassQ
+      'click .music-effects-settings .back-to-audio': @onClickMusicEffectsSettingsBackToAudio
+      
+      # Extras
       'click .extras .courses': @onClickExtrasCourses
       'click .extras .credits': @onClickExtrasCredits
       'click .extras .back-to-menu': @onClickExtrasBackToMenu
@@ -178,6 +196,20 @@ class LM.Menu.Items extends LOI.Components.Menu.Items
         value = LOI.Settings.Audio.InGameMusicOutput.Dynamic
       
     LOI.settings.audio.inGameMusicOutput.value value
+  
+  onClickAudioMusicEffectsSettings: (event) ->
+    @currentScreen @constructor.Screens.MusicEffectsSettings
+    
+  onInputMusicEffectsSettingsInLocationMusicVolumeDecrease: (event) ->
+    value = parseFloat $(event.target).val()
+    LOI.settings.audio.inLocationMusicVolume.value 1 - value
+    
+  onInputMusicEffectsSettingsInLocationMusicBandpassQ: (event) ->
+    value = parseFloat $(event.target).val()
+    LOI.settings.audio.inLocationMusicBandpassQ.value value
+  
+  onClickMusicEffectsSettingsBackToAudio: (event) ->
+    @currentScreen @constructor.Screens.Audio
 
   onClickSettingsBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu

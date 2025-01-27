@@ -14,6 +14,7 @@ class LOI.Components.Menu.Items extends LOI.Component
     Settings: 'Settings'
     Display: 'Display'
     Audio: 'Audio'
+    MusicEffectsSettings: 'MusicEffectsSettings'
     Permissions: 'Permissions'
     Extras: 'Extras'
     
@@ -78,6 +79,12 @@ class LOI.Components.Menu.Items extends LOI.Component
     
   inAudio: ->
     @currentScreen() is @constructor.Screens.Audio
+    
+  inMusicEffectsSettings: ->
+    @currentScreen() is @constructor.Screens.MusicEffectsSettings
+  
+  inAudioSubmenus: ->
+    @inAudio() or @inMusicEffectsSettings()
   
   inPermissions: ->
     @currentScreen() is @constructor.Screens.Permissions

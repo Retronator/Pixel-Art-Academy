@@ -19,5 +19,9 @@ class LM.Adventure extends LM.Adventure
       super arguments...
   
   endRun: ->
-    # Override to not perform any database flush behaviors since we don't
-    # know if the OS will give us the time to perform the saves in time.
+    if AB.ApplicationEnvironment.isElectron
+      # Override to not perform any database flush behaviors since we don't
+      # know if the OS will give us the time to perform the saves in time.
+      return
+    
+    super arguments...

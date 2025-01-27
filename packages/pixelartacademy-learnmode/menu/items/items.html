@@ -72,7 +72,20 @@
           {{#if $is inGameMusicOutput 'InLocation'}}radio{{/if}}
           {{#if $is inGameMusicOutput 'Direct'}}off{{/if}}
         </span></li>
+        <li class="menu-item"><span class="music-effects-settings actionable">Music effects settings</span></li>
         <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
+      </ul>
+    {{/if}}
+
+    {{#if inMusicEffectsSettings}}
+      <ul class="music-effects-settings menu">
+        <li class="menu-item">
+          Radio effect volume decrease: <input class="in-location-music-volume-decrease" type="range" min="0" max="0.7" step="0.05" value="{{inLocationMusicVolumeDecrease}}"/>
+        </li>
+        <li class="menu-item">
+          Radio effect frequency decrease: <input class="in-location-music-bandpass-q" type="range" min="0" max="0.5" step="0.05" value="{{inLocationMusicBandpassQ}}"/>
+        </li>
+        <li class="menu-item"><span class="back-to-audio actionable">Back</span></li>
       </ul>
     {{/if}}
 
