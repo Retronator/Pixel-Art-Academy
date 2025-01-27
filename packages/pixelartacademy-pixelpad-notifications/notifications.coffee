@@ -222,14 +222,15 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     @retroClasses retroClasses unless EJSON.equals retroClasses, newRetroClasses
   
   displayNewNotification: ->
+    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
+    return if toDo.animating()
+    
     notificationWasDisplayed = @displayedNotification()
     
     # Close existing notifications.
     @closeDisplayedNotification()
     
     # Close to-do if active.
-    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
-    
     if toDo.isActive()
       toDo.close()
       await toDo.waitUntilInactive()
@@ -266,6 +267,12 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
   retroMainClass: ->
     # Main class changes to lifted when a task's details are displayed.
     'lifted' if @_tasksDisplayed()
+  
+  retroCanTalkClass: ->
+    toDo = @os.getSystem PAA.PixelPad.Systems.ToDo
+    return unless toDo.isRendered()
+    
+    'can-talk' if not toDo.animating()
   
   retroHeadClass: ->
     return requestedHeadClass if requestedHeadClass = @_getRetroClass 'head'
