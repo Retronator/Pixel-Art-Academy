@@ -59,6 +59,9 @@ class Pinball.GameManager
   play: ->
     @startMode @constructor.Modes.Play
     
+    # Reset any changes to the cursor from edit/test mode.
+    @pinball.os.cursor().setClass null
+    
   startMode: (mode) ->
     return if @mode() is mode
     @mode mode
