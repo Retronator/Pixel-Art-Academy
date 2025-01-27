@@ -17,6 +17,53 @@ class PAA.PixelPad.Apps.Music.Player extends LOI.Component
   constructor: (@music) ->
     super arguments...
     
+  onCreated: ->
+    super arguments...
+    
+    # If the play button is pressed, make sure music can be heard.
+    @autorun (computation) =>
+      return unless PAA.PixelPad.Systems.Music.state 'playing'
+      return if LOI.adventure.menu.visible()
+      
+      if LOI.settings.audio.enabled.value() is LOI.Settings.Audio.Enabled.Off
+        message = "Audio is disabled. Would you like to enable it to play music?"
+      
+      else if LOI.settings.audio.mainVolume.value() is 0
+        message = "The main volume is set to zero. Would you like to increase it to play music?"
+        
+      else if LOI.settings.audio.musicVolume.value() is 0
+        message = "The music volume is set to zero. Would you like to increase it to play music?"
+        
+      else
+        return
+      
+      dialog = new LOI.Components.Dialog
+        message: message
+        buttons: [
+          text: "Yes"
+          value: true
+        ,
+          text: "No"
+        ]
+    
+      LOI.adventure.showActivatableModalDialog
+        dialog: dialog
+        callback: => @_enableAudioOrStopPlay dialog.result
+        
+  _enableAudioOrStopPlay: (enable) ->
+    if enable
+      if LOI.settings.audio.enabled.value() is LOI.Settings.Audio.Enabled.Off
+        LOI.settings.audio.enabled.value LOI.Settings.Audio.Enabled.On
+      
+      if LOI.settings.audio.mainVolume.value() is 0
+        LOI.settings.audio.mainVolume.value 1
+      
+      if LOI.settings.audio.musicVolume.value() is 0
+        LOI.settings.audio.musicVolume.value 1
+        
+    else
+      @music.system().stop()
+    
   trayOpenClass: ->
     'open' unless @music.loadedTape()
     
