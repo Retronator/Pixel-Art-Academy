@@ -48,6 +48,7 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/pixelarttools/colors..');
   api.addFile('drawing/pixelarttools/colors/colorswatches');
+  api.addFile('drawing/pixelarttools/colors/colorpickingwithundo');
   api.addFile('drawing/pixelarttools/colors/colorpicking');
   api.addFile('drawing/pixelarttools/colors/quickcolorpicking');
   api.addServerFile('drawing/pixelarttools/colors/palette-server');
