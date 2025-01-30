@@ -37,6 +37,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelarttools..');
 
   api.addFile('drawing/pixelarttools/basics..');
+  api.addFile('drawing/pixelarttools/basics/backbuttonshortcutinstruction');
   api.addFile('drawing/pixelarttools/basics/pencil');
   api.addFile('drawing/pixelarttools/basics/eraser');
   api.addFile('drawing/pixelarttools/basics/colorfill');

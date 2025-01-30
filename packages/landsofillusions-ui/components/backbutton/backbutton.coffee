@@ -49,6 +49,8 @@ class LOI.Components.BackButton extends AM.Component
     # back button, so we need to selectively add/remove our event handler.
     @_onKeyDownHandler = (event) =>
       return unless event.which is AC.Keys.escape
+      
+      PixelArtAcademy?.Tutorials.Drawing.PixelArtTools.Basics.state 'backButtonShortcutUsed', true
   
       @onClose event
   
