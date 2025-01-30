@@ -119,12 +119,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     position = super arguments...
     
     # Don't allow the reference to go off screen. We ensure enough of it is left
-    # on screen (20%) that it doesn't get covered by items like the calculator.
+    # on screen (60px) that it doesn't get covered by items like the calculator.
     return hiddenPosition unless displaySize = @displaySize()
     editorSize = @references.options.editorSize()
     
-    maxX = editorSize.width / 2 + displaySize.width * 0.3
-    maxY = editorSize.height / 2 + displaySize.height * 0.3
+    maxX = editorSize.width / 2 + displaySize.width / 2 - 60
+    maxY = editorSize.height / 2 + displaySize.height / 2 - 60
     
     x: _.clamp position.x, -maxX, maxX
     y: _.clamp position.y, -maxY, maxY
