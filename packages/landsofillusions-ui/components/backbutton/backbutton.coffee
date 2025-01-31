@@ -53,13 +53,28 @@ class LOI.Components.BackButton extends AM.Component
       PixelArtAcademy?.Tutorials.Drawing.PixelArtTools.Basics.state 'backButtonShortcutUsed', true
   
       @onClose event
+    
+    @_onContextMenu = (event) =>
+      return unless event.button is AC.Buttons.secondary
+      
+      @onClose event
+      
+      event.preventDefault()
   
     $(document).on 'keydown.landsofillusions-components-backbutton', null, @_onKeyDownHandler
+    
+    @autorun (computation) =>
+      if LOI.settings.controls.rightClick.value() is LOI.Settings.Controls.RightClick.BackButton
+        $(document).on 'contextmenu.landsofillusions-components-backbutton', null, @_onContextMenu
+        
+      else
+        $(document).off 'contextmenu.landsofillusions-components-backbutton', null, @_onContextMenu
 
   onDestroyed: ->
     super arguments...
   
     $(document).off 'keydown.landsofillusions-components-backbutton', null, @_onKeyDownHandler
+    $(document).off 'contextmenu.landsofillusions-components-backbutton', null, @_onContextMenu
 
   closingClass: ->
     'closing' if @closing()

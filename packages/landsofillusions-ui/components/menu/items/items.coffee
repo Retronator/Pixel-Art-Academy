@@ -15,6 +15,7 @@ class LOI.Components.Menu.Items extends LOI.Component
     Display: 'Display'
     Audio: 'Audio'
     MusicEffectsSettings: 'MusicEffectsSettings'
+    Controls: 'Controls'
     Permissions: 'Permissions'
     Extras: 'Extras'
     
@@ -86,6 +87,9 @@ class LOI.Components.Menu.Items extends LOI.Component
   inAudioSubmenus: ->
     @inAudio() or @inMusicEffectsSettings()
   
+  inControls: ->
+    @currentScreen() is @constructor.Screens.Controls
+
   inPermissions: ->
     @currentScreen() is @constructor.Screens.Permissions
     
@@ -131,6 +135,9 @@ class LOI.Components.Menu.Items extends LOI.Component
   canIncreaseGraphicsScale: ->
     @graphicsScale() < LOI.adventure.interface.highestAvailableScale()
 
+  rightClick: ->
+    LOI.settings.controls.rightClick.value()
+    
   permissionsPersistSettings: ->
     @_permissionsValue LOI.settings.persistSettings
 
@@ -165,6 +172,7 @@ class LOI.Components.Menu.Items extends LOI.Component
       # Settings
       'click .settings .display': @onClickSettingsDisplay
       'click .settings .audio': @onClickSettingsAudio
+      'click .settings .controls': @onClickSettingsControls
       'click .settings .permissions': @onClickSettingsPermissions
       'click .settings .back-to-menu': @onClickSettingsBackToMenu
       
@@ -181,6 +189,9 @@ class LOI.Components.Menu.Items extends LOI.Component
       'input .audio .sound-volume': @onInputAudioSoundVolume
       'input .audio .ambient-volume': @onInputAudioAmbientVolume
       'input .audio .music-volume': @onInputAudioMusicVolume
+      
+      # Controls
+      'click .controls .right-click': @onClickControlsRightClick
 
       # Permissions
       'click .permissions .persist-settings': @onClickPermissionsPersistSettings
@@ -278,6 +289,9 @@ class LOI.Components.Menu.Items extends LOI.Component
     
   onClickSettingsAudio: (event) ->
     @currentScreen @constructor.Screens.Audio
+  
+  onClickSettingsControls: (event) ->
+    @currentScreen @constructor.Screens.Controls
 
   onClickAudioEnabled: (event) ->
     switch LOI.settings.audio.enabled.value()
@@ -341,6 +355,19 @@ class LOI.Components.Menu.Items extends LOI.Component
     smoothShadingValue = LOI.settings.graphics.smoothShading.value
     smoothShadingValue not smoothShadingValue()
 
+  onClickControlsRightClick: (event) ->
+    switch LOI.settings.controls.rightClick.value()
+      when LOI.Settings.Controls.RightClick.None
+        value = LOI.Settings.Controls.RightClick.Eraser
+        
+      when LOI.Settings.Controls.RightClick.Eraser
+        value = LOI.Settings.Controls.RightClick.BackButton
+      
+      when LOI.Settings.Controls.RightClick.BackButton
+        value = LOI.Settings.Controls.RightClick.None
+
+    LOI.settings.controls.rightClick.value value
+    
   onClickSettingsPermissions: (event) ->
     @currentScreen @constructor.Screens.Permissions
 

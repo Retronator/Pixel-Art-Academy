@@ -23,6 +23,12 @@ class LOI.Settings
     inLocationMusicVolume: new AEc.Variable "#{@id()}.audio.inLocationMusicVolume", AEc.ValueTypes.Number
     inLocationMusicBandpassQ: new AEc.Variable "#{@id()}.audio.inLocationMusicBandpassQ", AEc.ValueTypes.Number
     
+  @Controls =
+    RightClick:
+      None: 'None'
+      Eraser: 'Eraser'
+      BackButton: 'BackButton'
+    
   constructor: ->
     @persistSettings = new @constructor.ConsentField
       name: 'persistSettings'
@@ -92,6 +98,9 @@ class LOI.Settings
       inLocationMusicVolume: new @constructor.Field 0.3, 'audio.inLocationMusicVolume', @persistSettings
       inLocationMusicBandpassQ: new @constructor.Field 0.5, 'audio.inLocationMusicBandpassQ', @persistSettings
       
+    @controls =
+      rightClick: new @constructor.Field @constructor.Controls.RightClick.Eraser, 'controls.rightClick', @persistSettings
+
     # Update audio variables.
     Tracker.autorun =>
       for audioTypeName in ['main', 'sound', 'ambient', 'music', 'inLocationMusic']
