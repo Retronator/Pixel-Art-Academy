@@ -72,6 +72,7 @@ Package.onUse(function(api) {
   api.addStyledFile('interface..');
   api.addComponent('interface/playfield..');
   api.addFile('interface/playfield/playfield-polygondebug');
+  api.addComponent('interface/playfield/grid..');
   api.addComponent('interface/backbox..');
   api.addComponent('interface/instructions..');
   api.addComponent('interface/parts..');
@@ -86,6 +87,7 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/toggledebugphysics');
   api.addFile('interface/actions/toggleslowmotion');
   api.addFile('interface/actions/toggledisplaywalls');
+  api.addFile('interface/actions/togglegrid');
   api.addFile('interface/actions/modes');
   api.addFile('interface/actions/reset');
   api.addFile('interface/actions/flip');

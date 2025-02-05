@@ -49,6 +49,10 @@ class Pinball.GameManager
   destroy: ->
     @liveBalls.stop()
     @_ballsAutorun.stop()
+    
+  inEdit: -> @mode() is @constructor.Modes.Edit
+  inTest: -> @mode() is @constructor.Modes.Test
+  inPlay: -> @mode() is @constructor.Modes.Play
 
   edit: ->
     return unless @startMode @constructor.Modes.Edit

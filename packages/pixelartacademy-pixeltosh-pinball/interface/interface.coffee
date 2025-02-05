@@ -37,6 +37,7 @@ class Pinball.Interface
     ,
       caption: 'View'
       items: [
+        Pinball.Interface.Actions.ToggleGrid.id()
         Pinball.Interface.Actions.ToggleDisplayWalls.id()
         null
         Pinball.Interface.Actions.OrthographicCamera.id()
@@ -61,6 +62,7 @@ class Pinball.Interface
     "#{Pinball.Interface.Actions.ToggleDebugPhysics.id()}": key: AC.Keys.d
     "#{Pinball.Interface.Actions.ToggleSlowMotion.id()}": key: AC.Keys.s
     "#{Pinball.Interface.Actions.ToggleDisplayWalls.id()}": shift: true, key: AC.Keys.w
+    "#{Pinball.Interface.Actions.ToggleGrid.id()}": shift: true, key: AC.Keys.g
     
   @createInterfaceData: ->
     type: PAA.Pixeltosh.Program.View.id()
