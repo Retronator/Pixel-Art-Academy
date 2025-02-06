@@ -31,6 +31,21 @@ class LOI.Components.Menu.Items extends LOI.Component
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
 
+  onRendered: ->
+    super arguments...
+    
+    @autorun (computation) =>
+      if LOI.settings.controls.rightClick.value() is LOI.Settings.Controls.RightClick.BackButton
+        $(document).on 'contextmenu.landsofillusions-components-menu-items', null, (event) => @onContextMenu event
+      
+      else
+        $(document).off '.landsofillusions-components-menu-items'
+  
+  onDestroyed: ->
+    super arguments...
+    
+    $(document).off '.landsofillusions-components-menu-items'
+  
   aboutVisible: ->
     # About is visible on the landing page.
     @options.landingPage
@@ -199,6 +214,38 @@ class LOI.Components.Menu.Items extends LOI.Component
       'click .permissions .persist-command-history': @onClickPermissionsPersistCommandHistory
       'click .permissions .persist-login': @onClickPermissionsPersistLogin
   
+  onContextMenu: (event) ->
+    event.preventDefault()
+    
+    switch @currentScreen()
+      when @constructor.Screens.MainMenu
+        if @options.landingPage
+          @onClickMainMenuQuit()
+          
+        else
+          @onClickMainMenuContinue()
+        
+      when @constructor.Screens.Settings
+        @onClickSettingsBackToMenu()
+        
+      when @constructor.Screens.Display
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.Audio
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.MusicEffectsSettings
+        @onClickMusicEffectsSettingsBackToAudio?()
+        
+      when @constructor.Screens.Controls
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.Permissions
+        @onClickBackToSettings()
+        
+      when @constructor.Screens.Extras
+        @onClickExtrasBackToMenu?()
+  
   onMouseEnterActionable: (event) ->
     @audio.hover() unless @_justClicked
     
@@ -211,6 +258,9 @@ class LOI.Components.Menu.Items extends LOI.Component
       @_justClicked = false
     ,
       100
+  
+  onClickBackToSettings: (event) ->
+    @currentScreen @constructor.Screens.Settings
 
   onClickMainMenuContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -418,6 +468,3 @@ class LOI.Components.Menu.Items extends LOI.Component
 
     else
       consentField.showDialog()
-
-  onClickBackToSettings: (event) ->
-    @currentScreen @constructor.Screens.Settings

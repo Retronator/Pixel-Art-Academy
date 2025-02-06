@@ -55,8 +55,6 @@ class LOI.Components.BackButton extends AM.Component
       @onClose event
     
     @_onContextMenu = (event) =>
-      return unless event.button is AC.Buttons.secondary
-      
       @onClose event
       
       event.preventDefault()
