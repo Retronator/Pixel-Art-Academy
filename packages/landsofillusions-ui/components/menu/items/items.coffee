@@ -215,15 +215,15 @@ class LOI.Components.Menu.Items extends LOI.Component
       'click .permissions .persist-login': @onClickPermissionsPersistLogin
   
   onContextMenu: (event) ->
+    # We want to handle right click only if there are no other modal dialogs present.
+    topModalDialog = LOI.adventure.topModalDialog()
+    return if topModalDialog and topModalDialog not instanceof LOI.Components.Menu
+    
     event.preventDefault()
     
     switch @currentScreen()
       when @constructor.Screens.MainMenu
-        if @options.landingPage
-          @onClickMainMenuQuit()
-          
-        else
-          @onClickMainMenuContinue()
+        @onClickMainMenuContinue() unless @options.landingPage
         
       when @constructor.Screens.Settings
         @onClickSettingsBackToMenu()
