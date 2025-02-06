@@ -35,14 +35,16 @@ class PAA.Pixeltosh.Programs.Finder extends PAA.Pixeltosh.Program
     
   menuItems: -> [
     caption: ''
-    items: []
+    items: [
+      PAA.Pixeltosh.Programs.Finder.Actions.About.id()
+    ]
   ,
     caption: 'File'
     items: [
-      PAA.Pixeltosh.OS.Interface.Actions.Open.id()
+      PAA.Pixeltosh.Programs.Finder.Actions.Open.id()
       null
-      PAA.Pixeltosh.OS.Interface.Actions.Close.id()
-      PAA.Pixeltosh.OS.Interface.Actions.CloseAll.id()
+      PAA.Pixeltosh.Programs.Finder.Actions.Close.id()
+      PAA.Pixeltosh.Programs.Finder.Actions.CloseAll.id()
     ]
   ]
   

@@ -3,6 +3,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.PixelArtTools.Basics extends PAA.Tutorials.Drawing.PixelArtTools
+  # backButtonShortcutUsed: boolean whether the player has used the shortcut for using the back button
   @id: -> 'PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Basics'
 
   @fullName: -> "Pixel art tools: basics"

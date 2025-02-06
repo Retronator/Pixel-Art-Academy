@@ -1,24 +1,39 @@
 <template name="LandsOfIllusions.Components.LoadGame">
   {{#unless deactivated}}
-    <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem">
+    <div class="landsofillusions-components-loadgame landsofillusions-components-savesystem {{editEnabledClass}} {{visibleClass}}">
       {{#if showBackButton}}
-        {{> LandsOfIllusions.Components.BackButton}}
+        {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
       {{/if}}
       {{#LandsOfIllusions.Components.Overlay}}
         {{#unless autoLoadedProfileId}}
-          <div class="title">Choose a save game</div>
+          <div class="title">
+            {{#if editEnabled}}
+              Choose a save game to edit
+            {{else}}
+              Choose a save game to load
+            {{/if}}
+          </div>
           <ul class="profiles" {{style profilesStyle}}>
             {{#each profiles}}
               <li class="profile {{profileActiveClass}}" data-id="{{_id}}">
                 <div class="floppy">
                   <div class="shutter"></div>
-                  <div class="label">{{profileName}}</div>
+                  <div class="label">{{#if editEnabled}}
+                      {{> LandsOfIllusions.Components.LoadGame.SaveGameName}}
+                    {{else}}{{profileName}}{{/if}}</div>
                 </div>
               </li>
             {{/each}}
           </ul>
           <div class="controls">
             <button class="previous-button action-button {{previousButtonVisibleClass}}" {{previousButtonDisabledAttribute}}>←</button>
+            {{#if editEnabled}}
+              {{#if editingProfileId}}
+                <button class="remove-button action-button">Remove</button>
+              {{/if}}
+            {{else}}
+              <button class="edit-button action-button {{editButtonVisibleClass}}">Edit</button>
+            {{/if}}
             <button class="next-button action-button {{nextButtonVisibleClass}}" {{nextButtonDisabledAttribute}}>→</button>
           </div>
         {{/unless}}

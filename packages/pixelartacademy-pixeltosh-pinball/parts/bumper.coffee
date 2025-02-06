@@ -49,9 +49,10 @@ class Pinball.Parts.Bumper extends Pinball.Part
     @towerTriggerShape = new AE.LiveComputedField =>
       return if @data().active
       return unless shape = @avatar.shape()
+      return unless sceneManager = @pinball.sceneManager()
+      ballPositionY = sceneManager.ballPositionY()
       
       properties = @extraShapeProperties()
-      ballPositionY = @pinball.sceneManager().ballPositionY()
       
       Pinball.Part.Avatar.Extrusion.detectShape shape.pixelArtEvaluation,
         height: ballPositionY * 3
@@ -106,9 +107,10 @@ class Pinball.Parts.Bumper extends Pinball.Part
     @ringShape = new AE.LiveComputedField =>
       return unless @data().active
       return unless shape = @avatar.shape()
+      return unless sceneManager = @pinball.sceneManager()
+      ballPositionY = sceneManager.ballPositionY()
 
       properties = @extraShapeProperties()
-      ballPositionY = @pinball.sceneManager().ballPositionY()
       
       Pinball.Part.Avatar.TaperedExtrusion.detectShape shape.pixelArtEvaluation,
         height: ballPositionY

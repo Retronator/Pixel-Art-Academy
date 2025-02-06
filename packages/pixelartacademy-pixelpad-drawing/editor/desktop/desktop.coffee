@@ -183,6 +183,24 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
 
       Tracker.nonreactive => applicationAreaData.set "views.#{zoomViewIndex}.actions", actions
       
+    # Add or remove right-click for eraser.
+    @autorun (computation) =>
+      return unless @interface.isCreated()
+      rightClick = LOI.settings.controls.rightClick.value()
+      
+      Tracker.nonreactive =>
+        shortcut = {holdButton: AC.Buttons.secondary}
+        interfaceData = @localInterfaceData()
+        
+        if rightClick is LOI.Settings.Controls.RightClick.Eraser
+          interfaceData.shortcuts.default.mapping[LOI.Assets.SpriteEditor.Tools.HardEraser.id()].push shortcut
+          
+        else
+          _.remove interfaceData.shortcuts.default.mapping[LOI.Assets.SpriteEditor.Tools.HardEraser.id()], (existingShortcut) =>
+            EJSON.equals existingShortcut, shortcut
+        
+        @localInterfaceData interfaceData
+    
     # Listen for tool changes to play activation sounds.
     @_hadStoredTool = false
     
@@ -364,7 +382,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
         mapping:
           "#{LOI.Assets.SpriteEditor.Tools.HardEraser.id()}": [
             {key: AC.Keys.e}
-            {holdButton: AC.Buttons.secondary}
             {holdButton: AC.Buttons.fifth}
           ]
           

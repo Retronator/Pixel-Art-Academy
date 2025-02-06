@@ -1,6 +1,6 @@
 {
     "name": "Pixel Art Academy Learn Mode",
-    "version": "0.27.1",
+    "version": "0.28.0",
     "devTools": false,
     "devtron": true,
     "desktopHCP": true,
@@ -10,7 +10,8 @@
     "window": {
         "minWidth": 640,
         "minHeight": 510,
-        "fullscreen": true,
+        "fullscreen": false,
+        "fullscreenable": true,
         "autoHideMenuBar": true,
         "icon": "@assets/icons/learnmode-a.png",
         "backgroundColor": "#000000",
@@ -18,11 +19,7 @@
             "icon": "@assets/icons/learnmode-a.ico"
         }
     },
-    "windowDev": {
-        "fullscreen": false,
-        "fullscreenable": true
-    },
-    "uglify": true,
+    "uglify": false,
     "plugins": {},
     "devDependencies": {
         "electron": "21.4.4"
@@ -72,7 +69,7 @@
         },
         "darwinDarkModeSupport": true,
         "appCategoryType": "public.app-category.education",
-        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2023 Matej Jan, Retronator",
+        "appCopyright": "Copyleft (AGPL-3.0 & CC-SA) 2025 Matej Jan, Retronator",
         "overwrite": true,
         "electronVersion": "21.4.4",
         "platform": "darwin, win32, linux",

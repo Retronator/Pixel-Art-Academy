@@ -56,7 +56,7 @@ class LM.Interface extends LOI.Interface
     # Manually load Audio since audio manager wasn't available when calling super.
     @constructor.Audio.load LOI.adventure.audioManager
     
-    # Play ambient in play mode, but not in the menus, except in the audio section. We have an additional extended
+    # Play ambient in play mode, but not in the menus, except in the audio sections. We have an additional extended
     # silence during quitting when the game transitions from the play to the main menu location and audio would still
     # be played as the adventure menu fades out before location switch.
     @quitting = new ReactiveField false
@@ -64,13 +64,13 @@ class LM.Interface extends LOI.Interface
     @audioOffInMenus = new ComputedField =>
       if @audio.focusPoint.value() is @constructor.FocusPoints.Play
         if LOI.adventure.menu.visible()
-          not LOI.adventure.menu.items.inAudio()
+          not LOI.adventure.menu.items.inAudioSubmenus()
           
         else
           @quitting()
       
       else
-        not LOI.adventure.currentLocation()?.menuItems?.inAudio()
+        not LOI.adventure.currentLocation()?.menuItems?.inAudioSubmenus()
     
     @autorun (computation) =>
       @audio.playAmbient not @audioOffInMenus()
@@ -118,34 +118,39 @@ class LM.Interface extends LOI.Interface
       @studio.setFocus @constructor.Studio.FocusPoints.MainMenu
       @audio.focusPoint @constructor.FocusPoints.MainMenu
 
-  goToPlay: ->
+  goToPlay: (loadProfileId) ->
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeOut()
 
     @audio.focusPoint @constructor.FocusPoints.Play
     
     Meteor.setTimeout =>
+      # Move the focus point.
       await @studio.moveFocus
         focusPoint: @constructor.Studio.FocusPoints.Play
-        speedFactor: 1.5
-
-      # Show the save dialog if we're entering play without syncing.
-      unless LOI.adventure.profile().hasSyncing()
-        await LOI.adventure.menu.saveGame.show()
+        speedFactor: if loadProfileId then 2.5 else 1.5
         
-        # If the player decided to cancel, send them back to the menu.
-        unless LOI.adventure.profile().hasSyncing()
-          LOI.adventure.quitGame callback: =>
-            LOI.adventure.interface.goToMainMenu()
+      if loadProfileId
+        # Start loading the game after the animation has finished to prevent lag.
+        await LOI.adventure.menu.loadGame.show loadProfileId, false
+
+      else
+        # We are starting a new game, show the save dialog.
+        await LOI.adventure.menu.saveGame.show()
       
-            # Notify that we've handled the quitting sequence.
-            true
-            
-          return
+      # If the player decided to cancel or the load didn't succeed, send them back to the menu.
+      unless LOI.adventure.profile().hasSyncing()
+        LOI.adventure.quitGame callback: =>
+          LOI.adventure.interface.goToMainMenu()
+    
+          # Notify that we've handled the quitting sequence.
+          true
           
-        # We have a profile loaded with syncing, so we can safely continue to play.
-        LOI.adventure.goToLocation LM.Locations.Play
-        @_openPixelPad()
+        return
+          
+      # We have a profile loaded with syncing, so we can safely continue to play.
+      LOI.adventure.goToLocation LM.Locations.Play unless loadProfileId
+      @_openPixelPad()
     ,
       750
     
@@ -164,12 +169,15 @@ class LM.Interface extends LOI.Interface
     
     await @studio.moveFocus
       focusPoint: @constructor.Studio.FocusPoints.MainMenu
-      speedFactor: 1.5
+      speedFactor: 2
     
     mainMenu = LOI.adventure.currentLocation()
     mainMenu.fadeIn()
 
     @waiting false
+  
+  startWaiting: ->
+    @waiting true
     
   focusArtworks: (artworks) ->
     # Start display.

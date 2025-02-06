@@ -79,6 +79,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @debugPhysics = @state.field 'debugPhysics', default: false
     @slowMotion = @state.field 'slowMotion', default: false
     @displayWalls = @state.field 'displayWalls', default: true
+    @showGrid = @state.field 'showGrid', default: false
   
     @sceneImage = new ReactiveField null
     
@@ -183,7 +184,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     # Pressing escape returns to edit mode if edit is unlocked.
     gameManager = @gameManager()
 
-    if gameManager.mode() isnt @constructor.GameManager.Modes.Edit and @editModeUnlocked()
+    if not gameManager.inEdit() and @editModeUnlocked()
       gameManager.edit()
       
       # Inform that we've handled the back button.

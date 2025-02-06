@@ -3,8 +3,8 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Pixeltosh.OS.Interface.Actions.Open extends PAA.Pixeltosh.OS.Interface.Actions.Action
-  @id: -> 'PixelArtAcademy.Pixeltosh.OS.Interface.Actions.Open'
+class PAA.Pixeltosh.Programs.Finder.Actions.Open extends PAA.Pixeltosh.OS.Interface.Actions.Action
+  @id: -> 'PixelArtAcademy.Pixeltosh.Programs.Finder.Actions.Open'
   @displayName: -> "Open"
 
   @initialize()

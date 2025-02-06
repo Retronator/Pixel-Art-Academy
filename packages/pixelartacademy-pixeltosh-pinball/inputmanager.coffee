@@ -40,7 +40,7 @@ class Pinball.InputManager
     return true if @pinball.os.interface.inputFocused()
     
     # Outside of edit mode, no ignoring is needed.
-    return unless @pinball.gameManager()?.mode() is Pinball.GameManager.Modes.Edit
+    return unless @pinball.gameManager()?.inEdit()
     
     # Ignore keys while editing.
     return true if @pinball.editorManager().editing()

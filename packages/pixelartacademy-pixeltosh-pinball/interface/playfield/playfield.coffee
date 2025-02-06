@@ -38,8 +38,7 @@ class Pinball.Interface.Playfield extends LOI.View
     
     @$('.pixelartacademy-pixeltosh-programs-pinball-interface-playfield').append @pinball.rendererManager().renderer.domElement
 
-  showOverlay: ->
-    @pinball.gameManager()?.mode() isnt Pinball.GameManager.Modes.Play
+  showOverlay: -> not @pinball.gameManager()?.inPlay()
 
   selectionVisibleClass: ->
     return unless selectedPart = @selectedPart()
@@ -111,7 +110,7 @@ class Pinball.Interface.Playfield extends LOI.View
     switch cameraManager.displayType()
       when Pinball.CameraManager.DisplayTypes.Orthographic
         # Prevent selection in play mode.
-        return if @pinball.gameManager()?.mode() is Pinball.GameManager.Modes.Play
+        return if @pinball.gameManager()?.inPlay()
 
         editorManager = @pinball.editorManager()
         editorManager.select()
@@ -138,10 +137,10 @@ class Pinball.Interface.Playfield extends LOI.View
         cameraManager.startRotateCamera event.coordinates
 
   onPointerMove: (event) ->
-    @pinball.mouse().onMouseMove event
+    @pinball.mouse()?.onMouseMove event
 
   onPointerLeavePlayfield: (event) ->
-    @pinball.mouse().onMouseLeave event
+    @pinball.mouse()?.onMouseLeave event
 
   onPointerWheel: (event) ->
     @pinball.cameraManager().changeDistanceByFactor 1.005 ** event.originalEvent.deltaY

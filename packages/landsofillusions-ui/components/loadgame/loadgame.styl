@@ -1,6 +1,56 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .landsofillusions-components-loadgame
+  visibility hidden
+
+  &.visible
+    visibility visible
+
+  &.edit-enabled
+    .safe-area
+      .profiles
+        .profile
+          border 1rem solid atariGray(1)
+          width 78rem
+          margin 0 1rem
+
+          &:hover:not(.active)
+            border-color atariGray(2)
+
+          &.active
+            border-color atariAqua(3)
+
+      .controls
+        .action-button
+          &.remove-button
+            color atariRed(0)
+
+            &::before
+              background atariRed(3)
+              border-bottom-color atariRed(1)
+
+            &:disabled
+              color atariRed(1)
+
+            &:hover::before
+              background atariRed(4)
+
+  &:not(.edit-enabled)
+    .safe-area
+      .profiles
+        .profile
+          &:hover:not(.active)
+            .floppy
+              top -1rem
+
+              .shutter
+                left 7rem
+
+          &.active
+            .floppy
+              top -300rem
+              transition top 1s
+
   .safe-area
     .profiles
       display flex
@@ -22,18 +72,6 @@
         cursor pointer
         justify-content center
         align-items center
-
-        &:hover:not(.active)
-          .floppy
-            top -1rem
-
-            .shutter
-              left 7rem
-
-        &.active
-          .floppy
-            top -300rem
-            transition top 1s
 
     .controls
       text-align center

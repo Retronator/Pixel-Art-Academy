@@ -20,6 +20,14 @@ class LOI.Settings
     soundVolume: new AEc.Variable "#{@id()}.audio.soundVolume", AEc.ValueTypes.Number
     ambientVolume: new AEc.Variable "#{@id()}.audio.ambientVolume", AEc.ValueTypes.Number
     musicVolume: new AEc.Variable "#{@id()}.audio.musicVolume", AEc.ValueTypes.Number
+    inLocationMusicVolume: new AEc.Variable "#{@id()}.audio.inLocationMusicVolume", AEc.ValueTypes.Number
+    inLocationMusicBandpassQ: new AEc.Variable "#{@id()}.audio.inLocationMusicBandpassQ", AEc.ValueTypes.Number
+    
+  @Controls =
+    RightClick:
+      None: 'None'
+      Eraser: 'Eraser'
+      BackButton: 'BackButton'
     
   constructor: ->
     @persistSettings = new @constructor.ConsentField
@@ -69,6 +77,7 @@ class LOI.Settings
       @persistEditorsInterface.allow() unless @persistEditorsInterface.decided()
 
     @graphics =
+      preferFullscreen: new @constructor.Field true, 'graphics.preferFullscreen', @persistSettings
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings
       maximumScale: new @constructor.Field null, 'graphics.maximumScale', @persistSettings
       anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings
@@ -86,13 +95,21 @@ class LOI.Settings
       soundVolume: new @constructor.Field 1, 'audio.soundVolume', @persistSettings
       ambientVolume: new @constructor.Field 1, 'audio.ambientVolume', @persistSettings
       musicVolume: new @constructor.Field 1, 'audio.musicVolume', @persistSettings
+      inLocationMusicVolume: new @constructor.Field 0.3, 'audio.inLocationMusicVolume', @persistSettings
+      inLocationMusicBandpassQ: new @constructor.Field 0.5, 'audio.inLocationMusicBandpassQ', @persistSettings
       
+    @controls =
+      rightClick: new @constructor.Field @constructor.Controls.RightClick.Eraser, 'controls.rightClick', @persistSettings
+
     # Update audio variables.
     Tracker.autorun =>
-      for audioTypeName in ['main', 'sound', 'ambient', 'music']
+      for audioTypeName in ['main', 'sound', 'ambient', 'music', 'inLocationMusic']
         variableName = "#{audioTypeName}Volume"
         @constructor.Audio[variableName] @audio[variableName].value()
-
+      
+      for variableName in ['inLocationMusicBandpassQ']
+        @constructor.Audio[variableName] @audio[variableName].value()
+        
   toObject: ->
     values = {}
 

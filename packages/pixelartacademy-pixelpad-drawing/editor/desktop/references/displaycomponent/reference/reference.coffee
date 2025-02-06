@@ -14,8 +14,13 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @trayWidth = 165
     @trayHeight = 190
     @trayHideActiveHeight = 10
-    @trayBorder = 8
+    # We need 13 pixels clearance so the reference doesn't appear when hovering over the tray.
+    @trayBorder = 13
 
+    # This represent the border around the reference as visible to the player.
+    @referenceBorder = 4
+
+    # We increase the resizing width beyond the visual border to make it easier to resize.
     @resizingBorder = 6
 
   onCreated: ->
@@ -51,8 +56,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       return unless displaySize = @displaySize scale
   
       # Make sure reference is within the tray.
-      halfWidth = displaySize.width / 2 + @resizingBorder
-      halfHeight = displaySize.height / 2 + @resizingBorder
+      halfWidth = displaySize.width / 2 + @referenceBorder
+      halfHeight = displaySize.height / 2 + @referenceBorder
 
       position = _.propertyValue(reference, 'position') or x: 0, y: 0
 
@@ -111,7 +116,18 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
   currentPosition: ->
     return hiddenPosition if hiddenPosition = @hiddenPosition()
   
-    super arguments...
+    position = super arguments...
+    
+    # Don't allow the reference to go off screen. We ensure enough of it is left
+    # on screen (60px) that it doesn't get covered by items like the calculator.
+    return hiddenPosition unless displaySize = @displaySize()
+    editorSize = @references.options.editorSize()
+    
+    maxX = editorSize.width / 2 + displaySize.width / 2 - 60
+    maxY = editorSize.height / 2 + displaySize.height / 2 - 60
+    
+    x: _.clamp position.x, -maxX, maxX
+    y: _.clamp position.y, -maxY, maxY
 
   imageOnlyClass: ->
     reference = @data()

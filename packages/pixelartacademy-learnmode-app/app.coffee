@@ -12,7 +12,7 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '0.27.1'
+  @version: -> '0.28.0'
   
   buildName: -> 'Learn Mode build'
 
@@ -47,6 +47,9 @@ class LM.App extends Artificial.Base.App
       # Listen for cheats.
       Desktop.on 'menu', 'unlockPixelArtFundamentals', (event) =>
         LM.PixelArtFundamentals.state 'unlocked', true
+        
+      # Start in prefered fullscreen mode.
+      Desktop.send 'window', 'setFullscreen', LOI.settings.graphics.preferFullscreen.value()
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer

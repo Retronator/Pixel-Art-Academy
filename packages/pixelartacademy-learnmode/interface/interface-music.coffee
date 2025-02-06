@@ -222,6 +222,11 @@ class LM.Interface extends LM.Interface
           
     # Control how to play the in-game music.
     @autorun (computation) =>
+      # In the music effects settings menu, always play the music in location.
+      if LOI.adventure.menu.visible() and LOI.adventure.menu.items.inMusicEffectsSettings()
+        @audio.inGameMusicInLocation true
+        return
+      
       pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
       inGameMusicMode = pixelPad?.os.currentApp()?.inGameMusicMode?()
       
