@@ -59,8 +59,19 @@ class LOI.Adventure extends AM.Component
       LOI.palette()
       not @loadingStoredProfile()
     ]
-
-    console.log "Adventure ready?", conditions if LOI.debug
+    
+    if LOI.debug
+      console.log "Adventure ready?", _.fromPairs _.zip [
+        'interfaceReady'
+        'currentTimelineId'
+        'currentContextReady'
+        'currentLocationReady'
+        'currentRegionReady'
+        'currentMemoryId'
+        'thingsReady'
+        'LOIPalette'
+        'notLoadingStoredProfile'
+      ], conditions
 
     _.every conditions
 
