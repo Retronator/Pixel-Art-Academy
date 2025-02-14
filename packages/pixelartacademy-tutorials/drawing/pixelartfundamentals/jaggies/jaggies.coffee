@@ -78,6 +78,45 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies
             value: "click here"
         ]
     ]
+    
+  
+  @pixelArtEvaluationClickHereCriterionWithRequiredMarkup: (criterionSelector) ->
+    markupStyle = InterfaceMarking.defaultStyle()
+    arrowBase = InterfaceMarking.arrowBase()
+    textBase = InterfaceMarking.textBase()
+    
+    [
+      interface:
+        selector: ".pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation #{criterionSelector}"
+        delay: 1
+        bounds:
+          x: 0
+          y: -35
+          width: 260
+          height: 55
+        markings: [
+          rectangle:
+            strokeStyle: markupStyle
+            x: 20
+            y: 2
+            width: 176.5
+            height: 13
+          line: _.extend {}, arrowBase,
+            points: [
+              x: 230, y: -9
+            ,
+              x: 199, y: 8, bezierControlPoints: [
+                x: 230, y: 3
+              ,
+                x: 209, y: 8
+              ]
+            ]
+          text: _.extend {}, textBase,
+            position:
+              x: 230, y: -11, origin: Markup.TextOriginPosition.BottomCenter
+            value: "click here"
+        ]
+    ]
 
   class @FixLineStep extends TutorialBitmap.PixelsStep
     constructor: ->

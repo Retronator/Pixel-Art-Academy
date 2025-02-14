@@ -163,7 +163,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
       camera.translateTo {x: 27, y: 12}, 1
       camera.scaleTo 4, 1
     
-    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereCriterionMarkup '.pixel-perfect-lines'
+    markup: -> PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.pixelArtEvaluationClickHereCriterionWithRequiredMarkup '.pixel-perfect-lines'
   
   class @TurnOff extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.TurnOff"
