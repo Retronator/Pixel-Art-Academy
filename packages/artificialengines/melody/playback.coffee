@@ -3,6 +3,7 @@ AEc = Artificial.Echo
 
 class AMe.Playback
   constructor: (@audioManager, @composition) ->
+    @_currentSectionDepenency = new Tracker.Dependency
   
   destroy: ->
     @stop()
@@ -18,6 +19,10 @@ class AMe.Playback
     @_context = @audioManager.context()
     @_output = new GainNode @_context
     
+  currentSection: ->
+    @_currentSectionDepenency.depend()
+    @_currentSection
+    
   connect: (node) ->
     sourceNode = @_getSourceNode()
     sourceNode.connect node
@@ -31,24 +36,38 @@ class AMe.Playback
     @_context = @audioManager.context()
 
     output = @_getSourceNode()
-    @_currentSectionDepenency = new Tracker.Dependency
     
-    @currentSection = @composition.initialSection
+    @_currentSection = @composition.initialSection
     @_currentSectionStartTime = @_context.currentTime
-    @_currentSectionHandle = @currentSection.schedule @_currentSectionStartTime, output
+    @_currentSectionHandle = @_currentSection.schedule @_currentSectionStartTime, output
     
     @_scheduleNextSection @_getAutomaticNextSection @composition.initialSection
+    
+    @_currentSectionDepenency.changed()
     
     # Listen for transitions.
     @_transitionsAutorun = Tracker.autorun =>
       return unless @ready()
-      @_currentSectionDepenency.depend()
+      
+      currentSection = @currentSection()
+      activeTransition = false
 
-      for transition in @currentSection.transitions
-        if transition.trigger?.value()
-          console.log "Triggered transition", transition if AMe.debug
-          @_scheduleNextSection transition.nextSection
+      for transition in currentSection.transitions
+        if transition.condition?()
+          console.log "Transition condition met", transition if AMe.debug
+          activeTransition = transition
           
+          # Note: It's important we don't break here and continue going over all the transitions since it's not the
+          # first that passes, but the last that passes to be the one we transition to. That way we can have more simple
+          # conditions at the start and more complex ones later that override the simple ones.
+          
+      if activeTransition
+        @_scheduleNextSection activeTransition.nextSection
+      
+      else
+        console.log "No transition condition was met, continuing to automatic next section." if AMe.debug
+        @_scheduleNextSection @_getAutomaticNextSection currentSection
+      
     # Start/stop section handling when the context is resumed/suspended.
     @_sectionRepetitionAutorun = Tracker.autorun =>
       if @audioManager.running()
@@ -68,21 +87,21 @@ class AMe.Playback
     @_transitionsAutorun?.stop()
     @_sectionRepetitionAutorun?.stop()
     
-    @currentSection = null
-    @nextSection = null
+    @_currentSection = null
+    @_nextSection = null
     
   _scheduleNextSection: (section) ->
-    return if section is @nextSection
+    return if section is @_nextSection
     
     console.log "Scheduling next section", section if AMe.debug
     
     @_nextSectionHandle?.stop()
     
-    @nextSection = section
-    @_nextSectionStartTime = @_currentSectionStartTime + @currentSection.duration
+    @_nextSection = section
+    @_nextSectionStartTime = @_currentSectionStartTime + @_currentSection.duration
     output = @_getSourceNode()
     
-    @_nextSectionHandle = @nextSection.schedule @_nextSectionStartTime, output
+    @_nextSectionHandle = @_nextSection.schedule @_nextSectionStartTime, output
   
     # Schedule handling of the next section for the case when no transitions get triggered.
     @_scheduleNextSectionHandling()
@@ -95,18 +114,19 @@ class AMe.Playback
     console.log "Attempting next section handling in #{timeTillRepetition}s." if AMe.debug
     
     @_scheduleNextSectionTimeout = Meteor.setTimeout =>
-      console.log "New section started", @_context.currentTime, @nextSection if AMe.debug
+      console.log "New section started", @_context.currentTime, @_nextSection if AMe.debug
   
-      @currentSection = @nextSection
+      previousSection = @_currentSection
+      @_currentSection = @_nextSection
       @_currentSectionStartTime = @_nextSectionStartTime
       @_currentSectionHandle = @_nextSectionHandle
       
-      @nextSection = null
+      @_nextSection = null
       @_nextSectionHandle = null
+
+      @_scheduleNextSection @_getAutomaticNextSection @_currentSection
       
-      @_scheduleNextSection @_getAutomaticNextSection @currentSection
-  
-      @_currentSectionDepenency.changed()
+      @_currentSectionDepenency.changed() unless previousSection is @_currentSection
     ,
       timeTillRepetition * 1000
     
@@ -114,7 +134,7 @@ class AMe.Playback
     # Repeat the section or follow any automatic transitions.
     nextSection = section
     
-    for transition in section.transitions when not transition.trigger
+    for transition in section.transitions when not transition.condition
       nextSection = transition.nextSection
       
     nextSection

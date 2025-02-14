@@ -66,4 +66,9 @@ Package.onUse(function(api) {
   api.addFile('notifications/conditionalnotificationsprovider')
   api.addFile('notifications/tasknotificationsprovider')
   api.addFile('notifications..')
+
+  api.addFile('compositions..')
+  api.addFile('compositions/composition')
+  api.addFile('compositions/pixelarttools')
+  api.addFile('compositions/elementsofart')
 });

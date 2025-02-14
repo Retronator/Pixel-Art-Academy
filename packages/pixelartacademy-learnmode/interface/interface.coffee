@@ -15,12 +15,6 @@ class LM.Interface extends LOI.Interface
       focusPoint: AEc.ValueTypes.String
       playAmbient: AEc.ValueTypes.Boolean
       inGameMusicInLocation: AEc.ValueTypes.Boolean
-      homeScreen: AEc.ValueTypes.Trigger
-      tutorialStart: AEc.ValueTypes.Trigger
-      tutorialMiddle: AEc.ValueTypes.Trigger
-      tutorialEnding: AEc.ValueTypes.Trigger
-      challengeStart: AEc.ValueTypes.Trigger
-      projectStart: AEc.ValueTypes.Trigger
     
   @FocusPoints:
     Play: 'Play'
