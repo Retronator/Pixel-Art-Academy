@@ -11,6 +11,7 @@ class PAA.Music
     MenuFadeOut: 0.5
     MenuFadeIn: 3
     DynamicSoundtrackToMusicAppFadeOut: 1
+    DynamicSoundtrackSongChangeFadeOut: 5
     PrePlayingMusicOnLoadFadeIn: 3
   
 if Meteor.isServer

@@ -261,10 +261,10 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
     mustExitDrawingSection = new ReactiveField false
     
     @_mustExitDrawingSectionAutorun = Tracker.autorun =>
-      return unless musicPlayback = LOI.adventure.interface.currentMusicPlayback()
-      return unless musicPlayback.composition is @
+      return unless dynamicSoundtrackPlayback = LOI.adventure.interface.currentDynamicSoundtrackPlayback()
+      return unless dynamicSoundtrackPlayback.composition is @
       
-      currentSection = musicPlayback.currentSection()
+      currentSection = dynamicSoundtrackPlayback.currentSection()
       
       if currentSection in drawingSections
         mustExitDrawingSection true unless drawingCondition()
@@ -358,33 +358,49 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
       condition: continueDrawingCondition
 
     # Temporarily reuse the song also for Pixel Art Fundamentals challenges and projects.
+    # home screen -> tutorial intro
     # tutorial intro -> tutorial start
     # tutorial start -> tutorial middle
     # tutorial middle -> tutorial ending 1
     # tutorial ending 1 -> tutorial ending 2
+    # tutorial ending 2 -> tutorial start
     # drawing-start -> drawing-middle
     # drawing-middle -> tutorial-middle
     
-    portfolioNotInTutorialsCondition = =>
-      return unless drawingAppInfo = @_getDrawingAppInfo()
-      drawingAppInfo.activeSection.nameKey isnt PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Tutorials
+    portfolioNotInTutorialsOrOtherAppsCondition = =>
+      if drawingAppInfo = @_getDrawingAppInfo()
+        drawingAppInfo.activeSection.nameKey isnt PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Tutorials
+        
+      else
+        return unless currentApp = @_getCurrentApp()
+        currentApp not instanceof PAA.PixelPad.Apps.HomeScreen
     
+    homeScreenSection.transitions.push new AMe.Transition homeScreenSection,
+      nextSection: tutorialIntroSection
+      condition: portfolioNotInTutorialsOrOtherAppsCondition
+      
     tutorialIntroSection.transitions.push new AMe.Transition tutorialIntroSection,
       nextSection: tutorialStartSection
-      condition: portfolioNotInTutorialsCondition
+      condition: portfolioNotInTutorialsOrOtherAppsCondition
     
     tutorialStartSection.transitions.push new AMe.Transition tutorialStartSection,
       nextSection: tutorialMiddleSection
-      condition: portfolioNotInTutorialsCondition
+      condition: portfolioNotInTutorialsOrOtherAppsCondition
     
     tutorialMiddleSection.transitions.push new AMe.Transition tutorialMiddleSection,
       nextSection: tutorialEnding1Section
-      condition: portfolioNotInTutorialsCondition
+      condition: portfolioNotInTutorialsOrOtherAppsCondition
     
     tutorialEnding1Section.transitions.push new AMe.Transition tutorialEnding1Section,
       nextSection: tutorialEnding2Section
-      condition: portfolioNotInTutorialsCondition
-        
+      condition: portfolioNotInTutorialsOrOtherAppsCondition
+    
+    tutorialEnding2Section.transitions.push new AMe.Transition tutorialEnding2Section,
+      nextSection: tutorialStartSection
+      condition: =>
+        return unless portfolioNotInTutorialsOrOtherAppsCondition()
+        not drawingCondition()
+      
     continueDrawingNotInTutorialsCondition = =>
       return unless continueDrawingCondition()
       return unless drawingAppInfo = @_getDrawingAppInfo()
