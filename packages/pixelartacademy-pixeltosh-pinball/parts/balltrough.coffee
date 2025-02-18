@@ -34,6 +34,8 @@ class Pinball.Parts.BallTrough extends Pinball.Parts.Hole
     
   onBallEnter: (ball) ->
     ball.die()
+
+    @pinball.audioManager().ballTrough()
     
     Meteor.setTimeout =>
       @pinball.gameManager().removeBall ball

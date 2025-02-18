@@ -33,6 +33,7 @@ Package.onUse(function(api) {
   api.addFile('editormanager');
   api.addFile('editormanager-startdrag');
   api.addFile('editormanager-startrotate');
+  api.addFile('audiomanager');
   api.addFile('mouse');
   api.addFile('ball');
 

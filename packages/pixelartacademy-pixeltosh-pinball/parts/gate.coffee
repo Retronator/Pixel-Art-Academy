@@ -36,7 +36,7 @@ class Pinball.Parts.Gate extends Pinball.Parts.DynamicPart
     
     axisY: sceneManager.ballPositionY() * 2.5
     
-  onAddedToDynamicsWorld: (@_dynamicsWorld) ->
+  onAddedToDynamicsWorld: (@physicsManager) ->
     super arguments...
     
     physicsObject = @avatar.getPhysicsObject()
@@ -44,8 +44,8 @@ class Pinball.Parts.Gate extends Pinball.Parts.DynamicPart
     
     @_createConstraint()
   
-  onRemovedFromDynamicsWorld: (dynamicsWorld) ->
-    dynamicsWorld.removeConstraint @constraint
+  onRemovedFromDynamicsWorld: (physicsManager) ->
+    physicsManager.dynamicsWorld.removeConstraint @constraint
     @constraint = null
 
   reset: ->
@@ -55,7 +55,7 @@ class Pinball.Parts.Gate extends Pinball.Parts.DynamicPart
     @_createConstraint() if @constraint
     
   _createConstraint: ->
-    @_dynamicsWorld.removeConstraint @constraint if @constraint
+    @physicsManager.dynamicsWorld.removeConstraint @constraint if @constraint
     
     physicsObject = @avatar.getPhysicsObject()
     shape = @shape()
@@ -73,7 +73,7 @@ class Pinball.Parts.Gate extends Pinball.Parts.DynamicPart
     @constraint.setAngularLowerLimit new Ammo.btVector3 -Math.PI / 2, 0, 0
     @constraint.setAngularUpperLimit new Ammo.btVector3 0, 0, 0
     
-    @_dynamicsWorld.addConstraint @constraint
+    @physicsManager.dynamicsWorld.addConstraint @constraint
     
   class @Shape extends Pinball.Part.Avatar.ConvexExtrusion
     positionY: -> @properties.axisY

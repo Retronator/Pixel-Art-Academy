@@ -128,6 +128,8 @@ class Pinball.GameManager
     @balls balls
     
     @ballNumber @ballNumber() + 1
+    
+    @pinball.audioManager().start()
   
   removeBall: (ball) ->
     balls = @balls()

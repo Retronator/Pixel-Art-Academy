@@ -4,7 +4,7 @@ Pinball = PAA.Pixeltosh.Programs.Pinball
 CollisionGroups = Pinball.PhysicsManager.CollisionGroups
 
 class Pinball.Parts.DynamicPart extends Pinball.Part
-  onAddedToDynamicsWorld: (dynamicsWorld) ->
+  onAddedToDynamicsWorld: (physicsManager) ->
     physicsObject = @avatar.getPhysicsObject()
     physicsObject.body.setActivationState Ammo.btCollisionObject.ActivationStates.DisableDeactivation
     

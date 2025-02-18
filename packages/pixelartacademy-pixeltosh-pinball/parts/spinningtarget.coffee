@@ -45,7 +45,7 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
     
     axisY: sceneManager.ballPositionY() * 2 + 0.002
     
-  onAddedToDynamicsWorld: (@_dynamicsWorld) ->
+  onAddedToDynamicsWorld: (@physicsManager) ->
     super arguments...
     
     physicsObject = @avatar.getPhysicsObject()
@@ -66,7 +66,7 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
     @_toBaseRotationQuaternion = @rotationQuaternion().invert()
     
   _createConstraint: ->
-    @_dynamicsWorld.removeConstraint @constraint if @constraint
+    @physicsManager.dynamicsWorld.removeConstraint @constraint if @constraint
     
     physicsObject = @avatar.getPhysicsObject()
     shape = @shape()
@@ -84,7 +84,7 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
     @constraint.setAngularLowerLimit new Ammo.btVector3 -Math.PI, 0, 0
     @constraint.setAngularUpperLimit new Ammo.btVector3 Math.PI, 0, 0
     
-    @_dynamicsWorld.addConstraint @constraint
+    @physicsManager.dynamicsWorld.addConstraint @constraint
     
   update: (elapsed) ->
     return unless physicsObject = @avatar.getPhysicsObject()
@@ -101,6 +101,7 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
     # Add points when entering the scoring region.
     if inScoringRegion and not @_wasInScoringRegion
       @pinball.gameManager().addPoints points if points = @data().points
+      @pinball.audioManager().spinningTargetRotation()
     
     @_wasInScoringRegion = inScoringRegion
     

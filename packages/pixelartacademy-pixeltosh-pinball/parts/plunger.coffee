@@ -50,7 +50,7 @@ class Pinball.Parts.Plunger extends Pinball.Part
     collisionGroup: Pinball.PhysicsManager.CollisionGroups.Actuators
     collisionMask: Pinball.PhysicsManager.CollisionGroups.Balls
   
-  onAddedToDynamicsWorld: (dynamicsWorld) ->
+  onAddedToDynamicsWorld: (physicsManager) ->
     # Plunger is a player-controlled kinematic object.
     physicsObject = @avatar.getPhysicsObject()
     @origin = physicsObject.getPosition()
@@ -74,12 +74,16 @@ class Pinball.Parts.Plunger extends Pinball.Part
     
     physicsObject = @avatar.getPhysicsObject()
     @displacement = physicsObject.getPosition().z - @origin.z
+    
+    @pinball.audioManager().plungerStart()
   
   deactivate: ->
     @active = false
     
     @_releaseSpeed = -@data().releaseSpeed * @displacement / @shape().depth
     
+    @pinball.audioManager().plungerEnd()
+  
   fixedUpdate: (elapsed) ->
     return unless @moving
     
@@ -91,7 +95,8 @@ class Pinball.Parts.Plunger extends Pinball.Part
         # We reached maximum displacement, stop.
         @displacement = maxDisplacement
         speed = 0
-        
+        @pinball.audioManager().plungerEnd()
+      
       else
         # Keep pulling the plunger.
         speed = @data().pullingSpeed

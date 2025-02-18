@@ -491,6 +491,7 @@ Package.onUse(function(api) {
   api.addFile('echo/audio');
   api.addFile('echo/variable');
   api.addFile('echo/node');
+  api.addFile('echo/sound');
 
   api.addFile('echo/nodes/output');
   api.addFile('echo/nodes/sound');

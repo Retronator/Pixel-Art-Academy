@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AEc = Artificial.Echo
 AR = Artificial.Reality
 AP = Artificial.Pyramid
 LOI = LandsOfIllusions
@@ -246,7 +247,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
     
     super arguments...
     
-  onAddedToDynamicsWorld: (@_dynamicsWorld) ->
+  onAddedToDynamicsWorld: (@physicsManager) ->
     # Reactively add active bumper parts.
     Tracker.nonreactive =>
       @_activeBumperPartsAutorun = Tracker.autorun =>
@@ -257,18 +258,20 @@ class Pinball.Parts.Bumper extends Pinball.Part
         @_ringRigidBody = ringPhysicsObject.body
         
         constants = @constants()
-        @_dynamicsWorld.addRigidBody @_ringRigidBody, constants.collisionGroup, constants.collisionMask
+        @physicsManager.dynamicsWorld.addRigidBody @_ringRigidBody, constants.collisionGroup, constants.collisionMask
+        @physicsManager.registerRigidBodyEntity @_ringRigidBody, @
     
   onRemovedFromDynamicsWorld: (dynamicsWorld) ->
     @_activeBumperPartsAutorun?.stop()
     @_activeBumperPartsAutorun = null
     @_removeRingRigidBody()
-    @_dynamicsWorld = null
+    @physicsManager = null
   
   _removeRingRigidBody: ->
-    return unless @_ringRigidBody and @_dynamicsWorld
+    return unless @_ringRigidBody and @physicsManager
     
-    @_dynamicsWorld.removeRigidBody @_ringRigidBody
+    @physicsManager.dynamicsWorld.removeRigidBody @_ringRigidBody
+    @physicsManager.unregisterRigidBody @_ringRigidBody
     @_ringRigidBody = null
   
   reset: ->
@@ -284,6 +287,8 @@ class Pinball.Parts.Bumper extends Pinball.Part
   onBallEnter: ->
     data = @data()
     @moving = 1 if data.active
+    
+    @pinball.audioManager().bumper data.active
     
     @pinball.gameManager().addPoints data.points if data.points
   

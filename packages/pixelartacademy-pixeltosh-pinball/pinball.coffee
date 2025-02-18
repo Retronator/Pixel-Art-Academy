@@ -53,6 +53,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @inputManager = new ReactiveField null
     @gameManager = new ReactiveField null
     @editorManager = new ReactiveField null
+    @audioManager = new ReactiveField null
     @mouse = new ReactiveField null
     
     @openedFile = new ReactiveField null
@@ -124,6 +125,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
     @inputManager new @constructor.InputManager @
     @gameManager new @constructor.GameManager @
     @editorManager new @constructor.EditorManager @
+    @audioManager new @constructor.AudioManager @
     @mouse new @constructor.Mouse @
     
     @sceneImage new AM.PixelImage
@@ -248,6 +250,9 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   fixedUpdate: (elapsed) ->
     sceneManager = @sceneManager()
     entity.fixedUpdate? elapsed for entity in sceneManager.entities()
+    
+    audioManager = @audioManager()
+    audioManager.fixedUpdate elapsed
 
   draw: (appTime) ->
     @rendererManager()?.draw appTime

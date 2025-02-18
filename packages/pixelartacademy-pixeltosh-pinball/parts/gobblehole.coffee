@@ -39,5 +39,7 @@ class Pinball.Parts.GobbleHole extends Pinball.Parts.Hole
   onBallEnter: (ball) ->
     ball.die()
     
+    @pinball.audioManager().gobbleHole()
+    
     return unless points = @data().points
     @pinball.gameManager().addPoints points

@@ -47,6 +47,8 @@ class Pinball.PhysicsManager
     @solver = new Ammo.btSequentialImpulseConstraintSolver
     @dynamicsWorld = new Ammo.btDiscreteDynamicsWorld @dispatcher, @broadphase, @solver, @collisionConfiguration
     
+    @_rigidBodyToEntity = [null]
+    
     # Add safety walls.
     @dynamicsWorld.addRigidBody new Ammo.btRigidBody new Ammo.btRigidBodyConstructionInfo 0,
       new Ammo.btDefaultMotionState new Ammo.btTransform Ammo.btQuaternion.identity(), new Ammo.btVector3(-1, 0, 0)
@@ -75,13 +77,15 @@ class Pinball.PhysicsManager
     ,
       added: (physicsObject) =>
         # Add the part to the simulation.
+        @registerRigidBodyEntity physicsObject.body, physicsObject.entity
         constants = physicsObject.entity.constants()
         @dynamicsWorld.addRigidBody physicsObject.body, constants.collisionGroup, constants.collisionMask
-        physicsObject.entity.onAddedToDynamicsWorld? @dynamicsWorld
+        physicsObject.entity.onAddedToDynamicsWorld? @
 
       removed: (physicsObject) =>
+        @unregisterRigidBody physicsObject.body
         @dynamicsWorld.removeRigidBody physicsObject.body
-        physicsObject.entity.onRemovedFromDynamicsWorld? @dynamicsWorld
+        physicsObject.entity.onRemovedFromDynamicsWorld? @
         
     # Adjust gravity.
     @_gravityAutorun = @pinball.autorun (computation) =>
@@ -101,6 +105,18 @@ class Pinball.PhysicsManager
     Ammo.destroy @broadphase
     Ammo.destroy @dispatcher
     Ammo.destroy @collisionConfiguration
+    
+  registerRigidBodyEntity: (rigidBody, entity) ->
+    userIndex = @_rigidBodyToEntity.length
+    rigidBody.setUserIndex userIndex
+    @_rigidBodyToEntity.push entity
+  
+  unregisterRigidBody: (rigidBody) ->
+    userIndex = rigidBody.getUserIndex()
+    @_rigidBodyToEntity[userIndex] = null
+    
+  getEntityForRigidBody: (rigidBody) ->
+    @_rigidBodyToEntity[rigidBody.getUserIndex()]
   
   intersectObject: (start, end) ->
     rayCallback = Ammo.castObject @_closestRayResultCallback, Ammo.RayResultCallback
