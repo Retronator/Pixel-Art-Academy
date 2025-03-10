@@ -57,6 +57,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       # If the image has no layer, we first have to add it as a partial action.
       unless assetData.getLayer layerAddress
         addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer null, assetData, []
+        AM.Document.Versioning.executePartialAction assetData, addLayerAction
         action.append addLayerAction
 
     fillActionsWereAdded = false
@@ -80,6 +81,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
       else if assetData instanceof LOI.Assets.Bitmap
         # Add the fill action.
         colorFillAction = new LOI.Assets.Bitmap.Actions.ColorFill @, assetData, layerAddress, pixel
+        AM.Document.Versioning.executePartialAction assetData, colorFillAction if assetData.partialAction
         action.append colorFillAction
         fillActionsWereAdded = true
 
