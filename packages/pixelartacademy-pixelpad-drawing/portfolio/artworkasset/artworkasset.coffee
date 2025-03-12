@@ -52,6 +52,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
   
   width: -> @document()?.bounds?.width or 1
   height: -> @document()?.bounds?.height or 1
+  portfolioBorderWidth: -> if @document()?.properties?.canvasBorder then 6 else 0
+  pixelArtScaling: -> @document()?.properties?.pixelArtScaling
   
   urlParameter: -> @artworkId
   

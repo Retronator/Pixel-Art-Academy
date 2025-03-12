@@ -33,9 +33,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @restrictedColorsError = new ReactiveField false
     
     @properties = new ReactiveField [
-      type: @constructor.Extra.Types.PixelArtScaling
-      value: true
-    ,
       type: @constructor.Extra.Types.CanvasBorder
       value: true
     ,
@@ -179,7 +176,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     # Add properties.
     paletteColors = []
     paletteId = null
-    properties = {}
+    properties =
+      pixelArtScaling: true
     
     getPaletteId = (name) -> LOI.Assets.Palette.documents.findOne({name})._id
     
@@ -198,8 +196,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         properties[_.camelCase property.type] = property.value
         
     properties.paletteIds = paletteColors if paletteColors.length > 0
-    artworkInfo.properties = properties if _.keys(properties).length > 0
     artworkInfo.paletteId = paletteId if paletteId?
+    artworkInfo.properties = properties
     
     artwork = PAA.Practice.Artworks.insert artworkInfo
     
@@ -229,14 +227,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @Types =
       RestrictedColors: 'RestrictedColors'
       # ColorPalette: 'ColorPalette'
-      PixelArtScaling: 'PixelArtScaling'
+      # PixelArtScaling: 'PixelArtScaling'
       PixelArtEvaluation: 'PixelArtEvaluation'
       CanvasBorder: 'CanvasBorder'
     
     @TypeNames =
       RestrictedColors: 'Restricted colors'
       # ColorPalette: 'Color palette'
-      PixelArtScaling: 'Pixel art scaling'
+      # PixelArtScaling: 'Pixel art scaling'
       PixelArtEvaluation: 'Pixel art evaluation'
       CanvasBorder: 'Canvas border'
       

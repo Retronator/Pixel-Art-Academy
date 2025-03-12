@@ -120,17 +120,24 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     width: "#{assetData.asset.width() * assetData.scale() + assetData.asset.portfolioBorderWidth() * 2}rem"
 
   _assetScale: (asset) ->
-    # Scale the sprite as much as possible (up to 6) while remaining under 70px.
+    maxSize = 70
     size = Math.max asset.width(), asset.height()
+    displayScale = LOI.adventure.interface.display.scale()
+
+    unless asset.pixelArtScaling()
+      # Without pixel art scaling, make the image fit into the 70px.
+      maxWindowPixelSize = 70 * displayScale
+      displaySize = Math.min size, maxWindowPixelSize
+      return displaySize / size / displayScale
+    
+    # with pixel art scaling, scale the image as much as possible (up to 6) while remaining under 70px.
     return 1 if _.isNaN size
     
     scale = 1
-    maxSize = 70
 
     if size > maxSize
       # The asset is bigger than our maximum size, so we will need to scale downwards. We start
       # operating in effective scale to still have integer magnification compared to window pixels.
-      displayScale = LOI.adventure.interface.display.scale()
       maxEffectiveSize = maxSize * displayScale
       
       effectiveScale = displayScale

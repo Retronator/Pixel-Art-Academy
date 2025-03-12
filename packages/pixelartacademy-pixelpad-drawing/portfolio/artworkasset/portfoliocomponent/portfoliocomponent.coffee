@@ -11,8 +11,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extend
   canvasBorderClass: ->
     return unless document = @artworkAsset.document()
     
-    'canvas-border' if document.properties?.canvasBorder
-
+    'canvas-border' if document.properties.canvasBorder
+  
+  smoothScalingClass: ->
+    return unless document = @artworkAsset.document()
+    
+    'smooth-scaling' unless document.properties.pixelArtScaling
+    
   canvasStyle: ->
     assetData = @parentDataWith 'scale'
     scale = assetData.scale()

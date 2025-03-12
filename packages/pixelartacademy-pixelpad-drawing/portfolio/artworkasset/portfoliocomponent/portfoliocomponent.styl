@@ -12,10 +12,17 @@
   &.canvas-border
     border 6rem solid atariGray(6)
 
-  .landsofillusions-assets-components-spriteimage
+  &.smooth-scaling
+    .landsofillusions-assets-components-bitmapimage
+      canvas
+        image-rendering auto
+
   .landsofillusions-assets-components-bitmapimage
     absolute-cover()
 
     .canvas
       width 100% !important
       height 100% !important
+
+  .image
+    absolute-cover()

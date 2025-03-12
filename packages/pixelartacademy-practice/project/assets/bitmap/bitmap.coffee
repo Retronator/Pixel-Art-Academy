@@ -159,6 +159,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   
   width: -> @bitmap()?.bounds.width
   height: -> @bitmap()?.bounds.height
+  pixelArtScaling: -> true
   portfolioBorderWidth: -> 6
 
   fixedDimensions: -> @constructor.fixedDimensions()
