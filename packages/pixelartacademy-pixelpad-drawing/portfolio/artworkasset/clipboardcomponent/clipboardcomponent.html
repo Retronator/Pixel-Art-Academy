@@ -1,17 +1,17 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent">
   <div class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-clipboardcomponent {{activeAssetClass}} {{editorActiveClass}}">
-    {{#if asset.clipboardPageComponent}}
-      <div class="bottom">
-        {{> Render asset.clipboardPageComponent}}
+    {{#if asset.clipboardSecondPageComponent}}
+      <div class="page-second">
+        {{> Render asset.clipboardSecondPageComponent}}
       </div>
     {{/if}}
     {{#if secondPageActive}}
-      <button class="turned-page back-button"></button>
+      <button class="page-first-turned back-button"></button>
     {{else}}
-      <div class="brief">
-        <div class="artwork {{styleClasses}}">
+      <div class="page-first">
+        <div class="asset-info {{styleClasses}}">
           {{#with artworkAsset.artwork}}
-            <div class="title">{{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title}}</div>
+            <div class="name">{{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title}}</div>
           {{/with}}
           {{#with artworkAsset.document}}
             <ul class="properties">
@@ -41,14 +41,9 @@
                   <button class="button edit-button">Edit</button>
                 </li>
               {{/if}}
-              {{#if canUpload}}
-                <li class="action">
-                  <a class="link download" href="{{sprite.imageUrl}}" download="{{spriteImageFileName}}.png">Download</a>
-                </li>
-                <li class="action">
-                  <button class="button upload-button">Upload</button>
-                </li>
-              {{/if}}
+              <li class="action">
+                <button class="button trash-button">Trash</button>
+              </li>
             </ul>
           {{/with}}
         </div>

@@ -8,10 +8,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extend
   constructor: (@artworkAsset) ->
     super arguments...
   
-  documentClassNameClass: ->
+  canvasBorderClass: ->
     return unless document = @artworkAsset.document()
     
-    _.kebabCase document.constructor.className
+    'canvas-border' if document.properties?.canvasBorder
 
   canvasStyle: ->
     assetData = @parentDataWith 'scale'
@@ -23,15 +23,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent extend
   
     style
 
-  pixelImage: ->
+  bitmapImage: ->
     return unless document = @artworkAsset.document()
 
-    if document instanceof LOI.Assets.Sprite
-      new LOI.Assets.Components.SpriteImage
-        spriteId: => document._id
-        loadPalette: true
-  
-    else if document instanceof LOI.Assets.Bitmap
-      new LOI.Assets.Components.BitmapImage
-        bitmapId: => document._id
-        loadPalette: true
+    new LOI.Assets.Components.BitmapImage
+      bitmapId: => document._id
+      loadPalette: true

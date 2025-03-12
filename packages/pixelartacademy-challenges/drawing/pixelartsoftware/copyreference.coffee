@@ -37,7 +37,7 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
 
     @uploadMode = new ReactiveField false
 
-    @_clipboardPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
+    @_clipboardSecondPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardSecondPageComponent @
   
   initializeSteps: ->
     super arguments...
@@ -52,11 +52,11 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
       storage:
         enabled: false
 
-  clipboardPageComponent: ->
+  clipboardSecondPageComponent: ->
     # We only show this page if we can upload.
     return unless PAA.PixelPad.Apps.Drawing.state('externalSoftware')?
     
-    @_clipboardPageComponent
+    @_clipboardSecondPageComponent
 
   availableToolKeys: ->
     # When we're in upload mode, don't show any tools in the editor.

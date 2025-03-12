@@ -52,8 +52,6 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     super arguments...
 
     @uploadMode = new ReactiveField false
-
-    @_clipboardPageComponent = new PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
   
   # Note: We have to override initializeStepsInAreaWithResources instead of initializeSteps since
   # this will be called when creating steps after reference selection.
@@ -72,12 +70,6 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
         enabled: false
       storage:
         enabled: false
-
-  clipboardPageComponent: ->
-    # We only show this page if we can upload.
-    return unless PAA.PixelPad.Apps.Drawing.state('externalSoftware')?
-    
-    @_clipboardPageComponent
 
   availableToolKeys: ->
     # When we're in upload mode, don't show any tools in the editor.
@@ -152,4 +144,3 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
           PAA.Tutorials.Drawing.PixelArtFundamentals.enablePixelArtEvaluation criterion
     
 ###
-

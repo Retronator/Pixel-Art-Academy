@@ -26,9 +26,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       return unless document = @artworkAsset.document()
       return unless assetData = @drawing.portfolio().displayedAsset()
 
-      # Add border to sprites.
       options =
-        border: document instanceof LOI.Assets.Sprite
+        border: document.properties?.canvasBorder
         pixelArtScaling: document.properties?.pixelArtScaling
   
       PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetData.scale(), document.bounds, options
@@ -36,7 +35,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       EJSON.equals
 
   canEdit: -> PAA.PixelPad.Apps.Drawing.canEdit()
-  canUpload: -> PAA.PixelPad.Apps.Drawing.canUpload()
+  canUpload: -> PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
   
   assetPlaceholderStyle: ->
     return unless assetSize = @assetSize()
@@ -47,9 +46,41 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
   events: ->
     super(arguments...).concat
       'click .edit-button': @onClickEditButton
+      'click .trash-button': @onClickTrashButton
 
   onClickEditButton: (event) ->
     AB.Router.changeParameter 'parameter4', 'edit'
+    
+  onClickTrashButton: (event) ->
+    dialog = new LOI.Components.Dialog
+      message: "Do you really want to destroy this artwork?"
+      buttons: [
+        text: "Trash"
+        value: true
+      ,
+        text: "Cancel"
+      ]
+
+    LOI.adventure.showActivatableModalDialog
+      dialog: dialog
+      callback: =>
+        return unless dialog.result
+    
+        artwork = @artworkAsset.artwork()
+        
+        # Remove artwork from the drawing app.
+        artworks = PAA.PixelPad.Apps.Drawing.state 'artworks'
+        _.remove artworks, (artworkEntry) => artworkEntry.artworkId is artwork._id
+        PAA.PixelPad.Apps.Drawing.state 'artworks', artworks
+        
+        # Navigate away from the artwork.
+        AB.Router.changeParameter 'parameter3', null
+        
+        # With a delay, remove the bitmap and the artwork from the database.
+        Meteor.setTimeout =>
+          PAA.Practice.Artworks.remove artwork
+        ,
+          1000
   
   class @Title extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title'

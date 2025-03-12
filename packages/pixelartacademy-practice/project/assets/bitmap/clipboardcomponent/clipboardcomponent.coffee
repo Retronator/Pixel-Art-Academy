@@ -44,7 +44,6 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
       
       PAA.PixelPad.Apps.Drawing.Clipboard.calculateAssetSize assetScale, bitmapBounds, options
       
-      
   onBackButton: ->
     if @secondPageActive()
       @closeSecondPage()

@@ -1,7 +1,7 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.PortfolioComponent">
-  <div class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-portfoliocomponent {{documentClassNameClass}}" {{style canvasStyle}}>
-    {{#if pixelImage}}
-      {{> Render pixelImage}}
+  <div class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-portfoliocomponent {{canvasBorderClass}}" {{style canvasStyle}}>
+    {{#if bitmapImage}}
+      {{> Render bitmapImage}}
     {{/if}}
   </div>
 </template>

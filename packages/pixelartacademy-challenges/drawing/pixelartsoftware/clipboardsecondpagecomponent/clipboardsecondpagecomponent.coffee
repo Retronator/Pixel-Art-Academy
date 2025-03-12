@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent extends AM.Component
-  @register 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent'
+class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardSecondPageComponent extends AM.Component
+  @register 'PixelArtAcademy.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardSecondPageComponent'
 
   constructor: (@copyReference) ->
     super arguments...

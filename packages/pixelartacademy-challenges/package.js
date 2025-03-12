@@ -32,7 +32,7 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('drawing/pixelartsoftware/briefcomponent..');
 
-  api.addComponent('drawing/pixelartsoftware/clipboardpagecomponent..');
+  api.addComponent('drawing/pixelartsoftware/clipboardsecondpagecomponent..');
 
   api.addFile('drawing/pixelartsoftware/referenceselection..');
   api.addComponent('drawing/pixelartsoftware/referenceselection/portfoliocomponent..');
