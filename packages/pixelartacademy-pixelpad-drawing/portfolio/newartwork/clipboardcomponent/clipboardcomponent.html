@@ -9,9 +9,11 @@
       <label class="property size">
         <span class="name">Size</span>
         <span class="value">
+          {{!--
           <span class="selection">
             {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeType}}
           </span>
+          --}}
           {{#if $is sizeType 'Fixed'}}
             <span class="dimensions">
               <span class="dimension width">
@@ -61,6 +63,10 @@
       <div class="error-message">
         {{#if $or widthError heightError}}Please enter a valid size.{{/if}}
         {{#if sizeOutOfRangeError}}The maximum size is {{maxSize}}.{{/if}}
+        {{#if restrictedColorsError}}
+          The artwork requires restricted colors.
+          This limitation will be removed in the future.
+        {{/if}}
       </div>
     {{/if}}
   </form>
@@ -86,6 +92,11 @@
       {{#if $is type 'PixelArtEvaluation'}}
         <label>
           {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtEvaluation}}<span class="checkmark"></span>
+        </label>
+      {{/if}}
+      {{#if $is type 'CanvasBorder'}}
+        <label>
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.CanvasBorder}}<span class="checkmark"></span>
         </label>
       {{/if}}
     </div>

@@ -26,5 +26,10 @@ class AE.ReactiveArray
 
     reactiveArray.stop = ->
       updateAutorun.stop()
+      
+      # Remove all remaining entries.
+      if options.removed
+        for item in reactiveArray()
+          options.removed item
 
     return reactiveArray

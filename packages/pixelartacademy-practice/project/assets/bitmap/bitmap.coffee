@@ -85,7 +85,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     
     # Subscribe to the palette.
     if restrictedPaletteName = @constructor.restrictedPaletteName()
-      LOI.Assets.Palette.forName.subscribeContent restrictedPaletteName
+      @_restrictedPaletteSubscription = LOI.Assets.Palette.forName.subscribeContent restrictedPaletteName
 
     # Prepare lazy initialization.
     @initialized = new ReactiveField false
@@ -104,6 +104,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @bitmap.stop()
     @versionedBitmap.stop()
     
+    @_restrictedPaletteSubscription?.stop()
     @_initializingAutorun?.stop()
     @_pixelArtEvaluation?.destroy()
     

@@ -15,21 +15,33 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     super arguments...
     
     @paletteNames = [
+      LOI.Assets.Palette.SystemPaletteNames.Black
+      LOI.Assets.Palette.SystemPaletteNames.Macintosh
       LOI.Assets.Palette.SystemPaletteNames.Pico8
       LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
-      LOI.Assets.Palette.SystemPaletteNames.Black
     ]
     
-    for paletteName in @paletteNames
-      LOI.Assets.Palette.forName.subscribeContent @, paletteName
+    @autorun (computation) =>
+      for paletteName in @paletteNames
+        LOI.Assets.Palette.forName.subscribeContent @, paletteName
   
     @sizeType = new ReactiveField @constructor.SizeTypes.Fixed
     
     @widthError = new ReactiveField false
     @heightError = new ReactiveField false
     @sizeOutOfRangeError = new ReactiveField false
+    @restrictedColorsError = new ReactiveField false
     
-    @properties = new ReactiveField []
+    @properties = new ReactiveField [
+      type: @constructor.Extra.Types.PixelArtScaling
+      value: true
+    ,
+      type: @constructor.Extra.Types.CanvasBorder
+      value: true
+    ,
+      type: @constructor.Extra.Types.RestrictedColors
+      value: LOI.Assets.Palette.SystemPaletteNames.Black
+    ]
     
     @extras = new ComputedField =>
       properties = @properties()
@@ -84,10 +96,17 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @sizeOutOfRangeError true if value > maxSize
 
     _.isNaN(value) or 0 <= value > maxSize
+    
+  validateRestrictedColors: ->
+    properties = @properties()
+    @restrictedColorsError not _.find properties, (property) => property.type is @constructor.Extra.Types.RestrictedColors
   
   errorClasses: ->
     errorClasses = for field in ['width', 'height'] when @["#{field}Error"]()
       "error-#{field}"
+      
+    errorClasses.push 'error-size-out-of-range' if @sizeOutOfRangeError()
+    errorClasses.push 'error-restricted-colors' if @restrictedColorsError()
       
     errorClasses.join ' '
     
@@ -152,6 +171,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   
       @validateWidth artworkInfo.size.width
       @validateHeight artworkInfo.size.height
+      
+    @validateRestrictedColors()
 
     return if @errorClasses()
 
@@ -207,15 +228,17 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   
     @Types =
       RestrictedColors: 'RestrictedColors'
-      ColorPalette: 'ColorPalette'
+      # ColorPalette: 'ColorPalette'
       PixelArtScaling: 'PixelArtScaling'
       PixelArtEvaluation: 'PixelArtEvaluation'
+      CanvasBorder: 'CanvasBorder'
     
     @TypeNames =
       RestrictedColors: 'Restricted colors'
-      ColorPalette: 'Color palette'
+      # ColorPalette: 'Color palette'
       PixelArtScaling: 'Pixel art scaling'
       PixelArtEvaluation: 'Pixel art evaluation'
+      CanvasBorder: 'Canvas border'
       
     @MultiselectionTypes = [
       @Types.ColorPalette
@@ -237,11 +260,16 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       # Select defaults when changing the type.
       else if newType isnt lastType
         switch newType
-          when @constructor.Types.PixelArtScaling, @constructor.Types.PixelArtEvaluation then value = true
-          when @constructor.Types.ColorPalette, @constructor.Types.RestrictedColors then value = @clipboardComponent.paletteNames[0]
+          when @constructor.Types.ColorPalette then value = @clipboardComponent.paletteNames[0]
+          when @constructor.Types.RestrictedColors then value = @clipboardComponent.paletteNames[0]
+          when @constructor.Types.PixelArtScaling then value = true
+          when @constructor.Types.PixelArtEvaluation then value = true
+          when @constructor.Types.CanvasBorder then value = true
   
         @clipboardComponent.updatePropertyAtIndex index, newType, value
       
+        @clipboardComponent.validateRestrictedColors() if newType is @constructor.Types.RestrictedColors
+    
     updateValue: (newValue) ->
       index = @data().index
       type = @data().type
@@ -313,6 +341,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         
     class @PixelArtEvaluation extends @Value
       @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtEvaluation'
+      
+      constructor: ->
+        super arguments...
+        
+        @type = AM.DataInputComponent.Types.Checkbox
+    
+    class @CanvasBorder extends @Value
+      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.CanvasBorder'
       
       constructor: ->
         super arguments...

@@ -119,7 +119,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       documentHasPixelArtEvaluation = @displayedAsset()?.document()?.properties?.pixelArtEvaluation
       
       # Show pixel art evaluation if the asset requires it.
-      assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation()
+      assetRequiresPixelArtEvaluation = @displayedAsset()?.constructor.pixelArtEvaluation?()
 
       # TODO: Show pixel art evaluation if the asset allows it and it was unlocked.
       

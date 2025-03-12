@@ -91,6 +91,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
         @_artworkAssetsDependency.changed()
   
       removed: (id) =>
+        @_artworkAssets[id].destroy()
         delete @_artworkAssets[id]
         @_artworkAssetsDependency.changed()
     
@@ -100,7 +101,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
 
     @_wipArtworksGroup =
       index: 0
-      name: => "WIP"
+      name: => "Work in progress"
       assets: new ComputedField =>
         assets = []
         
@@ -162,7 +163,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       sections.push @tutorialsSection if @tutorialsSection.groups().length
       sections.push @challengesSection if @challengesSection.groups().length
       sections.push @projectsSection if @projectsSection.groups().length
-      # sections.push @artworksSection if @artworksSection.groups().length
+      sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.
       if @activeSection and not @activeSection() in sections

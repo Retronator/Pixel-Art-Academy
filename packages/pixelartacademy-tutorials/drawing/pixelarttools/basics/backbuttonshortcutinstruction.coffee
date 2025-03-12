@@ -26,7 +26,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.BackButtonShortcutInstruction e
 
     return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
     return unless editor.drawingActive()
-    editor.activeAsset()?.completed()
+    editor.activeAsset()?.completed?()
 
   markup: ->
     markupStyle = InterfaceMarking.defaultStyle()

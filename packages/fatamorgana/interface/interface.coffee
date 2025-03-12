@@ -107,6 +107,7 @@ class FM.Interface extends AM.Component
     super arguments...
 
     @data.destroy()
+    @files.stop()
 
   getComponentData: (componentClassOrId) ->
     componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId

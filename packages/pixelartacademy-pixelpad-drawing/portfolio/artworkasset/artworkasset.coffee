@@ -22,9 +22,17 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
         return LOI.Assets[documentClassName].getDocumentForId id
         
       null
+      
+    @_palettesAutorun = Tracker.autorun (computation) =>
+      return unless document = @document()
+      return unless paletteIds = document.getAllPaletteIds()
+      LOI.Assets.Palette.forIds.subscribeContent paletteIds
   
     @portfolioComponent = new @constructor.PortfolioComponent @
     @clipboardComponent = new @constructor.ClipboardComponent @
+    
+  destroy: ->
+    @_palettesAutorun.stop()
 
   displayName: -> @artwork()?.title or 'Untitled'
   
@@ -37,6 +45,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
       parts.push "Size: #{bounds.width}x#{bounds.height}"
       
     if palette = document.palette
+      palette.refresh()
       parts.push "Palette: #{palette.name}"
       
     parts.join ', '

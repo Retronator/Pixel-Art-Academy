@@ -133,7 +133,7 @@ class LM.Interface extends LM.Interface
       return unless portfolio.activeAsset()
       
       activeGroup = portfolio.activeGroup()
-      course = activeGroup.thing.content().course
+      return unless course = activeGroup.thing?.content().course
       
       if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
         LM.Compositions.ElementsOfArt
@@ -198,6 +198,8 @@ class LM.Interface extends LM.Interface
     previousDynamicSoundtrackComposition = @_previousDynamicSoundtrackComposition
     previousDynamicSoundtrackPlayback = @_previousDynamicSoundtrackPlayback
     
+    return unless @_previousDynamicSoundtrackComposition
+
     @_previousDynamicSoundtrackComposition = null
     @_previousDynamicSoundtrackPlayback = null
     
