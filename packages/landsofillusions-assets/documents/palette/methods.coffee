@@ -1,3 +1,4 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
 LOI.Assets.Palette.insert.method (palette) ->
@@ -19,3 +20,11 @@ LOI.Assets.Palette.insert.method (palette) ->
 
   # Insert into the database.
   LOI.Assets.Palette.documents.insert palette
+  
+LOI.Assets.Palette.remove.method (paletteId) ->
+  check paletteId, Match.DocumentId
+  
+  RA.authorizeAdmin()
+  
+  # Insert into the database.
+  LOI.Assets.Palette.documents.remove paletteId

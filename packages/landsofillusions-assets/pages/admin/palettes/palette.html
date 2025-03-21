@@ -1,0 +1,27 @@
+<template name="LandsOfIllusions.Assets.Pages.Admin.Palettes.Palette">
+  <div class="landsofillusions-assets-pages-admin-palettes-palette">
+    <h2>{{name}}</h2>
+    {{#if lospecSlug}}
+      <p>
+        Lospec: <a href="https://lospec.com/palette-list/{{lospecSlug}}" target="_blank">lospec.com/palette-list/{{lospecSlug}}</a>
+        {{#if lospecAuthor}}by {{lospecAuthor}}{{/if}}
+      </p>
+    {{/if}}
+    <p>
+      Ramps:
+      <ul class="ramps">
+        {{#each ramps}}
+          <li class="ramp">
+            {{name}}
+            <ol class="shades">
+              {{#each shades}}
+                <li class="shade" {{style shadeStyle}}></li>
+              {{/each}}
+            </ol>
+          </li>
+        {{/each}}
+      </ul>
+      <button class="convert-ramps-to-shades-button">Convert ramps to shades</button>
+    </p>
+  </div>
+</template>

@@ -461,4 +461,13 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/actions/deletenode');
 
   api.addUnstyledComponent('audioeditor/soundselectdialog..');
+
+  // Admin
+
+  api.addFile('pages..');
+  api.addUnstyledComponent('pages/admin..');
+  api.addFile('pages/admin/palettes..');
+  api.addComponent('pages/admin/palettes/palette');
+  api.addUnstyledComponent('pages/admin/palettes/scripts');
+  api.addServerFile('pages/admin/palettes/scripts-server');
 });

@@ -23,8 +23,9 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
         # Route back to index.
         @goToDocument null
 
-  onDestroyed: ->
-    super arguments...
+  documentTypeName: -> @options.singularName
+  
+  showRemoveButton: -> @options.documentClass.remove and AB.Router.getParameter 'documentId'
 
   documents: ->
     sort = _id: 1
@@ -56,6 +57,7 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
   events: ->
     super(arguments...).concat
       'click .add-document': @onClickAddDocument
+      'click .remove-document': @onClickRemoveDocument
       'click .document': @onClickDocument
 
   onClickAddDocument: ->
@@ -65,6 +67,14 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
 
       # Switch to the new document.
       @goToDocument newId
+      
+  onClickRemoveDocument: ->
+    documentId = AB.Router.getParameter 'documentId'
+    @options.documentClass.remove documentId, (error) =>
+      return console.error if error
+      
+      # Route back to index.
+      @goToDocument null
 
   onClickDocument: ->
     @goToDocument @currentData()._id

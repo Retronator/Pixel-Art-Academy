@@ -11,6 +11,7 @@ class LOI.Assets.Palette extends AM.Document
   #     g: green attribute (0.0-1.0)
   #     b: blue attribute (0.0-1.0)
   # lospecSlug: the URL slug used on Lospec for this palette
+  # lospecAuthor: the author of the palette as provided by Lospec
   @Meta
     name: @id()
   
@@ -27,6 +28,7 @@ class LOI.Assets.Palette extends AM.Document
   @forName = @subscription 'forName'
   
   @insert = @method 'insert'
+  @remove = @method 'remove'
 
   # Enumeration of palette names provided by the system.
   @SystemPaletteNames:
