@@ -14,16 +14,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
   onCreated: ->
     super arguments...
     
-    @paletteNames = [
-      LOI.Assets.Palette.SystemPaletteNames.Black
-      LOI.Assets.Palette.SystemPaletteNames.Macintosh
-      LOI.Assets.Palette.SystemPaletteNames.Pico8
-      LOI.Assets.Palette.SystemPaletteNames.ZXSpectrum
-    ]
-    
     @autorun (computation) =>
-      for paletteName in @paletteNames
-        LOI.Assets.Palette.forName.subscribeContent @, paletteName
+      LOI.Assets.Palette.forName.subscribeContent @, LOI.Assets.Palette.SystemPaletteNames.Black
+      LOI.Assets.Palette.allLospec.subscribeContent @
   
     @sizeType = new ReactiveField @constructor.SizeTypes.Fixed
     
@@ -362,9 +355,18 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
         @type = AM.DataInputComponent.Types.Select
         
       options: ->
-        options = [name: '', value: null]
-
-        for paletteName in @extraComponent.clipboardComponent.paletteNames
-          options.push {name: paletteName, value: paletteName}
+        options = [
+          name: '', value: null
+        ,
+          name: LOI.Assets.Palette.SystemPaletteNames.Black, value: LOI.Assets.Palette.SystemPaletteNames.Black
+        ]
+        
+        lospecPalettes = LOI.Assets.Palette.documents.fetch
+          lospecSlug: $exists: true
+        ,
+          sort: name: 1
+        
+        for palette in lospecPalettes
+          options.push {name: palette.name, value: palette.name}
           
         options
