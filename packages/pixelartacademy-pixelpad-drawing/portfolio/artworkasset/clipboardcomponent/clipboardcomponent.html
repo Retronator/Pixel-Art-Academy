@@ -1,11 +1,7 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent">
   <div class="pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-clipboardcomponent {{activeAssetClass}} {{editorActiveClass}}">
-    {{#if asset.clipboardSecondPageComponent}}
-      <div class="page-second">
-        {{> Render asset.clipboardSecondPageComponent}}
-      </div>
-    {{/if}}
     {{#if secondPageActive}}
+      {{> Render artworkAsset.changeArtworkComponent}}
       <button class="page-first-turned back-button"></button>
     {{else}}
       <div class="page-first">
@@ -34,6 +30,14 @@
                   {{/if}}
                 </li>
               {{/if}}
+              <li class="property extras">
+                <span class="property-name">Extras</span>:
+                {{#if extras}}
+                  {{extras}}
+                {{else}}
+                  None
+                {{/if}}
+              </li>
             </ul>
             <ul class="actions">
               {{#if canEdit}}

@@ -1,0 +1,18 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/portfolio/forms/form.import"
+
+printColor = atariYellow(1)
+paperColor = atariOlive(7)
+inputColor = atariGray(2)
+errorColor = atariRed(4)
+
+.pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-changeartwork
+  pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormColors(printColor, paperColor, inputColor, errorColor)
+
+  &::before
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/forms/header-olive-yellow.png')
+
+  .properties
+    .title
+      .value
+        padding-left 5rem

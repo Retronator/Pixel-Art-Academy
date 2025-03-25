@@ -26,12 +26,18 @@ Package.onUse(function(api) {
   api.addComponent('portfolio..');
   api.addFile('portfolio/portfolio-initialize');
   api.addFile('portfolio/asset');
-  api.addFile('portfolio/formasset');
   api.addServerFile('portfolio/subscriptions');
+
+  api.addFile('portfolio/forms..');
+  api.addFile('portfolio/forms/asset');
+  api.addStyle('portfolio/forms/form');
+  api.addStyleImport('portfolio/forms/form');
+  api.addComponent('portfolio/forms/extras..');
 
   api.addFile('portfolio/artworkasset..');
   api.addComponent('portfolio/artworkasset/portfoliocomponent..');
   api.addComponent('portfolio/artworkasset/clipboardcomponent..');
+  api.addComponent('portfolio/artworkasset/changeartwork..');
 
   api.addFile('portfolio/newartwork..');
   api.addComponent('portfolio/newartwork/portfoliocomponent..');

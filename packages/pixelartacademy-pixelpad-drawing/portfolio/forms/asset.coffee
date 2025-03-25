@@ -3,7 +3,7 @@ AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.PixelPad.Apps.Drawing.Portfolio.FormAsset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
+class PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Asset extends PAA.PixelPad.Apps.Drawing.Portfolio.Asset
   # Id string for this asset used to identify the asset in code.
   @id: -> throw new AE.NotImplementedException "You must specify asset's id."
 

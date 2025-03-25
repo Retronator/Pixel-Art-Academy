@@ -31,6 +31,7 @@
         height 142rem
         background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/palette-shadow.png')
         mix-blend-mode multiply
+        pointer-events none
 
       &::after
         content ''
@@ -88,6 +89,18 @@
 
               .symbol
                 padding-left 1rem
+
+          &:only-child
+            display flex
+            flex-direction row
+            flex-wrap wrap-reverse
+            width 100%
+            margin-top 1rem
+
+            .shade
+              width 15rem
+              height 15rem
+              margin 1rem 8rem 0 0
 
       .color-help-button
         bottom 1rem

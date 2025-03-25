@@ -30,6 +30,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
   
     @portfolioComponent = new @constructor.PortfolioComponent @
     @clipboardComponent = new @constructor.ClipboardComponent @
+    @changeArtworkComponent = new @constructor.ChangeArtwork @
     
   destroy: ->
     @_palettesAutorun.stop()

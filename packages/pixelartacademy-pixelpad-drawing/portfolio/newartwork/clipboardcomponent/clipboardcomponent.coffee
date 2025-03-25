@@ -3,6 +3,8 @@ AM = Artificial.Mirage
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
+Extras = PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras
+
 class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends AM.Component
   @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent'
   @initializeDataComponent()
@@ -23,61 +25,20 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @widthError = new ReactiveField false
     @heightError = new ReactiveField false
     @sizeOutOfRangeError = new ReactiveField false
-    @restrictedColorsError = new ReactiveField false
     
-    @properties = new ReactiveField [
-      type: @constructor.Extra.Types.CanvasBorder
-      value: true
-    ,
-      type: @constructor.Extra.Types.RestrictedColors
-      value: LOI.Assets.Palette.SystemPaletteNames.Black
-    ]
-    
-    @extras = new ComputedField =>
-      properties = @properties()
-      
-      extras = for property, index in properties
-        _id: Random.id()
-        index: index
-        type: property.type
-        value: property.value
-  
-      # Add an extra for the new property.
-      extras.push _id: Random.id(), index: extras.length
-      
-      extras
-      
-    @blankExtras = new ComputedField =>
-      properties = @properties()
-      return if properties.length > 4
-      
-      [properties.length...5]
-
-  updatePropertyAtIndex: (index, type, value) ->
-    properties = @properties()
-    property = {type, value}
-    
-    if properties[index]
-      properties[index] = property
-
-    else
-      properties.push property
-      
-    # Enforce mutually exclusive properties.
-    if type is @constructor.Extra.Types.RestrictedColors
-      _.remove properties, (property) =>
-        property.type is @constructor.Extra.Types.ColorPalette
-      
-    else if type is @constructor.Extra.Types.ColorPalette
-      _.remove properties, (property) =>
-        property.type is @constructor.Extra.Types.RestrictedColors
-    
-    @properties properties
-  
-  removePropertyAtIndex: (index) ->
-    properties = @properties()
-    properties.splice index, 1
-    @properties properties
+    @extras = new PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras
+      allowedTypes: [
+        Extras.Extra.Types.CanvasBorder
+        Extras.Extra.Types.RestrictedColors
+        Extras.Extra.Types.PixelArtEvaluation
+      ]
+      initialProperties: [
+        type: Extras.Extra.Types.CanvasBorder
+        value: true
+      ,
+        type: Extras.Extra.Types.RestrictedColors
+        value: LOI.Assets.Palette.SystemPaletteNames.Black
+      ]
   
   validateWidth: (value) -> @widthError @validateDimension value
   validateHeight: (value) -> @heightError @validateDimension value
@@ -86,17 +47,13 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     @sizeOutOfRangeError true if value > maxSize
 
     _.isNaN(value) or 0 <= value > maxSize
-    
-  validateRestrictedColors: ->
-    properties = @properties()
-    @restrictedColorsError not _.find properties, (property) => property.type is @constructor.Extra.Types.RestrictedColors
   
   errorClasses: ->
     errorClasses = for field in ['width', 'height'] when @["#{field}Error"]()
       "error-#{field}"
       
     errorClasses.push 'error-size-out-of-range' if @sizeOutOfRangeError()
-    errorClasses.push 'error-restricted-colors' if @restrictedColorsError()
+    errorClasses.push 'error-restricted-colors' if @extras.restrictedColorsError()
       
     errorClasses.join ' '
     
@@ -109,7 +66,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       'change .property.size .width input': @onChangeWidth
       'change .property.size .height input': @onChangeHeight
       'change .palette': @onChangePalette
-      'submit .newartwork-form': @onSubmitNewArtworkForm
+      'submit .new-artwork-form': @onSubmitNewArtworkForm
 
   onInputWidth: (event) ->
     @widthError false
@@ -162,7 +119,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       @validateWidth artworkInfo.size.width
       @validateHeight artworkInfo.size.height
       
-    @validateRestrictedColors()
+    @extras.validateRestrictedColors()
 
     return if @errorClasses()
 
@@ -174,14 +131,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     
     getPaletteId = (name) -> LOI.Assets.Palette.documents.findOne({name})._id
     
-    for property in @properties()
-      if property.type is @constructor.Extra.Types.ColorPalette
+    for property in @extras.properties()
+      if property.type is Extras.Extra.Types.ColorPalette
         paletteColors.push getPaletteId property.value
         
-      else if property.type is @constructor.Extra.Types.RestrictedColors
+      else if property.type is Extras.Extra.Types.RestrictedColors
         paletteId = getPaletteId property.value
         
-      else if property.type is @constructor.Extra.Types.PixelArtEvaluation
+      else if property.type is Extras.Extra.Types.PixelArtEvaluation
         # Convert from a boolean to an editable pixel art evaluation.
         properties.pixelArtEvaluation = editable: true
         
@@ -213,160 +170,3 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     
     options: ->
       {name, value} for name, value of PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.SizeTypes
-      
-  class @Extra extends AM.Component
-    @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra'
-  
-    @Types =
-      RestrictedColors: 'RestrictedColors'
-      # ColorPalette: 'ColorPalette'
-      # PixelArtScaling: 'PixelArtScaling'
-      PixelArtEvaluation: 'PixelArtEvaluation'
-      CanvasBorder: 'CanvasBorder'
-    
-    @TypeNames =
-      RestrictedColors: 'Restricted colors'
-      # ColorPalette: 'Color palette'
-      # PixelArtScaling: 'Pixel art scaling'
-      PixelArtEvaluation: 'Pixel art evaluation'
-      CanvasBorder: 'Canvas border'
-      
-    @MultiselectionTypes = [
-      @Types.ColorPalette
-    ]
-    
-    onCreated: ->
-      super arguments...
-      
-      @clipboardComponent = @parentComponent()
-      
-    updateType: (newType) ->
-      index = @data().index
-      lastType = @data().type
-      
-      # Remove property when deselected.
-      if not newType
-        @clipboardComponent.removePropertyAtIndex index
-      
-      # Select defaults when changing the type.
-      else if newType isnt lastType
-        switch newType
-          when @constructor.Types.ColorPalette then value = @clipboardComponent.paletteNames[0]
-          when @constructor.Types.RestrictedColors then value = @clipboardComponent.paletteNames[0]
-          when @constructor.Types.PixelArtScaling then value = true
-          when @constructor.Types.PixelArtEvaluation then value = true
-          when @constructor.Types.CanvasBorder then value = true
-  
-        @clipboardComponent.updatePropertyAtIndex index, newType, value
-      
-        @clipboardComponent.validateRestrictedColors() if newType is @constructor.Types.RestrictedColors
-    
-    updateValue: (newValue) ->
-      index = @data().index
-      type = @data().type
-      
-      if newValue
-        @clipboardComponent.updatePropertyAtIndex index, type, newValue
-        
-      else
-        # Remove the property.
-        @clipboardComponent.removePropertyAtIndex index
-  
-    class @Type extends AM.DataInputComponent
-      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Type'
-      
-      constructor: ->
-        super arguments...
-        
-        @type = AM.DataInputComponent.Types.Select
-        @extraComponent = @ancestorComponentOfType @constructor
-  
-      onCreated: ->
-        super arguments...
-  
-        @extraComponent = @parentComponent()
-      
-      options: ->
-        options = [name: '', value: null]
-        
-        Extra = PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra
-        
-        for value, name of Extra.TypeNames
-          # Add the option if it's the currently active one, if it's a multi-selection one, or if it's not yet selected.
-          active = @data().type is value
-          
-          multiSelection = value in Extra.MultiselectionTypes
-          
-          properties = @extraComponent.clipboardComponent.properties()
-          existingProperty = _.find properties, (property) -> property.type is value
-    
-          options.push name: name, value: value if active or multiSelection or not existingProperty
-    
-        options
-        
-      load: ->
-        @data().type
-        
-      save: (value) ->
-        @extraComponent.updateType value
-  
-    class @Value extends AM.DataInputComponent
-      onCreated: ->
-        super arguments...
-  
-        @extraComponent = @parentComponent()
-        
-      load: ->
-        @data().value
-
-      save: (value) ->
-        @extraComponent.updateValue value
-        
-    class @PixelArtScaling extends @Value
-      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtScaling'
-      
-      constructor: ->
-        super arguments...
-        
-        @type = AM.DataInputComponent.Types.Checkbox
-        
-    class @PixelArtEvaluation extends @Value
-      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.PixelArtEvaluation'
-      
-      constructor: ->
-        super arguments...
-        
-        @type = AM.DataInputComponent.Types.Checkbox
-    
-    class @CanvasBorder extends @Value
-      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.CanvasBorder'
-      
-      constructor: ->
-        super arguments...
-        
-        @type = AM.DataInputComponent.Types.Checkbox
-    
-    class @Palette extends @Value
-      @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Extra.Palette'
-      
-      constructor: ->
-        super arguments...
-        
-        @type = AM.DataInputComponent.Types.Select
-        
-      options: ->
-        options = [
-          name: '', value: null
-        ,
-          name: LOI.Assets.Palette.SystemPaletteNames.Black, value: LOI.Assets.Palette.SystemPaletteNames.Black
-        ]
-        
-        lospecPalettes = LOI.Assets.Palette.documents.fetch
-          lospecSlug: $exists: true
-        ,
-          sort: name: 1
-        
-        for palette in lospecPalettes
-          options.push {name: palette.name, value: palette.name}
-          
-        options

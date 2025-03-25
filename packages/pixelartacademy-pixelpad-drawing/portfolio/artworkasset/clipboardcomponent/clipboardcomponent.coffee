@@ -21,6 +21,22 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       return unless palette = @artworkAsset.document()?.palette
       LOI.Assets.Palette.documents.findOne palette._id
       
+    @extras = new ComputedField =>
+      return unless document = @artworkAsset.document()
+      extras = []
+      
+      Extra = PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras.Extra
+      
+      for propertyName of document.properties
+        typePropertyName = _.upperFirst propertyName
+        
+        # TODO: Remove when pixel art scaling is an option.
+        continue if typePropertyName is Extra.Types.PixelArtScaling
+        
+        extras.push Extra.TypeNames[typePropertyName] if Extra.Types[typePropertyName]
+        
+      extras.join ', '
+
     # Calculate asset size.
     @assetSize = new ComputedField =>
       return unless document = @artworkAsset.document()
@@ -34,6 +50,19 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     ,
       EJSON.equals
 
+  onBackButton: ->
+    if @secondPageActive()
+      @closeSecondPage()
+      
+      # Inform that we've handled the back button.
+      return true
+      
+  showSecondPage: ->
+    @secondPageActive true
+  
+  closeSecondPage: ->
+    @secondPageActive false
+    
   canEdit: -> PAA.PixelPad.Apps.Drawing.canEdit()
   canUpload: -> PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
   
@@ -47,6 +76,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     super(arguments...).concat
       'click .edit-button': @onClickEditButton
       'click .trash-button': @onClickTrashButton
+      'click .property.extras': @onClickPropertyExtras
+      'click .back-button': @onClickBackButton
 
   onClickEditButton: (event) ->
     AB.Router.changeParameter 'parameter4', 'edit'
@@ -81,6 +112,12 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
           PAA.Practice.Artworks.remove artwork
         ,
           1000
+  
+  onClickPropertyExtras: (event) ->
+    @showSecondPage()
+  
+  onClickBackButton: (event) ->
+    @closeSecondPage()
   
   class @Title extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title'
