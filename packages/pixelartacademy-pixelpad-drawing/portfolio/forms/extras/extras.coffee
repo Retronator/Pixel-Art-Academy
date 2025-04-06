@@ -124,6 +124,18 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras extends AM.Component
       else
         # Remove the property.
         @extras.removePropertyAtIndex index
+
+    events: ->
+      super(arguments...).concat
+        'click .color-palette': @onClickColorPalette
+    
+    onClickColorPalette: (event) ->
+      extra = @currentData()
+      drawing = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing
+      
+      selectedPalette = await drawing.showPaletteSelection extra.value
+      
+      @updateValue selectedPalette.name if selectedPalette
   
     class @Type extends AM.DataInputComponent
       @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Forms.Extras.Extra.Type'
@@ -212,16 +224,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.Forms.Extras extends AM.Component
       options: ->
         options = [
           name: '', value: null
-        ,
-          name: LOI.Assets.Palette.SystemPaletteNames.Black, value: LOI.Assets.Palette.SystemPaletteNames.Black
         ]
         
-        lospecPalettes = LOI.Assets.Palette.documents.fetch
-          lospecSlug: $exists: true
+        palettes = LOI.Assets.Palette.documents.fetch
+          category: $exists: true
         ,
           sort: name: 1
         
-        for palette in lospecPalettes
+        for palette in palettes
           options.push {name: palette.name, value: palette.name}
           
         options

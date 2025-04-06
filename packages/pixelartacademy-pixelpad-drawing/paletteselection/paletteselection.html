@@ -1,0 +1,31 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection">
+  <div class="pixelartacademy-pixelpad-apps-drawing-paletteselection {{visibleClass}} {{activeClass}}">
+    <div class="overlay">
+      <div class="navigation">
+        {{#if showPreviousPageButton}}
+          <button class="previous page-button" {{style previousPageButtonStyle}}></button>
+        {{/if}}
+        {{#if showNextPageButton}}
+          <button class="next page-button" {{style nextPageButtonStyle}}></button>
+        {{/if}}
+      </div>
+      <div class="fan-deck">
+        <div class="pin"></div>
+        {{> PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection.Page.Cover}}
+        <ol class="sections">
+          {{# each sections}}
+            <li class="section">
+              {{> PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection.Page.Separator}}
+              <ol class="palettes">
+                {{#each palettes}}
+                  {{> PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection.Page.Palette}}
+                {{/each}}
+              </ol>
+            </li>
+          {{/each}}
+        </ol>
+      </div>
+    </div>
+    <div class="background"></div>
+  </div>
+</template>

@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection.Page.Cover">
+  <div class="pixelartacademy-pixelpad-apps-drawing-paletteselection-page-cover page">
+    <div class="title">
+      <div class="limited-palette">Limited Palette</div>
+      <div class="selection">selection</div>
+    </div>
+    <ol class="menu">
+      {{#each sections}}
+        <li class="menu-item">{{category}}</li>
+      {{/each}}
+    </ol>
+  </div>
+</template>

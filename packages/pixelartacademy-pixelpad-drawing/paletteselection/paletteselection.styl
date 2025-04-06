@@ -1,0 +1,94 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-paletteselection
+  absolute-cover()
+
+  &.visible
+    .overlay
+      .fan-deck
+        top 50%
+        transition-timing-function easeOutBackTight()
+
+  &.active
+    .overlay
+      .navigation
+        visibility visible
+
+  .overlay
+    absolute-cover()
+    z-index 12
+
+    .navigation
+      visibility hidden
+
+      .page-button
+        position absolute
+        left calc(50% - 112rem)
+        right calc(50% - 112rem)
+        z-index 13
+        background none
+        border none
+
+        &.previous
+          top 0
+          cursor n-resize
+
+        &.next
+          bottom 0
+          cursor s-resize
+
+    .fan-deck
+      position absolute
+      left 50%
+      top calc(100% + 53rem)
+      transition top 0.8s easeInBackTight()
+
+      .pin
+        position absolute
+        left -109rem
+        top 12rem
+        width 13rem
+        height 12rem
+        background-image image('/pixelartacademy/pixelpad/apps/drawing/paletteselection/pin.png')
+
+      .sections
+      .palettes
+        list-style none
+        margin 0
+        padding 0
+
+      .page
+        position absolute
+        left -112rem
+        top -26rem
+        width 224rem
+        height 53rem
+        transform-origin 10rem 43rem
+        transition transform 0.75s
+
+        &.turned
+          transform rotateZ(-90deg)
+
+          canvas
+            &.bottom-canvas
+              top: 0
+              left: -1rem
+
+        &.manual-movement
+          transition ease-out 0.1s
+
+        canvas
+          position absolute
+          width 100%
+          height 100%
+
+          &.bottom-canvas
+            top 1rem
+
+  .background
+    position absolute
+    left calc(50% - 240rem)
+    top calc(50% - 180rem)
+    width 480rem
+    height 360rem
+    background-image image('/items/backgrounds/black-gradient.png')

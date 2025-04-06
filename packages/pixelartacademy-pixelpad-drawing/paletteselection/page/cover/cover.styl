@@ -1,0 +1,42 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-paletteselection-page-cover
+  text-transform uppercase
+  z-index 13
+
+  .title
+    position absolute
+    left 65rem
+    top 2rem
+
+    .limited-palette
+      width 50%
+      schoenecker()
+      font-weight bold
+      letter-spacing -1rem
+      line-height 12rem
+
+    .selection
+      thintel()
+
+  .menu
+    position absolute
+    list-style none
+    left 58rem
+    top 2rem
+    width 50rem
+    margin 0
+    padding 0
+    transform rotateZ(90deg)
+    transform-origin 0 0
+    small-print()
+    color atariBlue(3)
+
+    .menu-item
+      padding 2rem
+      display inline-block
+
+      &:hover
+        background atariBlue(3)
+        color atariGray(7)
+        cursor pointer

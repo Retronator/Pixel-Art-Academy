@@ -78,6 +78,11 @@ The project is using these fonts:
 
   Attribution 4.0 International License
 
+- **Schoenecker** by Craig Kroeger (www.miniml.com)
+
+  Permission granted by the authors for use in this specific repository.
+  Any forks of this repository and other derivative works must obtain their own license to use this font.
+
 Fonts are served in the WOFF cross-browser format as base64 encoded data URIs directly inside the CSS.
 
 The CSS files are generated with Font Squirrel (http://www.fontsquirrel.com)

@@ -13,22 +13,6 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     variables:
       open: AEc.ValueTypes.Trigger
       close: AEc.ValueTypes.Trigger
-      
-  onCreated: ->
-    super arguments...
-    
-    @_wasDisplayingAsset = null
-    
-    @autorun (computation) =>
-      displayingAsset = @drawing.portfolio().activeAsset()?
-      
-      if displayingAsset and not @_wasDisplayingAsset
-        @audio.open()
-        
-      else if @_wasDisplayingAsset and not displayingAsset
-        @audio.close()
-      
-      @_wasDisplayingAsset = displayingAsset
     
   @calculateAssetSize: (portfolioScale, bounds, options) ->
     width = bounds?.width or 1
@@ -69,6 +53,22 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
   constructor: (@drawing) ->
     super arguments...
 
+  onCreated: ->
+    super arguments...
+    
+    @_wasDisplayingAsset = null
+    
+    @autorun (computation) =>
+      displayingAsset = @drawing.portfolio().activeAsset()?
+      
+      if displayingAsset and not @_wasDisplayingAsset
+        @audio.open()
+        
+      else if @_wasDisplayingAsset and not displayingAsset
+        @audio.close()
+      
+      @_wasDisplayingAsset = displayingAsset
+      
   asset: ->
     @drawing.portfolio().displayedAsset()?.asset
     

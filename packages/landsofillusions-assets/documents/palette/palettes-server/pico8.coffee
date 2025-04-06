@@ -36,6 +36,7 @@ Document.startup ->
   pico8Palette =
     name: pico8PaletteName
     lospecSlug: 'pico-8'
+    lospecAuthor: 'zep'
     ramps: []
 
   for colorLine in colorLines

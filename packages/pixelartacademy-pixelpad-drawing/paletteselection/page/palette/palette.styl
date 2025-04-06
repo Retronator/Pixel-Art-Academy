@@ -1,0 +1,41 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-drawing-paletteselection-page-palette
+  cursor pointer
+
+  .info
+    position absolute
+    right 11rem
+    top 2rem
+
+    .name
+      thintel()
+
+    .author-area
+      small-print()
+
+      .author
+        text-transform uppercase
+
+  .lospec-link
+    display block
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    width 9rem
+
+    &:hover
+      .logo
+        &.normal
+          visibility hidden
+
+        &.hover
+          visibility visible
+
+    .logo
+      absolute-cover()
+      mask image('/pixelartacademy/pixelpad/apps/drawing/paletteselection/lospec.png') no-repeat center / 5rem 23rem
+
+      &.hover
+        visibility hidden

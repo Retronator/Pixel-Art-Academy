@@ -89,6 +89,18 @@ cursor(type)
     html.scale-3-or-up &
       cursor url('/interface/cursors/3x/w-resize.png') 21 12, w-resize
 
+  else if type is n-resize
+    cursor url('/interface/cursors/2x/n-resize.png') 14 13, e-resize
+
+    html.scale-3-or-up &
+      cursor url('/interface/cursors/3x/n-resize.png') 20 20, e-resize
+
+  else if type is s-resize
+    cursor url('/interface/cursors/2x/s-resize.png') 14 20, w-resize
+
+    html.scale-3-or-up &
+      cursor url('/interface/cursors/3x/s-resize.png') 20 30, w-resize
+
   else if type is zoom-in
     cursor url('/interface/cursors/2x/zoom-in.png') 14 10, zoom-in
 

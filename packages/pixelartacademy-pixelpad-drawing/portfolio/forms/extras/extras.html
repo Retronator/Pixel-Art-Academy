@@ -24,10 +24,14 @@
     </div>
     <div class="value">
       {{#if $is type 'RestrictedColors'}}
-        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Forms.Extras.Extra.Palette}}
+        <div class="color-palette">
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Forms.Extras.Extra.Palette}}
+        </div>
       {{/if}}
       {{#if $is type 'ColorPalette'}}
-        {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Forms.Extras.Extra.Palette}}
+        <div class="color-palette">
+          {{> PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.Forms.Extras.Extra.Palette}}
+        </div>
       {{/if}}
       {{#if $is type 'PixelArtScaling'}}
         <label>

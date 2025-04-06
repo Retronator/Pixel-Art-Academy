@@ -10,6 +10,7 @@ class LOI.Assets.Palette extends AM.Document
   #     r: red attribute (0.0-1.0)
   #     g: green attribute (0.0-1.0)
   #     b: blue attribute (0.0-1.0)
+  # category: the category under which the palette appears in the selector or null if not selectable
   # lospecSlug: the URL slug used on Lospec for this palette
   # lospecAuthor: the author of the palette as provided by Lospec
   @Meta
@@ -17,17 +18,26 @@ class LOI.Assets.Palette extends AM.Document
   
   @enableDatabaseContent()
   
+  @Categories =
+    Basic: "Basic"
+    Monoramp: "Monoramp"
+    System: "System"
+    Modern: "Modern"
+  
   @databaseContentInformationFields =
     name: 1
     lospecSlug: 1
+    category: 1
 
   @all = @subscription 'all'
   @allLospec = @subscription 'allLospec'
+  @allCategorized = @subscription 'allCategorized'
   @forId = @subscription 'forId'
   @forIds = @subscription 'forIds'
   @forName = @subscription 'forName'
   
   @insert = @method 'insert'
+  @update = @method 'update'
   @remove = @method 'remove'
 
   # Enumeration of palette names provided by the system.

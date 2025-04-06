@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection.Page.Palette">
+  <div class="pixelartacademy-pixelpad-apps-drawing-paletteselection-page-palette page">
+    <div class="info" {{style infoStyle}}>
+      <span class="name">{{name}}</span>
+      {{#if lospecAuthor}}
+        <span class="author-area">by
+          <span class="author">{{lospecAuthor}}</span>
+        </span>
+      {{/if}}
+    </div>
+    {{#if lospecSlug}}
+      <a class="lospec-link" href="https://lospec.com/palette-list/{{lospecSlug}}" target="_blank">
+        <span class="logo normal" {{style lospecLogoStyle}}></span>
+        <span class="logo hover" {{style lospecLogoHoverStyle}}></span>
+      </a>
+    {{/if}}
+  </div>
+</template>

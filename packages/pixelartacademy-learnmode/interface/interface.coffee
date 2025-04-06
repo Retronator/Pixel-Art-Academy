@@ -181,6 +181,15 @@ class LM.Interface extends LOI.Interface
     # Stop display.
     @focusedArtworks null
     
+  active: ->
+    # The Learn Mode interface is inactive when adventure is paused.
+    return if LOI.adventure.paused()
+    
+    # Inactive when the menu is opened.
+    return if LOI.adventure.menu.visible()
+    
+    true
+
   introFadeCompleteClass: ->
     'complete' if @introFadeComplete()
   

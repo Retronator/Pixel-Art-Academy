@@ -49,6 +49,12 @@ Package.onUse(function(api) {
 
   api.addComponent('clipboard..');
 
+  api.addComponent('paletteselection..');
+  api.addFile('paletteselection/page..');
+  api.addComponent('paletteselection/page/cover..');
+  api.addComponent('paletteselection/page/separator..');
+  api.addComponent('paletteselection/page/palette..');
+
   api.addFile('editor..');
   api.addStyle('editor..');
   api.addFile('editor/editors');

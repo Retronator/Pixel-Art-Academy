@@ -17,8 +17,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
     super arguments...
     
     @autorun (computation) =>
-      LOI.Assets.Palette.forName.subscribeContent @, LOI.Assets.Palette.SystemPaletteNames.Black
-      LOI.Assets.Palette.allLospec.subscribeContent @
+      LOI.Assets.Palette.allCategorized.subscribeContent @
   
     @sizeType = new ReactiveField @constructor.SizeTypes.Fixed
     
@@ -65,7 +64,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
       'input .property.size .height input': @onInputHeight
       'change .property.size .width input': @onChangeWidth
       'change .property.size .height input': @onChangeHeight
-      'change .palette': @onChangePalette
       'submit .new-artwork-form': @onSubmitNewArtworkForm
 
   onInputWidth: (event) ->
@@ -81,27 +79,6 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent extends 
 
   onChangeHeight: (event) ->
     @validateHeight $(event.target).val()
-  
-  onChangePalette: (event) ->
-    $target = $(event.target)
-    value = $target.val()
-    return unless value is 'lospec'
-    
-    lospecUrl = prompt "Enter Lospec URL for the desired palette"
-    return unless lospecUrl
-    
-    lospecSlug = lospecUrl.substring lospecUrl.lastIndexOf('/') + 1
-    
-    LOI.Assets.Palette.importFromLospec lospecSlug, (error, paletteId) =>
-      return console.error error if error
-
-      # Wait till the new palette is loaded.
-      Tracker.autorun (computation) =>
-        return unless LOI.Assets.Palette.findOne paletteId
-        
-        # Give the dropdown a chance to refresh.
-        Tracker.afterFlush =>
-          $target.val paletteId
     
   onSubmitNewArtworkForm: (event) ->
     event.preventDefault()

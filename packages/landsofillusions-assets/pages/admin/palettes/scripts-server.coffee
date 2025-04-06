@@ -20,6 +20,8 @@ LOI.Assets.Pages.Admin.Palettes.Scripts.importLospec.method (slug) ->
     console.error error, paletteResponse.body
     throw new AE.ExternalException "Response from Lospec is not valid JSON."
     
+  console.log "Received", paletteData
+  
   ramps = for colorHex in paletteData.colors
     shades: [new THREE.Color("##{colorHex}").toObject()]
     
@@ -27,7 +29,8 @@ LOI.Assets.Pages.Admin.Palettes.Scripts.importLospec.method (slug) ->
     name: paletteData.name
     ramps: ramps
     lospecSlug: slug
-    lospecAuthor: paletteData.author
+    
+  palette.lospecAuthor = paletteData.author if paletteData.author
   
   LOI.Assets.Palette.documents.insert palette
   
