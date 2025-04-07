@@ -72,23 +72,11 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection.Page.Palette extends PAA.PixelP
           @topCanvasImageData.data[index + 1] = color.g * 255
           @topCanvasImageData.data[index + 2] = color.b * 255
           
-      rowsCount = Math.ceil colors.length / 10
-      colorsPerRow = Math.floor colors.length / rowsCount
-      colorsRemainder = colors.length % rowsCount
+      colorRows = PAA.PixelPad.Apps.Drawing.PaletteSelection.splitPaletteIntoColorRows palette
       
-      colorRows = []
-      
-      for rowIndex in [0...rowsCount]
-        rowColors = []
-        colorsCount = colorsPerRow
-        colorsCount++ if rowIndex < colorsRemainder
-        
-        rowColors.push colors.shift() for colorIndex in [0...colorsCount]
-        colorRows.push rowColors
-        
       totalHeight = 40
-      minimumHeight = Math.floor totalHeight / rowsCount
-      verticalRemainder = totalHeight % rowsCount
+      minimumHeight = Math.floor totalHeight / colorRows.length
+      verticalRemainder = totalHeight % colorRows.length
       startY = 14
       
       for rowColors, rowIndex in colorRows

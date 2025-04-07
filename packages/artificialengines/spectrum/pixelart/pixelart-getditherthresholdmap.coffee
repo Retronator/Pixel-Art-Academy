@@ -31,6 +31,6 @@ AS.PixelArt.getDitherThresholdMap = (size) ->
 
   for row in ditherThresholdMap
     for value, index in row
-      row[index] /= size ** 2
+      row[index] = (value + 0.5) / size ** 2
 
   ditherThresholdMap

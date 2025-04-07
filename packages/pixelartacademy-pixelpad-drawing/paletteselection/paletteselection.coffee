@@ -11,13 +11,35 @@ turnedAngle = 30
 
 class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.PaletteSelection'
-  @register @id()
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
       open: AEc.ValueTypes.Trigger
       close: AEc.ValueTypes.Trigger
       slide: AEc.ValueTypes.Trigger
+      
+  @splitPaletteIntoColorRows: (palette) ->
+    colors = []
+    
+    for ramp in palette.ramps
+      for shade in ramp.shades
+        colors.push THREE.Color.fromObject shade
+        
+    rowsCount = Math.ceil colors.length / 10
+    colorsPerRow = Math.floor colors.length / rowsCount
+    colorsRemainder = colors.length % rowsCount
+    
+    colorRows = []
+    
+    for rowIndex in [0...rowsCount]
+      rowColors = []
+      colorsCount = colorsPerRow
+      colorsCount++ if rowIndex < colorsRemainder
+      
+      rowColors.push colors.shift() for colorIndex in [0...colorsCount]
+      colorRows.push rowColors
+    
+    colorRows
       
   mixins: -> [@activatable]
   
@@ -82,17 +104,6 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     @$pages = new ReactiveField []
     
     $(document).on 'keydown.pixelartacademy-pixelpad-apps-drawing-paletteselection', (event) => @onKeyDown event
-    
-    if @initialTargetPaletteName
-      Tracker.autorun (computation) =>
-        return unless @activatable.activated()
-        return unless sections = @sections()
-        for section in sections
-          for palette, paletteIndex in section.palettes
-            if palette.name is @initialTargetPaletteName
-              computation.stop()
-              @goToPage section.separatorPageIndex + paletteIndex + 1
-              return
   
   onRendered: ->
     super arguments...
@@ -153,6 +164,15 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     ,
       1000
     
+  _getPaletteOnPage: (pageIndex) ->
+    return null unless sections = @sections()
+    
+    for section in sections when section.separatorPageIndex < pageIndex <= section.separatorPageIndex + section.palettes.length
+      paletteIndex = pageIndex - section.separatorPageIndex - 1
+      return section.palettes[paletteIndex]
+    
+    null
+
   previousPage: ->
     @_resetManualMovement()
   
@@ -212,6 +232,10 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     top: "calc(50% + #{25 + currentPageIndex * depthCompression}rem)"
     
   update: (appTime) ->
+    @_updateTargetPage appTime
+    @_updatePaletteGlow appTime
+    
+  _updateTargetPage: (appTime) ->
     targetPageIndex = @targetPageIndex()
     return unless targetPageIndex?
     

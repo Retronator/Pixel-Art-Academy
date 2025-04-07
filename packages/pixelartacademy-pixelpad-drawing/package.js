@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'stackblur-canvas': '2.4.0'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:fatamorgana');
   api.use('retronator:landsofillusions');
@@ -50,6 +54,7 @@ Package.onUse(function(api) {
   api.addComponent('clipboard..');
 
   api.addComponent('paletteselection..');
+  api.addFile('paletteselection/paletteselection-paletteglow');
   api.addFile('paletteselection/page..');
   api.addComponent('paletteselection/page/cover..');
   api.addComponent('paletteselection/page/separator..');
