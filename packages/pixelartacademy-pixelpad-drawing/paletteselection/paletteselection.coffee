@@ -121,9 +121,8 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
           
           $(page).css
             zIndex: $pages.length - index
-            top: "#{offset - 25}rem"
+            top: "#{offset - 26}rem"
         
-        @$('.navigation').css zIndex: $pages.length + 1
         @$('.pin').css zIndex: $pages.length + 1
     
     @app.addComponent @
@@ -225,11 +224,13 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     currentPageIndex = @currentPageIndex()
     
     bottom: "calc(50% + #{25 - currentPageIndex * depthCompression}rem)"
+    zIndex: @$pages().length + 1
   
   nextPageButtonStyle: ->
     currentPageIndex = @currentPageIndex()
     
     top: "calc(50% + #{25 + currentPageIndex * depthCompression}rem)"
+    zIndex: @$pages().length + 1
     
   update: (appTime) ->
     @_updateTargetPage appTime

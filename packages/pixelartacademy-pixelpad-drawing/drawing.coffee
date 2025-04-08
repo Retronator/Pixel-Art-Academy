@@ -39,6 +39,9 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
   
     # Player must have completed the reference copy challenge by uploading the result.
     PAA.Practice.Project.Asset.Bitmap.state 'canUpload'
+    
+  @canCreateArtworks: ->
+    PAA.Practice.Project.Asset.Bitmap.state('unlockedPixelArtEvaluationCriteria')?.length
 
   constructor: ->
     super arguments...

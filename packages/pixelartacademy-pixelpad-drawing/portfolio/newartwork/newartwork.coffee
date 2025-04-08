@@ -12,7 +12,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.NewArtwork extends PixelArtAcademy.Pix
   @displayName: -> "New artwork"
   
   @description: -> """
-      Create a new artwork that you will edit with the built-in editor.
+      Create a new artwork to draw anything you desire.
     """
   
   @initialize()

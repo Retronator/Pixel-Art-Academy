@@ -24,6 +24,27 @@ class LM.Notifications
     
     LM.ConditionalNotificationsProvider.registerNotificationClass @
 
+  class @ArtworksSection extends PAA.PixelPad.Systems.Notifications.Notification
+    @id: -> "PixelArtAcademy.LearnMode.Notifications.ArtworksSection"
+    
+    @message: -> """
+      You can now create your own artworks in the drawing app.
+
+      This feature is very barebones and isn't meant to replace dedicated drawing software.
+      You can use it to further explore pixel art evaluation, but note that the evaluation itself is very experimental
+      and only works on lines for now.
+    """
+    
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @condition: ->
+      # Show when the player can create artworks.
+      PAA.PixelPad.Apps.Drawing.canCreateArtworks()
+    
+    @initialize()
+    
+    LM.ConditionalNotificationsProvider.registerNotificationClass @
+
   class @TheEnd extends LM.ConditionalNotificationsProvider.ConditionalNotification
     @id: -> "PixelArtAcademy.LearnMode.Notifications.TheEnd"
     
