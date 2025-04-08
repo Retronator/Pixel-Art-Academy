@@ -173,9 +173,12 @@ class LM.Interface extends LOI.Interface
   startWaiting: ->
     @waiting true
     
-  focusArtworks: (artworks) ->
+  focusArtworks: (artworks, options) ->
     # Start display.
-    @focusedArtworks artworks
+    @focusedArtworks
+      artworks: artworks
+      options: _.defaults {}, options,
+        scrollParentSelector: '.focused-artworks'
 
   unfocusArtworks: ->
     # Stop display.
@@ -199,9 +202,8 @@ class LM.Interface extends LOI.Interface
   waitingOverlayVisibleClass: ->
     'visible' if @waiting()
     
-  artworksStreamOptions: ->
-    scrollParentSelector: '.focused-artworks'
-    
+  artworksStreamOptions: -> @focusedArtworks().options
+  
   events: ->
     super(arguments...).concat
       'click .focused-artworks': @onClickFocusedArtworks

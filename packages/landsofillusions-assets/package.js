@@ -102,6 +102,7 @@ Package.onUse(function(api) {
   api.addFile('documents/bitmap/layer');
   api.addFile('documents/bitmap/layergroup');
   api.addFile('documents/bitmap/pixelformat');
+  api.addServerFile('documents/bitmap/server');
 
   api.addFile('documents/bitmap/attribute..');
   api.addFile('documents/bitmap/attribute/alpha');

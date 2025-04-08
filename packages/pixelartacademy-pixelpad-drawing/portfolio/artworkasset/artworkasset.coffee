@@ -12,7 +12,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset extends PAA.PixelPad.Apps
   
     @document = new ComputedField =>
       return unless artwork = @artwork()
-      return unless documentRepresentation = _.find artwork.representations, (representation) => representation.type is PADB.Artwork.RepresentationTypes.Document
+      return unless documentRepresentation = artwork.firstDocumentRepresentation()
 
       # Extract the type and ID.
       url = new URL Meteor.absoluteUrl documentRepresentation.url

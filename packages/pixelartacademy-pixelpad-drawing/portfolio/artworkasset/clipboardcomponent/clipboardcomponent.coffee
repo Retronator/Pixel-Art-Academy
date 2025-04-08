@@ -78,6 +78,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       'click .trash-button': @onClickTrashButton
       'click .property.extras': @onClickPropertyExtras
       'click .back-button': @onClickBackButton
+      'click .asset-placeholder': @onClickAssetPlaceholder
 
   onClickEditButton: (event) ->
     AB.Router.changeParameter 'parameter4', 'edit'
@@ -118,6 +119,29 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
   
   onClickBackButton: (event) ->
     @closeSecondPage()
+  
+  onClickAssetPlaceholder: (event) ->
+    artwork = @artworkAsset.artwork()
+    
+    bitmapRepresentation = artwork.firstDocumentRepresentation()
+    bitmapUrl = new URL Meteor.absoluteUrl bitmapRepresentation.url
+    bitmapId = bitmapUrl.searchParams.get 'id'
+    bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+    
+    engineBitmap = new LOI.Assets.Engine.PixelImage.Bitmap
+      asset: => bitmap
+      
+    unless bitmapCanvas = engineBitmap.getCanvas()
+      # There are no pixels in the bitmap yet, so just return an empty 1px image.
+      bitmapCanvas = new AM.Canvas 1, 1
+  
+    artworkWithEmbeddedImage = _.clone artwork
+    artworkWithEmbeddedImage.image =
+      src: bitmapCanvas.toDataURL('image/png')
+      pixelScale: 1
+    
+    LOI.adventure.interface.focusArtworks [artworkWithEmbeddedImage],
+      captionComponentClass: PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ArtworkCaption
   
   class @Title extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.Drawing.Portfolio.NewArtwork.ClipboardComponent.Title'
