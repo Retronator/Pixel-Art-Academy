@@ -131,5 +131,11 @@ cursor(type)
     html.scale-3-or-up &
       cursor url('/interface/cursors/3x/paste.png') 6 3, pointer
 
+  else if type is delete
+    cursor url('/interface/cursors/2x/delete.png') 4 2, pointer
+
+    html.scale-3-or-up &
+      cursor url('/interface/cursors/3x/delete.png') 6 3, pointer
+
   else
     cursor arguments

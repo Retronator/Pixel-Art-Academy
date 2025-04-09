@@ -10,7 +10,8 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
   constructor: (@artworkAsset) ->
     super arguments...
   
-    @secondPageActive = new ReactiveField false
+    @changeArtworkActive = new ReactiveField false
+    @exportArtworkActive = new ReactiveField false
   
   onCreated: ->
     super arguments...
@@ -57,14 +58,25 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       # Inform that we've handled the back button.
       return true
       
-  showSecondPage: ->
-    @secondPageActive true
+  changeArtwork: ->
+    @changeArtworkActive true
+    
+  exportArtwork: ->
+    @exportArtworkActive true
   
   closeSecondPage: ->
-    @secondPageActive false
+    @changeArtworkActive false
+    @exportArtworkActive false
+  
+  secondPageActive: ->
+    @changeArtworkActive() or @exportArtworkActive()
     
   canEdit: -> PAA.PixelPad.Apps.Drawing.canEdit()
-  canUpload: -> PAA.PixelPad.Apps.Drawing.canEdit() or PAA.PixelPad.Apps.Drawing.canUpload()
+  
+  canExport: ->
+    # We can export if there's at least one layer.
+    document = @artworkAsset.document()
+    document.layers?.length or document.layerGroups?.length
   
   assetPlaceholderStyle: ->
     return unless assetSize = @assetSize()
@@ -75,6 +87,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
   events: ->
     super(arguments...).concat
       'click .edit-button': @onClickEditButton
+      'click .export-button': @onClickExportButton
       'click .trash-button': @onClickTrashButton
       'click .property.extras': @onClickPropertyExtras
       'click .back-button': @onClickBackButton
@@ -82,6 +95,9 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
 
   onClickEditButton: (event) ->
     AB.Router.changeParameter 'parameter4', 'edit'
+    
+  onClickExportButton: (event) ->
+    @exportArtwork()
     
   onClickTrashButton: (event) ->
     dialog = new LOI.Components.Dialog
@@ -115,27 +131,20 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
           1000
   
   onClickPropertyExtras: (event) ->
-    @showSecondPage()
+    @changeArtwork()
   
   onClickBackButton: (event) ->
     @closeSecondPage()
   
   onClickAssetPlaceholder: (event) ->
-    artwork = @artworkAsset.artwork()
-    
-    bitmapRepresentation = artwork.firstDocumentRepresentation()
-    bitmapUrl = new URL Meteor.absoluteUrl bitmapRepresentation.url
-    bitmapId = bitmapUrl.searchParams.get 'id'
-    bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-    
     engineBitmap = new LOI.Assets.Engine.PixelImage.Bitmap
-      asset: => bitmap
+      asset: @artworkAsset.document
       
     unless bitmapCanvas = engineBitmap.getCanvas()
       # There are no pixels in the bitmap yet, so just return an empty 1px image.
       bitmapCanvas = new AM.Canvas 1, 1
   
-    artworkWithEmbeddedImage = _.clone artwork
+    artworkWithEmbeddedImage = _.clone @artworkAsset.artwork()
     artworkWithEmbeddedImage.image =
       src: bitmapCanvas.toDataURL('image/png')
       pixelScale: 1

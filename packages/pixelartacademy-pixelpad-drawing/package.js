@@ -11,7 +11,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'stackblur-canvas': '2.4.0'
+  'stackblur-canvas': '2.4.0',
+  'jszip': '3.10.1'
 });
 
 Package.onUse(function(api) {
@@ -42,6 +43,7 @@ Package.onUse(function(api) {
   api.addComponent('portfolio/artworkasset/portfoliocomponent..');
   api.addComponent('portfolio/artworkasset/clipboardcomponent..');
   api.addComponent('portfolio/artworkasset/changeartwork..');
+  api.addComponent('portfolio/artworkasset/exportartwork..');
   api.addComponent('portfolio/artworkasset/artworkcaption..');
 
   api.addFile('portfolio/newartwork..');

@@ -36,16 +36,21 @@
   input[type=text]
     padding-left 4rem
 
-  input[type='checkbox']
+  input[type=checkbox]
     display none
 
     & + .checkmark
-      cursor pointer
-
-    &:checked + .checkmark::before
+      cursor text
+      opacity 0
       daily()
       font-weight bold
-      content '✔'
+
+      &::before
+        content '✔'
+
+    &:checked + .checkmark
+      opacity 1
+      cursor delete
 
   .option
     padding 0 0 2rem 4rem
@@ -125,6 +130,7 @@
         freehand()
         color transparent
         overflow hidden
+        cursor text
 
         &:hover
           pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormFreehandValue()

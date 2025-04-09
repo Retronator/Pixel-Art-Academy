@@ -1,0 +1,76 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/portfolio/forms/form.import"
+
+printColor = atariAqua(2)
+lighterPrintColor = atariGreen(3)
+paperColor = atariLime(7)
+inputColor = atariGray(2)
+errorColor = atariRed(4)
+
+.pixelartacademy-pixelpad-apps-drawing-portfolio-artworkasset-exportartwork
+  pixelArtAcademyPixelPadAppsDrawingPortfolioFormsFormColors(printColor, paperColor, inputColor, errorColor)
+
+  &::before
+    background-image image('/pixelartacademy/pixelpad/apps/drawing/forms/header-lime-aqua.png')
+
+  .properties
+    .title
+      .value
+        padding-left 5rem
+
+  .prompt
+    small-print()
+
+  .scales
+    display table
+    border-collapse collapse
+    position relative
+    margin 3rem 0
+    width 100%
+    small-print()
+
+    .category
+      display table-row
+      border 1rem solid
+      padding 1rem
+
+      &::before
+        content ''
+
+      &::before
+      .name
+      .description
+        display table-cell
+
+      .name
+        text-transform uppercase
+        padding-right 5rem
+        vertical-align middle
+
+      .description
+        text-wrap balance
+
+    .scale
+      display table-row
+      border 1rem solid
+
+      .selection
+      .factor
+      .dimensions
+        display table-cell
+        position relative
+
+      .factor
+      .dimensions
+        padding 0 1rem
+
+      .selection
+        border 1rem solid
+
+        .checkmark
+          color inputColor
+          padding 1rem 2rem 1rem 4rem
+          small-print()
+
+      .dimensions
+        color lighterPrintColor
