@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Base
 AM = Artificial.Mirage
 AMu = Artificial.Mummification
@@ -105,45 +106,54 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork extends AM.
       resizedCanvas._factor = factor
       resizedCanvas
     
-    # Export image.
-    $link = $('<a style="display: none">')
-    $('body').append $link
-    link = $link[0]
-    
     artwork = @artworkAsset.artwork()
     name = artwork.title or "untitled"
     
-    if canvases.length is 1
+    blobPromises = for canvas in canvases
+      do (canvas) =>
+        new Promise (resolve, reject) =>
+          canvas.toBlob (blob) =>
+            resolve
+              blob: blob
+              fileName: "#{name} x#{canvas._factor}.png"
+    
+    blobs = await Promise.all blobPromises
+    
+    if blobs.length is 1
       # Download the single png directly.
-      canvas = canvases[0]
-      link.href = canvas.toDataURL('image/png')
-      link.download = "#{name} x#{canvas._factor}.png"
+      fileBlob = blobs[0].blob
+      filename = blobs[0].fileName
       
     else
       # Create a ZIP file with all the images.
-      blobPromises = for canvas in canvases
-        do (canvas) =>
-          new Promise (resolve, reject) =>
-            canvas.toBlob (blob) =>
-              resolve
-                blob: blob
-                fileName: "#{name} x#{canvas._factor}.png"
-            ,
-              'image/png'
-      
-      blobs = await Promise.all blobPromises
-      
-      # Add each blob to the zip file.
       zip = new JSZip
       zip.file blob.fileName, blob.blob for blob in blobs
       
       # Generate the zip file blob.
-      zipBlob = await zip.generateAsync type: 'blob'
-      link.href = URL.createObjectURL zipBlob
-      link.download = "#{name}.zip"
+      fileBlob = await zip.generateAsync type: 'blob'
+      filename = "#{name}.zip"
 
-    link.click()
-    $link.remove()
+    switch AB.ApplicationEnvironment.type
+      when AB.ApplicationEnvironment.Types.Browser
+        $link = $('<a style="display: none">')
+        $('body').append $link
+
+        link = $link[0]
+        link.href = URL.createObjectURL fileBlob
+        link.download = filename
+        link.click()
+
+        $link.remove()
+        
+      when AB.ApplicationEnvironment.Types.Electron
+        arrayBuffer = await fileBlob.arrayBuffer()
+      
+        result = await Desktop.call 'dialogs', 'saveAs', arrayBuffer,
+          title: 'Save Artwork'
+          defaultPath: filename
+          buttonLabel: 'Save'
+      
+        throw new AE.ExternalException "Saving failed.", filename, result if result and result isnt true
     
     # Navigate back to the first page.
     @artworkAsset.clipboardComponent.closeSecondPage()
