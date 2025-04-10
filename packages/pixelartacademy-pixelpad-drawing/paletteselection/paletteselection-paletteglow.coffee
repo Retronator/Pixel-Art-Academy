@@ -50,7 +50,13 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends PAA.PixelPad.Apps.Drawi
       for section in sections
         for palette, paletteIndex in section.palettes
           if palette.name is @initialTargetPaletteName
-            @goToPage section.separatorPageIndex + paletteIndex + 1
+            # To ensure smooth animation, delay the initial turning slightly.
+            Meteor.setTimeout =>
+              return unless @activatable.activated()
+              @goToPage section.separatorPageIndex + paletteIndex + 1
+            ,
+              100
+
             delete @initialTargetPaletteName
             return
     

@@ -13,6 +13,8 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     variables:
       open: AEc.ValueTypes.Trigger
       close: AEc.ValueTypes.Trigger
+      secondPageOpen: AEc.ValueTypes.Trigger
+      secondPageClose: AEc.ValueTypes.Trigger
     
   @calculateAssetSize: (portfolioScale, bounds, options) ->
     width = bounds?.width or 1

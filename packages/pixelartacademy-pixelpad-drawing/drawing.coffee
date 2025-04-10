@@ -58,6 +58,9 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
     
+    # Pre-load palette selection audio since we're creating the palette selection component ad-hoc.
+    PAA.PixelPad.Apps.Drawing.PaletteSelection.Audio.load LOI.adventure.audioManager
+    
     @autorun (computation) =>
       return unless editorId = @state('editorId')
       
@@ -90,6 +93,8 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
 
   onDestroyed: ->
     super arguments...
+    
+    PAA.PixelPad.Apps.Drawing.PaletteSelection.Audio.unload()
     
     @editor().destroy()
 

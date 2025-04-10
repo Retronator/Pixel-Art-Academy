@@ -16,7 +16,12 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     variables:
       open: AEc.ValueTypes.Trigger
       close: AEc.ValueTypes.Trigger
-      slide: AEc.ValueTypes.Trigger
+      slide:
+        valueType: AEc.ValueTypes.Trigger
+        throttle: 50
+      manualSlide: AEc.ValueTypes.Boolean
+      manualSlideSpeed: AEc.ValueTypes.Number
+      pagePan: AEc.ValueTypes.Number
       
   @splitPaletteIntoColorRows: (palette) ->
     colors = []
@@ -41,7 +46,7 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     
     colorRows
       
-  mixins: -> [@activatable]
+  mixins: -> super(arguments...).concat @activatable
   
   constructor: (@initialTargetPaletteName) ->
     super arguments...
@@ -141,6 +146,8 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     true
   
   onActivate: (finishedActivatingCallback) ->
+    @audio.open()
+
     Meteor.setTimeout =>
       return unless @activatable.activating()
       @visible true
@@ -156,7 +163,15 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
   onDeactivate: (finishedDeactivatingCallback) ->
     @_resetTargetPage()
     @visible false
+    
+    if @$('.page.turned').length
+      $pages = @$pages()
+      @audio.pagePan AEc.getPanForElement $pages[0]
+      @audio.slide()
+    
     @$('.page').removeClass('turned').removeClass('manual-movement').css transform: ''
+    
+    @audio.close()
     
     Meteor.setTimeout =>
       finishedDeactivatingCallback()
@@ -184,6 +199,8 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
 
     $pages.eq(currentPageIndex).removeClass('turned')
     
+    @_slidePage()
+    
   nextPage: ->
     @_resetManualMovement()
 
@@ -191,18 +208,29 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     currentPageIndex = @currentPageIndex()
     return if currentPageIndex >= $pages.length - 1
     
+    @_slidePage()
+
     $pages.eq(currentPageIndex).addClass('turned')
     
     currentPageIndex++
     @currentPageIndex currentPageIndex
     
+  _slidePage: ->
+    $pages = @$pages()
+    currentPageIndex = @currentPageIndex()
+    
+    @audio.pagePan AEc.getPanForElement $pages[currentPageIndex]
+    @audio.slide()
+    
   goToPage: (targetPageIndex) ->
+    return if targetPageIndex is @currentPageIndex()
+    
     @targetPageIndex targetPageIndex
   
   _resetTargetPage: ->
     @targetPageIndex null
     @_pageTurnCooldownElapsed = 0
-    @_pageTurnCooldownDuration = 0.1
+    @_pageTurnCooldownDuration = 0.3
   
   selectPalette: (palette) ->
     @selectedPalette = palette
@@ -243,7 +271,12 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     # Immediately after target is set and after the cooldown, move a page.
     if not @_pageTurnCooldownElapsed or @_pageTurnCooldownElapsed >= @_pageTurnCooldownDuration
       @_pageTurnCooldownElapsed = 0
-      @_pageTurnCooldownDuration -= 0.01 if @_pageTurnCooldownDuration > 0.05
+      
+      if @_pageTurnCooldownDuration > 0.1
+        @_pageTurnCooldownDuration -= 0.1
+        
+      else if @_pageTurnCooldownDuration > 0.05
+        @_pageTurnCooldownDuration -= 0.01
 
       # Note: We don't want to store current page index into a local variable
       # since it will get change with the call to next or previous page.
@@ -253,7 +286,9 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
       else
         @previousPage()
       
-      @_resetTargetPage() if @currentPageIndex() is targetPageIndex
+      if @currentPageIndex() is targetPageIndex
+        @_resetTargetPage()
+        return
       
     @_pageTurnCooldownElapsed += appTime.elapsedAppTime
   
@@ -285,6 +320,7 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     # Prevent turning further on the first and last pages.
     if currentPageIndex is $pages.length - 1 and @manualPageRotation > 0 or currentPageIndex is 0 and @manualPageRotation < 0
       @_resetManualMovement()
+      $pages.eq(currentPageIndex).removeClass('turned')
       return
       
     # When moving backwards from rest, we need to activate the previous page.
@@ -293,12 +329,19 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
       @currentPageIndex currentPageIndex
       @manualPageRotation += 90
     
+    @audio.pagePan AEc.getPanForElement $pages[currentPageIndex]
+    
     if 0 < @manualPageRotation < 90
       $pages.eq(currentPageIndex).addClass('manual-movement')
       $pages[currentPageIndex].style.transform = "rotateZ(-#{_.clamp @manualPageRotation, 0, 90}deg)"
       
+      @audio.manualSlide true
+    
     else
       @_resetManualMovement true
+      
+      @audio.manualSlide false
+      @audio.slide()
       
     if @manualPageRotation > turnedAngle
       $pages.eq(currentPageIndex).addClass('turned')
@@ -321,6 +364,7 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
       return unless 0 < @manualPageRotation < 90
       
       @_resetManualMovement true
+      @_slidePage()
       
       currentPageIndex = @currentPageIndex()
       
@@ -334,6 +378,17 @@ class PAA.PixelPad.Apps.Drawing.PaletteSelection extends LOI.Component
     
     @_debouncedReset()
 
+    @_debouncedSlideEnd ?= _.debounce =>
+      @audio.manualSlide false
+    ,
+      50
+    
+    @_debouncedSlideEnd()
+    
+    # Play sliding audio corresponding to the scroll speed.
+    speed = _.clamp Math.abs(event.originalEvent.deltaY / 10), 1, 2
+    @audio.manualSlideSpeed speed
+    
   _resetManualMovement: (rememberAccumulatedPageRotation = false) ->
     currentPageIndex = @currentPageIndex()
     $pages = @$pages()

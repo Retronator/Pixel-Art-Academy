@@ -60,13 +60,16 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
       
   changeArtwork: ->
     @changeArtworkActive true
+    @drawing.clipboard().audio.secondPageOpen()
     
   exportArtwork: ->
     @exportArtworkActive true
+    @drawing.clipboard().audio.secondPageOpen()
   
   closeSecondPage: ->
     @changeArtworkActive false
     @exportArtworkActive false
+    @drawing.clipboard().audio.secondPageClose()
   
   secondPageActive: ->
     @changeArtworkActive() or @exportArtworkActive()
