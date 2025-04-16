@@ -91,6 +91,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork extends AM.
   onSubmitExportArtworkForm: (event) ->
     event.preventDefault()
     
+    # Navigate back to the first page.
+    # HACK: We do this at the start since waiting on the Electron save dialog will throw a timeout error.
+    @artworkAsset.clipboardComponent.closeSecondPage()
+    
     factors = for factorInput in @$('.factor-input:checked')
       parseInt $(factorInput).data('factor')
     
@@ -154,6 +158,3 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ExportArtwork extends AM.
           buttonLabel: 'Save'
       
         throw new AE.ExternalException "Saving failed.", filename, result if result and result isnt true
-    
-    # Navigate back to the first page.
-    @artworkAsset.clipboardComponent.closeSecondPage()
