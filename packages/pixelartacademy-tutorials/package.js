@@ -80,6 +80,11 @@ Package.onUse(function(api) {
   api.addFile('drawing/elementsofart/line/errorinstruction');
   api.addFile('drawing/elementsofart/line/referencestrayinstruction');
 
+  api.addFile('drawing/elementsofart/shape..');
+  api.addFile('drawing/elementsofart/shape/asset');
+
+  api.addFile('drawing/elementsofart/shape/basicshapes');
+
   // Pixel art fundamentals
 
   api.addFile('drawing/pixelartfundamentals..');

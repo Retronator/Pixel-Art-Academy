@@ -32,12 +32,36 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     Task = @
     
+  class @Shape extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Shape'
+    @goal: -> Goal
+    
+    @directive: -> "Learn about shapes"
+    
+    @instructions: -> """
+      In the Drawing app, complete the Elements of art: shape tutorial to learn about drawing things out of shapes.
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @predecessors: -> [Goal.Line]
+    
+    @interests: -> ['shape']
+    
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Tutorials.Drawing.ElementsOfArt.Shape.completed()
+    
+    Task = @
+
   @tasks: -> [
     @Line
+    @Shape
   ]
 
   @finalTasks: -> [
-    @Line
+    @Shape
   ]
 
   @initialize()

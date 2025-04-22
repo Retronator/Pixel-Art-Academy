@@ -25,6 +25,9 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
     things.push @_tutorialLine
     
     if @_tutorialLine.completed()
+      @_tutorialShape ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.ElementsOfArt.Shape
+      things.push @_tutorialShape
+
       @_tutorialPixelArtLines ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
       things.push @_tutorialPixelArtLines
       
