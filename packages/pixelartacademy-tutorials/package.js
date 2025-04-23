@@ -84,6 +84,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/elementsofart/shape/asset');
 
   api.addFile('drawing/elementsofart/shape/basicshapes');
+  api.addFile('drawing/elementsofart/shape/combiningbasicshapes');
 
   // Pixel art fundamentals
 

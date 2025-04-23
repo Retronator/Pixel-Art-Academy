@@ -10,8 +10,6 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Asset extends PAA.Practice.Tutor
 
   @breakPathsIntoSteps: -> true
   
-  @minClipboardScale: -> 1
-  
   availableToolKeys: ->
     [
       PAA.Practice.Software.Tools.ToolKeys.Pencil

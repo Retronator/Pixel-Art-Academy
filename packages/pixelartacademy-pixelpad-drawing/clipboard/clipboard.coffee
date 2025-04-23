@@ -20,15 +20,29 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     width = bounds?.width or 1
     height = bounds?.height or 1
     displayScale = LOI.adventure.interface.display.scale()
+    fitScale = Math.min 174 / width, 160 / height
 
     if options?.pixelArtScaling
-      # Asset in the clipboard should be bigger than in the portfolio.
       if portfolioScale < 1
-        # The asset was scaled down in the portfolio, but we should remain at least pixel perfect in the clipboard.
-        minimumScale = 1 / displayScale / window.devicePixelRatio
-        scale = Math.max portfolioScale, minimumScale
+        # The asset was scaled down in the portfolio, so we will need to scale downwards. We start
+        # operating in effective scale to still have integer magnification compared to window pixels.
+        effectiveScale = displayScale
+        effectiveScale-- while effectiveScale / displayScale > fitScale
+      
+        if effectiveScale > 0
+          scale = effectiveScale / displayScale
+        
+        else
+          # We need to reduce scale below 1 effective pixel so we start dividing by integer amounts below 1.
+          divisor = 1
+          divisor++ while 1 / divisor / displayScale > fitScale
+          
+          effectiveScale = 1 / divisor
+    
+          scale = Math.max portfolioScale, effectiveScale / displayScale
   
       else
+        # Asset in the clipboard should be bigger than in the portfolio.
         # 1 -> 2
         # 2 -> 3
         # 3 -> 4
@@ -38,8 +52,8 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
         scale = Math.ceil portfolioScale * 1.2
       
     else
-      # Make the asset fit in the clipboard (200px).
-      scale = _.min [1 / displayScale, 174 / width, 160 / height]
+      # Make the asset fit in the clipboard.
+      scale = Math.min 1 / displayScale, fitScale
 
     # Apply minimum and maximum scale if provided (it could be a non-integer).
     scale = Math.max scale, options.scaleLimits.min if options?.scaleLimits?.min
