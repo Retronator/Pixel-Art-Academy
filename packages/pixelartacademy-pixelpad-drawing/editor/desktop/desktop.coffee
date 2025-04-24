@@ -140,6 +140,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": PAA.Practice.Software.Tools.ToolKeys.ColorPicker
       "#{LOI.Assets.SpriteEditor.Tools.Line.id()}": PAA.Practice.Software.Tools.ToolKeys.Line
       "#{LOI.Assets.SpriteEditor.Tools.Rectangle.id()}": PAA.Practice.Software.Tools.ToolKeys.Rectangle
+      "#{LOI.Assets.SpriteEditor.Tools.Ellipse.id()}": PAA.Practice.Software.Tools.ToolKeys.Ellipse
       "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
       
     @autorun (computation) =>

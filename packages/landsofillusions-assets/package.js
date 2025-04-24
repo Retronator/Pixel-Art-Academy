@@ -14,7 +14,7 @@ Npm.depends({
   'pngjs': '2.3.0',
   'fast-png': '4.0.1',
   'delaunator': '3.0.2',
-  'bresenham-zingl': '0.1.1',
+  'bresenham-zingl': '0.2.0',
   'pako': '1.0.8',
   'ml-regression-theil-sen': '1.0.0',
   'canvas': '2.11.2'
@@ -317,6 +317,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/line');
   api.addFile('spriteeditor/tools/line-perfectline');
   api.addFile('spriteeditor/tools/rectangle');
+  api.addFile('spriteeditor/tools/ellipse');
 
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');

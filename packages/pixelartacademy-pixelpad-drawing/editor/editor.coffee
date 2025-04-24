@@ -205,6 +205,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
         "#{LOI.Assets.SpriteEditor.Tools.Line.id()}": key: AC.Keys.l
         "#{LOI.Assets.SpriteEditor.Tools.Rectangle.id()}": key: AC.Keys.u
+        "#{LOI.Assets.SpriteEditor.Tools.Ellipse.id()}": shift: true, key: AC.Keys.u
 
         "#{PAA.PixelPad.Apps.Drawing.Editor.Tools.MoveCanvas.id()}": key: AC.Keys.h, holdKey: AC.Keys.space, holdButton: AC.Buttons.auxiliary
       

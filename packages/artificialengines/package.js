@@ -473,6 +473,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum/pixelart..');
   api.addFile('spectrum/pixelart/pixelart-detectpixelscale');
   api.addFile('spectrum/pixelart/pixelart-getditherthresholdmap');
+  api.addFile('spectrum/pixelart/circle');
 
   api.addFile('spectrum/color..');
   api.addGlsl('spectrum/color/hsltorgb');

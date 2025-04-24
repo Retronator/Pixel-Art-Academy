@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'bresenham-zingl': '0.1.1'
+  'bresenham-zingl': '0.2.0'
 });
 
 Package.onUse(function(api) {

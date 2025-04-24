@@ -27,7 +27,7 @@ class LOI.Assets.SpriteEditor.Tools.Rectangle extends LOI.Assets.SpriteEditor.To
 
     pixels = []
     
-    if @drawingActive()
+    if @drawingActive() and @paintHelper.isPaintSet()
       _pixelCoordinatesDelta.subVectors _currentPixelCoordinates, _startPixelCoordinates
 
       if keyboardState.isKeyDown AC.Keys.shift
@@ -46,29 +46,26 @@ class LOI.Assets.SpriteEditor.Tools.Rectangle extends LOI.Assets.SpriteEditor.To
       if keyboardState.isCommandOrControlDown()
         _startPixelCoordinates.sub _pixelCoordinatesDelta
         
-      # Generate pixels between the start and current coordinates, but make sure we even have valid paint.
-      pixels = []
+      # Generate pixels between the start and current coordinates.
+      assetData = @editor().assetData()
+      boundsLeft = assetData.bounds.left
+      boundsTop = assetData.bounds.top
+      boundsRight = assetData.bounds.left + assetData.bounds.width - 1
+      boundsBottom = assetData.bounds.top + assetData.bounds.height - 1
       
-      if @paintHelper.isPaintSet()
-        assetData = @editor().assetData()
-        boundsLeft = assetData.bounds.left
-        boundsTop = assetData.bounds.top
-        boundsRight = assetData.bounds.left + assetData.bounds.width - 1
-        boundsBottom = assetData.bounds.top + assetData.bounds.height - 1
+      addPixel = (x, y) =>
+        return unless boundsLeft <= x <= boundsRight and boundsTop <= y <= boundsBottom
+        pixels.push {x, y}
+      
+      for x in [_startPixelCoordinates.x.._currentPixelCoordinates.x]
+        addPixel x, _startPixelCoordinates.y
+        addPixel x, _currentPixelCoordinates.y
         
-        addPixel = (x, y) =>
-          return unless boundsLeft <= x <= boundsRight and boundsTop <= y <= boundsBottom
-          pixels.push {x, y}
+      if Math.abs(_startPixelCoordinates.y - _currentPixelCoordinates.y) > 1
+        for y in [_startPixelCoordinates.y.._currentPixelCoordinates.y]
+          addPixel _startPixelCoordinates.x, y
+          addPixel _currentPixelCoordinates.x, y
         
-        for x in [_startPixelCoordinates.x.._currentPixelCoordinates.x]
-          addPixel x, _startPixelCoordinates.y
-          addPixel x, _currentPixelCoordinates.y
-          
-        if Math.abs(_startPixelCoordinates.y - _currentPixelCoordinates.y) > 1
-          for y in [_startPixelCoordinates.y.._currentPixelCoordinates.y]
-            addPixel _startPixelCoordinates.x, y
-            addPixel _currentPixelCoordinates.x, y
-          
-        @paintHelper.applyPaintToPixels pixels
+      @paintHelper.applyPaintToPixels pixels
 
     @pixels pixels
