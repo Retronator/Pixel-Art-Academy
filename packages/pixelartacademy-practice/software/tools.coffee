@@ -14,3 +14,6 @@ class PAA.Practice.Software.Tools
     References: 'References'
     Undo: 'Undo'
     Redo: 'Redo'
+    Line: 'Line'
+    Rectangle: 'Rectangle'
+    Ellipse: 'Ellipse'

@@ -312,7 +312,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   toolInfoStyle: ->
     return unless @toolInfoText()
     
-    pointerPosition = @pointer().windowCoordinate()
+    unless pointerPosition = @pointer().windowCoordinate()
+      return display: 'none'
     
     left: "calc(#{pointerPosition.x}px + 16rem)"
     top: "#{pointerPosition.y}px"

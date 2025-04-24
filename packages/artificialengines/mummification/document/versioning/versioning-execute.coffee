@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
 AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action, actionTime, appendToLastAction = false) ->
+  return unless action.forward.length
+  
   @_validateActionOrder versionedDocument, lastEditTime, actionTime
   
   # Find last action if possible.

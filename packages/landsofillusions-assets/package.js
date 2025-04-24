@@ -305,6 +305,7 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
+  api.addFile('spriteeditor/tools/aliasedstrokemask');
   api.addFile('spriteeditor/tools/aliasedstroke');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/harderaser');
@@ -312,6 +313,10 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/translate');
+  api.addFile('spriteeditor/tools/shape');
+  api.addFile('spriteeditor/tools/line');
+  api.addFile('spriteeditor/tools/line-perfectline');
+  api.addFile('spriteeditor/tools/rectangle');
 
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');

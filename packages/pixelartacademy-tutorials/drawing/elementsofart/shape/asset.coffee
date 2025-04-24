@@ -18,4 +18,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Asset extends PAA.Practice.Tutor
       PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
       PAA.Practice.Software.Tools.ToolKeys.Undo
       PAA.Practice.Software.Tools.ToolKeys.Redo
+      PAA.Practice.Software.Tools.ToolKeys.Line
+      PAA.Practice.Software.Tools.ToolKeys.Rectangle
+      PAA.Practice.Software.Tools.ToolKeys.Ellipse
     ]

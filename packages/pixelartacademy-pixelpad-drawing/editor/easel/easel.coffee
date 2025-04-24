@@ -294,8 +294,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Easel extends PAA.PixelPad.Apps.Drawing.E
           "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Tools.Brush.Round.id()}": key: AC.Keys.b
   
           "#{PAA.PixelPad.Apps.Drawing.Editor.Easel.Actions.DisplayMode.id()}": key: AC.Keys.f
-          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
-          "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
     ,
       @getShortcuts()
 

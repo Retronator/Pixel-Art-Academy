@@ -1,0 +1,50 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-ruler
+  position absolute
+  top -40rem
+  left 64rem
+  width 85rem
+  height 37rem
+  z-index 13
+  background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler.png')
+  filter drop-shadow(-1rem 0 0 desktopShadowColor)
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    top -2rem
+    transition-duration 0.2s
+
+  .fatamorgana-interface.line &
+  .fatamorgana-interface.rectangle &
+    .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+      top 0
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.hidden-tools &
+    visibility hidden
+
+  .fatamorgana-interface.line & .line
+    height 31rem
+    visibility visible
+
+  .fatamorgana-interface.rectangle & .rectangle
+    width 29rem
+    height 17rem
+    visibility visible
+
+  .line
+    left -1rem
+    top 0
+    background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-line.png') left top / 1rem 31rem
+
+  .rectangle
+    left 16rem
+    top 14rem
+    background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-rectangle.png') left top / 29rem 17rem
+
+  .indicator
+    position absolute
+    width 1rem
+    height 1rem
+    visibility hidden
+    transition width 0.2s, height 0.2s

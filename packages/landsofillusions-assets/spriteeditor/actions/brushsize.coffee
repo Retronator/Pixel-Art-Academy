@@ -46,8 +46,8 @@ class BrushSize extends FM.Action
     @sign = 1
 
   execute: ->
-    # Only change brush size if the active tool is an aliased stroke.
-    return unless @interface.activeTool() instanceof LOI.Assets.SpriteEditor.Tools.AliasedStroke
+    # Only change brush size if the active tool is an aliased stroke or a line.
+    return unless @interface.activeTool() instanceof LOI.Assets.SpriteEditor.Tools.AliasedStroke or @interface.activeTool().id() is LOI.Assets.SpriteEditor.Tools.Line.id()
 
     keyboardState = AC.Keyboard.getState()
 

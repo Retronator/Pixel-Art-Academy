@@ -37,6 +37,8 @@ class LOI.Assets.SpriteEditor.Helpers.Paint extends FM.Helper
   setPaletteColor: (paletteColor) -> @_setColor _.pick paletteColor, ['ramp', 'shade']
   setDirectColor: (directColor) -> @_setColor null, _.pick directColor, ['r', 'g', 'b']
   setMaterialIndex: (index) -> @_setColor null, null, index
+    
+  isPaintSet: -> @paletteColor() or @directColor() or @materialIndex()?
 
   _setColor: (paletteColor = null, directColor = null, materialIndex = null) ->
     @data.set 'paletteColor', paletteColor
@@ -82,3 +84,14 @@ class LOI.Assets.SpriteEditor.Helpers.Paint extends FM.Helper
     return unless colorData
 
     THREE.Color.fromObject colorData
+
+  applyPaintToPixels: (pixels) ->
+    paint =
+      directColor: @directColor()
+      paletteColor: @paletteColor()
+      materialIndex: @materialIndex()
+      normal: @normal()?.toObject()
+      alpha: @opacity()
+    
+    for property, value of paint when value?
+      pixel[property] = value for pixel in pixels

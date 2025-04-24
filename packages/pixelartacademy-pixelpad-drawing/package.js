@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
 
@@ -80,6 +81,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/colorfill..');
   api.addComponent('editor/desktop/zoom..');
   api.addComponent('editor/desktop/pico8..');
+  api.addComponent('editor/desktop/ruler..');
 
   api.addComponent('editor/desktop/palette..');
   api.addComponent('editor/desktop/palette/colorhelp..');

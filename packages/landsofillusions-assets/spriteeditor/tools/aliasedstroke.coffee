@@ -13,48 +13,36 @@ _tangentDirection = new THREE.Vector2
 _ray = new THREE.Ray
 _bezierMidPoint = new THREE.Vector2
 
-_pixelCoordinates = null
-_pixelCoordinatesLength = 0
-
-_createPixelCoordinates = (width, height) ->
-  pixelCoordinatesCapacity = (width + height) * 2
-  
-  unless _pixelCoordinates and _pixelCoordinates.length >= pixelCoordinatesCapacity
-    _pixelCoordinates = new Int16Array pixelCoordinatesCapacity
-    
-_clearPixelCoordinates = ->
-  _pixelCoordinatesLength = 0
-
-_addPixelCoordinate = (x, y) ->
-  _pixelCoordinates[_pixelCoordinatesLength] = x
-  _pixelCoordinates[_pixelCoordinatesLength + 1] = y
-  _pixelCoordinatesLength += 2
-  
-_strokeMask = null
-_strokeMaskWidth = 0
-_strokeMaskHeight = 0
-
-_createStrokeMask = (width, height) ->
-  _strokeMaskWidth = width
-  _strokeMaskHeight = height
-  strokeMaskCapacity = width * height
-  unless _strokeMask and _strokeMask.length >= strokeMaskCapacity
-    _strokeMask = new Uint8Array strokeMaskCapacity
-    
-_clearStrokeMask = ->
-  _strokeMask.fill 0
-  
-_addStrokeMask = (x, y) ->
-  _strokeMask[x + y * _strokeMaskWidth] = 1
+_strokeMask = new LOI.Assets.SpriteEditor.Tools.AliasedStrokeMask
 
 class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEditor.Tools.Tool
   @requiredButtonOnActivate: ->
     # Override with the button (or an array of alternatives) that needs to be pressed to start the stroke on activate.
     null
+    
+  @createRelativePixels: (assetData, layer, absolutePixels)->
+    layerOrigin =
+      x: layer?.origin?.x or 0
+      y: layer?.origin?.y or 0
+
+    relativePixels = []
+
+    for absolutePixel in absolutePixels
+      # If we have fixed bounds, make sure we're inside.
+      if assetData.bounds?.fixed
+        continue unless assetData.bounds.left <= absolutePixel.x <= assetData.bounds.right and assetData.bounds.top <= absolutePixel.y <= assetData.bounds.bottom
+
+      # Pixel must be in relative coordinates.
+      relativePixel = _.clone absolutePixel
+      relativePixel.x -= layerOrigin.x
+      relativePixel.y -= layerOrigin.y
+      
+      relativePixels.push relativePixel
+    
+    relativePixels
   
   # TODO: cleanLine: boolean whether to maintain a clean line with consistent width
   # drawPreview: boolean whether to always draw preview of the pixels to be applied
-  # fractionalPerfectLines: boolean whether to allow 3:2 and 5:2 lines
   constructor: ->
     super arguments...
 
@@ -87,10 +75,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     # Create stroke mask to match asset bounds.
     @_recreateStrokeMaskAutorun = @autorun (computation) =>
       return unless assetData = @editor()?.assetData()
-      return if assetData.bounds.width is _strokeMaskWidth and assetData.bounds.height is _strokeMaskHeight
-      
-      _createPixelCoordinates assetData.bounds.width, assetData.bounds.height
-      _createStrokeMask assetData.bounds.width, assetData.bounds.height
+      _strokeMask.initialize assetData.bounds.width, assetData.bounds.height
     
     @processStroke()
 
@@ -147,84 +132,17 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     "#{ratio[1]}:#{ratio[0]}"
 
   perfectLine: (start, end) ->
-    dx = end.x - start.x
-    dy = end.y - start.y
-
-    width = Math.abs(dx) + 1
-    height = Math.abs(dy) + 1
-
-    if width > height
-      ratio = width / height
-
-    else
-      ratio = height / width
-      vertical = true
-
-    if ratio < 3 and @data.get 'fractionalPerfectLines'
-      doubleRatio = Math.round ratio * 2
-      segmentLengths = [Math.ceil(doubleRatio / 2), Math.floor(doubleRatio / 2)]
-
-      if segmentLengths[0] is segmentLengths[1]
-        denominator = 1
-        numerator = segmentLengths[0]
-
-      else
-        denominator = 2
-        numerator = segmentLengths[0] + segmentLengths[1]
-
-    else
-      numerator = Math.round ratio
-      denominator = 1
-      segmentLengths = [numerator]
-
-    if width > 1 and height > 1
-      if vertical
-        @perfectLineRatio [denominator, numerator]
-
-      else
-        @perfectLineRatio [numerator, denominator]
-
-    else
-      # Don't write the ratio for straight lines.
-      @perfectLineRatio null
-
-    sx = Math.sign dx
-    sy = Math.sign dy
-
-    lengthLeft = Math.max width, height
-    sideLeft = Math.min width, height
-
-    currentPixel = _.pick start, ['x', 'y']
-  
-    segmentLengthIndex = 0
-    segmentLeft = segmentLengths[segmentLengthIndex]
-
-    while lengthLeft and sideLeft
-      _addPixelCoordinate currentPixel.x, currentPixel.y
-
-      # Mark progress along segment and length.
-      segmentLeft--
-      lengthLeft--
-
-      # Move ahead along length.
-      if vertical
-        currentPixel.y += sy
-
-      else
-        currentPixel.x += sx
-
-      continue if segmentLeft
-
-      # Step sideways.
-      if vertical
-        currentPixel.x += sx
-
-      else
-        currentPixel.y += sy
-
-      sideLeft--
-      segmentLengthIndex = (segmentLengthIndex + 1) % segmentLengths.length
-      segmentLeft = segmentLengths[segmentLengthIndex]
+    line = @interface.getOperator LOI.Assets.SpriteEditor.Tools.Line
+    fractional = line.data.get 'fractionalPerfectLines'
+    
+    {pixels, ratio} = LOI.Assets.SpriteEditor.Tools.Line.perfectLine start, end, fractional
+    
+    @perfectLineRatio ratio
+    
+    for pixel in pixels
+      _strokeMask.addPixelCoordinate pixel.x, pixel.y
+    
+    pixels
 
   onKeyDown: (event) ->
     super arguments...
@@ -261,6 +179,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
     else if @drawLine()
       # React to any modifier changes when line drawing.
+      # Note: We want to process the stroke and not just update the pixels since a perfect line
+      # changes the current pixel coordinates and they need to be reset to the actual cursor position.
       @processStroke()
 
   onPointerDown: (event) ->
@@ -333,7 +253,7 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     _secondToLastStrokeCoordinates.copy @secondToLastStrokeCoordinates() or _lastStrokeCoordinates
 
     keyboardState = AC.Keyboard.getState()
-    _clearPixelCoordinates()
+    _strokeMask.reset()
 
     drawStraight = @drawStraight()
 
@@ -352,31 +272,27 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     if @drawLine()
       if keyboardState.isCommandOrControlDown()
         # Draw perfect pixel art line.
-        @perfectLine _lastPixelCoordinates, _currentPixelCoordinates
+        pixels = @perfectLine _lastPixelCoordinates, _currentPixelCoordinates
 
         # Match current coordinates to the ending perfect coordinates.
-        @currentPixelCoordinates
-          x: _pixelCoordinates[_pixelCoordinatesLength - 2]
-          y: _pixelCoordinates[_pixelCoordinatesLength - 1]
+        @currentPixelCoordinates _.last pixels
 
       else
         @perfectLineRatio null
 
-        # Draw bresenham line from last coordinates (which persist after end of stroke).
-        _clearPixelCoordinates()
-        
-        # To assure consistency between drawing lines from both directions, we always draw from top to bottom.
+        # Draw bresenham line from last coordinates (which persist after end of stroke). To assure
+        # consistency between drawing lines from both directions, we always draw from top to bottom.
         if _lastPixelCoordinates.y < _currentPixelCoordinates.y
-          Bresenham.line _lastPixelCoordinates.x, _lastPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
+          Bresenham.line _lastPixelCoordinates.x, _lastPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
           
         else
-          Bresenham.line _currentPixelCoordinates.x, _currentPixelCoordinates.y, _lastPixelCoordinates.x, _lastPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
+          Bresenham.line _currentPixelCoordinates.x, _currentPixelCoordinates.y, _lastPixelCoordinates.x, _lastPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
 
     else
       # Apply locked coordinate.
       if drawStraight
         # Draw bresenham line from last stroke coordinates (which resets after end of stroke).
-        Bresenham.line _lastStrokeCoordinates.x, _lastStrokeCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
+        Bresenham.line _lastStrokeCoordinates.x, _lastStrokeCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
 
       else
         # Draw bezier curve from last stroke coordinates (which resets after end of stroke).
@@ -388,32 +304,13 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
         _ray.closestPointToPoint midPoint, _bezierMidPoint
         _bezierMidPoint.round()
 
-        Bresenham.quadBezier _lastStrokeCoordinates.x, _lastStrokeCoordinates.y, _bezierMidPoint.x, _bezierMidPoint.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _addPixelCoordinate x, y
+        Bresenham.quadBezier _lastStrokeCoordinates.x, _lastStrokeCoordinates.y, _bezierMidPoint.x, _bezierMidPoint.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, (x, y) => _strokeMask.addPixelCoordinate x, y
 
-    # Apply the brush mask to coordinates.
+    # Apply the cursor area to the stroke mask.
     cursorArea = @editor().cursor().cursorArea()
-    offset = cursorArea.position.centerOffset
     assetData = @editor().assetData()
-    boundsLeft = assetData.bounds.left
-    boundsTop = assetData.bounds.top
-    boundsWidth = assetData.bounds.width
-    boundsHeight = assetData.bounds.height
     
-    _clearStrokeMask()
-
-    for column, x in cursorArea.aliasedShape
-      for value, y in column when value
-        for pixelCoordinateIndex in [0..._pixelCoordinatesLength] by 2
-          brushX = _pixelCoordinates[pixelCoordinateIndex] - offset + x - boundsLeft
-          brushY = _pixelCoordinates[pixelCoordinateIndex + 1] - offset + y - boundsTop
-          _addStrokeMask brushX, brushY if 0 <= brushX < boundsWidth and 0 <= brushY < boundsHeight
-
-    # TODO: Apply symmetry.
-    # symmetryXOrigin = @options.editor().symmetryXOrigin?()
-    #if symmetryXOrigin?
-    #  Note: Do not use pointerState.x anymore, instead use editor.pointer().pixelCoordinate().
-    #  mirroredX = -@constructor.pointerState.x + 2 * symmetryXOrigin
-    #  xCoordinates.push [mirroredX, -1]
+    _strokeMask.generate cursorArea, assetData.bounds
 
     @pixels @createPixelsFromStrokeMask assetData, _strokeMask
     
@@ -423,28 +320,10 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     return unless @strokeActive()
 
     assetData = @editor().assetData()
-
     layerIndex = @paintHelper.layerIndex()
     layer = assetData.layers?[layerIndex]
-
-    layerOrigin =
-      x: layer?.origin?.x or 0
-      y: layer?.origin?.y or 0
-
-    absolutePixels = @pixels()
-    relativePixels = []
-
-    for absolutePixel in absolutePixels
-      # If we have fixed bounds, make sure we're inside.
-      if assetData.bounds?.fixed
-        continue unless assetData.bounds.left <= absolutePixel.x <= assetData.bounds.right and assetData.bounds.top <= absolutePixel.y <= assetData.bounds.bottom
-
-      # Pixel must be in relative coordinates.
-      relativePixel = _.clone absolutePixel
-      relativePixel.x -= layerOrigin.x
-      relativePixel.y -= layerOrigin.y
-      
-      relativePixels.push relativePixel
+    
+    relativePixels = @constructor.createRelativePixels assetData, layer, @pixels()
 
     @applyPixels assetData, layerIndex, relativePixels, @_strokeStarted
 
