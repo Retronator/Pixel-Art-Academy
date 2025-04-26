@@ -63,6 +63,8 @@ Package.onUse(function(api) {
   // Elements of art
 
   api.addFile('drawing/elementsofart..');
+  api.addFile('drawing/elementsofart/errorinstruction');
+  api.addFile('drawing/elementsofart/referencestrayinstruction');
 
   api.addFile('drawing/elementsofart/line..');
   api.addFile('drawing/elementsofart/line/asset');
@@ -82,9 +84,14 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/elementsofart/shape..');
   api.addFile('drawing/elementsofart/shape/asset');
+  api.addFile('drawing/elementsofart/shape/assetwithreferences');
 
   api.addFile('drawing/elementsofart/shape/basicshapes');
   api.addFile('drawing/elementsofart/shape/combiningbasicshapes');
+  api.addFile('drawing/elementsofart/shape/basicshapesbreakdown');
+
+  api.addFile('drawing/elementsofart/shape/errorinstruction');
+  api.addFile('drawing/elementsofart/shape/referencestrayinstruction');
 
   // Pixel art fundamentals
 

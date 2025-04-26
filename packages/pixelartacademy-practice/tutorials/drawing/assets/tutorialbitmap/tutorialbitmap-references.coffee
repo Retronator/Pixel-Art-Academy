@@ -3,8 +3,15 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+  @CanvasExtensionDirection =
+    Horizontal: 'Horizontal'
+    Vertical: 'Vertical'
+
   # Override to provide reference images that need to be added to the bitmap.
   @references: -> null
+  
+  # Override to specify how using multiple references should resize the canvas.
+  @canvasExtensionDirection: -> @CanvasExtensionDirection.Horizontal
   
   @initializeReferences: ->
     return unless references = @references()
@@ -53,6 +60,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         # Remove references at the end that haven't been drawn on yet.
         fixedDimensions = @constructor.fixedDimensions()
         singleWidth = fixedDimensions.width
+        singleHeight = fixedDimensions.height
+        horizontalExtension = @constructor.canvasExtensionDirection() is @constructor.CanvasExtensionDirection.Horizontal
         
         removeNeeded = false
         
@@ -62,12 +71,19 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
         if removeNeeded
           for stepArea, index in stepAreas by -1
-            startX = index * singleWidth
+            startX = 0
+            startY = 0
+            
+            if horizontalExtension
+              startX = index * singleWidth
+              
+            else
+              startY = index * singleHeight
             
             found = false
             for x in [0...singleWidth]
-              for y in [0...fixedDimensions.height]
-                if bitmap.findPixelAtAbsoluteCoordinates startX + x, y
+              for y in [0...singleHeight]
+                if bitmap.findPixelAtAbsoluteCoordinates startX + x, startY + y
                   found = true
                   break
                   
@@ -88,12 +104,20 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         @tutorial.state 'assets', assets
 
         # If necessary, resize the bitmap to make space for all the chosen references.
-        desiredWidth = singleWidth * Math.max 1, stepAreas.length
+        desiredWidth = singleWidth
+        desiredHeight = singleHeight
         
+        if horizontalExtension
+          desiredWidth = singleWidth * Math.max 1, stepAreas.length
+          
+        else
+          desiredHeight = singleHeight * Math.max 1, stepAreas.length
+          
         bitmap = Tracker.nonreactive => LOI.Assets.Bitmap.documents.findOne bitmapId, fields: bounds: 1
         width = bitmap.bounds.right - bitmap.bounds.left + 1
+        height = bitmap.bounds.bottom - bitmap.bounds.top + 1
         
-        unless desiredWidth is width
+        unless desiredWidth is width and desiredHeight is height
           bitmap = Tracker.nonreactive => LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
 
           # Create a change bounds action.
@@ -101,7 +125,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
             left: 0
             top: 0
             right: desiredWidth - 1
-            bottom: fixedDimensions.height - 1
+            bottom: desiredHeight - 1
             fixed: true
             
           bitmap.executeAction changeBounds, true
@@ -113,10 +137,16 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         
         for stepArea, index in stepAreas
           stepAreaBounds =
-            x: index * fixedDimensions.width
+            x: 0
             y: 0
-            width: fixedDimensions.width
-            height: fixedDimensions.height
+            width: singleWidth
+            height: singleHeight
+            
+          if horizontalExtension
+            stepAreaBounds.x = index * singleWidth
+            
+          else
+            stepAreaBounds.y = index * singleHeight
           
           stepAreaInstance = new @constructor.StepArea @, stepAreaBounds
   

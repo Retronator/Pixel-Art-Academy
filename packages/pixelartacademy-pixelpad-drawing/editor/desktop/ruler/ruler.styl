@@ -11,8 +11,10 @@
   background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler.png')
   filter drop-shadow(-1rem 0 0 desktopShadowColor)
 
-  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+  .pixelartacademy-pixelpad-apps-drawing.editor-desktop.editor-active .pixelartacademy-pixelpad-apps-drawing-editor-desktop:not(.focused-mode) &
     top -2rem
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
     transition-duration 0.2s
 
   .fatamorgana-interface.line &
@@ -54,4 +56,4 @@
     width 1rem
     height 1rem
     visibility hidden
-    transition width 0.2s, height 0.2s
+    transition width 0.2s, height 0.4s

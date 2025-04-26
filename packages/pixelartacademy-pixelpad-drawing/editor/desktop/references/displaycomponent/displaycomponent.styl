@@ -50,7 +50,7 @@
       &::after
         content ''
         absolute-cover()
-        z-index 13
+        z-index 14
         background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/tray.png')
 
       .reference
@@ -134,9 +134,10 @@
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
       transition box-shadow 0.05s !important
 
-  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+  .pixelartacademy-pixelpad-apps-drawing.editor-desktop.editor-active .pixelartacademy-pixelpad-apps-drawing-editor-desktop:not(.focused-mode) &
     .stored-references
       top -181rem
+      transition-delay 1s
 
       &:hover
         top -177rem

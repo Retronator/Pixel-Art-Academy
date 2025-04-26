@@ -5,7 +5,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
   @displayName: -> "Basic shapes"
   
   @description: -> """
-    Combine lines to construct essential shapes.
+    To start learning how to draw, you only need to be able to draw 3 basic shapes.
   """
   
   @fixedDimensions: -> width: 109, height: 46
@@ -19,7 +19,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
     @assetClass: -> Asset
     
     @message: -> """
-      Draw lines to create the 3 most basic shapes: a square, a triangle, and a circle.
+      Use the ruler or pencil to draw the 3 most basic shapes: a square, a triangle, and a circle.
     """
     
     @initialize()

@@ -10,7 +10,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CombiningBasicShapes extends PAA
     Many objects can be created from basic shapes.
   """
   
-  @fixedDimensions: -> width: 274, height: 90
+  @fixedDimensions: -> width: 274, height: 85
   
   @imageUrl: -> "/pixelartacademy/tutorials/drawing/elementsofart/shape/combiningbasicshapes.png"
   
@@ -96,7 +96,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CombiningBasicShapes extends PAA
     @assetClass: -> Asset
     
     @message: -> """
-      Draw the indicated lines to construct simple objects.
+      Draw the indicated shapes to construct simple objects.
     """
     
     @initialize()
