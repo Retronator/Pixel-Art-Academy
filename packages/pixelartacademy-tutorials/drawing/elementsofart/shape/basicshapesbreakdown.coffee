@@ -12,6 +12,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapesBreakdown extends PAA
   
   @referenceNames: -> [
     'basicshapesbreakdown-island'
+    'basicshapesbreakdown-rangerstation'
   ]
   
   @initialize()

@@ -52,6 +52,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
           # Find the ID of the image with this URL.
           imagePromises.push new Promise (resolve, reject) =>
             Tracker.autorun (computation) ->
+              LOI.Assets.Image.forUrl.subscribe imageUrl
               LOI.Assets.Image.forUrl.subscribeContent imageUrl
               return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
               computation.stop()
