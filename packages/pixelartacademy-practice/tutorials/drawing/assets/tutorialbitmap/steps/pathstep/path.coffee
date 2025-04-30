@@ -10,6 +10,8 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 class TutorialBitmap.PathStep.Path
   @minimumAntiAliasingAlpha = 10
+  # Note: this value was chosen so that the minimum complete closed line will get colored with the hints.
+  @minimumColorHintPixelAlpha = 110
   @minimumRequiredPixelAlpha = 250
   
   constructor: (@tutorialBitmap, @pathStep, svgPath) ->
@@ -17,6 +19,9 @@ class TutorialBitmap.PathStep.Path
     
     @path = new Path2D svgPath.getAttribute 'd'
     style = svgPath.getAttribute 'style'
+    
+    strokeColorString = style.match(/stroke:(.*?);/)?[1]
+    @color = new THREE.Color strokeColorString
     
     fillColorString = style.match(/fill:(.*?);/)?[1]
     @filled = fillColorString and fillColorString isnt 'none'
@@ -67,7 +72,7 @@ class TutorialBitmap.PathStep.Path
           
           # Make allowed pixels more visible, but don't change their
           # upper end since that's used for detecting required pixels.
-          @_imageData.data[pixelIndex * 4 + 3] = Math.max 128, alpha
+          @_imageData.data[pixelIndex * 4 + 3] = Math.max @constructor.minimumColorHintPixelAlpha - 1, alpha
     
     @pathBounds.width = @pathBounds.right - @pathBounds.left + 1
     @pathBounds.height = @pathBounds.bottom - @pathBounds.top + 1
@@ -120,6 +125,9 @@ class TutorialBitmap.PathStep.Path
     
   hasPixel: (x, y) ->
     @_getPixelAlpha x, y
+  
+  pixelExceedsColorHintThreshold: (x, y) ->
+    @_getPixelAlpha(x, y) >= @constructor.minimumColorHintPixelAlpha
     
   completed: ->
     # Store completed locally to know whether to draw the hint.
@@ -127,6 +135,23 @@ class TutorialBitmap.PathStep.Path
     
     # Make sure all corners are covered.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
+    return unless palette = @tutorialBitmap.palette()
+    
+    if paletteColor = palette.exactPaletteColor @color
+      goalColor = {paletteColor}
+      
+    else
+      goalColor = color: @color
+    
+    pixelMatchesColor = (pixel) =>
+      if pixel.paletteColor and goalColor.paletteColor
+        return false unless EJSON.equals pixel.paletteColor, goalColor.paletteColor
+      
+      else
+        pixelColor = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
+        return false unless goalColor.color.equals pixelColor
+        
+      true
 
     bounds = @pathStep.stepArea.bounds
     
@@ -143,16 +168,16 @@ class TutorialBitmap.PathStep.Path
                 y = corner.y + dy
                 absoluteX = bounds.x + x
                 absoluteY = bounds.y + y
-                if @hasPixel(x, y) and bitmapLayer.getPixel absoluteX, absoluteY
-                  corner.foundCoveredPixelPositions.push {x, y}
+                if @hasPixel(x, y) and pixel = bitmapLayer.getPixel absoluteX, absoluteY
+                  corner.foundCoveredPixelPositions.push {x, y} if pixelMatchesColor pixel
           
           return false unless corner.foundCoveredPixelPositions.length
         
         else
           absoluteX = bounds.x + corner.x
           absoluteY = bounds.y + corner.y
-          return false unless bitmapLayer.getPixel absoluteX, absoluteY
-          corner.foundCoveredPixelPositions = [corner]
+          return false unless pixel = bitmapLayer.getPixel absoluteX, absoluteY
+          corner.foundCoveredPixelPositions = [corner] if pixelMatchesColor pixel
         
     # See which pixels have been covered in the allowed area.
     pixelCoverage = new Uint8Array bounds.width * bounds.height * 2
@@ -181,9 +206,10 @@ class TutorialBitmap.PathStep.Path
               relativeY = y + dy
               absoluteX = bounds.x + relativeX
               absoluteY = bounds.y + relativeY
-              if @hasPixel(relativeX, relativeY) and bitmapLayer.getPixel absoluteX, absoluteY
-                found = true
-                break
+              if @hasPixel(relativeX, relativeY) and pixel = bitmapLayer.getPixel absoluteX, absoluteY
+                if pixelMatchesColor pixel
+                  found = true
+                  break
             break if found
           
           return false unless found
@@ -253,7 +279,7 @@ class TutorialBitmap.PathStep.Path
     @_completed = true
     @_completed
   
-  drawUnderlyingHints: (context, renderOptions) ->
+  drawHint: (context, renderOptions) ->
     # Determine if the path is even visible on the canvas.
     visibleBoundsLeft = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.left(), @pathBounds.left + @pathStep.stepArea.bounds.x
     visibleBoundsRight = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.right(), @pathBounds.right + @pathStep.stepArea.bounds.x
@@ -267,10 +293,13 @@ class TutorialBitmap.PathStep.Path
     
     # Completed lines draw much fainter if we're not supposed to draw hints after completion.
     if @_completed and not @pathStep.options.drawHintsAfterCompleted
-      initialStrokeStyle = context.strokeStyle
       pathOpacity = Math.min 0.25, renderOptions.camera.scale() / 32
-      context.strokeStyle = "hsl(0 0% 50% / #{pathOpacity})"
       
+    else
+      pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
+
+    context.strokeStyle = "rgb(#{@color.r * 255} #{@color.g * 255} #{@color.b * 255} / #{pathOpacity})"
+    
     context.stroke @path
 
     if @filled
@@ -288,5 +317,3 @@ class TutorialBitmap.PathStep.Path
       
       context.stroke()
       context.restore()
-      
-    context.strokeStyle = initialStrokeStyle if initialStrokeStyle

@@ -11,7 +11,7 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 class TutorialBitmap.PathStep extends TutorialBitmap.Step
   @debug = false
   
-  @drawUnderlyingHints: (context, renderOptions, stepArea, paths) ->
+  @drawPathHints: (context, renderOptions, stepArea, paths) ->
     # Draw path to step area.
     context.save()
     context.translate stepArea.bounds.x, stepArea.bounds.y
@@ -30,15 +30,11 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     pixelSize = 1 / renderOptions.camera.effectiveScale()
     context.lineWidth = pixelSize
     
-    pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
-    context.strokeStyle = "hsl(0 0% 50% / #{pathOpacity})"
-    context.fillStyle = "hsl(0 0% 50%)"
-    
     halfPixelSize = pixelSize / 2
     
     # Draw all the paths' hints.
     context.translate halfPixelSize, halfPixelSize
-    path.drawUnderlyingHints context, renderOptions for path in paths
+    path.drawHint context, renderOptions for path in paths
 
     context.restore()
   
@@ -81,6 +77,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
   
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
+    palette = @tutorialBitmap.palette()
 
     pixels = []
     width = @stepArea.bounds.width
@@ -88,35 +85,46 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
     for x in [0...width]
       for y in [0...height]
-        if @_pixelsMap[x + y * width]
-          pixels.push
-            x: x + @stepArea.bounds.x
-            y: y + @stepArea.bounds.y
-            paletteColor:
-              ramp: 0
-              shade: 0
+        for path in @paths
+          if path.pixelExceedsColorHintThreshold x, y
+            paletteColor = palette.exactPaletteColor path.color
+
+            pixels.push
+              x: x + @stepArea.bounds.x
+              y: y + @stepArea.bounds.y
+              paletteColor: paletteColor
+
+            break
     
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
   
-  drawUnderlyingHints: (context, renderOptions) ->
-    @constructor.drawUnderlyingHints context, renderOptions, @stepArea, @paths
-    
   drawOverlaidHints: (context, renderOptions) ->
+    @constructor.drawPathHints context, renderOptions, @stepArea, @paths
+
     @_prepareColorHelp context, renderOptions
     
-    # Erase dots at empty pixels.
     bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
+    palette = @tutorialBitmap.palette()
+    backgroundColor = @tutorialBitmap.backgroundColor()
     
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         absoluteX = x + @stepArea.bounds.x
         absoluteY = y + @stepArea.bounds.y
-        continue if @stepArea.hasGoalPixel absoluteX, absoluteY
-        continue unless bitmapLayer.getPixel absoluteX, absoluteY
+
+        continue unless pixel = bitmapLayer.getPixel absoluteX, absoluteY
         
-        @_drawColorHelpForPixel context, x, y, null, null, null, renderOptions
+        if @stepArea.hasGoalPixel(absoluteX, absoluteY)
+          # Draw dots at path pixels with the correct color.
+          for path in @paths when path.pixelExceedsColorHintThreshold absoluteX, absoluteY
+            continue if LOI.Assets.ColorHelper.areAssetColorsEqual pixel, path.color, palette, backgroundColor
+            @_drawColorHelpForPixel context, x, y, path.color, palette, pixel, renderOptions
+          
+        else
+          # Erase dots at empty pixels.
+          @_drawColorHelpForPixel context, x, y, null, null, null, renderOptions
     
     # Explicit return to avoid result collection.
     return

@@ -15,4 +15,4 @@ class TutorialBitmap.PixelsWithPathsStep extends TutorialBitmap.PixelsStep
       new TutorialBitmap.PathStep.Path @tutorialBitmap, @, svgPath
   
   drawUnderlyingHints: (context, renderOptions) ->
-    TutorialBitmap.PathStep.drawUnderlyingHints context, renderOptions, @stepArea, @paths
+    TutorialBitmap.PathStep.drawPathHints context, renderOptions, @stepArea, @paths

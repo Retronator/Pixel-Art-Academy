@@ -5,8 +5,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.ElementsOfArt.ReferencesTrayInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
-  @assetClass: -> throw new AE.NotImplementedException "Error instruction must provide which assets to be displayed with."
-  @firstAssetClass: -> throw new AE.NotImplementedException "Error instruction must provide which is the first of the assets."
+  @assetClass: -> throw new AE.NotImplementedException "Reference tray instruction must provide which assets to be displayed with."
+  @firstAssetClass: -> throw new AE.NotImplementedException "Reference tray instruction must provide which is the first of the assets."
   
   @getActiveAsset: ->
     # We must be in the editor on the provided asset.
