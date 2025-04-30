@@ -13,8 +13,6 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.AssetWithReferences extends PAA.
     
   @references: -> "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}.jpg" for name in @referenceNames()
   
-  @canvasExtensionDirection: -> @CanvasExtensionDirection.Vertical
-  
   availableToolKeys: ->
     super(arguments...).concat [
       PAA.Practice.Software.Tools.ToolKeys.References

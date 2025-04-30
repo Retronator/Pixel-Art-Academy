@@ -51,11 +51,10 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return unless bitmapId = @bitmapId()
         return unless bitmap = @bitmap()
         
-        assets = @tutorial.assetsData()
-        asset = _.find assets, (asset) => asset.id is @id()
+        assetData = @getAssetData()
         
         # Note: create a clone of step areas since the object gets compared for equality.
-        stepAreas = if asset.stepAreas then EJSON.clone asset.stepAreas else []
+        stepAreas = if assetData.stepAreas then EJSON.clone assetData.stepAreas else []
         
         # Remove references at the end that haven't been drawn on yet.
         fixedDimensions = @constructor.fixedDimensions()
@@ -100,8 +99,8 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         for referenceUrl in displayedReferenceUrlChoices
           stepAreas.push {referenceUrl} unless _.find stepAreas, (stepArea) => stepArea.referenceUrl is referenceUrl
         
-        asset.stepAreas = stepAreas
-        @tutorial.state 'assets', assets
+        assetData.stepAreas = stepAreas
+        @setAssetData assetData
 
         # If necessary, resize the bitmap to make space for all the chosen references.
         desiredWidth = singleWidth

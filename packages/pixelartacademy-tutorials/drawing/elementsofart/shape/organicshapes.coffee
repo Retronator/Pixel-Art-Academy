@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -26,7 +27,25 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes extends PAA.Tutori
     'organicshapes-cheshirecat'
   ]
   
+  @bitmapInfoTexts: ->
+    'organicshapes-mickey': "The Karnival Kid (Ub Iwerks, 1929)"
+    'organicshapes-cheshirecat': "Cheshire Cat in the Tree Above Alice (Sir John Tenniel, 1889)"
+  
   @initialize()
+  
+  bitmapInfo: ->
+    assetData = @getAssetData()
+    return unless assetData.stepAreas?.length
+
+    texts = []
+    
+    for stepArea in assetData.stepAreas when stepArea.referenceUrl
+      referenceKey = stepArea.referenceUrl.match(/\/([^\/]*)\./)[1]
+      texts.push @constructor.bitmapInfoTexts()[referenceKey]
+      
+    return unless texts.length
+      
+    "Fan art study based on #{AB.Rules.English.createNounSeries texts}."
 
   availableToolKeys: ->
     super(arguments...).concat [

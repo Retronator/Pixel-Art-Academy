@@ -15,6 +15,8 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapesBreakdown extends PAA
     'basicshapesbreakdown-rangerstation'
   ]
   
+  @canvasExtensionDirection: -> @CanvasExtensionDirection.Vertical
+  
   @initialize()
   
   Asset = @

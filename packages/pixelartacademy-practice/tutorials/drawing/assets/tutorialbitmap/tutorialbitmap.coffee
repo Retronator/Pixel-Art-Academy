@@ -217,17 +217,29 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     stepArea.reset() for stepArea in @stepAreas()
     
     # Remove any asset data.
-    assetsData = @tutorial.assetsData()
-    assetId = @id()
-    
-    if assetData = _.find assetsData, (assetData) => assetData.id is assetId
+    if assetData = @getAssetData()
       assetData.stepAreas = []
       assetData.completed = false
       
-      @tutorial.state 'assets', assetsData
+      @setAssetData assetData
     
     # Unlock recomputation after changes have been applied.
     Tracker.afterFlush => @resetting false
+    
+  getAssetData: ->
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    _.find assetsData, (assetData) => assetData.id is assetId
+    
+  setAssetData: (assetData) ->
+    assetsData = @tutorial.assetsData()
+    assetId = @id()
+    
+    assetDataIndex = _.findIndex assetsData, (assetData) => assetData.id is assetId
+    assetsData[assetDataIndex] = assetData
+    
+    @tutorial.state 'assets', assetsData
   
   addStepArea: (stepArea) ->
     stepAreas = @stepAreas()
