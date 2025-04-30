@@ -86,7 +86,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     for x in [0...width]
       for y in [0...height]
         for path in @paths
-          if path.pixelExceedsColorHintThreshold x, y
+          if path.pixelExceedsSolutionThreshold x, y
             paletteColor = palette.exactPaletteColor path.color
 
             pixels.push

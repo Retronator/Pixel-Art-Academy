@@ -22,6 +22,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes extends PAA.Tutori
       ]
       
   @referenceNames: -> [
+    'organicshapes-mickey'
     'organicshapes-cheshirecat'
   ]
   
@@ -31,6 +32,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes extends PAA.Tutori
     super(arguments...).concat [
       PAA.Practice.Software.Tools.ToolKeys.ColorPicker
       PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
     ]
     
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
@@ -140,11 +142,8 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes extends PAA.Tutori
     @activeConditions: ->
       return unless asset = @getActiveAsset()
 
-      # Show until the asset is completed.
-      return false if asset.completed()
-    
       # Show if any of the active steps are cleanup steps.
-      for stepArea in asset.stepAreas()
+      for stepArea in asset.stepAreas() when not stepArea.completed()
         continue unless activeStep = stepArea.activeStep()
         return true if activeStep instanceof PAA.Tutorials.Drawing.ElementsOfArt.Shape.CleanConstructionLinesStep
       

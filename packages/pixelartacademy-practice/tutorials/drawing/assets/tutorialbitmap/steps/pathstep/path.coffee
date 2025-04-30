@@ -10,8 +10,9 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 class TutorialBitmap.PathStep.Path
   @minimumAntiAliasingAlpha = 10
-  # Note: this value was chosen so that the minimum complete closed line will get colored with the hints.
-  @minimumColorHintPixelAlpha = 110
+  # Note: this value was chosen so that the minimum complete closed line will get colored to solve this step.
+  @minimumSolutionPixelAlpha = 110
+  @minimumColorHintPixelAlpha = 128
   @minimumRequiredPixelAlpha = 250
   
   constructor: (@tutorialBitmap, @pathStep, svgPath) ->
@@ -72,7 +73,7 @@ class TutorialBitmap.PathStep.Path
           
           # Make allowed pixels more visible, but don't change their
           # upper end since that's used for detecting required pixels.
-          @_imageData.data[pixelIndex * 4 + 3] = Math.max @constructor.minimumColorHintPixelAlpha - 1, alpha
+          @_imageData.data[pixelIndex * 4 + 3] = Math.max @constructor.minimumSolutionPixelAlpha - 1, alpha
     
     @pathBounds.width = @pathBounds.right - @pathBounds.left + 1
     @pathBounds.height = @pathBounds.bottom - @pathBounds.top + 1
@@ -126,6 +127,9 @@ class TutorialBitmap.PathStep.Path
   hasPixel: (x, y) ->
     @_getPixelAlpha x, y
   
+  pixelExceedsSolutionThreshold: (x, y) ->
+    @_getPixelAlpha(x, y) >= @constructor.minimumSolutionPixelAlpha
+    
   pixelExceedsColorHintThreshold: (x, y) ->
     @_getPixelAlpha(x, y) >= @constructor.minimumColorHintPixelAlpha
     

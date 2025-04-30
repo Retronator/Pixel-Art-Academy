@@ -342,11 +342,14 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f2, shift: true}
       return unless asset = @activeAsset()?.asset
       
-      return unless stepArea = asset.stepAreas?()[0]
-      activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+      return unless stepAreas = asset.stepAreas?()
       
-      activeStep.solve()
-      event.preventDefault()
+      for stepArea in stepAreas when not stepArea.completed()
+        activeStep = stepArea.steps()[stepArea.activeStepIndex()]
+        
+        activeStep.solve()
+        event.preventDefault()
+        break
       
     else if AC.Keyboard.isShortcutDown event, {key: AC.Keys.f3, shift: true}
       return unless asset = @activeAsset()?.asset
