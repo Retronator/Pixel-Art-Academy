@@ -140,12 +140,11 @@ class TutorialBitmap.PathStep.Path
     # Make sure all corners are covered.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()
+
+    goalColor = color: @color
     
     if paletteColor = palette.exactPaletteColor @color
-      goalColor = {paletteColor}
-      
-    else
-      goalColor = color: @color
+      goalColor.paletteColor = paletteColor
     
     pixelMatchesColor = (pixel) =>
       if pixel.paletteColor and goalColor.paletteColor

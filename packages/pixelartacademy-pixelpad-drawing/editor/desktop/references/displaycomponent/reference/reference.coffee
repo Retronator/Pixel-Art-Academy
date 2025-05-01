@@ -49,8 +49,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         
         return
 
-      # Scale should be such that 100^2 pixels are covered, but any side is not larger than 150 pixels.
-      scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min 150 / imageSize.width, 150 / imageSize.height
+      # Scale should be such that 100^2 pixels are covered, but any side is not larger than the tray.
+      maxWidth = @trayWidth - (@trayBorder + @referenceBorder) * 2
+      maxHeight = @trayHeight - (@trayBorder + @referenceBorder) * 2
+      
+      scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min maxWidth / imageSize.width, maxHeight / imageSize.height
       Tracker.nonreactive => @hiddenScale scale
   
       return unless displaySize = @displaySize scale
