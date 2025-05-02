@@ -92,6 +92,9 @@ Package.onUse(function(api) {
   api.addFile('drawing/elementsofart/shape/basicshapesbreakdown');
   api.addFile('drawing/elementsofart/shape/organicshapes');
 
+  api.addFile('drawing/elementsofart/shape/detailing..');
+  api.addFile('drawing/elementsofart/shape/detailing/detailingstep');
+
   api.addFile('drawing/elementsofart/shape/errorinstruction');
   api.addFile('drawing/elementsofart/shape/referencestrayinstruction');
 

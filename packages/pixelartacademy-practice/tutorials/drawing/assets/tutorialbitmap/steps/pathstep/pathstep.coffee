@@ -42,6 +42,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
   constructor: ->
     super arguments...
     
+    @options.hasPixelsWhenInactive ?= true
     @options.tolerance ?= 0
     
     @paths = for svgPath in @options.svgPaths
@@ -70,6 +71,8 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     completed
   
   hasPixel: (absoluteX, absoluteY) ->
+    return unless @options.hasPixelsWhenInactive or @isActiveStepInArea()
+    
     relativeX = absoluteX - @stepArea.bounds.x
     relativeY = absoluteY - @stepArea.bounds.y
     
