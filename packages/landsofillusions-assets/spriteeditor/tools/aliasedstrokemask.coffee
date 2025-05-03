@@ -31,15 +31,21 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStrokeMask
       @_mask = new Uint8Array strokeMaskCapacity
   
   reset: ->
+    return unless @_mask
+    
     @_pixelCoordinatesLength = 0
     @_mask.fill 0
   
   addPixelCoordinate: (x, y) ->
+    return unless @_pixelCoordinates
+    
     @_pixelCoordinates[@_pixelCoordinatesLength] = x
     @_pixelCoordinates[@_pixelCoordinatesLength + 1] = y
     @_pixelCoordinatesLength += 2
   
   generate: (cursorArea, bounds) ->
+    return unless @_mask
+    
     offset = cursorArea.position.centerOffset
 
     for column, x in cursorArea.aliasedShape
@@ -51,4 +57,4 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStrokeMask
           @_mask[brushX + brushY * @_width] = 1 if 0 <= brushX < bounds.width and 0 <= brushY < bounds.height
           
   isPixelInMask: (x, y) ->
-    @_mask[x + y * @_width]
+    @_mask?[x + y * @_width]

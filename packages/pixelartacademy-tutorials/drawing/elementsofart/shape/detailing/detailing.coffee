@@ -14,13 +14,22 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing extends PAA.Tutorials.
       
   @referenceNames: -> [
     'detailing-church'
+    'detailing-temple'
   ]
   
-  @goalChoices: ->
-    for name in @referenceNames()
-      referenceUrl: "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}.jpg"
-      svgUrl: "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}.svg"
-      goalImageUrl: "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}.png"
+  @detailingStepsCount: ->
+    'detailing-church': 3
+    'detailing-temple': 11
+    
+  @goalChoices: -> null
+  
+  @resources: ->
+    goalChoices:
+      for name in @referenceNames()
+        referenceUrl: "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}.jpg"
+        svgPaths: new @Resource.SvgPaths "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}.svg"
+        goalPixels: for number in [1..@detailingStepsCount()[name]]
+          new @Resource.ImagePixels "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{name}-#{number}.png"
   
   @initialize()
   
@@ -28,14 +37,16 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing extends PAA.Tutorials.
     svgPaths = stepResources.svgPaths.svgPaths()
 
     # Create basic shape steps.
-    steps = for svgPath, index in svgPaths
+    steps = for svgPath in svgPaths
       new @constructor.PathStep @, stepArea,
         svgPaths: [svgPath]
         preserveCompleted: true
     
     # Add detailing step.
-    steps.push new @constructor.DetailingStep @, stepArea,
-      goalPixels: stepResources.goalPixels
+    for goalPixels in stepResources.goalPixels
+      steps.push new @constructor.DetailingStep @, stepArea,
+        goalPixels: goalPixels
+        preserveCompleted: true
       
     steps
   

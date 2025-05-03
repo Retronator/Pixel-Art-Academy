@@ -29,7 +29,8 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing.DetailingStep extends 
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         # See if we specify whether a pixel must or must not be here.
-        continue unless goalPixel = @goalPixelsMap[x]?[y]
+        goalPixel = @goalPixelsMap[x]?[y]
+        continue unless goalPixel?
         
         # See if this location matches the goal.
         pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
@@ -75,7 +76,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing.DetailingStep extends 
         absoluteY = y + @stepArea.bounds.y
         pixel = bitmap.getPixelForLayerAtAbsoluteCoordinates 0, absoluteX, absoluteY
         goalPixel = @goalPixelsMap[x][y]
-        anyPixel = @stepArea.hasGoalPixel x, y
+        anyPixel = @stepArea.hasGoalPixel absoluteX, absoluteY
         
         if pixel and (goalPixel is false or not anyPixel)
           @_drawColorHelpForPixel context, x, y, null, null, true, renderOptions
