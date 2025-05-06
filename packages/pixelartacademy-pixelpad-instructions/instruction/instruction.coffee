@@ -121,7 +121,7 @@ class PAA.PixelPad.Systems.Instructions.Instruction extends AM.Component
   
   onActivate: ->
     # Override to perform additional setup when the instruction activates.
-    @resetDelay() if @delayOnActivate()
+    @delayTime if @delayOnActivate() then @delayDuration() else 0
   
   onDeactivate: ->
     # Override to perform any cleanup when the instruction deactivates.

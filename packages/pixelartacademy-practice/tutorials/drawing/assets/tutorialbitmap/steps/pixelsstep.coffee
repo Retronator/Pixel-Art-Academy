@@ -132,7 +132,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         continue if LOI.Assets.ColorHelper.areAssetColorsEqual pixel, goalPixel, palette, backgroundColor
         
         # Clear hints at pixels that should be empty.
-        anyPixel = @stepArea.hasGoalPixel x, y
+        anyPixel = @stepArea.hasGoalPixel absoluteX, absoluteY
 
         if pixel and not anyPixel
           @_drawColorHelpForPixel context, x, y, null, null, true, renderOptions

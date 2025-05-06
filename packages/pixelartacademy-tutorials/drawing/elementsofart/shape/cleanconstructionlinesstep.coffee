@@ -14,7 +14,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CleanConstructionLinesStep exten
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         continue unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
-        return false if pixel.paletteColor.ramp
+        return false if pixel.paletteColor?.ramp
 
     true
 
@@ -30,7 +30,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CleanConstructionLinesStep exten
         absoluteY = @stepArea.bounds.y + y
         
         continue unless pixel = bitmapLayer.getPixel absoluteX, absoluteY
-        continue unless pixel.paletteColor.ramp
+        continue unless pixel.paletteColor?.ramp
         pixels.push
           x: absoluteX
           y: absoluteY
@@ -47,7 +47,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CleanConstructionLinesStep exten
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         continue unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
-        continue unless pixel.paletteColor.ramp
+        continue unless pixel.paletteColor?.ramp
 
         @_drawColorHelpForPixel context, x, y, null, null, null, renderOptions
     
