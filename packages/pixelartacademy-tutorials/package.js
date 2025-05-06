@@ -95,6 +95,7 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/elementsofart/shape/basicshapes');
   api.addFile('drawing/elementsofart/shape/combiningbasicshapes');
+  api.addFile('drawing/elementsofart/shape/transformedbasicshapes');
   api.addFile('drawing/elementsofart/shape/basicshapesbreakdown');
   api.addFile('drawing/elementsofart/shape/organicshapes');
   api.addFile('drawing/elementsofart/shape/organicshapes2');
