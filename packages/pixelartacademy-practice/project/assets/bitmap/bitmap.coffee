@@ -78,6 +78,10 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     # Alias for the drawing app.
     @document = @bitmap
 
+    # Allow palette access.
+    # Note: We need this immediately so that background color can be calculated in the portfolio.
+    @palette = new AE.LiveComputedField => @customPalette() or @restrictedPalette()
+    
     briefComponentClass = @constructor.briefComponentClass()
     @briefComponent = new briefComponentClass @
     
@@ -88,7 +92,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     # Prepare lazy initialization.
     @initialized = new ReactiveField false
 
-    # Allow dereived classes to finish constructing.
+    # Allow derived classes to finish constructing.
     Meteor.setTimeout =>
       @_initializingAutorun = Tracker.autorun (computation) =>
         return unless @initializingConditions()
@@ -101,6 +105,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @bitmapId.stop()
     @bitmap.stop()
     @versionedBitmap.stop()
+    @palette.stop()
     
     @_restrictedPaletteSubscription?.stop()
     @_initializingAutorun?.stop()
@@ -125,8 +130,6 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
   # Override to provide extra initialization functionality.
   _initialize: ->
-    @palette = new ComputedField => @customPalette() or @restrictedPalette()
-  
     # Create additional helpers.
     if pixelArtEvaluation = @constructor.pixelArtEvaluation()
       pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
@@ -177,8 +180,6 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     return unless backgroundColor = @constructor.backgroundColor()
 
     if paletteColor = backgroundColor.paletteColor
-      # We need to wait until we're initialized so that the palette field is ready.
-      return unless @initialized()
       return unless palette = @palette()
       palette.color paletteColor.ramp, paletteColor.shade
 

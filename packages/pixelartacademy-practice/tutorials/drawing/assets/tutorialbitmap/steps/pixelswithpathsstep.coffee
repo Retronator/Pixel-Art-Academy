@@ -10,9 +10,13 @@ class TutorialBitmap.PixelsWithPathsStep extends TutorialBitmap.PixelsStep
     super arguments...
     
     @options.drawHintsForGoalPixels = false
+    @options.hintStrokeWidth ?= 1
     
     @paths = for svgPath in @options.svgPaths
       new TutorialBitmap.PathStep.Path @tutorialBitmap, @, svgPath
   
   drawUnderlyingHints: (context, renderOptions) ->
-    TutorialBitmap.PathStep.drawPathHints context, renderOptions, @stepArea, @paths
+    TutorialBitmap.PathStep.drawPathFillHints context, renderOptions, @stepArea, @paths
+
+  drawOverlaidHints: (context, renderOptions) ->
+    TutorialBitmap.PathStep.drawPathStrokeHints context, renderOptions, @stepArea, @paths, @options.hintStrokeWidth

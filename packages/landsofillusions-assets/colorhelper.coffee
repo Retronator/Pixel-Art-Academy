@@ -61,12 +61,12 @@ class LOI.Assets.ColorHelper
     # If we don't have both colors and there is no background, it's not a match.
     return false unless assetColor1 and assetColor2 or backgroundColor
     
-    color1 = if assetColor1 then @resolveAssetColor assetColor1, palette else backgroundColor
-    color2 = if assetColor2 then @resolveAssetColor assetColor2, palette else backgroundColor
+    color1 = if assetColor1 then @resolveAssetColor palette, assetColor1 else backgroundColor
+    color2 = if assetColor2 then @resolveAssetColor palette, assetColor2 else backgroundColor
     
     color1.r is color2.r and color1.g is color2.g and color1.b is color2.b
     
-  @resolveAssetColor: (assetColor, palette) ->
+  @resolveAssetColor: (palette, assetColor) ->
     # The color can be specified directly as an RGB object.
     return assetColor.directColor if assetColor.directColor
     
@@ -79,9 +79,16 @@ class LOI.Assets.ColorHelper
     # Otherwise we assume the color has already been resolved to an RGB object.
     assetColor
     
-  @getPaletteColorIndex: (assetColor, palette) ->
-    return 0 unless assetColor.paletteColor
+  # Returns the index of the color if all the shades are flattened into a single array.
+  @getSerialIndexForAssetColor: (palette, assetColor) ->
+    if assetColor.paletteColor
+      paletteColor = assetColor.paletteColor
+      
+    else if assetColor.directColor
+      paletteColor = @exactPaletteColor palette, assetColor.directColor
+      
+    return 0 unless paletteColor
     
     index = 0
-    index += palette.ramps[rampIndex].shades.length for rampIndex in [0...assetColor.paletteColor.ramp]
-    index + assetColor.paletteColor.shade
+    index += palette.ramps[rampIndex].shades.length for rampIndex in [0...paletteColor.ramp]
+    index + paletteColor.shade

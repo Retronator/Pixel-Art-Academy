@@ -33,6 +33,6 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.RequiredRampInstruction extends 
     for x in [0...bitmap.bounds.width]
       for y in [0...bitmap.bounds.height]
         continue unless pixel = bitmapLayer.getPixel x, y
-        return defaultDelayDuration if pixel.paletteColor.ramp is requiredRamp
+        return defaultDelayDuration if pixel.paletteColor?.ramp is requiredRamp
     
     0

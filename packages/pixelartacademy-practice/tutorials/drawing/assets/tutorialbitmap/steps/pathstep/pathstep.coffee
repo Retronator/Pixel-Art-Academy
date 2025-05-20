@@ -11,7 +11,7 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 class TutorialBitmap.PathStep extends TutorialBitmap.Step
   @debug = false
   
-  @drawPathHints: (context, renderOptions, stepArea, paths) ->
+  @drawPathStrokeHints: (context, renderOptions, stepArea, paths, strokeWidth = 1) ->
     # Draw path to step area.
     context.save()
     context.translate stepArea.bounds.x, stepArea.bounds.y
@@ -26,24 +26,28 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
       
       context.globalAlpha = 1
 
-    # Set line style.
-    pixelSize = 1 / renderOptions.camera.effectiveScale()
-    context.lineWidth = pixelSize
-    
-    halfPixelSize = pixelSize / 2
-    
     # Draw all the paths' hints.
-    context.translate halfPixelSize, halfPixelSize
-    path.drawHint context, renderOptions for path in paths
+    path.drawStrokeHint context, renderOptions, strokeWidth for path in paths
 
     context.restore()
   
+  @drawPathFillHints: (context, renderOptions, stepArea, paths) ->
+    # Draw path to step area.
+    context.save()
+    context.translate stepArea.bounds.x, stepArea.bounds.y
+    
+    # Draw all the paths' hints.
+    path.drawFillHint context, renderOptions for path in paths
+
+    context.restore()
+    
   # Note: We receive pure SVG paths through options since the SVG paths resource can be broken down into multiple steps.
   constructor: ->
     super arguments...
     
     @options.hasPixelsWhenInactive ?= true
     @options.tolerance ?= 0
+    @options.hintStrokeWidth ?= 1
     
     @paths = for svgPath in @options.svgPaths
       new @constructor.Path @tutorialBitmap, @, svgPath
@@ -56,7 +60,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     for x in [0...width]
       for y in [0...height]
         for path in @paths when path.hasPixel x, y
-          @_pixelsMap[x + y * width] = 1
+          @_pixelsMap[x + y * width]++
   
   completed: ->
     return unless super arguments...
@@ -76,7 +80,10 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     relativeX = absoluteX - @stepArea.bounds.x
     relativeY = absoluteY - @stepArea.bounds.y
     
-    @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] is 1
+    @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] > 0
+    
+  multiplePathsHavePixel: (relativeX, relativeY) ->
+    @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] > 1
   
   solve: ->
     bitmap = @tutorialBitmap.bitmap()
@@ -90,7 +97,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
       for y in [0...height]
         for path in @paths
           if path.pixelExceedsSolutionThreshold x, y
-            paletteColor = palette.exactPaletteColor path.color
+            paletteColor = palette.exactPaletteColor if path.pixelShouldBeFill x, y then path.fillColor else path.strokeColor
 
             pixels.push
               x: x + @stepArea.bounds.x
@@ -102,9 +109,12 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
+    
+  drawUnderlyingHints: (context, renderOptions) ->
+    @constructor.drawPathFillHints context, renderOptions, @stepArea, @paths
   
   drawOverlaidHints: (context, renderOptions) ->
-    @constructor.drawPathHints context, renderOptions, @stepArea, @paths
+    @constructor.drawPathStrokeHints context, renderOptions, @stepArea, @paths, @options.hintStrokeWidth
 
     @_prepareColorHelp context, renderOptions
     
@@ -120,10 +130,37 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
         continue unless pixel = bitmapLayer.getPixel absoluteX, absoluteY
         
         if @stepArea.hasGoalPixel(absoluteX, absoluteY)
-          # Draw dots at path pixels with the correct color.
-          for path in @paths when path.pixelExceedsColorHintThreshold absoluteX, absoluteY
-            continue if LOI.Assets.ColorHelper.areAssetColorsEqual pixel, path.color, palette, backgroundColor
-            @_drawColorHelpForPixel context, x, y, path.color, palette, pixel, renderOptions
+          # Draw hints if no path completed the pixel.
+          pixelCompleted = false
+          
+          for path in @paths
+            if path.pixelCompleted x, y
+              pixelCompleted = true
+              break
+              
+          continue if pixelCompleted
+        
+          # Draw hints at path pixels with the correct color.
+          hintNeeded = true
+          
+          # In the first pass, try to draw only strokes.
+          for path in @paths when path.pixelExceedsColorHintThreshold(x, y) and path.pixelCanBeStroke x, y
+            hintNeeded = false
+
+            # Nothing to do if the pixel already has the color of the path.
+            break if LOI.Assets.ColorHelper.areAssetColorsEqual pixel, path.strokeColor, palette, backgroundColor
+            
+            # Draw the hint for this stroke color.
+            @_drawColorHelpForPixel context, x, y, path.strokeAssetColor, palette, pixel, renderOptions
+            break
+            
+          if hintNeeded
+            # In the second pass, try to draw fill color hints.
+            for path in @paths when path.pixelExceedsColorHintThreshold(x, y) and path.pixelCanBeFill x, y
+              break if LOI.Assets.ColorHelper.areAssetColorsEqual pixel, path.fillColor, palette, backgroundColor
+              
+              @_drawColorHelpForPixel context, x, y, path.fillAssetColor, palette, pixel, renderOptions
+              break
           
         else
           # Erase dots at empty pixels.

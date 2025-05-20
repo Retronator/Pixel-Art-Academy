@@ -143,7 +143,7 @@ class TutorialBitmap.Step
     _bottomRightCorner.y = absoluteY + 1
     renderOptions.camera.roundCanvasToWindowPixel _bottomRightCorner, _bottomRightCorner
     
-    color = LOI.Assets.ColorHelper.resolveAssetColor assetColor, palette if assetColor
+    color = LOI.Assets.ColorHelper.resolveAssetColor palette, assetColor if assetColor
     
     if color
       unless colorLuminosity = @constructor._luminosityForRGB[color.r]?[color.g]?[color.b]
@@ -179,8 +179,8 @@ class TutorialBitmap.Step
             
           when @_ColorHelp.HintStyle.Symbols
             # Draw the symbol offset to create an outline.
-            index = if assetColor then LOI.Assets.ColorHelper.getPaletteColorIndex assetColor, palette else 0
-            symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[index]
+            serialIndex = if assetColor then LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor else 0
+            symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
 
             symbolSize = context.measureText symbol
             width = symbolSize.actualBoundingBoxRight - symbolSize.actualBoundingBoxLeft
@@ -213,8 +213,8 @@ class TutorialBitmap.Step
         
     else
       # Draw the symbol hint.
-      index = if assetColor then LOI.Assets.ColorHelper.getPaletteColorIndex assetColor, palette else 0
-      symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[index]
+      serialIndex = if assetColor then LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor else 0
+      symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
       
       symbolSize = context.measureText symbol
       width = symbolSize.actualBoundingBoxRight - symbolSize.actualBoundingBoxLeft

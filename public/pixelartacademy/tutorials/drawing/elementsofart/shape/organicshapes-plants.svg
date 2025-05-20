@@ -12,12 +12,12 @@
    xmlns:svg="http://www.w3.org/2000/svg"><defs
      id="defs1" /><g
      id="layer2"><path
-       style="display:inline;fill:none;stroke:#00ccff;stroke-width:0.1;stroke-linecap:round"
+       style="display:inline;fill:none;stroke:#0099ff;stroke-width:0.1;stroke-linecap:round;stroke-opacity:1"
        d="m 7.5,72.5 h 65"
        id="path1" /><path
        id="path12"
-       style="fill:none;stroke:#00ccff;stroke-width:0.1;stroke-linecap:round"
+       style="fill:none;stroke:#0099ff;stroke-width:0.1;stroke-linecap:round;stroke-opacity:1"
        d="m 22.5,72.5 c 1,-10 4,-8.5 5,-17 C 28.282279,48.850632 27.228678,37.305586 26.732813,32.593576 26.594805,31.282143 25.5,18.5 25.5,18.5 m 12,0 c 0,6.627417 -5.372583,12 -12,12 -6.627417,0 -12,-5.372583 -12,-12 0,-6.627417 5.372583,-12 12,-12 6.627417,0 12,5.372583 12,12 z" /><path
        id="path14"
-       style="fill:none;stroke:#00ccff;stroke-width:0.1;stroke-linecap:round"
+       style="fill:none;stroke:#0099ff;stroke-width:0.1;stroke-linecap:round;stroke-opacity:1"
        d="m 56.5,71.5 a 4,4 0 0 1 -4,4 4,4 0 0 1 -4,-4 4,4 0 0 1 4,-4 4,4 0 0 1 4,4 z m 11,-8 a 15,15 0 0 1 -15,15 15,15 0 0 1 -15,-15 15,15 0 0 1 15,-15 15,15 0 0 1 15,15 z" /></g></svg>

@@ -22,28 +22,36 @@ class TutorialBitmap.PathStep.Path
     style = svgPath.getAttribute 'style'
     
     strokeColorString = style.match(/stroke:(.*?);/)?[1]
-    @color = new THREE.Color strokeColorString
+
+    unless strokeColorString is 'none'
+      @strokeColor = new THREE.Color strokeColorString
+      @strokeAssetColor = directColor: @strokeColor
     
     fillColorString = style.match(/fill:(.*?);/)?[1]
-    @filled = fillColorString and fillColorString isnt 'none'
+    
+    unless fillColorString is 'none'
+      @fillColor = new THREE.Color fillColorString
+      @fillAssetColor = directColor: @fillColor
     
     # Rasterize the path to the canvas.
     @canvas.context.lineCap = 'round'
     @canvas.context.lineWidth = @pathStep.options.tolerance * 2
 
-    if @filled
+    if @fillColor
+      @canvas.context.fillStyle = "rgb(255 0 0)"
       @canvas.context.fill @path
 
-      # Reduce the size of the required filled area by the tolerance
-      if @pathStep.options.tolerance
+      if @pathStep.options.tolerance and @strokeColor
+        # Reduce the size of the required filled area by the tolerance since the stroke itself will be slightly lighter.
         @canvas.context.globalCompositeOperation = 'destination-out'
         @canvas.context.stroke @path
         @canvas.context.globalCompositeOperation = 'source-over'
       
-    # When we have tolerance, draw the lines slightly lighter than
-    # required so that none of their pixels are directly required.
-    @canvas.context.strokeStyle = "rgb(0 0 0 / #{(@constructor.minimumRequiredPixelAlpha - 10) / 255})" if @pathStep.options.tolerance
-    @canvas.context.stroke @path
+    if @strokeColor
+      # When we have tolerance, draw the lines slightly lighter than
+      # required so that none of their pixels are directly required.
+      @canvas.context.strokeStyle = "rgb(0 0 0 / #{(@constructor.minimumRequiredPixelAlpha - 10) / 255})" if @pathStep.options.tolerance
+      @canvas.context.stroke @path
     
     @_imageData = @canvas.getFullImageData()
     
@@ -67,9 +75,9 @@ class TutorialBitmap.PathStep.Path
           @pathBounds.top = Math.min @pathBounds.top, y
           @pathBounds.bottom = Math.max @pathBounds.bottom, y
           
-          # Turn anti-aliased pixels blue and required green for debugging purposes.
+          # Turn anti-aliased pixels blue (pink inside) and required green (yellow inside) for debugging purposes.
           channelOffset = if alpha >= @constructor.minimumRequiredPixelAlpha then 1 else 2
-          @_imageData.data[pixelIndex * 4 + channelOffset] = 255
+          @_imageData.data[pixelIndex * 4 + channelOffset] = 128
           
           # Make allowed pixels more visible, but don't change their
           # upper end since that's used for detecting required pixels.
@@ -92,12 +100,11 @@ class TutorialBitmap.PathStep.Path
       
       currentCornersOfPart.push {x, y}
 
-      # Turn corners red for debugging purposes.
+      # Turn corners lime (yellow for fill) for debugging purposes.
       for dx in [-cornerMaxOffset..cornerMaxOffset]
         for dy in [-cornerMaxOffset..cornerMaxOffset]
           pixelIndex = x + dx + (y + dy) * @_imageData.width
-          @_imageData.data[pixelIndex * 4] = 255
-          @_imageData.data[pixelIndex * 4 + 1] = 0
+          @_imageData.data[pixelIndex * 4 + 1] = 255
           @_imageData.data[pixelIndex * 4 + 2] = 0
       
       # HACK: Electron's Chrome produces different rasterization results that
@@ -133,6 +140,38 @@ class TutorialBitmap.PathStep.Path
   pixelExceedsColorHintThreshold: (x, y) ->
     @_getPixelAlpha(x, y) >= @constructor.minimumColorHintPixelAlpha
     
+  pixelShouldBeFill: (x, y) ->
+    pixelIndex = x + y * @_imageData.width
+    @_imageData.data[pixelIndex * 4] > 128
+  
+  pixelCanBeFill: (x, y) ->
+    pixelIndex = x + y * @_imageData.width
+    @_imageData.data[pixelIndex * 4] > 0
+  
+  pixelCanBeStroke: (x, y) ->
+    pixelIndex = x + y * @_imageData.width
+    @_imageData.data[pixelIndex * 4] < 255
+    
+  pixelCompleted: (x, y) ->
+    return unless @hasPixel x, y
+    return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
+    return unless palette = @tutorialBitmap.palette()
+    
+    bounds = @pathStep.stepArea.bounds
+    
+    absoluteX = bounds.x + x
+    absoluteY = bounds.y + y
+    pixel = bitmapLayer.getPixel absoluteX, absoluteY
+    backgroundColor = @tutorialBitmap.backgroundColor()
+    
+    if @pixelCanBeStroke x, y
+      return stroke: true if LOI.Assets.ColorHelper.areAssetColorsEqual @strokeAssetColor, pixel, palette, backgroundColor
+      
+    if @pixelCanBeFill x, y
+      return fill: true if LOI.Assets.ColorHelper.areAssetColorsEqual @fillAssetColor, pixel, palette, backgroundColor
+      
+    false
+    
   completed: ->
     # Store completed locally to know whether to draw the hint.
     @_completed = false
@@ -141,22 +180,24 @@ class TutorialBitmap.PathStep.Path
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()
 
-    goalColor = color: @color
-    
-    if paletteColor = palette.exactPaletteColor @color
-      goalColor.paletteColor = paletteColor
-    
-    pixelMatchesColor = (pixel) =>
-      if pixel.paletteColor and goalColor.paletteColor
-        return false unless EJSON.equals pixel.paletteColor, goalColor.paletteColor
-      
-      else
-        pixelColor = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
-        return false unless goalColor.color.equals pixelColor
-        
-      true
-
+    backgroundColor = @tutorialBitmap.backgroundColor()
     bounds = @pathStep.stepArea.bounds
+    
+    pixelMatchesColorOrOtherPathCompletesIt = (pixel, x, y) =>
+      if @pixelCanBeStroke x, y
+        stroke = true
+        return true if LOI.Assets.ColorHelper.areAssetColorsEqual @strokeAssetColor, pixel, palette, backgroundColor
+      
+      if @pixelCanBeFill x, y
+        return true if LOI.Assets.ColorHelper.areAssetColorsEqual @fillAssetColor, pixel, palette, backgroundColor
+
+      return false unless @pathStep.multiplePathsHavePixel x, y
+    
+      for path in @pathStep.paths when path isnt @
+        completion = path.pixelCompleted x, y
+        return true if stroke and completion?.stroke or not stroke and completion
+      
+      false
     
     for cornersForPart in @cornersOfParts
       for corner in cornersForPart
@@ -172,7 +213,7 @@ class TutorialBitmap.PathStep.Path
                 absoluteX = bounds.x + x
                 absoluteY = bounds.y + y
                 if @hasPixel(x, y) and pixel = bitmapLayer.getPixel absoluteX, absoluteY
-                  corner.foundCoveredPixelPositions.push {x, y} if pixelMatchesColor pixel
+                  corner.foundCoveredPixelPositions.push {x, y} if pixelMatchesColorOrOtherPathCompletesIt pixel, x, y
           
           return false unless corner.foundCoveredPixelPositions.length
         
@@ -180,17 +221,14 @@ class TutorialBitmap.PathStep.Path
           absoluteX = bounds.x + corner.x
           absoluteY = bounds.y + corner.y
           return false unless pixel = bitmapLayer.getPixel absoluteX, absoluteY
-          corner.foundCoveredPixelPositions = [corner] if pixelMatchesColor pixel
+          corner.foundCoveredPixelPositions = [corner] if pixelMatchesColorOrOtherPathCompletesIt pixel, corner.x, corner.y
         
     # See which pixels have been covered in the allowed area.
     pixelCoverage = new Uint8Array bounds.width * bounds.height * 2
     
-    coveredPixelsCount = 0
-    
     coverPixel = (x, y) =>
       pixelIndex = x + y * bounds.width
       pixelCoverage[pixelIndex * 2] = 1
-      coveredPixelsCount++
       
     for x in [0...bounds.width]
       for y in [0...bounds.height] when pixelAlpha = @_getPixelAlpha x, y
@@ -210,7 +248,7 @@ class TutorialBitmap.PathStep.Path
               absoluteX = bounds.x + relativeX
               absoluteY = bounds.y + relativeY
               if @hasPixel(relativeX, relativeY) and pixel = bitmapLayer.getPixel absoluteX, absoluteY
-                if pixelMatchesColor pixel
+                if pixelMatchesColorOrOtherPathCompletesIt pixel, relativeX, relativeY
                   found = true
                   break
             break if found
@@ -282,7 +320,7 @@ class TutorialBitmap.PathStep.Path
     @_completed = true
     @_completed
   
-  drawHint: (context, renderOptions) ->
+  _hintVisible: (renderOptions) ->
     # Determine if the path is even visible on the canvas.
     visibleBoundsLeft = Math.floor Math.max renderOptions.camera.viewportCanvasBounds.left(), @pathBounds.left + @pathStep.stepArea.bounds.x
     visibleBoundsRight = Math.ceil Math.min renderOptions.camera.viewportCanvasBounds.right(), @pathBounds.right + @pathStep.stepArea.bounds.x
@@ -292,31 +330,55 @@ class TutorialBitmap.PathStep.Path
     visibleBoundsHeight = visibleBoundsBottom - visibleBoundsTop + 1
     
     # Note: We have to allow 0 width and height for vertical and horizontal lines at integer positions.
-    return if visibleBoundsWidth < 0 or visibleBoundsHeight < 0
+    return false unless visibleBoundsWidth >= 0 and visibleBoundsHeight >= 0
     
+    {visibleBoundsLeft, visibleBoundsRight, visibleBoundsTop, visibleBoundsBottom, visibleBoundsWidth, visibleBoundsHeight}
+    
+  _getHintPathOpacity: (renderOptions) ->
     # Completed lines draw much fainter if we're not supposed to draw hints after completion.
     if @_completed and not @pathStep.options.drawHintsAfterCompleted
-      pathOpacity = Math.min 0.25, renderOptions.camera.scale() / 32
+      Math.min 0.25, renderOptions.camera.scale() / 32
       
     else
-      pathOpacity = Math.min 1, renderOptions.camera.scale() / 4
+      Math.min 1, renderOptions.camera.scale() / 4
 
-    context.strokeStyle = "rgb(#{@color.r * 255} #{@color.g * 255} #{@color.b * 255} / #{pathOpacity})"
+  drawStrokeHint: (context, renderOptions, strokeWidth) ->
+    return unless @strokeColor
+    return unless @_hintVisible renderOptions
     
+    pixelSize = 1 / renderOptions.camera.effectiveScale()
+    halfPixelSize = pixelSize / 2
+    
+    context.save()
+    context.lineWidth = pixelSize * strokeWidth
+    pathOpacity = @_getHintPathOpacity renderOptions
+    context.strokeStyle = "rgb(#{@strokeColor.r * 255} #{@strokeColor.g * 255} #{@strokeColor.b * 255} / #{pathOpacity})"
+    context.translate halfPixelSize, halfPixelSize if strokeWidth % 2
     context.stroke @path
+    context.restore()
 
-    if @filled
-      context.save()
-      context.clip @path
+  drawFillHint: (context, renderOptions) ->
+    return unless @fillColor
+    return unless {visibleBoundsLeft, visibleBoundsRight, visibleBoundsTop, visibleBoundsHeight} = @_hintVisible renderOptions
 
-      context.beginPath()
-      
-      pixelSize = 1 / renderOptions.camera.effectiveScale()
-      spacing = Math.max 5 * pixelSize, 1 / 3
-      
-      for x in [visibleBoundsLeft - visibleBoundsHeight...visibleBoundsRight] by spacing
-        context.moveTo x, visibleBoundsTop
-        context.lineTo x + visibleBoundsHeight, visibleBoundsTop + visibleBoundsHeight
-      
-      context.stroke()
-      context.restore()
+    context.save()
+    
+    pixelSize = 1 / renderOptions.camera.effectiveScale()
+    halfPixelSize = pixelSize / 2
+    context.translate halfPixelSize, halfPixelSize
+    
+    context.clip @path
+
+    context.beginPath()
+    
+    spacing = Math.max 5 * pixelSize, 1 / 3
+    
+    for x in [visibleBoundsLeft - visibleBoundsHeight...visibleBoundsRight] by spacing
+      context.moveTo x, visibleBoundsTop
+      context.lineTo x + visibleBoundsHeight, visibleBoundsTop + visibleBoundsHeight
+    
+    context.lineWidth = pixelSize
+    pathOpacity = @_getHintPathOpacity renderOptions
+    context.strokeStyle = "rgb(#{@fillColor.r * 255} #{@fillColor.g * 255} #{@fillColor.b * 255} / #{pathOpacity})"
+    context.stroke()
+    context.restore()

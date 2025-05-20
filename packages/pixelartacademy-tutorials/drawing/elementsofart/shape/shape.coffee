@@ -15,6 +15,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape extends PAA.Tutorials.Drawing.El
     @TransformedBasicShapes
     @BasicShapesBreakdown
     @Detailing
+    @SolidShapes
     @OrganicShapes
     @OrganicShapes2
   ]

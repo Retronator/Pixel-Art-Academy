@@ -25,7 +25,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.ColorHelp
     Always: 'Always'
     
   @symbols = """
-    ▪✚♥♦★
+    ✚♥♦★
     ☾▲▙◢
     ⚑▶▛◣
     ⌘▼▜◤

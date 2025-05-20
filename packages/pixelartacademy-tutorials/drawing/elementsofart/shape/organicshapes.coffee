@@ -11,15 +11,14 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes extends PAA.Tutori
   """
   
   @fixedDimensions: -> width: 80, height: 80
-  
+  @backgroundColor: -> new THREE.Color '#dedec4'
   @restrictedPaletteName: -> null
-  
   @customPalette: ->
     new LOI.Assets.Palette
       ramps: [
         shades: [r: 0, g: 0, b: 0]
       ,
-        shades: [r: 0, g: 0.8, b: 1]
+        shades: [r: 0, g: 0.6, b: 1]
       ]
       
   @referenceNames: -> [

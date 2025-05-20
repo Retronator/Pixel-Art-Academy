@@ -11,15 +11,14 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes2 extends PAA.Tutor
   """
   
   @fixedDimensions: -> width: 90, height: 90
-  
+  @backgroundColor: -> new THREE.Color '#e8cfb7'
   @restrictedPaletteName: -> null
-  
   @customPalette: ->
     new LOI.Assets.Palette
       ramps: [
         shades: [r: 0, g: 0, b: 0]
       ,
-        shades: [r: 0, g: 0.8, b: 1]
+        shades: [r: 0, g: 0.6, b: 1]
       ]
       
   @referenceNames: -> [
@@ -59,7 +58,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes2 extends PAA.Tutor
     
     # Mark construction and line art steps.
     for pathStep, index in steps
-      if pathStep.paths[0].color.b
+      if pathStep.paths[0].strokeColor.b
         pathStep.options.constructionStep = true
         pathStep.options.preserveCompleted = true
         

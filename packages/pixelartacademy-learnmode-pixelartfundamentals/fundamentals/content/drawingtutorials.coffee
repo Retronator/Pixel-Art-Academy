@@ -65,9 +65,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
       @tutorialClass = PAA.Tutorials.Drawing.ElementsOfArt.Line
       @initialize()
       
-    class @Shape extends LM.Content.FutureContent
+    class @Shape extends LM.Content.DrawingTutorialContent
       @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.ElementsOfArt.Shape'
-      @displayName: -> "Elements of art: shape"
+      @tutorialClass = PAA.Tutorials.Drawing.ElementsOfArt.Shape
       @initialize()
     
     class @Form extends LM.Content.FutureContent
