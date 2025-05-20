@@ -20,6 +20,10 @@ class FM.Tool extends FM.Operator
     
   isActive: ->
     @interface.active() and @interface.activeToolId() is @id()
+  
+  isEngaged: ->
+    # Override to specify when the tool is actively being used.
+    false
 
   onKeyDown: (event) ->
     # Override to handle key presses.

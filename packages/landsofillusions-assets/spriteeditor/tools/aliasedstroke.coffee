@@ -144,6 +144,8 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
     
     pixels
 
+  isEngaged: -> @strokeActive()
+  
   onKeyDown: (event) ->
     super arguments...
 

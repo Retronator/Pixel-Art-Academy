@@ -24,6 +24,10 @@ class PAA.Tutorials.Drawing.Instructions.Desktop extends PAA.PixelPad.Systems.In
   
     @headerHeight = 14
     @animationDuration = 0.35
+  
+  interactableClass: ->
+    editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+    'interactable' unless editor?.interface.activeTool()?.isEngaged()
     
   instructionsStyle: ->
     switch @displayState()

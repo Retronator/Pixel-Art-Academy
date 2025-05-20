@@ -20,6 +20,11 @@
       &.move-canvas
         cursor grab
 
+      &.active-tool-engaged
+        .fatamorgana-toolbox
+        .table-item
+          pointer-events none
+
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop
       &:not(.focused-mode)
         .fatamorgana-toolbox
@@ -205,8 +210,8 @@
           position absolute
           top 0
           left 62rem
-          width 9rem
-          height 31rem
+          width 11rem
+          height 37rem
 
         .rectangle
           position absolute

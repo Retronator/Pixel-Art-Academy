@@ -258,6 +258,10 @@ class FM.Interface extends AM.Component
   # gets assigned to Interface in Tool classes for what must be an incredibly obscure reason.
   activeToolClasses: ->
     @activeTool()?.toolClasses()
+  
+  activeToolEngagedClass: ->
+    return unless activeTool = @activeTool()
+    'active-tool-engaged' if activeTool.isEngaged()
 
   events: ->
     super(arguments...).concat

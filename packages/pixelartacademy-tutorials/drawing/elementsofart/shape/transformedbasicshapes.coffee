@@ -33,7 +33,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.TransformedBasicShapes extends P
     @stepNumber: -> 2
     
     @message: -> """
-      The shapes can be resized horizontally and vertically to arrive at rectangles and ellipses.
+      You might have to resize shapes horizontally or vertically and use rectangles and ellipses.
     """
     
     @initialize()
@@ -46,6 +46,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.TransformedBasicShapes extends P
     
     @message: -> """
       Sometimes you will even need to rotate shapes.
+      The rectangle and ellipse tools won't help much here, so you'll have to use lines and manually pixel the curves.
     """
     
     @initialize()

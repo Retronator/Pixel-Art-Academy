@@ -59,6 +59,8 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels [] if @_previewActive
+  
+  isEngaged: -> @startPixelCoordinates()?
 
   onKeyDown: (event) ->
     super arguments...
