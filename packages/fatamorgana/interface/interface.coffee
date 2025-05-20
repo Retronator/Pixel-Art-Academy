@@ -259,9 +259,12 @@ class FM.Interface extends AM.Component
   activeToolClasses: ->
     @activeTool()?.toolClasses()
   
-  activeToolEngagedClass: ->
+  activeToolEngaged: ->
     return unless activeTool = @activeTool()
-    'active-tool-engaged' if activeTool.isEngaged()
+    activeTool.isEngaged()
+  
+  activeToolEngagedClass: ->
+    'active-tool-engaged' if @activeToolEngaged()
 
   events: ->
     super(arguments...).concat

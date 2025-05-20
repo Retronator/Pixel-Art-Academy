@@ -105,7 +105,12 @@ class FM.Interface extends FM.Interface
 
   shortcutsActive: ->
     # Make sure we're not currently typing into an input.
-    not @inputFocused()
+    return false if @inputFocused()
+    
+    # Don't process shortcuts when the active tool is engaged.
+    return false if @activeToolEngaged()
+    
+    true
 
   onKeyDown: (event) ->
     return unless @active()

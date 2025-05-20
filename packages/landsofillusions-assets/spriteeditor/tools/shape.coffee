@@ -9,6 +9,7 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     super arguments...
 
     @drawingActive = new ReactiveField false
+    @movementActive = new ReactiveField false
 
     @startPixelCoordinates = new ReactiveField null
     @currentPixelCoordinates = new ReactiveField null
@@ -60,12 +61,14 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels [] if @_previewActive
   
-  isEngaged: -> @startPixelCoordinates()?
+  isEngaged: -> @drawingActive()
 
   onKeyDown: (event) ->
     super arguments...
 
     if @startPixelCoordinates()
+      @movementActive true if event.which is AC.Keys.space
+      
       # React to any modifier changes when drawing.
       @updateShape()
 
@@ -73,6 +76,8 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     super arguments...
 
     if @startPixelCoordinates()
+      @movementActive false if event.which is AC.Keys.space
+      
       # React to any modifier changes when drawing.
       @updateShape()
 
@@ -91,10 +96,12 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     
   startDrawing: ->
     # Only react when the pointer has a valid position.
-    @startPixelCoordinates @getNewPixelCoordinates()
+    return unless newPixelCoordinates = @getNewPixelCoordinates()
+    @startPixelCoordinates newPixelCoordinates
     
     @drawingActive true
     @realtimeUpdating true
+    @movementActive false
 
     # If pointer down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
     Tracker.afterFlush => @updateShape()
@@ -138,6 +145,12 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     # Update coordinates if they are new.
     unless EJSON.equals currentPixelCoordinates, newPixelCoordinates
       @currentPixelCoordinates newPixelCoordinates
+      
+      # If in movement mode, also change the start coordinates.
+      if @movementActive() and startPixelCoordinates = @startPixelCoordinates()
+        startPixelCoordinates.x += newPixelCoordinates.x - currentPixelCoordinates.x
+        startPixelCoordinates.y += newPixelCoordinates.y - currentPixelCoordinates.y
+        @startPixelCoordinates startPixelCoordinates
 
     @updatePixels()
 
