@@ -8,7 +8,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.SolidShapes extends PAA.Tutorial
     Shapes can be filled with color.
   """
   
-  @fixedDimensions: -> width: 87, height: 42
+  @fixedDimensions: -> width: 88, height: 42
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
   @backgroundColor: ->
     paletteColor:
