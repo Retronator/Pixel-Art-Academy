@@ -361,6 +361,11 @@ class TutorialBitmap.PathStep.Path
     return unless @fillColor
     return unless {visibleBoundsLeft, visibleBoundsRight, visibleBoundsTop, visibleBoundsHeight} = @_hintVisible renderOptions
 
+    # Visible bounds are in absolute canvas space, but we're drawing in relative step area, so we need to adjust.
+    visibleBoundsLeft -= @pathStep.stepArea.bounds.x
+    visibleBoundsRight -= @pathStep.stepArea.bounds.x
+    visibleBoundsTop -= @pathStep.stepArea.bounds.y
+
     context.save()
     
     pixelSize = 1 / renderOptions.camera.effectiveScale()

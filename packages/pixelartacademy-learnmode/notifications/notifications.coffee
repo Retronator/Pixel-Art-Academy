@@ -10,7 +10,7 @@ class LM.Notifications
     @message: -> """
         I'm planning to add more elements of art during Early Access.
 
-        Until then, focus just on the lines.
+        Until then, focus just on the lines and shapes.
         This will build your foundation before tackling harder elements such as values and colors.
       """
     

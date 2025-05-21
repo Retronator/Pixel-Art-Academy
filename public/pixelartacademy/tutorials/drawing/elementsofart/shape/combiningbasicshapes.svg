@@ -3,8 +3,8 @@
 
 <svg
    width="274"
-   height="85"
-   viewBox="0 0 274 85"
+   height="90"
+   viewBox="0 0 274 90"
    version="1.1"
    id="svg1"
    xml:space="preserve"
@@ -43,10 +43,10 @@
        d="m 111.5,21.5 c 1.36252,0.838847 2.88418,7.519463 3,8.5 0.12092,1.02366 1.75,10 2,16 0.25,6 1.75,21 3.25,23.5"
        id="path12" /><path
        style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-dasharray:none"
-       d="m 139.5,69.5 v -20 h 32 v 20"
+       d="M 139.5,69.5 V 49.75 h 32 V 69.5"
        id="path13" /><path
        style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-dasharray:none"
-       d="M 133.1,49.5 155.5,38.25 177.9,49.5 Z"
+       d="m 132.5,49.75 23,-11.5 23,11.5 z"
        id="path14" /><path
        style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-dasharray:none"
        d="m 190.5,69.5 v -4 h 30 v 4"
@@ -58,10 +58,10 @@
        d="m 197.5,53.5 v -11 h 16 v 11"
        id="path18" /><path
        style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-dasharray:none"
-       d="m 189.1,53.5 16.4,-8.25 16.4,8.25 z"
+       d="m 188.5,53.75 17,-8.5 17,8.5 z"
        id="path19" /><path
        style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-dasharray:none"
-       d="m 193.1,42.5 12.4,-6.25 12.4,6.25 z"
+       d="m 192.5,42.75 13,-6.5 13,6.5 z"
        id="path20" /><path
        style="fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-dasharray:none"
        d="M 204.5,36.75 V 33.5 h 2 v 3.25"
