@@ -10,6 +10,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Mickey Mouse Sound Cartoon (Ub Iwerks, 1928).
     """
+    maxClipboardScale: -> 2 / 3
 
   SuperMarioBros3World5:
     dimensions: -> width: 100, height: 100
@@ -17,6 +18,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Super Mario Bros. 3 (Nintendo Power Strategy Guide, vol. SG1/NP13, Nintendo, 1990).
     """
+    maxClipboardScale: -> 3 / 4
   
   SonicTheHedgehog3:
     dimensions: -> width: 80, height: 100
@@ -24,6 +26,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Sonic the Hedgehog 3 (Sega, 1994).
     """
+    maxClipboardScale: -> 3 / 4
     
   Zaxxon:
     dimensions: -> width: 70, height: 45
@@ -38,6 +41,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Rayman (Ubisoft, 1995).
     """
+    maxClipboardScale: -> 3 / 4
     
   ManiacMansion:
     dimensions: -> width: 200, height: 200
@@ -45,6 +49,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Maniac Mansion (Ken Macklin, Lucasfilm Games, 1987).
     """
+    maxClipboardScale: -> 1 / 3
   
   BubbleBobble:
     dimensions: -> width: 80, height: 70
@@ -59,6 +64,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Zelda II: The Adventure of Link (instruction booklet, Nintendo, 1987).
     """
+    maxClipboardScale: -> 3 / 4
   
   DayOfTheTentacle:
     dimensions: -> width: 60, height: 100
@@ -66,6 +72,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Day of the Tentacle (Peter Chan, LucasArts, 1993).
     """
+    maxClipboardScale: -> 2 / 3
   
   TetrisGameBoy:
     dimensions: -> width: 180, height: 200
@@ -73,6 +80,7 @@ assets =
     bitmapInfo: -> """
       Fan art study based on Tetris (Game Boy, Nintendo, 1989).
     """
+    maxClipboardScale: -> 1 / 3
     binderScale: 0.5
     
 for assetId, asset of assets
