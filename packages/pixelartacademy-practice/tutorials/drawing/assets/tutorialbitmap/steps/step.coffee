@@ -128,8 +128,8 @@ class TutorialBitmap.Step
     @_hintOpacity = if pixelSize < 2 then pixelSize / 5 else 1
     
     context.font = '0.5px Adventure Retronator'
-    context.textAlign = 'left'
-    context.textBaseline = 'top'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
   
   _drawColorHelpForPixel: (context, x, y, assetColor, palette, error, renderOptions) ->
     absoluteX = x + @stepArea.bounds.x
@@ -172,25 +172,20 @@ class TutorialBitmap.Step
       else if @_errorStyle is @_ColorHelp.ErrorStyle.HintOutline
         context.fillStyle = errorColor
 
-        switch @_hintStyle
-          when @_ColorHelp.HintStyle.Dots
-            # Draw a slightly bigger dot.
-            context.fillRect _topLeftCorner.x + @_dotHintOutlineErrorOffset, _topLeftCorner.y + @_dotHintOutlineErrorOffset, @_dotHintOutlineErrorSize, @_dotHintOutlineErrorSize
-            
-          when @_ColorHelp.HintStyle.Symbols
-            # Draw the symbol offset to create an outline.
-            serialIndex = if assetColor then LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor else 0
-            symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
+        if @_hintStyle is @_ColorHelp.HintStyle.Dots or not assetColor
+          # Draw a slightly bigger dot.
+          context.fillRect _topLeftCorner.x + @_dotHintOutlineErrorOffset, _topLeftCorner.y + @_dotHintOutlineErrorOffset, @_dotHintOutlineErrorSize, @_dotHintOutlineErrorSize
+          
+        else
+          # Draw the symbol offset to create an outline.
+          serialIndex = LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor
+          symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
 
-            symbolSize = context.measureText symbol
-            width = symbolSize.actualBoundingBoxRight - symbolSize.actualBoundingBoxLeft
-            height = symbolSize.actualBoundingBoxDescent - symbolSize.actualBoundingBoxAscent
-            
-            for offset in [-0.08, 0.08]
-              context.fillText symbol, absoluteX + 0.5 - width * 0.5 + offset, absoluteY + 0.5 - height * 0.5
-              context.fillText symbol, absoluteX + 0.5 - width * 0.5, absoluteY + 0.5 - height * 0.5 + offset
-              context.fillText symbol, absoluteX + 0.5 - width * 0.5 + offset, absoluteY + 0.5 - height * 0.5 + offset
-              context.fillText symbol, absoluteX + 0.5 - width * 0.5 - offset, absoluteY + 0.5 - height * 0.5 + offset
+          for offset in [-0.08, 0.08]
+            context.fillText symbol, absoluteX + 0.5 + offset, absoluteY + 0.5
+            context.fillText symbol, absoluteX + 0.5, absoluteY + 0.5 + offset
+            context.fillText symbol, absoluteX + 0.5 + offset, absoluteY + 0.5 + offset
+            context.fillText symbol, absoluteX + 0.5 - offset, absoluteY + 0.5 + offset
       
       else if @_errorStyle is @_ColorHelp.ErrorStyle.HintGlow or @_displayAllColorErrors and not @_errorStyle
         # Draw a radial gradient from the center of the pixel.
@@ -203,7 +198,7 @@ class TutorialBitmap.Step
     if color
       context.fillStyle = "rgba(#{color.r * 255}, #{color.g * 255}, #{color.b * 255}, #{@_hintOpacity})"
 
-    if @_hintStyle is @_ColorHelp.HintStyle.Dots
+    if @_hintStyle is @_ColorHelp.HintStyle.Dots or not assetColor
       # Draw the dot hint.
       if color
         context.fillRect _topLeftCorner.x + @_dotHintOffset, _topLeftCorner.y + @_dotHintOffset, @_dotHintSize, @_dotHintSize
@@ -213,17 +208,8 @@ class TutorialBitmap.Step
         
     else
       # Draw the symbol hint.
-      serialIndex = if assetColor then LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor else 0
+      serialIndex = LOI.Assets.ColorHelper.getSerialIndexForAssetColor palette, assetColor
       symbol = PAA.PixelPad.Apps.Drawing.Editor.ColorHelp.symbols[serialIndex]
-      
-      symbolSize = context.measureText symbol
-      width = symbolSize.actualBoundingBoxRight - symbolSize.actualBoundingBoxLeft
-      height = symbolSize.actualBoundingBoxDescent - symbolSize.actualBoundingBoxAscent
-      
-      if color
-        # Write the symbol in the center of the pixel.
-        context.fillText symbol, absoluteX + 0.5 - width * 0.5, absoluteY + 0.5 - height * 0.5
-        
-      else
-        # Clear the symbol.
-        context.clearRect absoluteX + 0.5 - width * 0.5, absoluteY + 0.5 - width * 0.5, width, width
+
+      # Write the symbol in the center of the pixel.
+      context.fillText symbol, absoluteX + 0.5, absoluteY + 0.5
