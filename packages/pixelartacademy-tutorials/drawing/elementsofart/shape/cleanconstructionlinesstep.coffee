@@ -49,7 +49,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.CleanConstructionLinesStep exten
         continue unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         continue unless pixel.paletteColor?.ramp
 
-        @_drawColorHelpForPixel context, x, y, null, null, null, renderOptions
+        @_drawColorHelpForPixel context, x, y, null, null, true, renderOptions
     
     # Explicit return to avoid result collection.
     return

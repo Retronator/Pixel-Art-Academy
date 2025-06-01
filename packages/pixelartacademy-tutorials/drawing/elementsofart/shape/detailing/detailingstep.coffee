@@ -3,6 +3,8 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+_blackAssetColor = paletteColor: {ramp: 0, shade: 0}
+
 class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing.DetailingStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.Step
   constructor: ->
     super arguments...
@@ -83,7 +85,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing.DetailingStep extends 
           
         # Draw hints on drawn goal pixels and optionally all goal pixels.
         else if goalPixel and not pixel
-          @_drawColorHelpForPixel context, x, y, {ramp: 0, shade: 0}, palette, true, renderOptions
+          @_drawColorHelpForPixel context, x, y, _blackAssetColor, palette, true, renderOptions
     
     # Explicit return to avoid result collection.
     return
