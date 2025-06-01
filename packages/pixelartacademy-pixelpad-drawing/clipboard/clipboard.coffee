@@ -22,6 +22,10 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     displayScale = LOI.adventure.interface.display.scale()
     fitScale = Math.min 174 / width, 160 / height
 
+    # Apply minimum and maximum scale if provided (it could be a non-integer).
+    fitScale = Math.max fitScale, options.scaleLimits.min if options?.scaleLimits?.min
+    fitScale = Math.min fitScale, options.scaleLimits.max if options?.scaleLimits?.max
+    
     if options?.pixelArtScaling
       if portfolioScale < 1
         # The asset was scaled down in the portfolio, so we will need to scale downwards. We start
@@ -54,10 +58,6 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     else
       # Make the asset fit in the clipboard.
       scale = Math.min 1 / displayScale, fitScale
-
-    # Apply minimum and maximum scale if provided (it could be a non-integer).
-    scale = Math.max scale, options.scaleLimits.min if options?.scaleLimits?.min
-    scale = Math.min scale, options.scaleLimits.max if options?.scaleLimits?.max
 
     contentWidth = width * scale
     contentHeight = height * scale
