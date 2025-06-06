@@ -165,4 +165,13 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thicklines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
+
+  // Design
+
+  api.addFile('drawing/design..');
+
+  api.addFile('drawing/design/shapelanguage..');
+  api.addFile('drawing/design/shapelanguage/asset');
+  api.addFile('drawing/design/shapelanguage/assetwithreferences');
+  api.addFile('drawing/design/shapelanguage/circle2');
 });

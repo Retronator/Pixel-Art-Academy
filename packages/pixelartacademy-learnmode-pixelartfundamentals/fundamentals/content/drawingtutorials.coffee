@@ -28,9 +28,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
       totalUnits: "tutorial steps"
       totalRecursive: true
   
-  status: ->
-    toDoTasksGoal = PAA.Learning.Goal.getAdventureInstanceForId LM.Intro.Tutorial.Goals.ToDoTasks.id()
-    if toDoTasksGoal.completed() then @constructor.Status.Unlocked else @constructor.Status.Locked
+  status: -> @constructor.Status.Unlocked
     
   class @ElementsOfArt extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.ElementsOfArt'

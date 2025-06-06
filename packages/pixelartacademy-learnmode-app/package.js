@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:pixelartacademy-learnmode-app',
-  version: '0.31.4',
+  version: '0.32.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -47,6 +47,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learnmode');
   api.use('retronator:pixelartacademy-learnmode-intro');
   api.use('retronator:pixelartacademy-learnmode-pixelartfundamentals');
+  api.use('retronator:pixelartacademy-learnmode-design');
 
   api.export('PixelArtAcademy');
 

@@ -22,9 +22,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
       totalUnits: "tasks"
       totalRecursive: true
   
-  status: ->
-    # Goals unlock after the episode's start scene is finished.
-    if LM.PixelArtFundamentals.Start.finished() then @constructor.Status.Unlocked else @constructor.Status.Locked
+  status: -> @constructor.Status.Unlocked
 
   class @ElementsOfArt extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.ElementsOfArt'
