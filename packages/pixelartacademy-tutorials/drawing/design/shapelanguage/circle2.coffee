@@ -10,6 +10,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Circle2 extends PAA.Tutorials.D
   """
 
   @fixedDimensions: -> width: 29, height: 32
+  @backgroundColor: -> new THREE.Color '#a6e2fe'
   
   @referenceNames: -> [
     'dragonwarrior'

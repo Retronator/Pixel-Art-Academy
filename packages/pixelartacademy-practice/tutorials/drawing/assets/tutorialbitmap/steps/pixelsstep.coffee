@@ -38,7 +38,15 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         # See if we require a pixel here.
-        continue unless goalPixel = @goalPixelsMap[x]?[y]
+        goalPixel = @goalPixelsMap[x]?[y]
+
+        unless goalPixel
+          # If we can't complete with extra pixels, make sure this pixel is empty since the implementation in the parent
+          # class doesn't catch it in time when the new step doesn't add any new pixels (but requires just removals).
+          unless @canCompleteWithExtraPixels()
+            return false if bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
+            
+          continue
 
         # We do require a pixel here so check if we have it in the bitmap.
         return false unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y

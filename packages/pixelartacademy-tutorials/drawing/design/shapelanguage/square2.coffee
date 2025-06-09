@@ -10,9 +10,12 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Square2 extends PAA.Tutorials.D
   """
 
   @fixedDimensions: -> width: 26, height: 28
+  @backgroundColor: -> new THREE.Color '#6c6c6c'
   
   @referenceNames: -> [
     'thelegendofzeldalinksawakeningdx'
+    'metalslug1stmission'
+    'advancewars'
   ]
   
   @initialize()
@@ -27,6 +30,30 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Square2 extends PAA.Tutorials.D
     @message: -> """
       Darknuts from The Legend of Zelda series are knights in heavy armor.
       The square appearance reinforces them as formidable, mid-game opponents.
+    """
+    
+    @initialize()
+  
+  class @MetalSlug extends PAA.Tutorials.Drawing.Instructions.Multiarea.UncompletedInstruction
+    @id: -> "#{Asset.id()}.MetalSlug"
+    @assetClass: -> Asset
+    @referenceUrl: -> Asset.createReferenceUrl 'metalslug1stmission'
+    
+    @message: -> """
+      Marco Rossi from the Metal Slug series, like many action game protagonists,
+      draws on his muscular, rectangular physique, cementing him as the primary hero of the game.
+    """
+    
+    @initialize()
+    
+  class @AdvanceWars extends PAA.Tutorials.Drawing.Instructions.Multiarea.UncompletedInstruction
+    @id: -> "#{Asset.id()}.AdvanceWars"
+    @assetClass: -> Asset
+    @referenceUrl: -> Asset.createReferenceUrl 'advancewars'
+    
+    @message: -> """
+      The Medium Tank in Advance Wars is the blockiest of all units,
+      signaling its superior defense against most other units.
     """
     
     @initialize()

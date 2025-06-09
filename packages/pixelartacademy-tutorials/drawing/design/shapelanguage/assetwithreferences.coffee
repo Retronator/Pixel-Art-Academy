@@ -94,8 +94,10 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
       new @constructor.PixelsStep @, stepArea,
         goalPixels: stepResources.step2
         preserveCompleted: true
+        hasPixelsWhenInactive: false
     ,
       # Create colors step.
       new @constructor.PixelsStep @, stepArea,
         goalPixels: stepResources.step3
+        hasPixelsWhenInactive: false
     ]
