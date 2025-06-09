@@ -5,24 +5,28 @@ PAA = PixelArtAcademy
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA.Tutorials.Drawing.Design.ShapeLanguage.Asset
   @referenceNames: -> throw new AE.NotImplementedException "Asset with references must provide reference names."
 
-  @lessonFileName: -> _.lowerCase _.pascalCase @displayName()
-    
-  @customPaletteImageUrl: -> "/pixelartacademy/tutorials/drawing/design/shapelanguage/#{@lessonFileName()}-template.png"
+  @lessonFileName: -> _.camelCase @displayName()
+  
+  @createResourceUrl: (fileName) -> "/pixelartacademy/tutorials/drawing/design/shapelanguage/#{fileName}"
+  @createLessonResourceUrl: (fileName) -> @createResourceUrl "#{@lessonFileName()}-#{fileName}"
+  @createReferenceUrl: (fileName) -> @createResourceUrl "#{fileName}.png"
+  
+  @customPaletteImageUrl: -> @createLessonResourceUrl "template.png"
   
   @references: ->
     for name in @referenceNames()
       image:
-        url: "/pixelartacademy/tutorials/drawing/design/shapelanguage/#{name}.png"
+        url: @createReferenceUrl name
       displayOptions:
         imageOnly: true
   
   @resources: ->
     goalChoices:
       for name in @referenceNames()
-        referenceUrl: "/pixelartacademy/tutorials/drawing/design/shapelanguage/#{name}.png"
-        step1: new @Resource.SvgPaths "/pixelartacademy/tutorials/drawing/design/shapelanguage/circle2-#{name}.svg"
-        step2: new @Resource.ImagePixels "/pixelartacademy/tutorials/drawing/design/shapelanguage/circle2-#{name}-1.png"
-        step3: new @Resource.ImagePixels "/pixelartacademy/tutorials/drawing/design/shapelanguage/circle2-#{name}-2.png"
+        referenceUrl: @createReferenceUrl name
+        step1: new @Resource.SvgPaths @createLessonResourceUrl "#{name}.svg"
+        step2: new @Resource.ImagePixels @createLessonResourceUrl "#{name}-1.png"
+        step3: new @Resource.ImagePixels @createLessonResourceUrl "#{name}-2.png"
   
   _initialize: ->
     super arguments...

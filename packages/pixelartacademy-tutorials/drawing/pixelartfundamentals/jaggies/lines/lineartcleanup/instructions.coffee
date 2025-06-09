@@ -255,8 +255,6 @@ class LineArtCleanup.Instructions
     
     @delayDuration: -> @defaultDelayDuration
   
-    @resetDelayOnOperationExecuted: -> true
-  
     @initialize()
     
     displaySide: ->

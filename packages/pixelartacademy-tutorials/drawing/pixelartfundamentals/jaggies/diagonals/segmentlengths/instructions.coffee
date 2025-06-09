@@ -123,8 +123,6 @@ class SegmentLengths.Instructions
     
     @delayDuration: -> @defaultDelayDuration
   
-    @resetDelayOnOperationExecuted: -> true
-  
     @message: -> """
       Draw the three diagonals with the pencil's line-drawing capability (shift + click).
     """

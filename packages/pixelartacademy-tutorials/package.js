@@ -29,6 +29,13 @@ Package.onUse(function(api) {
   api.addFile('drawing/instructions/generalinstruction')
   api.addFile('drawing/instructions/completeinstruction')
   api.addFile('drawing/instructions/stepinstruction')
+  api.addFile('drawing/instructions/referencestrayinstruction')
+
+  api.addFile('drawing/instructions/multiarea..');
+  api.addFile('drawing/instructions/multiarea/instruction')
+  api.addFile('drawing/instructions/multiarea/generalinstruction')
+  api.addFile('drawing/instructions/multiarea/completeinstruction')
+  api.addFile('drawing/instructions/multiarea/stepinstruction')
 
   api.addComponent('drawing/instructions/desktop..');
 
@@ -64,7 +71,6 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/elementsofart..');
   api.addFile('drawing/elementsofart/errorinstruction');
-  api.addFile('drawing/elementsofart/referencestrayinstruction');
 
   api.addFile('drawing/elementsofart/line..');
   api.addFile('drawing/elementsofart/line/asset');
@@ -173,5 +179,6 @@ Package.onUse(function(api) {
   api.addFile('drawing/design/shapelanguage..');
   api.addFile('drawing/design/shapelanguage/asset');
   api.addFile('drawing/design/shapelanguage/assetwithreferences');
+  api.addFile('drawing/design/shapelanguage/referencestrayinstruction');
   api.addFile('drawing/design/shapelanguage/circle2');
 });
