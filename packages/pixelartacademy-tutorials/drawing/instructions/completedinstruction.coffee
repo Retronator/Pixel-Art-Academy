@@ -5,11 +5,9 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # A general instruction that is displayed after a delay if the asset is not completed.
-class PAA.Tutorials.Drawing.Instructions.Multiarea.CompleteInstruction extends PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction
+class PAA.Tutorials.Drawing.Instructions.CompletedInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
   @activeConditions: ->
     return unless asset = @getActiveAsset()
-    
-    return unless @stepAreaActive()
     
     # Show when the asset is completed.
     asset.completed()

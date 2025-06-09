@@ -27,14 +27,15 @@ Package.onUse(function(api) {
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
   api.addFile('drawing/instructions/generalinstruction')
-  api.addFile('drawing/instructions/completeinstruction')
+  api.addFile('drawing/instructions/completedinstruction')
   api.addFile('drawing/instructions/stepinstruction')
   api.addFile('drawing/instructions/referencestrayinstruction')
 
   api.addFile('drawing/instructions/multiarea..');
   api.addFile('drawing/instructions/multiarea/instruction')
+  api.addFile('drawing/instructions/multiarea/uncompletedinstruction')
   api.addFile('drawing/instructions/multiarea/generalinstruction')
-  api.addFile('drawing/instructions/multiarea/completeinstruction')
+  api.addFile('drawing/instructions/multiarea/completedinstruction')
   api.addFile('drawing/instructions/multiarea/stepinstruction')
 
   api.addComponent('drawing/instructions/desktop..');

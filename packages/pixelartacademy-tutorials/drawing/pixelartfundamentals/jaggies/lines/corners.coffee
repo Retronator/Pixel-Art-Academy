@@ -219,7 +219,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.Corners extends P
           ]
       ]
     
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompletedInstruction
     @id: -> "#{Asset.id()}.Complete"
     @assetClass: -> Asset
     
