@@ -30,8 +30,10 @@
     height 31rem
     visibility visible
 
-  .fatamorgana-interface.rectangle & .rectangle
-  .fatamorgana-interface.ellipse & .ellipse
+  .fatamorgana-interface.rectangle & .rectangle.filled .indicator.filled
+  .fatamorgana-interface.rectangle & .rectangle .indicator.outlined
+  .fatamorgana-interface.ellipse & .ellipse.filled .indicator.filled
+  .fatamorgana-interface.ellipse & .ellipse .indicator.outlined
     width 29rem
     height 17rem
     visibility visible
@@ -42,14 +44,26 @@
     background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-line.png') left top / 1rem 31rem
 
   .rectangle
-    left 16rem
-    top 14rem
-    background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-rectangle.png') left top / 29rem 17rem
+    .indicator
+      left 16rem
+      top 14rem
+
+      &.outlined
+        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-rectangle.png') left top / 29rem 17rem
+
+      &.filled
+        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-rectangle-filled.png') left top / 29rem 17rem
 
   .ellipse
-    left 50rem
-    top 14rem
-    background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-ellipse.png') left top / 29rem 17rem
+    .indicator
+      left 50rem
+      top 14rem
+
+      &.outlined
+        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-ellipse.png') left top / 29rem 17rem
+
+      &.filled
+        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-ellipse-filled.png') left top / 29rem 17rem
 
   .indicator
     position absolute
@@ -57,3 +71,7 @@
     height 1rem
     visibility hidden
     transition width 0.2s, height 0.4s
+
+    &.filled
+      transition width 0.2s, height 0.65s
+      opacity 0.9

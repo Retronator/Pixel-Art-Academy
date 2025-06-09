@@ -11,7 +11,7 @@ _currentPixelCoordinates = new THREE.Vector2
 _startPixelCoordinates = new THREE.Vector2
 _pixelCoordinatesDelta = new THREE.Vector2
 
-class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tools.Shape
+class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tools.FillableShape
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Ellipse'
   @displayName: -> "Ellipse"
   
@@ -98,7 +98,20 @@ class LOI.Assets.SpriteEditor.Tools.Ellipse extends LOI.Assets.SpriteEditor.Tool
           _startPixelCoordinates.sub _pixelCoordinatesDelta
           
         Bresenham.ellipseRect _startPixelCoordinates.x, _startPixelCoordinates.y, _currentPixelCoordinates.x, _currentPixelCoordinates.y, pushEllipsePixel
-              
+        
+      if pixels.length and @data.get 'filled'
+        rows = {}
+        
+        for pixel in pixels
+          rows[pixel.y] ?= []
+          rows[pixel.y].push pixel.x
+          
+        for y, xs of rows
+          y = parseInt y
+          minX = _.min xs
+          maxX = _.max xs
+          pushEllipsePixel x, y for x in [minX...maxX] when x not in xs
+          
       @paintHelper.applyPaintToPixels pixels
 
     @pixels pixels

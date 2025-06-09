@@ -77,9 +77,12 @@ class FM.Interface extends FM.Interface
     operatorId = operatorClassOrId.id?() or operatorClassOrId
     @currentShortcutsMapping()[operatorId]
 
-  activateTool: (tool, storePreviousTool) ->
+  activateTool: (tool, storePreviousTool, toolWasRestored) ->
     previousActiveTool = @activeTool?()
-    return if tool is previousActiveTool
+    
+    if tool is previousActiveTool
+      tool.onReactivated?()
+      return
 
     @storedTool previousActiveTool if storePreviousTool
 
@@ -88,7 +91,7 @@ class FM.Interface extends FM.Interface
 
     # Inform the tools that they (de)activated.
     previousActiveTool?.onDeactivated?()
-    tool.onActivated?()
+    tool.onActivated? toolWasRestored
 
   deactivateTool: ->
     return unless activeTool = @activeTool()
@@ -97,7 +100,7 @@ class FM.Interface extends FM.Interface
     
   restoreStoredTool: ->
     if storedTool = @storedTool()
-      @activateTool storedTool
+      @activateTool storedTool, false, true
       @storedTool null
       return true
       

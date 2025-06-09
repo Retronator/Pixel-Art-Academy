@@ -52,6 +52,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       rulerDrag: AEc.ValueTypes.Boolean
       rulerPan: AEc.ValueTypes.Number
       rulerActivate: AEc.ValueTypes.Trigger
+      rulerActivateFilled: AEc.ValueTypes.Trigger
   
   @compressPan: (x) ->
     # Since desktop items go out of the screen, we don't want them to clamp to -1 and 1, but smoothly approach it.

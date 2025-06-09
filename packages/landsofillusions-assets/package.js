@@ -316,6 +316,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/shape');
   api.addFile('spriteeditor/tools/line');
   api.addFile('spriteeditor/tools/line-perfectline');
+  api.addFile('spriteeditor/tools/fillableshape');
   api.addFile('spriteeditor/tools/rectangle');
   api.addFile('spriteeditor/tools/ellipse');
 
