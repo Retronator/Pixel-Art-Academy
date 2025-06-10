@@ -14,6 +14,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.P
     @Circle2
     @Square
     @Square2
+    @Triangle
     @Triangle2
   ]
   
