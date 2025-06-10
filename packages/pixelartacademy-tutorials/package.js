@@ -183,4 +183,5 @@ Package.onUse(function(api) {
   api.addFile('drawing/design/shapelanguage/referencestrayinstruction');
   api.addFile('drawing/design/shapelanguage/circle2');
   api.addFile('drawing/design/shapelanguage/square2');
+  api.addFile('drawing/design/shapelanguage/triangle2');
 });

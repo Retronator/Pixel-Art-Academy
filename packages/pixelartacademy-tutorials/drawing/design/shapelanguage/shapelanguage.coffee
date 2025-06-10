@@ -12,6 +12,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.P
   @assets: -> [
     @Circle2
     @Square2
+    @Triangle2
   ]
   
   content: ->
