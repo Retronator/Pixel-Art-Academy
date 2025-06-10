@@ -13,6 +13,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Ruler extends FM.View
     @desktop = @interface.ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
     
     activateAudio = (filled) =>
+      return unless @desktop.drawingActive()
+      
       if filled
         @desktop.audio.rulerActivateFilled()
       

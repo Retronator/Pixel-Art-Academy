@@ -10,7 +10,9 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.P
   @initialize()
 
   @assets: -> [
+    @Circle
     @Circle2
+    @Square
     @Square2
     @Triangle2
   ]

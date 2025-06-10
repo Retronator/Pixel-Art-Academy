@@ -31,7 +31,7 @@ class PAA.Tutorials.Drawing.Instructions.Desktop extends PAA.PixelPad.Systems.In
   
   focusedModeClass: ->
     editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
-    'focused-mode' if editor.focusedMode()
+    'focused-mode' if editor?.focusedMode()
     
   instructionsStyle: ->
     switch @displayState()

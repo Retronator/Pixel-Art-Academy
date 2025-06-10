@@ -179,9 +179,12 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/design/shapelanguage..');
   api.addFile('drawing/design/shapelanguage/asset');
+  api.addFile('drawing/design/shapelanguage/shapesasset');
   api.addFile('drawing/design/shapelanguage/assetwithreferences');
   api.addFile('drawing/design/shapelanguage/referencestrayinstruction');
+  api.addFile('drawing/design/shapelanguage/circle');
   api.addFile('drawing/design/shapelanguage/circle2');
+  api.addFile('drawing/design/shapelanguage/square');
   api.addFile('drawing/design/shapelanguage/square2');
   api.addFile('drawing/design/shapelanguage/triangle2');
 });
