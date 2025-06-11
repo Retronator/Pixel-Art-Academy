@@ -24,6 +24,8 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ReferencesTrayInstruction exten
       Choose another reference to learn more or return to the portfolio to complete the lesson.
     """
     
+    @priority: -> -1
+    
     activeConditions: ->
       return unless asset = @getActiveAsset()
       

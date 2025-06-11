@@ -5,10 +5,6 @@ PAA = PixelArtAcademy
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA.Tutorials.Drawing.Design.ShapeLanguage.Asset
   @referenceNames: -> throw new AE.NotImplementedException "Asset with references must provide reference names."
 
-  @lessonFileName: -> _.camelCase @displayName()
-  
-  @createResourceUrl: (fileName) -> "/pixelartacademy/tutorials/drawing/design/shapelanguage/#{fileName}"
-  @createLessonResourceUrl: (fileName) -> @createResourceUrl "#{@lessonFileName()}-#{fileName}"
   @createReferenceUrl: (fileName) -> @createResourceUrl "#{fileName}.png"
   
   @customPaletteImageUrl: -> @createLessonResourceUrl "template.png"
@@ -79,25 +75,23 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
   destroy: ->
     super arguments...
     
-    @enabledPaletteRampIndices.stop()
-    @_enabledPaletteRampsAutorun.stop()
+    @enabledPaletteRampIndices?.stop()
+    @_enabledPaletteRampsAutorun?.stop()
   
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
-    [
-      # Create shapes step.
-      new @constructor.PathStep @, stepArea,
-        svgPaths: stepResources.step1.svgPaths()
-        preserveCompleted: true
-        hasPixelsWhenInactive: false
-    ,
-      # Create silhouette step.
-      new @constructor.PixelsStep @, stepArea,
-        goalPixels: stepResources.step2
-        preserveCompleted: true
-        hasPixelsWhenInactive: false
-    ,
-      # Create colors step.
-      new @constructor.PixelsStep @, stepArea,
-        goalPixels: stepResources.step3
-        hasPixelsWhenInactive: false
-    ]
+    # Create shapes step.
+    new @constructor.PathStep @, stepArea,
+      svgPaths: stepResources.step1.svgPaths()
+      preserveCompleted: true
+      hasPixelsWhenInactive: false
+      
+    # Create silhouette step.
+    new @constructor.PixelsStep @, stepArea,
+      goalPixels: stepResources.step2
+      preserveCompleted: true
+      hasPixelsWhenInactive: false
+      
+    # Create colors step.
+    new @constructor.PixelsStep @, stepArea,
+      goalPixels: stepResources.step3
+      hasPixelsWhenInactive: false

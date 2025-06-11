@@ -49,3 +49,9 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction extends PAA.Tutor
     return unless activeStepAreaIndex?
     
     asset.stepAreas()[activeStepAreaIndex]?.data().referenceUrl is @constructor.referenceUrl()
+    
+  getStepArea: ->
+    return unless asset = @getActiveAsset()
+    referenceUrl = @constructor.referenceUrl()
+    
+    _.find asset.stepAreas(), (stepArea) => stepArea.data().referenceUrl is referenceUrl

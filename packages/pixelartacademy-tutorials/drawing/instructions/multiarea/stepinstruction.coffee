@@ -31,8 +31,8 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction extends PAA.T
     # Show with the correct step.
     return unless @activeStepNumber() in @constructor.stepNumbers()
     
-    # Show until the asset is completed.
-    not asset.completed()
+    # Show until the step area is completed.
+    not @getStepArea().completed()
     
   getTutorialStep: (stepNumber) ->
     return unless asset = @getActiveAsset()

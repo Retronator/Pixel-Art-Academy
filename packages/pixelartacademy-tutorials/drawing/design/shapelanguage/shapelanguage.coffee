@@ -10,6 +10,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.P
   @initialize()
 
   @assets: -> [
+    @ShapesInNature
     @Circle
     @Circle2
     @Square

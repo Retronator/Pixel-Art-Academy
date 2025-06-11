@@ -95,16 +95,23 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
     for x in [0...width]
       for y in [0...height]
-        for path in @paths
-          if path.pixelExceedsSolutionThreshold x, y
-            paletteColor = palette.exactPaletteColor if path.pixelShouldBeFill x, y then path.fillColor else path.strokeColor
+        paletteColor = null
+        
+        # Try fills first.
+        for path in @paths when path.pixelExceedsSolutionThreshold(x, y) and path.pixelShouldBeFill x, y
+          paletteColor = palette.exactPaletteColor path.fillColor
+          break
+          
+        # Strokes override filles.
+        for path in @paths when path.pixelExceedsSolutionThreshold(x, y) and not path.pixelShouldBeFill x, y
+          paletteColor = palette.exactPaletteColor path.strokeColor
+          break
 
-            pixels.push
-              x: x + @stepArea.bounds.x
-              y: y + @stepArea.bounds.y
-              paletteColor: paletteColor
-
-            break
+        if paletteColor
+          pixels.push
+            x: x + @stepArea.bounds.x
+            y: y + @stepArea.bounds.y
+            paletteColor: paletteColor
     
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
