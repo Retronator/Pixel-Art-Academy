@@ -17,6 +17,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.P
     @Square2
     @Triangle
     @Triangle2
+    @ShapeCombinations
   ]
   
   content: ->
