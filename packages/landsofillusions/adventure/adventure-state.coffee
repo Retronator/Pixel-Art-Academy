@@ -92,6 +92,7 @@ class LOI.Adventure extends LOI.Adventure
       console.log "Game state was found." if LOI.debug or LOI.Adventure.debugState
       
       @_changeProfileId profileId
+      @_storeProfileId()
     
     , (errorOrConflictResolution) =>
       if errorOrConflictResolution instanceof Error
@@ -129,7 +130,6 @@ class LOI.Adventure extends LOI.Adventure
 
     # Activate the new profile.
     @profileId profileId
-    @_storeProfileId()
     
     console.log "Changed profile to", profileId if LOI.debug or LOI.Adventure.debugState
 
