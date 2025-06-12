@@ -4,7 +4,25 @@ PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA.Tutorials.Drawing.Design.ShapeLanguage.Asset
   @referenceNames: -> throw new AE.NotImplementedException "Asset with references must provide reference names."
-
+  
+  @rampsCountForReferences: ->
+    # Override if references have more than one ramp.
+    1 for name in @referenceNames()
+    
+  @rampIndicesForReferenceUrls: ->
+    rampsCountForReferences = @rampsCountForReferences()
+    
+    rampIndicesForReferenceUrls = {}
+    
+    currentIndex = 0
+    
+    for name, referenceIndex in @referenceNames()
+      rampsCountForReference = rampsCountForReferences[referenceIndex]
+      rampIndicesForReferenceUrls[@createReferenceUrl name] = [currentIndex...currentIndex + rampsCountForReference]
+      currentIndex += rampsCountForReference
+    
+    rampIndicesForReferenceUrls
+    
   @createReferenceUrl: (fileName) -> @createResourceUrl "#{fileName}.png"
   
   @customPaletteImageUrl: -> @createLessonResourceUrl "template.png"
@@ -27,7 +45,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
   _initialize: ->
     super arguments...
     
-    references = @constructor.references()
+    rampIndicesForReferenceUrls = @constructor.rampIndicesForReferenceUrls()
     
     # Disable and enable ramp shades depending if the reference has been chosen.
     @enabledPaletteRampIndices = new AE.LiveComputedField =>
@@ -35,9 +53,8 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
       enabledPaletteRampIndices = []
       
       if stepAreas = assetData.stepAreas
-        for stepArea in stepAreas
-          referenceIndex = _.findIndex references, (reference) => reference.image.url is stepArea.referenceUrl
-          enabledPaletteRampIndices.push referenceIndex
+        for stepArea in stepAreas when stepArea.referenceUrl
+          enabledPaletteRampIndices.push rampIndicesForReferenceUrls[stepArea.referenceUrl]...
       
       enabledPaletteRampIndices
     ,
@@ -45,12 +62,12 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
 
     @_enabledPaletteRampsAutorun = Tracker.autorun (computation) =>
       return unless @initialized() and @resourcesReady()
+      return unless bitmapId = @bitmapId()
+
       enabledPaletteRampIndices = @enabledPaletteRampIndices()
+      bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId, fields: customPalette: 1
       
-      Tracker.nonreactive => Tracker.afterFlush =>
-        return unless bitmapId = @bitmapId()
-        bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId, fields: customPalette: 1
-        
+      Tracker.nonreactive =>
         changed = false
         
         for ramp, rampIndex in bitmapData.customPalette.ramps

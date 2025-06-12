@@ -65,6 +65,12 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
     
   completed: -> @constructor.completed()
   isAssetCompleted: (assetClassOrId) -> @constructor.isAssetCompleted assetClassOrId
+  
+  getAsset: (assetClassOrId) ->
+    assetId = _.thingId assetClassOrId
+    assets = @assets()
+    
+    _.find assets, (asset) => asset.id() is assetId
 
   assetsData: ->
     return unless LOI.adventure.gameState()

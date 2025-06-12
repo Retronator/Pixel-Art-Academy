@@ -18,6 +18,12 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Square2 extends PAA.Tutorials.D
     'advancewars'
   ]
   
+  @rampsCountForReferences: -> [
+    1,
+    1,
+    2
+  ]
+  
   @initialize()
 
   Asset = @

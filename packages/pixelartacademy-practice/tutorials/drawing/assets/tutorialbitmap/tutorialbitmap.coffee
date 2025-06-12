@@ -64,7 +64,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       return if _.find assets, (asset) => asset.id is @id() and asset.bitmapId
 
       # We need to create the asset with the bitmap.
-      Tracker.nonreactive => @constructor.create LOI.adventure.profileId(), @tutorial, @id()
+      Tracker.nonreactive => @constructor.create @tutorial
     
     @completed = new AE.LiveComputedField =>
       # Read completed state from the stored assets field unless we're in the editor.
@@ -205,26 +205,6 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
       
       # Resources are loaded, create tutorial steps.
       Tracker.nonreactive => @initializeSteps()
-      
-  reset: ->
-    # Nothing to reset if we haven't initialized yet (resetting will be called when first creating the bitmap).
-    return unless @initialized()
-    
-    # Prevent recomputation of completed states while resetting.
-    @resetting true
-    
-    # Reset all steps.
-    stepArea.reset() for stepArea in @stepAreas()
-    
-    # Remove any asset data.
-    if assetData = @getAssetData()
-      assetData.stepAreas = []
-      assetData.completed = false
-      
-      @setAssetData assetData
-    
-    # Unlock recomputation after changes have been applied.
-    Tracker.afterFlush => @resetting false
     
   getAssetData: ->
     assetsData = @tutorial.assetsData()

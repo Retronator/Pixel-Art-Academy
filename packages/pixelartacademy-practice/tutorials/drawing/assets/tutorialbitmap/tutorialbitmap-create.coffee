@@ -6,24 +6,24 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-  @create: (profileId, tutorial, assetId) ->
-    @_createBitmapData(profileId)
+  @create: (tutorial) ->
+    @_createBitmapData()
       .then((bitmapData) => @_setBitmapDataReferences bitmapData)
       .then((bitmapData) => @_setBitmapDataPalette bitmapData)
       .then((bitmapData) => @_insertBitmap bitmapData)
-      .then((bitmapId) => @_resetAndAddToTutorial tutorial, assetId, bitmapId)
+      .then((bitmapId) => @_resetAndAddToTutorial tutorial, bitmapId)
       .catch (error) =>
         console.error error
         throw new AE.InvalidOperationException "Could not create tutorial bitmap."
     
-  @_createBitmapData: (profileId) ->
+  @_createBitmapData: ->
     new Promise (resolve, reject) =>
       size = @fixedDimensions()
       creationTime = new Date()
     
       resolve
         versioned: true
-        profileId: profileId
+        profileId: LOI.adventure.profileId()
         creationTime: creationTime
         lastEditTime: creationTime
         bounds:
@@ -35,6 +35,7 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         name: @displayName()
         pixelFormat: new LOI.Assets.Bitmap.PixelFormat 'flags', 'paletteColor', 'directColor'
         layers: []
+        properties: @properties()
       
   @_setBitmapDataReferences: (bitmapData) ->
     new Promise (resolve, reject) =>
@@ -152,18 +153,26 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
         return unless bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
         computation.stop()
         
-        addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @id(), bitmap
-        AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, addLayerAction, new Date()
+        @_initializeLayers bitmap
         
         resolve bitmapId
 
-  @_resetAndAddToTutorial: (tutorial, assetId, bitmapId) ->
-    @reset tutorial, assetId, bitmapId
+  @_initializeLayers: (bitmap) ->
+    addLayerAction = new LOI.Assets.Bitmap.Actions.AddLayer @id(), bitmap
+    AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, addLayerAction, new Date()
+    AMu.Document.Versioning.clearHistory bitmap
   
+  @_resetAndAddToTutorial: (tutorial, bitmapId) ->
+    # Reset the asset instance.
+    assetId = @id()
+    asset = tutorial.getAsset @id()
+    asset.reset()
+  
+    # Add to tutorial.
     assets = tutorial.assetsData()
     
-    unless tutorialBitmap = _.find assets, (asset) => asset.id is @id()
-      tutorialBitmap = id: @id()
+    unless tutorialBitmap = _.find assets, (asset) => asset.id is assetId
+      tutorialBitmap = id: assetId
       assets.push tutorialBitmap
 
     _.extend tutorialBitmap,

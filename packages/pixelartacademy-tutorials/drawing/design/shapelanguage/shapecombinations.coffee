@@ -15,6 +15,14 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapeCombinations extends PAA.T
   
   @referenceNames: -> [
     'sonicthehedgehog'
+    'metalslug1stmission'
+    'megaman2'
+  ]
+  
+  @rampsCountForReferences: -> [
+    4,
+    1,
+    1
   ]
   
   @initialize()
@@ -29,6 +37,32 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapeCombinations extends PAA.T
     @message: -> """
       Sonic's silhouette is a perfect combination of cartoony circles with aerodynamic triangles.
       His large, triangular feet further underscore his focus on speed.
+    """
+    
+    @initialize()
+
+  class @MetalSlug extends PAA.Tutorials.Drawing.Instructions.Multiarea.UncompletedInstruction
+    @id: -> "#{Asset.id()}.MetalSlug"
+    @assetClass: -> Asset
+    @referenceUrl: -> Asset.createReferenceUrl 'metalslug1stmission'
+    
+    @message: -> """
+      The titular Metal Slug super vehicle is far from a slow, indestructible tank.
+      With its nimbleness and even the ability to jump, its shape lends better to a triangle than a rectangle.
+      Yet, the overall triangle shape is composed of multiple circles, matching the comical, light-hearted art style of the series.
+    """
+    
+    @initialize()
+
+  class @MegaMan extends PAA.Tutorials.Drawing.Instructions.Multiarea.UncompletedInstruction
+    @id: -> "#{Asset.id()}.MegaMan"
+    @assetClass: -> Asset
+    @referenceUrl: -> Asset.createReferenceUrl 'megaman2'
+    
+    @message: -> """
+      Mega Man 2's Wood Man is, like a tree trunk, both a square and a circle, depending on perspective.
+      His wooden armor is sturdy and resilient, yet vulnerable to fire and blades.
+      This form visually matches his unrelenting stance to protect nature.
     """
     
     @initialize()

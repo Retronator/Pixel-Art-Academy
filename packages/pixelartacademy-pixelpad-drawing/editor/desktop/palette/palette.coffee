@@ -93,7 +93,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     width = _trayRampWidth
     columnHeight = 0
 
-    for ramp in palette.ramps
+    for ramp in palette.ramps when ramp.shades.length
       verticalSeparation = @constructor.TrayRamp.getVerticalShadeSeparation ramp.shades.length
       rampHeight = (ramp.shades.length - 1) * verticalSeparation + _trayShadeSize
       columnHeight += rampHeight + _trayRampBottomMargin
