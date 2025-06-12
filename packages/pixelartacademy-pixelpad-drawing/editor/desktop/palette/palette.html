@@ -1,6 +1,6 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette">
   <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette">
-    <div class="palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}} {{forceSymbolsVisibleClass}}">
+    <div class="palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}} {{forceSymbolsVisibleClass}}" {{style paletteStyle}}>
       <div class="colors" {{style colorsStyle}}>
         {{#each palette.ramps}}
           {{#if shades.length}}

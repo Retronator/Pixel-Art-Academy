@@ -18,6 +18,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.P
     @Triangle
     @Triangle2
     @ShapeCombinations
+    @BreakingTheRules
   ]
   
   content: ->

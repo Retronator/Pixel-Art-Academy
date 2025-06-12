@@ -190,4 +190,5 @@ Package.onUse(function(api) {
   api.addFile('drawing/design/shapelanguage/triangle');
   api.addFile('drawing/design/shapelanguage/triangle2');
   api.addFile('drawing/design/shapelanguage/shapecombinations');
+  api.addFile('drawing/design/shapelanguage/breakingtherules');
 });

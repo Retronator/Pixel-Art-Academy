@@ -24,6 +24,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
   onCreated: ->
     super arguments...
     
+    @desktop = @ancestorComponentOfType PAA.PixelPad.Apps.Drawing.Editor.Desktop
+    
     @asset = new ComputedField =>
       @interface.getLoaderForActiveFile()?.asset()
       
@@ -53,9 +55,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
     
     # Reset display of all hints.
     @autorun (computation) =>
-      return unless desktop = @interface.getEditorForActiveFile().desktop
-      return if desktop.active()
-      return unless asset = desktop.activeAsset()
+      return if @desktop.active()
+      return unless asset = @desktop.activeAsset()
       return unless asset instanceof PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
       return unless asset.initialized()
       asset.hintsEngineComponents.overlaid.displayAllColorErrors false
@@ -84,9 +85,22 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
   forceSymbolsVisibleClass: ->
     'force-symbols-visible' if @colorHelp.visible()
     
+  paletteStyle: ->
+    # We only need to style the custom palette tray.
+    return unless @customPalette()
+    
+    # We only need to show the tray when drawing is active and we're not focused.
+    return unless @desktop.drawingActive() and not @desktop.focusedMode()
+    
+    left: "calc(100% - #{@_trayContentWidth() + 15}rem)"
+    
   colorsStyle: ->
     # We only need to style the custom palette tray.
     return unless @customPalette()
+
+    width: "#{@_trayContentWidth()}rem"
+  
+  _trayContentWidth: ->
     return unless palette = @palette()
 
     # Calculate the width of the palette.
@@ -105,8 +119,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Sprite
 
     # Tray should be at least 32 wide.
     width = Math.max 32, width
-
-    width: "#{width}rem"
 
   shadeStyle: ->
     return unless @customPalette()

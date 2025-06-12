@@ -4,12 +4,12 @@
   .palette
     position absolute
     top calc(50% - 40rem)
-    right -75rem
+    left calc(100% + 20rem)
     width 48rem
     height 139rem
 
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
-      right 0
+      left calc(100% - 48rem)
 
     &:hover
     &.force-symbols-visible
@@ -137,7 +137,7 @@
         z-index 13
         top 2rem
         left -8rem
-        width 104rem
+        width 150rem
         height 139rem
         background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/palette-tray-shadow.png')
         mix-blend-mode multiply
@@ -145,7 +145,7 @@
       &::after
         content ''
         absolute-cover-size()
-        width 96rem
+        width 150rem
         z-index 13
         pointer-events none
         background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/palette-tray.png')
