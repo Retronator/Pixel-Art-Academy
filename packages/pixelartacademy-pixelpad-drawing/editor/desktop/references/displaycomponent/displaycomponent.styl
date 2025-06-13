@@ -1,4 +1,5 @@
 @import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
 
 .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent
   display none
@@ -11,7 +12,17 @@
     .references
       .reference
         .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-          box-sizing content-box
+          transition all 1s
+
+          &.dragging
+            .movement
+              top -1rem
+              left 0
+              transition-duration referenceMovementDurationLift
+
+          .movement
+            absolute-cover-size()
+            transition all referenceMovementDurationDrop
 
   .stored-references
     position absolute
@@ -59,16 +70,13 @@
         top 95rem
 
         .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-          z-index 16
-
-          &.dragging
-            transform translate(-52%, -52%)
-
           .pixelartacademy-pixelpad-apps-drawing-editor-desktop:not(.dragging) &
-            transition transform 0.2s, box-shadow 0.2s
-
             &:hover
-              transform translate(-52%, -50%)
+              .movement
+                left 0
+
+          .movement
+            left 1rem
 
     .actions
       pointer-events none
@@ -120,19 +128,14 @@
       margin 0
       padding 0
 
-      .reference
-        .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-          z-index 12
-
-          &.dragging
-            transform translate(-50%, -52%)
-
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active &
     .stored-references
-      transition all 0.2s !important
+    .displayed-references
+      .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
+        transition none
 
-    .pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference
-      transition box-shadow 0.05s !important
+    .stored-references
+      transition all 0.2s !important
 
   .pixelartacademy-pixelpad-apps-drawing.editor-desktop.editor-active .pixelartacademy-pixelpad-apps-drawing-editor-desktop:not(.focused-mode) &
     .stored-references

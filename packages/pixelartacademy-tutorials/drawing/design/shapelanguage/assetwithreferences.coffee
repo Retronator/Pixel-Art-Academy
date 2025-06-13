@@ -1,9 +1,14 @@
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA.Tutorials.Drawing.Design.ShapeLanguage.Asset
   @referenceNames: -> throw new AE.NotImplementedException "Asset with references must provide reference names."
+  
+  @bitmapInfoTextsForReferences: -> throw new AE.NotImplementedException "Asset with references must provide info texts."
+  
+  @cartridgeTypesForReferences: -> throw new AE.NotImplementedException "Asset with references must provide cartridge types."
   
   @rampsCountForReferences: ->
     # Override if references have more than one ramp.
@@ -28,11 +33,17 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
   @customPaletteImageUrl: -> @createLessonResourceUrl "template.png"
   
   @references: ->
-    for name in @referenceNames()
+    cartridgeTypesForReferences = @cartridgeTypesForReferences()
+    
+    for name, referenceIndex in @referenceNames()
+      cartridgeType = cartridgeTypesForReferences[referenceIndex]
+      
       image:
         url: @createReferenceUrl name
       displayOptions:
-        imageOnly: true
+        type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.SceneObject
+        styleClass: "cartridge cartridge-#{_.toLower cartridgeType}"
+        scale: 0.25
   
   @resources: ->
     goalChoices:
@@ -63,9 +74,9 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
     @_enabledPaletteRampsAutorun = Tracker.autorun (computation) =>
       return unless @initialized() and @resourcesReady()
       return unless bitmapId = @bitmapId()
+      return unless bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId, fields: customPalette: 1
 
       enabledPaletteRampIndices = @enabledPaletteRampIndices()
-      bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId, fields: customPalette: 1
       
       Tracker.nonreactive =>
         changed = false
@@ -112,3 +123,20 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences extends PAA
     new @constructor.PixelsStep @, stepArea,
       goalPixels: stepResources.step3
       hasPixelsWhenInactive: false
+      
+  bitmapInfo: ->
+    assetData = @getAssetData()
+    return unless assetData.stepAreas?.length
+    
+    references = @constructor.references()
+    bitmapInfoTextsForReferences = @constructor.bitmapInfoTextsForReferences()
+    
+    texts = []
+    
+    for stepArea in assetData.stepAreas when stepArea.referenceUrl
+      referenceIndex = _.findIndex references, (reference) => reference.image.url is stepArea.referenceUrl
+      texts.push bitmapInfoTextsForReferences[referenceIndex]
+    
+    return unless texts.length
+    
+    "Artwork from #{AB.Rules.English.createNounSeries texts}."

@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
+class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
   # assets: array of assets that are part of this tutorial
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -65,12 +65,6 @@ class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
     
   completed: -> @constructor.completed()
   isAssetCompleted: (assetClassOrId) -> @constructor.isAssetCompleted assetClassOrId
-  
-  getAsset: (assetClassOrId) ->
-    assetId = _.thingId assetClassOrId
-    assets = @assets()
-    
-    _.find assets, (asset) => asset.id() is assetId
 
   assetsData: ->
     return unless LOI.adventure.gameState()

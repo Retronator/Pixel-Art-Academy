@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+CartridgeTypes = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.SceneObject.Cartridge.Types
+
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.Triangle2 extends PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences
   @displayName: -> "Triangle 2"
 
@@ -16,6 +18,18 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Triangle2 extends PAA.Tutorials
     'dragonwarrior'
     'pokemonredversion'
     'dayofthetentacle'
+  ]
+  
+  @bitmapInfoTextsForReferences: -> [
+    "Dragon Quest (Chunsoft, 1986)"
+    "Pokémon Red Version (Game Freak, 1996)"
+    "Day of the Tentacle (LucasArts, 1993)"
+  ]
+  
+  @cartridgeTypesForReferences: -> [
+    CartridgeTypes.NES
+    CartridgeTypes.GameBoy
+    CartridgeTypes.CD
   ]
   
   @initialize()

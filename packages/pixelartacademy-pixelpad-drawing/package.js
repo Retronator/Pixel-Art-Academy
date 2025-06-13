@@ -95,7 +95,10 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');
-  api.addComponent('editor/desktop/references/displaycomponent/reference..');
+  api.addFile('editor/desktop/references/displaycomponent/reference..');
+  api.addComponent('editor/desktop/references/displaycomponent/reference/default..');
+  api.addComponent('editor/desktop/references/displaycomponent/reference/sceneobject..');
+  api.addStyledFile('editor/desktop/references/displaycomponent/reference/sceneobject/cartridge..');
 
   api.addComponent('editor/desktop/publications..');
   api.addFile('editor/desktop/publications/newpartinstruction');

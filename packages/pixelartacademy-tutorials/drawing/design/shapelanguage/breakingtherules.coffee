@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+CartridgeTypes = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.SceneObject.Cartridge.Types
+
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.BreakingTheRules extends PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences
   @displayName: -> "Breaking the rules"
 
@@ -16,6 +18,18 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.BreakingTheRules extends PAA.Tu
     'sonicthehedgehog'
     'samandmaxhittheroad'
     'monkeyisland2'
+  ]
+  
+  @bitmapInfoTextsForReferences: -> [
+    "Sonic the Hedgehog (Sega, 1991)"
+    "Sam & Max Hit the Road (LucasArts, 1993)"
+    "Monkey Island 2: LeChuck's Revenge (LucasArts, 1991)"
+  ]
+  
+  @cartridgeTypesForReferences: -> [
+    CartridgeTypes.Genesis
+    CartridgeTypes.FloppyDisk
+    CartridgeTypes.FloppyDisk
   ]
   
   @rampsCountForReferences: -> [

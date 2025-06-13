@@ -120,8 +120,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       position = @currentPosition()
 
-    left: "#{position.x}rem"
-    top: "#{position.y}rem"
+    left: "#{position.x - displaySize.width / 2}rem"
+    top: "#{position.y - displaySize.height / 2}rem"
     width: "#{displaySize.width}rem"
     height: "#{displaySize.height}rem"
 

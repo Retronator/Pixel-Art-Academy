@@ -4,7 +4,7 @@
       <ul class="references">
         {{#each storedReferences}}
           <li class="reference">
-            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.ReferenceInsert}}
           </li>
         {{/each}}
       </ul>
@@ -25,10 +25,20 @@
       <ul class="references">
         {{#each displayedReferences}}
           <li class="reference">
-            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference}}
+            {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.ReferenceInsert}}
           </li>
         {{/each}}
       </ul>
     </div>
   </div>
+</template>
+
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.ReferenceInsert">
+  {{#if displayOptions.type}}
+    {{#if $is displayOptions.type 'SceneObject'}}
+      {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.SceneObject}}
+    {{/if}}
+  {{else}}
+    {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Default}}
+  {{/if}}
 </template>

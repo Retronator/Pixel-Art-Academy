@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+CartridgeTypes = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.SceneObject.Cartridge.Types
+
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.Square2 extends PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences
   @displayName: -> "Square 2"
 
@@ -16,6 +18,18 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Square2 extends PAA.Tutorials.D
     'thelegendofzeldalinksawakeningdx'
     'metalslug1stmission'
     'advancewars'
+  ]
+  
+  @bitmapInfoTextsForReferences: -> [
+    "The Legend of Zelda: Link's Awakening DX (Nintendo, 1998)"
+    "Metal Slug 1st Mission (Ukiyotei, 1999)"
+    "Advance Wars (Intelligent Systems, 2001)"
+  ]
+  
+  @cartridgeTypesForReferences: -> [
+    CartridgeTypes.GameBoy
+    CartridgeTypes.NeoGeoPocket
+    CartridgeTypes.GameBoyAdvance
   ]
   
   @rampsCountForReferences: -> [

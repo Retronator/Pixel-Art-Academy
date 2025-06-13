@@ -199,7 +199,6 @@ class AM.DatabaseContent extends AM.DatabaseContent
         continue if currentLastEditTime.getTime() is exportedLastEditTime.getTime()
 
         if currentLastEditTime < exportedLastEditTime
-          console.log "hmmm", url, informationDocument, currentDocument, currentLastEditTime, exportedLastEditTime
           # The database document is older so we need to update it.
           do (informationDocument, exportedLastEditTime, documentClass, path, url) =>
             updatePromises.push new Promise (resolve, reject) =>

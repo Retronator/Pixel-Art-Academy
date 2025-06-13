@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+CartridgeTypes = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.SceneObject.Cartridge.Types
+
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.Circle2 extends PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences
   @displayName: -> "Circle 2"
 
@@ -16,6 +18,18 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.Circle2 extends PAA.Tutorials.D
     'dragonwarrior'
     'kirbysdreamland2'
     'supermariobros2'
+  ]
+  
+  @bitmapInfoTextsForReferences: -> [
+    "Dragon Quest (Chunsoft, 1986)"
+    "Kirby's Dream Land 2 (HAL Laboratory, 1995)"
+    "Super Mario Bros. 2 (Nintendo, 1988)"
+  ]
+  
+  @cartridgeTypesForReferences: -> [
+    CartridgeTypes.NES
+    CartridgeTypes.GameBoy
+    CartridgeTypes.NES
   ]
   
   @initialize()

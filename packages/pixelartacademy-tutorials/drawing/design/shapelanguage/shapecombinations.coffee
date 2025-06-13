@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+CartridgeTypes = PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.SceneObject.Cartridge.Types
+
 class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapeCombinations extends PAA.Tutorials.Drawing.Design.ShapeLanguage.AssetWithReferences
   @displayName: -> "Shape combinations"
 
@@ -17,6 +19,18 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapeCombinations extends PAA.T
     'sonicthehedgehog'
     'metalslug1stmission'
     'megaman2'
+  ]
+  
+  @bitmapInfoTextsForReferences: -> [
+    "Sonic the Hedgehog (1991, SEGA)"
+    "Metal Slug 1st Mission (Ukiyotei, 1999)"
+    "Mega Man 2 (Capcom, 1988)"
+  ]
+  
+  @cartridgeTypesForReferences: -> [
+    CartridgeTypes.Genesis
+    CartridgeTypes.NeoGeoPocket
+    CartridgeTypes.NES
   ]
   
   @rampsCountForReferences: -> [
