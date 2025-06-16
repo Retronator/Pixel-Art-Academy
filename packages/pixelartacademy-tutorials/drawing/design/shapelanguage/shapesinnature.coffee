@@ -13,6 +13,10 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapesInNature extends PAA.Tuto
 
   @fixedDimensions: -> width: 131, height: 63
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
+  @backgroundColor: ->
+    paletteColor:
+      ramp: 7
+      shade: 0
   
   @resources: ->
     paths: new @Resource.SvgPaths @createResourceUrl "#{@lessonFileName()}.svg"
@@ -159,6 +163,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapesInNature extends PAA.Tuto
       textBase.size *= 2
       textBase.lineHeight *= 2
       textBase.position = y: 43, origin: Markup.TextOriginPosition.TopCenter
+      textBase.outline = style: "#fff1e8"
       
       [
         text: _.merge {}, textBase,
