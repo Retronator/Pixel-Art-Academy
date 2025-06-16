@@ -27,8 +27,16 @@ class AM.Document.Versioning.ActionArchive extends AM.Document
   @maximumHistoryLength = 10
 
   @getHistoryForDocument: (versionedDocumentId) ->
-    actionArchives = @documents.fetch {versionedDocumentId}
+    actionArchives = @documents.fetch {versionedDocumentId}, sort: historyStart: 1
     _.flatten (actionArchive.history for actionArchive in actionArchives)
+  
+  @getLastActionForDocument: (versionedDocumentId) ->
+    actionArchive = @documents.findOne {versionedDocumentId},
+      sort:
+        historyStart: -1
+      limit: 1
+    
+    _.last actionArchive?.history
     
   @getHistoryLengthForDocument: (versionedDocumentId) ->
     lastActionArchive = @documents.findOne {versionedDocumentId},
