@@ -9,7 +9,7 @@ class PAA.Tutorials.Drawing.Design.ShapeLanguage.ShapeCombinations extends PAA.T
 
   @description: -> """
     Characters are often designed using different shapes,
-    signaling their multidimensional personality or simply to achieve other aesthetic or functional goals.
+    to signal their multidimensional personality or simply to achieve other aesthetic or functional goals.
   """
 
   @fixedDimensions: -> width: 38, height: 45
