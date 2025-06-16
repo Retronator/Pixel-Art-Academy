@@ -10,7 +10,6 @@
     z-index 11
     background atariGray(6)
     box-shadow -1rem 1rem 0 desktopShadowColor
-    transition all 0.6s
 
     &.hidden
       display none
@@ -45,13 +44,29 @@
       pixel-text-outline(atariGray(0))
 
 .pixelartacademy-pixelpad-apps-drawing.editor-desktop
+  &.editor-visible
+    &.active-asset:not(.editor-active)
+      .pixelartacademy-pixelpad-apps-drawing-editor-desktop
+        .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
+          .drawing-area
+            transition all 0.6s 0.2s
+
+    .pixelartacademy-pixelpad-apps-drawing-editor-desktop
+      &.drawing-active
+        .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
+          .drawing-area
+            transition none
+
+      .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
+        .drawing-area
+          transition all 0.6s
+
   &.active-asset:not(.editor-active)
     .pixelartacademy-pixelpad-apps-drawing-editor-desktop
       .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
         .drawing-area
-          transition all 0.6s 0.2s
+          transition top 0.6s 0.2s
 
-  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active
-    .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
-      .drawing-area
-        transition none
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelcanvas
+    .drawing-area
+      transition top 0.6s

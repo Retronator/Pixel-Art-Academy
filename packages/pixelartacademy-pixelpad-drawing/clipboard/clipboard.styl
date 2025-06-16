@@ -50,7 +50,11 @@
         margin 8rem 0
 
         ul
+          margin-top 0
           list-style square
+
+        p:has(+ ul)
+          margin-bottom 0
 
       .properties
         list-style none

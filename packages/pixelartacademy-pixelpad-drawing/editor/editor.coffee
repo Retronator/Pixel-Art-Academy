@@ -26,6 +26,10 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
     # Drawing becomes active when theme transition completes.
     # The theme should set this to true or false based on its needs.
     @drawingActive = new ReactiveField false
+  
+    # Editor is visible as soon as entry theme transition starts and continues until the exit
+    # theme transition ends. The theme should set this to true or false based on its needs.
+    @visible = new ReactiveField false
 
     # Allow to manually provide sprite data.
     @manualSpriteData = new ReactiveField null

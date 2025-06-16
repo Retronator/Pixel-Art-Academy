@@ -164,6 +164,9 @@ class PAA.PixelPad.Apps.Drawing extends PAA.PixelPad.App
 
   activeAssetClass: ->
     'active-asset' if @activeAsset()
+  
+  editorVisibleClass: ->
+    'editor-visible' if @editor().visible()
 
   editorActiveClass: ->
     'editor-active' if @editor().active()

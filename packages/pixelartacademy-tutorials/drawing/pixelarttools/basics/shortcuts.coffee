@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.Shortcuts extends PAA.Practice.
   @displayName: -> "Shortcuts"
 
   @description: -> """
-      An efficient pixel artist will learn shortcuts to switch between tools.
+      An efficient pixel artist will learn shortcuts to switch between tools:
 
       - B: pencil (brush)
       - E: eraser

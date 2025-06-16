@@ -17,17 +17,22 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
       secondPageClose: AEc.ValueTypes.Trigger
     
   @calculateAssetSize: (portfolioScale, bounds, options) ->
+    borderWidth = if options.border then 7 else 0
+    totalBorderWidth = borderWidth * 2
+  
     width = bounds?.width or 1
     height = bounds?.height or 1
     displayScale = LOI.adventure.interface.display.scale()
-    fitScale = Math.min 174 / width, 160 / height
+    
+    fitScale = (174 - totalBorderWidth) / width
+    fitScale = Math.min fitScale, (options.fitToHeight - totalBorderWidth) / height if options.fitToHeight
 
     # Apply minimum and maximum scale if provided (it could be a non-integer).
     fitScale = Math.max fitScale, options.scaleLimits.min if options?.scaleLimits?.min
     fitScale = Math.min fitScale, options.scaleLimits.max if options?.scaleLimits?.max
     
     if options?.pixelArtScaling
-      if portfolioScale < 1
+      if portfolioScale < 1 or fitScale < 1
         # The asset was scaled down in the portfolio, so we will need to scale downwards. We start
         # operating in effective scale to still have integer magnification compared to window pixels.
         effectiveScale = displayScale
@@ -53,7 +58,7 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
         # 4 -> 5
         # 5 -> 6
         # 6 -> 8
-        scale = Math.ceil portfolioScale * 1.2
+        scale = Math.min Math.floor(fitScale), Math.ceil portfolioScale * 1.2
       
     else
       # Make the asset fit in the clipboard.
@@ -61,8 +66,6 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
 
     contentWidth = width * scale
     contentHeight = height * scale
-
-    borderWidth = if options.border then 7 else 0
 
     {contentWidth, contentHeight, borderWidth, scale}
   
