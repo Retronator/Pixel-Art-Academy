@@ -155,7 +155,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         paletteColor = asset.materials?[materialIndex]
         setColor = not paletteColor
 
-      if paletteColor
+      if hasRestrictedPalette
         if paletteId = paintHelper.paletteId()
           # We have a specified palette. Wait until information about the palette is available.
           return unless palette = LOI.Assets.Palette.documents.findOne paletteId
@@ -164,6 +164,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
           # We have a restricted palette color. Wait until information about the palette is available.
           return unless palette = asset.getRestrictedPalette()
 
+      if paletteColor
         # Only reset the color if the palette does not contain the current one.
         setColor = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
 
@@ -176,12 +177,17 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
           # For assets with restricted colors, set the first available palette color.
           if hasRestrictedPalette
             if palette
+              foundColor = false
+
               for ramp, rampIndex in palette.ramps when ramp.shades.length > 0
                 paintHelper.setPaletteColor ramp: rampIndex, shade: 0
+                foundColor = true
                 break
                 
+              paintHelper.setClearColor() unless foundColor
+                
             else
-              paintHelper.setPaletteColor ramp: 0, shade: 0
+              paintHelper.setClearColor()
             
           # Set a black direct color.
           else
