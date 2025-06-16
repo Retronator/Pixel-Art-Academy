@@ -38,32 +38,22 @@
     height 17rem
     visibility visible
 
+  .shape
+    opacity 0.7
+
   .line
     left -1rem
     top 0
-    background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-line.png') left top / 1rem 31rem
 
   .rectangle
     .indicator
       left 16rem
       top 14rem
 
-      &.outlined
-        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-rectangle.png') left top / 29rem 17rem
-
-      &.filled
-        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-rectangle-filled.png') left top / 29rem 17rem
-
   .ellipse
     .indicator
       left 50rem
       top 14rem
-
-      &.outlined
-        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-ellipse.png') left top / 29rem 17rem
-
-      &.filled
-        background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/ruler-ellipse-filled.png') left top / 29rem 17rem
 
   .indicator
     position absolute
@@ -71,7 +61,11 @@
     height 1rem
     visibility hidden
     transition width 0.2s, height 0.4s
+    overflow hidden
 
     &.filled
       transition width 0.2s, height 0.65s
       opacity 0.9
+
+    canvas
+      absolute-cover-size()
