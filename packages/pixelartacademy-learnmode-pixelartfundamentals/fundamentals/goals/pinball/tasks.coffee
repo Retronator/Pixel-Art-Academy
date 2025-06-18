@@ -212,6 +212,8 @@ class Goal.AddPins extends Goal.Task
       return true if partData.type is Pinball.Parts.Pin.id()
       
     # Alternatively, pins could be drawn as isolated points on the playfield bitmap.
+    # HACK: To prevent lag with running the evaluation, only do this when the editor is not active.
+    return if PAA.PixelPad.Apps.Drawing.Editor.getEditor()?.drawingActive()
     return unless playfieldAsset = _.find project.assets, (asset) => asset.id is Pinball.Assets.Playfield.id()
     return unless playfieldBitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId playfieldAsset.bitmapId
     

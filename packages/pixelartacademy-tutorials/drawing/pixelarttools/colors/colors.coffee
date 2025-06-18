@@ -58,6 +58,8 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
       @_stopListening()
       
     _startListening: ->
+      @_listening = true
+      
       LOI.Assets.Bitmap.versionedDocuments.operationExecuted.addHandler @, @onOperationExecuted
       
       # Complete this instruction when the color help is opened.
@@ -71,9 +73,11 @@ class PAA.Tutorials.Drawing.PixelArtTools.Colors extends PAA.Tutorials.Drawing.P
         PAA.Tutorials.Drawing.PixelArtTools.Colors.state 'colorHelpOpenedWhenIncorrect', true
     
     _stopListening: ->
+      return unless @_listening
+      
       LOI.Assets.Bitmap.versionedDocuments.operationExecuted.removeHandler @, @onOperationExecuted
       
-      @_colorHelpOpenedAutorun?.stop()
+      @_colorHelpOpenedAutorun.stop()
   
     activeConditions: ->
       # Show this until the color help was opened when the color was incorrect.

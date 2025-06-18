@@ -7,11 +7,11 @@ class AM.Document.Versioning.VersionedCollection extends AM.Document.Versioning.
     super arguments...
     
     # Use to subscribe to individual operations being executed (including during partial actions).
-    @operationExecuted = new AB.Event
+    @operationExecuted = new AB.Event @
     @operationExecuted.addHandler @, @onOperationExecuted
     
     # Use to subscribe to operations executed in batches (no partial actions).
-    @operationsExecuted = new AB.Event
+    @operationsExecuted = new AB.Event @
   
     @_loaders = {}
     @_loadersUpdatedDependency = new Tracker.Dependency

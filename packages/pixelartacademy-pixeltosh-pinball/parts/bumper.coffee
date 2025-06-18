@@ -261,7 +261,7 @@ class Pinball.Parts.Bumper extends Pinball.Part
         @physicsManager.dynamicsWorld.addRigidBody @_ringRigidBody, constants.collisionGroup, constants.collisionMask
         @physicsManager.registerRigidBodyEntity @_ringRigidBody, @
     
-  onRemovedFromDynamicsWorld: (dynamicsWorld) ->
+  onRemovedFromDynamicsWorld: (physicsManager) ->
     @_activeBumperPartsAutorun?.stop()
     @_activeBumperPartsAutorun = null
     @_removeRingRigidBody()

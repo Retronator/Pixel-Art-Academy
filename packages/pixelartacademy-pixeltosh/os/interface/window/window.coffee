@@ -22,7 +22,7 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
       
     @windowMoveDelta = new ReactiveField null
     
-    @moved = new AB.Event
+    @moved = new AB.Event @
     
   onDestroyed: ->
     super arguments...
