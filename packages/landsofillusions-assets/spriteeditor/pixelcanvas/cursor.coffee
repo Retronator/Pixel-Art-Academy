@@ -81,7 +81,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     bounds = @pixelCanvas.assetData()?.bounds
     
     if type is @constructor.Types.Pixel and bounds?.fixed
-      topLeftCoordinates = cursorArea.position.topLeftCoordinates
+      return unless topLeftCoordinates = cursorArea.position.topLeftCoordinates
       return unless bounds.left <= topLeftCoordinates.x <= bounds.right and bounds.top <= topLeftCoordinates.y <= bounds.bottom
   
     # Determine stroke style.
