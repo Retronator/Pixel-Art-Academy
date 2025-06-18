@@ -62,9 +62,9 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Project.Thing
       _.every [
         asset.completed
         smoothCurves.score >= 0.8
-        smoothCurves.abruptSegmentLengthChanges?.score >= 0.8
-        smoothCurves.straightParts?.score >= 0.8
-        smoothCurves.inflectionPoints?.score >= 0.8
+        smoothCurves.abruptSegmentLengthChanges? and smoothCurves.abruptSegmentLengthChanges.score >= 0.8
+        smoothCurves.straightParts? and smoothCurves.straightParts.score >= 0.8
+        smoothCurves.inflectionPoints? and smoothCurves.inflectionPoints.score >= 0.8
       ]
       
   @completedConsistentLineWidth: ->
