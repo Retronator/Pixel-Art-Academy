@@ -166,7 +166,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
       if paletteColor
         # Only reset the color if the palette does not contain the current one.
-        setColor = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
+        setColor = not (palette?.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
 
       else
         # We need to set the color if we're in restricted palette or we have no direct color.

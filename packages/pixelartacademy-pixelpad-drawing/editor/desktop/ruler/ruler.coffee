@@ -38,9 +38,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Ruler extends FM.View
     
     @currentColor = new ComputedField =>
       return unless paletteColor = @paintHelper.paletteColor()
-      return unless colorData = THREE.Color.fromObject @paletteData()?.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
-      colorData.multiplyScalar 255
-      colorData
+      return unless colorData = @paletteData()?.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
+      color = THREE.Color.fromObject colorData
+      color.multiplyScalar 255
+      color
       
   onRendered: ->
     super arguments...
