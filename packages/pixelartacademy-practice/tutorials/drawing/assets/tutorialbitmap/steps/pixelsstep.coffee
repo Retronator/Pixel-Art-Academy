@@ -18,18 +18,10 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     
     # We create a map representation for fast retrieval as well.
     @goalPixelsMap = {}
-    palette = @tutorialBitmap.palette()
     
     for pixel in @goalPixels
       @goalPixelsMap[pixel.x] ?= {}
       @goalPixelsMap[pixel.x][pixel.y] = pixel
-      
-      if pixel.paletteColor
-        pixel.color = palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
-        
-      else
-        pixel.color = THREE.Color.fromObject pixel.directColor
-        pixel.paletteColor = palette.exactPaletteColor pixel.directColor
 
   completed: ->
     return unless super arguments...
@@ -41,6 +33,7 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
     # Compare goal pixels with first bitmap layer.
     return unless bitmapLayer = @tutorialBitmap.bitmap()?.layers[0]
     return unless palette = @tutorialBitmap.palette()
+    backgroundColor = @tutorialBitmap.backgroundColor()
     
     for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
@@ -50,13 +43,8 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         # We do require a pixel here so check if we have it in the bitmap.
         return false unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
-        # If either of the pixels has a direct color, we need to translate the other one too.
-        if pixel.paletteColor and goalPixel.paletteColor
-          return false unless EJSON.equals pixel.paletteColor, goalPixel.paletteColor
-        
-        else
-          pixelColor = pixel.directColor or palette.color pixel.paletteColor.ramp, pixel.paletteColor.shade
-          return false unless goalPixel.color.equals pixelColor
+        # Compare the RGB values the pixel resolves to.
+        return false unless LOI.Assets.ColorHelper.areAssetColorsEqual pixel, goalPixel, palette, backgroundColor
 
     true
 

@@ -48,7 +48,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
           
         pixelPerfectTopLeftCoordinates = camera.roundCanvasToWindowPixel topLeftCoordinates
   
-        {pixelPerfectTopLeftCoordinates}
+        {topLeftCoordinates, pixelPerfectTopLeftCoordinates}
     ,
       EJSON.equals
 
@@ -75,14 +75,14 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Cursor
     
     cursorArea = @cursorArea()
     return unless cursorArea.position
-    position = cursorArea.position.pixelPerfectTopLeftCoordinates
 
     # Don't draw an out-of-bounds pixel brush
     type = @type()
     bounds = @pixelCanvas.assetData()?.bounds
     
     if type is @constructor.Types.Pixel and bounds?.fixed
-      return unless bounds.left <= position.x <= bounds.right and bounds.top <= position.y <= bounds.bottom
+      return unless topLeftCoordinates = cursorArea.position.topLeftCoordinates
+      return unless bounds.left <= topLeftCoordinates.x <= bounds.right and bounds.top <= topLeftCoordinates.y <= bounds.bottom
   
     # Determine stroke style.
     scale = @pixelCanvas.camera().scale()

@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.Tutorials.Drawing.Tutorial extends LOI.Adventure.Thing
+class PAA.Practice.Tutorials.Drawing.Tutorial extends PAA.Practice.Project.Thing
   # assets: array of assets that are part of this tutorial
   #   id: unique asset identifier
   #   type: what kind of asset this is

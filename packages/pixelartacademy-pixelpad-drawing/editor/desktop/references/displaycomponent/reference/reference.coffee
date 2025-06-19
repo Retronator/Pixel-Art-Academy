@@ -1,13 +1,11 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AP = Artificial.Program
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference extends LOI.Assets.Components.References.Reference
-  @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference'
-  @register @id()
-
   constructor: ->
     super arguments...
 
@@ -62,14 +60,22 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       halfWidth = displaySize.width / 2 + @referenceBorder
       halfHeight = displaySize.height / 2 + @referenceBorder
 
-      position = _.propertyValue(reference, 'position') or x: 0, y: 0
-
       maxX = @trayWidth / 2 - halfWidth - @trayBorder
       maxY = @trayHeight / 2 - halfHeight - @trayBorder
 
+      unless initialPosition = _.propertyValue(reference, 'position')
+        # Generate a stably-random position from the reference's url.
+        hash = AP.HashFunctions.getObjectHash reference.image?.url, AP.HashFunctions.circularShift5
+        randomX = ((hash & 0xFF00) >> 8) / 0xFF
+        randomY = (hash & 0x00FF) / 0xFF
+        
+        initialPosition =
+          x: maxX * (2 * randomX - 1)
+          y: maxY * (2 * randomY - 1)
+      
       position =
-        x: _.clamp position.x, -maxX, maxX
-        y: _.clamp position.y, -maxY, maxY
+        x: _.clamp initialPosition.x, -maxX, maxX
+        y: _.clamp initialPosition.y, -maxY, maxY
   
       Tracker.nonreactive => @hiddenPosition position
 
@@ -122,12 +128,12 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     position = super arguments...
     
     # Don't allow the reference to go off screen. We ensure enough of it is left
-    # on screen (60px) that it doesn't get covered by items like the calculator.
+    # on screen (70px) that it doesn't get covered by items like the calculator.
     return hiddenPosition unless displaySize = @displaySize()
     editorSize = @references.options.editorSize()
     
-    maxX = editorSize.width / 2 + displaySize.width / 2 - 60
-    maxY = editorSize.height / 2 + displaySize.height / 2 - 60
+    maxX = editorSize.width / 2 + displaySize.width / 2 - 70
+    maxY = editorSize.height / 2 + displaySize.height / 2 - 70
     
     x: _.clamp position.x, -maxX, maxX
     y: _.clamp position.y, -maxY, maxY
@@ -189,7 +195,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
       distance = new THREE.Vector2(240, 180).length()
 
-      if displaySize = @displaySize()
+      scale = @resizingScale() ? @currentScale()
+
+      if displaySize = @displaySize scale
         halfWidth = displaySize.width / 2
         halfHeight = displaySize.height / 2
 
@@ -197,8 +205,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
       position.normalize().multiplyScalar(distance)
 
-      style.left = "#{position.x}rem"
-      style.top = "#{position.y}rem"
+      style.left = "#{position.x - (displaySize?.width or 0) / 2}rem"
+      style.top = "#{position.y - (displaySize?.height or 0) / 2}rem"
 
     style
 
@@ -219,7 +227,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     else
       position = @hiddenPosition()
     
-    left: "#{position.x}rem"
-    top: "#{position.y}rem"
+    left: "#{position.x - displaySize.width / 2}rem"
+    top: "#{position.y - displaySize.height / 2}rem"
     width: "#{displaySize.width}rem"
     height: "#{displaySize.height}rem"

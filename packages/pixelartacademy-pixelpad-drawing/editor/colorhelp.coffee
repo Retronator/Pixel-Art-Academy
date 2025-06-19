@@ -30,9 +30,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.ColorHelp
     ⚑▶▛◣
     ⌘▼▜◤
     ▰◀▟#
-    *↖↗↘↙
-    ◇▢◸◹◺◿◻▱
-    ←↑→↓
+    *◇▢◻▱
+    ↖◸←
+    ↗◹↑
+    ↘◺→
+    ↙◿↓
     ☺☹+–=
     ◈◬◉✙◍◎
     ◘▤▥▣▩

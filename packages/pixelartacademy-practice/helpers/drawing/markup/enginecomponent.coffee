@@ -183,6 +183,8 @@ class Markup.EngineComponent
     widths = (context.measureText(line).width for line in lines)
     maxWidth = _.max widths
     
+    context.textAlign = 'left'
+    
     middleFactor = 0
     context.textBaseline = 'top'
     

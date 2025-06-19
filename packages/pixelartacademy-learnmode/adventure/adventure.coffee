@@ -27,16 +27,12 @@ class LM.Adventure extends PAA.Adventure
   @episodeClasses: -> [
     LM.Intro
     LM.PixelArtFundamentals
+    LM.Design
   ]
   
   @lastNewLessonsVersion: -> '0.25.0'
   
   @lastLoadedProfileIdLocalStorageKey = 'LandsOfIllusions.Adventure.lastLoadedProfileId'
-  
-  constructor: ->
-    super arguments...
-    
-    @isLearnMode = true
   
   titleSuffix: -> ' // Pixel Art Academy: Learn Mode'
 

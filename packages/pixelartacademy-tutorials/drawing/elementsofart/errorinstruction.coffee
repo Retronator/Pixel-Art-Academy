@@ -6,17 +6,6 @@ PAA = PixelArtAcademy
 
 class PAA.Tutorials.Drawing.ElementsOfArt.ErrorInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
   @assetClass: -> throw new AE.NotImplementedException "Error instruction must provide which assets to be displayed with."
-  
-  @getActiveAsset: ->
-    # We must be in the editor on the provided asset.
-    return unless editor = @getEditor()
-    return unless editor.drawingActive()
-    
-    return unless asset = editor.activeAsset()
-    return unless asset instanceof @assetClass()
-    return unless asset.initialized()
-    
-    asset
     
   @activeConditions: ->
     return unless asset = @getActiveAsset()

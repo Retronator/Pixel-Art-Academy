@@ -4,6 +4,16 @@
   &:not(.interactable)
     pointer-events none
 
+  &.focused-mode
+    .instruction
+      &.bottom
+        .paper
+          top 0 !important
+
+      &.top
+        .paper
+          bottom 0 !important
+
   .instruction
     position absolute
     left 0

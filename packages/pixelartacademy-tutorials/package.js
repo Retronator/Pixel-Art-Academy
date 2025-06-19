@@ -27,8 +27,16 @@ Package.onUse(function(api) {
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
   api.addFile('drawing/instructions/generalinstruction')
-  api.addFile('drawing/instructions/completeinstruction')
+  api.addFile('drawing/instructions/completedinstruction')
   api.addFile('drawing/instructions/stepinstruction')
+  api.addFile('drawing/instructions/referencestrayinstruction')
+
+  api.addFile('drawing/instructions/multiarea..');
+  api.addFile('drawing/instructions/multiarea/instruction')
+  api.addFile('drawing/instructions/multiarea/uncompletedinstruction')
+  api.addFile('drawing/instructions/multiarea/generalinstruction')
+  api.addFile('drawing/instructions/multiarea/completedinstruction')
+  api.addFile('drawing/instructions/multiarea/stepinstruction')
 
   api.addComponent('drawing/instructions/desktop..');
 
@@ -64,7 +72,6 @@ Package.onUse(function(api) {
 
   api.addFile('drawing/elementsofart..');
   api.addFile('drawing/elementsofart/errorinstruction');
-  api.addFile('drawing/elementsofart/referencestrayinstruction');
 
   api.addFile('drawing/elementsofart/line..');
   api.addFile('drawing/elementsofart/line/asset');
@@ -165,4 +172,23 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thicklines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
+
+  // Design
+
+  api.addFile('drawing/design..');
+
+  api.addFile('drawing/design/shapelanguage..');
+  api.addFile('drawing/design/shapelanguage/asset');
+  api.addFile('drawing/design/shapelanguage/shapesasset');
+  api.addFile('drawing/design/shapelanguage/assetwithreferences');
+  api.addFile('drawing/design/shapelanguage/referencestrayinstruction');
+  api.addFile('drawing/design/shapelanguage/shapesinnature');
+  api.addFile('drawing/design/shapelanguage/circle');
+  api.addFile('drawing/design/shapelanguage/circle2');
+  api.addFile('drawing/design/shapelanguage/square');
+  api.addFile('drawing/design/shapelanguage/square2');
+  api.addFile('drawing/design/shapelanguage/triangle');
+  api.addFile('drawing/design/shapelanguage/triangle2');
+  api.addFile('drawing/design/shapelanguage/shapecombinations');
+  api.addFile('drawing/design/shapelanguage/breakingtherules');
 });

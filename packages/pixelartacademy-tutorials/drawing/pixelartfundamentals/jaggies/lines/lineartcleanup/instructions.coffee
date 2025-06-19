@@ -255,8 +255,6 @@ class LineArtCleanup.Instructions
     
     @delayDuration: -> @defaultDelayDuration
   
-    @resetDelayOnOperationExecuted: -> true
-  
     @initialize()
     
     displaySide: ->
@@ -269,7 +267,7 @@ class LineArtCleanup.Instructions
       
       if pixelArtEvaluation.active() then InstructionsSystem.DisplaySide.Top else InstructionsSystem.DisplaySide.Bottom
     
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompletedInstruction
     @id: -> "#{LineArtCleanup.id()}.Complete"
     @assetClass: -> LineArtCleanup
     

@@ -7,6 +7,10 @@ PAA = PixelArtAcademy
 FM = FataMorgana
 
 class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
+  @ReferenceDisplayTypes =
+    Default: 'Default'
+    SceneObject: 'SceneObject'
+  
   @styleClass: -> throw new AE.NotImplementedException "Editor must provide a style class name."
   
   @getEditor: ->
@@ -22,6 +26,10 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
     # Drawing becomes active when theme transition completes.
     # The theme should set this to true or false based on its needs.
     @drawingActive = new ReactiveField false
+  
+    # Editor is visible as soon as entry theme transition starts and continues until the exit
+    # theme transition ends. The theme should set this to true or false based on its needs.
+    @visible = new ReactiveField false
 
     # Allow to manually provide sprite data.
     @manualSpriteData = new ReactiveField null
@@ -147,7 +155,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
         paletteColor = asset.materials?[materialIndex]
         setColor = not paletteColor
 
-      if paletteColor
+      if hasRestrictedPalette
         if paletteId = paintHelper.paletteId()
           # We have a specified palette. Wait until information about the palette is available.
           return unless palette = LOI.Assets.Palette.documents.findOne paletteId
@@ -156,8 +164,9 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
           # We have a restricted palette color. Wait until information about the palette is available.
           return unless palette = asset.getRestrictedPalette()
 
+      if paletteColor
         # Only reset the color if the palette does not contain the current one.
-        setColor = not (palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
+        setColor = not (palette?.ramps[paletteColor.ramp]?.shades[paletteColor.shade])
 
       else
         # We need to set the color if we're in restricted palette or we have no direct color.
@@ -165,9 +174,20 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
       if setColor
         Tracker.nonreactive =>
-          # For assets with restricted colors, set the first palette color.
+          # For assets with restricted colors, set the first available palette color.
           if hasRestrictedPalette
-            paintHelper.setPaletteColor ramp: 0, shade: 0
+            if palette
+              foundColor = false
+
+              for ramp, rampIndex in palette.ramps when ramp.shades.length > 0
+                paintHelper.setPaletteColor ramp: rampIndex, shade: 0
+                foundColor = true
+                break
+                
+              paintHelper.setClearColor() unless foundColor
+                
+            else
+              paintHelper.setClearColor()
             
           # Set a black direct color.
           else

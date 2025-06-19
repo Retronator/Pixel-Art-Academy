@@ -91,8 +91,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
         else
           markup.push Markup.PixelArt.evaluatedPerceivedStraightLine(linePart, pixelArtEvaluationProperty)...
       
-      # If we're not going to be drawing curves, draw a faint unevaluated outline to indicate they were detected.
-      unless PAE.Criteria.SmoothCurves in displayedCriteria
+      # If we're not going to be drawing curves, draw a faint unevaluated
+      # outline to indicate they were detected (when not focused).
+      unless PAE.Criteria.SmoothCurves in displayedCriteria or filterValue
         for linePart in lineParts when linePart instanceof PAE.Line.Part.Curve
           curveMarkup = Markup.PixelArt.perceivedCurve linePart
           curveMarkup.line.width = 0
@@ -169,9 +170,9 @@ class PAE.EngineComponent extends PAA.Practice.Helpers.Drawing.Markup.EngineComp
             # If we're focusing on a line, skip drawing others.
             continue if focusedLines.length and linePart.line not in focusedLines
             
-            # Draw lines without curves with minimal lines.
+            # Draw lines without curves with minimal lines (when unfocused).
             {curveSmoothness} = linePart.line.evaluate pixelArtEvaluationProperty
-            unless curveSmoothness
+            unless curveSmoothness or filterValue
               straightLineMarkup = Markup.PixelArt.perceivedStraightLine linePart
               straightLineMarkup.line.width = 0
               markup.push straightLineMarkup

@@ -329,7 +329,7 @@ class AbruptSegmentLengthChanges.Instructions
     
     markup: -> @moveSecondPixelMarkup()
       
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompletedInstruction
     @id: -> "#{AbruptSegmentLengthChanges.id()}.Complete"
     @assetClass: -> AbruptSegmentLengthChanges
     

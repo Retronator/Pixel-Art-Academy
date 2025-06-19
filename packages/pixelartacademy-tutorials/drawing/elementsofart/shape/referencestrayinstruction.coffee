@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.ElementsOfArt.Shape.ReferencesTrayInstruction extends PAA.Tutorials.Drawing.ElementsOfArt.ReferencesTrayInstruction
+class PAA.Tutorials.Drawing.ElementsOfArt.Shape.ReferencesTrayInstruction extends PAA.Tutorials.Drawing.Instructions.ReferencesTrayInstruction
   @id: -> "PixelArtAcademy.Tutorials.Drawing.ElementsOfArt.Shape.ReferencesTrayInstruction"
   
   @assetClass: -> PAA.Tutorials.Drawing.ElementsOfArt.Shape.AssetWithReferences

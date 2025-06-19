@@ -8,7 +8,7 @@ _currentPixelCoordinates = new THREE.Vector2
 _startPixelCoordinates = new THREE.Vector2
 _pixelCoordinatesDelta = new THREE.Vector2
 
-class LOI.Assets.SpriteEditor.Tools.Rectangle extends LOI.Assets.SpriteEditor.Tools.Shape
+class LOI.Assets.SpriteEditor.Tools.Rectangle extends LOI.Assets.SpriteEditor.Tools.FillableShape
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Rectangle'
   @displayName: -> "Rectangle"
   
@@ -57,14 +57,20 @@ class LOI.Assets.SpriteEditor.Tools.Rectangle extends LOI.Assets.SpriteEditor.To
         return unless boundsLeft <= x <= boundsRight and boundsTop <= y <= boundsBottom
         pixels.push {x, y}
       
-      for x in [_startPixelCoordinates.x.._currentPixelCoordinates.x]
-        addPixel x, _startPixelCoordinates.y
-        addPixel x, _currentPixelCoordinates.y
+      if @data.get 'filled'
+        for x in [_startPixelCoordinates.x.._currentPixelCoordinates.x]
+          for y in [_startPixelCoordinates.y.._currentPixelCoordinates.y]
+            addPixel x, y
         
-      if Math.abs(_startPixelCoordinates.y - _currentPixelCoordinates.y) > 1
-        for y in [_startPixelCoordinates.y.._currentPixelCoordinates.y]
-          addPixel _startPixelCoordinates.x, y
-          addPixel _currentPixelCoordinates.x, y
+      else
+        for x in [_startPixelCoordinates.x.._currentPixelCoordinates.x]
+          addPixel x, _startPixelCoordinates.y
+          addPixel x, _currentPixelCoordinates.y
+          
+        if Math.abs(_startPixelCoordinates.y - _currentPixelCoordinates.y) > 1
+          for y in [_startPixelCoordinates.y.._currentPixelCoordinates.y]
+            addPixel _startPixelCoordinates.x, y
+            addPixel _currentPixelCoordinates.x, y
         
       @paintHelper.applyPaintToPixels pixels
 

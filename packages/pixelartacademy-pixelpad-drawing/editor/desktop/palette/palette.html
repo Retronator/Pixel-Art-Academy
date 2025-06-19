@@ -1,22 +1,24 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette">
   <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette">
-    <div class="palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}} {{forceSymbolsVisibleClass}}">
+    <div class="palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}} {{forceSymbolsVisibleClass}}" {{style paletteStyle}}>
       <div class="colors" {{style colorsStyle}}>
         {{#each palette.ramps}}
-          <div class="ramp">
-            {{#if customPalette}}
-              {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp}}
-            {{/if}}
-            {{#each shades}}
-              <div class="shade {{activeColorClass}}" {{style shadeStyle}}>
-                <div class="color" {{style colorStyle}}>
-                  {{#if showColorSymbol}}
-                    <span class="symbol" {{style colorSymbolStyle}}>{{symbol}}</span>
-                  {{/if}}
+          {{#if shades.length}}
+            <div class="ramp">
+              {{#if customPalette}}
+                {{> PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Palette.TrayRamp}}
+              {{/if}}
+              {{#each shades}}
+                <div class="shade {{activeColorClass}}" {{style shadeStyle}}>
+                  <div class="color" {{style colorStyle}}>
+                    {{#if showColorSymbol}}
+                      <span class="symbol" {{style colorSymbolStyle}}>{{symbol}}</span>
+                    {{/if}}
+                  </div>
                 </div>
-              </div>
-            {{/each}}
-          </div>
+              {{/each}}
+            </div>
+          {{/if}}
         {{/each}}
       </div>
       {{#if showColorHelp}}

@@ -5,89 +5,43 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
 class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-  @reset: (tutorial, assetId, bitmapId) ->
-    @_resetBitmapData(bitmapId)
-      .then((bitmapData) => @_resetBitmapDataReferences bitmapData)
-      .then((bitmapData) => @_resetBitmap bitmapData, tutorial, assetId)
+  @reset: (tutorial, bitmapId) ->
+    @_createBitmapData()
+      .then((bitmapData) => @_setBitmapDataReferences bitmapData)
+      .then((bitmapData) => @_setBitmapDataPalette bitmapData)
+      .then((bitmapData) => @_updateBitmap tutorial, bitmapId, bitmapData)
       .catch (error) =>
         console.error error
         throw new AE.InvalidOperationException "Could not reset tutorial bitmap."
   
-  @_resetBitmapData: (bitmapId) ->
-    new Promise (resolve, reject) =>
-      # Build the original state.
-      bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
-      
-      # Crop to initial size if needed.
-      size = @fixedDimensions()
-      
-      unless bitmap.bounds.width is size.width and bitmap.bounds.height is size.height
-        bitmap.crop
-          left: 0
-          right: size.width - 1
-          top: 0
-          bottom: size.height - 1
-          fixed: true
-      
-      # Clear the pixels and history.
-      bitmap.clear()
-      AMu.Document.Versioning.clearHistory bitmap
-      
-      # Prepare persistent document data.
-      bitmapData = bitmap.toPlainObject()
-      
-      # Reset properties.
-      if properties = @properties()
-        bitmapData.properties = properties
-        
-      resolve bitmapData
-      
-  @_resetBitmapDataReferences: (bitmapData) ->
-    new Promise (resolve, reject) =>
-      unless references = @references?()
-        resolve bitmapData
-        return
-        
-      referencePromises = []
+  @_updateBitmap: (tutorial, bitmapId, bitmapData) ->
+    LOI.Assets.Bitmap.documents.update bitmapId, bitmapData
     
-      for reference in references
-        imageUrl = if _.isString reference then reference else reference.image.url
-        
-        do (imageUrl) =>
-          reference = {} if _.isString reference
-          existingReference = _.find bitmapData.references, (bitmapReference) => bitmapReference.image.url is imageUrl
-          
-          # Find the ID of the image with this URL.
-          referencePromises.push new Promise (resolve, reject) =>
-            Tracker.autorun (computation) ->
-              unless image = existingReference?.image
-                LOI.Assets.Image.forUrl.subscribe imageUrl
-                LOI.Assets.Image.forUrl.subscribeContent imageUrl
-                return unless image = LOI.Assets.Image.documents.findOne url: imageUrl
-
-              computation.stop()
-              
-              # We need to copy extra meta data (like displayOptions from existing ones).
-              resolve _.defaults
-                image: image
-                position:
-                  x: 100 * (Math.random() - 0.5)
-                  y: 100 * (Math.random() - 0.5)
-              ,
-                reference
-
-      Promise.all(referencePromises).then (references) =>
-        bitmapData.references = references
-        resolve bitmapData
-
-  @_resetBitmap: (bitmapData, tutorial, assetId) ->
-    # Update persistent document.
-    LOI.Assets.Bitmap.documents.update bitmapData._id, bitmapData
-    
+    @_initializeLayers LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+  
     # Trigger reactivity.
-    LOI.Assets.Bitmap.versionedDocuments.reportNonVersionedChange bitmapData._id
+    LOI.Assets.Bitmap.versionedDocuments.reportNonVersionedChange bitmapId
     
-    # Reset the asset and its data.
-    assets = tutorial.assets()
-    asset = _.find assets, (asset) => asset.id() is assetId
+    # Reset the asset instance.
+    asset = tutorial.getAsset @id()
     asset.reset()
+    
+  reset: ->
+    # Nothing to reset if we haven't initialized yet (resetting will be called when first creating the bitmap).
+    return unless @initialized()
+    
+    # Prevent recomputation of completed states while resetting.
+    @resetting true
+    
+    # Reset all steps.
+    stepArea.reset() for stepArea in @stepAreas()
+    
+    # Remove any asset data.
+    if assetData = @getAssetData()
+      assetData.stepAreas = []
+      assetData.completed = false
+      
+      @setAssetData assetData
+    
+    # Unlock recomputation after changes have been applied.
+    Tracker.afterFlush => @resetting false

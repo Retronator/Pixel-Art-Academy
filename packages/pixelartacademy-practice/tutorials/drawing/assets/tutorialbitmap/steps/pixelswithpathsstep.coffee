@@ -19,4 +19,6 @@ class TutorialBitmap.PixelsWithPathsStep extends TutorialBitmap.PixelsStep
     TutorialBitmap.PathStep.drawPathFillHints context, renderOptions, @stepArea, @paths
 
   drawOverlaidHints: (context, renderOptions) ->
+    super arguments...
+
     TutorialBitmap.PathStep.drawPathStrokeHints context, renderOptions, @stepArea, @paths, @options.hintStrokeWidth

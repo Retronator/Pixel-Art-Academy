@@ -15,6 +15,9 @@
     padding 0
     margin 10rem 1rem
 
+    &:not(.enabled)
+      pointer-events none
+
     .app
       display block !important // Forcing inline-block because velocity is not registering it.
       vertical-align top

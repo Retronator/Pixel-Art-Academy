@@ -10,7 +10,6 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     Demonstrate the use of pixel art rules for drawing line art.
   """
 
-  @svgUrl: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.svg"
   @referenceImageUrl: -> "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.webp"
 
   @resources: ->
@@ -33,7 +32,7 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
   
   @goalChoices: -> [
     referenceUrl: @referenceImageUrl()
-    svgUrl: @svgUrl()
+    svgUrl: "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.svg"
   ]
 
   @briefComponentClass: ->

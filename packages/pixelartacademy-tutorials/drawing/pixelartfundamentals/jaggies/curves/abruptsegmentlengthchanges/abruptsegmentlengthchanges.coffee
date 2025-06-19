@@ -57,7 +57,6 @@ class PixelArtFundamentals.Jaggies.Curves.AbruptSegmentLengthChanges extends Pix
       svgPaths: [svgPaths[2]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
     
     # Step 2 requires you to open the evaluation paper.
     new @constructor.Steps.OpenEvaluationPaper @, stepArea

@@ -52,6 +52,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       rulerDrag: AEc.ValueTypes.Boolean
       rulerPan: AEc.ValueTypes.Number
       rulerActivate: AEc.ValueTypes.Trigger
+      rulerActivateFilled: AEc.ValueTypes.Trigger
   
   @compressPan: (x) ->
     # Since desktop items go out of the screen, we don't want them to clamp to -1 and 1, but smoothly approach it.
@@ -254,8 +255,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     super arguments...
 
     @autorun =>
-      # Cancel any previous timeout.
+      # Cancel any previous timeouts.
       Meteor.clearTimeout @_activateDrawingTimeout
+      Meteor.clearTimeout @_setEditorInvisibleTimeout
       
       if @active()
         # Add the drawing active class with delay so that the initial transitions still happen slowly.
@@ -263,11 +265,20 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
           @drawingActive true
         ,
           1000
+        
+        # Immediately set the editor to be visible.
+        @visible true
 
       else
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
 
+        # The editor become invisible after the transition.
+        @_setEditorInvisibleTimeout = Meteor.setTimeout =>
+          @visible false
+        ,
+          1000
+        
     # Trigger dragging of present items when the active status changes.
     Tracker.triggerOnDefinedChange =>
       if @active() then true else false

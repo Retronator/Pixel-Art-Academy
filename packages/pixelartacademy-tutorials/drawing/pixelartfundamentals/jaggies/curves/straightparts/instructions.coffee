@@ -279,7 +279,7 @@ class StraightParts.Instructions
       markup.push @movePixelMarkup(29, 21, 1, 0)...
       markup
       
-  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompleteInstruction
+  class @Complete extends PAA.Tutorials.Drawing.Instructions.CompletedInstruction
     @id: -> "#{StraightParts.id()}.Complete"
     @assetClass: -> StraightParts
     

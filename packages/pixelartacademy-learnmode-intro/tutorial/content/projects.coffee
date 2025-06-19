@@ -34,7 +34,7 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
 
     @displayName: -> "Snake"
 
-    @unlockInstructions: -> "Score at least 5 points in the Snake game on PICO-8 to unlock the Snake project."
+    @unlockInstructions: -> "Score some points in the Snake game on PICO-8 to unlock the Snake project."
 
     @contents: -> [
       @Body

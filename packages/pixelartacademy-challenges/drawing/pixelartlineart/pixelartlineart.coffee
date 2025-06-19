@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
+class PAA.Challenges.Drawing.PixelArtLineArt extends PAA.Practice.Project.Thing
   # assets: array of assets that the player has chosen to complete for the line art challenges
   #   id: unique asset identifier
   #   type: what kind of asset this is
@@ -62,9 +62,9 @@ class PAA.Challenges.Drawing.PixelArtLineArt extends LOI.Adventure.Thing
       _.every [
         asset.completed
         smoothCurves.score >= 0.8
-        smoothCurves.abruptSegmentLengthChanges?.score >= 0.8
-        smoothCurves.straightParts?.score >= 0.8
-        smoothCurves.inflectionPoints?.score >= 0.8
+        smoothCurves.abruptSegmentLengthChanges? and smoothCurves.abruptSegmentLengthChanges.score >= 0.8
+        smoothCurves.straightParts? and smoothCurves.straightParts.score >= 0.8
+        smoothCurves.inflectionPoints? and smoothCurves.inflectionPoints.score >= 0.8
       ]
       
   @completedConsistentLineWidth: ->

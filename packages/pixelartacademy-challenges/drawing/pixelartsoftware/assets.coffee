@@ -12,7 +12,6 @@ assets =
 
       Artist: Isabel 'Erien' Armentero
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Isabel'
@@ -32,7 +31,6 @@ assets =
 
       Artist: Hjalte Tagmose
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Hjalte'
@@ -51,7 +49,6 @@ assets =
 
       Artist: Hjalte Tagmose
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Hjalte'
@@ -132,7 +129,6 @@ assets =
 
       Artist: Chris Taylor
     """
-    maxClipboardScale: -> 1.5
     artist:
       name:
         first: 'Chris'
@@ -169,7 +165,6 @@ assets =
 
       Artist: Ricardo Oyón Rodríguez
     """
-    maxClipboardScale: -> 1.5
     artist:
       name:
         first: 'Ricardo'
@@ -227,7 +222,6 @@ assets =
 
       Artist: Mati Ernst
     """
-    maxClipboardScale: -> 3.5
     artist:
       name:
         first: 'Mati'
@@ -330,7 +324,6 @@ assets =
 
       Artist: Daniel Müller
     """
-    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Daniel'
@@ -349,7 +342,6 @@ assets =
 
       Artist: Phil Fish
     """
-    maxClipboardScale: -> 4.5
     artist:
       name:
         first: 'Phil'
@@ -367,7 +359,6 @@ assets =
 
       Artist: Simon Stafsnes 'Snake' Andersen
     """
-    maxClipboardScale: -> 2
     artist:
       name:
         first: 'Simon'
@@ -387,7 +378,6 @@ assets =
 
       Artist: Primož Vovk
     """
-    maxClipboardScale: -> 4
     artist:
       name:
         first: 'Primož'
@@ -405,7 +395,6 @@ assets =
 
       Artist: ENDESGA
     """
-    maxClipboardScale: -> 3.5
     artist:
       name:
         nickname: 'ENDESGA'
@@ -422,7 +411,6 @@ assets =
 
       Artist: Roy Nathan de Groot
     """
-    maxClipboardScale: -> 4.5
     artist:
       name:
         first: 'Roy'
@@ -442,7 +430,6 @@ assets =
 
      Artist: Weston Tracy
     """
-    maxClipboardScale: -> 2.5
     artist:
       name:
         first: 'Weston'
@@ -460,7 +447,6 @@ assets =
 
       Artist: Thomas van den Berg
     """
-    maxClipboardScale: -> 3.5
     artist:
       name:
         first: 'Thomas'
@@ -479,7 +465,6 @@ assets =
 
       Artist: Tristan Barona
     """
-    maxClipboardScale: -> 3
     artist:
       name:
         first: 'Tristan'
@@ -497,7 +482,6 @@ assets =
 
       Artist: Jay Ma
     """
-    maxClipboardScale: -> 2.5
     artist:
       name:
         first: 'Jay'
@@ -573,7 +557,6 @@ for assetId, asset of assets
       @restrictedPaletteName: asset.restrictedPaletteName or -> null
       @imageName: asset.imageName
       @bitmapInfo: asset.bitmapInfo
-      @maxClipboardScale: asset.maxClipboardScale
       @initialize()
   
     PAA.Challenges.Drawing.PixelArtSoftware.copyReferenceClasses[assetId] = CopyReference[assetId]

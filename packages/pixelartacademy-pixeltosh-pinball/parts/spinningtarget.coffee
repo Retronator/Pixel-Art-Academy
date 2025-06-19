@@ -53,8 +53,8 @@ class Pinball.Parts.SpinningTarget extends Pinball.Parts.DynamicPart
     
     @_createConstraint()
   
-  onRemovedFromDynamicsWorld: (dynamicsWorld) ->
-    dynamicsWorld.removeConstraint @constraint
+  onRemovedFromDynamicsWorld: (physicsManager) ->
+    physicsManager.dynamicsWorld.removeConstraint @constraint
     @constraint = null
     
   reset: ->

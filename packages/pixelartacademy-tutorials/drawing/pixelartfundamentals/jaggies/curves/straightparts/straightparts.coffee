@@ -61,7 +61,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves.StraightParts ex
       svgPaths: [svgPaths[0]]
       preserveCompleted: true
       hasPixelsWhenInactive: false
-      canCompleteWithExtraPixels: false
     
     # Step 2 requires you to close the evaluation paper.
     new PAA.Tutorials.Drawing.PixelArtFundamentals.CloseEvaluationPaper @, stepArea

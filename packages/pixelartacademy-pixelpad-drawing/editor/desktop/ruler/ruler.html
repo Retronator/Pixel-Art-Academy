@@ -1,7 +1,13 @@
 <template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.Ruler">
   <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-ruler table-item">
-    <div class="line indicator"></div>
-    <div class="rectangle indicator"></div>
-    <div class="ellipse indicator"></div>
+    <div class="line shape indicator">{{> Render lineIndicatorImage}}</div>
+    <div class="rectangle shape {{rectangleFilledClass}}">
+      <div class="outlined indicator">{{> Render rectangleIndicatorImage}}</div>
+      <div class="filled indicator">{{> Render filledRectangleIndicatorImage}}</div>
+    </div>
+    <div class="ellipse shape {{ellipseFilledClass}}">
+      <div class="outlined indicator"></div>
+      <div class="filled indicator"></div>
+    </div>
   </div>
 </template>

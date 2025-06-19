@@ -1,0 +1,32 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+ambientOcclusionColor = rgba(atariGray(0), 0.12)
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-sceneobject
+  position absolute
+  cursor grab
+
+  &.dragging
+    position fixed
+    z-index 101 !important
+
+  .figure
+  .shadow .rest
+  .shadow .hover
+    .stored-references &
+      z-index 16
+
+    .displayed-references &
+      z-index 12
+
+  .figure
+    margin 0
+    absolute-cover()
+
+    .image
+      display block
+      width 100%
+
+  .shadow
+    pointer-events none

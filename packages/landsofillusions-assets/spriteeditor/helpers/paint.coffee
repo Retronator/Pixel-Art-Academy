@@ -37,6 +37,7 @@ class LOI.Assets.SpriteEditor.Helpers.Paint extends FM.Helper
   setPaletteColor: (paletteColor) -> @_setColor _.pick paletteColor, ['ramp', 'shade']
   setDirectColor: (directColor) -> @_setColor null, _.pick directColor, ['r', 'g', 'b']
   setMaterialIndex: (index) -> @_setColor null, null, index
+  setClearColor: -> @_setColor null, null, null
     
   isPaintSet: -> @paletteColor() or @directColor() or @materialIndex()?
 

@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-# A general instruction that is displayed after a delay if the asset is not completed.
+# A general instruction that is displayed after a delay if the asset is not completed at a specific active step.
 class PAA.Tutorials.Drawing.Instructions.StepInstruction extends PAA.Tutorials.Drawing.Instructions.Instruction
   @stepNumber: ->
     # Override if the instruction should appear in a single step.
@@ -27,7 +27,7 @@ class PAA.Tutorials.Drawing.Instructions.StepInstruction extends PAA.Tutorials.D
     # Show until the asset is completed.
     not asset.completed()
   
-  @resetDelayOnOperationExecuted: -> true
+  @resetDelayOnOperationExecuted: -> @delayDuration()
   
   getTutorialStep: (stepNumber) ->
     return unless asset = @getActiveAsset()
