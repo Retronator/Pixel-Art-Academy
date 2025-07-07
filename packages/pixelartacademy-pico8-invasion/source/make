@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cat header invasion.lua memory > invasion.p8
