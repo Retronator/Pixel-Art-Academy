@@ -14,8 +14,7 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
 
     @assets = new ComputedField =>
       [
-        new PAA.Pico8.Cartridges.Invasion.Body @
-        new PAA.Pico8.Cartridges.Invasion.Food @
+        new PAA.Pico8.Cartridges.Invasion.Defender @
       ]
     ,
       true
@@ -27,5 +26,5 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
     @pico8Cartridge.destroy()
     
   content: ->
-    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.Intro.Tutorial
-    chapter.getContent PAA.LearnMode.Intro.Tutorial.Content.Projects.Invasion
+    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.DesignFundamentals.Fundamentals
+    chapter.getContent LM.Design.Fundamentals.Content.Projects.Invasion

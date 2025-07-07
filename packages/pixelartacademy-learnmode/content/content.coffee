@@ -27,7 +27,7 @@ class LM.Content
   # Id string for this content used to identify the content in code.
   @id: -> throw new AE.NotImplementedException "You must specify content's id."
 
-  # The type that identifies the content class individual tasks inherit from.
+  # The type that identifies the content class individual content inherits from.
   @type: -> 'Content'
 
   # String to represent the course in the UI. Note that we can't use

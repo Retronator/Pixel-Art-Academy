@@ -30,8 +30,11 @@ Package.onUse(function(api) {
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/shapelanguage');
+  api.addFile('fundamentals/goals/invasion');
 
   api.addFile('fundamentals/scenes/tutorialsdrawing');
+  api.addFile('fundamentals/scenes/pico8cartridges');
+  api.addFile('fundamentals/scenes/workbench');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');

@@ -3,7 +3,7 @@ PAA = PixelArtAcademy
 LM = PixelArtAcademy.LearnMode
 
 class LM.Content.AppContent extends LM.Content
-  @appClass = null # Override to set which goal this content represents.
+  @appClass = null # Override to set which app this content represents.
 
   @type: -> 'AppContent'
 

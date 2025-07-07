@@ -52,31 +52,20 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
 
     status: -> if LM.Intro.Tutorial.Goals.Snake.Play.completedConditions() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
 
-    class @Sprite extends LM.Content
-      @asset = null # Override which project asset this sprite is.
+    class @Body extends LM.Content.AssetContent
+      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Body'
 
-      @displayName: -> @asset.displayName()
+      @assetClass = PAA.Pico8.Cartridges.Snake.Body
 
-      constructor: ->
-        super arguments...
-
-        @progress = new LM.Content.Progress.ProjectAssetProgress
-          content: @
-          project: PAA.Pico8.Cartridges.Snake.Project
-          asset: @constructor.asset
+      @initialize()
 
       status: -> LM.Content.Status.Unlocked
 
-    class @Body extends @Sprite
-      @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Body'
-
-      @asset = PAA.Pico8.Cartridges.Snake.Body
-
-      @initialize()
-
-    class @Food extends @Sprite
+    class @Food extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Food'
 
-      @asset = PAA.Pico8.Cartridges.Snake.Food
+      @assetClass = PAA.Pico8.Cartridges.Snake.Food
 
       @initialize()
+  
+      status: -> LM.Content.Status.Unlocked

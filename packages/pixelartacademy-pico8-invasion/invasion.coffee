@@ -21,38 +21,20 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
   
   # Assets
   
-  class @Body extends PAA.Practice.Project.Asset.Bitmap
-    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Body'
+  class @Defender extends PAA.Practice.Project.Asset.Bitmap
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Defender'
     
-    @displayName: -> "Invasion body"
+    @displayName: -> "Defender"
     
     @description: -> """
-      One unit of the invasion body. Each food piece increases the invaders' strength.
+      Player unit tasked to defend from the incoming invasion. It will shoot projectiles from the top-most pixel you draw.
     """
     
-    @fixedDimensions: -> width: 8, height: 8
+    @fixedDimensions: -> width: 16, height: 16
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
     @backgroundColor: ->
       paletteColor:
-        ramp: 10
-        shade: 0
-    
-    @initialize()
-  
-  class @Food extends PAA.Practice.Project.Asset.Bitmap
-    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Food'
-    
-    @displayName: -> "Food"
-    
-    @description: -> """
-      A food piece that the invaders collect to grow stronger.
-    """
-    
-    @fixedDimensions: -> width: 8, height: 8
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
-    @backgroundColor: ->
-      paletteColor:
-        ramp: 10
+        ramp: 0
         shade: 0
     
     @initialize()

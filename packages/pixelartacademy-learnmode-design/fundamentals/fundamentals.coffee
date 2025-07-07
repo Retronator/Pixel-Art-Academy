@@ -12,6 +12,8 @@ class LM.Design.Fundamentals extends LM.Chapter
   
   @scenes: -> [
     @TutorialsDrawing
+    @Workbench
+    @Pico8Cartridges
   ]
 
   @courses: -> [
