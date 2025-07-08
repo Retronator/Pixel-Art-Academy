@@ -1,5 +1,6 @@
 DefenderProjectile = {}
 DefenderProjectile.__index = DefenderProjectile
+setmetatable(DefenderProjectile, { __index = Entity })
 
 function DefenderProjectile:new(x, y)
   local defenderProjectile = setmetatable({}, DefenderProjectile)

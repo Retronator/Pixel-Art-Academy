@@ -1,5 +1,6 @@
 Defender = {}
 Defender.__index = Defender
+setmetatable(Defender, { __index = Entity })
 
 function Defender:new(x, y)
   local defender = setmetatable({}, Defender)
@@ -7,7 +8,6 @@ function Defender:new(x, y)
   defender.x = x
   defender.y = y
   defender.sprite = Sprite:new(0, 2, 2)
-  defender.projectiles = {}
 
   return defender;
 end

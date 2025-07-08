@@ -4,8 +4,10 @@ __lua__
 -- invasion
 -- work in progress build
 #include classes/sprite.lua
+#include classes/entity.lua
 #include classes/defender.lua
 #include classes/defenderprojectile.lua
+#include classes/invader.lua
 #include classes/scene.lua
 #include init.lua
 #include update.lua
