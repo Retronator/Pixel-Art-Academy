@@ -1,4 +1,6 @@
-Defender = {}
+Defender = {
+  sprite = Sprite:new(0, 2, 2)
+}
 Defender.__index = Defender
 setmetatable(Defender, { __index = Entity })
 
@@ -7,38 +9,37 @@ function Defender:new(x, y)
 
   defender.x = x
   defender.y = y
-  defender.sprite = Sprite:new(0, 2, 2)
 
   return defender;
 end
 
 function Defender:update()
   -- Horizontal movement
-  if gameDesign.defenderMovement == DesignOptions.DefenderMovement.Horizontal or gameDesign.defenderMovement == DesignOptions.DefenderMovement.AllDirections then
+  if game.design.defender.movement == DesignOptions.Defender.Movement.Horizontal or game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
     if btn(0) then
-      self.x = self.x - gameDesign.defenderSpeed * dt
+      self.x = self.x - game.design.defender.speed * dt
     end
     if btn(1) then
-      self.x = self.x + gameDesign.defenderSpeed * dt
+      self.x = self.x + game.design.defender.speed * dt
     end
 
-    self.x = mid(gameDesign.playfieldBounds.left + self.sprite.relativeCenterX, self.x, gameDesign.playfieldBounds.right - self.sprite.relativeCenterX - 1)
+    self.x = mid(game.design.playfieldBounds.left + self.sprite.relativeCenterX, self.x, game.design.playfieldBounds.right - self.sprite.relativeCenterX - 1)
   end
 
   -- Vertical movement
-  if gameDesign.defenderMovement == DesignOptions.DefenderMovement.Vertical or gameDesign.defenderMovement == DesignOptions.DefenderMovement.AllDirections then
+  if game.design.defender.movement == DesignOptions.Defender.Movement.Vertical or game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
     if btn(2) then
-      self.y = self.y - gameDesign.defenderSpeed * dt
+      self.y = self.y - game.design.defender.speed * dt
     end
     if btn(3) then
-      self.y = self.y + gameDesign.defenderSpeed * dt
+      self.y = self.y + game.design.defender.speed * dt
     end
 
-    self.y = mid(gameDesign.playfieldBounds.top + self.sprite.relativeCenterY, self.y, gameDesign.playfieldBounds.bottom - self.sprite.relativeCenterY - 1)
+    self.y = mid(game.design.playfieldBounds.top + self.sprite.relativeCenterY, self.y, game.design.playfieldBounds.bottom - self.sprite.relativeCenterY - 1)
   end
   
   -- Shooting
-  if (btnp(4) or btnp(5)) and #scene.defenderProjectiles < gameDesign.defenderProjectilesMaxCount then
+  if (btnp(4) or btnp(5)) and #scene.defenderProjectiles < game.design.defenderProjectiles.maxCount then
     scene:addDefenderProjectile()
   end
 end

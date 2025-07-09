@@ -4,11 +4,34 @@ Scene.__index = Scene
 function Scene:new()
   local scene = setmetatable({}, Scene)
 
-  scene.defender = Defender:new(64, 64)
-  scene.defenderProjectiles = {}
+  local defenderX, defenderY
 
+  if game.design.invaders.attackDirection == Directions.Left then
+    defenderX = game.design.playfieldBounds.left + Defender.sprite.bounds.width
+
+  elseif game.design.invaders.attackDirection == Directions.Right then
+    defenderX = game.design.playfieldBounds.right - Defender.sprite.bounds.width
+
+  else
+    defenderX = game.design.playfieldBounds.left + flr(game.design.playfieldBounds.width / 2)
+    
+  end
+
+  if game.design.invaders.attackDirection == Directions.Up then
+    defenderY = game.design.playfieldBounds.top + Defender.sprite.bounds.height
+
+  elseif game.design.invaders.attackDirection == Directions.Down then
+    defenderY = game.design.playfieldBounds.bottom - Defender.sprite.bounds.height
+
+  else
+    defenderY = game.design.playfieldBounds.top + flr(game.design.playfieldBounds.height / 2)
+
+  end
+
+  scene.defender = Defender:new(defenderX, defenderY)
+
+  scene.defenderProjectiles = {}
   scene.invaders = {}
-  scene:addInvader(64, 20)
 
   return scene
 end
@@ -25,6 +48,7 @@ end
 function Scene:addInvader(x, y)
   local invader = Invader:new(x, y)
   add(self.invaders, invader)
+  return invader
 end
 
 function Scene:removeInvader(invader)
@@ -46,16 +70,16 @@ function Scene:update()
   for defenderProjectile in all(self.defenderProjectiles) do
     for invader in all(self.invaders) do
       if defenderProjectile:overlaps(invader) then
+        invader:die()
         self:removeDefenderProjectile(defenderProjectile)
         self:removeInvader(invader)
-        self:addInvader(gameDesign.playfieldBounds.left + rnd(gameDesign.playfieldBounds.width), gameDesign.playfieldBounds.top + rnd(gameDesign.playfieldBounds.height / 2))
       end
     end
   end
 end
 
 function Scene:draw()
-  clip(gameDesign.playfieldBounds.left, gameDesign.playfieldBounds.top, gameDesign.playfieldBounds.width, gameDesign.playfieldBounds.height)
+  clip(game.design.playfieldBounds.left, game.design.playfieldBounds.top, game.design.playfieldBounds.width, game.design.playfieldBounds.height)
 
   self.defender:draw()
 
