@@ -32,7 +32,3 @@ function DefenderProjectile:update()
 
   end
 end
-
-function DefenderProjectile:draw()
-  self.sprite:draw(self.x, self.y)
-end

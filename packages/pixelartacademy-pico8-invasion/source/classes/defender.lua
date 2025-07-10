@@ -43,7 +43,3 @@ function Defender:update()
     scene:addDefenderProjectile()
   end
 end
-
-function Defender:draw()
-  self.sprite:draw(self.x, self.y)
-end

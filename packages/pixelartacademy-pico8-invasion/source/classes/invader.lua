@@ -27,7 +27,3 @@ end
 function Invader:die()
   self.alive = false
 end
-
-function Invader:draw()
-  self.sprite:draw(self.x, self.y)
-end

@@ -65,8 +65,43 @@ function Sprite:new(spriteSheetIndex, spriteSheetWidth, spriteSheetHeight)
   return sprite
 end
 
-function Sprite:draw(centerX, centerY)
-  spr(self.spriteSheetIndex, centerX - self.centerX, centerY - self.centerY, self.spriteSheetWidth, self.spriteSheetHeight)
+function Sprite:getPixel(x, y)
+  local regionX = (self.spriteSheetIndex % spriteSheetTilesPerRow) * 8
+  local regionY = flr(self.spriteSheetIndex / spriteSheetTilesPerRow) * 8
+  local sheetX = regionX + self.bounds.left + x
+  local sheetY = regionY + self.bounds.top + y
+  return sget(sheetX, sheetY)
+end
+
+function Sprite:draw(centerX, centerY, mask)
+  if mask ~= nil then
+    local originX1 = flr(centerX) - self.centerX
+    local originY1 = flr(centerY) - self.centerY
+    local left = originX1 + self.bounds.left
+    local top = originY1 + self.bounds.top
+
+    local regionX = (self.spriteSheetIndex % spriteSheetTilesPerRow) * 8
+    local regionY = flr(self.spriteSheetIndex / spriteSheetTilesPerRow) * 8
+
+    for maskX = 1, self.bounds.width do
+      for maskY = 1, self.bounds.height do
+        if mask.value[maskX][maskY] then
+          local sheetX = regionX + self.bounds.left + maskX - 1
+          local sheetY = regionY + self.bounds.top + maskY - 1
+
+          color = sget(sheetX, sheetY)
+
+          if color ~= 0 then
+            local globalX = left + maskX - 1
+            local globalY = top + maskY - 1
+            pset(globalX, globalY, color)
+          end
+        end
+      end
+    end
+  else
+    spr(self.spriteSheetIndex, centerX - self.centerX, centerY - self.centerY, self.spriteSheetWidth, self.spriteSheetHeight)
+  end
 end
 
 function Sprite:isInPlayfield(centerX, centerY)
@@ -78,11 +113,11 @@ function Sprite:isInPlayfield(centerX, centerY)
   return right >= game.design.playfieldBounds.left and left <= game.design.playfieldBounds.right and bottom >= game.design.playfieldBounds.top and top <= game.design.playfieldBounds.bottom
 end
 
-function Sprite:overlaps(centerX, centerY, sprite, spriteCenterX, spriteCenterY)
+function Sprite:overlaps(centerX, centerY, sprite, spriteCenterX, spriteCenterY, spriteMask)
   -- Compute origins in world space.
   local originX1 = flr(centerX) - self.centerX
   local originY1 = flr(centerY) - self.centerY
-  local originX2 = flr(spriteCenterX)- sprite.centerX
+  local originX2 = flr(spriteCenterX) - sprite.centerX
   local originY2 = flr(spriteCenterY) - sprite.centerY
 
   -- Compute bounding boxes in world space.
@@ -116,14 +151,24 @@ function Sprite:overlaps(centerX, centerY, sprite, spriteCenterX, spriteCenterY)
   -- Compare every pixel in the overlap.
   for globalX = overlapLeft, overlapRight do
     for globalY = overlapTop, overlapBottom do
-      local sheetX1 = globalX - originX1 + regionX1
-      local sheetY1 = globalY - originY1 + regionY1
-      local sheetX2 = globalX - originX2 + regionX2
-      local sheetY2 = globalY - originY2 + regionY2
+      local spriteMaskIsTrue = true
 
-      -- If both pixels are not transparent, we have an overlap.
-      if sget(sheetX1, sheetY1) ~= 0 and sget(sheetX2, sheetY2) ~= 0 then
-        return true
+      if spriteMask ~= nil then
+        local maskX = globalX - originX2 - sprite.bounds.left + 1
+        local maskY = globalY - originY2 - sprite.bounds.top + 1
+        spriteMaskIsTrue = spriteMask.value[maskX][maskY]
+      end
+
+      if spriteMaskIsTrue then
+        local sheetX1 = globalX - originX1 + regionX1
+        local sheetY1 = globalY - originY1 + regionY1
+        local sheetX2 = globalX - originX2 + regionX2
+        local sheetY2 = globalY - originY2 + regionY2
+
+        -- If both pixels are not transparent, we have an overlap.
+        if sget(sheetX1, sheetY1) ~= 0 and sget(sheetX2, sheetY2) ~= 0 then
+          return true
+        end
       end
     end
   end
