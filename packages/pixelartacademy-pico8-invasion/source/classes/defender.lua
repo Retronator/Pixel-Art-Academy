@@ -17,10 +17,10 @@ function Defender:update()
   -- Horizontal movement
   if game.design.defender.movement == DesignOptions.Defender.Movement.Horizontal or game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
     if btn(0) then
-      self.x = self.x - game.design.defender.speed * dt
+      self.x = self.x - game.design.defender.speed
     end
     if btn(1) then
-      self.x = self.x + game.design.defender.speed * dt
+      self.x = self.x + game.design.defender.speed
     end
 
     self.x = mid(game.design.playfieldBounds.left + self.sprite.relativeCenterX, self.x, game.design.playfieldBounds.right - self.sprite.relativeCenterX - 1)
@@ -29,10 +29,10 @@ function Defender:update()
   -- Vertical movement
   if game.design.defender.movement == DesignOptions.Defender.Movement.Vertical or game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
     if btn(2) then
-      self.y = self.y - game.design.defender.speed * dt
+      self.y = self.y - game.design.defender.speed
     end
     if btn(3) then
-      self.y = self.y + game.design.defender.speed * dt
+      self.y = self.y + game.design.defender.speed
     end
 
     self.y = mid(game.design.playfieldBounds.top + self.sprite.relativeCenterY, self.y, game.design.playfieldBounds.bottom - self.sprite.relativeCenterY - 1)

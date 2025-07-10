@@ -4,11 +4,15 @@ Invaders.__index = Invaders
 function Invaders:new()
   local invaders = setmetatable({}, Invaders)
 
+  -- Formation size
+
   invaders.columns = game.design.invaders.formation.columns
   invaders.rows = game.design.invaders.formation.rows
 
   invaders.fullFormationWidth = invaders.columns * Invader.sprite.bounds.width + (invaders.columns - 1) * game.design.invaders.formation.horizontalSpacing
   invaders.fullFormationHeight = invaders.rows * Invader.sprite.bounds.height + (invaders.rows - 1) * game.design.invaders.formation.verticalSpacing
+
+  -- Formation bounds
 
   invaders.bounds = {
     left = -flr((invaders.fullFormationWidth - 1) / 2),
@@ -17,6 +21,8 @@ function Invaders:new()
 
   invaders.bounds.right = invaders.bounds.left + invaders.fullFormationWidth - 1
   invaders.bounds.bottom = invaders.bounds.top + invaders.fullFormationHeight - 1
+
+  -- Formation slots
 
   invaders.formation = {}
 
@@ -34,8 +40,7 @@ function Invaders:new()
     end
   end
 
-  invaders.spawnedAll = false
-  invaders.movedAll = true
+  -- Alive count
 
   invaders.aliveCount = invaders.columns * invaders.rows
 
@@ -48,27 +53,31 @@ function Invaders:new()
   invaders.aliveRowsCount = invaders.rows
   invaders.aliveColumnsCount = invaders.columns
 
+  -- Formation position
+
   local edgeMargin = min(game.design.invaders.formation.horizontalSpacing, game.design.invaders.formation.verticalSpacing)
 
-  if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
+  if game.design.invaders.formation.horizontalAlignment == HorizontalAlignment.Left then
     invaders.x = game.design.playfieldBounds.left - invaders.bounds.left + edgeMargin
 
-  elseif game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Left then
+  elseif game.design.invaders.formation.horizontalAlignment == HorizontalAlignment.Right then
     invaders.x = game.design.playfieldBounds.right - invaders.bounds.right - edgeMargin
 
   else
     invaders.x = game.design.playfieldBounds.left + flr(game.design.playfieldBounds.width / 2)
   end
 
-  if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
+  if game.design.invaders.formation.verticalAlignment == VerticalAlignment.Top then
     invaders.y = game.design.playfieldBounds.top - invaders.bounds.top + edgeMargin
 
-  elseif game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Up then
+  elseif game.design.invaders.formation.verticalAlignment == VerticalAlignment.Bottom then
     invaders.y = game.design.playfieldBounds.bottom - invaders.bounds.bottom - edgeMargin
 
   else
     invaders.y = game.design.playfieldBounds.top + flr(game.design.playfieldBounds.height / 2)
   end
+
+  -- Movement direction
 
   if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down or game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Up then
     invaders.attackOrientation = Orientations.Vertical
@@ -80,11 +89,137 @@ function Invaders:new()
 
   end
 
+  invaders:resetIndividualMovement()
+
+  -- Spawning
+
+  invaders.spawnedAll = false
   invaders.spawnDuration = 0
+
+  -- Movement
+
   invaders.movementDuration = 0
   invaders.lastMovementTime = time()
 
   return invaders
+end
+
+function Invaders:resetIndividualMovement()
+  if self.attackOrientation == Orientations.Vertical then
+    if self.moveDirection == Directions.Right then
+      self.currentIndividualColumnNumber = self.columns
+    else
+      self.currentIndividualColumnNumber = 1
+    end
+
+    if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
+      self.currentIndividualRowNumber = self.rows
+    else
+      self.currentIndividualRowNumber = 1
+    end
+
+  else
+    if self.moveDirection == Directions.Down then
+      self.currentIndividualRowNumber = self.rows
+    else
+      self.currentIndividualRowNumber = 1
+    end
+
+    if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
+      self.currentIndividualColumnNumber = self.columns
+    else
+      self.currentIndividualColumnNumber = 1
+    end
+  end
+end
+
+function Invaders:individualMovementHasValidInvader()
+  return not (self.currentIndividualRowNumber < 1 or self.currentIndividualRowNumber > self.rows or self.currentIndividualColumnNumber < 1 or self.currentIndividualColumnNumber > self.columns)
+end
+
+function Invaders:individualMovementHasSpawnedInvader()
+  if not self:individualMovementHasValidInvader() then
+    return false
+
+  else
+    return self.formation[self.currentIndividualColumnNumber][self.currentIndividualRowNumber].invader ~= nil
+
+  end
+end
+
+function Invaders:individualMovementHasAliveInvader()
+  if not self:individualMovementHasSpawnedInvader() then
+    return false
+
+  else
+    return self.formation[self.currentIndividualColumnNumber][self.currentIndividualRowNumber].invader.alive
+
+  end
+end
+
+function Invaders:moveIndividualMovementToNextAliveInvader()
+  while true do
+    local moveInAttackOrientation = false
+
+    if self.attackOrientation == Orientations.Vertical then
+      if self.moveDirection == Directions.Right then
+        self.currentIndividualColumnNumber = self.currentIndividualColumnNumber - 1
+
+        if self.currentIndividualColumnNumber < 1 then
+          moveInAttackOrientation = true
+          self.currentIndividualColumnNumber = self.columns
+        end
+
+      else
+        self.currentIndividualColumnNumber = self.currentIndividualColumnNumber + 1
+
+        if self.currentIndividualColumnNumber > self.columns then
+          moveInAttackOrientation = true
+          self.currentIndividualColumnNumber = 1
+        end
+
+      end
+
+      if moveInAttackOrientation then
+        if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
+          self.currentIndividualRowNumber = self.currentIndividualRowNumber - 1
+        else
+          self.currentIndividualRowNumber = self.currentIndividualRowNumber + 1
+        end
+      end
+
+    else
+      if self.moveDirection == Directions.Down then
+        self.currentIndividualRowNumber = self.currentIndividualRowNumber - 1
+
+        if self.currentIndividualRowNumber < 1 then
+          moveInAttackOrientation = true
+          self.currentIndividualRowNumber = self.columns
+        end
+
+      else
+        self.currentIndividualRowNumber = self.currentIndividualRowNumber + 1
+
+        if self.currentIndividualRowNumber > self.columns then
+          moveInAttackOrientation = true
+          self.currentIndividualRowNumber = 1
+        end
+      end
+
+      if moveInAttackOrientation then
+        if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
+          self.currentIndividualColumnNumber = self.currentIndividualColumnNumber - 1
+
+        else
+          self.currentIndividualColumnNumber = self.currentIndividualColumnNumber + 1
+        end
+      end
+    end
+
+    if self:individualMovementHasAliveInvader() or not self:individualMovementHasValidInvader() then
+      return
+    end
+  end
 end
 
 function Invaders:spawnNextInvader()
@@ -132,84 +267,23 @@ function Invaders:spawnNextInvader()
   end
 end
 
-function Invaders:moveNextInvaders()
-  local formationMovement = game.design.invaders.formation.movement
-  local FormationMovement = DesignOptions.Invaders.Formation.Movement
-  local moveByRow = formationMovement == FormationMovement.IndividualByRow or formationMovement == FormationMovement.ByRow
-  local firstCount, secondCount
-  local targetRow, targetColumn
+function Invaders:moveNextInvader()
+  if (not self:individualMovementHasAliveInvader()) then
+    self:moveIndividualMovementToNextAliveInvader()
 
-  if moveByRow then
-    firstCount = game.design.invaders.formation.rows
-    secondCount = game.design.invaders.formation.columns
-  else
-    firstCount = game.design.invaders.formation.columns
-    secondCount = game.design.invaders.formation.rows
-  end
-
-  for firstNumber = 1, firstCount do
-    for secondNumber = 1, secondCount do
-      local columnIndex, rowIndex
-
-      if moveByRow then
-        if targetRow ~= nil and targetRow ~= firstNumber then return end
-
-        if self.moveDirection == Directions.Right then
-          columnIndex = self.columns - secondNumber + 1
-
-        else
-          columnIndex = secondNumber
-
-        end
-
-        if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
-          rowIndex = self.rows - firstNumber + 1
-        else
-          rowIndex = firstNumber
-        end
-
-      else
-        if targetColumn ~= nil and targetColumn ~= firstNumber then return end
-
-        if self.moveDirection == Directions.Down then
-          rowIndex = self.rows - secondNumber + 1
-
-        else
-          rowIndex = secondNumber
-
-        end
-
-        if game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
-          columnIndex = self.columns - firstNumber + 1
-        else
-          columnIndex = firstNumber
-        end
-      end
-
-      formationSpot = self.formation[columnIndex][rowIndex]
-
-      if formationSpot.invader ~= nil and formationSpot.invader.alive and not formationSpot.moved then
-        formationSpot.invader:moveTo(self.x + formationSpot.x, self.y + formationSpot.y)
-        formationSpot.moved = true
-
-        if formationMovement == FormationMovement.IndividualByRow or formationMovement == FormationMovement.IndividualByColumn then
-          return
-
-        elseif formationMovement == FormationMovement.ByRow then
-          targetRow = firstNumber
-
-        elseif formationMovement == FormationMovement.ByColumn then
-          targetColumn = firstNumber
-        end
-      end
+    if (not self:individualMovementHasAliveInvader()) then
+      return
     end
   end
 
-  self.movedAll = true
+  formationSpot = self.formation[self.currentIndividualColumnNumber][self.currentIndividualRowNumber]
+  formationSpot.invader:moveTo(self.x + formationSpot.x, self.y + formationSpot.y)
+
+  self:moveIndividualMovementToNextAliveInvader()
 end
 
 function Invaders:update()
-  -- Spawning
+  -- Spawn invaders.
   if not self.spawnedAll then
     if game.design.invaders.formation.spawnDelay > 0 then
       self.spawnDuration = self.spawnDuration + dt
@@ -293,80 +367,81 @@ function Invaders:update()
     end
   end
 
-  -- Invader movement
-  self.movementDuration = self.movementDuration + dt
-  if self.movementDuration >= game.design.invaders.formation.movementDelay then
-    self:moveNextInvaders()
-    self.movementDuration = 0
+  -- Move invaders.
+  local moveCount
+
+  if game.design.invaders.formation.movement == DesignOptions.Invaders.Formation.Movement.Individual then
+    moveCount = 1
+
+  else
+    moveCount = invaders.aliveCount
+    invaders:resetIndividualMovement()
   end
 
-  if self.movedAll then
-    -- Reset individual movement.
-    for columnNumber = 1, invaders.columns do
-      for rowNumber = 1, invaders.rows do
-        invaders.formation[columnNumber][rowNumber].moved = false
-      end
-    end
+  for moveIndex = 1, moveCount do
+    self:moveNextInvader()
+  end
 
-    self.movedAll = false
-
+  if not self:individualMovementHasValidInvader() then
     -- Formation movement
     if (game.design.invaders.formation.postponeMovement ~= DesignOptions.Invaders.Formation.PostponeMovement.UntilSpawnedAll or self.spawnedAll) then
       local attack = false
 
       if invaders.moveDirection == Directions.Down then
-        self.y = self.y + game.design.invaders.formation.verticalMovementDistance
+        self.y = self.y + game.design.invaders.formation.verticalSpeed
 
-        if self.y + self.bounds.bottom >= game.design.playfieldBounds.bottom then
-          self.y = game.design.playfieldBounds.bottom - self.bounds.bottom
+        if self.y + self.bounds.bottom >= game.design.playfieldBounds.bottom or game.design.invaders.formation.verticalSpeed == 0 then
+          self.y = self.y - game.design.invaders.formation.verticalSpeed
           invaders.moveDirection = Directions.Up
           attack = true
         end
 
       elseif invaders.moveDirection == Directions.Up then
-        self.y = self.y - game.design.invaders.formation.verticalMovementDistance
+        self.y = self.y - game.design.invaders.formation.verticalSpeed
 
-        if self.y + self.bounds.top <= game.design.playfieldBounds.top then
-          self.y = game.design.playfieldBounds.top - self.bounds.top
+        if self.y + self.bounds.top <= game.design.playfieldBounds.top or game.design.invaders.formation.verticalSpeed == 0 then
+          self.y = self.y + game.design.invaders.formation.verticalSpeed
           invaders.moveDirection = Directions.Down
           attack = true
         end
 
       elseif invaders.moveDirection == Directions.Right then
-        self.x = self.x + game.design.invaders.formation.horizontalMovementDistance
+        self.x = self.x + game.design.invaders.formation.horizontalSpeed
 
-        if self.x + self.bounds.right >= game.design.playfieldBounds.right then
-          self.x = game.design.playfieldBounds.right - self.bounds.right
+        if self.x + self.bounds.right >= game.design.playfieldBounds.right or game.design.invaders.formation.horizontalSpeed == 0 then
+          self.x = self.x - game.design.invaders.formation.horizontalSpeed
           invaders.moveDirection = Directions.Left
           attack = true
         end
 
       elseif invaders.moveDirection == Directions.Left then
-        self.x = self.x - game.design.invaders.formation.horizontalMovementDistance
+        self.x = self.x - game.design.invaders.formation.horizontalSpeed
 
-        if self.x + self.bounds.left <= game.design.playfieldBounds.left then
-          self.x = game.design.playfieldBounds.left - self.bounds.left
+        if self.x + self.bounds.left <= game.design.playfieldBounds.left or game.design.invaders.formation.horizontalSpeed == 0  then
+          self.x = self.x + game.design.invaders.formation.horizontalSpeed
           invaders.moveDirection = Directions.Right
           attack = true
         end
-
       end
 
       if attack then
         if game.design.invaders.attackDirection == Directions.Down then
-          self.y = self.y + game.design.invaders.formation.verticalMovementDistance
+          self.y = self.y + game.design.invaders.formation.verticalSpeed
 
         elseif game.design.invaders.attackDirection == Directions.Up then
-          self.y = self.y - game.design.invaders.formation.verticalMovementDistance
+          self.y = self.y - game.design.invaders.formation.verticalSpeed
 
         elseif game.design.invaders.attackDirection == Directions.Right then
-          self.x = self.x + game.design.invaders.formation.horizontalMovementDistance
+          self.x = self.x + game.design.invaders.formation.horizontalSpeed
 
         elseif game.design.invaders.attackDirection == Directions.Left then
-          self.x = self.x - game.design.invaders.formation.horizontalMovementDistance
+          self.x = self.x - game.design.invaders.formation.horizontalSpeed
 
         end
       end
     end
+
+    -- Reset individual movement.
+    invaders:resetIndividualMovement()
   end
 end

@@ -11,6 +11,7 @@ __lua__
 #include classes/invaders.lua
 #include classes/scene.lua
 #include classes/game.lua
+#include constants.lua
 #include console.lua
 #include init.lua
 #include update.lua

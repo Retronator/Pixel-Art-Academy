@@ -6,10 +6,10 @@ function Scene:new()
 
   local defenderX, defenderY
 
-  if game.design.invaders.attackDirection == Directions.Left then
+  if game.design.defender.horizontalAlignment == HorizontalAlignment.Left then
     defenderX = game.design.playfieldBounds.left + Defender.sprite.bounds.width
 
-  elseif game.design.invaders.attackDirection == Directions.Right then
+  elseif game.design.defender.horizontalAlignment == HorizontalAlignment.Right then
     defenderX = game.design.playfieldBounds.right - Defender.sprite.bounds.width
 
   else
@@ -17,10 +17,10 @@ function Scene:new()
     
   end
 
-  if game.design.invaders.attackDirection == Directions.Up then
+  if game.design.defender.verticalAlignment == VerticalAlignment.Top then
     defenderY = game.design.playfieldBounds.top + Defender.sprite.bounds.height
 
-  elseif game.design.invaders.attackDirection == Directions.Down then
+  elseif game.design.defender.verticalAlignment == VerticalAlignment.Bottom then
     defenderY = game.design.playfieldBounds.bottom - Defender.sprite.bounds.height
 
   else

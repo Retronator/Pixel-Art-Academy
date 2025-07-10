@@ -19,16 +19,16 @@ end
 
 function DefenderProjectile:update()
   if game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Up then
-    self.y = self.y - game.design.defenderProjectiles.speed * dt
+    self.y = self.y - game.design.defenderProjectiles.speed
 
   elseif game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Down then
-    self.y = self.y + game.design.defenderProjectiles.speed * dt
+    self.y = self.y + game.design.defenderProjectiles.speed
 
   elseif game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Left then
-    self.x = self.x - game.design.defenderProjectiles.speed * dt
+    self.x = self.x - game.design.defenderProjectiles.speed
 
   elseif game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Right then
-    self.x = self.x + game.design.defenderProjectiles.speed * dt
+    self.x = self.x + game.design.defenderProjectiles.speed
 
   end
 end

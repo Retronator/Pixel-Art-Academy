@@ -6,28 +6,31 @@ function Game:new()
 
   game.design = {
     defender = {
-      movement = DesignOptions.Defender.Movement.Horizontal,
-      speed = 50
+      movement = DesignOptions.Defender.Movement.AllDirections,
+      horizontalAlignment = HorizontalAlignment.Left,
+      verticalAlignment = VerticalAlignment.Bottom,
+      speed = 2
     },
     defenderProjectiles = {
-      movement = DesignOptions.DefenderProjectiles.Movement.Up,
-      speed = 150,
+      movement = DesignOptions.DefenderProjectiles.Movement.Right,
+      speed = 6,
       maxCount = 10
     },
     invaders = {
       formation = {
         rows = 3,
-        columns = 5,
+        columns = 3,
         horizontalSpacing = 2,
         verticalSpacing = 2,
-        movement = DesignOptions.Invaders.Formation.Movement.IndividualByRow,
+        horizontalAlignment = HorizontalAlignment.Center,
+        verticalAlignment = VerticalAlignment.Middle,
+        movement = DesignOptions.Invaders.Formation.Movement.Individual,
         postponeMovement = DesignOptions.Invaders.Formation.PostponeMovement.UntilSpawnedAll,
-        movementDelay = 0.01,
-        horizontalMovementDistance = 2,
-        verticalMovementDistance = 2,
-        spawnDelay = 0.01
+        horizontalSpeed = 8,
+        verticalSpeed = 1,
+        spawnDelay = 0.1
       },
-      attackDirection = DesignOptions.Invaders.AttackDirection.Down,
+      attackDirection = DesignOptions.Invaders.AttackDirection.Left,
       entry = DesignOptions.Invaders.Entry.Appear,
       attack = DesignOptions.Invaders.Attack.None,
     },
