@@ -38,6 +38,8 @@ function Game:update()
       self.lives = self.lives - 1
       if self.lives > 0 then
         scene:addDefender()
+      else
+        sfx(12)
       end
     end
   end

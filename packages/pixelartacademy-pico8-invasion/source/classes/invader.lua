@@ -28,4 +28,5 @@ function Invader:die(explosionX, explosionY)
   self.alive = false
   self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
   game:increaseScore(Game.design.invaders.scorePerInvader)
+  sfx(5)
 end

@@ -59,4 +59,6 @@ function _init()
   game = nil
   scene = nil
   invaders = nil
+
+  sfx(10)
 end

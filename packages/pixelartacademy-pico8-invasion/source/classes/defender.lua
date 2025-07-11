@@ -17,6 +17,7 @@ end
 function Defender:die(explosionX, explosionY)
   self.alive = false
   self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
+  sfx(4)
 end
 
 
@@ -48,5 +49,6 @@ function Defender:update()
   -- Shooting
   if (btnp(4) or btnp(5)) and #scene.defenderProjectiles < Game.design.defenderProjectiles.maxCount then
     scene:addDefenderProjectile()
+    sfx(0)
   end
 end

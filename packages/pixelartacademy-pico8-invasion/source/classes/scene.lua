@@ -50,6 +50,9 @@ function Scene:new()
   scene.invaders = {}
   scene.particles = {}
 
+  sfx(10, -2)
+  sfx(11)
+
   return scene
 end
 

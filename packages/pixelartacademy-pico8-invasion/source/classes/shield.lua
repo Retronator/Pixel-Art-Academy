@@ -22,6 +22,7 @@ function Shield:hit(entity, explosionX, explosionY)
   local originX = self.x - flr((Shield.sprite.bounds.width - 1) / 2)
   local originY = self.y - flr((Shield.sprite.bounds.height - 1) / 2)
   self.mask:removeSprite(originX, originY, entity.sprite, entity.x, entity.y, explosionX or entity.x, explosionY or entity.y)
+  sfx(6)
 end
 
 function Entity:draw()

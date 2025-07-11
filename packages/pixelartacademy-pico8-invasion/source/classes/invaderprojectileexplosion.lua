@@ -10,5 +10,7 @@ function InvaderProjectileExplosion:new(x, y)
   invaderProjectileExplosion.x = x
   invaderProjectileExplosion.y = y
 
+  sfx(3)
+
   return invaderProjectileExplosion;
 end

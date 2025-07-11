@@ -10,5 +10,7 @@ function DefenderProjectileExplosion:new(x, y)
   defenderProjectileExplosion.x = x
   defenderProjectileExplosion.y = y
 
+  sfx(2)
+
   return defenderProjectileExplosion;
 end

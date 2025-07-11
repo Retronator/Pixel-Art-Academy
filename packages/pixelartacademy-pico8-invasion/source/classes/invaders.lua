@@ -114,7 +114,6 @@ function Invaders:new()
 
   else
     invaders.shootingOrientation = Orientations.Horizontal
-
   end
 
   invaders.shootingDuration = 0
@@ -529,12 +528,13 @@ function Invaders:update()
     end
 
     -- Shoot.
-    if self.aliveCount > 0 and #scene.invaderProjectiles < Game.design.invaderProjectiles.maxCount then
+    if self.aliveCount > 0 and scene.defender ~= nil and scene.defender.alive and #scene.invaderProjectiles < Game.design.invaderProjectiles.maxCount then
       self.shootingDuration = self.shootingDuration + dt
       if self.shootingDuration >= self.shootingTimeout then
         self:shoot()
         self.shootingDuration = 0
         self:setShootingTimeout()
+        sfx(1)
       end
     end
   end
