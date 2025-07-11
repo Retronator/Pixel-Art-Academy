@@ -81,12 +81,22 @@ function Invaders:new()
 
   if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down or Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Up then
     invaders.attackOrientation = Orientations.Vertical
-    invaders.moveDirection = Directions.Right
 
+    if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignment.Right then
+      invaders.moveDirection = Directions.Left
+
+    else
+      invaders.moveDirection = Directions.Right
+    end
   else
     invaders.attackOrientation = Orientations.Horizontal
-    invaders.moveDirection = Directions.Down
 
+    if Game.design.invaders.formation.verticalAlignment == VerticalAlignment.Bottom then
+      invaders.moveDirection = Directions.Up
+
+    else
+      invaders.moveDirection = Directions.Down
+    end
   end
 
   invaders.currentIndividualColumnNumber = 0
@@ -205,13 +215,13 @@ function Invaders:moveIndividualMovementToNextAliveInvader()
 
         if self.currentIndividualRowNumber < 1 then
           moveInAttackOrientation = true
-          self.currentIndividualRowNumber = self.columns
+          self.currentIndividualRowNumber = self.rows
         end
 
       else
         self.currentIndividualRowNumber = self.currentIndividualRowNumber + 1
 
-        if self.currentIndividualRowNumber > self.columns then
+        if self.currentIndividualRowNumber > self.rows then
           moveInAttackOrientation = true
           self.currentIndividualRowNumber = 1
         end
