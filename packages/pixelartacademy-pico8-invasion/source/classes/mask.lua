@@ -3,7 +3,8 @@ Mask.__index = Mask
 
 function Mask:new(sprite)
   local mask = setmetatable({}, Mask)
-  
+
+  mask.sprite = sprite
   mask.width = sprite.bounds.width
   mask.height = sprite.bounds.height
   mask.value = {}
@@ -19,7 +20,7 @@ function Mask:new(sprite)
   return mask
 end
 
-function Mask:removeSprite(originX, originY, sprite, spriteCenterX, spriteCenterY)
+function Mask:removeSprite(originX, originY, sprite, spriteCenterX, spriteCenterY, explosionX, explosionY)
   -- Compute origins in world space.
   local originX2 = flr(spriteCenterX) - sprite.centerX
   local originY2 = flr(spriteCenterY) - sprite.centerY
@@ -47,6 +48,8 @@ function Mask:removeSprite(originX, originY, sprite, spriteCenterX, spriteCenter
   end
 
   -- Compute origins in the sprite sheet space.
+  local regionX1 = (self.sprite.spriteSheetIndex % spriteSheetTilesPerRow) * 8
+  local regionY1 = flr(self.sprite.spriteSheetIndex / spriteSheetTilesPerRow) * 8
   local regionX2 = (sprite.spriteSheetIndex % spriteSheetTilesPerRow) * 8
   local regionY2 = flr(sprite.spriteSheetIndex / spriteSheetTilesPerRow) * 8
 
@@ -55,12 +58,21 @@ function Mask:removeSprite(originX, originY, sprite, spriteCenterX, spriteCenter
     for globalY = overlapTop, overlapBottom do
       local maskX = globalX - originX + 1
       local maskY = globalY - originY + 1
-      local sheetX = globalX - originX2 + regionX2
-      local sheetY = globalY - originY2 + regionY2
 
-      -- If sprite pixel is not transparent, remove it from the mask.
-      if sget(sheetX, sheetY) ~= 0 then
-        self.value[maskX][maskY] = false
+      if self.value[maskX][maskY] then
+        local sheet2X = globalX - originX2 + regionX2
+        local sheet2Y = globalY - originY2 + regionY2
+
+        -- If sprite pixel is not transparent, remove it from the mask.
+        if sget(sheet2X, sheet2Y) ~= 0 then
+          self.value[maskX][maskY] = false
+
+          local sheet1X = regionX1 + self.sprite.bounds.left + maskX - 1
+          local sheet1Y = regionY1 + self.sprite.bounds.top + maskY - 1
+          local color = sget(sheet1X, sheet1Y)
+
+          scene:addParticle(globalX, globalY, color, explosionX, explosionY)
+        end
       end
     end
   end

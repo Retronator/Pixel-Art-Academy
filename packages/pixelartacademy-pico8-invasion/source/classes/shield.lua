@@ -18,10 +18,10 @@ function Shield:overlaps(entity)
   return entity.sprite:overlaps(entity.x, entity.y, self.sprite, self.x, self.y, self.mask)
 end
 
-function Shield:hit(entity)
+function Shield:hit(entity, explosionX, explosionY)
   local originX = self.x - flr((Shield.sprite.bounds.width - 1) / 2)
   local originY = self.y - flr((Shield.sprite.bounds.height - 1) / 2)
-  self.mask:removeSprite(originX, originY, entity.sprite, entity.x, entity.y)
+  self.mask:removeSprite(originX, originY, entity.sprite, entity.x, entity.y, explosionX or entity.x, explosionY or entity.y)
 end
 
 function Entity:draw()

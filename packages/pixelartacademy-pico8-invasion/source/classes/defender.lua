@@ -9,9 +9,16 @@ function Defender:new(x, y)
 
   defender.x = x
   defender.y = y
+  defender.alive = true
 
   return defender;
 end
+
+function Defender:die(explosionX, explosionY)
+  self.alive = false
+  self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
+end
+
 
 function Defender:update()
   -- Horizontal movement

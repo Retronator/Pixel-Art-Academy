@@ -19,15 +19,15 @@ function Game:new()
     invaders = {
       formation = {
         rows = 3,
-        columns = 3,
+        columns = 7,
         horizontalSpacing = 2,
         verticalSpacing = 2,
         horizontalAlignment = HorizontalAlignment.Center,
         verticalAlignment = VerticalAlignment.Top,
         movement = DesignOptions.Invaders.Formation.Movement.Individual,
         postponeMovement = DesignOptions.Invaders.Formation.PostponeMovement.UntilSpawnedAll,
-        horizontalSpeed = 0,
-        verticalSpeed = 0,
+        horizontalSpeed = 2,
+        verticalSpeed = 8,
         spawnDelay = 0.01
       },
       attackDirection = DesignOptions.Invaders.AttackDirection.Down,

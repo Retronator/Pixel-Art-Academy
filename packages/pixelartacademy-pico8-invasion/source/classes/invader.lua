@@ -24,6 +24,7 @@ function Invader:moveTo(x, y)
   self.y = y
 end
 
-function Invader:die()
+function Invader:die(explosionX, explosionY)
   self.alive = false
+  self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
 end

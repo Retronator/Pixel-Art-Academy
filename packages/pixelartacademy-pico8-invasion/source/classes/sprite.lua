@@ -167,8 +167,39 @@ function Sprite:overlaps(centerX, centerY, sprite, spriteCenterX, spriteCenterY,
 
         -- If both pixels are not transparent, we have an overlap.
         if sget(sheetX1, sheetY1) ~= 0 and sget(sheetX2, sheetY2) ~= 0 then
-          return true
+          return true, globalX, globalY
         end
+      end
+    end
+  end
+
+  -- No pixels were overlapping.
+  return false
+end
+
+function Sprite:createParticles(centerX, centerY, explosionX, explosionY)
+  -- Compute origins in world space.
+  local originX = flr(centerX) - self.centerX
+  local originY = flr(centerY) - self.centerY
+
+  -- Compute bounding boxes in world space.
+  local left = originX + self.bounds.left
+  local top = originY + self.bounds.top
+  local right = originX + self.bounds.right
+  local bottom = originY + self.bounds.bottom
+
+  -- Compute origins in the sprite sheet space.
+  local regionX = (self.spriteSheetIndex % spriteSheetTilesPerRow) * 8
+  local regionY = flr(self.spriteSheetIndex / spriteSheetTilesPerRow) * 8
+
+  -- Compare every pixel in the overlap.
+  for globalX = left, right do
+    for globalY = top, bottom do
+      local sheetX = globalX - originX + regionX
+      local sheetY = globalY - originY + regionY
+      local color = sget(sheetX, sheetY)
+      if color > 0 then
+        scene:addParticle(globalX, globalY, color, explosionX, explosionY)
       end
     end
   end

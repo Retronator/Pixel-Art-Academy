@@ -71,8 +71,11 @@ function Scene:new()
     end
   end
 
+  -- Create dynamic lists.
   scene.defenderProjectiles = {}
+  scene.explosions = {}
   scene.invaders = {}
+  scene.particles = {}
 
   return scene
 end
@@ -96,8 +99,26 @@ function Scene:removeInvader(invader)
   del(self.invaders, invader)
 end
 
+function Scene:addParticle(x, y, color, explosionX, explosionY)
+  local particle = Particle:new(x, y, color, explosionX, explosionY)
+  add(self.particles, particle)
+end
+
+function Scene:addDefenderProjectileExplosion(x, y)
+  local explosion = DefenderProjectileExplosion:new(x, y)
+  add(self.explosions, explosion)
+  return explosion
+end
+
 function Scene:update()
-  self.defender:update()
+  if self.defender.alive then
+    self.defender:update()
+  end
+
+  -- Remove all explosions.
+  for index = #self.explosions, 1, -1 do
+    self.explosions[index] = nil
+  end
 
   -- Update projectile positions.
   for defenderProjectile in all(self.defenderProjectiles) do
@@ -110,18 +131,49 @@ function Scene:update()
   -- Check for collisions.
   for defenderProjectile in all(self.defenderProjectiles) do
     for invader in all(self.invaders) do
-      if defenderProjectile:overlaps(invader) then
-        invader:die()
+      local overlaps, explosionX, explosionY = defenderProjectile:overlaps(invader)
+      if overlaps then
+        invader:die(explosionX, explosionY)
         self:removeDefenderProjectile(defenderProjectile)
+        self:removeInvader(invader)
+        self:addDefenderProjectileExplosion(explosionX, explosionY)
+      end
+    end
+
+    for shield in all(self.shields) do
+      local overlaps, explosionX, explosionY = shield:overlaps(defenderProjectile)
+      if overlaps then
+        self:removeDefenderProjectile(defenderProjectile)
+        explosion = self:addDefenderProjectileExplosion(explosionX, explosionY)
+        shield:hit(explosion)
+      end
+    end
+  end
+
+  for invader in all(self.invaders) do
+    if self.defender.alive then
+      local overlaps, explosionX, explosionY = invader:overlaps(self.defender)
+      if overlaps then
+        self.defender:die(explosionX, explosionY)
+        invader:die(explosionX, explosionY)
         self:removeInvader(invader)
       end
     end
 
     for shield in all(self.shields) do
-      if shield:overlaps(defenderProjectile) then
-        self:removeDefenderProjectile(defenderProjectile)
-        shield:hit(defenderProjectile)
+      local overlaps, explosionX, explosionY = shield:overlaps(invader)
+      if overlaps then
+        explosion = InvaderShieldExplosion:new(explosionX, explosionY)
+        shield:hit(explosion)
       end
+    end
+  end
+
+  -- Move particles.
+  for particle in all(self.particles) do
+    particle:update()
+    if particle.x < game.design.playfieldBounds.left or particle.x > game.design.playfieldBounds.right or particle.y < game.design.playfieldBounds.top or particle.y > game.design.playfieldBounds.bottom then
+      del(self.particles, particle)
     end
   end
 end
@@ -133,7 +185,9 @@ function Scene:draw()
     defenderProjectile:draw()
   end
 
-  self.defender:draw()
+  if self.defender.alive then
+    self.defender:draw()
+  end
 
   for invader in all(self.invaders) do
     invader:draw()
@@ -141,6 +195,18 @@ function Scene:draw()
 
   for shield in all(self.shields) do
     shield:draw()
+  end
+
+  for particle in all(self.particles) do
+    if pget(particle.x, particle.y) > 0 then
+      del(self.particles, particle)
+    else
+      particle:draw()
+    end
+  end
+
+  for defenderProjectileExplosion in all(self.explosions) do
+    defenderProjectileExplosion:draw()
   end
 
   clip()
