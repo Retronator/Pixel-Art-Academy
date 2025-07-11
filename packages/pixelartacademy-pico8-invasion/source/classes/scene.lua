@@ -4,65 +4,40 @@ Scene.__index = Scene
 function Scene:new()
   local scene = setmetatable({}, Scene)
 
-  -- Create the defender.
-  local defenderX, defenderY
-
-  if game.design.defender.horizontalAlignment == HorizontalAlignment.Left then
-    defenderX = game.design.playfieldBounds.left + Defender.sprite.bounds.width
-
-  elseif game.design.defender.horizontalAlignment == HorizontalAlignment.Right then
-    defenderX = game.design.playfieldBounds.right - Defender.sprite.bounds.width
-
-  else
-    defenderX = game.design.playfieldBounds.left + flr(game.design.playfieldBounds.width / 2)
-  end
-
-  if game.design.defender.verticalAlignment == VerticalAlignment.Top then
-    defenderY = game.design.playfieldBounds.top + Defender.sprite.bounds.height
-
-  elseif game.design.defender.verticalAlignment == VerticalAlignment.Bottom then
-    defenderY = game.design.playfieldBounds.bottom - Defender.sprite.bounds.height
-
-  else
-    defenderY = game.design.playfieldBounds.top + flr(game.design.playfieldBounds.height / 2)
-  end
-
-  scene.defender = Defender:new(defenderX, defenderY)
-
   -- Create the shields.
   scene.shields = {}
 
-  if game.design.shields.amount > 0 then
+  if Game.design.shields.amount > 0 then
     local shieldsX, shieldsY
 
-    if game.design.shields.side == Sides.Left then
-      shieldsX = game.design.playfieldBounds.left + Defender.sprite.bounds.width * 2 + flr(Shield.sprite.bounds.width / 2)
+    if Game.design.shields.side == Sides.Left then
+      shieldsX = Game.design.playfieldBounds.left + Defender.sprite.bounds.width * 2 + flr(Shield.sprite.bounds.width / 2)
 
-    elseif game.design.shields.side == Sides.Right then
-      shieldsX = game.design.playfieldBounds.right - Defender.sprite.bounds.width * 2 - flr(Shield.sprite.bounds.width / 2)
+    elseif Game.design.shields.side == Sides.Right then
+      shieldsX = Game.design.playfieldBounds.right - Defender.sprite.bounds.width * 2 - flr(Shield.sprite.bounds.width / 2)
 
-    elseif game.design.shields.side == Sides.Top then
-      shieldsY = game.design.playfieldBounds.top + Defender.sprite.bounds.height * 2 + flr(Shield.sprite.bounds.height / 2)
+    elseif Game.design.shields.side == Sides.Top then
+      shieldsY = Game.design.playfieldBounds.top + Defender.sprite.bounds.height * 2 + flr(Shield.sprite.bounds.height / 2)
 
-    elseif game.design.shields.side == Sides.Bottom then
-      shieldsY = game.design.playfieldBounds.bottom - Defender.sprite.bounds.height * 2 - flr(Shield.sprite.bounds.height / 2)
+    elseif Game.design.shields.side == Sides.Bottom then
+      shieldsY = Game.design.playfieldBounds.bottom - Defender.sprite.bounds.height * 2 - flr(Shield.sprite.bounds.height / 2)
     end
 
-    if game.design.shields.side == Sides.Left or game.design.shields.side == Sides.Right then
-      local span = game.design.shields.amount * Shield.sprite.bounds.height + (game.design.shields.amount - 1) * game.design.shields.spacing
-      local top = game.design.playfieldBounds.top + flr(game.design.playfieldBounds.height / 2) - ceil(span / 2) + flr(Shield.sprite.bounds.height / 2)
+    if Game.design.shields.side == Sides.Left or Game.design.shields.side == Sides.Right then
+      local span = Game.design.shields.amount * Shield.sprite.bounds.height + (Game.design.shields.amount - 1) * Game.design.shields.spacing
+      local top = Game.design.playfieldBounds.top + flr(Game.design.playfieldBounds.height / 2) - ceil(span / 2) + flr(Shield.sprite.bounds.height / 2)
 
-      for shieldNumber = 1, game.design.shields.amount do
-        local shieldY = top + (shieldNumber - 1) * (Shield.sprite.bounds.height + game.design.shields.spacing)
+      for shieldNumber = 1, Game.design.shields.amount do
+        local shieldY = top + (shieldNumber - 1) * (Shield.sprite.bounds.height + Game.design.shields.spacing)
         add(scene.shields, Shield:new(shieldsX, shieldY))
       end
 
     else
-      local span = game.design.shields.amount * Shield.sprite.bounds.width + (game.design.shields.amount - 1) * game.design.shields.spacing
-      local left = game.design.playfieldBounds.left + flr(game.design.playfieldBounds.width / 2) - ceil(span / 2) + flr(Shield.sprite.bounds.width / 2)
+      local span = Game.design.shields.amount * Shield.sprite.bounds.width + (Game.design.shields.amount - 1) * Game.design.shields.spacing
+      local left = Game.design.playfieldBounds.left + flr(Game.design.playfieldBounds.width / 2) - ceil(span / 2) + flr(Shield.sprite.bounds.width / 2)
 
-      for shieldNumber = 1, game.design.shields.amount do
-        local shieldX = left + (shieldNumber - 1) * (Shield.sprite.bounds.width + game.design.shields.spacing)
+      for shieldNumber = 1, Game.design.shields.amount do
+        local shieldX = left + (shieldNumber - 1) * (Shield.sprite.bounds.width + Game.design.shields.spacing)
         add(scene.shields, Shield:new(shieldX, shieldsY))
       end
     end
@@ -78,23 +53,49 @@ function Scene:new()
   return scene
 end
 
+function Scene:addDefender()
+  local defenderX, defenderY
+
+  if Game.design.defender.horizontalAlignment == HorizontalAlignment.Left then
+    defenderX = Game.design.playfieldBounds.left + Defender.sprite.bounds.width
+
+  elseif Game.design.defender.horizontalAlignment == HorizontalAlignment.Right then
+    defenderX = Game.design.playfieldBounds.right - Defender.sprite.bounds.width
+
+  else
+    defenderX = Game.design.playfieldBounds.left + flr(Game.design.playfieldBounds.width / 2)
+  end
+
+  if Game.design.defender.verticalAlignment == VerticalAlignment.Top then
+    defenderY = Game.design.playfieldBounds.top + Defender.sprite.bounds.height
+
+  elseif Game.design.defender.verticalAlignment == VerticalAlignment.Bottom then
+    defenderY = Game.design.playfieldBounds.bottom - Defender.sprite.bounds.height
+
+  else
+    defenderY = Game.design.playfieldBounds.top + flr(Game.design.playfieldBounds.height / 2)
+  end
+
+  scene.defender = Defender:new(defenderX, defenderY)
+end
+
 function Scene:addDefenderProjectile()
   local x = self.defender.x
   local y = self.defender.y
 
-  if game.design.defenderProjectiles.movement == Directions.Up then
+  if Game.design.defenderProjectiles.movement == Directions.Up then
     local top = self.defender.y - Defender.sprite.centerY + Defender.sprite.bounds.top
     y = top - DefenderProjectile.sprite.bounds.top + DefenderProjectile.sprite.centerY
 
-  elseif game.design.defenderProjectiles.movement == Directions.Down then
+  elseif Game.design.defenderProjectiles.movement == Directions.Down then
     local bottom = self.defender.y - Defender.sprite.centerY + Defender.sprite.bounds.bottom
     y = bottom - DefenderProjectile.sprite.bounds.bottom + DefenderProjectile.sprite.centerY
 
-  elseif game.design.defenderProjectiles.movement == Directions.Left then
+  elseif Game.design.defenderProjectiles.movement == Directions.Left then
     local left = self.defender.x - Defender.sprite.centerX + Defender.sprite.bounds.left
     x = left - DefenderProjectile.sprite.bounds.left + DefenderProjectile.sprite.centerX
 
-  elseif game.design.defenderProjectiles.movement == Directions.Right then
+  elseif Game.design.defenderProjectiles.movement == Directions.Right then
     local right = self.defender.x - Defender.sprite.centerX + Defender.sprite.bounds.right
     x = right - DefenderProjectile.sprite.bounds.right + DefenderProjectile.sprite.centerX
   end
@@ -144,7 +145,7 @@ function Scene:addInvaderProjectileExplosion(x, y)
 end
 
 function Scene:update()
-  if self.defender.alive then
+  if self.defender ~= nil and self.defender.alive then
     self.defender:update()
   end
 
@@ -203,7 +204,7 @@ function Scene:update()
   end
 
   for invaderProjectile in all(self.invaderProjectiles) do
-    if self.defender.alive then
+    if self.defender ~= nil and self.defender.alive then
       local overlaps, explosionX, explosionY = invaderProjectile:overlaps(self.defender)
       if overlaps then
         self.defender:die(explosionX, explosionY)
@@ -223,7 +224,7 @@ function Scene:update()
   end  
 
   for invader in all(self.invaders) do
-    if self.defender.alive then
+    if self.defender ~= nil and self.defender.alive then
       local overlaps, explosionX, explosionY = invader:overlaps(self.defender)
       if overlaps then
         self.defender:die(explosionX, explosionY)
@@ -244,14 +245,14 @@ function Scene:update()
   -- Move particles.
   for particle in all(self.particles) do
     particle:update()
-    if particle.x < game.design.playfieldBounds.left or particle.x > game.design.playfieldBounds.right or particle.y < game.design.playfieldBounds.top or particle.y > game.design.playfieldBounds.bottom then
+    if particle.x < Game.design.playfieldBounds.left or particle.x > Game.design.playfieldBounds.right or particle.y < Game.design.playfieldBounds.top or particle.y > Game.design.playfieldBounds.bottom then
       del(self.particles, particle)
     end
   end
 end
 
 function Scene:draw()
-  clip(game.design.playfieldBounds.left, game.design.playfieldBounds.top, game.design.playfieldBounds.width, game.design.playfieldBounds.height)
+  clip(Game.design.playfieldBounds.left, Game.design.playfieldBounds.top, Game.design.playfieldBounds.width, Game.design.playfieldBounds.height)
 
   for defenderProjectile in all(self.defenderProjectiles) do
     defenderProjectile:draw()
@@ -261,7 +262,7 @@ function Scene:draw()
     invaderProjectile:draw()
   end
 
-  if self.defender.alive then
+  if self.defender ~= nil and self.defender.alive then
     self.defender:draw()
   end
 

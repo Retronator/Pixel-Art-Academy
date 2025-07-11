@@ -110,7 +110,7 @@ function Sprite:isInPlayfield(centerX, centerY)
   local top = centerY - self.relativeCenterY
   local bottom = top + self.bounds.height - 1
 
-  return right >= game.design.playfieldBounds.left and left <= game.design.playfieldBounds.right and bottom >= game.design.playfieldBounds.top and top <= game.design.playfieldBounds.bottom
+  return right >= Game.design.playfieldBounds.left and left <= Game.design.playfieldBounds.right and bottom >= Game.design.playfieldBounds.top and top <= Game.design.playfieldBounds.bottom
 end
 
 function Sprite:overlaps(centerX, centerY, sprite, spriteCenterX, spriteCenterY, spriteMask)

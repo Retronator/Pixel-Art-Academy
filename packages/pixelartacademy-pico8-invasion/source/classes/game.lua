@@ -4,66 +4,55 @@ Game.__index = Game
 function Game:new()
   local game = setmetatable({}, Game)
 
-  game.design = {
-    defender = {
-      movement = DesignOptions.Defender.Movement.Horizontal,
-      horizontalAlignment = HorizontalAlignment.Center,
-      verticalAlignment = VerticalAlignment.Bottom,
-      speed = 1
-    },
-    defenderProjectiles = {
-      movement = Directions.Up,
-      speed = 2,
-      maxCount = 1
-    },
-    invaders = {
-      formation = {
-        rows = 3,
-        columns = 7,
-        horizontalSpacing = 2,
-        verticalSpacing = 2,
-        horizontalAlignment = HorizontalAlignment.Center,
-        verticalAlignment = VerticalAlignment.Top,
-        movement = DesignOptions.Invaders.Formation.Movement.Individual,
-        postponeMovement = DesignOptions.Invaders.Formation.PostponeMovement.UntilSpawnedAll,
-        horizontalSpeed = 2,
-        verticalSpeed = 8,
-        spawnDelay = 0.01,
-        shooting = {
-          timeoutFull = 4,
-          timeoutEmpty = 1,
-          variability = 0.25
-        }
-      },
-      attackDirection = DesignOptions.Invaders.AttackDirection.Down,
-      entry = DesignOptions.Invaders.Entry.Appear,
-      attack = DesignOptions.Invaders.Attack.None,
-    },
-    invaderProjectiles = {
-      movement = Directions.Down,
-      speed = 1,
-      maxCount = 3
-    },
-    shields = {
-      amount = 4,
-      spacing = 16,
-      side = Sides.Bottom
-    },
-    playfieldBounds = {
-      left = 0,
-      right = 127,
-      top = 8,
-      bottom = 124 - Defender.sprite.bounds.height
-    }
-  }
+  game.lives = Game.design.lives
+  game.score = 0
+  game.level = 1
 
-  game.design.playfieldBounds.width = game.design.playfieldBounds.right - game.design.playfieldBounds.left + 1
-  game.design.playfieldBounds.height = game.design.playfieldBounds.bottom - game.design.playfieldBounds.top + 1
-
-  game.lives = 2
+  game.deathDuration = 0
+  game.levelDuration = 0
 
   return game
 end
 
+function Game:isGameplayActive()
+  if Game.design.postponeGameplay == DesignOptions.PostponeGameplay.UntilSpawnedAll and not invaders.spawnedAll then return false end
+  if scene.defender ~= nil and not scene.defender.alive then return false end
+  return true
+end
+
+function Game:increaseScore(amount)
+  self.score = self.score + amount
+end
+
 function Game:update()
+  -- Spawn defender.
+  if scene.defender == nil and self:isGameplayActive() then
+    scene:addDefender()
+  end
+
+  -- Respawn defender.
+  if scene.defender ~= nil and not scene.defender.alive and self.lives > 0 then
+    game.deathDuration = game.deathDuration + dt
+    if game.deathDuration > 2 then
+      game.deathDuration = 0
+      self.lives = self.lives - 1
+      if self.lives > 0 then
+        scene:addDefender()
+      end
+    end
+  end
+
+  -- Progress level.
+  if invaders.aliveCount == 0 and scene.defender.alive then
+    game.levelDuration = game.levelDuration + dt
+    if game.levelDuration > 2 then
+      game.levelDuration = 0
+      self.level = self.level + 1
+      scene = Scene:new()
+      invaders = Invaders:new()
+    end
+  end
+
+  invaders:update()
+  scene:update()
 end

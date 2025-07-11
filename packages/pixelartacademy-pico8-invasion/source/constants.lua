@@ -30,12 +30,16 @@ Sides = {
 }
 
 DesignOptions = {
+  PostponeGameplay = {
+    None = 1,
+    UntilSpawnedAll = 2
+  },
   Defender = {
     Movement = {
       Horizontal = 1,
       Vertical = 2,
       AllDirections = 3,
-    }
+    },
   },
   DefenderProjectiles = {
     Movement = Directions
@@ -45,21 +49,9 @@ DesignOptions = {
       Movement = {
         Individual = 1,
         All = 2
-      },
-      PostponeMovement = {
-        None = 1,
-        UntilSpawnedAll = 2
       }
     },
-    AttackDirection = Directions,
-    Entry = {
-      Appear = 1,
-      FlyIn = 2
-    },
-    Attack = {
-      None = 1,
-      FlyOut = 2
-    }
+    AttackDirection = Directions
   },
   InvaderProjectiles = {
     Movement = Directions

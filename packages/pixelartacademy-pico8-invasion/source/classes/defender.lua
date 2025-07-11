@@ -22,31 +22,31 @@ end
 
 function Defender:update()
   -- Horizontal movement
-  if game.design.defender.movement == DesignOptions.Defender.Movement.Horizontal or game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
+  if Game.design.defender.movement == DesignOptions.Defender.Movement.Horizontal or Game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
     if btn(0) then
-      self.x = self.x - game.design.defender.speed
+      self.x = self.x - Game.design.defender.speed
     end
     if btn(1) then
-      self.x = self.x + game.design.defender.speed
+      self.x = self.x + Game.design.defender.speed
     end
 
-    self.x = mid(game.design.playfieldBounds.left + self.sprite.relativeCenterX, self.x, game.design.playfieldBounds.right - self.sprite.relativeCenterX - 1)
+    self.x = mid(Game.design.playfieldBounds.left + self.sprite.relativeCenterX, self.x, Game.design.playfieldBounds.right - self.sprite.relativeCenterX - 1)
   end
 
   -- Vertical movement
-  if game.design.defender.movement == DesignOptions.Defender.Movement.Vertical or game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
+  if Game.design.defender.movement == DesignOptions.Defender.Movement.Vertical or Game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
     if btn(2) then
-      self.y = self.y - game.design.defender.speed
+      self.y = self.y - Game.design.defender.speed
     end
     if btn(3) then
-      self.y = self.y + game.design.defender.speed
+      self.y = self.y + Game.design.defender.speed
     end
 
-    self.y = mid(game.design.playfieldBounds.top + self.sprite.relativeCenterY, self.y, game.design.playfieldBounds.bottom - self.sprite.relativeCenterY - 1)
+    self.y = mid(Game.design.playfieldBounds.top + self.sprite.relativeCenterY, self.y, Game.design.playfieldBounds.bottom - self.sprite.relativeCenterY - 1)
   end
   
   -- Shooting
-  if (btnp(4) or btnp(5)) and #scene.defenderProjectiles < game.design.defenderProjectiles.maxCount then
+  if (btnp(4) or btnp(5)) and #scene.defenderProjectiles < Game.design.defenderProjectiles.maxCount then
     scene:addDefenderProjectile()
   end
 end

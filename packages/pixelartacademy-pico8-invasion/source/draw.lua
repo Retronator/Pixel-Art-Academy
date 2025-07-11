@@ -1,13 +1,25 @@
 function _draw()
   cls()
-  scene:draw()
 
-  rect(game.design.playfieldBounds.left - 1, game.design.playfieldBounds.top - 1, game.design.playfieldBounds.right + 1, game.design.playfieldBounds.bottom + 1, 6)
+  rect(Game.design.playfieldBounds.left - 1, Game.design.playfieldBounds.top - 1, Game.design.playfieldBounds.right + 1, Game.design.playfieldBounds.bottom + 1, 6)
+  print("score: " .. (game ~= nil and game.score or 0), 1, 1, 6)
 
-  print("score: " .. 0, 1, 1, 6)
+  if game == nil then
+    print("invasion",48,45, 7)
+    print("press button to start",22,65, 7)
 
-  for lifeIndicator in all(lifeIndicators) do
-    lifeIndicator:draw()
+  else
+    scene:draw()
+
+    for life = 1, game.lives - 1 do
+      lifeX = 1 + Defender.sprite.relativeCenterX + (life - 1) * (Defender.sprite.bounds.width + 1)
+      lifeY = 125 - Defender.sprite.relativeCenterY
+      Defender.sprite:draw(lifeX, lifeY)
+    end
+
+    if game.lives == 0 then
+      print("press button to start",22,55, 7)
+    end
   end
 
   console.draw()
