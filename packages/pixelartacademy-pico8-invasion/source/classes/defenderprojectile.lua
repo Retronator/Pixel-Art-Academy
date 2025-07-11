@@ -29,6 +29,5 @@ function DefenderProjectile:update()
 
   elseif game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Right then
     self.x = self.x + game.design.defenderProjectiles.speed
-
   end
 end

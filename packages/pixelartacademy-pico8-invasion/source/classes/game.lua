@@ -14,7 +14,7 @@ function Game:new()
     defenderProjectiles = {
       movement = Directions.Up,
       speed = 2,
-      maxCount = 10
+      maxCount = 1
     },
     invaders = {
       formation = {
@@ -28,11 +28,21 @@ function Game:new()
         postponeMovement = DesignOptions.Invaders.Formation.PostponeMovement.UntilSpawnedAll,
         horizontalSpeed = 2,
         verticalSpeed = 8,
-        spawnDelay = 0.01
+        spawnDelay = 0.01,
+        shooting = {
+          timeoutFull = 4,
+          timeoutEmpty = 1,
+          variability = 0.25
+        }
       },
       attackDirection = DesignOptions.Invaders.AttackDirection.Down,
       entry = DesignOptions.Invaders.Entry.Appear,
       attack = DesignOptions.Invaders.Attack.None,
+    },
+    invaderProjectiles = {
+      movement = Directions.Down,
+      speed = 1,
+      maxCount = 3
     },
     shields = {
       amount = 4,

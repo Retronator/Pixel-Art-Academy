@@ -60,5 +60,8 @@ DesignOptions = {
       None = 1,
       FlyOut = 2
     }
-  }
+  },
+  InvaderProjectiles = {
+    Movement = Directions
+  },
 }

@@ -15,7 +15,6 @@ function Scene:new()
 
   else
     defenderX = game.design.playfieldBounds.left + flr(game.design.playfieldBounds.width / 2)
-    
   end
 
   if game.design.defender.verticalAlignment == VerticalAlignment.Top then
@@ -26,7 +25,6 @@ function Scene:new()
 
   else
     defenderY = game.design.playfieldBounds.top + flr(game.design.playfieldBounds.height / 2)
-
   end
 
   scene.defender = Defender:new(defenderX, defenderY)
@@ -48,7 +46,6 @@ function Scene:new()
 
     elseif game.design.shields.side == Sides.Bottom then
       shieldsY = game.design.playfieldBounds.bottom - Defender.sprite.bounds.height * 2 - flr(Shield.sprite.bounds.height / 2)
-
     end
 
     if game.design.shields.side == Sides.Left or game.design.shields.side == Sides.Right then
@@ -73,6 +70,7 @@ function Scene:new()
 
   -- Create dynamic lists.
   scene.defenderProjectiles = {}
+  scene.invaderProjectiles = {}
   scene.explosions = {}
   scene.invaders = {}
   scene.particles = {}
@@ -81,12 +79,41 @@ function Scene:new()
 end
 
 function Scene:addDefenderProjectile()
-  local defenderProjectile = DefenderProjectile:new(self.defender.x, self.defender.y)
+  local x = self.defender.x
+  local y = self.defender.y
+
+  if game.design.defenderProjectiles.movement == Directions.Up then
+    local top = self.defender.y - Defender.sprite.centerY + Defender.sprite.bounds.top
+    y = top - DefenderProjectile.sprite.bounds.top + DefenderProjectile.sprite.centerY
+
+  elseif game.design.defenderProjectiles.movement == Directions.Down then
+    local bottom = self.defender.y - Defender.sprite.centerY + Defender.sprite.bounds.bottom
+    y = bottom - DefenderProjectile.sprite.bounds.bottom + DefenderProjectile.sprite.centerY
+
+  elseif game.design.defenderProjectiles.movement == Directions.Left then
+    local left = self.defender.x - Defender.sprite.centerX + Defender.sprite.bounds.left
+    x = left - DefenderProjectile.sprite.bounds.left + DefenderProjectile.sprite.centerX
+
+  elseif game.design.defenderProjectiles.movement == Directions.Right then
+    local right = self.defender.x - Defender.sprite.centerX + Defender.sprite.bounds.right
+    x = right - DefenderProjectile.sprite.bounds.right + DefenderProjectile.sprite.centerX
+  end
+
+  local defenderProjectile = DefenderProjectile:new(x, y)
   add(self.defenderProjectiles, defenderProjectile)
+end
+
+function Scene:addInvaderProjectile(invader)
+  local invaderProjectile = InvaderProjectile:new(invader.x, invader.y)
+  add(self.invaderProjectiles, invaderProjectile)
 end
 
 function Scene:removeDefenderProjectile(defenderProjectile)
   del(self.defenderProjectiles, defenderProjectile)
+end
+
+function Scene:removeInvaderProjectile(invaderProjectile)
+  del(self.invaderProjectiles, invaderProjectile)
 end
 
 function Scene:addInvader(x, y)
@@ -110,6 +137,12 @@ function Scene:addDefenderProjectileExplosion(x, y)
   return explosion
 end
 
+function Scene:addInvaderProjectileExplosion(x, y)
+  local explosion = InvaderProjectileExplosion:new(x, y)
+  add(self.explosions, explosion)
+  return explosion
+end
+
 function Scene:update()
   if self.defender.alive then
     self.defender:update()
@@ -128,6 +161,13 @@ function Scene:update()
     end
   end
 
+  for invaderProjectile in all(self.invaderProjectiles) do
+    invaderProjectile:update()
+    if not invaderProjectile:isInPlayfield() then
+      del(self.invaderProjectiles, invaderProjectile)
+    end
+  end
+
   -- Check for collisions.
   for defenderProjectile in all(self.defenderProjectiles) do
     for invader in all(self.invaders) do
@@ -140,6 +180,18 @@ function Scene:update()
       end
     end
 
+    for invaderProjectile in all(self.invaderProjectiles) do
+      local overlaps, explosionX, explosionY = defenderProjectile:overlaps(invaderProjectile)
+      if overlaps then
+        self:removeDefenderProjectile(defenderProjectile)
+        self:removeInvaderProjectile(invaderProjectile)
+        self:addDefenderProjectileExplosion(explosionX, explosionY)
+        self:addInvaderProjectileExplosion(explosionX, explosionY)
+        defenderProjectile.sprite:createParticles(defenderProjectile.x, defenderProjectile.y, explosionX, explosionY)
+        invaderProjectile.sprite:createParticles(invaderProjectile.x, invaderProjectile.y, explosionX, explosionY)
+      end
+    end
+
     for shield in all(self.shields) do
       local overlaps, explosionX, explosionY = shield:overlaps(defenderProjectile)
       if overlaps then
@@ -149,6 +201,26 @@ function Scene:update()
       end
     end
   end
+
+  for invaderProjectile in all(self.invaderProjectiles) do
+    if self.defender.alive then
+      local overlaps, explosionX, explosionY = invaderProjectile:overlaps(self.defender)
+      if overlaps then
+        self.defender:die(explosionX, explosionY)
+        self:removeInvaderProjectile(invaderProjectile)
+        self:addInvaderProjectileExplosion(explosionX, explosionY)
+      end
+    end
+
+    for shield in all(self.shields) do
+      local overlaps, explosionX, explosionY = shield:overlaps(invaderProjectile)
+      if overlaps then
+        self:removeInvaderProjectile(invaderProjectile)
+        explosion = self:addInvaderProjectileExplosion(explosionX, explosionY)
+        shield:hit(explosion)
+      end
+    end
+  end  
 
   for invader in all(self.invaders) do
     if self.defender.alive then
@@ -185,6 +257,10 @@ function Scene:draw()
     defenderProjectile:draw()
   end
 
+  for invaderProjectile in all(self.invaderProjectiles) do
+    invaderProjectile:draw()
+  end
+
   if self.defender.alive then
     self.defender:draw()
   end
@@ -205,8 +281,8 @@ function Scene:draw()
     end
   end
 
-  for defenderProjectileExplosion in all(self.explosions) do
-    defenderProjectileExplosion:draw()
+  for explosion in all(self.explosions) do
+    explosion:draw()
   end
 
   clip()

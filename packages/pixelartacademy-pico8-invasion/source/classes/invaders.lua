@@ -101,8 +101,23 @@ function Invaders:new()
   invaders.movementDuration = 0
   invaders.lastMovementTime = time()
 
+  -- Shooting
+
+  if game.design.invaderProjectiles.movement == Directions.Down or game.design.invaderProjectiles.movement == Directions.Up then
+    invaders.shootingOrientation = Orientations.Vertical
+
+  else
+    invaders.shootingOrientation = Orientations.Horizontal
+
+  end
+
+  invaders.shootingDuration = 0
+  invaders:setShootingTimeout()
+
   return invaders
 end
+
+-- Individual Movement
 
 function Invaders:resetIndividualMovement()
   if self.attackOrientation == Orientations.Vertical then
@@ -222,6 +237,8 @@ function Invaders:moveIndividualMovementToNextAliveInvader()
   end
 end
 
+-- Spawning
+
 function Invaders:spawnNextInvader()
   local spawnByRow = invaders.attackOrientation == Orientations.Vertical
   local firstCount, secondCount
@@ -267,6 +284,8 @@ function Invaders:spawnNextInvader()
   end
 end
 
+-- Movement
+
 function Invaders:moveNextInvader()
   if (not self:individualMovementHasAliveInvader()) then
     self:moveIndividualMovementToNextAliveInvader()
@@ -281,6 +300,69 @@ function Invaders:moveNextInvader()
 
   self:moveIndividualMovementToNextAliveInvader()
 end
+
+-- Shooting
+
+function Invaders:setShootingTimeout()
+  local fullRatio = self.aliveCount / (self.rows * self.columns)
+  local timeoutFull = game.design.invaders.formation.shooting.timeoutFull
+  local timeoutEmpty = game.design.invaders.formation.shooting.timeoutEmpty
+  local timeoutAverage = timeoutEmpty + fullRatio * (timeoutFull - timeoutEmpty)
+  local timeoutFactor = 1 + (rnd(2) - 1) * game.design.invaders.formation.shooting.variability
+
+  self.shootingTimeout = timeoutAverage * timeoutFactor
+end
+
+function Invaders:shoot()
+  local shooters = {}
+
+  local shootByRow = invaders.shootingOrientation == Orientations.Vertical
+  local firstCount, secondCount
+
+  if shootByRow then
+    firstCount = game.design.invaders.formation.columns
+    secondCount = game.design.invaders.formation.rows
+  else
+    firstCount = game.design.invaders.formation.rows
+    secondCount = game.design.invaders.formation.columns
+  end
+
+  for firstNumber = 1, firstCount do
+    local shooter
+
+    for secondNumber = 1, secondCount do
+      if shootByRow then
+        if game.design.invaderProjectiles.movement == Directions.Up then
+          formationSpot = self.formation[firstNumber][secondNumber]
+        else
+          formationSpot = self.formation[firstNumber][self.rows - secondNumber + 1]
+        end
+      else
+        if game.design.invaderProjectiles.movement == Directions.Up then
+          formationSpot = self.formation[secondNumber][firstNumber]
+        else
+          formationSpot = self.formation[self.columns - secondNumber + 1][firstNumber]
+        end
+      end
+
+      if formationSpot.invader ~= nil and formationSpot.invader.alive then
+        shooter = formationSpot.invader
+        break
+      end
+    end
+
+    if shooter then
+      add(shooters, shooter)
+    end
+  end
+
+  if #shooters > 0 then
+    local randomShooter = shooters[1 + flr(rnd(#shooters))]
+    scene:addInvaderProjectile(randomShooter)
+  end
+end
+
+-- Update
 
 function Invaders:update()
   -- Spawn invaders.
@@ -443,5 +525,15 @@ function Invaders:update()
 
     -- Reset individual movement.
     invaders:resetIndividualMovement()
+  end
+
+  -- Shoot.
+  if self.aliveCount > 0 and #scene.invaderProjectiles < game.design.invaderProjectiles.maxCount then
+    self.shootingDuration = self.shootingDuration + dt
+    if self.shootingDuration >= self.shootingTimeout then
+      self:shoot()
+      self.shootingDuration = 0
+      self:setShootingTimeout()
+    end
   end
 end
