@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-pico8-invasion',
+  name: 'retronator:pixelartacademy-pixeltosh-writer',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -11,18 +11,21 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:fatamorgana');
   api.use('retronator:pixelartacademy');
-  api.use('retronator:pixelartacademy-pico8');
+  api.use('retronator:pixelartacademy-learnmode');
+  api.use('retronator:pixelartacademy-pixeltosh');
 
   api.export('PixelArtAcademy');
 
-  api.addFile('invasion');
-  api.addServerFile('server');
+  api.addFile('writer');
+  api.addFile('textdocument');
 
-  api.addFile('project');
-  api.addFile('project-startend');
+  api.addFile('interface..');
 
-  api.addComponent('designdocument..');
+  api.addFile('interface/actions..');
+  api.addFile('interface/actions/about');
 
-  api.addAssets('invasion.p8.png', 'client');
+  api.addComponent('interface/about..');
+  api.addComponent('interface/editor..');
 });

@@ -54,7 +54,7 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
 
     class @Body extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Body'
-
+      @projectClass = PAA.Pico8.Cartridges.Snake.Project
       @assetClass = PAA.Pico8.Cartridges.Snake.Body
 
       @initialize()
@@ -63,7 +63,7 @@ class LM.Intro.Tutorial.Content.Projects extends LM.Content
 
     class @Food extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Content.Projects.Snake.Food'
-
+      @projectClass = PAA.Pico8.Cartridges.Snake.Project
       @assetClass = PAA.Pico8.Cartridges.Snake.Food
 
       @initialize()

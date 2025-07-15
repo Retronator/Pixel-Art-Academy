@@ -18,9 +18,10 @@ class LM.Design.Fundamentals.Workbench extends LOI.Adventure.Scene
     things = []
 
     if projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
-      @_invasion?.destroy()
-      @_invasion = new PAA.Pico8.Cartridges.Invasion.Project projectId
-
-      things.push @_invasion
+      if LM.Design.Fundamentals.Goals.Invasion.Run.completed()
+        @_invasion?.destroy()
+        @_invasion = new PAA.Pico8.Cartridges.Invasion.Project projectId
+  
+        things.push @_invasion
 
     things

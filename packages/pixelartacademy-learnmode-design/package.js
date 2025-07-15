@@ -35,6 +35,7 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/tutorialsdrawing');
   api.addFile('fundamentals/scenes/pico8cartridges');
   api.addFile('fundamentals/scenes/workbench');
+  api.addFile('fundamentals/scenes/pixeltoshfiles');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');

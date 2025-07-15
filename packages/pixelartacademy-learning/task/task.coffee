@@ -98,6 +98,8 @@ class PAA.Learning.Task
   
   @getAdventureInstance: -> @getAdventureInstanceForId @id()
 
+  @completed: -> @getAdventureInstance().completed()
+
   @reset: -> @getAdventureInstance().reset()
 
   constructor: (@options = {}) ->

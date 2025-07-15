@@ -33,8 +33,12 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
   class @Jaggies extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Jaggies'
     @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies
-    @tags: -> [LM.Content.Tags.WIP]
+    
+    @unlockInstructions: -> "Complete the Elements of art: line tutorial to learn about pixel art lines."
+    
     @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Line.getAdventureInstance()?.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
   
   class @Pinball extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Pinball'

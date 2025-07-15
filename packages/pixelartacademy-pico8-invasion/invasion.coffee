@@ -2,6 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
+  # cartridgeRan: whether the cartridge has ever been started
+  # highestLevelCompleted: the highest level the player completed
   # highScore: the top result the player has achieved
   @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion'
   
@@ -20,21 +22,102 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     @state 'highScore', value
   
   # Assets
-  
-  class @Defender extends PAA.Practice.Project.Asset.Bitmap
+
+  class @Sprite extends PAA.Practice.Project.Asset.Bitmap
+    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
+    
+    @backgroundColor: ->
+      paletteColor:
+        ramp: 0
+        shade: 0
+    
+  class @Defender extends @Sprite
     @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Defender'
     
     @displayName: -> "Defender"
     
     @description: -> """
-      Player unit tasked to defend from the incoming invasion. It will shoot projectiles from the top-most pixel you draw.
+      The player unit tasked to defend from the incoming invasion.
     """
     
     @fixedDimensions: -> width: 16, height: 16
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Pico8
-    @backgroundColor: ->
-      paletteColor:
-        ramp: 0
-        shade: 0
+    
+    @initialize()
+  
+  class @DefenderProjectile extends @Sprite
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.DefenderProjectile'
+    
+    @displayName: -> "Defender projectile"
+    
+    @description: -> """
+      The projectile that the defender shoots at the invaders.
+    """
+    
+    @fixedDimensions: -> width: 8, height: 8
+    
+    @initialize()
+  
+  class @DefenderProjectileExplosion extends @Sprite
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.DefenderProjectileExplosion'
+    
+    @displayName: -> "Defender projectile explosion"
+    
+    @description: -> """
+      The explosion that appears when the defender projectile hits something.
+    """
+    
+    @fixedDimensions: -> width: 8, height: 8
+    
+    @initialize()
+    
+  class @Invader extends @Sprite
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Invader'
+    
+    @displayName: -> "Invader"
+    
+    @description: -> """
+      The enemy unit that is attacking the defender.
+    """
+    
+    @fixedDimensions: -> width: 16, height: 16
+    
+    @initialize()
+  
+  class @InvaderProjectile extends @Sprite
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.InvaderProjectile'
+    
+    @displayName: -> "Invader projectile"
+    
+    @description: -> """
+      The projectile that the invaders shoot at the defender.
+    """
+    
+    @fixedDimensions: -> width: 8, height: 8
+    
+    @initialize()
+  
+  class @InvaderProjectileExplosion extends @Sprite
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.InvaderProjectileExplosion'
+    
+    @displayName: -> "Invader projectile explosion"
+    
+    @description: -> """
+      The explosion that appears when the invader projectile hits something.
+    """
+    
+    @fixedDimensions: -> width: 8, height: 8
+    
+    @initialize()
+    
+  class @Shield extends @Sprite
+    @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Shield'
+    
+    @displayName: -> "Shield"
+    
+    @description: -> """
+      An obstacle that blocks projectiles until it gets destroyed.
+    """
+    
+    @fixedDimensions: -> width: 24, height: 24
     
     @initialize()

@@ -13,5 +13,5 @@ class LM.Design.Fundamentals.Pico8Cartridges extends LOI.Adventure.Scene
     super arguments...
 
   things: -> [
-    PAA.Pico8.Cartridges.Invasion
+    PAA.Pico8.Cartridges.Invasion if LM.Design.Fundamentals.Goals.Invasion.Start.completed()
   ]

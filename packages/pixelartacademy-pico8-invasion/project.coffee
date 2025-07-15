@@ -12,12 +12,10 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
   constructor: ->
     super arguments...
 
-    @assets = new ComputedField =>
+    @assets = new AE.LiveComputedField =>
       [
         new PAA.Pico8.Cartridges.Invasion.Defender @
       ]
-    ,
-      true
     
     @pico8Cartridge = new PAA.Pico8.Cartridges.Invasion
 
@@ -26,5 +24,5 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
     @pico8Cartridge.destroy()
     
   content: ->
-    return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.DesignFundamentals.Fundamentals
+    return unless chapter = LOI.adventure.getCurrentChapter LM.Design.Fundamentals
     chapter.getContent LM.Design.Fundamentals.Content.Projects.Invasion

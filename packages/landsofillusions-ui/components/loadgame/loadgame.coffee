@@ -62,8 +62,10 @@ class LOI.Components.LoadGame extends LOI.Component
         dialog: @
         dontRender: true
       
-      # Wait for the dialog to be rendered before you activate it.
-      Tracker.afterFlush => @activatable.activate()
+      # In web apps, adventure and its UI is never created/rendered so don't try to activate it in that case.
+      if @isCreated()
+        # Wait for the dialog to be rendered before you activate it.
+        Tracker.afterFlush => @activatable.activate()
       
       new Promise (resolve, reject) =>
         Tracker.autorun (computation) =>
