@@ -163,11 +163,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
 
       await _.waitForFlush()
     
-      @content$ = @$('.content')
+      @$content = @$('.content')
       @_resizeObserver = new ResizeObserver =>
-        @contentHeight @content$.outerHeight()
+        @contentHeight @$content.outerHeight()
       
-      @_resizeObserver.observe @content$[0]
+      @_resizeObserver.observe @$content[0]
     
   onDestroyed: ->
     super arguments...

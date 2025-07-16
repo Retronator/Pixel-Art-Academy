@@ -6,18 +6,154 @@
   flex-direction column
   height 100%
 
-  .content
+  &.active
+
+  .main-area
+    position relative
     flex-grow 1
+
+    .content-area
+      position absolute
+      left 0
+      top 0
+      bottom 11rem
+      right 11rem
+      overflow hidden
+
+      .content
+        position absolute
+
+    .vertical-scrollbar
+    .horizontal-scrollbar
+      position absolute
+      border 1rem solid black
+
+      &.active
+        background image('/pixelartacademy/pixeltosh/os/dither-25-staggered.png') 0 0 / 4rem 2rem repeat
+
+        .position
+          display block
+
+      &.dragging
+        .position-move-indicator
+          display block
+
+      .arrow
+        position absolute
+        width 12rem
+        height 12rem
+        background white
+        border 1rem solid black
+        background-size 10rem 10rem
+
+        &.up
+          top -1rem
+          background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-up.png')
+
+          &:active:enabled
+            background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-up-active.png')
+
+        &.down
+          bottom -1rem
+          background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-down.png')
+
+          &:active:enabled
+            background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-down-active.png')
+
+        &.left
+          left -1rem
+          background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-left.png')
+
+          &:active:enabled
+            background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-left-active.png')
+
+        &.right
+          right -1rem
+          background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-right.png')
+
+          &:active:enabled
+            background-image image('/pixelartacademy/pixeltosh/os/scrollbar-arrow-right-active.png')
+
+      .position
+      .position-move-indicator
+        display none
+        position absolute
+        border 1rem solid black
+
+      .position
+        background white
+
+    .vertical-scrollbar
+      top -1rem
+      bottom 10rem
+      right -1rem
+      width 12rem
+
+      .arrow
+        left -1rem
+
+      .position
+      .position-move-indicator
+        left 0
+        width 10rem
+        height 12rem
+
+    .horizontal-scrollbar
+      left -1rem
+      right 10rem
+      bottom -1rem
+      height 12rem
+
+      .arrow
+        bottom -1rem
+
+      .position
+      .position-move-indicator
+        top 0
+        width 12rem
+        height 10rem
+
+    .resize-control
+      position absolute
+      bottom -1rem
+      right -1rem
+      width 12rem
+      height 12rem
+      border 1rem solid black
+      background-image image('/pixelartacademy/pixeltosh/os/resize.png')
 
   .move-indicator
     display none
     position absolute
     border 1rem solid white
-    border-image image('/pixelartacademy/pixeltosh/os/dither-border-white.png') 1 / 1rem repeat
+    border-image-slice 1
+    border-image-width 1rem
+    border-image-repeat repeat
     mix-blend-mode difference
 
     &.visible
       display block
 
-    &.alternative-dither
-      border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-alternative.png')
+    &.dither-width-even.dither-height-even
+      border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-even-height-even.png')
+
+      &.dither-inverse
+        border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-even-height-even-inverse.png')
+      
+    &.dither-width-even.dither-height-odd
+      border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-even-height-odd.png')
+
+      &.dither-inverse
+        border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-even-height-odd-inverse.png')
+
+    &.dither-width-odd.dither-height-even
+      border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-odd-height-even.png')
+
+      &.dither-inverse
+        border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-odd-height-even-inverse.png')
+
+    &.dither-width-odd.dither-height-odd
+      border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-odd-height-odd.png')
+
+      &.dither-inverse
+        border-image-source image('/pixelartacademy/pixeltosh/os/dither-border-white-width-odd-height-odd-inverse.png')

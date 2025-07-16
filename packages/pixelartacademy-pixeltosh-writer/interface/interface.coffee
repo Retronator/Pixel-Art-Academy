@@ -27,5 +27,8 @@ class Writer.Interface
       type: PAA.Pixeltosh.OS.Interface.Window.id()
       title:
         text: documentFile.name()
+      scrollbar:
+        vertical:
+          enabled: true
       contentArea:
         type: Writer.Interface.Editor.id()

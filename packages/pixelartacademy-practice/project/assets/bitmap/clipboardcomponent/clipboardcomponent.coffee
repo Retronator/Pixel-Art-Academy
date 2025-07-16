@@ -55,11 +55,11 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
     super arguments...
     
     # Recalculate how much space the asset has, both when the component content's resizes.
-    @pageFirstContent$ = @$('.page-first .content')
+    @$pageFirstContent = @$('.page-first .content')
     @_resizeObserver = new ResizeObserver =>
       @_updateMaxAssetHeight()
       
-    @_resizeObserver.observe @pageFirstContent$[0]
+    @_resizeObserver.observe @$pageFirstContent[0]
     
     # Recalculate it reactively due to asset size changes.
     @autorun (computation) =>
@@ -74,7 +74,7 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
     return unless assetSize = @assetSize()
 
     displayScale = LOI.adventure.interface.display.scale()
-    contentHeight = @pageFirstContent$.outerHeight() / displayScale
+    contentHeight = @$pageFirstContent.outerHeight() / displayScale
 
     maxTotalHeight = 260 - 24 - 10
     currentAssetHeight = assetSize.contentHeight + 2 * assetSize.borderWidth

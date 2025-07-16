@@ -27,6 +27,8 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
       top: 50
       width: 200
       height: 100
+      scrollLeft: 0
+      scrollTop: 0
     
     _.extend window,
       type: PAA.Pixeltosh.Program.View.id()
@@ -35,6 +37,11 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
         type: PAA.Pixeltosh.OS.Interface.Window.id()
         title:
           text: folderFile.name()
+        scrollbar:
+          vertical:
+            enabled: true
+          horizontal:
+            enabled: true
         contentArea:
           type: @id()
           path: folderPath
@@ -46,7 +53,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     @finder = @os.getProgram PAA.Pixeltosh.Programs.Finder
     
     @interfaceWindow = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
-    @interfaceWindow.moved.addHandler @, @onWindowMoved
+    @interfaceWindow.changed.addHandler @, @onWindowChanged
     
     @folderPath = =>
       folderData = @data()
@@ -67,7 +74,7 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     
     @finder.deregisterFolderWindow @_currentFolderPath if @_currentFolderPath
     
-    @interfaceWindow.moved.removeHandler @, @onWindowMoved
+    @interfaceWindow.changed.removeHandler @, @onWindowChanged
   
   files: ->
     folderPath = @folderPath()
@@ -97,14 +104,14 @@ class PAA.Pixeltosh.Programs.Finder.Folder extends LOI.View
     
     [files..., folders...]
 
-  onWindowMoved: (newPosition) ->
-    # Store window size.
+  onWindowChanged: (newProperties) ->
+    # Store window properties.
     folderPath = @folderPath()
     folders = PAA.Pixeltosh.OS.FileSystem.state('folders') or {}
     folders[folderPath] ?= {}
     
     _.merge folders[folderPath],
-      window: newPosition
+      window: newProperties
     
     PAA.Pixeltosh.OS.FileSystem.state 'folders', folders
 

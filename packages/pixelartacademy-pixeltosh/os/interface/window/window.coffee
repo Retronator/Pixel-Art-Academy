@@ -1,9 +1,21 @@
+import {ComputedField} from "meteor/peerlibrary:computed-field"
+import {ReactiveField} from "meteor/peerlibrary:reactive-field"
+
 AB = Artificial.Base
 FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+scrollbarArrowSize = 10
+scrollbarPositionSize = 12
+
 class PAA.Pixeltosh.OS.Interface.Window extends FM.View
+  # title: information for the window's title bar
+  # scrollbar: information about the window's scrollbars
+  #   horizontal: controls horizontal scrolling
+  #     enabled: boolean whether scrolling should be possible
+  #   vertical: controls vertical scrolling
+  #     enabled: boolean whether scrolling should be possible
   @id: -> 'PixelArtAcademy.Pixeltosh.OS.Interface.Window'
   @register @id()
   
@@ -12,43 +24,228 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     
     @os = @interface.parent
     
-    @windowData = new ComputedField =>
+    # Properties coming from the program view.
+    
+    @programViewData = new ComputedField =>
       return unless programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
       programView.data()
       
     @windowSize = new ComputedField =>
-      return unless windowData = @windowData()
-      _.pick windowData.value(), ['width', 'height']
-      
-    @windowMoveDelta = new ReactiveField null
+      return unless programViewData = @programViewData()
+      _.pick programViewData.value(), ['width', 'height']
     
-    @moved = new AB.Event @
+    # Have scroll left and top as normal fields so we can change them without going through program view's reactivity.
+    @scrollTop = new ReactiveField 0
+    @scrollLeft = new ReactiveField 0
+
+    # Load initial values from progarm view.
+    @autorun (computation) =>
+      return unless programViewData = @programViewData()
+      @scrollTop programViewData.value().scrollTop or 0
+      @scrollLeft programViewData.value().scrollLeft or 0
+      
+    # Track size for calculating scrollbar dimensions.
+    @contentAreaSize = new ReactiveField width: 0, height: 0
+    @contentSize = new ReactiveField width: 0, height: 0
+    
+    @maxScroll = new ComputedField =>
+      contentAreaSize = @contentAreaSize()
+      contentSize = @contentSize()
+
+      left: Math.max 0, contentSize.width - contentAreaSize.width
+      top: Math.max 0,contentSize.height - contentAreaSize.height
+    
+    # Create fields for indicating changes.
+    @windowMoveDelta = new ReactiveField null
+    @windowResizeDelta = new ReactiveField null
+    @scrollbarMoveDelta = new ReactiveField null
+
+    # Allow folder to be informed when any of our settings changed so they can be saved.
+    @changed = new AB.Event @
+  
+  onRendered: ->
+    super arguments...
+    
+    # Observe content size.
+    @$contentArea = @$('.content-area')
+    @_contentAreaResizeObserver = new ResizeObserver =>
+      scale = @os.display.scale()
+      
+      @contentAreaSize
+        width: @$contentArea.outerWidth() / scale
+        height: @$contentArea.outerHeight() / scale
+    
+    @_contentAreaResizeObserver.observe @$contentArea[0]
+    
+    @$content = @$('.content')
+    @_contentResizeObserver = new ResizeObserver =>
+      scale = @os.display.scale()
+      
+      @contentSize
+        width: @$content.outerWidth() / scale
+        height: @$content.outerHeight() / scale
+    
+    @_contentResizeObserver.observe @$content[0]
     
   onDestroyed: ->
     super arguments...
     
-    @_endWindowMove()
+    @_contentAreaResizeObserver?.disconnect()
+    @_contentResizeObserver?.disconnect()
+    
+    Meteor.clearInterval @_scrollInterval
+    @_endEvents()
+    
+  _endEvents: ->
+    $(document).off '.pixelartacademy-pixeltosh-os-interface-window'
+  
+  programViewActive: ->
+    programView = @ancestorComponentOfType PAA.Pixeltosh.Program.View
+    programView.active()
+    
+  # Scrolling
+  
+  scrollInDirection: (vertical, sign) ->
+    scrollDelta = 10
+    
+    if vertical
+      @_setScrollTop @_clampedScrollTop() + sign * scrollDelta
+      
+    else
+      @_setScrollLeft @_clampedScrollLeft() + sign * scrollDelta
+    
+  _clampedScrollTop: ->
+    _.clamp @scrollTop(), 0, @maxScroll().top
+    
+  _clampedScrollLeft: ->
+    _.clamp @scrollLeft(), 0, @maxScroll().left
+    
+  _setScrollTop: (scrollTop) ->
+    @scrollTop scrollTop
+    @changed {scrollTop}
+    
+    # Perform a lazy set so that the interface doesn't rerender.
+    @programViewData()?.lazySet 'scrollTop', @scrollTop()
+    
+  _setScrollLeft: (scrollLeft) ->
+    @scrollLeft scrollLeft
+    @changed {scrollLeft}
+    
+    # Perform a lazy set so that the interface doesn't rerender.
+    @programViewData()?.lazySet 'scrollLeft', @scrollLeft()
+    
+  # Content and scrollbars
+    
+  contentStyle: ->
+    left: "-#{@_clampedScrollLeft()}rem"
+    top: "-#{@_clampedScrollTop()}rem"
+    
+  verticalScrollbarActive: ->
+    @contentSize().height > @contentAreaSize().height
+    
+  horizontalScrollbarActive: ->
+    @contentSize().width > @contentAreaSize().width
+  
+  verticalScrollbarActiveClass: ->
+    'active' if @verticalScrollbarActive() and @programViewActive()
+    
+  horizontalScrollbarActiveClass: ->
+    'active' if @horizontalScrollbarActive() and @programViewActive()
+  
+  verticalScrollbarDraggingClass: ->
+    'dragging' if @scrollbarMoveDelta()?.top?
+  
+  horizontalScrollbarDraggingClass: ->
+    'dragging' if @scrollbarMoveDelta()?.left?
+
+  verticalScrollbarArrowDisabledAttribute: ->
+    disabled: true unless @verticalScrollbarActive()
+    
+  horizontalScrollbarArrowDisabledAttribute: ->
+    disabled: true unless @horizontalScrollbarActive()
+    
+  verticalScrollbarEnabled: ->
+    @data().child('scrollbar').child('vertical').get('enabled') and @programViewActive()
+  
+  horizontalScrollbarEnabled: ->
+    @data().child('scrollbar').child('horizontal').get('enabled') and @programViewActive()
+  
+  verticalScrollbarPositionStyle: ->
+    @_verticalScrollbarPositionStyle @scrollTop()
+  
+  verticalScrollbarPositionMoveIndicatorStyle: ->
+    @_verticalScrollbarPositionStyle @_clampedScrollTop() + @scrollbarMoveDelta()?.top or 0
+    
+  _verticalScrollbarPositionStyle: (scrollTop) ->
+    {scrollAreaSpan, contentSpan} = @_verticalScrollbarDimensions()
+    
+    scrollRatio = _.clamp scrollTop / contentSpan, 0, 1
+    
+    top: "#{Math.round scrollAreaSpan * scrollRatio + scrollbarArrowSize + 1}rem"
+    
+  _verticalScrollbarDimensions: ->
+    contentAreaSizeHeight = @contentAreaSize().height
+    
+    scrollAreaHeight = contentAreaSizeHeight - 2 * (scrollbarArrowSize + 1)
+    scrollAreaSpan = scrollAreaHeight - scrollbarPositionSize
+    
+    contentSpan = @contentSize().height - contentAreaSizeHeight
+    
+    {scrollAreaSpan, contentSpan}
+  
+  horizontalScrollbarPositionStyle: ->
+    @_horizontalScrollbarPositionStyle @scrollLeft()
+  
+  horizontalScrollbarPositionMoveIndicatorStyle: ->
+    @_horizontalScrollbarPositionStyle @_clampedScrollLeft() + @scrollbarMoveDelta()?.left or 0
+  
+  _horizontalScrollbarPositionStyle: (scrollLeft) ->
+    {scrollAreaSpan, contentSpan} = @_horizontalScrollbarDimensions()
+    
+    scrollRatio = _.clamp scrollLeft / contentSpan, 0, 1
+    
+    left: "#{Math.round scrollAreaSpan * scrollRatio + scrollbarArrowSize + 1}rem"
+  
+  _horizontalScrollbarDimensions: ->
+    contentAreaSizeWidth = @contentAreaSize().width
+    
+    scrollAreaWidth = contentAreaSizeWidth - 2 * (scrollbarArrowSize + 1)
+    scrollAreaSpan = scrollAreaWidth - scrollbarPositionSize
+    
+    contentSpan = @contentSize().width - contentAreaSizeWidth
+    
+    {scrollAreaSpan, contentSpan}
+
+  # Move indicator
     
   moveIndicatorVisibleClass: ->
-    'visible' if @windowMoveDelta()
+    'visible' if @windowMoveDelta() or @windowResizeDelta()
+  
+  moveIndicatorDitherClasses: ->
+    resizeDelta = @windowResizeDelta()
+    moveDelta = @windowMoveDelta()
     
-  moveIndicatorAlternativeDitherClass: ->
-    return unless delta = @windowMoveDelta()
+    programViewData = @programViewData()
+    left = programViewData.get('left') + (moveDelta?.x or 0)
+    top = programViewData.get('top') + (moveDelta?.y or 0)
+    width = @_roundToEven programViewData.get('width') + (resizeDelta?.width or 0)
+    height = @_roundToEven programViewData.get('height') + (resizeDelta?.height or 0)
     
-    windowData = @windowData()
-    left = windowData.get('left') + delta.x
-    top = windowData.get('top') + delta.y
+    widthClass = if Math.floor(width / 2) % 2 then 'dither-width-odd' else 'dither-width-even'
+    heightClass = if Math.floor(height / 2) % 2 then 'dither-height-odd' else 'dither-height-even'
+    inverseClass = if _.modulo(left, 2) is _.modulo(top, 2) then 'dither-inverse' else ''
     
-    'alternative-dither' if _.modulo(left, 2) is _.modulo(top, 2)
+    "#{widthClass} #{heightClass} #{inverseClass}"
     
   moveIndicatorStyle: ->
-    return unless delta = @windowMoveDelta()
     return unless windowSize = @windowSize()
+    moveDelta = @windowMoveDelta()
+    resizeDelta = @windowResizeDelta()
     
-    left: "#{delta.x - 1}rem"
-    top: "#{delta.y - 1}rem"
-    width: "#{@_roundToEven windowSize.width}rem"
-    height: "#{@_roundToEven windowSize.height}rem"
+    left: "#{(moveDelta?.x or 0) - 1}rem"
+    top: "#{(moveDelta?.y or 0) - 1}rem"
+    width: "#{@_roundToEven windowSize.width + (resizeDelta?.width or 0)}rem"
+    height: "#{@_roundToEven windowSize.height + (resizeDelta?.height or 0)}rem"
   
   _roundToEven: (value) ->
     Math.round(value / 2) * 2
@@ -56,7 +253,17 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
   events: ->
     super(arguments...).concat
       'pointerdown .title-bar': @onPointerDownTitleBar
+      'pointerdown .resize-control': @onPointerDownResizeControl
       'click .title-bar .close-button': @onClickCloseButton
+      'pointerdown .up.arrow': @onPointerDownUpArrow
+      'pointerdown .down.arrow': @onPointerDownDownArrow
+      'pointerdown .left.arrow': @onPointerDownLeftArrow
+      'pointerdown .right.arrow': @onPointerDownRightArrow
+      'pointerdown .vertical-scrollbar .position': @onPointerDownVerticalScrollbarPosition
+      'pointerdown .horizontal-scrollbar .position': @onPointerDownHorizontalScrollbarPosition
+      'wheel .content-area': @onWheelContentArea
+
+  # Moving the window
   
   onPointerDownTitleBar: (event) ->
     # Don't activate if clicking on the close button.
@@ -67,55 +274,211 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
       y: 0
 
     # Remember starting position of drag.
-    @_dragStartX = event.pageX
-    @_dragStartY = event.pageY
-
-    display = @callAncestorWith 'display'
-    scale = display.scale()
+    cursor = @os.cursor()
+    dragStartCoordinates = cursor.coordinates()
     
     # Calculate maximum Y offset (resulting top has to be 14 or more).
-    windowData = @windowData()
-    @_minDeltaY = PAA.Pixeltosh.OS.Interface.menuHeight - windowData.get 'top'
+    programViewData = @programViewData()
+    minDeltaY = PAA.Pixeltosh.OS.Interface.menuHeight - programViewData.get 'top'
 
     # Wire dragging handlers.
     $document = $(document)
-    $interface = @$('.pixelartacademy-pixeltosh-os-interface-window').closest('.fatamorgana-interface')
     
     # Create a throttled delta update function to emulate a slow CPU.
     delay = if LOI.settings.graphics.slowCPUEmulation.value() then 75 else 0
     
-    $interface.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', _.throttle (event) =>
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', _.throttle (event) =>
+      return unless coordinates = cursor.coordinates()
+      
       @windowMoveDelta
-        x: Math.round (event.pageX - @_dragStartX) / scale
-        y: Math.max @_minDeltaY, Math.round (event.pageY - @_dragStartY) / scale
+        x: Math.round coordinates.x - dragStartCoordinates.x
+        y: Math.max minDeltaY, Math.round coordinates.y - dragStartCoordinates.y
     ,
       delay
 
     $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
       # End drag mode.
-      @_endWindowMove()
+      @_endEvents()
 
       delta = @windowMoveDelta()
       @windowMoveDelta null
     
-      windowData = @windowData()
+      programViewData = @programViewData()
       
-      newPosition =
-        left: windowData.get('left') + delta.x
-        top: windowData.get('top') + delta.y
+      newProperties =
+        left: programViewData.get('left') + delta.x
+        top: programViewData.get('top') + delta.y
       
-      windowData.set 'left', newPosition.left
-      windowData.set 'top', newPosition.top
+      programViewData.set 'left', newProperties.left
+      programViewData.set 'top', newProperties.top
       
-      @moved newPosition
-      
-  _endWindowMove: ->
-    $elements = [
-      $(document)
-      @$('.pixelartacademy-pixeltosh-os-interface-window')?.closest('.fatamorgana-interface')
-    ]
+      @changed newProperties
+  
+  # Resizing the window
+  
+  onPointerDownResizeControl: (event) ->
+    @windowResizeDelta
+      width: 0
+      height: 0
+
+    # Remember starting position of drag.
+    cursor = @os.cursor()
+    dragStartCoordinates = cursor.coordinates()
     
-    $element?.off '.pixelartacademy-pixeltosh-os-interface-window' for $element in $elements
+    # Calculate maximum Y offset (resulting top has to be 14 or more).
+    programViewData = @programViewData()
+    minDeltaWidth = 60 - programViewData.get 'width'
+    minDeltaHeight = 75 - programViewData.get 'height'
+
+    # Wire dragging handlers.
+    $document = $(document)
+    
+    # Create a throttled delta update function to emulate a slow CPU.
+    delay = if LOI.settings.graphics.slowCPUEmulation.value() then 75 else 0
+    
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', _.throttle (event) =>
+      return unless coordinates = cursor.coordinates()
+      
+      @windowResizeDelta
+        width: Math.max minDeltaWidth, Math.round coordinates.x - dragStartCoordinates.x
+        height: Math.max minDeltaHeight, Math.round coordinates.y - dragStartCoordinates.y
+    ,
+      delay
+
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+      # End drag mode.
+      @_endEvents()
+
+      delta = @windowResizeDelta()
+      @windowResizeDelta null
+    
+      programViewData = @programViewData()
+      
+      newProperties =
+        width: programViewData.get('width') + delta.width
+        height: programViewData.get('height') + delta.height
+      
+      programViewData.set 'width', newProperties.width
+      programViewData.set 'height', newProperties.height
+      
+      @changed newProperties
+  
+  # Closing the window
   
   onClickCloseButton: (event) ->
     @interface.getOperator(PAA.Pixeltosh.OS.Interface.Actions.Close).execute()
+  
+  # Scrolling with arrows
+  
+  onPointerDownUpArrow: (event) ->
+    @_startScrollingUntilPointerUp true, -1
+
+  onPointerDownDownArrow: (event) ->
+    @_startScrollingUntilPointerUp true, 1
+
+  onPointerDownLeftArrow: (event) ->
+    @_startScrollingUntilPointerUp false, -1
+    
+  onPointerDownRightArrow: (event) ->
+    @_startScrollingUntilPointerUp false, 1
+    
+  _startScrollingUntilPointerUp: (vertical, sign) ->
+    @scrollInDirection vertical, sign
+    
+    $document = $(document)
+    
+    Meteor.clearInterval @_scrollInterval
+    @_scrollInterval = Meteor.setInterval =>
+      @scrollInDirection vertical, sign
+    ,
+      125
+      
+      $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+        $document.off '.pixelartacademy-pixeltosh-os-interface-window'
+        
+        Meteor.clearInterval @_scrollInterval
+  
+  # Scrolling by dragging the position indicator
+  
+  onPointerDownVerticalScrollbarPosition: (event) ->
+    # Remember starting position of drag.
+    cursor = @os.cursor()
+    dragStartCoordinates = cursor.coordinates()
+
+    # Wire dragging handlers.
+    $document = $(document)
+    
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window',  (event) =>
+      return unless coordinates = cursor.coordinates()
+      
+      scrollAreaDelta = coordinates.y - dragStartCoordinates.y
+      {scrollAreaSpan, contentSpan} = @_verticalScrollbarDimensions()
+      
+      @scrollbarMoveDelta
+        top: Math.round scrollAreaDelta / scrollAreaSpan * contentSpan
+
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+      # End drag mode.
+      @_endEvents()
+
+      delta = @scrollbarMoveDelta()
+      @scrollbarMoveDelta null
+    
+      @_setScrollTop @_clampedScrollTop() + delta.top
+
+  onPointerDownHorizontalScrollbarPosition: (event) ->
+    # Remember starting position of drag.
+    cursor = @os.cursor()
+    dragStartCoordinates = cursor.coordinates()
+    
+    # Wire dragging handlers.
+    $document = $(document)
+    
+    $document.on 'pointermove.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+      return unless coordinates = cursor.coordinates()
+      
+      scrollAreaDelta = coordinates.x - dragStartCoordinates.x
+      {scrollAreaSpan, contentSpan} = @_horizontalScrollbarDimensions()
+      
+      @scrollbarMoveDelta
+        left: Math.round scrollAreaDelta / scrollAreaSpan * contentSpan
+    
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+      # End drag mode.
+      @_endEvents()
+      
+      delta = @scrollbarMoveDelta()
+      @scrollbarMoveDelta null
+      
+      @_setScrollLeft @_clampedScrollLeft() + delta.left
+      
+  # Scrolling with the mouse wheel
+  
+  onWheelContentArea: (event) ->
+    # Accumulate wheel deltas.
+    @_accumulatedWheelDelta ?= x: 0, y: 0
+
+    @_accumulatedWheelDelta.x += event.originalEvent.deltaX
+    @_accumulatedWheelDelta.y += event.originalEvent.deltaY
+    
+    if LOI.settings.graphics.slowCPUEmulation.value()
+      # Throttle updates.
+      @_throttledApply ?= _.throttle (event) =>
+        @_applyWheelDelta()
+      ,
+        75
+      
+      @_throttledApply()
+      
+    else
+      # Apply immediately.
+      @_applyWheelDelta()
+
+  _applyWheelDelta: ->
+    scale = @os.display.scale()
+  
+    @_setScrollLeft Math.round @_clampedScrollLeft() + @_accumulatedWheelDelta.x / scale
+    @_setScrollTop Math.round @_clampedScrollTop() + @_accumulatedWheelDelta.y / scale
+    
+    @_accumulatedWheelDelta.x = 0
+    @_accumulatedWheelDelta.y = 0

@@ -13,13 +13,13 @@ class PAA.PixelPad.Apps.Music.Player.Counter.Digit extends LOI.Component
   onRendered: ->
     super arguments...
     
-    @numbers$ = @$('.numbers')
+    @$numbers = @$('.numbers')
     
     @showNumber @_currentNumber or 0
     
   showNumber: (number) ->
     @_currentNumber = number
-    return unless @numbers$
+    return unless @$numbers
     
-    @numbers$.css
+    @$numbers.css
       top: "#{-@constructor.numberHeight * number}rem"
