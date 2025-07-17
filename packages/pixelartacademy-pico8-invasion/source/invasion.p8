@@ -18,6 +18,7 @@ __lua__
 #include classes/shield.lua
 #include classes/scene.lua
 #include classes/game.lua
+#include parsetable.lua
 #include constants.lua
 #include console.lua
 #include init.lua

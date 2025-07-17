@@ -33,13 +33,18 @@ function Game:update()
   -- Respawn defender.
   if scene.defender ~= nil and not scene.defender.alive and self.lives > 0 then
     game.deathDuration = game.deathDuration + dt
+
     if game.deathDuration > 2 then
       game.deathDuration = 0
       self.lives = self.lives - 1
+
       if self.lives > 0 then
         scene:addDefender()
       else
         sfx(12)
+
+        -- Report the score.
+        poke(0x5f83, self.score)
       end
     end
   end
@@ -48,6 +53,9 @@ function Game:update()
   if invaders.aliveCount == 0 and scene.defender.alive then
     game.levelDuration = game.levelDuration + dt
     if game.levelDuration > 2 then
+      -- Report the level was completed.
+      poke(0x5f82, self.level)
+
       game.levelDuration = 0
       self.level = self.level + 1
       scene = Scene:new()

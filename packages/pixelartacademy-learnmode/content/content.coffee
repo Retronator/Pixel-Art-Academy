@@ -71,6 +71,8 @@ class LM.Content
 
     console.warn "Unknown content requested.", contentId
     null
+    
+  @getAdventureInstance: -> @getAdventureInstanceForId @id()
 
   constructor: (@parent, @options = {}) ->
     @course = @options.course

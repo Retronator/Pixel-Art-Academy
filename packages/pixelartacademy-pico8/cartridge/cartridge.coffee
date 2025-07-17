@@ -52,6 +52,10 @@ class PAA.Pico8.Cartridge extends LOI.Adventure.Thing
     @artwork.stop()
     @projectId.stop()
     @_imageUrlAutorun.stop()
+  
+  startParameter: ->
+    # Override what string should be passed on start as a stat(6) parameter.
+    ""
 
   fullName: ->
     @artwork()?.title

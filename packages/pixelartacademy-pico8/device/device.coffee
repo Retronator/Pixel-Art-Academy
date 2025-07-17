@@ -21,6 +21,7 @@ class PAA.Pico8.Device extends LOI.Component
 
     @game = new ReactiveField null
     @projectId = new ReactiveField null
+    @startParameter = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -35,9 +36,10 @@ class PAA.Pico8.Device extends LOI.Component
     
     @stop() if @_started
 
-  loadGame: (game, projectId) ->
+  loadGame: (game, projectId, startParameter) ->
     @game game
     @projectId projectId
+    @startParameter startParameter
 
   start: ->
     @stop() if @_started
@@ -69,7 +71,7 @@ class PAA.Pico8.Device extends LOI.Component
     PAA.Pico8.Device.Module =
       audioContext: @options.audioContext
       audioOutputNode: @options.audioOutputNode
-      arguments: [cartridgeUrl]
+      arguments: [cartridgeUrl, "-p", @startParameter()]
       canvas: @_$canvas[0]
       postRun: [
           =>

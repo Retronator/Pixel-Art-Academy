@@ -5,8 +5,9 @@ function _draw()
   print("score: " .. (game ~= nil and game.score or 0), 1, 1, 6)
 
   if game == nil then
-    print("invasion",48,45, 7)
-    print("press button to start",22,65, 7)
+    print("invasion", 48, 38, 7)
+    print(Game.info.subtitle, 64 - (#Game.info.subtitle * 2), 45, 7)
+    print("press button to start", 22, 65, 7)
 
   else
     scene:draw()

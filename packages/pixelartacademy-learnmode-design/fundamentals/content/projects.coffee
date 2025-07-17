@@ -96,6 +96,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       
       @initialize()
       
+      status: -> LM.Content.Status.Locked
+
     class @Invader extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Invasion.Invader'
       @projectClass = PAA.Pico8.Cartridges.Invasion.Project
@@ -105,6 +107,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
     
       @initialize()
       
+      status: -> LM.Content.Status.Locked
+    
     class @DefenderProjectile extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Invasion.DefenderProjectile'
       @projectClass = PAA.Pico8.Cartridges.Invasion.Project
@@ -113,6 +117,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       @unlockInstructions: -> "Add the Defender projectile game element in the Invasion design document to unlock the defender sprite."
       
       @initialize()
+      
+      status: -> LM.Content.Status.Locked
     
     class @InvaderProjectile extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Invasion.InvaderProjectile'
@@ -122,6 +128,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       @unlockInstructions: -> "Add the Invader projectile game element in the Invasion design document to unlock the defender sprite."
 
       @initialize()
+      
+      status: -> LM.Content.Status.Locked
     
     class @DefenderProjectileExplosion extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Invasion.DefenderProjectileExplosion'
@@ -131,6 +139,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       @unlockInstructions: -> "Finish drawing the defender projectile sprite to unlock the defender projectile explosion sprite."
 
       @initialize()
+      
+      status: -> LM.Content.Status.Locked
     
     class @InvaderProjectileExplosion extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Invasion.InvaderProjectileExplosion'
@@ -140,6 +150,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       @unlockInstructions: -> "Finish drawing the invader projectile sprite to unlock the defender projectile explosion sprite."
       
       @initialize()
+      
+      status: -> LM.Content.Status.Locked
     
     class @Shield extends LM.Content.AssetContent
       @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Invasion.Shield'
@@ -150,6 +162,8 @@ class LM.Design.Fundamentals.Content.Projects extends LM.Content
       
       @initialize()
       
+      status: -> LM.Content.Status.Locked
+  
   class @Maze extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.Projects.Maze'
     @displayName: -> "Maze"

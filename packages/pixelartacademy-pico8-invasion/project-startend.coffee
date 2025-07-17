@@ -6,6 +6,8 @@ PAA = PixelArtAcademy
 Invasion = PAA.Pico8.Cartridges.Invasion
 
 class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Pico8.Cartridges.Invasion.Project
+  # design: the design options
+  #   subtitle: a string displayed on the splash screen
   @start: ->
     # Make sure the player doesn't have an already active project.
     throw new AE.InvalidOperationException "Profile already has an active Invasion project." if Invasion.Project.state 'activeProjectId'

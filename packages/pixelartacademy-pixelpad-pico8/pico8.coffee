@@ -106,7 +106,7 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       
       # Load the game non-reactively so that changing of the project ID won't
       # cause a restart (instead we're forcing the player to go out and back in).
-      Tracker.nonreactive => device.loadGame cartridge.game(), cartridge.projectId()
+      Tracker.nonreactive => device.loadGame cartridge.game(), cartridge.projectId(), cartridge.startParameter()
 
       Meteor.clearTimeout @_deviceStartTimeout
 

@@ -11,15 +11,31 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
   @projectClass: -> @Project
 
   @initialize()
+  
+  startParameter: ->
+    PAA.Pico8.Cartridges.Invasion.DesignDocument.designStringForProjectId @projectId()
 
   onInputOutput: (address, value) ->
-    # Read score from address 1.
-    return unless address is 1 and value?
+    return unless value?
+    
+    switch address
+      # Running the cartridge
+      when 1
+        @state 'cartridgeRan', true
 
-    highScore = @state('highScore') or 0
-    return unless value > highScore
-
-    @state 'highScore', value
+      # Level completed
+      when 2
+        highestLevelCompleted = @state('highestLevelCompleted') or 0
+        return unless value > highestLevelCompleted
+        
+        @state 'highestLevelCompleted', value
+        
+      # Score achieved
+      when 3
+        highScore = @state('highScore') or 0
+        return unless value > highScore
+    
+        @state 'highScore', value
   
   # Assets
 

@@ -1,4 +1,6 @@
 function _init()
+  Game.info = parseTable(stat(6))
+
   Game.design = {
     lives = 3,
     postponeGameplay = DesignOptions.PostponeGameplay.UntilSpawnedAll,
@@ -61,4 +63,7 @@ function _init()
   invaders = nil
 
   sfx(10)
+
+  -- Report the cartridge was run.
+  poke(0x5f81, 1)
 end
