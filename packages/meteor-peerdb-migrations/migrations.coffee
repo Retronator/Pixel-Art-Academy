@@ -5,11 +5,12 @@ globals = @
 
 allMigrationDescriptors = []
 
-try
-  # Migration of migrations collection.
-  new DirectCollection('migrations').renameCollection 'peerdb.migrations'
-catch error
-  throw error unless /source namespace does not exist|Source collection .* does not exist/.test "#{error}"
+if Meteor.isServer
+  try
+    # Migration of migrations collection.
+    new DirectCollection('migrations').renameCollection 'peerdb.migrations'
+  catch error
+    throw error unless /source namespace does not exist|Source collection .* does not exist/.test "#{error}"
 
 # Fields:
 #   serial
@@ -23,7 +24,7 @@ catch error
 #   all
 #
 # We use a lower case collection name to signal it is a system collection.
-globals.Document.Migrations = new Meteor.Collection 'peerdb.migrations'
+globals.Document.Migrations = new Meteor.Collection if Meteor.isServer then 'peerdb.migrations' else null
 
 class globals.Document._Migration
   updateAll: (document, collection, currentSchema, intoSchema) ->
@@ -335,11 +336,13 @@ class globals.Document._RenameCollectionMigration extends globals.Document.Major
       throw error unless /source namespace does not exist|Source collection .* does not exist/.test "#{error}"
 
   forward: (document, collection, currentSchema, newSchema) ->
-    assert.equal collection.name, @oldName
-
-    @_rename collection, @newName
-
-    collection.name = @newName
+    # Renaming only happens on the server.
+    if Meteor.isServer
+      assert.equal collection.name, @oldName
+  
+      @_rename collection, @newName
+  
+      collection.name = @newName
 
     # We renamed the collection, so let's update all documents to new schema version.
     counts = super document, collection, currentSchema, newSchema
@@ -373,7 +376,7 @@ globals.Document.addMigration = (migration) ->
 globals.Document.renameCollectionMigration = (oldName, newName) ->
   @addMigration new @_RenameCollectionMigration oldName, newName
 
-globals.Document.migrateForward = (untilMigration) ->
+globals.Document.migrateForward = (untilMigration, usePersistence) ->
   schemas = ['1.0.0']
   currentSchema = '1.0.0'
   currentSerial = 0
@@ -423,16 +426,18 @@ globals.Document.migrateForward = (untilMigration) ->
     schemas.push currentSchema
     currentName = newName
 
-  unknownSchema = _.pluck @Meta.collection.find(
-    _schema:
-      $nin: schemas
-      $exists: true
-  ,
-    fields:
-      _id: 1
-  ).fetch(), '_id'
-
-  throw new Error "Documents with unknown schema version: #{unknownSchema}" if unknownSchema.length
+  if Meteor.isServer or usePersistence and @isPersistent
+    targetCollection = if usePersistence then @documents else @Meta.collection
+    unknownSchema = _.pluck targetCollection.find(
+      _schema:
+        $nin: schemas
+        $exists: true
+    ,
+      fields:
+        _id: 1
+    ).fetch(), '_id'
+  
+    throw new Error "Documents with unknown schema version: #{unknownSchema}" if unknownSchema.length
 
   updateAll = false
 
@@ -452,8 +457,9 @@ globals.Document.migrateForward = (untilMigration) ->
     else if migration instanceof @MajorMigration
       newSchema = semver.inc currentSchema, 'major'
 
-    if i < migrationsPending and migration instanceof @_RenameCollectionMigration
-      # We skip all already done rename migrations (but we run other old migrations again, just with the last known collection name).
+    if i < migrationsPending and migration instanceof @_RenameCollectionMigration and not usePersistence
+      # We skip all already done rename migrations except when using persistence
+      # (but we run other old migrations again, just with the last known collection name).
       currentSchema = newSchema
       currentName = migration.newName
       continue
@@ -472,10 +478,17 @@ globals.Document.migrateForward = (untilMigration) ->
 
     migration._updateAll = false
 
-    counts = migration.forward @, new DirectCollection(currentName), currentSchema, newSchema
-    throw new Error "Invalid return value from migration: #{util.inspect counts}" unless 'migrated' of counts and 'all' of counts
-
-    updateAll = true if counts.migrated and migration._updateAll
+    if Meteor.isServer or usePersistence and @isPersistent
+      targetCollection = if usePersistence then @documents else new DirectCollection(currentName)
+      counts = migration.forward @, targetCollection, currentSchema, newSchema
+      throw new Error "Invalid return value from migration: #{util.inspect counts}" unless 'migrated' of counts and 'all' of counts
+  
+      updateAll = true if counts.migrated and migration._updateAll
+      
+    else
+      counts =
+        migrated: 0
+        all: 0
 
     if i < migrationsPending
       count = globals.Document.Migrations.update
@@ -517,7 +530,7 @@ globals.Document.migrateForward = (untilMigration) ->
         timestamp: new Date()
 
     if migration instanceof @_RenameCollectionMigration
-      Log.info "Renamed collection '#{currentName}' to '#{newName}'"
+      Log.info "Renamed collection '#{currentName}' to '#{newName}'" if Meteor.isServer
       Log.info "Migrated #{counts.migrated}/#{counts.all} document(s) (from #{currentSchema} to #{newSchema}): #{migration.name}" if counts.all
     else
       Log.info "Migrated #{counts.migrated}/#{counts.all} document(s) in '#{currentName}' collection (from #{currentSchema} to #{newSchema}): #{migration.name}" if counts.all
@@ -527,15 +540,17 @@ globals.Document.migrateForward = (untilMigration) ->
 
   # We do not check for not migrated documents if migrations are disabled.
   unless globals.Document.migrationsDisabled
-    # For all those documents which lack schema information we assume they have the last schema.
-    @Meta.collection.update
-      _schema:
-        $exists: false
-    ,
-      $set:
-        _schema: currentSchema
-    ,
-      multi: true
+    if Meteor.isServer or usePersistence and @isPersistent
+      # For all those documents which lack schema information we assume they have the last schema.
+      targetCollection = if usePersistence then @documents else @Meta.collection
+      targetCollection.update
+        _schema:
+          $exists: false
+      ,
+        $set:
+          _schema: currentSchema
+      ,
+        multi: true
 
   @Meta.schema = currentSchema
 
@@ -546,8 +561,12 @@ globals.Document.migrateBackward = (untilMigration) ->
   # TODO: Implement.
   throw new Error "Not implemented yet"
 
+# Pause migration observe by setting to true whenever new documents shouldn't be assumed that they are fully upgraded.
+globals.Document.pauseMigrationObserve = false
+
 globals.Document._setupMigrationsObserve = ->
-  @Meta.collection.find(
+  targetCollection = if Meteor.isClient then @documents else @Meta.collection
+  targetCollection.find(
     _schema:
       $exists: false
   ,
@@ -556,11 +575,15 @@ globals.Document._setupMigrationsObserve = ->
       _schema: 1
   ).observeChanges
     added: globals.Document._observerCallback true, (id, fields) =>
+      return if globals.Document.pauseMigrationObserve
+      
       # TODO: Check if schema is known and complain if not.
       # TODO: We could automatically migrate old documents if we know of newer schema.
       return if fields._schema
 
-      @Meta.collection.update id,
+      return unless @Meta.schema
+      
+      targetCollection.update id,
         $set:
           _schema: @Meta.schema
 
@@ -576,16 +599,16 @@ getReplacedDocument = (document) ->
 
   throw new Error "Cannot find a replaced document for '#{document.Meta._name}'."
 
-migrateAllForward = ->
+globals.Document.migrateAllForward = (usePersistence) ->
   updateAll = false
 
   for migrationDescriptor in allMigrationDescriptors
-    updateAll = getReplacedDocument(migrationDescriptor.document).migrateForward(migrationDescriptor.migration) or updateAll
+    updateAll = getReplacedDocument(migrationDescriptor.document).migrateForward(migrationDescriptor.migration, usePersistence) or updateAll
 
   # We set initial schema value for all documents in server collections which do not have migrations.
-  for document in globals.Document.list when document.Meta.collection._connection is Meteor.server
+  for document in globals.Document.list when document.Meta.collection._connection is Meteor.server or Meteor.isClient and document.isPersistent
     unless document.Meta.schema
-      document.migrateForward(null)
+      document.migrateForward(null, usePersistence)
 
   # Return if updateAll should be called.
   updateAll
@@ -593,7 +616,7 @@ migrateAllForward = ->
 # TODO: What happens if this is called multiple times? We should make sure that for each document observers are made only once.
 setupMigrationsObserve = ->
   # Setup migrations' observe only for server collections.
-  for document in globals.Document.list when document.Meta.collection._connection is Meteor.server
+  for document in globals.Document.list when document.Meta.collection._connection is Meteor.server or Meteor.isClient and document.isPersistent
     document._setupMigrationsObserve()
 
 migrations = ->
@@ -610,13 +633,14 @@ migrations = ->
       all: 0
 
   # Even with disabled migrations this computes the latest schema versions for every document.
-  updateAll = migrateAllForward()
+  updateAll = globals.Document.migrateAllForward()
 
   # Check that everything has been migrated to the latest schema version.
   unless globals.Document.migrationsDisabled
     # Check only for server collections.
-    for document in globals.Document.list when document.Meta.collection._connection is Meteor.server
-      notMigrated = _.pluck document.Meta.collection.find(
+    for document in globals.Document.list when document.Meta.collection._connection is Meteor.server or Meteor.isClient and document.isPersistent
+      targetCollection = if Meteor.isClient then document.documents else document.Meta.collection
+      notMigrated = _.pluck targetCollection.find(
         _schema:
           $ne: document.Meta.schema
       ,

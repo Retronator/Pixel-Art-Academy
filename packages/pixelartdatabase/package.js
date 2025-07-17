@@ -37,7 +37,7 @@ Package.onUse(function(api) {
   api.addFile('artwork/artwork-updateartwork');
   api.addFile('artwork/methods');
   api.addServerFile('artwork/subscriptions');
-  api.addServerFile('artwork/migrations/0000-converttohttps');
+  api.addFile('artwork/migrations/0000-converttohttps');
 
   // Character
 

@@ -6,8 +6,8 @@ class Migration extends Document.MinorMigration
   forward: (document, collection, currentSchema, newSchema) =>
     count = 0
 
-    usersCollection = new DirectCollection 'users'
-    charactersCollection = new DirectCollection 'LandsOfIllusions.Characters'
+    usersCollection = if Meteor.isClient then Retronator.Accounts.User.documents else new DirectCollection 'users'
+    charactersCollection = if Meteor.isClient then LOI.Character.documents else new DirectCollection 'LandsOfIllusions.Characters'
 
     collection.findEach
       _schema: currentSchema

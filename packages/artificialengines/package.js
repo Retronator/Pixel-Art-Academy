@@ -294,7 +294,7 @@ Package.onUse(function(api) {
   api.addServerFile('babel/translation/translation-server-databasecontent');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
-  api.addServerFile('babel/translation/migrations/0000-renamecollection');
+  api.addFile('babel/translation/migrations/0000-renamecollection');
 
   api.addFile('babel/language/language');
   api.addServerFile('babel/language/subscriptions');

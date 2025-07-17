@@ -26,6 +26,7 @@ class Persistence.PersistentCollection extends AM.Collection
     document = @findOne selector
     persistenceRequired = document?.profileId or modifier.profileId
     lastEditTimePresent = modifier.$set?.lastEditTime or modifier.lastEditTime
-    throw new AE.ArgumentException "A persistent collection update of a profiled #{@documentClass.name} document must set the last edit time." if persistenceRequired and not lastEditTimePresent
+    schemaChange = modifier.$set?._schema?
+    throw new AE.ArgumentException "A persistent collection update of a profiled #{@documentClass.name} document must set the last edit time." if persistenceRequired and not lastEditTimePresent and not schemaChange
     
     super arguments...

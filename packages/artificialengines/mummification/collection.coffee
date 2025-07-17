@@ -7,3 +7,14 @@ class AM.Collection extends Mongo.Collection
   
   fetch: ->
     @find(arguments...).fetch()
+
+  # Support for migrations (mimics DirectCollection)
+  
+  findEach: (selector, options, eachCallback) =>
+    if _.isFunction options
+      eachCallback = options
+      options = {}
+    options = {} unless options
+    
+    cursor = @find(selector, options)
+    cursor.forEach eachCallback
