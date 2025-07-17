@@ -50,8 +50,8 @@ Package.onUse(function(api) {
   api.addFile('user/methods');
   api.addServerFile('user/methods-server');
   api.addServerFile('user/subscriptions');
-  api.addServerFile('user/migrations/0000-publicname');
-  api.addServerFile('user/migrations/0001-patreonloginservice');
+  api.addFile('user/migrations/0000-publicname');
+  api.addFile('user/migrations/0001-patreonloginservice');
 
   // Patreon
 

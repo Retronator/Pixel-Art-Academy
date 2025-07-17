@@ -49,7 +49,7 @@ Package.onUse(function(api) {
   api.addFile('documents/palette/methods');
   api.addFile('documents/palette/atari2600');
   api.addFile('documents/palette/subscriptions');
-  api.addServerFile('documents/palette/migrations/0000-renameatari2600topixelartacademy');
+  api.addFile('documents/palette/migrations/0000-renameatari2600topixelartacademy');
 
   api.addServerFile('documents/palette/palettes-server/pixelartacademy');
   api.addServerFile('documents/palette/palettes-server/pico8');
@@ -176,7 +176,7 @@ Package.onUse(function(api) {
   api.addFile('documents/audio/methods/updatenodeparameters');
   api.addFile('documents/audio/methods/updateconnections');
 
-  api.addServerFile('documents/asset/migrations/0000-moveauthorstoprofileid');
+  api.addFile('documents/asset/migrations/0000-moveauthorstoprofileid');
 
   // Upload
 
