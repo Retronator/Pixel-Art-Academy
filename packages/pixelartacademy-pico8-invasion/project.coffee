@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Base
 PAA = PixelArtAcademy
 
