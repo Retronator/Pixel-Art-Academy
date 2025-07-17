@@ -32,6 +32,16 @@ class AM.Document extends Document
       cursor = documents.find arguments...
       cursor.fetch()
 
+    # Add support for migrations (mimics DirectCollection).
+    documents.findEach = (selector, options, eachCallback) ->
+      if _.isFunction options
+        eachCallback = options
+        options = {}
+      options = {} unless options
+      
+      cursor = documents.find(selector, options)
+      cursor.forEach eachCallback
+      
   @_analyzeFields: (source, path) ->
     for fieldName, field of source
       prefix = if path.length then "#{path}." else ''

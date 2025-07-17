@@ -6,7 +6,7 @@ class Migration extends Document.PatchMigration
   forward: (document, collection, currentSchema, newSchema) ->
     count = 0
 
-    membershipCollection = new DirectCollection 'LandsOfIllusions.Character.Memberships'
+    membershipCollection = if Meteor.isClient then LOI.Character.Membership.documents else new DirectCollection 'LandsOfIllusions.Character.Memberships'
 
     # For each study group member, check if they have the last hangout set.
     membershipCollection.findEach

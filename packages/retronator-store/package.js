@@ -41,7 +41,7 @@ Package.onUse(function(api) {
   api.addFile('item/item');
   api.addServerFile('item/subscriptions');
 
-  api.addServerFile('item/migrations/0000-renamecollection');
+  api.addFile('item/migrations/0000-renamecollection');
 
   // VAT
 
@@ -57,9 +57,9 @@ Package.onUse(function(api) {
   api.addFile('payment/payment');
   api.addServerFile('payment/subscriptions');
 
-  api.addServerFile('payment/migrations/0000-renamecollection');
-  api.addServerFile('payment/migrations/0001-migratestripecustomeridfield');
-  api.addServerFile('payment/migrations/0002-invalid');
+  api.addFile('payment/migrations/0000-renamecollection');
+  api.addFile('payment/migrations/0001-migratestripecustomeridfield');
+  api.addFile('payment/migrations/0002-invalid');
 
   // Payment method
 
@@ -80,8 +80,8 @@ Package.onUse(function(api) {
   api.addServerFile('transaction/methods-server/confirmation');
   api.addServerFile('transaction/methods-server/stripe');
 
-  api.addServerFile('transaction/migrations/0000-renamecollection');
-  api.addServerFile('transaction/migrations/0001-invalid');
+  api.addFile('transaction/migrations/0000-renamecollection');
+  api.addFile('transaction/migrations/0001-invalid');
 
   api.addFile('shoppingcart/shoppingcart');
 

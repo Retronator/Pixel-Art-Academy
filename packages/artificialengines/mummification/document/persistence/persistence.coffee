@@ -217,6 +217,8 @@ class AM.Document.Persistence
     console.log "Profile documents retrieved …" if @debug
     
     # Insert all documents belonging to this profile.
+    Document.pauseMigrationObserve = true
+    
     for documentClassId, documentsById of documentsByClassIdAndId
       documentClass = AM.Document.getClassForId documentClassId
       
@@ -227,6 +229,10 @@ class AM.Document.Persistence
       for documentId, document of documentsById
         documentClass.documents.insert document
         
+    # Perform migrations on the incoming documents.
+    Document.migrateAllForward true
+    Document.pauseMigrationObserve = false
+    
     console.log "Profile documents inserted. Profile ready." if @debug
   
     @profileReady true
