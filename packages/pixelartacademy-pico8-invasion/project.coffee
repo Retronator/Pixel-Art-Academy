@@ -4,7 +4,11 @@ PAA = PixelArtAcademy
 
 class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
   # activeProjectId: ID of the project that is currently active
-  @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion'
+  
+  # Project document fields
+  # design: the design options
+  #   subtitle: a string displayed on the splash screen
+  @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Project'
   
   @fullName: -> "Invasion game"
 

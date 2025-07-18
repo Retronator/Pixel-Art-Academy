@@ -97,6 +97,8 @@ Package.onUse(function(api) {
   api.addComponent('project/assets/bitmap/clipboardcomponent..');
   api.addUnstyledComponent('project/assets/bitmap/briefcomponent..');
 
+  api.addFile('project/migrations/0000-projectthings');
+
   // Challenges
 
   api.addFile('challenges..');

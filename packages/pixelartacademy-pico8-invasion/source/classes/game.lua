@@ -44,7 +44,7 @@ function Game:update()
         sfx(12)
 
         -- Report the score.
-        poke(0x5f83, self.score)
+        poke2(0x5f83, self.score)
       end
     end
   end

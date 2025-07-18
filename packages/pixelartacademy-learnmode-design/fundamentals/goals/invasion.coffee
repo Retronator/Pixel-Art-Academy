@@ -29,8 +29,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     
     @completedConditions: ->
       # Require the design to not be empty.
-      activeProjectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
-      project = PAA.Practice.Project.documents.findOne activeProjectId
+      return unless activeProjectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
+      return unless project = PAA.Practice.Project.documents.findOne activeProjectId
       not EJSON.equals project.design, {}
       
   class @Run extends PAA.Learning.Task.Automatic

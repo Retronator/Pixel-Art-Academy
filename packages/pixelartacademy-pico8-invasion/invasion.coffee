@@ -32,10 +32,14 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
         
       # Score achieved
       when 3
+        @_newScore = value
+      
+      when 4
+        @_newScore += value << 8
         highScore = @state('highScore') or 0
-        return unless value > highScore
+        return unless @_newScore > highScore
     
-        @state 'highScore', value
+        @state 'highScore', @_newScore
   
   # Assets
 
