@@ -21,7 +21,10 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Pico8.Cartridges.Invasio
       type: PAA.Pico8.Cartridges.Invasion.Project.id()
       profileId: profileId
       assets: []
-      design: {}
+      design:
+        entities: []
+      designDocument:
+        writtenUnits: []
     
     # Write the project ID into profile's game state.
     Invasion.Project.state 'activeProjectId', projectId

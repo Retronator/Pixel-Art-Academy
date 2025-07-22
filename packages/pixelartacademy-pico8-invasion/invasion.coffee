@@ -62,6 +62,8 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     
     @fixedDimensions: -> width: 16, height: 16
     
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/defender.png'
+    
     @initialize()
   
   class @DefenderProjectile extends @Sprite
@@ -74,6 +76,8 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     """
     
     @fixedDimensions: -> width: 8, height: 8
+    
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/defender-projectile.png'
     
     @initialize()
   
@@ -88,6 +92,8 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     
     @fixedDimensions: -> width: 8, height: 8
     
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/defender-projectile-explosion.png'
+    
     @initialize()
     
   class @Invader extends @Sprite
@@ -100,6 +106,8 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     """
     
     @fixedDimensions: -> width: 16, height: 16
+    
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/invader.png'
     
     @initialize()
   
@@ -114,6 +122,8 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     
     @fixedDimensions: -> width: 8, height: 8
     
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/invader-projectile.png'
+    
     @initialize()
   
   class @InvaderProjectileExplosion extends @Sprite
@@ -127,6 +137,8 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     
     @fixedDimensions: -> width: 8, height: 8
     
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/invader-projectile-explosion.png'
+    
     @initialize()
     
   class @Shield extends @Sprite
@@ -139,5 +151,7 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
     """
     
     @fixedDimensions: -> width: 24, height: 24
+    
+    @imageUrl: -> '/pixelartacademy/pico8/cartridges/invasion/sprites/shield.png'
     
     @initialize()

@@ -23,6 +23,8 @@ Package.onUse(function(api) {
   api.addFile('project-startend');
 
   api.addComponent('designdocument..');
+  api.addComponent('designdocument/choice..');
+  api.addComponent('designdocument/entities..');
 
   api.addAssets('invasion.p8.png', 'client');
 });

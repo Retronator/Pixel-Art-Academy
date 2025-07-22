@@ -114,6 +114,40 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     else
       @_setScrollLeft @_clampedScrollLeft() + sign * scrollDelta
     
+  scrollToElement: (element, padding = 20) ->
+    # Get positions relative to document
+    scale = @os.display.scale()
+
+    $element = $(element)
+    elementOffset = $element.offset()
+    elementOffset.top /= scale
+    elementOffset.width /= scale
+
+    elementWidth = $element.outerWidth() / scale
+    elementHeight = $element.outerHeight() / scale
+
+    contentAreaOffset = @$contentArea.offset()
+    contentAreaOffset.top /= scale
+    contentAreaOffset.left /= scale
+
+    contentAreaSize = @contentAreaSize()
+    
+    if elementOffset.top < contentAreaOffset.top + padding
+      scrollDownBy = contentAreaOffset.top + padding - elementOffset.top
+      @_setScrollTop @_clampedScrollTop() - scrollDownBy
+      
+    else if elementOffset.top + elementHeight > contentAreaOffset.top + contentAreaSize.height - padding
+      scrollUpBy = elementOffset.top + elementHeight - (contentAreaOffset.top + contentAreaSize.height - padding)
+      @_setScrollTop @_clampedScrollTop() + scrollUpBy
+      
+    if elementOffset.left < contentAreaOffset.left + padding
+      scrollRightBy = contentAreaOffset.left - elementOffset.left + padding
+      @_setScrollLeft @_clampedScrollLeft() - scrollRightBy
+      
+    else if elementOffset.left + elementWidth > contentAreaOffset.left + contentAreaSize.width - padding
+      scrollLeftBy = elementOffset.left + elementWidth - (contentAreaOffset.left + contentAreaSize.width - padding)
+      @_setScrollLeft @_clampedScrollLeft() + scrollLeftBy
+  
   _clampedScrollTop: ->
     _.clamp @scrollTop(), 0, @maxScroll().top
     

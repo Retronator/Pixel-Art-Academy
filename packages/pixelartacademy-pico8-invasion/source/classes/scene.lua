@@ -59,20 +59,20 @@ end
 function Scene:addDefender()
   local defenderX, defenderY
 
-  if Game.design.defender.horizontalAlignment == HorizontalAlignment.Left then
+  if Game.design.defender.horizontalAlignment == HorizontalAlignments.Left then
     defenderX = Game.design.playfieldBounds.left + Defender.sprite.bounds.width
 
-  elseif Game.design.defender.horizontalAlignment == HorizontalAlignment.Right then
+  elseif Game.design.defender.horizontalAlignment == HorizontalAlignments.Right then
     defenderX = Game.design.playfieldBounds.right - Defender.sprite.bounds.width
 
   else
     defenderX = Game.design.playfieldBounds.left + flr(Game.design.playfieldBounds.width / 2)
   end
 
-  if Game.design.defender.verticalAlignment == VerticalAlignment.Top then
+  if Game.design.defender.verticalAlignment == VerticalAlignments.Top then
     defenderY = Game.design.playfieldBounds.top + Defender.sprite.bounds.height
 
-  elseif Game.design.defender.verticalAlignment == VerticalAlignment.Bottom then
+  elseif Game.design.defender.verticalAlignment == VerticalAlignments.Bottom then
     defenderY = Game.design.playfieldBounds.bottom - Defender.sprite.bounds.height
 
   else

@@ -6,8 +6,8 @@ function _init()
     postponeGameplay = DesignOptions.PostponeGameplay.UntilSpawnedAll,
     defender = {
       movement = DesignOptions.Defender.Movement.Horizontal,
-      horizontalAlignment = HorizontalAlignment.Center,
-      verticalAlignment = VerticalAlignment.Bottom,
+      horizontalAlignment = HorizontalAlignments.Center,
+      verticalAlignment = VerticalAlignments.Bottom,
       speed = 1
     },
     defenderProjectiles = {
@@ -21,8 +21,8 @@ function _init()
         columns = 7,
         horizontalSpacing = 2,
         verticalSpacing = 2,
-        horizontalAlignment = HorizontalAlignment.Center,
-        verticalAlignment = VerticalAlignment.Top,
+        horizontalAlignment = HorizontalAlignments.Center,
+        verticalAlignment = VerticalAlignments.Top,
         movement = DesignOptions.Invaders.Formation.Movement.Individual,
         horizontalSpeed = 2,
         verticalSpeed = 8,

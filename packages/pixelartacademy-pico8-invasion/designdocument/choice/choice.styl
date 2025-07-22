@@ -1,0 +1,39 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pico8-cartridges-invasion-designdocument
+  .choice
+    list-style none
+    margin 5rem 0 10rem
+    padding 0
+
+    .option-area
+      position relative
+      margin 5rem 0
+      text-align center
+
+      &:not(:last-child)::after
+        content ''
+        position absolute
+        bottom -3rem
+        left calc(50% - 5rem)
+        right calc(50% - 5rem)
+        height 1rem
+        background black
+
+      .option
+        font inherit
+        background none
+        border none
+        width 100%
+
+      button
+        &:hover
+          color white
+          pixel-text-outline black
+
+      input[type="text"]
+        input-placeholder black
+        text-align center
+
+  .chosen-choice
+    text-decoration underline 1rem

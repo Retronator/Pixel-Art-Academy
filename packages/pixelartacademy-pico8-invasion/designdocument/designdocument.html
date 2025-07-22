@@ -1,6 +1,89 @@
 <template name="PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument">
   <div class="pixelartacademy-pico8-cartridges-invasion-designdocument">
-    <p>This is the design document for Invasion.</p>
-    <p>Game subtitle is: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Subtitle}}</p>
+    <article>
+      <hgroup class="title" data-unit="title">
+        <h1>Invasion</h1>
+        <p>Design document</p>
+      </hgroup>
+      <h2 data-unit="game-concept-header">1. Game concept</h2>
+      <p data-unit="game-concept">
+        Invasion is a single-screen shoot 'em up, inspired by
+        {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice themeChoice}}.
+        The player is fending off a fleet of computer-controlled invaders by shooting projectiles at them.
+      </p>
+      {{#if design.theme}}
+        <h2 data-unit="game-mechanics-header">2. Game mechanics</h2>
+        <h3 data-unit="entities-header">2.a. Entities</h3>
+        {{#if hasEntity 'Defender'}}
+          <p data-unit="entities-defender">Defender: The player-controlled unit.</p>
+        {{/if}}
+        {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Entities}}
+        {{#if hasEntities}}
+          <h3 data-unit="game-flow-header">2.b. Game flow</h3>
+          {{#if hasEntity 'Defender'}}
+            <p data-unit="game-flow-defender">
+              A defender moves {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowDefenderMovementChoice}},
+              starting {{#if gameFlowDefenderStartingAlignmentPrepositionAt}}at{{else}}in{{/if}} the
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowDefenderStartingAlignmentChoice}}.
+            </p>
+          {{/if}}
+          {{#if defenderProjectileAdded}}
+            <p>
+              Using the fire button, the player shoots a projectile [up / down / left / right].
+              Hitting an invader makes it [explode / disappear]
+              and the player earns points.
+              If all the invaders are eliminated, the game repeats with a new level where invaders [shoot more frequently + score more points].
+            </p>
+          {{/if}}
+          {{#if invaderAdded}}
+            <p>
+              Invaders spawn at / in the [top / bottom / right side / left side / top-left corner / top-right corner / bottom-left corner / bottom-right corner]
+              in a grid formation of [_] rows and [_] columns.
+              They appear [all at once / one-by-one] and the game pauses during this time.
+              The invaders move [left and right / up and down],
+              and [descend down / ascend up / advance left / advance right / do not move horizontally / do not move vertically]
+              each time they reach the edge of the screen.
+              They move as a formation [in unison, one by one], at a constant speed / going faster and faster as invaders are eliminated.
+            </p>
+          {{/if}}
+          {{#if invaderProjectileAdded}}
+            <p>
+              Every once in a while, a random invader at the [top / bottom / left / right]
+              shoots a projectile up / down / left / right.
+              If the defender gets hit by an enemy projectile, the player looses a life. When all lives are lost, the game is over.
+            </p>
+          {{/if}}
+          {{#if shieldAdded}}
+            <p>
+              Shields are placed in the level on the [left / right / top / bottom]
+              side.
+              They slowly disintegrate as projectiles or invaders hit them.
+            </p>
+          {{/if}}
+          <h3 data-unit="properties-header">2.c. Properties</h3>
+          {{#if hasEntity 'Defender'}}
+            <div data-unit="properties-defender">
+              <p>
+                Defender:
+              </p>
+              <ul>
+                <li data-unit="properties-defender-movement">
+                  - Movement: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice propertiesDefenderMovementChoice}}
+                </li>
+                <li data-unit="properties-defender-starting-horizontal-position">
+                  - Starting horizontal position: [left / center / right]
+                </li>
+                <li data-unit="properties-defender-starting-vertical-position">
+                  - Starting vertical position: [top / middle / bottom]
+                </li>
+                <li data-unit="properties-defender-speed">
+                  - Speed: [_] pixels per move
+                </li>
+              </ul>
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    </article>
   </div>
 </template>

@@ -10,13 +10,13 @@ Orientations = {
   Vertical = 2
 }
 
-HorizontalAlignment = {
+HorizontalAlignments = {
   Left = 1,
   Center = 2,
   Right = 3
 }
 
-VerticalAlignment = {
+VerticalAlignments = {
   Top = 1,
   Middle = 2,
   Bottom = 3

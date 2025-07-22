@@ -28,10 +28,10 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     @initialize()
     
     @completedConditions: ->
-      # Require the design to not be empty.
+      # Require an entity to be added to the design.
       return unless activeProjectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
       return unless project = PAA.Practice.Project.documents.findOne activeProjectId
-      not EJSON.equals project.design, {}
+      project.design.entities?.length > 1
       
   class @Run extends PAA.Learning.Task.Automatic
     @id: -> "#{Goal.id()}.Run"
@@ -63,7 +63,7 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     @completedConditions: ->
       return unless projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
       return unless project = PAA.Practice.Project.documents.findOne projectId
-      return unless asset = _.find project.assets, (asset) -> asset.id is @assetId()
+      return unless asset = _.find project.assets, (asset) => asset.id is @assetId()
       return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
 
       # We know the player has changed the bitmap if the history position is not zero.
@@ -81,7 +81,7 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
       After adding the defender game element in the Invasion design document, go to the Drawing app and complete the sprite for the player unit.
     """
 
-    @predecessors: -> [Goal.Play]
+    @predecessors: -> [Goal.Run]
     
     @groupNumber: -> -1
     
@@ -129,7 +129,7 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
       After adding the invader game element in the Invasion design document, go to the Drawing app and complete the sprite for the enemy units.
     """
     
-    @predecessors: -> [Goal.Play]
+    @predecessors: -> [Goal.Run]
     
     @groupNumber: -> 1
     
@@ -161,7 +161,7 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
       After optionally adding the shield game element in the Invasion design document, go to the Drawing app and complete the sprite for an obstacle to the projectiles.
     """
     
-    @predecessors: -> [Goal.Play]
+    @predecessors: -> [Goal.Run]
     
     @initialize()
     

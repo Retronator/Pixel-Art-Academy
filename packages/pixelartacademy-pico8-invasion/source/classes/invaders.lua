@@ -57,20 +57,20 @@ function Invaders:new()
 
   local edgeMargin = min(Game.design.invaders.formation.horizontalSpacing, Game.design.invaders.formation.verticalSpacing)
 
-  if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignment.Left then
+  if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignments.Left then
     invaders.x = Game.design.playfieldBounds.left - invaders.bounds.left + edgeMargin
 
-  elseif Game.design.invaders.formation.horizontalAlignment == HorizontalAlignment.Right then
+  elseif Game.design.invaders.formation.horizontalAlignment == HorizontalAlignments.Right then
     invaders.x = Game.design.playfieldBounds.right - invaders.bounds.right - edgeMargin
 
   else
     invaders.x = Game.design.playfieldBounds.left + flr(Game.design.playfieldBounds.width / 2)
   end
 
-  if Game.design.invaders.formation.verticalAlignment == VerticalAlignment.Top then
+  if Game.design.invaders.formation.verticalAlignment == VerticalAlignments.Top then
     invaders.y = Game.design.playfieldBounds.top - invaders.bounds.top + edgeMargin
 
-  elseif Game.design.invaders.formation.verticalAlignment == VerticalAlignment.Bottom then
+  elseif Game.design.invaders.formation.verticalAlignment == VerticalAlignments.Bottom then
     invaders.y = Game.design.playfieldBounds.bottom - invaders.bounds.bottom - edgeMargin
 
   else
@@ -82,7 +82,7 @@ function Invaders:new()
   if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down or Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Up then
     invaders.attackOrientation = Orientations.Vertical
 
-    if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignment.Right then
+    if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignments.Right then
       invaders.moveDirection = Directions.Left
 
     else
@@ -91,7 +91,7 @@ function Invaders:new()
   else
     invaders.attackOrientation = Orientations.Horizontal
 
-    if Game.design.invaders.formation.verticalAlignment == VerticalAlignment.Bottom then
+    if Game.design.invaders.formation.verticalAlignment == VerticalAlignments.Bottom then
       invaders.moveDirection = Directions.Up
 
     else

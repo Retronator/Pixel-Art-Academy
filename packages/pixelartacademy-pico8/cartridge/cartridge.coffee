@@ -14,6 +14,7 @@ class PAA.Pico8.Cartridge extends LOI.Adventure.Thing
 
     @game = new ComputedField =>
       return unless slug = @constructor.gameSlug()
+      PAA.Pico8.Game.forSlug.subscribe @, slug
       PAA.Pico8.Game.forSlug.subscribeContent @, slug
 
       PAA.Pico8.Game.documents.findOne {slug}
