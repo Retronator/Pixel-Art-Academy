@@ -43,6 +43,8 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
       
       @_assetsUpdatedDependency.changed()
 
+    @pico8Cartridge = new PAA.Pico8.Cartridges.Invasion
+
   destroy: ->
     super arguments...
     

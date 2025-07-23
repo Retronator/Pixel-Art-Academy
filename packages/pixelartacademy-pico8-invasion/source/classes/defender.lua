@@ -23,7 +23,7 @@ end
 
 function Defender:update()
   -- Horizontal movement
-  if Game.design.defender.movement == DesignOptions.Defender.Movement.Horizontal or Game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
+  if Game.design.defender.movement == DesignOptions.Defender.Movements.Horizontal or Game.design.defender.movement == DesignOptions.Defender.Movements.AllDirections then
     if btn(0) then
       self.x = self.x - Game.design.defender.speed
     end
@@ -35,7 +35,7 @@ function Defender:update()
   end
 
   -- Vertical movement
-  if Game.design.defender.movement == DesignOptions.Defender.Movement.Vertical or Game.design.defender.movement == DesignOptions.Defender.Movement.AllDirections then
+  if Game.design.defender.movement == DesignOptions.Defender.Movements.Vertical or Game.design.defender.movement == DesignOptions.Defender.Movements.AllDirections then
     if btn(2) then
       self.y = self.y - Game.design.defender.speed
     end

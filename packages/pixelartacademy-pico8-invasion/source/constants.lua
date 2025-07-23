@@ -35,25 +35,18 @@ DesignOptions = {
     UntilSpawnedAll = 2
   },
   Defender = {
-    Movement = {
+    Movements = {
       Horizontal = 1,
       Vertical = 2,
       AllDirections = 3,
-    },
-  },
-  DefenderProjectiles = {
-    Movement = Directions
+    }
   },
   Invaders = {
     Formation = {
-      Movement = {
+      MovementTypes = {
         Individual = 1,
         All = 2
       }
-    },
-    AttackDirection = Directions
-  },
-  InvaderProjectiles = {
-    Movement = Directions
-  },
+    }
+  }
 }

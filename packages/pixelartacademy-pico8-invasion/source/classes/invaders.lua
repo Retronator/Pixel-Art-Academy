@@ -57,20 +57,20 @@ function Invaders:new()
 
   local edgeMargin = min(Game.design.invaders.formation.horizontalSpacing, Game.design.invaders.formation.verticalSpacing)
 
-  if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignments.Left then
+  if Game.design.invaders.formation.startingAlignment.horizontal == HorizontalAlignments.Left then
     invaders.x = Game.design.playfieldBounds.left - invaders.bounds.left + edgeMargin
 
-  elseif Game.design.invaders.formation.horizontalAlignment == HorizontalAlignments.Right then
+  elseif Game.design.invaders.formation.startingAlignment.horizontal == HorizontalAlignments.Right then
     invaders.x = Game.design.playfieldBounds.right - invaders.bounds.right - edgeMargin
 
   else
     invaders.x = Game.design.playfieldBounds.left + flr(Game.design.playfieldBounds.width / 2)
   end
 
-  if Game.design.invaders.formation.verticalAlignment == VerticalAlignments.Top then
+  if Game.design.invaders.formation.startingAlignment.vertical == VerticalAlignments.Top then
     invaders.y = Game.design.playfieldBounds.top - invaders.bounds.top + edgeMargin
 
-  elseif Game.design.invaders.formation.verticalAlignment == VerticalAlignments.Bottom then
+  elseif Game.design.invaders.formation.startingAlignment.vertical == VerticalAlignments.Bottom then
     invaders.y = Game.design.playfieldBounds.bottom - invaders.bounds.bottom - edgeMargin
 
   else
@@ -79,10 +79,10 @@ function Invaders:new()
 
   -- Movement direction
 
-  if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down or Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Up then
+  if Game.design.invaders.formation.attackDirection == Directions.Down or Game.design.invaders.formation.attackDirection == Directions.Up then
     invaders.attackOrientation = Orientations.Vertical
 
-    if Game.design.invaders.formation.horizontalAlignment == HorizontalAlignments.Right then
+    if Game.design.invaders.formation.startingAlignment.horizontal == HorizontalAlignments.Right then
       invaders.moveDirection = Directions.Left
 
     else
@@ -91,7 +91,7 @@ function Invaders:new()
   else
     invaders.attackOrientation = Orientations.Horizontal
 
-    if Game.design.invaders.formation.verticalAlignment == VerticalAlignments.Bottom then
+    if Game.design.invaders.formation.startingAlignment.vertical == VerticalAlignments.Bottom then
       invaders.moveDirection = Directions.Up
 
     else
@@ -132,7 +132,7 @@ function Invaders:resetIndividualMovement()
       self.currentIndividualColumnNumber = 1
     end
 
-    if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
+    if Game.design.invaders.formation.attackDirection == Directions.Down then
       self.currentIndividualRowNumber = self.rows
     else
       self.currentIndividualRowNumber = 1
@@ -145,7 +145,7 @@ function Invaders:resetIndividualMovement()
       self.currentIndividualRowNumber = 1
     end
 
-    if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
+    if Game.design.invaders.formation.attackDirection == Directions.Right then
       self.currentIndividualColumnNumber = self.columns
     else
       self.currentIndividualColumnNumber = 1
@@ -201,7 +201,7 @@ function Invaders:moveIndividualMovementToNextAliveInvader()
       end
 
       if moveInAttackOrientation then
-        if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
+        if Game.design.invaders.formation.attackDirection == Directions.Down then
           self.currentIndividualRowNumber = self.currentIndividualRowNumber - 1
         else
           self.currentIndividualRowNumber = self.currentIndividualRowNumber + 1
@@ -227,7 +227,7 @@ function Invaders:moveIndividualMovementToNextAliveInvader()
       end
 
       if moveInAttackOrientation then
-        if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
+        if Game.design.invaders.formation.attackDirection == Directions.Right then
           self.currentIndividualColumnNumber = self.currentIndividualColumnNumber - 1
 
         else
@@ -260,13 +260,13 @@ function Invaders:spawnNextInvader()
     for secondNumber = 1, secondCount do
 
       if spawnByRow then
-        if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Down then
+        if Game.design.invaders.formation.attackDirection == Directions.Down then
           formationSpot = self.formation[secondNumber][firstNumber]
         else
           formationSpot = self.formation[secondNumber][self.rows - firstNumber + 1]
         end
       else
-        if Game.design.invaders.attackDirection == DesignOptions.Invaders.AttackDirection.Right then
+        if Game.design.invaders.formation.attackDirection == Directions.Right then
           formationSpot = self.formation[firstNumber][secondNumber]
         else
           formationSpot = self.formation[self.columns - firstNumber + 1][secondNumber]
@@ -495,16 +495,16 @@ function Invaders:update()
       end
 
       if attack then
-        if Game.design.invaders.attackDirection == Directions.Down then
+        if Game.design.invaders.formation.attackDirection == Directions.Down then
           self.y = self.y + Game.design.invaders.formation.verticalSpeed
 
-        elseif Game.design.invaders.attackDirection == Directions.Up then
+        elseif Game.design.invaders.formation.attackDirection == Directions.Up then
           self.y = self.y - Game.design.invaders.formation.verticalSpeed
 
-        elseif Game.design.invaders.attackDirection == Directions.Right then
+        elseif Game.design.invaders.formation.attackDirection == Directions.Right then
           self.x = self.x + Game.design.invaders.formation.horizontalSpeed
 
-        elseif Game.design.invaders.attackDirection == Directions.Left then
+        elseif Game.design.invaders.formation.attackDirection == Directions.Left then
           self.x = self.x - Game.design.invaders.formation.horizontalSpeed
 
         end
@@ -516,7 +516,7 @@ function Invaders:update()
 
     local moveCount
 
-    if Game.design.invaders.formation.movement == DesignOptions.Invaders.Formation.Movement.Individual then
+    if Game.design.invaders.formation.movementType == DesignOptions.Invaders.Formation.MovementTypes.Individual then
       moveCount = 1
 
     else

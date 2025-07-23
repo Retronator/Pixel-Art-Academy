@@ -1,58 +1,67 @@
 function _init()
-  Game.info = parseTable(stat(6))
+  Game.design = parseTable(stat(6))
 
-  Game.design = {
-    lives = 3,
-    postponeGameplay = DesignOptions.PostponeGameplay.UntilSpawnedAll,
-    defender = {
-      movement = DesignOptions.Defender.Movement.Horizontal,
-      horizontalAlignment = HorizontalAlignments.Center,
-      verticalAlignment = VerticalAlignments.Bottom,
-      speed = 1
-    },
-    defenderProjectiles = {
-      movement = Directions.Up,
-      speed = 2,
-      maxCount = 1
-    },
-    invaders = {
-      formation = {
-        rows = 3,
-        columns = 7,
-        horizontalSpacing = 2,
-        verticalSpacing = 2,
-        horizontalAlignment = HorizontalAlignments.Center,
-        verticalAlignment = VerticalAlignments.Top,
-        movement = DesignOptions.Invaders.Formation.Movement.Individual,
-        horizontalSpeed = 2,
-        verticalSpeed = 8,
-        spawnDelay = 0.01,
-        shooting = {
-          timeoutFull = 3,
-          timeoutFullDecreasePerLevel = 0.5,
-          timeoutEmpty = 1,
-          variability = 0.25
-        }
+  -- Apply defaults if we didn't get the design from the starting parameter.
+  if not next(Game.design) then
+    Game.design = {
+      lives = 3,
+      postponeGameplay = DesignOptions.PostponeGameplay.UntilSpawnedAll,
+      defender = {
+        movement = DesignOptions.Defender.Movements.Horizontal,
+        startingAlignment = {
+          horizontal = HorizontalAlignments.Left,
+          vertical = VerticalAlignments.Bottom,
+        },
+        speed = 1
       },
-      attackDirection = DesignOptions.Invaders.AttackDirection.Down,
-      scorePerInvader = 10
-    },
-    invaderProjectiles = {
-      movement = Directions.Down,
-      speed = 1,
-      maxCount = 3
-    },
-    shields = {
-      amount = 4,
-      spacing = 16,
-      side = Sides.Bottom
-    },
-    playfieldBounds = {
-      left = 0,
-      right = 127,
-      top = 8,
-      bottom = 124 - Defender.sprite.bounds.height
+      defenderProjectiles = {
+        direction = Directions.Up,
+        speed = 2,
+        maxCount = 1
+      },
+      invaders = {
+        formation = {
+          rows = 3,
+          columns = 7,
+          horizontalSpacing = 2,
+          verticalSpacing = 2,
+          startingAlignment = {
+            horizontal = HorizontalAlignments.Center,
+            vertical = VerticalAlignments.Top,
+          },
+          movementOrientation = Orientations.Horizontal,
+          movementType = DesignOptions.Invaders.Formation.MovementTypes.Individual,
+          attackDirection = Directions.Down,
+          horizontalSpeed = 2,
+          verticalSpeed = 8,
+          spawnDelay = 0.01,
+          shooting = {
+            timeoutFull = 3,
+            timeoutFullDecreasePerLevel = 0.5,
+            timeoutEmpty = 1,
+            variability = 0.25
+          }
+        },
+        scorePerInvader = 10
+      },
+      invaderProjectiles = {
+        direction = Directions.Down,
+        speed = 1,
+        maxCount = 3
+      },
+      shields = {
+        amount = 4,
+        spacing = 16,
+        side = Sides.Bottom
+      }
     }
+  end
+
+  Game.design.playfieldBounds = {
+    left = 0,
+    right = 127,
+    top = 8,
+    bottom = 124 - Defender.sprite.bounds.height
   }
 
   Game.design.playfieldBounds.width = Game.design.playfieldBounds.right - Game.design.playfieldBounds.left + 1

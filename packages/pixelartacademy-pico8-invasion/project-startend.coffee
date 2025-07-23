@@ -14,7 +14,6 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Pico8.Cartridges.Invasio
     creationTime = new Date()
     
     # Create the project.
-    
     projectId = PAA.Practice.Project.documents.insert
       startTime: creationTime
       lastEditTime: creationTime

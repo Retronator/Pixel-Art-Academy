@@ -68,23 +68,29 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     
     # Observe content size.
     @$contentArea = @$('.content-area')
-    @_contentAreaResizeObserver = new ResizeObserver =>
+    updateContentAreaSize = =>
       scale = @os.display.scale()
       
       @contentAreaSize
         width: @$contentArea.outerWidth() / scale
         height: @$contentArea.outerHeight() / scale
     
+    updateContentAreaSize()
+    
+    @_contentAreaResizeObserver = new ResizeObserver updateContentAreaSize
     @_contentAreaResizeObserver.observe @$contentArea[0]
     
     @$content = @$('.content')
-    @_contentResizeObserver = new ResizeObserver =>
+    updateContentSize = =>
       scale = @os.display.scale()
       
       @contentSize
         width: @$content.outerWidth() / scale
         height: @$content.outerHeight() / scale
     
+    updateContentSize()
+    
+    @_contentResizeObserver = new ResizeObserver updateContentSize
     @_contentResizeObserver.observe @$content[0]
     
   onDestroyed: ->

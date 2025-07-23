@@ -5,82 +5,13 @@ PAA = PixelArtAcademy
 
 class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
   @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument'
-  @register @id()
-  
-  @Options =
-    HorizontalAlignments:
-      Left: 'Left'
-      Center: 'Center'
-      Right: 'Right'
-    VerticalAlignments:
-      Top: 'Top'
-      Middle: 'Middle'
-      Bottom: 'Bottom'
-    Themes:
-      ScienceFiction: 'ScienceFiction'
-      DeepSea: 'DeepSea'
-      CosmicHorror: 'CosmicHorror'
-      MicroscopicWorld: 'MicroscopicWorld'
-    Entities:
-      Defender: 'Defender'
-      Invader: 'Invader'
-      DefenderProjectile: 'DefenderProjectile'
-      InvaderProjectile: 'InvaderProjectile'
-      DefenderProjectileExplosion: 'DefenderProjectileExplosion'
-      InvaderProjectileExplosion: 'InvaderProjectileExplosion'
-    Defender:
-      Movement:
-        Horizontal: 'Horizontal'
-        Vertical: 'Vertical'
-        AllDirections: 'AllDirections'
-        
-  @Texts =
-    Themes:
-      ScienceFiction: "science fiction"
-      DeepSea: "the deep sea"
-      CosmicHorror: "cosmic horror"
-      MicroscopicWorld: "the microscopic world"
-    GameFlow:
-      Defender:
-        Movement:
-          Horizontal: 'left and right'
-          Vertical: 'up and down'
-          AllDirections: "in all 4 directions"
-        StartingAlignment:
-          TopLeft: 'top-left corner'
-          TopCenter: 'top side'
-          TopRight: 'top-right corner'
-          MiddleLeft: 'left side'
-          MiddleCenter: 'center'
-          MiddleRight: 'right side'
-          BottomLeft: 'bottom-left corner'
-          BottomCenter: 'bottom side'
-          BottomRight: 'bottom-right corner'
-    Properties:
-      Defender:
-        Movement:
-          Horizontal: 'horizontal'
-          Vertical: 'vertical'
-          AllDirections: "4-directional"
-            
-  @DesignSchema =
-    theme: @Options.Themes
-    entities: [@Options.Entities]
-    defender:
-      movement: @Options.Defender.Movement
-      startingAlignment:
-        horizontal: @Options.HorizontalAlignments
-        vertical: @Options.VerticalAlignments
-        
-  @getOptionByNumber: (optionNumber, options) ->
-    _.keys(options)[optionNumber - 1]
-    
-  @getOptionNumber: (optionId, options) ->
-    _.values(options).indexOf(optionId) + 1
   
   @designStringForProjectId: (projectId) ->
     project = PAA.Practice.Project.documents.findOne projectId
-    @_designStringsForObject(project.design, '').join '\n'
+    
+    design = _.defaultsDeep {}, project.design, @DesignDefaults
+    
+    @_designStringsForObject(design, '').join '\n'
     
   @_designStringsForObject: (object, path) ->
     if _.isArray object
@@ -129,72 +60,156 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     
     @autorun (computation) =>
       return unless writtenUnits = @writtenUnits()
-      computation.stop()
-      
-      elements = @$('article').toArray()
-      textElements = []
-      
-      while elements.length
-        parent = elements.shift()
-        
-        if parent.dataset?.unit
-          continue if parent.dataset.unit in writtenUnits
-          parent._unit ?= parent.dataset.unit
-        
-        expandedChildren = []
-      
-        for child in parent.childNodes
-          child._unit ?= parent._unit
 
-          if child.nodeType is Node.TEXT_NODE
-            text = child.textContent.replace /\s+/g, ' '
-            continue unless text.length and text isnt ' '
-            
-            child.textContent = ' '
-            textElements.push
-              text: text
-              element: parent
-              textNode: child
-            
-          else if child.classList.contains 'choice'
-            child.classList.add 'hidden'
-            textElements.push
-              choice: true
-              element: child
-              editingField: child.dataset.editingField
-          
-          else if child.classList.contains 'chosen-choice'
-            text = child.textContent
-            child.textContent = ' '
-            textElements.push
-              text: text
-              element: parent
-              textNode: child.firstChild
-              
-          else
-            expandedChildren.push child
-            
-        elements.unshift expandedChildren...
-        
-      @writeTextElements textElements
+      # Depend on design changes.
+      @design()
       
-  writeTextElements: (textElements) ->
+      Tracker.afterFlush =>
+        console.log "recomputing"
+        
+        elements = @$('article').toArray()
+        textElements = []
+        
+        while elements.length
+          parent = elements.shift()
+          
+          # Skip auto-resize measuring divs.
+          continue if parent.style?.visibility is 'hidden'
+
+          if parent.dataset?.unit
+            parent._unit ?= parent.dataset.unit
+          
+          expandedChildren = []
+        
+          for child in parent.childNodes
+            child._unit ?= parent._unit
+    
+            if child.nodeType is Node.TEXT_NODE
+              text = child.textContent.replace /\s+/g, ' '
+              
+              # If this is a new node, make sure it's not empty.
+              # Old nodes can be empty since they were cleared to be written out.
+              existingNode = _.find @_textElements, (textElement) => textElement.node is child
+              continue unless text.length and text isnt ' ' or existingNode
+              
+              textElements.push
+                text: text
+                element: parent
+                textNode: child
+                node: child
+              
+            else if child.classList.contains 'choice'
+              textElements.push
+                choice: true
+                element: child
+                editingField: child.dataset.editingField
+                node: child
+            
+            else if child.classList.contains 'chosen-choice'
+              text = child.textContent
+              textElements.push
+                text: text
+                element: parent
+                textNode: child.firstChild
+                node: child
+                
+            else if child.tagName is 'INPUT'
+              text = child.value
+              textElements.push
+                text: text
+                element: parent
+                input: child
+                node: child
+            
+            else
+              expandedChildren.push child
+              
+          elements.unshift expandedChildren...
+          
+        @writeTextElements textElements, writtenUnits
+        
+  writeTextElements: (textElements, writtenUnits) ->
     return unless textElements.length
     
-    cursor = $('<span class="cursor"></span>')[0]
-    textElements[0].element.prepend cursor
+    @_textElements ?= []
+    @_cursor ?= $('<span class="cursor"></span>')[0]
 
-    await _.waitForSeconds 0.5 unless @skipAnimation()
-    cursor.remove()
+    # Add new text elements.
+    @_newCurrentTextElementIndex = null
+    currentInsertionIndex = 0
     
     for textElement, index in textElements
-      previousTextElement = textElements[index - 1]
-      nextTextElement = textElements[index + 1]
+      # See if this text element has already been added.
+      found = false
+      for searchIndex in [currentInsertionIndex...@_textElements.length]
+        unless nodeIsSame = textElement.node is @_textElements[searchIndex].node
+          textIsSame = textElement.text is @_textElements[searchIndex].text
+          siblingIsSame = textElements[index - 1]?.node is @_textElements[searchIndex - 1]?.node or textElements[index + 1]?.node is @_textElements[searchIndex + 1]?.node
+        
+        continue unless nodeIsSame or textIsSame and siblingIsSame
+
+        found = true
+        currentInsertionIndex = searchIndex + 1
+        break
+          
+      continue if found
+      
+      # This is a new text element.
+      @_textElements.splice currentInsertionIndex, 0, textElement
+      
+      # If this unit wasn't written previously, blank it out and set for writing.
+      if textElement.node._unit in writtenUnits
+        textElement.written = true
+        
+      else
+        @_newCurrentTextElementIndex ?= currentInsertionIndex
+
+        if textElement.textNode
+          textElement.textNode.textContent = ' '
+          
+        else if textElement.choice
+          textElement.element.classList.add 'hidden'
+          
+        else if textElement.input
+          textElement.input.value = ''
+          textElement.input.classList.add 'hidden'
+      
+      currentInsertionIndex++
+      
+    # Nothing to do if no new elements were inserted.
+    return unless @_newCurrentTextElementIndex?
+    
+    # Start writing unless we're already doing it.
+    return if @_writing
+    @_writing = true
+    
+    # Place cursor at the start and wait a bit before writing.
+    @_currentTextElementIndex = @_newCurrentTextElementIndex
+    initialTextElement = @_textElements[@_currentTextElementIndex]
+    
+    initialTextElement.element.prepend @_cursor
+    await _.waitForNextFrame()
+    @window.scrollToElement initialTextElement.element
+    await _.waitForSeconds 0.5
+
+    @skipAnimation false
+    
+    # Iterate over all text elements.
+    while @_currentTextElementIndex < @_textElements.length
+      previousTextElement = @_textElements[@_currentTextElementIndex - 1]
+      textElement = @_textElements[@_currentTextElementIndex]
+      nextTextElement = @_textElements[@_currentTextElementIndex + 1]
+
+      if textElement.written
+        @_currentTextElementIndex++
+        continue
 
       if textElement.choice
         textElement.element.classList.remove 'hidden'
-        cursor.remove()
+        @_cursor.remove()
         @window.scrollToElement textElement.element
+        @skipAnimation false
+    
         await _.waitForNextFrame() while textElement.element.parentElement
         
       else
@@ -202,17 +217,43 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
         if previousTextElement?.element isnt textElement.element
           await _.waitForSeconds 0.5 unless @skipAnimation()
 
-        textNode = textElement.textNode
-        textNode.textContent = textElement.text[0]
-        textNode.after cursor
+        text = textElement.text[0]
+
+        if textElement.input
+          input = textElement.input
+          $input = $(input)
+          inputType = input.type
+          input.type = 'text'
+          input.classList.remove 'hidden'
+          input.after @_cursor
+
+          input.value = text
+          # Trigger auto-resizing of the input.
+          $input.trigger 'input'
+          
+        else
+          textNode = textElement.textNode
+          textNode.textContent = text
+          textNode.after @_cursor
         
         for character in textElement.text[1..]
-          textNode.textContent += character
+          text += character
+          
+          if textElement.input
+            input.value = text
+            $input.trigger 'input'
+            
+          else
+            textNode.textContent = text
 
           unless @skipAnimation()
-            @window.scrollToElement cursor
-            await _.waitForSeconds 0.03
+            @window.scrollToElement @_cursor
+            waitDuration = if _.endsWith text, '. ' then 0.5 else 0.03
+            await _.waitForSeconds waitDuration
       
+        if textElement.input
+          input.type = inputType
+          
       # See if this was the last element of this unit.
       currentUnit = textElement.element._unit
       if currentUnit and nextTextElement?.element._unit isnt currentUnit
@@ -222,10 +263,21 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
             lastEditTime: Date.now()
           $addToSet:
             'designDocument.writtenUnits': currentUnit
-          
+      
+      textElement.written = true
+      
+      if @_newCurrentTextElementIndex
+        @_currentTextElementIndex = @_newCurrentTextElementIndex
+        @_newCurrentTextElementIndex = null
+        
+      else
+        @_currentTextElementIndex++
+        
+    @_writing = false
+    
     await _.waitForSeconds 1 unless @skipAnimation()
 
-    cursor.remove()
+    @_cursor.remove() unless @_writing
   
   getDesignValue: (property) ->
     _.nestedProperty @design(), property
@@ -236,56 +288,56 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
         lastEditTime: Date.now()
         "design.#{property}": value
   
-  hasEntity: (entity) ->
-    entity in (@getDesignValue('entities') or [])
-  
-  hasEntities: ->
-    @getDesignValue('entities')?.length > 0
-  
-  themeChoice: ->
-    options: ({value, text} for value, text of @constructor.Texts.Themes)
-    property: 'theme'
-    
-  gameFlowDefenderMovementChoice: ->
-    options: ({value, text} for value, text of @constructor.Texts.GameFlow.Defender.Movement)
-    property: 'defender.movement'
-  
-  gameFlowDefenderStartingAlignmentPrepositionAt: ->
-    # We need 'at' (insted of 'in') when we are at a side and not in the corner/center.
-    return unless horizontalAlignment = @getDesignValue 'defender.startingAlignment.horizontal'
-    return unless verticalAlignment = @getDesignValue 'defender.startingAlignment.vertical'
-    
-    center = horizontalAlignment is @constructor.Options.HorizontalAlignments.Center
-    middle = verticalAlignment is @constructor.Options.VerticalAlignments.Middle
-    
-    (center or middle) and not (center and middle)
-  
-  gameFlowDefenderStartingAlignmentChoice: ->
-    options = for value, text of @constructor.Texts.GameFlow.Defender.StartingAlignment
-      alignments = value.match /[A-Z][a-z]*/g
-      
-      value: value
-      text: text
-      designValues:
-        'defender.startingAlignment.horizontal': alignments[1]
-        'defender.startingAlignment.vertical': alignments[0]
-      
-    options: options
-    value: =>
-      return unless horizontalAlignment = @getDesignValue 'defender.startingAlignment.horizontal'
-      return unless verticalAlignment = @getDesignValue 'defender.startingAlignment.vertical'
-
-      "#{verticalAlignment}#{horizontalAlignment}"
-  
-  propertiesDefenderMovementChoice: ->
-    options: ({value, text} for value, text of @constructor.Texts.Properties.Defender.Movement)
-    property: 'defender.movement'
-    
   events: ->
     super(arguments...).concat
       'click': @onClick
       
   onClick: (event) ->
-    return if $(event.target).closest('.choice').length
+    $target = $(event.target)
+    return if $target.closest('.choice').length or $target.closest('.entities').length
 
     @skipAnimation true
+  
+  class @Property extends AM.DataInputComponent
+    constructor: ->
+      super arguments...
+      
+      @type = AM.DataInputComponent.Types.Number
+      @autoResizeInput = true
+      @realtime = false
+      @customAttributes =
+        step: 'any'
+    
+    onCreated: ->
+      super arguments...
+
+      @designDocument = @parentComponent()
+      @display = @callAncestorWith 'display'
+      
+    onRendered: ->
+      super arguments...
+      
+      @$input = @$('input')
+      
+      @autorun (computation) =>
+        scale = @display.scale()
+        @autoResizeInputPadding = 5 * scale
+        @$input.trigger 'input'
+      
+    property: -> throw new AE.NotImplementedException 'Property must define its design property field.'
+    
+    load: ->
+      property = @property()
+      value = @designDocument.getDesignValue property
+      # Note: We can't use @ to reference the DesignDocument class since DesignDefaults get added in the child.
+      value ?= _.nestedProperty PAA.Pico8.Cartridges.Invasion.DesignDocument.DesignDefaults, property
+      
+      if @isRendered()
+        Tracker.afterFlush => @$input.trigger 'input'
+      
+      value
+    
+    save: (value) ->
+      property = @property()
+      float = parseFloat value
+      @designDocument.setDesignValue property, if _.isFinite float then float else undefined

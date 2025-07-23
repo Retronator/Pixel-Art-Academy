@@ -189,6 +189,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/spacebars/debughelpers');
 
   api.addFile('mirage/mixins/autoresizetextarea');
+  api.addFile('mirage/mixins/autoresizeinput');
   api.addFile('mirage/mixins/autoselectinput');
   api.addFile('mirage/mixins/persistentinput');
 

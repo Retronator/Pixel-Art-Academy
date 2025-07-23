@@ -27,6 +27,8 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     @realtime = true
     @autoSelect = false
     @autoResizeTextarea = false
+    @autoResizeInput = false
+    @autoResizeInputPadding = 0
 
   onRendered: ->
     super arguments...
@@ -46,6 +48,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     mixins = []
     mixins.push AM.AutoSelectInputMixin if @autoSelect
     mixins.push AM.PersistentInputMixin if @persistent
+    mixins.push AM.AutoResizeInputMixin if @autoResizeInput
     mixins.push AM.AutoResizeTextareaMixin if @autoResizeTextarea
     mixins
 

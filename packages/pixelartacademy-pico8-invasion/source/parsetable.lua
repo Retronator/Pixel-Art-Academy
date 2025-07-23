@@ -42,8 +42,9 @@ function parseTable(text)
           currentTable = newTable
           add(tableStack, newTable)
         else
-          -- Simply store the value
-          currentTable[key] = value
+          -- Cast and store the value.
+          local numberValue = tonum(value)
+          currentTable[key] = numberValue or value
         end
       end
     end

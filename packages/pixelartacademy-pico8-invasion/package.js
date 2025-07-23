@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.addFile('project-startend');
 
   api.addComponent('designdocument..');
+  api.addFile('designdocument/designdocument-design');
   api.addComponent('designdocument/choice..');
   api.addComponent('designdocument/entities..');
 

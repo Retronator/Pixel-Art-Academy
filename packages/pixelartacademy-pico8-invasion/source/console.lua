@@ -4,7 +4,15 @@ console = {
 
 console.log = function(...)
   text = ""
-  for object in all({...}) do
+
+  objects = {...}
+
+  if #objects == 1 and type(objects[1]) == "table" then
+    console.logTable(objects[1])
+    return
+  end
+
+  for object in all(objects) do
     if #text > 0 then
       text = text.." "
     end
@@ -14,6 +22,18 @@ console.log = function(...)
   add(console.texts, text)
   if #console.texts > 128 / 6 then
     deli(console.texts, 1)
+  end
+end
+
+console.logTable = function(object, indent)
+  indent = indent or ''
+  for key, value in pairs(object) do
+    if type(value) == "table" then
+      console.log(indent..key..":")
+      console.logTable(value, indent..' ')
+    else
+      console.log(indent..key..": "..tostr(value))
+    end
   end
 end
 

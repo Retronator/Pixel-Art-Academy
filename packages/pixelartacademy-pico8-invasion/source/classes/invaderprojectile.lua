@@ -18,16 +18,16 @@ function InvaderProjectile:isInPlayfield()
 end
 
 function InvaderProjectile:update()
-  if Game.design.invaderProjectiles.movement == DesignOptions.InvaderProjectiles.Movement.Up then
+  if Game.design.invaderProjectiles.direction == Directions.Up then
     self.y = self.y - Game.design.invaderProjectiles.speed
 
-  elseif Game.design.invaderProjectiles.movement == DesignOptions.InvaderProjectiles.Movement.Down then
+  elseif Game.design.invaderProjectiles.direction == Directions.Down then
     self.y = self.y + Game.design.invaderProjectiles.speed
 
-  elseif Game.design.invaderProjectiles.movement == DesignOptions.InvaderProjectiles.Movement.Left then
+  elseif Game.design.invaderProjectiles.direction == Directions.Left then
     self.x = self.x - Game.design.invaderProjectiles.speed
 
-  elseif Game.design.invaderProjectiles.movement == DesignOptions.InvaderProjectiles.Movement.Right then
+  elseif Game.design.invaderProjectiles.direction == Directions.Right then
     self.x = self.x + Game.design.invaderProjectiles.speed
   end
 end

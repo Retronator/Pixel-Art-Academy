@@ -17,6 +17,25 @@
         {{#if hasEntity 'Defender'}}
           <p data-unit="entities-defender">Defender: The player-controlled unit.</p>
         {{/if}}
+        {{#if hasEntity 'Invader'}}
+          <p data-unit="entities-invader">Invader: A computer-controlled enemy unit.</p>
+        {{/if}}
+        {{#if hasEntity 'DefenderProjectile'}}
+          <p data-unit="entities-defender-projectile">Defender projectile: A projectile the defender shoots up towards the invaders.</p>
+        {{/if}}
+        {{#if hasEntity 'InvaderProjectile'}}
+          <p data-unit="entities-invader-projectile">Invader projectile: A projectile the invaders shoot towards the defender.</p>
+        {{/if}}
+        {{#if hasEntity 'DefenderProjectileExplosion'}}
+          <p data-unit="entities-defender-projectile-explosion">Invader projectile explosion: An explosion caused by the invaders' projectile hitting something.
+            defender's projectile hits a target.</p>
+        {{/if}}
+        {{#if hasEntity 'InvaderProjectileExplosion'}}
+          <p data-unit="entities-invader-projectile-explosion">Invader projectile explosion: An explosion caused by the invaders' projectile hitting something.</p>
+        {{/if}}
+        {{#if hasEntity 'Shield'}}
+          <p data-unit="entities-shield">Shield: An obstacle that blocks projectiles.</p>
+        {{/if}}
         {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Entities}}
         {{#if hasEntities}}
           <h3 data-unit="game-flow-header">2.b. Game flow</h3>
@@ -35,15 +54,26 @@
               If all the invaders are eliminated, the game repeats with a new level where invaders [shoot more frequently + score more points].
             </p>
           {{/if}}
-          {{#if invaderAdded}}
-            <p>
-              Invaders spawn at / in the [top / bottom / right side / left side / top-left corner / top-right corner / bottom-left corner / bottom-right corner]
-              in a grid formation of [_] rows and [_] columns.
-              They appear [all at once / one-by-one] and the game pauses during this time.
-              The invaders move [left and right / up and down],
-              and [descend down / ascend up / advance left / advance right / do not move horizontally / do not move vertically]
-              each time they reach the edge of the screen.
-              They move as a formation [in unison, one by one], at a constant speed / going faster and faster as invaders are eliminated.
+          {{#if hasEntity 'Invader'}}
+            <p data-unit="game-flow-invaders">
+              Invaders spawn {{#if gameFlowInvadersStartingAlignmentPrepositionAt}}at{{else}}in{{/if}} the
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationStartingAlignmentChoice}}.
+              They appear
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAppearingChoice}}
+              and gameplay
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowPostponeGameplayChoice}}.
+              The invaders move
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementOrientationChoice}},
+              and
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAttackDirectionChoice}}
+              when they reach the edge of the screen.
+              Inside the formation they move
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementTypeChoice}},
+              {{#if $is invadersFormationMovementType 'All'}}
+                at a constant speed.
+              {{else}}
+                going faster and faster as invaders are eliminated.
+              {{/if}}
             </p>
           {{/if}}
           {{#if invaderProjectileAdded}}
@@ -64,20 +94,11 @@
           {{#if hasEntity 'Defender'}}
             <div data-unit="properties-defender">
               <p>
-                Defender:
+                Defender
               </p>
               <ul>
-                <li data-unit="properties-defender-movement">
-                  - Movement: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice propertiesDefenderMovementChoice}}
-                </li>
-                <li data-unit="properties-defender-starting-horizontal-position">
-                  - Starting horizontal position: [left / center / right]
-                </li>
-                <li data-unit="properties-defender-starting-vertical-position">
-                  - Starting vertical position: [top / middle / bottom]
-                </li>
                 <li data-unit="properties-defender-speed">
-                  - Speed: [_] pixels per move
+                  - Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderSpeed}} pixels per move
                 </li>
               </ul>
             </div>

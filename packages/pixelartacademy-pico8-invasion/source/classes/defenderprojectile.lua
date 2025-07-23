@@ -18,16 +18,16 @@ function DefenderProjectile:isInPlayfield()
 end
 
 function DefenderProjectile:update()
-  if Game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Up then
+  if Game.design.defenderProjectiles.direction == Directions.Up then
     self.y = self.y - Game.design.defenderProjectiles.speed
 
-  elseif Game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Down then
+  elseif Game.design.defenderProjectiles.direction == Directions.Down then
     self.y = self.y + Game.design.defenderProjectiles.speed
 
-  elseif Game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Left then
+  elseif Game.design.defenderProjectiles.direction == Directions.Left then
     self.x = self.x - Game.design.defenderProjectiles.speed
 
-  elseif Game.design.defenderProjectiles.movement == DesignOptions.DefenderProjectiles.Movement.Right then
+  elseif Game.design.defenderProjectiles.direction == Directions.Right then
     self.x = self.x + Game.design.defenderProjectiles.speed
   end
 end

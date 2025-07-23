@@ -59,20 +59,20 @@ end
 function Scene:addDefender()
   local defenderX, defenderY
 
-  if Game.design.defender.horizontalAlignment == HorizontalAlignments.Left then
+  if Game.design.defender.startingAlignment.horizontal == HorizontalAlignments.Left then
     defenderX = Game.design.playfieldBounds.left + Defender.sprite.bounds.width
 
-  elseif Game.design.defender.horizontalAlignment == HorizontalAlignments.Right then
+  elseif Game.design.defender.startingAlignment.horizontal == HorizontalAlignments.Right then
     defenderX = Game.design.playfieldBounds.right - Defender.sprite.bounds.width
 
   else
     defenderX = Game.design.playfieldBounds.left + flr(Game.design.playfieldBounds.width / 2)
   end
 
-  if Game.design.defender.verticalAlignment == VerticalAlignments.Top then
+  if Game.design.defender.startingAlignment.vertical == VerticalAlignments.Top then
     defenderY = Game.design.playfieldBounds.top + Defender.sprite.bounds.height
 
-  elseif Game.design.defender.verticalAlignment == VerticalAlignments.Bottom then
+  elseif Game.design.defender.startingAlignment.vertical == VerticalAlignments.Bottom then
     defenderY = Game.design.playfieldBounds.bottom - Defender.sprite.bounds.height
 
   else
@@ -86,19 +86,19 @@ function Scene:addDefenderProjectile()
   local x = self.defender.x
   local y = self.defender.y
 
-  if Game.design.defenderProjectiles.movement == Directions.Up then
+  if Game.design.defenderProjectiles.direction == Directions.Up then
     local top = self.defender.y - Defender.sprite.centerY + Defender.sprite.bounds.top
     y = top - DefenderProjectile.sprite.bounds.top + DefenderProjectile.sprite.centerY
 
-  elseif Game.design.defenderProjectiles.movement == Directions.Down then
+  elseif Game.design.defenderProjectiles.direction == Directions.Down then
     local bottom = self.defender.y - Defender.sprite.centerY + Defender.sprite.bounds.bottom
     y = bottom - DefenderProjectile.sprite.bounds.bottom + DefenderProjectile.sprite.centerY
 
-  elseif Game.design.defenderProjectiles.movement == Directions.Left then
+  elseif Game.design.defenderProjectiles.direction == Directions.Left then
     local left = self.defender.x - Defender.sprite.centerX + Defender.sprite.bounds.left
     x = left - DefenderProjectile.sprite.bounds.left + DefenderProjectile.sprite.centerX
 
-  elseif Game.design.defenderProjectiles.movement == Directions.Right then
+  elseif Game.design.defenderProjectiles.direction == Directions.Right then
     local right = self.defender.x - Defender.sprite.centerX + Defender.sprite.bounds.right
     x = right - DefenderProjectile.sprite.bounds.right + DefenderProjectile.sprite.centerX
   end
