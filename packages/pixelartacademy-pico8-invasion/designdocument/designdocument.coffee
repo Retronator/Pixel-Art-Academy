@@ -194,7 +194,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     
     initialTextElement.element.prepend @_cursor
     await _.waitForNextFrame()
-    @window.scrollToElement initialTextElement.element
+    await @window.scrollToElement initialTextElement.element
     await _.waitForSeconds 0.5
 
     @skipAnimation false
@@ -212,7 +212,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       if textElement.choice
         textElement.element.classList.remove 'hidden'
         @_cursor.remove()
-        @window.scrollToElement textElement.element
+        await @window.scrollToElement textElement.element, animate: not @skipAnimation(), skipAnimation: @skipAnimation
         @skipAnimation false
     
         await _.waitForNextFrame() while textElement.element.parentElement
@@ -252,7 +252,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
             textNode.textContent = text
 
           unless @skipAnimation()
-            @window.scrollToElement @_cursor
+            await @window.scrollToElement @_cursor, animate: not @skipAnimation(), skipAnimation: @skipAnimation
             waitDuration = if _.endsWith text, '. ' then 0.5 else 0.03
             await _.waitForSeconds waitDuration
       

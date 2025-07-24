@@ -39,6 +39,11 @@ Entities = {
   Shield = 7
 }
 
+DeathTypes = {
+  Disappear = 1,
+  Explode = 2
+}
+
 DesignOptions = {
   PostponeGameplay = {
     None = 1,

@@ -16,7 +16,11 @@ end
 
 function Defender:die(explosionX, explosionY)
   self.alive = false
-  self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
+
+  if Game.design.defender.deathType == DeathTypes.Explode then
+    self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
+  end
+
   sfx(4)
 end
 

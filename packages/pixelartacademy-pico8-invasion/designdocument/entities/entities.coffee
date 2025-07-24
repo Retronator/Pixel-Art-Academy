@@ -5,7 +5,9 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Pico8.Cartridges.Invasion.DesignDocument.Entities extends AM.Component
+DesignDocument = PAA.Pico8.Cartridges.Invasion.DesignDocument
+
+class DesignDocument.Entities extends AM.Component
   @id: -> "PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Entities"
   @register @id()
   
@@ -69,7 +71,37 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument.Entities extends AM.Component
     
     true
     
-  availableEntities: -> @assets()
+  availableEntities: ->
+    return unless project = @designDocument.project()
+    assets = @assets()
+    
+    defender = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.Defender.id()
+    invader = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.Invader.id()
+    defenderProjectile = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.DefenderProjectile.id()
+    defenderProjectileExplosion = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.DefenderProjectileExplosion.id()
+    invaderProjectile = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.InvaderProjectile.id()
+    invaderProjectileExplosion = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.InvaderProjectileExplosion.id()
+    shield = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.Shield.id()
+    
+    hasDefender = DesignDocument.Options.Entities.Defender in project.design.entities
+    hasInvader = DesignDocument.Options.Entities.Invader in project.design.entities
+    hasDefenderProjectile = DesignDocument.Options.Entities.DefenderProjectile in project.design.entities
+    hasInvaderProjectile = DesignDocument.Options.Entities.InvaderProjectile in project.design.entities
+    hasDefenderProjectileExplosion = DesignDocument.Options.Entities.DefenderProjectileExplosion in project.design.entities
+    hasInvaderProjectileExplosion = DesignDocument.Options.Entities.InvaderProjectileExplosion in project.design.entities
+    hasShield = DesignDocument.Options.Entities.Shield in project.design.entities
+    
+    entities = [
+      defender unless hasDefender
+      invader unless hasInvader
+      defenderProjectile if hasDefender and not hasDefenderProjectile
+      invaderProjectile if hasInvader and not hasInvaderProjectile
+      defenderProjectileExplosion if hasDefenderProjectile and not hasDefenderProjectileExplosion
+      invaderProjectileExplosion if hasInvaderProjectile and not hasInvaderProjectileExplosion
+      shield if (hasDefenderProjectile or hasInvaderProjectile) and not hasShield
+    ]
+    
+    _.without entities, undefined
   
   chosenText: ->
     choice = @data()
@@ -98,13 +130,14 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument.Entities extends AM.Component
     asset = @currentData()
     assetId = asset.id()
     
-    entityId = _.last assetId.split '.'
-    
-    entities = @designDocument.getDesignValue('entities') or []
-    entities.push entityId unless entityId in entities
-    @designDocument.setDesignValue 'entities', entities
-    
     @addingEntity false
+    
+    entityId = _.last assetId.split '.'
+    entities = @designDocument.getDesignValue('entities') or []
+    return if entityId in entities
+    
+    entities.push entityId
+    @designDocument.setDesignValue 'entities', entities
     
     # Create the asset bitmap.
     projectId = @designDocument.projectId()

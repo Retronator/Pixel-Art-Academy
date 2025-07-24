@@ -19,7 +19,8 @@ function _init()
           horizontal = HorizontalAlignments.Left,
           vertical = VerticalAlignments.Bottom,
         },
-        speed = 1
+        speed = 1,
+        deathType = DeathTypes.Explode
       },
       defenderProjectiles = {
         direction = Directions.Up,
@@ -50,7 +51,8 @@ function _init()
           }
         },
         scorePerInvader = 10,
-        scoreIncreasePerInvaderPerLevel = 0
+        scoreIncreasePerInvaderPerLevel = 0,
+        deathType = DeathTypes.Explode
       },
       invaderProjectiles = {
         direction = Directions.Down,

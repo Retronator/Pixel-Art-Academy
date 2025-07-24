@@ -34,7 +34,11 @@ end
 
 function Invader:die(explosionX, explosionY)
   self.alive = false
-  self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
+
+  if Game.design.invaders.deathType == DeathTypes.Explode then
+    self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
+  end
+
   game:increaseScore(Game.design.invaders.scorePerInvader + (game.level - 1) * Game.design.invaders.scoreIncreasePerInvaderPerLevel)
   sfx(5)
 end

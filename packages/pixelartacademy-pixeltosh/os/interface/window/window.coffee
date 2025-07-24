@@ -8,6 +8,8 @@ PAA = PixelArtAcademy
 
 scrollbarArrowSize = 10
 scrollbarPositionSize = 12
+scrollDelta = 10
+scrollDelay = 0.125
 
 class PAA.Pixeltosh.OS.Interface.Window extends FM.View
   # title: information for the window's title bar
@@ -112,22 +114,23 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
   # Scrolling
   
   scrollInDirection: (vertical, sign) ->
-    scrollDelta = 10
-    
     if vertical
-      @_setScrollTop @_clampedScrollTop() + sign * scrollDelta
+      @_setScrollTop @_clampedScrollTop() + Math.sign(sign) * scrollDelta
       
     else
-      @_setScrollLeft @_clampedScrollLeft() + sign * scrollDelta
+      @_setScrollLeft @_clampedScrollLeft() + Math.sign(sign) * scrollDelta
     
-  scrollToElement: (element, padding = 20) ->
+  scrollToElement: (element, options = {}) ->
+    options.padding ?= 20
+    options.animate ?= false
+    
     # Get positions relative to document
     scale = @os.display.scale()
 
     $element = $(element)
     elementOffset = $element.offset()
     elementOffset.top /= scale
-    elementOffset.width /= scale
+    elementOffset.left /= scale
 
     elementWidth = $element.outerWidth() / scale
     elementHeight = $element.outerHeight() / scale
@@ -138,21 +141,63 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
 
     contentAreaSize = @contentAreaSize()
     
-    if elementOffset.top < contentAreaOffset.top + padding
-      scrollDownBy = contentAreaOffset.top + padding - elementOffset.top
-      @_setScrollTop @_clampedScrollTop() - scrollDownBy
+    scrollTop = null
+    scrollLeft = null
+    
+    if elementOffset.top < contentAreaOffset.top + options.padding
+      scrollDownBy = contentAreaOffset.top + options.padding - elementOffset.top
+      scrollTop = @_clampedScrollTop() - scrollDownBy
       
-    else if elementOffset.top + elementHeight > contentAreaOffset.top + contentAreaSize.height - padding
-      scrollUpBy = elementOffset.top + elementHeight - (contentAreaOffset.top + contentAreaSize.height - padding)
-      @_setScrollTop @_clampedScrollTop() + scrollUpBy
+    else if elementOffset.top + elementHeight > contentAreaOffset.top + contentAreaSize.height - options.padding
+      scrollUpBy = elementOffset.top + elementHeight - (contentAreaOffset.top + contentAreaSize.height - options.padding)
+      scrollTop = @_clampedScrollTop() + scrollUpBy
       
-    if elementOffset.left < contentAreaOffset.left + padding
-      scrollRightBy = contentAreaOffset.left - elementOffset.left + padding
-      @_setScrollLeft @_clampedScrollLeft() - scrollRightBy
+    if elementOffset.left < contentAreaOffset.left + options.padding
+      scrollRightBy = contentAreaOffset.left - elementOffset.left + options.padding
+      scrollLeft = @_clampedScrollLeft() - scrollRightBy
       
-    else if elementOffset.left + elementWidth > contentAreaOffset.left + contentAreaSize.width - padding
-      scrollLeftBy = elementOffset.left + elementWidth - (contentAreaOffset.left + contentAreaSize.width - padding)
-      @_setScrollLeft @_clampedScrollLeft() + scrollLeftBy
+    else if elementOffset.left + elementWidth > contentAreaOffset.left + contentAreaSize.width - options.padding
+      scrollLeftBy = elementOffset.left + elementWidth - (contentAreaOffset.left + contentAreaSize.width - options.padding)
+      scrollLeft = @_clampedScrollLeft() + scrollLeftBy
+      
+    unless options.animate
+      @_setScrollTop scrollTop if scrollTop?
+      @_setScrollLeft scrollLeft if scrollLeft?
+      return
+      
+    new Promise (resolve, reject) =>
+      scrollVerticalBy = -scrollDownBy if scrollDownBy
+      scrollVerticalBy = scrollUpBy if scrollUpBy
+
+      scrollHorizontalBy = -scrollRightBy if scrollRightBy
+      scrollHorizontalBy = scrollLeftBy if scrollLeftBy
+      
+      scrollVerticalTimes = Math.abs scrollVerticalBy / scrollDelta if scrollVerticalBy
+      scrollHorizontalTimes = Math.abs scrollHorizontalBy / scrollDelta if scrollHorizontalBy
+      
+      while scrollVerticalTimes > 0 or scrollHorizontalTimes > 0
+        break if options.skipAnimation?()
+        
+        if scrollVerticalTimes > 0
+          @scrollInDirection true, scrollVerticalBy
+          scrollVerticalTimes--
+          
+          if scrollVerticalTimes <= 0
+            @_setScrollTop scrollTop
+          
+        if scrollHorizontalTimes > 0
+          @scrollInDirection false, scrollHorizontalBy
+          scrollHorizontalTimes--
+          
+          if scrollHorizontalTimes <= 0
+            @_setScrollLeft scrollLeft
+          
+        await _.waitForSeconds scrollDelay
+        
+      @_setScrollTop scrollTop if scrollTop?
+      @_setScrollLeft scrollLeft if scrollLeft?
+
+      resolve()
   
   _clampedScrollTop: ->
     _.clamp @scrollTop(), 0, @maxScroll().top
@@ -428,16 +473,17 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     $document = $(document)
     
     Meteor.clearInterval @_scrollInterval
+    
     @_scrollInterval = Meteor.setInterval =>
       @scrollInDirection vertical, sign
     ,
-      125
+      scrollDelay * 1000
+    
+    $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
+      $document.off '.pixelartacademy-pixeltosh-os-interface-window'
       
-      $document.on 'pointerup.pixelartacademy-pixeltosh-os-interface-window', (event) =>
-        $document.off '.pixelartacademy-pixeltosh-os-interface-window'
-        
-        Meteor.clearInterval @_scrollInterval
-  
+      Meteor.clearInterval @_scrollInterval
+
   # Scrolling by dragging the position indicator
   
   onPointerDownVerticalScrollbarPosition: (event) ->

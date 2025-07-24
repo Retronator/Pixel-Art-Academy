@@ -44,6 +44,9 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
     PostponeGameplay:
       None: 'None'
       UntilSpawnedAll: 'UntilSpawnedAll'
+    DeathTypes:
+      Disappear: 'Disappear'
+      Explode: 'Explode'
     Defender:
       Movements:
         Horizontal: 'Horizontal'
@@ -56,6 +59,11 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
           All: 'All'
         
   @Texts =
+    Directions:
+      Up: 'up'
+      Down: 'down'
+      Left: 'left'
+      Right: 'right'
     Themes:
       ScienceFiction: "science fiction"
       DeepSea: "the deep sea"
@@ -80,6 +88,14 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
           Horizontal: 'left and right'
           Vertical: 'up and down'
           AllDirections: "in all 4 directions"
+      DefenderProjectiles:
+        InvaderDeathTypes:
+          Disappear: 'disappear'
+          Explode: 'explode'
+        LevelUp:
+          IncreaseShootingFrequency: 'shoot more frequently'
+          IncreaseScore: 'score more points'
+          StayTheSame: 'stay the same'
       Invaders:
         Formation:
           Appearing:
@@ -98,7 +114,15 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
             Right: 'advance right'
             NoHorizontal: 'do not move horizontally'
             NoVertical: 'do not move vertically'
-            
+      InvaderProjectiles:
+        DefenderDeathTypes:
+          Disappear: 'disappears'
+          Explode: 'explodes'
+        LevelUp:
+          IncreaseShootingFrequency: 'shoot more frequently'
+          IncreaseScore: 'score more points'
+          StayTheSame: 'stay the same'
+          
   @DesignSchema =
     theme: @Options.Themes
     entities: [@Options.Entities]
@@ -108,6 +132,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
       startingAlignment:
         horizontal: @Options.HorizontalAlignments
         vertical: @Options.VerticalAlignments
+      deathType: @Options.DeathTypes
     defenderProjectiles:
       direction: @Options.Directions
     invaders:
@@ -118,6 +143,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
         movementType: @Options.Invaders.Formation.MovementTypes
         movementOrientation: @Options.Orientations
         attackDirection: @Options.Directions
+      deathType: @Options.DeathTypes
     invaderProjectiles:
       direction: @Options.Directions
     shields:
@@ -132,6 +158,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
         horizontal: @Options.HorizontalAlignments.Left
         vertical: @Options.VerticalAlignments.Bottom
       speed: 1
+      deathType: @Options.DeathTypes.Explode
     defenderProjectiles:
       direction: @Options.Directions.Up
       speed: 2
@@ -157,7 +184,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
           timeoutEmpty: 1
           variability: 0.25
       scorePerInvader: 10
-      scoreIncreasePerInvaderPerLevel: 0
+      scoreIncreasePerInvaderPerLevel: 10
+      deathType: @Options.DeathTypes.Explode
     invaderProjectiles:
       direction: @Options.Directions.Down
       speed: 1
@@ -186,11 +214,6 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
     return unless verticalAlignment = @getDesignValue 'defender.startingAlignment.vertical'
     @_gameFlowStartingAlignmentPrepositionAt horizontalAlignment, verticalAlignment
     
-  gameFlowInvadersStartingAlignmentPrepositionAt: ->
-    return unless horizontalAlignment = @getDesignValue 'invaders.formation.startingAlignment.horizontal'
-    return unless verticalAlignment = @getDesignValue 'invaders.formation.startingAlignment.vertical'
-    @_gameFlowStartingAlignmentPrepositionAt horizontalAlignment, verticalAlignment
-  
   _gameFlowStartingAlignmentPrepositionAt: (horizontalAlignment, verticalAlignment) ->
     # We need 'at' (insted of 'in') when we are at a side and not in the corner/center.
     center = horizontalAlignment is @constructor.Options.HorizontalAlignments.Center
@@ -200,9 +223,6 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
   
   gameFlowDefenderStartingAlignmentChoice: ->
     @_gameFlowStartingAlignmentChoice 'defender'
-  
-  gameFlowInvadersFormationStartingAlignmentChoice: ->
-    @_gameFlowStartingAlignmentChoice 'invaders.formation'
   
   _gameFlowStartingAlignmentChoice: (property) ->
     options = for value, text of @constructor.Texts.GameFlow.StartingAlignments
@@ -220,6 +240,53 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
       return unless verticalAlignment = @getDesignValue "#{property}.startingAlignment.vertical"
 
       "#{verticalAlignment}#{horizontalAlignment}"
+      
+  gameFlowDefenderProjectilesDirectionChoice: ->
+    options: ({value, text} for value, text of @constructor.Texts.Directions)
+    property: 'defenderProjectiles.direction'
+  
+  gameFlowDefenderProjectilesOrientationVertical: ->
+    defenderProjectilesDirection = @getDesignValue 'defenderProjectiles.direction'
+    defenderProjectilesDirection in [@constructor.Options.Directions.Up, @constructor.Options.Directions.Down]
+  
+  gameFlowDefenderProjectilesInvadersDeathTypeChoice: ->
+    options: ({value, text} for value, text of @constructor.Texts.GameFlow.DefenderProjectiles.InvaderDeathTypes)
+    property: 'invaders.deathType'
+  
+  gameFlowDefenderProjectilesInvadersLevelUpChoice: ->
+    options = [
+      value: 'IncreaseShootingFrequency'
+      text: @constructor.Texts.GameFlow.DefenderProjectiles.LevelUp.IncreaseShootingFrequency
+      designValues:
+        "invaders.formation.shooting.timeoutFullDecreasePerLevel": @constructor.DesignDefaults.invaders.formation.shooting.timeoutFullDecreasePerLevel
+        "invaders.scoreIncreasePerInvaderPerLevel": 0
+    ,
+      value: 'IncreaseScore'
+      text: @constructor.Texts.GameFlow.DefenderProjectiles.LevelUp.IncreaseScore
+      designValues:
+        "invaders.formation.shooting.timeoutFullDecreasePerLevel": 0
+        "invaders.scoreIncreasePerInvaderPerLevel": @constructor.DesignDefaults.invaders.scoreIncreasePerInvaderPerLevel
+    ,
+      value: 'StayTheSame'
+      text: @constructor.Texts.GameFlow.DefenderProjectiles.LevelUp.StayTheSame
+      designValues:
+        "invaders.formation.shooting.timeoutFullDecreasePerLevel": 0
+        "invaders.scoreIncreasePerInvaderPerLevel": 0
+    ]
+    
+    options: options
+    value: =>
+      return 'IncreaseShootingFrequency' if @getDesignValue 'invaders.formation.shooting.timeoutFullDecreasePerLevel'
+      return 'IncreaseScore' if @getDesignValue 'invaders.scoreIncreasePerInvaderPerLevel'
+      'StayTheSame'
+  
+  gameFlowInvadersStartingAlignmentPrepositionAt: ->
+    return unless horizontalAlignment = @getDesignValue 'invaders.formation.startingAlignment.horizontal'
+    return unless verticalAlignment = @getDesignValue 'invaders.formation.startingAlignment.vertical'
+    @_gameFlowStartingAlignmentPrepositionAt horizontalAlignment, verticalAlignment
+  
+  gameFlowInvadersFormationStartingAlignmentChoice: ->
+    @_gameFlowStartingAlignmentChoice 'invaders.formation'
   
   gameFlowInvadersFormationAppearingChoice: ->
     options = [
@@ -241,7 +308,10 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
 
       if spawnDelay then 'Individual' else 'All'
   
-  gameFlowPostponeGameplayChoice: ->
+  gameFlowInvadersFormationAppearingOneByOne: ->
+    @getDesignValue 'invaders.formation.spawnDelay'
+  
+  gameFlowInvadersPostponeGameplayChoice: ->
     options: ({value, text} for value, text of @constructor.Texts.PostponeGameplay)
     property: 'postponeGameplay'
   
@@ -333,13 +403,33 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
     options: options
     property: 'invaders.formation.movementType'
   
-  invadersFormationMovementType: -> @getDesignValue 'invaders.formation.movementType'
+  gameFlowInvadersFormationMovementType: -> @getDesignValue 'invaders.formation.movementType'
+  
+  gameFlowInvaderProjectilesDirectionChoice: ->
+    options: ({value, text} for value, text of @constructor.Texts.Directions)
+    property: 'invaderProjectiles.direction'
+  
+  gameFlowInvaderProjectilesDefenderDeathTypeChoice: ->
+    options: ({value, text} for value, text of @constructor.Texts.GameFlow.InvaderProjectiles.DefenderDeathTypes)
+    property: 'defender.deathType'
   
   Component = @
-
+  
+  class @Lives extends @Property
+    @register "#{Component.id()}.Lives"
+    property: -> 'lives'
+    
   class @DefenderSpeed extends @Property
     @register "#{Component.id()}.DefenderSpeed"
     property: -> 'defender.speed'
+    
+  class @DefenderProjectilesSpeed extends @Property
+    @register "#{Component.id()}.DefenderProjectilesSpeed"
+    property: -> 'defenderProjectiles.speed'
+    
+  class @DefenderProjectilesMaxCount extends @Property
+    @register "#{Component.id()}.DefenderProjectilesMaxCount"
+    property: -> 'defenderProjectiles.maxCount'
     
   class @InvadersFormationRows extends @Property
     @register "#{Component.id()}.InvadersFormationRows"
@@ -398,3 +488,11 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
   class @InvadersScoreIncreasePerInvaderPerLevel extends @Property
     @register "#{Component.id()}.InvadersScoreIncreasePerInvaderPerLevel"
     property: -> 'invaders.scoreIncreasePerInvaderPerLevel'
+
+  class @InvaderProjectilesSpeed extends @Property
+    @register "#{Component.id()}.InvaderProjectilesSpeed"
+    property: -> 'invaderProjectiles.speed'
+  
+  class @InvaderProjectilesMaxCount extends @Property
+    @register "#{Component.id()}.InvaderProjectilesMaxCount"
+    property: -> 'invaderProjectiles.maxCount'

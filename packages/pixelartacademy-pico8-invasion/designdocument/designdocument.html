@@ -46,12 +46,16 @@
               {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowDefenderStartingAlignmentChoice}}.
             </p>
           {{/if}}
-          {{#if defenderProjectileAdded}}
-            <p>
-              Using the fire button, the player shoots a projectile [up / down / left / right].
-              Hitting an invader makes it [explode / disappear]
+          {{#if hasEntity 'DefenderProjectile'}}
+            <p data-unit="game-flow-defender-projectiles">
+              Using the fire button, the player shoots a projectile
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowDefenderProjectilesDirectionChoice}}
+              in a {{#if gameFlowDefenderProjectilesOrientationVertical}}vertical{{else}}horizontal{{/if}} line.
+              Hitting an invader with a projectile makes the invader
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowDefenderProjectilesInvadersDeathTypeChoice}}
               and the player earns points.
-              If all the invaders are eliminated, the game repeats with a new level where invaders [shoot more frequently + score more points].
+              If all the invaders are eliminated, the game repeats with a new level where invaders
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowDefenderProjectilesInvadersLevelUpChoice}}.
             </p>
           {{/if}}
           {{#if hasEntity 'Invader'}}
@@ -59,9 +63,11 @@
               Invaders spawn {{#if gameFlowInvadersStartingAlignmentPrepositionAt}}at{{else}}in{{/if}} the
               {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationStartingAlignmentChoice}}.
               They appear
-              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAppearingChoice}}
-              and gameplay
-              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowPostponeGameplayChoice}}.
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAppearingChoice
+              }}{{#if gameFlowInvadersFormationAppearingOneByOne}}
+                and gameplay
+                {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersPostponeGameplayChoice}}{{/if
+              }}.
               The invaders move
               {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementOrientationChoice}},
               and
@@ -69,18 +75,20 @@
               when they reach the edge of the screen.
               Inside the formation they move
               {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementTypeChoice}},
-              {{#if $is invadersFormationMovementType 'All'}}
+              {{#if $is gameFlowInvadersFormationMovementType 'All'}}
                 at a constant speed.
               {{else}}
                 going faster and faster as invaders are eliminated.
               {{/if}}
             </p>
           {{/if}}
-          {{#if invaderProjectileAdded}}
-            <p>
-              Every once in a while, a random invader at the [top / bottom / left / right]
-              shoots a projectile up / down / left / right.
-              If the defender gets hit by an enemy projectile, the player looses a life. When all lives are lost, the game is over.
+          {{#if hasEntity 'InvaderProjectile'}}
+            <p data-unit="game-flow-invader-projectiles">
+              Every once in a while, a random invader shoots a projectile
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvaderProjectilesDirectionChoice}}.
+              If the defender gets hit by an enemy projectile, it
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvaderProjectilesDefenderDeathTypeChoice}}
+              and the player loses a life. When all lives are lost, the game is over.
             </p>
           {{/if}}
           {{#if shieldAdded}}
@@ -91,37 +99,63 @@
             </p>
           {{/if}}
           <h3 data-unit="properties-header">2.c. Properties</h3>
+          {{#if hasEntity 'InvaderProjectile'}}
+            <p data-unit="properties-invader-projectiles">
+              Player
+            </p>
+            <ul>
+              <li data-unit="properties-invader-projectiles">— Starting lives: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Lives}}</li>
+            </ul>
+          {{/if}}
           {{#if hasEntity 'Defender'}}
-            <div data-unit="properties-defender">
-              <p>
-                Defender
-              </p>
-              <ul>
-                <li>- Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderSpeed}} pixels per move</li>
-              </ul>
-            </div>
+            <p data-unit="properties-defender">
+              Defender
+            </p>
+            <ul>
+              <li data-unit="properties-defender">— Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderSpeed}} pixels per move</li>
+            </ul>
+          {{/if}}
+          {{#if hasEntity 'DefenderProjectile'}}
+            <p data-unit="properties-defender-projectile">
+              Defender projectile
+            </p>
+            <ul>
+              <li data-unit="properties-defender-projectiles">— Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderProjectilesSpeed}} pixels per move</li>
+              <li data-unit="properties-defender-projectiles">— Maximum count: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderProjectilesMaxCount}}</li>
+            </ul>
           {{/if}}
           {{#if hasEntity 'Invader'}}
-            <div data-unit="properties-invader">
-              <p>
-                Invaders
-              </p>
-              <ul>
-                <li>- Rows in the grid: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationRows}}</li>
-                <li>- Columns in the grid: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationColumns}}</li>
-                <li>- Horizontal spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationHorizontalSpacing}} pixels</li>
-                <li>- Vertical spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationVerticalSpacing}} pixels</li>
-                <li>- Horizontal speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationHorizontalSpeed}} pixels per move</li>
-                <li>- Vertical speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationVerticalSpeed}} pixels per move</li>
-                <li>- Spawn delay: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationSpawnDelay}} seconds per invader</li>
-                <li>- Shooting delay in level 1 with all invaders: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingTimeoutFull}} seconds</li>
-                <li>- Shooting delay in level 1 with last invader: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingTimoutEmpty}} seconds</li>
-                <li>- Shooting delay decrease per level with all invaders: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationTimeoutFullDecreasePerLevel}} seconds / level</li>
-                <li>- Shooting delay randomness: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingVariability}}%</li>
-                <li>- Score in level 1: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersScorePerInvader}} per invader</li>
-                <li>- Score increase per level: +{{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersScoreIncreasePerInvaderPerLevel}} per invader per level</li>
-              </ul>
-            </div>
+            <p data-unit="properties-invaders">
+              Invaders
+            </p>
+            <ul>
+              <li data-unit="properties-invaders">— Rows in the grid: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationRows}}</li>
+              <li data-unit="properties-invaders">— Columns in the grid: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationColumns}}</li>
+              <li data-unit="properties-invaders">— Horizontal spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationHorizontalSpacing}} pixels</li>
+              <li data-unit="properties-invaders">— Vertical spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationVerticalSpacing}} pixels</li>
+              <li data-unit="properties-invaders">— Horizontal speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationHorizontalSpeed}} pixels per move</li>
+              <li data-unit="properties-invaders">— Vertical speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationVerticalSpeed}} pixels per move</li>
+              <li data-unit="properties-invaders">— Spawn delay: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationSpawnDelay}} seconds per invader</li>
+              {{#if hasEntity 'InvaderProjectile'}}
+                <li data-unit="properties-invader-projectiles">— Shooting delay in level 1 with all invaders: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingTimeoutFull}} seconds</li>
+                <li data-unit="properties-invader-projectiles">— Shooting delay in level 1 with last invader: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingTimoutEmpty}} seconds</li>
+                <li data-unit="properties-invader-projectiles">— Shooting delay decrease per level with all invaders: -{{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationTimeoutFullDecreasePerLevel}} seconds / level</li>
+                <li data-unit="properties-invader-projectiles">— Shooting delay randomness: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingVariability}}%</li>
+              {{/if}}
+              {{#if hasEntity 'DefenderProjectile'}}
+                <li data-unit="properties-defender-projectiles">— Score in level 1: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersScorePerInvader}} per invader</li>
+                <li data-unit="properties-defender-projectiles">— Score increase per level: +{{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersScoreIncreasePerInvaderPerLevel}} per invader per level</li>
+              {{/if}}
+            </ul>
+          {{/if}}
+          {{#if hasEntity 'InvaderProjectile'}}
+            <p data-unit="properties-invader-projectiles">
+              Invader projectile
+            </p>
+            <ul>
+              <li data-unit="properties-invader-projectiles">— Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvaderProjectilesSpeed}} pixels per move</li>
+              <li data-unit="properties-invader-projectiles">— Maximum count: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvaderProjectilesMaxCount}}</li>
+            </ul>
           {{/if}}
         {{/if}}
       {{/if}}
