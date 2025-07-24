@@ -47,7 +47,7 @@ function Defender:update()
   end
   
   -- Shooting
-  if (btnp(4) or btnp(5)) and #scene.defenderProjectiles < Game.design.defenderProjectiles.maxCount then
+  if Game.design.hasDefenderProjectile and (btnp(4) or btnp(5)) and #scene.defenderProjectiles < Game.design.defenderProjectiles.maxCount then
     scene:addDefenderProjectile()
     sfx(0)
   end

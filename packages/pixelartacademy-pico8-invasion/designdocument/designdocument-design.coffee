@@ -40,6 +40,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
       InvaderProjectile: 'InvaderProjectile'
       DefenderProjectileExplosion: 'DefenderProjectileExplosion'
       InvaderProjectileExplosion: 'InvaderProjectileExplosion'
+      Shield: 'Shield'
     PostponeGameplay:
       None: 'None'
       UntilSpawnedAll: 'UntilSpawnedAll'
@@ -156,6 +157,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
           timeoutEmpty: 1
           variability: 0.25
       scorePerInvader: 10
+      scoreIncreasePerInvaderPerLevel: 0
     invaderProjectiles:
       direction: @Options.Directions.Down
       speed: 1
@@ -169,7 +171,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
     entity in (@getDesignValue('entities') or [])
   
   hasEntities: ->
-    @getDesignValue('entities')?.length > 0
+    @getDesignValue('entities')?.length
   
   themeChoice: ->
     options: ({value, text} for value, text of @constructor.Texts.Themes)
@@ -267,6 +269,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
         value: 'NoVertical'
         text: @constructor.Texts.GameFlow.Invaders.Formation.AttackDirections.NoVertical
         designValues:
+          'invaders.formation.attackDirection': @constructor.Options.Directions.Down
           'invaders.formation.verticalSpeed': 0
       ]
     
@@ -287,6 +290,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
         value: 'NoHorizontal'
         text: @constructor.Texts.GameFlow.Invaders.Formation.AttackDirections.NoHorizontal
         designValues:
+          'invaders.formation.attackDirection': @constructor.Options.Directions.Left
           'invaders.formation.horizontalSpeed': 0
       ]
     
@@ -336,3 +340,61 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
   class @DefenderSpeed extends @Property
     @register "#{Component.id()}.DefenderSpeed"
     property: -> 'defender.speed'
+    
+  class @InvadersFormationRows extends @Property
+    @register "#{Component.id()}.InvadersFormationRows"
+    property: -> 'invaders.formation.rows'
+    
+  class @InvadersFormationColumns extends @Property
+    @register "#{Component.id()}.InvadersFormationColumns"
+    property: -> 'invaders.formation.columns'
+    
+  class @InvadersFormationHorizontalSpacing extends @Property
+    @register "#{Component.id()}.InvadersFormationHorizontalSpacing"
+    property: -> 'invaders.formation.horizontalSpacing'
+    
+  class @InvadersFormationVerticalSpacing extends @Property
+    @register "#{Component.id()}.InvadersFormationVerticalSpacing"
+    property: -> 'invaders.formation.verticalSpacing'
+    
+  class @InvadersFormationHorizontalSpeed extends @Property
+    @register "#{Component.id()}.InvadersFormationHorizontalSpeed"
+    property: -> 'invaders.formation.horizontalSpeed'
+    
+  class @InvadersFormationVerticalSpeed extends @Property
+    @register "#{Component.id()}.InvadersFormationVerticalSpeed"
+    property: -> 'invaders.formation.verticalSpeed'
+    
+  class @InvadersFormationSpawnDelay extends @Property
+    @register "#{Component.id()}.InvadersFormationSpawnDelay"
+    property: -> 'invaders.formation.spawnDelay'
+    
+  class @InvadersFormationShootingTimeoutFull extends @Property
+    @register "#{Component.id()}.InvadersFormationShootingTimeoutFull"
+    property: -> 'invaders.formation.shooting.timeoutFull'
+    
+  class @InvadersFormationShootingTimoutEmpty extends @Property
+    @register "#{Component.id()}.InvadersFormationShootingTimoutEmpty"
+    property: -> 'invaders.formation.shooting.timeoutEmpty'
+    
+  class @InvadersFormationTimeoutFullDecreasePerLevel extends @Property
+    @register "#{Component.id()}.InvadersFormationTimeoutFullDecreasePerLevel"
+    property: -> 'invaders.formation.shooting.timeoutFullDecreasePerLevel'
+    
+  class @InvadersFormationShootingVariability extends @Property
+    @register "#{Component.id()}.InvadersFormationShootingVariability"
+    property: -> 'invaders.formation.shooting.variability'
+    
+    load: ->
+      Math.round super() * 100
+      
+    save: (value) ->
+      super value / 100
+    
+  class @InvadersScorePerInvader extends @Property
+    @register "#{Component.id()}.InvadersScorePerInvader"
+    property: -> 'invaders.scorePerInvader'
+
+  class @InvadersScoreIncreasePerInvaderPerLevel extends @Property
+    @register "#{Component.id()}.InvadersScoreIncreasePerInvaderPerLevel"
+    property: -> 'invaders.scoreIncreasePerInvaderPerLevel'

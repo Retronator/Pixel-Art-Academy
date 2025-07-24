@@ -11,10 +11,12 @@ function _draw()
   else
     scene:draw()
 
-    for life = 1, game.lives - 1 do
-      lifeX = 1 + Defender.sprite.relativeCenterX + (life - 1) * (Defender.sprite.bounds.width + 1)
-      lifeY = 125 - Defender.sprite.relativeCenterY
-      Defender.sprite:draw(lifeX, lifeY)
+    if Game.design.hasDefender then
+      for life = 1, game.lives - 1 do
+        lifeX = 1 + Defender.sprite.relativeCenterX + (life - 1) * (Defender.sprite.bounds.width + 1)
+        lifeY = 125 - Defender.sprite.relativeCenterY
+        Defender.sprite:draw(lifeX, lifeY)
+      end
     end
 
     if game.lives == 0 then

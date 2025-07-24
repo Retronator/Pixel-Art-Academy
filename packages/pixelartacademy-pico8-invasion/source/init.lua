@@ -5,6 +5,13 @@ function _init()
   if not next(Game.design) then
     Game.design = {
       lives = 3,
+      entities = {
+        Entities.Defender,
+        Entities.Invader,
+        Entities.DefenderProjectile,
+        Entities.InvaderProjectile,
+        Entities.Shield
+      },
       postponeGameplay = DesignOptions.PostponeGameplay.UntilSpawnedAll,
       defender = {
         movement = DesignOptions.Defender.Movements.Horizontal,
@@ -42,7 +49,8 @@ function _init()
             variability = 0.25
           }
         },
-        scorePerInvader = 10
+        scorePerInvader = 10,
+        scoreIncreasePerInvaderPerLevel = 0
       },
       invaderProjectiles = {
         direction = Directions.Down,
@@ -66,6 +74,10 @@ function _init()
 
   Game.design.playfieldBounds.width = Game.design.playfieldBounds.right - Game.design.playfieldBounds.left + 1
   Game.design.playfieldBounds.height = Game.design.playfieldBounds.bottom - Game.design.playfieldBounds.top + 1
+
+  for entity, value in pairs(Entities) do
+    Game.design['has'..entity] = Game:designHasEntity(value)
+  end
 
   game = nil
   scene = nil

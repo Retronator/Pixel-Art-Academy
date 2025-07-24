@@ -29,6 +29,16 @@ Sides = {
   Right = 4
 }
 
+Entities = {
+  Defender = 1,
+  Invader = 2,
+  DefenderProjectile = 3,
+  InvaderProjectile = 4,
+  DefenderProjectileExplosion = 5,
+  InvaderProjectileExplosion = 6,
+  Shield = 7
+}
+
 DesignOptions = {
   PostponeGameplay = {
     None = 1,

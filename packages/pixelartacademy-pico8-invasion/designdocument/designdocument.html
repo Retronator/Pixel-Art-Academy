@@ -97,9 +97,29 @@
                 Defender
               </p>
               <ul>
-                <li data-unit="properties-defender-speed">
-                  - Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderSpeed}} pixels per move
-                </li>
+                <li>- Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.DefenderSpeed}} pixels per move</li>
+              </ul>
+            </div>
+          {{/if}}
+          {{#if hasEntity 'Invader'}}
+            <div data-unit="properties-invader">
+              <p>
+                Invaders
+              </p>
+              <ul>
+                <li>- Rows in the grid: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationRows}}</li>
+                <li>- Columns in the grid: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationColumns}}</li>
+                <li>- Horizontal spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationHorizontalSpacing}} pixels</li>
+                <li>- Vertical spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationVerticalSpacing}} pixels</li>
+                <li>- Horizontal speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationHorizontalSpeed}} pixels per move</li>
+                <li>- Vertical speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationVerticalSpeed}} pixels per move</li>
+                <li>- Spawn delay: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationSpawnDelay}} seconds per invader</li>
+                <li>- Shooting delay in level 1 with all invaders: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingTimeoutFull}} seconds</li>
+                <li>- Shooting delay in level 1 with last invader: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingTimoutEmpty}} seconds</li>
+                <li>- Shooting delay decrease per level with all invaders: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationTimeoutFullDecreasePerLevel}} seconds / level</li>
+                <li>- Shooting delay randomness: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersFormationShootingVariability}}%</li>
+                <li>- Score in level 1: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersScorePerInvader}} per invader</li>
+                <li>- Score increase per level: +{{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvadersScoreIncreasePerInvaderPerLevel}} per invader per level</li>
               </ul>
             </div>
           {{/if}}

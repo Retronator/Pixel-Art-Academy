@@ -7,7 +7,7 @@ function Scene:new()
   -- Create the shields.
   scene.shields = {}
 
-  if Game.design.shields.amount > 0 then
+  if Game.design.hasShield and Game.design.shields.amount > 0 then
     local shieldsX, shieldsY
 
     if Game.design.shields.side == Sides.Left then

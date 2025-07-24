@@ -109,7 +109,7 @@ function Invaders:new()
 
   -- Shooting
 
-  if Game.design.invaderProjectiles.movement == Directions.Down or Game.design.invaderProjectiles.movement == Directions.Up then
+  if Game.design.invaderProjectiles.direction == Directions.Down or Game.design.invaderProjectiles.direction == Directions.Up then
     invaders.shootingOrientation = Orientations.Vertical
 
   else
@@ -334,13 +334,13 @@ function Invaders:shoot()
 
     for secondNumber = 1, secondCount do
       if shootByRow then
-        if Game.design.invaderProjectiles.movement == Directions.Up then
+        if Game.design.invaderProjectiles.direction == Directions.Up then
           formationSpot = self.formation[firstNumber][secondNumber]
         else
           formationSpot = self.formation[firstNumber][self.rows - secondNumber + 1]
         end
       else
-        if Game.design.invaderProjectiles.movement == Directions.Up then
+        if Game.design.invaderProjectiles.direction == Directions.Up then
           formationSpot = self.formation[secondNumber][firstNumber]
         else
           formationSpot = self.formation[self.columns - secondNumber + 1][firstNumber]
@@ -367,6 +367,8 @@ end
 -- Update
 
 function Invaders:update()
+  if not Game.design.hasInvader or game.lives == 0 then return end
+
   -- Spawn invaders.
   if not self.spawnedAll then
     if Game.design.invaders.formation.spawnDelay > 0 then
@@ -528,7 +530,7 @@ function Invaders:update()
     end
 
     -- Shoot.
-    if self.aliveCount > 0 and scene.defender ~= nil and scene.defender.alive and #scene.invaderProjectiles < Game.design.invaderProjectiles.maxCount then
+    if Game.design.hasInvaderProjectile and self.aliveCount > 0 and scene.defender ~= nil and scene.defender.alive and #scene.invaderProjectiles < Game.design.invaderProjectiles.maxCount then
       self.shootingDuration = self.shootingDuration + dt
       if self.shootingDuration >= self.shootingTimeout then
         self:shoot()

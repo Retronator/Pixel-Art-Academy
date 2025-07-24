@@ -39,6 +39,13 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
           
       _.flatten valueStrings
       
+    else
+      if options = _.nestedProperty @DesignSchema, path
+        index = _.values(options).indexOf object
+        object = index + 1 if index > -1
+      
+      object
+      
   onCreated: ->
     super arguments...
     
@@ -65,8 +72,6 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       @design()
       
       Tracker.afterFlush =>
-        console.log "recomputing"
-        
         elements = @$('article').toArray()
         textElements = []
         

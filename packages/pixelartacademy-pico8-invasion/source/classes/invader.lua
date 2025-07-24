@@ -22,11 +22,19 @@ end
 function Invader:moveTo(x, y)
   self.x = x
   self.y = y
+
+  if Game.design.invaders.formation.attackDirection == Directions.Left and self.x - self.sprite.relativeCenterX < Game.design.playfieldBounds.left or
+      Game.design.invaders.formation.attackDirection == Directions.Right and self.x - self.sprite.relativeCenterX + self.sprite.bounds.width > Game.design.playfieldBounds.right or
+      Game.design.invaders.formation.attackDirection == Directions.Up and self.y - self.sprite.relativeCenterY < Game.design.playfieldBounds.top or
+      Game.design.invaders.formation.attackDirection == Directions.Down and self.y - self.sprite.relativeCenterY + self.sprite.bounds.height > Game.design.playfieldBounds.bottom then
+
+    game:invadersWin()
+  end
 end
 
 function Invader:die(explosionX, explosionY)
   self.alive = false
   self.sprite:createParticles(self.x, self.y, explosionX, explosionY)
-  game:increaseScore(Game.design.invaders.scorePerInvader)
+  game:increaseScore(Game.design.invaders.scorePerInvader + (game.level - 1) * Game.design.invaders.scoreIncreasePerInvaderPerLevel)
   sfx(5)
 end
