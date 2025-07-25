@@ -245,6 +245,24 @@ end
 -- Spawning
 
 function Invaders:spawnNextInvader()
+  local formationSpot
+
+  if Game.design.invaders.formation.spawnOrder == DesignOptions.Invaders.Formation.SpawnOrder.Sequential then
+    formationSpot = self:getNextSpawningInvaderSequential()
+  else
+    formationSpot = self:getNextSpawningInvaderRandom()
+  end
+
+  if formationSpot then
+    local x = self.x + formationSpot.x
+    local y = self.y + formationSpot.y
+    formationSpot.invader = scene:addInvader(x, y)
+  else
+    self.spawnedAll = true
+  end
+end
+
+function Invaders:getNextSpawningInvaderSequential()
   local spawnByRow = invaders.attackOrientation == Orientations.Vertical
   local firstCount, secondCount
 
@@ -258,7 +276,6 @@ function Invaders:spawnNextInvader()
 
   for firstNumber = 1, firstCount do
     for secondNumber = 1, secondCount do
-
       if spawnByRow then
         if Game.design.invaders.formation.attackDirection == Directions.Down then
           formationSpot = self.formation[secondNumber][firstNumber]
@@ -274,15 +291,26 @@ function Invaders:spawnNextInvader()
       end
 
       if formationSpot.invader == nil then
-        local x = self.x + formationSpot.x
-        local y = self.y + formationSpot.y
-        formationSpot.invader = scene:addInvader(x, y)
-        return
+        return formationSpot
+      end
+    end
+  end
+end
+
+function Invaders:getNextSpawningInvaderRandom()
+  formationSpots = {}
+  for columnNumber = 1, invaders.columns do
+    for rowNumber = 1, invaders.rows do
+      formationSpot = invaders.formation[columnNumber][rowNumber]
+      if formationSpot.invader == nil then
+        add(formationSpots, formationSpot)
       end
     end
   end
 
-  self.spawnedAll = true
+  if #formationSpots > 0 then
+    return formationSpots[flr(rnd(#formationSpots)) + 1]
+  end
 end
 
 -- Movement
@@ -530,7 +558,7 @@ function Invaders:update()
     end
 
     -- Shoot.
-    if Game.design.hasInvaderProjectile and self.aliveCount > 0 and scene.defender ~= nil and scene.defender.alive and #scene.invaderProjectiles < Game.design.invaderProjectiles.maxCount then
+    if Game.design.hasInvaderProjectile and self.aliveCount > 0 and (scene.defender ~= nil and scene.defender.alive or not Game.design.hasDefender) and #scene.invaderProjectiles < Game.design.invaderProjectiles.maxCount then
       self.shootingDuration = self.shootingDuration + dt
       if self.shootingDuration >= self.shootingTimeout then
         self:shoot()

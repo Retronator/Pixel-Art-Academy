@@ -69,6 +69,8 @@ class DesignDocument.Entities extends AM.Component
       # We know the player has changed the bitmap if the history position is not zero.
       return unless bitmap.historyPosition
     
+    return unless @availableEntities().length
+    
     true
     
   availableEntities: ->
@@ -78,17 +80,13 @@ class DesignDocument.Entities extends AM.Component
     defender = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.Defender.id()
     invader = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.Invader.id()
     defenderProjectile = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.DefenderProjectile.id()
-    defenderProjectileExplosion = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.DefenderProjectileExplosion.id()
     invaderProjectile = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.InvaderProjectile.id()
-    invaderProjectileExplosion = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.InvaderProjectileExplosion.id()
     shield = _.find assets, (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.Shield.id()
     
     hasDefender = DesignDocument.Options.Entities.Defender in project.design.entities
     hasInvader = DesignDocument.Options.Entities.Invader in project.design.entities
     hasDefenderProjectile = DesignDocument.Options.Entities.DefenderProjectile in project.design.entities
     hasInvaderProjectile = DesignDocument.Options.Entities.InvaderProjectile in project.design.entities
-    hasDefenderProjectileExplosion = DesignDocument.Options.Entities.DefenderProjectileExplosion in project.design.entities
-    hasInvaderProjectileExplosion = DesignDocument.Options.Entities.InvaderProjectileExplosion in project.design.entities
     hasShield = DesignDocument.Options.Entities.Shield in project.design.entities
     
     entities = [
@@ -96,8 +94,6 @@ class DesignDocument.Entities extends AM.Component
       invader unless hasInvader
       defenderProjectile if hasDefender and not hasDefenderProjectile
       invaderProjectile if hasInvader and not hasInvaderProjectile
-      defenderProjectileExplosion if hasDefenderProjectile and not hasDefenderProjectileExplosion
-      invaderProjectileExplosion if hasInvaderProjectile and not hasInvaderProjectileExplosion
       shield if (hasDefenderProjectile or hasInvaderProjectile) and not hasShield
     ]
     
@@ -138,6 +134,20 @@ class DesignDocument.Entities extends AM.Component
     
     entities.push entityId
     @designDocument.setDesignValue 'entities', entities
+    
+    @_addAsset asset
+    
+    # Projectiles also require the explosion assets to be added.
+    if assetId is PAA.Pico8.Cartridges.Invasion.DefenderProjectile.id()
+      defenderProjectileExplosion = _.find @assets(), (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.DefenderProjectileExplosion.id()
+      @_addAsset defenderProjectileExplosion
+      
+    if assetId is PAA.Pico8.Cartridges.Invasion.InvaderProjectile.id()
+      invaderProjectileExplosion = _.find @assets(), (asset) => asset.id() is PAA.Pico8.Cartridges.Invasion.InvaderProjectileExplosion.id()
+      @_addAsset invaderProjectileExplosion
+  
+  _addAsset: (asset) ->
+    assetId = asset.id()
     
     # Create the asset bitmap.
     projectId = @designDocument.projectId()

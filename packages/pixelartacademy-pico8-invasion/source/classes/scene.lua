@@ -239,7 +239,17 @@ function Scene:update()
     for shield in all(self.shields) do
       local overlaps, explosionX, explosionY = shield:overlaps(invader)
       if overlaps then
-        explosion = InvaderShieldExplosion:new(explosionX, explosionY)
+        explosion = ShieldExplosion:new(explosionX, explosionY)
+        shield:hit(explosion)
+      end
+    end
+  end
+
+  if self.defender ~= nil then
+    for shield in all(self.shields) do
+      local overlaps, explosionX, explosionY = shield:overlaps(self.defender)
+      if overlaps then
+        explosion = ShieldExplosion:new(explosionX, explosionY)
         shield:hit(explosion)
       end
     end

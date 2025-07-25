@@ -34,9 +34,7 @@ Entities = {
   Invader = 2,
   DefenderProjectile = 3,
   InvaderProjectile = 4,
-  DefenderProjectileExplosion = 5,
-  InvaderProjectileExplosion = 6,
-  Shield = 7
+  Shield = 5
 }
 
 DeathTypes = {
@@ -58,6 +56,10 @@ DesignOptions = {
   },
   Invaders = {
     Formation = {
+      SpawnOrder = {
+        Sequential = 1,
+        Random = 2
+      },
       MovementTypes = {
         Individual = 1,
         All = 2

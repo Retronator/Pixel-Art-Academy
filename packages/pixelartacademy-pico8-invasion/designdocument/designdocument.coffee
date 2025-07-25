@@ -299,7 +299,10 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       
   onClick: (event) ->
     $target = $(event.target)
-    return if $target.closest('.choice').length or $target.closest('.entities').length
+    return if $target.closest('.choice').length
+    return if $target.closest('.chosen-choice').length
+    return if $target.closest('.entities').length
+    return if $target.closest('.entities-add').length
 
     @skipAnimation true
   

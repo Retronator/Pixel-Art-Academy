@@ -13,7 +13,7 @@ __lua__
 #include classes/invader.lua
 #include classes/invaderprojectile.lua
 #include classes/invaderprojectileexplosion.lua
-#include classes/invadershieldexplosion.lua
+#include classes/shieldexplosion.lua
 #include classes/invaders.lua
 #include classes/shield.lua
 #include classes/scene.lua

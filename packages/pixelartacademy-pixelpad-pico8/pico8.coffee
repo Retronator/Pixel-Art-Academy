@@ -76,13 +76,16 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       cartridgeParameter = AB.Router.getParameter 'parameter3'
       playParameter = AB.Router.getParameter 'parameter4'
       
-      Tracker.nonreactive =>
+      Tracker.autorun (computation) =>
         drawer = @drawer()
         
         if cartridgeParameter and playParameter
-          @cartridge drawer.selectedCartridge()
+          return unless cartridge = drawer.selectedCartridge()
+          computation.stop()
+          @cartridge cartridge
         
         else
+          computation.stop()
           # Turn off the device and deselect the cartridge when returning from play.
           if @cartridge()
             # Wait for the power off animation if needed.

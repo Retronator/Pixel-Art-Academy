@@ -4,6 +4,9 @@ function _draw()
   rect(Game.design.playfieldBounds.left - 1, Game.design.playfieldBounds.top - 1, Game.design.playfieldBounds.right + 1, Game.design.playfieldBounds.bottom + 1, 6)
   print("score: " .. (game ~= nil and game.score or 0), 1, 1, 6)
 
+  levelText = "level: " .. (game ~= nil and game.level or 1)
+  print(levelText, 128 - #levelText * 4, 1, 6)
+
   if game == nil then
     print("invasion", 48, 40, 7)
     print("press button to start", 22, 65, 7)

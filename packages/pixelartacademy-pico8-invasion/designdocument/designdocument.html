@@ -5,14 +5,14 @@
         <h1>Invasion</h1>
         <p>Design document</p>
       </hgroup>
-      <h2 data-unit="game-concept-header">1. Game concept</h2>
+      <h2 data-unit="game-concept-header">1. Game Concept</h2>
       <p data-unit="game-concept">
         Invasion is a single-screen shoot 'em up, inspired by
         {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice themeChoice}}.
         The player is fending off a fleet of computer-controlled invaders by shooting projectiles at them.
       </p>
       {{#if design.theme}}
-        <h2 data-unit="game-mechanics-header">2. Game mechanics</h2>
+        <h2 data-unit="game-elements-header">2. Game Elements</h2>
         <h3 data-unit="entities-header">2.a. Entities</h3>
         {{#if hasEntity 'Defender'}}
           <p data-unit="entities-defender">Defender: The player-controlled unit.</p>
@@ -25,13 +25,6 @@
         {{/if}}
         {{#if hasEntity 'InvaderProjectile'}}
           <p data-unit="entities-invader-projectile">Invader projectile: A projectile the invaders shoot towards the defender.</p>
-        {{/if}}
-        {{#if hasEntity 'DefenderProjectileExplosion'}}
-          <p data-unit="entities-defender-projectile-explosion">Invader projectile explosion: An explosion caused by the invaders' projectile hitting something.
-            defender's projectile hits a target.</p>
-        {{/if}}
-        {{#if hasEntity 'InvaderProjectileExplosion'}}
-          <p data-unit="entities-invader-projectile-explosion">Invader projectile explosion: An explosion caused by the invaders' projectile hitting something.</p>
         {{/if}}
         {{#if hasEntity 'Shield'}}
           <p data-unit="entities-shield">Shield: An obstacle that blocks projectiles.</p>
@@ -65,20 +58,27 @@
               They appear
               {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAppearingChoice
               }}{{#if gameFlowInvadersFormationAppearingOneByOne}}
+                in
+                {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationSpawnOrder}}
                 and gameplay
                 {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersPostponeGameplayChoice}}{{/if
               }}.
-              The invaders move
-              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementOrientationChoice}},
-              and
-              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAttackDirectionChoice}}
-              when they reach the edge of the screen.
-              Inside the formation they move
-              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementTypeChoice}},
-              {{#if $is gameFlowInvadersFormationMovementType 'All'}}
-                at a constant speed.
+              The invaders
+              {{#if gameFlowInvadersMove}}
+                move
+                {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementOrientationChoice}},
+                and
+                {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationAttackDirectionChoice
+                }}{{#if gameFlowInvadersFormationAttack}} when they reach the edge of the screen{{/if}}.
+                Inside the formation they move
+                {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowInvadersFormationMovementTypeChoice}},
+                {{#if $is gameFlowInvadersFormationMovementType 'All'}}
+                  at a constant speed.
+                {{else}}
+                  going faster and faster as invaders are eliminated.
+                {{/if}}
               {{else}}
-                going faster and faster as invaders are eliminated.
+                stand still.
               {{/if}}
             </p>
           {{/if}}
@@ -91,11 +91,11 @@
               and the player loses a life. When all lives are lost, the game is over.
             </p>
           {{/if}}
-          {{#if shieldAdded}}
-            <p>
-              Shields are placed in the level on the [left / right / top / bottom]
-              side.
-              They slowly disintegrate as projectiles or invaders hit them.
+          {{#if hasEntity 'Shield'}}
+            <p data-unit="game-flow-shields">
+              To aid the player, shields are placed in the level on the
+              {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.Choice gameFlowShieldsSideChoice}}
+              side. They disintegrate as projectiles, invaders, or the defender hit them.
             </p>
           {{/if}}
           <h3 data-unit="properties-header">2.c. Properties</h3>
@@ -156,6 +156,33 @@
               <li data-unit="properties-invader-projectiles">— Speed: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvaderProjectilesSpeed}} pixels per move</li>
               <li data-unit="properties-invader-projectiles">— Maximum count: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.InvaderProjectilesMaxCount}}</li>
             </ul>
+          {{/if}}
+          {{#if hasEntity 'Shield'}}
+            <p data-unit="properties-shields">
+              Shields
+            </p>
+            <ul>
+              <li data-unit="properties-shields">— Amount: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.ShieldsAmount}}</li>
+              <li data-unit="properties-shields">— Spacing: {{> PixelArtAcademy.Pico8.Cartridges.Invasion.DesignDocument.ShieldsSpacing}} pixels</li>
+            </ul>
+          {{/if}}
+          <h2 data-unit="art-header">3. Art</h2>
+          {{#if hasEntity 'Defender'}}
+            <p data-unit="art-defender">Defender (16×16 pixels)</p>
+          {{/if}}
+          {{#if hasEntity 'Invader'}}
+            <p data-unit="art-invader">Invader (16×16 pixels)</p>
+          {{/if}}
+          {{#if hasEntity 'DefenderProjectile'}}
+            <p data-unit="art-defender-projectile">Defender projectile (8×8 pixels)</p>
+            <p data-unit="art-defender-projectile">Defender projectile explosion (8×8 pixels)</p>
+          {{/if}}
+          {{#if hasEntity 'InvaderProjectile'}}
+            <p data-unit="art-invader-projectile">Invader projectile (8×8 pixels)</p>
+            <p data-unit="art-invader-projectile">Invader projectile explosion (8×8 pixels)</p>
+          {{/if}}
+          {{#if hasEntity 'Shield'}}
+            <p data-unit="art-shield">Shield (24×24 pixels)</p>
           {{/if}}
         {{/if}}
       {{/if}}

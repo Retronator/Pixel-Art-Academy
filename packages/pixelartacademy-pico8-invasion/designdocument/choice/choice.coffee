@@ -29,12 +29,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument.Choice extends AM.Component
     choice = @data()
     value = @value()
     
-    option = _.find choice.options, (option) => value is option.value
+    return unless option = _.find choice.options, (option) => value is option.value
     
-    unless option
-      console.warn "No option found for value", value, choice
-      return
-      
     option.text
   
   events: ->

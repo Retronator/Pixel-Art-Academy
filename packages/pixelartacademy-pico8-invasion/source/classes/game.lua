@@ -73,7 +73,7 @@ function Game:update()
   end
 
   -- Progress level.
-  if invaders.aliveCount == 0 and scene.defender and scene.defender.alive then
+  if invaders.aliveCount == 0 and invaders.spawnedAll and scene.defender and scene.defender.alive then
     game.levelDuration = game.levelDuration + dt
     if game.levelDuration > 2 then
       -- Report the level was completed.

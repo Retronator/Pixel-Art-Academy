@@ -113,12 +113,12 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
     
   # Scrolling
   
-  scrollInDirection: (vertical, sign) ->
+  scrollInDirection: (vertical, sign, factor=1) ->
     if vertical
-      @_setScrollTop @_clampedScrollTop() + Math.sign(sign) * scrollDelta
+      @_setScrollTop @_clampedScrollTop() + Math.sign(sign) * scrollDelta * factor
       
     else
-      @_setScrollLeft @_clampedScrollLeft() + Math.sign(sign) * scrollDelta
+      @_setScrollLeft @_clampedScrollLeft() + Math.sign(sign) * scrollDelta * factor
     
   scrollToElement: (element, options = {}) ->
     options.padding ?= 20
@@ -141,6 +141,7 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
 
     contentAreaSize = @contentAreaSize()
     
+    # Calculate where to scroll to.
     scrollTop = null
     scrollLeft = null
     
@@ -160,40 +161,50 @@ class PAA.Pixeltosh.OS.Interface.Window extends FM.View
       scrollLeftBy = elementOffset.left + elementWidth - (contentAreaOffset.left + contentAreaSize.width - options.padding)
       scrollLeft = @_clampedScrollLeft() + scrollLeftBy
       
+    # If we're not animating, simply set the values.
     unless options.animate
       @_setScrollTop scrollTop if scrollTop?
       @_setScrollLeft scrollLeft if scrollLeft?
       return
       
+    # Enable waiting for the end of animation.
     new Promise (resolve, reject) =>
+      # Calculate how many times the scroll in direction should be called.
       scrollVerticalBy = -scrollDownBy if scrollDownBy
       scrollVerticalBy = scrollUpBy if scrollUpBy
 
       scrollHorizontalBy = -scrollRightBy if scrollRightBy
       scrollHorizontalBy = scrollLeftBy if scrollLeftBy
       
-      scrollVerticalTimes = Math.abs scrollVerticalBy / scrollDelta if scrollVerticalBy
-      scrollHorizontalTimes = Math.abs scrollHorizontalBy / scrollDelta if scrollHorizontalBy
+      scrollVerticalTimes = Math.ceil Math.abs scrollVerticalBy / scrollDelta if scrollVerticalBy
+      scrollHorizontalTimes = Math.ceil Math.abs scrollHorizontalBy / scrollDelta if scrollHorizontalBy
       
-      while scrollVerticalTimes > 0 or scrollHorizontalTimes > 0
+      # Allow maximum of 5 scrolls.
+      if scrollVerticalTimes > 5
+        scrollVerticalFactor = scrollVerticalTimes / 5
+        scrollVerticalTimes = 5
+        
+      if scrollHorizontalTimes > 5
+        scrollHorizontalFactor = scrollHorizontalTimes / 5
+        scrollHorizontalTimes = 5
+      
+      # Perform the scrolls.
+      while scrollVerticalTimes or scrollHorizontalTimes
         break if options.skipAnimation?()
         
-        if scrollVerticalTimes > 0
-          @scrollInDirection true, scrollVerticalBy
+        if scrollVerticalTimes
+          @scrollInDirection true, scrollVerticalBy, scrollVerticalFactor
           scrollVerticalTimes--
+          @_setScrollTop scrollTop unless scrollVerticalTimes
           
-          if scrollVerticalTimes <= 0
-            @_setScrollTop scrollTop
-          
-        if scrollHorizontalTimes > 0
-          @scrollInDirection false, scrollHorizontalBy
+        if scrollHorizontalTimes
+          @scrollInDirection false, scrollHorizontalBy, scrollHorizontalFactor
           scrollHorizontalTimes--
+          @_setScrollLeft scrollLeft unless scrollHorizontalTimes
           
-          if scrollHorizontalTimes <= 0
-            @_setScrollLeft scrollLeft
-          
-        await _.waitForSeconds scrollDelay
+        await _.waitForSeconds scrollDelay if scrollVerticalTimes or scrollHorizontalTimes
         
+      # Set final values again in case we skip animation.
       @_setScrollTop scrollTop if scrollTop?
       @_setScrollLeft scrollLeft if scrollLeft?
 
