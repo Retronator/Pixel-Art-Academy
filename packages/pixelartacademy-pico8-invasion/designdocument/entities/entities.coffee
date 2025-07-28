@@ -63,7 +63,12 @@ class DesignDocument.Entities extends AM.Component
     return unless project = @designDocument.project()
     return unless project.assets
     
-    for asset in project.assets
+    optionalAssetIds = [
+      PAA.Pico8.Cartridges.Invasion.DefenderProjectileExplosion.id()
+      PAA.Pico8.Cartridges.Invasion.InvaderProjectileExplosion.id()
+    ]
+    
+    for asset in project.assets when asset.id not in optionalAssetIds
       return unless bitmap = LOI.Assets.Bitmap.documents.findOne asset.bitmapId
       
       # We know the player has changed the bitmap if the history position is not zero.

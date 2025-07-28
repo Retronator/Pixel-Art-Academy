@@ -28,6 +28,8 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
 
     @_assets = {}
     @_assetsUpdatedDependency = new Tracker.Dependency()
+
+    @_designDocumentAsset = Tracker.nonreactive => new PAA.Pico8.Cartridges.Invasion.DesignDocument.Asset @
     
     @autorun (computation) =>
       return unless activeProjectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
@@ -50,11 +52,16 @@ class PAA.Pico8.Cartridges.Invasion.Project extends PAA.Practice.Project.Thing
     
     @pico8Cartridge.destroy()
 
+    @_designDocumentAsset.destroy()
     asset.destroy() for assetId, asset of @_assets
     
   assets: ->
     @_assetsUpdatedDependency.depend()
-    _.values @_assets
+    
+    [
+      _.values(@_assets)...
+      @_designDocumentAsset
+    ]
     
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter LM.Design.Fundamentals

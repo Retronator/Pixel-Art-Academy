@@ -33,6 +33,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
       DeepSea: 'DeepSea'
       CosmicHorror: 'CosmicHorror'
       MicroscopicWorld: 'MicroscopicWorld'
+      Everything: 'Everything'
     Entities:
       Defender: 'Defender'
       Invader: 'Invader'
@@ -75,6 +76,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
       DeepSea: "the deep sea"
       CosmicHorror: "cosmic horror"
       MicroscopicWorld: "the microscopic world"
+      Everything: "a little bit of everything"
     PostponeGameplay:
       None: 'starts immediately'
       UntilSpawnedAll: 'pauses during this time'

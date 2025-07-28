@@ -1,3 +1,5 @@
+import {ReactiveField} from "meteor/peerlibrary:reactive-field"
+
 AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -49,6 +51,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
   onCreated: ->
     super arguments...
     
+    @pixelPadOS = @ancestorComponentOfType PAA.PixelPad.OS
+    
     @window = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
     
     @projectId = new ComputedField => PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
@@ -59,7 +63,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       
     @design = new ComputedField => @project()?.design
     @writtenUnits = new ComputedField => @project()?.designDocument.writtenUnits
-      
+    
+    @animating = new ReactiveField false
     @skipAnimation = new ReactiveField false
     
   onRendered: ->
@@ -139,7 +144,11 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     @_textElements ?= []
     @_cursor ?= $('<span class="cursor"></span>')[0]
 
-    # Add new text elements.
+    # Mark all non-written existing elements as potentially removed.
+    for textElement in @_textElements
+      textElement.removed = true unless textElement.written
+    
+    # Find existing and new text elements.
     @_newCurrentTextElementIndex = null
     currentInsertionIndex = 0
     
@@ -148,12 +157,21 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       found = false
       for searchIndex in [currentInsertionIndex...@_textElements.length]
         unless nodeIsSame = textElement.node is @_textElements[searchIndex].node
-          textIsSame = textElement.text is @_textElements[searchIndex].text
+          textIsSame = textElement.text and textElement.text is @_textElements[searchIndex].text
           siblingIsSame = textElements[index - 1]?.node is @_textElements[searchIndex - 1]?.node or textElements[index + 1]?.node is @_textElements[searchIndex + 1]?.node
         
         continue unless nodeIsSame or textIsSame and siblingIsSame
 
+        # We found the match, so don't remove this element.
+        matchedTextElement = @_textElements[searchIndex]
         found = true
+        matchedTextElement.removed = false
+        
+        # Update the text to latest unless it's already been blanked.
+        if textElement.text?.length and textElement.text not in [' ', matchedTextElement.text]
+          matchedTextElement.text = textElement.text
+        
+        # Move to next element.
         currentInsertionIndex = searchIndex + 1
         break
           
@@ -181,12 +199,23 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       
       currentInsertionIndex++
       
+    # Remove any unmatched elements.
+    removeIndex = 0
+    while removeIndex < @_textElements.length
+      if @_textElements[removeIndex].removed
+        @_textElements.splice removeIndex, 1
+        @_currentTextElementIndex-- if removeIndex < @_currentTextElementIndex
+        @_newCurrentTextElementIndex-- if @_newCurrentTextElementIndex? and @_newCurrentTextElementIndex < @_newCurrentTextElementIndex
+        
+      else
+        removeIndex++
+      
     # Nothing to do if no new elements were inserted.
     return unless @_newCurrentTextElementIndex?
     
     # Start writing unless we're already doing it.
-    return if @_writing
-    @_writing = true
+    return if @animating()
+    @animating true
     
     # Place cursor at the start and wait a bit before writing.
     @_currentTextElementIndex = @_newCurrentTextElementIndex
@@ -213,9 +242,9 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
         textElement.element.classList.remove 'hidden'
         @_cursor.remove()
         await @window.scrollToElement textElement.element, animate: not @skipAnimation(), skipAnimation: @skipAnimation
-        @skipAnimation false
     
         await _.waitForNextFrame() while textElement.element.parentElement
+        @skipAnimation false
         
       else
         # Wait before starting to type in a new element.
@@ -278,11 +307,11 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       else
         @_currentTextElementIndex++
         
-    @_writing = false
+    @animating false
     
     await _.waitForSeconds 1 unless @skipAnimation()
 
-    @_cursor.remove() unless @_writing
+    @_cursor.remove() unless @animating()
   
   getDesignValue: (property) ->
     _.nestedProperty @design(), property
@@ -293,9 +322,13 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
         lastEditTime: Date.now()
         "design.#{property}": value
   
+  animatingClass: ->
+    'animating' if @animating()
+  
   events: ->
     super(arguments...).concat
       'click': @onClick
+      'click .asset': @onClickAsset
       
   onClick: (event) ->
     $target = $(event.target)
@@ -305,6 +338,17 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     return if $target.closest('.entities-add').length
 
     @skipAnimation true
+    
+  onClickAsset: (event) ->
+    $target = $(event.target)
+    
+    entity = $target.data 'entity'
+    
+    # Find the bitmap ID for this entity.
+    project = @project()
+    asset = _.find project.assets, (asset) => asset.id is "PixelArtAcademy.Pico8.Cartridges.Invasion.#{entity}"
+    
+    @pixelPadOS.go PAA.PixelPad.Apps.Drawing.url(), asset.bitmapId
   
   class @Property extends AM.DataInputComponent
     constructor: ->

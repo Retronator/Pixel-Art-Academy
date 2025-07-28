@@ -8,6 +8,7 @@ class PAA.Practice.Tutorials.Drawing.InstructionsMarkupEngineComponent extends P
     @markup = new ComputedField =>
       return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
       return unless instructions = pixelPad.os.getSystem PAA.PixelPad.Systems.Instructions
+      return unless instructions.isCreated()
       return unless instruction = instructions.displayedInstruction()
       instruction.markup?()
 

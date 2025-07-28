@@ -1,21 +1,21 @@
-<template name="Artificial.Mirage.DataInputComponent">
-  {{#if isTextArea}}
+<template name="Artificial.Mirage.DataInputComponent">{{!
+  }}{{#if isTextArea}}
   {{! Text area }}
     <textarea placeholder="{{placeholder}}" {{customAttributes}}>{{value}}</textarea>
-  {{else}}
-    {{#if isSelect}}
+  {{else}}{{!
+    }}{{#if isSelect}}
     {{! Select }}
       <select {{customAttributes}}>
         {{#each options}}
           <option value="{{nullable this.value}}" {{selectedAttribute}}>{{this.name}}</option>
         {{/each}}
       </select>
-    {{else}}
-      {{#if isCheckbox}}
+    {{else}}{{!
+      }}{{#if isCheckbox}}
         {{! Checkbox }}
         <input type="checkbox" {{checkedAttribute}} {{customAttributes}}/>
-      {{else}}
-        {{#if isRadio}}
+      {{else}}{{!
+        }}{{#if isRadio}}
           {{! Radio }}
           {{#each options}}
             <label class="radio-area">
@@ -23,10 +23,10 @@
               {{this.name}}
             </label>
           {{/each}}
-        {{else}}
-          {{! Other inputs }}
-          <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}" {{customAttributes}}/>
-        {{/if}}
+        {{else}}{{!
+          Other inputs
+          }}<input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}" {{customAttributes}}/>{{!
+        }}{{/if}}
       {{/if}}
     {{/if}}
   {{/if}}

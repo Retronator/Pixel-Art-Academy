@@ -24,8 +24,10 @@ Package.onUse(function(api) {
 
   api.addComponent('designdocument..');
   api.addFile('designdocument/designdocument-design');
+  api.addFile('designdocument/asset');
   api.addComponent('designdocument/choice..');
   api.addComponent('designdocument/entities..');
+  api.addComponent('designdocument/portfoliocomponent..');
 
   api.addAssets('invasion.p8.png', 'client');
 });

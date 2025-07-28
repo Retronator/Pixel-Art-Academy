@@ -23,15 +23,18 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument.Choice extends AM.Component
       
     @manualEditing = new ReactiveField false
   
-  editing: -> @manualEditing() or not @chosenText()?
+  editing: -> @manualEditing() or not @chosenChoiceText()?
   
-  chosenText: ->
+  chosenChoiceText: ->
     choice = @data()
     value = @value()
     
     return unless option = _.find choice.options, (option) => value is option.value
     
     option.text
+  
+  chosenChoiceCursor: ->
+    if @designDocument.animating() then 'default' else 'pointer'
   
   events: ->
     super(arguments...).concat
@@ -52,6 +55,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument.Choice extends AM.Component
     @manualEditing false
   
   onClickChosenChoice: (event) ->
+    return if @designDocument.animating()
+    
     @manualEditing true
     
     Tracker.afterFlush =>
