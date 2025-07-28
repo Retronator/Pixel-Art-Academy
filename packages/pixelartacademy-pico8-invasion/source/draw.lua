@@ -9,7 +9,10 @@ function _draw()
 
   if game == nil then
     print("invasion", 48, 40, 7)
-    print("press button to start", 22, 65, 7)
+    print("press button to start", 22, 60, 7)
+    spr(0,56,76, 2, 2)
+    spr(2,16,24, 2, 2)
+    spr(2,100,36, 2, 2)
 
   else
     scene:draw()

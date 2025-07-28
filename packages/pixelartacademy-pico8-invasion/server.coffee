@@ -38,4 +38,16 @@ Document.startup =>
         y: 0
       ]
       labelImage:
-        assets: []
+        assets: [
+          id: PAA.Pico8.Cartridges.Invasion.Defender.id()
+          x: 56
+          y: 76
+        ,
+          id: PAA.Pico8.Cartridges.Invasion.Invader.id()
+          x: 16
+          y: 24
+        ,
+          id: PAA.Pico8.Cartridges.Invasion.Invader.id()
+          x: 100
+          y: 36
+        ]
