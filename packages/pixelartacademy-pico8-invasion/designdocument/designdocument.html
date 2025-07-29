@@ -168,21 +168,56 @@
           {{/if}}
           <h2 data-unit="art-header">3. Art</h2>
           {{#if hasEntity 'Defender'}}
-            <p class="asset" data-entity="Defender" data-unit="art-defender">Defender (16×16 pixels)</p>
+            <p class="asset" data-unit="art-defender">
+              Defender (16×16 pixels)
+              <div class="asset-image" data-entity="Defender" data-cursor="pointer">
+                {{> Render assetBitmap "Defender"}}
+              </div>
+            </p>
           {{/if}}
           {{#if hasEntity 'Invader'}}
-            <p class="asset" data-entity="Invader" data-unit="art-invader">Invader (16×16 pixels)</p>
+            <p class="asset" data-unit="art-invader">
+              Invader (16×16 pixels)
+              <div class="asset-image" data-entity="Invader" data-cursor="pointer">
+                {{> Render assetBitmap "Invader"}}
+              </div>
+            </p>
           {{/if}}
           {{#if hasEntity 'DefenderProjectile'}}
-            <p class="asset" data-entity="DefenderProjectile" data-unit="art-defender-projectile">Defender projectile (8×8 pixels)</p>
-            <p class="asset" data-entity="DefenderProjectile" data-unit="art-defender-projectile">Defender projectile explosion (8×8 pixels)</p>
+            <p class="asset" data-unit="art-defender-projectile">
+              Defender projectile (8×8 pixels)
+              <div class="asset-image" data-entity="DefenderProjectile" data-cursor="pointer">
+                {{> Render assetBitmap "DefenderProjectile"}}
+              </div>
+            </p>
+            <p class="asset" data-unit="art-defender-projectile">
+              Defender projectile explosion (8×8 pixels)
+              <div class="asset-image" data-entity="DefenderProjectileExplosion" data-cursor="pointer">
+                {{> Render assetBitmap "DefenderProjectileExplosion"}}
+              </div>
+            </p>
           {{/if}}
           {{#if hasEntity 'InvaderProjectile'}}
-            <p class="asset" data-entity="InvaderProjectile" data-unit="art-invader-projectile">Invader projectile (8×8 pixels)</p>
-            <p class="asset" data-entity="InvaderProjectile" data-unit="art-invader-projectile">Invader projectile explosion (8×8 pixels)</p>
+            <p class="asset" data-unit="art-invader-projectile">
+              Invader projectile (8×8 pixels)
+              <div class="asset-image" data-entity="InvaderProjectile" data-cursor="pointer">
+                {{> Render assetBitmap "InvaderProjectile"}}
+              </div>
+            </p>
+            <p class="asset" data-unit="art-invader-projectile">
+              Invader projectile explosion (8×8 pixels)
+              <div class="asset-image" data-entity="InvaderProjectileExplosion" data-cursor="pointer">
+                {{> Render assetBitmap "InvaderProjectileExplosion"}}
+              </div>
+            </p>
           {{/if}}
           {{#if hasEntity 'Shield'}}
-            <p class="asset" data-entity="Shield" data-unit="art-shield">Shield (24×24 pixels)</p>
+            <p class="asset" data-unit="art-shield">
+              Shield (24×24 pixels)
+              <div class="asset-image" data-entity="Shield" data-cursor="pointer">
+                {{> Render assetBitmap "Shield"}}
+              </div>
+            </p>
           {{/if}}
         {{/if}}
       {{/if}}

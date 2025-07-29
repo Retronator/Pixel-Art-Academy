@@ -51,6 +51,10 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
   onCreated: ->
     super arguments...
     
+    LOI.Assets.Palette.forName.subscribeContent LOI.Assets.Palette.SystemPaletteNames.Macintosh
+    
+    @display = @callAncestorWith 'display'
+
     @pixelPadOS = @ancestorComponentOfType PAA.PixelPad.OS
     
     @window = @ancestorComponentOfType PAA.Pixeltosh.OS.Interface.Window
@@ -112,7 +116,6 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
               textElements.push
                 choice: true
                 element: child
-                editingField: child.dataset.editingField
                 node: child
             
             else if child.classList.contains 'chosen-choice'
@@ -121,6 +124,12 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
                 text: text
                 element: parent
                 textNode: child.firstChild
+                node: child
+                
+            else if child.classList.contains 'asset-image'
+              textElements.push
+                assetImage: true
+                element: child
                 node: child
                 
             else if child.tagName is 'INPUT'
@@ -190,7 +199,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
         if textElement.textNode
           textElement.textNode.textContent = ' '
           
-        else if textElement.choice
+        else if textElement.choice or textElement.assetImage
           textElement.element.classList.add 'hidden'
           
         else if textElement.input
@@ -245,6 +254,28 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
     
         await _.waitForNextFrame() while textElement.element.parentElement
         @skipAnimation false
+        
+      else if textElement.assetImage
+        textElement.element.classList.remove 'hidden'
+        $bitmapImage = $(textElement.element).find('.landsofillusions-assets-components-bitmapimage')
+
+        scale = @display.scale()
+        height = $bitmapImage.height() / scale
+        textElement.element.style.height = "#{height}rem"
+        $bitmapImage.height 0
+
+        @_cursor.remove()
+        await @window.scrollToElement textElement.element, animate: not @skipAnimation(), skipAnimation: @skipAnimation
+        
+        textElement.element.style.visibility = ''
+
+        for revealHeight in [4..height] by 4
+          $bitmapImage.height "#{revealHeight}rem"
+          await _.waitForSeconds 0.1
+          break if @skipAnimation()
+          
+        $bitmapImage.height 'auto'
+        textElement.element.style.height = ''
         
       else
         # Wait before starting to type in a new element.
@@ -325,10 +356,23 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
   animatingClass: ->
     'animating' if @animating()
   
+  assetBitmap: (entity) ->
+    assetId = "PixelArtAcademy.Pico8.Cartridges.Invasion.#{entity}"
+    
+    new LOI.Assets.Components.BitmapImage
+      bitmapId: =>
+        return unless project = @project()
+        return unless asset = _.find project.assets, (asset) => asset.id is assetId
+        asset.bitmapId
+      scale: 4
+      targetPalette: =>
+        LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.Macintosh
+      backgroundColor: PAA.Pico8.Cartridges.Invasion.Sprite.backgroundColor
+      
   events: ->
     super(arguments...).concat
       'click': @onClick
-      'click .asset': @onClickAsset
+      'click .asset-image': @onClickAssetImage
       
   onClick: (event) ->
     $target = $(event.target)
@@ -339,8 +383,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
 
     @skipAnimation true
     
-  onClickAsset: (event) ->
-    $target = $(event.target)
+  onClickAssetImage: (event) ->
+    $target = $(event.currentTarget)
     
     entity = $target.data 'entity'
     

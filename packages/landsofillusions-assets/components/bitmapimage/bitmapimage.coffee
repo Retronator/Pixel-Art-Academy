@@ -106,8 +106,10 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
         context.clearRect 0, 0, canvas.width, canvas.height
         return
 
-      canvas.width = bounds.width
-      canvas.height = bounds.height
+      scale = @options.scale or 1
+
+      canvas.width = bounds.width * scale
+      canvas.height = bounds.height * scale
 
       context.setTransform 1, 0, 0, 1, -bounds.x, -bounds.y
       context.clearRect 0, 0, canvas.width, canvas.height
@@ -116,11 +118,16 @@ class LOI.Assets.Components.BitmapImage extends AM.Component
 
       @bitmap.drawToContext context,
         lightDirection: @options.lightDirection?()
+        scale: scale
+        targetPalette: @options.targetPalette?()
+        ditherSize: @options.ditherSize
+        backgroundColor: @options.backgroundColor?()
 
       context.restore()
 
   canvasStyle: ->
     return unless bounds = @bounds()
+    scale = @options.scale or 1
 
-    width: "#{bounds.width}rem"
-    height: "#{bounds.height}rem"
+    width: "#{bounds.width * scale}rem"
+    height: "#{bounds.height * scale}rem"

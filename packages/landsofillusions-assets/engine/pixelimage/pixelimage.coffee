@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 # Create temporary objects and constants.
@@ -9,6 +10,8 @@ _lightColor = new THREE.Color
 _sourceColor = new THREE.Color
 _shadedColor = new THREE.Color
 _averageNormal = new THREE.Vector3
+_closestColorLinear = new THREE.Color
+_secondClosestColorLinear = new THREE.Color
 
 class LOI.Assets.Engine.PixelImage
   drawToContext: (context, renderOptions = {}) ->
@@ -51,17 +54,18 @@ class LOI.Assets.Engine.PixelImage
     @_palette = asset.customPalette or LOI.Assets.Palette.documents.findOne(asset.palette?._id)
 
     # Build a new canvas if needed.
-    unless @_canvas?.width is asset.bounds.width and @_canvas?.height is asset.bounds.height
-      @_canvas = new AM.ReadableCanvas asset.bounds.width, asset.bounds.height
+    scale = renderOptions.scale or 1
+    unless @_canvas?.width is asset.bounds.width * scale and @_canvas?.height is asset.bounds.height * scale
+      @_canvas = new AM.ReadableCanvas asset.bounds.width * scale, asset.bounds.height * scale
       @_imageData = @_canvas.getFullImageData()
-      @_canvasPixelsCount = @_canvas.width * @_canvas.height
 
     # Clear the image buffer to transparent.
     @_imageData.data.fill 0
 
     # Build the depth buffer if needed.
-    unless @_depthBuffer?.length is @_canvasPixelsCount
-      @_depthBuffer = new Float32Array @_canvasPixelsCount
+    assetPixelsCount = asset.bounds.width * asset.bounds.height
+    unless @_depthBuffer?.length is assetPixelsCount
+      @_depthBuffer = new Float32Array assetPixelsCount
 
     # Clear the depth buffer to smallest value.
     @_depthBuffer.fill Number.NEGATIVE_INFINITY
@@ -97,8 +101,8 @@ class LOI.Assets.Engine.PixelImage
   # Call for each pixel and specify the coordinates within asset bounds.
   _renderPixelShaded: (x, y, z, absoluteX, absoluteY, paletteColor, directColor, materialIndex, normal, asset, renderOptions) ->
     # Find pixel index in the image buffer.
-    depthPixelIndex = x + y * @_canvas.width
-    pixelIndex = depthPixelIndex * 4
+    scale = renderOptions.scale or 1
+    depthPixelIndex = x + y * asset.bounds.width
 
     # Allow a special material called 'erase' to delete pixels.
     erase = asset.materials?[materialIndex]?.name is 'erase'
@@ -300,15 +304,41 @@ class LOI.Assets.Engine.PixelImage
 
       else
         destinationColor = _sourceColor
-
-    if erase
-      @_imageData.data[pixelIndex + 3] = 0
-
-    else
-      @_imageData.data[pixelIndex] = destinationColor.r * 255
-      @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
-      @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
-      @_imageData.data[pixelIndex + 3] = (destinationColor.a ? 1) * 255
+        
+    if targetPalette = renderOptions.targetPalette
+      secondClosestPaletteColor = {}
+      closestPaletteColor = targetPalette.closestPaletteColor destinationColor, null, secondClosestPaletteColor
+      
+      closestColor = targetPalette.color closestPaletteColor.ramp, closestPaletteColor.shade
+      secondClosestColor = targetPalette.color secondClosestPaletteColor.ramp, secondClosestPaletteColor.shade
+      
+      # Ensure the colors are always dithered in the same order.
+      if closestColor.r < secondClosestColor.r or closestColor.g < secondClosestColor.g or closestColor.b < secondClosestColor.b
+        tempColor = closestColor
+        closestColor = secondClosestColor
+        secondClosestColor = tempColor
+      
+      _closestColorLinear.copySRGBToLinear closestColor
+      _secondClosestColorLinear.copySRGBToLinear secondClosestColor
+      ditherBlendFactor = _.clamp AS.Color.inverseLerp(_closestColorLinear, _secondClosestColorLinear, destinationColor), 0, 1
+      
+    for canvasOffsetX in [0...scale]
+      for canvasOffsetY in [0...scale]
+        pixelIndex = ((x * scale + canvasOffsetX) + (y * scale + canvasOffsetY) * asset.bounds.width * scale) * 4
+        
+        if erase
+          @_imageData.data[pixelIndex + 3] = 0
+    
+        else
+          if targetPalette
+            destinationColor = @_dither x * scale + canvasOffsetX, y * scale + canvasOffsetY, closestColor, secondClosestColor, ditherBlendFactor, renderOptions.ditherSize
+          
+          @_imageData.data[pixelIndex] = destinationColor.r * 255
+          @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
+          @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
+          @_imageData.data[pixelIndex + 3] = (destinationColor.a ? 1) * 255
+          
+    return
 
   _endRender: ->
     @_canvas.putFullImageData @_imageData
@@ -376,3 +406,13 @@ class LOI.Assets.Engine.PixelImage
       boundColor = _color.copy(earlierColor).lerp(laterColor, blendFactor)
 
     boundColor
+    
+  _dither: (absoluteX, absoluteY, color, secondColor, blendFactor, ditherSize = 2) ->
+    @_ditherThresholdMaps ?= {}
+    @_ditherThresholdMaps[ditherSize] ?= AS.PixelArt.getDitherThresholdMap ditherSize
+
+    ditherX = absoluteX % ditherSize
+    ditherY = absoluteY % ditherSize
+    ditherAmount = @_ditherThresholdMaps[ditherSize][ditherY][ditherX]
+    
+    if blendFactor > ditherAmount then secondColor else color

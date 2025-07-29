@@ -17,7 +17,8 @@ class LOI.Assets.ColorHelper
   # Return the color from the palette closest to the given RGB color.
   # You can provide a background color and if the target color is closest to the
   # background color than any of the palette colors, the method will return null.
-  @closestPaletteColorFromRGB: (palette, r, g, b, backgroundColor = null) ->
+  # You can also provide an object to where the second closest color can be stored.
+  @closestPaletteColorFromRGB: (palette, r, g, b, backgroundColor = null, secondClosest = null) ->
     closestRamp = null
     closestShade = null
     smallestColorDistance = if backgroundColor then @colorRGBDistance backgroundColor, r, g, b else 3
@@ -27,9 +28,17 @@ class LOI.Assets.ColorHelper
         distance = @colorRGBDistance shade, r, g, b
         
         if distance < smallestColorDistance
+          if secondClosest
+            secondClosest.ramp = closestRamp
+            secondClosest.shade = closestShade
+
           smallestColorDistance = distance
           closestRamp = rampIndex
           closestShade = shadeIndex
+          
+        else if secondClosest and not secondClosest.ramp?
+          secondClosest.ramp = rampIndex
+          secondClosest.shade = shadeIndex
 
     # Return nothing if the background color was closer to any of the palette colors.
     return null unless closestRamp?
@@ -37,8 +46,8 @@ class LOI.Assets.ColorHelper
     ramp: closestRamp
     shade: closestShade
 
-  @closestPaletteColor: (palette, color, backgroundColor = null) ->
-    @closestPaletteColorFromRGB palette, color.r, color.g, color.b, backgroundColor
+  @closestPaletteColor: (palette, color, backgroundColor = null, secondClosest = null) ->
+    @closestPaletteColorFromRGB palette, color.r, color.g, color.b, backgroundColor, secondClosest
 
   # Calculate the distance between two color objects.
   @colorDistance: (color1, color2) ->
