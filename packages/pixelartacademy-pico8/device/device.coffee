@@ -68,10 +68,15 @@ class PAA.Pico8.Device extends LOI.Component
   _startWithCartridgeUrl: (cartridgeUrl) ->
     console.groupCollapsed "PICO-8"
     
+    pico8Arguments = [cartridgeUrl]
+    
+    if startParameter = @startParameter()
+      pico8Arguments.push "-p", startParameter
+    
     PAA.Pico8.Device.Module =
       audioContext: @options.audioContext
       audioOutputNode: @options.audioOutputNode
-      arguments: [cartridgeUrl, "-p", @startParameter()]
+      arguments: pico8Arguments
       canvas: @_$canvas[0]
       postRun: [
           =>

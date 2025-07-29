@@ -65,7 +65,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
       return unless game = cartridge.game()
       return unless device = @device()
 
-      device.loadGame game, @desktop.activeAsset().project.projectId
+      device.loadGame game, cartridge.projectId(), cartridge.startParameter()
     
     # Drag handheld when activating and deactivating.
     Tracker.triggerOnDefinedChange @active, =>
