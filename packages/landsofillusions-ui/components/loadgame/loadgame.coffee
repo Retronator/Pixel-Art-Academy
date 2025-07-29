@@ -62,11 +62,12 @@ class LOI.Components.LoadGame extends LOI.Component
         dialog: @
         dontRender: true
       
-      # In web apps, adventure and its UI is never created/rendered so don't try to activate it in that case.
-      if @isCreated()
-        # Wait for the dialog to be rendered before you activate it.
-        Tracker.afterFlush => @activatable.activate()
-      
+      # Wait for the dialog to be rendered before you activate it.
+      Tracker.afterFlush =>
+        # In web apps, adventure and its UI is never created/rendered so don't try to activate it in that case.
+        if @isCreated()
+          @activatable.activate()
+    
       new Promise (resolve, reject) =>
         Tracker.autorun (computation) =>
           # Wait until persistence is ready so we have the profiles loaded.
