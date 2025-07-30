@@ -417,7 +417,7 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       
       @autorun (computation) =>
         scale = @display.scale()
-        @autoResizeInputPadding = 5 * scale
+        @autoResizeInputPadding = 6 * scale
         @$input.trigger 'input'
       
     property: -> throw new AE.NotImplementedException 'Property must define its design property field.'

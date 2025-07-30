@@ -49,21 +49,23 @@
       margin-left 10rem
 
     p:has(+ ul)
-      margin-bottom 0
+      margin-bottom 2rem
 
-    ul
+    .properties
       list-style none
       margin 0 10rem 5rem
       padding 0
 
-      li
+      .property
         position relative
+        min-height 12rem
 
-    input
-      background none
-      border none
-      font inherit
-      border-bottom 1rem solid black
+        input
+          padding 0 0 0 5rem
+          background none
+          border none
+          font inherit
+          border-bottom 1rem solid black
 
     .hidden
       display none

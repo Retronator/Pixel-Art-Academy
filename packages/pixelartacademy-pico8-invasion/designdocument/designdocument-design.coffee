@@ -222,12 +222,12 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
     options: ({value, text} for value, text of @constructor.Texts.GameFlow.Defender.Movements)
     property: 'defender.movement'
   
-  gameFlowDefenderStartingAlignmentPrepositionAt: ->
+  gameFlowDefenderStartingAlignmentPrepositionOn: ->
     return unless horizontalAlignment = @getDesignValue 'defender.startingAlignment.horizontal'
     return unless verticalAlignment = @getDesignValue 'defender.startingAlignment.vertical'
-    @_gameFlowStartingAlignmentPrepositionAt horizontalAlignment, verticalAlignment
+    @_gameFlowStartingAlignmentPrepositionOn horizontalAlignment, verticalAlignment
     
-  _gameFlowStartingAlignmentPrepositionAt: (horizontalAlignment, verticalAlignment) ->
+  _gameFlowStartingAlignmentPrepositionOn: (horizontalAlignment, verticalAlignment) ->
     # We need 'at' (insted of 'in') when we are at a side and not in the corner/center.
     center = horizontalAlignment is @constructor.Options.HorizontalAlignments.Center
     middle = verticalAlignment is @constructor.Options.VerticalAlignments.Middle
@@ -296,10 +296,10 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
       return 'StayTheSame' if timeoutFullDecreasePerLevel is 0 and scoreIncreasePerInvaderPerLevel is 0
       null
   
-  gameFlowInvadersStartingAlignmentPrepositionAt: ->
+  gameFlowInvadersStartingAlignmentPrepositionOn: ->
     return unless horizontalAlignment = @getDesignValue 'invaders.formation.startingAlignment.horizontal'
     return unless verticalAlignment = @getDesignValue 'invaders.formation.startingAlignment.vertical'
-    @_gameFlowStartingAlignmentPrepositionAt horizontalAlignment, verticalAlignment
+    @_gameFlowStartingAlignmentPrepositionOn horizontalAlignment, verticalAlignment
   
   gameFlowInvadersFormationStartingAlignmentChoice: ->
     @_gameFlowStartingAlignmentChoice 'invaders.formation'
