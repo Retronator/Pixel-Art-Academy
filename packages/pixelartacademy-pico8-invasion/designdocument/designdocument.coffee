@@ -402,7 +402,8 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
       @autoResizeInput = true
       @realtime = false
       @customAttributes =
-        step: 'any'
+        step: @step()
+        min: @min()
     
     onCreated: ->
       super arguments...
@@ -421,6 +422,9 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends AM.Component
         @$input.trigger 'input'
       
     property: -> throw new AE.NotImplementedException 'Property must define its design property field.'
+
+    step: -> 'any' # Override to provide a different default step.
+    min: -> null # Override if a property has a minimum value.
     
     load: ->
       property = @property()

@@ -465,26 +465,34 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
   class @Lives extends @Property
     @register "#{Component.id()}.Lives"
     property: -> 'lives'
+    min: -> 1
     
   class @DefenderSpeed extends @Property
     @register "#{Component.id()}.DefenderSpeed"
     property: -> 'defender.speed'
+    step: -> 0.1
+    min: -> 0
     
   class @DefenderProjectilesSpeed extends @Property
     @register "#{Component.id()}.DefenderProjectilesSpeed"
     property: -> 'defenderProjectiles.speed'
+    step: -> 0.1
+    min: -> 0
     
   class @DefenderProjectilesMaxCount extends @Property
     @register "#{Component.id()}.DefenderProjectilesMaxCount"
     property: -> 'defenderProjectiles.maxCount'
+    min: -> 0
     
   class @InvadersFormationRows extends @Property
     @register "#{Component.id()}.InvadersFormationRows"
     property: -> 'invaders.formation.rows'
+    min: -> 1
     
   class @InvadersFormationColumns extends @Property
     @register "#{Component.id()}.InvadersFormationColumns"
     property: -> 'invaders.formation.columns'
+    min: -> 1
     
   class @InvadersFormationHorizontalSpacing extends @Property
     @register "#{Component.id()}.InvadersFormationHorizontalSpacing"
@@ -497,30 +505,42 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
   class @InvadersFormationHorizontalSpeed extends @Property
     @register "#{Component.id()}.InvadersFormationHorizontalSpeed"
     property: -> 'invaders.formation.horizontalSpeed'
+    step: -> 0.1
+    min: -> 0
     
   class @InvadersFormationVerticalSpeed extends @Property
     @register "#{Component.id()}.InvadersFormationVerticalSpeed"
     property: -> 'invaders.formation.verticalSpeed'
+    step: -> 0.1
+    min: -> 0
     
   class @InvadersFormationSpawnDelay extends @Property
     @register "#{Component.id()}.InvadersFormationSpawnDelay"
     property: -> 'invaders.formation.spawnDelay'
+    step: -> 0.01
+    min: -> 0
     
   class @InvadersFormationShootingTimeoutFull extends @Property
     @register "#{Component.id()}.InvadersFormationShootingTimeoutFull"
     property: -> 'invaders.formation.shooting.timeoutFull'
+    step: -> 0.1
+    min: -> 0
     
   class @InvadersFormationShootingTimoutEmpty extends @Property
     @register "#{Component.id()}.InvadersFormationShootingTimoutEmpty"
     property: -> 'invaders.formation.shooting.timeoutEmpty'
+    step: -> 0.1
+    min: -> 0
     
   class @InvadersFormationTimeoutFullDecreasePerLevel extends @Property
     @register "#{Component.id()}.InvadersFormationTimeoutFullDecreasePerLevel"
     property: -> 'invaders.formation.shooting.timeoutFullDecreasePerLevel'
+    step: -> 0.1
     
   class @InvadersFormationShootingVariability extends @Property
     @register "#{Component.id()}.InvadersFormationShootingVariability"
     property: -> 'invaders.formation.shooting.variability'
+    min: -> 0
     
     load: ->
       Math.round super() * 100
@@ -539,14 +559,18 @@ class PAA.Pico8.Cartridges.Invasion.DesignDocument extends PAA.Pico8.Cartridges.
   class @InvaderProjectilesSpeed extends @Property
     @register "#{Component.id()}.InvaderProjectilesSpeed"
     property: -> 'invaderProjectiles.speed'
+    step: -> 0.1
+    min: -> 0
   
   class @InvaderProjectilesMaxCount extends @Property
     @register "#{Component.id()}.InvaderProjectilesMaxCount"
     property: -> 'invaderProjectiles.maxCount'
+    min: -> 0
   
   class @ShieldsAmount extends @Property
     @register "#{Component.id()}.ShieldsAmount"
     property: -> 'shields.amount'
+    min: -> 0
   
   class @ShieldsSpacing extends @Property
     @register "#{Component.id()}.ShieldsSpacing"
