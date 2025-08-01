@@ -1,0 +1,39 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+.publication.chronoscope
+  position relative
+  filter drop-shadow(-8rem 2rem 0 desktopShadowColor)
+  transition filter 0.7s ease-out
+  color atariGray(2)
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop-publications.active &
+    filter drop-shadow(-24rem 6rem 0 desktopShadowColor)
+
+  &.cover
+  &.table-of-contents
+    .running-header
+    .running-footer
+      display none
+
+  &.table-of-contents
+  &.content-part
+    &::before
+      content ''
+      position absolute
+      inset -11rem -303rem 0 -13rem
+      background-image image('/pixelartacademy/learnmode/design/fundamentals/publications/chronoscope/article.png')
+
+    .contents-area.read-only
+      right -100%
+
+  .contents-area
+    position relative
+    z-index 1
+
+  .contents-area.read-only
+    absolute-cover()
+    overflow hidden
+
+    .contents
+      absolute-cover()

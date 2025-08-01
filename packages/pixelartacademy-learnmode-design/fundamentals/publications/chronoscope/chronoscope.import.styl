@@ -1,0 +1,22 @@
+figure-image-cutout-gradient(color)
+  background-image repeating-linear-gradient(0deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem),
+  repeating-linear-gradient(90deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem),
+  repeating-linear-gradient(180deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem),
+  repeating-linear-gradient(270deg, color, color 4rem, transparent 4rem, transparent 6rem, color 6rem)
+  background-size 1rem 100%, 100% 1rem, 1rem 100%, 100% 1rem
+  background-position 0 0, 0 0, 100% 0, 0 100%
+  background-repeat no-repeat
+
+figure-image-cutout(mainColor, fadeColor, inkPaperColorName)
+  scissorsImageUrl = '/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/chronoscope/scissors-%s.png' % inkPaperColorName
+
+  &.added-to-references
+    color mainColor
+    figure-image-cutout-gradient(fadeColor)
+
+  .cutout
+    &::before
+      figure-image-cutout-gradient(mainColor)
+
+    .cut-icon
+      background url(scissorsImageUrl) 100% 100% / 100%

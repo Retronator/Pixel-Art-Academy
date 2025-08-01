@@ -36,10 +36,18 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/pico8cartridges');
   api.addFile('fundamentals/scenes/workbench');
   api.addFile('fundamentals/scenes/pixeltoshfiles');
+  api.addFile('fundamentals/scenes/publications');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');
   api.addFile('fundamentals/content/goals');
   api.addFile('fundamentals/content/drawingtutorials');
   api.addFile('fundamentals/content/projects');
+
+  api.addFile('fundamentals/publications..');
+  api.addStyledFile('fundamentals/publications/chronoscope..');
+  api.addStyle('fundamentals/publications/chronoscope/chronoscope-cover');
+  api.addStyle('fundamentals/publications/chronoscope/chronoscope-tableofcontents')
+
+  api.addStyle('fundamentals/publications/chronoscope/issues/sciencefiction/cover')
 });

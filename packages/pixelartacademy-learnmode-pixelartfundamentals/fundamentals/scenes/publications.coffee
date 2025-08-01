@@ -9,8 +9,9 @@ class LM.PixelArtFundamentals.Fundamentals.Publications extends LOI.Adventure.Sc
 
   @initialize()
 
-  things: ->
-    things = []
+  @getUnlockedIds: ->
+    publications = []
+    publicationParts = []
     
     activePinballProjectId = PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
 
@@ -18,7 +19,22 @@ class LM.PixelArtFundamentals.Fundamentals.Publications extends LOI.Adventure.Sc
       if pinballProject = PAA.Practice.Project.documents.findOne activePinballProjectId
         for asset in pinballProject.assets
           assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
+          
           if unlockedPublications = assetClass.unlockedPublications?()
-            things.push unlockedPublications...
+            publications.push unlockedPublications...
+          
+          if unlockedPublicationParts = assetClass.unlockedPublicationParts?()
+            publicationParts.push unlockedPublicationParts...
+    
+    {publications, publicationParts}
 
-    things
+  things: -> @constructor.getUnlockedIds().publications
+
+  class @Parts extends LOI.Adventure.Scene
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.PublicationParts'
+
+    @location: -> PAA.Publication.Part.Location
+  
+    @initialize()
+  
+    things: -> Publications.getUnlockedIds().publicationParts

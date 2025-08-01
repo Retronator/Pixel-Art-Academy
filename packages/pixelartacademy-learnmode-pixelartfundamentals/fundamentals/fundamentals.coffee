@@ -21,7 +21,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     @Workbench
     @MusicTapes
     @Publications
-    @PublicationParts
+    @Publications.Parts
   ]
 
   @courses: -> [

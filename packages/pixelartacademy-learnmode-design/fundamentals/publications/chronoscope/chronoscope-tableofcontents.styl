@@ -1,0 +1,38 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "chronoscope.import"
+
+.publication.chronoscope.table-of-contents
+  .contents-area
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        padding-left 90rem
+
+        header
+          width fit-content
+
+          h1
+            position relative
+            margin 10rem 0 0
+            header-17()
+            text-transform lowercase
+
+            &::after
+              content ''
+              position absolute
+              left -90rem
+              bottom 0
+              right 0
+              height 3rem
+              background-color atariGray(2)
+
+        .pixelartacademy-publication-article-tableofcontents
+          margin-top 30rem
+          thintel()
+
+          .table-of-contents
+            list-style none
+            padding 0
+
+            .content-item
+              margin-bottom 20rem

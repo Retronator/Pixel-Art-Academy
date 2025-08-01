@@ -16,6 +16,8 @@ class LM.Design.Fundamentals extends LM.Chapter
     @Workbench
     @Pico8Cartridges
     @PixeltoshFiles
+    @Publications
+    @Publications.Parts
   ]
 
   @courses: -> [

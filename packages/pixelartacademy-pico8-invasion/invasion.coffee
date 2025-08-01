@@ -51,6 +51,9 @@ class PAA.Pico8.Cartridges.Invasion extends PAA.Pico8.Cartridge
         ramp: 0
         shade: 0
     
+    @availablePublications: ->
+      LM.Design.Fundamentals.Publications.getChronoscopeIds().publications
+  
   class @Defender extends @Sprite
     @id: -> 'PixelArtAcademy.Pico8.Cartridges.Invasion.Defender'
     
