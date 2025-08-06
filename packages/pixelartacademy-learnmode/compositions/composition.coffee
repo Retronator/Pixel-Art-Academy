@@ -54,4 +54,10 @@ class LM.Compositions.Composition extends AMe.Composition
     unitsCount = activeGroup.content?()?.progress.unitsCount() or 1
     groupProgress = if unitsCount > 1 then unitIndex / (unitsCount - 1) else 0
     
-    {activeSection, groupProgress}
+    {activeAsset, activeSection, groupProgress}
+
+  _drawingCondition: ->
+    return unless currentApp = @_getCurrentApp()
+    return unless currentApp instanceof PAA.PixelPad.Apps.Drawing
+    drawing = currentApp
+    drawing.editor()?.drawingActive()

@@ -133,14 +133,23 @@ class LM.Interface extends LM.Interface
       return unless portfolio.activeAsset()
       
       activeGroup = portfolio.activeGroup()
-      return unless course = activeGroup.thing?.content().course
+      activeThing = activeGroup.thing
+      return unless course = activeThing?.content().course
       
       if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
-        LM.Compositions.ElementsOfArt
+        if activeThing instanceof PAA.Tutorials.Drawing.ElementsOfArt
+          LM.Compositions.ElementsOfArt
         
+        else if activeThing instanceof PAA.Tutorials.Drawing.PixelArtFundamentals
+          LM.Compositions.PixelArtFundamentals
+          
       else if course instanceof LM.Intro.Tutorial.Content.Course
         LM.Compositions.PixelArtTools
         
+      else if course instanceof LM.Design.Fundamentals.Content.Course
+        if activeThing instanceof PAA.Pico8.Cartridges.Invasion.Project
+          LM.Compositions.PixelArtFundamentals
+
     previouslyAvailableCompositionClasses = []
   
     @autorun (computation) =>
@@ -175,6 +184,8 @@ class LM.Interface extends LM.Interface
             else if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
               availableCompositionClasses.push LM.Compositions.ElementsOfArt
           
+              if PAA.Tutorials.Drawing.ElementsOfArt.Line.completed()
+                availableCompositionClasses.push LM.Compositions.PixelArtFundamentals
           
           for compositionClass in availableCompositionClasses when compositionClass not in previouslyAvailableCompositionClasses or not currentDynamicSoundtrackComposition
             desiredCompositionClass = compositionClass

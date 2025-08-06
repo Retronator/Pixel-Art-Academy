@@ -72,4 +72,5 @@ Package.onUse(function(api) {
   api.addFile('compositions/composition')
   api.addFile('compositions/pixelarttools')
   api.addFile('compositions/elementsofart')
+  api.addFile('compositions/pixelartfundamentals')
 });

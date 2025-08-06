@@ -41,7 +41,7 @@ class AMe.Playback
     @_currentSectionStartTime = @_context.currentTime
     @_currentSectionHandle = @_currentSection.schedule @_currentSectionStartTime, output
     
-    @_scheduleNextSection @_getAutomaticNextSection @composition.initialSection
+    @_scheduleTransition @_getAutomaticTransition @composition.initialSection
     
     @_currentSectionDepenency.changed()
     
@@ -50,7 +50,7 @@ class AMe.Playback
       return unless @ready()
       
       currentSection = @currentSection()
-      activeTransition = false
+      activeTransition = null
 
       for transition in currentSection.transitions
         if transition.condition?()
@@ -62,24 +62,24 @@ class AMe.Playback
           # conditions at the start and more complex ones later that override the simple ones.
           
       if activeTransition
-        @_scheduleNextSection activeTransition.nextSection
+        @_scheduleTransition activeTransition
       
       else
-        console.log "No transition condition was met, continuing to automatic next section." if AMe.debug
-        @_scheduleNextSection @_getAutomaticNextSection currentSection
+        console.log "No transition condition was met, continuing to automatic transition." if AMe.debug
+        @_scheduleTransition @_getAutomaticTransition currentSection
       
     # Start/stop section handling when the context is resumed/suspended.
     @_sectionRepetitionAutorun = Tracker.autorun =>
       if @audioManager.running()
-        console.log "Audio manager is running, schedule next section handling." if AMe.debug
-        @_scheduleNextSectionHandling()
+        console.log "Audio manager is running, schedule transition handling." if AMe.debug
+        @_scheduleTransitionHandling()
         
       else
-        console.log "Audio manager is not running, cancel next section handling." if AMe.debug
-        @_clearNextSectionHandling()
+        console.log "Audio manager is not running, cancel transition handling." if AMe.debug
+        @_clearTransitionHandling()
         
   stop: ->
-    @_clearNextSectionHandling()
+    @_clearTransitionHandling()
 
     @_currentSectionHandle?.stop()
     @_nextSectionHandle?.stop()
@@ -89,8 +89,16 @@ class AMe.Playback
     
     @_currentSection = null
     @_nextSection = null
+    @_nextTransition = null
     
-  _scheduleNextSection: (section) ->
+  _scheduleTransition: (transition) ->
+    return if transition and transition is @_nextTransition and transition.nextSection is @_nextSection
+    
+    @_nextTransition = transition
+
+    # If no transition is provided, we repeat the current section.
+    section = transition?.nextSection or @_currentSection
+    
     return if section is @_nextSection
     
     console.log "Scheduling next section", section if AMe.debug
@@ -104,16 +112,16 @@ class AMe.Playback
     @_nextSectionHandle = @_nextSection.schedule @_nextSectionStartTime, output
   
     # Schedule handling of the next section for the case when no transitions get triggered.
-    @_scheduleNextSectionHandling()
+    @_scheduleTransitionHandling()
   
-  _scheduleNextSectionHandling: ->
+  _scheduleTransitionHandling: ->
     return unless @_nextSectionStartTime
-    @_clearNextSectionHandling()
+    @_clearTransitionHandling()
     
-    timeTillRepetition = @_nextSectionStartTime - @_context.currentTime
-    console.log "Attempting next section handling in #{timeTillRepetition}s." if AMe.debug
+    timeTillNextSectionStart = @_nextSectionStartTime - @_context.currentTime
+    console.log "Attempting next section handling in #{timeTillNextSectionStart}s." if AMe.debug
     
-    @_scheduleNextSectionTimeout = Meteor.setTimeout =>
+    @_scheduleTransitionTimeout = Meteor.setTimeout =>
       console.log "New section started", @_context.currentTime, @_nextSection if AMe.debug
   
       previousSection = @_currentSection
@@ -121,24 +129,35 @@ class AMe.Playback
       @_currentSectionStartTime = @_nextSectionStartTime
       @_currentSectionHandle = @_nextSectionHandle
       
+      @_nextTransition?.transitionCount++
+      
+      @_nextTransition = null
       @_nextSection = null
       @_nextSectionHandle = null
 
-      @_scheduleNextSection @_getAutomaticNextSection @_currentSection
+      @_scheduleTransition @_getAutomaticTransition @_currentSection
       
       @_currentSectionDepenency.changed() unless previousSection is @_currentSection
     ,
-      timeTillRepetition * 1000
+      timeTillNextSectionStart * 1000
     
-  _getAutomaticNextSection: (section) ->
-    # Repeat the section or follow any automatic transitions.
-    nextSection = section
+  _getAutomaticTransition: (section) ->
+    # Follow any automatic transitions.
+    automaticTransitions = (transition for transition in section.transitions when not transition.condition)
     
-    for transition in section.transitions when not transition.condition
-      nextSection = transition.nextSection
-      
-    nextSection
+    return null unless automaticTransitions.length
     
-  _clearNextSectionHandling: ->
+    # Choose a random next section, among the ones with lowest play count.
+    playCounts = (transition.transitionCount - transition.priority for transition in automaticTransitions)
+    console.log "Choosing a random next section with prioritized play counts", playCounts if AMe.debug
+
+    minPlayCount = _.min playCounts
+    
+    potentialTransitions = (transition for transition, index in automaticTransitions when playCounts[index] is minPlayCount)
+    
+    console.log "Potential sections with play count", minPlayCount, potentialTransitions if AMe.debug
+    potentialTransitions[Math.floor(Math.random() * potentialTransitions.length)]
+    
+  _clearTransitionHandling: ->
     console.log "Canceling next section handling." if AMe.debug
-    Meteor.clearTimeout @_scheduleNextSectionTimeout
+    Meteor.clearTimeout @_scheduleTransitionTimeout

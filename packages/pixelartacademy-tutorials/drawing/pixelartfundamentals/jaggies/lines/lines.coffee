@@ -2,7 +2,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines extends PAA.Practice.Tutorials.Drawing.Tutorial
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines extends PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies
   @id: -> 'PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines'
 
   @fullName: -> "Pixel art lines"
