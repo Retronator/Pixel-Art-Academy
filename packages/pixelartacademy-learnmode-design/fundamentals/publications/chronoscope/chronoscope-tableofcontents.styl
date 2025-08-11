@@ -4,35 +4,125 @@
 
 .publication.chronoscope.table-of-contents
   .contents-area
+    &.read-only
+      .contents
+        position absolute
+        left 20rem
+        top 20rem
+        // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
+        width 540rem
+        height 340rem
+        column-width 240rem
+        column-gap 60rem
+        column-fill auto
+
+        .pixelartacademy-publication-article.ql-container
+          padding-left 50rem
+
     .contents
       .pixelartacademy-publication-article.ql-container
-        padding-left 90rem
+        .ql-editor
+          header
+            width fit-content
 
-        header
-          width fit-content
+            h1
+              position relative
+              margin 0
+              header-17()
+              line-height 17rem
+              padding-bottom 7rem
+              text-transform lowercase
 
-          h1
-            position relative
-            margin 10rem 0 0
-            header-17()
-            text-transform lowercase
+              &::after
+                content ''
+                position absolute
+                left -70rem
+                bottom 0
+                right 0
+                height 3rem
+                background-color atariGray(2)
 
-            &::after
-              content ''
-              position absolute
-              left -90rem
-              bottom 0
-              right 0
-              height 3rem
-              background-color atariGray(2)
+            h2
+              thintel()
+              margin 2rem 0 20rem
 
-        .pixelartacademy-publication-article-tableofcontents
-          margin-top 30rem
-          thintel()
+          > h2
+            adventure()
+            font-weight normal
 
-          .table-of-contents
-            list-style none
-            padding 0
+          > h3
+            adventure()
+            font-weight normal
+            text-transform uppercase
 
-            .content-item
-              margin-bottom 20rem
+          p
+            small-print()
+            line-height 6rem
+
+            &.chronoscope-tableofcontents-imprint
+              margin 1rem 0
+
+              &:nth-child(1)
+                margin-bottom 5rem
+
+              &:nth-child(3)
+                margin-bottom 3rem
+
+              &:nth-child(4)
+                margin-bottom 10rem
+
+              &:nth-child(6)::before
+                content '©'
+                display inline-block
+                margin 0 2rem 0 0
+                transform scaleX(-1)
+                adventure()
+
+              strong
+                daily()
+                font-weight bold
+
+          .pixelartacademy-publication-article-customclass-container:has(.chronoscope-tableofcontents-imprint)
+            position absolute
+            bottom 0
+            left 50rem
+
+          > h1
+          .pixelartacademy-publication-article-tableofcontents
+          small
+            margin-left -50rem
+
+          > h1
+            header-8()
+            line-height 8rem
+            break-before column
+
+          small
+            display block
+            margin-top 20rem
+            small-print()
+            color atariGray(3)
+
+          .pixelartacademy-publication-article-tableofcontents
+            margin-top 43rem
+            thintel()
+
+            .table-of-contents
+              list-style none
+              padding 0
+
+              .content-item
+                margin-bottom 10rem
+
+                &.unlocked
+                  cursor pointer
+
+                &:not(.unlocked)
+                  color atariGray(3)
+
+                  &::after
+                    content ''
+                    display inline-block
+                    width 7rem
+                    height 9rem
+                    background-image image('/pixelartacademy/learnmode/pixelartfundamentals/fundamentals/publications/pinballmagazine/content-locked.png')

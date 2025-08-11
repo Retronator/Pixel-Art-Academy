@@ -223,3 +223,8 @@ class PAA.Publication.Article.Figure extends AM.Quill.BlotComponent
   class @StyleClass extends @Property
     @register 'PixelArtAcademy.Publication.Article.Figure.StyleClass'
     @property: -> 'class'
+    
+    constructor: ->
+      super arguments...
+      
+      @inputClass = "style"

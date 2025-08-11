@@ -1,0 +1,21 @@
+Chronoscope Contents
+Chronoscope
+Science Fiction Special Edition
+Illustration across time
+Chronoscope celebrates the medium of illustration, from its origins to contemporary times. This special edition focuses on the imaginary works that describe our potential future in its many forms, be it life on other planets or exploring the hidden places on Earth. Like our Chronoscope monthly magazine, you will find a well-organized collection of illustration works that can serve as inspiration or reference. All the gathered works are in the public domain.
+Other special edition books:
+Cosmic Horror
+"An essential look at the terrifying worlds descending from the legacy of Lovecraft" —Publishing Monthly. "Cosmic Horror at its visual best" —University Arts. Celebrate our collection of public domain illustrations for Lovecraft's novels and beyond.
+The Microscopic World
+Come together to view the world under the microscope, magnified through the lens of best illustrators in the age before photography. "A marvel of scientific exploration from the 19th century!" — Technical Reference.
+
+Distributed in the United States by
+Retronator
+Publishing
+176 2nd Street, San Francisco, CA 94105
+Art: public domain, text: CC-BY-SA
+2025 Chronoscope cooperative, Retropolis 
+Contents
+*Locked articles will be added in the future
+
+{"_id":"JY55jPQaT4gcC34Mc","lastEditTime":{"$date":1754904525516},"_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.Design.Fundamentals.Publications.Chronoscope.ScienceFiction.TableOfContents","title":"Chronoscope Contents","article":[{"insert":"Chronoscope"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":"Science Fiction Special Edition"},{"attributes":{"publication-header-heading":2},"insert":"\n"},{"insert":"Illustration across time"},{"attributes":{"header":3},"insert":"\n"},{"insert":"Chronoscope celebrates the medium of illustration, from its origins to contemporary times. This special edition focuses on the imaginary works that describe our potential future in its many forms, be it life on other planets or exploring the hidden places on Earth. Like our Chronoscope monthly magazine, you will find a well-organized collection of illustration works that can serve as inspiration or reference. All the gathered works are in the public domain.\nOther special edition books:"},{"attributes":{"header":2},"insert":"\n"},{"insert":"Cosmic Horror"},{"attributes":{"header":3},"insert":"\n"},{"insert":"\"An essential look at the terrifying worlds descending from the legacy of Lovecraft\" —Publishing Monthly. \"Cosmic Horror at its visual best\" —University Arts. Celebrate our collection of public domain illustrations for Lovecraft's novels and beyond.\nThe Microscopic World"},{"attributes":{"header":3},"insert":"\n"},{"insert":"Come together to view the world under the microscope, magnified through the lens of best illustrators in the age before photography. \"A marvel of scientific exploration from the 19th century!\" — Technical Reference.\n\nDistributed in the United States by"},{"attributes":{"publication-customclass":"chronoscope-tableofcontents-imprint"},"insert":"\n"},{"attributes":{"bold":true},"insert":"Retronator"},{"attributes":{"publication-customclass":"chronoscope-tableofcontents-imprint"},"insert":"\n"},{"insert":"Publishing"},{"attributes":{"publication-customclass":"chronoscope-tableofcontents-imprint"},"insert":"\n"},{"insert":"176 2nd Street, San Francisco, CA 94105"},{"attributes":{"publication-customclass":"chronoscope-tableofcontents-imprint"},"insert":"\n"},{"insert":"Art: public domain, text: CC-BY-SA"},{"attributes":{"publication-customclass":"chronoscope-tableofcontents-imprint"},"insert":"\n"},{"insert":"2025 Chronoscope cooperative, Retropolis "},{"attributes":{"publication-customclass":"chronoscope-tableofcontents-imprint"},"insert":"\n"},{"insert":"Contents"},{"attributes":{"header":1},"insert":"\n"},{"insert":{"publication-tableofcontents":{}}},{"insert":"*Locked articles will be added in the future"},{"insert":"\n","attributes":{"small":true}}]}

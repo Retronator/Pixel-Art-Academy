@@ -22,6 +22,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     super arguments...
 
     @type = @constructor.Types.Text
+    @inputClass = ""
 
     @persistent = true
     @realtime = true

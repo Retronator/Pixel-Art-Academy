@@ -49,5 +49,8 @@ Package.onUse(function(api) {
   api.addStyle('fundamentals/publications/chronoscope/chronoscope-cover');
   api.addStyle('fundamentals/publications/chronoscope/chronoscope-tableofcontents')
 
+  api.addStyle('fundamentals/publications/chronoscope/contentpart/contents')
+  api.addStyle('fundamentals/publications/chronoscope/contentpart/figure')
+
   api.addStyle('fundamentals/publications/chronoscope/issues/sciencefiction/cover')
 });

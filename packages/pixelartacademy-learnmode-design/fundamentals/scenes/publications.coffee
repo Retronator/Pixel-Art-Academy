@@ -25,6 +25,13 @@ class LM.Design.Fundamentals.Publications extends LOI.Adventure.Scene
             
           else if theme is PAA.Pico8.Cartridges.Invasion.DesignDocument.Options.Themes.Everything
             publications.push _.values(IssueIds)...
+            
+    for referenceId in publications
+      continue unless publication = PAA.Publication.documents.findOne {referenceId}
+      for content in publication.contents
+        referenceId = content.part.referenceId
+        continue unless publicationPart = PAA.Publication.Part.documents.findOne {referenceId}
+        publicationParts.push referenceId if publicationPart.design?.class is 'unlocked'
     
     {publications, publicationParts}
 

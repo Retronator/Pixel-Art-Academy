@@ -10,3 +10,4 @@ class LM.Design.Fundamentals.Publications.Chronoscope
 if Meteor.isClient
   PAA.Publication.Article.CustomClass.registerClass "chronoscope-cover-specialeditiontitle"
   PAA.Publication.Article.CustomClass.registerClass "chronoscope-cover-line chronoscope-cover-line-#{lineNumber}" for lineNumber in [1..2]
+  PAA.Publication.Article.CustomClass.registerClass "chronoscope-tableofcontents-imprint"

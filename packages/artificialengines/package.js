@@ -177,6 +177,7 @@ Package.onUse(function(api) {
 
   api.addClientFile('mirage/quill-client/quill');
   api.addClientFile('mirage/quill-client/blotcomponent');
+  api.addClientFile('mirage/quill-client/small');
 
   api.addUnstyledComponent('mirage/render..');
 
