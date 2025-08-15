@@ -37,6 +37,7 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/workbench');
   api.addFile('fundamentals/scenes/pixeltoshfiles');
   api.addFile('fundamentals/scenes/publications');
+  api.addFile('fundamentals/scenes/apps');
 
   api.addFile('fundamentals/content..');
   api.addFile('fundamentals/content/course');

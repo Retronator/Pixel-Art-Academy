@@ -27,7 +27,7 @@ export default class FileSystem {
       this.module.respond('getApplicationPaths', fetchId, this.getApplicationPaths());
     });
 
-    this.writeOperationsByFilePath = {}
+    this.operations = []
 
     this.module.on('writeFile', (event, fetchId, filePath, fileData) => {
       this.log.verbose('writeFile received', filePath, fileData.length, fetchId);
@@ -38,19 +38,12 @@ export default class FileSystem {
         this.module.respond('writeFile', fetchId, new Error('Invalid JSON content'));
         return;
       }
-      this.writeOperationsByFilePath[filePath] ??= []
-      this.writeOperationsByFilePath[filePath].push({fetchId, fileData});
-      // If we have just this file waiting to be written, start the write chain of operations.
-      if (this.writeOperationsByFilePath[filePath].length === 1) {
-        this.writeFirstFile(filePath);
-      }
+      this.addOperation({write: {filePath, fetchId, fileData}});
     });
 
     this.module.on('deleteFile', (event, fetchId, filePath) => {
       this.log.verbose('deleteFile received', filePath, fetchId);
-      fs.unlink(filePath, (error) => {
-        this.module.respond('deleteFile', fetchId, error);
-      })
+      this.addOperation({delete: {filePath, fetchId}});
     });
 
     this.module.on('getProfiles', async (event, fetchId, directoryPath) => {
@@ -219,10 +212,27 @@ export default class FileSystem {
     });
   }
 
-  writeFirstFile(filePath) {
-    let firstWriteOperation = this.writeOperationsByFilePath[filePath][0]
-    let fetchId = firstWriteOperation.fetchId
-    let fileData = firstWriteOperation.fileData
+  addOperation(operation) {
+    this.operations.push(operation);
+    // If we have just this operation waiting to be executed, start the chain of execution.
+    if (this.operations.length === 1) {
+      this.executeFirstOperation();
+    }
+  }
+
+  executeFirstOperation() {
+    const operation = this.operations[0];
+    if (operation.write) {
+      this.writeFile(operation.write);
+    } else if (operation.delete) {
+      this.deleteFile(operation.delete);
+    }
+  }
+
+  writeFile(writeOperation) {
+    const filePath = writeOperation.filePath
+    const fetchId = writeOperation.fetchId
+    const fileData = writeOperation.fileData
 
     this.log.verbose("writeFile processing for", filePath, fetchId);
 
@@ -260,18 +270,33 @@ export default class FileSystem {
       this.log.verbose("writeFile succeeded.", filePath, fetchId);
     }
     this.module.respond('writeFile', fetchId, error);
-    this.moveToNextFile(filePath);
+    this.moveToNextOperation();
   }
 
-  moveToNextFile(filePath) {
-    // The first file has been written to, so we can remove it.
-    this.writeOperationsByFilePath[filePath].shift();
+  deleteFile(deleteOperation) {
+    const filePath = deleteOperation.filePath
+    const fetchId = deleteOperation.fetchId
 
-    // Nothing left to do if we've cleared all operations for this file.
-    if (this.writeOperationsByFilePath[filePath].length === 0) return;
+    fs.unlink(filePath, (error) => {
+      if (error) {
+        this.log.error('deleteFile error.', filePath, error, fetchId);
+      } else {
+        this.log.verbose("deleteFile succeeded.", filePath, fetchId);
+      }
+      this.module.respond('deleteFile', fetchId, error);
+      this.moveToNextOperation();
+    })
+  }
 
-    // Chain to the next operation on this file.
-    this.writeFirstFile(filePath);
+  moveToNextOperation() {
+    // The first operation has been executed, so we can remove it.
+    this.operations.shift();
+
+    // Nothing left to do if we've cleared all operations.
+    if (this.operations.length === 0) return;
+
+    // Chain to the next operation.
+    this.executeFirstOperation();
   }
 
   getApplicationPaths() {

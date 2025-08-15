@@ -20,7 +20,7 @@ class LM.Design extends LOI.Adventure.Episode
     # Allow cheating.
     return true if LM.Design.state 'invasionUnlocked'
     
-    LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Shape.completed()
+    LM.Design.Fundamentals.Goals.ShapeLanguage.completed()
   
 if Meteor.isServer
   LOI.initializePackage

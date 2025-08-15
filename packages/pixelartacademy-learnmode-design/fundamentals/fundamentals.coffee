@@ -18,6 +18,7 @@ class LM.Design.Fundamentals extends LM.Chapter
     @PixeltoshFiles
     @Publications
     @Publications.Parts
+    @Apps
   ]
 
   @courses: -> [
