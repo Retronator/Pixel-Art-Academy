@@ -1,0 +1,33 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+@import "{retronator:pixelartacademy-learnmode-pixelartfundamentals}/fundamentals/publications/pinballmagazine/pinballmagazine.import"
+
+.publication.chronoscope.content-part
+  .contents-area
+    &.read-only
+      .contents
+        position absolute
+        left 10rem
+        top 0
+        // Note: Width has to be a multiple of column width * n + gap * (n - 1), otherwise the width will not be ensured.
+        width 14480rem
+        height 370rem
+        column-width 270rem
+        column-gap 20rem
+        column-fill auto
+
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        small-print()
+
+        h1
+          margin 0
+          thintel()
+          line-height 10rem
+          text-transform uppercase
+
+        figure + h1
+          margin-top 10rem
+
+        figure + p
+          margin-top 10rem

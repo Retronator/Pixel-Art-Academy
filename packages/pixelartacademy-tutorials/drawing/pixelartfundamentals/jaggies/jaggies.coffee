@@ -6,7 +6,7 @@ Markup = PAA.Practice.Helpers.Drawing.Markup
 InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
 TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies extends PAA.Tutorials.Drawing.PixelArtFundamentals
   @pixelArtEvaluationClickHereMarkup: ->
     markup = []
     

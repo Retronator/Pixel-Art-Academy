@@ -324,6 +324,11 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
 
   _goToClickedAsset: ->
     assetData = @currentData()
+    
+    # Check if there is a custom click handler.
+    if assetData.asset.onClick
+      assetData.asset.onClick()
+      return
 
     # Set active sprite ID.
     AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()

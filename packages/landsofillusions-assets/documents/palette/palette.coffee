@@ -74,11 +74,8 @@ class LOI.Assets.Palette extends AM.Document
   exactPaletteColor: (color) ->
     LOI.Assets.ColorHelper.exactPaletteColor @, color
     
-  closestPaletteColor: (color, backgroundColor) ->
-    LOI.Assets.ColorHelper.closestPaletteColor @, color, backgroundColor
+  closestPaletteColor: (color, backgroundColor, secondClosestColor) ->
+    LOI.Assets.ColorHelper.closestPaletteColor @, color, backgroundColor, secondClosestColor
   
   closestPaletteColorFromRGB: (r, g, b, backgroundColor) ->
     LOI.Assets.ColorHelper.closestPaletteColorFromRGB @, r, g, b, backgroundColor
-    
-  _colorDistance: (color, r, g, b) ->
-    Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)

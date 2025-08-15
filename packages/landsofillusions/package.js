@@ -90,6 +90,8 @@ Package.onUse(function(api) {
   api.addFile('state/migrations/0004-admissionapplication');
   api.addFile('state/migrations/0005-tutorialspritesremove');
   api.addFile('state/migrations/0006-recordfirststudygrouphangout');
+  api.addFile('state/migrations/0007-profileids');
+  api.addFile('state/migrations/0008-activeprojectid');
 
   // Engine
 

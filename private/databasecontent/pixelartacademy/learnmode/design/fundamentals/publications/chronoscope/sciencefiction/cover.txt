@@ -1,0 +1,17 @@
+Chronoscope Science Fiction Cover
+ChronoscopE
+Illustration across time
+Special Edition
+
+Science Fiction
+
+Story illustrations
+Movie posters
+Magazine
+covers
+
+Aliens
+Retrofuturism
+Flying machines
+
+{"_id":"gvjtp2hDDh69jBnSB","lastEditTime":{"$date":1754907020825},"_schema":"1.0.0","referenceId":"PixelArtAcademy.LearnMode.Design.Fundamentals.Publications.Chronoscope.ScienceFiction.Cover","title":"Chronoscope Science Fiction Cover","design":{"class":""},"article":[{"insert":"ChronoscopE"},{"attributes":{"publication-header-heading":1},"insert":"\n"},{"insert":"Illustration across time"},{"attributes":{"publication-header-heading":2},"insert":"\n"},{"insert":"Special Edition"},{"attributes":{"publication-header-heading":3},"insert":"\n"},{"insert":"\nScience Fiction"},{"attributes":{"publication-customclass":"chronoscope-cover-specialeditiontitle"},"insert":"\n"},{"insert":"\nStory illustrations"},{"attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-1"},"insert":"\n"},{"insert":"Movie posters"},{"attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-1"},"insert":"\n"},{"insert":"Magazine"},{"attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-1"},"insert":"\n"},{"insert":"covers"},{"insert":"\n","attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-1"}},{"insert":"\nAliens"},{"attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-2"},"insert":"\n"},{"insert":"Retrofuturism"},{"attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-2"},"insert":"\n"},{"insert":"Flying machines"},{"insert":"\n","attributes":{"publication-customclass":"chronoscope-cover-line chronoscope-cover-line-2"}}]}

@@ -10,7 +10,10 @@ class PAA.Publication.Pages.Admin.Parts extends Artificial.Mummification.Admin.C
     super
       documentClass: PAA.Publication.Part
       adminComponentClass: PAA.Publication.Pages.Admin.Parts.Part
-      nameField: 'title'
+      nameFunction: (part) =>
+        parts = part.referenceId.split('.')
+        publicationsPartIndex = _.indexOf parts, 'Publications'
+        parts[publicationsPartIndex + 1..].join ' '
       singularName: 'publication part'
       pluralName: 'publication parts'
 

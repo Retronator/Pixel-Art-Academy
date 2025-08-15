@@ -45,7 +45,7 @@ class PAA.Publication.Pages.Admin.Parts.Part.Article extends AM.Component
             ['bold', 'italic', 'underline', 'strike', {'script': 'sub'}, {'script': 'super'}]
             ['link', 'code']
             [{'list': 'ordered'}, {'list': 'bullet'}]
-            ['blockquote', 'code-block']
+            ['blockquote', 'code-block', 'small']
             ['image']
             ['publication-tableofcontents']
             ['clean']

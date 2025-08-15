@@ -243,12 +243,6 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
     # Drawing ending 3 -> tutorial ending 1
     # Drawing ending 4 -> drawing intro
     
-    drawingCondition = =>
-      return unless currentApp = @_getCurrentApp()
-      return unless currentApp instanceof PAA.PixelPad.Apps.Drawing
-      drawing = currentApp
-      drawing.editor()?.drawingActive()
-    
     drawingSections = [
       drawingStartSection
       drawingMiddleSection
@@ -267,7 +261,7 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
       currentSection = dynamicSoundtrackPlayback.currentSection()
       
       if currentSection in drawingSections
-        mustExitDrawingSection true unless drawingCondition()
+        mustExitDrawingSection true unless @_drawingCondition()
       
       else
         mustExitDrawingSection false
@@ -275,7 +269,7 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
     tutorialStartSection.transitions.push new AMe.Transition tutorialStartSection,
       nextSection: drawingStartSection
       condition: =>
-        return unless drawingCondition()
+        return unless @_drawingCondition()
         return unless drawingAppInfo = @_getDrawingAppInfo()
         return unless drawingAppInfo.activeSection.nameKey is PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Tutorials
         drawingAppInfo.groupProgress < 1 / 3
@@ -283,16 +277,16 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
     tutorialMiddleSection.transitions.push new AMe.Transition tutorialMiddleSection,
       nextSection: drawingMiddleSection
       condition: =>
-        return unless drawingCondition()
+        return unless @_drawingCondition()
         return unless drawingAppInfo = @_getDrawingAppInfo()
         return unless drawingAppInfo.activeSection.nameKey is PAA.PixelPad.Apps.Drawing.Portfolio.Sections.Tutorials
         drawingAppInfo.groupProgress < 2 / 3
     
     tutorialEnding2Section.transitions.push new AMe.Transition tutorialEnding2Section,
       nextSection: drawingEnding1Section
-      condition: drawingCondition
+      condition: @_drawingCondition
     
-    stopDrawingCondition = => not drawingCondition() or mustExitDrawingSection()
+    stopDrawingCondition = => not @_drawingCondition() or mustExitDrawingSection()
     
     drawingStartSection.transitions.push new AMe.Transition drawingStartSection,
       nextSection: tutorialStartSection
@@ -399,7 +393,7 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
       nextSection: tutorialStartSection
       condition: =>
         return unless portfolioNotInTutorialsOrOtherAppsCondition()
-        not drawingCondition()
+        not @_drawingCondition()
       
     continueDrawingNotInTutorialsCondition = =>
       return unless continueDrawingCondition()

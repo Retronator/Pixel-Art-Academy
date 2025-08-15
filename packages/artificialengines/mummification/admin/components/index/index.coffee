@@ -36,6 +36,8 @@ class AM.Admin.Components.Index extends Artificial.Mirage.Component
 
   nameOrId: ->
     data = @currentData()
+    return @options.nameFunction data if @options.nameFunction
+    
     name = data[@options.nameField]
 
     if name instanceof Artificial.Babel.Translation

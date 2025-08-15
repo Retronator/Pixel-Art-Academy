@@ -1,0 +1,93 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+cover-text-shadow()
+  text-shadow atariGray(0) 1rem 1rem
+
+strong-cover-text-shadow()
+  text-shadow atariGray(0) 1rem 1rem, atariGray(0) 0 0 3rem
+
+.publication.chronoscope.cover
+  color atariGray(7)
+
+  &::before
+    content ''
+    position absolute
+    inset -7rem -5rem 0
+
+  .contents-area
+    text-align center
+
+    .contents
+      .pixelartacademy-publication-article.ql-container
+        header
+          display inline-block
+          position relative
+          margin-top 10rem
+
+          h1
+            margin 0
+            chronoscope()
+            background image('/pixelartacademy/learnmode/design/fundamentals/publications/chronoscope/cover-header-gradient.png') 0 0 / 1rem 43rem repeat-x
+            text-fill-color transparent
+            background-clip text
+
+          h2
+            display flex
+            position absolute
+            top -1rem
+            left 0
+            right 0
+            margin 0
+            thintel()
+            text-transform uppercase
+
+            &::before
+            &::after
+              content ''
+              flex-grow 1
+              background image('/pixelartacademy/learnmode/design/fundamentals/publications/chronoscope/cover-header-extensions.png') 0 0 / 100rem 7rem
+              height 7rem
+
+            &::before
+              margin 1rem 4rem 0 10rem
+              background-position right
+
+            &::after
+              margin 1rem 10rem 0 4rem
+
+          h3
+            margin -4rem 0 0
+            text-transform uppercase
+            font-weight bold
+            italic()
+            cover-text-shadow()
+
+        .chronoscope-cover-specialeditiontitle
+          position absolute
+          left 0
+          right 0
+          top 70rem
+          header-17()
+          text-transform uppercase
+          color atariGray(6)
+
+        .pixelartacademy-publication-article-customclass-container
+          &:has(.chronoscope-cover-line)
+            position absolute
+            text-transform uppercase
+            thintel()
+            strong-cover-text-shadow()
+
+            p
+              margin 5rem 0
+
+          &:has(.chronoscope-cover-line-1)
+            left 20rem
+            top 134rem
+            text-align left
+
+          &:has(.chronoscope-cover-line-2)
+            right 20rem
+            bottom 13rem
+            text-align right

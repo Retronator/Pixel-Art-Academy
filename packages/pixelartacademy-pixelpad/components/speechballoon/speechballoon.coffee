@@ -47,12 +47,17 @@ class PAA.PixelPad.Components.SpeechBalloon extends AM.Component
   onRendered: ->
     super arguments...
     
-    @contentMeasuring$ = @$('.content-measuring')
+    @$contentMeasuring = @$('.content-measuring')
     @_resizeObserver = new ResizeObserver =>
-      @contentWidth @contentMeasuring$.outerWidth()
-      @contentHeight @contentMeasuring$.outerHeight()
+      @contentWidth @$contentMeasuring.outerWidth()
+      @contentHeight @$contentMeasuring.outerHeight()
     
-    @_resizeObserver.observe @contentMeasuring$[0]
+    @_resizeObserver.observe @$contentMeasuring[0]
+    
+  onDestroyed: ->
+    super arguments...
+    
+    @_resizeObserver?.disconnect()
     
   displayedClass: ->
     'displayed' if @displayed()

@@ -77,13 +77,19 @@ class PAA.Pico8.Game extends PAA.Pico8.Game
 
     # Replace all assets.
     for asset in @assets
-      projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
-      throw new AE.InvalidOperationException "Project asset not found." unless projectAsset
+      continue unless projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
 
       assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
       backgroundIndex = assetClass.backgroundColor().paletteColor.ramp
 
       replaceSprite projectAsset.bitmapId, asset.x * 8, asset.y * 8, backgroundIndex
+      
+    # Remove the hash to avoid detecting a corrupted cart.
+    for hashAddress in [0x8006..0x8019]
+      dataByteIndex = hashAddress * 4
+      for offset in [0..3]
+        cartridgeImageData.data[dataByteIndex + offset] = cartridgeImageData.data[dataByteIndex + offset] & 252
+        cartridgeImageData.data[dataByteIndex + offset] = cartridgeImageData.data[dataByteIndex + offset] & 252
 
     # Prepare helpers to draw the label.
     replaceLabelColor = (x, y, colorIndex) =>
@@ -107,10 +113,9 @@ class PAA.Pico8.Game extends PAA.Pico8.Game
     drawSpriteToLabel = (bitmapId, labelX, labelY, backgroundIndex) =>
       drawBitmap bitmapId, labelX, labelY, backgroundIndex, replaceLabelColor
 
-    if @labelImage.assets
+    if @labelImage?.assets
       for asset in @labelImage.assets
-        projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
-        throw new AE.InvalidOperationException "Project asset not found." unless projectAsset
+        continue unless projectAsset = _.find project.assets, (projectAsset) => projectAsset.id is asset.id
 
         assetClass = PAA.Practice.Project.Asset.getClassForId asset.id
         backgroundIndex = assetClass.backgroundColor().paletteColor.ramp

@@ -109,12 +109,12 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.page .content')
+    @$content = @$('.page .content')
     @_resizeObserver = new ResizeObserver =>
       @previousContentHeight @contentHeight()
-      @contentHeight @content$.outerHeight()
+      @contentHeight @$content.outerHeight()
     
-    @_resizeObserver.observe @content$[0]
+    @_resizeObserver.observe @$content[0]
   
     @animating = new ReactiveField false
     
@@ -154,6 +154,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         
   onDestroyed: ->
     super arguments...
+    
+    @_resizeObserver?.disconnect()
     
     # Disable any ongoing audio.
     @audio.strikethrough false

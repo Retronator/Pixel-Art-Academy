@@ -30,7 +30,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications extends LOI.View
     super arguments...
     
     @designConstants =
-      revealedHeight: 10
+      revealedHeight: 6
       verticalPadding: 30
       horizontalPadding: 30
     

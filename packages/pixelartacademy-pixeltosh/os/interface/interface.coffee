@@ -16,10 +16,10 @@ class PAA.Pixeltosh.OS.Interface extends FM.Interface
     super parent,
       load: =>
         localInterfaceDataField()
-      save: (address, value) =>
+      save: (address, value, lazy) =>
         localInterfaceData = localInterfaceDataField()
         _.nestedProperty localInterfaceData, address, value
-        localInterfaceDataField localInterfaceData
+        localInterfaceDataField localInterfaceData unless lazy
 
     active = true
     

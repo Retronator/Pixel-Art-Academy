@@ -32,6 +32,7 @@ Package.onUse(function(api) {
   api.addFile('content/goalcontent');
   api.addFile('content/appcontent');
   api.addFile('content/drawingtutorialcontent');
+  api.addFile('content/assetcontent');
   api.addFile('content/futurecontent');
   api.addFile('content/course');
   api.addFile('content/tags');
@@ -71,4 +72,5 @@ Package.onUse(function(api) {
   api.addFile('compositions/composition')
   api.addFile('compositions/pixelarttools')
   api.addFile('compositions/elementsofart')
+  api.addFile('compositions/pixelartfundamentals')
 });

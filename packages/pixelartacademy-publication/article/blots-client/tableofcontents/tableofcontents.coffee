@@ -24,6 +24,8 @@ class PAA.Publication.Article.TableOfContents extends AM.Quill.BlotComponent
       _.sortBy publication.contents, 'order'
       
     @unlockedParts = new ComputedField =>
+      return [] unless LOI.adventure
+      
       currentSituation = new LOI.Adventure.Situation
         location: PAA.Publication.Part.Location
       

@@ -3,9 +3,32 @@
     <div class="title-bar">
       {{> PixelArtAcademy.Pixeltosh.OS.Interface.TitleBar child 'title'}}
     </div>
-    <div class="content">
-      {{> FataMorgana.DockedArea child 'contentArea'}}
+    <div class="main-area">
+      <div class="content-area">
+        <div class="content" {{style contentStyle}}>
+          {{> FataMorgana.DockedArea child 'contentArea'}}
+        </div>
+      </div>
+      <div class="vertical-scrollbar {{verticalScrollbarActiveClass}} {{verticalScrollbarDraggingClass}}">
+        {{#if verticalScrollbarEnabled}}
+          <button class="up arrow" {{verticalScrollbarArrowDisabledAttribute}}></button>
+          <div class="position" {{style verticalScrollbarPositionStyle}}></div>
+          <div class="position-move-indicator" {{style verticalScrollbarPositionMoveIndicatorStyle}}></div>
+          <button class="down arrow" {{verticalScrollbarArrowDisabledAttribute}}></button>
+        {{/if}}
+      </div>
+      <div class="horizontal-scrollbar {{horizontalScrollbarActiveClass}} {{horizontalScrollbarDraggingClass}}">
+        {{#if horizontalScrollbarEnabled}}
+          <button class="left arrow" {{horizontalScrollbarArrowDisabledAttribute}}></button>
+          <div class="position" {{style horizontalScrollbarPositionStyle}}></div>
+          <div class="position-move-indicator" {{style horizontalScrollbarPositionMoveIndicatorStyle}}></div>
+          <button class="right arrow" {{horizontalScrollbarArrowDisabledAttribute}}></button>
+        {{/if}}
+      </div>
+      {{#if programViewActive}}
+        <div class="resize-control"></div>
+      {{/if}}
     </div>
-    <div class="move-indicator {{moveIndicatorVisibleClass}} {{moveIndicatorAlternativeDitherClass}}" {{style moveIndicatorStyle}}></div>
+    <div class="move-indicator {{moveIndicatorVisibleClass}} {{moveIndicatorDitherClasses}}" {{style moveIndicatorStyle}}></div>
   </div>
 </template>

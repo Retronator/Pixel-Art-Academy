@@ -53,8 +53,6 @@
       position absolute
       left 70rem
       top 80rem
-      width 110rem
-      padding 10rem
       color black
 
       .cartridges
@@ -63,8 +61,7 @@
         margin 0
 
         .cartridge
-          position relative
-          top 0
+          position absolute
           width 47rem
           height 57rem
           transition all 0.2s
@@ -73,8 +70,12 @@
           cursor pointer
           perspective 200rem
 
+          &:nth-child(2)
+            top 70rem
+            left 20rem
+
           &:hover
-            top -1rem
+            transform translate(0, -1rem)
             filter drop-shadow(-6rem 2rem 0 transparentify(atariOrange(2), atariOrange(4)))
 
           &.selected

@@ -18,13 +18,13 @@ class FM.Interface.Data.Value
     updateAutorun = Tracker.autorun (computation) ->
       update options.load()
 
-    value = (value) ->
+    value = (value, lazy) ->
       if value isnt undefined
         # Do we even need to do any change?
         valueChanged = not EJSON.equals value, oldValue
         
         if valueChanged
-          options.save options.address, value
+          options.save options.address, value, lazy
           
           # Don't wait for old value to update from the autorun, so we can
           # detect changes when multiple sets are done within the same computation.

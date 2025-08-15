@@ -170,6 +170,8 @@ class PAA.Learning.Goal
 
   @getAdventureInstance: -> @getAdventureInstanceForId @id()
   
+  @completed: -> @getAdventureInstance().completed()
+  
   @reset: -> @getAdventureInstance().reset()
   
   constructor: (@options = {}) ->

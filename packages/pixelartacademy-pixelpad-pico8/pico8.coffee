@@ -76,13 +76,16 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       cartridgeParameter = AB.Router.getParameter 'parameter3'
       playParameter = AB.Router.getParameter 'parameter4'
       
-      Tracker.nonreactive =>
+      Tracker.autorun (computation) =>
         drawer = @drawer()
         
         if cartridgeParameter and playParameter
-          @cartridge drawer.selectedCartridge()
+          return unless cartridge = drawer.selectedCartridge()
+          computation.stop()
+          @cartridge cartridge
         
         else
+          computation.stop()
           # Turn off the device and deselect the cartridge when returning from play.
           if @cartridge()
             # Wait for the power off animation if needed.
@@ -106,7 +109,7 @@ class PAA.PixelPad.Apps.Pico8 extends PAA.PixelPad.App
       
       # Load the game non-reactively so that changing of the project ID won't
       # cause a restart (instead we're forcing the player to go out and back in).
-      Tracker.nonreactive => device.loadGame cartridge.game(), cartridge.projectId()
+      Tracker.nonreactive => device.loadGame cartridge.game(), cartridge.projectId(), cartridge.startParameter()
 
       Meteor.clearTimeout @_deviceStartTimeout
 

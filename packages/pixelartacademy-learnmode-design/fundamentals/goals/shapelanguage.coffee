@@ -23,6 +23,8 @@ class LM.Design.Fundamentals.Goals.ShapeLanguage extends PAA.Learning.Goal
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
   
+    @interests: -> ['shape language']
+
     @requiredInterests: -> ['shape']
 
     @initialize()

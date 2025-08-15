@@ -19,6 +19,9 @@
       {{#if $is type 'DrawingTutorialContent'}}
         {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
       {{/if}}
+      {{#if $is type 'AssetContent'}}
+        {{> PixelArtAcademy.LearnMode.Menu.Progress.Content.DefaultContent}}
+      {{/if}}
     </div>
     {{#if contents.length}}
       <ul class="contents {{contentsDisplayedClass}}">

@@ -14,6 +14,7 @@ class PAA.Publication.Article
     'header'
     'list'
     'code-block'
+    'small'
     'image'
     'video'
 

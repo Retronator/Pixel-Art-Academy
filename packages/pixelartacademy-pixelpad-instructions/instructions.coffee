@@ -72,15 +72,15 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
   onRendered: ->
     super arguments...
     
-    @content$ = @$('.content')
+    @$content = @$('.content')
     @_resizeObserver = new ResizeObserver =>
       @previousContentWidth @contentWidth()
-      @contentWidth @content$.outerWidth()
+      @contentWidth @$content.outerWidth()
 
       @previousContentHeight @contentHeight()
-      @contentHeight @content$.outerHeight()
+      @contentHeight @$content.outerHeight()
     
-    @_resizeObserver.observe @content$[0]
+    @_resizeObserver.observe @$content[0]
   
     @animating = new ReactiveField false
   
@@ -133,6 +133,8 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
         
   onDestroyed: ->
     super arguments...
+    
+    @_resizeObserver?.disconnect()
     
     instruction.destroy() for instruction in @instructions
   

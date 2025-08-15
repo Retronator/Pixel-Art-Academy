@@ -25,7 +25,7 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
     # Allow cheating.
     return true if LM.PixelArtFundamentals.state 'pinballUnlocked'
     
-    PAA.Learning.Task.getAdventureInstanceForId(LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.id())?.completed()
+    LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.getAdventureInstance()?.completed()
 
 if Meteor.isServer
   LOI.initializePackage

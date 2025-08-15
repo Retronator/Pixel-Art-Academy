@@ -3,6 +3,7 @@ LM = PixelArtAcademy.LearnMode
 
 class LM.Design extends LOI.Adventure.Episode
   # unlocked: boolean whether this episode's content is instantly available
+  # invasionUnlocked: boolean whether the invasion project is instantly available
   @id: -> 'PixelArtAcademy.LearnMode.Design'
 
   @fullName: -> "Design"
@@ -14,6 +15,12 @@ class LM.Design extends LOI.Adventure.Episode
   @startSection: -> @Start
   
   @initialize()
+  
+  @invasionEnabled: ->
+    # Allow cheating.
+    return true if LM.Design.state 'invasionUnlocked'
+    
+    LM.Design.Fundamentals.Goals.ShapeLanguage.completed()
   
 if Meteor.isServer
   LOI.initializePackage

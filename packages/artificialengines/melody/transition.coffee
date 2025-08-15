@@ -5,3 +5,6 @@ class AMe.Transition
     _.defaults @, options,
       nextSection: null
       condition: null
+      priority: 0
+    
+    @transitionCount = 0

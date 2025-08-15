@@ -22,8 +22,9 @@ class PAA.Publication.Part extends PAA.Publication.Part
     # The content is the title of the publication and the article inserts.
     content = "#{@title or @referenceId}\n"
     
-    for operation in @article when _.isString operation.insert
-      content += operation.insert
+    if @article
+      for operation in @article when _.isString operation.insert
+        content += operation.insert
     
     content += "\n#{EJSON.stringify @}"
     
