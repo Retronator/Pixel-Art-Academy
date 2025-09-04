@@ -96,8 +96,10 @@ Document.startup ->
     description: "Get the downloadable version of Learn Mode on Steam."
     isKey: true
   
+  # Note: Both items now have the same description since Learn Mode is
+  # released and there is no difference between the keys anymore.
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Steam.LearnMode.ReleaseStateOverrideKey
-    name: "Pixel Art Academy: Learn Mode - pre-release Steam key"
-    description: "Get the downloadable version of Learn Mode on Steam before its release."
+    name: "Pixel Art Academy: Learn Mode - Steam key"
+    description: "Get the downloadable version of Learn Mode on Steam."
     isKey: true

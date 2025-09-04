@@ -5,7 +5,7 @@ Retronator.Store.Vat.Rates =
     cz: 0.21  # Czech Republic
     dk: 0.25  # Denmark
     de: 0.19  # Germany
-    ee: 0.22  # Estonia TODO: Scheduled to increase to 24% in July 2025
+    ee: 0.24  # Estonia
     ie: 0.23  # Ireland
     gr: 0.24  # Greece
     es: 0.21  # Spain
@@ -22,7 +22,7 @@ Retronator.Store.Vat.Rates =
     at: 0.20  # Austria
     pl: 0.23  # Poland
     pt: 0.23  # Portugal
-    ro: 0.19  # Romania
+    ro: 0.21  # Romania
     si: 0.22  # Slovenia
     sk: 0.23  # Slovakia
     fi: 0.255 # Finland
