@@ -40,5 +40,9 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
       
       @_tutorialPixelArtLineWidth ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
       things.push @_tutorialPixelArtLineWidth
+    
+    if @_tutorialShape?.completed()
+      @_tutorialSimplification ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.Simplification
+      things.push @_tutorialSimplification
       
     things

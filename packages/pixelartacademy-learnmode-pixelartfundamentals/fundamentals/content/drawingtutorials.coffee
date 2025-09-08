@@ -11,6 +11,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
     @PixelArtDiagonals
     @PixelArtCurves
     @PixelArtLineWidth
+    @Simplification
     @AntiAliasing
     @Dithering
     @Rotation
@@ -111,6 +112,11 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
   class @PixelArtLineWidth extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLineWidth'
     @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
+    @initialize()
+  
+  class @Simplification extends LM.Content.DrawingTutorialContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Simplification'
+    @tutorialClass = PAA.Tutorials.Drawing.Simplification
     @initialize()
     
   class @AntiAliasing extends LM.Content.FutureContent

@@ -10,6 +10,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
   
   @contents: -> [
     @PixelArtLineArt
+    @DrawQuickly
     @AntiAliasing
     @DitheredValues
     @DitheredColors
@@ -121,6 +122,11 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
       status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
       
+  class @DrawQuickly extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly'
+    @displayName: -> "Draw quickly"
+    @initialize()
+    
   class @AntiAliasing extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.AntiAliasing'
     @displayName: -> "Anti-aliasing"

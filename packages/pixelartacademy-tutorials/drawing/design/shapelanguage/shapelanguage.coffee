@@ -2,7 +2,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.PixelArtTools
+class PAA.Tutorials.Drawing.Design.ShapeLanguage extends PAA.Tutorials.Drawing.Design
   @id: -> 'PixelArtAcademy.Tutorials.Drawing.Design.ShapeLanguage'
 
   @fullName: -> "Shape language"

@@ -1,13 +1,12 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Asset extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
-  @id: -> "PixelArtAcademy.Tutorials.Drawing.ElementsOfArt.Shape.#{_.pascalCase @displayName()}"
+class PAA.Tutorials.Drawing.Simplification.Asset extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+  @id: -> "PixelArtAcademy.Tutorials.Drawing.Simplification.#{_.pascalCase @displayName()}"
   
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.Black
   
-  @svgUrl: -> "/pixelartacademy/tutorials/drawing/elementsofart/shape/#{_.fileCase @displayName()}.svg"
-  @breakPathsIntoSteps: -> true
+  @minClipboardScale: -> 2
   
   availableToolKeys: ->
     [

@@ -1,0 +1,65 @@
+LOI = LandsOfIllusions
+PAA = PixelArtAcademy
+LM = PixelArtAcademy.LearnMode
+
+class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Learning.Goal
+  @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Simplification'
+
+  @displayName: -> "Simplification"
+  
+  @chapter: -> LM.PixelArtFundamentals.Fundamentals
+
+  Goal = @
+
+  class @Tutorial extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Simplification.Tutorial'
+    @goal: -> Goal
+
+    @directive: -> "Learn about simplification"
+
+    @instructions: -> """
+      In the Drawing app, complete the Simplification tutorial to learn how to intentionally simplify your drawings.
+    """
+
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @requiredInterests: -> ['shape']
+  
+    @initialize()
+    
+    @completedConditions: ->
+      PAA.Tutorials.Drawing.Simplification.completed()
+    
+    Task = @
+    
+  class @Challenge extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Simplification.Challenge'
+    @goal: -> Goal
+    
+    @directive: -> "Draw quickly"
+    
+    @instructions: -> """
+      In the Drawing app, complete the Quick drawing challenge.
+    """
+    
+    @icon: -> PAA.Learning.Task.Icons.Drawing
+    
+    @predecessors: -> [Goal.Tutorial]
+    
+    @initialize()
+    
+    @completedConditions: ->
+      # TODO: Set to completed when the draw quickly challenge is completed.
+    
+    Task = @
+
+  @tasks: -> [
+    @Tutorial
+    @Challenge
+  ]
+
+  @finalTasks: -> [
+    @Challenge
+  ]
+
+  @initialize()

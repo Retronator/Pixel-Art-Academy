@@ -9,6 +9,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @ElementsOfArt
     @Jaggies
     @Pinball
+    @Simplification
   ]
   @initialize()
   
@@ -50,3 +51,14 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
     @initialize()
     
     status: -> if LM.PixelArtFundamentals.pinballEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
+  class @Simplification extends LM.Content.GoalContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Simplification'
+    @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Simplification
+    @tags: -> [LM.Content.Tags.WIP]
+    
+    @unlockInstructions: -> "Complete the Elements of art: shape tutorial to unlock the Simplification study goal."
+    
+    @initialize()
+    
+    status: -> if LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Shape.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked

@@ -42,12 +42,31 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     super arguments...
 
     @sectionHeight = 25
-    @initialGroupHeight = 19
-    @inactiveGroupHeight = 5
+    @maxInitialGroupHeight = 19
+    @maxInactiveGroupHeight = 5
     @activeGroupHeight = 150
+    @groupsMaxTotalHeight = 180
     @settingsHeight = 118
     @sectionsMargin = 13
     @sectionsMaxTotalHeight = 241 - 2 * @sectionsMargin
+    
+  getInitialGroupHeight: (groupCount) ->
+    heightPerGroup = Math.floor @groupsMaxTotalHeight / groupCount
+    Math.min heightPerGroup, @maxInitialGroupHeight
+    
+  getInactiveGroupHeight: (groupCount) ->
+    heightPerGroup = Math.floor (@groupsMaxTotalHeight - @activeGroupHeight) / (groupCount - 1)
+    Math.min heightPerGroup, @maxInactiveGroupHeight
+  
+  defaultGroupHeightInActiveSection: ->
+    return @maxInitialGroupHeight unless activeSection = @activeSection()
+
+    @getInitialGroupHeight activeSection.groups().length
+  
+  defaultInactiveGroupHeightInActiveSection: ->
+    return @maxInactiveGroupHeight unless activeSection = @activeSection()
+    
+    @getInactiveGroupHeight activeSection.groups().length
 
   sectionActiveClass: ->
     section = @currentData()
@@ -70,10 +89,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
     
     if section is activeSection
       if activeGroup
-        activeSectionHeight = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        activeSectionHeight = @sectionHeight + (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
       
       else
-        activeSectionHeight = @sectionHeight + groups.length * @initialGroupHeight
+        activeSectionHeight = @sectionHeight + groups.length * @getInitialGroupHeight groups.length
         
       height = activeSectionHeight
       
@@ -169,10 +188,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
   
       if groups = section.groups?()
         if @activeGroup()
-          top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+          top += (groups.length - 1) * @getInactiveGroupHeight(groups.length) + @activeGroupHeight
 
         else
-          top += groups.length * @initialGroupHeight
+          top += groups.length * @getInitialGroupHeight groups.length
 
       else
         top += @settingsHeight

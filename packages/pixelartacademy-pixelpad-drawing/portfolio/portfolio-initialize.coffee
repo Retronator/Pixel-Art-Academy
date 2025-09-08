@@ -298,10 +298,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelPad.Apps.
       activeSectionGroups = activeSection.groups()
 
       if @activeGroup()
-        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        activeSectionHeight = @sectionHeight + (activeSectionGroups.length - 1) * @getInactiveGroupHeight(activeSectionGroups.length) + @activeGroupHeight
         
       else
-        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @initialGroupHeight
+        activeSectionHeight = @sectionHeight + activeSectionGroups.length * @getInitialGroupHeight activeSectionGroups.length
       
       sectionsTotalHeight = (sections.length - 1) * @sectionHeight + activeSectionHeight
       
