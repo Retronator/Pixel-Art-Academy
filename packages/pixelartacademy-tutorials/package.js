@@ -178,6 +178,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/simplification..');
   api.addFile('drawing/simplification/asset');
   api.addFile('drawing/simplification/symbols');
+  api.addFile('drawing/simplification/symbolicandrealisticdrawing');
 
   // Design
 

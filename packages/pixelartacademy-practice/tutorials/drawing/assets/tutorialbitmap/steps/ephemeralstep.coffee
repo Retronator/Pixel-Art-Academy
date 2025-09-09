@@ -18,7 +18,6 @@ class TutorialBitmap.EphemeralStep extends TutorialBitmap.Step
   
     @_solved()
   
-  hasPixel: -> false
   solve: -> @_solved true
   
   reset: -> @_solved false

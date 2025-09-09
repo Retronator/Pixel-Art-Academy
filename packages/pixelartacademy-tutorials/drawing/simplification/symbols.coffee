@@ -1,8 +1,6 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Markup = PAA.Practice.Helpers.Drawing.Markup
-
 class PAA.Tutorials.Drawing.Simplification.Symbols extends PAA.Tutorials.Drawing.Simplification.Asset
   @displayName: -> "Symbols"
   
