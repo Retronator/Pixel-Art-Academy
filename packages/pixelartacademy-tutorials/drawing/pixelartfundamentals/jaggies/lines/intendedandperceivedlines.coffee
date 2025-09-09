@@ -18,20 +18,12 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.IntendedAndPercei
   
   @svgUrl: -> "/pixelartacademy/tutorials/drawing/pixelartfundamentals/jaggies/lines/Intendedandperceivedlines.svg"
   @breakPathsIntoSteps: -> true
+  @pathTolerance: -> 1
   
   @markup: -> true
   @pixelArtEvaluation: -> partialUpdates: true
   
   @initialize()
-  
-  initializeStepsInAreaWithResources: (stepArea, stepResources) ->
-    svgPaths = stepResources.svgPaths.svgPaths()
-  
-    for svgPath, index in svgPaths
-      new @constructor.PathStep @, stepArea,
-        svgPaths: [svgPath]
-        # Don't require very precise lines.
-        tolerance: 1
 
   Asset = @
   
