@@ -29,6 +29,9 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
 
   # Override to provide a string with more information related to the bitmap (e.g. author info in challenges).
   @bitmapInfo: -> null
+  
+  # Override to add a style class to bitmap info.
+  @bitmapInfoClass: -> ''
 
   @portfolioComponentClass: ->
     @PortfolioComponent
@@ -192,6 +195,8 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     if translation.language then translation.text else null
 
   bitmapInfoTranslation: -> AB.translation @_translationSubscription, 'bitmapInfo'
+  
+  bitmapInfoClass: -> @constructor.bitmapInfoClass()
   
   imageUrl: ->
     return unless bitmapId = @bitmapId()

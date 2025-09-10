@@ -19,7 +19,7 @@
           {{/with}}
           <div class="asset-placeholder" {{style assetPlaceholderStyle}}></div>
           {{#if asset.bitmapInfo}}
-            <div class="bitmap-info">{{#Markdown}}{{asset.bitmapInfo}}{{/Markdown}}</div>
+            <div class="bitmap-info {{asset.bitmapInfoClass}}">{{#Markdown}}{{asset.bitmapInfo}}{{/Markdown}}</div>
           {{/if}}
         </div>
       </div>
