@@ -58,7 +58,7 @@ class Pinball.Parts.Pins extends Pinball.Part
             
           cylinder
           
-        THREE.BufferGeometryUtils.mergeBufferGeometries cylinders
+        THREE.BufferGeometryUtils.mergeGeometries cylinders
       
       createCollisionShape: ->
         collisionShape = new Ammo.btCompoundShape

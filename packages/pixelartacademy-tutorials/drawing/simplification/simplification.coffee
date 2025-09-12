@@ -13,6 +13,7 @@ class PAA.Tutorials.Drawing.Simplification extends PAA.Practice.Tutorials.Drawin
     @Symbols
     @SymbolicAndRealisticDrawing
     @IntentionalSimplification
+    @Silhouette
   ]
   
   content: ->

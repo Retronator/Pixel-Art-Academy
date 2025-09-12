@@ -11,7 +11,24 @@ _.mixin
 
   # Calculates the fields that need to be added or removed (signified by undefined) to go from a to b.
   objectDifference: (a, b) ->
-    if _.isObject(a) and _.isObject(b)
+    if _.isArray(a) and _.isArray(b)
+      # For arrays, we return an array as long as the target. Undefined fields in it signify no change.
+      changed = a.length isnt b.length
+      arrayDifference = []
+  
+      for i in [0...b.length]
+        valueDifference = _.objectDifference a[i], b[i]
+        
+        if valueDifference is unchangedObject
+          arrayDifference[i] = undefined
+          
+        else
+          arrayDifference[i] = valueDifference
+          changed = true
+  
+      if changed then arrayDifference else unchangedObject
+
+    else if _.isObject(a) and _.isObject(b)
       # For objects, we do a deep difference. If no field was changed, we return a special unchanged object.
       difference = {}
       changed = false
@@ -27,18 +44,6 @@ _.mixin
         changed = true
   
       if changed then difference else unchangedObject
-      
-    else if _.isArray(a) and _.isArray(b)
-      # For arrays, we return an array as long as the target. Undefined fields in it signify no change.
-      arrayDifference = []
-  
-      for i in [0...valueB.length]
-        valueDifference = _.objectDifference a[i], b[i]
-        unless valueDifference is unchangedObject
-          arrayDifference[i] = valueDifference
-          changed = true
-  
-      if changed then arrayDifference else unchangedObject
 
     else
       # Other value types can be compared directly.
@@ -49,21 +54,21 @@ _.mixin
       
   # Changes source to get the values from difference (or remove them where undefined).
   applyObjectDifference: (source, difference) ->
-    if _.isObject(source) and _.isObject(difference)
+    if _.isArray(source) and _.isArray(difference)
+      source.length = difference.length
+      
+      for i in [0...source.length] when difference[i] isnt undefined
+        source[i] = _.applyObjectDifference source[i], difference[i]
+  
+      source
+  
+    else if _.isObject(source) and _.isObject(difference)
       for key, differenceValue of difference
         if differenceValue is undefined
           delete source[key]
       
         else
           source[key] = _.applyObjectDifference source[key], differenceValue
-  
-      source
-      
-    else if _.isArray(source) and _.isArray(difference)
-      source.length = difference.length
-      
-      for i in [0...source.length] when difference[i] isnt undefined
-        source[i] = _.applyObjectDifference source[i], difference[i]
   
       source
     

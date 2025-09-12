@@ -5,8 +5,9 @@ Package.describe({
 
 Npm.depends({
   'path-to-regexp': '2.1.0',
-  'three': '0.126.1',
-  'canvas': '2.11.2',
+  'three': '0.180.0',
+  'abort-controller': '3.0.0',
+  'canvas': '3.2.0',
   'pako': '1.0.8',
   'bson': '4.0.2',
   'text-encoder-lite': '2.0.0',
@@ -72,6 +73,7 @@ Package.onUse(function(api) {
   // Global initialization
 
   api.addFile('everywhere/lodash/lodash');
+  api.addFile('everywhere/abortcontroller');
 
   // Define all namespaces so that we can use shortcuts.
 

@@ -7,6 +7,7 @@ Some references in this folder are not covered by CC-SA, but their respective li
 ### Creative Commons
 
 - tutankhamun.jpg: Cicero Moraes, Michael E. Habicht, Francesco M. Galassi, Elena Varotto, and Thiago Beaini, 2023 ([Pharaoh Tutankhamun: a novel 3D digital facial approximation](https://www.researchgate.net/publication/371120172_Pharaoh_Tutankhamun_a_novel_3D_digital_facial_approximation))
+- silhouette-scissors.glb: virgodmonkey ([Basic Scissors](https://sketchfab.com/3d-models/basic-scissors-3bcc523bc5bd4a8ba7d0e4a7b1ee1c90))
 
 ### Images used under fair use
 

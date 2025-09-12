@@ -8,3 +8,7 @@ PADB = PixelArtDatabase
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Default extends PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference
   @id: -> 'PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Default'
   @register @id()
+
+  imageOnlyClass: ->
+    reference = @data()
+    'image-only' if reference.displayOptions?.imageOnly

@@ -109,3 +109,5 @@ class PAA.Practice.Project.Asset
   editorStyleClasses: -> '' # Override to provide a string with class names for styling the surrounding editor.
 
   editorOptions: -> null # Override to provide an object that is sent to the editor and relevant components.
+
+  referenceDefaults: -> null # Override to provide an object mapping image urls to reference's default values.

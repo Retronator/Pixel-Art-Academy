@@ -17,3 +17,4 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References extends FM.View
       editorActive: => @desktop.active()
       editorSize: => @desktop.drawing.os.pixelPad.size()
       assetOptions: => @desktop.displayedAsset()?.editorOptions?()?.references
+      defaults: => @desktop.displayedAsset()?.referenceDefaults?()

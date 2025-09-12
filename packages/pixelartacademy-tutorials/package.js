@@ -180,6 +180,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/simplification/symbols');
   api.addFile('drawing/simplification/symbolicandrealisticdrawing');
   api.addFile('drawing/simplification/intentionalsimplification');
+  api.addFile('drawing/simplification/silhouette');
 
   // Design
 

@@ -1,3 +1,3 @@
-require 'three/examples/js/loaders/GLTFLoader'
-require 'three/examples/js/loaders/DRACOLoader'
-require 'three/examples/js/loaders/RGBELoader'
+THREE.GLTFLoader = require('three/examples/jsm/loaders/GLTFLoader').GLTFLoader
+THREE.DRACOLoader = require('three/examples/jsm/loaders/DRACOLoader').DRACOLoader
+THREE.HDRLoader = require('three/examples/jsm/loaders/HDRLoader').HDRLoader

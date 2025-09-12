@@ -49,6 +49,7 @@ class LOI.Assets.Palette extends LOI.Assets.Palette
         canvas.context.fillText ramp.name, 0.5 * scale, (rampIndex + 1) * scale
 
       for shade, shadeIndex in ramp.shades
+        console.log "filling", shade
         canvas.context.fillStyle = "rgb(#{shade.r * 255},#{shade.g * 255},#{shade.b * 255})"
         canvas.context.fillRect namesWidth + shadeIndex * scale, (rampIndex + 0.5) * scale, scale, scale
   

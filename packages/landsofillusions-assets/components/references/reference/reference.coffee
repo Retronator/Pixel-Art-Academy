@@ -193,6 +193,19 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       reference[name] value
 
+  changeDisplayOptions: (value) ->
+    return unless reference = @data()
+    
+    assetData = Tracker.nonreactive => @references.options.assetData()
+    action = new LOI.Assets.VisualAsset.Actions.UpdateReference @references.constructor.id(), assetData, reference.image._id,
+      displayOptions: value
+    
+    if @_updateAction
+      @_updateAction.append action
+    
+    else
+      assetData.executeAction action
+    
   reorderToTop: ->
     return unless reference = @data()
 

@@ -362,7 +362,7 @@ class PAA.StillLifeStand extends LOI.Adventure.Item
 
     else
       # We should rotate the camera instead.
-      @cameraManager().startRotateCamera event.coordinates
+      @cameraManager().startRotateCamera()
 
   onMouseMove: (event) ->
     @mouse().onMouseMove event

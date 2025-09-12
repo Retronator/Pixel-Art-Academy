@@ -138,10 +138,6 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     x: _.clamp position.x, -maxX, maxX
     y: _.clamp position.y, -maxY, maxY
 
-  imageOnlyClass: ->
-    reference = @data()
-    'image-only' if reference.displayOptions?.imageOnly
-
   displaySize: (scale) ->
     return unless imageSize = @imageSize()
 
@@ -225,7 +221,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         y: @parentOffset.top / displayScale + position.y
     
     else
-      position = @hiddenPosition()
+      return unless position = @hiddenPosition()
     
     left: "#{position.x - displaySize.width / 2}rem"
     top: "#{position.y - displaySize.height / 2}rem"

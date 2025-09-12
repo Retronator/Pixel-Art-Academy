@@ -1,0 +1,16 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-model {{draggingClass}} {{resizingDirectionClass}}" {{style referenceStyle}}>
+    <div class="movement">
+      <figure class="figure">
+        <div class="viewport">
+          {{#if hasInput}}
+            <div class="input-area"></div>
+          {{/if}}
+        </div>
+        {{#if caption}}
+          <figcaption class="caption">{{caption}}</figcaption>
+        {{/if}}
+      </figure>
+    </div>
+  </div>
+</template>

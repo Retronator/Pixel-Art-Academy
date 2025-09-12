@@ -46,12 +46,12 @@ class LOI.Assets.Image extends LOI.Assets.Image
   getPreviewImage: ->
     extension = _.last @url.split '.'
 
-    if extension is 'webp'
+    if extension in ['webp', 'glb']
       canvas = new AM.ReadableCanvas 200, 100
       canvas.context.textAlign = 'center'
       canvas.context.textBaseline = 'middle'
       canvas.context.font = '15px sans-serif'
-      canvas.context.fillText "webp preview not available", 100, 50
+      canvas.context.fillText "#{extension} preview not available", 100, 50
       return canvas
     
     url = if _.startsWith @url, '/' then Meteor.absoluteUrl @url else @url

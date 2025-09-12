@@ -18,7 +18,7 @@ class AM.HDRImage extends AM.Component
     super arguments...
 
     # Load the image
-    loader = new THREE.RGBELoader()
+    loader = new THREE.HDRLoader()
     loader.setDataType THREE.FloatType
     loader.load @options.source, (texture) =>
       @texture texture

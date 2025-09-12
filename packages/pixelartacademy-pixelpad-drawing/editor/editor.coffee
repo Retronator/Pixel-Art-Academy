@@ -10,6 +10,7 @@ class PAA.PixelPad.Apps.Drawing.Editor extends LOI.Adventure.Thing
   @ReferenceDisplayTypes =
     Default: 'Default'
     SceneObject: 'SceneObject'
+    Model: 'Model'
   
   @styleClass: -> throw new AE.NotImplementedException "Editor must provide a style class name."
   

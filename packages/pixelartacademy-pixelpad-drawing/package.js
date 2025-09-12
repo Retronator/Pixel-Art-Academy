@@ -96,9 +96,17 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');
   api.addFile('editor/desktop/references/displaycomponent/reference..');
+
   api.addComponent('editor/desktop/references/displaycomponent/reference/default..');
+
   api.addComponent('editor/desktop/references/displaycomponent/reference/sceneobject..');
   api.addStyledFile('editor/desktop/references/displaycomponent/reference/sceneobject/cartridge..');
+
+  api.addComponent('editor/desktop/references/displaycomponent/reference/model..');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/cameramanager');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/scenemanager');
+  api.addFile('editor/desktop/references/displaycomponent/reference/model/renderermanager');
+  api.addClientFile('editor/desktop/references/displaycomponent/reference/model/loader-client');
 
   api.addComponent('editor/desktop/publications..');
   api.addFile('editor/desktop/publications/newpartinstruction');
