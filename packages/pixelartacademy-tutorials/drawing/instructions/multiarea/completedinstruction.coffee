@@ -6,7 +6,7 @@ PAA = PixelArtAcademy
 
 # A general instruction that is displayed after a delay if the asset is not completed.
 class PAA.Tutorials.Drawing.Instructions.Multiarea.CompletedInstruction extends PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction
-  @activeConditions: ->
+  activeConditions: ->
     return unless asset = @getActiveAsset()
     
     return unless @stepAreaActive()

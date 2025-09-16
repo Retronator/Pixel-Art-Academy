@@ -100,3 +100,6 @@ class AP.PolygonWithHoles
     outsetInternalBoundaries = (boundary.getInsetPolygonBoundary -distance for boundary in @internalBoundaries)
     
     new AP.PolygonWithHoles insetExternalBoundary, outsetInternalBoundaries
+
+  getSVGPathDString: ->
+    (boundary.getSVGPathDString() for boundary in @boundaries).join ' '

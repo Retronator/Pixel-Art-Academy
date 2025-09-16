@@ -88,7 +88,7 @@ class TutorialBitmap.PathStep.Path
     
     # Calculate positions of corner points.
     @cornersOfParts = []
-    pathData = svgPath.getPathData normalize: true
+    @pathData = svgPath.getPathData normalize: true
     
     currentCornersOfPart = null
     cornerMaxOffset = @pathStep.options.tolerance
@@ -111,7 +111,7 @@ class TutorialBitmap.PathStep.Path
       # sometimes leave ends unpainted, so we force them to have alpha here.
       @_imageData.data[pixelIndex * 4 + 3] = cornerAlpha
     
-    for segment in pathData
+    for segment in @pathData
       if segment.type is 'M'
         @cornersOfParts.push currentCornersOfPart if currentCornersOfPart
         currentCornersOfPart = []

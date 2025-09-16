@@ -49,6 +49,10 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     @options.tolerance ?= 0
     @options.hintStrokeWidth ?= 1
     
+    @_initializePaths()
+    
+  # We separate the initialization part so we can reuse it in child implementations.
+  _initializePaths: ->
     @paths = for svgPath in @options.svgPaths
       new @constructor.Path @tutorialBitmap, @, svgPath
       

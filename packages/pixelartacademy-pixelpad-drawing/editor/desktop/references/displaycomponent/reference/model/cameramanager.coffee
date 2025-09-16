@@ -3,10 +3,6 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-defaultAzimuthalAngle = AR.Degrees 0
-defaultPolarAngle = AR.Degrees 90
-defaultRadialDistance = 1
-
 class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Reference.Model.CameraManager
   @fullRotationDelta = 50 # display pixels
 
@@ -15,9 +11,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @camera = new AE.ReactiveWrapper @_camera
     
     @_properties = new ReactiveField
-      azimuthalAngle: defaultAzimuthalAngle
-      polarAngle: defaultPolarAngle
-      radialDistance: defaultRadialDistance
+      azimuthalAngle: 0
+      polarAngle: 0
+      radialDistance: 1
     
     # Update camera field of view from the reference.
     @reference.autorun =>
@@ -38,27 +34,19 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       return unless cameraData = @reference.data().displayOptions?.camera
       
       properties = Tracker.nonreactive => @_properties()
-      properties.azimuthalAngle = cameraData.azimuthalAngle ? defaultAzimuthalAngle
-      properties.polarAngle = cameraData.polarAngle ? defaultPolarAngle
-      properties.radialDistance = cameraData.radialDistance ? defaultRadialDistance
+      properties.azimuthalAngle = cameraData.azimuthalAngle ? 0
+      properties.polarAngle = cameraData.polarAngle ? 0
+      properties.radialDistance = cameraData.radialDistance ? 1
       @_properties properties
 
     # Update camera position when properties change.
     @reference.autorun =>
       properties = @_properties()
       
-      r = properties.radialDistance
-      φ = properties.azimuthalAngle
-      θ = properties.polarAngle
-      
-      @_camera.position.set(
-        r * Math.sin(θ) * Math.cos(φ),
-        r * Math.cos(θ),
-        r * Math.sin(θ) * Math.sin(φ)
-      )
+      @_camera.position.setFromSphericalCoords properties.radialDistance, properties.polarAngle, properties.azimuthalAngle
       
       # Update rotation to look at the center.
-      @_camera.rotation.set -Math.PI / 2 + θ, Math.PI / 2 - φ, 0, 'YXZ'
+      @_camera.rotation.set -Math.PI / 2 + properties.polarAngle, properties.azimuthalAngle, 0, 'YXZ'
 
       @camera.updated()
 
@@ -80,7 +68,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       # Only react to mouse coordinate changes.
       properties = @_properties()
       
-      properties.azimuthalAngle = startProperties.azimuthalAngle - dragDeltaX * Math.PI * 2
+      properties.azimuthalAngle = startProperties.azimuthalAngle + dragDeltaX * Math.PI * 2
       properties.polarAngle = startProperties.polarAngle + dragDeltaY * Math.PI * 2
 
       @_properties properties

@@ -15,7 +15,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     # Minimize reactivity.
     @imageUrl = new AE.LiveComputedField => @reference.data()?.image.url
-    @environmentUrl = new AE.LiveComputedField => @reference.data()?.displayOptions?.environment.url
+    @environmentUrl = new AE.LiveComputedField => @reference.data()?.displayOptions?.environment?.url
     @background = new AE.LiveComputedField => @reference.data()?.displayOptions?.background
     
     # Update scene based on the reference url.

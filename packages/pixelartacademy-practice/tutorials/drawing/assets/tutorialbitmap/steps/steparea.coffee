@@ -87,6 +87,7 @@ class TutorialBitmap.StepArea
 
   destroy: ->
     @_progressAutorun.stop()
+    step.destroy() for step in @steps()
     
   addStep: (step, stepIndex) ->
     steps = @steps()

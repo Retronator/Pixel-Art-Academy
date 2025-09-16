@@ -9,7 +9,7 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 # A general instruction that is displayed after a delay if the asset is not completed at a specific active step.
 class PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction extends PAA.Tutorials.Drawing.Instructions.Instruction
-  @referenceUrl: -> throw new AE.NotImplementedException "A multiarea instruction must specify to which reference it applies."
+  @referenceUrl: -> null # Override if this instruction is for a specific reference (otherwise it applies to all).
   
   constructor: ->
     super arguments...
@@ -30,7 +30,8 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction extends PAA.Tutor
         if operation instanceof LOI.Assets.VisualAsset.Operations.UpdateReference
           # Find which reference was changed and which step area it corresponds to.
           referenceUrl = bitmap.references[operation.index].image.url
-          @activeStepAreaIndex _.findIndex asset.stepAreas(), (stepArea) => stepArea.data().referenceUrl is referenceUrl
+          activeStepAreaIndex = _.findIndex asset.stepAreas(), (stepArea) => stepArea.data().referenceUrl is referenceUrl
+          @activeStepAreaIndex if activeStepAreaIndex > -1 then activeStepAreaIndex else null
           break
         
         if operation instanceof LOI.Assets.Bitmap.Operations.ChangePixels
@@ -58,10 +59,16 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction extends PAA.Tutor
     activeStepAreaIndex = @activeStepAreaIndex()
     return unless activeStepAreaIndex?
     
-    asset.stepAreas()[activeStepAreaIndex]?.data().referenceUrl is @constructor.referenceUrl()
+    return true unless specificReferenceUrl = @constructor.referenceUrl()
+    
+    asset.stepAreas()[activeStepAreaIndex]?.data().referenceUrl is specificReferenceUrl
     
   getStepArea: ->
     return unless asset = @getActiveAsset()
-    referenceUrl = @constructor.referenceUrl()
-    
-    _.find asset.stepAreas(), (stepArea) => stepArea.data().referenceUrl is referenceUrl
+  
+    if specificReferenceUrl = @constructor.referenceUrl()
+      _.find asset.stepAreas(), (stepArea) => stepArea.data().referenceUrl is specificReferenceUrl
+      
+    else
+      # Since this instruction is not specific to one reference, it applies to any step area, including the current one.
+      asset.stepAreas()[@activeStepAreaIndex()]

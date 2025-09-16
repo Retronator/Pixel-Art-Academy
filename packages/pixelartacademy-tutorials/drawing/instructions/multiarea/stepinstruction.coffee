@@ -20,12 +20,11 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction extends PAA.T
     return unless asset = @getActiveAsset()
     activeStepAreaIndex = @activeStepAreaIndex()
     return unless activeStepAreaIndex?
+    return unless stepArea = asset.stepAreas()[activeStepAreaIndex]
     
-    asset.stepAreas()[activeStepAreaIndex].activeStepIndex() + 1
+    stepArea.activeStepIndex() + 1
   
   activeConditions: ->
-    return unless asset = @getActiveAsset()
-    
     return unless @stepAreaActive()
     
     # Show with the correct step.

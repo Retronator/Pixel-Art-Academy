@@ -351,7 +351,12 @@ Package.onUse(function(api) {
   api.addFile('pyramid/polygonboundary');
   api.addFile('pyramid/polygonwithholes');
 
+  api.addFile('pyramid/polygonalchain');
+
   api.addFile('pyramid/beziercurve');
+
+  api.addFile('pyramid/triangulatedsurface..');
+  api.addFile('pyramid/triangulatedsurface/triangulatedsurface-getsilhouette');
 
   // Artificial Reality
 

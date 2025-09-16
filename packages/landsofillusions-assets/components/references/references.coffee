@@ -104,6 +104,10 @@ class LOI.Assets.Components.References extends LOI.Component
         assetOptions.upload.enabled
         assetOptions.storage.enabled
       ]
+      
+  getReferenceComponentForUrl: (url) ->
+    referenceComponents = @allChildComponentsOfType LOI.Assets.Components.References.Reference
+    _.find referenceComponents, (referenceComponent) => referenceComponent.data().image.url is url
 
   removeUploadingReference: (referenceId, imageId) ->
     # Wait until references have updated and we have the new one with created image ID.

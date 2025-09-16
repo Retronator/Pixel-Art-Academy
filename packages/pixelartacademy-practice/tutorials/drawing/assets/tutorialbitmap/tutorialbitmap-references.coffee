@@ -25,6 +25,15 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     
           LOI.Assets.Image.documents.insert url: imageUrl unless LOI.Assets.Image.documents.findOne url: imageUrl
           
+  getReferenceDataForUrl: (url) ->
+    return unless bitmapReferences = @bitmap()?.references
+    defaultReferencesData = @constructor.references()
+    
+    return unless data = _.find bitmapReferences, (reference) => reference.image.url is url
+    return unless defaultData = _.find defaultReferencesData, (reference) => reference.image.url is url
+    
+    _.defaultsDeep {}, data, defaultData
+    
   _initialize: ->
     super arguments...
     

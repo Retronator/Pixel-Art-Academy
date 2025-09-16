@@ -37,6 +37,8 @@ class TutorialBitmap.Step
   
   constructor: (@tutorialBitmap, @stepArea, @options = {}) ->
     @stepArea.addStep @, @options.stepIndex
+    
+  destroy: -> # Override to do any cleanup.
   
   # Override to specify when the step's conditions are satisfied.
   completed: ->
