@@ -71,10 +71,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     return unless event.which is 1
 
     # Handle input.
-    if @data().displayOptions?.input.rotate
+    if input = @data().displayOptions?.input
       if $(event.target).closest('.input-area').length
-        @cameraManager().startRotateCamera event
-        return
+        if input.rotate
+          @cameraManager().startRotateCamera event
+          return
+          
+        else if input.meshVisibility
+          @sceneManager().startAdjustMeshVisibility event
+          return
     
     super arguments...
     

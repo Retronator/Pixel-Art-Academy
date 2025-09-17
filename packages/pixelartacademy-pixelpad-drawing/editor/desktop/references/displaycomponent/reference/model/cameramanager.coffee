@@ -7,26 +7,37 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
   @fullRotationDelta = 50 # display pixels
 
   constructor: (@reference) ->
-    @_camera = new THREE.PerspectiveCamera 60, 1, 0.01, 100
-    @camera = new AE.ReactiveWrapper @_camera
+    @camera = new AE.ReactiveWrapper null
     
     @_properties = new ReactiveField
       azimuthalAngle: 0
       polarAngle: 0
       radialDistance: 1
     
-    # Update camera field of view from the reference.
+    # Update camera type and field of view from the reference.
     @reference.autorun =>
-      @_camera.fov = @reference.data().displayOptions?.camera?.fieldOfView or 60
-      @_camera.updateProjectionMatrix()
-      @camera.updated()
+      if fov = @reference.data().displayOptions?.camera?.fieldOfView
+        @_camera = new THREE.PerspectiveCamera fov, 1, 0.01, 100
+        
+      else if frustum = @reference.data().displayOptions?.camera?.frustum
+        left = frustum.left or -frustum.width / 2
+        right = frustum.right or frustum.width / 2
+        top = frustum.top or frustum.height / 2
+        bottom = frustum.bottom or -frustum.height / 2
+        @_camera = new THREE.OrthographicCamera left, right, top, bottom, 0.01, 100
+        
+      else
+        @_camera = null
+
+      @camera @_camera
     
     # Update camera aspect ratio when canvas size changes.
     @reference.autorun =>
+      return unless camera = @camera()
       return unless viewportSize = @reference.viewportSize()
       
-      @_camera.aspect = viewportSize.width / viewportSize.height
-      @_camera.updateProjectionMatrix()
+      camera.aspect = viewportSize.width / viewportSize.height
+      camera.updateProjectionMatrix()
       @camera.updated()
       
     # Update camera properties from the reference.
@@ -41,18 +52,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     # Update camera position when properties change.
     @reference.autorun =>
+      return unless camera = @camera()
       properties = @_properties()
       
-      @_camera.position.setFromSphericalCoords properties.radialDistance, properties.polarAngle, properties.azimuthalAngle
+      camera.position.setFromSphericalCoords properties.radialDistance, properties.polarAngle, properties.azimuthalAngle
       
       # Update rotation to look at the center.
-      @_camera.rotation.set -Math.PI / 2 + properties.polarAngle, properties.azimuthalAngle, 0, 'YXZ'
+      camera.rotation.set -Math.PI / 2 + properties.polarAngle, properties.azimuthalAngle, 0, 'YXZ'
 
       @camera.updated()
 
   startRotateCamera: (event) ->
-    # Dragging of blueprint needs to be handled in display coordinates since the canvas ones should technically stay
-    # the same (the whole point is for the same canvas coordinate to stay under the mouse as we move it around).
     startClientCoordinatesX = event.clientX
     startClientCoordinatesY = event.clientY
     
@@ -62,14 +72,14 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     $(document).on 'pointermove.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-model-cameramanager', (event) =>
       scale = @reference.display.scale()
       
-      dragDeltaX = (startClientCoordinatesX - event.clientX) / scale / @constructor.fullRotationDelta
-      dragDeltaY = (startClientCoordinatesY - event.clientY) / scale / @constructor.fullRotationDelta
+      dragDeltaX = (event.clientX - startClientCoordinatesX) / scale / @constructor.fullRotationDelta
+      dragDeltaY = (event.clientY - startClientCoordinatesY)  / scale / @constructor.fullRotationDelta
 
       # Only react to mouse coordinate changes.
       properties = @_properties()
       
-      properties.azimuthalAngle = startProperties.azimuthalAngle + dragDeltaX * Math.PI * 2
-      properties.polarAngle = startProperties.polarAngle + dragDeltaY * Math.PI * 2
+      properties.azimuthalAngle = startProperties.azimuthalAngle - dragDeltaX * Math.PI * 2
+      properties.polarAngle = startProperties.polarAngle - dragDeltaY * Math.PI * 2
 
       @_properties properties
 

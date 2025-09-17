@@ -170,10 +170,12 @@ class PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap extends PAA.Practice.
     @_referenceStepsAutorun?.stop()
 
   referenceDefaults: ->
+    return {} unless references = @constructor.references()
+    
     defaults = {}
     
     # Add reference data to defaults (make sure an object and not just an URL is given).
-    for reference in @constructor.references() when _.isObject reference
+    for reference in references when _.isObject reference
       defaults[reference.image.url] = reference
       
     defaults

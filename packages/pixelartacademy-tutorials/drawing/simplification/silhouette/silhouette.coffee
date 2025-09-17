@@ -48,6 +48,7 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
     new @constructor.SilhouetteStep @, stepArea,
       drawHintsAfterCompleted: false
       tolerance: 1
+      svgPaths: => # Dummy function to trigger reactive path generation.
   
   availableToolKeys: ->
     super(arguments...).concat [

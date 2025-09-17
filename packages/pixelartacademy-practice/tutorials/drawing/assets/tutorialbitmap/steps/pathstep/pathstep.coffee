@@ -49,11 +49,21 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     @options.tolerance ?= 0
     @options.hintStrokeWidth ?= 1
     
-    @_initializePaths()
+    @_pathsDependency = new Tracker.Dependency
+
+    if _.isFunction @options.svgPaths
+      @_initializePathsAutorun = Tracker.autorun =>
+        @_initializePaths @options.svgPaths()
+      
+    else
+      @_initializePaths @options.svgPaths
+      
+  destroy: ->
+    @_initializePathsAutorun?.stop()
     
   # We separate the initialization part so we can reuse it in child implementations.
-  _initializePaths: ->
-    @paths = for svgPath in @options.svgPaths
+  _initializePaths: (svgPaths) ->
+    @paths = for svgPath in svgPaths
       new @constructor.Path @tutorialBitmap, @, svgPath
       
     @_pixelsMap = new Uint8Array @stepArea.bounds.width * @stepArea.bounds.height
@@ -66,7 +76,14 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
         for path in @paths when path.hasPixel x, y
           @_pixelsMap[x + y * width]++
   
+    @_pathsDependency.changed()
+  
+  _pathsReady: ->
+    @_pathsDependency.depend()
+    @paths?.length
+    
   completed: ->
+    return unless @_pathsReady()
     return unless super arguments...
 
     # Check that all paths have their pixels covered. We check all paths instead of
@@ -79,6 +96,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     completed
   
   hasPixel: (absoluteX, absoluteY) ->
+    return unless @_pathsReady()
     return unless @options.hasPixelsWhenInactive or @isActiveStepInArea()
     
     relativeX = absoluteX - @stepArea.bounds.x
@@ -87,6 +105,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] > 0
     
   multiplePathsHavePixel: (relativeX, relativeY) ->
+    return unless @_pathsReady()
     @_pixelsMap[relativeX + relativeY * @stepArea.bounds.width] > 1
   
   solve: ->
@@ -122,9 +141,13 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
     
   drawUnderlyingHints: (context, renderOptions) ->
+    return unless @_pathsReady()
+
     @constructor.drawPathFillHints context, renderOptions, @stepArea, @paths
   
   drawOverlaidHints: (context, renderOptions) ->
+    return unless @_pathsReady()
+
     @constructor.drawPathStrokeHints context, renderOptions, @stepArea, @paths, @options.hintStrokeWidth
 
     @_prepareColorHelp context, renderOptions
