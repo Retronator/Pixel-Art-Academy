@@ -58,7 +58,15 @@
         right 33%
         top 33%
         bottom 33%
-        cursor move
+
+        &.horizontal
+          cursor ew-resize
+
+        &.vertical
+          cursor ns-resize
+
+        &.horizontal.vertical
+          cursor move
 
       canvas
         width 100% !important

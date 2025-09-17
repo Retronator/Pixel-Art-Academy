@@ -9,6 +9,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
   @_textureCache = {}
   
   @fullMeshVisibilityAdjustmentDelta = 50 # display pixels
+  @fullMeshMorphingAdjustmentDelta = 50 # display pixels
   
   constructor: (@reference) ->
     @_scene = new THREE.Scene()
@@ -20,6 +21,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     @_meshVisibilityProperties = new ReactiveField
       amountVisible: 1
       sizePreference: 0
+    
+    @_meshMorphingProperties = new ReactiveField {}
     
     @environmentTexture = new ReactiveField null
 
@@ -88,7 +91,31 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         orderedMesh.mesh.visible = meshIndex < visibleCount
       
       @scene.updated()
+      
+    # Update mesh morphing properties from the reference.
+    @reference.autorun =>
+      return unless meshMorphing = @reference.data().displayOptions?.meshMorphing
+      
+      properties = Tracker.nonreactive => @_meshMorphingProperties()
+      _.extend properties, meshMorphing
+      @_meshMorphingProperties properties
+    
+    # Update mesh morphing.
+    @reference.autorun =>
+      @_modelSceneDependency.depend()
+      meshMorphingProperties = @_meshMorphingProperties()
+      
+      @_scene.traverse (object) =>
+        return unless object.isMesh
         
+        for morphKey, morphInfluenceIndex of object.morphTargetDictionary when meshMorphingProperties[morphKey]?
+          object.morphTargetInfluences[morphInfluenceIndex] = meshMorphingProperties[morphKey]
+        
+        # Explicit return to avoid result collection.
+        return
+      
+      @scene.updated()
+      
     # Update environment.
     @reference.autorun =>
       return unless environmentUrl = @environment()?.url
@@ -167,3 +194,36 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       
       @reference.changeDisplayOptions
         meshVisibility: properties
+
+  startAdjustMeshMorphing: (event, morphAxes) ->
+    startClientCoordinatesX = event.clientX
+    startClientCoordinatesY = event.clientY
+    
+    startProperties = _.clone @_meshMorphingProperties()
+    startProperties[morphKey] ?= 0 for axis, morphKey of morphAxes
+    
+    # Wire movement of the mouse anywhere in the window.
+    $(document).on 'pointermove.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-model-cameramanager', (event) =>
+      scale = @reference.display.scale()
+      
+      # Only react to mouse coordinate changes.
+      properties = @_meshMorphingProperties()
+      
+      if morphAxes.horizontal
+        dragDeltaX = (event.clientX - startClientCoordinatesX) / scale / @constructor.fullMeshMorphingAdjustmentDelta
+        properties[morphAxes.horizontal] = _.clamp startProperties[morphAxes.horizontal] + dragDeltaX, 0, 1
+      
+      if morphAxes.vertical
+        dragDeltaY = (event.clientY - startClientCoordinatesY) / scale / @constructor.fullMeshMorphingAdjustmentDelta
+        properties[morphAxes.vertical] = _.clamp startProperties[morphAxes.vertical] + dragDeltaY, 0, 1
+      
+      @_meshMorphingProperties properties
+
+    # Wire end of dragging on pointer up anywhere in the window.
+    $(document).on 'pointerup.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-model-cameramanager', =>
+      $(document).off '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-references-displaycomponent-reference-model-cameramanager'
+      
+      properties = @_meshMorphingProperties()
+      
+      @reference.changeDisplayOptions
+        meshMorphing: properties

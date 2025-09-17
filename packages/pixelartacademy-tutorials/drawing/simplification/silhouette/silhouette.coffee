@@ -56,6 +56,9 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
     ]
   
   Asset = @
+
+  class @SilhouetteStep extends PAA.Tutorials.Drawing.Simplification.ModelStep
+    @style: -> 'opacity:1;fill:#000000;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:bevel'
   
   class @Adjust extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
     @id: -> "#{Asset.id()}.Adjust"

@@ -15,6 +15,7 @@ class PAA.Tutorials.Drawing.Simplification extends PAA.Practice.Tutorials.Drawin
     @IntentionalSimplification
     @Silhouette
     @DefiningFeatures
+    @StylizedProportions
   ]
   
   content: ->

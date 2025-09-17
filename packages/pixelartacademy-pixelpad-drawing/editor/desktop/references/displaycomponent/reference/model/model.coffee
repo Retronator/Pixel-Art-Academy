@@ -62,6 +62,16 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     
   hasInput: ->
     @data().displayOptions?.input
+    
+  horizontalInputAreaClass: ->
+    return unless input = @data().displayOptions?.input
+    return unless input.rotate or input.meshVisibility or input.meshMorphing.horizontal
+    'horizontal'
+    
+  verticalInputAreaClass: ->
+    return unless input = @data().displayOptions?.input
+    return unless input.rotate or input.meshVisibility or input.meshMorphing.vertical
+    'vertical'
 
   events: ->
     super(arguments...).concat
@@ -79,6 +89,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
           
         else if input.meshVisibility
           @sceneManager().startAdjustMeshVisibility event
+          return
+          
+        else if input.meshMorphing
+          @sceneManager().startAdjustMeshMorphing event, input.meshMorphing
           return
     
     super arguments...

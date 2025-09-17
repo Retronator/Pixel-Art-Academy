@@ -57,8 +57,19 @@ class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutori
     svgPaths = []
     
     for mesh in meshes
-      # Prepare triangulated surface.
-      mesh.triangulatedSurface ?= AP.TriangulatedSurface.fromBufferGeometry mesh.geometry
+      unless mesh.triangulatedSurface
+        # Prepare triangulated surface.
+        mesh.uniqueVertexIndices = []
+        mesh.triangulatedSurface = AP.TriangulatedSurface.fromBufferGeometry mesh.geometry,
+          uniqueVertexIndices: mesh.uniqueVertexIndices
+          
+      if mesh.morphTargetInfluences?.length
+        baseCoordinates = mesh.geometry.attributes.position.array
+        targets = for weight, morphTargetIndex in mesh.morphTargetInfluences
+          coordinates: mesh.geometry.morphAttributes.position[morphTargetIndex].array
+          weight: weight
+          
+        mesh.triangulatedSurface.morphVertices baseCoordinates, targets, mesh.uniqueVertexIndices
       
       # Get its silhouette for the current camera and object transform.
       polygonalChains = mesh.triangulatedSurface.getSilhouette mesh.matrixWorld, camera

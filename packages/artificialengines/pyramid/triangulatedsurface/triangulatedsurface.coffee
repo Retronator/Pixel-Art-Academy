@@ -1,13 +1,15 @@
 AP = Artificial.Pyramid
 
 class AP.TriangulatedSurface
-  @fromBufferGeometry: (geometry, vertexDistanceTolerance = 1e-6) ->
+  @fromBufferGeometry: (geometry, options = {}) ->
+    vertexDistanceTolerance = options.vertexDistanceTolerance ? 1e-6
+    uniqueVertexIndices = options.uniqueVertexIndices ? []
+    
     # Extract vertices from position attribute.
     vertices = []
     positions = geometry.attributes.position.array
     
     uniqueVertexMap = new Map()
-    uniqueVertexIndices = []
     
     for vertexIndex in [0...positions.length / 3]
       coordinateIndex = vertexIndex * 3
@@ -55,6 +57,25 @@ class AP.TriangulatedSurface
   
   constructor: (@vertices, @triangles) ->
   
+  morphVertices: (baseCoordinates, targets, uniqueVertexIndices) ->
+    for vertexIndex in [0...baseCoordinates.length / 3]
+      coordinateIndex = vertexIndex * 3
+      
+      targetVertexIndex = if uniqueVertexIndices then uniqueVertexIndices[vertexIndex] else vertexIndex
+      targetVertex = @vertices[targetVertexIndex]
+      
+      targetVertex.x = baseCoordinates[coordinateIndex]
+      targetVertex.y = baseCoordinates[coordinateIndex + 1]
+      targetVertex.z = baseCoordinates[coordinateIndex + 2]
+      
+      for target in targets
+        targetVertex.x += target.coordinates[coordinateIndex] * target.weight
+        targetVertex.y += target.coordinates[coordinateIndex + 1] * target.weight
+        targetVertex.z += target.coordinates[coordinateIndex + 2] * target.weight
+  
+    # Explicit return to prevent result collection.
+    return
+    
   getEdges: ->
     return @_edges if @_edges
     

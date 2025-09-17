@@ -183,13 +183,12 @@ Package.onUse(function(api) {
   api.addFile('drawing/simplification/symbols');
   api.addFile('drawing/simplification/symbolicandrealisticdrawing');
   api.addFile('drawing/simplification/intentionalsimplification');
+  api.addFile('drawing/simplification/definingfeatures');
+  api.addFile('drawing/simplification/stylizedproportions');
 
   api.addFile('drawing/simplification/silhouette..');
   api.addFile('drawing/simplification/silhouette/rotatestep');
-  api.addFile('drawing/simplification/silhouette/silhouettestep');
 
-  api.addFile('drawing/simplification/definingfeatures..');
-  api.addFile('drawing/simplification/definingfeatures/lineartstep');
 
   // Design
 
