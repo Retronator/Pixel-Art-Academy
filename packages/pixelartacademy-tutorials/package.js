@@ -185,6 +185,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/simplification/intentionalsimplification');
   api.addFile('drawing/simplification/definingfeatures');
   api.addFile('drawing/simplification/stylizedproportions');
+  api.addFile('drawing/simplification/basicshapes');
 
   api.addFile('drawing/simplification/silhouette..');
   api.addFile('drawing/simplification/silhouette/rotatestep');
