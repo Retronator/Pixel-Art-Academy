@@ -10,7 +10,7 @@ class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutori
   @meshSelector: (object) -> object instanceof THREE.Mesh
   
   # Override to define the style of the generated paths.
-  @style: -> 'opacity:1;fill:none;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:bevel'
+  @style: (fill) -> "opacity:1;fill:#{if fill then '#000000' else 'none'};stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:bevel"
 
   destroy: ->
     super arguments...
@@ -88,7 +88,7 @@ class PAA.Tutorials.Drawing.Simplification.ModelStep extends PAA.Practice.Tutori
       
       pathElement = document.createElementNS 'http://www.w3.org/2000/svg', 'path'
       pathElement.setAttribute 'd', svgPathDStrings.join ' '
-      pathElement.setAttribute 'style', @constructor.style()
+      pathElement.setAttribute 'style', @constructor.style @options.fill
       
       svgPaths.push pathElement
 

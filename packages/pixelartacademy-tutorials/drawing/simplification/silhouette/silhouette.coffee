@@ -70,13 +70,15 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
     # Create reference rotation step.
     new @constructor.RotateStep @, stepArea,
+      fill: true
       goalRotation: stepResources.information.goalRotation
       strokeStyle: TutorialBitmap.PathStep.StrokeStyles.None
       fillStyle: TutorialBitmap.PathStep.FillStyles.Solid
       svgPaths: => # Dummy function to trigger reactive path generation.
     
     # Create silhouette drawing step.
-    new @constructor.SilhouetteStep @, stepArea,
+    new PAA.Tutorials.Drawing.Simplification.ModelStep @, stepArea,
+      fill: true
       drawHintsAfterCompleted: false
       tolerance: 1
       strokeStyle: TutorialBitmap.PathStep.StrokeStyles.None
@@ -89,9 +91,6 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
   
   Asset = @
 
-  class @SilhouetteStep extends PAA.Tutorials.Drawing.Simplification.ModelStep
-    @style: -> 'opacity:1;fill:#000000;stroke:#000000;stroke-width:0.1;stroke-linecap:square;stroke-linejoin:bevel'
-  
   class @Adjust extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
     @id: -> "#{Asset.id()}.Adjust"
     @assetClass: -> Asset

@@ -8,7 +8,7 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 
 _currentAxis = new THREE.Vector3
 
-class PAA.Tutorials.Drawing.Simplification.Silhouette.RotateStep extends PAA.Tutorials.Drawing.Simplification.Silhouette.SilhouetteStep
+class PAA.Tutorials.Drawing.Simplification.Silhouette.RotateStep extends PAA.Tutorials.Drawing.Simplification.ModelStep
   constructor: ->
     super arguments...
     
