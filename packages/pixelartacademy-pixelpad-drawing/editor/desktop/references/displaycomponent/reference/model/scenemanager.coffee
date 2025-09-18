@@ -28,8 +28,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
     # Minimize reactivity.
     @imageUrl = new AE.LiveComputedField => @reference.data()?.image.url
-    @environment = new AE.LiveComputedField => @reference.data()?.displayOptions?.environment
-    @background = new AE.LiveComputedField => @reference.data()?.displayOptions?.background
+    @environment = new AE.LiveComputedField (=> @reference.data()?.displayOptions?.environment), EJSON.equals
+    @background = new AE.LiveComputedField (=> @reference.data()?.displayOptions?.background), EJSON.equals
+    @meshVisibility = new AE.LiveComputedField (=> @reference.data()?.displayOptions?.meshVisibility), EJSON.equals
     
     # Update scene based on the reference url.
     @reference.autorun =>
@@ -46,7 +47,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
         
     # Update mesh visibility properties from the reference.
     @reference.autorun =>
-      return unless meshVisibility = @reference.data().displayOptions?.meshVisibility
+      return unless meshVisibility = @meshVisibility()
       
       properties = Tracker.nonreactive => @_meshVisibilityProperties()
       properties.amountVisible = meshVisibility.amountVisible ? 1
@@ -55,6 +56,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       
     # Update mesh visibility.
     @reference.autorun =>
+      return unless meshVisibility = @meshVisibility()
+      
       @_modelSceneDependency.depend()
       meshVisibilityProperties = @_meshVisibilityProperties()
       
@@ -64,14 +67,17 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
       @_scene.traverse (object) =>
         return unless object.isMesh
         
-        #object.geometry.computeBoundingSphere()
         object.geometry.computeBoundingBox()
         object.geometry.boundingBox.getSize _size
         
+        sizeMeasurementAxes = meshVisibility.sizeMeasurementAxes or {x: true, y: true, z: true}
+
+        size = 1
+        size *= _size[coordinate] for coordinate, include of sizeMeasurementAxes when include
+        
         orderedMeshes.push
           mesh: object
-          #size: object.geometry.boundingSphere.radius
-          size: _size.x * _size.y * _size.z
+          size: size
           priorityOrder: orderedMeshes.length + 1
       
       orderedMeshes.sort (a, b) => b.size - a.size

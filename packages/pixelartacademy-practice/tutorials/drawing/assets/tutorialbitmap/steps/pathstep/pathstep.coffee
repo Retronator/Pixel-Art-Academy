@@ -11,6 +11,14 @@ TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
 class TutorialBitmap.PathStep extends TutorialBitmap.Step
   @debug = false
   
+  @StrokeStyles =
+    Solid: 'Solid'
+    None: 'None'
+    
+  @FillStyles =
+    Solid: 'Solid'
+    Dashed: 'Dashed'
+  
   @drawPathStrokeHints: (context, renderOptions, stepArea, paths, strokeWidth = 1) ->
     # Draw path to step area.
     context.save()
@@ -48,6 +56,8 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     @options.hasPixelsWhenInactive ?= true
     @options.tolerance ?= 0
     @options.hintStrokeWidth ?= 1
+    @options.strokeStyle ?= @constructor.StrokeStyles.Solid
+    @options.fillStyle ?= @constructor.FillStyles.Dashed
     
     @_pathsDependency = new Tracker.Dependency
 

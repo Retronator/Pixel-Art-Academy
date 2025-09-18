@@ -4,17 +4,21 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+
 _currentAxis = new THREE.Vector3
 
-class PAA.Tutorials.Drawing.Simplification.Silhouette.RotateStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.Step
+class PAA.Tutorials.Drawing.Simplification.Silhouette.RotateStep extends PAA.Tutorials.Drawing.Simplification.Silhouette.SilhouetteStep
   constructor: ->
     super arguments...
     
     @goalAxis = new THREE.Vector3().setFromSphericalCoords 1, @options.goalRotation.polarAngle, @options.goalRotation.azimuthalAngle
-    @goalCosineTolerance = Math.cos AR.Degrees 30
+    @goalCosineTolerance = Math.cos @options.goalRotation.angleTolerance
       
   completed: ->
-    return unless super arguments...
+    # Skip PathStep's completed implementation and go straight to the Step parent.
+    return unless TutorialBitmap.Step::completed.apply @, arguments...
+    
     return unless stepAreaData = @stepArea.data()
     return unless referenceData = @tutorialBitmap.getReferenceDataForUrl stepAreaData.referenceUrl
 
@@ -32,11 +36,11 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette.RotateStep extends PAA.Pra
     asset = @tutorialBitmap.getAssetData()
     reference = _.find asset.references, (reference) -> reference.url is stepAreaData.referenceUrl
 
-    # Replace the layer pixels in this bitmap.
+    # Update the camera rotation to the goal values.
     updateReferenceAction = new LOI.Assets.VisualAsset.Actions.UpdateReference @tutorialBitmap.id(), bitmap, reference.image._id,
       displayOptions:
         camera:
-          azimuthalAngle: 0
-          polarAngle: 0
+          azimuthalAngle: @options.goalRotation.azimuthalAngle
+          polarAngle: @options.goalRotation.polarAngle
         
     AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, updateReferenceAction, new Date

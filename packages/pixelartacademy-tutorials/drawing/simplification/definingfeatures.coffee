@@ -29,10 +29,41 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
       meshVisibility:
         amountVisible: 1
         sizePreference: 0.5
+        sizeMeasurementAxes:
+          x: true
+          z: true
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-house.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        meshVisibility: true
+      background:
+        color: "#92c1e3"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/symmetrical_garden_1k.hdr"
+      camera:
+        frustum:
+          width: 110
+          height: 110
+        zNear: 1
+        zFar: 1000
+        radialDistance: 100
+        polarAngle: AR.Degrees 90
+        azimuthalAngle: -AR.Degrees 90
+      meshVisibility:
+        amountVisible: 1
+        sizePreference: 0.5
+        sizeMeasurementAxes:
+          y: true
+          z: true
   ]
   
   @goalChoices: -> [
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-pizza.glb"
+  ,
+    referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-house.glb"
   ]
   
   @initialize()

@@ -343,6 +343,7 @@ class TutorialBitmap.PathStep.Path
       Math.min 1, renderOptions.camera.scale() / 4
 
   drawStrokeHint: (context, renderOptions, strokeWidth) ->
+    return unless @pathStep.options.strokeStyle is TutorialBitmap.PathStep.StrokeStyles.Solid
     return unless @strokeColor
     return unless @_hintVisible renderOptions
     
@@ -372,18 +373,34 @@ class TutorialBitmap.PathStep.Path
     halfPixelSize = pixelSize / 2
     context.translate halfPixelSize, halfPixelSize
     
-    context.clip @path
-
-    context.beginPath()
-    
-    spacing = Math.max 5 * pixelSize, 1 / 3
-    
-    for x in [visibleBoundsLeft - visibleBoundsHeight...visibleBoundsRight] by spacing
-      context.moveTo x, visibleBoundsTop
-      context.lineTo x + visibleBoundsHeight, visibleBoundsTop + visibleBoundsHeight
-    
-    context.lineWidth = pixelSize
     pathOpacity = @_getHintPathOpacity renderOptions
-    context.strokeStyle = "rgb(#{@fillColor.r * 255} #{@fillColor.g * 255} #{@fillColor.b * 255} / #{pathOpacity})"
-    context.stroke()
+    
+    switch @pathStep.options.fillStyle
+      when TutorialBitmap.PathStep.FillStyles.Solid
+        context.fillStyle = "rgb(#{@fillColor.r * 255} #{@fillColor.g * 255} #{@fillColor.b * 255})"
+        context.fill @path
+      
+      when TutorialBitmap.PathStep.FillStyles.Dashed
+        context.clip @path
+    
+        context.beginPath()
+        
+        spacing = Math.max 5 * pixelSize, 1 / 3
+        
+        # Round spacing to a simple fraction.
+        if spacing > 1
+          spacing = Math.round spacing
+          
+        else
+          spacing = 1 / Math.round 1 / spacing
+        
+        for x in [visibleBoundsLeft - visibleBoundsHeight...visibleBoundsRight] by spacing
+          context.moveTo x, visibleBoundsTop
+          context.lineTo x + visibleBoundsHeight, visibleBoundsTop + visibleBoundsHeight
+        
+        context.lineWidth = pixelSize
+        pathOpacity = @_getHintPathOpacity renderOptions
+        context.strokeStyle = "rgb(#{@fillColor.r * 255} #{@fillColor.g * 255} #{@fillColor.b * 255} / #{pathOpacity})"
+        context.stroke()
+      
     context.restore()

@@ -16,15 +16,19 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
     
     # Update camera type and field of view from the reference.
     @reference.autorun =>
-      if fov = @reference.data().displayOptions?.camera?.fieldOfView
-        @_camera = new THREE.PerspectiveCamera fov, 1, 0.01, 100
+      camera = @reference.data().displayOptions?.camera
+      zNear = camera?.zNear or 0.01
+      zFar = camera?.zFar or 100
+      
+      if fieldOfView = camera?.fieldOfView
+        @_camera = new THREE.PerspectiveCamera fieldOfView, 1, zNear, zFar
         
-      else if frustum = @reference.data().displayOptions?.camera?.frustum
+      else if frustum = camera?.frustum
         left = frustum.left or -frustum.width / 2
         right = frustum.right or frustum.width / 2
         top = frustum.top or frustum.height / 2
         bottom = frustum.bottom or -frustum.height / 2
-        @_camera = new THREE.OrthographicCamera left, right, top, bottom, 0.01, 100
+        @_camera = new THREE.OrthographicCamera left, right, top, bottom, zNear, zFar
         
       else
         @_camera = null

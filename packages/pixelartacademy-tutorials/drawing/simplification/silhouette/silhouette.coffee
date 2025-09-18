@@ -2,6 +2,8 @@ AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+TutorialBitmap = PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+
 class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Drawing.Simplification.AssetWithReferences
   @displayName: -> "Silhouette"
   
@@ -27,14 +29,40 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
         radialDistance: 0.25
         polarAngle: AR.Degrees 90
       exposureValue: -1.5
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/simplification/silhouette-house.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        rotate: true
+      background:
+        color: "#92c1e3"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/symmetrical_garden_1k.hdr"
+      camera:
+        frustum:
+          width: 150
+          height: 150
+        zNear: 1
+        zFar: 1000
+        radialDistance: 100
   ]
   
   @goalChoices: -> [
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/silhouette-scissors.glb"
     information:
       goalRotation:
-        azimuthalAngle: 0
-        polarAngle: 0
+        azimuthalAngle: AR.Degrees 0
+        polarAngle: AR.Degrees 0
+        angleTolerance: AR.Degrees 30
+  ,
+    referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/silhouette-house.glb"
+    information:
+      goalRotation:
+        azimuthalAngle: AR.Degrees 90
+        polarAngle: AR.Degrees 90
+        angleTolerance: AR.Degrees 5
   ]
   
   @initialize()
@@ -43,11 +71,15 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
     # Create reference rotation step.
     new @constructor.RotateStep @, stepArea,
       goalRotation: stepResources.information.goalRotation
+      strokeStyle: TutorialBitmap.PathStep.StrokeStyles.None
+      fillStyle: TutorialBitmap.PathStep.FillStyles.Solid
+      svgPaths: => # Dummy function to trigger reactive path generation.
     
     # Create silhouette drawing step.
     new @constructor.SilhouetteStep @, stepArea,
       drawHintsAfterCompleted: false
       tolerance: 1
+      strokeStyle: TutorialBitmap.PathStep.StrokeStyles.None
       svgPaths: => # Dummy function to trigger reactive path generation.
   
   availableToolKeys: ->

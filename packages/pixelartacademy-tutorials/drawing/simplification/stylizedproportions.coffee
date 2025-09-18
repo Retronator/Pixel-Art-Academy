@@ -43,6 +43,7 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
     new @constructor.SilhouetteStep @, stepArea,
       drawHintsAfterCompleted: false
       tolerance: 1
+      strokeStyle: TutorialBitmap.PathStep.StrokeStyles.None
       svgPaths: => # Dummy function to trigger reactive path generation.
   
   Asset = @
