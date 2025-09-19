@@ -8,7 +8,7 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
   @displayName: -> "Silhouette"
   
   @description: -> """
-    One way to simplify an object and achieve clarity is to draw its most recognizable shape.
+    One place to start simplification is to draw the object's most recognizable shape.
   """
 
   @fixedDimensions: -> width: 50, height: 50
@@ -47,6 +47,25 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
         zNear: 1
         zFar: 1000
         radialDistance: 100
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/simplification/silhouette-ship.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        rotate: true
+      background:
+        color: "#92c1e3"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/qwantani_noon_puresky_1k.hdr"
+      camera:
+        frustum:
+          width: 45
+          height: 45
+        zNear: 1
+        zFar: 1000
+        radialDistance: 100
+      exposureValue: -0.5
   ]
   
   @goalChoices: -> [
@@ -63,6 +82,13 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
         azimuthalAngle: AR.Degrees 90
         polarAngle: AR.Degrees 90
         angleTolerance: AR.Degrees 5
+  ,
+    referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/silhouette-ship.glb"
+    information:
+      goalRotation:
+        azimuthalAngle: AR.Degrees 90
+        polarAngle: AR.Degrees 90
+        angleTolerance: AR.Degrees 20
   ]
   
   @initialize()
@@ -120,7 +146,7 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
     @assetClass: -> Asset
     
     @message: -> """
-      With a clear silhouette, we don't even need to add details for the object to be recognizable.
+      With a clear silhouette, we don't even need to add inner details for the object to be recognizable.
     """
     
     @initialize()

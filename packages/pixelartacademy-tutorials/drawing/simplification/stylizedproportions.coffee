@@ -8,7 +8,7 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
   @displayName: -> "Stylized proportions"
   
   @description: -> """
-    You can change the sizes of the object's parts to achieve a more distinct or uniform look.
+    You can change the sizes of the object's parts to achieve more clarity.
   """
 
   @fixedDimensions: -> width: 50, height: 50

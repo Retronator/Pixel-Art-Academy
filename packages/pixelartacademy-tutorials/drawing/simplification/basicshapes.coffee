@@ -8,7 +8,7 @@ class PAA.Tutorials.Drawing.Simplification.BasicShapes extends PAA.Tutorials.Dra
   @displayName: -> "Basic shapes"
   
   @description: -> """
-    Simplify the shapes into their basic counterparts.
+    Simplify the shapes into their basic counterparts for a clean, easily readable, or stylized look.
   """
 
   @fixedDimensions: -> width: 50, height: 50
@@ -55,6 +55,26 @@ class PAA.Tutorials.Drawing.Simplification.BasicShapes extends PAA.Tutorials.Dra
         azimuthalAngle: -AR.Degrees 90
       meshMorphing:
         "Key 1": 0
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/simplification/basicshapes-sword.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        meshMorphing:
+          horizontal: "Key 1"
+      background:
+        color: "#808080"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/studio_small_03_1k.hdr"
+      camera:
+        frustum:
+          width: 1
+          height: 1
+        polarAngle: AR.Degrees 90
+      exposureValue: -2
+      meshMorphing:
+        "Key 1": 0
   ]
   
   @goalChoices: -> [
@@ -63,6 +83,8 @@ class PAA.Tutorials.Drawing.Simplification.BasicShapes extends PAA.Tutorials.Dra
       fill: true
   ,
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/basicshapes-house.glb"
+  ,
+    referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/basicshapes-sword.glb"
   ]
   
   @initialize()

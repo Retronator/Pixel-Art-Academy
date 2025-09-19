@@ -12,11 +12,11 @@ class PAA.Tutorials.Drawing.Simplification extends PAA.Practice.Tutorials.Drawin
   @assets: -> [
     @Symbols
     @SymbolicAndRealisticDrawing
-    @IntentionalSimplification
     @Silhouette
     @DefiningFeatures
     @StylizedProportions
     @BasicShapes
+    @IntentionalSimplification
   ]
   
   content: ->

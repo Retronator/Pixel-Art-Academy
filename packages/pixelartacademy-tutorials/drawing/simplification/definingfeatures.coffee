@@ -6,7 +6,7 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
   @displayName: -> "Defining features"
   
   @description: -> """
-    When a silhouette is not enough, choose the most essential, signature parts of an object to draw.
+    When simplifying, choose the most essential, signature parts of an object to draw.
   """
 
   @fixedDimensions: -> width: 50, height: 50

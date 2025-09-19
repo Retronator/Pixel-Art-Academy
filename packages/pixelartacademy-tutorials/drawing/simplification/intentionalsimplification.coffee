@@ -7,7 +7,7 @@ class PAA.Tutorials.Drawing.Simplification.IntentionalSimplification extends PAA
   @displayName: -> "Intentional simplification"
   
   @description: -> """
-    When we know how to draw realistically, we can control how and how far to simplify our drawings.
+    When we can draw realistically and apply simplification, we can control how and how far to stylize our drawings.
   """
 
   @fixedDimensions: -> width: 168, height: 88
