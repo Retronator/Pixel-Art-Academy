@@ -340,7 +340,7 @@ class TutorialBitmap.PathStep.Path
     if @closed and not @fillColor and @partsCount is 1
       holeFound = false
       
-      for x in [@pathBounds.left..@pathBounds.right] when not holeFound
+      for x in [@pathBounds.left..@pathBounds.right]
         # See if this column contains any unvisited pixels between
         # visited pixels (those are in the concavity for this goal path).
         firstEdgeReached = false
@@ -383,12 +383,15 @@ class TutorialBitmap.PathStep.Path
                   
               # We didn't reach the edge, so we must have been in a closed area.
               holeFound = true
+              break
               
             else unless firstEdgeReached
               firstEdgeReached = true
               
           else if firstEdgeReached and not concavityCoordinates
             concavityCoordinates = {x, y}
+            
+        break if holeFound
       
     @_completed = true
     @_completed

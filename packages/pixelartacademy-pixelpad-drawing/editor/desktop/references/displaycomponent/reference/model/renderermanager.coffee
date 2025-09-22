@@ -28,6 +28,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.References.DisplayComponent.Refer
 
   destroy: ->
     @renderer.dispose()
+    @renderer.forceContextLoss()
 
   startRendering: ->
     # Start the reactive redraw routine.

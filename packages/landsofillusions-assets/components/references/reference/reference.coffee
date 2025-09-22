@@ -193,7 +193,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     else
       reference[name] value
 
-  changeDisplayOptions: (value) ->
+  changeDisplayOptions: (value, appendToLastAction) ->
     return unless reference = @data()
     
     assetData = Tracker.nonreactive => @references.options.assetData()
@@ -204,7 +204,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
       @_updateAction.append action
     
     else
-      assetData.executeAction action
+      assetData.executeAction action, appendToLastAction
     
   reorderToTop: ->
     return unless reference = @data()
