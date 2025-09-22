@@ -284,7 +284,7 @@ class LM.Compositions.ElementsOfArt extends LM.Compositions.Composition
     
     tutorialEnding2Section.transitions.push new AMe.Transition tutorialEnding2Section,
       nextSection: drawingEnding1Section
-      condition: @_drawingCondition
+      condition: => @_drawingCondition()
     
     stopDrawingCondition = => not @_drawingCondition() or mustExitDrawingSection()
     

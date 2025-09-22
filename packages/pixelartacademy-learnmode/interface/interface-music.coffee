@@ -136,18 +136,27 @@ class LM.Interface extends LM.Interface
       activeThing = activeGroup.thing
       return unless course = activeThing?.content().course
       
-      if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
+      if course instanceof LM.Intro.Tutorial.Content.Course
+        # Intro
+        LM.Compositions.PixelArtTools
+        
+      else if course instanceof LM.PixelArtFundamentals.Fundamentals.Content.Course
+        # Pixel art fundamentals
         if activeThing instanceof PAA.Tutorials.Drawing.ElementsOfArt
+          LM.Compositions.ElementsOfArt
+        
+        else if activeThing instanceof PAA.Tutorials.Drawing.Simplification
           LM.Compositions.ElementsOfArt
         
         else if activeThing instanceof PAA.Tutorials.Drawing.PixelArtFundamentals
           LM.Compositions.PixelArtFundamentals
-          
-      else if course instanceof LM.Intro.Tutorial.Content.Course
-        LM.Compositions.PixelArtTools
         
       else if course instanceof LM.Design.Fundamentals.Content.Course
-        if activeThing instanceof PAA.Pico8.Cartridges.Invasion.Project
+        # Design fundamentals
+        if activeThing instanceof PAA.Tutorials.Drawing.Design
+          LM.Compositions.ElementsOfArt
+      
+        else if activeThing instanceof PAA.Pico8.Cartridges.Invasion.Project
           LM.Compositions.PixelArtFundamentals
 
     previouslyAvailableCompositionClasses = []
