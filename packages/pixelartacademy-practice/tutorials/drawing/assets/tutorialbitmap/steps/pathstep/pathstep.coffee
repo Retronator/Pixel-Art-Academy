@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
-AM = Artificial.Mummification
+AM = Artificial.Mirage
+AMu = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
@@ -73,8 +74,21 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
   # We separate the initialization part so we can reuse it in child implementations.
   _initializePaths: (svgPaths) ->
-    @paths = for svgPath in svgPaths
-      new @constructor.Path @tutorialBitmap, @, svgPath
+    @paths = []
+    
+    for svgPath in svgPaths
+      style = svgPath.getAttribute 'style'
+      fillColorString = style.match(/fill:(.*?);/)?[1]
+      
+      if not fillColorString or fillColorString is 'none'
+        # Further break down the SVG path into its separate parts.
+        svgSubpaths = AM.SVGHelper.splitPath svgPath
+        
+        for svgSubpath in svgSubpaths
+          @paths.push new @constructor.Path @tutorialBitmap, @, svgSubpath
+          
+      else
+        @paths.push new @constructor.Path @tutorialBitmap, @, svgPath
       
     @_pixelsMap = new Uint8Array @stepArea.bounds.width * @stepArea.bounds.height
     
@@ -148,7 +162,7 @@ class TutorialBitmap.PathStep extends TutorialBitmap.Step
     
     # Replace the layer pixels in this bitmap.
     strokeAction = new LOI.Assets.Bitmap.Actions.Stroke @tutorialBitmap.id(), bitmap, [0], pixels
-    AM.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
+    AMu.Document.Versioning.executeAction bitmap, bitmap.lastEditTime, strokeAction, new Date
     
   drawUnderlyingHints: (context, renderOptions) ->
     return unless @_pathsReady()

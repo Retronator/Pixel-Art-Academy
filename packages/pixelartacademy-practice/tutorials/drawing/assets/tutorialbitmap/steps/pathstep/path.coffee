@@ -123,7 +123,11 @@ class TutorialBitmap.PathStep.Path
         when 'C'
           addCorner segment.values[4], segment.values[5]
     
+        when 'Z'
+          @closed = true
+          
     @cornersOfParts.push currentCornersOfPart
+    @partsCount = @cornersOfParts.length
     
     @canvas.putFullImageData @_imageData
   
@@ -223,13 +227,35 @@ class TutorialBitmap.PathStep.Path
           return false unless pixel = bitmapLayer.getPixel absoluteX, absoluteY
           corner.foundCoveredPixelPositions = [corner] if pixelMatchesColorOrOtherPathCompletesIt pixel, corner.x, corner.y
         
-    # See which pixels have been covered in the allowed area.
-    pixelCoverage = new Uint8Array bounds.width * bounds.height * 2
+    # Prepare a data structure for marking pixels as covered (painted
+    # by the player) and visited (flood-filled to find connectivity).
+    pixelFlags = new Uint8Array bounds.width * bounds.height * 3
     
     coverPixel = (x, y) =>
       pixelIndex = x + y * bounds.width
-      pixelCoverage[pixelIndex * 2] = 1
+      pixelFlags[pixelIndex * 3] = 1
       
+    pixelCovered = (x, y) =>
+      pixelIndex = x + y * bounds.width
+      pixelFlags[pixelIndex * 3] > 0
+      
+    visitPixel = (x, y) =>
+      pixelIndex = x + y * bounds.width
+      pixelFlags[pixelIndex * 3 + 1] = 1
+    
+    pixelVisited = (x, y) =>
+      pixelIndex = x + y * bounds.width
+      pixelFlags[pixelIndex * 3 + 1]
+    
+    markPixelConcavity = (x, y) =>
+      pixelIndex = x + y * bounds.width
+      pixelFlags[pixelIndex * 3 + 2] = 1
+    
+    pixelConcave = (x, y) =>
+      pixelIndex = x + y * bounds.width
+      pixelFlags[pixelIndex * 3 + 2]
+    
+    # See which pixels have been covered in the allowed area.
     for x in [0...bounds.width]
       for y in [0...bounds.height] when pixelAlpha = @_getPixelAlpha x, y
         # Tolerance of 0 requires all required area to be drawn (at least in the vicinity for anti-aliased pixel).
@@ -266,15 +292,13 @@ class TutorialBitmap.PathStep.Path
       fringe = [{x: originX, y: originY}]
       
       # Mark that we've visited the origin.
-      originPixelIndex = originX + originY * bounds.width
-      pixelCoverage[originPixelIndex * 2 + 1] = 1
+      visitPixel originX, originY
       
       while fringe.length
         pixel = fringe.pop()
-        pixelIndex = pixel.x + pixel.y * bounds.width
         
         # Continue if this pixel wasn't covered.
-        continue if pixelCoverage[pixelIndex * 2] is 0
+        continue unless pixelCovered pixel.x, pixel.y
         
         # Visit all neighbors.
         for neighborDx in [-1..1]
@@ -283,10 +307,9 @@ class TutorialBitmap.PathStep.Path
   
             neighborX = pixel.x + neighborDx
             neighborY = pixel.y + neighborDy
-            neighborPixelIndex = neighborX + neighborY * bounds.width
             
             # Continue if we've already visited this pixel.
-            continue if pixelCoverage[neighborPixelIndex * 2 + 1] > 0
+            continue if pixelVisited neighborX, neighborY
             
             # Make sure there is a neighbor here.
             continue unless @hasPixel neighborX, neighborY
@@ -294,15 +317,11 @@ class TutorialBitmap.PathStep.Path
             fringe.push {x: neighborX, y: neighborY}
             
             # Mark that we've visited this pixel.
-            pixelCoverage[neighborPixelIndex * 2 + 1] = 1
+            visitPixel neighborX, neighborY
         
       # Prevent collection of results from the loops.
       return
       
-    pixelVisited = (x, y) =>
-      pixelIndex = x + y * bounds.width
-      pixelCoverage[pixelIndex * 2 + 1]
-    
     for cornersForPart in @cornersOfParts
       # Visit pixels from the initial corners.
       for position in cornersForPart[0].foundCoveredPixelPositions
@@ -317,6 +336,60 @@ class TutorialBitmap.PathStep.Path
             break
         return false unless found
     
+    # Simple, closed, un-filled lines require that if there is a hole in the concavity of the path, it is fully enclosed.
+    if @closed and not @fillColor and @partsCount is 1
+      holeFound = false
+      
+      for x in [@pathBounds.left..@pathBounds.right] when not holeFound
+        # See if this column contains any unvisited pixels between
+        # visited pixels (those are in the concavity for this goal path).
+        firstEdgeReached = false
+        concavityCoordinates = null
+        
+        for y in [@pathBounds.top..@pathBounds.bottom]
+          if pixelVisited x, y
+            if firstEdgeReached and concavityCoordinates
+              # We found a second edge, so it means the concavity coordinates are on the inside of the path.
+              # Flood-fill from this position and make sure we don't reach the edge of the bounds.
+              fringe = [concavityCoordinates]
+              
+              # Mark that the origin is in the concavity.
+              markPixelConcavity concavityCoordinates.x, concavityCoordinates.y
+              
+              while fringe.length
+                pixel = fringe.pop()
+                
+                # The path is not closed if we've reached the border.
+                return false if pixel.x < @pathBounds.left or pixel.x > @pathBounds.right or pixel.y < @pathBounds.top or pixel.y > @pathBounds.bottom
+                
+                # Continue if this pixel was drawn.
+                continue if bitmapLayer.getPixel bounds.x + pixel.x, bounds.y + pixel.y
+                
+                # Visit all 4 direct neighbors.
+                for neighborDx in [-1..1]
+                  for neighborDy in [-1..1]
+                    continue unless (neighborDx is 0) isnt (neighborDy is 0)
+          
+                    neighborX = pixel.x + neighborDx
+                    neighborY = pixel.y + neighborDy
+                    
+                    # Continue if we've already visited this pixel.
+                    continue if pixelConcave neighborX, neighborY
+                    
+                    fringe.push {x: neighborX, y: neighborY}
+                    
+                    # Mark that we've visited this pixel.
+                    markPixelConcavity neighborX, neighborY
+                  
+              # We didn't reach the edge, so we must have been in a closed area.
+              holeFound = true
+              
+            else unless firstEdgeReached
+              firstEdgeReached = true
+              
+          else if firstEdgeReached and not concavityCoordinates
+            concavityCoordinates = {x, y}
+      
     @_completed = true
     @_completed
   
@@ -356,6 +429,13 @@ class TutorialBitmap.PathStep.Path
     context.strokeStyle = "rgb(#{@strokeColor.r * 255} #{@strokeColor.g * 255} #{@strokeColor.b * 255} / #{pathOpacity})"
     context.translate halfPixelSize, halfPixelSize if strokeWidth % 2
     context.stroke @path
+    
+    # Draw a double outline for closed paths when debugging.
+    if TutorialBitmap.PathStep.debug and @closed
+      offset = 2 * strokeWidth * pixelSize
+      context.translate offset, offset
+      context.stroke @path
+    
     context.restore()
 
   drawFillHint: (context, renderOptions) ->

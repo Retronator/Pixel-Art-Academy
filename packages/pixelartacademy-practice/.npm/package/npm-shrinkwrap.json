@@ -17,9 +17,9 @@
       "integrity": "sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ=="
     },
     "path-data-polyfill": {
-      "version": "1.0.4",
-      "resolved": "https://registry.npmjs.org/path-data-polyfill/-/path-data-polyfill-1.0.4.tgz",
-      "integrity": "sha512-rrtYO5xbHz0GOrLIc0uRVhwcOlWNn9JtTwaFFdwYrcrOJXZlmfMWqXf3xjo2jlJIwEbOH+4+Aqf+1diNvXSAnQ=="
+      "version": "1.0.10",
+      "resolved": "https://registry.npmjs.org/path-data-polyfill/-/path-data-polyfill-1.0.10.tgz",
+      "integrity": "sha512-AnYgL9dMq6/ataXc+JeQs95dyunknJQbpoVp0kGlkc6ky8obJknByqYGRiFdc3b2ravdaZ9dvzzgfG3ae4vdEQ=="
     },
     "quill-delta": {
       "version": "4.2.2",

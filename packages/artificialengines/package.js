@@ -15,7 +15,8 @@ Npm.depends({
   "velocity-animate": "1.5.2",
   'showdown': '1.9.1',
   'lodash': '4.17.21',
-  'poly-decomp': '0.3.0'
+  'poly-decomp': '0.3.0',
+  'path-data-polyfill': '1.0.10'
 });
 
 Package.onUse(function(api) {
@@ -160,6 +161,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/shortcuthelper');
   api.addClientFile('mirage/velocity-client');
   api.addClientFile('mirage/window-client');
+  api.addClientFile('mirage/svghelper');
 
   api.addUnstyledComponent('mirage/datainput..');
 

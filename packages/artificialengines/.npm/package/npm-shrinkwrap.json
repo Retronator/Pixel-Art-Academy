@@ -82,9 +82,9 @@
       "integrity": "sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA=="
     },
     "detect-libc": {
-      "version": "2.0.4",
-      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.4.tgz",
-      "integrity": "sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA=="
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.0.tgz",
+      "integrity": "sha512-vEtk+OcP7VBRtQZ1EJ3bdgzSfBjgnEalLTp5zjJrS+2Z1w2KZly4SBdac/WDU3hhsNAZ9E8SC96ME4Ey8MZ7cg=="
     },
     "emoji-regex": {
       "version": "7.0.3",
@@ -246,6 +246,11 @@
       "resolved": "https://registry.npmjs.org/parchment/-/parchment-3.0.0.tgz",
       "integrity": "sha512-HUrJFQ/StvgmXRcQ1ftY6VEZUq3jA2t9ncFN4F84J/vN0/FPpQF+8FKXb3l6fLces6q0uOHj6NJn+2xvZnxO6A=="
     },
+    "path-data-polyfill": {
+      "version": "1.0.10",
+      "resolved": "https://registry.npmjs.org/path-data-polyfill/-/path-data-polyfill-1.0.10.tgz",
+      "integrity": "sha512-AnYgL9dMq6/ataXc+JeQs95dyunknJQbpoVp0kGlkc6ky8obJknByqYGRiFdc3b2ravdaZ9dvzzgfG3ae4vdEQ=="
+    },
     "path-exists": {
       "version": "3.0.0",
       "resolved": "https://registry.npmjs.org/path-exists/-/path-exists-3.0.0.tgz",
@@ -352,9 +357,9 @@
       "integrity": "sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ=="
     },
     "tar-fs": {
-      "version": "2.1.3",
-      "resolved": "https://registry.npmjs.org/tar-fs/-/tar-fs-2.1.3.tgz",
-      "integrity": "sha512-090nwYJDmlhwFwEW3QQl+vaNnxsO2yVsd45eTKRBzSzu+hlb1w2K9inVq5b0ngXuLVqQ4ApvsUHHnu/zQNkWAg=="
+      "version": "2.1.4",
+      "resolved": "https://registry.npmjs.org/tar-fs/-/tar-fs-2.1.4.tgz",
+      "integrity": "sha512-mDAjwmZdh7LTT6pNleZ05Yt65HC3E+NiQzl672vQG38jIrehtJk/J3mNwIg+vShQPcLF/LV7CMnDW6vjj6sfYQ=="
     },
     "tar-stream": {
       "version": "2.2.0",
