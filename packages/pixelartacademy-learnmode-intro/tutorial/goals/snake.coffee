@@ -8,6 +8,10 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
   @displayName: -> "Snake game"
 
   @chapter: -> LM.Intro.Tutorial
+  
+  reset: ->
+    PAA.Pico8.Cartridges.state 'Snake', null
+    super arguments...
 
   Goal = @
   
@@ -63,6 +67,10 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
         return unless bitmap.historyPosition
 
       true
+      
+    onActiveDisplayed: ->
+      # Reset high score again to force replay, in case the player continued to play the game after the first time.
+      PAA.Pico8.Cartridges.Snake.state 'highScore', 0
 
   class @PlayAgain extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.Intro.Tutorial.Goals.Snake.PlayAgain'
