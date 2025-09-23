@@ -2,7 +2,6 @@ AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Markup = PAA.Practice.Helpers.Drawing.Markup
 InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
 
 class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorials.Drawing.ElementsOfArt.Shape.Asset

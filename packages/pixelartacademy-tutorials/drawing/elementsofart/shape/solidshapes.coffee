@@ -1,6 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Markup = PAA.Practice.Helpers.Drawing.Markup
+InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
+
 class PAA.Tutorials.Drawing.ElementsOfArt.Shape.SolidShapes extends PAA.Tutorials.Drawing.ElementsOfArt.Shape.Asset
   @displayName: -> "Solid shapes"
   
@@ -64,6 +67,58 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.SolidShapes extends PAA.Tutorial
     """
     
     @initialize()
+    
+    constructor: ->
+      super arguments...
+      
+      @filledRectangleCompleted = new ReactiveField false
+      
+    onActivate: ->
+      super arguments...
+      
+      @filledRectangleCompleted false
+
+    markup: ->
+      return if @filledRectangleCompleted()
+      
+      arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
+      
+      # Show when we're not on the filled rectangle.
+      editor = @getEditor()
+      activeTool = editor.interface.activeTool()
+      rectangleTool = activeTool if activeTool instanceof LOI.Assets.SpriteEditor.Tools.Rectangle
+      
+      if rectangleTool?.data.get 'filled'
+        @filledRectangleCompleted true
+        return
+      
+      [
+        interface:
+          selector: ".fatamorgana-toolbox .tool.rectangle"
+          bounds:
+            x: 0
+            y: 20
+            width: 50
+            height: 50
+          markings: [
+            line: _.extend {}, arrowBase,
+              points: [
+                x: 25, y: 46
+              ,
+                x: 16, y: 26, bezierControlPoints: [
+                  x: 20, y: 41
+                ,
+                  x: 16, y: 36
+                ]
+              ]
+          ,
+            text: _.extend {}, textBase,
+              position:
+                x: 25, y: 48, origin: Markup.TextOriginPosition.TopCenter
+              value: if rectangleTool then "select again\nto fill" else "select\nrectangle"
+          ]
+      ]
   
   class @Combine extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     @id: -> "#{Asset.id()}.Combine"
