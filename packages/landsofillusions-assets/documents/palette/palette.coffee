@@ -7,9 +7,9 @@ class LOI.Assets.Palette extends AM.Document
   # ramps: array of
   #   name: name of the ramp
   #   shades: array of
-  #     r: red attribute (0.0-1.0)
-  #     g: green attribute (0.0-1.0)
-  #     b: blue attribute (0.0-1.0)
+  #     r: red attribute (0.0-1.0) in sRGB space
+  #     g: green attribute (0.0-1.0) in sRGB space
+  #     b: blue attribute (0.0-1.0) in sRGB space
   # category: the category under which the palette appears in the selector or null if not selectable
   # lospecSlug: the URL slug used on Lospec for this palette
   # lospecAuthor: the author of the palette as provided by Lospec
