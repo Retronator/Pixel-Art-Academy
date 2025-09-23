@@ -71,13 +71,13 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.Detailing.DetailingStep extends 
     bitmap = @tutorialBitmap.bitmap()
     palette = @tutorialBitmap.palette()
     
-    for x in [0...@stepArea.bounds.width] when @goalPixelsMap[x]
+    for x in [0...@stepArea.bounds.width]
       for y in [0...@stepArea.bounds.height]
         # Do we have a pixel here?
         absoluteX = x + @stepArea.bounds.x
         absoluteY = y + @stepArea.bounds.y
         pixel = bitmap.getPixelForLayerAtAbsoluteCoordinates 0, absoluteX, absoluteY
-        goalPixel = @goalPixelsMap[x][y]
+        goalPixel = @goalPixelsMap[x]?[y]
         anyPixel = @stepArea.hasGoalPixel absoluteX, absoluteY
         
         if pixel and (goalPixel is false or not anyPixel)
