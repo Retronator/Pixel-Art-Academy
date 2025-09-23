@@ -127,9 +127,26 @@ class TutorialBitmap.PathStep.Path
           @closed = true
           
     @cornersOfParts.push currentCornersOfPart
-    @partsCount = @cornersOfParts.length
-    
     @canvas.putFullImageData @_imageData
+
+    # Simple, closed, un-filled lines require that the interior is fully enclosed.
+    if @closed and not @fillColor and @cornersOfParts.length is 1
+      @interiorCanvas = new AM.ReadableCanvas @pathStep.stepArea.bounds.width, @pathStep.stepArea.bounds.height
+      @interiorCanvas.context.fill @path
+      @interiorCanvas.context.lineWidth = @pathStep.options.tolerance * 2
+      @interiorCanvas.context.globalCompositeOperation = 'destination-out'
+      @interiorCanvas.context.stroke @path
+      @interiorCanvas.context.globalCompositeOperation = 'source-over'
+      @_interiorImageData = @interiorCanvas.getFullImageData()
+      
+      # Only make interior pixels the ones that are not aliased (100% are in the interior).
+      for x in [0...@interiorCanvas.width]
+        for y in [0...@interiorCanvas.height]
+          alphaIndex = (x + y * @_interiorImageData.width) * 4 + 3
+          alpha = @_interiorImageData.data[alphaIndex]
+          @_interiorImageData.data[alphaIndex] = if alpha < 255 then 0 else 255
+      
+      @interiorCanvas.putFullImageData @_interiorImageData
   
   _getPixelAlpha: (x, y) ->
     pixelIndex = x + y * @_imageData.width
@@ -247,11 +264,11 @@ class TutorialBitmap.PathStep.Path
       pixelIndex = x + y * bounds.width
       pixelFlags[pixelIndex * 3 + 1]
     
-    markPixelConcavity = (x, y) =>
+    markPixelInterior = (x, y) =>
       pixelIndex = x + y * bounds.width
       pixelFlags[pixelIndex * 3 + 2] = 1
     
-    pixelConcave = (x, y) =>
+    pixelInInterior = (x, y) =>
       pixelIndex = x + y * bounds.width
       pixelFlags[pixelIndex * 3 + 2]
     
@@ -337,61 +354,41 @@ class TutorialBitmap.PathStep.Path
         return false unless found
     
     # Simple, closed, un-filled lines require that if there is a hole in the concavity of the path, it is fully enclosed.
-    if @closed and not @fillColor and @partsCount is 1
-      holeFound = false
-      
+    if @_interiorImageData
       for x in [@pathBounds.left..@pathBounds.right]
-        # See if this column contains any unvisited pixels between
-        # visited pixels (those are in the concavity for this goal path).
-        firstEdgeReached = false
-        concavityCoordinates = null
-        
         for y in [@pathBounds.top..@pathBounds.bottom]
-          if pixelVisited x, y
-            if firstEdgeReached and concavityCoordinates
-              # We found a second edge, so it means the concavity coordinates are on the inside of the path.
-              # Flood-fill from this position and make sure we don't reach the edge of the bounds.
-              fringe = [concavityCoordinates]
-              
-              # Mark that the origin is in the concavity.
-              markPixelConcavity concavityCoordinates.x, concavityCoordinates.y
-              
-              while fringe.length
-                pixel = fringe.pop()
-                
-                # The path is not closed if we've reached the border.
-                return false if pixel.x < @pathBounds.left or pixel.x > @pathBounds.right or pixel.y < @pathBounds.top or pixel.y > @pathBounds.bottom
-                
-                # Continue if this pixel was drawn.
-                continue if bitmapLayer.getPixel bounds.x + pixel.x, bounds.y + pixel.y
-                
-                # Visit all 4 direct neighbors.
-                for neighborDx in [-1..1]
-                  for neighborDy in [-1..1]
-                    continue unless (neighborDx is 0) isnt (neighborDy is 0)
+          interiorIndex = (x + y * @_interiorImageData.width) * 4 + 3
           
-                    neighborX = pixel.x + neighborDx
-                    neighborY = pixel.y + neighborDy
-                    
-                    # Continue if we've already visited this pixel.
-                    continue if pixelConcave neighborX, neighborY
-                    
-                    fringe.push {x: neighborX, y: neighborY}
-                    
-                    # Mark that we've visited this pixel.
-                    markPixelConcavity neighborX, neighborY
-                  
-              # We didn't reach the edge, so we must have been in a closed area.
-              holeFound = true
-              break
-              
-            else unless firstEdgeReached
-              firstEdgeReached = true
-              
-          else if firstEdgeReached and not concavityCoordinates
-            concavityCoordinates = {x, y}
+          if @_interiorImageData.data[interiorIndex] and not pixelInInterior x, y
+            # We found a pixel that should be in the interior but isn't marked as such yet.
+            # Flood-fill from this position and make sure we don't reach the edge of the bounds.
+            markPixelInterior x, y
+            fringe = [{x, y}]
             
-        break if holeFound
+            while fringe.length
+              pixel = fringe.pop()
+              
+              # The path is not closed if we've reached the border.
+              return false if pixel.x < @pathBounds.left or pixel.x > @pathBounds.right or pixel.y < @pathBounds.top or pixel.y > @pathBounds.bottom
+              
+              # Continue if this pixel was drawn.
+              continue if bitmapLayer.getPixel bounds.x + pixel.x, bounds.y + pixel.y
+              
+              # Visit all 4 direct neighbors.
+              for neighborDx in [-1..1]
+                for neighborDy in [-1..1]
+                  continue unless (neighborDx is 0) isnt (neighborDy is 0)
+        
+                  neighborX = pixel.x + neighborDx
+                  neighborY = pixel.y + neighborDy
+                  
+                  # Continue if we've already marked this pixel as interior.
+                  continue if pixelInInterior neighborX, neighborY
+                  
+                  fringe.push {x: neighborX, y: neighborY}
+                  
+                  # Mark that this pixel is in the interior.
+                  markPixelInterior neighborX, neighborY
       
     @_completed = true
     @_completed
