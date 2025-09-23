@@ -100,6 +100,11 @@ class PAA.Tutorials.Drawing.Simplification.BasicShapes extends PAA.Tutorials.Dra
       strokeStyle: if stepResources.information?.fill then TutorialBitmap.PathStep.StrokeStyles.None else TutorialBitmap.PathStep.StrokeStyles.Solid
       svgPaths: => # Dummy function to trigger reactive path generation.
   
+  availableToolKeys: ->
+    super(arguments...).concat [
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+    ]
+    
   Asset = @
   
   class @SilhouetteStep extends PAA.Tutorials.Drawing.Simplification.ModelStep

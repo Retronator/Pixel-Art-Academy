@@ -160,10 +160,9 @@ class PAA.Learning.Goal
           return goal if goal.id() is goalId
 
     # If the goal is not part of the storyline, it might be in the Study Guide.
-    studyGuideGlobal = _.find LOI.adventure.globals, (global) => global instanceof PAA.StudyGuide.Global
-
-    for studyGuideGoalId, goal of studyGuideGlobal.goals()
-      return goal if studyGuideGoalId is goalId
+    if studyGuideGlobal = _.find LOI.adventure.globals(), (global) => global instanceof PAA.StudyGuide.Global
+      for studyGuideGoalId, goal of studyGuideGlobal.goals()
+        return goal if studyGuideGoalId is goalId
 
     console.warn "Unknown goal requested.", goalId
     null

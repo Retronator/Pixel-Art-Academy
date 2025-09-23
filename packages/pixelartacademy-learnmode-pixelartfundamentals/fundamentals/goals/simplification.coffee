@@ -50,12 +50,13 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     
     @completedConditions: ->
       # TODO: Set to completed when the draw quickly challenge is completed.
+      false
     
     Task = @
 
   @tasks: -> [
     @Tutorial
-    @Challenge
+    # @Challenge
   ]
 
   @finalTasks: -> [

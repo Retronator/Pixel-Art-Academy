@@ -78,6 +78,11 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
       strokeStyle: if stepResources.information?.fill then TutorialBitmap.PathStep.StrokeStyles.None else TutorialBitmap.PathStep.StrokeStyles.Solid
       svgPaths: => # Dummy function to trigger reactive path generation.
   
+  availableToolKeys: ->
+    super(arguments...).concat [
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+    ]
+    
   Asset = @
   
   class @AdjustAmount extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
