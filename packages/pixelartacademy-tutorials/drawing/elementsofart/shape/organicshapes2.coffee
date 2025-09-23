@@ -54,7 +54,9 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.OrganicShapes2 extends PAA.Tutor
     ]
     
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
-    steps = super arguments...
+    super arguments...
+    
+    steps = stepArea.steps()
     
     # Mark construction and line art steps.
     for pathStep, index in steps
