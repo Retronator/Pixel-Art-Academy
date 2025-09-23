@@ -60,7 +60,21 @@ class PAA.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice
 
   availableToolKeys: ->
     # When we're in upload mode, don't show any tools in the editor.
-    if @uploadMode() then [] else null
+    return [] if @uploadMode()
+    
+    # Otherwise, show all basic tools.
+    [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+      PAA.Practice.Software.Tools.ToolKeys.Eraser
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+      PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+      PAA.Practice.Software.Tools.ToolKeys.Zoom
+      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      PAA.Practice.Software.Tools.ToolKeys.Undo
+      PAA.Practice.Software.Tools.ToolKeys.Redo
+      PAA.Practice.Software.Tools.ToolKeys.References
+    ]
 
   templateUrl: ->
     "/pixelartacademy/challenges/drawing/pixelartsoftware/#{@constructor.imageName()}-template.png"
