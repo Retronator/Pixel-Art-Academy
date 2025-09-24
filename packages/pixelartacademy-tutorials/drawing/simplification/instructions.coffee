@@ -27,7 +27,12 @@ class PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction extends PAA.T
     return if asset.completed()
     return unless asset.constructor.meshMorphingInstructions
     return unless @stepAreaActive()
-    @getMeshMorphing()
+    return unless @getMeshMorphing()
+    
+    # Show modification instructions while input is active on the reference.
+    return unless stepAreaData = @getStepArea()?.data()
+    return unless referenceData = asset.getReferenceDataForUrl stepAreaData.referenceUrl
+    referenceData.displayOptions?.input
   
 class @DrawLinesInstruction extends PAA.Tutorials.Drawing.Simplification.MeshMorphingInstruction
   @id: -> "PixelArtAcademy.Tutorials.Drawing.Simplification.DrawLinesInstruction"
