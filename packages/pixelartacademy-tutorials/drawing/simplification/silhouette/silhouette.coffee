@@ -139,6 +139,15 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
       Fill in the object's silhouette to represent the object.
     """
     
+    activeConditions: ->
+      return unless super arguments...
+      
+      # Show instruction while input is active on the reference.
+      return unless stepAreaData = @getStepArea()?.data()
+      return unless asset = @getActiveAsset()
+      return unless referenceData = asset.getReferenceDataForUrl stepAreaData.referenceUrl
+      referenceData.displayOptions?.input
+      
     @initialize()
   
   class @Complete extends PAA.Tutorials.Drawing.Instructions.Multiarea.CompletedInstruction

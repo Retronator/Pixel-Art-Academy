@@ -15,7 +15,8 @@ class AP.PolygonalChain
     startVertex = @vertices[0]
     pathString = "M #{startVertex.x} #{startVertex.y}"
     
-    for vertex, vertexIndex in @vertices[1..]
+    # Note: We can't iterate over @vertices[1..] because vertexIndex would be off by one.
+    for vertex, vertexIndex in @vertices when vertexIndex > 0
       if vertexIndex is @vertices.length - 1 and vertex.equals startVertex
         pathString += "Z"
         

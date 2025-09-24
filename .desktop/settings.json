@@ -1,6 +1,6 @@
 {
     "name": "Pixel Art Academy Learn Mode",
-    "version": "0.34.1",
+    "version": "0.34.2",
     "devTools": false,
     "devtron": true,
     "desktopHCP": true,
@@ -65,7 +65,7 @@
         "appBundleId": "com.retronator.pixelartacademy-learnmode",
         "icon": ".desktop/assets/icons/learnmode-a.ico",
         "_osx": {
-            "icon": ".desktop/assets/icons/learnmode-a.icns"
+            "icon": ".desktop/assets/icons/learnmode-a-squircle.icns"
         },
         "darwinDarkModeSupport": true,
         "appCategoryType": "public.app-category.education",
