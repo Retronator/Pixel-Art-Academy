@@ -58,12 +58,38 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
         sizeMeasurementAxes:
           y: true
           z: true
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-boombox.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        meshVisibility: true
+      background:
+        color: "#808080"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/studio_small_08_1k.hdr"
+      camera:
+        frustum:
+          width: 1
+          height: 1
+        polarAngle: AR.Degrees 90
+        radialDistance: 2
+      exposureValue: 0.5
+      meshVisibility:
+        amountVisible: 1
+        sizePreference: 0.5
+        sizeMeasurementAxes:
+          x: true
+          y: true
   ]
   
   @goalChoices: -> [
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-pizza.glb"
   ,
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-house.glb"
+  ,
+    referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/definingfeatures-boombox.glb"
   ]
   
   @initialize()
@@ -88,6 +114,25 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
       return unless referenceData = _.find bitmapReferences, (reference) => reference.image.url is stepAreaData.referenceUrl
       referenceData.displayOptions?.meshVisibility
   
+    getLiveMeshVisibility: ->
+      return unless stepAreaData = @getStepArea()?.data()
+      return unless drawingEditor = @getEditor()
+      return unless referencesView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.References
+      return unless referenceComponent = referencesView.displayComponent.getReferenceComponentForUrl stepAreaData.referenceUrl
+      return unless sceneManager = referenceComponent.sceneManager()
+      sceneManager.meshVisibilityProperties()
+  
+    activeConditions: ->
+      # Show modification instructions while input is active on the reference.
+      return unless @stepAreaActive()
+      return unless stepAreaData = @getStepArea()?.data()
+      return unless asset = @getActiveAsset()
+      return unless referenceData = asset.getReferenceDataForUrl stepAreaData.referenceUrl
+      referenceData.displayOptions?.input
+    
+    @resetCompletedConditions: ->
+      not @getActiveAsset()
+      
   class @AdjustAmount extends @Instruction
     @id: -> "#{Asset.id()}.AdjustAmount"
     @assetClass: -> Asset
@@ -96,11 +141,13 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
       Hover over the center of the reference image and drag left and right to change how many parts of the object are visible.
     """
     
+    @priority: -> 2
+    
     @initialize()
   
-    activeConditions: ->
+    completedConditions: ->
       return unless @stepAreaActive()
-      not @getMeshVisibility()
+      @getMeshVisibility()
   
   class @AdjustSizePreference extends @Instruction
     @id: -> "#{Asset.id()}.AdjustSizePreference"
@@ -114,10 +161,10 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
     
     @initialize()
     
-    activeConditions: ->
+    completedConditions: ->
       return unless @stepAreaActive()
-      return unless meshVisibility = @getMeshVisibility()
-      0.4 < meshVisibility.sizePreference < 0.6
+      return unless meshVisibility = @getLiveMeshVisibility()
+      meshVisibility.sizePreference in [0, 1]
     
   class @Draw extends @Instruction
     @id: -> "#{Asset.id()}.Draw"
@@ -128,7 +175,3 @@ class PAA.Tutorials.Drawing.Simplification.DefiningFeatures extends PAA.Tutorial
     """
     
     @initialize()
-    
-    activeConditions: ->
-      return unless @stepAreaActive()
-      @getMeshVisibility()

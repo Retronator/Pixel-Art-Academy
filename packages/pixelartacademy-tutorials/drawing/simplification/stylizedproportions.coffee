@@ -55,6 +55,26 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
         azimuthalAngle: -AR.Degrees 90
       meshMorphing:
         "Key 1": 0
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/simplification/stylizedproportions-clock.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        meshMorphing:
+          horizontal: "Key 1"
+      background:
+        color: "#808080"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/studio_small_03_1k.hdr"
+      camera:
+        frustum:
+          width: 0.18
+          height: 0.18
+        polarAngle: AR.Degrees 90
+      exposureValue: -0.5
+      meshMorphing:
+        "Key 1": 0
   ]
   
   @goalChoices: -> [
@@ -63,6 +83,8 @@ class PAA.Tutorials.Drawing.Simplification.StylizedProportions extends PAA.Tutor
       fill: true
   ,
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/stylizedproportions-house.glb"
+  ,
+    referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/stylizedproportions-clock.glb"
   ]
   
   @meshMorphingInstructions = true
