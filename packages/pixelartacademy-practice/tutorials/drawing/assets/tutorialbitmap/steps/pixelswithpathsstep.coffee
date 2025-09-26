@@ -11,6 +11,8 @@ class TutorialBitmap.PixelsWithPathsStep extends TutorialBitmap.PixelsStep
     
     @options.drawHintsForGoalPixels = false
     @options.hintStrokeWidth ?= 1
+    @options.strokeStyle ?= TutorialBitmap.PathStep.StrokeStyles.Solid
+    @options.fillStyle ?= TutorialBitmap.PathStep.FillStyles.Dashed
     
     @paths = for svgPath in @options.svgPaths
       new TutorialBitmap.PathStep.Path @tutorialBitmap, @, svgPath
