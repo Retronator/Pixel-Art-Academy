@@ -416,7 +416,7 @@ class TutorialBitmap.PathStep.Path
       Math.min 1, renderOptions.camera.scale() / 4
 
   drawStrokeHint: (context, renderOptions, strokeWidth) ->
-    return unless @pathStep.options.strokeStyle is TutorialBitmap.PathStep.StrokeStyles.Solid
+    return if @pathStep.options.strokeStyle is TutorialBitmap.PathStep.StrokeStyles.None
     return unless @strokeColor
     return unless @_hintVisible renderOptions
     
