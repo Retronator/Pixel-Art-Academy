@@ -40,8 +40,9 @@ class TutorialBitmap.PixelsStep extends TutorialBitmap.Step
         # See if we require a pixel here.
         continue unless goalPixel = @goalPixelsMap[x]?[y]
 
-        # We do require a pixel here so check if we have it in the bitmap.
-        return false unless pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
+        # We do require a pixel here so get it from the bitmap.
+        # Note: We can't return false if the pixel is not found as the required color might be the background color.
+        pixel = bitmapLayer.getPixel @stepArea.bounds.x + x, @stepArea.bounds.y + y
         
         # Compare the RGB values the pixel resolves to.
         return false unless LOI.Assets.ColorHelper.areAssetColorsEqual pixel, goalPixel, palette, backgroundColor
