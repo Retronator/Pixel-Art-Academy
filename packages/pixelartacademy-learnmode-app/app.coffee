@@ -30,6 +30,7 @@ class LM.App extends Artificial.Base.App
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
     new LOI.Assets
+    new PAA
     new PAA.Pixeltosh
     new PAA.Practice
     new PAA.Publication

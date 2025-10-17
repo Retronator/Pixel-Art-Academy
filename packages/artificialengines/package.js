@@ -16,7 +16,8 @@ Npm.depends({
   'showdown': '1.9.1',
   'lodash': '4.17.21',
   'poly-decomp': '0.3.0',
-  'path-data-polyfill': '1.0.10'
+  'path-data-polyfill': '1.0.10',
+  'onnxruntime-web': '1.16.3'
 });
 
 Package.onUse(function(api) {
@@ -93,6 +94,7 @@ Package.onUse(function(api) {
   api.addFile('melody..');
   api.addFile('everything..');
   api.addFile('workforce..');
+  api.addFile('mind..');
 
   // Artificial Everywhere
 
