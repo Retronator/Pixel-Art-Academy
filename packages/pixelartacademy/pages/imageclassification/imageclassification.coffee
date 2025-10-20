@@ -10,7 +10,7 @@ class PAA.Pages.ImageClassification extends AM.Component
     @brushSize = new ReactiveField 5
     @isDrawing = new ReactiveField false
 
-    @classifiers = [new @constructor.Classifier.QuickDrawMobileNet, new @constructor.Classifier.Sketchy]
+    @classifiers = [new @constructor.Classifier.QuickDraw, new @constructor.Classifier.Sketchy]
     
     for classifier in @classifiers
       await classifier.createInferenceSession()

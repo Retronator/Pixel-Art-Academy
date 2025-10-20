@@ -6,12 +6,20 @@ ONNX = require 'onnxruntime-web'
 
 class PAA.Pages.ImageClassification.Classifier
   @modelPath: -> AE.NotImplementedException "Classifier must specify the path to the model file."
-  @inputSize: -> AE.NotImplementedException "Classifier must specify how big the input is."
-  @targetSize: -> AE.NotImplementedException "Classifier must specify how big the image should be resized."
+  @inputSize: -> 64
+  @targetSize: -> 60
+  @tensorShape: -> [1, 64, 64, 1]
   @labelsPath: -> null # Override to specify the document to load the labels from.
-  @labels: -> null # Override to directly specify the labels.
+  @labels: -> ["airplane","alarm clock","ant","apple","axe","banana","bat","bear","bee","bench","bicycle","bread",
+    "butterfly","camel","candle","cannon","car","castle","cat","chair","church","couch","cow","crab","cup","dog",
+    "dolphin","door","duck","elephant","eyeglasses","fan","fish","flower","frog","giraffe","guitar","hamburger",
+    "hammer","harp","hat","hedgehog","helicopter","horse","hot air balloon","hourglass","kangaroo","knife","lion",
+    "lobster","mouse","mushroom","owl","parrot","pear","penguin","piano","pickup truck","pig","pineapple","pizza",
+    "rabbit","raccoon","rhinoceros","rifle","sailboat","saw","saxophone","scissors","scorpion","sea turtle","shark",
+    "sheep","shoe","skyscraper","snail","snake","spider","spoon","squirrel","strawberry","swan","sword","table",
+    "teapot","teddy bear","tiger","tree","trumpet","umbrella","violin","windmill","wine bottle","zebra"]
   @performSoftmax: -> false # Override if softmax should be performed on the output.
-  @valueScale: -> 1 / 255
+  @valueScale: -> 1
 
   constructor: ->
     @inferenceSession = new ReactiveField null
@@ -37,20 +45,23 @@ class PAA.Pages.ImageClassification.Classifier
     @inferenceSession inferenceSession
     
   loadLabels: ->
+    if labelsPath = @constructor.labelsPath()
+      try
+        response = await fetch Meteor.absoluteUrl(labelsPath)
+        data = await response.json()
+        @labels data
+      
+      catch error
+        console.error "Error loading labels from #{labelsPath}", error
+        @labels []
+        
+      return
+    
     if labels = @constructor.labels()
       @labels labels
       return
       
-    labelsPath = @constructor.labelsPath()
-    
-    try
-      response = await fetch Meteor.absoluteUrl(labelsPath)
-      data = await response.json()
-      @labels data
-    
-    catch error
-      console.error "Error loading labels from #{labelsPath}", error
-      @labels []
+    @labels []
   
   ready: ->
     @inferenceSession() and @labels()
@@ -151,53 +162,7 @@ class PAA.Pages.ImageClassification.Classifier
     _.sortBy labelProbabilities, (labelProbability) => -labelProbability.probability
     
   class @Sketchy extends @
-    @modelPath: -> '/pixelartacademy/imageclassification/sketchy_cnn.onnx'
-    @inputSize: -> 64
-    @targetSize: -> 50
-    @tensorShape: -> [1, 64, 64, 1]
-    @labels: -> ['airplane', 'alarm_clock', 'ant', 'ape', 'apple', 'armor', 'axe', 'banana', 'bat', 'bear', 'bee',
-      'beetle', 'bell', 'bench', 'bicycle', 'blimp', 'bread', 'butterfly', 'cabin', 'camel', 'candle', 'cannon',
-      'car', 'castle', 'cat', 'chair', 'chicken', 'church', 'couch', 'cow', 'crab', 'crocodilian', 'cup',
-      'deer', 'dog', 'dolphin', 'door', 'duck', 'elephant', 'eyeglasses', 'fan', 'fish', 'flower', 'frog', 'geyser',
-      'giraffe', 'guitar', 'hamburger', 'hammer', 'harp', 'hat', 'hedgehog', 'helicopter', 'hermit_crab', 'horse',
-      'hot-air_balloon', 'hotdog', 'hourglass', 'jack-o-lantern', 'jellyfish', 'kangaroo', 'knife', 'lion', 'lizard',
-      'lobster', 'motorcycle', 'mouse', 'mushroom', 'owl', 'parrot', 'pear', 'penguin', 'piano', 'pickup_truck', 'pig',
-      'pineapple', 'pistol', 'pizza', 'pretzel', 'rabbit', 'raccoon', 'racket', 'ray', 'rhinoceros', 'rifle', 'rocket',
-      'sailboat', 'saw', 'saxophone', 'scissors', 'scorpion', 'sea_turtle', 'seagull', 'seal', 'shark', 'sheep', 'shoe',
-      'skyscraper', 'snail', 'snake', 'songbird', 'spider', 'spoon', 'squirrel', 'starfish', 'strawberry', 'swan',
-      'sword', 'table', 'tank', 'teapot', 'teddy_bear', 'tiger', 'tree', 'trumpet', 'turtle', 'umbrella', 'violin',
-      'volcano', 'wading_bird', 'wheelchair', 'windmill', 'window', 'wine_bottle', 'zebra']
+    @modelPath: -> '/pixelartacademy/imageclassification/sketchy.onnx'
 
   class @QuickDraw extends @
-    @modelPath: -> '/pixelartacademy/imageclassification/quickdraw_cnn.onnx'
-    @inputSize: -> 28
-    @targetSize: -> 28
-    @tensorShape: -> [1, 28, 28, 1]
-    @labels: -> [
-      "bowtie","windmill","tree","river","ice cream","eye","book","sun","star",
-      "airplane","butterfly","clock","car","fish","face","umbrella","cat","bicycle",
-      "pizza","house","cake","bucket","crown","light bulb","cell phone","t-shirt"
-    ]
-  
-  class @QuickDrawXenova extends @
-    @modelPath: -> '/pixelartacademy/imageclassification/quickdraw_xenova.onnx'
-    @inputSize: -> 28
-    @targetSize: -> 28
-    @tensorShape: -> [1, 1, 28, 28]
-    @labelsPath: -> '/pixelartacademy/imageclassification/quickdraw_xenova_labels.json'
-    @performSoftmax: -> true
-  
-  class @QuickDrawMobileNet extends @
-    @modelPath: -> '/pixelartacademy/imageclassification/quickdraw_mobilenet.onnx'
-    @inputSize: -> 64
-    @targetSize: -> 60
-    @tensorShape: -> [1, 64, 64, 1]
-    @valueScale: -> 1
-    @labels: -> ["airplane","alarm clock","ant","apple","axe","banana","bat","bear","bee","bench","bicycle","bread",
-      "butterfly","camel","candle","cannon","car","castle","cat","chair","church","couch","cow","crab","cup","dog",
-      "dolphin","door","duck","elephant","eyeglasses","fan","fish","flower","frog","giraffe","guitar","hamburger",
-      "hammer","harp","hat","hedgehog","helicopter","horse","hot air balloon","hourglass","kangaroo","knife","lion",
-      "lobster","mouse","mushroom","owl","parrot","pear","penguin","piano","pickup truck","pig","pineapple","pizza",
-      "rabbit","raccoon","rhinoceros","rifle","sailboat","saw","saxophone","scissors","scorpion","sea turtle","shark",
-      "sheep","shoe","skyscraper","snail","snake","spider","spoon","squirrel","strawberry","swan","sword","table",
-      "teapot","teddy bear","tiger","tree","trumpet","umbrella","violin","windmill","wine bottle","zebra"]
+    @modelPath: -> '/pixelartacademy/imageclassification/quickdraw.onnx'
