@@ -10,5 +10,4 @@ class LM.Design.Fundamentals.Apps extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Apps.Pixeltosh if LM.Design.invasionEnabled()
   ]

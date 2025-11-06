@@ -37,6 +37,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pixeltosh');
   api.use('retronator:pixelartacademy-pixeltosh-pinball');
   api.use('retronator:pixelartacademy-pixeltosh-writer');
+  api.use('retronator:pixelartacademy-pixeltosh-drawquickly');
 
   api.use('retronator:pixelartacademy-pixelpad');
   api.use('retronator:pixelartacademy-pixelpad-pico8');

@@ -8,6 +8,8 @@ class LM.Design.Fundamentals.Content.DrawingTutorials extends LM.Content
   @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
     @ShapeLanguage
+    @ColorSchemes
+    @Composition
   ]
   @initialize()
 
@@ -27,4 +29,14 @@ class LM.Design.Fundamentals.Content.DrawingTutorials extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.DrawingTutorials.ShapeLanguage'
     @tutorialClass = PAA.Tutorials.Drawing.Design.ShapeLanguage
 
+    @initialize()
+    
+  class @ColorSchemes extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.DrawingTutorials.ColorSchemes'
+    @displayName: -> "Color schemes"
+    @initialize()
+  
+  class @Composition extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.Design.Fundamentals.Content.DrawingTutorials.Composition'
+    @displayName: -> "Composition"
     @initialize()

@@ -10,5 +10,5 @@ class LM.PixelArtFundamentals.Fundamentals.Apps extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Apps.Pixeltosh if LM.PixelArtFundamentals.pinballEnabled()
+    PAA.PixelPad.Apps.Pixeltosh if LM.PixelArtFundamentals.pixeltoshEnabled()
   ]

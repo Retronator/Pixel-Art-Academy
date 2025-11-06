@@ -11,9 +11,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
   @contents: -> [
     @PixelArtLineArt
     @DrawQuickly
-    @AntiAliasing
-    @DitheredValues
-    @DitheredColors
   ]
   
   @tags: -> [LM.Content.Tags.WIP]
@@ -122,22 +119,30 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
       
       status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
       
-  class @DrawQuickly extends LM.Content.FutureContent
+  class @DrawQuickly extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DrawQuickly'
     @displayName: -> "Draw quickly"
+    
+    @unlockInstructions: -> "Complete the Simplification tutorial to unlock the Draw Quickly game on the Pixeltosh."
+    
     @initialize()
     
-  class @AntiAliasing extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.AntiAliasing'
-    @displayName: -> "Anti-aliasing"
-    @initialize()
-  
-  class @DitheredValues extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DitheredValues'
-    @displayName: -> "Dithered values"
-    @initialize()
-  
-  class @DitheredColors extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.DitheredColors'
-    @displayName: -> "Dithered colors"
-    @initialize()
+    @criterion: -> PAA.Practice.PixelArtEvaluation.Criteria.PixelPerfectLines
+
+    status: -> if LM.PixelArtFundamentals.drawQuicklyEnabled() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+    
+    constructor: ->
+      super arguments...
+      
+      @progress = new LM.Content.Progress.ManualProgress
+        content: @
+        units: "modes"
+        
+        completed: => @progress.completedRatio() is 1
+        
+        unitsCount: => 2
+        requiredUnitsCount: => 2
+
+        completedUnitsCount: =>
+          # TODO: Return if you've tried symbolic and realistic drawing modes.
+          0

@@ -21,11 +21,17 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
   
   @initialize()
   
+  @pixeltoshEnabled: ->
+    PAA.Tutorials.Drawing.ElementsOfArt.Line.completed()
+  
   @pinballEnabled: ->
     # Allow cheating.
     return true if LM.PixelArtFundamentals.state 'pinballUnlocked'
     
-    LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.getAdventureInstance()?.completed()
+    LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.completed()
+    
+  @drawQuicklyEnabled: ->
+    PAA.Tutorials.Drawing.Simplification.completed()
 
 if Meteor.isServer
   LOI.initializePackage

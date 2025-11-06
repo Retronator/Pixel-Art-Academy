@@ -25,7 +25,7 @@ class PAA.Pixeltosh.Programs.Pinball extends PAA.Pixeltosh.Program
   @fullName: -> "Pinball Creation Kit"
   @description: ->
     "
-      A do-it-yourself Pinball game.
+      A do-it-yourself pinball game.
     "
   
   @slug: -> 'pinball'
