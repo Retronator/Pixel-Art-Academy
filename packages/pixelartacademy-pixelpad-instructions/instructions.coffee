@@ -23,9 +23,6 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
   onCreated: ->
     super arguments...
   
-    @app = @ancestorComponentOfType Artificial.Base.App
-    @app.addComponent @
-    
     @mouseHovering = new ReactiveField false
     
     @contentWidth = new ReactiveField 0
@@ -68,6 +65,9 @@ class PAA.PixelPad.Systems.Instructions extends PAA.PixelPad.System
     @interfaceMarkings = new ComputedField =>
       return unless markup = @targetDisplayedInstruction()?.markup?()
       marking.interface for marking in markup when marking.interface
+    
+    @app = @ancestorComponentOfType Artificial.Base.App
+    @app.addComponent @
   
   onRendered: ->
     super arguments...

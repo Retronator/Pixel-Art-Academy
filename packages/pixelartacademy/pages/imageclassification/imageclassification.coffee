@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AP = Artificial.Pyramid
 PAA = PixelArtAcademy
 
 class PAA.Pages.ImageClassification extends AM.Component
@@ -58,7 +59,7 @@ class PAA.Pages.ImageClassification extends AM.Component
     @isDrawing true
     @_previousX = null
     @_previousY = null
-    @_rawStroke = []
+    @_rawStroke = new AP.PolygonalChain []
     @_smoothStroke = []
     @_strokes.push @_smoothStroke
     
@@ -72,7 +73,7 @@ class PAA.Pages.ImageClassification extends AM.Component
     @_previousX ?= x
     @_previousY ?= y
     
-    @_rawStroke.push {x, y}
+    @_rawStroke.vertices.push new THREE.Vector2 x, y
     
     size = @brushSize()
     
@@ -91,7 +92,7 @@ class PAA.Pages.ImageClassification extends AM.Component
       return unless classifier.ready()
       
     @_throttledClassify ?= _.throttle =>
-      @_smoothStroke.splice 0, @_smoothStroke.length, @_douglasPeucker(@_rawStroke, 1)...
+      @_smoothStroke.splice 0, @_smoothStroke.length, @_rawStroke.getDecimatedPolygonalChain(1).vertices...
       
       promises = for classifier in @classifiers
         do (classifier) =>
@@ -117,49 +118,7 @@ class PAA.Pages.ImageClassification extends AM.Component
     
   _endDraw: ->
     @isDrawing false
-    @_stroke = null
-    
-  _perpendicularDistance: (p, a, b) ->
-    ax = a.x; ay = a.y
-    bx = b.x; bY = b.y
-    px = p.x; py = p.y
-  
-    dx = bx - ax
-    dy = bY - ay
-  
-    if dx is 0 and dy is 0
-      return Math.hypot(px - ax, py - ay)
-  
-    t = ((px - ax) * dx + (py - ay) * dy) / (dx*dx + dy*dy)
-    if t < 0 then t = 0 else if t > 1 then t = 1
-  
-    cx = ax + t * dx
-    cy = ay + t * dy
-  
-    Math.hypot(px - cx, py - cy)
-  
-  _douglasPeucker: (points, epsilon) ->
-    return [] unless points?.length
-    return points.slice() if points.length <= 2
-  
-    start  = points[0]
-    finish = points[points.length - 1]
-  
-    maxDist = -1
-    index   = -1
-    for i in [1...points.length-1]
-      d = @_perpendicularDistance(points[i], start, finish)
-      if d > maxDist
-        maxDist = d
-        index   = i
-  
-    if maxDist > epsilon
-      left  = @_douglasPeucker(points[0..index], epsilon)
-      right = @_douglasPeucker(points[index..-1], epsilon)
-      left[0...-1].concat right
-    else
-      [start, finish]
-      
+
   onClickBrushSizeButton: (event) ->
     size = parseInt event.currentTarget.getAttribute 'data-size'
     @brushSize size
@@ -168,5 +127,4 @@ class PAA.Pages.ImageClassification extends AM.Component
     @context.clearRect 0, 0, @canvas.width, @canvas.height
     
     @_strokes = []
-    @_stroke = null
     @$('.results-area').html ""

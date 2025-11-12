@@ -393,10 +393,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
         
         cheatMore = false
         
-        while uncompletedAssetData = _.find assetsData, (assetData) -> not assetData.completed
+        while uncompletedAssetData = _.find assetsData, (assetData) => not assetData.completed and _.find assets, (asset) => asset.id() is assetData.id
           console.log "Completing", uncompletedAssetData.id
           
-          uncompletedAsset = _.find assets, (asset) -> asset.id() is uncompletedAssetData.id
+          uncompletedAsset = _.find assets, (asset) => asset.id() is uncompletedAssetData.id
           uncompletedAsset.solve()
           uncompletedAssetData.completed = true
           

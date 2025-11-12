@@ -13,5 +13,8 @@ Template.registerHelper 'toLower', (string) ->
 Template.registerHelper 'toUpper', (string) ->
   _.toUpper string if string
 
+Template.registerHelper 'upperFirst', (string) ->
+  _.upperFirst string if string
+
 Template.registerHelper 'deburr', (string) ->
   _.deburr string if string

@@ -10,6 +10,11 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'bresenham-zingl': '0.2.0',
+  'onnxruntime-web': '1.16.3'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:fatamorgana');
   api.use('retronator:pixelartacademy');
@@ -19,6 +24,10 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('drawquickly');
+  api.addFile('classifier');
+  api.addFile('symbolicdrawing');
+  api.addFile('symbolicdrawing-things');
+  api.addFile('timer');
 
   api.addFile('interface..');
 
@@ -26,6 +35,20 @@ Package.onUse(function(api) {
   api.addFile('interface/actions/about');
 
   api.addComponent('interface/about..');
+
   api.addComponent('interface/game..');
   api.addComponent('interface/game/splash..');
+  api.addComponent('interface/game/difficulty..');
+  api.addComponent('interface/game/speed..');
+  api.addComponent('interface/game/instructions..');
+
+  api.addStyledFile('interface/game/draw..');
+  api.addComponent('interface/game/draw/symbolicdrawing..');
+  api.addComponent('interface/game/draw/symbolicdrawing/things..');
+  api.addComponent('interface/game/draw/canvas..');
+  api.addComponent('interface/game/draw/timer..');
+
+  api.addStyledFile('interface/game/results..');
+  api.addComponent('interface/game/results/symbolicdrawing..');
+  api.addComponent('interface/game/results/drawing..');
 });

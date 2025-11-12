@@ -29,6 +29,7 @@ Package.onUse(function(api) {
   api.addComponent('os/interface/titlebar..');
   api.addComponent('os/interface/window..');
   api.addStyle('os/interface/rectanglearea..');
+  api.addStyle('os/interface/button..');
 
   api.addFile('os/interface/actions..');
   api.addFile('os/interface/actions/action');

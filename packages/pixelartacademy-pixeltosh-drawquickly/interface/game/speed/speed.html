@@ -1,0 +1,15 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Speed">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-speed">
+    <div class="title">Choose Speed</div>
+    <div class="button-area">
+      {{#each difficultyOptions}}
+        <div class="difficulty">
+          <div class="time">
+            <span class="minutes">{{minutes}}</span>:<span class="seconds">{{seconds}}</span>
+          </div>
+          <button class="difficulty-button pixelartacademy-pixeltosh-os-interface-button">{{upperFirst this}}</button>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

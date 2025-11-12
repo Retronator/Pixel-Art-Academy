@@ -4,6 +4,9 @@ PAA = PixelArtAcademy
 
 ONNX = require 'onnxruntime-web'
 
+_scaleMatrix = new THREE.Matrix3
+_scaledPoint = new THREE.Vector2
+
 class PAA.Pages.ImageClassification.Classifier
   @modelPath: -> AE.NotImplementedException "Classifier must specify the path to the model file."
   @inputSize: -> 64
@@ -30,6 +33,10 @@ class PAA.Pages.ImageClassification.Classifier
     inputSize = @constructor.inputSize()
     
     @inputCanvas = new AM.ReadableCanvas inputSize, inputSize
+    @inputCanvas.context.lineWidth = 2
+    @inputCanvas.context.strokeStyle = '#000000'
+    @inputCanvas.context.lineCap = 'round'
+    @inputCanvas.context.lineJoin = 'round'
   
   createInferenceSession: ->
     ONNX.env.wasm.wasmPaths = Meteor.absoluteUrl '/artificial/mind/onnx/'
@@ -95,8 +102,8 @@ class PAA.Pages.ImageClassification.Classifier
     
     @inputCanvas.context.clearRect 0, 0, inputSize, inputSize
     
-    sourceWidth = maxX - minX
-    sourceHeight = maxY - minY
+    sourceWidth = (maxX - minX) or 1
+    sourceHeight = (maxY - minY) or 1
     
     targetWidth = if sourceWidth > sourceHeight then targetSize else targetSize * sourceWidth / sourceHeight
     targetHeight = targetWidth / sourceWidth * sourceHeight
@@ -109,14 +116,9 @@ class PAA.Pages.ImageClassification.Classifier
     scaleX = targetWidth / sourceWidth
     scaleY = targetHeight / sourceHeight
     
-    @inputCanvas.context.lineWidth = 2
-    @inputCanvas.context.strokeStyle = '#000000'
-    @inputCanvas.context.lineCap = 'round'
-    @inputCanvas.context.lineJoin = 'round'
-    
-    scalePoint = (point) =>
-      x: (point.x - minX) * scaleX + originX
-      y: (point.y - minY) * scaleY + originY
+    _scaleMatrix.makeTranslation -minX, -minY
+    _scaleMatrix.scale scaleX, scaleY
+    _scaleMatrix.translate originX, originY
     
     for stroke in strokes
       continue unless stroke.length
@@ -124,13 +126,13 @@ class PAA.Pages.ImageClassification.Classifier
       @inputCanvas.context.beginPath()
       
       # Move to first point
-      firstPoint = scalePoint stroke[0]
-      @inputCanvas.context.moveTo firstPoint.x, firstPoint.y
+      _scaledPoint.copy(stroke[0]).applyMatrix3 _scaleMatrix
+      @inputCanvas.context.moveTo _scaledPoint.x, _scaledPoint.y
       
       # Draw lines to remaining points
       for point in stroke
-        scaledPoint = scalePoint point
-        @inputCanvas.context.lineTo scaledPoint.x, scaledPoint.y
+        _scaledPoint.copy(point).applyMatrix3 _scaleMatrix
+        @inputCanvas.context.lineTo _scaledPoint.x, _scaledPoint.y
       
       @inputCanvas.context.stroke()
     

@@ -1,0 +1,57 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-programs-drawquickly-interface-game-draw-symbolicdrawing-things
+  .things
+    display flex
+    flex-wrap wrap
+    list-style none
+    position absolute
+    left 140rem
+    top 50rem
+    width 180rem
+    padding 0
+    margin 0
+    chicago-mini()
+    line-height 21rem
+    text-transform uppercase
+
+    .thing
+      position relative
+      width 90rem
+      height 20rem
+
+      &::after
+        content ''
+        position absolute
+        left -3rem
+        right -3rem
+        top 0
+        bottom 0
+        background image('/pixelartacademy/pixeltosh/os/dither-white.png') 0 0 / 2rem 2rem
+        visibility hidden
+        transition visibility 0s 0.5s
+
+      &.drawn
+        &::after
+          visibility visible
+
+        .text
+          display inline-block
+          position relative
+
+          &::after
+            width calc(100% + 6rem)
+
+      .text
+        display inline-block
+        position relative
+
+        &::after
+          content ''
+          position absolute
+          left -3rem
+          width 0
+          top 10rem
+          height 1rem
+          background-color black
+          transition width 0.3s linear
