@@ -19,4 +19,4 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines extends PAA.Tutor
 
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals
-    chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLines
+    chapter.getContent PAA.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Lines
