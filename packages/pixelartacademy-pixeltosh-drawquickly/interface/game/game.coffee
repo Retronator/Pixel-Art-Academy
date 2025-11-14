@@ -11,8 +11,10 @@ class DrawQuickly.Interface.Game extends LOI.View
   
   @ScreenTypes:
     Splash: 'Splash'
+    Mode: 'Mode'
     Difficulty: 'Difficulty'
     Speed: 'Speed'
+    Thing: 'Thing'
     Instructions: 'Instructions'
     Draw: 'Draw'
     Results: 'Results'
@@ -25,11 +27,17 @@ class DrawQuickly.Interface.Game extends LOI.View
     
     @currentScreen = new ReactiveField @constructor.ScreenTypes.Splash
     
+  chooseMode: ->
+    @currentScreen @constructor.ScreenTypes.Mode
+    
   chooseDifficulty: ->
     @currentScreen @constructor.ScreenTypes.Difficulty
   
   chooseSpeed: ->
     @currentScreen @constructor.ScreenTypes.Speed
+  
+  chooseThing: ->
+    @currentScreen @constructor.ScreenTypes.Thing
 
   showInstructions: ->
     @currentScreen @constructor.ScreenTypes.Instructions
@@ -42,3 +50,26 @@ class DrawQuickly.Interface.Game extends LOI.View
   
   backToSplash: ->
     @currentScreen @constructor.ScreenTypes.Splash
+
+  showBackButton: ->
+    @currentScreen() in [
+      @constructor.ScreenTypes.Mode
+      @constructor.ScreenTypes.Difficulty
+      @constructor.ScreenTypes.Speed
+      @constructor.ScreenTypes.Thing
+      @constructor.ScreenTypes.Instructions
+    ]
+    
+  events: ->
+    super(arguments...).concat
+      'click .back-button': @onClickBackButton
+  
+  onClickBackButton: (event) ->
+    switch @currentScreen()
+      when @constructor.ScreenTypes.Mode then @backToSplash()
+      when @constructor.ScreenTypes.Difficulty, @constructor.ScreenTypes.Thing then @chooseMode()
+      when @constructor.ScreenTypes.Speed then @chooseDifficulty()
+      when @constructor.ScreenTypes.Instructions
+        switch @drawQuickly.gameMode
+          when DrawQuickly.GameModes.SymbolicDrawing then @chooseSpeed()
+          when DrawQuickly.GameModes.RealisticDrawing then @chooseThing()

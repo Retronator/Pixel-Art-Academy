@@ -18,9 +18,9 @@ class DrawQuickly.Interface.Game.Speed extends AM.Component
   
   difficultyOptions: ->
     [
-      'easy'
+      'slow'
       'medium'
-      'hard'
+      'fast'
     ]
     
   time: ->

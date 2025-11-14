@@ -15,4 +15,4 @@ class DrawQuickly.Interface.Game.Results.SymbolicDrawing extends DrawQuickly.Int
     @symbolicDrawing = @game.drawQuickly.symbolicDrawing
   
   drawings: ->
-    {label, drawing} for label, drawing of @symbolicDrawing.drawings
+    {label, strokes} for label, strokes of @symbolicDrawing.drawings

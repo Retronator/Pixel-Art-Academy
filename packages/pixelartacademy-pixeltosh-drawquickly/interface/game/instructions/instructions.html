@@ -5,9 +5,14 @@
       {{#if $is drawQuickly.gameMode 'SymbolicDrawing'}}
         <h1>Symbolic Drawing</h1>
         <p>You will be given a list of 10 things.</p>
-        <p>Draw as many of them as possible before the time runs out.</p>
         <p>You can draw them in any order you want.</p>
-        <p>Good luck!</p>
+        <p>Draw as many of them as possible before the time runs out!</p>
+      {{/if}}
+      {{#if $is drawQuickly.gameMode 'RealisticDrawing'}}
+        <h1>Realistic Drawing</h1>
+        <p>You will be given 5 references to draw.</p>
+        <p>The time for drawing will get shorter each round.</p>
+        <p>Simplify the subject to get done in time!</p>
       {{/if}}
       <p class="button-area"><button class="start-button pixelartacademy-pixeltosh-os-interface-button">Start</button></p>
     </div>

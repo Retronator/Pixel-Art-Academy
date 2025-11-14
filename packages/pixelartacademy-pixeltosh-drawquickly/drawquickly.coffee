@@ -5,6 +5,13 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Pixeltosh.Programs.DrawQuickly extends PAA.Pixeltosh.Program
+  # realisticDrawing: results of realistic drawing mode
+  #   things: an object of drawn things
+  #     {thing}: name of the thing
+  #       durations: array of results for the 5 durations
+  #         drawingId: the ID of the drawing made for this duration
+  #         score: total classifier scores
+  #           realistic, symbolic
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.DrawQuickly'
   @register @id()
 
@@ -22,12 +29,14 @@ class PAA.Pixeltosh.Programs.DrawQuickly extends PAA.Pixeltosh.Program
   
   @GameModes:
     SymbolicDrawing: 'SymbolicDrawing'
+    RealisticDrawing: 'RealisticDrawing'
   
   load: ->
     super arguments...
     
-    @gameMode = new ReactiveField @constructor.GameModes.SymbolicDrawing
+    @gameMode = @constructor.GameModes.RealisticDrawing
     @symbolicDrawing = new @constructor.SymbolicDrawing @
+    @realisticDrawing = new @constructor.RealisticDrawing @
     
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
     
@@ -46,8 +55,12 @@ class PAA.Pixeltosh.Programs.DrawQuickly extends PAA.Pixeltosh.Program
     
     @app.removeComponent @
     @symbolicDrawing.destroy()
+    @realisticDrawing.destroy()
+    
+  setGameMode: (@gameMode) ->
   
   menuItems: -> @constructor.Interface.createMenuItems()
 
   update: (gameTime) ->
     @symbolicDrawing.update gameTime
+    @realisticDrawing.update gameTime

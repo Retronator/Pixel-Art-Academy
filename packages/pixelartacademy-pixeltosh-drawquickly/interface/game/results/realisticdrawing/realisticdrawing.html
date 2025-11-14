@@ -1,0 +1,16 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Results.RealisticDrawing">
+  <div class="pixelartacademy-pixeltosh-programs-resultsquickly-interface-game-results pixelartacademy-pixeltosh-programs-resultsquickly-interface-game-results-realisticdrawing">
+    <div class="title">{{realisticDrawing.thingToDraw}}</div>
+    <ul class="drawings">
+      {{#each durations}}
+        <li class="drawing">
+          {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Results.Drawing drawingInfo}}
+        </li>
+      {{/each}}
+    </ul>
+    <div class="buttons-area">
+      <button class="restart-button pixelartacademy-pixeltosh-os-interface-button">Restart</button>
+      <button class="done-button pixelartacademy-pixeltosh-os-interface-button">Done</button>
+    </div>
+  </div>
+</template>

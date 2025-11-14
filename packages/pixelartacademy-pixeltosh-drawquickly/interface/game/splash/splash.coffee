@@ -22,7 +22,7 @@ class DrawQuickly.Interface.Game.Splash extends AM.Component
       'click .quit-button': @onClickQuitButton
       
   onClickPlayButton: (event) ->
-    @game.chooseDifficulty()
+    @game.chooseMode()
   
   onClickQuitButton: (event) ->
     @os.unloadProgram @drawQuickly

@@ -119,32 +119,20 @@ class DrawQuickly.Interface.Game.Draw.Canvas extends AM.Component
     @canDraw false
     @_endDraw()
     
+  reset: ->
+    @clear()
+    @canDraw true
+    @drawingStarted false
+    
   clear: ->
     @context.clearRect 0, 0, @canvas.width, @canvas.height
     
     @strokes []
     
-  getDrawing: ->
-    canvas = new AM.ReadableCanvas 50, 50
-    imageData = canvas.getFullImageData()
-    imageData.data.fill 255
-
+  getPlainStrokes: ->
     for stroke in @strokes()
-      for vertexIndex in [0...stroke.vertices.length - 1]
-        start = stroke.vertices[vertexIndex]
-        end = stroke.vertices[vertexIndex + 1]
-        
-        startX = Math.round start.x / 2
-        startY = Math.round start.y / 2
-        endX = Math.round end.x / 2
-        endY = Math.round end.y / 2
-        
-        Bresenham.line startX, startY, endX, endY, (x, y) =>
-          for channelIndex in [0...3]
-            imageData.data[(x + y * imageData.width) * 4 + channelIndex] = 0
-    
-    canvas.putFullImageData imageData
-    canvas.toDataURL()
+      for vertex in stroke.vertices
+        vertex.toObject()
   
   clearButtonDisabledAttribute: ->
     disabled: true unless @canDraw()

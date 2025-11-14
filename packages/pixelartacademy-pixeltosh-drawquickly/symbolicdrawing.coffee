@@ -12,17 +12,17 @@ class DrawQuickly.SymbolicDrawing
     
   @timePerDifficulty =
     easy:
-      easy: 90
+      slow: 90
       medium: 60
-      hard: 30
+      fast: 30
     medium:
-      easy: 135
+      slow: 135
       medium: 90
-      hard: 45
+      fast: 45
     hard:
-      easy: 180
+      slow: 180
       medium: 120
-      hard: 60
+      fast: 60
   
   constructor: (@drawQuickly) ->
     @canvasText = new ReactiveField ""
@@ -36,35 +36,45 @@ class DrawQuickly.SymbolicDrawing
     @thingsDrawn = new ReactiveField []
     @thingsLeftToDraw = new AE.LiveComputedField => _.difference @thingsToDraw(), @thingsDrawn()
     
+    # Set default values.
     @difficulty = 'easy'
     @time = 120
   
   destroy: ->
     @thingsLeftToDraw.stop()
-    @end()
+    @_endTimerAutorun?.stop()
+    @_evaluateAutorun?.stop()
   
   setDifficulty: (@difficulty) ->
   
   setTime: (@time) ->
-    
-  start: ->
+  
+  reset: ->
     @canvasText ""
     @pixeltoshClass ''
     @guessesText ""
     
+    @timer null
+    @canvas null
+    
+    @thingsToDraw []
+    @thingsDrawn []
+    
+  start: ->
     timer = new DrawQuickly.Timer @time
     timer.start()
     @timer timer
     
-    @canvas @drawQuickly.os.interface.allChildComponentsOfType(DrawQuickly.Interface.Game.Draw.Canvas)[0]
-      
+    canvas = @drawQuickly.os.interface.allChildComponentsOfType(DrawQuickly.Interface.Game.Draw.Canvas)[0]
+    @canvas canvas
+    
     # End game when the timer runs out.
     @_endTimerAutorun = @drawQuickly.autorun (computation) =>
-      return if @timer().running()
-      return if @timer().time()
+      return if timer.running()
+      return if timer.time()
       computation.stop()
       
-      @canvas().endDrawing()
+      canvas.endDrawing()
       @canvasText "Game over"
       @end()
     
@@ -72,14 +82,11 @@ class DrawQuickly.SymbolicDrawing
     difficultyFactor = @constructor.difficultyFactors[@difficulty]
     
     @thingsToDraw @_chooseThingsToDraw @constructor.thingsByDifficulty[@difficulty]
-    @thingsDrawn []
 
     @drawings = {}
     
     # Evaluate what is drawn.
     @_evaluateAutorun = @drawQuickly.autorun (computation) =>
-      canvas = @canvas()
-
       unless inputData = canvas.classificationInputData()
         @pixeltoshClass ''
         @guessesText ""
@@ -155,8 +162,8 @@ class DrawQuickly.SymbolicDrawing
         @guessesText '' unless @constructor.debug
         @pixeltoshClass 'got-it'
         
-        drawing = canvas.getDrawing()
-        @_addDrawnThing foundLabel, drawing
+        strokes = canvas.getPlainStrokes()
+        @_addDrawnThing foundLabel, strokes
         
         @canvasText "#{foundLabel}!"
         
@@ -181,12 +188,12 @@ class DrawQuickly.SymbolicDrawing
     tenThings.sort()
     tenThings
 
-  _addDrawnThing: (thing, drawing) ->
+  _addDrawnThing: (thing, strokes) ->
     thingsDrawn = @thingsDrawn()
     thingsDrawn.push thing
     @thingsDrawn thingsDrawn
     
-    @drawings[thing] = drawing
+    @drawings[thing] = strokes
     
     @end() if thingsDrawn.length is 10
   

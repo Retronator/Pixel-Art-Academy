@@ -17,6 +17,10 @@ class DrawQuickly.Interface.Game.Results extends AM.Component
   events: ->
     super(arguments...).concat
       'click .done-button': @onClickDoneButton
+      'click .restart-button': @onClickRestartButton
   
   onClickDoneButton: (event) ->
     @game.backToSplash()
+  
+  onClickRestartButton: (event) ->
+    @game.showInstructions()

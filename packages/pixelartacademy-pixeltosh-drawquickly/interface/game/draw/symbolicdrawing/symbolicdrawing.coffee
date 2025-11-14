@@ -13,6 +13,7 @@ class DrawQuickly.Interface.Game.Draw.SymbolicDrawing extends DrawQuickly.Interf
     super arguments...
     
     @symbolicDrawing = @game.drawQuickly.symbolicDrawing
+    @symbolicDrawing.reset()
     
   onRendered: ->
     super arguments...

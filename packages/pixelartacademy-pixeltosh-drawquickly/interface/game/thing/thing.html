@@ -1,0 +1,10 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Thing">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-thing">
+    <div class="title">Choose subject</div>
+    <ul class="things">
+      {{#each things}}
+        <button class="thing-button {{completedClass}}">{{this}}</button>
+      {{/each}}
+    </ul>
+  </div>
+</template>

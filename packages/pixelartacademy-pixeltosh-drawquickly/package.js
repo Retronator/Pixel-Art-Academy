@@ -25,8 +25,10 @@ Package.onUse(function(api) {
 
   api.addFile('drawquickly');
   api.addFile('classifier');
+  api.addFile('drawing');
   api.addFile('symbolicdrawing');
   api.addFile('symbolicdrawing-things');
+  api.addFile('realisticdrawing');
   api.addFile('timer');
 
   api.addFile('interface..');
@@ -38,17 +40,22 @@ Package.onUse(function(api) {
 
   api.addComponent('interface/game..');
   api.addComponent('interface/game/splash..');
+  api.addComponent('interface/game/mode..');
   api.addComponent('interface/game/difficulty..');
   api.addComponent('interface/game/speed..');
+  api.addComponent('interface/game/thing..');
   api.addComponent('interface/game/instructions..');
 
   api.addStyledFile('interface/game/draw..');
   api.addComponent('interface/game/draw/symbolicdrawing..');
   api.addComponent('interface/game/draw/symbolicdrawing/things..');
+  api.addComponent('interface/game/draw/realisticdrawing..');
+  api.addComponent('interface/game/draw/realisticdrawing/references..');
   api.addComponent('interface/game/draw/canvas..');
   api.addComponent('interface/game/draw/timer..');
 
   api.addStyledFile('interface/game/results..');
   api.addComponent('interface/game/results/symbolicdrawing..');
+  api.addComponent('interface/game/results/realisticdrawing..');
   api.addComponent('interface/game/results/drawing..');
 });

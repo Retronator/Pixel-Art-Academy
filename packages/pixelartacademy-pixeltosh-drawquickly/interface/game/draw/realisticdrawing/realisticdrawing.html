@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.RealisticDrawing">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game-draw pixelartacademy-pixeltosh-programs-drawquickly-interface-game-draw-realisticdrawing">
+    {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.Timer realisticDrawing.timer}}
+    {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.Canvas}}
+    {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.RealisticDrawing.References}}
+    {{#if realisticDrawing.canvasText}}
+      <div class="canvas-text" data-cursor="">{{realisticDrawing.canvasText}}</div>
+    {{/if}}
+    <div class="pixeltosh"></div>
+    <div class="pixeltosh-text">
+      {{#if showInstructions}}
+        <div class="instructions">Start drawing when you are ready.</div>
+      {{else}}
+        {{score}}
+      {{/if}}
+    </div>
+  </div>
+</template>
