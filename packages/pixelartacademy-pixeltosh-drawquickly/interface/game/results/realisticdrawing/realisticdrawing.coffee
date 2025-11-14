@@ -31,3 +31,4 @@ class DrawQuickly.Interface.Game.Results.RealisticDrawing extends DrawQuickly.In
     
     strokes: drawing.strokes
     label: "#{minutes}:#{seconds.toString().padStart 2, '0'}"
+    size: 80

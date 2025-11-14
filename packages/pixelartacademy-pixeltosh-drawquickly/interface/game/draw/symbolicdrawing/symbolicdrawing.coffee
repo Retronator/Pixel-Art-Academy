@@ -20,5 +20,10 @@ class DrawQuickly.Interface.Game.Draw.SymbolicDrawing extends DrawQuickly.Interf
     
     @symbolicDrawing.start()
     
+  onDestroyed: ->
+    super arguments...
+    
+    @symbolicDrawing.stop()
+    
   showInstructions: ->
     not (@symbolicDrawing.thingsDrawn().length or @symbolicDrawing.guessesText().length)

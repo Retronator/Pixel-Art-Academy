@@ -41,7 +41,11 @@ class DrawQuickly.SymbolicDrawing
     @time = 120
   
   destroy: ->
+    @stop()
+
     @thingsLeftToDraw.stop()
+    
+  stop: ->
     @_endTimerAutorun?.stop()
     @_evaluateAutorun?.stop()
   
@@ -50,6 +54,8 @@ class DrawQuickly.SymbolicDrawing
   setTime: (@time) ->
   
   reset: ->
+    @stop()
+    
     @canvasText ""
     @pixeltoshClass ''
     @guessesText ""
@@ -174,8 +180,7 @@ class DrawQuickly.SymbolicDrawing
           if @constructor.debug then 3000 else 500
         
   end: ->
-    @_endTimerAutorun.stop()
-    @_evaluateAutorun.stop()
+    @stop()
     
     Meteor.setTimeout =>
       return unless gameView = @drawQuickly.os.interface.getView DrawQuickly.Interface.Game

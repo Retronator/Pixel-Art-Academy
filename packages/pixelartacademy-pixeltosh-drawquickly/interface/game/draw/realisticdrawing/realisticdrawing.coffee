@@ -18,22 +18,20 @@ class DrawQuickly.Interface.Game.Draw.RealisticDrawing extends DrawQuickly.Inter
     super arguments...
     
     @realisticDrawing.start()
+  
+  onDestroyed: ->
+    super arguments...
+    
+    @realisticDrawing.stop()
     
   showInstructions: ->
     return unless timer = @realisticDrawing.timer()
     timer.time() and not timer.running()
   
-  score: ->
-    score = @realisticDrawing.score()
-
-    sum = score.symbolic + score.realistic
-    return unless sum
+  showInstructionsClass: ->
+    'show-instructions' if @showInstructions()
     
-    proportionalScore = score.realistic / sum
-    
-    combinedScore = @percentage Math.max score.realistic, proportionalScore
-    
-    "#{combinedScore} r:#{@percentage score.realistic} s:#{@percentage score.symbolic} p:#{@percentage proportionalScore}"
+  roundNumber: -> @realisticDrawing.durationIndex() + 1
   
-  percentage: (score) ->
-    "#{Math.round score * 100}%"
+  referenceUrl: ->
+    "/pixelartacademy/pixeltosh/programs/drawquickly/references/#{_.fileCase @realisticDrawing.thingToDraw}.png"

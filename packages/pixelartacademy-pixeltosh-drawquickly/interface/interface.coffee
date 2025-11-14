@@ -15,6 +15,12 @@ class DrawQuickly.Interface
       items: [
         PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
       ]
+    ,
+      caption: 'Game'
+      items: [
+        DrawQuickly.Interface.Actions.BackToSplash.id()
+        DrawQuickly.Interface.Actions.Restart.id()
+      ]
     ]
     
   @createInterfaceData: (documentFile) ->

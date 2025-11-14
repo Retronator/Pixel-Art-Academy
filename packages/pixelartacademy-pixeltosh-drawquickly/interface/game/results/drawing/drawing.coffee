@@ -14,25 +14,30 @@ class DrawQuickly.Interface.Game.Results.Drawing extends AM.Component
   
   onRendered: ->
     drawing = @data()
+    size = drawing.size
+    scale = size / 100
     
-    canvas = new AM.ReadableCanvas 50, 50
+    canvas = new AM.ReadableCanvas size, size
     imageData = canvas.getFullImageData()
-    imageData.data.fill 255
     
     for stroke in drawing.strokes
       for vertexIndex in [0...stroke.length - 1]
         start = stroke[vertexIndex]
         end = stroke[vertexIndex + 1]
         
-        startX = Math.round start.x / 2
-        startY = Math.round start.y / 2
-        endX = Math.round end.x / 2
-        endY = Math.round end.y / 2
+        startX = Math.round start.x * scale
+        startY = Math.round start.y * scale
+        endX = Math.round end.x * scale
+        endY = Math.round end.y * scale
         
         Bresenham.line startX, startY, endX, endY, (x, y) =>
-          for channelIndex in [0...3]
-            imageData.data[(x + y * imageData.width) * 4 + channelIndex] = 0
+          imageData.data[(x + y * imageData.width) * 4 + 3] = 255
     
     canvas.putFullImageData imageData
     canvas.classList.add 'canvas'
     @$('.canvas-area').append canvas
+  
+  canvasAreaStyle: ->
+    drawing = @data()
+    width: "#{drawing.size}rem"
+    height: "#{drawing.size}rem"

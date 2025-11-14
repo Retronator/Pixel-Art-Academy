@@ -35,6 +35,8 @@ Package.onUse(function(api) {
 
   api.addFile('interface/actions..');
   api.addFile('interface/actions/about');
+  api.addFile('interface/actions/backtosplash');
+  api.addFile('interface/actions/restart');
 
   api.addComponent('interface/about..');
 
@@ -50,7 +52,6 @@ Package.onUse(function(api) {
   api.addComponent('interface/game/draw/symbolicdrawing..');
   api.addComponent('interface/game/draw/symbolicdrawing/things..');
   api.addComponent('interface/game/draw/realisticdrawing..');
-  api.addComponent('interface/game/draw/realisticdrawing/references..');
   api.addComponent('interface/game/draw/canvas..');
   api.addComponent('interface/game/draw/timer..');
 

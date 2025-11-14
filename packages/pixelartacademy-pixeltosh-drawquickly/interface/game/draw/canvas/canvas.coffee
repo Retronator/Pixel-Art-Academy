@@ -139,10 +139,10 @@ class DrawQuickly.Interface.Game.Draw.Canvas extends AM.Component
     
   events: ->
     super(arguments...).concat
-      'mousedown .canvas': @onMouseDownCanvas
+      'mousedown .canvas-area': @onMouseDownCanvasArea
       'click .clear-button': @onClickClearButton
       
-  onMouseDownCanvas: (event) ->
+  onMouseDownCanvasArea: (event) ->
     event.preventDefault()
     
     return unless @canDraw()

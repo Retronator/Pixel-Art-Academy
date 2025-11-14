@@ -7,9 +7,7 @@ class DrawQuickly.RealisticDrawing
   
   @durations = [
     60
-    45
     30
-    20
     10
   ]
   
@@ -24,9 +22,6 @@ class DrawQuickly.RealisticDrawing
   
   constructor: (@drawQuickly) ->
     @canvasText = new ReactiveField ""
-    @score = new ReactiveField
-      symbolic: 0
-      realistic: 0
     
     @timer = new ReactiveField null
     @canvas = new ReactiveField null
@@ -36,9 +31,11 @@ class DrawQuickly.RealisticDrawing
     @thingToDraw = 'airplane'
   
   destroy: ->
+    @stop()
+    
+  stop: ->
     @_startTimerAutorun?.stop()
     @_endTimerAutorun?.stop()
-    @_evaluateAutorun?.stop()
   
   setThingToDraw: (@thingToDraw) ->
   
@@ -50,9 +47,6 @@ class DrawQuickly.RealisticDrawing
   
   startDuration: ->
     @canvasText ""
-    @score
-      symbolic: 0
-      realistic: 0
     
     durationIndex = @durationIndex()
     duration = @constructor.durations[durationIndex]
@@ -77,57 +71,21 @@ class DrawQuickly.RealisticDrawing
       @canvas().endDrawing()
       @canvasText "Time's up!"
       @endDuration()
-    
-    # Evaluate what is drawn.
-    @_evaluateAutorun = @drawQuickly.autorun (computation) =>
-      canvas = @canvas()
-
-      unless inputData = canvas.classificationInputData()
-        @score
-          symbolic: 0
-          realistic: 0
-        
-        return
-      
-      Tracker.nonreactive =>
-        classificationPromises = for classifierType, classifier of @drawQuickly.classifiers
-          do (classifierType, classifier) =>
-            new Promise (resolve, reject) =>
-              labelProbabilities = await classifier.classify inputData
-              resolve {classifierType, labelProbabilities}
-        
-        classifierResults = await Promise.all classificationPromises
-        
-        # Add together the results from all classifiers.
-        score = {}
-        
-        for classifierResult in classifierResults
-          for labelProbability in classifierResult.labelProbabilities when labelProbability.label is @thingToDraw
-            score[classifierResult.classifierType] = labelProbability.probability
-        
-        @score score
         
   endDuration: ->
-    @_startTimerAutorun.stop()
-    @_endTimerAutorun.stop()
+    @stop()
 
-    Meteor.setTimeout =>
-      # Get scores after the evaluation had time to complete one final time.
-      @_evaluateAutorun.stop()
-      
-      drawingId = DrawQuickly.Drawing.save @canvas().getPlainStrokes()
-      
-      durationIndex = @durationIndex()
+    drawingId = DrawQuickly.Drawing.save @canvas().getPlainStrokes()
+    durationIndex = @durationIndex()
     
-      realisticDrawingData = @drawQuickly.state 'realisticDrawing'
-      realisticDrawingData ?= things: {}
-      realisticDrawingData.things[@thingToDraw] ?= durations: []
-      realisticDrawingData.things[@thingToDraw].durations[durationIndex] =
-        drawingId: drawingId
-        score: @score()
-        
-      @drawQuickly.state 'realisticDrawing', realisticDrawingData
-
+    realisticDrawingData = @drawQuickly.state 'realisticDrawing'
+    realisticDrawingData ?= things: {}
+    realisticDrawingData.things[@thingToDraw] ?= durations: []
+    realisticDrawingData.things[@thingToDraw].durations[durationIndex] = {drawingId}
+    
+    @drawQuickly.state 'realisticDrawing', realisticDrawingData
+    
+    Meteor.setTimeout =>
       # Move forward.
       durationIndex++
       
