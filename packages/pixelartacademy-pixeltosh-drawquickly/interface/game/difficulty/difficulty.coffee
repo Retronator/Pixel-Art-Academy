@@ -16,17 +16,16 @@ class DrawQuickly.Interface.Game.Difficulty extends AM.Component
     @drawQuickly = @os.getProgram DrawQuickly
     @game = @parentComponent()
   
-  difficultyOptions: ->
-    [
-      'easy'
-      'medium'
-      'hard'
-    ]
+  difficultyOptions: -> _.values DrawQuickly.SymbolicDrawing.DifficultyProperties
     
   imageUrl: ->
     difficulty = @currentData()
     
     "/pixelartacademy/pixeltosh/programs/drawquickly/difficulty-#{difficulty}.png"
+  
+  bestScore: ->
+    difficulty = @currentData()
+    DrawQuickly.SymbolicDrawing.getBestScoreForDifficulty difficulty
   
   events: ->
     super(arguments...).concat

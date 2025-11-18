@@ -27,4 +27,4 @@ class DrawQuickly.Interface.Game.Mode extends AM.Component
     
   onClickRealisticModeButton: (event) ->
     @game.drawQuickly.setGameMode DrawQuickly.GameModes.RealisticDrawing
-    @game.chooseThing()
+    @game.chooseComplexity()

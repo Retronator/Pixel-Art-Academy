@@ -14,6 +14,7 @@ class DrawQuickly.Interface.Game extends LOI.View
     Mode: 'Mode'
     Difficulty: 'Difficulty'
     Speed: 'Speed'
+    Complexity: 'Complexity'
     Thing: 'Thing'
     Instructions: 'Instructions'
     Draw: 'Draw'
@@ -36,6 +37,9 @@ class DrawQuickly.Interface.Game extends LOI.View
   chooseSpeed: ->
     @currentScreen @constructor.ScreenTypes.Speed
   
+  chooseComplexity: ->
+    @currentScreen @constructor.ScreenTypes.Complexity
+
   chooseThing: ->
     @currentScreen @constructor.ScreenTypes.Thing
 
@@ -56,6 +60,7 @@ class DrawQuickly.Interface.Game extends LOI.View
       @constructor.ScreenTypes.Mode
       @constructor.ScreenTypes.Difficulty
       @constructor.ScreenTypes.Speed
+      @constructor.ScreenTypes.Complexity
       @constructor.ScreenTypes.Thing
       @constructor.ScreenTypes.Instructions
     ]
@@ -67,8 +72,9 @@ class DrawQuickly.Interface.Game extends LOI.View
   onClickBackButton: (event) ->
     switch @currentScreen()
       when @constructor.ScreenTypes.Mode then @backToSplash()
-      when @constructor.ScreenTypes.Difficulty, @constructor.ScreenTypes.Thing then @chooseMode()
+      when @constructor.ScreenTypes.Difficulty, @constructor.ScreenTypes.Complexity then @chooseMode()
       when @constructor.ScreenTypes.Speed then @chooseDifficulty()
+      when @constructor.ScreenTypes.Thing then @chooseComplexity()
       when @constructor.ScreenTypes.Instructions
         switch @drawQuickly.gameMode
           when DrawQuickly.GameModes.SymbolicDrawing then @chooseSpeed()

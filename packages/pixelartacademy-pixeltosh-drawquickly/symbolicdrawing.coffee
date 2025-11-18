@@ -5,9 +5,19 @@ DrawQuickly = PAA.Pixeltosh.Programs.DrawQuickly
 class DrawQuickly.SymbolicDrawing
   @debug = false
   
+  @DifficultyProperties =
+    Easy: 'easy'
+    Medium: 'medium'
+    Hard: 'hard'
+    
+  @SpeedProperties =
+    Slow: 'slow'
+    Medium: 'medium'
+    Fast: 'fast'
+  
   @difficultyFactors =
     easy: 0
-    medium: 0
+    medium: 0.2
     hard: 1
     
   @timePerDifficulty =
@@ -24,6 +34,26 @@ class DrawQuickly.SymbolicDrawing
       medium: 120
       fast: 60
   
+  @getBestScoreForDifficultyAndSpeed: (difficulty, speed) ->
+    return unless symbolicDrawingData = DrawQuickly.state 'symbolicDrawing'
+    symbolicDrawingData.bestScores?[difficulty]?[speed] or 0
+  
+  @getBestScoreForDifficulty: (difficulty) ->
+    for speed in ['fast', 'medium', 'slow']
+      if score = @getBestScoreForDifficultyAndSpeed difficulty, speed
+        return {speed, score}
+    
+    null
+  
+  @getBestScore: ->
+    for difficulty in ['hard', 'medium', 'easy']
+      if bestScore = @getBestScoreForDifficulty(difficulty)
+        if bestScore.score
+          bestScore.difficulty = difficulty
+          return bestScore
+    
+    null
+  
   constructor: (@drawQuickly) ->
     @canvasText = new ReactiveField ""
     @pixeltoshClass = new ReactiveField ''
@@ -37,8 +67,9 @@ class DrawQuickly.SymbolicDrawing
     @thingsLeftToDraw = new AE.LiveComputedField => _.difference @thingsToDraw(), @thingsDrawn()
     
     # Set default values.
-    @difficulty = 'easy'
-    @time = 120
+    @difficulty = @constructor.DifficultyProperties.Easy
+    @speed = @constructor.SpeedProperties.Slow
+    @time = 0
   
   destroy: ->
     @stop()
@@ -50,8 +81,13 @@ class DrawQuickly.SymbolicDrawing
     @_evaluateAutorun?.stop()
   
   setDifficulty: (@difficulty) ->
+    @_setTime()
   
-  setTime: (@time) ->
+  setSpeed: (@speed) ->
+    @_setTime()
+    
+  _setTime: ->
+    @time = @constructor.timePerDifficulty[@difficulty][@speed]
   
   reset: ->
     @stop()
@@ -181,6 +217,14 @@ class DrawQuickly.SymbolicDrawing
         
   end: ->
     @stop()
+    score = @thingsDrawn().length
+    
+    symbolicDrawingData = @drawQuickly.state 'symbolicDrawing'
+    symbolicDrawingData ?= bestScores: {}
+    symbolicDrawingData.bestScores[@difficulty] ?= {}
+    symbolicDrawingData.bestScores[@difficulty][@speed] = Math.max score, symbolicDrawingData.bestScores[@difficulty][@speed] or 0
+    
+    @drawQuickly.state 'symbolicDrawing', symbolicDrawingData
     
     Meteor.setTimeout =>
       return unless gameView = @drawQuickly.os.interface.getView DrawQuickly.Interface.Game

@@ -24,11 +24,11 @@ class DrawQuickly.Interface.Game.Speed extends AM.Component
     ]
     
   time: ->
-    difficulty = @currentData()
-    @getTimeForDifficulty difficulty
+    speed = @currentData()
+    @getTimeForSpeed speed
     
-  getTimeForDifficulty: (difficulty) ->
-    DrawQuickly.SymbolicDrawing.timePerDifficulty[@drawQuickly.symbolicDrawing.difficulty][difficulty]
+  getTimeForSpeed: (speed) ->
+    DrawQuickly.SymbolicDrawing.timePerDifficulty[@drawQuickly.symbolicDrawing.difficulty][speed]
   
   minutes: ->
     Math.floor Math.ceil(@time()) / 60
@@ -36,13 +36,17 @@ class DrawQuickly.Interface.Game.Speed extends AM.Component
   seconds: ->
     seconds = Math.ceil(@time()) % 60
     seconds.toString().padStart 2, '0'
+  
+  bestScore: ->
+    speed = @currentData()
+    DrawQuickly.SymbolicDrawing.getBestScoreForDifficultyAndSpeed @drawQuickly.symbolicDrawing.difficulty, speed
     
   events: ->
     super(arguments...).concat
       'click .difficulty-button': @onClickSpeedButton
   
   onClickSpeedButton: (event) ->
-    difficulty = @currentData()
-    @game.drawQuickly.symbolicDrawing.setTime @getTimeForDifficulty difficulty
+    speed = @currentData()
+    @game.drawQuickly.symbolicDrawing.setSpeed speed
     
     @game.showInstructions()

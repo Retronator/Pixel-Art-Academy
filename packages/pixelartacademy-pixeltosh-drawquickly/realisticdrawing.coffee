@@ -5,20 +5,38 @@ DrawQuickly = PAA.Pixeltosh.Programs.DrawQuickly
 class DrawQuickly.RealisticDrawing
   @debug = false
   
-  @durations = [
-    60
-    30
-    10
-  ]
+  @ComplexityProperties =
+    Simple: 'simple'
+    Medium: 'medium'
+    Complex: 'complex'
   
-  @thingsToDraw = ["airplane","alarm clock","ant","apple","axe","banana","bat","bear","bee","bench","bicycle","bread",
-    "butterfly","camel","candle","cannon","car","castle","cat","chair","church","couch","cow","crab","cup","dog",
-    "dolphin","door","duck","elephant","eyeglasses","fan","fish","flower","frog","giraffe","guitar","hamburger",
-    "hammer","harp","hat","hedgehog","helicopter","horse","hot air balloon","hourglass","kangaroo","knife","lion",
-    "lobster","mouse","mushroom","owl","parrot","pear","penguin","piano","pickup truck","pig","pineapple","pizza",
-    "rabbit","raccoon","rhinoceros","rifle","sailboat","saw","saxophone","scissors","scorpion","turtle","shark",
-    "sheep","shoe","skyscraper","snail","snake","spider","spoon","squirrel","strawberry","swan","sword","table",
-    "teapot","teddy bear","tiger","tree","trumpet","umbrella","violin","windmill","bottle","zebra"]
+  @durationsPerComplexity =
+    simple: [
+      20
+      10
+      5
+    ]
+    medium: [
+      40
+      20
+      10
+    ]
+    complex: [
+      60
+      30
+      15
+    ]
+  
+  @getDrawnThings: ->
+    return [] unless realisticDrawingData = DrawQuickly.state 'realisticDrawing'
+    return [] unless things = realisticDrawingData.things
+    
+    (thingName for thingName, thing of things when thing.durations?.length)
+    
+  @getDrawnThingsForComplexity: (complexity) ->
+    drawnThings = @getDrawnThings()
+    allThings = @thingsByComplexity[complexity]
+    _.intersection drawnThings, allThings
   
   constructor: (@drawQuickly) ->
     @canvasText = new ReactiveField ""
@@ -26,9 +44,10 @@ class DrawQuickly.RealisticDrawing
     @timer = new ReactiveField null
     @canvas = new ReactiveField null
 
-    @completedDurationsCount = new ReactiveField 0
     @durationIndex = new ReactiveField 0
-    @thingToDraw = 'airplane'
+
+    @complexity = @constructor.ComplexityProperties.Simple
+    @thingToDraw = ''
   
   destroy: ->
     @stop()
@@ -36,6 +55,8 @@ class DrawQuickly.RealisticDrawing
   stop: ->
     @_startTimerAutorun?.stop()
     @_endTimerAutorun?.stop()
+    
+  setComplexity: (@complexity) ->
   
   setThingToDraw: (@thingToDraw) ->
   
@@ -49,7 +70,7 @@ class DrawQuickly.RealisticDrawing
     @canvasText ""
     
     durationIndex = @durationIndex()
-    duration = @constructor.durations[durationIndex]
+    duration = @constructor.durationsPerComplexity[@complexity][durationIndex]
     timer = new DrawQuickly.Timer duration
     @timer timer
     

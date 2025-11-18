@@ -22,7 +22,7 @@ class DrawQuickly.Interface.Game.Results.RealisticDrawing extends DrawQuickly.In
   drawingInfo: ->
     durationInfo = @currentData()
     
-    time = DrawQuickly.RealisticDrawing.durations[durationInfo.index]
+    time = DrawQuickly.RealisticDrawing.durationsPerComplexity[@realisticDrawing.complexity][durationInfo.index]
     
     minutes = Math.floor Math.ceil(time) / 60
     seconds = Math.ceil(time) % 60
@@ -32,3 +32,10 @@ class DrawQuickly.Interface.Game.Results.RealisticDrawing extends DrawQuickly.In
     strokes: drawing.strokes
     label: "#{minutes}:#{seconds.toString().padStart 2, '0'}"
     size: 80
+    
+  events: ->
+    super(arguments...).concat
+      'click .thing-button': @onClickThingButton
+  
+  onClickThingButton: (event) ->
+    @game.chooseThing()

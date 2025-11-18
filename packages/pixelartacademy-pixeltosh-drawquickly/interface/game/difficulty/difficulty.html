@@ -6,6 +6,12 @@
         <div class="difficulty">
           <img class="illustration" src="{{image imageUrl}}" />
           <button class="difficulty-button pixelartacademy-pixeltosh-os-interface-button">{{upperFirst this}}</button>
+          {{#if bestScore}}
+            <div class="best-score">
+              Best: {{bestScore.score}}/10<br/>
+              {{bestScore.speed}} speed
+            </div>
+          {{/if}}
         </div>
       {{/each}}
     </div>

@@ -29,6 +29,7 @@ Package.onUse(function(api) {
   api.addFile('symbolicdrawing');
   api.addFile('symbolicdrawing-things');
   api.addFile('realisticdrawing');
+  api.addFile('realisticdrawing-things');
   api.addFile('timer');
 
   api.addFile('interface..');
@@ -45,6 +46,7 @@ Package.onUse(function(api) {
   api.addComponent('interface/game/mode..');
   api.addComponent('interface/game/difficulty..');
   api.addComponent('interface/game/speed..');
+  api.addComponent('interface/game/complexity..');
   api.addComponent('interface/game/thing..');
   api.addComponent('interface/game/instructions..');
 

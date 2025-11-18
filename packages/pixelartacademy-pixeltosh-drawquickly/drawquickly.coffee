@@ -5,6 +5,10 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Pixeltosh.Programs.DrawQuickly extends PAA.Pixeltosh.Program
+  # symbolicDrawing: results of symbolic drawing mode
+  #   bestScores: object with scores by difficulty
+  #     {easy, medium, hard}: object with scores by speed
+  #       {slow, medium, fast}: number of drawn things in time
   # realisticDrawing: results of realistic drawing mode
   #   things: an object of drawn things
   #     {thing}: name of the thing

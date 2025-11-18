@@ -48,6 +48,12 @@
       {{#if $is depth 4}}
         <h4 class="title">{{displayName}}</h4>
       {{/if}}
+      {{#if $is depth 5}}
+        <h5 class="title">{{displayName}}</h5>
+      {{/if}}
+      {{#if $is depth 6}}
+        <h6 class="title">{{displayName}}</h6>
+      {{/if}}
       {{#if tags.length}}
         <ul class="tags">
           {{#each tags}}

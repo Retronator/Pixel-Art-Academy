@@ -48,9 +48,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     
     @initialize()
     
-    @completedConditions: ->
-      # TODO: Set to completed when the draw quickly challenge is completed.
-      false
+    @completedConditions: -> PAA.Pixeltosh.Programs.DrawQuickly.SymbolicDrawing.getBestScore() and PAA.Pixeltosh.Programs.DrawQuickly.RealisticDrawing.getDrawnThings().length
     
     Task = @
 

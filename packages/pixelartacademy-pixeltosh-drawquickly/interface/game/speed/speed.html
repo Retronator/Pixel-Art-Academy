@@ -8,6 +8,11 @@
             {{minutes}}:{{seconds}}
           </div>
           <button class="difficulty-button pixelartacademy-pixeltosh-os-interface-button">{{upperFirst this}}</button>
+          {{#if bestScore}}
+            <div class="best-score">
+              Best: {{bestScore}}/10
+            </div>
+          {{/if}}
         </div>
       {{/each}}
     </div>

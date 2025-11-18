@@ -16,7 +16,8 @@ class DrawQuickly.Interface.Game.Thing extends AM.Component
     @drawQuickly = @os.getProgram DrawQuickly
     @game = @parentComponent()
     
-  things: -> DrawQuickly.RealisticDrawing.thingsToDraw
+  things: ->
+    DrawQuickly.RealisticDrawing.thingsByComplexity[@drawQuickly.realisticDrawing.complexity]
   
   completedThing: ->
     thing = @currentData()
