@@ -110,7 +110,7 @@ class DrawQuickly.RealisticDrawing
       # Move forward.
       durationIndex++
       
-      if durationIndex is @constructor.durations.length
+      if durationIndex is @constructor.durationsPerComplexity[@complexity].length
         return unless gameView = @drawQuickly.os.interface.getView DrawQuickly.Interface.Game
         gameView.showResults()
         

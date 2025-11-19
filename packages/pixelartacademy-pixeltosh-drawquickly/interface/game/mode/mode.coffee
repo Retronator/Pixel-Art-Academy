@@ -26,5 +26,11 @@ class DrawQuickly.Interface.Game.Mode extends AM.Component
     @game.chooseDifficulty()
     
   onClickRealisticModeButton: (event) ->
+    await LOI.adventure.showDialogMessage """
+      Freehand drawing from reference can be hard for beginners and requires training that will be added later in development.
+
+      It's OK if you're not happy with your results yet.
+    """
+    
     @game.drawQuickly.setGameMode DrawQuickly.GameModes.RealisticDrawing
     @game.chooseComplexity()

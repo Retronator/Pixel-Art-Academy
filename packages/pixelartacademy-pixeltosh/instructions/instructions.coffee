@@ -24,6 +24,10 @@ class PAA.Pixeltosh.Instructions extends PAA.PixelPad.Systems.Instructions
     Smirk: 'smirk-up'
     OhNo: 'ohno'
   
+  customClass: ->
+    return unless instruction = @targetDisplayedInstruction()
+    instruction.customClass?()
+  
   faceClass: ->
     if instruction = @targetDisplayedInstruction()
       return instruction.faceClass()

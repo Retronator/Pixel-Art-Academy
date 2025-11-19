@@ -8,7 +8,7 @@ class Pinball.Instructions
     @getPinball: ->
       return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
       program = os.activeProgram()
-      return unless program instanceof PAA.Pixeltosh.Programs.Pinball
+      return unless program instanceof Pinball
       program
     
   class @InvalidPlayfield extends @Instruction
