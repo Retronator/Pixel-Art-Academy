@@ -103,7 +103,7 @@ class DrawQuickly.SymbolicDrawing
     @thingsDrawn []
     
   start: ->
-    timer = new DrawQuickly.Timer @time
+    timer = new DrawQuickly.Timer @drawQuickly, @time
     timer.start()
     @timer timer
     

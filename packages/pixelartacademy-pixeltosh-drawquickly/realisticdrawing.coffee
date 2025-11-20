@@ -71,7 +71,7 @@ class DrawQuickly.RealisticDrawing
     
     durationIndex = @durationIndex()
     duration = @constructor.durationsPerComplexity[@complexity][durationIndex]
-    timer = new DrawQuickly.Timer duration
+    timer = new DrawQuickly.Timer @drawQuickly, duration
     @timer timer
     
     canvas = @canvas()

@@ -27,6 +27,22 @@ class DrawQuickly.Interface.Game extends LOI.View
     @drawQuickly = @os.getProgram DrawQuickly
     
     @currentScreen = new ReactiveField @constructor.ScreenTypes.Splash
+
+  onBackButton: ->
+    switch @currentScreen()
+      when @constructor.ScreenTypes.Mode then @backToSplash()
+      when @constructor.ScreenTypes.Difficulty, @constructor.ScreenTypes.Complexity then @chooseMode()
+      when @constructor.ScreenTypes.Speed then @chooseDifficulty()
+      when @constructor.ScreenTypes.Thing then @chooseComplexity()
+      when @constructor.ScreenTypes.Instructions, @constructor.ScreenTypes.Results
+        switch @drawQuickly.gameMode
+          when DrawQuickly.GameModes.SymbolicDrawing then @chooseSpeed()
+          when DrawQuickly.GameModes.RealisticDrawing then @chooseThing()
+          
+      else return
+      
+    # Inform that we've handled the back button.
+    true
     
   chooseMode: ->
     @currentScreen @constructor.ScreenTypes.Mode
@@ -70,12 +86,4 @@ class DrawQuickly.Interface.Game extends LOI.View
       'click .back-button': @onClickBackButton
   
   onClickBackButton: (event) ->
-    switch @currentScreen()
-      when @constructor.ScreenTypes.Mode then @backToSplash()
-      when @constructor.ScreenTypes.Difficulty, @constructor.ScreenTypes.Complexity then @chooseMode()
-      when @constructor.ScreenTypes.Speed then @chooseDifficulty()
-      when @constructor.ScreenTypes.Thing then @chooseComplexity()
-      when @constructor.ScreenTypes.Instructions
-        switch @drawQuickly.gameMode
-          when DrawQuickly.GameModes.SymbolicDrawing then @chooseSpeed()
-          when DrawQuickly.GameModes.RealisticDrawing then @chooseThing()
+    @onBackButton()
