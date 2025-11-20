@@ -12,7 +12,7 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '0.34.3'
+  @version: -> '0.35.0'
   
   buildName: -> 'Learn Mode build'
 
@@ -49,7 +49,13 @@ class LM.App extends Artificial.Base.App
       Desktop.on 'menu', 'unlockPixelArtFundamentals', (event) =>
         LM.PixelArtFundamentals.state 'unlocked', true
         
-      # Start in prefered fullscreen mode.
+      Desktop.on 'menu', 'unlockPinball', (event) =>
+        LM.PixelArtFundamentals.state 'pinballUnlocked', true
+      
+      Desktop.on 'menu', 'unlockDrawQuickly', (event) =>
+        LM.PixelArtFundamentals.state 'drawQuicklyUnlocked', true
+        
+      # Start in preferred fullscreen mode.
       Desktop.send 'window', 'setFullscreen', LOI.settings.graphics.preferFullscreen.value()
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.

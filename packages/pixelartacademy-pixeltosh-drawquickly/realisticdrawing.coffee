@@ -31,7 +31,7 @@ class DrawQuickly.RealisticDrawing
     return [] unless realisticDrawingData = DrawQuickly.state 'realisticDrawing'
     return [] unless things = realisticDrawingData.things
     
-    (thingName for thingName, thing of things when thing.durations?.length)
+    _.keys things
     
   @getDrawnThingsForComplexity: (complexity) ->
     drawnThings = @getDrawnThings()

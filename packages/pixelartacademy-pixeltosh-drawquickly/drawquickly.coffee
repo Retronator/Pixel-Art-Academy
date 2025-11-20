@@ -12,10 +12,8 @@ class PAA.Pixeltosh.Programs.DrawQuickly extends PAA.Pixeltosh.Program
   # realisticDrawing: results of realistic drawing mode
   #   things: an object of drawn things
   #     {thing}: name of the thing
-  #       durations: array of results for the 5 durations
+  #       durations: array of results for the 3 durations
   #         drawingId: the ID of the drawing made for this duration
-  #         score: total classifier scores
-  #           realistic, symbolic
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.DrawQuickly'
   @register @id()
 

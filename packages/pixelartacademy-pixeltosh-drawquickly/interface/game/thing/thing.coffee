@@ -21,9 +21,9 @@ class DrawQuickly.Interface.Game.Thing extends AM.Component
   
   completedThing: ->
     thing = @currentData()
-    realisticDrawingData = PAA.Pixeltosh.Programs.DrawQuickly.state 'realisticDrawing'
+    return unless realisticDrawingData = PAA.Pixeltosh.Programs.DrawQuickly.state 'realisticDrawing'
     
-    realisticDrawingData.things[thing]
+    realisticDrawingData.things?[thing]
   
   completedClass: ->
     'completed' if @completedThing()

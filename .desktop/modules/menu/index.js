@@ -76,6 +76,18 @@ export default class ApplicationMenu {
             click: async () => {
               this.module.send('unlockPixelArtFundamentals');
             }
+          },
+          {
+            label: 'Unlock Pinball',
+            click: async () => {
+              this.module.send('unlockPinball');
+            }
+          },
+          {
+            label: 'Unlock Draw Quickly',
+            click: async () => {
+              this.module.send('unlockDrawQuickly');
+            }
           }
         ]
       },
