@@ -35,8 +35,8 @@ class DrawQuickly.SymbolicDrawing
       fast: 60
   
   @getBestScoreForDifficultyAndSpeed: (difficulty, speed) ->
-    return unless symbolicDrawingData = DrawQuickly.state 'symbolicDrawing'
-    symbolicDrawingData.bestScores?[difficulty]?[speed] or 0
+    symbolicDrawingData = DrawQuickly.state 'symbolicDrawing'
+    symbolicDrawingData?.bestScores?[difficulty]?[speed] or 0
   
   @getBestScoreForDifficulty: (difficulty) ->
     for speed in ['fast', 'medium', 'slow']

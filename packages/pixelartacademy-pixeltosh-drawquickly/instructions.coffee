@@ -26,7 +26,7 @@ class DrawQuickly.Instructions
       return unless game.currentScreen() is DrawQuickly.Interface.Game.ScreenTypes.Splash
       
       # Show when you don't have a score, but not a 10/10 on any of the symbolic difficulties.
-      symbolicDrawingData = DrawQuickly.state 'symbolicDrawing'
+      return unless symbolicDrawingData = DrawQuickly.state 'symbolicDrawing'
       
       for difficulty, difficultyProperty of DrawQuickly.SymbolicDrawing.DifficultyProperties
         anyScore = false
