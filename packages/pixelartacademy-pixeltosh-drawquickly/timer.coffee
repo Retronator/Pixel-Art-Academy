@@ -14,6 +14,9 @@ class DrawQuickly.Timer
     @running true
     @nextBeepTime = 5
     
+  stop: ->
+    @running false
+    
   update: (appTime) ->
     return unless @running()
     

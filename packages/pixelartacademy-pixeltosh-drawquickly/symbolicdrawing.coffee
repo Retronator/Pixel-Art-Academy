@@ -217,6 +217,7 @@ class DrawQuickly.SymbolicDrawing
         
   end: ->
     @stop()
+    @timer().stop()
     score = @thingsDrawn().length
     
     symbolicDrawingData = @drawQuickly.state 'symbolicDrawing'

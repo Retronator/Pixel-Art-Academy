@@ -31,6 +31,7 @@ Package.onUse(function(api) {
   api.addFile('realisticdrawing');
   api.addFile('realisticdrawing-things');
   api.addFile('timer');
+  api.addStyledFile('instructions');
 
   api.addFile('interface..');
 
