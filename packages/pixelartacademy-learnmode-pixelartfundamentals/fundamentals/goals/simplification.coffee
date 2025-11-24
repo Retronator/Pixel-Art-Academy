@@ -39,7 +39,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     @directive: -> "Draw quickly"
     
     @instructions: -> """
-      In the Drawing app, complete the Quick drawing challenge.
+      In the Pixeltosh app, launch the game Draw Quickly and try both symbolic drawing and realistic drawing.
     """
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
@@ -48,15 +48,13 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     
     @initialize()
     
-    @completedConditions: ->
-      # TODO: Set to completed when the draw quickly challenge is completed.
-      false
+    @completedConditions: -> PAA.Pixeltosh.Programs.DrawQuickly.SymbolicDrawing.getBestScore() and PAA.Pixeltosh.Programs.DrawQuickly.RealisticDrawing.getDrawnThings().length
     
     Task = @
 
   @tasks: -> [
     @Tutorial
-    # @Challenge
+    @Challenge
   ]
 
   @finalTasks: -> [

@@ -1,0 +1,30 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixeltosh-os-interface-button
+  position relative
+  border 1rem solid black
+  border-image image('/pixelartacademy/pixeltosh/os/button-border.png') 4 / 4rem
+  chicago-mini()
+  padding 3rem
+  color black
+  background-color white
+  background-clip content-box
+
+  &:active:not(:disabled)
+    border-image-source image('/pixelartacademy/pixeltosh/os/button-border-active.png')
+    color white
+    background-color black
+
+  &:disabled::after
+    content ''
+    position absolute
+    inset 3rem
+    background image('/pixelartacademy/pixeltosh/os/dither-white.png') 0 0 / 2rem 2rem
+
+  &.mini
+    border-image-source image('/pixelartacademy/pixeltosh/os/button-mini-border.png')
+    geneva-mini()
+    padding 0 0 0 1rem
+
+    &:active:not(:disabled)
+      border-image-source image('/pixelartacademy/pixeltosh/os/button-mini-border-active.png')

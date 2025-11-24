@@ -81,14 +81,14 @@ class PAA.Tutorials.Drawing.Simplification.Silhouette extends PAA.Tutorials.Draw
       goalRotation:
         azimuthalAngle: AR.Degrees 90
         polarAngle: AR.Degrees 90
-        angleTolerance: AR.Degrees 10
+        angleTolerance: AR.Degrees 15
   ,
     referenceUrl: "/pixelartacademy/tutorials/drawing/simplification/silhouette-ship.glb"
     information:
       goalRotation:
         azimuthalAngle: AR.Degrees 90
         polarAngle: AR.Degrees 90
-        angleTolerance: AR.Degrees 20
+        angleTolerance: AR.Degrees 30
   ]
   
   @initialize()

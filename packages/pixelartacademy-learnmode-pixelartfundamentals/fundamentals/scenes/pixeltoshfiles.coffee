@@ -40,9 +40,27 @@ class LM.PixelArtFundamentals.Fundamentals.PixeltoshFiles extends LOI.Adventure.
     
     pinballEnabled = LM.PixelArtFundamentals.pinballEnabled()
     
+    unless @_drawQuicklyDisk
+      @_drawQuicklyDisk = new PAA.Pixeltosh.OS.FileSystem.File
+        id: "#{PAA.Pixeltosh.Programs.DrawQuickly.id()}.Disk"
+        path: 'Draw Quickly'
+        type: PAA.Pixeltosh.OS.FileSystem.FileTypes.Disk
+      
+      @_drawQuicklyDisk.options.disk = @_drawQuicklyDisk
+    
+    @_drawQuciklyProgram ?= new PAA.Pixeltosh.OS.FileSystem.File
+      id: PAA.Pixeltosh.Programs.DrawQuickly.id()
+      path: 'Draw Quickly/Draw Quickly'
+      type: PAA.Pixeltosh.Programs.DrawQuickly
+      disk: @_drawQuicklyDisk
+      
+    drawQuciklyEnabled = LM.PixelArtFundamentals.drawQuicklyEnabled()
+    
     [
       @_pinballDisk if pinballEnabled
       @_pinballProgram if pinballEnabled
       @_pinballMachine if pinballEnabled
       @_moonShot if pinballEnabled
+      @_drawQuicklyDisk if drawQuciklyEnabled
+      @_drawQuciklyProgram if drawQuciklyEnabled
     ]

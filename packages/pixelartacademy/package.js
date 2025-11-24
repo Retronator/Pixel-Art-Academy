@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'onnxruntime-web': '1.16.3'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions-ui');
   api.imply('retronator:landsofillusions-ui');
@@ -17,6 +21,10 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('pixelartacademy');
+
+  api.addFile('pages..');
+  api.addComponent('pages/imageclassification..');
+  api.addFile('pages/imageclassification/classifier');
 
   api.addFile('adventure..');
   api.addFile('chapter..');

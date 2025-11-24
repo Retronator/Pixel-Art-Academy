@@ -1,5 +1,3 @@
-import {ComputedField} from "meteor/peerlibrary:computed-field"
-
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 

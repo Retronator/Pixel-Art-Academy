@@ -9,9 +9,10 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
   @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
     @Pinball
-    @PixelSuiteIcons
-    @BlockBreaker
     @Chess
+    @PixelPaint
+    @CityBuilder
+    @BlockBreaker
   ]
   @initialize()
 
@@ -26,33 +27,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
       
   status: -> LM.Content.Status.Unlocked
 
-  class @PixelSuiteIcons extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PixelSuiteIcons'
-    @displayName: -> "PixelSuite icons"
-    @initialize()
-    
-    @contents: -> [
-      @Calculator
-      @ContactCards
-      @Calendar
-    ]
-    @initialize()
-    
-    class @Calculator extends LM.Content.FutureContent
-      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PixelSuiteIcons.Calculator'
-      @displayName: -> "Calculator"
-      @initialize()
-    
-    class @ContactCards extends LM.Content.FutureContent
-      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PixelSuiteIcons.ContactCards'
-      @displayName: -> "Contact cards"
-      @initialize()
-    
-    class @Calendar extends LM.Content.FutureContent
-      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PixelSuiteIcons.Calendar'
-      @displayName: -> "Calendar"
-      @initialize()
-  
   class @Pinball extends LM.Content
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Pinball'
     @displayName: -> "Pinball"
@@ -161,4 +135,14 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Projects extends LM.Content
   class @Chess extends LM.Content.FutureContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.Chess'
     @displayName: -> "Chess"
+    @initialize()
+  
+  class @PixelPaint extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.PixelPaint'
+    @displayName: -> "PixelPaint"
+    @initialize()
+  
+  class @CityBuilder extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Projects.CityBuilder'
+    @displayName: -> "City builder"
     @initialize()

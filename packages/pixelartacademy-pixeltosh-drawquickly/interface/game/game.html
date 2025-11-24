@@ -1,0 +1,44 @@
+<template name="PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game">
+  <div class="pixelartacademy-pixeltosh-programs-drawquickly-interface-game">
+    {{#if $is currentScreen 'Splash'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Splash}}
+    {{/if}}
+    {{#if $is currentScreen 'Mode'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Mode}}
+    {{/if}}
+    {{#if $is currentScreen 'Difficulty'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Difficulty}}
+    {{/if}}
+    {{#if $is currentScreen 'Speed'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Speed}}
+    {{/if}}
+    {{#if $is currentScreen 'Complexity'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Complexity}}
+    {{/if}}
+    {{#if $is currentScreen 'Thing'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Thing}}
+    {{/if}}
+    {{#if $is currentScreen 'Instructions'}}
+      {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Instructions}}
+    {{/if}}
+    {{#if $is currentScreen 'Draw'}}
+      {{#if $is drawQuickly.gameMode 'SymbolicDrawing'}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.SymbolicDrawing}}
+      {{/if}}
+      {{#if $is drawQuickly.gameMode 'RealisticDrawing'}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.RealisticDrawing}}
+      {{/if}}
+    {{/if}}
+    {{#if $is currentScreen 'Results'}}
+      {{#if $is drawQuickly.gameMode 'SymbolicDrawing'}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Results.SymbolicDrawing}}
+      {{/if}}
+      {{#if $is drawQuickly.gameMode 'RealisticDrawing'}}
+        {{> PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Results.RealisticDrawing}}
+      {{/if}}
+    {{/if}}
+    {{#if showBackButton}}
+      <button class="back-button">Back</button>
+    {{/if}}
+  </div>
+</template>

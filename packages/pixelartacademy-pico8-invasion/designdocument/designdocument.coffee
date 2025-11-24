@@ -1,5 +1,3 @@
-import {ReactiveField} from "meteor/peerlibrary:reactive-field"
-
 AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions

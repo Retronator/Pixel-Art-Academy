@@ -13,6 +13,7 @@ class Writer.Interface
     ,
       caption: 'File'
       items: [
+        PAA.Pixeltosh.OS.Interface.Actions.Quit.id()
       ]
     ]
     

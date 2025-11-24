@@ -71,7 +71,12 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       return if asset.completed()
   
       editor = @getEditor()
-      editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+      return unless editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+      
+      # If the origin has been changed, the instruction needs to keep being active so it can
+      # be completed even if the tool changes (like it does when activated via the hold button).
+      pixelCanvasEditor = editor.interface.getEditorForActiveFile()
+      EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
   
     @resetCompletedConditions: ->
       not @getActiveAsset()

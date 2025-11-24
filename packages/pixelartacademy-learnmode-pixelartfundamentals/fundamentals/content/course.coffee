@@ -17,7 +17,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Course extends LM.Content.Cou
   ]
 
   @contents: -> [
-    LM.PixelArtFundamentals.Fundamentals.Content.Storylines
     LM.PixelArtFundamentals.Fundamentals.Content.Goals
     LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials
     LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges

@@ -7,15 +7,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
   @tags: -> [LM.Content.Tags.WIP]
   @contents: -> [
     @ElementsOfArt
-    @PixelArtLines
-    @PixelArtDiagonals
-    @PixelArtCurves
-    @PixelArtLineWidth
+    @PixelArt
     @Simplification
-    @AntiAliasing
-    @Dithering
-    @Rotation
-    @Scale
+    @GraphicalProjections
   ]
   @initialize()
   
@@ -94,47 +88,117 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
       @displayName: -> "Elements of art: texture"
       @initialize()
   
-  class @PixelArtLines extends LM.Content.DrawingTutorialContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLines'
-    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
+  class @PixelArt extends LM.Content
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt'
+    @displayName: -> "Pixel art"
+    @tags: -> [LM.Content.Tags.WIP]
+    
+    @contents: -> [
+      @Lines
+      @Diagonals
+      @Curves
+      @LineWidth
+      @Shapes
+      @Scale
+      @Rotation
+      @LimitedPalettes
+      @TechnicalLimitations
+      @Aliasing
+      @Dithering
+    ]
+    
     @initialize()
     
-  class @PixelArtDiagonals extends LM.Content.DrawingTutorialContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtDiagonals'
-    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
-    @initialize()
-  
-  class @PixelArtCurves extends LM.Content.DrawingTutorialContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtCurves'
-    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
-    @initialize()
-  
-  class @PixelArtLineWidth extends LM.Content.DrawingTutorialContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArtLineWidth'
-    @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
-    @initialize()
-  
+    constructor: ->
+      super arguments...
+    
+      @progress = new LM.Content.Progress.ContentProgress
+        content: @
+        requiredUnits: "tutorials"
+        totalUnits: "tutorial steps"
+        totalRecursive: true
+    
+    status: -> @constructor.Status.Unlocked
+    
+    class @Lines extends LM.Content.DrawingTutorialContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Lines'
+      @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines
+      @initialize()
+      
+    class @Diagonals extends LM.Content.DrawingTutorialContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Diagonals'
+      @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Diagonals
+      @initialize()
+    
+    class @Curves extends LM.Content.DrawingTutorialContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Curves'
+      @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Curves
+      @initialize()
+    
+    class @LineWidth extends LM.Content.DrawingTutorialContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.LineWidth'
+      @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.LineWidth
+      @initialize()
+    
+    class @Shapes extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Shapes'
+      @displayName: -> "Pixel art shapes"
+      @initialize()
+    
+    class @Scale extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Scale'
+      @displayName: -> "Pixel art scale"
+      @initialize()
+    
+    class @Rotation extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Rotation'
+      @displayName: -> "Pixel art rotation"
+      @initialize()
+    
+    class @LimitedPalettes extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.LimitedPalettes'
+      @displayName: -> "Limited palettes"
+      @initialize()
+    
+    class @TechnicalLimitations extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.TechnicalLimitations'
+      @displayName: -> "Technical limitations"
+      @initialize()
+      
+    class @Aliasing extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Aliasing'
+      @displayName: -> "Aliasing"
+      @initialize()
+    
+    class @Dithering extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Dithering'
+      @displayName: -> "Dithering"
+      @initialize()
+      
   class @Simplification extends LM.Content.DrawingTutorialContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Simplification'
     @tutorialClass = PAA.Tutorials.Drawing.Simplification
     @initialize()
     
-  class @AntiAliasing extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.AntiAliasing'
-    @displayName: -> "Anti-aliasing"
-    @initialize()
-  
-  class @Dithering extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Dithering'
-    @displayName: -> "Dithering"
-    @initialize()
-  
-  class @Rotation extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Rotation'
-    @displayName: -> "Pixel art rotation"
-    @initialize()
+  class @GraphicalProjections extends LM.Content.FutureContent
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.GraphicalProjections'
+    @displayName: -> "Graphical projections"
     
-  class @Scale extends LM.Content.FutureContent
-    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.Scale'
-    @displayName: -> "Pixel art scale"
+    @contents: -> [
+      @Multiview
+      @PixelIsometric
+    ]
+    
     @initialize()
+  
+    status: -> @constructor.Status.Unlocked
+    
+    class @Multiview extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.GraphicalProjections.Multiview'
+      @displayName: -> "Multiview"
+      @initialize()
+  
+    class @PixelIsometric extends LM.Content.FutureContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.GraphicalProjections.PixelIsometric'
+      @displayName: -> "Pixel isometric"
+      @initialize()

@@ -1,6 +1,3 @@
-import {ComputedField} from "meteor/peerlibrary:computed-field"
-import {ReactiveField} from "meteor/peerlibrary:reactive-field"
-
 AB = Artificial.Base
 FM = FataMorgana
 LOI = LandsOfIllusions

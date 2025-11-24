@@ -28,6 +28,9 @@ class AEc.Sound
   destroy: ->
     @buffer null
     @_loadAutorun.stop()
+
+  ready: ->
+    @audioManager.context()? and @buffer()?
     
   play: (options) ->
     return unless context = @audioManager.context()

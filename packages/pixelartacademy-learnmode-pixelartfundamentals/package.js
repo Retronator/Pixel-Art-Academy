@@ -58,7 +58,6 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/content/drawingchallenges');
   api.addFile('fundamentals/content/projects');
   api.addFile('fundamentals/content/drawingeditors');
-  api.addFile('fundamentals/content/storylines');
 
   api.addStyledFile('fundamentals/publications/pinballmagazine..')
   api.addStyle('fundamentals/publications/pinballmagazine/pinballmagazine-cover')

@@ -124,13 +124,18 @@ class THREE.Line2
   getSignedDistanceFromLine: (point) ->
     # Positive distance is to the right of the line.
     @getNormal true, _normal
-    distanceToLine = _normal.dot @start
-    distanceToPoint = _normal.dot point
     
-    distanceToPoint - distanceToLine
+    if _normal.lengthSq()
+      distanceToLine = _normal.dot @start
+      distanceToPoint = _normal.dot point
+      
+      distanceToPoint - distanceToLine
+      
+    else
+      @start.distanceTo point
     
   getDistanceFromLine: (point) ->
-    Math.abs @getSignedDistanceFromLine()
+    Math.abs @getSignedDistanceFromLine point
     
   isPointInRightHalfPlane: (point) ->
     @getSignedDistanceFromLine(point) > 0
