@@ -16,6 +16,9 @@
     text-align center
     cursor pointer
     text-transform uppercase
+    letter-spacing 1rem
+    transform skewX(45deg)
+    color atariCyan(5)
 
   .tasks-map
     position absolute
@@ -23,10 +26,90 @@
     visibility hidden
     cursor default
 
-    .connections-canvas
-      position absolute
-      width 100%
-      height 100%
+    .tiles
+      position relative
+
+      .tile
+        position absolute
+        width 13rem
+        height 5rem
+
+        &.blueprint
+        &.road
+        &.ground
+        &.building
+          .blueprint
+            background-position -16rem -10rem
+
+        &.edge.left .blueprint
+          background-position -1rem -10rem
+
+        &.edge.right .blueprint
+          background-position -31rem -10rem
+
+        &.edge.up .blueprint
+          background-position -16rem 0
+
+        &.edge.down .blueprint
+          background-position -16rem -20rem
+
+        &.edge.left.up .blueprint
+          background-position -1rem 0
+
+        &.edge.left.down .blueprint
+          background-position -1rem -20rem
+
+        &.edge.right.up .blueprint
+          background-position -31rem 0
+
+        &.edge.right.down .blueprint
+          background-position -31rem -20rem
+
+        &.road.up .road
+        &.road.down .road
+          background-position -1rem -30rem
+
+        &.road.left .road
+        &.road.right .road
+          background-position -16rem -30rem
+
+        &.road.down.right .road
+          background-position -1rem -40rem
+
+        &.road.down.left .road
+          background-position -16rem -40rem
+
+        &.road.up.right .road
+          background-position -1rem -50rem
+
+        &.road.up.left .road
+          background-position -16rem -50rem
+
+        &.road.left.right.up .road
+          background-position -1rem -60rem
+
+        &.road.up.down.right .road
+          background-position -16rem -60rem
+
+        &.road.left.right.down .road
+          background-position -1rem -70rem
+
+        &.road.up.down.left .road
+          background-position -16rem -70rem
+
+        &.road.left.right.up.down .road
+          background-position -1rem -80rem
+
+        .blueprint
+        .road
+          absolute-cover()
+          background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') 15rem 5rem / 45rem 85rem
+
+        .blueprint
+          z-index 0
+
+        .road
+          z-index 1
 
     .tasks
       list-style none
@@ -35,6 +118,7 @@
 
       .task
         position absolute
+        z-index 2
 
   .provided-interests
     position absolute

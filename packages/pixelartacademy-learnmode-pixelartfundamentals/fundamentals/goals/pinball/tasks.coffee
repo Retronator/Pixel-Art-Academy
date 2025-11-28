@@ -201,6 +201,8 @@ class Goal.AddPins extends Goal.Task
   
   @predecessors: -> [Goal.PlayGobbleHole]
   
+  @groupNumber: -> -1
+  
   @initialize()
   
   @completedConditions: ->

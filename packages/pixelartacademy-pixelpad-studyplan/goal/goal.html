@@ -4,7 +4,14 @@
       {{> t10e goal.displayNameTranslation}}
     </div>
     <div class="tasks-map" {{style tasksMapStyle}}>
-      <canvas class="connections-canvas"></canvas>
+      <div class="tiles">
+        {{#each tiles}}
+          <div class="tile {{tileTypeClasses}}" {{style tileStyle}}>
+            <div class="blueprint"></div>
+            <div class="road"></div>
+          </div>
+        {{/each}}
+      </div>
       <ul class="tasks">
         {{#each goalTasks}}
           {{#if task}}

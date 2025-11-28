@@ -7,6 +7,12 @@ IL = Illustrapedia
 class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Goal'
   @register @id()
+  
+  @TileTypes =
+    Blueprint: 'Blueprint'
+    Road: 'Road'
+    Ground: 'Ground'
+    Building: 'Building'
 
   constructor: (goalOrOptions) ->
     super arguments...
@@ -110,10 +116,113 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     @levelsCount = @maxLevel + 1
     @groupsCount = @maxGroupNumber - @minGroupNumber + 1
 
-    @taskWidth = 9
-    @taskHeight = 9
-    @levelGap = 8
-    @groupGap = 6
+    @minMapTileY = @minGroupNumber * 2 - 4
+    @maxMapTileY = @maxGroupNumber * 2 + 4
+    @minMapTileX = -3
+    @maxMapTileX = @maxLevel * 2 + 3
+    @mapWidth = @maxMapTileX - @minMapTileX + 1
+    @mapHeight = @maxMapTileY - @minMapTileY + 1
+
+    @tileMap = {}
+
+    for x in [@minMapTileX..@maxMapTileX]
+      @tileMap[x] = {}
+
+      for y in [@minMapTileY..@maxMapTileY]
+        @tileMap[x][y] = {x, y}
+        
+    @tiles = []
+    
+    for y in [@minMapTileY..@maxMapTileY]
+      for x in [@maxMapTileX..@minMapTileX]
+        @tiles.push @tileMap[x][y]
+        
+    # Place tasks.
+    placeTile = (x, y, type) =>
+      # Don't replace buildings and roads.
+      return if @tileMap[x][y].type in [@constructor.TileTypes.Road, @constructor.TileTypes.Building]
+      
+      # Placing a tile places that tile to the target and blueprints around it.
+      @tileMap[x][y].type = type
+      @tileMap[x - 1]?[y].type ?= @constructor.TileTypes.Blueprint
+      @tileMap[x + 1]?[y].type ?= @constructor.TileTypes.Blueprint
+      @tileMap[x][y - 1]?.type ?= @constructor.TileTypes.Blueprint
+      @tileMap[x][y + 1]?.type ?= @constructor.TileTypes.Blueprint
+    
+    for goalTask in @goalTasks
+      goalTask.tileX = goalTask.level * 2
+      goalTask.tileY = goalTask.groupNumber * 2
+      
+      goalTask.entryTile = @tileMap[goalTask.tileX - 1][goalTask.tileY + 1]
+      goalTask.exitTile = @tileMap[goalTask.tileX + 1][goalTask.tileY + 1]
+      
+      # Connect entry tile and exit tile with a road.
+      for x in [goalTask.entryTile.x..goalTask.exitTile.x]
+        placeTile x, goalTask.entryTile.y, @constructor.TileTypes.Road
+        
+      # If it's not a dummy task, also place a building.
+      if goalTask.task or goalTask.endTask
+        placeTile goalTask.tileX, goalTask.tileY, @constructor.TileTypes.Building
+    
+      # Add ground.
+      for x in [goalTask.tileX - 1..goalTask.tileX + 1]
+        for y in [goalTask.tileY - 2..goalTask.tileY + 2]
+          placeTile x, y, @constructor.TileTypes.Ground
+    
+    # Connect roads from all predecessors.
+    for goalTask in @goalTasks
+      for predecessor in goalTask.predecessors
+        for y in [predecessor.exitTile.y..goalTask.entryTile.y]
+          placeTile predecessor.exitTile.x, y, @constructor.TileTypes.Road
+        
+        groundMinY = Math.min(predecessor.exitTile.y, goalTask.entryTile.y) - 1
+        groundMaxY = Math.max(predecessor.exitTile.y, goalTask.entryTile.y) + 1
+
+        for y in [groundMinY..groundMaxY]
+          for x in [predecessor.exitTile.x - 1..predecessor.exitTile.x + 1]
+            placeTile x, y, @constructor.TileTypes.Ground
+    
+    # Determine road neighbors.
+    for x in [@minMapTileX..@maxMapTileX]
+      for y in [@minMapTileY..@maxMapTileY] when @tileMap[x][y].type is @constructor.TileTypes.Road
+        left = @tileMap[x - 1]?[y]?.type is @constructor.TileTypes.Road
+        right = @tileMap[x + 1]?[y]?.type is @constructor.TileTypes.Road
+        up = @tileMap[x][y - 1]?.type is @constructor.TileTypes.Road
+        down = @tileMap[x][y + 1]?.type is @constructor.TileTypes.Road
+        @tileMap[x][y].neighbors = {left, right, up, down}
+        
+    # Place blueprint edges.
+    for x in [@minMapTileX..@maxMapTileX]
+      for y in [@minMapTileY..@maxMapTileY] when not @tileMap[x][y].type
+        # One of the neighbors must have a defined type to be on the edge.
+        upLeft = @tileMap[x - 1]?[y - 1]?.type
+        up = @tileMap[x][y - 1]?.type
+        upRight = @tileMap[x + 1]?[y - 1]?.type
+        left = @tileMap[x - 1]?[y].type
+        right = @tileMap[x + 1]?[y].type
+        downLeft = @tileMap[x - 1]?[y + 1]?.type
+        down = @tileMap[x][y + 1]?.type
+        downRight = @tileMap[x + 1]?[y + 1]?.type
+        continue unless upLeft or up or upRight or left or right or downLeft or down or downRight
+        
+        tile = @tileMap[x][y]
+        tile.edge =
+          left: upRight or right or downRight
+          right: upLeft or left or downLeft
+          up: downLeft or down or downRight
+          down: upLeft or up or upRight
+          
+        # Opposite openings cancel each other.
+        if tile.edge.left and tile.edge.right
+          tile.edge.left = false
+          tile.edge.right = false
+          
+        if tile.edge.up and tile.edge.down
+          tile.edge.up = false
+          tile.edge.down = false
+    
+    @tileWidth = 8
+    @tileHeight = 4
     @borderWidth = 1
     @padding =
       left: 6
@@ -124,18 +233,6 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
 
     # Optional interests are stated in two lines when no normal required interests are present.
     @optionalInterestsLabelHeight = if @goal.requiredInterests().length then 7 else 16
-
-    # Calculate entry and exit points.
-    for goalTask in @goalTasks
-      position = @_taskPosition goalTask
-
-      goalTask.entryPoint =
-        x: position.x
-        y: position.y + Math.floor @taskHeight / 2
-
-      goalTask.exitPoint =
-        x: position.x + @taskWidth
-        y: position.y + Math.floor @taskHeight / 2
 
   onCreated: ->
     super arguments...
@@ -154,9 +251,6 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
 
   onRendered: ->
     super arguments...
-
-    # Draw tasks map connections.
-    @constructor.TasksMapConnections.draw @
 
     # Update name height when in blueprint.
     @autorun (computation) =>
@@ -305,10 +399,10 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     if interestDocument._id in @blueprint.draggedInterestIds() then 'valid-target' else 'invalid-target'
 
   tasksMapSize: ->
-    minimumWidth = @levelsCount * @taskWidth + (@levelsCount - 1) * @levelGap - Math.ceil @taskWidth / 2
+    minimumWidth = @mapWidth * @tileWidth + @mapHeight * @tileHeight
 
     width: Math.max 80, minimumWidth
-    height: @groupsCount * @taskHeight + (@groupsCount - 1) * @groupGap
+    height: @mapHeight * @tileHeight
 
   tasksMapStyle: ->
     tasksMapSize = @tasksMapSize()
@@ -318,22 +412,52 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     width: "#{tasksMapSize.width}rem"
     height: "#{tasksMapSize.height}rem"
 
-  taskStyle: ->
-    goalTask = @currentData()
-    position = @_taskPosition goalTask
+  tileTypeClasses: ->
+    tile = @currentData()
+    
+    classes = [_.kebabCase tile.type]
 
+    if tile.edge
+      classes.push 'edge'
+      
+      for side, edgeExits of tile.edge when edgeExits
+        classes.push side
+    
+    if tile.type is @constructor.TileTypes.Road
+      for side, neighborExists of tile.neighbors when neighborExists
+        classes.push side
+    
+    classes.join ' '
+  
+  tileStyle: ->
+    tile = @currentData()
+    position = @_mapPosition tile.x, tile.y
+    
     left: "#{position.x}rem"
     top: "#{position.y}rem"
-    width: "#{@taskWidth}rem"
-    height: "#{@taskHeight}rem"
     
-  _taskPosition: (goalTask) ->
-    x: goalTask.level * (@taskWidth + @levelGap)
-    y: (goalTask.groupNumber - @minGroupNumber) * (@taskHeight + @groupGap)
+  taskStyle: ->
+    goalTask = @currentData()
+    position = @_mapPositionForGoalTask goalTask
+
+    left: "#{position.x}rem"
+    top: "#{position.y - 5}rem"
+    width: "#{13}rem"
+    height: "#{10}rem"
+    
+  _mapPosition: (tileX, tileY) ->
+    relativeX = tileX - @minMapTileX
+    relativeY = tileY - @minMapTileY
+    
+    x: relativeX * @tileWidth + relativeY * @tileHeight
+    y: relativeY * @tileHeight
+    
+  _mapPositionForGoalTask: (goalTask) ->
+    @_mapPosition goalTask.tileX, goalTask.tileY
 
   providedInterestsPosition: ->
     if @expanded?()
-      y = @nameHeight() + @_taskPosition(@endGoalTask).y
+      y = @nameHeight() + @_mapPositionForGoalTask(@endGoalTask).y
 
     else
       y = @nameHeight() / 2 - @taskHeight / 2
@@ -353,7 +477,7 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     return unless @isCreated()
 
     if @expanded()
-      y = @nameHeight() + @endGoalTask.exitPoint.y
+      y = @nameHeight() + @endGoalTask.exitTile.y
 
     else
       y = @nameHeight() / 2

@@ -68,7 +68,7 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint extends AM.Component
 
       camera.applyTransformToCanvas()
 
-      for component in [@grid(), @flowchart()]
+      for component in [@grid()]
         continue unless component
 
         context.save()
