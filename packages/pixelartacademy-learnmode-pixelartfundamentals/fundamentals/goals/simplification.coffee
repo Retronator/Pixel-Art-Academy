@@ -46,6 +46,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     
     @predecessors: -> [Goal.Tutorial]
     
+    @interests: -> ['simplification']
+    
     @initialize()
     
     @completedConditions: -> PAA.Pixeltosh.Programs.DrawQuickly.SymbolicDrawing.getBestScore() and PAA.Pixeltosh.Programs.DrawQuickly.RealisticDrawing.getDrawnThings().length

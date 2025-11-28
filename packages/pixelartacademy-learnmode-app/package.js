@@ -22,6 +22,8 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions-assets');
   api.use('retronator:landsofillusions-ui');
 
+  api.use('retronator:illustrapedia');
+
   api.use('retronator:pixelartdatabase');
 
   api.use('retronator:pixelartacademy');

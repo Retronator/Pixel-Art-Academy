@@ -25,6 +25,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @interests: -> ['line']
   
+    @requiredInterests: -> ['pixel art software', 'learn mode tutorial project']
+    
     @initialize()
     
     @completedConditions: ->

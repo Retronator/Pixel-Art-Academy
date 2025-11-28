@@ -16,21 +16,21 @@ class IL.Interest extends AM.Document
       searchTerms: [Document.GeneratedField 'self', ['name', 'synonyms'], (interest) =>
         searchTerms = []
 
-        if interest.synonyms
-          for synonym in interest.synonyms
-            # Use lowercase letters only (strips symbols and deburrs the string).
-            searchTerms.push _.lowerCase synonym
-
         if interest.name?.translations
           allTranslationData = AB.Translation.allTranslationData interest.name
 
           for translation in allTranslationData
             searchTerms.push _.lowerCase translation.translationData.text
         
+        if interest.synonyms
+          for synonym in interest.synonyms
+            # Use lowercase letters only (strips symbols and deburrs the string).
+            searchTerms.push _.lowerCase synonym
+        
         [interest._id, searchTerms]
       ]
 
-  @cacheUrl = '/illustrapedia/interest/cache.json'
+  @enableDatabaseContent()
   
   # Methods
 
@@ -42,7 +42,7 @@ class IL.Interest extends AM.Document
   @all: @subscription 'all'
   
   @forSearchTerm: @subscription 'forSearchTerm',
-    query: (searchTerm) =>
+    query: (searchTerm, publishingQuery) =>
       return unless searchTerm.length
       # Use lowercase letters only (strips symbols and deburrs the string).
       words = _.lowerCase(searchTerm).split ' '
@@ -52,7 +52,7 @@ class IL.Interest extends AM.Document
       # Search term needs to appear at the start of a word. Note that we need to escape the backslashes.
       searchTerms.push searchTerms: new RegExp "(?:^#{word}|\\s#{word})", 'i' for word in words
 
-      IL.Interest.documents.find $and: searchTerms
+      IL.Interest.getQueryDocuments(publishingQuery).find $and: searchTerms
 
   # Convenience method to return the interest that matches the search term exactly. This is useful
   # because interests are referenced by plain strings, which need to be matched to interest documents.

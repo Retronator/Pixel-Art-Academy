@@ -4,9 +4,9 @@ IL = Illustrapedia
 IL.Interest.all.publish ->
   RA.authorizeAdmin()
   
-  IL.Interest.documents.find()
+  IL.Interest.getPublishingDocuments().find()
 
 IL.Interest.forSearchTerm.publish (searchTerm) ->
   check searchTerm, String
 
-  IL.Interest.forSearchTerm.query searchTerm
+  IL.Interest.forSearchTerm.query searchTerm, true

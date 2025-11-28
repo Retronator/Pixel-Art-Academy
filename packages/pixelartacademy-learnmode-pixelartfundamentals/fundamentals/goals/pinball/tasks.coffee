@@ -235,6 +235,8 @@ class Goal.DrawBallTrough extends Goal.AssetsTask
   """
   
   @predecessors: -> [Goal.PlayGobbleHole]
+  
+  @groupNumber: -> 1
 
   @initialize()
   
@@ -254,6 +256,8 @@ class Goal.PlayBallTrough extends Goal.Task
   """
   
   @predecessors: -> [Goal.DrawBallTrough]
+  
+  @groupNumber: -> 1
 
   @initialize()
 

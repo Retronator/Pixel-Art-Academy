@@ -44,7 +44,7 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
       Notice the first art asset in the game and imagine how you want it to look.
     """
     
-    @interests: -> ['pico-8']
+    @interests: -> ['pico-8', 'gaming']
     
     @predecessors: -> [Goal.Start]
     
