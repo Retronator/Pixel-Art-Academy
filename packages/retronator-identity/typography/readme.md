@@ -44,6 +44,10 @@ The project is using these fonts:
 
   Custom, large title font inspired by the Marion typeface
 
+- **Study Plan** by Matej Jan (www.retronator.com)
+
+  Custom, diagonal font used in the Study Plan app
+
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
   Acme 9, Acme 7 Wide, Acme 5 Wide, Kyrou 9, Kyrou 7 Wide, Kyrou 5 Wide variants.

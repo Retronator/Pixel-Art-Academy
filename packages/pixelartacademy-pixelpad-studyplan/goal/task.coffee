@@ -21,3 +21,17 @@ class PAA.PixelPad.Apps.StudyPlan.Goal.Task extends AM.Component
     task = @data()
 
     'active' if task.active()
+  
+  buildingStyle: ->
+    height = 10 + Math.floor Math.random() * 10
+    height-- if height in [12, 16]
+    height++ if height in [13, 17]
+    
+    width: "13rem"
+    height: "#{height}rem"
+    top: "#{5 - height}rem"
+    
+  gateClass: ->
+    task = @data()
+    
+    'gate' if task.requiredInterests().length

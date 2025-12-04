@@ -8,12 +8,17 @@
         {{#each tiles}}
           <div class="tile {{tileTypeClasses}}" {{style tileStyle}}>
             <div class="blueprint"></div>
+            <div class="sidewalk"></div>
             <div class="road"></div>
           </div>
         {{/each}}
       </div>
+      <div class="complete-flag" {{style completeFlagStyle}}>
+        <div class="image"></div>
+        <div class="blueprint"></div>
+      </div>
       <ul class="tasks">
-        {{#each goalTasks}}
+        {{#each sortedGoalTasks}}
           {{#if task}}
             <li class="task" {{style taskStyle}}>
               {{> PixelArtAcademy.PixelPad.Apps.StudyPlan.Goal.Task task}}

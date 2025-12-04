@@ -55,6 +55,9 @@ class PAA.Learning.Task
   # Override to place the task in a different group. Tasks in the same group will be drawn
   # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
   @groupNumber: -> 0
+
+  # Override to force the task to a specific level.
+  @level: -> null
   
   @onActive: -> # Override to perform an action when the task has evaluated to active.
   
@@ -127,6 +130,7 @@ class PAA.Learning.Task
   requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
+  level: -> @constructor.level()
   
   onActive: -> @constructor.onActive()
   onActiveDisplayed: -> @constructor.onActiveDisplayed()

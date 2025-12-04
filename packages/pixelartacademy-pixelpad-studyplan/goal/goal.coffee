@@ -11,6 +11,7 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
   @TileTypes =
     Blueprint: 'Blueprint'
     Road: 'Road'
+    Sidewalk: 'Sidewalk'
     Ground: 'Ground'
     Building: 'Building'
 
@@ -72,7 +73,7 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
       addedNewTasks = false
 
       # (Re)calculate all levels.
-      goalTask.level = null for goalTask in @goalTasks
+      goalTask.level = goalTask.task?.level() for goalTask in @goalTasks
       calculateLevel goalTask for goalTask in @goalTasks
 
       # Put the end goal as the last level.
@@ -116,13 +117,98 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     @levelsCount = @maxLevel + 1
     @groupsCount = @maxGroupNumber - @minGroupNumber + 1
 
-    @minMapTileY = @minGroupNumber * 2 - 4
-    @maxMapTileY = @maxGroupNumber * 2 + 4
-    @minMapTileX = -3
-    @maxMapTileX = @maxLevel * 2 + 3
+    # Distribute levels.
+    entryTileX = 1
+
+    @levels = []
+    
+    for level in [0..@maxLevel]
+      # Determine how many tiles are needed for this level.
+      width = 0
+      entryRequired = false
+      exitRequired = true
+      maxGroupNumberRequiringExit = Number.NEGATIVE_INFINITY
+      
+      for goalTask in @goalTasks when goalTask.level is level
+        spaceBefore = 0
+        spaceAfter = 0
+        
+        if goalTask.task
+          # Required interests must have space for a gate and an entry access road to get to it.
+          if goalTask.task.requiredInterests().length
+            spaceBefore = 1
+            entryRequired = true
+            
+          # Tasks that are placed after access roads should have some space
+          # before to make it clear we can't get to them from the access road.
+          if @levels[level - 1]?.exitRequired and goalTask.groupNumber <= @levels[level - 1].maxGroupNumberRequiringExit
+            spaceBefore = 1
+          
+          # Provided interests must have space for an access road.
+          if goalTask.task.interests().length
+            spaceAfter = 1
+            exitRequired = true
+            maxGroupNumberRequiringExit = Math.max maxGroupNumberRequiringExit, goalTask.groupNumber
+            
+          # Tasks where the road curves up should have space to make the left turn clearer.
+          if _.find @goalTasks, (otherGoalTask) => goalTask in otherGoalTask.predecessors and otherGoalTask.groupNumber < goalTask.groupNumber
+            spaceAfter = 1
+        
+        goalTask.tileX = entryTileX + 1 + spaceBefore
+        
+        taskWidth = 1 + spaceBefore + spaceAfter
+        width = Math.max width, taskWidth
+        
+      exitTileX = entryTileX + width + 1
+      
+      @levels.push {entryTileX, exitTileX, entryRequired, exitRequired, maxGroupNumberRequiringExit}
+      
+      entryTileX = exitTileX
+      
+    # Distribute groups.
+    @groupNumbers = {}
+    lastGroupY = 0
+    
+    for groupNumber in [@minGroupNumber..@maxGroupNumber]
+      groupNumberInfo =
+        levelFilled: []
+        
+      @groupNumbers[groupNumber] = groupNumberInfo
+      
+      ySpacing = 2
+      
+      for goalTask in @goalTasks when goalTask.groupNumber is groupNumber and (goalTask.task or goalTask.endTask)
+        # See if we need extra spacing from the level above.
+        ySpacing = 4 if @groupNumbers[groupNumber - 1]?.levelFilled[goalTask.level]
+        
+        # Fill this spot.
+        groupNumberInfo.levelFilled[goalTask.level] = true
+        
+        # Add roads in the same group as filled.
+        for predecessor in goalTask.predecessors when predecessor.groupNumber is groupNumber
+          for level in [predecessor.level...goalTask.level]
+            groupNumberInfo.levelFilled[level] = true
+            
+            # Add extra space above the road.
+            ySpacing = Math.max ySpacing, 3 if @groupNumbers[groupNumber - 1]?.levelFilled[level]
+            
+      groupNumberInfo.y = lastGroupY + ySpacing
+      lastGroupY = groupNumberInfo.y
+      
+    # Shift Ys so group 0 is on 0.
+    shiftY = -@groupNumbers[0].y
+    
+    for groupNumber, groupNumberInfo of @groupNumbers
+      groupNumberInfo.y += shiftY
+
+    @minMapTileY = @groupNumbers[@minGroupNumber].y - 6
+    @maxMapTileY = @groupNumbers[@maxGroupNumber].y + 3
+    @minMapTileX = -1
+    @maxMapTileX = @levels[@maxLevel].exitTileX + 2
     @mapWidth = @maxMapTileX - @minMapTileX + 1
     @mapHeight = @maxMapTileY - @minMapTileY + 1
 
+    # Create the tile map.
     @tileMap = {}
 
     for x in [@minMapTileX..@maxMapTileX]
@@ -137,24 +223,38 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
       for x in [@maxMapTileX..@minMapTileX]
         @tiles.push @tileMap[x][y]
         
-    # Place tasks.
-    placeTile = (x, y, type) =>
-      # Don't replace buildings and roads.
-      return if @tileMap[x][y].type in [@constructor.TileTypes.Road, @constructor.TileTypes.Building]
+    placeTile = (x, y, type, verticalBlueprintNeighbors = true) =>
+      # Don't replace buildings and pathways.
+      return if @tileMap[x][y].type in [@constructor.TileTypes.Building, @constructor.TileTypes.Sidewalk, @constructor.TileTypes.Road]
       
       # Placing a tile places that tile to the target and blueprints around it.
       @tileMap[x][y].type = type
       @tileMap[x - 1]?[y].type ?= @constructor.TileTypes.Blueprint
       @tileMap[x + 1]?[y].type ?= @constructor.TileTypes.Blueprint
-      @tileMap[x][y - 1]?.type ?= @constructor.TileTypes.Blueprint
-      @tileMap[x][y + 1]?.type ?= @constructor.TileTypes.Blueprint
-    
-    for goalTask in @goalTasks
-      goalTask.tileX = goalTask.level * 2
-      goalTask.tileY = goalTask.groupNumber * 2
       
-      goalTask.entryTile = @tileMap[goalTask.tileX - 1][goalTask.tileY + 1]
-      goalTask.exitTile = @tileMap[goalTask.tileX + 1][goalTask.tileY + 1]
+      if verticalBlueprintNeighbors
+        @tileMap[x][y - 1]?.type ?= @constructor.TileTypes.Blueprint
+        @tileMap[x][y + 1]?.type ?= @constructor.TileTypes.Blueprint
+    
+    addAccessRoad = (x, endY) =>
+      # Start from top-down, placing roads if there are none. If we hit a road, further places should be sidewalks.
+      startY = @minMapTileY + 1
+      sidewalk = false
+
+      for y in [startY..endY]
+        if @tileMap[x][y].type is @constructor.TileTypes.Road
+          sidewalk = true
+          
+        else
+          placeTile x, y, (if sidewalk then @constructor.TileTypes.Sidewalk else @constructor.TileTypes.Road), false
+    
+    # Place tasks.
+    for goalTask in @goalTasks
+      goalTask.tileY = @groupNumbers[goalTask.groupNumber].y - 1
+      level = @levels[goalTask.level]
+      
+      goalTask.entryTile = @tileMap[level.entryTileX][goalTask.tileY + 1]
+      goalTask.exitTile = @tileMap[level.exitTileX][goalTask.tileY + 1]
       
       # Connect entry tile and exit tile with a road.
       for x in [goalTask.entryTile.x..goalTask.exitTile.x]
@@ -169,6 +269,11 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
         for y in [goalTask.tileY - 2..goalTask.tileY + 2]
           placeTile x, y, @constructor.TileTypes.Ground
     
+    # Sort tasks back-to-front, right-to-left for correct z ordering.
+    @sortedGoalTasks = _.orderBy @goalTasks, ['tileY', 'tileX'], ['asc', 'desc']
+    
+    onlyFinalTask = @goal.finalTasks()[0] if @goal.finalTasks().length is 1
+    
     # Connect roads from all predecessors.
     for goalTask in @goalTasks
       for predecessor in goalTask.predecessors
@@ -181,6 +286,16 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
         for y in [groundMinY..groundMaxY]
           for x in [predecessor.exitTile.x - 1..predecessor.exitTile.x + 1]
             placeTile x, y, @constructor.TileTypes.Ground
+         
+    # Create access roads.
+    for goalTask in @goalTasks when goalTask.task
+      # Add entry roads if there are required interests and we're not the first task of the goal.
+      if goalTask.task.requiredInterests().length and goalTask.task.predecessors.length
+        addAccessRoad(@levels[goalTask.level].entryTileX, goalTask.tileY)
+        
+      # Add exit roads if there are interests and we're not the only final task.
+      if goalTask.task.interests().length and goalTask.task isnt onlyFinalTask
+        addAccessRoad(@levels[goalTask.level].exitTileX, goalTask.tileY)
     
     # Determine road neighbors.
     for x in [@minMapTileX..@maxMapTileX]
@@ -220,6 +335,11 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
         if tile.edge.up and tile.edge.down
           tile.edge.up = false
           tile.edge.down = false
+          
+        # If there are no edges left, we're inside of a hole and we should fill it.
+        unless tile.edge.left or tile.edge.right or tile.edge.up or tile.edge.down
+          tile.type = if left is @constructor.TileTypes.Ground and right is @constructor.TileTypes.Ground then @constructor.TileTypes.Ground else @constructor.TileTypes.Blueprint
+          tile.edge = null
     
     @tileWidth = 8
     @tileHeight = 4
@@ -441,9 +561,7 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     position = @_mapPositionForGoalTask goalTask
 
     left: "#{position.x}rem"
-    top: "#{position.y - 5}rem"
-    width: "#{13}rem"
-    height: "#{10}rem"
+    top: "#{position.y}rem"
     
   _mapPosition: (tileX, tileY) ->
     relativeX = tileX - @minMapTileX
@@ -454,6 +572,11 @@ class PAA.PixelPad.Apps.StudyPlan.Goal extends AM.Component
     
   _mapPositionForGoalTask: (goalTask) ->
     @_mapPosition goalTask.tileX, goalTask.tileY
+  
+  completeFlagStyle: ->
+    position = @_mapPositionForGoalTask @endGoalTask
+    left: "#{position.x}rem"
+    top: "#{position.y}rem"
 
   providedInterestsPosition: ->
     if @expanded?()

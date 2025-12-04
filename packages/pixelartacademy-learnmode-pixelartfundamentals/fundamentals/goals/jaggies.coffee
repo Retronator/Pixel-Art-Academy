@@ -112,6 +112,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies extends PAA.Learning.Go
     
     @predecessors: -> [Goal.Lines]
     
+    @level: -> 2
+    
     @initialize()
     
     @completedConditions: ->

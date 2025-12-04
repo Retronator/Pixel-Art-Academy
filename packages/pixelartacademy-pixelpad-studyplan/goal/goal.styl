@@ -15,10 +15,8 @@
     padding 5rem
     text-align center
     cursor pointer
-    text-transform uppercase
-    letter-spacing 1rem
-    transform skewX(45deg)
     color atariCyan(5)
+    study-plan()
 
   .tasks-map
     position absolute
@@ -35,6 +33,7 @@
         height 5rem
 
         &.blueprint
+        &.sidewalk
         &.road
         &.ground
         &.building
@@ -64,6 +63,9 @@
 
         &.edge.right.down .blueprint
           background-position -31rem -20rem
+
+        &.sidewalk .sidewalk
+          background-position -31rem -29rem
 
         &.road.up .road
         &.road.down .road
@@ -101,15 +103,32 @@
           background-position -1rem -80rem
 
         .blueprint
+        .sidewalk
         .road
           absolute-cover()
-          background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') 15rem 5rem / 45rem 85rem
+          background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') 15rem 5rem / 90rem 85rem
 
         .blueprint
           z-index 0
 
-        .road
+        .sidewalk
           z-index 1
+          top -1rem
+
+        .road
+          z-index 2
+
+    .complete-flag
+      position absolute
+      z-index 2
+
+      .blueprint
+        position absolute
+        left 5rem
+        top -6rem
+        width 6rem
+        height 11rem
+        background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') -56rem -24rem / 90rem 85rem
 
     .tasks
       list-style none
@@ -118,7 +137,7 @@
 
       .task
         position absolute
-        z-index 2
+        z-index 3
 
   .provided-interests
     position absolute

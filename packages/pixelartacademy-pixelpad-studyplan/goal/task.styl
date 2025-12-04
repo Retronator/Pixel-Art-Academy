@@ -2,15 +2,15 @@
 
 .pixelartacademy-pixelpad-apps-studyplan-goal-task
   position relative
-  width 100%
-  height 100%
+  cursor pointer
 
   &:hover
-    z-index 4
-
     .building
       .blueprint
         border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
+
+    .gate
+      background-position-x -69rem
 
     .info
       visibility visible
@@ -27,11 +27,13 @@
         .blueprint
           border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
 
+  &.gate
+    .gate
+      display block
+
   .building
-    position relative
-    width 100%
-    height 100%
-    cursor pointer
+    position absolute
+    left 0
 
     .blueprint
       width 100%
@@ -49,6 +51,15 @@
         top -0.5rem
         left 1.5rem
         adventure()
+
+  .gate
+    display none
+    position absolute
+    left -2rem
+    top 2rem
+    width 11rem
+    height 10rem
+    background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') -49rem -4rem / 90rem 85rem
 
   .info
     position absolute
