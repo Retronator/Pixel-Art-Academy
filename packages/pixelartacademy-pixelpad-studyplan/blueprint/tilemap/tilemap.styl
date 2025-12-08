@@ -1,0 +1,157 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
+  position absolute
+  top 0
+  left 0
+
+  > .blueprint
+    position absolute
+
+  .tile
+    position absolute
+    width 13rem
+    height 5rem
+
+    &:hover
+      .building
+        &.active
+          .blueprint
+            border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
+
+        .blueprint
+          border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
+
+      .gate
+        .blueprint
+          background-position-x -69rem
+
+    &.blueprint
+    &.sidewalk
+    &.road
+    &.ground
+    &.building
+    &.gate
+    &.flag
+      .ground
+        .blueprint
+          background-position -16rem -10rem
+
+    .ground .blueprint
+    .pathway .blueprint
+    .gate .blueprint
+    .flag .blueprint
+      background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') 15rem 5rem / 90rem 85rem
+
+    .ground
+      absolute-cover()
+
+      .blueprint
+      .image
+        absolute-cover()
+
+      .blueprint
+        &.edge.left
+          background-position -1rem -10rem
+
+        &.edge.right
+          background-position -31rem -10rem
+
+        &.edge.up
+          background-position -16rem 0
+
+        &.edge.down
+          background-position -16rem -20rem
+
+        &.edge.left.up
+          background-position -1rem 0
+
+        &.edge.left.down
+          background-position -1rem -20rem
+
+        &.edge.right.up
+          background-position -31rem 0
+
+        &.edge.right.down
+          background-position -31rem -20rem
+
+    .pathway
+      absolute-cover()
+
+      &.sidewalk .blueprint
+        background-position -31rem -29rem
+
+      &.road.up .blueprint
+      &.road.down .blueprint
+        background-position -1rem -30rem
+
+      &.road.left .blueprint
+      &.road.right .blueprint
+        background-position -16rem -30rem
+
+      &.road.down.right .blueprint
+        background-position -1rem -40rem
+
+      &.road.down.left .blueprint
+        background-position -16rem -40rem
+
+      &.road.up.right .blueprint
+        background-position -1rem -50rem
+
+      &.road.up.left .blueprint
+        background-position -16rem -50rem
+
+      &.road.left.right.up .blueprint
+        background-position -1rem -60rem
+
+      &.road.up.down.right .blueprint
+        background-position -16rem -60rem
+
+      &.road.left.right.down .blueprint
+        background-position -1rem -70rem
+
+      &.road.up.down.left .blueprint
+        background-position -16rem -70rem
+
+      &.road.left.right.up.down .blueprint
+        background-position -1rem -80rem
+
+      .blueprint
+      .image
+        absolute-cover()
+
+    .building
+      &.active
+        .blueprint
+          background-color atariCyan(3)
+          border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active.png')
+
+      .blueprint
+        position absolute
+        z-index 2
+        left 0
+        background-color atariCyan(0)
+        background-clip padding-box
+        border-width 5rem 4rem 4rem 5rem
+        border-style solid
+        border-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building.png') 5 4 4 5
+
+    .gate
+      .blueprint
+        position absolute
+        z-index 2
+        left -2rem
+        top -6rem
+        width 11rem
+        height 10rem
+        background-position -49rem -4rem
+
+    .flag
+      .blueprint
+        position absolute
+        z-index 2
+        left 5rem
+        top -6rem
+        width 6rem
+        height 11rem
+        background-position -56rem -24rem

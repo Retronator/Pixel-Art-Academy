@@ -207,5 +207,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     @Space
     @Texture
   ]
+  
+  @finalTasksCompleteType: -> @FinalTasksCompleteType.All
 
   @initialize()

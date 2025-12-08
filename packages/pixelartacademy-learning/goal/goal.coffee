@@ -7,6 +7,10 @@ class PAA.Learning.Goal
   @_goalClassesById = {}
   @_goalClassesUpdatedDependency = new Tracker.Dependency
 
+  @FinalTasksCompleteType:
+    All: 'All'
+    Any: 'Any'
+    
   @getClassForId: (id) ->
     @_goalClassesUpdatedDependency.depend()
     @_goalClassesById[id]
@@ -34,6 +38,7 @@ class PAA.Learning.Goal
 
   # Override to provide task classes that complete this goal.
   @finalTasks: -> []
+  @finalTasksCompleteType: -> @FinalTasksCompleteType.Any
   @finalGroupNumber: -> 0
 
   @initialize: ->
@@ -87,34 +92,33 @@ class PAA.Learning.Goal
     @_requiredInterests = null
     @_optionalInterests = []
 
-    # Go over all possible ways to reach the final tasks.
-    for finalTask in @finalTasks()
-      paths = @_findPaths finalTask
+    # Go over all possible ways to reach the end.
+    paths = @_findPathsToEnd()
 
-      for path in paths
-        # Find required interests in this path.
-        pathRequiredInterests = []
-        pathProvidedInterests = []
+    for path in paths
+      # Find required interests in this path.
+      pathRequiredInterests = []
+      pathProvidedInterests = []
 
-        for task in path
-          pathRequiredInterests = _.union pathRequiredInterests, task.requiredInterests()
-          pathProvidedInterests = _.union pathProvidedInterests, task.interests()
+      for task in path
+        pathRequiredInterests = _.union pathRequiredInterests, task.requiredInterests()
+        pathProvidedInterests = _.union pathProvidedInterests, task.interests()
 
-        # Self-provided interests don't need to be required.
-        pathRequiredInterests = _.without pathRequiredInterests, pathProvidedInterests
+      # Self-provided interests don't need to be required.
+      pathRequiredInterests = _.without pathRequiredInterests, pathProvidedInterests
 
-        unless @_requiredInterests
-          @_requiredInterests = pathRequiredInterests
+      unless @_requiredInterests
+        @_requiredInterests = pathRequiredInterests
 
-        else
-          # To find universal required interests, they need to intersect with the current ones.
-          newRequiredInterests = _.intersection @_requiredInterests, pathRequiredInterests
+      else
+        # To find universal required interests, they need to intersect with the current ones.
+        newRequiredInterests = _.intersection @_requiredInterests, pathRequiredInterests
 
-          # Any interests that are not in the intersection, are optional.
-          @_optionalInterests = _.union @_optionalInterests, _.difference @_requiredInterests, newRequiredInterests
-          @_optionalInterests = _.union @_optionalInterests, _.difference pathRequiredInterests, newRequiredInterests
+        # Any interests that are not in the intersection, are optional.
+        @_optionalInterests = _.union @_optionalInterests, _.difference @_requiredInterests, newRequiredInterests
+        @_optionalInterests = _.union @_optionalInterests, _.difference pathRequiredInterests, newRequiredInterests
 
-          @_requiredInterests = newRequiredInterests
+        @_requiredInterests = newRequiredInterests
 
     # Add goal's own required interests.
     @_requiredInterests = _.union @_requiredInterests, @ownRequiredInterests()
@@ -124,6 +128,24 @@ class PAA.Learning.Goal
     if duplicateInterests.length
       console.warn "Duplicate interests for goal", @id(), duplicateInterests, @_requiredInterests, @_optionalInterests
 
+  @_findPathsToEnd: ->
+    # To get to the end, we can come from any of the final tasks.
+    finalTasks = @finalTasks()
+    finalTaskPaths = (@_findPaths predecessor for predecessor in finalTasks)
+
+    if @finalTasksCompleteType() is @FinalTasksCompleteType.All
+      # We need to take one path from each of the final tasks, so we create all possible combinations.
+      combinations = _.cartesianProduct finalTaskPaths...
+
+      # Each combination is now an array of sub-paths, so we just concatenate all tasks found in these sub-paths.
+      paths = (_.uniq _.flattenDeep combination for combination in combinations)
+
+    else
+      # We can take any of the paths from final tasks so simply merge them together.
+      paths = _.flatten finalTaskPaths
+
+    paths
+    
   @_findPaths: (task) ->
     # To get to this task, we can come from any of the predecessors.
     predecessors = task.predecessors()
@@ -150,6 +172,24 @@ class PAA.Learning.Goal
     path.push task for path in paths
 
     paths
+    
+  @isInterestProvidedFromIndividuallyCompletedFinalTask: (interest) ->
+    switch @finalTasksCompleteType()
+      when @FinalTasksCompleteType.All
+        # We can get this interest from completing the goal only if there's only one final task that provides it.
+        finalTasks = @finalTasks()
+        return false unless finalTasks.length is 1
+        interest in finalTasks[0].interests()
+        
+      when @FinalTasksCompleteType.Any
+        # We can get this interest from completing the goal if any final task provides it.
+        for finalTask in @finalTasks()
+          return true if interest in finalTask.interests()
+          
+        false
+      
+  @doesCompletingAnyFinalTaskCompleteTheGoal: ->
+    @finalTasksCompleteType() is @FinalTasksCompleteType.Any or @finalTasks().length is 1
 
   @getAdventureInstanceForId: (goalId) ->
     return unless LOI.adventureInitialized()

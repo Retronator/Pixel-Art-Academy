@@ -48,6 +48,8 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
   onCreated: ->
     super arguments...
+    
+    @_goalNodeTemplates = {}
 
     @blueprint new @constructor.Blueprint @
     @goalSearch new @constructor.GoalSearch @
@@ -57,6 +59,22 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
 
     # Maximize on run.
     @maximize()
+    
+  onDestroyed: ->
+    super arguments...
+    
+    goalNode.destroy() for goalId, goalNode of @_goalNodeTemplates
+    
+  createGoalNode: (goalId, goalHierarchy) ->
+    unless PAA.Learning.Goal.getClassForId goalId
+      console.warn "Unrecognized goal requested.", goalId
+      return null
+  
+    unless @_goalNodeTemplates[goalId]
+      @_goalNodeTemplates[goalId] = new @constructor.GoalNode
+      @_goalNodeTemplates[goalId].initialize goalId
+    
+    @_goalNodeTemplates[goalId].cloneTemplate goalHierarchy
 
   hasGoal: (goalId) -> @constructor.hasGoal goalId
   

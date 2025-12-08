@@ -2,7 +2,9 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelPad.Apps.StudyPlan.Blueprint.Camera
+StudyPlan = PAA.PixelPad.Apps.StudyPlan
+
+class StudyPlan.Blueprint.Camera
   constructor: (@blueprint) ->
     @state = new LOI.StateObject address: @blueprint.studyPlan.stateAddress.child 'camera'
     

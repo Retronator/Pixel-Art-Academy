@@ -23,14 +23,22 @@ Package.onUse(function(api) {
 
   api.addComponent('studyplan');
 
-  api.addComponent('goal..');
-  api.addComponent('goal/task');
+  api.addFile('connectionpoint');
+  api.addFile('goalhierarchy');
+  api.addFile('goalnode');
+  api.addFile('pathway');
+  api.addFile('taskpoint');
+  api.addFile('tilemap');
+  api.addFile('tile');
 
   api.addComponent('goalsearch..');
 
   api.addComponent('blueprint..');
-  api.addFile('blueprint/flowchart');
   api.addFile('blueprint/camera');
   api.addFile('blueprint/mouse');
-  api.addFile('blueprint/grid');
+
+  api.addComponent('blueprint/goal..');
+  api.addComponent('blueprint/goal/task..');
+
+  api.addComponent('blueprint/tilemap..');
 });
