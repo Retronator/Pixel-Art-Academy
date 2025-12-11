@@ -7,6 +7,7 @@
 
   > .blueprint
     position absolute
+    z-index 0
 
   .tile
     position absolute
@@ -26,18 +27,6 @@
         .blueprint
           background-position-x -69rem
 
-    &.blueprint
-    &.sidewalk
-    &.road
-    &.ground
-    &.building
-    &.gate
-    &.flag
-      .ground
-        .blueprint
-          background-position -16rem -10rem
-
-    .ground .blueprint
     .pathway .blueprint
     .gate .blueprint
     .flag .blueprint
@@ -45,6 +34,7 @@
 
     .ground
       absolute-cover()
+      z-index 1
 
       .blueprint
       .image
@@ -77,6 +67,7 @@
 
     .pathway
       absolute-cover()
+      z-index 2
 
       &.sidewalk .blueprint
         background-position -31rem -29rem
@@ -121,14 +112,21 @@
         absolute-cover()
 
     .building
+    .gate
+    .flag
+      position absolute
+      z-index 3
+
+      .blueprint
+        position absolute
+
+    .building
       &.active
         .blueprint
           background-color atariCyan(3)
           border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active.png')
 
       .blueprint
-        position absolute
-        z-index 2
         left 0
         background-color atariCyan(0)
         background-clip padding-box
@@ -138,8 +136,6 @@
 
     .gate
       .blueprint
-        position absolute
-        z-index 2
         left -2rem
         top -6rem
         width 11rem
@@ -148,8 +144,6 @@
 
     .flag
       .blueprint
-        position absolute
-        z-index 2
         left 5rem
         top -6rem
         width 6rem

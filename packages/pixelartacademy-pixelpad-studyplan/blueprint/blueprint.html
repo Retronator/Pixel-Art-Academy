@@ -1,6 +1,9 @@
 <template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint">
   <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint {{draggingClass}}">
     <div class="origin" {{style originStyle}}>
+      {{#if displayedGoalHierarchy}}
+        {{> renderRoadTileMapComponent displayedGoalHierarchy.roadTileMap}}
+      {{/if}}
       {{#each goalComponents}}
         {{> renderGoalComponent goalNodeForGoalComponent}}
       {{/each}}

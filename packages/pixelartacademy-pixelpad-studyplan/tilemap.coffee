@@ -31,7 +31,7 @@ class StudyPlan.TileMap
   tileFilled: (x, y) ->
     @map[x]?[y]? and @map[x][y].type isnt @constructor.Tile.Types.BlueprintEdge
     
-  placeTile: (x, y, type, verticalBlueprintNeighbors = true) =>
+  placeTile: (x, y, type, horizontalBlueprintNeighbors = true, verticalBlueprintNeighbors = true) ->
     tile = @getTile x, y
     
     # Don't replace structures and pathways.
@@ -40,10 +40,11 @@ class StudyPlan.TileMap
     # Placing a tile places that tile to the target and blueprints around it.
     tile.type = type
     
-    leftNeighbor = @getTile x - 1, y
-    leftNeighbor.type ?= @constructor.Tile.Types.Blueprint
-    rightNeighbor = @getTile x + 1, y
-    rightNeighbor.type ?= @constructor.Tile.Types.Blueprint
+    if horizontalBlueprintNeighbors
+      leftNeighbor = @getTile x - 1, y
+      leftNeighbor.type ?= @constructor.Tile.Types.Blueprint
+      rightNeighbor = @getTile x + 1, y
+      rightNeighbor.type ?= @constructor.Tile.Types.Blueprint
     
     if verticalBlueprintNeighbors
       topNeighbor = @getTile x, y - 1
@@ -51,9 +52,14 @@ class StudyPlan.TileMap
       bottomNeighbor = @getTile x, y + 1
       bottomNeighbor.type ?= @constructor.Tile.Types.Blueprint
   
-  placeRoad: (pathway, accessRoad) ->
-    waypoints = [pathway.startPoint.localPosition, pathway.localWaypointPositions..., pathway.endPoint.localPosition]
-    waypoints = _.reverse waypoints if accessRoad
+  placeRoad: (pathway, options = {}) ->
+    if options.useGlobalPositions
+      waypoints = [pathway.startPoint.globalPosition, pathway.globalWaypointPositions..., pathway.endPoint.globalPosition]
+      
+    else
+      waypoints = [pathway.startPoint.localPosition, pathway.localWaypointPositions..., pathway.endPoint.localPosition]
+
+    waypoints = _.reverse waypoints if options.accessRoad
     type = @constructor.Tile.Types.Road
     
     for waypointIndex in [0...waypoints.length - 1]
@@ -78,13 +84,13 @@ class StudyPlan.TileMap
         x = if vertical then start.x else coordinate
         y = if vertical then coordinate else start.y
         tile = @getTile x, y
-        type = @constructor.Tile.Types.Sidewalk if accessRoad and tile.type is @constructor.Tile.Types.Road
-        @placeTile x, y, type, not accessRoad
+        type = @constructor.Tile.Types.Sidewalk if options.accessRoad and tile.type is @constructor.Tile.Types.Road
+        @placeTile x, y, type, vertical and not options.noBlueprint, not vertical and not options.noBlueprint
         
     # Explicit return to avoid result collection.
     return
 
-  finishConstruction: ->
+  finishConstruction: (options = {}) ->
     # Determine road neighbors.
     for tile in @tiles when tile.type is @constructor.Tile.Types.Road
       x = tile.position.x
@@ -94,6 +100,8 @@ class StudyPlan.TileMap
       up = @map[x]?[y - 1]?.type is @constructor.Tile.Types.Road
       down = @map[x]?[y + 1]?.type is @constructor.Tile.Types.Road
       @map[x][y].roadNeighbors = {left, right, up, down}
+
+    return if options.noBlueprintEdges
     
     # Place blueprint edges.
     filledTiles = _.clone @tiles
@@ -136,3 +144,6 @@ class StudyPlan.TileMap
           unless tile.edgeDirections.left or tile.edgeDirections.right or tile.edgeDirections.up or tile.edgeDirections.down
             tile.type = if left is @constructor.Tile.Types.Ground and right is @constructor.Tile.Types.Ground then @constructor.Tile.Types.Ground else @constructor.Tile.Types.Blueprint
             tile.edgeDirections = null
+
+    # Explicit return to avoid result collection.
+    return

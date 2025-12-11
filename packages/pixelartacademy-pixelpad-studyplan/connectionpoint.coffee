@@ -25,3 +25,6 @@ class StudyPlan.ConnectionPoint
     taskPoint.providedInterests.push @providedInterests...
     
     taskPoint
+
+  calculateGlobalPosition: (origin) ->
+    @globalPosition.copy(@localPosition).add origin

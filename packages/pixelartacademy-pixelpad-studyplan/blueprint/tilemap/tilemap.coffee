@@ -86,7 +86,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
           else
             sourceY = 10
           
-        else
+        else unless tile.type is StudyPlan.TileMap.Tile.Types.Road
           sourceX = 16
           sourceY = 10
 

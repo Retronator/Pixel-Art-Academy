@@ -24,7 +24,7 @@ class StudyPlan.GoalNode
     @parent = null
     
     @localPosition = new THREE.Vector2
-    @globalPosition = new THREE.Vector2
+    @globalPosition = new ReactiveField new THREE.Vector2
     
     @width = 0
     @height = 0
@@ -159,7 +159,7 @@ class StudyPlan.GoalNode
       # Determine how many tiles are needed for this level.
       width = 0
       entryRequired = false
-      exitRequired = true
+      exitRequired = false
       maxGroupNumberRequiringExit = Number.NEGATIVE_INFINITY
       
       for taskPoint in @taskPoints when taskPoint.level is levelIndex
@@ -174,7 +174,7 @@ class StudyPlan.GoalNode
             
           # Tasks that are placed after access roads should have some space
           # before to make it clear we can't get to them from the access road.
-          if @levels[levelIndex - 1]?.exitRequired and taskPoint.groupNumber <= @levels[levelIndex - 1].maxGroupNumberRequiringExit
+          if @levels[levelIndex - 1]?.sideExitPoint and taskPoint.groupNumber < @levels[levelIndex - 1].maxGroupNumberRequiringExit
             spaceBefore = 1
           
           # Provided interests must have space for an access road.
@@ -201,7 +201,7 @@ class StudyPlan.GoalNode
         level.sideEntryPoint.localPosition.x = entryTileX
         @sidewaysPoints.push level.sideEntryPoint
       
-      if exitRequired and levelIndex < @maxLevel - 1 or not @goalClass.doesCompletingAnyFinalTaskCompleteTheGoal()
+      if exitRequired and (levelIndex < @maxLevel - 1 or not @goalClass.doesCompletingAnyFinalTaskCompleteTheGoal())
         level.sideExitPoint = new StudyPlan.ConnectionPoint
         level.sideExitPoint.localPosition.x = exitTileX
         @sidewaysPoints.push level.sideExitPoint
@@ -252,8 +252,8 @@ class StudyPlan.GoalNode
     # Create the tile map.
     @tileMap = new StudyPlan.TileMap
     
-    accessRoadStartY = @groupNumbers[@minGroupNumber].y - 6
-    connectionPoint.localPosition.y = accessRoadStartY for connectionPoint in @sidewaysPoints
+    @accessRoadStartY = @groupNumbers[@minGroupNumber].y - 6
+    connectionPoint.localPosition.y = @accessRoadStartY for connectionPoint in @sidewaysPoints
     
     # Place tasks.
     for taskPoint in @taskPoints
@@ -299,64 +299,75 @@ class StudyPlan.GoalNode
         pathway = new StudyPlan.Pathway level.sideEntryPoint, taskPoint.entryPoint
         pathway.localWaypointPositions.push new THREE.Vector2 level.entryTileX, pathway.endPoint.localPosition.y
         @taskPathways.push pathway
-        @tileMap.placeRoad pathway, true
+        @tileMap.placeRoad pathway, accessRoad: true
         
       # Add exit roads if there are interests and it can't lead directly to the exit of the goal.
       if taskPoint.task.interests().length and level.sideExitPoint
         pathway = new StudyPlan.Pathway taskPoint.exitPoint, level.sideExitPoint
         pathway.localWaypointPositions.push new THREE.Vector2 level.exitTileX, pathway.startPoint.localPosition.y
         @taskPathways.push pathway
-        @tileMap.placeRoad pathway, true
+        @tileMap.placeRoad pathway, accessRoad: true
         
     @tileMap.finishConstruction()
   
   calculateLocalPositions: ->
-    # The base size is our tile map size.
-    minX = @tileMap.minX
-    minY = @tileMap.minY
-    maxX = @tileMap.maxX
-    maxY = @tileMap.maxY
-    
-    # Below the tile map is the goal title.
-    maxY += StudyPlan.Blueprint.Goal.titleTileHeight
+    # The base size is where the surrounding roads would go.
+    @minX = @entryPoint.localPosition.x - StudyPlan.GoalHierarchy.goalPadding.left
+    @maxX = @exitPoint.localPosition.x + StudyPlan.GoalHierarchy.goalPadding.right
+    @minY = @accessRoadStartY - StudyPlan.GoalHierarchy.goalPadding.top
+    @maxY = @tileMap.maxY + 3 + @goalHierarchy.blueprint.getGoalNameTileHeight @goalId
+
+    @topRoadY = @minY
+    @bottomRoadY = @maxY
 
     # Place forward goals to the right of this goal.
     topY = null
-    leftX = @exitPoint.localPosition.x + 4
+    leftX = @maxX
     
     for goalNode in @forwardGoalNodes
       goalNode.calculateLocalPositions()
       
       rightX = leftX + goalNode.width - 1
-      maxX = Math.max maxX, rightX
+      @maxX = Math.max @maxX, rightX
       
-      topY ?= goalNode.tileMap.minY
-      minY = Math.min minY, topY
+      topY ?= goalNode.accessRoadStartY - StudyPlan.GoalHierarchy.goalPadding.top
+      @minY = Math.min @minY, topY
       bottomY = topY + goalNode.height - 1
-      maxY = Math.max maxY, bottomY
+      @maxY = Math.max @maxY, bottomY
 
-      goalNode.localPosition.set leftX - goalNode.tileMap.minX, topY - goalNode.tileMap.minY
-      topY = bottomY + 1 + StudyPlan.Blueprint.Goal.verticalPadding
+      goalNode.localPosition.set leftX - goalNode.minX, topY - goalNode.topRoadY
+      topY = bottomY
     
     # Place sideways goals above this goal.
-    bottomY = Math.min(@tileMap.minY, @forwardGoalNodes[0]?.tileMap.minY or 0) - 1 - StudyPlan.Blueprint.Goal.verticalPadding
+    bottomY = @minY
     
     for goalNode in @sidewaysGoalNodes
       goalNode.calculateLocalPositions()
       
       topY = bottomY - goalNode.height + 1
-      minY = Math.min minY, topY
+      @minY = Math.min @minY, topY
       
-      maxX = Math.max maxX, goalNode.tileMap.maxX
+      @maxX = Math.max @maxX, goalNode.maxX
       
-      goalNode.localPosition.set -goalNode.tileMap.minX, topY - goalNode.tileMap.minY
-      bottomY = topY - 1 - StudyPlan.Blueprint.Goal.verticalPadding
+      goalNode.localPosition.set 0, topY - goalNode.minY
+      bottomY = topY
     
-    @width = maxX - minX + 1
-    @height = maxY - minY + 1
+    @width = @maxX - @minX + 1
+    @height = @maxY - @minY + 1
   
   calculateGlobalPositions: ->
-    @globalPosition.set @parent.globalPosition.x + @localPosition.x, @parent.globalPosition.y + @localPosition.y if @parent
+    if @parent
+      globalPosition = @localPosition.clone().add @parent.globalPosition()
+      
+    else
+      globalPosition = new THREE.Vector2
+      
+    @globalPosition globalPosition
+    
+    @entryPoint.calculateGlobalPosition globalPosition
+    @exitPoint.calculateGlobalPosition globalPosition
+    sidewaysPoint.calculateGlobalPosition globalPosition for sidewaysPoint in @sidewaysPoints
+    taskPathway.calculateGlobalPositions globalPosition for taskPathway in @taskPathways
     
     goalNode.calculateGlobalPositions() for goalNode in @sidewaysGoalNodes
     goalNode.calculateGlobalPositions() for goalNode in @forwardGoalNodes
@@ -380,6 +391,7 @@ class StudyPlan.GoalNode
       
     goalNode.entryPoint = getConnectionPointClone @entryPoint
     goalNode.exitPoint = getConnectionPointClone @exitPoint
+    goalNode.sidewaysPoints.push getConnectionPointClone sidewaysPoint for sidewaysPoint in @sidewaysPoints
     
     for taskPoint in @taskPoints
       goalNode.taskPoints.push getConnectionPointClone taskPoint
@@ -394,6 +406,7 @@ class StudyPlan.GoalNode
       pathway.clone getConnectionPointClone(pathway.startPoint), getConnectionPointClone(pathway.endPoint)
     
     goalNode.tileMap = @tileMap
+    goalNode.accessRoadStartY = @accessRoadStartY
     
     goalNode
     

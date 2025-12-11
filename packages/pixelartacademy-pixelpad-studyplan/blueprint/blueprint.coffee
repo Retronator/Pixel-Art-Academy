@@ -20,6 +20,8 @@ class StudyPlan.Blueprint extends AM.Component
     @bounds = new AE.Rectangle()
     @$blueprint = new ReactiveField null
     @dragBlueprint = new ReactiveField false
+    
+    @_goalNameTileHeightsCache = {}
 
   onCreated: ->
     super arguments...
@@ -30,6 +32,22 @@ class StudyPlan.Blueprint extends AM.Component
     @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
 
+    @goalHierarchy = new AE.LiveComputedField =>
+      return unless @studyPlan.ready()
+      return unless goalsData = @studyPlan.state 'goals'
+      
+      Tracker.nonreactive => new StudyPlan.GoalHierarchy @, goalsData
+    
+    @previewConnection = new ReactiveField null
+
+    @previewGoalHierarchy = new AE.LiveComputedField =>
+      return unless goalHierarchy = @goalHierarchy()
+      return unless previewConnection = @previewConnection()
+      
+      Tracker.nonreactive => goalHierarchy.getPreviewGoalHierarchy previewConnection
+    
+    @roadTileMapComponent = new @constructor.TileMap
+    
     # Create goal components and connections.
     @_goalComponentsById = {}
 
@@ -39,7 +57,12 @@ class StudyPlan.Blueprint extends AM.Component
       
       previousGoalComponents = _.values @_goalComponentsById
 
-      for goalId, goalData of goalsData
+      newGoalIds = _.keys goalsData
+      
+      if previewConnection = @previewConnection()
+        newGoalIds = _.union newGoalIds, [previewConnection.startGoalId, previewConnection.endGoalId]
+
+      for goalId in newGoalIds
         goalComponent = @_goalComponentsById[goalId]
 
         if goalComponent
@@ -62,20 +85,6 @@ class StudyPlan.Blueprint extends AM.Component
         delete @_goalComponentsById[goalId]
 
       @_goalComponentsById
-
-    @goalHierarchy = new AE.LiveComputedField =>
-      return unless @studyPlan.ready()
-      return unless goalsData = @studyPlan.state 'goals'
-      
-      Tracker.nonreactive => new StudyPlan.GoalHierarchy @, goalsData
-      
-    @previewConnection = new ReactiveField null
-  
-    @previewGoalHierarchy = new AE.LiveComputedField =>
-      return unless goalHierarchy = @goalHierarchy()
-      return unless previewConnection = @previewConnection()
-      
-      Tracker.nonreactive => goalHierarchy.getPreviewGoalHierarchy previewConnection
 
     # Handle blueprint dragging.
     @autorun (computation) =>
@@ -103,7 +112,25 @@ class StudyPlan.Blueprint extends AM.Component
     super arguments...
 
     @goalComponentsById.stop()
+    
+    @goalHierarchy().destroy()
     @goalHierarchy.stop()
+    
+    @previewGoalHierarchy()?.destroy()
+    @previewGoalHierarchy.stop()
+  
+  getGoalNameTileHeight: (goalId) ->
+    return 1 unless @isRendered()
+    goalComponentsById = @goalComponentsById()
+
+    if goalComponent = goalComponentsById[goalId]
+      height = goalComponent.nameTileHeight()
+      @_goalNameTileHeightsCache[goalId] = height
+    
+    @_goalNameTileHeightsCache[goalId] or 1
+  
+  renderRoadTileMapComponent: ->
+    @roadTileMapComponent.renderComponent @currentComponent()
     
   displayedGoalHierarchy: -> @previewGoalHierarchy() or @goalHierarchy()
 

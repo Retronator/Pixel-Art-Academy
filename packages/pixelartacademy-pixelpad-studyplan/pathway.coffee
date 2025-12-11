@@ -10,6 +10,9 @@ class StudyPlan.Pathway
     @localWaypointPositions = []
     @globalWaypointPositions = []
     
+    # Don't add duplicate pathways.
+    return @ if _.find @startPoint.outgoingPathways, (pathway) => pathway.endPoint is @endPoint and pathway.interest is @interest
+    
     @startPoint.outgoingPathways.push @
     @endPoint.incomingPathways.push @
 
@@ -17,3 +20,7 @@ class StudyPlan.Pathway
     pathway = new StudyPlan.Pathway newStartPoint, newEndPoint, @interest
     pathway.localWaypointPositions.push @localWaypointPositions...
     pathway
+  
+  calculateGlobalPositions: (origin) ->
+    @globalWaypointPositions = for localWaypointPosition in @localWaypointPositions
+      localWaypointPosition.clone().add origin
