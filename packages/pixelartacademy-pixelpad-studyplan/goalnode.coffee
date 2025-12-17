@@ -12,10 +12,11 @@ class StudyPlan.GoalNode
     
     @entryPoint = null
     @exitPoint = null
+    @endTaskPoint = null
     @sidewaysPoints = []
     
     @taskPoints = []
-    @taskPointsByTaskId = {}
+    @taskPointsById = {}
     
     @taskPathways = []
     
@@ -28,6 +29,9 @@ class StudyPlan.GoalNode
     
     @width = 0
     @height = 0
+  
+  destroy: ->
+    @goal?.destroy()
     
   initialize: (@goalId) ->
     unless @goalClass = PAA.Learning.Goal.getClassForId @goalId
@@ -36,38 +40,38 @@ class StudyPlan.GoalNode
     
     @goal = new @goalClass
     
-    @entryPoint = new StudyPlan.ConnectionPoint
-    @exitPoint = new StudyPlan.ConnectionPoint
+    @entryPoint = StudyPlan.ConnectionPoint.createLocal @
+    @exitPoint = StudyPlan.ConnectionPoint.createLocal @
     
     tasks = @goal.tasks()
     
     # Create task points.
     for task in tasks
       taskPoint = new StudyPlan.TaskPoint
-      taskPoint.initializeTask task
+      taskPoint.initializeTask task, @
       
       @taskPoints.push taskPoint
-      @taskPointsByTaskId[task.id()] = taskPoint
+      @taskPointsById[task.id()] = taskPoint
     
     # Create links between task points.
     for task in tasks
-      taskPoint = @taskPointsByTaskId[task.id()]
+      taskPoint = @taskPointsById[task.id()]
       
       predecessors = task.predecessors()
       
       if predecessors.length
         for predecessor in predecessors
-          predecessorTaskPoint = @taskPointsByTaskId[predecessor.id()]
+          predecessorTaskPoint = @taskPointsById[predecessor.id()]
           taskPoint.predecessors.push predecessorTaskPoint
     
     # Create end task point.
     @endTaskPoint = new StudyPlan.TaskPoint
-    @endTaskPoint.initializeEndTask()
+    @endTaskPoint.initializeEndTask @
     @endTaskPoint.groupNumber = @goal.finalGroupNumber()
     @taskPoints.push @endTaskPoint
     
     for task in @goal.finalTasks()
-      taskPoint = @taskPointsByTaskId[task.id()]
+      taskPoint = @taskPointsById[task.id()]
       @endTaskPoint.predecessors.push taskPoint
       
     # Calculate levels.
@@ -111,7 +115,7 @@ class StudyPlan.GoalNode
           for missingLevel in [predecessor.level + 1...taskPoint.level]
             # Create the dummy goal in the same group as the predecessor and link it to the previous missing level.
             dummyTaskPoint = new StudyPlan.TaskPoint
-            dummyTaskPoint.initializeDummyTask()
+            dummyTaskPoint.initializeDummyTask @
             dummyTaskPoint.level = missingLevel
             dummyTaskPoint.groupNumber = predecessor.groupNumber
             dummyTaskPoint.predecessors.push lastTaskPoint
@@ -132,14 +136,14 @@ class StudyPlan.GoalNode
     for taskPoint in @taskPoints
       if taskPoint.predecessors.length
         for predecessor in taskPoint.predecessors
-          pathway = new StudyPlan.Pathway predecessor.exitPoint, taskPoint.entryPoint
+          pathway = new StudyPlan.Pathway predecessor.exitPoint, taskPoint.entryPoint, @
           @taskPathways.push pathway
       
       else
-        pathway = new StudyPlan.Pathway @entryPoint, taskPoint.entryPoint
+        pathway = new StudyPlan.Pathway @entryPoint, taskPoint.entryPoint, @
         @taskPathways.push pathway
     
-    pathway = new StudyPlan.Pathway @endTaskPoint.exitPoint, @exitPoint
+    pathway = new StudyPlan.Pathway @endTaskPoint.exitPoint, @exitPoint, @
     @taskPathways.push pathway
     
     # Prepare for distributing the tasks on the tilemap.
@@ -197,13 +201,11 @@ class StudyPlan.GoalNode
       level = {entryTileX, exitTileX, maxGroupNumberRequiringExit}
       
       if entryRequired and levelIndex
-        level.sideEntryPoint = new StudyPlan.ConnectionPoint
-        level.sideEntryPoint.localPosition.x = entryTileX
+        level.sideEntryPoint = StudyPlan.ConnectionPoint.createLocal @, entryTileX
         @sidewaysPoints.push level.sideEntryPoint
       
       if exitRequired and (levelIndex < @maxLevel - 1 or not @goalClass.doesCompletingAnyFinalTaskCompleteTheGoal())
-        level.sideExitPoint = new StudyPlan.ConnectionPoint
-        level.sideExitPoint.localPosition.x = exitTileX
+        level.sideExitPoint = StudyPlan.ConnectionPoint.createLocal @, exitTileX
         @sidewaysPoints.push level.sideExitPoint
         
       @levels.push level
@@ -252,7 +254,7 @@ class StudyPlan.GoalNode
     # Create the tile map.
     @tileMap = new StudyPlan.TileMap
     
-    @accessRoadStartY = @groupNumbers[@minGroupNumber].y - 6
+    @accessRoadStartY = @groupNumbers[@minGroupNumber].y - 4
     connectionPoint.localPosition.y = @accessRoadStartY for connectionPoint in @sidewaysPoints
     
     # Place tasks.
@@ -261,18 +263,20 @@ class StudyPlan.GoalNode
       
       # If it's not a dummy task, also place a building.
       if taskPoint.task
-        @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Building
+        tile = @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Building
+        tile.building = taskPoint.task.studyPlanBuilding()
+        taskPoint.tiles.push tile
         
         if taskPoint.task.requiredInterests().length
-          @tileMap.placeTile taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2, StudyPlan.TileMap.Tile.Types.Gate
+          taskPoint.tiles.push @tileMap.placeTile taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2, StudyPlan.TileMap.Tile.Types.Gate
       
       if taskPoint.endTask
-        @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Flag
+        taskPoint.tiles.push @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Flag
         
       # Add ground.
-      for x in [taskPoint.localPosition.x - 1..taskPoint.localPosition.x + 1]
-        for y in [taskPoint.localPosition.y - 2..taskPoint.localPosition.y + 2]
-          @tileMap.placeTile x, y, StudyPlan.TileMap.Tile.Types.Ground
+      for x in [taskPoint.localPosition.x - 2..taskPoint.localPosition.x + 2]
+        for y in [taskPoint.localPosition.y - 3..taskPoint.localPosition.y + 2]
+          taskPoint.tiles.push @tileMap.placeTile x, y, StudyPlan.TileMap.Tile.Types.Ground
     
     # Add waypoints to pathways that change group numbers.
     for taskPoint in @taskPoints
@@ -296,20 +300,63 @@ class StudyPlan.GoalNode
       
       # Add entry roads if there are required interests and we're not the first task of the goal.
       if taskPoint.task.requiredInterests().length and level.sideEntryPoint
-        pathway = new StudyPlan.Pathway level.sideEntryPoint, taskPoint.entryPoint
+        pathway = new StudyPlan.Pathway level.sideEntryPoint, taskPoint.entryPoint, @
         pathway.localWaypointPositions.push new THREE.Vector2 level.entryTileX, pathway.endPoint.localPosition.y
         @taskPathways.push pathway
         @tileMap.placeRoad pathway, accessRoad: true
         
       # Add exit roads if there are interests and it can't lead directly to the exit of the goal.
       if taskPoint.task.interests().length and level.sideExitPoint
-        pathway = new StudyPlan.Pathway taskPoint.exitPoint, level.sideExitPoint
+        pathway = new StudyPlan.Pathway taskPoint.exitPoint, level.sideExitPoint, @
         pathway.localWaypointPositions.push new THREE.Vector2 level.exitTileX, pathway.startPoint.localPosition.y
         @taskPathways.push pathway
         @tileMap.placeRoad pathway, accessRoad: true
         
-    @tileMap.finishConstruction()
+    @tileMap.finishConstruction onlySolidRoadLines: true
   
+  cloneTemplate: (goalHierarchy) ->
+    goalNode = new @constructor
+    goalNode.goalHierarchy = goalHierarchy
+    goalNode.goalId = @goalId
+    goalNode.goalClass = @goalClass
+    goalNode.goal = @goal
+    
+    connectionPointCloneMappings = []
+    
+    getConnectionPointClone = (connectionPoint) ->
+      connectionPointCloneMapping = _.find connectionPointCloneMappings, (mapping) -> mapping.from is connectionPoint
+      return connectionPointCloneMapping.to if connectionPointCloneMapping
+      
+      clonedConnectionPoint = connectionPoint.clone goalNode, getConnectionPointClone
+      clonedConnectionPoint.goalNode = goalNode
+      connectionPointCloneMappings.push from: connectionPoint, to: clonedConnectionPoint
+      clonedConnectionPoint
+      
+    goalNode.entryPoint = getConnectionPointClone @entryPoint
+    goalNode.exitPoint = getConnectionPointClone @exitPoint
+    goalNode.endTaskPoint = getConnectionPointClone @endTaskPoint
+    goalNode.sidewaysPoints.push getConnectionPointClone sidewaysPoint for sidewaysPoint in @sidewaysPoints
+    
+    for taskPoint in @taskPoints
+      goalNode.taskPoints.push getConnectionPointClone taskPoint
+      
+    for taskId, taskPoint of @taskPointsById
+      goalNode.taskPointsById[taskId] = getConnectionPointClone taskPoint
+    
+    for taskPoint in @taskPoints
+      clonedTaskPoint = getConnectionPointClone taskPoint
+      
+      for predecessor in taskPoint.predecessors
+        clonedTaskPoint.predecessors.push getConnectionPointClone predecessor
+      
+    for pathway in @taskPathways
+      goalNode.taskPathways.push pathway.clone getConnectionPointClone(pathway.startPoint), getConnectionPointClone(pathway.endPoint), goalNode
+    
+    goalNode.tileMap = @tileMap
+    goalNode.accessRoadStartY = @accessRoadStartY
+    
+    goalNode
+    
   calculateLocalPositions: ->
     # The base size is where the surrounding roads would go.
     @minX = @entryPoint.localPosition.x - StudyPlan.GoalHierarchy.goalPadding.left
@@ -367,48 +414,28 @@ class StudyPlan.GoalNode
     @entryPoint.calculateGlobalPosition globalPosition
     @exitPoint.calculateGlobalPosition globalPosition
     sidewaysPoint.calculateGlobalPosition globalPosition for sidewaysPoint in @sidewaysPoints
+    taskPoint.calculateGlobalPosition globalPosition for taskPoint in @taskPoints
     taskPathway.calculateGlobalPositions globalPosition for taskPathway in @taskPathways
     
     goalNode.calculateGlobalPositions() for goalNode in @sidewaysGoalNodes
     goalNode.calculateGlobalPositions() for goalNode in @forwardGoalNodes
     
-  cloneTemplate: (goalHierarchy) ->
-    goalNode = new @constructor
-    goalNode.goalHierarchy = goalHierarchy
-    goalNode.goalId = @goalId
-    goalNode.goalClass = @goalClass
-    goalNode.goal = @goal
+  getExitPointForInterest: (interest) ->
+    # Find the task that provides this interest.
+    return unless taskPoint = _.find @taskPoints, (taskPoint) => interest in taskPoint.providedInterests
     
-    connectionPointCloneMappings = []
-    
-    getConnectionPointClone = (connectionPoint) ->
-      connectionPointCloneMapping = _.find connectionPointCloneMappings, (mapping) -> mapping.from is connectionPoint
-      return connectionPointCloneMapping.to if connectionPointCloneMapping
+    # The exit of this task will either lead to one of the sideways points or towards the exit.
+    if sidewaysExitPathway = _.find taskPoint.exitPoint.outgoingPathways, (pathway) => pathway.endPoint in @sidewaysPoints
+      return sidewaysExitPathway.endPoint
       
-      clonedConnectionPoint = connectionPoint.clone()
-      connectionPointCloneMappings.push from: connectionPoint, to: clonedConnectionPoint
-      clonedConnectionPoint
-      
-    goalNode.entryPoint = getConnectionPointClone @entryPoint
-    goalNode.exitPoint = getConnectionPointClone @exitPoint
-    goalNode.sidewaysPoints.push getConnectionPointClone sidewaysPoint for sidewaysPoint in @sidewaysPoints
+    @exitPoint
     
-    for taskPoint in @taskPoints
-      goalNode.taskPoints.push getConnectionPointClone taskPoint
+  getEntryPointForInterest: (interest) ->
+    # Find the task that requires this interest.
+    return unless taskPoint = _.find @taskPoints, (taskPoint) => interest in taskPoint.entryPoint.requiredInterests
     
-    for taskPoint in @taskPoints
-      clonedTaskPoint = getConnectionPointClone taskPoint
-      
-      for predecessor in taskPoint.predecessors
-        clonedTaskPoint.predecessors.push getConnectionPointClone predecessor
-      
-    for pathway in @taskPathways
-      pathway.clone getConnectionPointClone(pathway.startPoint), getConnectionPointClone(pathway.endPoint)
+    # The entry of this task will either lead to one of the sideways points or towards the entry.
+    if sidewaysExitPathway = _.find taskPoint.exitPoint.incomingPathways, (pathway) => pathway.startPoint in @sidewaysPoints
+      return sidewaysExitPathway.endPoint
     
-    goalNode.tileMap = @tileMap
-    goalNode.accessRoadStartY = @accessRoadStartY
-    
-    goalNode
-    
-  destroy: ->
-    @goal.destroy()
+    @entryPoint

@@ -41,4 +41,9 @@ Package.onUse(function(api) {
   api.addComponent('blueprint/goal/task..');
 
   api.addComponent('blueprint/tilemap..');
+  api.addFile('blueprint/tilemap/tilemap-buildings');
+  api.addStyle('blueprint/tilemap/tilemap-buildings');
+  api.addStyle('blueprint/tilemap/tilemap-terrain');
+  api.addStyle('blueprint/tilemap/tilemap-pathways');
+  api.addFile('blueprint/tilemap/tile');
 });

@@ -46,7 +46,7 @@ class StudyPlan.Blueprint extends AM.Component
       
       Tracker.nonreactive => goalHierarchy.getPreviewGoalHierarchy previewConnection
     
-    @roadTileMapComponent = new @constructor.TileMap
+    @roadTileMapComponent = new @constructor.TileMap noBlueprint: true
     
     # Create goal components and connections.
     @_goalComponentsById = {}
@@ -85,6 +85,56 @@ class StudyPlan.Blueprint extends AM.Component
         delete @_goalComponentsById[goalId]
 
       @_goalComponentsById
+    
+    # Support animating pathway reveal.
+    @_animationRestarting = false
+    @_pendingAnimationsCount = new ReactiveField 0
+    @_animateTimeouts = []
+    @_revealedPathways = []
+    
+    @readyToAnimate = new ComputedField =>
+      return unless @roadTileMapComponent.isRendered()
+      
+      goalComponentsById = @goalComponentsById()
+      for goalId, goalComponent of goalComponentsById
+        return unless goalComponent.isRendered()
+        
+      true
+      
+    # Track task entries.
+    @taskEntries = new AE.ReactiveArray =>
+      PAA.Learning.Task.Entry.documents.fetch profileId: LOI.adventure.profileId()
+    ,
+      added: (taskEntry) =>
+      updated: (taskEntry) =>
+      removed: (taskEntry) =>
+
+    # Reveal initial entry pathway.
+    goalHierarchy = null
+    
+    @autorun (computation) =>
+      return unless @readyToAnimate()
+      return unless goalHierarchy = @displayedGoalHierarchy()
+      goalHierarchy.roadTileMap()
+      return if @_animationRestarting
+      
+      # Restart all animations. Wait for the current ones to cancel.
+      @_animationRestarting = true
+      Meteor.clearTimeout timeout for timeout in @_animateTimeouts
+      @_animateTimeouts = []
+      @_revealedPathways = []
+      
+      Tracker.nonreactive =>
+        Tracker.autorun (computation) =>
+          console.log "restart waiting for pending", @_pendingAnimationsCount()
+          return if @_pendingAnimationsCount()
+          computation.stop()
+          @_animationRestarting = false
+          
+          console.log "REVEALING", goalHierarchy.rootGoalNode.entryPoint
+          
+          # Reveal the starting point.
+          @revealPathwaysFrom goalHierarchy.rootGoalNode.entryPoint, true
 
     # Handle blueprint dragging.
     @autorun (computation) =>
@@ -118,6 +168,8 @@ class StudyPlan.Blueprint extends AM.Component
     
     @previewGoalHierarchy()?.destroy()
     @previewGoalHierarchy.stop()
+    
+    @taskEntries.stop()
   
   getGoalNameTileHeight: (goalId) ->
     return 1 unless @isRendered()
@@ -128,6 +180,61 @@ class StudyPlan.Blueprint extends AM.Component
       @_goalNameTileHeightsCache[goalId] = height
     
     @_goalNameTileHeightsCache[goalId] or 1
+    
+  revealPathwaysFrom: (origin, animate) ->
+    for pathway in origin.outgoingPathways when pathway not in @_revealedPathways
+      @_revealedPathways.push pathway
+      
+      if animate
+        do (pathway) =>
+          @_animateTimeouts.push Meteor.setTimeout => @_revealPathway pathway, true
+        
+      else
+        @_revealPathway pathway
+        
+  _revealPathway: (pathway, animate) ->
+    @_pendingAnimationsCount @_pendingAnimationsCount() + 1
+    
+    animationOptions = {animate, stopAnimation: => @_animationRestarting}
+    
+    if pathway.goalNode
+      goalComponentsById = @goalComponentsById()
+      goalComponent = goalComponentsById[pathway.goalNode.goalId]
+      await goalComponent.tileMapComponent.revealPathway pathway, animationOptions
+      
+    else
+      await @roadTileMapComponent.revealPathway pathway, _.extend {useGlobalPositions: true}, animationOptions
+    
+    @_pendingAnimationsCount @_pendingAnimationsCount() - 1
+    return if @_animationRestarting
+    
+    # We need to check if we can continue on task entries.
+    if (taskPoint = pathway.endPoint.taskPoint) and pathway.endPoint is taskPoint.entryPoint
+      if taskPoint.task
+        # See if we need to open the gate.
+        if taskPoint.task.requiredInterests() and taskPoint.task.hasRequiredInterests()
+          goalComponent.tileMapComponent.openGate taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2
+          
+        # See if we need to activate the task.
+        if taskPoint.task.active()
+          goalComponent.tileMapComponent.activateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
+          
+        # See if we need to reveal task tiles.
+        if taskPoint.task.completed()
+          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
+
+        # We can't continue unless the task is completed.
+        return unless taskPoint.task.completed()
+        
+      else if taskPoint.endTask
+        # See if we need to raise the flag
+        if taskPoint.goalNode.goal.completed()
+          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
+          goalComponent.tileMapComponent.raiseFlag taskPoint.localPosition.x, taskPoint.localPosition.y
+        
+        return unless taskPoint.goalNode.goal.completed()
+    
+    @revealPathwaysFrom pathway.endPoint, animate
   
   renderRoadTileMapComponent: ->
     @roadTileMapComponent.renderComponent @currentComponent()

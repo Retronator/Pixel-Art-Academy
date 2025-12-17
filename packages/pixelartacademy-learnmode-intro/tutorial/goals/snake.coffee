@@ -30,6 +30,8 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @requiredInterests: -> ['pixel art software']
 
+    @studyPlanBuilding: -> 'SimCityIndustrial1'
+  
     @initialize()
 
     @completedConditions: ->
@@ -54,6 +56,8 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @predecessors: -> [Goal.Play]
 
+    @studyPlanBuilding: -> 'SimCityCommercial4'
+    
     @initialize()
     
     @completedConditions: ->
@@ -86,6 +90,8 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
     @interests: -> ['learn mode tutorial project']
 
     @predecessors: -> [Goal.Draw]
+    
+    @studyPlanBuilding: -> 'TransportTycoonCinema'
 
     @initialize()
 

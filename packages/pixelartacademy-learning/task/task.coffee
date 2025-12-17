@@ -52,6 +52,9 @@ class PAA.Learning.Task
   @predecessors: -> []
   @predecessorsCompleteType: -> @PredecessorsCompleteType.All
 
+  # Override to specify which building image to use in the Study Plan.
+  @studyPlanBuilding: -> ''
+  
   # Override to place the task in a different group. Tasks in the same group will be drawn
   # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
   @groupNumber: -> 0
@@ -129,6 +132,7 @@ class PAA.Learning.Task
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()
+  studyPlanBuilding: -> @constructor.studyPlanBuilding()
   groupNumber: -> @constructor.groupNumber()
   level: -> @constructor.level()
   
@@ -174,11 +178,14 @@ class PAA.Learning.Task
           return false if predecessorsCompletedCount is 0
 
     # Check that the profile has all required interests.
-    requiredInterests = @requiredInterests()
-    return false unless _.intersection(requiredInterests, LOI.adventure.currentInterests()).length is requiredInterests.length
+    return false unless @hasRequiredInterests()
 
     # All requirements to be active have been met.
     true
+    
+  hasRequiredInterests: ->
+    requiredInterests = @requiredInterests()
+    _.intersection(requiredInterests, LOI.adventure.currentInterests()).length is requiredInterests.length
     
   reset: ->
     PAA.Learning.Task.Entry.documents.remove

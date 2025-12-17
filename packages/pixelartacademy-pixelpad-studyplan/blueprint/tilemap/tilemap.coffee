@@ -5,6 +5,7 @@ PAA = PixelArtAcademy
 IL = Illustrapedia
 
 StudyPlan = PAA.PixelPad.Apps.StudyPlan
+TileTypes = StudyPlan.TileMap.Tile.Types
 
 class StudyPlan.Blueprint.TileMap extends AM.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.TileMap'
@@ -14,6 +15,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
 
   @tileWidth = 8
   @tileHeight = 4
+  @tileRevealDelay = 0.05
   
   @mapPosition: (positionOrTileX, tileY) ->
     if _.isObject positionOrTileX
@@ -26,17 +28,18 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     x: tileX * @tileWidth + tileY * @tileHeight
     y: tileY * @tileHeight
 
+  constructor: (@options = {}) ->
+    super arguments...
+    
   onCreated: ->
     super arguments...
     
-    @revealed = new ReactiveField false
-    @buildingActive = new ReactiveField false
-    @gateOpened = new ReactiveField false
-    @flagRaised = new ReactiveField false
+    @map = {}
     
     @nonBlueprintTiles = new ComputedField =>
       tileMap = @data()
-      _.filter tileMap.tiles, (tile) => tile.type not in [StudyPlan.TileMap.Tile.Types.BlueprintEdge, StudyPlan.TileMap.Tile.Types.Blueprint]
+      
+      @_getTileForData tile for tile in tileMap.tiles when tile.type not in [TileTypes.BlueprintEdge, TileTypes.Blueprint]
     
     unless @constructor._blueprintTilesImage
       @constructor._blueprintTilesImage = new ReactiveField false
@@ -47,6 +50,8 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       
   onRendered: ->
     super arguments...
+    
+    return if @options.noBlueprint
     
     @$blueprint = @$ '.blueprint'
     @blueprintCanvas = @$blueprint[0]
@@ -67,7 +72,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       @blueprintContext.translate -topLeftPixel.x, -topLeftPixel.y
       
       for tile in tileMap.tiles
-        if tile.type is StudyPlan.TileMap.Tile.Types.BlueprintEdge
+        if tile.type is TileTypes.BlueprintEdge
           if tile.edgeDirections.left
             sourceX = 1
           
@@ -86,7 +91,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
           else
             sourceY = 10
           
-        else unless tile.type is StudyPlan.TileMap.Tile.Types.Road
+        else unless tile.type is TileTypes.Road
           sourceX = 16
           sourceY = 10
 
@@ -97,6 +102,103 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       
       @_blueprintDrawnDependecy.changed()
   
+  _getTile: (x, y) ->
+    unless tile = @map[x]?[y]
+      tile = new @constructor.Tile x, y
+      @map[x] ?= {}
+      @map[x][y] = tile
+      
+    tile
+  
+  _getTileForData: (tileData) ->
+    tile = @_getTile tileData.position.x, tileData.position.y
+    
+    return tile if EJSON.equals tileData, tile.data
+    
+    tile.resetWithData tileData
+    tile
+
+  revealPathway: (pathway, options = {}) ->
+    if options.useGlobalPositions
+      waypoints = [pathway.startPoint.globalPosition, pathway.globalWaypointPositions..., pathway.endPoint.globalPosition]
+      
+    else
+      waypoints = [pathway.startPoint.localPosition, pathway.localWaypointPositions..., pathway.endPoint.localPosition]
+
+    for waypointIndex in [0...waypoints.length - 1]
+      start = waypoints[waypointIndex]
+      end = waypoints[waypointIndex + 1]
+      
+      if start.x is end.x
+        vertical = true
+        startCoordinate = start.y
+        endCoordinate = end.y
+        
+      else if start.y is end.y
+        vertical = false
+        startCoordinate = start.x
+        endCoordinate = end.x
+        
+      else
+        console.warn "Pathway has diagonal sections.", pathway, waypoints
+        continue
+        
+      for coordinate in [startCoordinate..endCoordinate]
+        for offset in [-1..1]
+          x = if vertical then start.x + offset else coordinate
+          y = if vertical then coordinate else start.y + offset
+          @_revealTile x, y
+          
+        if coordinate is startCoordinate and waypointIndex
+          @_revealTile start.x - 1, start.y - 1
+          @_revealTile start.x + 1, start.y - 1
+          @_revealTile start.x - 1, start.y + 1
+          @_revealTile start.x + 1, start.y + 1
+        
+        # Start and end waypoints are the same, so we don't need to wait on the start ones, except the first time.
+        firstTile = waypointIndex is 0 and coordinate is startCoordinate
+        firstTileOfStretch = coordinate is startCoordinate
+        lastTile = waypointIndex is waypoints.length - 2 and coordinate is endCoordinate
+        
+        unless firstTileOfStretch and not firstTile or lastTile
+          await @_waitForAnimation() if options.animate
+        
+        return if options.stopAnimation()
+        
+  revealTask: (taskPoint, options) ->
+    Meteor.setTimeout =>
+      for offset in [-2..2]
+        x = taskPoint.localPosition.x + offset
+        revealingTiles = _.filter taskPoint.tiles, (tile) =>
+          tile.position.x is x and tile.type not in [TileTypes.Sidewalk, TileTypes.Road]
+        
+        revealed = false
+        
+        for tile in revealingTiles when @_getTile(x, tile.position.y).revealed() is false
+          @_revealTile x, tile.position.y
+          revealed = true
+        
+        await @_waitForAnimation() if revealed and options.animate
+        
+  _waitForAnimation: ->
+    _.waitForSeconds @constructor.tileRevealDelay if @constructor.tileRevealDelay
+
+  _revealTile: (x, y) ->
+    tile = @_getTile x, y
+    tile.revealed true
+    
+  openGate: (x, y) ->
+    tile = @_getTile x, y
+    tile.gateOpened true
+    
+  raiseFlag: (x, y) ->
+    tile = @_getTile x, y
+    tile.flagRaised true
+    
+  activateBuilding: (x, y) ->
+    tile = @_getTile x, y
+    tile.buildingActive true
+    
   blueprintStyle: ->
     return unless tileMap = @data()
     
@@ -112,7 +214,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     
   tileType: ->
     tile = @currentData()
-    tile.type
+    tile.data.type
   
   tileTypeClass: ->
     _.kebabCase @tileType()
@@ -120,43 +222,56 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   tileStyle: ->
     tile = @currentData()
     
-    mapPosition = @constructor.mapPosition tile.position
+    mapPosition = @constructor.mapPosition tile.data.position
     
     left: "#{mapPosition.x}rem"
     top: "#{mapPosition.y}rem"
     
   revealedClass: ->
-    'revealed' if @revealed()
+    tile = @currentData()
+    'revealed' if tile.revealed()
+  
+  buildingClass: ->
+    tile = @currentData()
+    classes = [_.kebabCase tile.data.building]
+    classes.push 'height-8' if @_buildingHeight() is 8
+    classes.join ' '
     
   buildingActiveClass: ->
-    'active' if @buildingActive()
+    tile = @currentData()
+    'active' if tile.buildingActive()
     
   gateOpenedClass: ->
-    'opened' if @gateOpened()
+    tile = @currentData()
+    'opened' if tile.gateOpened()
     
   flagRaisedClass: ->
-    'raised' if @flagRaised()
+    tile = @currentData()
+    'raised' if tile.flagRaised()
   
   pathwayClasses: ->
     tile = @currentData()
     
     classes = []
 
-    switch tile.type
-      when StudyPlan.TileMap.Tile.Types.Sidewalk then classes.push 'sidewalk'
-      when StudyPlan.TileMap.Tile.Types.Road
-        classes.push 'road'
+    switch tile.data.type
+      when TileTypes.Sidewalk then classes.push 'sidewalk'
+      when TileTypes.Road
+        classes.push 'road', tile.data.roadMarkingStyles...
 
-        for side, neighborExists of tile.roadNeighbors when neighborExists
+        for side, neighborExists of tile.data.roadNeighbors when neighborExists
           classes.push side
       
     classes.join ' '
   
   buildingBlueprintStyle: ->
-    height = 10 + Math.floor Math.random() * 10
-    height-- if height in [12, 16]
-    height++ if height in [13, 17]
+    height = @_buildingHeight()
     
-    width: "13rem"
     height: "#{height}rem"
     top: "#{5 - height}rem"
+    
+  _buildingHeight: ->
+    tile = @currentData()
+    height = @constructor.buildings.heights[tile.data.building] or 10
+    height++ if height in [13, 17]
+    height

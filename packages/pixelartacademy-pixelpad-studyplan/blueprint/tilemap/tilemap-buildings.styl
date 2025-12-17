@@ -1,0 +1,64 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
+  .tile
+    .building
+      for i in 1..6
+        &.sim-city-residential-{i}
+          .shadow
+          .image
+            background-position 0 ((i - 1) * -20)rem
+
+        &.sim-city-church
+          .shadow
+          .image
+            background-position 0 -120rem
+
+        &.sim-city-subway
+          .shadow
+          .image
+            background-position 0 -140rem
+
+        &.sim-city-water-pump
+          .shadow
+          .image
+            background-position 0 -160rem
+
+        &.sim-city-park
+          .shadow
+          .image
+            background-position 0 -180rem
+
+      for i in 1..4
+        &.sim-city-commercial-{i}
+          .shadow
+          .image
+            background-position -30rem ((i - 1) * -20)rem
+
+      for i in 1..4
+        &.sim-city-industrial-{i}
+          .shadow
+          .image
+            background-position -30rem ((i + 3) * -20)rem
+
+        &.sim-city-wind-turbine
+          .shadow
+          .image
+            background-position -30rem -160rem
+
+      for i in 1..3
+        &.sim-city-office-{i}
+          .shadow
+          .image
+            height 30rem
+            background-position -60rem ((i - 1) * -30)rem
+
+      &.transport-tycoon-house
+        .shadow
+        .image
+          background-position -60rem -90rem
+
+      &.transport-tycoon-cinema
+        .shadow
+        .image
+          background-position -60rem -110rem

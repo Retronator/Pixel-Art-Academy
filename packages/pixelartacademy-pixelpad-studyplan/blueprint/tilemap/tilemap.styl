@@ -20,12 +20,50 @@
           .blueprint
             border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
 
+        &.height-8
+          &.active
+            .blueprint
+              background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-hover.png')
+
+          .blueprint
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-hover.png')
+
         .blueprint
           border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
 
       .gate
         .blueprint
           background-position-x -69rem
+
+    &.revealed
+      .ground
+      .pathway
+      .gate
+      .flag
+      .building
+        .blueprint
+          visibility hidden
+
+        .image
+        .shadow
+          visibility visible
+
+      .pathway
+        .image
+          top 0
+
+      .building
+        .image
+          bottom -10rem
+
+    .ground
+    .pathway
+    .gate
+    .flag
+    .building
+      .image
+      .shadow
+        visibility hidden
 
     .pathway .blueprint
     .gate .blueprint
@@ -36,89 +74,43 @@
       absolute-cover()
       z-index 1
 
-      .blueprint
       .image
         absolute-cover()
-
-      .blueprint
-        &.edge.left
-          background-position -1rem -10rem
-
-        &.edge.right
-          background-position -31rem -10rem
-
-        &.edge.up
-          background-position -16rem 0
-
-        &.edge.down
-          background-position -16rem -20rem
-
-        &.edge.left.up
-          background-position -1rem 0
-
-        &.edge.left.down
-          background-position -1rem -20rem
-
-        &.edge.right.up
-          background-position -31rem 0
-
-        &.edge.right.down
-          background-position -31rem -20rem
+        background image('/pixelartacademy/pixelpad/apps/studyplan/ground-tiles.png') -1rem 0 / 45rem 85rem
 
     .pathway
       absolute-cover()
-      z-index 2
-
-      &.sidewalk .blueprint
-        background-position -31rem -29rem
-
-      &.road.up .blueprint
-      &.road.down .blueprint
-        background-position -1rem -30rem
-
-      &.road.left .blueprint
-      &.road.right .blueprint
-        background-position -16rem -30rem
-
-      &.road.down.right .blueprint
-        background-position -1rem -40rem
-
-      &.road.down.left .blueprint
-        background-position -16rem -40rem
-
-      &.road.up.right .blueprint
-        background-position -1rem -50rem
-
-      &.road.up.left .blueprint
-        background-position -16rem -50rem
-
-      &.road.left.right.up .blueprint
-        background-position -1rem -60rem
-
-      &.road.up.down.right .blueprint
-        background-position -16rem -60rem
-
-      &.road.left.right.down .blueprint
-        background-position -1rem -70rem
-
-      &.road.up.down.left .blueprint
-        background-position -16rem -70rem
-
-      &.road.left.right.up.down .blueprint
-        background-position -1rem -80rem
+      z-index 3
 
       .blueprint
       .image
-        absolute-cover()
+        absolute-cover-size()
+
+      .image
+      .image::after
+        background image('/pixelartacademy/pixelpad/apps/studyplan/pathway-tiles.png') 15rem 5rem / 45rem 85rem
+
+      .image
+        top -10rem
+        transition top 0.2s ease-out
+
+        &::after
+          content ''
+          absolute-cover()
 
     .building
     .gate
     .flag
       position absolute
-      z-index 3
 
       .blueprint
+      .image
         position absolute
+        z-index 4
+
+      .shadow
+        position absolute
+        z-index 2
 
     .building
       &.active
@@ -126,7 +118,17 @@
           background-color atariCyan(3)
           border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active.png')
 
+      &.height-8
+        &.active
+          .blueprint
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-height.png')
+
+        .blueprint
+          border none
+          background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8.png') 0 0 / 100% 100%
+
       .blueprint
+        width 13rem
         left 0
         background-color atariCyan(0)
         background-clip padding-box
@@ -134,7 +136,27 @@
         border-style solid
         border-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building.png') 5 4 4 5
 
+      .shadow
+      .image
+        left -11rem
+        bottom -10rem
+        width 30rem
+        height 20rem
+
+      .shadow
+        background image('/pixelartacademy/pixelpad/apps/studyplan/buildings-shadows.png') 30rem 20rem / 200rem 200rem
+        mediterranean-shadow()
+
+      .image
+        background image('/pixelartacademy/pixelpad/apps/studyplan/buildings.png') 30rem 20rem / 200rem 200rem
+        bottom 0
+        transition bottom 0.2s ease-out
+
     .gate
+      &.opened
+        .image
+          animation gate-open 0.4s steps(4) forwards
+
       .blueprint
         left -2rem
         top -6rem
@@ -142,10 +164,60 @@
         height 10rem
         background-position -49rem -4rem
 
+      .shadow
+      .image
+        left -3rem
+        top -7rem
+        width 12rem
+        height 11rem
+
+      .shadow
+        background-image image('/pixelartacademy/pixelpad/apps/studyplan/gate-shadow.png')
+
+      .image
+        background image('/pixelartacademy/pixelpad/apps/studyplan/gate.png') 0 0 / 60rem 11rem
+
     .flag
+      &.raised
+        .shadow
+        .image
+          animation flag-raise 0.9s steps(8) forwards, flag-raised 0.6s steps(5) 0.9s infinite
+
       .blueprint
         left 5rem
         top -6rem
         width 6rem
         height 11rem
         background-position -56rem -24rem
+
+      .shadow
+      .image
+        left -1rem
+        top -7rem
+        width 12rem
+        height 12rem
+        background image('/pixelartacademy/pixelpad/apps/studyplan/flag.png') 0 0 / 180rem 24rem
+
+      .image
+        background-position-y -12rem
+
+@keyframes gate-open
+  from
+    background-position-x 0
+
+  to
+    background-position-x -48rem
+
+@keyframes flag-raise
+  from
+    background-position-x 0
+
+  to
+    background-position-x -96rem
+
+@keyframes flag-raised
+  from
+    background-position-x -108rem
+
+  to
+    background-position-x -168rem

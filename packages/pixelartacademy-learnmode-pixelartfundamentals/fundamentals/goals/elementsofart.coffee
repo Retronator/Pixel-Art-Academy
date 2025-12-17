@@ -25,7 +25,9 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @interests: -> ['line']
   
-    @requiredInterests: -> ['pixel art software', 'learn mode tutorial project']
+    @requiredInterests: -> ['learn mode tutorial project']
+    
+    @studyPlanBuilding: -> 'SimCityWindTurbine'
     
     @initialize()
     
@@ -52,6 +54,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @groupNumber: -> -1
     
+    @studyPlanBuilding: -> 'SimCityOffice2'
+    
     @initialize()
     
     @completedConditions: ->
@@ -76,6 +80,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     @interests: -> ['color']
 
     @groupNumber: -> -1
+    
+    @studyPlanBuilding: -> 'SimCityChurch'
     
     @initialize()
     
@@ -105,6 +111,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @groupNumber: -> 1
     
+    @studyPlanBuilding: -> 'SimCityOffice1'
+    
     @initialize()
     
     @completedConditions: ->
@@ -130,6 +138,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     @interests: -> ['space']
     
     @requiredInterests: -> ['scene']
+    
+    @studyPlanBuilding: -> 'SimCityOffice3'
     
     @initialize()
     
@@ -161,6 +171,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @groupNumber: -> 1
     
+    @studyPlanBuilding: -> 'SimCityCommercial3'
+    
     @initialize()
     
     @completedConditions: ->
@@ -184,6 +196,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     @predecessors: -> [Goal.Color, Goal.Value]
     
     @interests: -> ['texture']
+    
+    @studyPlanBuilding: -> 'SimCityPark'
     
     @initialize()
     

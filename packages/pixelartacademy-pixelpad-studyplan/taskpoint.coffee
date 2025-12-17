@@ -12,28 +12,33 @@ class StudyPlan.TaskPoint extends StudyPlan.ConnectionPoint
     @level = null
     @groupNumber = null
     @predecessors = []
+    @tiles = []
     
-  initializeTask: (@task) ->
+  initializeTask: (@task, @goalNode) ->
     @_createConnectionPoints()
-    @entryPoint.requiredInterests.push @task.requiredInterests()
+    @entryPoint.requiredInterests.push @task.requiredInterests()...
 
-    @providedInterests.push @task.interests()
-    new StudyPlan.Pathway @, @exitPoint if @providedInterests.length
+    @providedInterests.push @task.interests()...
+    new StudyPlan.Pathway @, @exitPoint, @goalNode if @providedInterests.length
     
     @groupNumber = @task.groupNumber()
     @level = @task.level()
 
-  initializeEndTask: ->
+  initializeEndTask: (@goalNode) ->
     @_createConnectionPoints()
     @endTask = true
     
-  initializeDummyTask: ->
+  initializeDummyTask: (@goalNode) ->
     @_createConnectionPoints()
     
   _createConnectionPoints: ->
-    @entryPoint = new StudyPlan.ConnectionPoint
-    @exitPoint = new StudyPlan.ConnectionPoint
-    new StudyPlan.Pathway @entryPoint, @exitPoint
+    @entryPoint = StudyPlan.ConnectionPoint.createLocal @goalNode
+    @entryPoint.taskPoint = @
+    
+    @exitPoint = StudyPlan.ConnectionPoint.createLocal @goalNode
+    @exitPoint.taskPoint = @
+    
+    new StudyPlan.Pathway @entryPoint, @exitPoint, @goalNode
   
   setPositionX: (x) ->
     @localPosition.x = x
@@ -45,15 +50,25 @@ class StudyPlan.TaskPoint extends StudyPlan.ConnectionPoint
     @entryPoint.localPosition.y = y + 1
     @exitPoint.localPosition.y = y + 1
     
-  clone: ->
+  clone: (newGoalNode, getConnectionPointClone) ->
     taskPoint = super arguments...
-    
-    taskPoint.entryPoint = @entryPoint.clone()
-    taskPoint.exitPoint = @exitPoint.clone()
-    
-    @entryPoint.outgoingPathways[0].clone taskPoint.entryPoint, taskPoint.exitPoint
-    @outgoingPathways[0]?.clone taskPoint, taskPoint.exitPoint
-
+    taskPoint.task = @task
     taskPoint.endTask = @endTask
+    taskPoint.tiles = @tiles
+    
+    taskPoint.entryPoint = getConnectionPointClone @entryPoint
+    taskPoint.entryPoint.taskPoint = taskPoint
+
+    taskPoint.exitPoint = getConnectionPointClone @exitPoint
+    taskPoint.exitPoint.taskPoint = taskPoint
+    
+    @entryPoint.outgoingPathways[0].clone taskPoint.entryPoint, taskPoint.exitPoint, newGoalNode
+    @outgoingPathways[0]?.clone taskPoint, taskPoint.exitPoint, newGoalNode
 
     taskPoint
+  
+  calculateGlobalPosition: (origin) ->
+    super arguments...
+    
+    @entryPoint.calculateGlobalPosition origin
+    @exitPoint.calculateGlobalPosition origin

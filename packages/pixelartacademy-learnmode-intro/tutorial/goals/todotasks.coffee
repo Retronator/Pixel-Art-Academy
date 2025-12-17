@@ -25,6 +25,8 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
     """
     
     @interests: -> ['to-do tasks']
+    
+    @studyPlanBuilding: -> 'SimCityResidential1'
   
     @initialize()
     

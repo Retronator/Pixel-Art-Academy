@@ -35,7 +35,7 @@ class StudyPlan.TileMap
     tile = @getTile x, y
     
     # Don't replace structures and pathways.
-    return if tile.type in [@constructor.Tile.Types.Building, @constructor.Tile.Types.Flag, @constructor.Tile.Types.Gate, @constructor.Tile.Types.Sidewalk, @constructor.Tile.Types.Road]
+    return tile if tile.type in [@constructor.Tile.Types.Building, @constructor.Tile.Types.Flag, @constructor.Tile.Types.Gate, @constructor.Tile.Types.Sidewalk, @constructor.Tile.Types.Road]
     
     # Placing a tile places that tile to the target and blueprints around it.
     tile.type = type
@@ -51,6 +51,8 @@ class StudyPlan.TileMap
       topNeighbor.type ?= @constructor.Tile.Types.Blueprint
       bottomNeighbor = @getTile x, y + 1
       bottomNeighbor.type ?= @constructor.Tile.Types.Blueprint
+      
+    tile
   
   placeRoad: (pathway, options = {}) ->
     if options.useGlobalPositions
@@ -81,11 +83,23 @@ class StudyPlan.TileMap
         continue
         
       for coordinate in [startCoordinate..endCoordinate]
-        x = if vertical then start.x else coordinate
-        y = if vertical then coordinate else start.y
-        tile = @getTile x, y
-        type = @constructor.Tile.Types.Sidewalk if options.accessRoad and tile.type is @constructor.Tile.Types.Road
-        @placeTile x, y, type, vertical and not options.noBlueprint, not vertical and not options.noBlueprint
+        for offset in [-1, 0, 1]
+          x = if vertical then start.x + offset else coordinate
+          y = if vertical then coordinate else start.y + offset
+          
+          if offset is 0
+            tile = @getTile x, y
+            type = @constructor.Tile.Types.Sidewalk if options.accessRoad and tile.type is @constructor.Tile.Types.Road
+            @placeTile x, y, type, vertical and not options.noBlueprint, not vertical and not options.noBlueprint
+            
+          else unless options.noGround
+            @placeTile x, y, @constructor.Tile.Types.Ground, vertical and not options.noBlueprint, not vertical and not options.noBlueprint
+            
+        if coordinate is startCoordinate and waypointIndex and not options.noGround
+          @placeTile start.x - 1, start.y - 1, @constructor.Tile.Types.Ground
+          @placeTile start.x + 1, start.y - 1, @constructor.Tile.Types.Ground
+          @placeTile start.x - 1, start.y + 1, @constructor.Tile.Types.Ground
+          @placeTile start.x + 1, start.y + 1, @constructor.Tile.Types.Ground
         
     # Explicit return to avoid result collection.
     return
@@ -99,11 +113,29 @@ class StudyPlan.TileMap
       right = @map[x + 1]?[y]?.type is @constructor.Tile.Types.Road
       up = @map[x]?[y - 1]?.type is @constructor.Tile.Types.Road
       down = @map[x]?[y + 1]?.type is @constructor.Tile.Types.Road
-      @map[x][y].roadNeighbors = {left, right, up, down}
-
-    return if options.noBlueprintEdges
+      tile.roadNeighbors = {left, right, up, down}
+      tile.intersection = _.sumBy([left, right, up, down], (neighbor) => if neighbor then 1 else 0) > 2
     
+    # Add road marking styles.
+    for tile in @tiles when tile.type is @constructor.Tile.Types.Road
+      x = tile.position.x
+      y = tile.position.y
+      tile.roadMarkingStyles = []
+
+      if options.onlySolidRoadLines
+        tile.roadMarkingStyles.push 'solid-lines'
+      
+      else
+        tile.roadMarkingStyles.push "vertical-lines-#{_.modulo tile.position.y, 3}" if (tile.roadNeighbors.up or tile.roadNeighbors.down) and not tile.roadNeighbors.left and not tile.roadNeighbors.right
+  
+      tile.roadMarkingStyles.push 'intersection' if tile.intersection
+      tile.roadMarkingStyles.push 'intersection-left' if tile.roadNeighbors.left and @map[x - 1][y].intersection
+      tile.roadMarkingStyles.push 'intersection-right' if tile.roadNeighbors.right and @map[x + 1][y].intersection
+      tile.roadMarkingStyles.push 'intersection-up' if tile.roadNeighbors.up and @map[x][y - 1].intersection
+      tile.roadMarkingStyles.push 'intersection-down' if tile.roadNeighbors.down and @map[x][y + 1].intersection
+
     # Place blueprint edges.
+    return if options.noBlueprintEdges
     filledTiles = _.clone @tiles
     
     for filledTile in filledTiles
