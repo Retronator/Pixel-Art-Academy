@@ -1,5 +1,3 @@
-import {ReactiveField} from "meteor/peerlibrary:reactive-field"
-
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy

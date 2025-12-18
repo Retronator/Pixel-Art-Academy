@@ -39,7 +39,8 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     @nonBlueprintTiles = new ComputedField =>
       tileMap = @data()
       
-      @_getTileForData tile for tile in tileMap.tiles when tile.type not in [TileTypes.BlueprintEdge, TileTypes.Blueprint]
+      tiles = (@_getTileForData tile for tile in tileMap.tiles when tile.type not in [TileTypes.BlueprintEdge, TileTypes.Blueprint])
+      _.orderBy tiles, [((tile) => tile.data.position.y), ((tile) => tile.data.position.x)], ['asc', 'desc']
     
     unless @constructor._blueprintTilesImage
       @constructor._blueprintTilesImage = new ReactiveField false
@@ -190,10 +191,10 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   openGate: (x, y) ->
     tile = @_getTile x, y
     tile.gateOpened true
-    
-  raiseFlag: (x, y) ->
+  
+  setFlag: (x, y, value) ->
     tile = @_getTile x, y
-    tile.flagRaised true
+    tile.flagRaised value
     
   activateBuilding: (x, y) ->
     tile = @_getTile x, y
@@ -275,3 +276,13 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     height = @constructor.buildings.heights[tile.data.building] or 10
     height++ if height in [13, 17]
     height
+    
+  events: ->
+    super(arguments...).concat
+      'click .flag .image': @onClickFlagImage
+  
+  onClickFlagImage: (event) ->
+    tile = @currentData()
+    goal = @ancestorComponentOfType StudyPlan.Blueprint.Goal
+
+    goal.markComplete not tile.flagRaised()

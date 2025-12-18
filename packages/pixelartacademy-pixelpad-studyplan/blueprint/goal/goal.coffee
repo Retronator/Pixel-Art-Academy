@@ -14,6 +14,7 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     super arguments...
     
     @nameTileHeight = new ReactiveField 1
+    @nameWidth = new ReactiveField 0
 
   destroy: ->
     super arguments...
@@ -33,19 +34,28 @@ class StudyPlan.Blueprint.Goal extends AM.Component
   onRendered: ->
     super arguments...
     
+    @$nameArea = @$('.name-area')
     @$name = @$('.name')
-    @_nameResizeObserver = new ResizeObserver =>
-      pixelHeight = @$name.outerHeight() / @blueprint.display.scale()
+    
+    @_nameAreaResizeObserver = new ResizeObserver =>
+      pixelHeight = @$nameArea.outerHeight() / @blueprint.display.scale()
       tileHeight = Math.ceil pixelHeight / StudyPlan.Blueprint.TileMap.tileHeight
       
       @nameTileHeight tileHeight
+      @nameWidth @$name.outerWidth()
     
-    @_nameResizeObserver.observe @$name[0]
+    @_nameAreaResizeObserver.observe @$nameArea[0]
   
   onDestroyed: ->
     super arguments...
     
-    @_nameResizeObserver?.disconnect()
+    @_nameAreaResizeObserver?.disconnect()
+    
+  markComplete: (value) ->
+    goalNode = @data()
+    goalNode.markComplete value
+    position = goalNode.endTaskPoint.localPosition
+    @tileMapComponent.setFlag position.x, position.y, value
   
   goalStyle: ->
     goalNode = @data()
@@ -54,6 +64,10 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     left: "#{position.x}rem"
     top: "#{position.y}rem"
   
+  markedCompleteClass: ->
+    goalNode = @data()
+    'marked-complete' if goalNode.markedComplete()
+  
   nameStyle: ->
     goalNode = @data()
     bottomLeft = StudyPlan.Blueprint.TileMap.mapPosition goalNode.tileMap.minX + 2, goalNode.tileMap.maxY + 2
@@ -61,11 +75,34 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     
     left: "#{bottomLeft.x}rem"
     right: "#{-bottomRight.x}rem"
-    top: "#{bottomLeft.y}rem"
+    top: "#{bottomLeft.y - 5}rem"
     
+  goalUIStyle: ->
+    left: "calc(50% + #{@nameWidth() / 2}px + 2rem)"
+
   goal: ->
     goalNode = @data()
     goalNode.goal
 
   renderTileMapComponent: ->
     @tileMapComponent.renderComponent @currentComponent()
+
+  class @MarkedComplete extends AM.DataInputComponent
+    @register 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal.MarkedComplete'
+    
+    constructor: ->
+      super arguments...
+      
+      @type = AM.DataInputComponent.Types.Checkbox
+      
+    onCreated: ->
+      super arguments...
+      
+      @goal = @ancestorComponentOfType StudyPlan.Blueprint.Goal
+    
+    load: ->
+      goalNode = @data()
+      goalNode.markedComplete()
+    
+    save: (value) ->
+      @goal.markComplete value

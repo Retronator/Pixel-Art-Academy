@@ -3,8 +3,85 @@
 .pixelartacademy-pixelpad-apps-studyplan-blueprint-goal
   position absolute
 
-  .name
+  .name-area
     position absolute
+    padding 5rem 0
     text-align center
-    color atariCyan(5)
     study-plan()
+    color atariCyan(4)
+    z-index 6
+    cursor default
+
+    &:hover
+      .goal-ui
+        visibility visible
+        padding-left 3rem
+
+        .marked-complete
+          .checkmark
+            color atariGreen(3)
+            top 1rem
+
+      &.marked-complete
+        .goal-ui
+          .marked-complete
+            .checkmark
+              color atariGreen(2)
+
+    &.marked-complete
+      color atariCyan(2)
+
+      .goal-ui
+        .marked-complete
+          .checkmark
+            visibility visible
+
+    .name
+      display inline
+      position relative
+
+    .goal-ui
+      display flex
+      position absolute
+      top calc(50% - 10.5rem)
+      width 40rem
+      padding 5rem
+      padding-left 0
+      text-align left
+      visibility hidden
+
+      .marked-complete
+        display block
+        position relative
+        cursor pointer
+        padding 2rem 2rem 2rem 0
+
+        &:hover
+          .checkmark
+            visibility visible
+
+        &::before
+          content '◻'
+
+        input
+          display none
+
+        .checkmark
+          position absolute
+          left 1rem
+          top 2rem
+          visibility hidden
+
+          &::before
+            content '✓'
+
+      .remove-button
+        display block
+        padding 2rem 2rem 2rem 0
+        border none
+        background none
+        font inherit
+        color inherit
+
+        &:hover
+          color atariRed(2)

@@ -6,10 +6,7 @@ PAA = PixelArtAcademy
 class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   # goals: object of goals placed in the study plan
   #   {id}:
-  #     position: where the goal should appear on the canvas
-  #       x
-  #       y
-  #     expanded: boolean if goal's tasks are displayed
+  #     markedComplete: boolean whether the player considers this goal complete
   #     connections: array of connections to required interests of other goals
   #       goalId: target goal of this connection
   #       interest: which of the required interests this connection ties into

@@ -33,6 +33,15 @@ class StudyPlan.GoalNode
   destroy: ->
     @goal?.destroy()
     
+  markedComplete: ->
+    goalsData = PAA.PixelPad.Apps.StudyPlan.state 'goals'
+    goalsData[@goalId].markedComplete
+    
+  markComplete: (value) ->
+    goalsData = PAA.PixelPad.Apps.StudyPlan.state 'goals'
+    goalsData[@goalId].markedComplete = value
+    PAA.PixelPad.Apps.StudyPlan.state 'goals', goalsData
+    
   initialize: (@goalId) ->
     unless @goalClass = PAA.Learning.Goal.getClassForId @goalId
       console.warn "Unrecognized goal present in study plan.", @goalId

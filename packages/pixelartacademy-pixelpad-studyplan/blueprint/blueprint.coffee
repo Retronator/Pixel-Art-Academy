@@ -31,10 +31,23 @@ class StudyPlan.Blueprint extends AM.Component
     # Initialize components.
     @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
-
-    @goalHierarchy = new AE.LiveComputedField =>
+    
+    @goalsData = new AE.LiveComputedField =>
       return unless @studyPlan.ready()
       return unless goalsData = @studyPlan.state 'goals'
+      
+      # We only care about connections to minimize reactivity.
+      minimalGoalsData = {}
+      
+      for goalId, goalData of goalsData
+        minimalGoalsData[goalId] = _.pick goalData, ['connections']
+        
+      minimalGoalsData
+    ,
+      EJSON.equals
+
+    @goalHierarchy = new AE.LiveComputedField =>
+      return unless goalsData = @goalsData()
       
       Tracker.nonreactive => new StudyPlan.GoalHierarchy @, goalsData
     
@@ -50,14 +63,19 @@ class StudyPlan.Blueprint extends AM.Component
     
     # Create goal components and connections.
     @_goalComponentsById = {}
-
-    @goalComponentsById = new AE.LiveComputedField =>
+    
+    @goalIds = new AE.LiveComputedField =>
       return unless @studyPlan.ready()
       return unless goalsData = @studyPlan.state 'goals'
-      
-      previousGoalComponents = _.values @_goalComponentsById
+      goalIds = _.keys goalsData
+      goalIds.sort()
+      goalIds
+    ,
+      EJSON.equals
 
-      newGoalIds = _.keys goalsData
+    @goalComponentsById = new AE.LiveComputedField =>
+      return unless newGoalIds = @goalIds()
+      previousGoalComponents = _.values @_goalComponentsById
       
       if previewConnection = @previewConnection()
         newGoalIds = _.union newGoalIds, [previewConnection.startGoalId, previewConnection.endGoalId]
@@ -161,6 +179,8 @@ class StudyPlan.Blueprint extends AM.Component
   onDestroyed: ->
     super arguments...
 
+    @goalsData.stop()
+    @goalIds.stop()
     @goalComponentsById.stop()
     
     @goalHierarchy().destroy()
@@ -227,10 +247,13 @@ class StudyPlan.Blueprint extends AM.Component
         return unless taskPoint.task.completed()
         
       else if taskPoint.endTask
-        # See if we need to raise the flag
+        # See if we need to reveal the end task tiles.
         if taskPoint.goalNode.goal.completed()
           await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
-          goalComponent.tileMapComponent.raiseFlag taskPoint.localPosition.x, taskPoint.localPosition.y
+  
+          # See if we need to raise a flag.
+          if taskPoint.goalNode.markedComplete()
+            goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true
         
         return unless taskPoint.goalNode.goal.completed()
     
@@ -287,4 +310,8 @@ class StudyPlan.Blueprint extends AM.Component
       'mousedown': @onMouseDown
 
   onMouseDown: (event) ->
+    $target = $(event.target)
+    return if $target.closest('.flag .image').length
+    return if $target.closest('.goal-ui').length
+    
     @startDragBlueprint()
