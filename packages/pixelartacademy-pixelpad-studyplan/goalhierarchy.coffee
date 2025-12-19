@@ -11,6 +11,9 @@ class StudyPlan.GoalHierarchy
     left: 2
     top: 2
     right: 2
+    bottom: 4
+    
+  @goalIslandSpacing = 10
   
   constructor: (@blueprint, goalsData) ->
     @goalNodesById = {}
@@ -31,8 +34,8 @@ class StudyPlan.GoalHierarchy
       goalsDataList.push goalData
       goalsDataById[goalId] = goalData
     
-    # Root is the goal that no-one is connected to.
-    rootGoalData = _.find goalsDataList, (goalData) =>
+    # Roots are the goals that no-one is connected to.
+    rootGoalsData = _.filter goalsDataList, (goalData) =>
       incomingConnection = _.find goalsDataList, (otherGoalData) =>
         _.find otherGoalData.connections, (connection) => connection.goalId is goalData.id
       
@@ -44,7 +47,7 @@ class StudyPlan.GoalHierarchy
       goalNode = @goalNodesById[goalData.id]
       
       for connection in goalData.connections
-        otherGoalData = goalsDataById[connection.goalId]
+        continue unless otherGoalData = goalsDataById[connection.goalId]
         otherGoalNode = @goalNodesById[otherGoalData.id]
         continue if otherGoalNode.parent
         
@@ -52,20 +55,25 @@ class StudyPlan.GoalHierarchy
         
         goalClass = PAA.Learning.Goal.getClassForId goalData.id
         
-        if goalClass.isInterestProvidedFromIndividuallyCompletedFinalTask connection.interest
-          connectingGoalNodes = goalNode.forwardGoalNodes
-          
+        if connection.direction
+          switch connection.direction
+            when StudyPlan.GoalConnectionDirections.Forward then connectingGoalNodes = goalNode.forwardGoalNodes
+            when StudyPlan.GoalConnectionDirections.Sideways then connectingGoalNodes = goalNode.sidewaysGoalNodes
+        
         else
-          connectingGoalNodes = goalNode.sidewaysGoalNodes
+          if goalClass.isInterestProvidedFromIndividuallyCompletedFinalTask connection.interest
+            connectingGoalNodes = goalNode.forwardGoalNodes
+            
+          else
+            connectingGoalNodes = goalNode.sidewaysGoalNodes
         
         connectingGoalNodes.push otherGoalNode
         
         connect otherGoalData
     
-    connect rootGoalData
+    connect rootGoalData for rootGoalData in rootGoalsData
     
-    @rootGoalNode = @goalNodesById[rootGoalData.id]
-    console.log "hierarchy", @rootGoalNode
+    @rootGoalNodes = (@goalNodesById[rootGoalData.id] for rootGoalData in rootGoalsData)
     
     @roadTileMap = new ReactiveField null
     
@@ -75,9 +83,15 @@ class StudyPlan.GoalHierarchy
       @_globalPathways.push pathway
 
     @_recalculateAutorun = Tracker.autorun (computation) =>
-      console.log "recalc positions"
-      @rootGoalNode.calculateLocalPositions()
-      @rootGoalNode.calculateGlobalPositions()
+      goalIslandXPosition = 0
+      
+      for rootGoalNode in @rootGoalNodes
+        rootGoalNode.calculateLocalPositions()
+        
+        rootGoalNode.globalPosition new THREE.Vector2 goalIslandXPosition, 0
+        rootGoalNode.calculateGlobalPositions()
+        
+        goalIslandXPosition += rootGoalNode.width + @constructor.goalIslandSpacing
       
       roadTileMap = new StudyPlan.TileMap
       
@@ -207,7 +221,7 @@ class StudyPlan.GoalHierarchy
           mainHorizontalY = topRoadY
           
           if firstForwardGoalNode = goalNode.forwardGoalNodes[0]
-            topOfFirstForwardGoal = firstForwardGoalNode.absolutePosition().y + firstForwardGoalNode.minY
+            topOfFirstForwardGoal = firstForwardGoalNode.globalPosition().y + firstForwardGoalNode.minY
             mainHorizontalY = Math.min mainHorizontalY, topOfFirstForwardGoal
           
           # Create main junction between the main horizontal and the vertical.
@@ -255,7 +269,7 @@ class StudyPlan.GoalHierarchy
         
         goalConnectionPoints
       
-      createGoalConnectionPoints @rootGoalNode
+      createGoalConnectionPoints rootGoalNode for rootGoalNode in @rootGoalNodes
       
       # Create pathways for all goal connections.
       paths = []
@@ -263,15 +277,21 @@ class StudyPlan.GoalHierarchy
       for goalData in goalsDataList when goalData.connections
         for connection in goalData.connections
           startGoal = @goalNodesById[goalData.id]
-          endGoal = @goalNodesById[connection.goalId]
-          startPoint = startGoal.getExitPointForInterest connection.interest
-          endPoint = endGoal.getEntryPointForInterest connection.interest
-          if path = @pathfind startPoint, endPoint
-            paths.push path
+          continue unless endGoal = @goalNodesById[connection.goalId]
+          
+          if connection.direction
+            switch connection.direction
+              when StudyPlan.GoalConnectionDirections.Forward then startPoint = startGoal.exitPoint
+              when StudyPlan.GoalConnectionDirections.Sideways then startPoint = startGoal.sidewaysPoints[connection.sidewaysIndex or 0]
             
+            endPoint = endGoal.entryPoint
+          
           else
-            console.log "no path for", startGoal.goalId, endGoal.goalId, connection.interest
-            
+            startPoint = startGoal.getExitPointForInterest connection.interest
+            endPoint = endGoal.getEntryPointForInterest connection.interest
+          
+          paths.push path if path = @pathfind startPoint, endPoint
+          
       # Replace all global pathways with needed paths.
       pathway.remove() for pathway in @_globalPathways
       @_globalPathways = []
@@ -294,6 +314,36 @@ class StudyPlan.GoalHierarchy
         roadTileMap.placeRoad pathway, useGlobalPositions: true
       
       roadTileMap.finishConstruction()
+      
+      # Propagate interests.
+      rootGoalNode.entryPoint.propagateInterests() for rootGoalNode in @rootGoalNodes
+      
+      # Place expansion points.
+      for goalId, goalNode of @goalNodesById
+        # We can expand forward if there are no forward goal nodes.
+        unless goalNode.forwardGoalNodes.length
+          expansionPosition = goalNode.exitPoint.globalPosition
+          roadTileMap.placeExpansionPoint expansionPosition.x + 2, expansionPosition.y, StudyPlan.TileMap.Tile.ExpansionDirections.Forward,
+            goalId: goalId
+            exit: true
+            
+        # We can expand sideways where there are not outgoing pathways.
+        for sidewaysPoint, index in goalNode.sidewaysPoints when not sidewaysPoint.outgoingPathways.length
+          expansionPosition = sidewaysPoint.globalPosition
+          
+          roadTileMap.placeExpansionPoint expansionPosition.x, expansionPosition.y - 2, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways,
+            goalId: goalId
+            sidewaysIndex: index
+            
+        # We can connect backwards if the goal has required interests, but there is no predecessor set.
+        if goalNode.goal.requiredInterests().length and not goalNode.parent
+          expansionPosition = goalNode.entryPoint.globalPosition
+          roadTileMap.placeExpansionPoint expansionPosition.x - 2, expansionPosition.y, StudyPlan.TileMap.Tile.ExpansionDirections.Backwards,
+            goalId: goalId
+            entry: true
+        
+      # Place initial expansion point if there are no goals at all.
+      roadTileMap.placeExpansionPoint 0, 0, StudyPlan.TileMap.Tile.ExpansionDirections.Forward unless goalsDataList.length
       
       @roadTileMap roadTileMap
       

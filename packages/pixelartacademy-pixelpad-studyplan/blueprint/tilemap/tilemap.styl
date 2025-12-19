@@ -202,6 +202,61 @@
         background-position-y -12rem
         cursor pointer
 
+    .expansion-point
+      position absolute
+      z-index 6
+      padding 2rem
+      study-plan()
+      color atariCyan(4)
+      pixel-text-outline atariCyan(0)
+      cursor pointer
+
+      &:hover
+        color atariCyan(7)
+
+      &.forward
+      &.backwards
+        top -3rem
+
+        &::after
+          top -7rem
+
+      &.forward
+        left 0
+
+        &::before
+          content '→'
+
+        &::after
+          left 15rem
+
+      &.backwards
+        left -6rem
+
+        &::before
+          content '←'
+
+        &::after
+          left -7rem
+
+      &.sideways
+        left -3rem
+        top -6rem
+
+        &::before
+          content '↑'
+
+        &::after
+          left -3rem
+          top -15rem
+
+      &::after
+        content '?'
+        position absolute
+        pixolde()
+        font-weight bold
+        padding 2rem
+
 @keyframes gate-open
   from
     background-position-x 0

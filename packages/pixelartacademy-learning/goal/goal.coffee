@@ -244,6 +244,7 @@ class PAA.Learning.Goal
   
   tasks: -> @_tasks
   finalTasks: -> @_finalTasks
+  initialTasks: -> _.filter @_tasks, (task) => not task.predecessors().length
 
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()

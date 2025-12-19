@@ -34,6 +34,8 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   onCreated: ->
     super arguments...
     
+    @blueprint = @ancestorComponentOfType StudyPlan.Blueprint
+
     @map = {}
     
     @nonBlueprintTiles = new ComputedField =>
@@ -168,8 +170,11 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
         
   revealTask: (taskPoint, options) ->
     Meteor.setTimeout =>
-      for offset in [-2..2]
-        x = taskPoint.localPosition.x + offset
+      xS = (tile.position.x for tile in taskPoint.tiles)
+      minX = _.min xS
+      maxX = _.max xS
+      
+      for x in [minX..maxX]
         revealingTiles = _.filter taskPoint.tiles, (tile) =>
           tile.position.x is x and tile.type not in [TileTypes.Sidewalk, TileTypes.Road]
         
@@ -276,13 +281,41 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     height = @constructor.buildings.heights[tile.data.building] or 10
     height++ if height in [13, 17]
     height
+  
+  expansionPointDirectionClass: ->
+    tile = @currentData()
+    _.kebabCase tile.data.expansionDirection
     
   events: ->
     super(arguments...).concat
       'click .flag .image': @onClickFlagImage
+      'click .expansion-point': @onClickExpansionPoint
   
   onClickFlagImage: (event) ->
     tile = @currentData()
     goal = @ancestorComponentOfType StudyPlan.Blueprint.Goal
 
     goal.markComplete not tile.flagRaised()
+  
+  onClickExpansionPoint: (event) ->
+    tile = @currentData()
+    
+    goalHierarchy = @blueprint.goalHierarchy()
+    
+    if tile.data.connectionPoint
+      goalNode = goalHierarchy.goalNodesById[tile.data.connectionPoint.goalId]
+      
+      if tile.data.connectionPoint.entry
+        connectionPoint = goalNode.entryPoint
+        
+      else if tile.data.connectionPoint.exit
+        connectionPoint = goalNode.exitPoint
+        
+      else
+        connectionPoint = goalNode.sidewaysPoints[tile.data.connectionPoint.sidewaysIndex]
+      
+    @blueprint.studyPlan.displayAddGoal
+      availableInterests: connectionPoint?.propagatedProvidedInterests or []
+      sourceGoalId: goalNode?.goalId
+      direction: tile.data.expansionDirection
+      sidewaysIndex: tile.data.connectionPoint?.sidewaysIndex

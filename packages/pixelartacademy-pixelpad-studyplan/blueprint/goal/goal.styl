@@ -15,24 +15,16 @@
     &:hover
       .goal-ui
         visibility visible
-        padding-left 3rem
-
-        .marked-complete
-          .checkmark
-            color atariGreen(3)
-            top 1rem
-
-      &.marked-complete
-        .goal-ui
-          .marked-complete
-            .checkmark
-              color atariGreen(2)
 
     &.marked-complete
       color atariCyan(2)
 
       .goal-ui
         .marked-complete
+          &:hover
+            .checkmark
+              color atariGreen(2)
+
           .checkmark
             visibility visible
 
@@ -45,8 +37,7 @@
       position absolute
       top calc(50% - 10.5rem)
       width 40rem
-      padding 5rem
-      padding-left 0
+      padding 5rem 5rem 5rem 2rem
       text-align left
       visibility hidden
 
@@ -58,22 +49,14 @@
 
         &:hover
           .checkmark
-            visibility visible
-
-        &::before
-          content '◻'
+            color atariGreen(3)
 
         input
           display none
 
         .checkmark
-          position absolute
-          left 1rem
-          top 2rem
-          visibility hidden
-
-          &::before
-            content '✓'
+          position relative
+          top 1rem
 
       .remove-button
         display block

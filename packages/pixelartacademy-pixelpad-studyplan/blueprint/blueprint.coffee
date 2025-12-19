@@ -32,6 +32,21 @@ class StudyPlan.Blueprint extends AM.Component
     @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
     
+    # Update bounds of the blueprint.
+    @autorun =>
+      # Depend on app's actual (animating) size.
+      pixelPadSize = @studyPlan.os.pixelPad.animatingSize()
+      scale = @display.scale()
+      
+      # Resize the back buffer to canvas element size, if it actually changed.
+      newSize =
+        width: pixelPadSize.width * scale
+        height: pixelPadSize.height * scale
+      
+      # Bounds are reported in window pixels as well.
+      @bounds.width newSize.width
+      @bounds.height newSize.height
+    
     @goalsData = new AE.LiveComputedField =>
       return unless @studyPlan.ready()
       return unless goalsData = @studyPlan.state 'goals'
@@ -96,10 +111,7 @@ class StudyPlan.Blueprint extends AM.Component
 
       # Destroy all components that aren't present any more.
       for unusedGoalComponent in previousGoalComponents
-        goalId = unusedGoalComponent.goal.id()
-
-        @_goalComponentsById[goalId].destroy()
-
+        goalId = unusedGoalComponent.goalId
         delete @_goalComponentsById[goalId]
 
       @_goalComponentsById
@@ -144,15 +156,13 @@ class StudyPlan.Blueprint extends AM.Component
       
       Tracker.nonreactive =>
         Tracker.autorun (computation) =>
-          console.log "restart waiting for pending", @_pendingAnimationsCount()
           return if @_pendingAnimationsCount()
           computation.stop()
           @_animationRestarting = false
           
-          console.log "REVEALING", goalHierarchy.rootGoalNode.entryPoint
-          
           # Reveal the starting point.
-          @revealPathwaysFrom goalHierarchy.rootGoalNode.entryPoint, true
+          for rootGoalNode in goalHierarchy.rootGoalNodes
+            @revealPathwaysFrom rootGoalNode.entryPoint, true
 
     # Handle blueprint dragging.
     @autorun (computation) =>
@@ -303,7 +313,7 @@ class StudyPlan.Blueprint extends AM.Component
     return unless goalComponent = @goalComponentsById()[goalId]
 
     camera = @camera()
-    camera.setOrigin goalComponent.position()
+    camera.setOrigin goalComponent.mapPosition()
 
   events: ->
     super(arguments...).concat
@@ -313,5 +323,6 @@ class StudyPlan.Blueprint extends AM.Component
     $target = $(event.target)
     return if $target.closest('.flag .image').length
     return if $target.closest('.goal-ui').length
+    return if $target.closest('.expansion-point').length
     
     @startDragBlueprint()

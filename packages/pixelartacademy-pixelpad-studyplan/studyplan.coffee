@@ -1,3 +1,6 @@
+import {ReactiveField} from "meteor/peerlibrary:reactive-field"
+
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -9,6 +12,8 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   #     markedComplete: boolean whether the player considers this goal complete
   #     connections: array of connections to required interests of other goals
   #       goalId: target goal of this connection
+  #       direction: in which direction from this goal the connection is going
+  #       sidewaysIndex: if the connection goes sideways, from which exit does it go
   #       interest: which of the required interests this connection ties into
   # camera:
   #   origin: the position the center of the canvas displays
@@ -31,6 +36,10 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
 
   @initialize()
 
+  @GoalConnectionDirections =
+    Forward: 'Forward'
+    Sideways: 'Sideways'
+  
   @hasGoal: (goalId) ->
     goalId = _.thingId goalId
 
@@ -41,14 +50,26 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     super arguments...
 
     @blueprint = new ReactiveField null
+    @addGoalComponent = new ReactiveField null
     @goalSearch = new ReactiveField null
+    
+    @addGoalOptions = new ReactiveField null
     
   onCreated: ->
     super arguments...
     
+    # Instantiate all goals.
+    @_goals = []
+    
+    @goals = new AE.LiveComputedField =>
+      goal.destroy() for goal in @_goals
+      @_goals = (new goalClass for goalClass in PAA.Learning.Goal.getClasses())
+      @_goals
+    
     @_goalNodeTemplates = {}
 
     @blueprint new @constructor.Blueprint @
+    @addGoalComponent new @constructor.AddGoal @
     @goalSearch new @constructor.GoalSearch @
 
     # We set size in an autorun so that it adapts to window resizes.
@@ -59,6 +80,10 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
   onDestroyed: ->
     super arguments...
+    
+    goal.destroy() for goal in @_goals
+    
+    @addGoalComponent()?.destroy()
     
     goalNode.destroy() for goalId, goalNode of @_goalNodeTemplates
     
@@ -75,7 +100,15 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
 
   hasGoal: (goalId) -> @constructor.hasGoal goalId
   
+  displayAddGoal: (options) ->
+    @addGoalOptions options
+    
+  closeAddGoal: ->
+    @addGoalOptions null
+  
   addGoal: (options) ->
+    _.extend options, @addGoalOptions()
+    
     goals = @state('goals') or {}
     goalId = options.goal.id()
 
@@ -84,31 +117,32 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
       @blueprint().focusGoal goalId
       return
 
-    # Calculate target element's position in blueprint.
-    blueprint = @blueprint()
-    elementOffset = $(options.element).offset()
-    blueprintOffset = blueprint.$blueprint().offset()
-
-    canvasCoordinate = blueprint.camera().transformWindowToCanvas
-      x: elementOffset.left - blueprintOffset.left
-      y: elementOffset.top - blueprintOffset.top
-
-    goals[goalId] =
-      position: canvasCoordinate
-      expanded: false
-
-    # Save state with new goal.
-    @state 'goals', goals
-
-    blueprint.mouse().updateCoordinates options.event
-
-    blueprint.startDrag
-      goalPosition: canvasCoordinate
-      goalId: goalId
-      requireMove: true
-      expandOnEnd: true
+    # Add the new goal.
+    goals[goalId] = {}
+    
+    if options.sourceGoalId
+      # Add connection from the source goal.
+      connection =
+        goalId: goalId
+        direction: options.direction
       
+      connection.sidewaysIndex = options.sidewaysIndex if options.sidewaysIndex?
+      
+      goals[options.sourceGoalId].connections ?= []
+      goals[options.sourceGoalId].connections.push connection
+
+    # Store and close the dialog.
+    @state 'goals', goals
+    @closeAddGoal()
+
   removeGoal: (goalId) ->
     goals = @state('goals') or {}
     delete goals[goalId]
+    
+    for connectingGoalId, connectingGoal of goals when connectingGoal.connections
+      _.remove connectingGoal.connections, (connection) => connection.goalId is goalId
+    
     @state 'goals', goals
+  
+  addGoalDisplayed: ->
+    @addGoalOptions()

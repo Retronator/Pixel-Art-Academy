@@ -31,6 +31,7 @@ Package.onUse(function(api) {
   api.addFile('tilemap');
   api.addFile('tile');
 
+  api.addComponent('addgoal..');
   api.addComponent('goalsearch..');
 
   api.addComponent('blueprint..');

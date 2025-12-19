@@ -35,6 +35,9 @@
             <div class="image"></div>
           </div>
         {{/if}}
+        {{#if $is tileType 'ExpansionPoint'}}
+          <div class="expansion-point {{expansionPointDirectionClass}}"></div>
+        {{/if}}
       </div>
     {{/each}}
   </div>

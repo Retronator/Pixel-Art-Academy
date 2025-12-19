@@ -15,6 +15,12 @@ class StudyPlan.TileMap.Tile
     Building: 'Building'
     Gate: 'Gate'
     Flag: 'Flag'
+    ExpansionPoint: 'ExpansionPoint'
+    
+  @ExpansionDirections =
+    Forward: 'Forward'
+    Backwards: 'Backwards'
+    Sideways: 'Sideways'
 
   constructor: (x, y) ->
     @position = new THREE.Vector2 x, y

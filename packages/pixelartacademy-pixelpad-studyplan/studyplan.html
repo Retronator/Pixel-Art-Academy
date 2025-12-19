@@ -1,5 +1,8 @@
 <template name="PixelArtAcademy.PixelPad.Apps.StudyPlan">
   <div class="pixelartacademy-pixelpad-apps-studyplan app">
     {{> Render blueprint}}
+    {{#if addGoalDisplayed}}
+      {{> Render addGoalComponent}}
+    {{/if}}
   </div>
 </template>

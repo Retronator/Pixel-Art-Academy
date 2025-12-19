@@ -53,6 +53,12 @@ class StudyPlan.TileMap
       bottomNeighbor.type ?= @constructor.Tile.Types.Blueprint
       
     tile
+    
+  placeExpansionPoint: (x, y, direction, connectionPointIndicator) ->
+    tile = @getTile x, y
+    tile.type = @constructor.Tile.Types.ExpansionPoint
+    tile.expansionDirection = direction
+    tile.connectionPoint = connectionPointIndicator
   
   placeRoad: (pathway, options = {}) ->
     if options.useGlobalPositions
@@ -91,6 +97,10 @@ class StudyPlan.TileMap
             tile = @getTile x, y
             type = @constructor.Tile.Types.Sidewalk if options.accessRoad and tile.type is @constructor.Tile.Types.Road
             @placeTile x, y, type, vertical and not options.noBlueprint, not vertical and not options.noBlueprint
+
+            if options.solidLines
+              tile.roadMarkingStyles ?= []
+              tile.roadMarkingStyles.push 'solid-lines'
             
           else unless options.noGround
             @placeTile x, y, @constructor.Tile.Types.Ground, vertical and not options.noBlueprint, not vertical and not options.noBlueprint
@@ -120,10 +130,10 @@ class StudyPlan.TileMap
     for tile in @tiles when tile.type is @constructor.Tile.Types.Road
       x = tile.position.x
       y = tile.position.y
-      tile.roadMarkingStyles = []
+      tile.roadMarkingStyles ?= []
 
       if options.onlySolidRoadLines
-        tile.roadMarkingStyles.push 'solid-lines'
+        tile.roadMarkingStyles.push 'solid-lines' unless 'solid-lines' in tile.roadMarkingStyles
       
       else
         tile.roadMarkingStyles.push "vertical-lines-#{_.modulo tile.position.y, 3}" if (tile.roadNeighbors.up or tile.roadNeighbors.down) and not tile.roadNeighbors.left and not tile.roadNeighbors.right

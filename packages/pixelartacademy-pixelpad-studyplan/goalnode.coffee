@@ -35,7 +35,7 @@ class StudyPlan.GoalNode
     
   markedComplete: ->
     goalsData = PAA.PixelPad.Apps.StudyPlan.state 'goals'
-    goalsData[@goalId].markedComplete
+    goalsData[@goalId]?.markedComplete
     
   markComplete: (value) ->
     goalsData = PAA.PixelPad.Apps.StudyPlan.state 'goals'
@@ -270,6 +270,8 @@ class StudyPlan.GoalNode
     for taskPoint in @taskPoints
       taskPoint.setPositionY @groupNumbers[taskPoint.groupNumber].y - 1
       
+      leftGroundOffset = 2
+
       # If it's not a dummy task, also place a building.
       if taskPoint.task
         tile = @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Building
@@ -278,12 +280,13 @@ class StudyPlan.GoalNode
         
         if taskPoint.task.requiredInterests().length
           taskPoint.tiles.push @tileMap.placeTile taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2, StudyPlan.TileMap.Tile.Types.Gate
+          leftGroundOffset = 3
       
       if taskPoint.endTask
         taskPoint.tiles.push @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Flag
         
       # Add ground.
-      for x in [taskPoint.localPosition.x - 2..taskPoint.localPosition.x + 2]
+      for x in [taskPoint.localPosition.x - leftGroundOffset..taskPoint.localPosition.x + 2]
         for y in [taskPoint.localPosition.y - 3..taskPoint.localPosition.y + 2]
           taskPoint.tiles.push @tileMap.placeTile x, y, StudyPlan.TileMap.Tile.Types.Ground
     
@@ -298,8 +301,10 @@ class StudyPlan.GoalNode
     
     # Place roads
     for taskPoint in @taskPoints
-      @tileMap.placeRoad taskPoint.entryPoint.outgoingPathways[0]
-      @tileMap.placeRoad pathway for pathway in taskPoint.entryPoint.incomingPathways
+      @tileMap.placeRoad taskPoint.entryPoint.outgoingPathways[0], solidLines: not taskPoint.endTask
+      
+      for pathway in taskPoint.entryPoint.incomingPathways
+        @tileMap.placeRoad pathway, solidLines: pathway.startPoint isnt @entryPoint
     
     @tileMap.placeRoad @endTaskPoint.exitPoint.outgoingPathways[0]
     
@@ -321,7 +326,7 @@ class StudyPlan.GoalNode
         @taskPathways.push pathway
         @tileMap.placeRoad pathway, accessRoad: true
         
-    @tileMap.finishConstruction onlySolidRoadLines: true
+    @tileMap.finishConstruction()
   
   cloneTemplate: (goalHierarchy) ->
     goalNode = new @constructor
@@ -371,7 +376,7 @@ class StudyPlan.GoalNode
     @minX = @entryPoint.localPosition.x - StudyPlan.GoalHierarchy.goalPadding.left
     @maxX = @exitPoint.localPosition.x + StudyPlan.GoalHierarchy.goalPadding.right
     @minY = @accessRoadStartY - StudyPlan.GoalHierarchy.goalPadding.top
-    @maxY = @tileMap.maxY + 3 + @goalHierarchy.blueprint.getGoalNameTileHeight @goalId
+    @maxY = @tileMap.maxY + StudyPlan.GoalHierarchy.goalPadding.bottom + @goalHierarchy.blueprint.getGoalNameTileHeight @goalId
 
     @topRoadY = @minY
     @bottomRoadY = @maxY
@@ -414,11 +419,10 @@ class StudyPlan.GoalNode
   calculateGlobalPositions: ->
     if @parent
       globalPosition = @localPosition.clone().add @parent.globalPosition()
+      @globalPosition globalPosition
       
     else
-      globalPosition = new THREE.Vector2
-      
-    @globalPosition globalPosition
+      globalPosition = @globalPosition()
     
     @entryPoint.calculateGlobalPosition globalPosition
     @exitPoint.calculateGlobalPosition globalPosition

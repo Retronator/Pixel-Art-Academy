@@ -16,9 +16,6 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     @nameTileHeight = new ReactiveField 1
     @nameWidth = new ReactiveField 0
 
-  destroy: ->
-    super arguments...
-
   onCreated: ->
     super arguments...
 
@@ -26,7 +23,7 @@ class StudyPlan.Blueprint.Goal extends AM.Component
 
     # Subscribe to all interests of this goal.
     @autorun (computation) =>
-      goal = @goal()
+      return unless goal = @goal()
       
       for interest in _.union goal.interests(), goal.requiredInterests(), goal.optionalInterests()
         IL.Interest.forSearchTerm.subscribe interest
@@ -58,18 +55,21 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     @tileMapComponent.setFlag position.x, position.y, value
   
   goalStyle: ->
-    goalNode = @data()
-    position = StudyPlan.Blueprint.TileMap.mapPosition goalNode.globalPosition()
+    return unless position = @mapPosition()
     
     left: "#{position.x}rem"
     top: "#{position.y}rem"
+    
+  mapPosition: ->
+    return unless goalNode = @data()
+    StudyPlan.Blueprint.TileMap.mapPosition goalNode.globalPosition()
   
   markedCompleteClass: ->
-    goalNode = @data()
+    return unless goalNode = @data()
     'marked-complete' if goalNode.markedComplete()
   
   nameStyle: ->
-    goalNode = @data()
+    return unless goalNode = @data()
     bottomLeft = StudyPlan.Blueprint.TileMap.mapPosition goalNode.tileMap.minX + 2, goalNode.tileMap.maxY + 2
     bottomRight = StudyPlan.Blueprint.TileMap.mapPosition goalNode.tileMap.maxX, goalNode.tileMap.maxY + 2
     
@@ -81,11 +81,18 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     left: "calc(50% + #{@nameWidth() / 2}px + 2rem)"
 
   goal: ->
-    goalNode = @data()
+    return unless goalNode = @data()
     goalNode.goal
 
   renderTileMapComponent: ->
     @tileMapComponent.renderComponent @currentComponent()
+    
+  events: ->
+    super(arguments...).concat
+      'click .remove-button': @onClickRemoveButton
+      
+  onClickRemoveButton: (event) ->
+    @blueprint.studyPlan.removeGoal @goalId
 
   class @MarkedComplete extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal.MarkedComplete'

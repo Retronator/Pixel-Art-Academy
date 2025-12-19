@@ -1,0 +1,19 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.AddGoal">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-addgoal">
+    <div class="window">
+      <h1 class="header">
+        Add short-term goal
+      </h1>
+      <p class="explanation">
+        Short term goals are goals you can work towards immediately.
+      </p>
+      <ul class="goals">
+        {{#each availableGoals}}
+          <li class="goal">
+            {{> t10e displayNameTranslation}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>
