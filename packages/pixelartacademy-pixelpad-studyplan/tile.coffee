@@ -19,6 +19,7 @@ class StudyPlan.TileMap.Tile
     
   @ExpansionDirections =
     Forward: 'Forward'
+    ForwardDown: 'ForwardDown'
     Backwards: 'Backwards'
     Sideways: 'Sideways'
 

@@ -43,13 +43,18 @@ class StudyPlan.ConnectionPoint
   
   propagateInterests: ->
     @propagatedProvidedInterests = []
+    @propagatedAvailableInterests = []
     
     # To propagate interests we add all propagated interests from incoming pathways and add our own provided interests.
     for pathway in @incomingPathways
       pathway.startPoint.propagateInterests() unless pathway.startPoint.propagatedProvidedInterests
       @propagatedProvidedInterests.push interest for interest in pathway.startPoint.propagatedProvidedInterests when interest not in @propagatedProvidedInterests
+      @propagatedAvailableInterests.push interest for interest in pathway.startPoint.propagatedAvailableInterests when interest not in @propagatedAvailableInterests
       
     @propagatedProvidedInterests.push interest for interest in @providedInterests when interest not in @propagatedProvidedInterests
+    
+    if @task?.completed()
+      @propagatedAvailableInterests.push interest for interest in @providedInterests when interest not in @propagatedAvailableInterests
     
     # Propagate forward to all outgoing pathways.
     for pathway in @outgoingPathways

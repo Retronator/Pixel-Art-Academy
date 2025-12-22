@@ -279,7 +279,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   _buildingHeight: ->
     tile = @currentData()
     height = @constructor.buildings.heights[tile.data.building] or 10
-    height++ if height in [13, 17]
+    height++ if height in [13, 17, 21]
     height
   
   expansionPointDirectionClass: ->
@@ -301,6 +301,8 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     tile = @currentData()
     
     goalHierarchy = @blueprint.goalHierarchy()
+
+    connectionDirection = StudyPlan.GoalConnectionDirections.Forward
     
     if tile.data.connectionPoint
       goalNode = goalHierarchy.goalNodesById[tile.data.connectionPoint.goalId]
@@ -313,9 +315,10 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
         
       else
         connectionPoint = goalNode.sidewaysPoints[tile.data.connectionPoint.sidewaysIndex]
+        connectionDirection = StudyPlan.GoalConnectionDirections.Sideways
       
     @blueprint.studyPlan.displayAddGoal
-      availableInterests: connectionPoint?.propagatedProvidedInterests or []
+      goalIDs: tile.data.goalIDs
       sourceGoalId: goalNode?.goalId
-      direction: tile.data.expansionDirection
+      direction: connectionDirection
       sidewaysIndex: tile.data.connectionPoint?.sidewaysIndex

@@ -12,7 +12,9 @@
             <span class="checkmark">✓</span>
           </label>
         {{/if}}
-        <button class="remove-button">✕</button>
+        {{#if canRemove}}
+          <button class="remove-button">✕</button>
+        {{/if}}
       </div>
     </div>
   </div>

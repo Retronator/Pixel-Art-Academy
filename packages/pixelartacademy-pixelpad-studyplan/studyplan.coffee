@@ -83,8 +83,6 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
     goal.destroy() for goal in @_goals
     
-    @addGoalComponent()?.destroy()
-    
     goalNode.destroy() for goalId, goalNode of @_goalNodeTemplates
     
   createGoalNode: (goalId, goalHierarchy) ->
@@ -107,7 +105,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @addGoalOptions null
   
   addGoal: (options) ->
-    _.extend options, @addGoalOptions()
+    _.defaults options, @addGoalOptions()
     
     goals = @state('goals') or {}
     goalId = options.goal.id()

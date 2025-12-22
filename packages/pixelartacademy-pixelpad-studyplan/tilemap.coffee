@@ -27,6 +27,10 @@ class StudyPlan.TileMap
       @maxY = Math.max @maxY, y
     
     tile
+  
+  getTileType: (x, y) ->
+    return unless @map[x]?[y]
+    @map[x][y].type
     
   tileFilled: (x, y) ->
     @map[x]?[y]? and @map[x][y].type isnt @constructor.Tile.Types.BlueprintEdge
@@ -54,11 +58,12 @@ class StudyPlan.TileMap
       
     tile
     
-  placeExpansionPoint: (x, y, direction, connectionPointIndicator) ->
+  placeExpansionPoint: (x, y, direction, goalIDs, connectionPointOptions) ->
     tile = @getTile x, y
     tile.type = @constructor.Tile.Types.ExpansionPoint
     tile.expansionDirection = direction
-    tile.connectionPoint = connectionPointIndicator
+    tile.goalIDs = goalIDs
+    tile.connectionPoint = connectionPointOptions
   
   placeRoad: (pathway, options = {}) ->
     if options.useGlobalPositions

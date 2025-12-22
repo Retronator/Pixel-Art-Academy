@@ -24,6 +24,9 @@ class StudyPlan.GoalNode
     @sidewaysGoalNodes = []
     @parent = null
     
+    @possibleForwardGoalIDs = null
+    @possibleSidewaysGoalIDs = null
+    
     @localPosition = new THREE.Vector2
     @globalPosition = new ReactiveField new THREE.Vector2
     
