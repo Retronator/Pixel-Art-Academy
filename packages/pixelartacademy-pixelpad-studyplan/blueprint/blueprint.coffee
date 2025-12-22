@@ -17,7 +17,8 @@ class StudyPlan.Blueprint extends AM.Component
     # Prepare all reactive fields.
     @camera = new ReactiveField null
     @mouse = new ReactiveField null
-    @bounds = new AE.Rectangle()
+    @bounds = new AE.Rectangle
+    @mapBoundingRectangle = new AE.Rectangle
     @$blueprint = new ReactiveField null
     @dragBlueprint = new ReactiveField false
     
@@ -121,6 +122,7 @@ class StudyPlan.Blueprint extends AM.Component
     @_pendingAnimationsCount = new ReactiveField 0
     @_animateTimeouts = []
     @_revealedPathways = []
+    @initialRevealCompleted = new ReactiveField false
     
     @readyToAnimate = new ComputedField =>
       return unless @roadTileMapComponent.isRendered()
@@ -131,15 +133,7 @@ class StudyPlan.Blueprint extends AM.Component
         
       true
       
-    # Track task entries.
-    @taskEntries = new AE.ReactiveArray =>
-      PAA.Learning.Task.Entry.documents.fetch profileId: LOI.adventure.profileId()
-    ,
-      added: (taskEntry) =>
-      updated: (taskEntry) =>
-      removed: (taskEntry) =>
-
-    # Reveal initial entry pathway.
+    # Reveal initial pathways.
     goalHierarchy = null
     
     @autorun (computation) =>
@@ -153,6 +147,8 @@ class StudyPlan.Blueprint extends AM.Component
       Meteor.clearTimeout timeout for timeout in @_animateTimeouts
       @_animateTimeouts = []
       @_revealedPathways = []
+      @_pointsWaitingToBeRevealed = []
+      @$blueprint()?.removeClass 'animating'
       
       Tracker.nonreactive =>
         Tracker.autorun (computation) =>
@@ -162,7 +158,29 @@ class StudyPlan.Blueprint extends AM.Component
           
           # Reveal the starting point.
           for rootGoalNode in goalHierarchy.rootGoalNodes
-            @revealPathwaysFrom rootGoalNode.entryPoint, true
+            @revealPoint rootGoalNode.entryPoint
+        
+          # Animate unrevealed tasks and goals.
+          @_animateTimeouts.push Meteor.setTimeout =>
+            @$blueprint().addClass 'animating'
+            
+            for point in @_pointsWaitingToBeRevealed
+              @camera().setOrigin @constructor.TileMap.mapPosition point.globalPosition
+              await @revealPoint point, true
+              
+            @_initialRevealCompleted = true
+          ,
+            if @_initialRevealCompleted then 0 else 1000
+
+    # Calculate total bounding rectangle of the map.
+    @autorun (computation) =>
+      mapBoundingRectangle = new AE.Rectangle
+      
+      if goalComponentsById = @goalComponentsById()
+        for goalId, goalComponent of goalComponentsById
+          mapBoundingRectangle.union goalComponent.mapBoundingRectangle
+          
+      @mapBoundingRectangle.copy mapBoundingRectangle
 
     # Handle blueprint dragging.
     @autorun (computation) =>
@@ -193,13 +211,11 @@ class StudyPlan.Blueprint extends AM.Component
     @goalIds.stop()
     @goalComponentsById.stop()
     
-    @goalHierarchy().destroy()
+    @goalHierarchy()?.destroy()
     @goalHierarchy.stop()
     
     @previewGoalHierarchy()?.destroy()
     @previewGoalHierarchy.stop()
-    
-    @taskEntries.stop()
   
   getGoalNameTileHeight: (goalId) ->
     return 1 unless @isRendered()
@@ -211,7 +227,82 @@ class StudyPlan.Blueprint extends AM.Component
     
     @_goalNameTileHeightsCache[goalId] or 1
     
-  revealPathwaysFrom: (origin, animate) ->
+  revealPoint: (point, animate) ->
+    # We need to check if we can reveal tasks.
+    if (taskPoint = point.taskPoint) and point is taskPoint.entryPoint
+      animationOptions = {animate, stopAnimation: => @_animationRestarting}
+      
+      goalComponentsById = @goalComponentsById()
+      goalComponent = goalComponentsById[point.goalNode.goalId]
+      
+      if taskPoint.task
+        # See if we need to open the gate.
+        if taskPoint.task.requiredInterests() and taskPoint.task.hasRequiredInterests()
+          goalComponent.tileMapComponent.openGate taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2
+          
+        # See if we need to activate the task.
+        if taskPoint.task.active()
+          goalComponent.tileMapComponent.activateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
+          
+        # See if we need to reveal task tiles.
+        if taskPoint.task.completed()
+          # If we're not animating, don't continue to unrevealed tasks.
+          unless StudyPlan.isTaskRevealed(taskPoint.task.id()) or animate
+            @_pointsWaitingToBeRevealed.push point
+            return
+            
+          @_pendingAnimationsCount @_pendingAnimationsCount() + 1
+          
+          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
+          
+          if animate
+            # Mark that the task was revealed.
+            revealed = StudyPlan.state('revealed') or {}
+            revealed.taskIds ?= []
+            revealed.taskIds.push taskPoint.task.id()
+            StudyPlan.state 'revealed', revealed
+          
+          @_pendingAnimationsCount @_pendingAnimationsCount() - 1
+          return if @_animationRestarting
+
+        else
+          # We can't continue unless the task is completed.
+          return
+        
+      else if taskPoint.endTask
+        goalId = taskPoint.goalNode.goalId
+        
+        # See if we need to reveal the end task tiles.
+        if taskPoint.goalNode.goal.completed()
+          # If we're not animating, don't continue to unrevealed goals.
+          unless StudyPlan.isGoalRevealed(goalId) or animate
+            @_pointsWaitingToBeRevealed.push point
+            return
+            
+          @_pendingAnimationsCount @_pendingAnimationsCount() + 1
+          
+          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
+          
+          if animate
+            # Mark that the goal was revealed.
+            revealed = StudyPlan.state('revealed') or {}
+            revealed.goalIds ?= []
+            revealed.goalIds.push goalId
+            StudyPlan.state 'revealed', revealed
+          
+          @_pendingAnimationsCount @_pendingAnimationsCount() - 1
+          return if @_animationRestarting
+  
+          # See if we need to raise a flag.
+          if taskPoint.goalNode.markedComplete()
+            goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true
+        
+        return unless taskPoint.goalNode.goal.completed()
+        
+    return if @_animationRestarting
+    @_revealPathwaysFrom point, animate
+    
+  _revealPathwaysFrom: (origin, animate) ->
     for pathway in origin.outgoingPathways when pathway not in @_revealedPathways
       @_revealedPathways.push pathway
       
@@ -238,36 +329,7 @@ class StudyPlan.Blueprint extends AM.Component
     @_pendingAnimationsCount @_pendingAnimationsCount() - 1
     return if @_animationRestarting
     
-    # We need to check if we can continue on task entries.
-    if (taskPoint = pathway.endPoint.taskPoint) and pathway.endPoint is taskPoint.entryPoint
-      if taskPoint.task
-        # See if we need to open the gate.
-        if taskPoint.task.requiredInterests() and taskPoint.task.hasRequiredInterests()
-          goalComponent.tileMapComponent.openGate taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2
-          
-        # See if we need to activate the task.
-        if taskPoint.task.active()
-          goalComponent.tileMapComponent.activateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
-          
-        # See if we need to reveal task tiles.
-        if taskPoint.task.completed()
-          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
-
-        # We can't continue unless the task is completed.
-        return unless taskPoint.task.completed()
-        
-      else if taskPoint.endTask
-        # See if we need to reveal the end task tiles.
-        if taskPoint.goalNode.goal.completed()
-          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
-  
-          # See if we need to raise a flag.
-          if taskPoint.goalNode.markedComplete()
-            goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true
-        
-        return unless taskPoint.goalNode.goal.completed()
-    
-    @revealPathwaysFrom pathway.endPoint, animate
+    @revealPoint pathway.endPoint, animate
   
   renderRoadTileMapComponent: ->
     @roadTileMapComponent.renderComponent @currentComponent()
@@ -306,6 +368,9 @@ class StudyPlan.Blueprint extends AM.Component
 
       @dragBlueprint false
 
+  animatingClass: ->
+    'animating' if @initialRevealCompleted()
+    
   draggingClass: ->
     'dragging' if @dragBlueprint()
 

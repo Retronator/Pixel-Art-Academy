@@ -48,13 +48,14 @@
         .shadow
           visibility visible
 
-      .pathway
-        .image
-          top 0
+      .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
+        .pathway
+          .image
+            top 0
 
-      .building
-        .image
-          bottom -10rem
+        .building
+          .image
+            bottom -10rem
 
     .ground
     .pathway
@@ -91,12 +92,13 @@
         background image('/pixelartacademy/pixelpad/apps/studyplan/pathway-tiles.png') 15rem 5rem / 45rem 85rem
 
       .image
-        top -10rem
-        transition top 0.2s ease-out
-
         &::after
           content ''
           absolute-cover()
+
+        .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
+          top -10rem
+          transition top 0.2s ease-out
 
     .building
     .gate
@@ -149,8 +151,10 @@
 
       .image
         background image('/pixelartacademy/pixelpad/apps/studyplan/buildings.png') 30rem 20rem / 200rem 200rem
-        bottom 0
-        transition bottom 0.2s ease-out
+
+        .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
+          transition bottom 0.2s ease-out
+          bottom 0
 
     .gate
       &.opened

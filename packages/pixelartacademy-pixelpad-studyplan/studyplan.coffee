@@ -15,6 +15,9 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   #       direction: in which direction from this goal the connection is going
   #       sidewaysIndex: if the connection goes sideways, from which exit does it go
   #       interest: which of the required interests this connection ties into
+  # revealed: object for storing which parts of the map have been revealed yet
+  #   taskIds: an array of task IDs for which the player has seen their reveal animation
+  #   goalIds: an array of goal IDs for which the player has seen their reveal animation
   # camera:
   #   origin: the position the center of the canvas displays
   #     x
@@ -45,6 +48,19 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
 
     # Note: We return a boolean so we can use this from functions where undefined means 'not ready'.
     @state('goals')?[goalId]?
+    
+  @isTaskRevealed: (taskId) ->
+    return unless revealed = @state 'revealed'
+    return unless revealed.taskIds
+    taskId in revealed.taskIds
+    
+  @isGoalRevealed: (goalId) ->
+    return unless revealed = @state 'revealed'
+    return unless revealed.goalIds
+    goalId in revealed.goalIds
+    
+  @reset: ->
+    @state.set {}
 
   constructor: ->
     super arguments...

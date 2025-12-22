@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -15,6 +16,7 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     
     @nameTileHeight = new ReactiveField 1
     @nameWidth = new ReactiveField 0
+    @mapBoundingRectangle = new AE.Rectangle
 
   onCreated: ->
     super arguments...
@@ -28,6 +30,18 @@ class StudyPlan.Blueprint.Goal extends AM.Component
       for interest in _.union goal.interests(), goal.requiredInterests(), goal.optionalInterests()
         IL.Interest.forSearchTerm.subscribe interest
   
+    @autorun (computation) =>
+      return unless goalNode = @data()
+      globalPosition = goalNode.globalPosition()
+      topLeft = StudyPlan.Blueprint.TileMap.mapPosition globalPosition.x + goalNode.tileMap.minX, globalPosition.y + goalNode.tileMap.minY
+      bottomRight = StudyPlan.Blueprint.TileMap.mapPosition globalPosition.x + goalNode.tileMap.maxX, globalPosition.y + goalNode.tileMap.maxY
+      
+      @mapBoundingRectangle.copy
+        left: topLeft.x
+        top: topLeft.y
+        right: bottomRight.x
+        bottom: bottomRight.y
+      
   onRendered: ->
     super arguments...
     
