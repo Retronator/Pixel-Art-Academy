@@ -41,7 +41,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     @nonBlueprintTiles = new ComputedField =>
       tileMap = @data()
       
-      tiles = (@_getTileForData tile for tile in tileMap.tiles when tile.type not in [TileTypes.BlueprintEdge, TileTypes.Blueprint])
+      tiles = (@_getTileWithData tile for tile in tileMap.tiles when tile.type not in [TileTypes.BlueprintEdge, TileTypes.Blueprint])
       _.orderBy tiles, [((tile) => tile.data.position.y), ((tile) => tile.data.position.x)], ['asc', 'desc']
     
     unless @constructor._blueprintTilesImage
@@ -113,13 +113,14 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       
     tile
   
-  _getTileForData: (tileData) ->
+  _getTileWithData: (tileData) ->
     tile = @_getTile tileData.position.x, tileData.position.y
-    
-    return tile if EJSON.equals tileData, tile.data
-    
     tile.resetWithData tileData
     tile
+    
+  getPositionForTask: (taskId) ->
+    return unless tile = _.find @nonBlueprintTiles(), (tile) => tile.data.type is TileTypes.Building and tile.data.taskId is taskId
+    tile.data.position
 
   revealPathway: (pathway, options = {}) ->
     if options.useGlobalPositions
@@ -132,6 +133,9 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       start = waypoints[waypointIndex]
       end = waypoints[waypointIndex + 1]
       
+      if start.x is end.x and start.y is end.y
+        continue
+        
       if start.x is end.x
         vertical = true
         startCoordinate = start.y
@@ -150,13 +154,18 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
         for offset in [-1..1]
           x = if vertical then start.x + offset else coordinate
           y = if vertical then coordinate else start.y + offset
-          @_revealTile x, y
+          
+          if offset is 0
+            @_revealTile x, y
+          
+          else
+            @_revealPathwaySideTile x, y
           
         if coordinate is startCoordinate and waypointIndex
-          @_revealTile start.x - 1, start.y - 1
-          @_revealTile start.x + 1, start.y - 1
-          @_revealTile start.x - 1, start.y + 1
-          @_revealTile start.x + 1, start.y + 1
+          @_revealPathwaySideTile start.x - 1, start.y - 1
+          @_revealPathwaySideTile start.x + 1, start.y - 1
+          @_revealPathwaySideTile start.x - 1, start.y + 1
+          @_revealPathwaySideTile start.x + 1, start.y + 1
         
         # Start and end waypoints are the same, so we don't need to wait on the start ones, except the first time.
         firstTile = waypointIndex is 0 and coordinate is startCoordinate
@@ -173,6 +182,11 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       xS = (tile.position.x for tile in taskPoint.tiles)
       minX = _.min xS
       maxX = _.max xS
+      
+      # Don't reveal another task's tiles.
+      for x in [taskPoint.localPosition.x + 1..maxX] when _.find taskPoint.tiles, (tile) => tile.position.x is x and tile.type is TileTypes.Building
+        maxX = x - 1
+        break
       
       for x in [minX..maxX]
         revealingTiles = _.filter taskPoint.tiles, (tile) =>
@@ -191,6 +205,11 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
 
   _revealTile: (x, y) ->
     tile = @_getTile x, y
+    tile.revealed true
+  
+  _revealPathwaySideTile: (x, y) ->
+    tile = @_getTile x, y
+    return if tile.data.type in [TileTypes.Building, TileTypes.Road, TileTypes.Sidewalk]
     tile.revealed true
     
   openGate: (x, y) ->
@@ -269,6 +288,10 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
           classes.push side
       
     classes.join ' '
+  
+  taskHoveredClass: ->
+    tile = @currentData()
+    'task-hovered' if @blueprint.hoveredTaskId() is tile.data.taskId
   
   buildingBlueprintStyle: ->
     height = @_buildingHeight()

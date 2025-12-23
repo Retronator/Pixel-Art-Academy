@@ -1,0 +1,48 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-blueprint-taskinfo
+  position absolute
+  z-index 1
+  width 120rem
+  padding 5rem
+  visibility hidden
+  opacity 0
+  background atariCyan(2)
+  transition opacity 0.2s, visibility 0.2s
+  pointer-events none
+
+  &.visible
+    visibility visible
+    opacity 1
+
+  &.wide
+    width 200rem
+
+  .directive
+    margin-bottom 5rem
+    text-transform uppercase
+
+  .instructions
+    hyphens auto
+
+  .interests
+    .label
+      margin-top 5rem
+      padding-bottom 1rem
+      border-bottom 1rem solid atariCyan(4)
+
+    .list
+      position relative
+      list-style none
+      padding-left 10rem
+      margin-top 1rem
+
+      .interest
+        &::before
+          content '+'
+          position absolute
+          left 0
+
+        &.required
+          &::before
+            content '→'

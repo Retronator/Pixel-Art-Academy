@@ -24,6 +24,13 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
       Click on the arrow to get back to the tasks.
     """
     
+    @studyPlanDirective: -> "Learn about to-do tasks"
+    
+    @instructions: -> """
+      The notepad on the main screen keeps track of your current tasks.
+      You can always click on a task to learn how to complete it.
+    """
+    
     @interests: -> ['to-do tasks']
     
     @studyPlanBuilding: -> 'SimCityResidential1'

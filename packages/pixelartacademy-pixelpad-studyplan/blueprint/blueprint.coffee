@@ -21,6 +21,7 @@ class StudyPlan.Blueprint extends AM.Component
     @mapBoundingRectangle = new AE.Rectangle
     @$blueprint = new ReactiveField null
     @dragBlueprint = new ReactiveField false
+    @hoveredTaskId = new ReactiveField null
     
     @_goalNameTileHeightsCache = {}
 
@@ -170,7 +171,7 @@ class StudyPlan.Blueprint extends AM.Component
               
             @_initialRevealCompleted = true
           ,
-            if @_initialRevealCompleted then 0 else 1000
+            if @_initialRevealCompleted then 30 else 1000
 
     # Calculate total bounding rectangle of the map.
     @autorun (computation) =>
@@ -383,10 +384,21 @@ class StudyPlan.Blueprint extends AM.Component
   events: ->
     super(arguments...).concat
       'mousedown': @onMouseDown
+      'pointerenter .tile.building, pointerenter .tile.gate': @onPointerEnterTask
+      'pointerleave .tile.building, pointerleave .tile.gate': @onPointerLeaveTask
+      
+  onPointerEnterTask: (event) ->
+    tile = @currentData()
+    @hoveredTaskId tile.data.taskId
+    
+  onPointerLeaveTask: (event) ->
+    @hoveredTaskId null
 
   onMouseDown: (event) ->
     $target = $(event.target)
-    return if $target.closest('.flag .image').length
+    return if $target.closest('.flag.tile').length
+    return if $target.closest('.building.tile').length
+    return if $target.closest('.gate.tile').length
     return if $target.closest('.goal-ui').length
     return if $target.closest('.expansion-point').length
     

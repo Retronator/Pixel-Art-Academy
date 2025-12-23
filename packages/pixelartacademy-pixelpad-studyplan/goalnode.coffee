@@ -277,12 +277,17 @@ class StudyPlan.GoalNode
 
       # If it's not a dummy task, also place a building.
       if taskPoint.task
+        taskId = taskPoint.task.id()
+        
         tile = @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Building
         tile.building = taskPoint.task.studyPlanBuilding()
+        tile.taskId = taskId
         taskPoint.tiles.push tile
         
         if taskPoint.task.requiredInterests().length
-          taskPoint.tiles.push @tileMap.placeTile taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2, StudyPlan.TileMap.Tile.Types.Gate
+          tile = @tileMap.placeTile taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2, StudyPlan.TileMap.Tile.Types.Gate
+          tile.taskId = taskId
+          taskPoint.tiles.push tile
           leftGroundOffset = 3
       
       if taskPoint.endTask

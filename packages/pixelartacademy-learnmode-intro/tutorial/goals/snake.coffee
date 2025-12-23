@@ -52,8 +52,6 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
 
-    @interests: -> ['snake', 'food']
-
     @predecessors: -> [Goal.Play]
 
     @studyPlanBuilding: -> 'SimCityCommercial4'
@@ -87,7 +85,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
       you're happy. Score some more points to complete the project.
     """
 
-    @interests: -> ['learn mode tutorial project']
+    @interests: -> ['Learn Mode tutorial project']
 
     @predecessors: -> [Goal.Draw]
     

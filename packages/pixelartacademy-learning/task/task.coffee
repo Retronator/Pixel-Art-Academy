@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 IL = Illustrapedia
@@ -42,6 +43,10 @@ class PAA.Learning.Task
   # Instructions how to complete this task.
   @instructions: -> throw new AE.NotImplementedException "You must specify the task instructions."
 
+  # Override to provide alternative texts to show in the Study Plan app.
+  @studyPlanDirective: -> null
+  @studyPlanInstructions: -> null
+
   # Override to list the interests this task increases.
   @interests: -> []
 
@@ -80,7 +85,9 @@ class PAA.Learning.Task
 
         # Create this task's translated names.
         translationNamespace = @id()
-        AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
+        for property in ['directive', 'instructions', 'studyPlanDirective', 'studyPlanInstructions']
+          continue unless text = @[property]()
+          AB.createTranslation translationNamespace, property, text
 
         # Initialize interests.
         IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
@@ -129,6 +136,16 @@ class PAA.Learning.Task
   instructions: -> AB.translate(@_translationSubscription, 'instructions').text
   instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
+  studyPlanDirective: ->
+    translation = AB.translate @_translationSubscription, 'studyPlanDirective'
+    return translation.text if translation.language
+    @directive()
+    
+  studyPlanDirectiveTranslation: -> AB.existingTranslation(@_translationSubscription, 'studyPlanDirective') or @directiveTranslation()
+  
+  studyPlanInstructions: -> AB.translate(@_translationSubscription, 'studyPlanInstructions').text
+  studyPlanInstructionsTranslation: -> AB.existingTranslation(@_translationSubscription, 'studyPlanInstructions') or @instructionsTranslation()
+  
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()

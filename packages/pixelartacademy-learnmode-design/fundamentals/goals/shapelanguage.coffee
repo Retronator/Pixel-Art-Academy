@@ -26,6 +26,8 @@ class LM.Design.Fundamentals.Goals.ShapeLanguage extends PAA.Learning.Goal
     @interests: -> ['shape language']
 
     @requiredInterests: -> ['shape']
+    
+    @studyPlanBuilding: -> 'SimCityResidential3'
 
     @initialize()
     

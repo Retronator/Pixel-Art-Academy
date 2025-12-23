@@ -1,11 +1,11 @@
-<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal.Task">
-  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-goal-task">
-    <div class="info">
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.TaskInfo">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-taskinfo {{visibleClass}} {{wideClass}}" {{style taskInfoStyle}}>
+    {{#with task}}
       <div class="directive">
-        {{> t10e directiveTranslation}}
+        {{> t10e studyPlanDirectiveTranslation}}
       </div>
       <div class="instructions">
-        {{> t10e instructionsTranslation}}
+        {{> t10e studyPlanInstructionsTranslation}}
       </div>
       {{#if requiredInterests.length}}
         <div class="interests">
@@ -31,6 +31,6 @@
           </ul>
         </div>
       {{/if}}
-    </div>
+    {{/with}}
   </div>
 </template>

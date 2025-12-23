@@ -14,7 +14,12 @@
     width 13rem
     height 5rem
 
-    &:hover
+    &.task-hovered
+      .building
+      .gate
+        .image
+          filter drop-shadow(0 0 2rem white)
+
       .building
         &.active
           .blueprint
@@ -115,6 +120,14 @@
         z-index 2
 
     .building
+    .gate
+      .image
+        filter drop-shadow(0 0 2rem transparent)
+        transition filter 0.1s
+
+    .building
+      cursor default
+
       &.active
         .blueprint
           background-color atariCyan(3)
@@ -123,7 +136,7 @@
       &.height-8
         &.active
           .blueprint
-            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-height.png')
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active.png')
 
         .blueprint
           border none
@@ -153,10 +166,12 @@
         background image('/pixelartacademy/pixelpad/apps/studyplan/buildings.png') 30rem 20rem / 200rem 200rem
 
         .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
-          transition bottom 0.2s ease-out
+          transition bottom 0.2s ease-out, filter 0.1s
           bottom 0
 
     .gate
+      cursor default
+
       &.opened
         .image
           animation gate-open 0.4s steps(4) forwards

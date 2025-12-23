@@ -25,7 +25,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @interests: -> ['line']
   
-    @requiredInterests: -> ['learn mode tutorial project']
+    @requiredInterests: -> ['Learn Mode tutorial project']
     
     @studyPlanBuilding: -> 'SimCityWindTurbine'
     
@@ -78,6 +78,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     @predecessors: -> [Goal.Shape]
     
     @interests: -> ['color']
+    
+    @requiredInterests: -> ['future tech']
 
     @groupNumber: -> -1
     

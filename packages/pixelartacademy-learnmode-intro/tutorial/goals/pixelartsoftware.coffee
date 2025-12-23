@@ -95,7 +95,7 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
 
-    @interests: -> ['pixel art software', 'pixel art', 'drawing software']
+    @interests: -> ['pixel art software']
 
     @predecessors: -> [Goal.Basics, Goal.Helpers, Goal.ColorTools]
     @predecessorsCompleteType: -> @PredecessorsCompleteType.Any

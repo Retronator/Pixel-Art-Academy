@@ -4,7 +4,7 @@
       <canvas class="blueprint" {{style blueprintStyle}}></canvas>
     {{/unless}}
     {{#each nonBlueprintTiles}}
-      <div class="tile {{tileTypeClass}} {{revealedClass}} {{groundClass}}" {{style tileStyle}}>
+      <div class="tile {{tileTypeClass}} {{revealedClass}} {{groundClass}} {{taskHoveredClass}}" {{style tileStyle}}>
         {{#unless options.noGround}}
           <div class="ground">
             <div class="image"></div>

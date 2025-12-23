@@ -37,9 +37,8 @@ Package.onUse(function(api) {
   api.addComponent('blueprint..');
   api.addFile('blueprint/camera');
   api.addFile('blueprint/mouse');
-
   api.addComponent('blueprint/goal..');
-  api.addComponent('blueprint/goal/task..');
+  api.addComponent('blueprint/taskinfo..');
 
   api.addComponent('blueprint/tilemap..');
   api.addFile('blueprint/tilemap/tilemap-buildings');

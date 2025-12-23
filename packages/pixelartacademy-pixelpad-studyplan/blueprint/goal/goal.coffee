@@ -78,6 +78,14 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     return unless goalNode = @data()
     StudyPlan.Blueprint.TileMap.mapPosition goalNode.globalPosition()
   
+  getMapPositionForTask: (taskId) ->
+    return unless goalNode = @data()
+    goalPosition = goalNode.globalPosition()
+
+    return unless taskPosition = @tileMapComponent.getPositionForTask taskId
+    
+    StudyPlan.Blueprint.TileMap.mapPosition goalPosition.x + taskPosition.x, goalPosition.y + taskPosition.y
+    
   markedCompleteClass: ->
     return unless goalNode = @data()
     'marked-complete' if goalNode.markedComplete()
