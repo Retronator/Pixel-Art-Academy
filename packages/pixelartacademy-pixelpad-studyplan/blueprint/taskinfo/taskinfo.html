@@ -13,7 +13,7 @@
           <ul class="list">
             {{#each requiredInterests}}
               {{#with interestDocument}}
-                <li class="required interest">{{> t10e name}}</li>
+                <li class="required interest {{acquiredInterestClass}}">{{> t10e name}}</li>
               {{/with}}
             {{/each}}
           </ul>
@@ -25,7 +25,7 @@
           <ul class="list">
             {{#each interests}}
               {{#with interestDocument}}
-                <li class="interest">{{> t10e name}}</li>
+                <li class="interest {{acquiredInterestClass}}">{{> t10e name}}</li>
               {{/with}}
             {{/each}}
           </ul>

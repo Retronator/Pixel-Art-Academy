@@ -345,7 +345,7 @@ class StudyPlan.GoalHierarchy
           goalNode.possibleSidewaysGoalIDs[sidewaysPointIndex] ?= []
           goalNode.possibleSidewaysGoalIDs[sidewaysPointIndex].push (availableGoalIDs sidewaysPoint[interestsCollectionName])...
           
-          for outgoingPathway in sidewaysPoint.outgoingPathways when outgoingPathway.endPoint is outgoingPathway.endPoint.goalNode.entryPoint
+          for outgoingPathway in sidewaysPoint.outgoingPathways when outgoingPathway.endPoint is outgoingPathway.endPoint.goalNode?.entryPoint
             distributePossibleGoals outgoingPathway.endPoint.goalNode, interestsCollectionName
             
         # See if we can add any goals forward.
@@ -394,7 +394,11 @@ class StudyPlan.GoalHierarchy
           
           # If there are sideways roads going past this expansion point, just connect the road.
           if roadTileMap.getTileType(expansionPosition.x, expansionPosition.y - 2) is StudyPlan.TileMap.Tile.Types.Road
-            roadTileMap.placeTile expansionPosition.x, expansionPosition.y - 1, StudyPlan.TileMap.Tile.Types.Road
+            expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal expansionPosition.x, expansionPosition.y - 1
+            pathway = new StudyPlan.Pathway sidewaysPoint, expansionRoadPoint
+            addGlobalPathway pathway
+            
+            roadTileMap.placeRoad pathway, useGlobalPositions: true
           
           else
             roadTileMap.placeExpansionPoint expansionPosition.x, expansionPosition.y - 2, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways, goalNode.possibleSidewaysGoalIDs[index],
@@ -408,8 +412,12 @@ class StudyPlan.GoalHierarchy
           lastSidewaysGoalNode = _.last goalNode.sidewaysGoalNodes
           entryY = lastSidewaysGoalNode.globalPosition().y
           
-          roadTileMap.placeTile entryX, entryY - 1, StudyPlan.TileMap.Tile.Types.Road
+          expansionRoadPoint = StudyPlan.ConnectionPoint.createGlobal entryX, entryY - 1
+          pathway = new StudyPlan.Pathway lastSidewaysGoalNode.entryPoint, expansionRoadPoint
+          pathway.globalWaypointPositions.push new THREE.Vector2 entryX, entryY
+          addGlobalPathway pathway
           
+          roadTileMap.placeRoad pathway, useGlobalPositions: true
           roadTileMap.placeExpansionPoint entryX, entryY - 3, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways, goalNode.possibleSidewaysGoalIDs,
             goalId: goalId
             

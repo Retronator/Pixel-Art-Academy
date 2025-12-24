@@ -93,7 +93,7 @@ class StudyPlan.Blueprint.TaskInfo extends AM.Component
     spaceToRight = maxScreenX - displayCoordinates.x - @constructor.taskPadding.right
 
     if spaceBelow >= infoHeight or spaceAbove >= infoHeight
-      if displayCoordinates.y < centerY and spaceBelow >= infoHeight or spaceAbove <= infoHeight
+      if displayCoordinates.y < centerY and spaceBelow >= infoHeight or spaceAbove < infoHeight
         top = displayCoordinates.y + @constructor.taskPadding.bottom
     
       else
@@ -103,7 +103,7 @@ class StudyPlan.Blueprint.TaskInfo extends AM.Component
       left = @constructor.backButtonPadding if left < @constructor.backButtonPadding and (top? and top < @constructor.backButtonPadding or screenHeight - bottom - infoHeight < @constructor.backButtonPadding)
       
     else
-      if displayCoordinates.x < centerX and spaceToRight >= infoWidth or spaceToLeft <= infoWidth
+      if displayCoordinates.x < centerX and spaceToRight >= infoWidth or spaceToLeft < infoWidth
         left = displayCoordinates.x + @constructor.taskPadding.right
         
       else
@@ -120,3 +120,7 @@ class StudyPlan.Blueprint.TaskInfo extends AM.Component
   interestDocument: ->
     interest = @currentData()
     IL.Interest.find interest
+  
+  acquiredInterestClass: ->
+    interest = @currentData()
+    'acquired' if interest.referenceString() in LOI.adventure.currentInterests()
