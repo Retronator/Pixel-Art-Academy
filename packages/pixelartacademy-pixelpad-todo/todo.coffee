@@ -78,6 +78,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     @activeTasks = new ComputedField =>
       _.filter @tasks(), (task) => task.active()
 
+    @availableTasks = new ComputedField =>
+      _.filter @tasks(), (task) => task.available()
+      
     @activeTasksToBeDisplayed = new ReactiveField []
     @displayedActiveTasks = new ReactiveField []
     @completedTasks = new ReactiveField []
@@ -93,6 +96,15 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         activeTasksToBeDisplayed.push task for task in activeTasks when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
         
         @activeTasksToBeDisplayed activeTasksToBeDisplayed
+        
+        # Remove deactivated tasks.
+        deactivatedTasks = _.filter displayedActiveTasks, (task) => not task.active() and not task.completed()
+
+        for task in deactivatedTasks
+          _.pull displayedActiveTasks, task
+          @$("[data-task-id='#{task.id()}']").remove()
+        
+        @displayedActiveTasks displayedActiveTasks if deactivatedTasks.length
         
         # Remove completed tasks so that the total shown tasks is not above 9 if possible.
         tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
@@ -198,6 +210,15 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     await _.waitForSeconds @waitBetweenAnimationsDuration
 
     await task.onCompletedDisplayed()
+    
+    # If there are no more active tasks, remove all completed ones.
+    unless @activeTasks().length
+      completedTasks = @completedTasks()
+      @completedTasks []
+      
+      # Also remove them from the displayed list.
+      for task in completedTasks
+        @$("[data-task-id='#{task.id()}']").remove()
     
     @_animateClose()
   
@@ -338,6 +359,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
   
   showToDo: ->
     @activeTasks().length or @completedTasks().length or @displayedActiveTasks().length
+  
+  hasAvailableTasks: ->
+    @availableTasks().length
 
   taskSelectedClass: ->
     'task-selected' if @selectedTask()

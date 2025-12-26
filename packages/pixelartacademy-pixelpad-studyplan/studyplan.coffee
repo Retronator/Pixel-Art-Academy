@@ -43,11 +43,17 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     Forward: 'Forward'
     Sideways: 'Sideways'
   
-  @hasGoal: (goalId) ->
-    goalId = _.thingId goalId
+  @hasGoal: (goalOrGoalId) ->
+    goalId = _.thingId goalOrGoalId
 
     # Note: We return a boolean so we can use this from functions where undefined means 'not ready'.
     @state('goals')?[goalId]?
+    
+  @hasActiveGoal: (goalOrGoalId) ->
+    goalId = _.thingId goalOrGoalId
+    
+    return false unless goal = @state('goals')?[goalId]
+    not goal.markedComplete
     
   @isTaskRevealed: (taskId) ->
     return unless revealed = @state 'revealed'

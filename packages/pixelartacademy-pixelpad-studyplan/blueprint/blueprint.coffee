@@ -157,21 +157,23 @@ class StudyPlan.Blueprint extends AM.Component
           computation.stop()
           @_animationRestarting = false
           
-          # Reveal the starting point.
-          for rootGoalNode in goalHierarchy.rootGoalNodes
-            @revealPoint rootGoalNode.entryPoint
-        
-          # Animate unrevealed tasks and goals.
-          @_animateTimeouts.push Meteor.setTimeout =>
-            @$blueprint().addClass 'animating'
-            
-            for point in @_pointsWaitingToBeRevealed
-              @camera().setOrigin @constructor.TileMap.mapPosition point.globalPosition
-              await @revealPoint point, true
+          # Wait for the tilemap to be reset.
+          Tracker.afterFlush =>
+            # Reveal the starting point.
+            for rootGoalNode in goalHierarchy.rootGoalNodes
+              @revealPoint rootGoalNode.entryPoint
+          
+            # Animate unrevealed tasks and goals.
+            @_animateTimeouts.push Meteor.setTimeout =>
+              @$blueprint().addClass 'animating'
               
-            @_initialRevealCompleted = true
-          ,
-            if @_initialRevealCompleted then 30 else 1000
+              for point in @_pointsWaitingToBeRevealed
+                @camera().setOrigin @constructor.TileMap.mapPosition point.globalPosition
+                await @revealPoint point, true
+                
+              @_initialRevealCompleted = true
+            ,
+              if @_initialRevealCompleted then 30 else 1000
 
     # Calculate total bounding rectangle of the map.
     @autorun (computation) =>

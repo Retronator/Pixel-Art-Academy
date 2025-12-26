@@ -55,9 +55,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Ruler extends FM.View
   onDestroyed: ->
     super arguments...
     
-    @lineIndicatorImage.destroy()
-    @rectangleIndicatorImage.destroy()
-    @filledRectangleIndicatorImage.destroy()
+    @lineIndicatorImage?.destroy()
+    @rectangleIndicatorImage?.destroy()
+    @filledRectangleIndicatorImage?.destroy()
+    @ellipseIndicatorImage?.destroy()
+    @filledEllipseIndicatorImage?.destroy()
     
   rectangleFilledClass: ->
     rectangle = @interface.getOperator LOI.Assets.SpriteEditor.Tools.Rectangle

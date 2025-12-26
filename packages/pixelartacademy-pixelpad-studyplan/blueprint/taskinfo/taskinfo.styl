@@ -47,7 +47,12 @@
           color atariRed(6)
 
           &::before
-            content '→'
+            content 'x'
+
+          &.acquired
+            &::before
+              content '✓'
+              adventure()
 
         &.acquired
           color atariGreen(6)

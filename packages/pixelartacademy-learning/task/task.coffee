@@ -166,7 +166,7 @@ class PAA.Learning.Task
     # We need an entry made by this profile.
     @entry()
 
-  active: ->
+  available: ->
     # We should only be determining active state for the current profile.
     unless @options.profileId() is LOI.adventure.profileId()
       console.warn "Active task determination requested for another profile."
@@ -199,6 +199,10 @@ class PAA.Learning.Task
 
     # All requirements to be active have been met.
     true
+  
+  active: ->
+    # Task is active when it is available and its goal is added to the Study Plan.
+    @available() and PAA.PixelPad.Apps.StudyPlan.hasGoal @goal
     
   hasRequiredInterests: ->
     requiredInterests = @requiredInterests()

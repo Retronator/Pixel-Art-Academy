@@ -209,7 +209,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   
   _revealPathwaySideTile: (x, y) ->
     tile = @_getTile x, y
-    return if tile.data.type in [TileTypes.Building, TileTypes.Road, TileTypes.Sidewalk]
+    return if tile.data?.type in [TileTypes.Building, TileTypes.Road, TileTypes.Sidewalk]
     tile.revealed true
     
   openGate: (x, y) ->

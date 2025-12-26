@@ -22,7 +22,11 @@
               {{#if showToDo}}
                 TO DO:
               {{else}}
-                You're all done!
+                {{#if hasAvailableTasks}}
+                  Add new goals in the Study Plan to get more tasks.
+                {{else}}
+                  You're all done!
+                {{/if}}
               {{/if}}
             </div>
             <div class="tasks-area">

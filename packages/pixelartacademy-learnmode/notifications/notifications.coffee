@@ -45,6 +45,30 @@ class LM.Notifications
     
     LM.ConditionalNotificationsProvider.registerNotificationClass @
 
+  class @NoTasks extends LM.ConditionalNotificationsProvider.ConditionalNotification
+    @id: -> "PixelArtAcademy.LearnMode.Notifications.NoTasks"
+    
+    @message: -> """
+      Your to-do list is empty!
+
+      Use the Study Plan app when you're ready to achieve new goals.
+    """
+    
+    @priority: -> 3
+    
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @condition: ->
+      # Show when no tasks are active, but some are available.
+      tasks = _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
+      activeTasks = _.filter tasks, (task) => task.active()
+      availableTasks = _.filter tasks, (task) => not task.available()
+      not activeTasks.length and availableTasks.length
+      
+    @initialize()
+    
+    LM.ConditionalNotificationsProvider.registerNotificationClass @
+    
   class @TheEnd extends LM.ConditionalNotificationsProvider.ConditionalNotification
     @id: -> "PixelArtAcademy.LearnMode.Notifications.TheEnd"
     
@@ -64,7 +88,7 @@ class LM.Notifications
     @displayStyle: -> @DisplayStyles.Always
     
     @condition: ->
-      # Show when no tasks are active.
+      # Show when all the courses are completed.
       for chapter in LOI.adventure.currentChapters()
         for course in chapter.courses
           return unless course.completed()

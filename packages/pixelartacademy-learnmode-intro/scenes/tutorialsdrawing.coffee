@@ -17,6 +17,8 @@ class LM.Intro.TutorialsDrawing extends LOI.Adventure.Scene
     @_tutorialHelpers?.destroy()
 
   things: ->
+    return unless LM.Intro.Tutorial.Goals.PixelArtSoftware.active()
+
     things = []
     DrawingApp = PAA.PixelPad.Apps.Drawing
 

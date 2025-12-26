@@ -213,6 +213,8 @@ class PAA.Learning.Goal
   
   @reset: -> @getAdventureInstance().reset()
   
+  @active: -> PAA.PixelPad.Apps.StudyPlan.hasActiveGoal @
+  
   constructor: (@options = {}) ->
     # By default the task is related to the current profile.
     @options.profileId ?= => LOI.adventure.profileId()

@@ -20,6 +20,8 @@ class Goal.OpenPinballMachine extends Goal.Task
 
   @requiredInterests: -> ['smooth curve (pixel art)']
 
+  @studyPlanBuilding: -> 'SimCitySubway'
+
   @initialize()
 
   @completedConditions: -> LM.PixelArtFundamentals.Fundamentals.state 'openedPinballMachine'
@@ -40,6 +42,8 @@ class Goal.DrawBall extends Goal.AssetsTask
   """
   
   @predecessors: -> [Goal.OpenPinballMachine]
+  
+  @studyPlanBuilding: -> 'SimCityWaterPump'
   
   @initialize()
   
@@ -84,6 +88,8 @@ class Goal.PlayBall extends Goal.Task
   
   @predecessors: -> [Goal.DrawBall]
 
+  @studyPlanBuilding: -> 'SimCityPark'
+
   @initialize()
 
   @completedConditions: ->
@@ -108,6 +114,8 @@ class Goal.DrawPlayfield extends Goal.AssetsTask
   """
   
   @predecessors: -> [Goal.PlayBall]
+
+  @studyPlanBuilding: -> 'SimCityCommercial3'
 
   @initialize()
   
@@ -134,6 +142,8 @@ class Goal.PlayPlayfield extends Goal.Task
   
   @predecessors: -> [Goal.DrawPlayfield]
 
+  @studyPlanBuilding: -> 'SimCityCommercial4'
+
   @initialize()
 
   @completedConditions: ->
@@ -159,6 +169,8 @@ class Goal.DrawGobbleHole extends Goal.AssetsTask
   
   @predecessors: -> [Goal.PlayPlayfield]
 
+  @studyPlanBuilding: -> 'SimCityIndustrial1'
+
   @initialize()
   
   @unlockedAssets: -> [
@@ -176,6 +188,8 @@ class Goal.PlayGobbleHole extends Goal.Task
   """
   
   @predecessors: -> [Goal.DrawGobbleHole]
+
+  @studyPlanBuilding: -> 'SimCityIndustrial2'
 
   @initialize()
 
@@ -202,6 +216,8 @@ class Goal.AddPins extends Goal.Task
   @predecessors: -> [Goal.PlayGobbleHole]
   
   @groupNumber: -> -1
+  
+  @studyPlanBuilding: -> 'SimCityIndustrial3'
   
   @initialize()
   
@@ -240,6 +256,8 @@ class Goal.DrawBallTrough extends Goal.AssetsTask
   
   @groupNumber: -> 1
 
+  @studyPlanBuilding: -> 'SimCityIndustrial4'
+
   @initialize()
   
   @unlockedAssets: -> [
@@ -261,6 +279,8 @@ class Goal.PlayBallTrough extends Goal.Task
   
   @groupNumber: -> 1
 
+  @studyPlanBuilding: -> 'SimCityOffice1'
+
   @initialize()
 
   @completedConditions: -> @playfieldHasPart Pinball.Parts.BallTrough
@@ -279,6 +299,8 @@ class Goal.DrawBumper extends Goal.AssetsTask
     Goal.AddPins
     Goal.PlayBallTrough
   ]
+
+  @studyPlanBuilding: -> 'SimCityOffice2'
 
   @initialize()
   
@@ -299,6 +321,8 @@ class Goal.PlayBumper extends Goal.Task
   
   @predecessors: -> [Goal.DrawBumper]
 
+  @studyPlanBuilding: -> 'SimCityOffice3'
+
   @initialize()
 
   @completedConditions: -> @playfieldHasPart Pinball.Parts.Bumper
@@ -315,6 +339,8 @@ class Goal.DrawGate extends Goal.AssetsTask
   """
   
   @predecessors: -> [Goal.PlayBumper]
+
+  @studyPlanBuilding: -> 'TransportTycoonHouse'
 
   @initialize()
   
@@ -334,6 +360,8 @@ class Goal.PlayGate extends Goal.Task
   
   @predecessors: -> [Goal.DrawGate]
 
+  @studyPlanBuilding: -> 'TransportTycoonCinema'
+
   @initialize()
 
   @completedConditions: -> @playfieldHasPart Pinball.Parts.Gate
@@ -351,6 +379,8 @@ class Goal.RemoveGobbleHoles extends Goal.Task
   
   @predecessors: -> [Goal.PlayGate]
 
+  @studyPlanBuilding: -> 'SimCityChurch'
+
   @initialize()
 
   @completedConditions: -> not @playfieldHasPart Pinball.Parts.GobbleHole
@@ -366,6 +396,8 @@ class Goal.DrawFlipper extends Goal.AssetsTask
   """
   
   @predecessors: -> [Goal.RemoveGobbleHoles]
+
+  @studyPlanBuilding: -> 'SimCityWindTurbine'
 
   @initialize()
   
@@ -385,6 +417,8 @@ class Goal.PlayFlipper extends Goal.Task
   """
   
   @predecessors: -> [Goal.DrawFlipper]
+
+  @studyPlanBuilding: -> 'SimCityResidential1'
 
   @initialize()
 
@@ -418,6 +452,8 @@ class Goal.DrawLowerThird extends Goal.RedrawPlayfieldTask
   
   @predecessors: -> [Goal.PlayFlipper]
 
+  @studyPlanBuilding: -> 'SimCityResidential2'
+
   @initialize()
 
 class Goal.ActiveBumpers extends Goal.Task
@@ -434,6 +470,8 @@ class Goal.ActiveBumpers extends Goal.Task
   """
   
   @predecessors: -> [Goal.DrawUpperThird]
+
+  @studyPlanBuilding: -> 'SimCityResidential5'
 
   @initialize()
   
@@ -461,6 +499,8 @@ class Goal.DrawUpperThird extends Goal.RedrawPlayfieldTask
   
   @predecessors: -> [Goal.DrawLowerThird]
   
+  @studyPlanBuilding: -> 'SimCityResidential3'
+
   @initialize()
 
 class Goal.DrawSpinningTarget extends Goal.AssetsTask
@@ -474,6 +514,8 @@ class Goal.DrawSpinningTarget extends Goal.AssetsTask
   """
   
   @predecessors: -> [Goal.ActiveBumpers]
+
+  @studyPlanBuilding: -> 'SimCityResidential6'
 
   @initialize()
   
@@ -493,6 +535,8 @@ class Goal.PlaySpinningTarget extends Goal.Task
   """
   
   @predecessors: -> [Goal.DrawSpinningTarget]
+
+  @studyPlanBuilding: -> 'SimCityCommercial1'
 
   @initialize()
   
