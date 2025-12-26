@@ -18,6 +18,14 @@
   &.wide
     width 200rem
 
+  &.completed
+    .directive
+      color atariGreen(6)
+
+      &::after
+        content '✔'
+        adventure()
+
   .directive
     margin-bottom 5rem
     text-transform uppercase

@@ -60,7 +60,7 @@ class LM.Notifications
     
     @condition: ->
       # Show when no tasks are active, but some are available.
-      tasks = _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
+      tasks = LOI.adventure.currentTasks()
       activeTasks = _.filter tasks, (task) => task.active()
       availableTasks = _.filter tasks, (task) => not task.available()
       not activeTasks.length and availableTasks.length

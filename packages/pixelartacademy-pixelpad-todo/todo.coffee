@@ -72,8 +72,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       @selectedTask null
   
     # Handle displayed tasks.
-    @tasks = new ComputedField =>
-      _.flatten (chapter.tasks for chapter in LOI.adventure.currentChapters())
+    @tasks = new ComputedField => LOI.adventure.currentTasks()
   
     @activeTasks = new ComputedField =>
       _.filter @tasks(), (task) => task.active()
@@ -95,16 +94,21 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
         
         activeTasksToBeDisplayed.push task for task in activeTasks when task not in activeTasksToBeDisplayed and task not in displayedActiveTasks
         
-        @activeTasksToBeDisplayed activeTasksToBeDisplayed
-        
         # Remove deactivated tasks.
-        deactivatedTasks = _.filter displayedActiveTasks, (task) => not task.active() and not task.completed()
+        deactivatedActiveTasksToBeDisplayed = _.filter activeTasksToBeDisplayed, (task) => not task.active()
+        
+        for task in deactivatedActiveTasksToBeDisplayed
+          _.pull activeTasksToBeDisplayed, task
+        
+        deactivatedActiveTasks = _.filter displayedActiveTasks, (task) => not task.active() and not task.completed()
 
-        for task in deactivatedTasks
+        for task in deactivatedActiveTasks
           _.pull displayedActiveTasks, task
           @$("[data-task-id='#{task.id()}']").remove()
-        
-        @displayedActiveTasks displayedActiveTasks if deactivatedTasks.length
+
+        # Update active tasks.
+        @activeTasksToBeDisplayed activeTasksToBeDisplayed
+        @displayedActiveTasks displayedActiveTasks if deactivatedActiveTasks.length
         
         # Remove completed tasks so that the total shown tasks is not above 9 if possible.
         tasksCount = activeTasksToBeDisplayed.length + displayedActiveTasks.length + completedTasks.length
@@ -219,6 +223,8 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       # Also remove them from the displayed list.
       for task in completedTasks
         @$("[data-task-id='#{task.id()}']").remove()
+        
+      return
     
     @_animateClose()
   
@@ -310,6 +316,18 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     return unless @_animationAvailable()
     
     parameter1 = AB.Router.getParameter 'parameter1'
+    
+    # If any of the goals were completed that haven't been revealed in the Study Plan yet, go there first.
+    if PAA.PixelPad.Apps.StudyPlan.used()
+      studyPlanData = PAA.PixelPad.Apps.StudyPlan.state()
+      
+      if studyPlanData.revealed.goalIds
+        for goalId, goal of studyPlanData.goals when PAA.Learning.Goal.getClassForId(goalId).completed() and goalId not in studyPlanData.revealed.goalIds
+          AB.Router.setParameters {parameter1, parameter2: PAA.PixelPad.Apps.StudyPlan.url()}
+          
+          # Inform that we've handled the back button.
+          return true
+        
     AB.Router.setParameters {parameter1}
   
     # Inform that we've handled the back button.

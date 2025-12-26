@@ -223,6 +223,10 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   activateBuilding: (x, y) ->
     tile = @_getTile x, y
     tile.buildingActive true
+  
+  deactivateBuilding: (x, y) ->
+    tile = @_getTile x, y
+    tile.buildingActive false
     
   blueprintStyle: ->
     return unless tileMap = @data()

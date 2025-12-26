@@ -67,6 +67,10 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
   @reset: ->
     @state.set {}
+    
+  @used: ->
+    # When we've used the Study Plan, some tasks will be revealed.
+    @state('revealed')?
 
   constructor: ->
     super arguments...

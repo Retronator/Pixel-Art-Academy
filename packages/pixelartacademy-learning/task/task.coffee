@@ -201,8 +201,8 @@ class PAA.Learning.Task
     true
   
   active: ->
-    # Task is active when it is available and its goal is added to the Study Plan.
-    @available() and PAA.PixelPad.Apps.StudyPlan.hasGoal @goal
+    # Task is active when it is available and its goal is active.
+    @available() and @goal.active()
     
   hasRequiredInterests: ->
     requiredInterests = @requiredInterests()

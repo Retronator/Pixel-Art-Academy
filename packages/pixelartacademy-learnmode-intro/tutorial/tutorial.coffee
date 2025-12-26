@@ -34,20 +34,20 @@ class LM.Intro.Tutorial extends LM.Chapter
       
       toDoTasksId = LM.Intro.Tutorial.Goals.ToDoTasks.id()
       pixelArtSoftwareId = LM.Intro.Tutorial.Goals.PixelArtSoftware.id()
-      snakeId = LM.Intro.Tutorial.Goals.Snake.id()
       
-      PAA.PixelPad.Apps.StudyPlan.state 'goals',
-        "#{toDoTasksId}":
-          connections: [
-            goalId: pixelArtSoftwareId
-            direction: PAA.PixelPad.Apps.StudyPlan.GoalConnectionDirections.Forward
-          ]
-        "#{pixelArtSoftwareId}":
-          connections: [
-            goalId: snakeId
-            direction: PAA.PixelPad.Apps.StudyPlan.GoalConnectionDirections.Forward
-          ]
-        "#{snakeId}": {}
+      PAA.PixelPad.Apps.StudyPlan.state.set
+        goals:
+          "#{toDoTasksId}":
+            connections: [
+              goalId: pixelArtSoftwareId
+              direction: PAA.PixelPad.Apps.StudyPlan.GoalConnectionDirections.Forward
+            ]
+          "#{pixelArtSoftwareId}": {}
+        camera:
+          scale: 1
+          origin:
+            x: 100
+            y: 0
     
     # Create the snake project when the play task has been completed.
     @snakePlayTask = @getTask LM.Intro.Tutorial.Goals.Snake.Play

@@ -65,6 +65,10 @@ class StudyPlan.Blueprint.TaskInfo extends AM.Component
     
   wideClass: ->
     'wide' if @wide()
+  
+  completedClass: ->
+    return unless task = @task()
+    'completed' if task.completed()
     
   taskInfoStyle: ->
     return unless taskPosition = @taskPosition()

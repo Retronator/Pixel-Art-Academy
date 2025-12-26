@@ -215,6 +215,8 @@ class PAA.Learning.Goal
   
   @active: -> PAA.PixelPad.Apps.StudyPlan.hasActiveGoal @
   
+  @activeOrCompleted: -> @active() or @completed()
+  
   constructor: (@options = {}) ->
     # By default the task is related to the current profile.
     @options.profileId ?= => LOI.adventure.profileId()
@@ -255,7 +257,13 @@ class PAA.Learning.Goal
 
   # The goal is completed when at least one of the final tasks has been reached.
   completed: ->
-    _.some _.map @finalTasks(), (task) -> task.completed()
+    _.some (task.completed() for task in @finalTasks())
+    
+  allCompleted: ->
+    _.every (task.completed() for task in @tasks())
 
   reset: ->
     task.reset() for task in @_tasks
+    
+  active: -> @constructor.active()
+  activeOrCompleted: -> @active() or @completed()

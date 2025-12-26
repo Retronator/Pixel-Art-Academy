@@ -67,6 +67,16 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     goalNode.markComplete value
     position = goalNode.endTaskPoint.localPosition
     @tileMapComponent.setFlag position.x, position.y, value
+    
+    if value
+      # Goal is marked complete, deactivate all tasks.
+      for taskPoint in goalNode.taskPoints
+        @tileMapComponent.deactivateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
+      
+    else
+      # Activate all available tasks.
+      for taskPoint in goalNode.taskPoints when taskPoint.task?.available()
+        @tileMapComponent.activateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
   
   goalStyle: ->
     return unless position = @mapPosition()

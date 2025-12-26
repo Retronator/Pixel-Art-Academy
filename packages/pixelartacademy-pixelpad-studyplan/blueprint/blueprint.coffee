@@ -166,9 +166,15 @@ class StudyPlan.Blueprint extends AM.Component
             # Animate unrevealed tasks and goals.
             @_animateTimeouts.push Meteor.setTimeout =>
               @$blueprint().addClass 'animating'
+              camera = @camera()
               
               for point in @_pointsWaitingToBeRevealed
-                @camera().setOrigin @constructor.TileMap.mapPosition point.globalPosition
+                # Center camera slightly to the right of the point if we're not close enough.
+                mapPosition = @constructor.TileMap.mapPosition point.globalPosition
+                mapPosition.x += 50
+                origin = camera.origin()
+                camera.setOrigin mapPosition if Math.abs(mapPosition.x - origin.x) > 100 or Math.abs(mapPosition.y - origin.y) > 100
+                
                 await @revealPoint point, true
                 
               @_initialRevealCompleted = true
@@ -298,7 +304,14 @@ class StudyPlan.Blueprint extends AM.Component
   
           # See if we need to raise a flag.
           if taskPoint.goalNode.markedComplete()
-            goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true
+            raiseFlag = true
+
+          # When revealing a goal that has all its tasks completed, automatically mark it as complete.
+          else if animate and taskPoint.goalNode.goal.allCompleted()
+            taskPoint.goalNode.markComplete true
+            raiseFlag = true
+            
+          goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true if raiseFlag
         
         return unless taskPoint.goalNode.goal.completed()
         
