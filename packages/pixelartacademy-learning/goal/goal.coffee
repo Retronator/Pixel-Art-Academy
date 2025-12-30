@@ -210,6 +210,7 @@ class PAA.Learning.Goal
   @getAdventureInstance: -> @getAdventureInstanceForId @id()
   
   @completed: -> @getAdventureInstance().completed()
+  @allCompleted: -> @getAdventureInstance().allCompleted()
   
   @reset: -> @getAdventureInstance().reset()
   

@@ -226,12 +226,23 @@
       z-index 6
       padding 2rem
       study-plan()
-      color atariCyan(7)
+      color atariCyan(4)
       pixel-text-outline atariCyan(0)
       cursor pointer
 
-      &:hover
-        color atariGray(7)
+      &.short-term
+      &.mid-term
+        color atariCyan(7)
+
+        &::after
+          content '?'
+          position absolute
+          pixolde()
+          font-weight bold
+          padding 2rem
+
+        &:hover
+          color atariGray(7)
 
       &.forward
       &.backwards
@@ -279,13 +290,6 @@
         &::after
           left -3rem
           top -15rem
-
-      &::after
-        content '?'
-        position absolute
-        pixolde()
-        font-weight bold
-        padding 2rem
 
 @keyframes gate-open
   from

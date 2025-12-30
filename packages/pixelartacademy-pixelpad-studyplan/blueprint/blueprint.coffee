@@ -177,9 +177,9 @@ class StudyPlan.Blueprint extends AM.Component
                 
                 await @revealPoint point, true
                 
-              @_initialRevealCompleted = true
+              @initialRevealCompleted true
             ,
-              if @_initialRevealCompleted then 30 else 1000
+              if @initialRevealCompleted() then 30 else 1000
 
     # Calculate total bounding rectangle of the map.
     @autorun (computation) =>
@@ -319,15 +319,22 @@ class StudyPlan.Blueprint extends AM.Component
     @_revealPathwaysFrom point, animate
     
   _revealPathwaysFrom: (origin, animate) ->
+    revealPromises = [] if animate
+    
     for pathway in origin.outgoingPathways when pathway not in @_revealedPathways
       @_revealedPathways.push pathway
       
       if animate
         do (pathway) =>
-          @_animateTimeouts.push Meteor.setTimeout => @_revealPathway pathway, true
+          revealPromises.push new Promise (resolve) =>
+            @_animateTimeouts.push Meteor.setTimeout =>
+              await @_revealPathway pathway, true
+              resolve()
         
       else
         @_revealPathway pathway
+        
+    Promise.all revealPromises if animate
         
   _revealPathway: (pathway, animate) ->
     @_pendingAnimationsCount @_pendingAnimationsCount() + 1

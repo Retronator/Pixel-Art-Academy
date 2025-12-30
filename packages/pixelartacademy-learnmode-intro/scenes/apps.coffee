@@ -11,6 +11,6 @@ class LM.Intro.Apps extends LOI.Adventure.Scene
   
   things: -> [
     PAA.PixelPad.Apps.Drawing if LM.Intro.Tutorial.Goals.ToDoTasks.completed()
-    PAA.PixelPad.Apps.StudyPlan if LM.Intro.Tutorial.Goals.PixelArtSoftware.completed()
+    PAA.PixelPad.Apps.StudyPlan if LM.Intro.Tutorial.Goals.PixelArtSoftware.Basics.completed()
     PAA.PixelPad.Apps.Pico8 if LM.Intro.pico8Enabled()
   ]

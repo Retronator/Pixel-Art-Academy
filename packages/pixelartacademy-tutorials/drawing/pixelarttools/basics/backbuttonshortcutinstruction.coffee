@@ -2,11 +2,12 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Basics = PAA.Tutorials.Drawing.PixelArtTools.Basics
 Markup = PAA.Practice.Helpers.Drawing.Markup
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
 InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
 
-class PAA.Tutorials.Drawing.PixelArtTools.Basics.BackButtonShortcutInstruction extends PAA.PixelPad.Systems.Instructions.Instruction
+class Basics.BackButtonShortcutInstruction extends PAA.PixelPad.Systems.Instructions.Instruction
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtTools.Basics.BackButtonShortcutInstruction"
   
   @priority: -> 10
@@ -21,12 +22,12 @@ class PAA.Tutorials.Drawing.PixelArtTools.Basics.BackButtonShortcutInstruction e
     # Show this until the player used the shortcut for the back button.
     return if PAA.Tutorials.Drawing.PixelArtTools.Basics.state 'backButtonShortcutUsed'
     
-    # Show this only when we're on a completed tutorial, from color fill forward.
-    return unless PAA.Tutorials.Drawing.PixelArtTools.Basics.isAssetCompleted PAA.Tutorials.Drawing.PixelArtTools.Basics.ColorFill
-
+    # Show this only when we're on a completed color fill tutorial (1 or 2).
     return unless editor = PAA.PixelPad.Apps.Drawing.Editor.getEditor()
+    return unless activeAsset = editor.activeAsset()
+    return unless activeAsset.constructor in [Basics.ColorFill, Basics.ColorFill2]
     return unless editor.drawingActive()
-    editor.activeAsset()?.completed?()
+    activeAsset.completed?()
 
   markup: ->
     markupStyle = InterfaceMarking.defaultStyle()

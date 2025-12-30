@@ -58,11 +58,11 @@ class StudyPlan.TileMap
       
     tile
     
-  placeExpansionPoint: (x, y, direction, goalIDs, connectionPointOptions) ->
+  placeExpansionPoint: (x, y, direction, goalIds, connectionPointOptions) ->
     tile = @getTile x, y
     tile.type = @constructor.Tile.Types.ExpansionPoint
     tile.expansionDirection = direction
-    tile.goalIDs = goalIDs
+    tile.goalIds = goalIds
     tile.connectionPoint = connectionPointOptions
   
   placeRoad: (pathway, options = {}) ->

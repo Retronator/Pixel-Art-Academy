@@ -31,6 +31,9 @@ Package.onUse(function(api) {
   api.addFile('tilemap');
   api.addFile('tile');
 
+  api.addFile('interfacemarking');
+  api.addFile('instructions');
+
   api.addComponent('addgoal..');
   api.addComponent('goalsearch..');
 

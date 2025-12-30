@@ -312,6 +312,17 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   expansionPointDirectionClass: ->
     tile = @currentData()
     _.kebabCase tile.data.expansionDirection
+  
+  expansionPointGoalTypeClass: ->
+    tile = @currentData()
+    
+    sourceGoalType = StudyPlan.getGoalType tile.data.connectionPoint.goalId
+    return 'future' if sourceGoalType is StudyPlan.GoalTypes.MidTerm
+    
+    goalTypes = []
+    goalTypes = _.uniq (StudyPlan.getGoalType goalId for goalId in _.flatten tile.data.goalIds)
+    
+    (_.kebabCase goalType for goalType in goalTypes).join ' '
     
   events: ->
     super(arguments...).concat
@@ -345,7 +356,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
         connectionDirection = StudyPlan.GoalConnectionDirections.Sideways
       
     @blueprint.studyPlan.displayAddGoal
-      goalIDs: tile.data.goalIDs
-      sourceGoalId: goalNode?.goalId
+      goalIds: tile.data.goalIds
+      sourceGoalId: tile.data.connectionPoint?.goalId
       direction: connectionDirection
       sidewaysIndex: tile.data.connectionPoint?.sidewaysIndex

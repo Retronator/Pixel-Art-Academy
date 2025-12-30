@@ -115,7 +115,9 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @id: -> "#{Task.id()}.ActiveNotification"
       
       @message: -> """
-        Note that you can complete to-do tasks in any order you want!
+        You can complete to-do tasks in any order you want!
+
+        Use the Study Plan to explore your choices.
       """
       
       @displayStyle: -> @DisplayStyles.Always

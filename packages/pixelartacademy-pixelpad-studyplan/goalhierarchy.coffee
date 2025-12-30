@@ -323,10 +323,10 @@ class StudyPlan.GoalHierarchy
       for goalId, goalNode of @goalNodesById
         _.remove possibleGoals, (goal) => goal.id() is goalNode.goalId
         
-        goalNode.possibleForwardGoalIDs = []
-        goalNode.possibleSidewaysGoalIDs = []
+        goalNode.possibleForwardGoalIds = []
+        goalNode.possibleSidewaysGoalIds = []
         
-      availableGoalIDs = (interests) =>
+      availableGoalIds = (interests) =>
         goals = []
         
         for goal in possibleGoals
@@ -342,14 +342,14 @@ class StudyPlan.GoalHierarchy
       distributePossibleGoals = (goalNode, interestsCollectionName) =>
         # Go across sideways expansion points first since those can be completed earliest.
         for sidewaysPoint, sidewaysPointIndex in goalNode.sidewaysPoints
-          goalNode.possibleSidewaysGoalIDs[sidewaysPointIndex] ?= []
-          goalNode.possibleSidewaysGoalIDs[sidewaysPointIndex].push (availableGoalIDs sidewaysPoint[interestsCollectionName])...
+          goalNode.possibleSidewaysGoalIds[sidewaysPointIndex] ?= []
+          goalNode.possibleSidewaysGoalIds[sidewaysPointIndex].push (availableGoalIds sidewaysPoint[interestsCollectionName])...
           
           for outgoingPathway in sidewaysPoint.outgoingPathways when outgoingPathway.endPoint is outgoingPathway.endPoint.goalNode?.entryPoint
             distributePossibleGoals outgoingPathway.endPoint.goalNode, interestsCollectionName
             
         # See if we can add any goals forward.
-        goalNode.possibleForwardGoalIDs.push availableGoalIDs(goalNode.exitPoint[interestsCollectionName])...
+        goalNode.possibleForwardGoalIds.push availableGoalIds(goalNode.exitPoint[interestsCollectionName])...
         
         for outgoingPathway in goalNode.exitPoint.outgoingPathways
           distributePossibleGoals outgoingPathway.endPoint.goalNode, interestsCollectionName
@@ -357,36 +357,33 @@ class StudyPlan.GoalHierarchy
       # Add short-term goals first.
       distributePossibleGoals rootGoalNode, 'propagatedAvailableInterests' for rootGoalNode in @rootGoalNodes
 
-      # Add the rest of the goals.
-      # TODO: Enable when mid-term goals are allowed to be added by the player.
-      # distributePossibleGoals rootGoalNode, 'propagatedProvidedInterests' for rootGoalNode in @rootGoalNodes
+      # Allow adding mid-term goals after completing the intro.
+      if LM.Intro.Tutorial.Goals.Snake.completed()
+        distributePossibleGoals rootGoalNode, 'propagatedProvidedInterests' for rootGoalNode in @rootGoalNodes
       
       # Place expansion points.
       for goalId, goalNode of @goalNodesById
         # If there are forward goal nodes, we have to expand down, otherwise forward.
-        if goalNode.possibleForwardGoalIDs.length
+        if goalNode.possibleForwardGoalIds.length
+          connectionOptions = {goalId, exit: true}
+          
           if goalNode.forwardGoalNodes.length
             exitX = goalNode.exitPoint.globalPosition.x + @constructor.goalPadding.right
             testY = goalNode.exitPoint.globalPosition.y
             
             testY++ while roadTileMap.getTileType(exitX, testY) is StudyPlan.TileMap.Tile.Types.Road
             roadTileMap.placeTile exitX, testY, StudyPlan.TileMap.Tile.Types.Road
-            
-            roadTileMap.placeExpansionPoint exitX, testY + 2, StudyPlan.TileMap.Tile.ExpansionDirections.ForwardDown, goalNode.possibleForwardGoalIDs,
-              goalId: goalId
-              exit: true
+            roadTileMap.placeExpansionPoint exitX, testY + 2, StudyPlan.TileMap.Tile.ExpansionDirections.ForwardDown, goalNode.possibleForwardGoalIds, connectionOptions
           
           else
             expansionPosition = goalNode.exitPoint.globalPosition
-            roadTileMap.placeExpansionPoint expansionPosition.x + 2, expansionPosition.y, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, goalNode.possibleForwardGoalIDs,
-              goalId: goalId
-              exit: true
+            roadTileMap.placeExpansionPoint expansionPosition.x + 2, expansionPosition.y, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, goalNode.possibleForwardGoalIds, connectionOptions
             
         # We can expand sideways where there are no outgoing pathways.
         sidewaysExpansionPossible = false
         
         for sidewaysPoint, index in goalNode.sidewaysPoints
-          continue unless goalNode.possibleSidewaysGoalIDs[index]?.length
+          continue unless goalNode.possibleSidewaysGoalIds[index]?.length
           sidewaysExpansionPossible = true
           continue if sidewaysPoint.outgoingPathways.length
           
@@ -401,7 +398,7 @@ class StudyPlan.GoalHierarchy
             roadTileMap.placeRoad pathway, useGlobalPositions: true
           
           else
-            roadTileMap.placeExpansionPoint expansionPosition.x, expansionPosition.y - 2, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways, goalNode.possibleSidewaysGoalIDs[index],
+            roadTileMap.placeExpansionPoint expansionPosition.x, expansionPosition.y - 2, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways, goalNode.possibleSidewaysGoalIds[index],
               goalId: goalId
               sidewaysIndex: index
               
@@ -418,7 +415,7 @@ class StudyPlan.GoalHierarchy
           addGlobalPathway pathway
           
           roadTileMap.placeRoad pathway, useGlobalPositions: true
-          roadTileMap.placeExpansionPoint entryX, entryY - 3, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways, goalNode.possibleSidewaysGoalIDs,
+          roadTileMap.placeExpansionPoint entryX, entryY - 3, StudyPlan.TileMap.Tile.ExpansionDirections.Sideways, goalNode.possibleSidewaysGoalIds,
             goalId: goalId
             
         # We can connect backwards if the goal has required interests, but there is no predecessor set.
@@ -430,7 +427,7 @@ class StudyPlan.GoalHierarchy
         
       # Place initial expansion point if there are no goals at all.
       unless goalsDataList.length
-        roadTileMap.placeExpansionPoint 0, 0, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, availableGoalIDs []
+        roadTileMap.placeExpansionPoint 0, 0, StudyPlan.TileMap.Tile.ExpansionDirections.Forward, availableGoalIds []
       
       roadTileMap.finishConstruction()
       

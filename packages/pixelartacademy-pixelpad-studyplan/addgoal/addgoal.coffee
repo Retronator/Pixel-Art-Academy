@@ -4,7 +4,9 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 IL = Illustrapedia
 
-class PAA.PixelPad.Apps.StudyPlan.AddGoal extends AM.Component
+StudyPlan = PAA.PixelPad.Apps.StudyPlan
+
+class StudyPlan.AddGoal extends AM.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.StudyPlan.AddGoal'
   @register @id()
 
@@ -15,27 +17,23 @@ class PAA.PixelPad.Apps.StudyPlan.AddGoal extends AM.Component
     super arguments...
     
     @availableGoals = new ComputedField =>
-      return unless goalIDs = @studyPlan.addGoalOptions()?.goalIDs
+      return unless goalIds = @studyPlan.addGoalOptions()?.goalIds
       
       # Sideways goals can be sent as an array per index.
-      goalIDs = _.flatten goalIDs
+      goalIds = _.flatten goalIds
 
-      _.filter @studyPlan.goals(), (goal) => goal.id() in goalIDs
+      _.filter @studyPlan.goals(), (goal) => goal.id() in goalIds
       
     @shortTermGoals = new ComputedField =>
-      currentInterests = LOI.adventure.currentInterests()
-      
-      _.filter @availableGoals(), (goal) =>
-        # See if any of initial tasks has all their requirements met.
-        for task in goal.initialTasks()
-          requiredInterests = task.requiredInterests()
-          return true if _.intersection(requiredInterests, currentInterests).length is requiredInterests.length
-          
-        false
+      _.filter @availableGoals(), (goal) => StudyPlan.getGoalType(goal) is StudyPlan.GoalTypes.ShortTerm
 
     @midTermGoals = new ComputedField =>
       _.difference @availableGoals(), @shortTermGoals()
 
+  sourceGoalIsMidTerm: ->
+    return unless sourceGoalId = @studyPlan.addGoalOptions()?.sourceGoalId
+    StudyPlan.getGoalType(sourceGoalId) is StudyPlan.GoalTypes.MidTerm
+    
   showShortTermGoals: ->
     @shortTermGoals().length
     
@@ -58,8 +56,8 @@ class PAA.PixelPad.Apps.StudyPlan.AddGoal extends AM.Component
     addGoalOptions = {goal}
     
     # If sideways goals are sent as an array per index, determine which index was chosen.
-    sidewaysIndex = _.findIndex @studyPlan.addGoalOptions().goalIDs, (goalIDEntry) =>
-      _.isArray(goalIDEntry) and goal.id() in goalIDEntry
+    sidewaysIndex = _.findIndex @studyPlan.addGoalOptions().goalIds, (goalIdEntry) =>
+      _.isArray(goalIdEntry) and goal.id() in goalIdEntry
     
     addGoalOptions.sidewaysIndex = sidewaysIndex if sidewaysIndex >= 0
     

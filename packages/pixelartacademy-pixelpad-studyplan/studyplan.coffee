@@ -1,5 +1,3 @@
-import {ReactiveField} from "meteor/peerlibrary:reactive-field"
-
 AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
@@ -42,6 +40,11 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   @GoalConnectionDirections =
     Forward: 'Forward'
     Sideways: 'Sideways'
+    
+  @GoalTypes =
+    ShortTerm: 'ShortTerm'
+    MidTerm: 'MidTerm'
+    LongTerm: 'LongTerm'
   
   @hasGoal: (goalOrGoalId) ->
     goalId = _.thingId goalOrGoalId
@@ -55,6 +58,12 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     return false unless goal = @state('goals')?[goalId]
     not goal.markedComplete
     
+  @isGoalMarkedComplete: (goalOrGoalId) ->
+    goalId = _.thingId goalOrGoalId
+    
+    return false unless goal = @state('goals')?[goalId]
+    goal.markedComplete
+    
   @isTaskRevealed: (taskId) ->
     return unless revealed = @state 'revealed'
     return unless revealed.taskIds
@@ -65,6 +74,19 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     return unless revealed.goalIds
     goalId in revealed.goalIds
     
+  @getGoalType: (goalOrGoalId) ->
+    goalId = _.thingId goalOrGoalId
+    
+    goal = PAA.Learning.Goal.getAdventureInstanceForId goalId
+    currentInterests = LOI.adventure.currentInterests()
+    
+    # Short term goals must have an initial task that has all required interests.
+    for task in goal.initialTasks()
+      requiredInterests = task.requiredInterests()
+      return @GoalTypes.ShortTerm if _.intersection(requiredInterests, currentInterests).length is requiredInterests.length
+      
+    @GoalTypes.MidTerm
+    
   @reset: ->
     @state.set {}
     
@@ -72,6 +94,12 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     # When we've used the Study Plan, some tasks will be revealed.
     @state('revealed')?
 
+  @getApp: ->
+    return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
+    return unless currentApp = pixelPad.os.currentApp()
+    return unless currentApp instanceof PAA.PixelPad.Apps.StudyPlan
+    currentApp
+    
   constructor: ->
     super arguments...
 
@@ -143,6 +171,9 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
 
     # Add the new goal.
     goals[goalId] = {}
+    
+    goal = PAA.Learning.Goal.getClassForId goalId
+    goals[goalId].markedComplete = true if goal.allCompleted()
     
     if options.sourceGoalId
       # Add connection from the source goal.
