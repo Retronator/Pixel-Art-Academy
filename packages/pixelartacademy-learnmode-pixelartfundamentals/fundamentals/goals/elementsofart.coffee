@@ -66,6 +66,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
   class @Color extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Color'
     @goal: -> Goal
+    @completable: -> false
     
     @directive: -> "Learn about colors"
     
@@ -96,6 +97,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
   class @Form extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Form'
     @goal: -> Goal
+    @completable: -> false
     
     @directive: -> "Learn about form"
     
@@ -126,6 +128,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
   class @Space extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Space'
     @goal: -> Goal
+    @completable: -> false
     
     @directive: -> "Learn about space"
     
@@ -156,6 +159,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
   class @Value extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Value'
     @goal: -> Goal
+    @completable: -> false
     
     @directive: -> "Learn about value"
     
@@ -186,6 +190,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
   class @Texture extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.Texture'
     @goal: -> Goal
+    @completable: -> false
     
     @directive: -> "Learn about texture"
     

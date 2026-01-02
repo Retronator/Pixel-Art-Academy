@@ -33,12 +33,7 @@ class PAA.Adventure extends LOI.Adventure
       
       new LOI.Adventure.Situation options
     
-    @currentTapes = new ComputedField =>
+    @currentTapeSelectors = new ComputedField =>
       return unless tapesSituation = @tapesSituation()
       
-      tapeSelectors = tapesSituation.things()
-      
-      tapes = for tapeSelector in tapeSelectors
-        PAA.Music.Tape.documents.findOne tapeSelector
-      
-      _.without tapes, undefined
+      tapesSituation.things()

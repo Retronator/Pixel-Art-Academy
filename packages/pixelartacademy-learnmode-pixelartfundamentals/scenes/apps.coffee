@@ -10,5 +10,5 @@ class LM.PixelArtFundamentals.Apps extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Apps.Music if LOI.adventure.currentTapes().length
+    PAA.PixelPad.Apps.Music if LOI.adventure.currentTapeSelectors().length
   ]

@@ -34,7 +34,16 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
     @opened = new ReactiveField false
     @hoveredTape = new ReactiveField null
 
-  tapes: -> LOI.adventure.currentTapes()
+  onCreated: ->
+    super arguments...
+    
+    @tapes = new ComputedField =>
+      tapeSelectors = LOI.adventure.currentTapeSelectors()
+      
+      tapes = for tapeSelector in tapeSelectors
+        PAA.Music.Tape.documents.findOne tapeSelector
+      
+      _.without tapes, undefined
   
   onRendered: ->
     super arguments...

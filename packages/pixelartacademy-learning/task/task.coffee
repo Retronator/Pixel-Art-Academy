@@ -36,6 +36,9 @@ class PAA.Learning.Task
 
   # The icon that represents the kind of work done in this task.
   @icon: -> @Icons.Task
+  
+  # Override if this task is not yet available.
+  @completable: -> true
 
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
@@ -129,6 +132,8 @@ class PAA.Learning.Task
 
   id: -> @constructor.id()
   type: -> @constructor.type()
+  
+  completable: -> @constructor.completable()
 
   directive: -> AB.translate(@_translationSubscription, 'directive').text
   directiveTranslation: -> AB.translation @_translationSubscription, 'directive'
@@ -166,13 +171,14 @@ class PAA.Learning.Task
     # We need an entry made by this profile.
     @entry()
 
+  # Task is available when all prerequisites are completed and until it is completed.
   available: ->
     # We should only be determining active state for the current profile.
     unless @options.profileId() is LOI.adventure.profileId()
       console.warn "Active task determination requested for another profile."
       return
 
-    # Task is not active after it's completed.
+    # Task is not available after it's completed.
     return if @completed()
 
     # Predecessors need to be completed for the task to be active.
@@ -199,9 +205,9 @@ class PAA.Learning.Task
 
     # All requirements to be active have been met.
     true
-  
+
+  # Task is active when it is available and its goal is active.
   active: ->
-    # Task is active when it is available and its goal is active.
     @available() and @goal.active()
     
   hasRequiredInterests: ->

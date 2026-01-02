@@ -211,12 +211,13 @@ class PAA.Learning.Goal
   
   @completed: -> @getAdventureInstance().completed()
   @allCompleted: -> @getAdventureInstance().allCompleted()
+  @active: -> @getAdventureInstance().active()
+  @available: -> @getAdventureInstance().available()
+  @activeAndAvailable: -> @getAdventureInstance().activeAndAvailable()
+  @activeOrCompleted: -> @getAdventureInstance().activeOrCompleted()
+  @activeAndAvailableOrCompleted: -> @getAdventureInstance().activeAndAvailableOrCompleted()
   
   @reset: -> @getAdventureInstance().reset()
-  
-  @active: -> PAA.PixelPad.Apps.StudyPlan.hasActiveGoal @
-  
-  @activeOrCompleted: -> @active() or @completed()
   
   constructor: (@options = {}) ->
     # By default the task is related to the current profile.
@@ -250,6 +251,7 @@ class PAA.Learning.Goal
   tasks: -> @_tasks
   finalTasks: -> @_finalTasks
   initialTasks: -> _.filter @_tasks, (task) => not task.predecessors().length
+  completableTasks: -> _.filter @_tasks, (task) => task.completable()
 
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()
@@ -260,11 +262,19 @@ class PAA.Learning.Goal
   completed: ->
     _.some (task.completed() for task in @finalTasks())
     
+  # The goal is fully completed when all of the tasks are completed.
   allCompleted: ->
     _.every (task.completed() for task in @tasks())
 
+  # A goal is active when it has been added to the study plan.
+  active: -> PAA.PixelPad.Apps.StudyPlan.hasActiveGoal @
+  
+  # A goal is available when one of its initial tasks is available.
+  available: -> _.some (task.available() for task in @initialTasks())
+
+  activeAndAvailable: -> @active() and @available()
+  activeOrCompleted: -> @active() or @completed()
+  activeAndAvailableOrCompleted: -> @activeAndAvailable() or @completed()
+
   reset: ->
     task.reset() for task in @_tasks
-    
-  active: -> @constructor.active()
-  activeOrCompleted: -> @active() or @completed()

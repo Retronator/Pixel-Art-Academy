@@ -62,7 +62,7 @@ class LM.Notifications
       # Show when no tasks are active, but some are available.
       tasks = LOI.adventure.currentTasks()
       activeTasks = _.filter tasks, (task) => task.active()
-      availableTasks = _.filter tasks, (task) => not task.available()
+      availableTasks = _.filter tasks, (task) => task.available()
       not activeTasks.length and availableTasks.length
       
     @initialize()
