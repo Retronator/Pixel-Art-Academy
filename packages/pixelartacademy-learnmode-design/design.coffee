@@ -20,7 +20,7 @@ class LM.Design extends LOI.Adventure.Episode
     # Allow cheating.
     return true if LM.Design.state 'invasionUnlocked'
     
-    return false unless PAA.PixelPad.Apps.StudyPlan.hasGoal LM.Design.Fundamentals.Goals.Invasion
+    return false unless LM.Design.Fundamentals.Goals.Invasion.activeOrCompleted()
     
     LM.Design.Fundamentals.Goals.ShapeLanguage.completed()
   
