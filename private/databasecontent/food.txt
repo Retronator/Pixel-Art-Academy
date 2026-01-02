@@ -1,0 +1,2 @@
+food
+{"_id":"nCWC39zr6wGzm3PvJ","name":{"_id":"bkFih9eJSDGeQ6fBy","translations":{"en":{"us":{"text":"food","quality":0},"best":{"text":"food","quality":0,"languageRegion":"en-US"}},"best":{"text":"food","quality":0,"languageRegion":"en-US"}}},"_schema":"1.0.0","searchTerms":["food"],"lastEditTime":{"$date":1767351688401}}

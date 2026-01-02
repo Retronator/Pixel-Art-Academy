@@ -1,0 +1,2 @@
+future tech
+{"_id":"DNmGYcStzfgt9sgEB","name":{"_id":"tdKYthjNf5pCap7y4","translations":{"en":{"us":{"text":"future tech","quality":0},"best":{"text":"future tech","quality":0,"languageRegion":"en-US"}},"best":{"text":"future tech","quality":0,"languageRegion":"en-US"}}},"_schema":"1.0.0","searchTerms":["future tech"],"lastEditTime":{"$date":1767351688410}}

@@ -1,0 +1,2 @@
+simplification
+{"_id":"nR68oDNpEwJWBJt5c","name":{"_id":"6WjL5iDzRith8tZJv","translations":{"en":{"us":{"text":"simplification","quality":0},"best":{"text":"simplification","quality":0,"languageRegion":"en-US"}},"best":{"text":"simplification","quality":0,"languageRegion":"en-US"}}},"_schema":"1.0.0","searchTerms":["simplification"],"lastEditTime":{"$date":1767351688407}}

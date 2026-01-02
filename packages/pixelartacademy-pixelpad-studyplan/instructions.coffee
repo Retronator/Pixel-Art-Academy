@@ -122,9 +122,13 @@ class StudyPlan.Instructions
     activeConditions: ->
       return unless blueprint = @getBlueprintWhenNoTaskIsHovered()
       
-      # Show after Pixel Art Software is completed and until the Snake goal is added and completed.
+      # Show after Pixel art software is completed and until the Elements of art goal is added.
       return unless PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.completed()
-      return if LM.Intro.Tutorial.Goals.Snake.completed() and StudyPlan.hasGoal LM.Intro.Tutorial.Goals.Snake
+      return if StudyPlan.hasGoal LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt
+      
+      # If the Pixel art Software is fully completed and marked complete, don't
+      # show this anymore, so the instruction for adding the next goal kicks in.
+      return if PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.allCompleted() and StudyPlan.isGoalMarkedComplete PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware
 
       # Wait for the flag tile to be revealed.
       return unless flagTile = @getFlagTile()

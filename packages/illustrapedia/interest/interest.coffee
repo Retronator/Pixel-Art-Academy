@@ -4,6 +4,7 @@ IL = Illustrapedia
 
 class IL.Interest extends AM.Document
   @id: -> 'Illustrapedia.Interest'
+  # lastEditTime: the time the document was last edited
   # name: the canonical name of the interest
   #   _id
   #   translations
@@ -31,6 +32,9 @@ class IL.Interest extends AM.Document
       ]
 
   @enableDatabaseContent()
+
+  @databaseContentInformationFields =
+    searchTerms: 1
   
   # Methods
 
@@ -63,3 +67,8 @@ class IL.Interest extends AM.Document
   # Convenience method to return the main string used to reference this interest.
   referenceString: ->
     @name.translations.best.text
+    
+if Meteor.isServer
+  # Export all interests
+  AM.DatabaseContent.addToExport ->
+    IL.Interest.documents.fetch()

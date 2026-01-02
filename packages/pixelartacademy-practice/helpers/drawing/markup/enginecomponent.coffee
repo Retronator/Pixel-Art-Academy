@@ -10,6 +10,19 @@ class Markup.EngineComponent
   # (markup pixels will be scaled down when zoomed out more than this).
   @minimumZoomPercentage = 400 # %
   
+  @_fontsAvailable = {}
+  
+  @fontAvailable: (font) ->
+    unless @_fontsAvailable[font]
+      @_fontsAvailable[font] = new ReactiveField false
+      
+      Tracker.nonreactive =>
+        await document.fonts.load font
+        await document.fonts.ready
+        @_fontsAvailable[font] true
+    
+    @_fontsAvailable[font]()
+  
   drawMarkup: (markup, context, properties) ->
     # How big is an HTML canvas pixel relative to the unit of the context.
     pixelSize = properties.pixelSize
@@ -111,54 +124,55 @@ class Markup.EngineComponent
         textSize = text.size * scaledDisplayPixelSize
         context.font = "#{textSize}px #{text.font}"
         
-        if text.backgroundStyle
-          context.fillStyle = text.backgroundStyle
-          @_drawTextBackground context, text.value, text.position, lineHeight, text.backgroundPadding
-        
-        if text.lineHeight
-          lineHeight = text.lineHeight * scaledDisplayPixelSize
+        if @constructor.fontAvailable context.font
+          if text.backgroundStyle
+            context.fillStyle = text.backgroundStyle
+            @_drawTextBackground context, text.value, text.position, lineHeight, text.backgroundPadding
           
-        else
-          lineHeight = textSize * 1.2
+          if text.lineHeight
+            lineHeight = text.lineHeight * scaledDisplayPixelSize
+            
+          else
+            lineHeight = textSize * 1.2
+            
+          textPosition = _.clone text.position
           
-        textPosition = _.clone text.position
-        
-        # Adjust for right-based origin to have an extra pixel space.
-        if _.endsWith textPosition.origin, 'Right'
-          textPosition.x += scaledDisplayPixelSize
-          
-        if text.outline
-          # Adjust position to accommodate for the outline.
-          if _.endsWith textPosition.origin, 'Left'
+          # Adjust for right-based origin to have an extra pixel space.
+          if _.endsWith textPosition.origin, 'Right'
             textPosition.x += scaledDisplayPixelSize
             
-          if _.endsWith textPosition.origin, 'Right'
-            textPosition.x -= scaledDisplayPixelSize
-          
-          if _.startsWith textPosition.origin, 'Top'
-            textPosition.y += scaledDisplayPixelSize
-          
-          if _.startsWith textPosition.origin, 'Bottom'
-            textPosition.y -= scaledDisplayPixelSize
-          
-          context.fillStyle = text.outline.style
-          
-          outlineWidth = text.outline.width or 1
-          outlinePosition = _.clone textPosition
-          
-          context.beginPath()
-          
-          for offsetX in [-outlineWidth..outlineWidth]
-            for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
-              outlinePosition.x = textPosition.x + offsetX * scaledDisplayPixelSize
-              outlinePosition.y = textPosition.y + offsetY * scaledDisplayPixelSize
-              @_drawText context, text.value, outlinePosition, lineHeight, text.align
+          if text.outline
+            # Adjust position to accommodate for the outline.
+            if _.endsWith textPosition.origin, 'Left'
+              textPosition.x += scaledDisplayPixelSize
               
-          context.fill()
+            if _.endsWith textPosition.origin, 'Right'
+              textPosition.x -= scaledDisplayPixelSize
+            
+            if _.startsWith textPosition.origin, 'Top'
+              textPosition.y += scaledDisplayPixelSize
+            
+            if _.startsWith textPosition.origin, 'Bottom'
+              textPosition.y -= scaledDisplayPixelSize
+            
+            context.fillStyle = text.outline.style
+            
+            outlineWidth = text.outline.width or 1
+            outlinePosition = _.clone textPosition
+            
+            context.beginPath()
+            
+            for offsetX in [-outlineWidth..outlineWidth]
+              for offsetY in [-outlineWidth..outlineWidth] when offsetX or offsetY
+                outlinePosition.x = textPosition.x + offsetX * scaledDisplayPixelSize
+                outlinePosition.y = textPosition.y + offsetY * scaledDisplayPixelSize
+                @_drawText context, text.value, outlinePosition, lineHeight, text.align
+                
+            context.fill()
+          
+          context.fillStyle = text.style
+          @_drawText context, text.value, textPosition, lineHeight, text.align
         
-        context.fillStyle = text.style
-        @_drawText context, text.value, textPosition, lineHeight, text.align
-      
     context.restore()
 
   _drawArrow: (context, start, end, width = 1, length = 0.5) ->

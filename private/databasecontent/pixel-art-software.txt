@@ -1,0 +1,2 @@
+pixel art software
+{"_id":"z7kvSffP6wAKhGC4x","name":{"_id":"8h5ezWT7YfqcG72SL","translations":{"en":{"us":{"text":"pixel art software","quality":0},"best":{"text":"pixel art software","quality":0,"languageRegion":"en-US"}},"best":{"text":"pixel art software","quality":0,"languageRegion":"en-US"}}},"_schema":"1.0.0","searchTerms":["pixel art software"],"lastEditTime":{"$date":1767351688396}}

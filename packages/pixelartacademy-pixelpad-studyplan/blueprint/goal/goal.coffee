@@ -28,6 +28,7 @@ class StudyPlan.Blueprint.Goal extends AM.Component
       return unless goal = @goal()
       
       for interest in _.union goal.interests(), goal.requiredInterests(), goal.optionalInterests()
+        IL.Interest.forSearchTerm.subscribeContent interest
         IL.Interest.forSearchTerm.subscribe interest
   
     @autorun (computation) =>

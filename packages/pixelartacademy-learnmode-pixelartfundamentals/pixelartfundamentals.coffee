@@ -32,11 +32,15 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
     # Allow cheating.
     return true if LM.PixelArtFundamentals.state 'pinballUnlocked'
     
+    return false unless PAA.PixelPad.Apps.StudyPlan.hasGoal LM.PixelArtFundamentals.Fundamentals.Goals.Pinball
+    
     LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.SmoothCurves.completed()
     
   @drawQuicklyEnabled: ->
     # Allow cheating.
     return true if LM.PixelArtFundamentals.state 'drawQuicklyUnlocked'
+    
+    return false unless PAA.PixelPad.Apps.StudyPlan.hasGoal LM.PixelArtFundamentals.Fundamentals.Goals.Simplification
     
     PAA.Tutorials.Drawing.Simplification.completed()
 
