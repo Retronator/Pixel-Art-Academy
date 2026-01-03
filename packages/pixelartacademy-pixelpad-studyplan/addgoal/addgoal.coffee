@@ -23,16 +23,25 @@ class StudyPlan.AddGoal extends AM.Component
       goalIds = _.flatten goalIds
 
       _.filter @studyPlan.goals(), (goal) => goal.id() in goalIds
+    
+    @accomplishedGoals = new ComputedField =>
+      _.filter @availableGoals(), (goal) => goal.allCompleted()
+      
+    @unacomplishedGoals = new ComputedField =>
+      _.difference @availableGoals(), @accomplishedGoals()
       
     @shortTermGoals = new ComputedField =>
-      _.filter @availableGoals(), (goal) => StudyPlan.getGoalType(goal) is StudyPlan.GoalTypes.ShortTerm
+      _.filter @unacomplishedGoals(), (goal) => StudyPlan.getGoalType(goal) is StudyPlan.GoalTypes.ShortTerm
 
     @midTermGoals = new ComputedField =>
-      _.difference @availableGoals(), @shortTermGoals()
+      _.difference @unacomplishedGoals(), @shortTermGoals()
 
   sourceGoalIsMidTerm: ->
     return unless sourceGoalId = @studyPlan.addGoalOptions()?.sourceGoalId
     StudyPlan.getGoalType(sourceGoalId) is StudyPlan.GoalTypes.MidTerm
+  
+  showAccomplishedGoals: ->
+    @accomplishedGoals().length
     
   showShortTermGoals: ->
     @shortTermGoals().length

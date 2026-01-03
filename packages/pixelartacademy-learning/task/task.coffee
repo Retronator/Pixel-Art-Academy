@@ -177,6 +177,9 @@ class PAA.Learning.Task
     unless @options.profileId() is LOI.adventure.profileId()
       console.warn "Active task determination requested for another profile."
       return
+      
+    # Filter uncompletable tasks.
+    return unless @constructor.completable()
 
     # Task is not available after it's completed.
     return if @completed()

@@ -80,7 +80,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt extends PAA.Learn
     
     @interests: -> ['color']
     
-    @requiredInterests: -> []
+    @requiredInterests: -> ['future tech']
 
     @groupNumber: -> -1
     

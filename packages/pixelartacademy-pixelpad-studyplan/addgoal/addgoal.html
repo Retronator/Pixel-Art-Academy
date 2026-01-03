@@ -6,6 +6,21 @@
           Reach this goal first to be able to plan ahead.
         </p>
       {{else}}
+        {{#if showAccomplishedGoals}}
+          <h1 class="header">
+            Add an accomplished goal
+          </h1>
+          <p class="explanation">
+            Accomplished goals are goals you already fully completed.
+          </p>
+          <ul class="goals">
+            {{#each accomplishedGoals}}
+              <li class="goal">
+                {{> t10e displayNameTranslation}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
         {{#if showShortTermGoals}}
           <h1 class="header">
             Add a short-term goal
