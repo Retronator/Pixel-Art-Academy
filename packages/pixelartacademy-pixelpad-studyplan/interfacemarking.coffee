@@ -9,7 +9,7 @@ Atari2600 = LOI.Assets.Palette.Atari2600
 class StudyPlan.InterfaceMarking
   @defaultStyle: ->
     palette = LOI.palette()
-    markupColor = palette.color Atari2600.hues.brown, 5
+    markupColor = palette.color Atari2600.hues.aqua, 5
     
     "##{markupColor.getHexString()}"
   
