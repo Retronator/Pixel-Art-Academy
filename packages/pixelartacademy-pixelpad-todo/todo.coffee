@@ -224,6 +224,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       for task in completedTasks
         @$("[data-task-id='#{task.id()}']").remove()
         
+      @_animateEnd()
       return
     
     @_animateClose()
@@ -279,7 +280,7 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       
       # Make sure we're still on the home screen (no app has been opened while we were waiting).
       if @os.currentAppUrl()
-        @animating false
+        @_animateEnd()
         return false
       
       @manualDisplayState @constructor.DisplayState.Open
@@ -288,13 +289,13 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
     
     # Make sure we're still being rendered.
     unless @isRendered()
-      @animating false
+      @_animateEnd()
       return false
     
     true
   
   _animateClose: ->
-    @animating false
+    @_animateEnd()
     
     Meteor.clearTimeout @_animateCloseTimeout
     
@@ -307,6 +308,9 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       @manualDisplayState null
     ,
       2000
+    
+  _animateEnd: ->
+    @animating false
       
   allowsShortcutsTable: -> false
   

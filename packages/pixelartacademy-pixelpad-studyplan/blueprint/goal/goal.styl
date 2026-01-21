@@ -31,6 +31,7 @@
     .name
       display inline
       position relative
+      cursor pointer
 
     .goal-ui
       display flex
@@ -68,3 +69,11 @@
 
         &:hover
           color atariRed(2)
+
+  .pixelartacademy-pixelpad-apps-studyplan-blueprint.goal-selected &:not(.selected)
+    .name-area
+      display none
+
+    .pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
+      > .blueprint
+        display none

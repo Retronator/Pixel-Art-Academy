@@ -14,7 +14,10 @@ class StudyPlan.Instructions
       # We only have markup without a message.
       InstructionsSystem.DisplayState.Hidden
     
-    getBlueprintWhenNoTaskIsHovered: ->
+    getBlueprintWhenNoInfoIsVisible: ->
+      return unless studyPlan = @getStudyPlan()
+      return if studyPlan.modalWindowDisplayed()
+
       return unless blueprint = @getBlueprint()
       return if blueprint.hoveredTaskId()
       blueprint
@@ -27,7 +30,7 @@ class StudyPlan.Instructions
     @delayDuration: -> 2
     
     activeConditions: ->
-      return unless blueprint = @getBlueprintWhenNoTaskIsHovered()
+      return unless blueprint = @getBlueprintWhenNoInfoIsVisible()
       
       # Show when helpers and pixel art software challenge are not completed.
       return if PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.Helpers.completed() or PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.CopyReference.completed()
@@ -120,7 +123,7 @@ class StudyPlan.Instructions
       @_flagChangedAutorun.stop()
     
     activeConditions: ->
-      return unless blueprint = @getBlueprintWhenNoTaskIsHovered()
+      return unless blueprint = @getBlueprintWhenNoInfoIsVisible()
       
       # Show after Pixel art software is completed and until the Elements of art goal is added.
       return unless PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.completed()
@@ -160,14 +163,14 @@ class StudyPlan.Instructions
       
       if @flagChangedCount() < 2
         if pixelArtSoftware.allCompleted()
-          flagText = "Click on the flag pole\nto mark this goal complete" unless markedComplete
+          flagText = "Click on the flagpole\nto mark this goal complete" unless markedComplete
           
         else
           if markedComplete
             flagText = "Click on the flag\nto show optional tutorials again"
             
           else
-            flagText = "Click on the flag pole\nto hide optional tutorials"
+            flagText = "Click on the flagpole\nto hide optional tutorials"
   
         if flagText
           markup.push
@@ -236,7 +239,7 @@ class StudyPlan.Instructions
     @delayDuration: -> @defaultDelayDuration
     
     hasExpansionPointInDirectionWithGoalType: (expansionDirection, goalType) ->
-      return unless blueprint = @getBlueprintWhenNoTaskIsHovered()
+      return unless blueprint = @getBlueprintWhenNoInfoIsVisible()
       
       # Show until add new goal is selected.
       return if @getStudyPlan().addGoalOptions()

@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal">
-  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-goal" {{style goalStyle}} data-goalid="{{goalId}}">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-goal {{selectedClass}}" {{style goalStyle}} data-goalid="{{goalId}}">
     {{> renderTileMapComponent tileMap}}
     <div class="name-area {{markedCompleteClass}}" {{style nameStyle}}>
       <div class="name">

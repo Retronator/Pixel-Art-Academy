@@ -1,49 +1,46 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
 .pixelartacademy-pixelpad-apps-studyplan-addgoal
-  absolute-cover()
+  position absolute
+  left 20rem
+  bottom 20rem
+  width 120rem
+  padding 5rem
+  background atariCyan(1)
 
-  .window
-    position absolute
-    left 20rem
-    bottom 20rem
-    width 120rem
-    padding 5rem
-    background atariCyan(1)
+  .header
+    margin 0 0 5rem
+    color atariCyan(7)
+    text-transform uppercase
+    uni()
 
-    .header
-      margin 0 0 5rem
-      color atariCyan(7)
-      text-transform uppercase
-      uni()
+  .explanation
+    margin 5rem 0
+    color atariCyan(3)
+    small-print()
 
-    .explanation
-      margin 5rem 0
-      color atariCyan(3)
-      small-print()
-
-      &:only-child
-        margin 0
-
-    .goals
-      list-style none
-      padding 0
+    &:only-child
       margin 0
 
-      & + .header
-        margin-top 5rem
+  .goals
+    list-style none
+    padding 0
+    margin 0
 
-      .goal
-        margin-bottom 1rem
-        padding 0 2rem
-        border 1rem solid atariCyan(5)
-        background atariCyan(0)
-        color atariGray(5)
-        text-transform uppercase
-        uni()
-        cursor pointer
+    & + .header
+      margin-top 5rem
 
-        &:hover
-          background atariCyan(1)
-          color atariGray(7)
-          border-color atariCyan(7)
+    .goal
+      margin-bottom 1rem
+      padding 0 2rem
+      border 1rem solid atariCyan(5)
+      background atariCyan(0)
+      color atariGray(5)
+      text-transform uppercase
+      uni()
+      cursor pointer
+
+      &:hover
+        background atariCyan(1)
+        color atariGray(7)
+        border-color atariCyan(7)

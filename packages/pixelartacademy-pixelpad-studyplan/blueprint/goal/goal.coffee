@@ -79,6 +79,9 @@ class StudyPlan.Blueprint.Goal extends AM.Component
       for taskPoint in goalNode.taskPoints when taskPoint.task?.available()
         @tileMapComponent.activateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
   
+  selectedClass: ->
+    'selected' if @blueprint.studyPlan.selectedGoalId() is @goalId
+    
   goalStyle: ->
     return unless position = @mapPosition()
     
@@ -128,8 +131,12 @@ class StudyPlan.Blueprint.Goal extends AM.Component
     
   events: ->
     super(arguments...).concat
+      'click .name': @onClickName
       'click .remove-button': @onClickRemoveButton
       
+  onClickName: (event) ->
+    @blueprint.studyPlan.selectGoal @goalId
+    
   onClickRemoveButton: (event) ->
     @blueprint.studyPlan.removeGoal @goalId
 

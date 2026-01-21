@@ -397,6 +397,12 @@ class StudyPlan.Blueprint extends AM.Component
   draggingClass: ->
     'dragging' if @dragBlueprint()
 
+  goalSelectedClass: ->
+    'goal-selected' if @studyPlan.selectedGoalId()
+  
+  taskSelectedClass: ->
+    'task-selected' if @studyPlan.selectedTaskId()
+    
   focusGoal: (goalId) ->
     return unless goalComponent = @goalComponentsById()[goalId]
 
@@ -408,13 +414,6 @@ class StudyPlan.Blueprint extends AM.Component
       'mousedown': @onMouseDown
       'pointerenter .tile.building, pointerenter .tile.gate': @onPointerEnterTask
       'pointerleave .tile.building, pointerleave .tile.gate': @onPointerLeaveTask
-      
-  onPointerEnterTask: (event) ->
-    tile = @currentData()
-    @hoveredTaskId tile.data.taskId
-    
-  onPointerLeaveTask: (event) ->
-    @hoveredTaskId null
 
   onMouseDown: (event) ->
     $target = $(event.target)
@@ -425,3 +424,10 @@ class StudyPlan.Blueprint extends AM.Component
     return if $target.closest('.expansion-point').length
     
     @startDragBlueprint()
+    
+  onPointerEnterTask: (event) ->
+    tile = @currentData()
+    @hoveredTaskId tile.data.taskId
+  
+  onPointerLeaveTask: (event) ->
+    @hoveredTaskId null

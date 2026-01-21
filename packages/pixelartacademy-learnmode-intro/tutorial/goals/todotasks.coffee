@@ -43,6 +43,9 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
       @_instructionsWereOpened = false
       @_instructionsWereOpenedAndClosed = new ReactiveField false
       
+      @startInstructionsAutorun()
+      
+    startInstructionsAutorun: ->
       @_instructionsAutorun = Tracker.autorun (computation) =>
         return unless LOI.adventure.ready()
         return unless pixelPad = LOI.adventure.getCurrentThing PAA.PixelPad
@@ -68,6 +71,14 @@ class LM.Intro.Tutorial.Goals.ToDoTasks extends PAA.Learning.Goal
       @_instructionsWereOpenedAndClosed()
     
     activeNotificationId: -> @constructor.ActiveNotification.id()
+    
+    reset: ->
+      super arguments...
+      
+      @_instructionsWereOpened = false
+      @_instructionsWereOpenedAndClosed false
+      
+      @startInstructionsAutorun()
     
     Task = @
     

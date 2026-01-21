@@ -36,12 +36,13 @@ Package.onUse(function(api) {
 
   api.addComponent('addgoal..');
   api.addComponent('goalsearch..');
+  api.addComponent('goalinfo..');
+  api.addComponent('taskinfo..');
 
   api.addComponent('blueprint..');
   api.addFile('blueprint/camera');
   api.addFile('blueprint/mouse');
   api.addComponent('blueprint/goal..');
-  api.addComponent('blueprint/taskinfo..');
 
   api.addComponent('blueprint/tilemap..');
   api.addFile('blueprint/tilemap/tilemap-buildings');

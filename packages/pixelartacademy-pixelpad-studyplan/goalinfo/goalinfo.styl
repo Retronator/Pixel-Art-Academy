@@ -1,0 +1,108 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-goalinfo
+  position absolute
+  top 40rem
+  right 5rem
+  z-index 1
+  width 120rem
+  padding 5rem
+  visibility hidden
+  opacity 0
+  background atariCyan(2)
+  transition opacity 0.2s, visibility 0.2s
+
+  &.visible
+    visibility visible
+    opacity 1
+
+  &:not(.goal-completed)
+    .marked-complete
+      color atariGray(4)
+      cursor default
+
+      .checkmark
+        border-color atariGray(4)
+
+  .name
+    text-transform uppercase
+    margin-bottom 5rem
+
+  .marked-complete
+    display block
+    cursor pointer
+
+    input
+      display none
+
+      &:checked + .checkmark::before
+        content '✓'
+
+    .checkmark
+      position relative
+      display inline-block
+      width 9rem
+      height 9rem
+      margin-bottom 1rem
+      border 1rem solid atariCyan(6)
+      vertical-align middle
+      adventure()
+
+      &::before
+        position absolute
+        top -1rem
+        left 1rem
+
+  .instructions
+    small-print()
+    margin 3rem 0 0
+    color atariCyan(5)
+
+  button
+    position relative
+    width 50rem
+    height 15rem
+    padding 2rem 4rem 4rem
+    margin-top 10rem
+    border none
+    background none
+    uni()
+    color atariGray(6)
+    text-transform uppercase
+
+    &::before
+    &::after
+      content ''
+      absolute-cover()
+      z-index -1
+
+    &::before
+      background-color atariCyan(1)
+      top 2rem
+
+    &::after
+      background-color atariCyan(3)
+      bottom 2rem
+
+    &:hover
+      color atariGray(7)
+
+      &::after
+        background-color atariCyan(4)
+
+    &:active:not(:disabled)
+      padding-top 3rem
+      padding-bottom 3rem
+
+      &::after
+        top 1rem
+        bottom 1rem
+
+    &:disabled
+      color atariGray(3)
+
+      &::before
+        background-color atariGray(1)
+
+      &::after
+        background-color atariGray(2)

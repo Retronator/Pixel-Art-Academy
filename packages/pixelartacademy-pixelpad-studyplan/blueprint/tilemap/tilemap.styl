@@ -121,13 +121,13 @@
 
     .building
     .gate
+      cursor default
+
       .image
         filter drop-shadow(0 0 2rem transparent)
         transition filter 0.1s
 
     .building
-      cursor default
-
       &.active
         .blueprint
           background-color atariAqua(3)
@@ -170,8 +170,6 @@
           bottom 0
 
     .gate
-      cursor default
-
       &.opened
         .image
           animation gate-open 0.4s steps(4) forwards

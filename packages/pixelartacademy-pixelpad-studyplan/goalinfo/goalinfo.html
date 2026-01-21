@@ -1,0 +1,35 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.GoalInfo">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-goalinfo {{visibleClass}} {{goalCompletedClass}}">
+    <div class="name">
+      {{> t10e goal.displayNameTranslation}}
+    </div>
+    <label class="marked-complete">
+      {{> PixelArtAcademy.PixelPad.Apps.StudyPlan.GoalInfo.MarkedComplete}}
+      <span class="checkmark"></span> Completed
+    </label>
+    <p class="instructions">
+      {{#if goal.completed}}
+        {{#if markedComplete}}
+          Clear the checkmark to reactivate the goal and see its tasks in the Drawing app again.
+        {{else}}
+          Mark the goal as completed to hide its tasks from the Drawing app and make space for new goals.
+        {{/if}}
+      {{else}}
+        Complete the required tasks to be able to mark this goal as completed.
+      {{/if}}
+    </p>
+    <button class="remove-button" {{removeButtonDisabledAttribute}}>Remove</button>
+    <p class="instructions">
+      {{#if canRemove}}
+        {{#if goal.allCompleted}}
+          Remove the goal from the study plan if you're not happy with its position.
+        {{else}}
+          Remove the goal from the study plan if you don't want to work on it anymore.
+        {{/if}}
+        You can always add it back later.
+      {{else}}
+        You can't remove this goal because other goals lead from it. Remove those first and try again.
+      {{/if}}
+    </p>
+  </div>
+</template>

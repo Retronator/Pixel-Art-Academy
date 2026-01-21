@@ -1,6 +1,6 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
-.pixelartacademy-pixelpad-apps-studyplan-blueprint-taskinfo
+.pixelartacademy-pixelpad-apps-studyplan-taskinfo
   position absolute
   z-index 1
   width 120rem
@@ -9,7 +9,6 @@
   opacity 0
   background atariCyan(2)
   transition opacity 0.2s, visibility 0.2s
-  pointer-events none
 
   &.visible
     visibility visible
@@ -26,11 +25,14 @@
         content '✔'
         adventure()
 
+  &:not(.selected)
+    pointer-events none
+
   .directive
-    margin-bottom 5rem
     text-transform uppercase
 
   .instructions
+    margin-top 5rem
     hyphens auto
 
   .interests
@@ -43,7 +45,7 @@
       position relative
       list-style none
       padding-left 10rem
-      margin-top 1rem
+      margin 1rem 0 0
 
       .interest
         &::before

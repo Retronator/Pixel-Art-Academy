@@ -51,13 +51,7 @@ class StudyPlan.AddGoal extends AM.Component
     
   events: ->
     super(arguments...).concat
-      'click': @onClick
       'click .goal': @onClickGoal
-  
-  onClick: (event) ->
-    return if $(event.target).closest('.window').length
-    
-    @studyPlan.closeAddGoal()
   
   onClickGoal: (event) ->
     goal = @currentData()

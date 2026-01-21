@@ -107,10 +107,12 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @addGoalComponent = new ReactiveField null
     @goalSearch = new ReactiveField null
     
-    @addGoalOptions = new ReactiveField null
-    
   onCreated: ->
     super arguments...
+    
+    @addGoalOptions = new ReactiveField null
+    @selectedGoalId = new ReactiveField null
+    @selectedTaskId = new ReactiveField null
     
     # Instantiate all goals.
     @_goals = []
@@ -157,6 +159,39 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
   closeAddGoal: ->
     @addGoalOptions null
+    
+  selectGoal: (goalId) ->
+    @selectedGoalId goalId
+    
+    blueprint = @blueprint()
+    goalHierarchy = blueprint.displayedGoalHierarchy()
+    goalNode = goalHierarchy.goalNodesById[goalId]
+    goalPosition = goalNode.globalPosition()
+    centerX = goalPosition.x + (goalNode.tileMap.minX + goalNode.tileMap.maxX) / 2
+    centerY = goalPosition.y + (goalNode.tileMap.minY + goalNode.tileMap.maxY) / 2
+    mapPosition = StudyPlan.Blueprint.TileMap.mapPosition centerX, centerY
+    mapPosition.x += StudyPlan.GoalInfo.width / 2
+    
+    camera = blueprint.camera()
+    camera.setOrigin mapPosition
+    
+  deselectGoal: ->
+    @selectedGoalId null
+    
+  selectTask: (taskId) ->
+    @selectedTaskId taskId
+    
+    task = PAA.Learning.Task.getAdventureInstanceForId taskId
+    blueprint = @blueprint()
+    goalComponentsById = blueprint.goalComponentsById()
+    goalComponent = goalComponentsById[task.goal.id()]
+    mapPosition = goalComponent.getMapPositionForTask taskId
+    
+    camera = blueprint.camera()
+    camera.setOrigin mapPosition
+    
+  deselectTask: ->
+    @selectedTaskId null
   
   addGoal: (options) ->
     _.defaults options, @addGoalOptions()
@@ -199,5 +234,18 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
     @state 'goals', goals
   
+  modalWindowDisplayed: ->
+    return unless @isCreated()
+    @selectedTaskId() or @selectedGoalId() or @addGoalDisplayed()
+  
   addGoalDisplayed: ->
     @addGoalOptions()
+  
+  events: ->
+    super(arguments...).concat
+      'click .modal-window-cover': @onClickModalWindowCover
+  
+  onClickModalWindowCover: (event) ->
+    @deselectGoal() if @selectedGoalId()
+    @deselectTask() if @selectedTaskId()
+    @closeAddGoal() if @addGoalDisplayed()
