@@ -167,7 +167,7 @@ class StudyPlan.Instructions
           
         else
           if markedComplete
-            flagText = "Click on the flag\nto show optional tutorials again"
+            flagText = "Click on the flag\nto show tutorials again"
             
           else
             flagText = "Click on the flagpole\nto hide optional tutorials"

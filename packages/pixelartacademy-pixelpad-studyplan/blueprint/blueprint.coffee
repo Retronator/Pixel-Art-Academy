@@ -186,8 +186,12 @@ class StudyPlan.Blueprint extends AM.Component
       mapBoundingRectangle = new AE.Rectangle
       
       if goalComponentsById = @goalComponentsById()
-        for goalId, goalComponent of goalComponentsById
-          mapBoundingRectangle.union goalComponent.mapBoundingRectangle
+        if selectedGoalId = @studyPlan.selectedGoalId()
+          mapBoundingRectangle = goalComponentsById[selectedGoalId].mapBoundingRectangle
+        
+        else
+          for goalId, goalComponent of goalComponentsById
+            mapBoundingRectangle.union goalComponent.mapBoundingRectangle
           
       @mapBoundingRectangle.copy mapBoundingRectangle
 
@@ -404,10 +408,16 @@ class StudyPlan.Blueprint extends AM.Component
     'task-selected' if @studyPlan.selectedTaskId()
     
   focusGoal: (goalId) ->
-    return unless goalComponent = @goalComponentsById()[goalId]
-
+    goalHierarchy = @displayedGoalHierarchy()
+    goalNode = goalHierarchy.goalNodesById[goalId]
+    goalPosition = goalNode.globalPosition()
+    centerX = goalPosition.x + (goalNode.tileMap.minX + goalNode.tileMap.maxX) / 2
+    centerY = goalPosition.y + (goalNode.tileMap.minY + goalNode.tileMap.maxY) / 2
+    mapPosition = StudyPlan.Blueprint.TileMap.mapPosition centerX, centerY
+    mapPosition.x += StudyPlan.GoalInfo.width / 2
+    
     camera = @camera()
-    camera.setOrigin goalComponent.mapPosition()
+    camera.setOrigin mapPosition
 
   events: ->
     super(arguments...).concat

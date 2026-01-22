@@ -19,6 +19,10 @@
     &.marked-complete
       color atariCyan(2)
 
+      .name
+        &:hover
+          color atariCyan(3)
+
       .goal-ui
         .marked-complete
           &:hover
@@ -32,6 +36,9 @@
       display inline
       position relative
       cursor pointer
+
+      &:hover
+        color atariCyan(5)
 
     .goal-ui
       display flex
@@ -71,9 +78,4 @@
           color atariRed(2)
 
   .pixelartacademy-pixelpad-apps-studyplan-blueprint.goal-selected &:not(.selected)
-    .name-area
-      display none
-
-    .pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
-      > .blueprint
-        display none
+    display none

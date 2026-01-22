@@ -24,19 +24,35 @@
       .checkmark
         border-color atariGray(4)
 
+  .close-button
+    position absolute
+    top 0
+    right 0
+    background none
+    border none
+    padding 2rem
+    adventure()
+    color atariCyan(4)
+
+    &:hover
+      color atariCyan(5)
+
   .name
     text-transform uppercase
     margin-bottom 5rem
+    margin-right 10rem
 
   .marked-complete
     display block
     cursor pointer
+    color atariGray(6)
 
     input
       display none
 
       &:checked + .checkmark::before
         content '✓'
+        color atariGreen(5)
 
     .checkmark
       position relative
@@ -58,7 +74,7 @@
     margin 3rem 0 0
     color atariCyan(5)
 
-  button
+  .action-button
     position relative
     width 50rem
     height 15rem
@@ -77,18 +93,18 @@
       z-index -1
 
     &::before
-      background-color atariCyan(1)
+      background-color atariAqua(1)
       top 2rem
 
     &::after
-      background-color atariCyan(3)
+      background-color atariAqua(3)
       bottom 2rem
 
     &:hover
       color atariGray(7)
 
       &::after
-        background-color atariCyan(4)
+        background-color atariAqua(4)
 
     &:active:not(:disabled)
       padding-top 3rem

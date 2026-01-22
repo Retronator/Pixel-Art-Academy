@@ -1,13 +1,16 @@
 <template name="PixelArtAcademy.PixelPad.Apps.StudyPlan">
   <div class="pixelartacademy-pixelpad-apps-studyplan app">
     {{> Render blueprint}}
-    {{#if modalWindowDisplayed}}
+    {{#if displayModalWindowCover}}
       <div class="modal-window-cover"></div>
     {{/if}}
     {{> PixelArtAcademy.PixelPad.Apps.StudyPlan.TaskInfo}}
     {{> PixelArtAcademy.PixelPad.Apps.StudyPlan.GoalInfo}}
     {{#if addGoalDisplayed}}
       {{> Render addGoalComponent}}
+    {{/if}}
+    {{#if displayActiveGoals}}
+      {{> Render activeGoals}}
     {{/if}}
   </div>
 </template>

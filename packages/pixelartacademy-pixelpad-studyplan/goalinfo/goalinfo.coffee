@@ -47,21 +47,19 @@ class StudyPlan.GoalInfo extends AM.Component
     return unless goalComponent = @goalComponent()
     goalComponent.data()
   
-  canRemove: ->
-    return unless goalNode = @goalNode()
-    
-    # Goal can be removed when it's a leaf in the hierarchy.
-    not (goalNode.forwardGoalNodes.length or goalNode.sidewaysGoalNodes.length)
-  
-  removeButtonDisabledAttribute: ->
-    disabled: true unless @canRemove()
+  canRemove: -> StudyPlan.canRemoveGoal @goalId()
     
   events: ->
     super(arguments...).concat
+      'click .close-button': @onClickCloseButton
       'click .remove-button': @onClickRemoveButton
   
+  onClickCloseButton: (event) ->
+    @studyPlan.deselectGoal()
+    
   onClickRemoveButton: (event) ->
     @studyPlan.removeGoal @goalId()
+    @studyPlan.deselectGoal()
     
   class @MarkedComplete extends AM.DataInputComponent
     @register 'PixelArtAcademy.PixelPad.Apps.StudyPlan.GoalInfo.MarkedComplete'

@@ -38,6 +38,7 @@ Package.onUse(function(api) {
   api.addComponent('goalsearch..');
   api.addComponent('goalinfo..');
   api.addComponent('taskinfo..');
+  api.addComponent('activegoals..');
 
   api.addComponent('blueprint..');
   api.addFile('blueprint/camera');

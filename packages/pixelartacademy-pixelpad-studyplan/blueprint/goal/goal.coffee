@@ -123,11 +123,7 @@ class StudyPlan.Blueprint.Goal extends AM.Component
   renderTileMapComponent: ->
     @tileMapComponent.renderComponent @currentComponent()
   
-  canRemove: ->
-    return unless goalNode = @data()
-    
-    # Goal can be removed when it's a leaf in the hierarchy.
-    not (goalNode.forwardGoalNodes.length or goalNode.sidewaysGoalNodes.length)
+  canRemove: -> StudyPlan.canRemoveGoal @goalId
     
   events: ->
     super(arguments...).concat

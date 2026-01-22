@@ -87,6 +87,12 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
       
     @GoalTypes.MidTerm
     
+  @canRemoveGoal: (goalOrGoalId) ->
+    goalId = _.thingId goalOrGoalId
+    
+    return false unless goal = @state('goals')?[goalId]
+    not goal.connections?.length > 0
+    
   @reset: ->
     @state.set {}
     
@@ -106,6 +112,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @blueprint = new ReactiveField null
     @addGoalComponent = new ReactiveField null
     @goalSearch = new ReactiveField null
+    @activeGoals = new ReactiveField null
     
   onCreated: ->
     super arguments...
@@ -127,6 +134,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @blueprint new @constructor.Blueprint @
     @addGoalComponent new @constructor.AddGoal @
     @goalSearch new @constructor.GoalSearch @
+    @activeGoals new @constructor.ActiveGoals @
 
     # We set size in an autorun so that it adapts to window resizes.
     @autorun (computation) => @setMaximumPixelPadSize fullscreen: true
@@ -140,6 +148,14 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     goal.destroy() for goal in @_goals
     
     goalNode.destroy() for goalId, goalNode of @_goalNodeTemplates
+  
+  onBackButton: ->
+    return unless @modalWindowDisplayed()
+    
+    @closeModalWindow()
+    
+    # Inform that we've handled the back button.
+    true
     
   createGoalNode: (goalId, goalHierarchy) ->
     unless PAA.Learning.Goal.getClassForId goalId
@@ -156,6 +172,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   
   displayAddGoal: (options) ->
     @addGoalOptions options
+    @activeGoals().close()
     
   closeAddGoal: ->
     @addGoalOptions null
@@ -163,17 +180,8 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   selectGoal: (goalId) ->
     @selectedGoalId goalId
     
-    blueprint = @blueprint()
-    goalHierarchy = blueprint.displayedGoalHierarchy()
-    goalNode = goalHierarchy.goalNodesById[goalId]
-    goalPosition = goalNode.globalPosition()
-    centerX = goalPosition.x + (goalNode.tileMap.minX + goalNode.tileMap.maxX) / 2
-    centerY = goalPosition.y + (goalNode.tileMap.minY + goalNode.tileMap.maxY) / 2
-    mapPosition = StudyPlan.Blueprint.TileMap.mapPosition centerX, centerY
-    mapPosition.x += StudyPlan.GoalInfo.width / 2
-    
-    camera = blueprint.camera()
-    camera.setOrigin mapPosition
+    # After the map bounds have recomputed, focus on the goal.
+    Tracker.afterFlush => @blueprint().focusGoal goalId
     
   deselectGoal: ->
     @selectedGoalId null
@@ -238,14 +246,24 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     return unless @isCreated()
     @selectedTaskId() or @selectedGoalId() or @addGoalDisplayed()
   
+  displayModalWindowCover: ->
+    @addGoalDisplayed()
+    
+  closeModalWindow: ->
+    @deselectGoal() if @selectedGoalId()
+    @deselectTask() if @selectedTaskId()
+    @closeAddGoal() if @addGoalDisplayed()
+  
   addGoalDisplayed: ->
     @addGoalOptions()
   
+  displayActiveGoals: ->
+    # Show active goals once the player can mark the Pixel Art Software goal complete.
+    PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.completed()
+    
   events: ->
     super(arguments...).concat
       'click .modal-window-cover': @onClickModalWindowCover
   
   onClickModalWindowCover: (event) ->
-    @deselectGoal() if @selectedGoalId()
-    @deselectTask() if @selectedTaskId()
-    @closeAddGoal() if @addGoalDisplayed()
+    @closeModalWindow()

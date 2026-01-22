@@ -1,0 +1,54 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-activegoals
+  position absolute
+  left 10rem
+  right calc(50% + 10rem)
+  z-index 2
+  transition bottom 0.35s cubic-bezier(.17,1.02,.84,1)
+
+  &.opened
+    transition-timing-function cubic-bezier(.41,1.25,.84,1)
+
+  .title
+    position absolute
+    left 0
+    right 0
+    bottom 0
+    height 15rem
+    padding 3rem 5rem
+    text-transform uppercase
+    background-color atariCyan(2)
+    color atariCyan(6)
+    cursor pointer
+
+  .container
+    position absolute
+    left 0
+    right 0
+    top 0
+    background-color atariCyan(1)
+
+    .content
+      padding 5rem
+
+      .explanation
+        margin 0
+        small-print()
+        color atariCyan(5)
+        text-wrap balance
+
+      .active-goals
+        list-style none
+        margin 5rem 0 0
+        padding 0
+
+        .active-goal
+          text-transform uppercase
+          color atariGray(5)
+
+          .name
+            cursor pointer
+
+            &:hover
+              color atariGray(6)

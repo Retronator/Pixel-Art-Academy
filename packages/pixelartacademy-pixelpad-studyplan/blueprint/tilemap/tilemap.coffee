@@ -315,6 +315,7 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
   
   expansionPointGoalTypeClass: ->
     tile = @currentData()
+    return _.kebabCase StudyPlan.GoalTypes.ShortTerm unless tile.data.connectionPoint
     
     sourceGoalType = StudyPlan.getGoalType tile.data.connectionPoint.goalId
     return 'future' if sourceGoalType is StudyPlan.GoalTypes.MidTerm

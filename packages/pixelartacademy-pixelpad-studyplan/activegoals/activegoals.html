@@ -1,0 +1,32 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.ActiveGoals">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-activegoals" {{style activeGoalsStyle}}>
+    <div class="title">
+      Active goals
+      {{#if activeGoals.length}}
+        ({{activeGoals.length}})
+      {{/if}}
+    </div>
+    <div class="container" {{style containerStyle}}>
+      <div class="content">
+        {{#if activeGoals.length}}
+          <p class="explanation">
+            Goals that are active appear in the Drawing app.
+          </p>
+          <ul class="active-goals">
+            {{#each activeGoals}}
+              <li class="active-goal">
+                <span class="name">
+                  {{> t10e displayNameTranslation}}
+                </span>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="explanation">
+            You currently have no active goals. Add new goals or remove the checkmark from completed goals to reactivate them.
+          </p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>
