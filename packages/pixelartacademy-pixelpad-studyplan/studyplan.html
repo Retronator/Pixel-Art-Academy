@@ -12,5 +12,15 @@
     {{#if displayActiveGoals}}
       {{> Render activeGoals}}
     {{/if}}
+    {{#if displayInterests}}
+      {{> Render interests}}
+    {{/if}}
   </div>
+
+  <style>
+    html.adventure .build-version {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+  </style>
 </template>

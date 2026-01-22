@@ -90,12 +90,18 @@ class AM.DatabaseContent extends AM.DatabaseContent
             publicData = documentResponse.body
     
             privateUrl = "databasecontent/#{path}"
-            privateData = AM.DatabaseContent.assets.getBinary privateUrl
-  
-            lastEditTime = existingInformationDocument.lastEditTime
-  
-            notChangedCount++
-            
+          
+            try
+              privateData = AM.DatabaseContent.assets.getBinary privateUrl
+              
+              lastEditTime = existingInformationDocument.lastEditTime
+    
+              notChangedCount++
+          
+            catch error
+              # The document was removed from the private folder so we should export it again.
+              shouldExport = true
+              
           else
             shouldExport = true
 

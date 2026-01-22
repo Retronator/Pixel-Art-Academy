@@ -113,6 +113,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @addGoalComponent = new ReactiveField null
     @goalSearch = new ReactiveField null
     @activeGoals = new ReactiveField null
+    @interests = new ReactiveField null
     
   onCreated: ->
     super arguments...
@@ -135,6 +136,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @addGoalComponent new @constructor.AddGoal @
     @goalSearch new @constructor.GoalSearch @
     @activeGoals new @constructor.ActiveGoals @
+    @interests new @constructor.Interests @
 
     # We set size in an autorun so that it adapts to window resizes.
     @autorun (computation) => @setMaximumPixelPadSize fullscreen: true
@@ -260,6 +262,10 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
   displayActiveGoals: ->
     # Show active goals once the player can mark the Pixel Art Software goal complete.
     PAA.LearnMode.Intro.Tutorial.Goals.PixelArtSoftware.completed()
+  
+  displayInterests: ->
+    # Show interests once the player has more than two.
+    LOI.adventure.currentInterests().length > 2
     
   events: ->
     super(arguments...).concat

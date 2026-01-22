@@ -17,6 +17,8 @@ class IL.Interest extends IL.Interest
     lines = content.split '\n'
     EJSON.parse _.last lines
   
+  databaseContentPath: -> "illustrapedia/interest/#{_.kebabCase @searchTerms[0]}"
+  
   getDatabaseContent: ->
     # Add last edit time if needed so that documents don't need unnecessary imports.
     @lastEditTime ?= new Date()
@@ -31,5 +33,5 @@ class IL.Interest extends IL.Interest
     
     plainData: @
     arrayBuffer: arrayBuffer
-    path: "#{_.kebabCase @searchTerms[0]}.txt"
+    path: "#{@databaseContentPath()}.txt"
     lastEditTime: @lastEditTime

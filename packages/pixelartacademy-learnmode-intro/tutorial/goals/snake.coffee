@@ -26,7 +26,7 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
       Score some points to continue.
     """
 
-    @interests: -> ['pico-8', 'gaming']
+    @interests: -> ['pico-8', 'video game']
 
     @requiredInterests: -> ['pixel art software']
 

@@ -38,7 +38,9 @@ Package.onUse(function(api) {
   api.addComponent('goalsearch..');
   api.addComponent('goalinfo..');
   api.addComponent('taskinfo..');
+  api.addStyledFile('bottompanel..');
   api.addComponent('activegoals..');
+  api.addComponent('interests..');
 
   api.addComponent('blueprint..');
   api.addFile('blueprint/camera');

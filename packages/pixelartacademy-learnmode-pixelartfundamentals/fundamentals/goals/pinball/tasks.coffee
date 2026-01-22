@@ -16,7 +16,7 @@ class Goal.OpenPinballMachine extends Goal.Task
     In the Pixeltosh app, open the Pinball Creation Kit drive and open the My Pinball Machine file.
   """
 
-  @interests: -> ['pinball', 'gaming']
+  @interests: -> ['pinball', 'video game']
 
   @requiredInterests: -> ['smooth curve (pixel art)']
 

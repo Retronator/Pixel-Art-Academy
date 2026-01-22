@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.ActiveGoals">
-  <div class="pixelartacademy-pixelpad-apps-studyplan-activegoals" {{style activeGoalsStyle}}>
+  <div class="pixelartacademy-pixelpad-apps-studyplan-activegoals pixelartacademy-pixelpad-apps-studyplan-bottompanel" {{style panelStyle}}>
     <div class="title">
       Active goals
       {{#if activeGoals.length}}
@@ -14,7 +14,7 @@
           </p>
           <ul class="active-goals">
             {{#each activeGoals}}
-              <li class="active-goal">
+              <li class="goal">
                 <span class="name">
                   {{> t10e displayNameTranslation}}
                 </span>
