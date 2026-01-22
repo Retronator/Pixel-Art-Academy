@@ -16,11 +16,10 @@ class StudyPlan.Instructions
     
     getBlueprintWhenNoInfoIsVisible: ->
       return unless studyPlan = @getStudyPlan()
+      return unless studyPlan.isCreated()
       return if studyPlan.modalWindowDisplayed()
-
-      return unless blueprint = @getBlueprint()
-      return if blueprint.hoveredTaskId()
-      blueprint
+      return if studyPlan.highlightedTaskId()
+      @getBlueprint()
       
   class @Choices extends @Instruction
     @id: -> "PixelArtAcademy.PixelPad.Apps.StudyPlan.Instructions.Choices"

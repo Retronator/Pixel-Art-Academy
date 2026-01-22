@@ -2,18 +2,18 @@
   <div class="pixelartacademy-pixelpad-apps-studyplan-activegoals pixelartacademy-pixelpad-apps-studyplan-bottompanel" {{style panelStyle}}>
     <div class="title">
       Active goals
-      {{#if activeGoals.length}}
-        ({{activeGoals.length}})
+      {{#if activeAndAvailableGoals.length}}
+        ({{activeAndAvailableGoals.length}})
       {{/if}}
     </div>
     <div class="container" {{style containerStyle}}>
       <div class="content">
-        {{#if activeGoals.length}}
+        {{#if activeAndAvailableGoals.length}}
           <p class="explanation">
             Goals that are active appear in the Drawing app.
           </p>
           <ul class="active-goals">
-            {{#each activeGoals}}
+            {{#each activeAndAvailableGoals}}
               <li class="goal">
                 <span class="name">
                   {{> t10e displayNameTranslation}}
@@ -23,7 +23,7 @@
           </ul>
         {{else}}
           <p class="explanation">
-            You currently have no active goals. Add new goals or remove the checkmark from completed goals to reactivate them.
+            You currently have no active goals. Add new short-term goals or remove the checkmark from completed goals to reactivate them.
           </p>
         {{/if}}
       </div>

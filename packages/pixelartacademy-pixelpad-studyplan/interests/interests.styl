@@ -8,10 +8,15 @@
     .content
       .current-interests
         list-style none
-        margin 5rem 0 0
+        margin 0
         padding 0
+        small-print()
+        text-transform uppercase
 
         .interest
           display inline-block
           color atariGray(5)
-          margin-right 10rem
+          margin 5rem 8rem 0 0
+          cursor pointer
+          &:hover
+            color atariGray(7)

@@ -14,18 +14,16 @@ class StudyPlan.ActiveGoals extends StudyPlan.BottomPanel
   onCreated: ->
     super arguments...
     
-    @activeGoalIds = new ComputedField =>
+    @activeAndAvailableGoals = new ComputedField =>
       return [] unless goalsData = StudyPlan.state 'goals'
       
-      activeGoalIds = (goalId for goalId, goal of goalsData when not goal.markedComplete)
-      activeGoalIds.sort()
-      activeGoalIds
-    ,
-      EJSON.equals
-    
-    @activeGoals = new ComputedField =>
-      activeGoals = (PAA.Learning.Goal.getAdventureInstanceForId goalId for goalId in @activeGoalIds())
-      _.sortBy activeGoals, (goal) => goal.displayName()
+      goals = []
+
+      for goalId, goalData of goalsData
+        goal = PAA.Learning.Goal.getAdventureInstanceForId goalId
+        goals.push goal if goal.activeAndAvailable()
+      
+      _.sortBy goals, (goal) => _.lowerCase goal.displayName()
 
   canRemove: ->
     goal = @currentData()
@@ -33,8 +31,8 @@ class StudyPlan.ActiveGoals extends StudyPlan.BottomPanel
   
   events: ->
     super(arguments...).concat
-      'click .active-goal .name': @onClickActiveGoalName
+      'click .goal .name': @onClickGoalName
     
-  onClickActiveGoalName: (event) ->
+  onClickGoalName: (event) ->
     goal = @currentData()
     @studyPlan.selectGoal goal.id()

@@ -293,9 +293,9 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
       
     classes.join ' '
   
-  taskHoveredClass: ->
+  taskHighlightedClass: ->
     tile = @currentData()
-    'task-hovered' if @blueprint.hoveredTaskId() is tile.data.taskId
+    'task-highlighted' if @blueprint.studyPlan.highlightedTaskId() is tile.data.taskId
   
   buildingBlueprintStyle: ->
     height = @_buildingHeight()

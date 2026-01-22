@@ -121,6 +121,7 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @addGoalOptions = new ReactiveField null
     @selectedGoalId = new ReactiveField null
     @selectedTaskId = new ReactiveField null
+    @highlightedTaskId = new ReactiveField null
     
     # Instantiate all goals.
     @_goals = []
@@ -190,18 +191,16 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     
   selectTask: (taskId) ->
     @selectedTaskId taskId
-    
-    task = PAA.Learning.Task.getAdventureInstanceForId taskId
-    blueprint = @blueprint()
-    goalComponentsById = blueprint.goalComponentsById()
-    goalComponent = goalComponentsById[task.goal.id()]
-    mapPosition = goalComponent.getMapPositionForTask taskId
-    
-    camera = blueprint.camera()
-    camera.setOrigin mapPosition
+    @blueprint().focusTask taskId
     
   deselectTask: ->
     @selectedTaskId null
+    
+  highlightTask: (taskId) ->
+    @highlightedTaskId taskId
+  
+  stopHighlightingTask: ->
+    @highlightedTaskId null
   
   addGoal: (options) ->
     _.defaults options, @addGoalOptions()
@@ -245,7 +244,6 @@ class PAA.PixelPad.Apps.StudyPlan extends PAA.PixelPad.App
     @state 'goals', goals
   
   modalWindowDisplayed: ->
-    return unless @isCreated()
     @selectedTaskId() or @selectedGoalId() or @addGoalDisplayed()
   
   displayModalWindowCover: ->

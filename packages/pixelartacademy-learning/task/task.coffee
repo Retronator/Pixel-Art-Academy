@@ -208,6 +208,8 @@ class PAA.Learning.Task
 
     # All requirements to be active have been met.
     true
+    
+  availableOrCompleted: -> @available() or @completed()
 
   # Task is active when it is available and its goal is active.
   active: ->

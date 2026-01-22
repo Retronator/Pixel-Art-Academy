@@ -21,7 +21,6 @@ class StudyPlan.Blueprint extends AM.Component
     @mapBoundingRectangle = new AE.Rectangle
     @$blueprint = new ReactiveField null
     @dragBlueprint = new ReactiveField false
-    @hoveredTaskId = new ReactiveField null
     
     @_goalNameTileHeightsCache = {}
 
@@ -418,6 +417,15 @@ class StudyPlan.Blueprint extends AM.Component
     
     camera = @camera()
     camera.setOrigin mapPosition
+    
+  focusTask: (taskId) ->
+    task = PAA.Learning.Task.getAdventureInstanceForId taskId
+    goalComponentsById = @goalComponentsById()
+    goalComponent = goalComponentsById[task.goal.id()]
+    mapPosition = goalComponent.getMapPositionForTask taskId
+    
+    camera = @camera()
+    camera.setOrigin mapPosition
 
   events: ->
     super(arguments...).concat
@@ -437,7 +445,7 @@ class StudyPlan.Blueprint extends AM.Component
     
   onPointerEnterTask: (event) ->
     tile = @currentData()
-    @hoveredTaskId tile.data.taskId
+    @studyPlan.highlightTask tile.data.taskId
   
   onPointerLeaveTask: (event) ->
-    @hoveredTaskId null
+    @studyPlan.stopHighlightingTask()

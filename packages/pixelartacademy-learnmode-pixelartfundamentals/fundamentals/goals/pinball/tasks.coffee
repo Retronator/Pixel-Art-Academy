@@ -68,7 +68,7 @@ class Goal.DrawBall extends Goal.AssetsTask
       return unless os = PAA.PixelPad.Apps.Pixeltosh.getOS()
       program = os.activeProgram()
       return unless program instanceof PAA.Pixeltosh.Programs.Pinball
-      program.projectId() is PAA.Pixeltosh.Programs.Pinball.state 'activeProjectId'
+      program.projectId() is PAA.Pixeltosh.Programs.Pinball.Project.state 'activeProjectId'
     
     @delayDuration: -> 5
     

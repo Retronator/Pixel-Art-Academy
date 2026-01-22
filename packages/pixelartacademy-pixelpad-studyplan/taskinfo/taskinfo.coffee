@@ -28,7 +28,7 @@ class StudyPlan.TaskInfo extends AM.Component
     
     @studyPlan = @ancestorComponentOfType StudyPlan
     @blueprint = new ComputedField => @studyPlan.blueprint()
-    @taskId = new ComputedField => @studyPlan.selectedTaskId() or @blueprint()?.hoveredTaskId()
+    @taskId = new ComputedField => @studyPlan.selectedTaskId() or @studyPlan.highlightedTaskId()
     
     @selected = new ReactiveField false
     @task = new ReactiveField null
