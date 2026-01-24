@@ -14,6 +14,11 @@ class StudyPlan.Interests extends StudyPlan.BottomPanel
   onCreated: ->
     super arguments...
     
+    @autorun (computation) =>
+      interests = LOI.adventure.currentInterests()
+      IL.Interest.forReferenceNames.subscribe @, interests
+      IL.Interest.forReferenceNames.subscribeContent @, interests
+    
     @currentInterests = new ComputedField =>
       interests = (IL.Interest.find interest for interest in LOI.adventure.currentInterests())
       _.pull interests, undefined
@@ -34,9 +39,8 @@ class StudyPlan.Interests extends StudyPlan.BottomPanel
 
   onClickInterest: (event) ->
     interest = @currentData()
-    referenceString = interest.referenceString()
     
-    possibleTaskClasses = _.filter @addedTaskClasses(), (taskClass) => referenceString in taskClass.interests() and taskClass.completed()
+    possibleTaskClasses = _.filter @addedTaskClasses(), (taskClass) => interest.referenceName in taskClass.interests() and taskClass.completed()
     return unless possibleTaskClasses.length
     
     if @_lastFocusedTask in possibleTaskClasses

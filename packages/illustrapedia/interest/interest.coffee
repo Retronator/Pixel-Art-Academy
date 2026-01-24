@@ -8,12 +8,18 @@ class IL.Interest extends AM.Document
   # name: the canonical name of the interest
   #   _id
   #   translations
-  # synonyms: array of strings that indicate this interest.
-  # searchTerms: auto-generated array of words that match this interest.
+  # referenceName: string that is used to reference this interest
+  # synonyms: array of strings that indicate this interest
+  # searchTerms: auto-generated array of words that match this interest
   @Meta
     name: @id()
     fields: =>
       name: Document.ReferenceField AB.Translation, ['translations'], false
+      
+      referenceName: Document.GeneratedField 'self', ['name'], (interest) =>
+        referenceName = interest.name.translations.best.text
+        [interest._id, referenceName]
+        
       searchTerms: [Document.GeneratedField 'self', ['name', 'synonyms'], (interest) =>
         searchTerms = []
 
@@ -34,6 +40,7 @@ class IL.Interest extends AM.Document
   @enableDatabaseContent()
 
   @databaseContentInformationFields =
+    referenceName: 1
     searchTerms: 1
   
   # Methods
@@ -44,6 +51,8 @@ class IL.Interest extends AM.Document
   # Subscriptions
 
   @all: @subscription 'all'
+  
+  @forReferenceNames: @subscription 'forReferenceNames'
   
   @forSearchTerm: @subscription 'forSearchTerm',
     query: (searchTerm, publishingQuery) =>
@@ -63,10 +72,6 @@ class IL.Interest extends AM.Document
   @find: (exactSearchTerm) ->
     exactSearchTerm = _.lowerCase exactSearchTerm
     @documents.findOne searchTerms: exactSearchTerm
-
-  # Convenience method to return the main string used to reference this interest.
-  referenceString: ->
-    @name.translations.best.text
     
 if Meteor.isServer
   # Export all interests

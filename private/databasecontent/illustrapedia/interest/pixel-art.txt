@@ -1,2 +1,2 @@
 pixel art
-{"_id":"t36pu8SaPNLdBj2nW","name":{"_id":"uezEcdTczkGrd3v37","translations":{"en":{"us":{"text":"pixel art","quality":0},"best":{"text":"pixel art","quality":0,"languageRegion":"en-US"}},"best":{"text":"pixel art","quality":0,"languageRegion":"en-US"}}},"_schema":"1.0.0","searchTerms":["pixel art"],"lastEditTime":{"$date":1767351688397}}
+{"_id":"t36pu8SaPNLdBj2nW","name":{"_id":"uezEcdTczkGrd3v37","translations":{"en":{"us":{"text":"pixel art","quality":0},"best":{"text":"pixel art","quality":0,"languageRegion":"en-US"}},"best":{"text":"pixel art","quality":0,"languageRegion":"en-US"}}},"_schema":"1.1.0","searchTerms":["pixel art"],"lastEditTime":{"$date":1769194966250},"referenceName":"pixel art"}

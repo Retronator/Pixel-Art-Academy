@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.addServerFile('interest/interest-server-databasecontent');
   api.addServerFile('interest/methods-server');
   api.addFile('interest/subscriptions');
+  api.addFile('interest/migrations/0000-referencename');
 
   // Pages
 

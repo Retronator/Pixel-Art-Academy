@@ -140,4 +140,4 @@ class StudyPlan.TaskInfo extends AM.Component
   
   acquiredInterestClass: ->
     interest = @currentData()
-    'acquired' if interest.referenceString() in LOI.adventure.currentInterests()
+    'acquired' if interest.referenceName in LOI.adventure.currentInterests()
