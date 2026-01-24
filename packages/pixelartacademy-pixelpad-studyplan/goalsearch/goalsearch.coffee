@@ -39,7 +39,9 @@ class PAA.PixelPad.Apps.StudyPlan.GoalSearch extends AM.Component
 
     # Subscribe to interests.
     @autorun (computation) =>
-      IL.Interest.forSearchTerm.subscribe @interestSearchTerm()
+      interestSearchTerm = @interestSearchTerm()
+      IL.Interest.forSearchTerm.subscribeContent @, interestSearchTerm
+      IL.Interest.forSearchTerm.subscribe @, interestSearchTerm
 
     @autocompleteInterests = new ComputedField =>
       IL.Interest.forSearchTerm.query(@interestSearchTerm())?.fetch()

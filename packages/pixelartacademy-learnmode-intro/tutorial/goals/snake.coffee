@@ -26,10 +26,12 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
       Score some points to continue.
     """
 
-    @interests: -> ['pico-8', 'gaming']
+    @interests: -> ['pico-8', 'video game']
 
     @requiredInterests: -> ['pixel art software']
 
+    @studyPlanBuilding: -> 'SimCityIndustrial1'
+  
     @initialize()
 
     @completedConditions: ->
@@ -50,10 +52,10 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
 
-    @interests: -> ['snake', 'food']
-
     @predecessors: -> [Goal.Play]
 
+    @studyPlanBuilding: -> 'SimCityCommercial4'
+    
     @initialize()
     
     @completedConditions: ->
@@ -83,9 +85,11 @@ class LM.Intro.Tutorial.Goals.Snake extends PAA.Learning.Goal
       you're happy. Score some more points to complete the project.
     """
 
-    @interests: -> ['learn mode tutorial project']
+    @interests: -> ['Learn Mode tutorial project']
 
     @predecessors: -> [Goal.Draw]
+    
+    @studyPlanBuilding: -> 'TransportTycoonCinema'
 
     @initialize()
 

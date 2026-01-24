@@ -24,6 +24,8 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
     @requiredInterests: -> ['shape']
+    
+    @studyPlanBuilding: -> 'TransportTycoonHouse'
   
     @initialize()
     
@@ -45,6 +47,10 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Simplification extends PAA.Lear
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
     @predecessors: -> [Goal.Tutorial]
+    
+    @interests: -> ['simplification']
+    
+    @studyPlanBuilding: -> 'SimCityResidential6'
     
     @initialize()
     

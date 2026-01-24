@@ -12,7 +12,7 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '0.35.2'
+  @version: -> '0.36.2'
   
   buildName: -> 'Learn Mode build'
 
@@ -30,6 +30,7 @@ class LM.App extends Artificial.Base.App
     # Instantiate all app packages, which register router URLs.
     new Artificial.Pages
     new LOI.Assets
+    new Illustrapedia
     new PAA
     new PAA.Pixeltosh
     new PAA.Practice

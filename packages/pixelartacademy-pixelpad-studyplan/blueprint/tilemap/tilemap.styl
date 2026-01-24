@@ -1,0 +1,311 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
+  position absolute
+  top 0
+  left 0
+
+  > .blueprint
+    position absolute
+    z-index 0
+
+  .tile
+    position absolute
+    width 13rem
+    height 5rem
+
+    &.task-highlighted
+      .building
+      .gate
+        .image
+          filter drop-shadow(0 0 2rem white)
+
+      .building
+        &.active
+          .blueprint
+            border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
+
+        &.height-8
+          &.active
+            .blueprint
+              background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-hover.png')
+
+          .blueprint
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-hover.png')
+
+        .blueprint
+          border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
+
+      .gate
+        .blueprint
+          background-position-x -69rem
+
+    &.revealed
+      .ground
+      .pathway
+      .gate
+      .flag
+      .building
+        .blueprint
+          visibility hidden
+
+        .image
+        .shadow
+          visibility visible
+
+      .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
+        .pathway
+          .image
+            top 0
+
+        .building
+          .image
+            bottom -10rem
+
+    .ground
+    .pathway
+    .gate
+    .flag
+    .building
+      .image
+      .shadow
+        visibility hidden
+
+    .pathway .blueprint
+    .gate .blueprint
+    .flag .blueprint
+      background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-tiles.png') 15rem 5rem / 90rem 85rem
+
+    .ground
+      absolute-cover()
+      z-index 1
+
+      .image
+        absolute-cover()
+        background image('/pixelartacademy/pixelpad/apps/studyplan/ground-tiles.png') -1rem 0 / 45rem 85rem
+
+    .pathway
+      absolute-cover()
+      z-index 3
+
+      .blueprint
+      .image
+        absolute-cover-size()
+
+      .image
+      .image::after
+        background image('/pixelartacademy/pixelpad/apps/studyplan/pathway-tiles.png') 15rem 5rem / 45rem 85rem
+
+      .image
+        &::after
+          content ''
+          absolute-cover()
+
+        .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
+          top -10rem
+          transition top 0.2s ease-out
+
+    .building
+    .gate
+    .flag
+      position absolute
+
+      .blueprint
+      .image
+        position absolute
+        z-index 4
+
+      .shadow
+        position absolute
+        z-index 2
+
+    .building
+    .gate
+      cursor default
+
+      .image
+        filter drop-shadow(0 0 2rem transparent)
+        transition filter 0.1s
+
+    .building
+      &.active
+        .blueprint
+          background-color atariAqua(3)
+          border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active.png')
+
+      &.height-8
+        &.active
+          .blueprint
+            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active.png')
+
+        .blueprint
+          border none
+          background image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8.png') 0 0 / 100% 100%
+
+      .blueprint
+        width 13rem
+        left 0
+        background-color atariCyan(0)
+        background-clip padding-box
+        border-width 5rem 4rem 4rem 5rem
+        border-style solid
+        border-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building.png') 5 4 4 5
+
+      .shadow
+      .image
+        left -11rem
+        bottom -10rem
+        width 30rem
+        height 20rem
+
+      .shadow
+        background image('/pixelartacademy/pixelpad/apps/studyplan/buildings-shadows.png') 30rem 20rem / 200rem 200rem
+        mediterranean-shadow()
+
+      .image
+        background image('/pixelartacademy/pixelpad/apps/studyplan/buildings.png') 30rem 20rem / 200rem 200rem
+
+        .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
+          transition bottom 0.2s ease-out, filter 0.1s
+          bottom 0
+
+    .gate
+      &.opened
+        .image
+          animation gate-open 0.4s steps(4) forwards
+
+      .blueprint
+        left -2rem
+        top -6rem
+        width 11rem
+        height 10rem
+        background-position -49rem -4rem
+
+      .shadow
+      .image
+        left -3rem
+        top -7rem
+        width 12rem
+        height 11rem
+
+      .shadow
+        background-image image('/pixelartacademy/pixelpad/apps/studyplan/gate-shadow.png')
+
+      .image
+        background image('/pixelartacademy/pixelpad/apps/studyplan/gate.png') 0 0 / 60rem 11rem
+
+    .flag
+      &.raised
+        .shadow
+        .image
+          animation flag-raise 0.9s steps(8) forwards, flag-raised 0.6s steps(5) 0.9s infinite
+
+      .blueprint
+        left 5rem
+        top -6rem
+        width 6rem
+        height 11rem
+        background-position -56rem -24rem
+
+      .shadow
+      .image
+        left -1rem
+        top -7rem
+        width 12rem
+        height 12rem
+        background image('/pixelartacademy/pixelpad/apps/studyplan/flag.png') 0 0 / 180rem 24rem
+
+      .image
+        background-position-y -12rem
+        cursor pointer
+
+    .expansion-point
+      position absolute
+      z-index 6
+      padding 2rem
+      study-plan()
+      color atariCyan(4)
+      pixel-text-outline atariCyan(0)
+      cursor pointer
+
+      &.short-term
+      &.mid-term
+        color atariCyan(7)
+
+        &::after
+          content '?'
+          position absolute
+          pixolde()
+          font-weight bold
+          padding 2rem
+
+        &:hover
+          color atariGray(7)
+
+      &.forward
+      &.backwards
+        top -3rem
+
+        &::after
+          top -7rem
+
+      &.forward
+        left 0
+
+        &::before
+          content '→'
+
+        &::after
+          left 15rem
+
+      &.forward-down
+        left -2rem
+        top -4rem
+
+        &::before
+          content '↓'
+
+        &::after
+          left 10rem
+          top 2rem
+
+      &.backwards
+        left -6rem
+
+        &::before
+          content '←'
+
+        &::after
+          left -7rem
+
+      &.sideways
+        left -3rem
+        top -6rem
+
+        &::before
+          content '↑'
+
+        &::after
+          left -3rem
+          top -15rem
+
+@keyframes gate-open
+  from
+    background-position-x 0
+
+  to
+    background-position-x -48rem
+
+@keyframes flag-raise
+  from
+    background-position-x 0
+
+  to
+    background-position-x -96rem
+
+@keyframes flag-raised
+  from
+    background-position-x -108rem
+
+  to
+    background-position-x -168rem

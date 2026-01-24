@@ -23,15 +23,34 @@ Package.onUse(function(api) {
 
   api.addComponent('studyplan');
 
-  api.addComponent('goal..');
-  api.addComponent('goal/task');
-  api.addFile('goal/tasksmapconnections');
+  api.addFile('connectionpoint');
+  api.addFile('goalhierarchy');
+  api.addFile('goalnode');
+  api.addFile('pathway');
+  api.addFile('taskpoint');
+  api.addFile('tilemap');
+  api.addFile('tile');
 
+  api.addFile('interfacemarking');
+  api.addFile('instructions');
+
+  api.addComponent('addgoal..');
   api.addComponent('goalsearch..');
+  api.addComponent('goalinfo..');
+  api.addComponent('taskinfo..');
+  api.addStyledFile('bottompanel..');
+  api.addComponent('activegoals..');
+  api.addComponent('interests..');
 
   api.addComponent('blueprint..');
-  api.addFile('blueprint/flowchart');
   api.addFile('blueprint/camera');
   api.addFile('blueprint/mouse');
-  api.addFile('blueprint/grid');
+  api.addComponent('blueprint/goal..');
+
+  api.addComponent('blueprint/tilemap..');
+  api.addFile('blueprint/tilemap/tilemap-buildings');
+  api.addStyle('blueprint/tilemap/tilemap-buildings');
+  api.addStyle('blueprint/tilemap/tilemap-terrain');
+  api.addStyle('blueprint/tilemap/tilemap-pathways');
+  api.addFile('blueprint/tilemap/tile');
 });

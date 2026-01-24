@@ -1,0 +1,55 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.AddGoal">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-addgoal">
+    {{#if sourceGoalIsMidTerm}}
+      <p class="explanation">
+        Reach this goal first to be able to plan ahead.
+      </p>
+    {{else}}
+      {{#if showAccomplishedGoals}}
+        <h1 class="header">
+          Add an accomplished goal
+        </h1>
+        <p class="explanation">
+          Accomplished goals are goals you already fully completed.
+        </p>
+        <ul class="goals">
+          {{#each accomplishedGoals}}
+            <li class="goal">
+              {{> t10e displayNameTranslation}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+      {{#if showShortTermGoals}}
+        <h1 class="header">
+          Add a short-term goal
+        </h1>
+        <p class="explanation">
+          Short-term goals are goals you can work towards immediately.
+        </p>
+        <ul class="goals">
+          {{#each shortTermGoals}}
+            <li class="goal">
+              {{> t10e displayNameTranslation}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+      {{#if showMidTermGoals}}
+        <h1 class="header">
+          Add a mid-term goal
+        </h1>
+        <p class="explanation">
+          Mid-term goals are goals that are planned ahead.
+        </p>
+        <ul class="goals">
+          {{#each midTermGoals}}
+            <li class="goal">
+              {{> t10e displayNameTranslation}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

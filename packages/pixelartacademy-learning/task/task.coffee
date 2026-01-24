@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 IL = Illustrapedia
@@ -35,12 +36,19 @@ class PAA.Learning.Task
 
   # The icon that represents the kind of work done in this task.
   @icon: -> @Icons.Task
+  
+  # Override if this task is not yet available.
+  @completable: -> true
 
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
 
   # Instructions how to complete this task.
   @instructions: -> throw new AE.NotImplementedException "You must specify the task instructions."
+
+  # Override to provide alternative texts to show in the Study Plan app.
+  @studyPlanDirective: -> null
+  @studyPlanInstructions: -> null
 
   # Override to list the interests this task increases.
   @interests: -> []
@@ -52,9 +60,15 @@ class PAA.Learning.Task
   @predecessors: -> []
   @predecessorsCompleteType: -> @PredecessorsCompleteType.All
 
+  # Override to specify which building image to use in the Study Plan.
+  @studyPlanBuilding: -> ''
+  
   # Override to place the task in a different group. Tasks in the same group will be drawn
   # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
   @groupNumber: -> 0
+
+  # Override to force the task to a specific level.
+  @level: -> null
   
   @onActive: -> # Override to perform an action when the task has evaluated to active.
   
@@ -74,7 +88,9 @@ class PAA.Learning.Task
 
         # Create this task's translated names.
         translationNamespace = @id()
-        AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
+        for property in ['directive', 'instructions', 'studyPlanDirective', 'studyPlanInstructions']
+          continue unless text = @[property]()
+          AB.createTranslation translationNamespace, property, text
 
         # Initialize interests.
         IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
@@ -116,6 +132,8 @@ class PAA.Learning.Task
 
   id: -> @constructor.id()
   type: -> @constructor.type()
+  
+  completable: -> @constructor.completable()
 
   directive: -> AB.translate(@_translationSubscription, 'directive').text
   directiveTranslation: -> AB.translation @_translationSubscription, 'directive'
@@ -123,10 +141,22 @@ class PAA.Learning.Task
   instructions: -> AB.translate(@_translationSubscription, 'instructions').text
   instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
+  studyPlanDirective: ->
+    translation = AB.translate @_translationSubscription, 'studyPlanDirective'
+    return translation.text if translation.language
+    @directive()
+    
+  studyPlanDirectiveTranslation: -> AB.existingTranslation(@_translationSubscription, 'studyPlanDirective') or @directiveTranslation()
+  
+  studyPlanInstructions: -> AB.translate(@_translationSubscription, 'studyPlanInstructions').text
+  studyPlanInstructionsTranslation: -> AB.existingTranslation(@_translationSubscription, 'studyPlanInstructions') or @instructionsTranslation()
+  
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()
+  studyPlanBuilding: -> @constructor.studyPlanBuilding()
   groupNumber: -> @constructor.groupNumber()
+  level: -> @constructor.level()
   
   onActive: -> @constructor.onActive()
   onActiveDisplayed: -> @constructor.onActiveDisplayed()
@@ -141,13 +171,17 @@ class PAA.Learning.Task
     # We need an entry made by this profile.
     @entry()
 
-  active: ->
+  # Task is available when all prerequisites are completed and until it is completed.
+  available: ->
     # We should only be determining active state for the current profile.
     unless @options.profileId() is LOI.adventure.profileId()
       console.warn "Active task determination requested for another profile."
       return
+      
+    # Filter uncompletable tasks.
+    return unless @constructor.completable()
 
-    # Task is not active after it's completed.
+    # Task is not available after it's completed.
     return if @completed()
 
     # Predecessors need to be completed for the task to be active.
@@ -170,11 +204,20 @@ class PAA.Learning.Task
           return false if predecessorsCompletedCount is 0
 
     # Check that the profile has all required interests.
-    requiredInterests = @requiredInterests()
-    return false unless _.intersection(requiredInterests, LOI.adventure.currentInterests()).length is requiredInterests.length
+    return false unless @hasRequiredInterests()
 
     # All requirements to be active have been met.
     true
+    
+  availableOrCompleted: -> @available() or @completed()
+
+  # Task is active when it is available and its goal is active.
+  active: ->
+    @available() and @goal.active()
+    
+  hasRequiredInterests: ->
+    requiredInterests = @requiredInterests()
+    _.intersection(requiredInterests, LOI.adventure.currentInterests()).length is requiredInterests.length
     
   reset: ->
     PAA.Learning.Task.Entry.documents.remove

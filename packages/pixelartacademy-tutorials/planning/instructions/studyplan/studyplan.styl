@@ -1,0 +1,180 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-tutorials-planning-instructions-studyplan
+  &:not(.interactable)
+    pointer-events none
+
+  &.focused-mode
+    .instruction
+      &.bottom
+        .paper
+          top 0 !important
+
+      &.top
+        .paper
+          bottom 0 !important
+
+  .instruction
+    display none
+    position absolute
+    left 0
+    right 0
+    daily()
+    line-height 9rem
+    color atariGray(0)
+
+    &.bottom
+      bottom 0
+
+      .paper
+        transition top 0.25s ease-out
+
+        &.closed:hover
+          top -17rem !important
+
+        .header
+          &::before
+            // HACK: prevent a tiny line to appear due to anti-aliasing.
+            bottom -2rem
+
+        .container
+          .content
+            padding-bottom 1em
+
+    &.top
+      top 0
+
+      .paper
+        transition bottom 0.25s ease-out
+
+        &.closed:hover
+          bottom -17rem !important
+
+        .container
+          &::before
+            background-position bottom
+            top 0
+
+          .gutter
+            &::before
+            &::after
+              background-position bottom
+
+          .content
+            position absolute
+            bottom 0
+            padding-top 1em
+
+    .paper
+      position absolute
+      width 200rem
+      left calc(50% - 100rem)
+
+      &.open:hover
+        .header
+          .close-hint
+            visibility visible
+
+      &::after
+        content ''
+        display block
+        position absolute
+        z-index 12
+        left 18rem
+        width 1rem
+        top 0
+        bottom 0
+        background-color atariRed(5)
+
+      .header
+        position relative
+        height 14rem
+        cursor pointer
+
+        &:hover
+          .close-hint
+            color atariGray(1)
+
+        &::before
+        &::after
+          content ''
+          display block
+          z-index 12
+
+        &::before
+          absolute-cover()
+          background-color atariGray(5)
+
+        &::after
+          position absolute
+          top 0
+          bottom 0
+          left -1rem
+          width 1rem
+          background-color #ebdfd3
+          mix-blend-mode multiply
+
+        .close-hint
+          position absolute
+          z-index 12
+          right 3rem
+          top 1rem
+          visibility hidden
+          color atariGray(2)
+
+      .container
+        position relative
+
+        &::before
+          content ''
+          display block
+          absolute-cover()
+          top 1rem
+          z-index 12
+          left 19rem
+          background image('/pixelartacademy/tutorials/drawing/instructions/desktop/lines.png') 0 -1rem / 1rem 27rem
+
+        .gutter
+          position absolute
+          top 0
+          bottom 0
+          left 0
+          width 18rem
+
+          &::before
+          &::after
+            content ''
+            display block
+            z-index 12
+
+          &::before
+            position absolute
+            top 0
+            bottom 0
+            left -1rem
+            width 14rem
+            background image('/pixelartacademy/tutorials/drawing/instructions/desktop/left-shadow.png') 0 0 / 14rem 27rem
+            mix-blend-mode multiply
+
+          &::after
+            absolute-cover()
+            background image('/pixelartacademy/tutorials/drawing/instructions/desktop/left.png') 0 0 / 18rem 27rem
+
+        .content
+          position relative
+          z-index 12
+          padding 0 10rem 0 25rem
+
+          p
+          ul
+          ol
+            margin 9rem 0
+
+            &:first-child
+              margin-top 0
+
+            &:last-child
+              margin-bottom 0
+
+          ul
+            list-style square

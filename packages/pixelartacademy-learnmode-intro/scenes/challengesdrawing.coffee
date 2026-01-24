@@ -34,6 +34,8 @@ class LM.Intro.ChallengesDrawing extends LOI.Adventure.Scene
     @_pixelArtSoftware?.destroy()
 
   things: ->
+    return unless LM.Intro.Tutorial.Goals.PixelArtSoftware.active()
+    
     things = []
 
     if PAA.Tutorials.Drawing.PixelArtTools.Basics.completed()

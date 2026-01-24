@@ -25,6 +25,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     
     @requiredInterests: -> ['shape language']
     
+    @studyPlanBuilding: -> 'SimCityIndustrial2'
+    
     @initialize()
     
     @completedConditions: ->
@@ -44,9 +46,11 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
       Notice the first art asset in the game and imagine how you want it to look.
     """
     
-    @interests: -> ['pico-8']
+    @interests: -> ['pico-8', 'video game']
     
     @predecessors: -> [Goal.Start]
+    
+    @studyPlanBuilding: -> 'SimCityIndustrial4'
     
     @initialize()
     
@@ -90,6 +94,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     
     @groupNumber: -> -1
     
+    @studyPlanBuilding: -> 'SimCityOffice1'
+    
     @initialize()
   
   class @DrawProjectile extends @Draw
@@ -116,6 +122,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     
     @groupNumber: -> -1
     
+    @studyPlanBuilding: -> 'SimCityCommercial4'
+    
     @initialize()
   
   class @DrawInvader extends @Draw
@@ -132,6 +140,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     @predecessors: -> [Goal.Run]
     
     @groupNumber: -> 1
+    
+    @studyPlanBuilding: -> 'SimCitySubway'
     
     @initialize()
   
@@ -151,6 +161,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     
     @groupNumber: -> 1
     
+    @studyPlanBuilding: -> 'SimCityWaterPump'
+    
     @initialize()
 
   class @Play extends PAA.Learning.Task.Automatic
@@ -164,6 +176,8 @@ class LM.Design.Fundamentals.Goals.Invasion extends PAA.Learning.Goal
     """
     
     @predecessors: -> [Goal.DrawDefenderProjectile, Goal.DrawInvaderProjectile]
+    
+    @studyPlanBuilding: -> 'SimCityResidential4'
     
     @initialize()
     

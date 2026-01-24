@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:pixelartacademy-learnmode-app',
-  version: '0.35.2',
+  version: '0.36.2',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -21,6 +21,8 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:landsofillusions-assets');
   api.use('retronator:landsofillusions-ui');
+
+  api.use('retronator:illustrapedia');
 
   api.use('retronator:pixelartdatabase');
 

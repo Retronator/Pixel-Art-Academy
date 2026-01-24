@@ -34,6 +34,8 @@ class LM.PixelArtFundamentals.Fundamentals.ChallengesDrawing extends LOI.Adventu
     @_pixelArtLineArt?.destroy()
 
   things: ->
+    return unless LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.active()
+    
     things = []
     
     if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed()

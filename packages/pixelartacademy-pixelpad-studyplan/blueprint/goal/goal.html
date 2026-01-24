@@ -1,0 +1,21 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-goal {{selectedClass}}" {{style goalStyle}} data-goalid="{{goalId}}">
+    {{> renderTileMapComponent tileMap}}
+    <div class="name-area {{markedCompleteClass}}" {{style nameStyle}}>
+      <div class="name">
+        {{> t10e goal.displayNameTranslation}}
+      </div>
+      <div class="goal-ui" {{style goalUIStyle}}>
+        {{#if goal.completed}}
+          <label class="marked-complete">
+            {{> PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.Goal.MarkedComplete}}
+            <span class="checkmark">✓</span>
+          </label>
+        {{/if}}
+        {{#if canRemove}}
+          <button class="remove-button">✕</button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

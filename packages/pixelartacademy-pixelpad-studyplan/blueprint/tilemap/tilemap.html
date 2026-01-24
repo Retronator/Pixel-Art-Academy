@@ -1,0 +1,44 @@
+<template name="PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint.TileMap">
+  <div class="pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap">
+    {{#unless options.noBlueprint}}
+      <canvas class="blueprint" {{style blueprintStyle}}></canvas>
+    {{/unless}}
+    {{#each nonBlueprintTiles}}
+      <div class="tile {{tileTypeClass}} {{revealedClass}} {{groundClass}} {{taskHighlightedClass}}" {{style tileStyle}}>
+        {{#unless options.noGround}}
+          <div class="ground">
+            <div class="image"></div>
+          </div>
+        {{/unless}}
+        <div class="pathway {{pathwayClasses}}">
+          <div class="blueprint"></div>
+          <div class="image"></div>
+        </div>
+        {{#if $is tileType 'Building'}}
+          <div class="building {{buildingClass}} {{buildingActiveClass}}">
+            <div class="blueprint" {{style buildingBlueprintStyle}}></div>
+            <div class="shadow"></div>
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'Gate'}}
+          <div class="gate {{gateOpenedClass}}">
+            <div class="blueprint"></div>
+            <div class="shadow"></div>
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'Flag'}}
+          <div class="flag {{flagRaisedClass}}">
+            <div class="blueprint"></div>
+            <div class="shadow"></div>
+            <div class="image"></div>
+          </div>
+        {{/if}}
+        {{#if $is tileType 'ExpansionPoint'}}
+          <div class="expansion-point {{expansionPointDirectionClass}} {{expansionPointGoalTypeClass}}"></div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+</template>

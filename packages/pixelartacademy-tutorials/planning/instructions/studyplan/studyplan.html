@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.Tutorials.Planning.Instructions.StudyPlan">
+  <div class="pixelartacademy-tutorials-planning-instructions-studyplan system">
+    <div class="instruction {{displaySideClass}}">
+      <div class="content">
+        {{> Render displayedInstruction}}
+      </div>
+    </div>
+    {{#each interfaceMarkings}}
+      {{> PixelArtAcademy.PixelPad.Systems.Instructions.InterfaceMarking}}
+    {{/each}}
+  </div>
+</template>

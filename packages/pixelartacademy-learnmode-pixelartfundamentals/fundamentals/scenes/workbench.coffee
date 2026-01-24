@@ -15,6 +15,8 @@ class LM.PixelArtFundamentals.Fundamentals.Workbench extends LOI.Adventure.Scene
     @_pinball?.destroy()
 
   things: ->
+    return unless LM.PixelArtFundamentals.Fundamentals.Goals.Pinball.active()
+    
     things = []
     
     # Pinball project appears after Pinball Creation Kit was run for the first time.

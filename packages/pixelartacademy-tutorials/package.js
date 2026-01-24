@@ -190,7 +190,6 @@ Package.onUse(function(api) {
   api.addFile('drawing/simplification/silhouette..');
   api.addFile('drawing/simplification/silhouette/rotatestep');
 
-
   // Design
 
   api.addFile('drawing/design..');
@@ -209,4 +208,13 @@ Package.onUse(function(api) {
   api.addFile('drawing/design/shapelanguage/triangle2');
   api.addFile('drawing/design/shapelanguage/shapecombinations');
   api.addFile('drawing/design/shapelanguage/breakingtherules');
+
+  // Planning
+
+  api.addFile('planning..');
+
+  api.addFile('planning/instructions..');
+  api.addFile('planning/instructions/instruction')
+  api.addComponent('planning/instructions/studyplan..');
+
 });

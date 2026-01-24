@@ -36,28 +36,15 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
 
   onCreated: ->
     super arguments...
-
-    @tapesLocation = new PAA.Music.Tapes
-
-    @tapesSituation = new ComputedField =>
-      options =
-        timelineId: LOI.adventure.currentTimelineId()
-        location: @tapesLocation
-
-      return unless options.timelineId
-
-      new LOI.Adventure.Situation options
-
+    
     @tapes = new ComputedField =>
-      return unless tapesSituation = @tapesSituation()
-
-      tapeSelectors = tapesSituation.things()
-
+      tapeSelectors = LOI.adventure.currentTapeSelectors()
+      
       tapes = for tapeSelector in tapeSelectors
         PAA.Music.Tape.documents.findOne tapeSelector
-        
+      
       _.without tapes, undefined
-
+  
   onRendered: ->
     super arguments...
 
@@ -69,11 +56,6 @@ class PAA.PixelPad.Apps.Music.Drawer extends LOI.Component
       @audio.drawerOpen() unless PAA.PixelPad.Systems.Music.state 'tapeId'
     ,
       500
-    
-  onDestroyed: ->
-    super arguments...
-    
-    @tapesLocation.destroy()
     
   selectTape: (tape) ->
     AB.Router.changeParameter 'parameter3', tape.slug

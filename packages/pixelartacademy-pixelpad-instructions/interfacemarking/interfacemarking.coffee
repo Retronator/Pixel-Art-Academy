@@ -70,13 +70,20 @@ class PAA.PixelPad.Systems.Instructions.InterfaceMarking extends AM.Component
           console.warn "Marking selector #{markingData.selector} returned no elements."
           return
         
-        targetOffset = $target.offset()
-  
-        $os = $('.pixelartacademy-pixelpad-os')
-        osOffset = $os.offset()
-  
-        @left (targetOffset.left - osOffset.left) / scale
-        @top (targetOffset.top - osOffset.top) / scale
+        updatePosition = =>
+          return if @isDestroyed()
+          targetOffset = $target.offset()
+          
+          $os = $('.pixelartacademy-pixelpad-os')
+          osOffset = $os.offset()
+    
+          @left (targetOffset.left - osOffset.left) / scale
+          @top (targetOffset.top - osOffset.top) / scale
+          
+          if markingData.trackTarget
+            window.requestAnimationFrame => updatePosition()
+          
+        updatePosition()
         @visible true
       ,
         (markingData.delay or 0) * 1000
@@ -84,8 +91,7 @@ class PAA.PixelPad.Systems.Instructions.InterfaceMarking extends AM.Component
     # Redraw when data or size changes.
     @autorun (computation) =>
       markingData = @data()
-      displayScale = @display.scale()
-      scale = displayScale # * devicePixelRatio
+      scale = @display.scale()
       
       @canvas.width = markingData.bounds.width * scale
       @canvas.height = markingData.bounds.height * scale
@@ -95,8 +101,8 @@ class PAA.PixelPad.Systems.Instructions.InterfaceMarking extends AM.Component
       @context.translate -markingData.bounds.x, -markingData.bounds.y
     
       @markup.drawMarkup markingData.markings, @context,
-        pixelSize: 1 / scale # * devicePixelRatio
-        displayPixelSize: 1 / scale * displayScale
+        pixelSize: 1 / scale
+        displayPixelSize: 1
         minimumZoomPercentage: 100
   
   onDestroyed: ->

@@ -5,7 +5,9 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 IL = Illustrapedia
 
-class PAA.PixelPad.Apps.StudyPlan.Blueprint extends AM.Component
+StudyPlan = PAA.PixelPad.Apps.StudyPlan
+
+class StudyPlan.Blueprint extends AM.Component
   @id: -> 'PixelArtAcademy.PixelPad.Apps.StudyPlan.Blueprint'
   @register @id()
   
@@ -15,16 +17,12 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint extends AM.Component
     # Prepare all reactive fields.
     @camera = new ReactiveField null
     @mouse = new ReactiveField null
-    @grid = new ReactiveField null
-    @flowchart = new ReactiveField null
-    @bounds = new AE.Rectangle()
+    @bounds = new AE.Rectangle
+    @mapBoundingRectangle = new AE.Rectangle
     @$blueprint = new ReactiveField null
-    @canvas = new ReactiveField null
-    @context = new ReactiveField null
-    @dragGoalId = new ReactiveField null
-    @dragRequireMove = new ReactiveField false
-    @dragHasMoved = new ReactiveField false
     @dragBlueprint = new ReactiveField false
+    
+    @_goalNameTileHeightsCache = {}
 
   onCreated: ->
     super arguments...
@@ -34,184 +32,167 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint extends AM.Component
     # Initialize components.
     @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
-    @grid new @constructor.Grid @
-    @flowchart new @constructor.Flowchart @
-
-    # Resize the canvas when app size changes.
+    
+    # Update bounds of the blueprint.
     @autorun =>
-      return unless canvas = @canvas()
-
       # Depend on app's actual (animating) size.
       pixelPadSize = @studyPlan.os.pixelPad.animatingSize()
       scale = @display.scale()
-
+      
       # Resize the back buffer to canvas element size, if it actually changed.
       newSize =
         width: pixelPadSize.width * scale
         height: pixelPadSize.height * scale
-
-      for key, value of newSize
-        canvas[key] = value unless canvas[key] is value
-
+      
       # Bounds are reported in window pixels as well.
       @bounds.width newSize.width
       @bounds.height newSize.height
-
-    # Redraw canvas routine.
-    @autorun =>
-      camera = @camera()
-      context = @context()
-      return unless context
-
-      context.setTransform 1, 0, 0, 1, 0, 0
-      context.clearRect 0, 0, @bounds.width(), @bounds.height()
-
-      camera.applyTransformToCanvas()
-
-      for component in [@grid(), @flowchart()]
-        continue unless component
-
-        context.save()
-        component.drawToContext context
-        context.restore()
-
-    # Create goal components and connections.
-    @_goalComponentsById = {}
-    @goalConnections = new ReactiveField []
-
-    @goalComponentsById = new ComputedField =>
+    
+    @goalsData = new AE.LiveComputedField =>
       return unless @studyPlan.ready()
       return unless goalsData = @studyPlan.state 'goals'
       
-      previousGoalComponents = _.values @_goalComponentsById
-      goalConnections = []
-
+      # We only care about connections to minimize reactivity.
+      minimalGoalsData = {}
+      
       for goalId, goalData of goalsData
-        if goalData.connections
-          for connection in goalData.connections
-            goalConnections.push
-              startGoalId: goalId
-              endGoalId: connection.goalId
-              interest: connection.interest
+        minimalGoalsData[goalId] = _.pick goalData, ['connections']
+        
+      minimalGoalsData
+    ,
+      EJSON.equals
 
+    @goalHierarchy = new AE.LiveComputedField =>
+      return unless goalsData = @goalsData()
+      
+      Tracker.nonreactive => new StudyPlan.GoalHierarchy @, goalsData
+    
+    @previewConnection = new ReactiveField null
+
+    @previewGoalHierarchy = new AE.LiveComputedField =>
+      return unless goalHierarchy = @goalHierarchy()
+      return unless previewConnection = @previewConnection()
+      
+      Tracker.nonreactive => goalHierarchy.getPreviewGoalHierarchy previewConnection
+    
+    @roadTileMapComponent = new @constructor.TileMap noBlueprint: true
+    
+    # Create goal components and connections.
+    @_goalComponentsById = {}
+    
+    @goalIds = new AE.LiveComputedField =>
+      return unless @studyPlan.ready()
+      return unless goalsData = @studyPlan.state 'goals'
+      goalIds = _.keys goalsData
+      goalIds.sort()
+      goalIds
+    ,
+      EJSON.equals
+
+    @goalComponentsById = new AE.LiveComputedField =>
+      return unless newGoalIds = @goalIds()
+      previousGoalComponents = _.values @_goalComponentsById
+      
+      if previewConnection = @previewConnection()
+        newGoalIds = _.union newGoalIds, [previewConnection.startGoalId, previewConnection.endGoalId]
+
+      for goalId in newGoalIds
         goalComponent = @_goalComponentsById[goalId]
 
         if goalComponent
           _.pull previousGoalComponents, goalComponent
 
         else
-          # Create an instance of this goal.
-          unless goalClass = PAA.Learning.Goal.getClassForId goalId
+          unless PAA.Learning.Goal.getClassForId goalId
             console.warn "Unrecognized goal present in study plan.", goalId
             continue
-
-          goal = new goalClass
-
-          goalStateAddress = @studyPlan.stateAddress.child("goals.\"#{goalId}\"")
-          state = new LOI.StateObject address: goalStateAddress
-
-          goalComponent = new PAA.PixelPad.Apps.StudyPlan.Goal
-            _id: Random.id()
-            goal: goal
-            state: state
-            blueprint: @
-
+      
+          goalComponent = new @constructor.Goal @, goalId
           @_goalComponentsById[goalId] = goalComponent
-
-      @goalConnections goalConnections
 
       # Destroy all components that aren't present any more.
       for unusedGoalComponent in previousGoalComponents
-        goalId = unusedGoalComponent.goal.id()
-
-        @_goalComponentsById[goalId].goal.destroy()
-        @_goalComponentsById[goalId].state.destroy()
-
+        goalId = unusedGoalComponent.goalId
         delete @_goalComponentsById[goalId]
 
       @_goalComponentsById
-
-    # Handle connections.
-    @draggedConnection = new ReactiveField null
-    @hoveredInterest = new ReactiveField null
-
-    @draggedInterestIds = new ComputedField =>
-      return unless draggedConnection = @draggedConnection()
-
-      goalComponent = @_goalComponentsById[draggedConnection.startGoalId]
-
-      IL.Interest.find(interest)?._id for interest in goalComponent.goal.interests()
-
-    @connections = new ComputedField =>
-      # Create a deep clone of the connections so that we can manipulate them.
-      connections = _.cloneDeep @goalConnections()
-
-      if draggedConnection = @draggedConnection()
-        # See if dragged connection is one of the existing ones.
-        draggedGoalConnection = _.find connections, (connection) =>
-          connection.endGoalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
-
-        if draggedGoalConnection
-          # Disconnect it so it will be moved with the mouse.
-          draggedGoalConnection.endGoalId = null
-
-        else
-          # Add the dragged connection to connections.
-          connections.push draggedConnection
-
-      # See if we're hovering over a valid interest.
-      hoveredInterest = @hoveredInterest()
-      draggedInterestIds = @draggedInterestIds()
-
-      if hoveredInterest and draggedInterestIds
-        hoveredInterestDocument = IL.Interest.find hoveredInterest.interest
-
-        hoveredInterest = null unless hoveredInterestDocument?._id in draggedInterestIds
-
-      for connection in connections
-        startGoalComponent = @_goalComponentsById[connection.startGoalId]
-
-        continue unless componentPosition = startGoalComponent.position()
-        continue unless providedInterestsExitPoint = startGoalComponent.providedInterestsExitPoint()
-
-        connection.start =
-          x: componentPosition.x + providedInterestsExitPoint.x
-          y: componentPosition.y + providedInterestsExitPoint.y
-
-        if connection.endGoalId or hoveredInterest
-          continue unless interestDocument = IL.Interest.find connection.interest or hoveredInterest.interest
-
-          continue unless endGoalComponent = @_goalComponentsById[connection.endGoalId or hoveredInterest.goalId]
-          continue unless componentPosition = endGoalComponent.position()
-          continue unless requiredInterestEntryPoint = endGoalComponent.requiredInterestEntryPointById interestDocument._id
-
-          connection.end =
-            x: componentPosition.x + requiredInterestEntryPoint.x
-            y: componentPosition.y + requiredInterestEntryPoint.y
-
-        else
-          connection.end = @mouse().canvasCoordinate()
-
-      # Remove any connections that we couldn't determine.
-      _.filter connections, (connection) => connection.start and connection.end
-
-    # Handle goal dragging.
-    @autorun (computation) =>
-      return unless goalId = @dragGoalId()
-      return unless goalComponent = @goalComponentsById()?[goalId]
+    
+    # Support animating pathway reveal.
+    @_animationRestarting = false
+    @_pendingAnimationsCount = new ReactiveField 0
+    @_animateTimeouts = []
+    @_revealedPathways = []
+    @initialRevealCompleted = new ReactiveField false
+    
+    @readyToAnimate = new ComputedField =>
+      return unless @roadTileMapComponent.isRendered()
       
-      newCanvasCoordinate = @mouse().canvasCoordinate()
+      goalComponentsById = @goalComponentsById()
+      for goalId, goalComponent of goalComponentsById
+        return unless goalComponent.isRendered()
+        
+      true
+      
+    # Reveal initial pathways.
+    goalHierarchy = null
+    
+    @autorun (computation) =>
+      return unless @readyToAnimate()
+      return unless goalHierarchy = @displayedGoalHierarchy()
+      goalHierarchy.roadTileMap()
+      return if @_animationRestarting
+      
+      # Restart all animations. Wait for the current ones to cancel.
+      @_animationRestarting = true
+      Meteor.clearTimeout timeout for timeout in @_animateTimeouts
+      @_animateTimeouts = []
+      @_revealedPathways = []
+      @_pointsWaitingToBeRevealed = []
+      @$blueprint()?.removeClass 'animating'
+      
+      Tracker.nonreactive =>
+        Tracker.autorun (computation) =>
+          return if @_pendingAnimationsCount()
+          computation.stop()
+          @_animationRestarting = false
+          
+          # Wait for the tilemap to be reset.
+          Tracker.afterFlush =>
+            # Reveal the starting point.
+            for rootGoalNode in goalHierarchy.rootGoalNodes
+              @revealPoint rootGoalNode.entryPoint
+          
+            # Animate unrevealed tasks and goals.
+            @_animateTimeouts.push Meteor.setTimeout =>
+              @$blueprint().addClass 'animating'
+              camera = @camera()
+              
+              for point in @_pointsWaitingToBeRevealed
+                # Center camera slightly to the right of the point if we're not close enough.
+                mapPosition = @constructor.TileMap.mapPosition point.globalPosition
+                mapPosition.x += 50
+                origin = camera.origin()
+                camera.setOrigin mapPosition if Math.abs(mapPosition.x - origin.x) > 100 or Math.abs(mapPosition.y - origin.y) > 100
+                
+                await @revealPoint point, true
+                
+              @initialRevealCompleted true
+            ,
+              if @initialRevealCompleted() then 30 else 1000
 
-      dragDelta =
-        x: newCanvasCoordinate.x - @dragStartCanvasCoordinate.x
-        y: newCanvasCoordinate.y - @dragStartCanvasCoordinate.y
-
-      # Notify that we moved.
-      @dragHasMoved true if dragDelta.x or dragDelta.y
-
-      goalComponent.position
-        x: @dragStartGoalPosition.x + dragDelta.x
-        y: @dragStartGoalPosition.y + dragDelta.y
+    # Calculate total bounding rectangle of the map.
+    @autorun (computation) =>
+      mapBoundingRectangle = new AE.Rectangle
+      
+      if goalComponentsById = @goalComponentsById()
+        if selectedGoalId = @studyPlan.selectedGoalId()
+          mapBoundingRectangle = goalComponentsById[selectedGoalId].mapBoundingRectangle
+        
+        else
+          for goalId, goalComponent of goalComponentsById
+            mapBoundingRectangle.union goalComponent.mapBoundingRectangle
+          
+      @mapBoundingRectangle.copy mapBoundingRectangle
 
     # Handle blueprint dragging.
     @autorun (computation) =>
@@ -235,70 +216,171 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint extends AM.Component
     $blueprint = @$('.pixelartacademy-pixelpad-apps-studyplan-blueprint')
     @$blueprint $blueprint
 
-    canvas = @$('.canvas')[0]
-    @canvas canvas
-    @context canvas.getContext '2d'
-
-    # Prevent click events from happening when dragging was active. We need to manually add this event
-    # listener so that we can set setCapture to true and make this listener be called before child click events.
-    $blueprint[0].addEventListener 'click', =>
-      # If drag has happened, don't process other clicks.
-      event.stopImmediatePropagation() if @dragHasMoved()
-
-      # Reset drag has moved to allow further clicks.
-      @dragHasMoved false
-    ,
-      true
-
   onDestroyed: ->
     super arguments...
 
-    for goalId, goalComponent of @goalComponentsById()
-      goalComponent.goal.destroy()
-      goalComponent.state.destroy()
+    @goalsData.stop()
+    @goalIds.stop()
+    @goalComponentsById.stop()
+    
+    @goalHierarchy()?.destroy()
+    @goalHierarchy.stop()
+    
+    @previewGoalHierarchy()?.destroy()
+    @previewGoalHierarchy.stop()
+  
+  getGoalNameTileHeight: (goalId) ->
+    return 1 unless @isRendered()
+    goalComponentsById = @goalComponentsById()
+
+    if goalComponent = goalComponentsById[goalId]
+      height = goalComponent.nameTileHeight()
+      @_goalNameTileHeightsCache[goalId] = height
+    
+    @_goalNameTileHeightsCache[goalId] or 1
+    
+  revealPoint: (point, animate) ->
+    # We need to check if we can reveal tasks.
+    if (taskPoint = point.taskPoint) and point is taskPoint.entryPoint
+      animationOptions = {animate, stopAnimation: => @_animationRestarting}
+      
+      goalComponentsById = @goalComponentsById()
+      goalComponent = goalComponentsById[point.goalNode.goalId]
+      
+      if taskPoint.task
+        # See if we need to open the gate.
+        if taskPoint.task.requiredInterests() and taskPoint.task.hasRequiredInterests()
+          goalComponent.tileMapComponent.openGate taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2
+          
+        # See if we need to activate the task.
+        if taskPoint.task.active()
+          goalComponent.tileMapComponent.activateBuilding taskPoint.localPosition.x, taskPoint.localPosition.y
+          
+        # See if we need to reveal task tiles.
+        if taskPoint.task.completed()
+          # If we're not animating, don't continue to unrevealed tasks.
+          unless StudyPlan.isTaskRevealed(taskPoint.task.id()) or animate
+            @_pointsWaitingToBeRevealed.push point
+            return
+            
+          @_pendingAnimationsCount @_pendingAnimationsCount() + 1
+          
+          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
+          
+          if animate
+            # Mark that the task was revealed.
+            revealed = StudyPlan.state('revealed') or {}
+            revealed.taskIds ?= []
+            revealed.taskIds.push taskPoint.task.id()
+            StudyPlan.state 'revealed', revealed
+          
+          @_pendingAnimationsCount @_pendingAnimationsCount() - 1
+          return if @_animationRestarting
+
+        else
+          # We can't continue unless the task is completed.
+          return
+        
+      else if taskPoint.endTask
+        goalId = taskPoint.goalNode.goalId
+        
+        # See if we need to reveal the end task tiles.
+        if taskPoint.goalNode.goal.completed()
+          # If we're not animating, don't continue to unrevealed goals.
+          unless StudyPlan.isGoalRevealed(goalId) or animate
+            @_pointsWaitingToBeRevealed.push point
+            return
+            
+          @_pendingAnimationsCount @_pendingAnimationsCount() + 1
+          
+          await goalComponent.tileMapComponent.revealTask taskPoint, animationOptions
+          
+          if animate
+            # Mark that the goal was revealed.
+            revealed = StudyPlan.state('revealed') or {}
+            revealed.goalIds ?= []
+            revealed.goalIds.push goalId
+            StudyPlan.state 'revealed', revealed
+          
+          @_pendingAnimationsCount @_pendingAnimationsCount() - 1
+          return if @_animationRestarting
+  
+          # See if we need to raise a flag.
+          if taskPoint.goalNode.markedComplete()
+            raiseFlag = true
+
+          # When revealing a goal that has all its tasks completed, automatically mark it as complete.
+          else if animate and taskPoint.goalNode.goal.allCompleted()
+            taskPoint.goalNode.markComplete true
+            raiseFlag = true
+            
+          goalComponent.tileMapComponent.setFlag taskPoint.localPosition.x, taskPoint.localPosition.y, true if raiseFlag
+        
+        return unless taskPoint.goalNode.goal.completed()
+        
+    return if @_animationRestarting
+    @_revealPathwaysFrom point, animate
+    
+  _revealPathwaysFrom: (origin, animate) ->
+    revealPromises = [] if animate
+    
+    for pathway in origin.outgoingPathways when pathway not in @_revealedPathways
+      @_revealedPathways.push pathway
+      
+      if animate
+        do (pathway) =>
+          revealPromises.push new Promise (resolve) =>
+            @_animateTimeouts.push Meteor.setTimeout =>
+              await @_revealPathway pathway, true
+              resolve()
+        
+      else
+        @_revealPathway pathway
+        
+    Promise.all revealPromises if animate
+        
+  _revealPathway: (pathway, animate) ->
+    @_pendingAnimationsCount @_pendingAnimationsCount() + 1
+    
+    animationOptions = {animate, stopAnimation: => @_animationRestarting}
+    
+    if pathway.goalNode
+      goalComponentsById = @goalComponentsById()
+      goalComponent = goalComponentsById[pathway.goalNode.goalId]
+      await goalComponent.tileMapComponent.revealPathway pathway, animationOptions
+      
+    else
+      await @roadTileMapComponent.revealPathway pathway, _.extend {useGlobalPositions: true}, animationOptions
+    
+    @_pendingAnimationsCount @_pendingAnimationsCount() - 1
+    return if @_animationRestarting
+    
+    @revealPoint pathway.endPoint, animate
+  
+  renderRoadTileMapComponent: ->
+    @roadTileMapComponent.renderComponent @currentComponent()
+    
+  displayedGoalHierarchy: -> @previewGoalHierarchy() or @goalHierarchy()
 
   goalComponents: ->
     _.values @goalComponentsById()
+  
+  renderGoalComponent: ->
+    goalComponent = Template.parentData()
+    goalComponent.renderComponent @currentComponent()
+    
+  goalNodeForGoalComponent: ->
+    goalComponent = @currentData()
+    
+    return unless goalHierarchy = @displayedGoalHierarchy()
+    
+    goalHierarchy.goalNodesById[goalComponent.goalId]
 
   originStyle: ->
     camera = @camera()
     originInWindow = camera.transformCanvasToWindow x: 0, y: 0
 
     transform: "translate3d(#{originInWindow.x}px, #{originInWindow.y}px, 0)"
-
-  startDrag: (options) ->
-    @dragStartCanvasCoordinate = @mouse().canvasCoordinate()
-    @dragStartGoalPosition = options.goalPosition
-    @dragRequireMove options.requireMove
-    @dragHasMoved false
-    @dragBlueprint false
-
-    # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on 'mouseup.pixelartacademy-pixelpad-apps-studyplan-blueprint-drag-node', (event) =>
-      # If required to move, don't stop drag until we do so.
-      return if @dragRequireMove() and not @dragHasMoved()
-
-      # Expand goal if desired.
-      @_goalComponentsById[options.goalId].expanded true if options.expandOnEnd
-      
-      # Update the state to write lazy updates of fields.
-      LOI.adventure.gameState.updated()
-
-      # Delete goal if we're over trash.
-      @studyPlan.removeGoal options.goalId if @mouseOverTrash()
-
-      @dragGoalId null
-      $(document).off '.pixelartacademy-pixelpad-apps-studyplan-blueprint-drag-node'
-
-    # Also expand goal on click since default goal click handler will fire before us (but after the
-    # mouseup above) in case we're dragging from the search bar without holding the mouse button.
-    $(document).on 'click.pixelartacademy-pixelpad-apps-studyplan-blueprint-drag-node-click', (event) =>
-      @_goalComponentsById[options.goalId].expanded true if options.expandOnEnd
-
-      $(document).off '.pixelartacademy-pixelpad-apps-studyplan-blueprint-drag-node-click'
-
-    # Set goal component last since it triggers reactivity.
-    @dragGoalId options.goalId
 
   startDragBlueprint: ->
     # Dragging of blueprint needs to be handled in display coordinates since the canvas ones should technically stay
@@ -312,115 +394,58 @@ class PAA.PixelPad.Apps.StudyPlan.Blueprint extends AM.Component
 
       @dragBlueprint false
 
+  animatingClass: ->
+    'animating' if @initialRevealCompleted()
+    
   draggingClass: ->
-    'dragging' if @dragGoalId() or @dragBlueprint()
+    'dragging' if @dragBlueprint()
 
-  dragged: ->
-    @dragGoalId() and (@dragHasMoved() or @dragRequireMove())
-
-  draggedClass: ->
-    'dragged' if @dragged()
-
-  connectingClass: ->
-    'connecting' if @draggedConnection()
-
-  mouseOverTrash: ->
-    # Trash is only visible when dragged.
-    return unless @dragged()
-
-    $trash = @$('.trash')
-
-    position = $trash.position()
-    width = $trash.outerWidth()
-    height = $trash.outerHeight()
-    mouse = @mouse().windowCoordinate()
-
-    (position.left < mouse.x < position.left + width) and (position.top < mouse.y < position.top + height)
-
-  trashActiveClass: ->
-    'active' if @mouseOverTrash()
-
+  goalSelectedClass: ->
+    'goal-selected' if @studyPlan.selectedGoalId()
+  
+  taskSelectedClass: ->
+    'task-selected' if @studyPlan.selectedTaskId()
+    
   focusGoal: (goalId) ->
-    return unless goalComponent = @goalComponentsById()[goalId]
-
+    goalHierarchy = @displayedGoalHierarchy()
+    goalNode = goalHierarchy.goalNodesById[goalId]
+    goalPosition = goalNode.globalPosition()
+    centerX = goalPosition.x + (goalNode.tileMap.minX + goalNode.tileMap.maxX) / 2
+    centerY = goalPosition.y + (goalNode.tileMap.minY + goalNode.tileMap.maxY) / 2
+    mapPosition = StudyPlan.Blueprint.TileMap.mapPosition centerX, centerY
+    mapPosition.x += StudyPlan.GoalInfo.width / 2
+    
     camera = @camera()
-    camera.setOrigin goalComponent.position()
-
-  startConnection: (startGoalId) ->
-    @draggedConnection {startGoalId}
-
-  modifyConnection: (options) ->
-    # Go over all the goals and find the first connection that matches the goal and interest.
-    goals = @studyPlan.state 'goals'
-
-    for goalId, goalData of goals
-      continue unless goalData.connections
-
-      for connection in goalData.connections
-        if connection.goalId is options.goalId and connection.interest is options.interest
-          @draggedConnection
-            startGoalId: goalId
-            endGoalId: options.goalId
-            interest: options.interest
-
-          return
-
-  endConnection: (options) ->
-    return unless draggedConnection = @draggedConnection()
-
-    startGoalComponent = @_goalComponentsById[draggedConnection.startGoalId]
-    connections = startGoalComponent.state('connections') or []
-
-    # Remove the old data if this is an existing connection.
-    if draggedConnection.endGoalId
-      connections = _.reject connections, (connection) =>
-        connection.goalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
-
-    # Add the new connection if it's valid.
-    draggedInterestIds = @draggedInterestIds()
-    interestDocument = IL.Interest.find options.interest
-    return unless interestDocument?._id in draggedInterestIds
-
-    connections.push
-      goalId: options.goalId
-      interest: options.interest
-
-    # Update state with new connections.
-    startGoalComponent.state 'connections', connections
-
-    # End dragging.
-    @draggedConnection null
-
-  startHoverInterest: (options) ->
-    @hoveredInterest options
-
-  endHoverInterest: ->
-    @hoveredInterest null
+    camera.setOrigin mapPosition
+    
+  focusTask: (taskId) ->
+    task = PAA.Learning.Task.getAdventureInstanceForId taskId
+    goalComponentsById = @goalComponentsById()
+    goalComponent = goalComponentsById[task.goal.id()]
+    mapPosition = goalComponent.getMapPositionForTask taskId
+    
+    camera = @camera()
+    camera.setOrigin mapPosition
 
   events: ->
     super(arguments...).concat
       'mousedown': @onMouseDown
-      'mouseup': @onMouseUp
+      'pointerenter .tile.building, pointerenter .tile.gate': @onPointerEnterTask
+      'pointerleave .tile.building, pointerleave .tile.gate': @onPointerLeaveTask
 
   onMouseDown: (event) ->
-    # Reset dragging on any start of clicks.
-    @dragHasMoved false
-
-    # We should drag the blueprint if we're not dragging a goal.
-    @startDragBlueprint() unless @dragGoalId()
-
-  onMouseUp: (event) ->
-    return unless draggedConnection = @draggedConnection()
-
-    # If we were modifying an existing connection, remove it.
-    if draggedConnection.endGoalId
-      startGoalComponent = @_goalComponentsById[draggedConnection.startGoalId]
-      connections = startGoalComponent.state 'connections'
-
-      connections = _.reject connections, (connection) =>
-        connection.goalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
-
-      startGoalComponent.state 'connections', connections
-
-    # End connecting.
-    @draggedConnection null
+    $target = $(event.target)
+    return if $target.closest('.flag.tile').length
+    return if $target.closest('.building.tile').length
+    return if $target.closest('.gate.tile').length
+    return if $target.closest('.goal-ui').length
+    return if $target.closest('.expansion-point').length
+    
+    @startDragBlueprint()
+    
+  onPointerEnterTask: (event) ->
+    tile = @currentData()
+    @studyPlan.highlightTask tile.data.taskId
+  
+  onPointerLeaveTask: (event) ->
+    @studyPlan.stopHighlightingTask()

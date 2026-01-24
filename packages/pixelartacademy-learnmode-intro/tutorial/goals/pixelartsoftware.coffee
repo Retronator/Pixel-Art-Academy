@@ -26,6 +26,8 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @icon: -> PAA.Learning.Task.Icons.Drawing
   
     @requiredInterests: -> ['to-do tasks']
+    
+    @studyPlanBuilding: -> 'SimCityResidential2'
 
     @initialize()
     
@@ -48,6 +50,8 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @predecessors: -> [Goal.Basics]
 
     @groupNumber: -> -1
+    
+    @studyPlanBuilding: -> 'SimCityCommercial2'
 
     @initialize()
 
@@ -70,6 +74,8 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @predecessors: -> [Goal.Basics]
 
     @groupNumber: -> 1
+    
+    @studyPlanBuilding: -> 'SimCityIndustrial3'
 
     @initialize()
 
@@ -89,10 +95,12 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @icon: -> PAA.Learning.Task.Icons.Drawing
 
-    @interests: -> ['pixel art software', 'pixel art', 'drawing software']
+    @interests: -> ['pixel art software']
 
     @predecessors: -> [Goal.Basics, Goal.Helpers, Goal.ColorTools]
     @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
+    
+    @studyPlanBuilding: -> 'SimCityCommercial1'
 
     @initialize()
 
@@ -107,7 +115,9 @@ class LM.Intro.Tutorial.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @id: -> "#{Task.id()}.ActiveNotification"
       
       @message: -> """
-        Note that you can complete to-do tasks in any order you want!
+        You can complete to-do tasks in any order you want!
+
+        Use the Study Plan to explore your choices.
       """
       
       @displayStyle: -> @DisplayStyles.Always

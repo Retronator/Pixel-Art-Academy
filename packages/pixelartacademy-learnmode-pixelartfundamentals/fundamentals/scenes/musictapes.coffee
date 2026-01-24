@@ -13,21 +13,11 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
   things: ->
     tapes = []
     
-    # You immediately get the first tapes.
-    # TODO: When more original compositions are added, move these as rewards later on.
-    tapes.push
-      artist: 'Extent of the Jam'
-      title: 'musicdisk01'
-    
-    tapes.push
-      artist: 'Shnabubula'
-      title: 'Finding the Groove'
-
-    # Tape for Elements of art: line.
-    if PAA.Tutorials.Drawing.ElementsOfArt.Line.completed()
+    # Tape for Elements of art: shape.
+    if PAA.Tutorials.Drawing.ElementsOfArt.Shape.completed()
       tapes.push
-        artist: 'HOME'
-        title: 'Resting State'
+        artist: 'Shnabubula'
+        title: 'Finding the Groove'
       
     # Tape for Pixel art lines.
     if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed()
@@ -53,6 +43,18 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
         artist: 'Three Chain Links'
         'sides.0.title': 'The Happiest Days Of Our Lives'
     
+    # Tape for Simplification.
+    if LM.PixelArtFundamentals.Fundamentals.Goals.Simplification.Tutorial.completed()
+      tapes.push
+        artist: 'HOME'
+        title: 'Resting State'
+        
+    # Tape for Shape language.
+    if LM.Design.Fundamentals.Goals.ShapeLanguage.Learn.completed()
+      tapes.push
+        artist: 'Extent of the Jam'
+        title: 'musicdisk01'
+    
     tapes
 
   class @NotificationsProvider extends PAA.PixelPad.Systems.Notifications.Provider
@@ -60,22 +62,33 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     @initialize()
     
     @NotificationArtists =
-      FirstTapes: 'Shnabubula'
       HOME: 'HOME'
       Glaciaere: 'glaciære'
       RevolutionVoid: 'Revolution Void'
       StateAzure: 'State Azure'
       ThreeChainLinks: 'Three Chain Links'
+      ExtentOfTheJam: 'Extent of the Jam'
+      Shnabubula: 'Shnabubula'
+    
+    @FirstTapeNotificationArtists =
+      FirstTapeShnabubula: 'Shnabubula'
+      FirstTapeGlaciaere: 'glaciære'
     
     availableNotificationIds: ->
       # See which tapes are available.
-      return [] unless musicTapes = LOI.adventure.getCurrentScene MusicTapes
-      tapes = musicTapes.things()
-      
+      tapeSelectors = LOI.adventure.currentTapeSelectors()
       potentialNotificationIds = []
       
-      for className, artist of @constructor.NotificationArtists
-        continue unless _.find tapes, (tape) => tape.artist is artist
+      # See if we've shown any of the music notifications yet.
+      if LM.PixelArtFundamentals.Fundamentals.MusicTapes.state('displayedNotificationIds')
+        notificationArtists = @constructor.NotificationArtists
+        
+      else
+        # Choose one of the first-time notifications.
+        notificationArtists = @constructor.FirstTapeNotificationArtists
+      
+      for className, artist of notificationArtists
+        continue unless _.find tapeSelectors, (tape) => tape.artist is artist
         potentialNotificationIds.push MusicTapes[className].id()
         
       # Remove all notifications that were already displayed.
@@ -83,6 +96,10 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
       _.difference potentialNotificationIds, displayedNotificationIds
       
   class @Notification extends PAA.PixelPad.Systems.Notifications.Notification
+    @displayedId: ->
+      # Override if the notification fulfills a different ID.
+      @id()
+    
     @displayStyle: -> @DisplayStyles.Always
     
     @priority: -> -1
@@ -90,20 +107,37 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     @retroClasses: ->
       body: PAA.PixelPad.Systems.Notifications.Retro.BodyClasses.Walkman
       
+    displayedId: -> @constructor.displayedId()
+      
     updateLastDisplayedTime: ->
       super arguments...
       
       displayedNotificationIds = LM.PixelArtFundamentals.Fundamentals.MusicTapes.state('displayedNotificationIds') or []
-      displayedNotificationIds.push @id()
+      displayedNotificationIds.push @displayedId()
       LM.PixelArtFundamentals.Fundamentals.MusicTapes.state 'displayedNotificationIds', displayedNotificationIds
   
-  class @FirstTapes extends @Notification
-    @id: -> "#{MusicTapes.id()}.FirstTapes"
+  class @FirstTapeShnabubula extends @Notification
+    @id: -> "#{MusicTapes.id()}.FirstTapeShnabubula"
+    @displayedId: -> "#{MusicTapes.id()}.Shnabubula"
     
     @message: -> """
       You can now play extra music!
 
-      In the Music app, you'll find some good DOS chiptunes from Extent of the Jam as well as Shnabubula's piano improvisations that take me straight back to The Sims build mode.
+      In the Music app, you'll find Shnabubula's piano improvisations that take me straight back to The Sims build mode.
+    """
+
+    @displayStyle: -> @DisplayStyles.Always
+    
+    @initialize()
+  
+  class @FirstTapeGlaciaere extends @Notification
+    @id: -> "#{MusicTapes.id()}.FirstTapeGlaciaere"
+    @displayedId: -> "#{MusicTapes.id()}.Glaciaere"
+    
+    @message: -> """
+      You can now play extra music!
+
+      In the Music app, you'll find a cassette tape with vaporwave tracks by Glaciære.
     """
 
     @displayStyle: -> @DisplayStyles.Always
@@ -114,7 +148,7 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     @id: -> "#{MusicTapes.id()}.HOME"
     
     @message: -> """
-      Hey, I got my hands on a demo album by HOME a.k.a. the brilliant kid who started the chillsynth genre!
+      Hey, I got my hands on a demo tape by HOME a.k.a. the brilliant kid who started the chillsynth genre!
       
       You can find it in the Music app.
     """
@@ -126,6 +160,8 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     
     @message: -> """
       I got you a new cassette tape with two vaporwave albums by Glaciære.
+      
+      You can find it in the Music app.
     """
     
     @initialize()
@@ -154,6 +190,24 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     @message: -> """
       I got even more music for you, two albums from Three Chain Links.
       He makes cool stuff inspired by the 80s and old video games.
+    """
+    
+    @initialize()
+  
+  class @ExtentOfTheJam extends @Notification
+    @id: -> "#{MusicTapes.id()}.ExtentOfTheJam"
+    
+    @message: -> """
+      Do you like chiptunes? I added some good DOS ones from Extent of the Jam to the Music app.
+    """
+    
+    @initialize()
+  
+  class @Shnabubula extends @Notification
+    @id: -> "#{MusicTapes.id()}.Shnabubula"
+    
+    @message: -> """
+      I got you a new cassette tape, Shnabubula's piano improvisations that take me straight back to The Sims build mode.
     """
     
     @initialize()

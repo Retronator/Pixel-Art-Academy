@@ -327,6 +327,7 @@ Package.onUse(function(api) {
   api.addFile('program/hashfunctions');
 
   api.addFile('program/search..');
+  api.addFile('program/search/breadthfirstsearch');
 
   // Artificial Pyramid
   api.addGlsl('pyramid/trigonometry');

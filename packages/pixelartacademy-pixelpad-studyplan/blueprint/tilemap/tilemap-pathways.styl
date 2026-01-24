@@ -1,0 +1,90 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-pixelpad-apps-studyplan-blueprint-tilemap
+  .tile
+    .pathway
+      &.sidewalk *
+        background-position -31rem -29rem !important
+
+      &.road.up *
+      &.road.down *
+        background-position -1rem -30rem
+
+      &.road.left *
+      &.road.right *
+        background-position -16rem -30rem
+
+      &.road.down.right *
+        background-position -1rem -40rem
+
+      &.road.down.left *
+        background-position -16rem -40rem
+
+      &.road.up.right *
+        background-position -1rem -50rem
+
+      &.road.up.left *
+        background-position -16rem -50rem
+
+      &.road.left.right.up *
+        background-position -1rem -60rem
+
+      &.road.up.down.right *
+        background-position -16rem -60rem
+
+      &.road.left.right.down *
+        background-position -1rem -70rem
+
+      &.road.up.down.left *
+        background-position -16rem -70rem
+
+      &.road.left.right.up.down *
+        background-position -1rem -80rem
+
+      &.road.up
+      &.road.down
+        &.solid-lines .image::after
+          background-position -1rem -10rem
+
+        &.vertical-lines-0 .image::after
+          background-position -31rem -40rem
+
+        &.vertical-lines-1 .image::after
+          background-position -31rem -50rem
+
+        &.vertical-lines-2 .image::after
+          background-position -31rem -60rem
+
+        &.intersection-up .image::after
+          background-position -1rem 0
+
+        &.intersection-down .image::after
+          background-position -1rem -20rem
+
+        &.intersection-up.intersection-down .image::after
+          background-position -31rem -20rem
+
+      &.road.left
+      &.road.right
+        .image::after
+          background-position -31rem 0
+
+        &.solid-lines .image::after
+          background-position -16rem -20rem
+
+        &.intersection-left .image::after
+          background-position -16rem 0
+
+        &.intersection-right .image::after
+          background-position -16rem -10rem
+
+        &.intersection-left.intersection-right .image::after
+          background-position -31rem -10rem
+
+      &.road.down.right
+      &.road.down.left
+      &.road.up.right
+      &.road.up.left
+      &.road.intersection
+        .image::after
+          background-position 15rem 5rem

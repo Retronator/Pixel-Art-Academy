@@ -4,22 +4,24 @@ IL = Illustrapedia
 
 class IL.Interest extends AM.Document
   @id: -> 'Illustrapedia.Interest'
+  # lastEditTime: the time the document was last edited
   # name: the canonical name of the interest
   #   _id
   #   translations
-  # synonyms: array of strings that indicate this interest.
-  # searchTerms: auto-generated array of words that match this interest.
+  # referenceName: string that is used to reference this interest
+  # synonyms: array of strings that indicate this interest
+  # searchTerms: auto-generated array of words that match this interest
   @Meta
     name: @id()
     fields: =>
       name: Document.ReferenceField AB.Translation, ['translations'], false
+      
+      referenceName: Document.GeneratedField 'self', ['name'], (interest) =>
+        referenceName = interest.name.translations.best.text
+        [interest._id, referenceName]
+        
       searchTerms: [Document.GeneratedField 'self', ['name', 'synonyms'], (interest) =>
         searchTerms = []
-
-        if interest.synonyms
-          for synonym in interest.synonyms
-            # Use lowercase letters only (strips symbols and deburrs the string).
-            searchTerms.push _.lowerCase synonym
 
         if interest.name?.translations
           allTranslationData = AB.Translation.allTranslationData interest.name
@@ -27,10 +29,19 @@ class IL.Interest extends AM.Document
           for translation in allTranslationData
             searchTerms.push _.lowerCase translation.translationData.text
         
+        if interest.synonyms
+          for synonym in interest.synonyms
+            # Use lowercase letters only (strips symbols and deburrs the string).
+            searchTerms.push _.lowerCase synonym
+        
         [interest._id, searchTerms]
       ]
 
-  @cacheUrl = '/illustrapedia/interest/cache.json'
+  @enableDatabaseContent()
+
+  @databaseContentInformationFields =
+    referenceName: 1
+    searchTerms: 1
   
   # Methods
 
@@ -41,8 +52,10 @@ class IL.Interest extends AM.Document
 
   @all: @subscription 'all'
   
+  @forReferenceNames: @subscription 'forReferenceNames'
+  
   @forSearchTerm: @subscription 'forSearchTerm',
-    query: (searchTerm) =>
+    query: (searchTerm, publishingQuery) =>
       return unless searchTerm.length
       # Use lowercase letters only (strips symbols and deburrs the string).
       words = _.lowerCase(searchTerm).split ' '
@@ -52,14 +65,15 @@ class IL.Interest extends AM.Document
       # Search term needs to appear at the start of a word. Note that we need to escape the backslashes.
       searchTerms.push searchTerms: new RegExp "(?:^#{word}|\\s#{word})", 'i' for word in words
 
-      IL.Interest.documents.find $and: searchTerms
+      IL.Interest.getQueryDocuments(publishingQuery).find $and: searchTerms
 
   # Convenience method to return the interest that matches the search term exactly. This is useful
   # because interests are referenced by plain strings, which need to be matched to interest documents.
   @find: (exactSearchTerm) ->
     exactSearchTerm = _.lowerCase exactSearchTerm
     @documents.findOne searchTerms: exactSearchTerm
-
-  # Convenience method to return the main string used to reference this interest.
-  referenceString: ->
-    @name.translations.best.text
+    
+if Meteor.isServer
+  # Export all interests
+  AM.DatabaseContent.addToExport ->
+    IL.Interest.documents.fetch()
