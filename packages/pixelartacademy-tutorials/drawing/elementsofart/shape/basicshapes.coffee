@@ -2,6 +2,7 @@ AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Markup = PAA.Practice.Helpers.Drawing.Markup
 InterfaceMarking = PAA.PixelPad.Systems.Instructions.InterfaceMarking
 
 class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorials.Drawing.ElementsOfArt.Shape.Asset
@@ -52,14 +53,15 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
     
     markup: ->
       arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
       
       [
         interface:
           selector: ".fatamorgana-toolbox .tool.rectangle"
           bounds:
-            x: 10
+            x: 0
             y: 20
-            width: 20
+            width: 50
             height: 35
           markings: [
             line: _.extend {}, arrowBase,
@@ -72,6 +74,10 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
                   x: 16, y: 36
                 ]
               ]
+            text: _.extend {}, textBase,
+              position:
+                x: 25, y: 48, origin: Markup.TextOriginPosition.TopCenter
+              value: "click here"
           ]
       ]
   
@@ -131,14 +137,15 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
     
     markup: ->
       arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
       
       [
         interface:
           selector: ".fatamorgana-toolbox .tool.line"
           bounds:
-            x: 0
+            x: -10
             y: 20
-            width: 20
+            width: 50
             height: 45
           markings: [
             line: _.extend {}, arrowBase,
@@ -151,6 +158,10 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
                   x: 5, y: 48
                 ]
               ]
+            text: _.extend {}, textBase,
+              position:
+                x: 15, y: 59, origin: Markup.TextOriginPosition.TopCenter
+              value: "click here"
           ]
       ]
   
@@ -210,14 +221,15 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
     
     markup: ->
       arrowBase = InterfaceMarking.arrowBase()
+      textBase = InterfaceMarking.textBase()
       
       [
         interface:
           selector: ".fatamorgana-toolbox .tool.ellipse"
           bounds:
-            x: 10
+            x: 0
             y: 20
-            width: 20
+            width: 50
             height: 35
           markings: [
             line: _.extend {}, arrowBase,
@@ -230,6 +242,10 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapes extends PAA.Tutorial
                   x: 16, y: 36
                 ]
               ]
+            text: _.extend {}, textBase,
+              position:
+                x: 25, y: 48, origin: Markup.TextOriginPosition.TopCenter
+              value: "click here"
           ]
       ]
   

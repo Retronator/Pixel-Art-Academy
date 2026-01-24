@@ -65,19 +65,7 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
     @message: -> """
       Click and drag to move the image around the table.
     """
-    
-    @activeConditions: ->
-      return unless asset = @getActiveAsset()
-      return if asset.completed()
-  
-      editor = @getEditor()
-      return unless editor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
-      
-      # If the origin has been changed, the instruction needs to keep being active so it can
-      # be completed even if the tool changes (like it does when activated via the hold button).
-      pixelCanvasEditor = editor.interface.getEditorForActiveFile()
-      EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
-  
+
     @resetCompletedConditions: ->
       not @getActiveAsset()
     
@@ -92,6 +80,20 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
       @_initialOrigin = pixelCanvasEditor.camera().origin()
     
+    activeConditions: ->
+      return unless asset = @getActiveAsset()
+      return if asset.completed()
+      
+      drawingEditor = @getEditor()
+      
+      # If the origin has been changed, the instruction needs to keep being active so it can
+      # be completed even if the tool changes (like it does when activated via the hold button).
+      if @_initialOrigin
+        pixelCanvasEditor = drawingEditor.interface.getEditorForActiveFile()
+        return true unless EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
+      
+      drawingEditor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+    
     completedConditions: ->
       # Wait until the origin has been changed.
       return unless drawingEditor = @getEditor()
@@ -99,5 +101,9 @@ class PAA.Tutorials.Drawing.PixelArtTools.Helpers.MoveCanvas extends PAA.Practic
       return if EJSON.equals @_initialOrigin, pixelCanvasEditor.camera().origin()
   
       # Wait until the move has finished so the text doesn't disappear immediately.
-      moveCanvas = drawingEditor.interface.activeTool()
-      not moveCanvas.moving()
+      if drawingEditor.interface.activeToolId() is PAA.PixelPad.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas.id()
+        moveCanvas = drawingEditor.interface.activeTool()
+        not moveCanvas.moving()
+        
+      else
+        true
