@@ -10,6 +10,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
   
   @contents: -> [
     @PixelArtLineArt
+    @PixelArtReadability
     @DrawQuickly
   ]
   
@@ -51,8 +52,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
     @unlockInstructions: -> "Complete the Pixel art lines tutorial to unlock the Pixel art line art challenge."
     
     class @CompletedCriteria extends LM.Content
-      @prefixFilter = null # Override with the class name prefix that defines this group.
-
       constructor: ->
         super arguments...
 
@@ -290,3 +289,59 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
         @complexity = 'complex'
         
         @initialize()
+
+  class @PixelArtReadability extends LM.Content
+    @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability'
+    @displayName: -> "Pixel art readability"
+    
+    @unlockInstructions: -> "Complete the Pixel art size tutorial to unlock the Pixel art readability challenge."
+  
+    @contents: -> [
+      @Icon8
+      @Icon16
+      @Icon32
+    ]
+
+    @initialize()
+    
+    status: -> if PAA.Tutorials.Drawing.PixelArtFundamentals.Size.completed() then LM.Content.Status.Unlocked else LM.Content.Status.Locked
+
+    constructor: ->
+      super arguments...
+    
+      @progress = new LM.Content.Progress.ContentProgress
+        content: @
+        units: "sizes"
+        
+    class @Icon extends LM.Content
+      @size: -> throw new AE.NotImplementedException "Icon content must define the size of the icon."
+      @sizeString: ->
+        size = @size()
+        "#{size}×#{size}"
+        
+      @displayName: -> "#{@sizeString()} icon"
+      
+      constructor: ->
+        super arguments...
+
+        @progress = new LM.Content.Progress.ManualProgress
+          content: @
+
+          completed: => false
+          
+      status: -> LM.Content.Status.Unlocked
+
+    class @Icon8 extends @Icon
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability.Icon8'
+      @size: -> 8
+      @initialize()
+    
+    class @Icon16 extends @Icon
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability.Icon16'
+      @size: -> 16
+      @initialize()
+    
+    class @Icon32 extends @Icon
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges.PixelArtReadability.Icon32'
+      @size: -> 32
+      @initialize()

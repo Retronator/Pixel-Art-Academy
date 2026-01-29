@@ -55,7 +55,6 @@ class LM.PixelArtFundamentals.Fundamentals.Content.Goals extends LM.Content
   class @Simplification extends LM.Content.GoalContent
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.Goals.Simplification'
     @goalClass = LM.PixelArtFundamentals.Fundamentals.Goals.Simplification
-    @tags: -> [LM.Content.Tags.WIP]
     
     @unlockInstructions: -> "Complete the Elements of art: shape tutorial to unlock the Simplification study goal."
     

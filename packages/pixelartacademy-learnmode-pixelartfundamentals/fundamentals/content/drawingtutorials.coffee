@@ -99,7 +99,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
       @Curves
       @LineWidth
       @Shapes
-      @Scale
+      @Size
       @Rotation
       @LimitedPalettes
       @TechnicalLimitations
@@ -145,9 +145,9 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials extends LM.C
       @displayName: -> "Pixel art shapes"
       @initialize()
     
-    class @Scale extends LM.Content.FutureContent
-      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Scale'
-      @displayName: -> "Pixel art scale"
+    class @Size extends LM.Content.DrawingTutorialContent
+      @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Content.DrawingTutorials.PixelArt.Size'
+      @tutorialClass = PAA.Tutorials.Drawing.PixelArtFundamentals.Size
       @initialize()
     
     class @Rotation extends LM.Content.FutureContent
