@@ -173,6 +173,9 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
 
+  api.addFile('drawing/pixelartfundamentals/size..');
+  api.addFile('drawing/pixelartfundamentals/size/displayresolution');
+
   // Simplification
 
   api.addFile('drawing/simplification..');

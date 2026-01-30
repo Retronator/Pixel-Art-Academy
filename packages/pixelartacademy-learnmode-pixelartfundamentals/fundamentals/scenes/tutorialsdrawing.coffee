@@ -24,6 +24,7 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
     elementsOfArtActive = LM.PixelArtFundamentals.Fundamentals.Goals.ElementsOfArt.active()
     jaggiesActive = LM.PixelArtFundamentals.Fundamentals.Goals.Jaggies.active()
     simplificationActive = LM.PixelArtFundamentals.Fundamentals.Goals.Simplification.active()
+    sizeActive = LM.PixelArtFundamentals.Fundamentals.Goals.Size.active()
     
     @_tutorialLine ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.ElementsOfArt.Line
     things.push @_tutorialLine if elementsOfArtActive
@@ -48,5 +49,8 @@ class LM.PixelArtFundamentals.Fundamentals.TutorialsDrawing extends LOI.Adventur
     if @_tutorialShape?.completed()
       @_tutorialSimplification ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.Simplification
       things.push @_tutorialSimplification if simplificationActive
+      
+      @_tutorialSize ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.PixelArtFundamentals.Size
+      things.push @_tutorialSize if sizeActive
       
     things

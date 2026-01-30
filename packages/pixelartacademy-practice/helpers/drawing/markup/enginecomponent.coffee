@@ -22,6 +22,10 @@ class Markup.EngineComponent
         @_fontsAvailable[font] true
     
     @_fontsAvailable[font]()
+    
+  constructor: ->
+    @_bitmapPixelImages = []
+    @_urlImages = []
   
   drawMarkup: (markup, context, properties) ->
     # How big is an HTML canvas pixel relative to the unit of the context.
@@ -35,6 +39,8 @@ class Markup.EngineComponent
     scaledDisplayPixelSize = Math.min 100 / minimumZoomPercentage, displayPixelSize
     
     context.save()
+    
+    bitmapCanvases = []
     
     for marking in markup
       if pixel = marking.pixel
@@ -172,6 +178,50 @@ class Markup.EngineComponent
           
           context.fillStyle = text.style
           @_drawText context, text.value, textPosition, lineHeight, text.align
+      
+      if image = marking.image
+        if bitmap = image.bitmap
+          if bitmapCanvas = _.find bitmapCanvases, (bitmapCanvas) => bitmapCanvas.bitmap is bitmap
+            source = bitmapCanvas.canvas
+        
+          else
+            unless bitmapPixelImage = _.find @_bitmapPixelImages, (bitmapPixelImage) => bitmapPixelImage.bitmap is bitmap
+              bitmapPixelImage =
+                bitmap: bitmap
+                pixelImage: new LOI.Assets.Engine.PixelImage.Bitmap asset: => bitmap
+              
+              @_bitmapPixelImages.push bitmapPixelImage
+              
+            if source = bitmapPixelImage.pixelImage.getCanvas()
+              bitmapCanvases.push
+                bitmap: bitmap
+                canvas: source
+          
+        if url = image.url
+          unless urlImage = @_urlImages[url]
+            loadDependency = new Tracker.Dependency
+            
+            image = new Image
+            image.onload = => loadDependency.changed()
+            image.src = url
+            
+            @_urlImages[url] = {image, loadDependency}
+            
+          source = urlImage.image
+          urlImage.loadDependency.depend()
+            
+        if source
+          sourceX = image.source?.position.x or 0
+          sourceY = image.source?.position.y or 0
+          sourceWidth = image.source?.width or source.width
+          sourceHeight = image.source?.height or source.height
+          
+          destinationX = image.position.x
+          destinationY = image.position.y
+          destinationWidth = image.width or sourceWidth
+          destinationHeight = image.height or sourceHeight
+          
+          context.drawImage source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight
         
     context.restore()
 
