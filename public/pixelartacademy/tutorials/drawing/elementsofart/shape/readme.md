@@ -1,4 +1,8 @@
-References in this folder are NOT all covered by CC-SA. Copyright of some belongs to their respective authors. 
+# Pixel Art Academy Tutorials
+
+## Elements of art: shape
+
+Some references in this folder are not covered by CC-SA, but their respective licenses.
 
 ### Public domain images
 

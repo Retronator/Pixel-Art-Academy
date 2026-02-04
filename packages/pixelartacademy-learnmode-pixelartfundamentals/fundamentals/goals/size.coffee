@@ -24,7 +24,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
-    @requiredInterests: -> ['simplification']
+    @requiredInterests: -> ['simplification', 'smooth curve (pixel art)']
     
     @studyPlanBuilding: -> 'SimCityCommercial3'
     

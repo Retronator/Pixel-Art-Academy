@@ -288,7 +288,7 @@ class StudyPlan.GoalNode
           tile = @tileMap.placeTile taskPoint.localPosition.x - 1, taskPoint.localPosition.y + 2, StudyPlan.TileMap.Tile.Types.Gate
           tile.taskId = taskId
           taskPoint.tiles.push tile
-          leftGroundOffset = 3
+          leftGroundOffset = 4
       
       if taskPoint.endTask
         taskPoint.tiles.push @tileMap.placeTile taskPoint.localPosition.x, taskPoint.localPosition.y, StudyPlan.TileMap.Tile.Types.Flag
@@ -399,12 +399,12 @@ class StudyPlan.GoalNode
       rightX = leftX + goalNode.width - 1
       @maxX = Math.max @maxX, rightX
       
-      topY ?= goalNode.accessRoadStartY - StudyPlan.GoalHierarchy.goalPadding.top
+      topY ?= goalNode.minY
       @minY = Math.min @minY, topY
       bottomY = topY + goalNode.height - 1
       @maxY = Math.max @maxY, bottomY
 
-      goalNode.localPosition.set leftX - goalNode.minX, topY - goalNode.topRoadY
+      goalNode.localPosition.set leftX - goalNode.minX, topY - goalNode.minY
       topY = bottomY
     
     # Place sideways goals above this goal.

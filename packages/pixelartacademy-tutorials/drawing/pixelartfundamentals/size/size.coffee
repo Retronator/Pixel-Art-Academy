@@ -11,6 +11,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size extends PAA.Tutorials.Draw
   
   @assets: -> [
     @DisplayResolution
+    @SmallestDetails
   ]
 
   content: ->

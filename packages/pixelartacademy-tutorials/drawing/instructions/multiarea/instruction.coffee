@@ -54,6 +54,13 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction extends PAA.Tutor
     
     @_updateActiveStepAreaAutorun.stop()
     
+  activeReferenceUrl: ->
+    activeStepAreaIndex = @activeStepAreaIndex()
+    return unless activeStepAreaIndex?
+
+    return unless asset = @getActiveAsset()
+    asset.stepAreas()[activeStepAreaIndex].data().referenceUrl
+    
   stepAreaActive: ->
     return unless asset = @getActiveAsset()
     activeStepAreaIndex = @activeStepAreaIndex()

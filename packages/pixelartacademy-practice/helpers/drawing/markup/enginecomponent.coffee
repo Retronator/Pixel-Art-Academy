@@ -201,11 +201,12 @@ class Markup.EngineComponent
           unless urlImage = @_urlImages[url]
             loadDependency = new Tracker.Dependency
             
-            image = new Image
-            image.onload = => loadDependency.changed()
-            image.src = url
+            imageElement = new Image
+            imageElement.onload = => loadDependency.changed()
+            imageElement.src = url
             
-            @_urlImages[url] = {image, loadDependency}
+            urlImage = {image: imageElement, loadDependency}
+            @_urlImages[url] = urlImage
             
           source = urlImage.image
           urlImage.loadDependency.depend()
