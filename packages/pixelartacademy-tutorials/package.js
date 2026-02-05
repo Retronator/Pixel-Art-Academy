@@ -176,6 +176,7 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/size..');
   api.addFile('drawing/pixelartfundamentals/size/displayresolution');
   api.addFile('drawing/pixelartfundamentals/size/smallestdetails');
+  api.addFile('drawing/pixelartfundamentals/size/readabilityanalysis');
 
   // Simplification
 

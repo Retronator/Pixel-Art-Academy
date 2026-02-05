@@ -93,6 +93,8 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/pixelartevaluation/smoothcurves..');
   api.addComponent('editor/desktop/pixelartevaluation/consistentlinewidth..');
 
+  api.addComponent('editor/desktop/readabilityanalysis..');
+
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');
   api.addFile('editor/desktop/references/displaycomponent/reference..');

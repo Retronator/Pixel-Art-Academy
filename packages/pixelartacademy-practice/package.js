@@ -177,4 +177,7 @@ Package.onUse(function(api) {
   // Engine component requires lines to be defined.
   api.addFile('pixelartevaluation/enginecomponent')
   api.addFile('pixelartevaluation/enginecomponent-debug')
+
+  // Readability analysis
+  api.addFile('readabilityanalysis..')
 });

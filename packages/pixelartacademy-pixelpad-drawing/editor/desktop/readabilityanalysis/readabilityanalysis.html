@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis">
+  <div class="pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis table-item {{activeClass}}">
+    {{#if paperDisplayed}}
+      <div class="paper">
+        <div class="sheet" {{style paperSheetStyle}}></div>
+        <div class="content-placeholder" {{style contentPlaceholderStyle}}></div>
+        <div class="content">
+          <div class="header">
+            <div class="pixeltosh"></div>
+            <div class="title">Pixeltosh Readability Analysis</div>
+          </div>
+          <div class="analysis">
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</template>

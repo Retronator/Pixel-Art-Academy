@@ -8,9 +8,6 @@ DrawQuickly = PAA.Pixeltosh.Programs.DrawQuickly
 
 Bresenham = require('bresenham-zingl')
 
-_normalizationMatrix = new THREE.Matrix3
-_scaledVertex = new THREE.Vector2
-
 class DrawQuickly.Interface.Game.Draw.Canvas extends AM.Component
   @id: -> 'PixelArtAcademy.Pixeltosh.Programs.DrawQuickly.Interface.Game.Draw.Canvas'
   @register @id()
@@ -36,83 +33,17 @@ class DrawQuickly.Interface.Game.Draw.Canvas extends AM.Component
 
     @context = @canvas.context
 
-    # Normalize drawing into a 64×64 canvas with the drawing scaled into the 60×60 area.
-    inputSize = 64
-    targetSize = 60
-    
-    @_normalizedCanvas = new AM.ReadableCanvas inputSize, inputSize
-    @_normalizedContext = @_normalizedCanvas.context
-    @_normalizedContext.lineWidth = 2
-    @_normalizedContext.strokeStyle = '#000000'
-    @_normalizedContext.lineCap = 'round'
-    @_normalizedContext.lineJoin = 'round'
-
+    inputSize = PAA.ImageClassification.SimpleClassifier.inputSize
     _classificationInputData = new Float32Array inputSize * inputSize
     
     @autorun (computation) =>
       strokes = @strokes()
       
-      # Find bounds of the drawn area.
-      minX = Number.POSITIVE_INFINITY
-      minY = Number.POSITIVE_INFINITY
-      maxX = Number.NEGATIVE_INFINITY
-      maxY = Number.NEGATIVE_INFINITY
-      
-      for stroke in strokes
-        for vertex in stroke.vertices
-          minX = Math.min minX, vertex.x
-          minY = Math.min minY, vertex.y
-          maxX = Math.max maxX, vertex.x
-          maxY = Math.max maxY, vertex.y
-      
-      # Make sure something was drawn.
-      if minX > maxX or minY > maxY
+      unless strokes.length
         @classificationInputData null
         return
         
-      # Move drawing to origin.
-      _normalizationMatrix.makeTranslation -minX, -minY
-      
-      # Scale to target size.
-      sourceWidth = (maxX - minX) or 1
-      sourceHeight = (maxY - minY) or 1
-      
-      targetWidth = if sourceWidth > sourceHeight then targetSize else targetSize * sourceWidth / sourceHeight
-      targetHeight = targetWidth / sourceWidth * sourceHeight
-
-      _normalizationMatrix.scale targetWidth / sourceWidth, targetHeight / sourceHeight
-      
-      # Center in the input area.
-      originX = (inputSize - targetWidth) / 2
-      originY = (inputSize - targetHeight) / 2
-      
-      _normalizationMatrix.translate originX, originY
-      
-      # Redraw the normalized strokes.
-      @_normalizedContext.clearRect 0, 0, inputSize, inputSize
-      
-      for stroke in strokes
-        @_normalizedContext.beginPath()
-      
-        # Move to first point
-        _scaledVertex.copy(stroke.vertices[0]).applyMatrix3 _normalizationMatrix
-        @_normalizedContext.moveTo _scaledVertex.x, _scaledVertex.y
-        
-        # Draw lines to remaining points
-        for vertex in stroke.vertices
-          _scaledVertex.copy(vertex).applyMatrix3 _normalizationMatrix
-          @_normalizedContext.lineTo _scaledVertex.x, _scaledVertex.y
-        
-        @_normalizedContext.stroke()
-      
-      # Extract alpha channel into the input array for classification.
-      normalizedImageData = @_normalizedCanvas.getFullImageData()
-      
-      for x in [0...inputSize]
-        for y in [0...inputSize]
-          pixelIndex = y * inputSize + x
-          _classificationInputData[pixelIndex] = normalizedImageData.data[pixelIndex * 4 + 3]
-      
+      PAA.ImageClassification.SimpleClassifier.convertStrokesToInputData strokes, _classificationInputData
       @classificationInputData _classificationInputData
     
   endDrawing: ->

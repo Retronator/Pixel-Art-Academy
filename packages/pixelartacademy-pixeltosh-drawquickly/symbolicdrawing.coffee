@@ -145,7 +145,7 @@ class DrawQuickly.SymbolicDrawing
         
         # Add together the results from all classifiers.
         combinedLabelProbabilities = {}
-        for label in PAA.Pixeltosh.Programs.DrawQuickly.Classifier.labels
+        for label in PAA.ImageClassification.SimpleClassifier.labels
           combinedLabelProbabilities[label] =
             label: label
         

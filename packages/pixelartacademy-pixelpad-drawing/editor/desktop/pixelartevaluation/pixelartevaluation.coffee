@@ -236,7 +236,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     'active' if @active()
     
   paperDisplayed: ->
-    # Display the paper if the property is defined and we're not explicitely told to not display it.
+    # Display the paper if the property is defined and we're not explicitly told to not display it.
     property = @pixelArtEvaluationProperty()
     property and property.displayed isnt false
   

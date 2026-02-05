@@ -59,7 +59,9 @@ class PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction extends PAA.Tutor
     return unless activeStepAreaIndex?
 
     return unless asset = @getActiveAsset()
-    asset.stepAreas()[activeStepAreaIndex].data().referenceUrl
+    return unless stepAreas = asset.stepAreas()
+    return unless stepArea = stepAreas[activeStepAreaIndex]
+    stepArea.data().referenceUrl
     
   stepAreaActive: ->
     return unless asset = @getActiveAsset()

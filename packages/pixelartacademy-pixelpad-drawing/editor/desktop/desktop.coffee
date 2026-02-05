@@ -132,6 +132,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
 
     @autorun (computation) =>
+      # Show readability analysis if the document has it.
+      documentHasReadabilityAnalysis = @displayedAsset()?.document()?.properties?.readabilityAnalysis
+      
+      # Show readability analysis if the asset requires it.
+      assetRequiresReadabilityAnalysis = @displayedAsset()?.constructor.readabilityAnalysis?()
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis.id(), documentHasReadabilityAnalysis or assetRequiresReadabilityAnalysis
+    
+    @autorun (computation) =>
       # Show publications if the asset requires it.
       publications = @displayedAsset()?.constructor.availablePublications?()
       
