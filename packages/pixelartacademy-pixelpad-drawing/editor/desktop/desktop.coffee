@@ -313,6 +313,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   editorDrawComponents: ->
     providers = [
       @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
     ]
     
     _.flatten(provider.editorDrawComponents() for provider in providers when provider?)

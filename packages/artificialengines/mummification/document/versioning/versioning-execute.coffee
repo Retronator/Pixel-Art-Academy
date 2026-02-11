@@ -34,13 +34,16 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
     versionedDocument.lastEditTime = actionTime
     versionedDocument.historyPosition = newHistoryPosition
     
+    affectedHistoryPosition = currentHistoryPosition
+    affectedHistoryPosition-- if appendToLastAction
+    
     # Update the action archive. We do this on the client and let it sync to the server through persistence.
     affectedActionArchives = AM.Document.Versioning.ActionArchive.documents.fetch
       versionedDocumentId: versionedDocument._id
       $or: [
-        historyEnd: $gte: currentHistoryPosition
+        historyEnd: $gte: affectedHistoryPosition
       ,
-        historyStart: $gt: currentHistoryPosition - AM.Document.Versioning.ActionArchive.maximumHistoryLength
+        historyStart: $gt: affectedHistoryPosition - AM.Document.Versioning.ActionArchive.maximumHistoryLength
       ]
     ,
       sort:
@@ -53,10 +56,10 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
       # furthest archive always gets picked. This is important in case multiple archives would be candidates for
       # extension, such as if we've increased the history limit.
       unless targetActionArchive
-        targetActionArchive = actionArchive if actionArchive.historyStart <= currentHistoryPosition < actionArchive.historyStart + AM.Document.Versioning.ActionArchive.maximumHistoryLength
+        targetActionArchive = actionArchive if actionArchive.historyStart <= affectedHistoryPosition < actionArchive.historyStart + AM.Document.Versioning.ActionArchive.maximumHistoryLength
 
       # Prune any archives that start after the current position.
-      AM.Document.Versioning.ActionArchive.documents.remove actionArchive._id if actionArchive.historyStart > currentHistoryPosition
+      AM.Document.Versioning.ActionArchive.documents.remove actionArchive._id if actionArchive.historyStart > affectedHistoryPosition
     
     if targetActionArchive
       # Change an existing action archive.
@@ -81,6 +84,8 @@ AM.Document.Versioning.executeAction = (versionedDocument, lastEditTime, action,
             $slice: newHistoryPositionIndex
       
     else
+      throw new AE.InvalidOrderException "Action archive was not found when attempting to append to last action." if appendToLastAction
+      
       # Create a new action archive.
       AM.Document.Versioning.ActionArchive.documents.insert
         profileId: versionedDocument.profileId

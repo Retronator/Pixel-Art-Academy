@@ -103,6 +103,16 @@ class TutorialBitmap.StepArea
     
   reset: ->
     step.reset() for step in @steps()
+    
+  getInformation: ->
+    return unless data = @data()
+    
+    if referenceUrl = data.referenceUrl
+      goalChoice = _.find @tutorialBitmap.resources.goalChoices, (goalChoice) => goalChoice.referenceUrl is referenceUrl
+      goalChoice.information
+      
+    else
+      @tutorialBitmap.resources.information
   
   hasGoalPixel: (absoluteX, absoluteY) ->
     # Check if any of the steps require a pixel at these absolute bitmap coordinates.

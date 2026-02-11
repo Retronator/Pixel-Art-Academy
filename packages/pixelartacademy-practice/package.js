@@ -180,4 +180,6 @@ Package.onUse(function(api) {
 
   // Readability analysis
   api.addFile('readabilityanalysis..')
+  api.addFile('readabilityanalysis/enginecomponent')
+  api.addFile('readabilityanalysis/enginecomponent-debug')
 });

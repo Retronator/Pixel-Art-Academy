@@ -166,6 +166,16 @@ class PAA.Practice.PixelArtEvaluation
       layer.getLinePartsBetween points...
     
     _.flatten lineParts
+  
+  getPointsAt: (x, y) ->
+    points = []
+    
+    for layer in @layers
+      if pixel = layer.getPixel(x, y)
+        if point = layer.getPointOn pixel
+          points.push point
+      
+    points
     
   _updateArea: (layerIndex, bounds) ->
     if @layers[layerIndex]

@@ -94,6 +94,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/desktop/pixelartevaluation/consistentlinewidth..');
 
   api.addComponent('editor/desktop/readabilityanalysis..');
+  api.addFile('editor/desktop/readabilityanalysis/readabilityanalysis-recognition');
 
   api.addUnstyledComponent('editor/desktop/references..');
   api.addComponent('editor/desktop/references/displaycomponent..');

@@ -54,6 +54,13 @@ class Markup.EngineComponent
         context.arc point.x, point.y, radius, 0, 2 * Math.PI
         context.fill()
       
+      if circle = marking.circle
+        radius = circle.radius or 0.5
+        context.fillStyle = circle.style
+        context.beginPath()
+        context.arc circle.x, circle.y, radius, 0, 2 * Math.PI
+        context.fill()
+      
       if line = marking.line
         context.strokeStyle = line.style
         context.lineCap = line.cap

@@ -119,7 +119,7 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @_readabilityAnalysis?.destroy()
     
   initializingConditions: ->
-    # Wait with initalizing until we've selected the asset as the active one in the editor.
+    # Wait with initializing until we've selected the asset as the active one in the editor.
     @_isActiveInEditor false
   
   _isActiveInEditor: (requiresDrawingActive) ->
@@ -139,7 +139,11 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   _initialize: ->
     # Create additional helpers.
     if pixelArtEvaluation = @constructor.pixelArtEvaluation()
-      pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
+      if @pixelArtEvalutionOptions
+        pixelArtEvaluationOptions = @pixelArtEvaluationOptions()
+        
+      else
+        pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
       
       @pixelArtEvaluationInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
@@ -152,7 +156,11 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
         pixelArtEvaluationInstance
         
     if readabilityAnalysis = @constructor.readabilityAnalysis()
-      readabilityAnalysisOptions = if _.isObject readabilityAnalysis then readabilityAnalysis else {}
+      if @readabilityAnalysisOptions
+        readabilityAnalysisOptions = @readabilityAnalysisOptions()
+        
+      else
+        readabilityAnalysisOptions = if _.isObject readabilityAnalysis then readabilityAnalysis else {}
       
       @readabilityAnalysisInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
@@ -218,6 +226,10 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   imageUrl: ->
     return unless bitmapId = @bitmapId()
     "/assets/bitmap.png?id=#{bitmapId}"
+    
+  # Override if you want to send options based on the bitmap instance.
+  pixelArtEvaluationOptions: ->
+  readabilityAnalysisOptions: ->
 
 # We want a generic state for bitmap assets so we create it outside of the constructor as inherited classes don't need it.
 # canEdit: can the user edit the bitmaps with built-in editors

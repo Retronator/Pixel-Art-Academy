@@ -14,13 +14,22 @@ penColor = atariCyan(3)
   cursor pointer
 
   &.active
-    transform translate(0, 0)
+    transform translate(0, calc(100% - 31rem))
     right calc(50% - 130rem)
     cursor default
 
     .paper
+      transform translate(0, -4rem)
+
       .sheet
-        filter drop-shadow(-20rem 5rem 0 desktopShadowColor)
+        transition-duration 1s
+        filter drop-shadow(-20rem 5rem 0 desktopShadowColor) drop-shadow(0 0 10rem desktopShadowColor)
+
+  &.revealed
+    transform translate(0, 0)
+
+    .paper
+      transform translate(0, 0)
 
   .paper
     position relative
@@ -33,11 +42,12 @@ penColor = atariCyan(3)
     .sheet
       content ''
       display block
-      absolute-cover()
+      absolute-cover-size()
+      height 378rem
       border-style solid
       border-width 42rem 16rem 0
       border-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/paper.png') 42 16 0 fill repeat
-      filter drop-shadow(-1rem 1rem 0 desktopShadowColor)
+      filter drop-shadow(-1rem 1rem 0 desktopShadowColor) drop-shadow(0 0 0 desktopShadowColor)
       transition all 0.2s
 
     .content-placeholder
@@ -52,7 +62,7 @@ penColor = atariCyan(3)
       padding 7rem 20rem 3rem
 
       .header
-        height 27rem
+        height 26.5rem
 
         .pixeltosh
           float left
@@ -62,18 +72,63 @@ penColor = atariCyan(3)
           height 23rem
           background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh.png')
 
+          &.passes
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh-gotit.png')
+
+          &.fails
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh-thinking.png')
+
+          &.wait
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh-wait.gif')
+
         .title
           position relative
-          left 3rem
+          left 5rem
           top 9rem
           text-transform uppercase
 
+      .analysis
+        .image
+          .title
+            text-transform uppercase
+
+        .result
+          position relative
+          padding-left 8rem
+
+          &::before
+            position absolute
+            content 'x'
+            left 0
+            top 0
+
+          &.passes::before
+            content '✔'
+
+          .title
+            text-transform uppercase
+
+        .classification
+          display flex
+          margin-top 8rem
+
+          .classifier
+            width 50%
+
+            .name
+              text-transform uppercase
+
+            .labels
+              list-style none
+              margin 0
+              padding 0
+
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
-    transform translate(calc(100% - 42rem), calc(100% - 31rem))
+    transform translate(calc(100% - 44rem), calc(100% - 31rem))
 
     &:hover:not(.active)
       .paper
         transform translate(-4rem, -4rem)
 
         .sheet
-          filter drop-shadow(-8rem 2rem 0 desktopShadowColor)
+          filter drop-shadow(-8rem 2rem 0 desktopShadowColor) drop-shadow(0 0 5rem desktopShadowColor)

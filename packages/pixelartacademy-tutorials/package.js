@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials');
 
   api.addFile('drawing..');
+  api.addFile('drawing/markup');
 
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
@@ -114,7 +115,6 @@ Package.onUse(function(api) {
   // Pixel art fundamentals
 
   api.addFile('drawing/pixelartfundamentals..');
-  api.addFile('drawing/pixelartfundamentals/markup');
 
   api.addFile('drawing/pixelartfundamentals/jaggies..');
   api.addFile('drawing/pixelartfundamentals/jaggies/asset');

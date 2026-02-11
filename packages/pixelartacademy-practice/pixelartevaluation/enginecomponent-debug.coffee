@@ -13,7 +13,7 @@ curveColor = "hsl(100deg 50% 50% / 100%)"
 segmentBoundaryColor = "hsl(80deg 50% 50% / 100%)"
 
 class PAE.EngineComponent extends PAE.EngineComponent
-  @debug = true
+  @debug = false
   
   constructor: (@options) ->
     super arguments...
@@ -163,3 +163,23 @@ class PAE.EngineComponent extends PAE.EngineComponent
     context.stroke()
 
     @_drawDebugPoint context, point.position for point in points
+  
+  _addPixelToPath: (context, pixel) ->
+    context.rect pixel.x - 0.5, pixel.y - 0.5, 1, 1
+  
+  _diagonalDash: (context, bounds, color) ->
+    context.save()
+    context.clip()
+    context.strokeStyle = color
+    context.lineWidth = @_pixelSize
+    context.beginPath()
+    
+    for x in [-bounds.height...bounds.width] by 5 * @_pixelSize
+      context.moveTo x, 0
+      context.lineTo x + bounds.height, bounds.height
+    
+    context.stroke()
+    context.restore()
+  
+  _bezierCurve: (context, controlPoint1, controlPoint2, end) ->
+    context.bezierCurveTo controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, end.x, end.y

@@ -4,6 +4,7 @@ PAA = PixelArtAcademy
 
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
+InstructionsSystem = PAA.PixelPad.Systems.Instructions
 
 class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis"
@@ -38,20 +39,17 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
       exposureValue: -0.5
   ]
   
-  @referenceNames: -> ["alarmclock"]
+  @labels: -> ["alarm clock"]
   
   @goalChoices: ->
-    for name in @referenceNames()
-      referenceUrl: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/size/readabilityanalysis-#{name}.glb"
-      information:
-        label: name
+    for label in @labels()
+      referenceUrl: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/size/readabilityanalysis-#{_.fileCase label}.glb"
+      information: {label}
         
-  @pixelArtEvaluation: -> true
   @readabilityAnalysis: -> true
   
   @properties: ->
     pixelArtScaling: true
-    readabilityAnalysis: true
 
   @initialize()
   
@@ -71,29 +69,70 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     ]
     
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
-    new @constructor.OpenReadabilityAnalysisStep @, stepArea,
-      label: stepResources.information.label
+    new @constructor.DrawSomethingStep @, stepArea
+    new @constructor.OpenReadabilityAnalysisStep @, stepArea
+    new @constructor.PassReadabilityStep @, stepArea
+  
+  readabilityAnalysisOptions: ->
+    fixedDimensions = @constructor.fixedDimensions()
+    width = fixedDimensions.width
+    height = fixedDimensions.height
+    horizontalExtension = @constructor.canvasExtensionDirection() is @constructor.CanvasExtensionDirection.Horizontal
+  
+    regions: =>
+      return unless @initialized()
       
-    new @constructor.DrawingStep @, stepArea,
-      label: stepResources.information.label
+      # Create areas with target labels from step areas.
+      x = 0
+      y = 0
+      
+      for stepArea in @stepAreas()
+        region =
+          bounds: {x, y, width, height}
+          label: stepArea.getInformation()?.label
+          
+        if horizontalExtension
+          x += width
+          
+        else
+          y += height
+          
+        region
   
   Asset = @
   
+  class @DrawSomethingStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.Step
+    # Any pixels are valid to draw.
+    hasPixel: -> true
+    
+    completed: ->
+      return unless bitmap = @stepArea.tutorialBitmap.bitmap()
+      
+      for x in [@stepArea.bounds.x...@stepArea.bounds.x + @stepArea.bounds.width]
+        for y in [@stepArea.bounds.y...@stepArea.bounds.y + @stepArea.bounds.height]
+          if bitmap.findPixelAtAbsoluteCoordinates x, y
+            return true
+      
+      false
+  
   class @OpenReadabilityAnalysisStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.EphemeralStep
+    activate: ->
+      super arguments...
+      
+      bitmap = @tutorialBitmap.bitmap()
+      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'readabilityAnalysis', {}
+      bitmap.executeAction updatePropertyAction
+    
     completed: ->
       return true if super arguments...
       
       # Readability analysis needs to be open.
       return unless drawingEditor = @getEditor()
-      return unless pixelArtEvaluationView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
-      pixelArtEvaluationView.active()
-  
-  class @DrawingStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.Step
-    completed: ->
-      readabilityAnalysis = @stepArea.tutorialBitmap.readabilityAnalysis()
-      
-      # TODO: Check if the classifier thinks the subject is correct.
-      false
+      return unless readabilityAnalysisView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
+      readabilityAnalysisView.active()
+
+  class @PassReadabilityStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.Step
+    completed: -> @stepArea.tutorialBitmap.bitmap()?.properties.readabilityAnalysis.passes
       
   class @ReferencesTrayInstruction extends PAA.Tutorials.Drawing.Instructions.ReferencesTrayInstruction
     @id: -> "#{Asset.id()}.ReferencesTrayInstruction"
@@ -107,27 +146,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @initialize()
   
-  class @HasPixelsInstruction extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
-    @stepNumber: -> 1
-    
-    hasPixels: ->
-      return unless asset = @getActiveAsset()
-      return unless @stepAreaActive()
-      return unless stepArea = @getStepArea()
-      
-      # Show until anything has been drawn.
-      bitmap = asset.bitmap()
-      
-      for x in [stepArea.bounds.x...stepArea.bounds.x + stepArea.bounds.width]
-        for y in [stepArea.bounds.y...stepArea.bounds.y + stepArea.bounds.height]
-          if bitmap.findPixelAtAbsoluteCoordinates x, y
-            return true
-      
-      false
-    
-  class @Rotate extends @HasPixelsInstruction
+  class @Rotate extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
     @id: -> "#{Asset.id()}.Rotate"
     @assetClass: -> Asset
+    
+    @stepNumber: -> 1
     
     @message: -> """
       Convey the object in any way you want. You can rotate the reference to observe the object, but you do not have to follow it in your drawing.
@@ -135,15 +158,11 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @initialize()
     
-    activeConditions: ->
-      hasPixels = @hasPixels()
-      return unless hasPixels?
-
-      not hasPixels
-  
-  class @OpenReadabilityAnalysis extends @HasPixelsInstruction
+  class @OpenReadabilityAnalysis extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
     @id: -> "#{Asset.id()}.OpenReadabilityAnalysis"
     @assetClass: -> Asset
+    
+    @stepNumber: -> 2
     
     @message: -> """
       Open the readability analysis when your drawing is ready.
@@ -151,4 +170,51 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @initialize()
     
-    activeConditions: -> @hasPixels()
+    markup: -> PAA.Tutorials.Drawing.Markup.bottomRightClickHereMarkup '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis', 10
+
+  class @ReadabilityAnalysisDescription extends PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction
+    @passes: -> throw new AE.NotImplementedException "Readability analysis description must say whether it should be displayed when passed or not."
+    @assetClass: -> Asset
+    
+    @displaySide: -> InstructionsSystem.DisplaySide.Top
+    @delayDuration: -> 3
+
+    activeConditions: ->
+      # Show when the readability analysis is open.
+      return unless drawingEditor = @getEditor()
+      return unless readabilityAnalysisView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
+      return unless readabilityAnalysisView.active()
+      
+      # Show when the readability analysis has the correct passes state.
+      return unless asset = @getActiveAsset()
+      asset.bitmap()?.properties.readabilityAnalysis.passes is @constructor.passes()
+  
+  class @ReadabilityAnalysisFail extends @ReadabilityAnalysisDescription
+    @id: -> "#{Asset.id()}.ReadabilityAnalysisFail"
+    
+    @passes: -> false
+    
+    @message: -> """
+        Pixeltosh has performed an analysis of what it can see.
+        Since it's an old computer, it's not very good at seeing like a human does.
+        Don't take its assessment too seriously.
+        
+        Still, you can improve the clarity of your drawing to discern it from other possibilities.
+      """
+    
+    @initialize()
+    
+  class @ReadabilityAnalysisPass extends @ReadabilityAnalysisDescription
+    @id: -> "#{Asset.id()}.ReadabilityAnalysisPass"
+
+    @passes: -> true
+    
+    @message: -> """
+        Pixeltosh has performed an analysis of what it can see.
+        Since it's an old computer, it's not very good at seeing like a human does.
+        Don't take its assessment too seriously.
+        
+        Still, your drawing is clear enough that it was able to detect the subject correctly.
+      """
+
+    @initialize()
