@@ -54,7 +54,8 @@ class AB.Rules.English
     "accommodation", "advertising", "air", "aid", "advice", "anger", "art", "assistance", "bread", "business",
     "butter", "calm", "cash", "chaos", "cheese", "childhood", "clothing", "coffee", "content", "corruption",
     "courage", "currency", "damage", "danger", "darkness", "data", "determination", "economics", "education",
-    "electricity", "employment", "energy", "entertainment", "enthusiasm", "equipment", "evidence", "failure", "fame",
+    "electricity", "employment", "energy", "entertainment", "enthusiasm", "equipment", "evidence", "eyeglasses"
+    "failure", "fame",
     "fire", "flour", "food", "freedom", "friendship", "fuel", "furniture", "fun", "genetics", "gold", "grammar",
     "guilt", "hair", "happiness", "harm", "health", "heat", "help", "homework", "honesty", "hospitality", "housework",
     "humour", "imagination", "importance", "information", "innocence", "intelligence", "jealousy", "juice", "justice",

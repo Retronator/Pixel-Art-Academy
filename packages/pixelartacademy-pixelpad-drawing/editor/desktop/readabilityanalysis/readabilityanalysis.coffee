@@ -262,7 +262,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
     'revealed' if @revealed()
     
   paperDisplayed: ->
-    # Display the paper if the property is defined and we're not explicitly told to not display it.
+    # Display the paper if the property is defined.
     @readabilityAnalysisProperty()
   
   contentPlaceholderStyle: ->

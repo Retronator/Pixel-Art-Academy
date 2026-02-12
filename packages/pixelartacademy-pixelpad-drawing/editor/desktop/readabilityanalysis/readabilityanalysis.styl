@@ -88,40 +88,46 @@ penColor = atariCyan(3)
           text-transform uppercase
 
       .analysis
-        .image
-          .title
-            text-transform uppercase
+        .region
+          margin-bottom 8rem
 
-        .result
-          position relative
-          padding-left 8rem
+          &:last-child
+            margin-bottom 0
 
-          &::before
-            position absolute
-            content 'x'
-            left 0
-            top 0
-
-          &.passes::before
-            content '✔'
-
-          .title
-            text-transform uppercase
-
-        .classification
-          display flex
-          margin-top 8rem
-
-          .classifier
-            width 50%
-
-            .name
+          .image
+            .title
               text-transform uppercase
 
-            .labels
-              list-style none
-              margin 0
-              padding 0
+          .result
+            position relative
+            padding-left 8rem
+
+            &::before
+              position absolute
+              content 'x'
+              left 0
+              top 0
+
+            &.passes::before
+              content '✔'
+
+            .title
+              text-transform uppercase
+
+          .classification
+            display flex
+            margin-top 8rem
+
+            .classifier
+              width 50%
+
+              .name
+                text-transform uppercase
+
+              .labels
+                list-style none
+                margin 0
+                padding 0
 
   .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
     transform translate(calc(100% - 44rem), calc(100% - 31rem))

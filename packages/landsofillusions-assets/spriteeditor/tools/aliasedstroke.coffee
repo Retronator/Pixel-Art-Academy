@@ -199,12 +199,16 @@ class LOI.Assets.SpriteEditor.Tools.AliasedStroke extends LOI.Assets.SpriteEdito
 
     # Register that the stroke has just started.
     @_strokeStarted = true
-
     @strokeActive true
-    @realtimeUpdating true
 
     # If pointer down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
-    Tracker.afterFlush => @processStroke()
+    Tracker.afterFlush =>
+      @processStroke()
+      
+      # Start realtime updating after the initial stroke has been processed since otherwise the costly realtime updates
+      # can prolong recalculation/flushing so much that the pointer can be released before the stroke was even initially
+      # processed.
+      @realtimeUpdating true
 
   onPointerUp: (event) ->
     super arguments...

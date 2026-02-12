@@ -6,9 +6,12 @@ Some references in this folder (and 3D models the references were rendered from)
 
 ### Creative Commons
 
-- [NES-Controller-Flat](https://commons.wikimedia.org/wiki/File:NES-Controller-Flat.jpg) by Evan-Amos
-- [SNES-Controller-Flat](https://commons.wikimedia.org/wiki/File:SNES-Controller-Flat.jpg) by Evan-Amos
-- [Sega Genesis Mini 02](https://commons.wikimedia.org/wiki/File:Sega_Genesis_Mini_02.jpg) by Wilfredor
+- smallestdetails-nes.jpg: Evan-Amos ([NES-Controller-Flat](https://commons.wikimedia.org/wiki/File:NES-Controller-Flat.jpg))
+- smallestdetails-snes.jpg: Evan-Amos ([SNES-Controller-Flat](https://commons.wikimedia.org/wiki/File:SNES-Controller-Flat.jpg))
+- smallestdetails-genesis.jpg: Wilfredor ([Sega Genesis Mini 02](https://commons.wikimedia.org/wiki/File:Sega_Genesis_Mini_02.jpg))
+- readabilityanalysis-alarmclock.glb: Brout ([Alarm Clock](https://sketchfab.com/3d-models/alarm-clock-c42ed1677f614ea1aea316e6d10de856))
+- readabilityanalysis-bicycle.glb: RayznGames ([Bicycle Game Asset](https://sketchfab.com/3d-models/bicycle-game-asset-571b8d5c48f54831abc61dbb0088cad4))
+- readabilityanalysis-umbrella.glb: Araon ([Elegant umbrella](https://sketchfab.com/3d-models/elegant-umbrella-ca9bb8c8ffc640c6a9be8ad5f341c9c4))
 
 ### Images used under fair use
 

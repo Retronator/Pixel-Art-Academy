@@ -34,6 +34,7 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
       PAA.Tutorials.Drawing.PixelArtFundamentals.Size.completed()
   
   class @Icon extends PAA.Learning.Task.Automatic
+    @completable: -> false
     @goal: -> Goal
     @size: -> throw new AE.NotImplementedException "Icon task must define the size of the icon."
     @sizeString: ->

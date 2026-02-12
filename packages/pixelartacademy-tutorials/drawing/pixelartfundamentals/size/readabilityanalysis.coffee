@@ -37,9 +37,47 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
         zNear: 0.1
         zFar: 0.5
       exposureValue: -0.5
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/size/readabilityanalysis-bicycle.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        rotate: true
+      background:
+        color: "#808080"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/studio_small_08_1k.hdr"
+      camera:
+        fieldOfView: 40
+        radialDistance: 2.8
+        azimuthalAngle: AR.Degrees -60
+        polarAngle: AR.Degrees 70
+        zNear: 0.1
+        zFar: 5
+      exposureValue: -0.5
+  ,
+    image:
+      url: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/size/readabilityanalysis-umbrella.glb"
+    displayOptions:
+      type: PAA.PixelPad.Apps.Drawing.Editor.ReferenceDisplayTypes.Model
+      input:
+        rotate: true
+      background:
+        color: "#808080"
+      environment:
+        url: "/artificial/spectrum/environments/polyhaven/studio_small_08_1k.hdr"
+      camera:
+        fieldOfView: 40
+        radialDistance: 2.5
+        azimuthalAngle: AR.Degrees 80
+        polarAngle: AR.Degrees 110
+        zNear: 0.1
+        zFar: 5
+      exposureValue: -0.5
   ]
   
-  @labels: -> ["alarm clock"]
+  @labels: -> ['alarm clock', 'bicycle', 'umbrella']
   
   @goalChoices: ->
     for label in @labels()
@@ -50,6 +88,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
   
   @properties: ->
     pixelArtScaling: true
+    readabilityAnalysis: {}
 
   @initialize()
   
@@ -116,13 +155,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
       false
   
   class @OpenReadabilityAnalysisStep extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap.EphemeralStep
-    activate: ->
-      super arguments...
-      
-      bitmap = @tutorialBitmap.bitmap()
-      updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @tutorialBitmap.constructor.id(), bitmap, 'readabilityAnalysis', {}
-      bitmap.executeAction updatePropertyAction
-    
     completed: ->
       return true if super arguments...
       
