@@ -34,6 +34,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.DisplayResolution extends 
   
   class @Instruction extends PAA.Tutorials.Drawing.Instructions.StepInstruction
     markup: ->
+      return [] unless asset = @getActiveAsset()
+      return [] unless bitmap = asset.bitmap()
+    
       textScale = 6
       textBase = Markup.textBase()
       textBase.size *= textScale
@@ -41,9 +44,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.DisplayResolution extends 
       textBase.style = Asset.markupColorStyle()
       textBase.outline = style: Asset.backgroundColorStyle(), width: textScale
       textBase.position = y: 20, origin: Markup.TextOriginPosition.BottomCenter
-      
-      asset = @getActiveAsset()
-      bitmap = asset.bitmap()
       
       dragon32FroggerSource =
         position: x: 68, y: 170
