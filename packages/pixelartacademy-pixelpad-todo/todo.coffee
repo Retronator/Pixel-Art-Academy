@@ -224,8 +224,12 @@ class PAA.PixelPad.Systems.ToDo extends PAA.PixelPad.System
       for task in completedTasks
         @$("[data-task-id='#{task.id()}']").remove()
         
-      @_animateEnd()
-      return
+      # If more tasks could be added, don't close the notebook, so the player can see the instructions to add them.
+      # But if all tasks are done and the end notification should display, we want to proceed with closing for the
+      # notification to display immediately (the "all done" text is short enough to be read at a glance).
+      unless LM.Notifications.TheEnd.condition()
+        @_animateEnd()
+        return
     
     @_animateClose()
   

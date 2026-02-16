@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.SmallestDetails extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.SmallestDetails extends PAA.Tutorials.Drawing.PixelArtFundamentals.Size.AssetWithReferences
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Size.SmallestDetails"
   
   @displayName: -> "Smallest details"
