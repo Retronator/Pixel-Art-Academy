@@ -6,7 +6,7 @@ Atari2600 = LOI.Assets.Palette.Atari2600
 Markup = PAA.Practice.Helpers.Drawing.Markup
 InstructionsSystem = PAA.PixelPad.Systems.Instructions
 
-class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extends PAA.Practice.Tutorials.Drawing.Assets.TutorialBitmap
+class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extends PAA.Tutorials.Drawing.PixelArtFundamentals.Size.AssetWithReferences
   @id: -> "PixelArtAcademy.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis"
   
   @displayName: -> "Readability analysis"
@@ -92,21 +92,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
 
   @initialize()
   
-  availableToolKeys: ->
-    [
-      PAA.Practice.Software.Tools.ToolKeys.Pencil
-      PAA.Practice.Software.Tools.ToolKeys.Eraser
-      PAA.Practice.Software.Tools.ToolKeys.ColorFill
-      PAA.Practice.Software.Tools.ToolKeys.Zoom
-      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
-      PAA.Practice.Software.Tools.ToolKeys.Undo
-      PAA.Practice.Software.Tools.ToolKeys.Redo
-      PAA.Practice.Software.Tools.ToolKeys.Line
-      PAA.Practice.Software.Tools.ToolKeys.Rectangle
-      PAA.Practice.Software.Tools.ToolKeys.Ellipse
-      PAA.Practice.Software.Tools.ToolKeys.References
-    ]
-    
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
     new @constructor.DrawSomethingStep @, stepArea
     new @constructor.OpenReadabilityAnalysisStep @, stepArea

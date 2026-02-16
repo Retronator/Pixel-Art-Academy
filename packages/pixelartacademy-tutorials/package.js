@@ -174,9 +174,11 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
 
   api.addFile('drawing/pixelartfundamentals/size..');
+  api.addFile('drawing/pixelartfundamentals/size/assetwithreferences');
   api.addFile('drawing/pixelartfundamentals/size/displayresolution');
   api.addFile('drawing/pixelartfundamentals/size/perceivedresolution');
   api.addFile('drawing/pixelartfundamentals/size/smallestdetails');
+  api.addFile('drawing/pixelartfundamentals/size/smallestrecognizablesize');
   api.addFile('drawing/pixelartfundamentals/size/readabilityanalysis');
 
   // Simplification

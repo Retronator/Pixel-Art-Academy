@@ -90,7 +90,7 @@ class TutorialBitmap.StepArea
   addStep: (step, stepIndex) ->
     steps = @steps()
     
-    if stepIndex
+    if stepIndex?
       steps.splice stepIndex, 0, step
       
     else

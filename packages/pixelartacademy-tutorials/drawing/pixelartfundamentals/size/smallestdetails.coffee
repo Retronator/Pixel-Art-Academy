@@ -39,21 +39,6 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.SmallestDetails extends PA
   
   @initialize()
   
-  availableToolKeys: ->
-    [
-      PAA.Practice.Software.Tools.ToolKeys.Pencil
-      PAA.Practice.Software.Tools.ToolKeys.Eraser
-      PAA.Practice.Software.Tools.ToolKeys.ColorFill
-      PAA.Practice.Software.Tools.ToolKeys.Zoom
-      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
-      PAA.Practice.Software.Tools.ToolKeys.Undo
-      PAA.Practice.Software.Tools.ToolKeys.Redo
-      PAA.Practice.Software.Tools.ToolKeys.Line
-      PAA.Practice.Software.Tools.ToolKeys.Rectangle
-      PAA.Practice.Software.Tools.ToolKeys.Ellipse
-      PAA.Practice.Software.Tools.ToolKeys.References
-    ]
-  
   Asset = @
   
   class @ReferencesTrayInstruction extends PAA.Tutorials.Drawing.Instructions.ReferencesTrayInstruction

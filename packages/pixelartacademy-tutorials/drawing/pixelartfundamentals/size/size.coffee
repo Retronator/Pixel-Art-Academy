@@ -13,6 +13,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size extends PAA.Tutorials.Draw
     @DisplayResolution
     @PerceivedResolution
     @SmallestDetails
+    @SmallestRecognizableSize
     @ReadabilityAnalysis
   ]
 
