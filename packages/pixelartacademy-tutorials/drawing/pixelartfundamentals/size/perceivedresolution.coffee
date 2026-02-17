@@ -18,7 +18,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
   @backgroundColor: -> new THREE.Color @backgroundColorStyle()
   @markupColorStyle: -> "#407bec"
   
-  @steps: -> for step in [1..28]
+  @steps: -> for step in [1..26]
     goalImageUrl: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/size/perceivedresolution-#{step}.png"
     imageUrl: "/pixelartacademy/tutorials/drawing/pixelartfundamentals/size/perceivedresolution-#{step}-start.png" if step is 3
   
@@ -40,6 +40,74 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
     # Allow extra pixels since markup images cover the canvas and you can accidentally paint in that area.
     step.options.canCompleteWithExtraPixels = true for step in steps
 
+  _initialize: ->
+    super arguments...
+    
+    enabledColorsByStep = [
+      [{ramp: 0, shade: 0}]
+      []
+      []
+      []
+      [{ramp: 1, shade: 0}, {ramp: 2, shade: 0}]
+      [{ramp: 0, shade: 1}]
+      [{ramp: 0, shade: 2}]
+      [{ramp: 0, shade: 3}]
+      [{ramp: 0, shade: 4}]
+      [{ramp: 1, shade: 1}]
+      [{ramp: 1, shade: 2}]
+      [{ramp: 1, shade: 3}]
+      [{ramp: 1, shade: 4}]
+      [{ramp: 1, shade: 5}]
+      [{ramp: 1, shade: 6}]
+      [{ramp: 1, shade: 7}]
+      [{ramp: 3, shade: 0}]
+      [{ramp: 3, shade: 1}]
+      [{ramp: 3, shade: 2}]
+      [{ramp: 3, shade: 3}]
+      [{ramp: 2, shade: 1}]
+      [{ramp: 2, shade: 2}]
+      [{ramp: 2, shade: 3}]
+      [{ramp: 4, shade: 0}]
+      [{ramp: 4, shade: 1}]
+      [{ramp: 4, shade: 2}]
+    ]
+    
+    # Enable ramp shades as the steps progress.
+    @_setPaletteColorsAutorun = Tracker.autorun (computation) =>
+      return unless @initialized() and @resourcesReady()
+      return unless bitmapId = @bitmapId()
+      return unless bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId, fields: customPalette: 1
+      activeStepIndex = @stepAreas()[0].activeStepIndex()
+      
+      Tracker.nonreactive =>
+        customPalette =
+          allRamps: bitmapData.customPalette.allRamps or _.clone bitmapData.customPalette.ramps
+          ramps: []
+        
+        for enabledColors in enabledColorsByStep[..activeStepIndex]
+          for color in enabledColors
+            customPalette.ramps[color.ramp] ?= shades: []
+            customPalette.ramps[color.ramp].shades[color.shade] = customPalette.allRamps[color.ramp].shades[color.shade]
+        
+        return if EJSON.equals customPalette, bitmapData.customPalette
+
+        # Wait for stroke to be saved fully.
+        Tracker.autorun (computation) =>
+          bitmap = LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+          return if bitmap.partialAction
+          computation.stop()
+          
+          # Update persistent document.
+          LOI.Assets.Bitmap.documents.update bitmapId, $set: {customPalette, lastEditTime: new Date()}
+          
+          # Trigger reactivity.
+          LOI.Assets.Bitmap.versionedDocuments.reportNonVersionedChange bitmapId
+
+  destroy: ->
+    super arguments...
+    
+    @_setPaletteColorsAutorun?.stop()
+    
   Asset = @
   
   class @Context extends PAA.Tutorials.Drawing.Instructions.StepInstruction
