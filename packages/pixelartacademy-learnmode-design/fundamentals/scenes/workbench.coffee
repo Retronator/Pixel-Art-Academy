@@ -15,15 +15,14 @@ class LM.Design.Fundamentals.Workbench extends LOI.Adventure.Scene
     @_invasion?.destroy()
 
   things: ->
-    return unless LM.Design.Fundamentals.Goals.Invasion.active()
-    
     things = []
 
-    if projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
-      if LM.Design.Fundamentals.Goals.Invasion.Start.completed()
-        @_invasion?.destroy()
-        @_invasion = new PAA.Pico8.Cartridges.Invasion.Project projectId
-  
-        things.push @_invasion
+    if LM.Design.Fundamentals.Goals.Invasion.activeAndAvailable()
+      if projectId = PAA.Pico8.Cartridges.Invasion.Project.state 'activeProjectId'
+        if LM.Design.Fundamentals.Goals.Invasion.Start.completed()
+          @_invasion?.destroy()
+          @_invasion = new PAA.Pico8.Cartridges.Invasion.Project projectId
+    
+          things.push @_invasion
 
     things

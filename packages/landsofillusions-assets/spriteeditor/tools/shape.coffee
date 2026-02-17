@@ -100,11 +100,16 @@ class LOI.Assets.SpriteEditor.Tools.Shape extends LOI.Assets.SpriteEditor.Tools.
     @startPixelCoordinates newPixelCoordinates
     
     @drawingActive true
-    @realtimeUpdating true
     @movementActive false
 
     # If pointer down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
-    Tracker.afterFlush => @updateShape()
+    Tracker.afterFlush =>
+      @updateShape()
+      
+      # Start realtime updating after the initial stroke has been processed since otherwise the costly realtime updates
+      # can prolong recalculation/flushing so much that the pointer can be released before the stroke was even initially
+      # processed.
+      @realtimeUpdating true
     
   getNewPixelCoordinates: (event) ->
     if @cursorType() is LOI.Assets.SpriteEditor.PixelCanvas.Cursor.Types.AliasedBrush

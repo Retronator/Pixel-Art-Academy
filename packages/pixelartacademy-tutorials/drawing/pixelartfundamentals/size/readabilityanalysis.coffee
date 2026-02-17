@@ -89,6 +89,8 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
   @properties: ->
     pixelArtScaling: true
     readabilityAnalysis: {}
+    
+  @markup: -> true
 
   @initialize()
   
@@ -163,7 +165,52 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @initialize()
   
-  class @Rotate extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
+  class @Drawing extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
+    activeConditions: ->
+      return unless super arguments...
+      
+      # Show when the readability analysis is closed.
+      return unless drawingEditor = @getEditor()
+      return unless readabilityAnalysisView = drawingEditor.interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
+      not readabilityAnalysisView.active()
+      
+    markup: ->
+      return [] unless asset = @getActiveAsset()
+      return [] unless stepAreas = asset.stepAreas()
+      return [] unless stepAreas.length > 1
+      
+      markup = []
+      
+      style = "#aaa"
+      
+      lineBase =
+        style: style
+        width: 0
+      
+      textBase = _.extend {}, Markup.textBase(), {style}
+      
+      for stepArea, stepAreaIndex in stepAreas
+        if information = stepArea.getInformation()
+          markup.push
+            text: _.extend {}, textBase,
+              position:
+                x: stepAreaIndex * 32 + 16, y: -0.5, origin: Markup.TextOriginPosition.BottomCenter
+              value: information.label
+        
+        if stepAreaIndex
+          divisionX = stepAreaIndex * 32
+          
+          markup.push
+            line: _.extend {}, lineBase,
+              points: [
+                x: divisionX, y: 0
+              ,
+                x: divisionX, y: 32
+              ]
+      
+      markup
+  
+  class @Rotate extends @Drawing
     @id: -> "#{Asset.id()}.Rotate"
     @assetClass: -> Asset
     
@@ -175,7 +222,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @initialize()
     
-  class @OpenReadabilityAnalysis extends PAA.Tutorials.Drawing.Instructions.Multiarea.StepInstruction
+  class @OpenReadabilityAnalysis extends @Drawing
     @id: -> "#{Asset.id()}.OpenReadabilityAnalysis"
     @assetClass: -> Asset
     
@@ -187,7 +234,26 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
     
     @initialize()
     
-    markup: -> PAA.Tutorials.Drawing.Markup.bottomRightClickHereMarkup '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis', 10
+    markup: ->
+      markup = super arguments...
+      
+      clickHereMarkup = PAA.Tutorials.Drawing.Markup.bottomRightClickHereMarkup '.pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis', 10
+      markup.push clickHereMarkup...
+      
+      markup
+  
+  class @Dividers extends @Drawing
+    @id: -> "#{Asset.id()}.Dividers"
+    @assetClass: -> Asset
+    
+    @stepNumber: -> 3
+    @priority: -> -1
+    
+    @activeDisplayState: ->
+      # We only have markup without a message.
+      PAA.PixelPad.Systems.Instructions.DisplayState.Hidden
+    
+    @initialize()
 
   class @ReadabilityAnalysisDescription extends PAA.Tutorials.Drawing.Instructions.Multiarea.Instruction
     @passes: -> throw new AE.NotImplementedException "Readability analysis description must say whether it should be displayed when passed or not."

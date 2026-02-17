@@ -260,6 +260,10 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
     tile = @currentData()
     'revealed' if tile.revealed()
   
+  tileRevealed: ->
+    tile = @currentData()
+    tile.revealed()
+  
   buildingClass: ->
     tile = @currentData()
     classes = [_.kebabCase tile.data.building]
@@ -290,6 +294,8 @@ class StudyPlan.Blueprint.TileMap extends AM.Component
 
         for side, neighborExists of tile.data.roadNeighbors when neighborExists
           classes.push side
+          
+    return unless classes.length
       
     classes.join ' '
   

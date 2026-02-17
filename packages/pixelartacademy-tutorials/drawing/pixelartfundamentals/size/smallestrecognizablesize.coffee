@@ -139,7 +139,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.SmallestRecognizableSize e
     @stepNumber: -> 8
     
     @message: -> """
-      Tigers are even bigger cats, which gives us enough space to depict its characteristic black stripes.
+      The tiger is an even bigger cat, which gives us enough space to depict its characteristic black stripes.
     """
     
     @initialize()

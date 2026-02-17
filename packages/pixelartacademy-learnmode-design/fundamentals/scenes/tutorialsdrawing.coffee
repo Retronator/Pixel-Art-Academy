@@ -15,11 +15,10 @@ class LM.Design.Fundamentals.TutorialsDrawing extends LOI.Adventure.Scene
     @_tutorialShapeLanguage?.destroy()
 
   things: ->
-    return unless LM.Design.Fundamentals.Goals.ShapeLanguage.active()
-
     things = []
     
-    @_tutorialShapeLanguage ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.Design.ShapeLanguage
-    things.push @_tutorialShapeLanguage
+    if LM.Design.Fundamentals.Goals.ShapeLanguage.activeAndAvailable()
+      @_tutorialShapeLanguage ?= Tracker.nonreactive => new PAA.Tutorials.Drawing.Design.ShapeLanguage
+      things.push @_tutorialShapeLanguage
     
     things
