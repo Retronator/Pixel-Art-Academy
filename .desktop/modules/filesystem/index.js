@@ -1,6 +1,6 @@
 import moduleJson from './module.json';
 import {app} from 'electron';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 /**
@@ -51,7 +51,7 @@ export default class FileSystem {
       const profileJsons = [];
 
       // Scan the directory for subdirectories, whose names correspond to profile IDs.
-      const directory = await fs.promises.opendir(directoryPath);
+      const directory = await fs.opendir(directoryPath);
       for await (const directoryEntry of directory) {
         if (!directoryEntry.isDirectory()) continue;
 
@@ -61,7 +61,7 @@ export default class FileSystem {
         const profileDocumentPath = path.join(directoryPath, profileId, `Artificial.Mummification.Document.Persistence.Profile/${profileId}.json`);
 
         try {
-          const profileJson = await fs.promises.readFile(profileDocumentPath, {encoding: 'utf8'})
+          const profileJson = await fs.readFile(profileDocumentPath, {encoding: 'utf8'})
           profileJsons.push(profileJson);
           this.log.verbose("Found profile directory", profileId);
         } catch (e) {
@@ -85,13 +85,13 @@ export default class FileSystem {
         let totalDocumentsCount = 0;
         let loadedDocumentsCount = 0;
 
-        let rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        let rootDirectory = await fs.opendir(rootDirectoryPath);
         for await (const rootDirectoryEntry of rootDirectory) {
           if (!rootDirectoryEntry.isDirectory()) continue;
 
           const className = rootDirectoryEntry.name;
           const classDirectoryPath = path.join(rootDirectoryPath, className);
-          const classDirectory = await fs.promises.opendir(classDirectoryPath);
+          const classDirectory = await fs.opendir(classDirectoryPath);
 
           for await (const classDirectoryEntry of classDirectory) {
             if (!classDirectoryEntry.isFile()) continue;
@@ -102,7 +102,7 @@ export default class FileSystem {
         this.log.verbose('Documents count:', totalDocumentsCount);
 
         // Scan the root directory for subdirectories, whose names correspond to class names.
-        rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        rootDirectory = await fs.opendir(rootDirectoryPath);
         this.log.verbose('Root directory opened.');
 
         for await (const rootDirectoryEntry of rootDirectory) {
@@ -110,14 +110,17 @@ export default class FileSystem {
           if (!rootDirectoryEntry.isDirectory()) continue;
 
           const className = rootDirectoryEntry.name;
-          documentJsons[className] = []
+          documentJsons[className] = {}
 
           // Scan the directory for files, whose names correspond to document IDs.
           const classDirectoryPath = path.join(rootDirectoryPath, className);
           const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
 
+          // Create backup directory.
+          await fs.mkdir(classBackupDirectoryPath, { recursive: true });
+
           this.log.verbose('Opening class directory', className);
-          const classDirectory = await fs.promises.opendir(classDirectoryPath);
+          const classDirectory = await fs.opendir(classDirectoryPath);
           this.log.verbose('Class directory opened.');
 
           for await (const classDirectoryEntry of classDirectory) {
@@ -127,12 +130,12 @@ export default class FileSystem {
             if (!classDirectoryEntry.name.endsWith('json')) continue;
 
             const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
-            const fileJson = await fs.promises.readFile(filePath, {encoding: 'utf8'})
-            documentJsons[className].push(fileJson);
+            const fileJson = await fs.readFile(filePath, {encoding: 'utf8'})
+            documentJsons[className][classDirectoryEntry.name] = fileJson;
 
             // Create a backup of the file.
             const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
-            await fs.promises.cp(filePath, backupFilePath);
+            await fs.copyFile(filePath, backupFilePath);
 
             loadedDocumentsCount++;
             this.module.send('getProfileDocumentsProgress', loadedDocumentsCount / totalDocumentsCount);
@@ -156,7 +159,7 @@ export default class FileSystem {
         const rootBackupDirectoryPath = path.join(backupDirectoryPath, backupTimestamp);
 
         // Scan the root directory for subdirectories, whose names correspond to class names.
-        let rootDirectory = await fs.promises.opendir(rootDirectoryPath);
+        let rootDirectory = await fs.opendir(rootDirectoryPath);
         this.log.verbose('Root directory opened.');
 
         for await (const rootDirectoryEntry of rootDirectory) {
@@ -169,8 +172,11 @@ export default class FileSystem {
           const classDirectoryPath = path.join(rootDirectoryPath, className);
           const classBackupDirectoryPath = path.join(rootBackupDirectoryPath, className);
 
+          // Create backup directory.
+          await fs.mkdir(classBackupDirectoryPath, { recursive: true });
+
           this.log.verbose('Opening class directory', className);
-          const classDirectory = await fs.promises.opendir(classDirectoryPath);
+          const classDirectory = await fs.opendir(classDirectoryPath);
           this.log.verbose('Class directory opened.');
 
           for await (const classDirectoryEntry of classDirectory) {
@@ -182,7 +188,7 @@ export default class FileSystem {
             // Create a backup of the file.
             const filePath = path.join(classDirectoryPath, classDirectoryEntry.name);
             const backupFilePath = path.join(classBackupDirectoryPath, classDirectoryEntry.name);
-            await fs.promises.cp(filePath, backupFilePath);
+            await fs.copyFile(filePath, backupFilePath);
           }
         }
 
@@ -200,7 +206,7 @@ export default class FileSystem {
         this.log.verbose('removeProfile received', rootDirectoryPath);
 
         // Scan the root directory for subdirectories, whose names correspond to class names.
-        await fs.promises.rm(rootDirectoryPath, {recursive: true});
+        await fs.rm(rootDirectoryPath, {recursive: true});
         this.log.verbose('Profile directory removed.');
 
         this.module.respond('removeProfile', fetchId, true);
@@ -222,6 +228,8 @@ export default class FileSystem {
 
   executeFirstOperation() {
     const operation = this.operations[0];
+    // We kick off the asynchronous operations, but we don't have to await
+    // for them since the handler doesn't do anything with the result.
     if (operation.write) {
       this.writeFile(operation.write);
     } else if (operation.delete) {
@@ -229,38 +237,45 @@ export default class FileSystem {
     }
   }
 
-  writeFile(writeOperation) {
-    const filePath = writeOperation.filePath
-    const fetchId = writeOperation.fetchId
-    const fileData = writeOperation.fileData
+  async writeFile(writeOperation) {
+    const { filePath, fetchId, fileData } = writeOperation;
 
     this.log.verbose("writeFile processing for", filePath, fetchId);
 
-    fs.cp(filePath, `${filePath}.backup`, error => {
-      if (error) {
+    const directoryPath = path.dirname(filePath);
+    const temporaryPath = `${filePath}.tmp`;
+    const backupPath = `${filePath}.backup`;
+
+    try {
+      // Create directory if needed.
+      await fs.mkdir(directoryPath, { recursive: true });
+
+      // Backup the file if it exists.
+      try {
+        await fs.copyFile(filePath, backupPath);
+      } catch {
         this.log.verbose("File does not exist yet, backup copy not made.", filePath, fetchId);
       }
 
-      fs.writeFile(filePath, fileData, error => {
-        if (error?.code === 'ENOENT') {
-          this.log.verbose("Directory path does not exist, creating directories for", filePath);
-          const directoryPath = path.dirname(filePath);
-          fs.mkdir(directoryPath, {recursive: true}, error => {
-            if (error) {
-              this.log.error('mkdir error', directoryPath, error);
-              this.endWriteFile(filePath, fetchId, error);
-            } else {
-              this.log.verbose("Directories made, retrying write", filePath);
-              fs.writeFile(filePath, fileData, error => {
-                this.endWriteFile(filePath, fetchId, error);
-              });
-            }
-          });
-        } else {
-          this.endWriteFile(filePath, fetchId, error);
-        }
-      });
-    });
+      // Write to temporary file and rename it.
+      await fs.writeFile(temporaryPath, fileData);
+      const handle = await fs.open(temporaryPath, "r");
+      await handle.sync();
+      await handle.close();
+      await fs.rename(temporaryPath, filePath);
+
+      // We are done.
+      this.endWriteFile(filePath, fetchId, null);
+
+    } catch (error) {
+      // Clean temporary file, if it exists.
+      try {
+        await fs.unlink(temporaryPath);
+      } catch {}
+
+      // Report error.
+      this.endWriteFile(filePath, fetchId, error);
+    }
   }
 
   endWriteFile(filePath, fetchId, error) {
@@ -273,19 +288,25 @@ export default class FileSystem {
     this.moveToNextOperation();
   }
 
-  deleteFile(deleteOperation) {
-    const filePath = deleteOperation.filePath
-    const fetchId = deleteOperation.fetchId
+  async deleteFile(deleteOperation) {
+    const { filePath, fetchId } = deleteOperation;
 
-    fs.unlink(filePath, (error) => {
-      if (error) {
-        this.log.error('deleteFile error.', filePath, error, fetchId);
+    try {
+      await fs.unlink(filePath);
+      this.log.verbose("deleteFile succeeded.", filePath, fetchId);
+      this.module.respond("deleteFile", fetchId, null);
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        // Already gone = success
+        this.log.verbose("deleteFile skipped (already missing).", filePath, fetchId);
+        this.module.respond("deleteFile", fetchId, null);
       } else {
-        this.log.verbose("deleteFile succeeded.", filePath, fetchId);
+        this.log.error("deleteFile error.", filePath, error, fetchId);
+        this.module.respond("deleteFile", fetchId, error);
       }
-      this.module.respond('deleteFile', fetchId, error);
+    } finally {
       this.moveToNextOperation();
-    })
+    }
   }
 
   moveToNextOperation() {

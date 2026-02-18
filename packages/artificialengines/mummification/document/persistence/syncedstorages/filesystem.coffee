@@ -76,14 +76,15 @@ class Persistence.SyncedStorages.FileSystem extends Persistence.SyncedStorage
       documents[documentClassId] = {}
       @lastEditTimes[documentClassId] ?= {}
       
-      for documentJson in documentJsons
+      for documentName, documentJson of documentJsons
         try
           document = EJSON.parse documentJson
           documents[documentClassId][document._id] = "#{syncedStorageId}": document
           @lastEditTimes[documentClassId][document._id] = document.lastEditTime
       
         catch error
-          console.error "Error parsing document JSON.", error, documentJson
+          console.error "Error parsing document JSON for", documentClassId, documentName, error
+          console.log "JSON content", documentJson
     
     console.log "Documents successfully parsed." if Persistence.debug
     documents
