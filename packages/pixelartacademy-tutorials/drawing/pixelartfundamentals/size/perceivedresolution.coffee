@@ -77,7 +77,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
       return unless @initialized() and @resourcesReady()
       return unless bitmapId = @bitmapId()
       return unless bitmapData = LOI.Assets.Bitmap.documents.findOne bitmapId, fields: customPalette: 1
-      activeStepIndex = @stepAreas()[0].activeStepIndex()
+      return unless stepAreas = @stepAreas()
+      return unless stepAreas.length
+      activeStepIndex = stepAreas[0].activeStepIndex()
       
       Tracker.nonreactive =>
         customPalette =
