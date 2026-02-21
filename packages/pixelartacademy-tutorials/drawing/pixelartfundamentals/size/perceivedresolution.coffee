@@ -278,9 +278,9 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.PerceivedResolution extend
     @assetClass: -> Asset
     
     @message: -> """
-      Note that we often want to post the same artwork in multiple places and can't control the display size.
+      Note that we often want to post the same artwork in multiple places and can't control how big the pixels will appear.
       People will see it on different devices and can zoom in to see it larger.
-      At that point, the amount of detail in the subject becomes more important for its style than the pixel size.
+      In that case, other factors, like which details we have space to represent, can become more important for choosing the canvas size.
     """
   
     @activeConditions: ->

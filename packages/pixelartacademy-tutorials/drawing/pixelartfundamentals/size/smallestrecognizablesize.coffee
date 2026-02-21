@@ -116,7 +116,7 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.SmallestRecognizableSize e
     
     @message: -> """
       The wolf has an even longer body and a typical gray-brown coat.
-      We draw the ears like the cat, but we put the snout to the side to convey a bigger, fuller head.
+      We draw the ears like the cat, but we put the nose to the side to convey a longer snout.
     """
     
     @initialize()
