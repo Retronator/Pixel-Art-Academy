@@ -22,6 +22,7 @@ class LM.PixelArtFundamentals.Fundamentals extends LM.Chapter
     @MusicTapes
     @Publications
     @Publications.Parts
+    @Pico8Cartridges
   ]
 
   @courses: -> [
