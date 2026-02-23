@@ -38,7 +38,7 @@ _.mixin
       changed = false
   
       for key, valueA of a
-        if b[key]?
+        if b[key] isnt undefined
           valueDifference = _.objectDifference valueA, b[key]
           unless valueDifference is unchangedObject
             difference[key] = valueDifference
@@ -48,7 +48,7 @@ _.mixin
           difference[key] = removedConstant
           changed = true
           
-      for key, valueB of b when not a[key]? and valueB?
+      for key, valueB of b when a[key] is undefined and valueB isnt undefined
         difference[key] = valueB
         changed = true
   

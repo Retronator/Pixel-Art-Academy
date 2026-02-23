@@ -150,7 +150,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
       
     # Update evaluation where requested.
     @pixelArtEvaluationPropertyTemplate = new ComputedField =>
-      _.clone @pixelArtEvaluationProperty()
+      _.cloneDeep @pixelArtEvaluationProperty()
     ,
       EJSON.equals
     
