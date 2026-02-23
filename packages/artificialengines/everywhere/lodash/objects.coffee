@@ -32,7 +32,8 @@ _.mixin
   
       if changed then arrayDifference else unchangedObject
 
-    else if _.isObject(a) and _.isObject(b)
+    # HACK: On the server, iterating over properties of dates leads to recursion, so we have to explicitly exclude them.
+    else if _.isObject(a) and _.isObject(b) and not _.isDate(a) and not _.isDate(b)
       # For objects, we do a deep difference. If no field was changed, we return a special unchanged object.
       difference = {}
       changed = false

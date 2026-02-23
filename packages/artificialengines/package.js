@@ -562,3 +562,14 @@ Package.onUse(function(api) {
 
   api.addFile('workforce/work');
 });
+
+Package.onTest(function(api) {
+  api.use([
+    'coffeescript',
+    'tinytest',
+    'ejson',
+    'retronator:artificialengines'
+  ]);
+
+  api.addFile('everywhere/lodash/objects-tests');
+});
