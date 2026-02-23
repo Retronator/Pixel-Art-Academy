@@ -26,7 +26,7 @@ class PAA.Tutorials.Drawing.ElementsOfArt.Shape.BasicShapesBreakdown extends PAA
     @assetClass: -> Asset
     
     @message: -> """
-      Draw the indicated shapes to construct the scene from the reference.
+      Draw the lines and shapes as indicated to construct the scene from the reference.
     """
     
     @initialize()
