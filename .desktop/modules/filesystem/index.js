@@ -258,8 +258,8 @@ export default class FileSystem {
       }
 
       // Write to temporary file and rename it.
-      await fs.writeFile(temporaryPath, fileData);
-      const handle = await fs.open(temporaryPath, "r");
+      const handle = await fs.open(temporaryPath, "w");
+      await handle.writeFile(fileData);
       await handle.sync();
       await handle.close();
       await fs.rename(temporaryPath, filePath);
