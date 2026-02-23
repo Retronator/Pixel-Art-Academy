@@ -149,15 +149,10 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
       Tracker.nonreactive => @interface.deactivateTool()
       
     # Update evaluation where requested.
-    @pixelArtEvaluationPropertyTemplate = new ComputedField =>
-      _.cloneDeep @pixelArtEvaluationProperty()
-    ,
-      EJSON.equals
-    
     @autorun (computation) =>
-      return unless pixelArtEvaluationPropertyTemplate = @pixelArtEvaluationPropertyTemplate()
+      return unless pixelArtEvaluationProperty = @pixelArtEvaluationProperty()
       return unless pixelArtEvaluation = @pixelArtEvaluation()
-      evaluation = pixelArtEvaluation.evaluate pixelArtEvaluationPropertyTemplate
+      evaluation = pixelArtEvaluation.evaluate pixelArtEvaluationProperty
       
       Tracker.nonreactive =>
         # Only update evaluation when we're at the end of history to prevent recalculation when undoing/redoing
