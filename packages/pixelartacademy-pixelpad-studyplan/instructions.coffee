@@ -334,7 +334,6 @@ class StudyPlan.Instructions
                 ,
                   x: -10, y: -17
                 ]
-                #x: 30, y: -22
                 x: -5, y: -12
               ]
             text: _.extend {}, textBase,

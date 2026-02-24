@@ -1,10 +1,16 @@
-Artworks in this folder are NOT covered by CC-SA. Copyright belongs to their respective authors. 
+# Pixel Art Academy Tutorials
 
-Sprites used under fair use:
+## Pixel art tools: basics
 
-- 720° (ZX Spectrum) by Atari, 1987
-- Out Run (ZX Spectrum) by Probe Software, 1987
-- CodeMasters logo (from the loading screen of Fast Food) by Neil Adamson, 1989
+Some references in this folder are not covered by CC-SA, but their respective licenses.
+
+### Images used under fair use
+
+Game artwork from:
+
+- 720° (ZX Spectrum), Atari, 1987
+- Out Run (ZX Spectrum), Probe Software, 1987
+- CodeMasters logo (from the loading screen of Fast Food), Neil Adamson, 1989
 
 The artworks are chosen based on their historical and educational relevance. The purpose is for students to
 get familiar with early computer graphics from an art history standpoint and study the techniques developed

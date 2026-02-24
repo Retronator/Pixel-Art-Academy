@@ -1,6 +1,13 @@
-Artworks in this folder are NOT covered by CC-SA. Copyright belongs to their respective authors. 
+# Pixel Art Academy Tutorials
 
-Sprites used with permission from the authors:
+## Pixel art tools: basics
+
+Some references in this folder are not covered by CC-SA, but their respective licenses.
+
+### Images used with permission
+
+The following images are included or derived from images with permission from the authors.
+Any forks of this repository and other derivative works must obtain their own licenses to use these images.
 
 - Brush by Susan Kare, 1982
 

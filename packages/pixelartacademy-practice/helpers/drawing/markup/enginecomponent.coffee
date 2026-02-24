@@ -22,6 +22,10 @@ class Markup.EngineComponent
         @_fontsAvailable[font] true
     
     @_fontsAvailable[font]()
+    
+  constructor: ->
+    @_bitmapPixelImages = []
+    @_urlImages = []
   
   drawMarkup: (markup, context, properties) ->
     # How big is an HTML canvas pixel relative to the unit of the context.
@@ -36,6 +40,8 @@ class Markup.EngineComponent
     
     context.save()
     
+    bitmapCanvases = []
+    
     for marking in markup
       if pixel = marking.pixel
         context.fillStyle = pixel.style
@@ -46,6 +52,13 @@ class Markup.EngineComponent
         context.fillStyle = point.style
         context.beginPath()
         context.arc point.x, point.y, radius, 0, 2 * Math.PI
+        context.fill()
+      
+      if circle = marking.circle
+        radius = circle.radius or 0.5
+        context.fillStyle = circle.style
+        context.beginPath()
+        context.arc circle.x, circle.y, radius, 0, 2 * Math.PI
         context.fill()
       
       if line = marking.line
@@ -172,6 +185,51 @@ class Markup.EngineComponent
           
           context.fillStyle = text.style
           @_drawText context, text.value, textPosition, lineHeight, text.align
+      
+      if image = marking.image
+        if bitmap = image.bitmap
+          if bitmapCanvas = _.find bitmapCanvases, (bitmapCanvas) => bitmapCanvas.bitmap is bitmap
+            source = bitmapCanvas.canvas
+        
+          else
+            unless bitmapPixelImage = _.find @_bitmapPixelImages, (bitmapPixelImage) => bitmapPixelImage.bitmap is bitmap
+              bitmapPixelImage =
+                bitmap: bitmap
+                pixelImage: new LOI.Assets.Engine.PixelImage.Bitmap asset: => bitmap
+              
+              @_bitmapPixelImages.push bitmapPixelImage
+              
+            if source = bitmapPixelImage.pixelImage.getCanvas()
+              bitmapCanvases.push
+                bitmap: bitmap
+                canvas: source
+          
+        if url = image.url
+          unless urlImage = @_urlImages[url]
+            loadDependency = new Tracker.Dependency
+            
+            imageElement = new Image
+            imageElement.onload = => loadDependency.changed()
+            imageElement.src = url
+            
+            urlImage = {image: imageElement, loadDependency}
+            @_urlImages[url] = urlImage
+            
+          source = urlImage.image
+          urlImage.loadDependency.depend()
+            
+        if source
+          sourceX = image.source?.position.x or 0
+          sourceY = image.source?.position.y or 0
+          sourceWidth = image.source?.width or source.width
+          sourceHeight = image.source?.height or source.height
+          
+          destinationX = image.position.x
+          destinationY = image.position.y
+          destinationWidth = image.width or sourceWidth
+          destinationHeight = image.height or sourceHeight
+          
+          context.drawImage source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight
         
     context.restore()
 

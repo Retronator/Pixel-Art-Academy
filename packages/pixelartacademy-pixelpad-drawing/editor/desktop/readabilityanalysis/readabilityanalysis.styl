@@ -1,0 +1,140 @@
+@import "{retronator:retronator-identity}/style/style.import"
+@import "{retronator:pixelartacademy-pixelpad-drawing}/editor/desktop/desktop.import"
+
+paperColor = atariGray(7)
+printColor = atariIndigo(1)
+penColor = atariCyan(3)
+
+.pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis
+  position absolute
+  right 0
+  bottom 0
+  z-index 14
+  transform translate(calc(100% + 10rem), calc(100% + 10rem))
+  cursor pointer
+
+  &.active
+    transform translate(0, calc(100% - 31rem))
+    right calc(50% - 130rem)
+    cursor default
+
+    .paper
+      transform translate(0, -4rem)
+
+      .sheet
+        transition-duration 1s
+        filter drop-shadow(-20rem 5rem 0 desktopShadowColor) drop-shadow(0 0 10rem desktopShadowColor)
+
+  &.revealed
+    transform translate(0, 0)
+
+    .paper
+      transform translate(0, 0)
+
+  .paper
+    position relative
+    width 260rem
+    transition all 0.2s
+    color printColor
+    checkout()
+    line-height 8rem
+
+    .sheet
+      content ''
+      display block
+      absolute-cover-size()
+      height 378rem
+      border-style solid
+      border-width 42rem 16rem 0
+      border-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/paper.png') 42 16 0 fill repeat
+      filter drop-shadow(-1rem 1rem 0 desktopShadowColor) drop-shadow(0 0 0 desktopShadowColor)
+      transition all 0.2s
+
+    .content-placeholder
+      transition all 0.5s
+
+    .content
+      position absolute
+      z-index 1
+      top 0
+      left 0
+      right 0
+      padding 7rem 20rem 3rem
+
+      .header
+        height 26.5rem
+
+        .pixeltosh
+          float left
+          position relative
+          left -1rem
+          width 20rem
+          height 23rem
+          background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh.png')
+
+          &.passes
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh-gotit.png')
+
+          &.fails
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh-thinking.png')
+
+          &.wait
+            background-image image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/readabilityanalysis/pixeltosh-wait.gif')
+
+        .title
+          position relative
+          left 5rem
+          top 9rem
+          text-transform uppercase
+
+      .analysis
+        .region
+          margin-bottom 8rem
+
+          &:last-child
+            margin-bottom 0
+
+          .image
+            .title
+              text-transform uppercase
+
+          .result
+            position relative
+            padding-left 8rem
+
+            &::before
+              position absolute
+              content 'x'
+              left 0
+              top 0
+
+            &.passes::before
+              content '✔'
+
+            .title
+              text-transform uppercase
+
+          .classification
+            display flex
+            margin-top 8rem
+
+            .classifier
+              width 50%
+
+              .name
+                text-transform uppercase
+
+              .labels
+                list-style none
+                margin 0
+                padding 0
+
+  .pixelartacademy-pixelpad-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    transform translate(calc(100% - 44rem), calc(100% - 31rem))
+
+    &:hover:not(.active)
+      .paper
+        transform translate(-4rem, -4rem)
+
+        .sheet
+          filter drop-shadow(-8rem 2rem 0 desktopShadowColor) drop-shadow(0 0 5rem desktopShadowColor)

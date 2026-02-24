@@ -49,9 +49,24 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     ,
       (a, b) => a is b
       
+    @asset = new ComputedField =>
+      @interface.parent.activeAsset()
+    ,
+      (a, b) => a is b
+    
     @pixelArtEvaluation = new ComputedField =>
-      return unless bitmap = @bitmapObject()
       @_pixelArtEvaluation?.destroy()
+      return unless asset = @asset()
+      
+      # Try to reuse the pixel art evaluation instance from the asset.
+      if asset.initialized
+        return unless asset.initialized()
+        
+        if asset.pixelArtEvaluationInstance
+          @_pixelArtEvaluation = null
+          return asset.pixelArtEvaluationInstance()
+      
+      return unless bitmap = @bitmapObject()
       @_pixelArtEvaluation = new PAE bitmap
       
     @hoveredFilterValue = new ReactiveField null
@@ -236,7 +251,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation extends LOI.Vi
     'active' if @active()
     
   paperDisplayed: ->
-    # Display the paper if the property is defined and we're not explicitely told to not display it.
+    # Display the paper if the property is defined and we're not explicitly told to not display it.
     property = @pixelArtEvaluationProperty()
     property and property.displayed isnt false
   

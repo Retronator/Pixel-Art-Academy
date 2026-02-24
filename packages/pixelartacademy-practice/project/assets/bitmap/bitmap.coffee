@@ -46,6 +46,9 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   # Override if the asset requires a pixel art evaluation analysis.
   # You can return an object to be sent as options to the constructor.
   @pixelArtEvaluation: -> false
+
+  # Override if the asset requires a readability analysis.
+  @readabilityAnalysis: -> false
   
   @initialize: ->
     super arguments...
@@ -113,9 +116,10 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
     @_restrictedPaletteSubscription?.stop()
     @_initializingAutorun?.stop()
     @_pixelArtEvaluation?.destroy()
+    @_readabilityAnalysis?.destroy()
     
   initializingConditions: ->
-    # Wait with initalizing until we've selected the asset as the active one in the editor.
+    # Wait with initializing until we've selected the asset as the active one in the editor.
     @_isActiveInEditor false
   
   _isActiveInEditor: (requiresDrawingActive) ->
@@ -135,7 +139,11 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   _initialize: ->
     # Create additional helpers.
     if pixelArtEvaluation = @constructor.pixelArtEvaluation()
-      pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
+      if @pixelArtEvalutionOptions
+        pixelArtEvaluationOptions = @pixelArtEvaluationOptions()
+        
+      else
+        pixelArtEvaluationOptions = if _.isObject pixelArtEvaluation then pixelArtEvaluation else {}
       
       @pixelArtEvaluationInstance = new ComputedField =>
         return unless bitmap = @versionedBitmap()
@@ -147,6 +155,23 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
         pixelArtEvaluationInstance.depend()
         pixelArtEvaluationInstance
         
+    if readabilityAnalysis = @constructor.readabilityAnalysis()
+      if @readabilityAnalysisOptions
+        readabilityAnalysisOptions = @readabilityAnalysisOptions()
+        
+      else
+        readabilityAnalysisOptions = if _.isObject readabilityAnalysis then readabilityAnalysis else {}
+      
+      @readabilityAnalysisInstance = new ComputedField =>
+        return unless bitmap = @versionedBitmap()
+        @_readabilityAnalysis?.destroy()
+        @_readabilityAnalysis = new PAA.Practice.ReadabilityAnalysis bitmap, readabilityAnalysisOptions
+      
+      @readabilityAnalysis = new ComputedField =>
+        return unless readabilityAnalysisInstance = @readabilityAnalysisInstance()
+        readabilityAnalysisInstance.depend()
+        readabilityAnalysisInstance
+    
     Meteor.setTimeout => @initialized true
   
   _afterInitialization: (action) ->
@@ -201,6 +226,10 @@ class PAA.Practice.Project.Asset.Bitmap extends PAA.Practice.Project.Asset
   imageUrl: ->
     return unless bitmapId = @bitmapId()
     "/assets/bitmap.png?id=#{bitmapId}"
+    
+  # Override if you want to send options based on the bitmap instance.
+  pixelArtEvaluationOptions: ->
+  readabilityAnalysisOptions: ->
 
 # We want a generic state for bitmap assets so we create it outside of the constructor as inherited classes don't need it.
 # canEdit: can the user edit the bitmaps with built-in editors

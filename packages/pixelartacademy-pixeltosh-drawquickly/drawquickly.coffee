@@ -63,8 +63,8 @@ class PAA.Pixeltosh.Programs.DrawQuickly extends PAA.Pixeltosh.Program
     @windowId = @os.addWindow @constructor.Interface.createInterfaceData()
     
     @classifiers =
-      symbolic: new @constructor.Classifier.Symbolic
-      realistic: new @constructor.Classifier.Realistic
+      symbolic: new PAA.ImageClassification.SimpleClassifier.Symbolic
+      realistic: new PAA.ImageClassification.SimpleClassifier.Realistic
     
     for classifierName, classifier of @classifiers
       await classifier.createInferenceSession()

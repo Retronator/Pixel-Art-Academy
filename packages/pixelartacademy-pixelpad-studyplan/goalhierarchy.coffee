@@ -8,9 +8,9 @@ StudyPlan = PAA.PixelPad.Apps.StudyPlan
 
 class StudyPlan.GoalHierarchy
   @goalPadding =
-    left: 2
+    left: 3
     top: 2
-    right: 2
+    right: 4
     bottom: 4
     
   @goalIslandSpacing = 10
@@ -116,8 +116,8 @@ class StudyPlan.GoalHierarchy
       connectConnectionPoints = (connectionPoints) =>
         for connectionPointB, connectionPointAIndex in connectionPoints[1..]
           connectionPointA = connectionPoints[connectionPointAIndex]
-          addGlobalPathway new StudyPlan.Pathway connectionPointA, connectionPointB
-          addGlobalPathway new StudyPlan.Pathway connectionPointB, connectionPointA
+          addGlobalPathway new StudyPlan.Pathway connectionPointA, connectionPointB, null, true
+          addGlobalPathway new StudyPlan.Pathway connectionPointB, connectionPointA, null, true
       
       # Recursively create potential global road network.
       createGoalConnectionPoints = (goalNode) =>
@@ -131,15 +131,15 @@ class StudyPlan.GoalHierarchy
         bottomRoadY = goalGlobalPosition.y + goalNode.bottomRoadY
         
         entryConnection = StudyPlan.ConnectionPoint.createGlobal entryX, goalNode.entryPoint.globalPosition.y
-        addGlobalPathway new StudyPlan.Pathway entryConnection, goalNode.entryPoint
+        addGlobalPathway new StudyPlan.Pathway entryConnection, goalNode.entryPoint, null, true
 
         exitConnection = StudyPlan.ConnectionPoint.createGlobal exitX, goalNode.exitPoint.globalPosition.y
-        addGlobalPathway new StudyPlan.Pathway goalNode.exitPoint, exitConnection
+        addGlobalPathway new StudyPlan.Pathway goalNode.exitPoint, exitConnection, null, true
         
         sidewaysConnections = for sidewaysPoint in goalNode.sidewaysPoints
           sidewaysConnection = StudyPlan.ConnectionPoint.createGlobal sidewaysPoint.globalPosition.x, topRoadY
-          addGlobalPathway new StudyPlan.Pathway sidewaysPoint, sidewaysConnection
-          addGlobalPathway new StudyPlan.Pathway sidewaysConnection, sidewaysPoint
+          addGlobalPathway new StudyPlan.Pathway sidewaysPoint, sidewaysConnection, null, true
+          addGlobalPathway new StudyPlan.Pathway sidewaysConnection, sidewaysPoint, null, true
           sidewaysConnection
         
         goalConnectionPoints =
@@ -158,7 +158,11 @@ class StudyPlan.GoalHierarchy
           goalConnectionPoints.left.push accessHorizontalEntryConnection
           
           accessHorizontalConnections = [accessHorizontalEntryConnection, accessJunction, sidewaysConnections...]
-          accessHorizontalConnections.push forwardGoalsConnectionPoints[0].accessHorizontal... if forwardGoalsConnectionPoints.length
+          
+          if forwardGoalsConnectionPoints.length
+            # Align the access horizontal with those of forward goals.
+            extendedAccessHorizontalConnections = [accessHorizontalConnections..., forwardGoalsConnectionPoints[0].accessHorizontal... ]
+            mergeHorizontalConnectionPoints extendedAccessHorizontalConnections
           
           mergeHorizontalConnectionPoints accessHorizontalConnections
           connectConnectionPoints accessHorizontalConnections
@@ -188,13 +192,9 @@ class StudyPlan.GoalHierarchy
               if forwardHorizontalConnections.length
                 forwardHorizontalY = forwardHorizontalConnections[0].globalPosition.y
                 
-                forwardHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal entryConnection.globalPosition.x, forwardHorizontalY
+                forwardHorizontalEntryConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, forwardHorizontalY
                 forwardHorizontalConnections.push forwardHorizontalEntryConnection
                 mainVertical.push forwardHorizontalEntryConnection
-                
-                forwardHorizontalExitConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, forwardHorizontalY
-                forwardHorizontalConnections.push forwardHorizontalExitConnection
-                goalConnectionPoints.right.push forwardHorizontalExitConnection
                 
                 mergeHorizontalConnectionPoints forwardHorizontalConnections
                 connectConnectionPoints forwardHorizontalConnections
@@ -254,7 +254,7 @@ class StudyPlan.GoalHierarchy
                 sidewaysHorizontalExitConnection = StudyPlan.ConnectionPoint.createGlobal exitConnection.globalPosition.x, sidewaysHorizontalY
                 sidewaysHorizontalConnections.push sidewaysHorizontalExitConnection
                 
-                mergeHorizontalConnectionPoints sidewaysHorizontalConnections
+                mergeHorizontalConnectionPoints sidewaysHorizontalConnections, false
                 connectConnectionPoints sidewaysHorizontalConnections
         
         # Finalize the main vertical.
@@ -293,11 +293,8 @@ class StudyPlan.GoalHierarchy
           
           paths.push path if path = @pathfind startPoint, endPoint
           
-      # Replace all global pathways with needed paths.
-      pathway.remove() for pathway in @_globalPathways
-      @_globalPathways = []
-      
-      for path in paths
+      # Create needed paths from connections.
+      addPath = (path) =>
         startPoint = path[0].startPoint
         globalWaypointPositions = []
         
@@ -314,14 +311,42 @@ class StudyPlan.GoalHierarchy
 
         roadTileMap.placeRoad pathway, useGlobalPositions: true
       
+      addPath path for path in paths
+      
       # Propagate interests.
       rootGoalNode.entryPoint.propagateInterests() for rootGoalNode in @rootGoalNodes
       
-      # Distribute possible goals.
-      possibleGoals = @blueprint.studyPlan.goals().slice()
+      # Create pathways for missing required interests.
+      interestProviders = {}
       
       for goalId, goalNode of @goalNodesById
-        _.remove possibleGoals, (goal) => goal.id() is goalNode.goalId
+        for taskPoint in goalNode.taskPoints
+          for interest in taskPoint.providedInterests when not interestProviders[interest]
+            interestProviders[interest] = taskPoint
+      
+      for goalId, goalNode of @goalNodesById
+        for taskPoint in goalNode.taskPoints
+          unprovidedInterests = _.difference taskPoint.entryPoint.requiredInterests, taskPoint.entryPoint.propagatedProvidedInterests
+          for interest in unprovidedInterests when interestProviders[interest]
+            startPoint = interestProviders[interest]
+            endPoint = taskPoint.entryPoint
+            if path = @pathfind startPoint, endPoint
+              addPath path
+      
+      # Distribute possible goals.
+      possibleGoals = []
+      
+      for goal in @blueprint.studyPlan.goals()
+        # Calculate all required interests so we can remove them as we distribute the goals.
+        requiredInterests = []
+        
+        for task in goal.initialTasks()
+          requiredInterests = _.union requiredInterests, task.requiredInterests()
+          
+        possibleGoals.push {goal, requiredInterests}
+      
+      for goalId, goalNode of @goalNodesById
+        _.remove possibleGoals, (possibleGoal) => possibleGoal.goal.id() is goalNode.goalId
         
         goalNode.possibleForwardGoalIds = []
         goalNode.possibleSidewaysGoalIds = []
@@ -329,13 +354,17 @@ class StudyPlan.GoalHierarchy
       availableGoalIds = (interests) =>
         goals = []
         
-        for goal in possibleGoals
-          for task in goal.initialTasks()
-            requiredInterests = task.requiredInterests()
-            if _.intersection(requiredInterests, interests).length is requiredInterests.length
-              goals.push goal
+        for possibleGoal in possibleGoals
+          coveredInterests = _.intersection possibleGoal.requiredInterests, interests
+          
+          if coveredInterests.length or not possibleGoal.requiredInterests.length
+            goals.push possibleGoal.goal
+            
+            # Mark that we've found a place based on the covered interests.
+            _.pullAll possibleGoal.requiredInterests, coveredInterests
         
-        _.pull possibleGoals, goals...
+        # Goals without any more interests to be covered, can't be added anywhere else.
+        _.remove possibleGoals, (possibleGoal) => not possibleGoal.requiredInterests.length
         
         goal.id() for goal in goals
       
@@ -442,4 +471,9 @@ class StudyPlan.GoalHierarchy
       isGoal: (point) => point is endPoint
       getEdgeStart: (pathway) => pathway.startPoint
       getEdgeEnd: (pathway) => pathway.endPoint
-      getDescendentEdges: (point) => point.outgoingPathways
+      getDescendentEdges: (point) =>
+        if point.potentialOutgoingPathways.length
+          point.potentialOutgoingPathways
+          
+        else
+          point.outgoingPathways

@@ -6,19 +6,29 @@ IL = Illustrapedia
 StudyPlan = PAA.PixelPad.Apps.StudyPlan
 
 class StudyPlan.Pathway
-  constructor: (@startPoint, @endPoint, @goalNode) ->
+  constructor: (@startPoint, @endPoint, @goalNode, @potential) ->
     @localWaypointPositions = []
     @globalWaypointPositions = []
     
     # Don't add duplicate pathways.
     return @ if _.find @startPoint.outgoingPathways, (pathway) => pathway.endPoint is @endPoint
     
-    @startPoint.outgoingPathways.push @
-    @endPoint.incomingPathways.push @
+    if @potential
+      @startPoint.potentialOutgoingPathways.push @
+      @endPoint.potentialIncomingPathways.push @
+      
+    else
+      @startPoint.outgoingPathways.push @
+      @endPoint.incomingPathways.push @
 
   remove: ->
-    _.pull @startPoint.outgoingPathways, @
-    _.pull @endPoint.incomingPathways, @
+    if @potential
+      _.pull @startPoint.potentialOutgoingPathways, @
+      _.pull @endPoint.potentialIncomingPathways, @
+      
+    else
+      _.pull @startPoint.outgoingPathways, @
+      _.pull @endPoint.incomingPathways, @
 
   clone: (newStartPoint, newEndPoint, newGoalNode) ->
     pathway = new StudyPlan.Pathway newStartPoint, newEndPoint, newGoalNode

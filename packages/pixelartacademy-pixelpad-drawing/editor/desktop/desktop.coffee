@@ -47,6 +47,8 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       pico8Pan: AEc.ValueTypes.Number
       pixelArtEvaluationDrag: AEc.ValueTypes.Boolean
       pixelArtEvaluationPan: AEc.ValueTypes.Number
+      readabilityAnalysisDrag: AEc.ValueTypes.Boolean
+      readabilityAnalysisPan: AEc.ValueTypes.Number
       cursorPan: AEc.ValueTypes.Number
       publicationsDrag: AEc.ValueTypes.Boolean
       rulerDrag: AEc.ValueTypes.Boolean
@@ -131,6 +133,15 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       
       handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation.id(), documentHasPixelArtEvaluation or assetRequiresPixelArtEvaluation
 
+    @autorun (computation) =>
+      # Show readability analysis if the document has it.
+      documentHasReadabilityAnalysis = @displayedAsset()?.document()?.properties?.readabilityAnalysis
+      
+      # Show readability analysis if the asset requires it.
+      assetRequiresReadabilityAnalysis = @displayedAsset()?.constructor.readabilityAnalysis?()
+      
+      handleView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis.id(), documentHasReadabilityAnalysis or assetRequiresReadabilityAnalysis
+    
     @autorun (computation) =>
       # Show publications if the asset requires it.
       publications = @displayedAsset()?.constructor.availablePublications?()
@@ -304,6 +315,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
   editorDrawComponents: ->
     providers = [
       @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
+      @interface.getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
     ]
     
     _.flatten(provider.editorDrawComponents() for provider in providers when provider?)
@@ -349,6 +361,9 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
       if pixelArtEvaluation = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.PixelArtEvaluation
         @audio.pixelArtEvaluationDrag visible if incrementToolCount pixelArtEvaluation.paperDisplayed() and not pixelArtEvaluation.active()
       
+      if readabilityAnalysis = @_getView PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis
+        @audio.readabilityAnalysisDrag visible if incrementToolCount readabilityAnalysis.paperDisplayed() and not readabilityAnalysis.active()
+        
       @audio.publicationsDrag visible if incrementToolCount displayedAsset?.constructor.availablePublications?().length and not @_getView(PAA.PixelPad.Apps.Drawing.Editor.Desktop.Publications)?.active()
       @audio.rulerDrag visible if incrementToolCount @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Line) or @toolIsAvailable(PAA.Practice.Software.Tools.ToolKeys.Rectangle) or @toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Ellipse
       
@@ -477,6 +492,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @_palette = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-palette')[0]
     @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
     @_pixelArtEvaluation = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pixelartevaluation')[0]
+    @_readabilityAnalysis = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-readabilityanalysis')[0]
     
     switch activeToolId
       when LOI.Assets.SpriteEditor.Tools.Line.id() then $('.fatamorgana-toolbox .line')[0]
@@ -497,4 +513,5 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop extends PAA.PixelPad.Apps.Drawing
     @audio.colorSwatchesPan adjustPan AEc.getPanForElement @_palette if @_palette
     @audio.pico8Pan adjustPan AEc.getPanForElement @_pico8 if @_pico8
     @audio.pixelArtEvaluationPan adjustPan AEc.getPanForElement @_pixelArtEvaluation if @_pixelArtEvaluation
+    @audio.readabilityAnalysisPan adjustPan AEc.getPanForElement @_readabilityAnalysis if @_readabilityAnalysis
     @audio.rulerPan adjustPan AEc.getPanForElement @_ruler if @_ruler

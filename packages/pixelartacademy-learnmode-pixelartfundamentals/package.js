@@ -40,11 +40,13 @@ Package.onUse(function(api) {
   api.addFile('fundamentals/scenes/workbench');
   api.addFile('fundamentals/scenes/musictapes');
   api.addFile('fundamentals/scenes/publications');
+  api.addFile('fundamentals/scenes/pico8cartridges');
 
   api.addFile('fundamentals/goals..');
   api.addFile('fundamentals/goals/elementsofart');
   api.addFile('fundamentals/goals/jaggies');
   api.addFile('fundamentals/goals/simplification');
+  api.addFile('fundamentals/goals/size');
 
   api.addFile('fundamentals/goals/pinball..');
   api.addFile('fundamentals/goals/pinball/assetstask');

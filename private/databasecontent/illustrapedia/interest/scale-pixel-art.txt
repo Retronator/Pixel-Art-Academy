@@ -1,0 +1,2 @@
+scale pixel art
+{"_id":"7yBxgEr56K4KygHiu","name":{"_id":"mperK5eZ6g3pTmRYs","translations":{"en":{"us":{"text":"scale (pixel art)","quality":0},"best":{"text":"scale (pixel art)","quality":0,"languageRegion":"en-US"}},"best":{"text":"scale (pixel art)","quality":0,"languageRegion":"en-US"}}},"_schema":"1.1.0","searchTerms":["scale pixel art"],"referenceName":"scale (pixel art)","lastEditTime":{"$date":1771232823080}}

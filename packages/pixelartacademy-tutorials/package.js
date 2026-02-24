@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.addFile('tutorials');
 
   api.addFile('drawing..');
+  api.addFile('drawing/markup');
 
   api.addFile('drawing/instructions..');
   api.addFile('drawing/instructions/instruction')
@@ -114,7 +115,6 @@ Package.onUse(function(api) {
   // Pixel art fundamentals
 
   api.addFile('drawing/pixelartfundamentals..');
-  api.addFile('drawing/pixelartfundamentals/markup');
 
   api.addFile('drawing/pixelartfundamentals/jaggies..');
   api.addFile('drawing/pixelartfundamentals/jaggies/asset');
@@ -172,6 +172,14 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/thicklines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/widelines');
   api.addFile('drawing/pixelartfundamentals/jaggies/linewidth/varyinglinewidth');
+
+  api.addFile('drawing/pixelartfundamentals/size..');
+  api.addFile('drawing/pixelartfundamentals/size/assetwithreferences');
+  api.addFile('drawing/pixelartfundamentals/size/displayresolution');
+  api.addFile('drawing/pixelartfundamentals/size/perceivedresolution');
+  api.addFile('drawing/pixelartfundamentals/size/smallestdetails');
+  api.addFile('drawing/pixelartfundamentals/size/smallestrecognizablesize');
+  api.addFile('drawing/pixelartfundamentals/size/readabilityanalysis');
 
   // Simplification
 

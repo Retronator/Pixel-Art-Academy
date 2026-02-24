@@ -8,7 +8,7 @@ class LOI.Assets.VisualAsset.Operations.UpdateProperty extends AM.Document.Versi
   @initialize()
 
   execute: (document) ->
-    if not document.properties[@property] and @changes
+    if (not document.properties[@property] or not _.isObject document.properties[@property]) and @changes
       document.properties[@property] = @changes
       
     else if document.properties[@property] and not @changes

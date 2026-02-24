@@ -11,8 +11,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'bresenham-zingl': '0.2.0',
-  'onnxruntime-web': '1.16.3'
+  'bresenham-zingl': '0.2.0'
 });
 
 Package.onUse(function(api) {
@@ -24,7 +23,6 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('drawquickly');
-  api.addFile('classifier');
   api.addFile('drawing');
   api.addFile('symbolicdrawing');
   api.addFile('symbolicdrawing-things');

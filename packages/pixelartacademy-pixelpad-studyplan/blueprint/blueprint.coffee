@@ -324,7 +324,12 @@ class StudyPlan.Blueprint extends AM.Component
   _revealPathwaysFrom: (origin, animate) ->
     revealPromises = [] if animate
     
-    for pathway in origin.outgoingPathways when pathway not in @_revealedPathways
+    outgoingPathways = [origin.outgoingPathways...]
+    
+    if (taskPoint = origin.taskPoint) and origin is taskPoint.entryPoint
+      outgoingPathways.push origin.taskPoint.outgoingPathways...
+      
+    for pathway in outgoingPathways when pathway not in @_revealedPathways
       @_revealedPathways.push pathway
       
       if animate

@@ -6,31 +6,41 @@
     {{#each nonBlueprintTiles}}
       <div class="tile {{tileTypeClass}} {{revealedClass}} {{groundClass}} {{taskHighlightedClass}}" {{style tileStyle}}>
         {{#unless options.noGround}}
-          <div class="ground">
+          {{#if tileRevealed}}
+            <div class="ground"></div>
+          {{/if}}
+        {{/unless}}
+        {{#if pathwayClasses}}
+          <div class="pathway {{pathwayClasses}}">
+            {{#unless tileRevealed}}
+              <div class="blueprint"></div>
+            {{/unless}}
             <div class="image"></div>
           </div>
-        {{/unless}}
-        <div class="pathway {{pathwayClasses}}">
-          <div class="blueprint"></div>
-          <div class="image"></div>
-        </div>
+        {{/if}}
         {{#if $is tileType 'Building'}}
           <div class="building {{buildingClass}} {{buildingActiveClass}}">
-            <div class="blueprint" {{style buildingBlueprintStyle}}></div>
+            {{#unless tileRevealed}}
+              <div class="blueprint" {{style buildingBlueprintStyle}}></div>
+            {{/unless}}
             <div class="shadow"></div>
             <div class="image"></div>
           </div>
         {{/if}}
         {{#if $is tileType 'Gate'}}
           <div class="gate {{gateOpenedClass}}">
-            <div class="blueprint"></div>
+            {{#unless tileRevealed}}
+              <div class="blueprint"></div>
+            {{/unless}}
             <div class="shadow"></div>
             <div class="image"></div>
           </div>
         {{/if}}
         {{#if $is tileType 'Flag'}}
           <div class="flag {{flagRaisedClass}}">
-            <div class="blueprint"></div>
+            {{#unless tileRevealed}}
+              <div class="blueprint"></div>
+            {{/unless}}
             <div class="shadow"></div>
             <div class="image"></div>
           </div>

@@ -124,6 +124,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/transform');
   api.addFile('everywhere/lodash/cartesianproduct');
   api.addFile('everywhere/lodash/time');
+  api.addFile('everywhere/lodash/values');
 
   api.addFile('everywhere/tracker/delayedautorun');
   api.addFile('everywhere/tracker/triggerondefinedchange');
@@ -560,4 +561,15 @@ Package.onUse(function(api) {
   // Artificial Workforce
 
   api.addFile('workforce/work');
+});
+
+Package.onTest(function(api) {
+  api.use([
+    'coffeescript',
+    'tinytest',
+    'ejson',
+    'retronator:artificialengines'
+  ]);
+
+  api.addFile('everywhere/lodash/objects-tests');
 });

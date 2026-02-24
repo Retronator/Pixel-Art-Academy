@@ -14,34 +14,7 @@
     width 13rem
     height 5rem
 
-    &.task-highlighted
-      .building
-      .gate
-        .image
-          filter drop-shadow(0 0 2rem white)
-
-      .building
-        &.active
-          .blueprint
-            border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
-
-        &.height-8
-          &.active
-            .blueprint
-              background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-hover.png')
-
-          .blueprint
-            background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-hover.png')
-
-        .blueprint
-          border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
-
-      .gate
-        .blueprint
-          background-position-x -69rem
-
     &.revealed
-      .ground
       .pathway
       .gate
       .flag
@@ -53,6 +26,12 @@
         .shadow
           visibility visible
 
+      .building
+      .gate
+        .image
+          filter drop-shadow(0 0 2rem transparent)
+          transition filter 0.1s
+
       .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
         .pathway
           .image
@@ -60,9 +39,35 @@
 
         .building
           .image
+            transition bottom 0.2s ease-out, filter 0.1s
             bottom -10rem
 
-    .ground
+      &.task-highlighted
+        .building
+        .gate
+          .image
+            filter drop-shadow(0 0 2rem white)
+
+        .building
+          &.active
+            .blueprint
+              border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active-hover.png')
+
+          &.height-8
+            &.active
+              .blueprint
+                background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-active-hover.png')
+
+            .blueprint
+              background-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-8-hover.png')
+
+          .blueprint
+            border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-hover.png')
+
+        .gate
+          .blueprint
+            background-position-x -69rem
+
     .pathway
     .gate
     .flag
@@ -70,6 +75,9 @@
       .image
       .shadow
         visibility hidden
+
+      .shadow
+        pointer-events none
 
     .pathway .blueprint
     .gate .blueprint
@@ -79,10 +87,8 @@
     .ground
       absolute-cover()
       z-index 1
-
-      .image
-        absolute-cover()
-        background image('/pixelartacademy/pixelpad/apps/studyplan/ground-tiles.png') -1rem 0 / 45rem 85rem
+      pointer-events none
+      background image('/pixelartacademy/pixelpad/apps/studyplan/ground-tiles.png') -1rem 0 / 45rem 85rem
 
     .pathway
       absolute-cover()
@@ -123,14 +129,9 @@
     .gate
       cursor default
 
-      .image
-        filter drop-shadow(0 0 2rem transparent)
-        transition filter 0.1s
-
     .building
       &.active
         .blueprint
-          background-color atariAqua(3)
           border-image-source image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building-active.png')
 
       &.height-8
@@ -145,11 +146,9 @@
       .blueprint
         width 13rem
         left 0
-        background-color atariCyan(0)
-        background-clip padding-box
         border-width 5rem 4rem 4rem 5rem
         border-style solid
-        border-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building.png') 5 4 4 5
+        border-image image('/pixelartacademy/pixelpad/apps/studyplan/blueprint-building.png') 5 4 4 5 fill
 
       .shadow
       .image
@@ -166,7 +165,7 @@
         background image('/pixelartacademy/pixelpad/apps/studyplan/buildings.png') 30rem 20rem / 200rem 200rem
 
         .pixelartacademy-pixelpad-apps-studyplan-blueprint.animating &
-          transition bottom 0.2s ease-out, filter 0.1s
+          transition bottom 0.2s ease-out
           bottom 0
 
     .gate

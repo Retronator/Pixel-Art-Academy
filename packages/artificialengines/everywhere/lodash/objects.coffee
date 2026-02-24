@@ -1,3 +1,6 @@
+# Note: We can't use undefined in place of these constants since stringifying them would change them to null.
+unchangedConstant = "__unchanged__"
+removedConstant = "__deleted__"
 unchangedObject = {}
 
 _.mixin
@@ -5,14 +8,15 @@ _.mixin
   # Note: we couldn't have just passed the target property directly
   # to be invoked as it wouldn't be bound to correct this.
   propertyValue: (target, propertyName) ->
+    # Note: We cannot replace this with resolve since that would not preserve this in the call (@).
     return target[propertyName]() if _.isFunction target[propertyName]
 
     target[propertyName]
 
-  # Calculates the fields that need to be added or removed (signified by undefined) to go from a to b.
+  # Calculates the fields that need to be added or removed (signified by the removed constant) to go from a to b.
   objectDifference: (a, b) ->
     if _.isArray(a) and _.isArray(b)
-      # For arrays, we return an array as long as the target. Undefined fields in it signify no change.
+      # For arrays, we return an array as long as the target.
       changed = a.length isnt b.length
       arrayDifference = []
   
@@ -20,7 +24,7 @@ _.mixin
         valueDifference = _.objectDifference a[i], b[i]
         
         if valueDifference is unchangedObject
-          arrayDifference[i] = undefined
+          arrayDifference[i] = unchangedConstant
           
         else
           arrayDifference[i] = valueDifference
@@ -28,15 +32,21 @@ _.mixin
   
       if changed then arrayDifference else unchangedObject
 
-    else if _.isObject(a) and _.isObject(b)
+    # HACK: On the server, iterating over properties of dates leads to recursion, so we have to explicitly exclude them.
+    else if _.isObject(a) and _.isObject(b) and not _.isDate(a) and not _.isDate(b)
       # For objects, we do a deep difference. If no field was changed, we return a special unchanged object.
       difference = {}
       changed = false
   
       for key, valueA of a
-        valueDifference = _.objectDifference valueA, b[key]
-        unless valueDifference is unchangedObject
-          difference[key] = valueDifference
+        if b[key] isnt undefined
+          valueDifference = _.objectDifference valueA, b[key]
+          unless valueDifference is unchangedObject
+            difference[key] = valueDifference
+            changed = true
+            
+        else
+          difference[key] = removedConstant
           changed = true
           
       for key, valueB of b when a[key] is undefined and valueB isnt undefined
@@ -57,14 +67,14 @@ _.mixin
     if _.isArray(source) and _.isArray(difference)
       source.length = difference.length
       
-      for i in [0...source.length] when difference[i] isnt undefined
+      for i in [0...source.length] when difference[i] isnt unchangedConstant
         source[i] = _.applyObjectDifference source[i], difference[i]
   
       source
   
     else if _.isObject(source) and _.isObject(difference)
       for key, differenceValue of difference
-        if differenceValue is undefined
+        if differenceValue is removedConstant
           delete source[key]
       
         else

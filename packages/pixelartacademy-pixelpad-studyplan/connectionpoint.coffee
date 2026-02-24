@@ -28,6 +28,9 @@ class StudyPlan.ConnectionPoint
     @outgoingPathways = []
     @incomingPathways = []
   
+    @potentialOutgoingPathways = []
+    @potentialIncomingPathways = []
+    
   clone: ->
     connectionPoint = new @constructor
     

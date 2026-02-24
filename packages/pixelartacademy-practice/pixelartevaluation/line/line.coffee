@@ -44,6 +44,22 @@ class PAE.Line
     point.unassignLine @ for point in @points
     @core?.unassignOutline @
     
+  getPixelBounds: ->
+    return @_pixelBounds if @_pixelBounds
+    
+    minX = Number.POSITIVE_INFINITY
+    maxX = Number.NEGATIVE_INFINITY
+    minY = Number.POSITIVE_INFINITY
+    maxY = Number.NEGATIVE_INFINITY
+    
+    for pixel in @pixels
+      minX = pixel.x if pixel.x < minX
+      maxX = pixel.x if pixel.x > maxX
+      minY = pixel.y if pixel.y < minY
+      maxY = pixel.y if pixel.y > maxY
+    
+    @_pixelBounds = {minX, maxX, minY, maxY}
+  
   getCornerPoints: ->
     return @_cornerPoints if @_cornerPoints
     
