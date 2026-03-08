@@ -18,8 +18,8 @@ float FresnelEquations_getReflectance(const float angleOfIncidence, const Comple
   ComplexNumber n1cosJ = multiply(n1, cosJ);
   ComplexNumber n2cosI = multiply(n2, cosI);
 
-  float reflectanceS = pow2(abs(divide(subtract(n1cosI, n2cosJ), add(n1cosI, n2cosJ))));
-  float reflectanceP = pow2(abs(divide(subtract(n1cosJ, n2cosI), add(n1cosJ, n2cosI))));
+  float reflectanceS = pow2(complexAbs(divide(subtract(n1cosI, n2cosJ), add(n1cosI, n2cosJ))));
+  float reflectanceP = pow2(complexAbs(divide(subtract(n1cosJ, n2cosI), add(n1cosJ, n2cosI))));
 
   return (reflectanceS + reflectanceP) / 2.0;
 }

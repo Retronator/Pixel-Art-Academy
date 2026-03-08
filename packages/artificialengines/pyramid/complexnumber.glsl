@@ -7,7 +7,7 @@ struct ComplexNumber {
   float imaginary;
 };
 
-float abs(const ComplexNumber a) {
+float complexAbs(const ComplexNumber a) {
   return sqrt(pow2(a.real) + pow2(a.imaginary));
 }
 
@@ -74,8 +74,8 @@ ComplexNumber pow2(const ComplexNumber a) {
   return multiply(a, a);
 }
 
-ComplexNumber sqrt(const ComplexNumber a) {
-  float absoluteValue = abs(a);
+ComplexNumber complexSqrt(const ComplexNumber a) {
+  float absoluteValue = complexAbs(a);
   float imaginarySign = a.imaginary >= 0.0 ? 1.0 : -1.0;
 
   return ComplexNumber(
@@ -86,7 +86,7 @@ ComplexNumber sqrt(const ComplexNumber a) {
 
 ComplexNumber complexLog(const ComplexNumber a) {
   return ComplexNumber(
-    log(abs(a)),
+    log(complexAbs(a)),
     argument(a)
   );
 }
@@ -108,7 +108,7 @@ ComplexNumber complexCos(const ComplexNumber a) {
 ComplexNumber complexAsin(const ComplexNumber a) {
   ComplexNumber i = ComplexNumber(0.0, 1.0);
   ComplexNumber minusI = ComplexNumber(0.0, -1.0);
-  return multiply(minusI, complexLog(add(multiply(i, a), sqrt(subtract(1.0, pow2(a))))));
+  return multiply(minusI, complexLog(add(multiply(i, a), complexSqrt(subtract(1.0, pow2(a))))));
 }
 
 #endif
