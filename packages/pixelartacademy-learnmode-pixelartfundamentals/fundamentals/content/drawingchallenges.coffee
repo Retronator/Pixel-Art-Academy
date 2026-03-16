@@ -313,7 +313,7 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
         content: @
         units: "sizes"
         
-    class @Icon extends LM.Content.FutureContent
+    class @Icon extends LM.Content
       @size: -> throw new AE.NotImplementedException "Icon content must define the size of the icon."
       @sizeString: ->
         size = @size()

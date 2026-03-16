@@ -32,6 +32,7 @@ class LM.PixelArtFundamentals.Fundamentals.ChallengesDrawing extends LOI.Adventu
     @_referenceSelectionAutorun.stop()
 
     @_pixelArtLineArt?.destroy()
+    @_pixelArtReadability?.destroy()
 
   things: ->
     things = []
@@ -42,4 +43,10 @@ class LM.PixelArtFundamentals.Fundamentals.ChallengesDrawing extends LOI.Adventu
   
         things.push @_pixelArtLineArt
 
+    if LM.PixelArtFundamentals.Fundamentals.Goals.Size.activeAndAvailable()
+      if PAA.Tutorials.Drawing.PixelArtFundamentals.Size.completed()
+        @_pixelArtReadability ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtReadability
+        
+        things.push @_pixelArtReadability
+        
     things

@@ -49,4 +49,12 @@ Package.onUse(function(api) {
   api.addComponent('drawing/pixelartlineart/referenceselection/portfoliocomponent..');
   api.addComponent('drawing/pixelartlineart/referenceselection/customcomponent..');
 
+  // Pixel art readability
+
+  api.addFile('drawing/pixelartreadability..');
+
+  api.addFile('drawing/pixelartreadability/iconselection..');
+  api.addComponent('drawing/pixelartreadability/iconselection/portfoliocomponent..');
+  api.addComponent('drawing/pixelartreadability/iconselection/customcomponent..');
+
 });

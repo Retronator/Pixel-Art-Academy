@@ -1,0 +1,225 @@
+@import "{retronator:retronator-identity}/style/style.import"
+
+.pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent
+  absolute-cover()
+  z-index 1
+  background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem !important
+  opacity 0
+  visibility hidden
+  transition all 0.4s
+
+  &.active
+    opacity 1
+    visibility visible
+    transition all 0.6s 0.2s
+
+  &.on-cover
+    .navigation-button.next-page
+      left calc(50% + 80rem)
+
+  .book-area
+    position absolute
+    left calc(50% - 82rem)
+    top 0
+    bottom 0
+    transition left 0.2s
+
+    &.displayed
+      .book-closed
+        top calc(50% - 122rem)
+        transition-delay 0.5s
+        transition-timing-function ease-out
+
+    &.open
+      left 50%
+
+      .book-closed
+        visibility hidden
+
+      .book-open
+        visibility visible
+
+    .book-closed
+      position absolute
+      left -12rem
+      top 100%
+      width 178rem
+      height 245rem
+      background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-closed.png')
+      transition top 1s ease-in
+      padding 3rem 0 0 12rem
+      cursor pointer
+
+      .titles
+        > *
+          margin 0 auto
+          text-align center
+          width 138rem
+          border 1rem solid atariGray(6)
+          background atariGray(0)
+
+        .academy
+          position relative
+          z-index 1
+          margin-top 2rem
+          width 98rem
+          padding 2rem
+          border-color atariCyan(0)
+          color atariOrange(5)
+          academy()
+          line-height 10rem
+
+        .series
+          margin-top -14rem
+          padding 15rem 0 2rem
+          color atariGray(4)
+          small-print()
+          text-transform uppercase
+
+        .main-title
+          margin-top -1rem
+          text-transform uppercase
+
+          .line-1
+          .line-3
+            background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-titles-shine.png') 0 0 / 1rem 8rem
+            text-fill-color transparent
+            background-clip text
+
+          .line-1
+            margin-top 2rem
+            daily()
+            background-position-y 1rem
+
+          .line-2
+            position relative
+            header-17()
+            letter-spacing -1rem
+            line-height 20rem
+
+            .outline
+              pixel-text-outline atariGray(6)
+
+            .gradient
+              absolute-cover()
+              background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-titles-spectrum.png') 0 3rem / 1rem 18rem
+              text-fill-color transparent
+              background-clip text
+
+          .line-3
+            margin-top 1rem
+            header-8()
+            background-position-y 3rem
+
+        .pixeltosh
+          margin-top -1rem
+          padding-bottom 1rem
+          italic()
+          color atariYellow(6)
+          text-transform uppercase
+          letter-spacing -1rem
+
+        .tagline
+          margin-top -1rem
+          small-print()
+          line-height 6rem
+          padding 3rem 0 3rem 68rem
+          color atariGray(6)
+
+      > .pixeltosh
+        margin -22rem 0 0 10rem
+        width 73rem
+        height 94rem
+        background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-pixeltosh.png')
+
+      .icons-examples
+        position absolute
+        left 27rem
+        bottom 16rem
+        width 136rem
+        height 94rem
+
+        .size-section
+          position absolute
+
+          &.size-8
+          &.size-16
+            width 60rem
+            right 0
+
+          &.size-16
+          &.size-32
+            bottom 0
+
+          &.size-8
+            .icons
+              .icon
+                width 8rem
+                height 8rem
+
+          &.size-16
+            .icons
+              flex-wrap wrap
+              gap 5rem
+
+              .icon
+                width 16rem
+                height 16rem
+
+          &.size-32
+            width 70rem
+            left 0
+
+            .icons
+              .icon
+                width 32rem
+                height 32rem
+
+          .size-label
+            display inline-block
+            margin-bottom 2rem
+            background atariBlue(2)
+            color atariYellow(6)
+            uni()
+            text-transform uppercase
+
+          .icons
+            display flex
+            list-style none
+            padding 0
+            margin 0
+            justify-content space-between
+
+            .icon
+              background atariGray(1)
+
+              .placeholder
+                width 100%
+
+    .book-open
+      position absolute
+      z-index 1
+      left -168rem
+      top calc(50% - 122rem)
+      width 332rem
+      height 246rem
+      background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-open.png')
+      visibility hidden
+
+  .navigation-button
+    position absolute
+    z-index 2
+    top 0
+    bottom 0
+    background none
+    border none
+
+    &.previous-page
+      left 0
+      right calc(50% + 150rem)
+      cursor w-resize
+
+    &.next-page
+      left calc(50% + 150rem)
+      right 0
+      cursor e-resize

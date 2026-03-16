@@ -1,0 +1,65 @@
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent">
+  <div class="pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent {{activeClass}} {{onCoverClass}}">
+    {{#if bookVisible}}
+      <div class="book-area {{bookDisplayedClass}} {{bookOpenClass}}">
+        <div class="book-closed">
+          <div class="titles">
+            <div class="academy">Retropolis Academy of Art</div>
+            <div class="series">Computer Art Series</div>
+            <div class="main-title">
+              <div class="line-1">The</div>
+              <div class="line-2">
+                <div class="outline">Graphics Book</div>
+                <div class="gradient">Graphics Book</div>
+              </div>
+              <div class="line-3">of Icons</div>
+            </div>
+            <div class="pixeltosh">Pixeltosh &amp; more</div>
+            <div class="tagline">Ready-to-use icons for home computers</div>
+          </div>
+          <div class="pixeltosh"></div>
+          <div class="icons-examples">
+            <div class="size-section size-8">
+              <div class="size-label">8×8</div>
+              <ul class="icons">
+                {{#each icons8}}
+                  {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon}}
+                {{/each}}
+              </ul>
+            </div>
+            <div class="size-section size-16">
+              <div class="size-label">16×16</div>
+              <ul class="icons">
+                {{#each icons16}}
+                  {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon}}
+                {{/each}}
+              </ul>
+            </div>
+            <div class="size-section size-32">
+              <div class="size-label">32×32</div>
+              <ul class="icons">
+                {{#each icons32}}
+                  {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon}}
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="book-open">
+        </div>
+      </div>
+      {{#if canMoveBack}}
+        <button class="navigation-button previous-page"></button>
+      {{/if}}
+      {{#if canMoveForward}}
+        <button class="navigation-button next-page"></button>
+      {{/if}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.Icon">
+  <li class="icon icon-{{number}}">
+    <img class="placeholder" src="{{imageUrl}}" />
+  </li>
+</template>

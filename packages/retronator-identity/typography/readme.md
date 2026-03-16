@@ -48,6 +48,10 @@ The project is using these fonts:
 
   Custom, diagonal font used in the Study Plan app
 
+- **Quaternary** by Matej Jan (www.retronator.com)
+
+  Custom, 4x3 fixed-width font with a digital style
+
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
   Acme 9, Acme 7 Wide, Acme 5 Wide, Kyrou 9, Kyrou 7 Wide, Kyrou 5 Wide variants.
