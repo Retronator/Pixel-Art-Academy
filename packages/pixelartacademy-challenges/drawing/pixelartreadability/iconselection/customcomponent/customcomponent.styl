@@ -206,6 +206,24 @@
       background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-open.png')
       visibility hidden
 
+      .footer
+        position absolute
+        left 18rem
+        right 14rem
+        bottom 7rem
+
+        .page-number
+          position absolute
+          bottom 0
+          small-print()
+          color atariGray(4)
+
+          &.left
+            left 0
+
+          &.right
+            right 0
+
   .navigation-button
     position absolute
     z-index 2
@@ -213,13 +231,17 @@
     bottom 0
     background none
     border none
+    transition background 0.2s
+
+    &:hover
+      background rgba(atariGray(2), 0.3)
 
     &.previous-page
       left 0
-      right calc(50% + 150rem)
+      right calc(50% + 154rem)
       cursor w-resize
 
     &.next-page
-      left calc(50% + 150rem)
+      left calc(50% + 154rem)
       right 0
       cursor e-resize

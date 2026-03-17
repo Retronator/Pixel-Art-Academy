@@ -14,6 +14,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       bookOpen: AEc.ValueTypes.Trigger
       bookClose: AEc.ValueTypes.Trigger
       turnPage: AEc.ValueTypes.Trigger
+      turnPages: AEc.ValueTypes.Trigger
       
   onCreated: ->
     super arguments...
@@ -57,7 +58,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
         @_bookDragTimeout = Meteor.setTimeout =>
           @audio.bookDrag true
         ,
-          800
+          600
       
       else if @_wasActive and not shouldBeActive
         # End any animation for selecting a reference.
@@ -98,6 +99,11 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     
     @currentPage if currentPage > 1 then 1 else 0
     
+    switch currentPage
+      when 1 then @audio.bookClose()
+      when 2 then @audio.turnPage()
+      else @audio.turnPages()
+
     # Inform that we've handled the back button.
     true
   
@@ -129,6 +135,9 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     for number in [1..count]
       number: number
       imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{size}-#{number}.png"
+  
+  pageNumberLeft: -> @currentPage()
+  pageNumberRight: -> @currentPage() + 1
     
   events: ->
     super(arguments...).concat
@@ -138,6 +147,8 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   
   onClickBookClosed: (event) ->
     @currentPage 1
+    
+    @audio.turnPage()
   
   onClickNextPage: (event) ->
     currentPage = @currentPage()
@@ -148,7 +159,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     else
       @audio.bookOpen()
 
-    @currentPage currentPage + 1
+    @currentPage if currentPage then currentPage + 2 else 1
   
   onClickPreviousPage: (event) ->
     currentPage = @currentPage()
@@ -159,4 +170,4 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     else
       @audio.turnPage()
     
-    @currentPage currentPage - 1
+    @currentPage if currentPage is 1 then 0 else currentPage - 2
