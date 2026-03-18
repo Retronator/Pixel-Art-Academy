@@ -56,5 +56,6 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartreadability/iconselection..');
   api.addComponent('drawing/pixelartreadability/iconselection/portfoliocomponent..');
   api.addComponent('drawing/pixelartreadability/iconselection/customcomponent..');
+  api.addComponent('drawing/pixelartreadability/iconselection/customcomponent/iconcanvas..');
 
 });

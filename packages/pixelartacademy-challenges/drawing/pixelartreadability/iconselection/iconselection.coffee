@@ -61,7 +61,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
       part.iconEntries = for label in @constructor.labels[partId]
         iconNumber++
         pageNumber++
-        iconEntry = {iconNumber, label: _.titleCase(label), pageNumber}
+        iconEntry = {iconNumber, label, name: _.titleCase(label), pageNumber}
 
         @pages[pageNumber] = iconEntry
 

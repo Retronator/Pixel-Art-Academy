@@ -97,18 +97,33 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   onBackButton: ->
     return unless currentPage = @currentPage()
     
-    @currentPage if currentPage > 1 then 1 else 0
-    
-    switch currentPage
-      when 1 then @audio.bookClose()
-      when 3 then @audio.turnPage()
-      else @audio.turnPages()
+    @goToPage if currentPage > 1 then 1 else 0
 
     # Inform that we've handled the back button.
     true
     
   goToPage: (pageNumber) ->
-    @currentPage (pageNumber - 1) // 2 * 2 + 1
+    previousPageNumber = @currentPage()
+
+    # Current page refers to the page number on the left spread (or 0 on the cover), so we need to round it down.
+    newPageNumber = Math.max 0, (pageNumber - 1) // 2 * 2 + 1
+
+    @currentPage newPageNumber
+    
+    if previousPageNumber is 0 and pageNumber is 1
+      @audio.bookOpen()
+    
+    else if previousPageNumber is 1 and pageNumber is 0
+      @audio.bookClose()
+    
+    else
+      pagesTurned = Math.abs newPageNumber - previousPageNumber
+      
+      if pagesTurned > 2
+        @audio.turnPages()
+        
+      else
+        @audio.turnPage()
   
   activeClass: ->
     'active' if @active()
@@ -126,7 +141,8 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     @currentPage() > 0
     
   canMoveForward: ->
-    true
+    return unless pages = @drawingApp.portfolio().activeAsset()?.asset.pages
+    @currentPage() < pages.length - 1
   
   icons8: -> @icons 8, 4
   
@@ -156,6 +172,45 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     pageData = @currentData()
     pageData.number and pageData.title
   
+  onIconEntry: ->
+    pageData = @currentData()
+    pageData.iconNumber
+    
+  binaryData: (size) ->
+    iconEntry = @currentData()
+    bytesCount = (size ** 2) / 8
+    
+    if bitmap = @getBitmapForIcon iconEntry.label, size
+      ("00000000" for i in [0...bytesCount])
+      
+    else
+      ("00000000" for i in [0...bytesCount])
+    
+  decimalData: (size) ->
+    iconEntry = @currentData()
+    bytesCount = (size ** 2) / 8
+    
+    if bitmap = @getBitmapForIcon iconEntry.label, size
+      (0 for i in [0...bytesCount])
+    
+    else
+      (0 for i in [0...bytesCount])
+  
+  hexadecimalData: (size) ->
+    iconEntry = @currentData()
+    bytesCount = (size ** 2) / 8
+    
+    if bitmap = @getBitmapForIcon iconEntry.label, size
+      ("00" for i in [0...bytesCount])
+    
+    else
+      ("00" for i in [0...bytesCount])
+  
+  getBitmapForIcon: (label, size) ->
+    return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
+    return unless bitmapId = icons[label]?.sizes[size]?.bitmapId
+    LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+  
   pageNumberLeft: -> @currentPage()
   pageNumberRight: -> @currentPage() + 1
     
@@ -165,41 +220,27 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       'click .next-page': @onClickNextPage
       'click .previous-page': @onClickPreviousPage
       'click .contents-part .title': @onClickContentsPartTitle
+      'click .icon-entry': @onClickIconEntry
   
   onClickBookClosed: (event) ->
-    @currentPage 1
-    
-    @audio.turnPage()
+    @goToPage 1
   
   onClickNextPage: (event) ->
     currentPage = @currentPage()
     
-    if currentPage
-      @audio.turnPage()
-      
-    else
-      @audio.bookOpen()
-
-    @currentPage if currentPage then currentPage + 2 else 1
+    @goToPage if currentPage then currentPage + 2 else 1
   
   onClickPreviousPage: (event) ->
     currentPage = @currentPage()
     
-    if currentPage is 1
-      @audio.bookClose()
-      
-    else
-      @audio.turnPage()
-    
-    @currentPage if currentPage is 1 then 0 else currentPage - 2
+    @goToPage if currentPage is 1 then 0 else currentPage - 2
   
   onClickContentsPartTitle: (event) ->
     contentsPart = @currentData()
     
     @goToPage contentsPart.titlePageNumber
+  
+  onClickIconEntry: (event) ->
+    iconEntry = @currentData()
     
-    if contentsPart.number is 1
-      @audio.turnPage()
-    
-    else
-      @audio.turnPages()
+    @goToPage iconEntry.pageNumber
