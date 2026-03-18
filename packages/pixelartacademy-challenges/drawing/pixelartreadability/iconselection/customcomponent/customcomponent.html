@@ -46,6 +46,44 @@
           </div>
         </div>
         <div class="book-open">
+          <div class="page left">
+            {{#if onTableOfContents}}
+              <div class="table-of-contents">
+                <hgroup class="title">
+                  <h1>Contents</h1>
+                  <h2>The Graphics Book of Icons</h2>
+                </hgroup>
+                {{#each tableOfContentsParts}}
+                  <div class="contents-part">
+                    <div class="title">Part {{number}} - {{title}}</div>
+                    <ol class="icon-entries">
+                      {{#each iconEntries}}
+                        <li class="icon-entry">
+                          <div class="name">{{label}}</div>
+                          <div class="page-number">{{pageNumber}}</div>
+                        </li>
+                      {{/each}}
+                    </ol>
+                  </div>
+                {{/each}}
+              </div>
+            {{/if}}
+          </div>
+          <div class="page right">
+            {{#with pageDataRight}}
+              {{#if onPartTitle}}
+                <div class="part-title">
+                  <div class="number">Part {{number}}</div>
+                  <div class="title">{{title}}</div>
+                  <ol class="icon-entries">
+                    {{#each iconEntries}}
+                      <li class="icon-entry">{{label}}</li>
+                    {{/each}}
+                  </ol>
+                </div>
+              {{/if}}
+            {{/with}}
+          </div>
           <div class="footer">
             <div class="page-number left">{{pageNumberLeft}}</div>
             <div class="page-number right">{{pageNumberRight}}</div>

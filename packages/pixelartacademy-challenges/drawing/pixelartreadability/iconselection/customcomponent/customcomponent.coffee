@@ -101,11 +101,14 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     
     switch currentPage
       when 1 then @audio.bookClose()
-      when 2 then @audio.turnPage()
+      when 3 then @audio.turnPage()
       else @audio.turnPages()
 
     # Inform that we've handled the back button.
     true
+    
+  goToPage: (pageNumber) ->
+    @currentPage (pageNumber - 1) // 2 * 2 + 1
   
   activeClass: ->
     'active' if @active()
@@ -135,6 +138,23 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     for number in [1..count]
       number: number
       imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{size}-#{number}.png"
+    
+  onTableOfContents: -> @currentPage() is 1
+  
+  tableOfContentsParts: ->
+    return unless contents = @drawingApp.portfolio().activeAsset()?.asset.contents
+    _.values contents
+  
+  pageDataLeft: -> @pageData @pageNumberLeft()
+  pageDataRight: -> @pageData @pageNumberRight()
+  
+  pageData: (pageNumber) ->
+    return unless pages = @drawingApp.portfolio().activeAsset()?.asset.pages
+    pages[pageNumber]
+  
+  onPartTitle: ->
+    pageData = @currentData()
+    pageData.number and pageData.title
   
   pageNumberLeft: -> @currentPage()
   pageNumberRight: -> @currentPage() + 1
@@ -144,6 +164,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       'click .book-closed': @onClickBookClosed
       'click .next-page': @onClickNextPage
       'click .previous-page': @onClickPreviousPage
+      'click .contents-part .title': @onClickContentsPartTitle
   
   onClickBookClosed: (event) ->
     @currentPage 1
@@ -171,3 +192,14 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       @audio.turnPage()
     
     @currentPage if currentPage is 1 then 0 else currentPage - 2
+  
+  onClickContentsPartTitle: (event) ->
+    contentsPart = @currentData()
+    
+    @goToPage contentsPart.titlePageNumber
+    
+    if contentsPart.number is 1
+      @audio.turnPage()
+    
+    else
+      @audio.turnPages()

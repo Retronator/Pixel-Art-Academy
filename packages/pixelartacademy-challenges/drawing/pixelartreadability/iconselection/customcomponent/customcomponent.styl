@@ -1,5 +1,8 @@
 @import "{retronator:retronator-identity}/style/style.import"
 
+grid-background()
+  background image('/pixelartacademy/challenges/drawing/pixelartreadability/book-grid.png') 0 0 / 5rem 5rem
+
 .pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent
   absolute-cover()
   z-index 1
@@ -98,7 +101,7 @@
             line-height 20rem
 
             .outline
-              pixel-text-outline atariGray(6)
+              pixel-text-outline atariGray(6) false
 
             .gradient
               absolute-cover()
@@ -206,23 +209,192 @@
       background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-open.png')
       visibility hidden
 
+      .page
+        position absolute
+        top 8rem
+        height 230rem
+        width 147rem
+        border 1rem solid atariGray(3)
+        padding 4rem 0
+
+        &.left
+          left 13rem
+
+        &.right
+          right 9rem
+
+        &::before
+        &::after
+          content ""
+          position absolute
+          left -1rem
+          right -1rem
+          background-color atariGray(4)
+          height 5rem
+          border 1rem solid atariGray(3)
+
+        &::before
+          top -1rem
+
+        &::after
+          bottom -1rem
+
+        .table-of-contents
+          position relative
+          z-index 1
+          width 308rem
+          height 220rem
+          column-width 145rem
+          column-gap 18rem
+          column-count 2
+          counter-reset icon-counter
+
+          > .title
+            text-align center
+            text-transform uppercase
+
+            h1
+              height 19rem
+              header-8()
+              color atariGray(1)
+              margin 0
+              padding-top 3rem
+              grid-background()
+
+            h2
+              small-print()
+              color atariGray(2)
+              margin 0
+              padding 1rem
+              border-block 1rem solid atariGray(3)
+
+          .contents-part
+            small-print()
+            break-inside avoid
+            margin 0 5rem 5rem
+            padding-top 5rem
+
+            .title
+              border 1rem solid atariGray(3)
+              padding 1rem
+              background-color atariGray(5)
+              color atariGray(2)
+              text-transform uppercase
+              text-align center
+              cursor pointer
+
+              &:hover
+                color atariGray(1)
+
+            .icon-entries
+              counter-reset none
+              list-style none
+              padding 0 1rem
+              margin 3rem 0
+
+              .icon-entry
+                display flex
+                color atariGray(2)
+                line-height 6rem
+                cursor pointer
+
+                &:hover
+                  color atariGray(1)
+
+                &::before
+                  counter-increment icon-counter
+                  content counter(icon-counter) "."
+                  margin-right 2rem
+
+                .name
+                .page-number
+                  white-space nowrap
+
+                .name
+                  display flex
+                  flex 1
+                  align-items baseline
+
+                  &::after
+                    content ""
+                    flex 1
+                    height 1rem
+                    margin 0 2rem 0 1rem
+                    background-color atariGray(5)
+
+                .page-number
+                  color atariGray(3)
+
+        .part-title
+          text-align center
+          text-transform uppercase
+
+          .number
+            header-17()
+            margin-top 56rem
+            color atariGray(6)
+
+            outlineColor = atariGray(1)
+            depthColor = atariGray(2)
+            textShadowValue = (("-1rem 0 0 %s" % outlineColor) ("0 -1rem 0 %s" % outlineColor) ("1rem 0 0 %s" % outlineColor) ("0 1rem 0 %s" % outlineColor) ("1rem 1rem 0 %s" % outlineColor))
+
+            depth = 3
+            push(textShadowValue, "%srem %srem 0 %s" % (depth depth depthColor))
+
+            for i in (2..depth)
+              push(textShadowValue, "%srem %srem 0 %s" % ((i - 1) i depthColor))
+              push(textShadowValue, "%srem %srem 0 %s" % (i (i - 1) depthColor))
+
+            text-shadow unquote(join(',', textShadowValue))
+
+          .title
+            width 131rem
+            height 21rem
+            border 1rem solid atariGray(3)
+            padding 3rem 0
+            margin 13rem auto 15rem
+            background atariGray(1)
+            background-clip content-box
+            header-8()
+            color atariGray(1)
+            grid-background()
+
+          .icon-entries
+            list-style none
+            margin 0 18rem
+            padding 0
+            small-print()
+            text-transform uppercase
+            color atariGray(3)
+            text-wrap balance
+
+            .icon-entry
+              display inline-block
+              margin 1rem 2rem
+
       .footer
         position absolute
-        left 18rem
-        right 14rem
-        bottom 7rem
+        left 13rem
+        right 9rem
+        bottom 8rem
 
         .page-number
           position absolute
-          bottom 0
+          z-index 1
+          bottom -2rem
+          width 13rem
+          height 9rem
+          border 1rem solid atariGray(3)
+          background atariGray(6)
           small-print()
-          color atariGray(4)
+          color atariGray(3)
+          text-align center
 
           &.left
-            left 0
+            left 67rem
 
           &.right
-            right 0
+            right 67rem
 
   .navigation-button
     position absolute
@@ -238,10 +410,10 @@
 
     &.previous-page
       left 0
-      right calc(50% + 154rem)
+      right calc(50% + 155rem)
       cursor w-resize
 
     &.next-page
-      left calc(50% + 154rem)
+      left calc(50% + 155rem)
       right 0
       cursor e-resize
