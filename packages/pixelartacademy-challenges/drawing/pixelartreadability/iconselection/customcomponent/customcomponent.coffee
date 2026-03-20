@@ -250,7 +250,21 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     
   _getBytes: ->
     if bitmap = @_getBitmapForCurrentIcon()
-      [255]
+      bytesPerRow = bitmap.bounds.width / 8
+      bytes = []
+      
+      for y in [0...bitmap.bounds.height]
+        for byteIndex in [0...bytesPerRow]
+          xStart = byteIndex * 8
+          byte = 0
+
+          for xOffset in [0...8]
+            x = xStart + xOffset
+            byte += 2 ** (7 - xOffset) if bitmap.getPixelForLayerAtCoordinates 0, x, y
+            
+          bytes.push byte
+          
+      bytes
     
     else
       {size} = @_getLabelAndSize()
@@ -261,7 +275,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   _joinBytes: (bytes, joinWithNewLine) ->
     bytes.join if joinWithNewLine then '<br/>' else ',<wbr>'
     
-  _getBitmapForCurrentIcon: (label, size) ->
+  _getBitmapForCurrentIcon: ->
     {label, size} = @_getLabelAndSize()
     
     @_getBitmapForIcon label, size

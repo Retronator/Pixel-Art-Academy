@@ -33,6 +33,12 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.I
     
     gridOpacity = @constructor.gridOpacityForSize[@size]
     
+    @bitmap = new ComputedField =>
+      return unless iconEntry = @parentDataWith 'label'
+      return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
+      return unless bitmapId = icons[iconEntry.label]?.sizes[@size]?.bitmapId
+      LOI.Assets.Bitmap.versionedDocuments.getDocumentForId bitmapId
+    
     # Redraw the canvas.
     @autorun (computation) =>
       canvasPixelSize = displaySize
@@ -53,3 +59,12 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.I
           context.lineTo canvasPixelSize, offset
         
         context.stroke()
+      
+      return unless bitmap = @bitmap()
+      
+      context.fillStyle = 'rgb(64, 64, 64)'
+      
+      for y in [0...@size]
+        for x in [0...@size]
+          if bitmap.getPixelForLayerAtCoordinates 0, x, y
+            context.fillRect x * iconPixelScale, y * iconPixelScale, iconPixelScale, iconPixelScale
