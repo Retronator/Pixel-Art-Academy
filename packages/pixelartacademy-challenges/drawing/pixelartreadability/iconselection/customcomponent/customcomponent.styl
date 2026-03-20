@@ -5,7 +5,6 @@ grid-background()
 
 .pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent
   absolute-cover()
-  z-index 1
   background image('/pixelartacademy/pixelpad/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem !important
   opacity 0
   visibility hidden
@@ -20,11 +19,35 @@ grid-background()
     .navigation-button.next-page
       left calc(50% + 80rem)
 
+  &.editor-active
+    .book-area
+      .book-open
+        left -277rem
+        top -196rem
+
+    .navigation-button
+      display none
+
+  &:not(.editor-active)
+    .book-area
+      .book-open
+        .page
+          .icon-page
+            .icon-section
+              cursor pointer
+
+              &:hover
+                border-color atariGray(3)
+
+                > .title
+                  border-bottom-color atariGray(3)
+
+                  .size
+                    color atariGray(1)
+
   .book-area
-    position absolute
-    left calc(50% - 82rem)
-    top 0
-    bottom 0
+    absolute-cover-size()
+    left -82rem
     transition left 0.2s
 
     &.displayed
@@ -34,7 +57,7 @@ grid-background()
         transition-timing-function ease-out
 
     &.open
-      left 50%
+      left 0
 
       .book-closed
         visibility hidden
@@ -43,8 +66,12 @@ grid-background()
         visibility visible
 
     .book-closed
+    .book-open
       position absolute
-      left -12rem
+      z-index 14
+
+    .book-closed
+      left calc(50% - 12rem)
       top 100%
       width 178rem
       height 245rem
@@ -200,14 +227,13 @@ grid-background()
                 width 100%
 
     .book-open
-      position absolute
-      z-index 1
-      left -168rem
+      left calc(50% - 168rem)
       top calc(50% - 122rem)
       width 332rem
       height 246rem
       background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-open.png')
       visibility hidden
+      transition left 1s, top 1s
 
       .page
         position absolute
@@ -407,28 +433,17 @@ grid-background()
               .icon-area
                 .data-area
                   .data
-                    display flex
-                    flex-wrap wrap
-                    align-content start
                     height 30rem
                     overflow hidden
 
-                    .byte:not(:last-child)
-                      &::after
-                        content ','
-
             &.size-8
               .icon-area
+                padding-bottom 3rem
+
                 .icon
                   width 42rem
                   height 42rem
                   margin-right 8rem
-
-            &.size-16
-              .icon-area
-                .data-area
-                  .data
-                    row-gap 1rem
 
             &.size-32
               .icon-area
@@ -454,7 +469,7 @@ grid-background()
 
             .icon-area
               display flex
-              padding 4rem 4rem 6rem
+              padding 4rem
 
               .icon
                 flex-shrink 0
@@ -469,19 +484,14 @@ grid-background()
                 color atariGray(3)
                 quaternary()
 
+                &.hexadecimal
+                  text-transform uppercase
+
                 &:last-child
                   margin-right 0
 
                 .title
                   text-transform uppercase
-
-                .data
-                  list-style none
-                  padding 0
-                  margin 0
-
-                  .byte
-                    color inherit
 
       .footer
         position absolute
@@ -509,7 +519,7 @@ grid-background()
 
   .navigation-button
     position absolute
-    z-index 2
+    z-index 15
     top 0
     bottom 0
     background none

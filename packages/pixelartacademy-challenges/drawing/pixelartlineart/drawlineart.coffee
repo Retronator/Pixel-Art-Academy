@@ -35,11 +35,6 @@ class PAA.Challenges.Drawing.PixelArtLineArt.DrawLineArt extends PAA.Practice.Tu
     svgUrl: "/pixelartacademy/challenges/drawing/pixelartlineart/#{@imageName()}.svg"
   ]
 
-  @briefComponentClass: ->
-    # Note: We need to fully qualify the name instead of using @constructor
-    # since we're overriding with a class with the same name.
-    PAA.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
-    
   @pixelArtEvaluation: -> true
   
   @properties: ->

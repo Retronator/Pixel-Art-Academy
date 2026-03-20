@@ -10,7 +10,7 @@ class PAA.Practice.ReadabilityAnalysis
   #   passes: boolean if the region is readable
   #   recognition:
   #     passes: boolean if the target label is recognized correctly
-  #   bounds: the bounds of the region in the bitmap, not stored in the asset
+  #   bounds: the bounds of the region in the bitmap, if not covering the whole bitmap
   #     x, y, width, height
   #   labels: the analysis of which labels get recognized in the image
   #     symbolic, realistic: arrays of label probabilities sorted by probability descending (only labels with 1% and up probability stored in the asset)
@@ -41,10 +41,7 @@ class PAA.Practice.ReadabilityAnalysis
     inputSize = PAA.ImageClassification.SimpleClassifier.inputSize
     @_classificationInputData = []
     
-    @regionsOptions = new AE.LiveComputedField =>
-      _.resolve @options.regions
-    ,
-      EJSON.equals
+    @regionsOptions = new ReactiveField @_extractRegionsOptions(@bitmap), EJSON.equals
     
     @analyzing = new ReactiveField false
     
@@ -73,10 +70,7 @@ class PAA.Practice.ReadabilityAnalysis
           for regionOptions, regionIndex in regionsOptions
             return unless classificationCounter is @_classificationCounter
             
-            region =
-              targetLabel: regionOptions.label
-              bounds: regionOptions.bounds
-            
+            region = _.clone regionOptions
             regions.push region
             
             # Generate strokes from detected elements.
@@ -206,11 +200,27 @@ class PAA.Practice.ReadabilityAnalysis
           @analyzing false
           @_classificationDependency.changed()
 
+    # Subscribe to changes of the readability property.
+    LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.addHandler @, @onOperationsExecuted
+  
   destroy: ->
     @_classificationAutorun.stop()
     
-    @regionsOptions.stop()
     @pixelArtEvaluation.destroy()
+
+    LOI.Assets.Bitmap.versionedDocuments.operationsExecuted.removeHandler @, @onOperationsExecuted
     
   depend: ->
     @_classificationDependency.depend()
+
+  onOperationsExecuted: (document, operations, changedFields) ->
+    return unless document._id is @bitmap._id
+    return unless changedFields.properties?.readabilityAnalysis
+    
+    @regionsOptions @_extractRegionsOptions document
+    
+  _extractRegionsOptions: (bitmap) ->
+    return {} unless regions = bitmap.properties?.readabilityAnalysis?.regions
+    
+    for region in regions
+      _.pick region, 'targetLabel', 'bounds'

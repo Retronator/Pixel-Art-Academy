@@ -1,3 +1,5 @@
+AE = Artificial.Everywhere
+AM = Artificial.Mummification
 AR = Artificial.Reality
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -94,36 +96,65 @@ class PAA.Tutorials.Drawing.PixelArtFundamentals.Size.ReadabilityAnalysis extend
 
   @initialize()
   
+  destroy: ->
+    super arguments...
+    
+    @regions?.stop()
+    @_readabilityAnalysisRegionsAutorun?.stop()
+  
+  _initialize: ->
+    super arguments...
+    
+    # Update readability analysis regions based on the reference.
+    @regions = new AE.LiveComputedField =>
+      return unless @initialized()
+      
+      fixedDimensions = @constructor.fixedDimensions()
+      width = fixedDimensions.width
+      height = fixedDimensions.height
+      
+      # Create areas with target labels from step areas.
+      x = 0
+      
+      for stepArea in @stepAreas()
+        region =
+          bounds: {x, y: 0, width, height}
+          targetLabel: stepArea.getInformation()?.label
+          
+        x += width
+        
+        region
+    ,
+      EJSON.equals
+    
+    @_readabilityAnalysisRegionsAutorun = Tracker.autorun (computation) =>
+      return unless regions = @regions()
+      return unless bitmap = @bitmap()
+
+      Tracker.nonreactive =>
+        # Nothing to do if the regions are the same.
+        if regions.length
+          currentRegionsCount = bitmap.properties.readabilityAnalysis.regions?.length or 0
+          return if regions.length is currentRegionsCount and _.objectContains bitmap.properties.readabilityAnalysis.regions, regions
+          
+        else
+          return unless bitmap.properties.readabilityAnalysis.regions
+        
+        # Only update analysis when we're at the end of history to prevent recalculation when undoing/redoing
+        # (in case we change analysis and this would cause new values—history is more important).
+        historyLength = bitmap.history?.length or AM.Document.Versioning.ActionArchive.getHistoryLengthForDocument bitmap._id
+        return unless bitmap.historyPosition is historyLength
+        
+        readabilityAnalysisProperty = {}
+        readabilityAnalysisProperty.regions = regions if regions.length
+        
+        updatePropertyAction = new LOI.Assets.VisualAsset.Actions.UpdateProperty @constructor.id(), bitmap, 'readabilityAnalysis', readabilityAnalysisProperty
+        bitmap.executeAction updatePropertyAction, true
+  
   initializeStepsInAreaWithResources: (stepArea, stepResources) ->
     new @constructor.DrawSomethingStep @, stepArea
     new @constructor.OpenReadabilityAnalysisStep @, stepArea
     new @constructor.PassReadabilityStep @, stepArea
-  
-  readabilityAnalysisOptions: ->
-    fixedDimensions = @constructor.fixedDimensions()
-    width = fixedDimensions.width
-    height = fixedDimensions.height
-    horizontalExtension = @constructor.canvasExtensionDirection() is @constructor.CanvasExtensionDirection.Horizontal
-  
-    regions: =>
-      return unless @initialized()
-      
-      # Create areas with target labels from step areas.
-      x = 0
-      y = 0
-      
-      for stepArea in @stepAreas()
-        region =
-          bounds: {x, y, width, height}
-          label: stepArea.getInformation()?.label
-          
-        if horizontalExtension
-          x += width
-          
-        else
-          y += height
-          
-        region
   
   Asset = @
   

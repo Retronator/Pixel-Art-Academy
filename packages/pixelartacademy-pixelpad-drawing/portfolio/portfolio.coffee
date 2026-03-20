@@ -349,7 +349,7 @@ class PAA.PixelPad.Apps.Drawing.Portfolio extends LOI.Component
       assetData.asset.onClick()
       return
 
-    # Set active sprite ID.
+    # Set active asset URL.
     AB.Router.changeParameter 'parameter3', assetData.asset.urlParameter()
 
   onClickPixelPadEditor: (event) ->

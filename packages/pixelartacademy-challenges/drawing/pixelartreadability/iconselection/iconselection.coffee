@@ -1,6 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
-AB = Artificial.Babel
+AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -15,6 +15,8 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
 
   @portfolioComponentClass: -> @PortfolioComponent
   @customComponentClass: -> @CustomComponent
+  
+  @defaultUrl = 'the-graphics-book-of-icons'
   
   @initialize()
   
@@ -67,7 +69,67 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
 
         iconEntry
     
-  urlParameter: -> 'the-graphics-book-of-icons'
+    # Provide the bitmap data to the editor. We need to keep it
+    # persistent even after the URL is changed to allow for transitions.
+    @_lastBitmapId = null
+    
+    @document = new AE.LiveComputedField =>
+      return unless bitmapId = @_getBitmapId() or @_lastBitmapId
+      @_lastBitmapId = bitmapId
+      LOI.Assets.Bitmap.getDocumentForId bitmapId
+      
+  destroy: ->
+    @document.stop()
+    
+  urlParameter: ->
+    # Try to return the current bitmap ID if it's one of our icons.
+    return bitmapId if bitmapId = @_getBitmapId()
+    
+    # No icon has been selected, so return the default URL.
+    @constructor.defaultUrl
+    
+  _getBitmapId: ->
+    return unless parameter = AB.Router.getParameter 'parameter3'
+    return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
+    
+    for label, labelEntry of icons
+      for size, icon of labelEntry.sizes
+        return icon.bitmapId if icon.bitmapId is parameter
+        
+    null
   
   width: -> 56
   height: -> 82
+  
+  availableToolKeys: ->
+    [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+      PAA.Practice.Software.Tools.ToolKeys.Eraser
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      PAA.Practice.Software.Tools.ToolKeys.Zoom
+      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
+      PAA.Practice.Software.Tools.ToolKeys.Undo
+      PAA.Practice.Software.Tools.ToolKeys.Redo
+      PAA.Practice.Software.Tools.ToolKeys.Line
+      PAA.Practice.Software.Tools.ToolKeys.Rectangle
+      PAA.Practice.Software.Tools.ToolKeys.Ellipse
+    ]
+  
+  previewInfo: ->
+    return unless bounds = @document()?.bounds
+    
+    scale = 128 / bounds.width
+    borderWidth = 12
+    
+    left = "calc(50% - 76rem)"
+    
+    if AB.Router.getParameter('parameter4') is 'edit'
+      top = "calc(50% - 76rem)"
+      
+    else
+      # When the drawing is not being edited, move it above the top.
+      top = "-152rem"
+    
+    position = {left, top}
+
+    {borderWidth, scale, position}

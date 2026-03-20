@@ -13,6 +13,10 @@ class PAA.PixelPad.Apps.Drawing.Portfolio.ArtworkAsset.ClipboardComponent extend
     @changeArtworkActive = new ReactiveField false
     @exportArtworkActive = new ReactiveField false
   
+  mixins: -> [
+    PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin
+  ]
+  
   onCreated: ->
     super arguments...
 

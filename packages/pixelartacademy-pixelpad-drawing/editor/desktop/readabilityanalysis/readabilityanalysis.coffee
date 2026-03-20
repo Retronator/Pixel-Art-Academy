@@ -136,8 +136,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
           readabilityAnalysisProperty.regions = []
         
           for region, regionIndex in readabilityAnalysis.regions
-            regionAnalysis =
-              targetLabel: region.targetLabel
+            regionAnalysis = _.pick region, 'targetLabel', 'bounds'
             
             readabilityAnalysisProperty.regions[regionIndex] = regionAnalysis
           

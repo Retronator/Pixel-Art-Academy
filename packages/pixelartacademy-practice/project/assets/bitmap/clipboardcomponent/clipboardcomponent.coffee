@@ -12,6 +12,10 @@ class PAA.Practice.Project.Asset.Bitmap.ClipboardComponent extends AM.Component
 
     @secondPageActive = new ReactiveField false
 
+  mixins: -> [
+    PAA.Practice.Project.Asset.Bitmap.ClipboardComponent.PreviewInfoMixin
+  ]
+  
   onCreated: ->
     super arguments...
     

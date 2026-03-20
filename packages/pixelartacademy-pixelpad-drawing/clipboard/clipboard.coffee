@@ -92,7 +92,7 @@ class PAA.PixelPad.Apps.Drawing.Clipboard extends LOI.Component
     @drawing.portfolio().displayedAsset()?.asset
     
   activeClass: ->
-    'active' if @drawing.activeAssetClass() and not @drawing.displayedAssetCustomComponent()
+    'active' if @drawing.activeAsset() and not @drawing.displayedAssetCustomComponent()
 
   onBackButton: ->
     # Relay to asset clipboard component.

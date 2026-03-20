@@ -1,5 +1,11 @@
 <template name="PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent">
-  <div class="pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent {{activeClass}} {{onCoverClass}}">
+  <style>
+    /* We don't need the clipboard. */
+    .pixelartacademy-pixelpad-apps-drawing-clipboard {
+      visibility: hidden;
+    }
+  </style>
+  <div class="pixelartacademy-challenges-drawing-pixelartreadability-iconselection-customcomponent {{activeClass}} {{onCoverClass}} {{editorActiveClass}}">
     {{#if bookVisible}}
       <div class="book-area {{bookDisplayedClass}} {{bookOpenClass}}">
         <div class="book-closed">
@@ -120,78 +126,64 @@
       <div class="number">{{iconNumber}}</div>
       <div class="name">{{name}}</div>
     </div>
-    <div class="icon-section size-8">
-      <div class="title">
-        <div class="size">8X8</div>
-        <div class="bytes">1 byte per row</div>
-      </div>
-      <div class="icon-area">
-        <div class="icon">
-          {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 8}}
+    {{#with iconSection8}}
+      <div class="icon-section size-8">
+        <div class="title">
+          <div class="size">8X8</div>
+          <div class="bytes">1 byte per row</div>
         </div>
-        <div class="binary data-area">
-          <div class="title">Bin</div>
-          <ol class="data">
-            {{#each binaryData 8}}
-              <li class="byte">{{this}}</li>
-            {{/each}}
-          </ol>
-        </div>
-        <div class="decimal data-area">
-          <div class="title">Dec</div>
-          <ol class="data">
-            {{#each decimalData 8}}
-              <li class="byte">{{this}}</li>
-            {{/each}}
-          </ol>
-        </div>
-        <div class="hexadecimal data-area">
-          <div class="title">Hex</div>
-          <ol class="data">
-            {{#each hexadecimalData 8}}
-              <li class="byte">{{this}}</li>
-            {{/each}}
-          </ol>
+        <div class="icon-area">
+          <div class="icon">
+            {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 8}}
+          </div>
+          <div class="binary data-area">
+            <div class="title">Bin</div>
+            <div class="data">{{{binaryData true}}}</div>
+          </div>
+          <div class="decimal data-area">
+            <div class="title">Dec</div>
+            <div class="data">{{{decimalData true}}}</div>
+          </div>
+          <div class="hexadecimal data-area">
+            <div class="title">Hex</div>
+            <div class="data">{{{hexadecimalData true}}}</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="icon-section size-16">
-      <div class="title">
-        <div class="size">16X16</div>
-        <div class="bytes">2 bytes per row</div>
-      </div>
-      <div class="icon-area">
-        <div class="icon">
-          {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 16}}
+    {{/with}}
+    {{#with iconSection16}}
+      <div class="icon-section size-16">
+        <div class="title">
+          <div class="size">16X16</div>
+          <div class="bytes">2 bytes per row</div>
         </div>
-        <div class="decimal data-area">
-          <div class="title">Data</div>
-          <ol class="data">
-            {{#each decimalData 16}}
-              <li class="byte">{{this}}</li>
-            {{/each}}
-          </ol>
+        <div class="icon-area">
+          <div class="icon">
+            {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 16}}
+          </div>
+          <div class="decimal data-area">
+            <div class="title">Data</div>
+            <div class="data">{{{decimalData}}}</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="icon-section size-32">
-      <div class="title">
-        <div class="size">32X32</div>
-        <div class="bytes">4 bytes per row</div>
-      </div>
-      <div class="icon-area">
-        <div class="icon">
-          {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 32}}
+    {{/with}}
+    {{#with iconSection32}}
+      <div class="icon-section size-32">
+        <div class="title">
+          <div class="size">32X32</div>
+          <div class="bytes">4 bytes per row</div>
         </div>
-        <div class="decimal data-area">
-          <div class="title">Data</div>
-          <ol class="data">
-            {{#each decimalData 32}}
-              <li class="byte">{{this}}</li>
-            {{/each}}
-          </ol>
+        <div class="icon-area">
+          <div class="icon">
+            {{> PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent.IconCanvas args 32}}
+          </div>
+          <div class="decimal data-area">
+            <div class="title">Data</div>
+            <div class="data">{{{decimalData}}}</div>
+          </div>
         </div>
       </div>
-    </div>
+    {{/with}}
   </div>
 </template>
