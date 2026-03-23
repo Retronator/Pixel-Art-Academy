@@ -86,6 +86,11 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.Pico8 extends LOI.View
     super arguments...
     
     @_pico8 = $('.pixelartacademy-pixelpad-apps-drawing-editor-desktop-pico8')[0]
+    
+  onDestroyed: ->
+    super arguments...
+    
+    @app.removeComponent @
 
   activeClass: ->
     'active' if @active()

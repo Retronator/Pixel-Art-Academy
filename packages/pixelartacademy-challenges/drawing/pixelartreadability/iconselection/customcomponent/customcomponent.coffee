@@ -10,6 +10,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   
   @Audio = new LOI.Assets.Audio.Namespace @id(),
     variables:
+      bookPan: AEc.ValueTypes.Number
       bookDrag: AEc.ValueTypes.Boolean
       bookOpen: AEc.ValueTypes.Trigger
       bookClose: AEc.ValueTypes.Trigger
@@ -18,6 +19,11 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       
   onCreated: ->
     super arguments...
+    
+    @app = @ancestorComponentOfType Artificial.Base.App
+    @app.addComponent @
+    
+    @_dragTimeLeft = 0
     
     # Controls whether the book is visible anywhere in the screen.
     @bookVisible = new ReactiveField false
@@ -60,6 +66,21 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     super arguments...
     
     @audio.bookDrag false
+    
+    @autorun (computation) =>
+      if @bookVisible()
+        Tracker.afterFlush =>
+          @_bookOpen = @$('.book-open')[0]
+        
+      else
+        @_bookOpen = null
+        
+    # Note: We have to limit reactivity for the bookDrag to trigger
+    # correctly, so we precalculate editorActive to a boolean.
+    @editorActive = new ComputedField =>
+      return unless editor = @drawingApp.editor()
+      return unless editor.isCreated()
+      editor.active()
 
     @autorun (computation) =>
       shouldBeActive = @drawingApp.activeAsset()?
@@ -81,10 +102,20 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
         
         @_bookDragTimeout = Meteor.setTimeout =>
           @audio.bookDrag true
+          
+          @_dragWhenActiveAutorun?.stop()
+          @_dragWhenActiveAutorun = Tracker.autorun (computation) =>
+            editorActive = @editorActive()
+            Tracker.nonreactive =>
+              @audio.bookDrag not editorActive
+              @_dragTimeLeft = 1.5
         ,
           600
       
       else if @_wasActive and not shouldBeActive
+        # Stop controlling the book drag variable.
+        @_dragWhenActiveAutorun?.stop()
+      
         # End any animation for selecting a reference.
         Meteor.clearTimeout @_switchToBitmapTimeout
         Meteor.clearTimeout @_closeBookTimeout
@@ -109,6 +140,12 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   
       @_wasActive = shouldBeActive
       
+  onDestroyed: ->
+    super arguments...
+    
+    @app.removeComponent @
+    @_dragWhenActiveAutorun?.stop()
+    
   _resetActivateTimers: ->
     Meteor.clearTimeout @_activeTimeout
     Meteor.clearTimeout @_deactivateTimeout
@@ -129,11 +166,13 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       AB.Router.changeParameters
         parameter3: bitmapId
         
-      # Enter the editor after preview asset scale has been applied.
-      Meteor.setTimeout =>
-        AB.Router.changeParameters
-          parameter3: bitmapId
-          parameter4: 'edit'
+      # Enter the editor after preview asset scale has been applied. Flushing waits for recomputation of the property.
+      Tracker.afterFlush =>
+        # Additionally wait for the URL to change before adding the edit parameter.
+        Meteor.setTimeout =>
+          AB.Router.changeParameters
+            parameter3: bitmapId
+            parameter4: 'edit'
   
   setPixelPadSize: (drawingApp) ->
     drawingApp.setMaximumPixelPadSize fullscreen: true
@@ -297,7 +336,13 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   
   pageNumberLeft: -> @currentPage()
   pageNumberRight: -> @currentPage() + 1
+  
+  update: (appTime) ->
+    return unless @_bookOpen and @_dragTimeLeft > 0
+    @_dragTimeLeft -= appTime.elapsedAppTime
     
+    @audio.bookPan PAA.PixelPad.Apps.Drawing.Editor.Desktop.compressPan AEc.getPanForElement @_bookOpen
+  
   events: ->
     super(arguments...).concat
       'click .book-closed': @onClickBookClosed
