@@ -10,6 +10,10 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
 
   @portfolioComponentClass: -> @PortfolioComponent
   @customComponentClass: -> @CustomComponent
+    
+  @getIconStatus: (bitmap) ->
+    completed: bitmap.properties.readabilityAnalysis.passes
+    started: bitmap.properties.readabilityAnalysis.regions[0].labels?
   
   constructor: ->
     super arguments...
@@ -53,8 +57,43 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
       @_lastBitmapId = bitmapId
       LOI.Assets.Bitmap.getDocumentForId bitmapId
       
+    @_updateIconStatusAutorun = Tracker.autorun (computation) =>
+      # When an icon is being drawn, update its status in the state.
+      return unless bitmap = @document()
+      return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
+      
+      label = bitmap.properties.readabilityAnalysis.regions[0].targetLabel
+      size = bitmap.bounds.width
+      
+      return unless iconData = icons[label]?.sizes[size]
+      
+      iconStatus = @constructor.getIconStatus bitmap
+      
+      # Started and completed are stored as true and undefined.
+      startedCorrect = if iconStatus.started then iconData.started else not iconData.started?
+      completedCorrect = if iconStatus.completed then iconData.completed else not iconData.completed?
+      
+      return if startedCorrect and completedCorrect
+      
+      unless startedCorrect
+        if iconStatus.started
+          iconData.started = true
+          
+        else
+          delete iconData.started
+          
+      unless completedCorrect
+        if iconStatus.completed
+          iconData.completed = true
+          
+        else
+          delete iconData.completed
+      
+      PAA.Challenges.Drawing.PixelArtReadability.state 'icons', icons
+      
   destroy: ->
     @document.stop()
+    @_updateIconStatusAutorun.stop()
     
   urlParameter: ->
     # Try to return the current bitmap ID if it's one of our icons.
@@ -78,6 +117,11 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
       return true if label in labels
       
     false
+  
+  completed: ->
+    return unless bitmap = @document()
+    
+    @constructor.getIconStatus(bitmap).completed
   
   width: -> 56
   height: -> 82

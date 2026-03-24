@@ -8,11 +8,12 @@ class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Project.Th
   #     sizes:
   #       8/16/32: object with data for this size
   #         bitmapId: ID of the bitmap representing this subject size
+  #         started: auto-updated field if the player started drawing this size for this subject
   #         completed: auto-updated field if the player completed this size for this subject
-  #     completedAny: auto-updated field if the player completed any of the size for this subject
-  #     completedAll: auto-updated field if the player completed all of the sizes for this subject
+  # startedCounts:
+  #    8/16/32: auto-updated integer count how many icons of this size have been started
   # completedCounts:
-  #   8/16/32: auto-updated integer count how many icons of this size has been completed
+  #   8/16/32: auto-updated integer count how many icons of this size have been completed
   @id: -> 'PixelArtAcademy.Challenges.Drawing.PixelArtReadability'
 
   @fullName: -> "Pixel art readability"
@@ -27,16 +28,11 @@ class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Project.Th
   @addIcon: (label, size) ->
     icons = @state 'icons'
     icons ?= {}
-    icons[label] ?=
-      sizes: {}
-      completedAny: false
-      completedAll: false
-      
+    icons[label] ?= sizes: {}
+    
     bitmapId = await @_createBitmap label, size
       
-    icons[label].sizes[size] =
-      bitmapId: bitmapId
-      completed: false
+    icons[label].sizes[size] = {bitmapId}
     
     @state 'icons', icons
     
@@ -76,10 +72,32 @@ class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Project.Th
             ]
           
       resolve LOI.Assets.Bitmap.documents.insert bitmapData
+      
+  constructor: ->
+    super arguments...
+    
+    @_countsAutorun = Tracker.autorun (computation) =>
+      icons = @state 'icons'
+      
+      Tracker.nonreactive =>
+        startedCounts = @state 'startedCounts'
+        completedCounts = @state 'completedCounts'
+        
+        newStartedCounts = {8: 0, 16: 0, 32: 0}
+        newCompletedCounts = {8: 0, 16: 0, 32: 0}
+        
+        for label, labelEntry of icons
+          for size, icon of labelEntry.sizes
+            newStartedCounts[size]++ if icon.started
+            newCompletedCounts[size]++ if icon.completed
+        
+        @state 'startedCounts', newStartedCounts unless EJSON.equals startedCounts, newStartedCounts
+        @state 'completedCounts', newCompletedCounts unless EJSON.equals completedCounts, newCompletedCounts
 
   destroy: ->
     super arguments...
     
+    @_countsAutorun.stop()
     @_iconSelectionVolume1?.destroy()
     @_iconSelectionVolume2?.destroy()
     

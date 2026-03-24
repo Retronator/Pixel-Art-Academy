@@ -101,6 +101,7 @@ class PAA.PixelPad.Apps.Drawing.Editor.Desktop.ReadabilityAnalysis extends LOI.V
         
       displayed: => false # TODO: Enable when stroke analysis is provided @displayed()
       focusedPixel: => if @displayed() then @hoveredPixel() else null
+      bitmapBounds: => @bitmap()?.bounds
       
     # Automatically enter focused mode when active.
     @autorun (computation) =>

@@ -27,7 +27,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.Volume2 extends P
     air: title: "In the air"
     water: title: "By the water"
     wilderness: title: "Wilderness"
-    ground: title: "Creepy crawlies"
+    ground: title: "On the ground"
     fruit: title: "Fruit"
     plants: title: "Plants"
   

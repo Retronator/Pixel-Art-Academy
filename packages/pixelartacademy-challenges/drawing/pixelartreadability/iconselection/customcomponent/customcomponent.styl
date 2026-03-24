@@ -476,20 +476,42 @@ grid-background()
                   .page-number
                     white-space nowrap
 
-                  .name
+                  .sizes
+                    list-style none
                     display flex
+                    position relative
+                    z-index 1
+                    left 2rem
+                    width 0
+                    padding 0
+                    margin 0
+
+                    .size
+                      display none
+                      padding-right 1rem
+
+                      &.started
+                      &.completed
+                        display block
+
+                      &.started
+                        color atariGray(3)
+
+                      &.completed
+                        color atariGreen(3)
+
+                  .page-number
+                    display flex
+                    color atariGray(3)
                     flex 1
                     align-items baseline
 
-                    &::after
+                    &::before
                       content ""
                       flex 1
                       height 1rem
                       margin 0 2rem 0 1rem
                       background-color atariGray(5)
-
-                  .page-number
-                    color atariGray(3)
 
         .part-title
           text-align center
@@ -564,9 +586,26 @@ grid-background()
               text-transform uppercase
 
           .icon-section
+            position relative
             width 137rem
             margin 5rem auto
             border 1rem solid atariGray(4)
+
+            &.started
+            &.completed
+              &::after
+                content ''
+                position absolute
+                top 1rem
+                right 1rem
+                width 9rem
+                height 7rem
+
+            &.started::after
+              background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-checkmark-started.png')
+
+            &.completed::after
+              background-image image('/pixelartacademy/challenges/drawing/pixelartreadability/book-checkmark-completed.png')
 
             &.size-16
             &.size-32

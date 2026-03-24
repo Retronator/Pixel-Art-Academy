@@ -34,7 +34,6 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
       PAA.Tutorials.Drawing.PixelArtFundamentals.Size.completed()
   
   class @Icon extends PAA.Learning.Task.Automatic
-    @completable: -> false
     @goal: -> Goal
     @size: -> throw new AE.NotImplementedException "Icon task must define the size of the icon."
     @sizeString: ->
@@ -43,12 +42,14 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
       
     @instructions: -> """
       In the Drawing app, pick a subject in the Pixel art readability challenge and choose the #{@sizeString()} size.
-      Complete and refine your drawing until the Pixeltosh correctly guesses your subject in the readability analysis.
+      Complete and refine your drawing until the Pixeltosh correctly guesses your icon in the readability analysis.
     """
     
     @icon: -> PAA.Learning.Task.Icons.Drawing
     
     @predecessors: -> [Goal.Learn]
+    
+    @completedConditions: -> PAA.Challenges.Drawing.PixelArtReadability.state('completedCounts')?[@size()] >= 1
     
   class @Icon8 extends @Icon
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon8'
@@ -61,8 +62,6 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     @studyPlanBuilding: -> 'SimCityResidential1'
     
     @initialize()
-    
-    @completedConditions: -> false
   
   class @Icon16 extends @Icon
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon16'
@@ -75,8 +74,6 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     @studyPlanBuilding: -> 'TransportTycoonCinema'
     
     @initialize()
-    
-    @completedConditions: -> false
   
   class @Icon32 extends @Icon
     @id: -> 'PixelArtAcademy.LearnMode.PixelArtFundamentals.Fundamentals.Goals.Size.Icon32'
@@ -89,8 +86,6 @@ class LM.PixelArtFundamentals.Fundamentals.Goals.Size extends PAA.Learning.Goal
     @studyPlanBuilding: -> 'SimCityOffice3'
     
     @initialize()
-    
-    @completedConditions: -> false
   
   @tasks: -> [
     @Learn

@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 RA = PAA.Practice.ReadabilityAnalysis
 
 class RA.EngineComponent extends RA.EngineComponent
-  @debug = true
+  @debug = false
   
   constructor: (@options) ->
     super arguments...
@@ -39,15 +39,19 @@ class RA.EngineComponent extends RA.EngineComponent
     focusedElements = [focusedLines..., focusedPoints...]
     
     context.save()
+    
+    bitmapBounds = @options.bitmapBounds()
 
     if @drawInput()
       for region, regionIndex in readabilityAnalysis.regions
+        bounds = region.bounds or bitmapBounds
+        
         if focusedElements.length
           strokeIndex = _.findIndex region.strokes, (strokeAnalysis) => strokeAnalysis.element is focusedElements[0]
-          @_drawInput context, readabilityAnalysis._classificationInputData[regionIndex][strokeIndex + 1], region.bounds
+          @_drawInput context, readabilityAnalysis._classificationInputData[regionIndex][strokeIndex + 1], bounds
           
         else
-          @_drawInput context, readabilityAnalysis._classificationInputData[regionIndex][0], region.bounds
+          @_drawInput context, readabilityAnalysis._classificationInputData[regionIndex][0], bounds
       
     context.restore()
 

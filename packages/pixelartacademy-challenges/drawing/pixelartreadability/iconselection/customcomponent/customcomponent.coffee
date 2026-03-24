@@ -4,7 +4,9 @@ AEc = Artificial.Echo
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent extends LOI.Component
+IconSelection = PAA.Challenges.Drawing.PixelArtReadability.IconSelection
+
+class IconSelection.CustomComponent extends LOI.Component
   @id: -> 'PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent'
   @register @id()
   
@@ -259,6 +261,17 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   tableOfContentsParts: ->
     return unless contents = @drawingApp.portfolio().activeAsset()?.asset.contents
     _.values contents
+  
+  iconEntrySizes: -> [{size: 8}, {size: 16}, {size: 32}]
+  
+  iconStatusClass: ->
+    return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
+
+    {label, size} = @_getLabelAndSize()
+    return unless iconData = icons[label]?.sizes[size]
+
+    return 'completed' if iconData.completed
+    return 'started' if iconData.started
   
   pageDataLeft: -> @pageData @pageNumberLeft()
   pageDataRight: -> @pageData @pageNumberRight()

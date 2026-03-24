@@ -327,7 +327,16 @@ class LM.PixelArtFundamentals.Fundamentals.Content.DrawingChallenges extends LM.
         @progress = new LM.Content.Progress.ManualProgress
           content: @
 
-          completed: => false
+          requiredUnits: "completed icons"
+          totalUnits: "started icons"
+      
+          completedUnitsCount: => PAA.Challenges.Drawing.PixelArtReadability.state('startedCounts')?[@constructor.size()] or 0
+          unitsCount: => 94
+          
+          requiredCompletedUnitsCount: => PAA.Challenges.Drawing.PixelArtReadability.state('completedCounts')?[@constructor.size()] or 0
+          requiredUnitsCount: => 1
+
+          completed: => @progress.requiredCompletedUnitsCount() >= 1
           
       status: -> LM.Content.Status.Unlocked
 
