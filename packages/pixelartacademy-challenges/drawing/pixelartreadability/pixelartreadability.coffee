@@ -80,13 +80,16 @@ class PAA.Challenges.Drawing.PixelArtReadability extends PAA.Practice.Project.Th
   destroy: ->
     super arguments...
     
-    @_iconSelection?.destroy()
+    @_iconSelectionVolume1?.destroy()
+    @_iconSelectionVolume2?.destroy()
     
   assetsData: -> []
 
   assets: ->
-    @_iconSelection ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtReadability.IconSelection @
-    [@_iconSelection]
+    @_iconSelectionVolume1 ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtReadability.IconSelection.Volume1 @
+    @_iconSelectionVolume2 ?= Tracker.nonreactive => new PAA.Challenges.Drawing.PixelArtReadability.IconSelection.Volume2 @
+    
+    [@_iconSelectionVolume1, @_iconSelectionVolume2]
     
   content: ->
     return unless chapter = LOI.adventure.getCurrentChapter PAA.LearnMode.PixelArtFundamentals.Fundamentals

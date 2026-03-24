@@ -54,6 +54,8 @@ Package.onUse(function(api) {
   api.addFile('drawing/pixelartreadability..');
 
   api.addFile('drawing/pixelartreadability/iconselection..');
+  api.addFile('drawing/pixelartreadability/iconselection/iconselection-volume1');
+  api.addFile('drawing/pixelartreadability/iconselection/iconselection-volume2');
   api.addComponent('drawing/pixelartreadability/iconselection/portfoliocomponent..');
   api.addComponent('drawing/pixelartreadability/iconselection/customcomponent..');
   api.addComponent('drawing/pixelartreadability/iconselection/customcomponent/iconcanvas..');

@@ -5,36 +5,11 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Challenges.Drawing.ReferenceSelection
-  @id: -> "PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection"
-
-  @displayName: -> "The Graphics Book of Icons"
-
-  @description: -> """
-    Successfully draw at least one 16×16 icon in the book to complete the challenge.
-  """
+  @volumeNumber: -> throw new AE.NotImplementedException 'Icon selection must specify which volume it is.'
+  @coverIconsCounts: -> throw new AE.NotImplementedException 'Icon selection must specify how many icons it has on the cover.'
 
   @portfolioComponentClass: -> @PortfolioComponent
   @customComponentClass: -> @CustomComponent
-  
-  @defaultUrl = 'the-graphics-book-of-icons'
-  
-  @initialize()
-  
-  @parts =
-    transport: title: 'Transport'
-    buildings: title: 'Buildings'
-    toolsAndWeapons: title: 'Tools and Weapons'
-    furniture: title: 'Furniture'
-    musicalInstruments: title: 'Musical Instruments'
-    householdItems: title: 'Household Items'
-    
-  @labels =
-    transport: ['airplane', 'bicycle', 'car', 'helicopter', 'hot air balloon', 'pickup truck', 'sailboat']
-    buildings: ['castle', 'church', 'skyscraper', 'windmill']
-    toolsAndWeapons: ['axe', 'cannon', 'hammer', 'knife', 'rifle', 'saw', 'scissors', 'sword']
-    furniture: ['bench', 'chair', 'couch', 'door', 'table']
-    musicalInstruments: ['guitar', 'harp', 'piano', 'saxophone', 'trumpet', 'violin']
-    householdItems: ['alarm clock', 'bottle', 'candle', 'cup', 'eyeglasses', 'fan', 'hat', 'hourglass', 'shoe', 'spoon', 'teapot', 'teddy bear', 'umbrella']
   
   constructor: ->
     super arguments...
@@ -42,7 +17,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
     # Calculate contents.
     partNumber = 0
     iconNumber = 0
-    pageNumber = 2
+    pageNumber = 3
     
     @contents = _.cloneDeep @constructor.parts
     @pages = []
@@ -86,17 +61,23 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection extends PAA.Chall
     return bitmapId if bitmapId = @_getBitmapId()
     
     # No icon has been selected, so return the default URL.
-    @constructor.defaultUrl
+    @constructor.defaultUrl()
     
   _getBitmapId: ->
     return unless parameter = AB.Router.getParameter 'parameter3'
     return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
     
-    for label, labelEntry of icons
+    for label, labelEntry of icons when @_ownLabel label
       for size, icon of labelEntry.sizes
         return icon.bitmapId if icon.bitmapId is parameter
         
     null
+    
+  _ownLabel: (label) ->
+    for category, labels of @constructor.labels
+      return true if label in labels
+      
+    false
   
   width: -> 56
   height: -> 82

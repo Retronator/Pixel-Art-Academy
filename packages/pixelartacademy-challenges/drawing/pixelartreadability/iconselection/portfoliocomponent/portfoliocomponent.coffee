@@ -4,3 +4,8 @@ LOI = LandsOfIllusions
 
 class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.PortfolioComponent extends AM.Component
   @register 'PixelArtAcademy.Challenges.Drawing.PixelArtReadability.IconSelection.PortfolioComponent'
+  
+  constructor: (@iconSelection) ->
+    super arguments...
+    
+  volumeNumber: -> @iconSelection.constructor.volumeNumber()

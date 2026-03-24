@@ -13,14 +13,14 @@ class PAA.ImageClassification.SimpleClassifier
   @inputSize = 64
   @targetSize = 60
   @tensorShape = [1, 64, 64, 1]
-  @labels = ["airplane","alarm clock","ant","apple","axe","banana","bat","bear","bee","bench","bicycle","bread",
-    "butterfly","camel","candle","cannon","car","castle","cat","chair","church","couch","cow","crab","cup","dog",
-    "dolphin","door","duck","elephant","eyeglasses","fan","fish","flower","frog","giraffe","guitar","hamburger",
-    "hammer","harp","hat","hedgehog","helicopter","horse","hot air balloon","hourglass","kangaroo","knife","lion",
-    "lobster","mouse","mushroom","owl","parrot","pear","penguin","piano","pickup truck","pig","pineapple","pizza",
-    "rabbit","raccoon","rhinoceros","rifle","sailboat","saw","saxophone","scissors","scorpion","turtle","shark",
-    "sheep","shoe","skyscraper","snail","snake","spider","spoon","squirrel","strawberry","swan","sword","table",
-    "teapot","teddy bear","tiger","tree","trumpet","umbrella","violin","windmill","bottle","zebra"]
+  @labels = ['airplane','alarm clock','ant','apple','axe','banana','bat','bear','bee','bench','bicycle','bread',
+    'butterfly','camel','candle','cannon','car','castle','cat','chair','church','couch','cow','crab','cup','dog',
+    'dolphin','door','duck','elephant','eyeglasses','fan','fish','flower','frog','giraffe','guitar','hamburger',
+    'hammer','harp','hat','hedgehog','helicopter','horse','hot air balloon','hourglass','kangaroo','knife','lion',
+    'lobster','mouse','mushroom','owl','parrot','pear','penguin','piano','pickup truck','pig','pineapple','pizza',
+    'rabbit','raccoon','rhinoceros','rifle','sailboat','saw','saxophone','scissors','scorpion','turtle','shark',
+    'sheep','shoe','skyscraper','snail','snake','spider','spoon','squirrel','strawberry','swan','sword','table',
+    'teapot','teddy bear','tiger','tree','trumpet','umbrella','violin','windmill','bottle','zebra']
 
   @convertStrokesToInputData: (strokes, inputData) ->
     # Find bounds of the drawn area.

@@ -17,6 +17,9 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
       turnPage: AEc.ValueTypes.Trigger
       turnPages: AEc.ValueTypes.Trigger
       
+  constructor: (@iconSelection) ->
+    super arguments...
+  
   onCreated: ->
     super arguments...
     
@@ -41,7 +44,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     # Go to the right page based on the current asset.
     @activeLabel = new ComputedField =>
       return unless parameter = AB.Router.getParameter 'parameter3'
-      return if parameter is PAA.Challenges.Drawing.PixelArtReadability.IconSelection.defaultUrl
+      return if parameter is @iconSelection.constructor.defaultUrl()
       
       return unless icons = PAA.Challenges.Drawing.PixelArtReadability.state 'icons'
       
@@ -70,6 +73,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     @autorun (computation) =>
       if @bookVisible()
         Tracker.afterFlush =>
+          return unless @isRendered()
           @_bookOpen = @$('.book-open')[0]
         
       else
@@ -181,7 +185,7 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
     # Remove selected icon if needed.
     if @activeLabel()
       AB.Router.changeParameters
-        parameter3: PAA.Challenges.Drawing.PixelArtReadability.IconSelection.defaultUrl
+        parameter3: @iconSelection.constructor.defaultUrl()
         parameter4: null
       
       # Inform that we've handled the back button.
@@ -232,25 +236,25 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   bookOpenClass: ->
     'open' if @currentPage() > 0
   
-  canMoveBack: ->
-    @currentPage() > 0
-    
-  canMoveForward: ->
-    return unless pages = @drawingApp.portfolio().activeAsset()?.asset.pages
-    @currentPage() < pages.length - 1
+  volumeNumber: -> @iconSelection.constructor.volumeNumber()
   
-  icons8: -> @icons 8, 4
+  icons8: -> @icons 8
   
-  icons16: -> @icons 16, 9
+  icons16: -> @icons 16
+  
+  icons32: -> @icons 32
 
-  icons32: -> @icons 32, 2
+  icons: (size) ->
+    count = @iconSelection.constructor.coverIconsCounts()[size]
   
-  icons: (size, count) ->
     for number in [1..count]
       number: number
       imageUrl: @versionedUrl "/pixelartacademy/challenges/drawing/pixelartreadability/book-icon-#{size}-#{number}.png"
     
-  onTableOfContents: -> @currentPage() is 1
+  onTableOfContents: -> @currentPage() <= 3
+  
+  tableOfContentsPagesStyle: ->
+    left: "#{-(145 + 18) * (@currentPage() - 1)}rem"
   
   tableOfContentsParts: ->
     return unless contents = @drawingApp.portfolio().activeAsset()?.asset.contents
@@ -336,6 +340,13 @@ class PAA.Challenges.Drawing.PixelArtReadability.IconSelection.CustomComponent e
   
   pageNumberLeft: -> @currentPage()
   pageNumberRight: -> @currentPage() + 1
+  
+  canMoveBack: ->
+    @currentPage() > 0
+  
+  canMoveForward: ->
+    return unless pages = @drawingApp.portfolio().activeAsset()?.asset.pages
+    @currentPage() < pages.length - 1
   
   update: (appTime) ->
     return unless @_bookOpen and @_dragTimeLeft > 0
