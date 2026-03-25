@@ -37,14 +37,14 @@ class PAE.Core
     
     while fringe.length
       pixel = fringe.pop()
-      @_addPixel pixel
+      @_addPixel pixel unless pixel.isCoreAdjacent
       
       pixel.forEachNeighbor (neighbor) =>
         # Skip our own pixels (which were already added during the fill).
         return if @_pixelsMap[neighbor.x]?[neighbor.y]
         
         # Skip surface pixels.
-        return unless neighbor.couldBeCore()
+        return unless neighbor.couldBeCore() or neighbor.isCoreAdjacent
         
         # Did we reach another core?
         if neighbor.core

@@ -3,10 +3,12 @@ AC = Artificial.Control
 PAA = PixelArtAcademy
 PAE = PAA.Practice.PixelArtEvaluation
 
-deepCoreColor = "hsl(100deg 50% 50% / 50%)"
-shallowCoreColor = "hsl(60deg 50% 50% / 40%)"
+deepCoreColor = "hsl(100deg 50% 50% / 60%)"
+shallowCoreColor = "hsl(60deg 50% 50% / 50%)"
+coreAdjacentColor = "hsl(20deg 50% 50% / 40%)"
 pointColor = "hsl(350deg 50% 50%)"
 edgeColor = "hsl(200deg 50% 50% / 50%)"
+potentialEdgeColor = "hsl(200deg 25% 25% / 50%)"
 getStraightLineColor = (opacity) -> "hsl(60deg 50% 50% / #{opacity})"
 straightLineColor = getStraightLineColor 1
 curveColor = "hsl(100deg 50% 50% / 100%)"
@@ -61,10 +63,16 @@ class PAE.EngineComponent extends PAE.EngineComponent
         @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isShallowCore
         @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, shallowCoreColor
       
+        # Draw core adjacent pixels.
+        context.beginPath()
+        @_addPixelToPath context, pixel for pixel in layer.pixels when pixel.isCoreAdjacent
+        @_diagonalDash context, pixelArtEvaluation.bitmap.bounds, coreAdjacentColor
+        
       if @drawPoints()
         # Draw point network.
         for point in layer.points
-          @_drawDebugEdge context, point, neighbor for neighbor in point.neighbors
+          @_drawDebugEdge context, point, neighbor, potentialEdgeColor for neighbor in point.allNeighbors
+          @_drawDebugEdge context, point, neighbor, edgeColor for neighbor in point.neighbors
         
         # Draw points.
         @_drawDebugPoint context, point for point in layer.points
@@ -86,8 +94,8 @@ class PAE.EngineComponent extends PAE.EngineComponent
         
     context.restore()
 
-  _drawDebugEdge: (context, pointA, pointB) ->
-    context.strokeStyle = edgeColor
+  _drawDebugEdge: (context, pointA, pointB, color) ->
+    context.strokeStyle = color
     context.lineWidth = @_pixelSize * 2
     context.beginPath()
     

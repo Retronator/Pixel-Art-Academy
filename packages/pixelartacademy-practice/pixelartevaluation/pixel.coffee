@@ -9,8 +9,9 @@ class PAE.Pixel
     @core = null
     @outlineCores = []
     
-    @isShallowCore = null
     @isDeepCore = null
+    @isShallowCore = null
+    @isCoreAdjacent = null
     
   couldBeCore: -> @isShallowCore or @isDeepCore
   
@@ -69,6 +70,20 @@ class PAE.Pixel
       
     else
       @isShallowCore = true
+      
+  determineCoreAdjacency: ->
+    @isCoreAdjacent = false
+    return if @isDeepCore or @isShallowCore
+    
+    for x in [@x - 1..@x + 1]
+      for y in [@y - 1..@y + 1] when x isnt @x or y isnt @y
+        if pixel = @layer.getPixel x, y
+          if pixel.isDeepCore or pixel.isShallowCore
+            @isCoreAdjacent = true
+            return
+    
+    # Explicit return to avoid result collection.
+    return
   
   forEachNeighbor: (operation) ->
     for x in [@x - 1..@x + 1]

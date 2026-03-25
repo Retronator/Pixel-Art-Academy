@@ -172,6 +172,9 @@ class PAE.Layer
       
       # Invalidate core pixel and neighbors (since they can fall on the outline).
       pixel.forEachPixelInNeighborhood (neighbor) => addAdditionalInvalidatedPixel neighbor
+    
+    forEachInvalidatedPixel (pixel) =>
+      pixel.determineCoreAdjacency()
       
     # Assign cores to core pixels.
     forEachInvalidatedPixel (pixel) =>
