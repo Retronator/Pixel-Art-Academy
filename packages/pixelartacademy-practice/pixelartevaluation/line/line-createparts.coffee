@@ -58,7 +58,19 @@ PAE.Line::_createParts = ->
       
     else
       # Find which straight line parts overlay the segment.
-      potentialStraightLineParts = (part for part in @potentialStraightLineParts when part.overlaysPointRange normalizedStartPointIndex, normalizedPointIndex)
+      potentialStraightLinePartIndices = (partIndex for part, partIndex in @potentialStraightLineParts when part.overlaysPointRange normalizedStartPointIndex, normalizedPointIndex)
+      
+      if @isClosed
+        # Rotate the parts until the first one is the earliest one in the sequence.
+        for overlayingPartIndex in [1...potentialStraightLinePartIndices.length]
+          unless potentialStraightLinePartIndices[overlayingPartIndex] is potentialStraightLinePartIndices[overlayingPartIndex - 1] + 1
+            # We found the gap, so this part must be the starting one.
+            for shiftIndex in [0...overlayingPartIndex]
+              potentialStraightLinePartIndices.push potentialStraightLinePartIndices.shift()
+            
+            break
+      
+      potentialStraightLineParts = (@potentialStraightLineParts[partIndex] for partIndex in potentialStraightLinePartIndices)
       
       potentialStraightLineSegmentRanges = []
       
@@ -102,22 +114,7 @@ PAE.Line::_createParts = ->
           
         else
           segmentRangeIndex++
-          
-      if @isClosed
-        # Rotate the parts until the first one is the earliest one in the sequence.
-        lastSegmentRangeEnd = -1
-        
-        for segmentRange, segmentRangeIndex in potentialStraightLineSegmentRanges
-          if segmentRange.start is lastSegmentRangeEnd + 1
-            lastSegmentRangeEnd = segmentRange.end
-            continue
-          
-          # We found the gap, so this segment range must be the starting one.
-          for shiftIndex in [0...segmentRangeIndex]
-            potentialStraightLineSegmentRanges.push potentialStraightLineSegmentRanges.shift()
-            
-          break
-          
+
       for segmentRange in potentialStraightLineSegmentRanges
         @parts.push new PAE.Line.Part.StraightLine @, segmentRange.start, segmentRange.end
       
