@@ -12,9 +12,9 @@ class LM.App extends Artificial.Base.App
   
   template: -> @constructor.id()
   
-  @version: -> '0.37.5'
+  @version: -> '1.3.0'
   
-  buildName: -> 'Learn Mode build'
+  buildName: -> 'Learn Mode demo'
 
   # Routing helpers for default layouts
 

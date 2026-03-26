@@ -43,6 +43,10 @@ class LM.PixelArtFundamentals extends LOI.Adventure.Episode
     return false unless LM.PixelArtFundamentals.Fundamentals.Goals.Simplification.activeOrCompleted()
     
     PAA.Tutorials.Drawing.Simplification.completed()
+  
+  meetsAccessRequirement: ->
+    # Pixel art fundamentals are not available in the demo.
+    false
 
 if Meteor.isServer
   LOI.initializePackage

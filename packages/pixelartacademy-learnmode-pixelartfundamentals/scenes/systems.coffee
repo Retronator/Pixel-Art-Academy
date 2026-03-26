@@ -10,5 +10,6 @@ class LM.PixelArtFundamentals.Systems extends LOI.Adventure.Scene
   @initialize()
   
   things: -> [
-    PAA.PixelPad.Systems.Music
+    # Music is not available in the demo.
+    # PAA.PixelPad.Systems.Music
   ]

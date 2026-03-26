@@ -8,7 +8,9 @@ class LM.PixelArtFundamentals.Start extends LOI.Adventure.Section
 
   @initialize()
 
-  @started: -> true
+  @started: ->
+    # Pixel art fundamentals are not available in the demo.
+    false
 
   @finished: ->
     return unless LOI.adventureInitialized()

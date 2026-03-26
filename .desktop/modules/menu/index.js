@@ -69,25 +69,6 @@ export default class ApplicationMenu {
             click: async () => {
               await shell.openExternal('mailto:hi@retronator.com?subject=Pixel%20Art%20Academy%3A%20Learn%20Mode%20bug%20report')
             }
-          },
-          { type: 'separator'},
-          {
-            label: 'Unlock Pixel art fundamentals',
-            click: async () => {
-              this.module.send('unlockPixelArtFundamentals');
-            }
-          },
-          {
-            label: 'Unlock Pinball',
-            click: async () => {
-              this.module.send('unlockPinball');
-            }
-          },
-          {
-            label: 'Unlock Draw Quickly',
-            click: async () => {
-              this.module.send('unlockDrawQuickly');
-            }
           }
         ]
       },
