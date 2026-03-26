@@ -6,7 +6,7 @@ PAA = PixelArtAcademy
 
 class PAA.Tutorials.Planning.Instructions.Instruction extends PAA.PixelPad.Systems.Instructions.Instruction
   # The default amount of time before we show instructions to the user to let them figure it out themselves.
-  @defaultDelayDuration = 5
+  @defaultDelayDuration = 3
   
   @getStudyPlan: ->
     PAA.PixelPad.Apps.StudyPlan.getApp()

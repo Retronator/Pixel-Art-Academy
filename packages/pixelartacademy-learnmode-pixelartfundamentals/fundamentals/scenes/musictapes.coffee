@@ -13,11 +13,21 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
   things: ->
     tapes = []
     
-    # Tape for Elements of art: shape.
-    if PAA.Tutorials.Drawing.ElementsOfArt.Shape.completed()
+    # Tapes for Elements of art: line.
+    if PAA.Tutorials.Drawing.ElementsOfArt.Line.completed()
+      tapes.push
+        artist: 'Extent of the Jam'
+        title: 'musicdisk01'
+      
       tapes.push
         artist: 'Shnabubula'
         title: 'Finding the Groove'
+
+    # Tape for Elements of art: shape.
+    if PAA.Tutorials.Drawing.ElementsOfArt.Shape.completed()
+      tapes.push
+        artist: 'HOME'
+        title: 'Resting State'
       
     # Tape for Pixel art lines.
     if PAA.Tutorials.Drawing.PixelArtFundamentals.Jaggies.Lines.completed()
@@ -46,14 +56,14 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     # Tape for Simplification.
     if LM.PixelArtFundamentals.Fundamentals.Goals.Simplification.Tutorial.completed()
       tapes.push
-        artist: 'HOME'
-        title: 'Resting State'
+        artist: 'Holizna'
+        title: 'Be Happy With Who You Are'
         
     # Tape for Shape language.
     if LM.Design.Fundamentals.Goals.ShapeLanguage.Learn.completed()
       tapes.push
-        artist: 'Extent of the Jam'
-        title: 'musicdisk01'
+        artist: 'Joseph Sacco'
+        'sides.0.title': 'Lostalgia'
     
     tapes
 
@@ -62,32 +72,21 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     @initialize()
     
     @NotificationArtists =
+      FirstTapes: 'Shnabubula'
       HOME: 'HOME'
       Glaciaere: 'glaciære'
       RevolutionVoid: 'Revolution Void'
       StateAzure: 'State Azure'
       ThreeChainLinks: 'Three Chain Links'
-      ExtentOfTheJam: 'Extent of the Jam'
-      Shnabubula: 'Shnabubula'
-    
-    @FirstTapeNotificationArtists =
-      FirstTapeShnabubula: 'Shnabubula'
-      FirstTapeGlaciaere: 'glaciære'
+      Holizna: 'Holizna'
+      JosephSacco: 'Joseph Sacco'
     
     availableNotificationIds: ->
       # See which tapes are available.
       tapeSelectors = LOI.adventure.currentTapeSelectors()
       potentialNotificationIds = []
       
-      # See if we've shown any of the music notifications yet.
-      if LM.PixelArtFundamentals.Fundamentals.MusicTapes.state('displayedNotificationIds')
-        notificationArtists = @constructor.NotificationArtists
-        
-      else
-        # Choose one of the first-time notifications.
-        notificationArtists = @constructor.FirstTapeNotificationArtists
-      
-      for className, artist of notificationArtists
+      for className, artist of @constructor.NotificationArtists
         continue unless _.find tapeSelectors, (tape) => tape.artist is artist
         potentialNotificationIds.push MusicTapes[className].id()
         
@@ -102,8 +101,6 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     
     @displayStyle: -> @DisplayStyles.Always
     
-    @priority: -> -1
-    
     @retroClasses: ->
       body: PAA.PixelPad.Systems.Notifications.Retro.BodyClasses.Walkman
       
@@ -116,28 +113,13 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
       displayedNotificationIds.push @displayedId()
       LM.PixelArtFundamentals.Fundamentals.MusicTapes.state 'displayedNotificationIds', displayedNotificationIds
   
-  class @FirstTapeShnabubula extends @Notification
-    @id: -> "#{MusicTapes.id()}.FirstTapeShnabubula"
-    @displayedId: -> "#{MusicTapes.id()}.Shnabubula"
+  class @FirstTapes extends @Notification
+    @id: -> "#{MusicTapes.id()}.FirstTapes"
     
     @message: -> """
       You can now play extra music!
 
-      In the Music app, you'll find Shnabubula's piano improvisations that take me straight back to The Sims build mode.
-    """
-
-    @displayStyle: -> @DisplayStyles.Always
-    
-    @initialize()
-  
-  class @FirstTapeGlaciaere extends @Notification
-    @id: -> "#{MusicTapes.id()}.FirstTapeGlaciaere"
-    @displayedId: -> "#{MusicTapes.id()}.Glaciaere"
-    
-    @message: -> """
-      You can now play extra music!
-
-      In the Music app, you'll find a cassette tape with vaporwave tracks by Glaciære.
+      In the Music app, you'll find some good DOS chiptunes from Extent of the Jam as well as Shnabubula's piano improvisations that take me straight back to The Sims build mode.
     """
 
     @displayStyle: -> @DisplayStyles.Always
@@ -194,20 +176,23 @@ class LM.PixelArtFundamentals.Fundamentals.MusicTapes extends LOI.Adventure.Scen
     
     @initialize()
   
-  class @ExtentOfTheJam extends @Notification
-    @id: -> "#{MusicTapes.id()}.ExtentOfTheJam"
+  class @Holizna extends @Notification
+    @id: -> "#{MusicTapes.id()}.Holizna"
     
     @message: -> """
-      Do you like chiptunes? I added some good DOS ones from Extent of the Jam to the Music app.
+      Time to draw and chill with some uplifting lo-fi beats from Holizna.
+      
+      You can play the new tape in the Music app.
     """
     
     @initialize()
   
-  class @Shnabubula extends @Notification
-    @id: -> "#{MusicTapes.id()}.Shnabubula"
+  class @JosephSacco extends @Notification
+    @id: -> "#{MusicTapes.id()}.JosephSacco"
     
     @message: -> """
-      I got you a new cassette tape, Shnabubula's piano improvisations that take me straight back to The Sims build mode.
+      The Music app has a new cassette tape by Joseph Sacco,
+      if you want some synthwave to transports you into a retro-futuristic world.
     """
     
     @initialize()

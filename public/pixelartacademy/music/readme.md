@@ -16,6 +16,9 @@ The following albums are included under their respective CC licenses.
 - [Stellar Descent](https://stateazure.bandcamp.com/album/stellar-descent) by State Azure. [Some rights reserved](http://creativecommons.org/licenses/by-sa/3.0/).
 - [The Happiest Days Of Our Lives](https://threechainlinks.bandcamp.com/album/the-happiest-days-of-our-lives) by Three Chain Links. [Some rights reserved](http://creativecommons.org/licenses/by-sa/3.0/).
 - [Interface](https://threechainlinks.bandcamp.com/album/interface) by Three Chain Links. [Some rights reserved](http://creativecommons.org/licenses/by-sa/3.0/).
+- [Lostalgia](https://freemusicarchive.org/music/joseph-sacco/lostalgia) by Joseph Sacco. [Some rights reserved](https://creativecommons.org/licenses/by/4.0).
+- [Shortwave](https://freemusicarchive.org/music/joseph-sacco/shortwave) by Joseph Sacco. [Some rights reserved](https://creativecommons.org/licenses/by/4.0).
+- [Be Happy With Who You Are](https://freemusicarchive.org/music/holiznacc0/be-happy-with-who-you-are) by Holizna.
 
 ### Music used with permission
 

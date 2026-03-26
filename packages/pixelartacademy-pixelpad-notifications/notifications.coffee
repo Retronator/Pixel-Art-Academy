@@ -63,6 +63,9 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
     @displayedNotification = new ReactiveField null
     @readNotifications = new ReactiveField []
     
+    @displayAlwaysNotifications = new ComputedField =>
+      _.filter @unreadNotifications(), (notification) => notification.displayStyle() is @constructor.Notification.DisplayStyles.Always
+    
     @retroClasses = new ReactiveField
       head: null
       face: null
@@ -161,7 +164,13 @@ class PAA.PixelPad.Systems.Notifications extends PAA.PixelPad.System
       # Prevent immediate closing.
       return if Date.now() - @_displayTimeMilliseconds < 1000
       
+      # Note: even though @closeDisplayedNotification checks for the notification to be displayed,
+      # we need to check here as well so that we don't immediately display the next message.
+      return unless @displayedNotification()
       @closeDisplayedNotification()
+      
+      # Continue displaying any notifications that need to be shown immediately.
+      @_displayUnreadNotificationWithDisplayStyle @constructor.Notification.DisplayStyles.Always
       
     # Track eyes when active.
     $faceOrigin = @$('.face-origin')
