@@ -24,6 +24,10 @@ class LM.Design extends LOI.Adventure.Episode
     
     LM.Design.Fundamentals.Goals.ShapeLanguage.completed()
   
+  meetsAccessRequirement: ->
+    # Design fundamentals are not available in the demo.
+    false
+
 if Meteor.isServer
   LOI.initializePackage
     id: 'retronator_pixelartacademy-learnmode-design'
